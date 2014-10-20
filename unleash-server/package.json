@@ -45,6 +45,7 @@
         "jshint": "2.5.2",
         "mocha": "1.20.1",
         "supertest": "0.13.0",
-        "supervisor": "~0.6.0"
+        "supervisor": "~0.6.0",
+        "xmlbuilder": "^2.4.4"
     }
 }

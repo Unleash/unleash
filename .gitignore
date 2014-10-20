@@ -31,5 +31,8 @@ node_modules
 .idea
 *.iml
 
-# Java 
+# Java
 target
+
+# Local config
+/unleash-server/config/database.json

@@ -5,6 +5,10 @@ unleash-server is a place to ask for the status of features.
 # Important commands:
 
 ```
+// Set up DB
+npm run db-create
+npm run db-migrate
+
 //Start server in dev-mode:
 npm run start-dev
 

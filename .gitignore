@@ -30,3 +30,6 @@ node_modules
 # Idea stuff
 .idea
 *.iml
+
+# Java 
+target

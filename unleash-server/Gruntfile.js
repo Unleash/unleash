@@ -1,4 +1,6 @@
-var dbPort = (process.env.BOXEN_POSTGRESQL_PORT || '5432');
+// TEMPORARY USE OF GRUNT FOR DB MIGRATIONS
+
+var dbUrl = process.env.DB_URL || 'postgresql://localhost:5432/unleash';
 
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-liquibase');
@@ -6,10 +8,10 @@ module.exports = function(grunt) {
     grunt.initConfig({
         liquibase : {
             options: {
-                username : '',
-                password : '',
-                url : 'jdbc:postgresql://localhost:' + dbPort + '/unleash',
-                changeLogFile: 'db_changes/db.changelog-master.xml'
+                username: '',
+                password: '',
+                url : 'jdbc:' + dbUrl,
+                changeLogFile: 'sql/db_changes/db.changelog-master.xml'
             },
             update: {
                 command: 'update'

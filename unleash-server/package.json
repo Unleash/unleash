@@ -24,7 +24,7 @@
         "test-bamboo-ci": "mocha test test/*",
         "db-create": "createdb unleash",
         "db-drop": "dropdb unleash",
-        "db-migrate": "cd sql && grunt liquibase:update"
+        "db-migrate": "grunt --verbose liquibase:update"
     },
     "dependencies": {
         "bluebird": "2.2.2",
@@ -36,7 +36,7 @@
         "log4js": "0.6.21",
         "nconf": "0.6.9",
         "grunt": "^0.4.5",
-        "grunt-liquibase": "^0.1.5"
+        "grunt-liquibase": "finn-no/grunt-liquibase#auth-in-url"
     },
     "devDependencies": {
         "chai": "1.9.1",

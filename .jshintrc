@@ -11,7 +11,6 @@
         "after"     : false,
         "beforeEach": false,
         "afterEach" : false,
-        "assert"    : false,
         "contain"   : false
     },
 

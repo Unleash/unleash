@@ -2,7 +2,7 @@ language: node_js
 node_js:
 - '0.11'
 - '0.10'
-script: cd unleash-sever && npm test
+script: cd unleash-server && npm test
 notifications:
   hipchat:
     rooms:

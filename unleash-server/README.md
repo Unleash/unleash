@@ -1,4 +1,5 @@
 # unleash-server
+[![Build Status](https://travis-ci.org/finn-no/unleash.svg?branch=master)](https://travis-ci.org/finn-no/unleash)
 unleash-server is a place to ask for the status of features.
 
 ## Important commands:

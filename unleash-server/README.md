@@ -1,24 +1,22 @@
-# unleash-server  
+# unleash-server
 unleash-server is a place to ask for the status of features.
-
 
 # Important commands:
 
 ```
 // Set up DB
-npm run db-create
-npm run db-migrate
+cp config/database.example.json config/database.json
+npm run db-setup
 
-//Start server in dev-mode:
+// Start server in dev-mode:
 npm run start-dev
 
-//Admin dashboard
+// Admin dashboard
 http://localhost:4242
 
-//Feature API:
+// Feature API:
 http://localhost:4242/features
 
-
-//Execute tests:
+// Execute tests:
 npm test
 ```

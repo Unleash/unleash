@@ -2,7 +2,7 @@ language: java
 jdk: oraclejdk7
 script:
 - cd unleash-server && npm install && npm test
-- cd unleash-client-java && mvn test
+- cd .. && cd unleash-client-java && mvn test
 notifications:
   hipchat:
     rooms:

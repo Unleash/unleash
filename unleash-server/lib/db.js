@@ -1,5 +1,6 @@
 var Promise = require('bluebird');
 var featuresMock = require('./featuresMock');
+// var dbPool = require('./dbPool');
 
 function getFeature(name) {
     var featureFound;

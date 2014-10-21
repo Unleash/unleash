@@ -18,7 +18,7 @@
     "private": true,
     "scripts": {
         "start": "node server.js",
-        "start-dev": "NODE_ENV=local supervisor --ignore ./node_modules/ server.js",
+        "start-dev": "NODE_ENV=local supervisor --ignore ./node_modules/,./public/js server.js",
         "test": "jshint server.js lib public/scripts test && mocha test test/*",
         "tdd": "mocha --watch test test/*",
         "test-bamboo-ci": "mocha test test/*",

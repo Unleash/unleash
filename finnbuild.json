@@ -1,0 +1,39 @@
+{
+  "links": {
+    "build": "UNLEASH-UNLEASHGITHUB",
+    "repository": "https://github.com/finn-no/unleash"
+  },
+  "versions": {
+    "jdk": "1.7",
+    "mvn": "3"
+  },
+  "tasks": {
+    "deploy": [
+      {"command": "cd unleash-server && npm install"},
+      {"command": "cd unleash-server && npm test"},
+      {"command": "cd unleash-server && tar -cvzf unleash-server.tar.gz --exclude=unleash-server.tar.gz --exclude=.git *"},
+      {
+        "command": "cd unleash-server && mvn deploy:deploy-file -Durl=http://mavenproxy.finntech.no/finntech-internal-snapshot/ -DrepositoryId=finntech-internal-snapshot -Dfile=unleash-server.tar.gz -DgroupId=no.finntech.unleash -DartifactId=unleash-server -Dversion=0.1337-SNAPSHOT -Dpackaging=tar.gz",
+        "pipelines": [
+          {
+            "name": "unleash-server",
+            "pattern": "Uploaded: +(http:.+unleash-server-.+.tar.gz)"
+          }
+        ]
+      },
+      { "command" : "rm unleash-server/sql -Rf && mkdir unleash-server/sql"  },
+      { "command" : "cd unleash-server && scripts/generate-liquibase-artifact.js > sql/db.changelog-master.xml"},
+      { "command" : "cd unleash-server && jar -cf ../unleash-db.jar sql"},
+      {
+        "command": "mvn deploy:deploy-file -Durl=http://mavenproxy.finntech.no/finntech-internal-snapshot/ -DrepositoryId=finntech-internal-snapshot -Dfile=unleash-db.jar -DgroupId=no.finntech.unleash -DartifactId=unleash-db -Dversion=0.1337-SNAPSHOT -Dpackaging=jar",
+        "pipelines": [
+          {
+            "name": "unleash-db",
+            "pattern": "Uploaded:\\s+(http:.+unleash-db-.+\\.jar)"
+          }
+        ]
+      },
+      
+    ]
+  }
+}

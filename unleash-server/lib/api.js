@@ -5,7 +5,7 @@ module.exports = function (app) {
 
     app.get('/features', function (req, res) {
         db.getFeatures().then(function (features) {
-            res.json(features);
+            res.json({features: features});
         });
     });
 

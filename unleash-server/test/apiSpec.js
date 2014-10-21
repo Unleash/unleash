@@ -22,8 +22,22 @@ describe('The api', function () {
     it('creates new feature toggle', function (done) {
         request
             .post('/features')
-            .send({name: 'featureAss', 'status': 'off'})
+            .send({name: 'com.test.feature', 'status': 'off'})
             .set('Content-Type', 'application/json')
             .expect(201, done);
     });
+
+    it('change status of feature toggle', function (done) {
+        request
+            .patch('/features/com.test.feature')
+            .send({
+                'comment': 'patch test of com.test.feature',
+                data: {
+                    'status': 'on'
+                }
+            })
+            .set('Content-Type', 'application/json')
+            .expect(204, done);
+    });
+
 });

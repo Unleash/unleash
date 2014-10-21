@@ -34,7 +34,20 @@ module.exports = function (app) {
     });
 
     app.patch('/features/:id', function (req, res) {
-        res.status(500).end();
+        var body = req.body;
+        body.data.name = req.params.id;
+        var event = {};
+        event.type = 'feature-update';
+        event.user = req.connection.remoteAddress;
+        event.comment = body.comment;
+        event.data = body.data;
+
+        // console.log(event);
+
+        // db.save(event).then(function () {
+        res.status(204).end();
+        // });
+
     });
 
 };

@@ -34,6 +34,10 @@
         ]
       },
       
+    ],
+    "default": [
+      {"command": "cd unleash-server && npm install"},
+      {"command": "cd unleash-server && npm test"}
     ]
   }
 }

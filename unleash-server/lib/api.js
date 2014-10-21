@@ -33,5 +33,9 @@ module.exports = function (app) {
         });
     });
 
+    app.patch('/features/:id', function (req, res) {
+        res.status(500).end();
+    });
+
 };
 

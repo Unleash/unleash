@@ -1,5 +1,6 @@
 # unleash-server
 [![Build Status](https://travis-ci.org/finn-no/unleash.svg?branch=master)](https://travis-ci.org/finn-no/unleash)
+[![Code Climate](https://codeclimate.com/github/finn-no/unleash/badges/gpa.svg)](https://codeclimate.com/github/finn-no/unleash)
 unleash-server is a place to ask for the status of features.
 
 ## Important commands:

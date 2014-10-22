@@ -36,3 +36,5 @@ target
 
 # Local config
 /unleash-server/config/database.json
+
+.DS_Store

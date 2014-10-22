@@ -1,17 +1,16 @@
 var assert = require('assert');
 var events = require('../lib/events');
-var EventRepository = require('../lib/eventRepository');
-var eventRepository = new EventRepository();
+var eventStore = require('../lib/eventStore');
 
-describe('EventRepository', function () {
+describe('EventStore', function () {
     describe('#create()', function () {
         it('should emit event', function (done) {
-            eventRepository.on(events.featureCreated, function (x) {
+            eventStore.on(events.featureCreated, function (x) {
                     assert(x);
                     done();
                 }
             );
-            eventRepository.create({
+            eventStore.create({
                 'name': 'mail-server.validate-email-addresses',
                 'enabled': false,
                 'strategy': 'default',

@@ -2,16 +2,14 @@ var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 var events = require('./events');
 
-function EventRepository() {
+function EventStore() {
     EventEmitter.call(this);
 }
 
-util.inherits(EventRepository, EventEmitter);
+util.inherits(EventStore, EventEmitter);
 
-EventRepository.prototype.create = function (obj) {
+EventStore.prototype.create = function (obj) {
     this.emit(events.featureCreated, obj);
 };
 
-
-
-module.exports = EventRepository;
+module.exports = new EventStore();

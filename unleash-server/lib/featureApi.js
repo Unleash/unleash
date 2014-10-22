@@ -29,8 +29,9 @@ module.exports = function (app) {
                 //Todo: error-msg: feature name is already in use
                 res.status(403).end();
             } else {
-                eventStore.create(eventType.featureCreated, user, newFeature);
-                res.status(201).end();
+                eventStore.create(eventType.featureCreated, user, newFeature).then(function() {
+                    res.status(201).end();
+                });
             }
         });
     });

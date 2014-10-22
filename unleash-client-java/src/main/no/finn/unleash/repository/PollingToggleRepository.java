@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
@@ -95,7 +94,7 @@ public class PollingToggleRepository implements ToggleRepository {
     private Collection<Toggle> fetchToggles() throws ToggleException {
         try {
             Collection<Toggle> toggles = toggleRepository.getToggles();
-            storeRepoAsTempFile(JsonParser.toJsonString(toggles));
+            storeRepoAsTempFile(JsonToggleParser.toJsonString(toggles));
             return toggles;
         } catch (ToggleException ex) {
             if(togglesCache.isEmpty()) {
@@ -106,7 +105,7 @@ public class PollingToggleRepository implements ToggleRepository {
     }
 
 
-    private List<Toggle> loadFromTempFile() throws ToggleException {
+    private Collection<Toggle> loadFromTempFile() throws ToggleException {
         LOG.info("Unleash will try to load feature toggle states from temporary backup");
         try(FileReader reader = new FileReader(pathToTmpBackupFile())) {
             BufferedReader br = new BufferedReader(reader);
@@ -115,7 +114,7 @@ public class PollingToggleRepository implements ToggleRepository {
             while((line = br.readLine()) != null) {
                 builder.append(line);
             }
-            return JsonParser.toListOfToggles(builder.toString());
+            return JsonToggleParser.fromJson(builder.toString());
         } catch (IOException e) {
             LOG.error("Unleash was unable to feature toggle repo from temporary backup: " + pathToTmpBackupFile());
             throw new ToggleException("Unleash was unable to feature toggle states from temporary backup");

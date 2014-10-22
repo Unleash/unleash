@@ -2,7 +2,6 @@ package no.finn.unleash.repository;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import no.finn.unleash.Toggle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,9 +48,9 @@ public class HTTPToggleRepository implements ToggleRepository {
         }
     }
 
-    private List<Toggle> fetchToggles() throws IOException {
+    private Collection<Toggle> fetchToggles() throws IOException {
         HttpResponse httpResponse = httpClient.execute(new HttpGet(serverEndpoint));
         final String jsonString = EntityUtils.toString(httpResponse.getEntity());
-        return JsonParser.toListOfToggles(jsonString);
+        return JsonToggleParser.fromJson(jsonString);
     }
 }

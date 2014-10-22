@@ -30,4 +30,14 @@ public final class Toggle {
     public Map<String, String> getParameters() {
         return parameters;
     }
+
+    @Override
+    public String toString() {
+        return "Toggle{" +
+                "name='" + name + '\'' +
+                ", enabled=" + enabled +
+                ", strategy='" + strategy + '\'' +
+                ", parameters=" + parameters +
+                '}';
+    }
 }

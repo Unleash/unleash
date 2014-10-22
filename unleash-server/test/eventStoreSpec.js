@@ -1,21 +1,24 @@
 var assert = require('assert');
-var events = require('../lib/events');
+var eventType = require('../lib/eventType');
 var eventStore = require('../lib/eventStore');
 
 describe('EventStore', function () {
     describe('#create()', function () {
         it('should emit event', function (done) {
-            eventStore.once(events.featureCreated, function (x) {
+            eventStore.once(eventType.featureCreated, function (x) {
                     assert(x);
                     done();
                 }
             );
-            eventStore.create({
+
+            var eventData = {
                 'name': 'mail-server.validate-email-addresses',
                 'enabled': false,
                 'strategy': 'default',
                 'description': 'Feature description'
-            });
+            };
+
+            eventStore.create(eventType.featureCreated,"ole",eventData);
         });
     });
 });

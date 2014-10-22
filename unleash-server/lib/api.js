@@ -1,9 +1,12 @@
 var db = require('./db');
-
+var EventRepository = require('./eventRepository');
+var eventDb = new EventRepository();
 
 module.exports = function (app) {
 
     app.get('/features', function (req, res) {
+        // TODO svelovla, fix this
+        eventDb.create({name: 'testing method'});
         db.getFeatures().then(function (features) {
             res.json({features: features});
         });
@@ -37,7 +40,6 @@ module.exports = function (app) {
         var body = req.body;
         body.data.name = req.params.id;
         var event = {};
-        event.type = 'feature-update';
         event.user = req.connection.remoteAddress;
         event.comment = body.comment;
         event.data = body.data;

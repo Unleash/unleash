@@ -5,7 +5,7 @@ var eventStore = require('../lib/eventStore');
 describe('EventStore', function () {
     describe('#create()', function () {
         it('should emit event', function (done) {
-            eventStore.on(events.featureCreated, function (x) {
+            eventStore.once(events.featureCreated, function (x) {
                     assert(x);
                     done();
                 }

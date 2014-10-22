@@ -22,22 +22,31 @@ describe('The api', function () {
     it('creates new feature toggle', function (done) {
         request
             .post('/features')
-            .send({name: 'com.test.feature', 'status': 'off'})
+            .send({name: 'com.test.feature', 'enabled': false})
             .set('Content-Type', 'application/json')
             .expect(201, done);
     });
 
-    it('change status of feature toggle', function (done) {
+    it('can not change status of feature toggle that dose not exsist', function (done) {
         request
-            .patch('/features/com.test.feature')
+            .patch('/features/shouldNotExsist')
             .send({
-                'comment': 'patch test of com.test.feature',
-                data: {
-                    'status': 'on'
-                }
+                'field': 'enabled',
+                'value': true
             })
             .set('Content-Type', 'application/json')
-            .expect(204, done);
+            .expect(404, done);
+    });
+
+    it('can change status of feature toggle that dose exsist', function (done) {
+        request
+            .patch('/features/featureY')
+            .send({
+                'field': 'enabled',
+                'value': true
+            })
+            .set('Content-Type', 'application/json')
+            .expect(202, done);
     });
 
 });

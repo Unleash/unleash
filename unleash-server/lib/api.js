@@ -27,7 +27,7 @@ module.exports = function (app) {
 
         db.getFeature(newFeature.name).then(function (feature) {
             if (feature) {
-                res.status(500).end();
+                res.status(403).end();
             } else {
                 db.addFeature(newFeature).then(function () {
                     res.status(201).end();
@@ -36,20 +36,20 @@ module.exports = function (app) {
         });
     });
 
-    app.patch('/features/:id', function (req, res) {
-        var body = req.body;
-        body.data.name = req.params.id;
-        var event = {};
-        event.user = req.connection.remoteAddress;
-        event.comment = body.comment;
-        event.data = body.data;
-
-        // console.log(event);
-
-        // db.save(event).then(function () {
-        res.status(204).end();
-        // });
-
+    app.patch('/features/:featureName', function (req, res) {
+        var featureName = req.params.featureName;
+        db.getFeature(featureName).then(function (feature) {
+            if (feature) {
+                var changeRequest = req.body;
+                var event = {};
+                event.type = 'feature-update';
+                event.user = req.connection.remoteAddress;
+                event.data = changeRequest;
+                res.status(202).end();
+            } else {
+                res.status(404).end();
+            }
+        });
     });
 
 };

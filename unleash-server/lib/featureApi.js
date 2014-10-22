@@ -1,4 +1,4 @@
-var db = require('./db')
+var db = require('./db'),
     eventStore = require('./eventStore'),
     eventType = require('./eventType');
 

@@ -29,19 +29,20 @@ var FeatureList = React.createClass({
         this.setState({features: data.features});
     },
 
-    updateFeature: function (feature) {
+    updateFeature: function (changeRequest) {
         var newFeatures = this.state.features;
         newFeatures.forEach(function(f){
-            if(f.name === feature.name) {
-                f = feature;
+            if(f.name === changeRequest.name) {
+                f[changeRequest.field] = changeRequest.value;
             }
         });
-
+        console.log(changeRequest);
         reqwest({
-            url: 'features/' + feature.name,
-            method: 'post',
+            url: 'features/' + changeRequest.name,
+            method: 'patch',
             type: 'json',
-            data: feature
+            contentType: 'application/json',
+            data: JSON.stringify(changeRequest)
         }).then(function() {
             this.setState({features: newFeatures});
         }.bind(this), function() {
@@ -78,9 +79,11 @@ var Feature = React.createClass({
 */
     handleEnableChange: function(event) {
         var feature = this.props.feature;
-
-        feature.enabled = event.target.checked;
-        this.props.updateFeature(feature);
+        this.props.updateFeature({
+            name: feature.name,
+            field: "enabled",
+            value: event.target.checked
+            });
     },
 
     render: function () {

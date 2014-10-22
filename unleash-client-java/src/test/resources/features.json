@@ -1,1 +1,23 @@
-{"features":[{"name":"featureX","status":"on","strategy":"default"},{"name":"featureY","status":"off","strategy":"baz","parameters":{"foo":"bar"}},{"name":"featureZ","status":"on","strategy":"baz","parameters":{"foo":"rab"}}]}
+{"features": [
+    {
+        "name": "featureX",
+        "enabled": true,
+        "strategy": "default"
+    },
+    {
+        "name": "featureY",
+        "enabled": false,
+        "strategy": "baz",
+        "parameters": {
+            "foo": "bar"
+        }
+    },
+    {
+        "name": "featureZ",
+        "enabled": true,
+        "strategy": "baz",
+        "parameters": {
+            "foo": "rab"
+        }
+    }
+]}

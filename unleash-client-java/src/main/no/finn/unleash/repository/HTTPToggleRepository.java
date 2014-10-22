@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+//TODO: take advantage of Etag and 304 responses.
 public class HTTPToggleRepository implements ToggleRepository {
     private static final Log LOG = LogFactory.getLog(HTTPToggleRepository.class);
 

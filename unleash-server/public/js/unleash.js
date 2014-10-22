@@ -22,15 +22,39 @@ var FeatureList = React.createClass({
     },
 
     componentDidMount: function () {
-        reqwest("/features").then(this.setFeatures);
+        reqwest('/features').then(this.setFeatures);
+    },
+
+    setFeatures: function (data) {
+        this.setState({features: data.features});
+    },
+
+    updateFeature: function (feature) {
+        var newFeatures = this.state.features;
+        newFeatures.forEach(function(f){
+            if(f.name === feature.name) {
+                f = feature;
+            }
+        });
+
+        reqwest({
+            url: 'features/' + feature.name,
+            method: 'post',
+            type: 'json',
+            data: feature
+        }).then(function() {
+            this.setState({features: newFeatures});
+        }.bind(this), function() {
+            alert("update failed");
+        }.bind(this));
     },
 
     render: function () {
         var featureNodes = this.state.features.map(function (feature) {
             return (
-                <Feature feature={feature} />
+                <Feature feature={feature} updateFeature={this.updateFeature} />
             );
-        });
+        }.bind(this));
 
         return (
             <div className="mod shadow">
@@ -41,18 +65,22 @@ var FeatureList = React.createClass({
               </div>
             </div>
         );
-    },
-
-    setFeatures: function (data) {
-        this.setState({features: data.features});
     }
 });
 
 var Feature = React.createClass({
     // TODO: validate props?
-
-    handleStatusChange: function (event) {
+/*
+    handleStatusChange: function (feature, event) {
+        console.log(feature);
         console.log(event);
+    },
+*/
+    handleEnableChange: function(event) {
+        var feature = this.props.feature;
+
+        feature.enabled = event.target.checked;
+        this.props.updateFeature(feature);
     },
 
     render: function () {
@@ -80,9 +108,9 @@ var Feature = React.createClass({
                               {this.props.feature.status}
                               <input
                                  type="checkbox"
-                                 checked={this.props.feature.status === 'on'}
+                                 checked={this.props.feature.enabled}
                                  className="mll"
-                                 onChange={this.handleStatusChange}
+                                 onChange={this.handleEnableChange}
                               />
                            </label>
                          </p>

@@ -1,12 +1,11 @@
 var db = require('./db');
-var EventRepository = require('./eventRepository');
-var eventDb = new EventRepository();
+var eventStore = require('./eventStore');
 
 module.exports = function (app) {
 
     app.get('/features', function (req, res) {
         // TODO svelovla, fix this
-        eventDb.create({name: 'testing method'});
+        eventStore.create({name: 'testing method'});
         db.getFeatures().then(function (features) {
             res.json({features: features});
         });

@@ -1,11 +1,10 @@
-var db = require('./db');
-var eventStore = require('./eventStore');
+var db = require('./db')
+    eventStore = require('./eventStore'),
+    eventType = require('./eventType');
 
 module.exports = function (app) {
 
     app.get('/features', function (req, res) {
-        // TODO svelovla, fix this
-        eventStore.create({name: 'testing method'});
         db.getFeatures().then(function (features) {
             res.json({features: features});
         });
@@ -22,15 +21,16 @@ module.exports = function (app) {
     });
 
     app.post('/features', function (req, res) {
-        var newFeature = req.body;
+        var newFeature = req.body,
+            user = req.connection.remoteAddress;
 
         db.getFeature(newFeature.name).then(function (feature) {
             if (feature) {
+                //Todo: error-msg: feature name is already in use
                 res.status(403).end();
             } else {
-                db.addFeature(newFeature).then(function () {
-                    res.status(201).end();
-                });
+                eventStore.create(eventType.featureCreated, user, newFeature);
+                res.status(201).end();
             }
         });
     });

@@ -1,6 +1,5 @@
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
-var events = require('./events');
 
 function EventStore() {
     EventEmitter.call(this);
@@ -8,8 +7,16 @@ function EventStore() {
 
 util.inherits(EventStore, EventEmitter);
 
-EventStore.prototype.create = function (obj) {
-    this.emit(events.featureCreated, obj);
+EventStore.prototype.create = function (eventType, user, eventData) {
+    var event = {
+        id: 1,
+        created: "2014-08-01 12:22:00",
+        type: eventType,
+        user: user,
+        data: eventData
+    };
+
+    this.emit(event.type, event);
 };
 
 module.exports = new EventStore();

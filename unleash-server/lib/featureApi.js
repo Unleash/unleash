@@ -1,7 +1,7 @@
-var db = require('./db'),
-    eventStore = require('./eventStore'),
+var eventStore = require('./eventStore'),
     eventType = require('./eventType'),
     featureDb = require('./featureDb');
+
 
 module.exports = function (app) {
 
@@ -12,7 +12,7 @@ module.exports = function (app) {
     });
 
     app.get('/features/:id', function (req, res) {
-        db.getFeature.then(function (feature) {
+        featureDb.getFeature(req.params.id).then(function (feature) {
             if (feature) {
                 res.json(feature);
             } else {
@@ -25,36 +25,41 @@ module.exports = function (app) {
         var newFeature = req.body,
             createdBy = req.connection.remoteAddress;
 
-        db.getFeature(newFeature.name).then(function (feature) {
-            if (feature) {
-                //Todo: error-msg: feature name is already in use
-                res.status(403).end();
-            } else {
-                eventStore.create({
-                    type: eventType.featureCreated,
-                    createdBy: createdBy,
-                    data: newFeature
-                }).then(function() {
-                    res.status(201).end();
-                });
-            }
-        });
+        var handleFeatureExist = function() {
+            res.status(403).end();
+        };
+
+        var handleCreateFeature = function () {
+            eventStore.create({
+                type: eventType.featureCreated,
+                createdBy: createdBy,
+                data: newFeature
+            }).then(function () {
+                res.status(201).end();
+            }, function () {
+                res.status(500).end();
+            });
+        };
+
+        featureDb.getFeature(newFeature.name).then(handleFeatureExist, handleCreateFeature);
     });
 
     app.patch('/features/:featureName', function (req, res) {
         var featureName = req.params.featureName;
-        db.getFeature(featureName).then(function (feature) {
-            if (feature) {
+
+        featureDb.getFeature(featureName).then(
+            function () {
                 var changeRequest = req.body;
                 var event = {};
-                event.type = 'feature-update';
+                event.type = eventType.featureUpdated;
                 event.user = req.connection.remoteAddress;
                 event.data = changeRequest;
                 res.status(202).end();
-            } else {
+            },
+            function () {
                 res.status(404).end();
             }
-        });
+        );
     });
 
 };

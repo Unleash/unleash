@@ -1,3 +1,4 @@
 module.exports = {
-    featureCreated : 'feature-created'
+    featureCreated : 'feature-created',
+    featureUpdated : 'feature-updated'
 };

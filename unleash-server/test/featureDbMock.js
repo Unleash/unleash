@@ -27,10 +27,29 @@ var features = [
     }
 ];
 
+function getFeature(name) {
+    var featureFound;
+    features.forEach(function (feature) {
+        if (feature.name === name) {
+            featureFound = feature;
+        }
+    });
+
+    return featureFound;
+}
+
 module.exports = {
     getFeatures: function() {
         return new Promise(function (resolve) {
             resolve(features);
         });
+    },
+    getFeature: function(name) {
+        var feature = getFeature(name);
+        if(feature) {
+            return Promise.resolve(feature);
+        } else {
+            return Promise.reject("feature not found");
+        }
     }
 };

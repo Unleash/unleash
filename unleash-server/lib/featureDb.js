@@ -31,6 +31,22 @@ function getFeatures() {
     });
 }
 
+function getFeature(name) {
+    var sql = 'SELECT name, enabled, strategy_name as strategy, parameters FROM features WHERE name=$1';
+
+    return new Promise(function (resolve, reject) {
+        dbPool.query(sql, [name], function(err, res) {
+            if(err) {reject(err);}
+
+            if(res.rows.length === 1) {
+                resolve(mapToToggle(res.rows[0]));
+            } else {
+                reject();
+            }
+        });
+    });
+}
+
 function mapToToggle(row) {
     return {
         name: row.name,
@@ -41,6 +57,7 @@ function mapToToggle(row) {
 }
 
 module.exports = {
-    getFeatures: getFeatures
+    getFeatures: getFeatures,
+    getFeature: getFeature
 };
 

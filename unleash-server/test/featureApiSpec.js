@@ -14,6 +14,7 @@ describe('The api', function () {
         });
 
         mockery.registerSubstitute('./eventDb', '../test/eventDbMock');
+        mockery.registerSubstitute('./featureDb', '../test/featureDbMock');
 
 
         server = require('../server');

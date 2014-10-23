@@ -28,3 +28,15 @@ npm test
 3. Run `db-migrate create your-migration-name` and edit the generated file to run the above SQL files.
 4. Run `npm run db-migrate-up`.
 5. Generate LB artifact using `scripts/generate-liquibase-artifact` (TODO: make this internal)
+
+### Create a local unleash-db on postgres
+´´´sql
+CREATE USER unleash_user WITH PASSWORD 'passord';
+CREATE DATABASE unleash;
+GRANT ALL PRIVILEGES ON DATABASE unleash to unleash_user;
+´´´
+
+Then set up your DATABASE_URI env.var:
+```
+export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
+```

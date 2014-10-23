@@ -11,8 +11,8 @@ module.exports = function (app) {
         });
     });
 
-    app.get('/features/:id', function (req, res) {
-        featureDb.getFeature(req.params.id).then(function (feature) {
+    app.get('/features/:featureName', function (req, res) {
+        featureDb.getFeature(req.params.featureName).then(function (feature) {
             if (feature) {
                 res.json(feature);
             } else {
@@ -45,16 +45,23 @@ module.exports = function (app) {
     });
 
     app.patch('/features/:featureName', function (req, res) {
-        var featureName = req.params.featureName;
+        var featureName = req.params.featureName,
+            createdBy = req.connection.remoteAddress,
+            changeRequest = req.body;
+
+        changeRequest.name = featureName;
 
         featureDb.getFeature(featureName).then(
             function () {
-                var changeRequest = req.body;
-                var event = {};
-                event.type = eventType.featureUpdated;
-                event.user = req.connection.remoteAddress;
-                event.data = changeRequest;
-                res.status(202).end();
+                eventStore.create({
+                    type: eventType.featureUpdated,
+                    createdBy: createdBy,
+                    data: changeRequest
+                }).then(function () {
+                    res.status(202).end();
+                }, function () {
+                    res.status(500).end();
+                });
             },
             function () {
                 res.status(404).end();

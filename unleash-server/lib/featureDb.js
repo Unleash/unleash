@@ -21,6 +21,41 @@ eventStore.on(eventType.featureCreated, function (event) {
     }
 );
 
+eventStore.on(eventType.featureUpdated, function (event) {
+        var sql, params;
+        var changeRequest = event.data;
+
+        switch (changeRequest.field) {
+            case 'enabled':
+                sql = 'UPDATE features SET enabled = $1 WHERE name=$2';
+                params = [event.data.value ? 1 : 0, event.data.name];
+                break;
+            case 'strategy':
+                sql = 'UPDATE features SET strategy_name = $1 WHERE name=$2';
+                params = [event.data.value, event.data.name];
+                break;
+            case 'parameters':
+                sql = 'UPDATE features SET parameters = $1 WHERE name=$2';
+                params = [event.data.value, event.data.name];
+                break;
+            default:
+                break;
+        }
+
+
+        if(sql && params) {
+            dbPool.query(sql, params, function(err) {
+                if(err) {
+                    logger.error('Could not update feature, error was: ', err);
+                }
+            });
+        } else {
+            logger.error("Could not handle feature-update event", event);
+        }
+
+    }
+);
+
 function getFeatures() {
     var sql = 'SELECT name, enabled, strategy_name as strategy, parameters FROM features ORDER BY created_at';
     return new Promise(function (resolve, reject) {

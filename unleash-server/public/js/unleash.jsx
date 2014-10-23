@@ -5,18 +5,21 @@
 //      Meny
 //      FeatureList
 //          Feature
-//              - name
-//              - status
-//              - description
+//            FeatureViewer
+//              - props
 //              - button-edit
 //              - button-delete
 //              - toggle-status
+//            FeatureEditor
+//              - name
+//              - status
+//              - description
 //
 //  NewFeaturePage
 //      Meny
 //      NewFeatureForm
 
-var FeatureForm = React.createClass({
+var FeatureEditor = React.createClass({
 
     getInitialState: function () {
         return {name: '', description: '', strategy: 'Default'};
@@ -84,16 +87,20 @@ var FeatureForm = React.createClass({
                     <div className="control-group">
                         <div className="controls">
                             <input type="submit" value="Save" className="btn btn-success" />
+                            <input
+                               type="button"
+                               value="Cancel"
+                               className="btn"
+                               onClick={this.props.onToggleMode} />
                         </div>
                     </div>
-
                 </fieldset>
             </form>
         );
     }
 });
 
-var Feature = React.createClass({
+var FeatureViewer = React.createClass({
     // TODO: validate props?
     handleEnableChange: function(event) {
         var feature = this.props.feature;
@@ -101,7 +108,7 @@ var Feature = React.createClass({
             name: feature.name,
             field: 'enabled',
             value: event.target.checked
-            });
+        });
     },
 
     render: function () {
@@ -144,7 +151,7 @@ var Feature = React.createClass({
                   <div className='mod'>
                     <div className='inner'>
                        <div className='bd'>
-                         <button className='pam mtl mll'>Edit</button>
+                         <button className='pam mtl mll' onClick={this.props.onToggleMode}>Edit</button>
                          <button className='pam mtl mll'>Delete</button>
                        </div>
                     </div>
@@ -155,6 +162,32 @@ var Feature = React.createClass({
               <hr />
             </div>
         );
+    }
+});
+
+var Feature = React.createClass({
+    getInitialState: function() {
+        return { mode: 'view' };
+    },
+
+    onToggleMode: function() {
+        if (this.state.mode === 'view') {
+            this.setState({mode: 'edit'});
+        } else if (this.state.mode === 'edit') {
+            this.setState({mode: 'view'});
+        } else {
+            throw "invalid mode: " + this.state.mode;
+        }
+    },
+
+    render: function() {
+        if (this.state.mode === 'view') {
+            return (<FeatureViewer feature={this.props.feature} onToggleMode={this.onToggleMode} />);
+        } else if (this.state.mode === 'edit') {
+            return (<FeatureEditor feature={this.props.feature} onToggleMode={this.onToggleMode} />);
+        } else {
+            throw "invalid mode: " + this.state.mode;
+        }
     }
 });
 
@@ -199,7 +232,7 @@ var FeatureList = React.createClass({
         }.bind(this));
     },
 
-    createFeature: function (feature, callback) {
+    createFeature: function (feature) {
         reqwest({
             url: 'features',
             method: 'post',
@@ -227,7 +260,6 @@ var FeatureList = React.createClass({
                 </div>
                 <div className='panel-body'>
                     {featureNodes}
-                    <FeatureForm onFeatureSubmit={this.createFeature}/>
                 </div>
             </div>
         );

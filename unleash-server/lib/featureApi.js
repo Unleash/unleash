@@ -1,11 +1,12 @@
 var db = require('./db'),
     eventStore = require('./eventStore'),
-    eventType = require('./eventType');
+    eventType = require('./eventType'),
+    featureDb = require('./featureDb');
 
 module.exports = function (app) {
 
     app.get('/features', function (req, res) {
-        db.getFeatures().then(function (features) {
+        featureDb.getFeatures().then(function (features) {
             res.json({features: features});
         });
     });

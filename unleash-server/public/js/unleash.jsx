@@ -21,17 +21,9 @@
 
 var FeatureEditor = React.createClass({
 
-    getInitialState: function () {
-        return {name: '', description: '', strategy: 'Default'};
-    },
-
-    handleNameChange: function(e) { this.setState({name: e.target.value.trim()}); },
-    handleDescriptionChange: function(e) { this.setState({description: e.target.value.trim()}); },
-    handleStrategyChange: function(e) { this.setState({strategy: e.target.value.trim()}); },
-
     handleSubmit: function(e) {
         e.preventDefault();
-        this.props.onFeatureSubmit(this.state);
+        this.props.onSubmit(this.props.feature);
         return;
     },
 
@@ -39,20 +31,19 @@ var FeatureEditor = React.createClass({
         return (
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 <fieldset>
-
-                    <legend>Add a new feature</legend>
+                    <legend>Edit/new feature</legend>
 
                     <div className="control-group">
-                        <label className="control-label" htmlFor="name">Name </label>
+                        <label className="control-label" htmlFor="name">Name</label>
                         <div className="controls">
                             <input
                                 id="name"
+                                name="name"
                                 type="text"
                                 placeholder="Superfeature"
                                 className="input-large"
                                 required=""
-                                onChange={this.handleNameChange}
-                                value={this.state.name} />
+                                value={this.props.feature.name} />
                             <p className="help-block">Give the feature a name</p>
                         </div>
                     </div>
@@ -62,11 +53,11 @@ var FeatureEditor = React.createClass({
                         <div className="controls">
                             <input
                                 id="description"
+                                name="description"
                                 type="text"
                                 placeholder="It does this and that "
                                 className="input-large"
-                                onChange={this.handleDescriptionChange}
-                                value={this.state.description} />
+                                value={this.props.feature.description} />
                             <p className="help-block">Describe the feature</p>
                         </div>
                     </div>
@@ -77,8 +68,7 @@ var FeatureEditor = React.createClass({
                             <select
                                 id="strategy"
                                 className="input-large"
-                                onChange={this.handleStrategyChange}
-                                value={this.state.strategy}>
+                                value={this.props.feature.strategy}>
                                 <option value="Default">Default</option>
                             </select>
                         </div>
@@ -95,6 +85,8 @@ var FeatureEditor = React.createClass({
                         </div>
                     </div>
                 </fieldset>
+
+                <hr />
             </form>
         );
     }
@@ -167,28 +159,52 @@ var FeatureViewer = React.createClass({
 
 var Feature = React.createClass({
     getInitialState: function() {
-        return { mode: 'view' };
+        return { mode: 'view', error: '' };
     },
 
     onToggleMode: function() {
-        if (this.state.mode === 'view') {
+        if (this.isInViewMode()) {
             this.setState({mode: 'edit'});
-        } else if (this.state.mode === 'edit') {
+        } else if (this.isInEditMode()) {
             this.setState({mode: 'view'});
         } else {
             throw "invalid mode: " + this.state.mode;
         }
     },
 
+    onSubmit: function() {
+        var isNew = false;
+        var cb = function(err) {
+            if (err) {
+                this.setState({error: err});
+            } else {
+                this.setState(this.getInitialState());
+            }
+        };
+
+        if (isNew) {
+            this.props.createFeature(this.props.feature, cb.bind(this));
+        } else {
+            this.props.updateFeature(this.props.feature, cb.bind(this));
+        }
+    },
+
     render: function() {
-        if (this.state.mode === 'view') {
-            return (<FeatureViewer feature={this.props.feature} onToggleMode={this.onToggleMode} />);
-        } else if (this.state.mode === 'edit') {
-            return (<FeatureEditor feature={this.props.feature} onToggleMode={this.onToggleMode} />);
+        if (this.isInViewMode()) {
+            return (
+                <FeatureViewer feature={this.props.feature} onToggleMode={this.onToggleMode} />
+            );
+        } else if (this.isInEditMode()) {
+            return (
+                <FeatureEditor feature={this.props.feature} onToggleMode={this.onToggleMode} onSubmit={this.onSubmit} />
+            );
         } else {
             throw "invalid mode: " + this.state.mode;
         }
-    }
+    },
+
+    isInViewMode: function() { return this.state.mode === 'view'; },
+    isInEditMode: function() { return this.state.mode === 'edit'; }
 });
 
 var FeatureList = React.createClass({
@@ -204,14 +220,14 @@ var FeatureList = React.createClass({
     },
 
     loadFeaturesFromServer: function () {
-        reqwest('/features').then(this.setFeatures);
+        reqwest('features').then(this.setFeatures);
     },
 
     setFeatures: function (data) {
         this.setState({features: data.features});
     },
 
-    updateFeature: function (changeRequest) {
+    updateFeature: function (changeRequest, callback) {
         var newFeatures = this.state.features;
         newFeatures.forEach(function(f){
             if(f.name === changeRequest.name) {
@@ -227,12 +243,14 @@ var FeatureList = React.createClass({
             data: JSON.stringify(changeRequest)
         }).then(function() {
             this.setState({features: newFeatures});
+            callback();
         }.bind(this), function() {
+            callback('update failed');
             window.alert('update failed');
         }.bind(this));
     },
 
-    createFeature: function (feature) {
+    createFeature: function (feature, callback) {
         reqwest({
             url: 'features',
             method: 'post',
@@ -240,8 +258,9 @@ var FeatureList = React.createClass({
             contentType: 'application/json',
             data: JSON.stringify(feature)
         }).then(function() {
-          // how do we communicate success?
+            callback();
         }.bind(this), function() {
+            callback('create failed');
             window.alert('create failed');
         }.bind(this));
     },
@@ -249,7 +268,10 @@ var FeatureList = React.createClass({
     render: function () {
         var featureNodes = this.state.features.map(function (feature) {
             return (
-                <Feature feature={feature} updateFeature={this.updateFeature} />
+                <Feature
+                  feature={feature}
+                  updateFeature={this.updateFeature}
+                  createFeature={this.createFeature} />
             );
         }.bind(this));
 

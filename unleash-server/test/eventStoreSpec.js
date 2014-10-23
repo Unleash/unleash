@@ -18,7 +18,11 @@ describe('EventStore', function () {
                 'description': 'Feature description'
             };
 
-            eventStore.create(eventType.featureCreated,'ole',eventData);
+            eventStore.create({
+                type: eventType.featureCreated,
+                user: 'ole',
+                data: eventData
+            });
         });
     });
 });

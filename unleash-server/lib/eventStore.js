@@ -1,5 +1,6 @@
 var Promise = require('bluebird'),
     util = require('util'),
+    dbPool = require('./dbPool'),
     EventEmitter = require('events').EventEmitter;
 
 function EventStore() {

@@ -11,7 +11,9 @@
         "after"     : false,
         "beforeEach": false,
         "afterEach" : false,
-        "contain"   : false
+        "contain"   : false,
+        "React"     : false,
+        "reqwest"   : false
     },
 
     "bitwise"       : true,
@@ -24,7 +26,7 @@
     "immed"         : true,
     "indent"        : 4,
     "latedef"       : "nofunc",
-    "newcap"        : true,
+    "newcap"        : false,
     "noarg"         : true,
     "noempty"       : true,
     "nonbsp"        : true,

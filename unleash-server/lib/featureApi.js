@@ -23,7 +23,7 @@ module.exports = function (app) {
 
     app.post('/features', function (req, res) {
         var newFeature = req.body,
-            user = req.connection.remoteAddress;
+            createdBy = req.connection.remoteAddress;
 
         db.getFeature(newFeature.name).then(function (feature) {
             if (feature) {
@@ -32,7 +32,7 @@ module.exports = function (app) {
             } else {
                 eventStore.create({
                     type: eventType.featureCreated,
-                    user: user,
+                    createdBy: createdBy,
                     data: newFeature
                 }).then(function() {
                     res.status(201).end();

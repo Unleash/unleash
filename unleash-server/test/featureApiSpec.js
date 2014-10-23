@@ -1,4 +1,5 @@
-var request = require('supertest');
+var request = require('supertest'),
+    mockery = require('mockery'),
 
 request = request('http://localhost:4242');
 
@@ -6,10 +7,21 @@ describe('The api', function () {
     var server;
 
     before(function () {
+        mockery.enable({
+            warnOnReplace: false,
+            warnOnUnregistered: false,
+            useCleanCache: true
+        });
+
+        mockery.registerSubstitute('./eventDb', '../test/eventDbMock');
+
+
         server = require('../server');
     });
 
     after(function () {
+        mockery.disable();
+        mockery.deregisterAll();
         server.server.close();
     });
 

@@ -1,5 +1,5 @@
-var Promise = require('bluebird'),
-    util = require('util'),
+var util = require('util'),
+    eventDb = require('./eventDb'),
     EventEmitter = require('events').EventEmitter;
 
 function EventStore() {
@@ -8,10 +8,10 @@ function EventStore() {
 util.inherits(EventStore, EventEmitter);
 
 EventStore.prototype.create = function (event) {
-    return new Promise(function (resolve) {
-        this.emit(event.type, event);
-        resolve();
-    }.bind(this));
+    var that = this;
+    return eventDb.store(event).then(function() {
+        that.emit(event.type, event);
+    });
 };
 
 module.exports = new EventStore();

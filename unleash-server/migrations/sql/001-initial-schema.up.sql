@@ -16,7 +16,7 @@ CREATE TABLE events (
   id serial primary key,
   created_at timestamp default now(),
   type varchar(255) NOT NULL,
-  user varchar(255) NOT NULL,
+  created_by varchar(255) NOT NULL,
   data json
 );
 

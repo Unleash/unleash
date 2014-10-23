@@ -50,7 +50,7 @@ eventStore.on(eventType.featureUpdated, function (event) {
                 }
             });
         } else {
-            logger.error("Could not handle feature-update event", event);
+            logger.error('Could not handle feature-update event', event);
         }
 
     }

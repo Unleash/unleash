@@ -1,6 +1,6 @@
 var Promise = require('bluebird');
 
-function storeEvent(event) {
+function storeEvent() {
     return new Promise(function (resolve) {
         resolve();
     });

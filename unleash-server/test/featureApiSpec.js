@@ -1,7 +1,5 @@
 var request = require('supertest'),
-    mockery = require('mockery'),
-
-request = request('http://localhost:4242');
+    mockery = require('mockery');
 
 describe('The api', function () {
     var server;
@@ -16,8 +14,8 @@ describe('The api', function () {
         mockery.registerSubstitute('./eventDb', '../test/eventDbMock');
         mockery.registerSubstitute('./featureDb', '../test/featureDbMock');
 
-
         server = require('../server');
+        request = request('http://localhost:' + server.app.get('port'));
     });
 
     after(function () {

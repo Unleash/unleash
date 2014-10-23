@@ -1,15 +1,8 @@
 var eventStore = require('./eventStore'),
     eventType = require('./eventType'),
-    featuresMock = require('./featuresMock'),
     logger = require('./logger'),
     Promise = require('bluebird'),
     dbPool = require('./dbPool');
-/*
- name varchar(255) PRIMARY KEY NOT NULL,
- enabled integer default 0,
- strategy_name varchar(255) references strategies(name),
- parameters json
- */
 
 eventStore.on(eventType.featureCreated, function (event) {
         var sql = 'INSERT INTO features(name, enabled, strategy_name, parameters) VALUES ($1, $2, $3, $4)';
@@ -29,7 +22,22 @@ eventStore.on(eventType.featureCreated, function (event) {
 );
 
 function getFeatures() {
-    return Promise.resolve(featuresMock);
+    var sql = 'SELECT name, enabled, strategy_name as strategy, parameters FROM features ORDER BY created_at';
+    return new Promise(function (resolve, reject) {
+        dbPool.query(sql, function(err, res) {
+            if(err) {reject(err);}
+            resolve(res.rows.map(mapToToggle));
+        });
+    });
+}
+
+function mapToToggle(row) {
+    return {
+        name: row.name,
+        enabled: row.enabled > 0,
+        strategy: row.strategy,
+        parameters: row.parameters
+    };
 }
 
 module.exports = {

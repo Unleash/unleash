@@ -1,8 +1,27 @@
-var assert = require('assert');
-var eventType = require('../lib/eventType');
-var eventStore = require('../lib/eventStore');
+var assert = require('assert'),
+    mockery = require('mockery'),
+    eventType = require('../lib/eventType'),
+    eventStore;
+
 
 describe('EventStore', function () {
+    before(function () {
+        mockery.enable({
+            warnOnReplace: false,
+            warnOnUnregistered: false,
+            useCleanCache: true
+        });
+
+        mockery.registerSubstitute('./eventDb', '../test/eventDbMock');
+
+        eventStore = require('../lib/eventStore');
+    });
+
+    after(function () {
+        mockery.disable();
+        mockery.deregisterAll();
+    });
+
     describe('#create()', function () {
         it('should emit event', function (done) {
             eventStore.once(eventType.featureCreated, function (x) {
@@ -20,7 +39,7 @@ describe('EventStore', function () {
 
             eventStore.create({
                 type: eventType.featureCreated,
-                user: 'ole',
+                createdBy: 'ole',
                 data: eventData
             });
         });

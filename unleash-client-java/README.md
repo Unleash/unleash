@@ -1,6 +1,6 @@
 # The Unleash Client 4 Java
 
-# API
+## Awesome API
 
 It is really simple to use unleash.
 

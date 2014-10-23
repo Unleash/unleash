@@ -18,44 +18,72 @@
 
 var FeatureForm = React.createClass({
 
+    getInitialState: function () {
+        return {name: '', description: '', strategy: 'Default'};
+    },
+
+    handleNameChange: function(e) { this.setState({name: e.target.value.trim()}); },
+    handleDescriptionChange: function(e) { this.setState({description: e.target.value.trim()}); },
+    handleStrategyChange: function(e) { this.setState({strategy: e.target.value.trim()}); },
+
+    handleSubmit: function(e) {
+        e.preventDefault();
+        this.props.onFeatureSubmit(this.state);
+        return;
+    },
+
     render: function () {
         return (
-            <form className="form-horizontal">
+            <form className="form-horizontal" onSubmit={this.handleSubmit}>
                 <fieldset>
 
                     <legend>Add a new feature</legend>
 
                     <div className="control-group">
-                        <label className="control-label" for="name">Name </label>
+                        <label className="control-label" htmlFor="name">Name </label>
                         <div className="controls">
-                            <input id="name" name="name" type="text"
-                            placeholder="Superfeature" className="input-large" required="" />
+                            <input
+                                id="name"
+                                type="text"
+                                placeholder="Superfeature"
+                                className="input-large"
+                                required=""
+                                onChange={this.handleNameChange}
+                                value={this.state.name} />
                             <p className="help-block">Give the feature a name</p>
                         </div>
                     </div>
 
                     <div className="control-group">
-                        <label className="control-label" for="description">Description</label>
+                        <label className="control-label" htmlFor="description">Description</label>
                         <div className="controls">
-                            <input id="description" name="description" type="text"
-                            placeholder="It does this and that " className="input-large" />
+                            <input
+                                id="description"
+                                type="text"
+                                placeholder="It does this and that "
+                                className="input-large"
+                                onChange={this.handleDescriptionChange}
+                                value={this.state.description} />
                             <p className="help-block">Describe the feature</p>
                         </div>
                     </div>
 
                     <div className="control-group">
-                        <label className="control-label" for="strategy">Strategy</label>
+                        <label className="control-label" htmlFor="strategy">Strategy</label>
                         <div className="controls">
-                            <select id="strategy" name="strategy" className="input-large">
-                                <option>Default</option>
+                            <select
+                                id="strategy"
+                                className="input-large"
+                                onChange={this.handleStrategyChange}
+                                value={this.state.strategy}>
+                                <option value="Default">Default</option>
                             </select>
                         </div>
                     </div>
 
                     <div className="control-group">
-                        <label className="control-label" for="submit"></label>
                         <div className="controls">
-                            <button id="submit" name="submit" className="btn btn-success">Submit</button>
+                            <input type="submit" value="Save" className="btn btn-success" />
                         </div>
                     </div>
 
@@ -152,7 +180,7 @@ var FeatureList = React.createClass({
                 f[changeRequest.field] = changeRequest.value;
             }
         });
-        console.log(changeRequest);
+
         reqwest({
             url: 'features/' + changeRequest.name,
             method: 'patch',
@@ -163,6 +191,20 @@ var FeatureList = React.createClass({
             this.setState({features: newFeatures});
         }.bind(this), function() {
             window.alert('update failed');
+        }.bind(this));
+    },
+
+    createFeature: function (feature, callback) {
+        reqwest({
+            url: 'features',
+            method: 'post',
+            type: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(feature)
+        }).then(function() {
+          // how do we communicate success?
+        }.bind(this), function() {
+            window.alert('create failed');
         }.bind(this));
     },
 
@@ -180,7 +222,7 @@ var FeatureList = React.createClass({
                 </div>
                 <div className='panel-body'>
                     {featureNodes}
-                    <FeatureForm />
+                    <FeatureForm onFeatureSubmit={this.createFeature}/>
                 </div>
             </div>
         );

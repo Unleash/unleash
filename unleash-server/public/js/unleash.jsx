@@ -166,6 +166,11 @@ var FeatureList = React.createClass({
     },
 
     componentDidMount: function () {
+        this.loadFeaturesFromServer();
+        setInterval(this.loadFeaturesFromServer, this.props.pollInterval);
+    },
+
+    loadFeaturesFromServer: function () {
         reqwest('/features').then(this.setFeatures);
     },
 
@@ -230,6 +235,6 @@ var FeatureList = React.createClass({
 });
 
 React.renderComponent(
-    new FeatureList(null),
+    <FeatureList pollInterval={1000} />,
     document.getElementById('content')
 );

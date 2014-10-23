@@ -8,7 +8,7 @@ CREATE TABLE features (
   created_at timestamp default now(),
   name varchar(255) PRIMARY KEY NOT NULL,
   enabled integer default 0,
-  strategy_name varchar(255) references strategies(name),
+  strategy_name varchar(255),
   parameters json
 );
 

@@ -1,39 +1,69 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Unleash</title>
     <meta name="description" content="unleash">
 
-    <meta name="HandheldFriendly" content="True">
-    <meta name="MobileOptimized" content="320">
-    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
-
-    <title>unleash - admin</title>
-
-    <link rel="stylesheet" type="text/css" media="screen,projection,handheld,print" href="//finncdn.no/bb/css/so/5.5.18/so.css" />
-    <link rel="stylesheet" type="text/css" href="css/unleash.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.11.2/react.min.js"></script>
     <script src="//fb.me/JSXTransformer-0.11.2.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/reqwest/1.1.4/reqwest.js"></script>
-  </head>
-
-  <body>
-    <div class="topbar fixed">
-      <div class="container">
-        <div class="nav-level1 h4">
-          <a href="" class="homelink pln">
-            <h1 class="caption showbydefault hide-lt900">unleash admin</h1>
-          </a>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container">
+            <a class="navbar-brand" href="#">Unleash</a>
+            <ul class="nav navbar-nav">
+                <li><a href="#">New</a></li>
+            </ul>
         </div>
-      </div>
-    </div>
-
-    <div class="container r-mtm" style="padding-top:100px;">
-      <div class="page">
+    </nav>
+    <div class="container">
         <div id="content">Loading...</div>
-      </div>
     </div>
 
-    <script type="text/jsx" src="js/unleash.js"></script>
-  </body>
+    <!--
+    This is the bootstrap form
+    <form class="form-horizontal">
+        <fieldset>
+
+
+            <legend>Add a new feature</legend>
+
+
+            <div class="control-group">
+                <label class="control-label" for="name">Name </label>
+                <div class="controls">
+                    <input id="name" name="name" type="text" placeholder="Superfeature" class="input-large" required="">
+                    <p class="help-block">Give the feature a name</p>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="description">Description</label>
+                <div class="controls">
+                    <input id="description" name="description" type="text" placeholder="It does this and that " class="input-large">
+                    <p class="help-block">Describe the feature</p>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="strategy">Strategy</label>
+                <div class="controls">
+                    <select id="strategy" name="strategy" class="input-large">
+                        <option>Default</option>
+                    </select>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+-->
+    <script type="text/jsx" src="js/unleash.jsx"></script>
+</body>
 </html>

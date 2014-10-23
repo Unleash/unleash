@@ -30,10 +30,12 @@ npm test
 5. Generate LB artifact using `scripts/generate-liquibase-artifact` (TODO: make this internal)
 
 ### Create a local unleash-db on postgres
-´´´sql
+´´´bash
+$ psql postgres <<SQL
 CREATE USER unleash_user WITH PASSWORD 'passord';
 CREATE DATABASE unleash;
 GRANT ALL PRIVILEGES ON DATABASE unleash to unleash_user;
+SQL
 ´´´
 
 Then set up your DATABASE_URI env.var:

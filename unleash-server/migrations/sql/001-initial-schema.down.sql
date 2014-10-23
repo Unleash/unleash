@@ -1,3 +1,3 @@
-DROP TABLE strategies;
-DROP TABLE features;
 DROP TABLE events;
+DROP TABLE features;
+DROP TABLE strategies;

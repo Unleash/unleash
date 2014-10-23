@@ -1,3 +1,0 @@
-{
-    "dev": "postgres://localhost:5432/unleash_dev"
-}

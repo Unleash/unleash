@@ -21,12 +21,7 @@
         "start-dev": "NODE_ENV=local supervisor --ignore ./node_modules/,./public/js server.js",
         "test": "jshint server.js lib test && jsxhint public/js/*.jsx && mocha test test/*",
         "tdd": "mocha --watch test test/*",
-        "test-bamboo-ci": "mocha test test/*",
-        "db-create": "createdb unleash_${NODE_ENV:-dev}",
-        "db-drop": "dropdb unleash_${NODE_ENV:-dev}",
-        "db-migrate-up": "db-migrate --config config/database.json up",
-        "db-migrate-down": "db-migrate --config config/database.json down",
-        "db-setup": "npm run db-create; npm run db-migrate-up"
+        "test-bamboo-ci": "mocha test test/*"
     },
     "dependencies": {
         "any-db": "2.1.0",

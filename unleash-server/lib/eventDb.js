@@ -13,7 +13,6 @@ function storeEvent(event) {
     });
 }
 
-
 module.exports = {
     store: storeEvent
 };

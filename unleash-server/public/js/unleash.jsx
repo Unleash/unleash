@@ -16,6 +16,55 @@
 //      Meny
 //      NewFeatureForm
 
+var FeatureForm = React.createClass({
+
+    render: function () {
+        return (
+            <form className="form-horizontal">
+                <fieldset>
+
+                    <legend>Add a new feature</legend>
+
+                    <div className="control-group">
+                        <label className="control-label" for="name">Name </label>
+                        <div className="controls">
+                            <input id="name" name="name" type="text"
+                            placeholder="Superfeature" className="input-large" required="" />
+                            <p className="help-block">Give the feature a name</p>
+                        </div>
+                    </div>
+
+                    <div className="control-group">
+                        <label className="control-label" for="description">Description</label>
+                        <div className="controls">
+                            <input id="description" name="description" type="text"
+                            placeholder="It does this and that " className="input-large" />
+                            <p className="help-block">Describe the feature</p>
+                        </div>
+                    </div>
+
+                    <div className="control-group">
+                        <label className="control-label" for="strategy">Strategy</label>
+                        <div className="controls">
+                            <select id="strategy" name="strategy" className="input-large">
+                                <option>Default</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="control-group">
+                        <label className="control-label" for="submit"></label>
+                        <div className="controls">
+                            <button id="submit" name="submit" className="btn btn-success">Submit</button>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+        );
+    }
+});
+
 var Feature = React.createClass({
     // TODO: validate props?
     handleEnableChange: function(event) {
@@ -131,6 +180,7 @@ var FeatureList = React.createClass({
                 </div>
                 <div className='panel-body'>
                     {featureNodes}
+                    <FeatureForm />
                 </div>
             </div>
         );

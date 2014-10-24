@@ -1,14 +1,15 @@
 package no.finn.unleash;
 
+import java.net.URI;
 import java.util.Random;
+import no.finn.unleash.repository.FeatureToggleRepository;
 import no.finn.unleash.repository.HTTPToggleRepository;
 import no.finn.unleash.repository.PollingToggleRepository;
 import no.finn.unleash.repository.ToggleRepository;
 
 public class ManualTesting {
     public static void main(String[] args) throws Exception {
-        HTTPToggleRepository httpRepo = new HTTPToggleRepository("http://localhost:4242/features");
-        ToggleRepository repository = new PollingToggleRepository(httpRepo, 1);
+        ToggleRepository repository = new FeatureToggleRepository(URI.create("http://localhost:4242/features"), 1);
 
 
         Unleash unleash = new Unleash(repository);

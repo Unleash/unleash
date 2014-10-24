@@ -18,7 +18,7 @@
     "private": true,
     "scripts": {
         "start": "node server.js",
-        "start-dev": "NODE_ENV=local supervisor --ignore ./node_modules/,./public/js server.js",
+        "dev": "NODE_ENV=local supervisor --ignore ./node_modules/,./public/js server.js",
         "test": "jshint server.js lib test && jsxhint public/js/*.jsx && mocha test test/*",
         "test-travis": "jshint server.js lib test && jsxhint public/js/*.jsx && mocha test test/* && npm run cover",
         "tdd": "mocha --watch test test/*",

@@ -57,7 +57,7 @@ eventStore.on(eventType.featureUpdated, function (event) {
 );
 
 function getFeatures() {
-    var sql = 'SELECT name, enabled, strategy_name as strategy, parameters FROM features ORDER BY created_at';
+    var sql = 'SELECT name, enabled, strategy_name as strategy, parameters FROM features ORDER BY created_at DESC';
     return new Promise(function (resolve, reject) {
         dbPool.query(sql, function(err, res) {
             if(err) {reject(err);}

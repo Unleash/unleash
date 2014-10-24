@@ -85,18 +85,17 @@ var SavedFeature = React.createClass({
     render: function() {
         return (
             <div className='row'>
-                <span>
-                <input
-                    className='pull-left'
-                    type='checkbox'
-                    checked={this.props.feature.enabled}
-                    onChange={this.onChange} />
-                    </span>
-                <span
+                <div className='col-xs-1 col-sm-1 col-md-1 col-lg-1'>
+                    <input
+                        type='checkbox'
+                        className='pull-right'
+                        checked={this.props.feature.enabled}
+                        onChange={this.onChange} />
+                </div>
+                <div
                     className='col-xs-4 col-sm-4 col-md-4 col-lg-4'
-                    title='{this.props.feature.description}'>{this.props.feature.name}
-                </span>
-                <span className='col-xs-4 col-sm-4 col-md-4 col-lg-4'>{this.props.feature.strategy}</span>
+                    title='{this.props.feature.description}'>{this.props.feature.name}</div>
+                <div className='pull-right col-xs-2 col-sm-2 col-md-2 col-lg-2'>{this.props.feature.strategy}</div>
             </div>
         );
     }

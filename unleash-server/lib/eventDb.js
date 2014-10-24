@@ -13,6 +13,26 @@ function storeEvent(event) {
     });
 }
 
+function getEvents() {
+    var sql = 'SELECT id, type, created_by as created, data FROM events ORDER BY created_at DESC';
+    return new Promise(function (resolve, reject) {
+        dbPool.query(sql, function(err, res) {
+            if(err) {reject(err);}
+            resolve(res.rows.map(mapToEvent));
+        });
+    });
+}
+
+function mapToEvent(row) {
+    return {
+        id: row.id,
+        type: row.type,
+        createdBy: row.created,
+        data: row.data
+    };
+}
+
 module.exports = {
-    store: storeEvent
+    store: storeEvent,
+    getEvents: getEvents
 };

@@ -9,7 +9,14 @@
 //
 
 var Menu = React.createClass({
-    render: function() { return <div/>; }
+    render: function() { return (
+            <nav className='navbar navbar-default' role='navigation'>
+                <div className='container'>
+                    <a className='navbar-brand' href='#'>Unleash</a>
+                </div>
+            </nav>
+        );
+    }
 });
 
 

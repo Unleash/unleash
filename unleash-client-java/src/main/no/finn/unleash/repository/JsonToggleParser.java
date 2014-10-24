@@ -1,5 +1,6 @@
 package no.finn.unleash.repository;
 
+import java.io.Reader;
 import java.util.Collection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,5 +22,10 @@ public final class JsonToggleParser {
     public static Collection<Toggle> fromJson(String jsonString) {
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(jsonString,ToggleCollection.class).getFeatures();
+    }
+
+    public static Collection<Toggle> fromJson(Reader reader) {
+        Gson gson = new GsonBuilder().create();
+        return gson.fromJson(reader,ToggleCollection.class).getFeatures();
     }
 }

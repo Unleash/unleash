@@ -23,46 +23,42 @@ var Menu = React.createClass({
 var UnsavedFeature = React.createClass({
     render: function() {
         return (
-          <div className="bg-info new-feature-form">
+          <div className="bg-info new-feature-form row">
             <form className="form-inline" role="form" ref="form">
-              <div className="form-group">
-                <label className="sr-only" htmlFor="name">Name</label>
+              <div className="checkbox col-md-1 text-right">
+                <input ref="enabled" type="checkbox" defaultValue={this.props.feature.enabled} />
+              </div>
+
+              <div className="form-group col-md-4">
                 <input
                    type="text"
-                   className="form-control input-large"
+                   className="form-control"
                    id="name"
                    ref="name"
                    defaultValue={this.props.feature.name}
                    placeholder="Enter name" />
-              </div>
 
-              <div className="form-group">
-                <div className="input-group">
                   <input className="form-control"
                          type="text"
                          ref="description"
                          placeholder="Enter description" />
-                </div>
               </div>
 
-              <div className="form-group">
-                <label className="sr-only" htmlFor="strategy">Strategy</label>
-                <select id="strategy" ref="strategy"
-                        className="input-large" defaultValue={this.props.feature.strategy}>
+              <div className="form-group col-md-1 col-md-offset-5">
+                <select id="strategy"
+                        ref="strategy"
+                        className=""
+                        defaultValue={this.props.feature.strategy}>
                   <option value="default">default</option>
                 </select>
               </div>
 
-              <div className="checkbox">
-                <label>
-                  Enabled
-                  <input ref="enabled" type="checkbox" defaultValue={this.props.feature.enabled} />
-                </label>
+              <div className="form-group col-md-1">
+                <button type="submit" className="btn btn-primary btn-xs" onClick={this.saveFeature}>
+                    Save
+                </button>
               </div>
 
-              <button type="submit" className="btn btn-primary pull-right" onClick={this.saveFeature}>
-                Save
-              </button>
             </form>
           </div>
         );
@@ -92,17 +88,16 @@ var SavedFeature = React.createClass({
     render: function() {
         return (
             <div className='row'>
-                <div className='col-xs-1 col-sm-1 col-md-1 col-lg-1'>
+                <div className='col-md-1 text-right'>
                     <input
                         type='checkbox'
-                        className='pull-right'
                         checked={this.props.feature.enabled}
                         onChange={this.onChange} />
                 </div>
                 <div
-                    className='col-xs-4 col-sm-4 col-md-4 col-lg-4'
+                    className='col-md-4'
                     title='{this.props.feature.description}'>{this.props.feature.name}</div>
-                <div className='pull-right col-xs-2 col-sm-2 col-md-2 col-lg-2'>
+                <div className='col-md-2 col-md-offset-5'>
                     {this.props.feature.strategy}
                 </div>
             </div>
@@ -134,13 +129,13 @@ var FeatureList = React.createClass({
         }.bind(this));
 
         return (
-            <div className="container-fluid">
+            <div className="container">
               <div className='panel panel-primary'>
                   <div className='panel-heading'>
                       <h3 className='panel-title'>Features</h3>
                       <div className='text-right'>
                           <button type="button"
-                                  className="btn btn-success btn-sm"
+                                  className="btn btn-default btn-sm"
                                   onClick={this.props.onNewFeature}>
                               <span className="glyphicon glyphicon-plus"></span> New
                           </button>

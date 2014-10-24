@@ -14,12 +14,66 @@ var Menu = React.createClass({
 
 
 var UnsavedFeature = React.createClass({
-    // TODO: form
-    render: function() { return <div/>; }
+    render: function() {
+        return (
+          <div>
+            <form className="form-inline" role="form" ref="form">
+              <div className="form-group">
+                <label className="sr-only" htmlFor="name">Name</label>
+                <input
+                   type="text"
+                   className="form-control input-large"
+                   id="name"
+                   ref="name"
+                   defaultValue={this.props.feature.name}
+                   placeholder="Enter name" />
+              </div>
+
+              <div className="form-group">
+                <div className="input-group">
+                  <input className="form-control" 
+                         type="text" 
+                         ref="description" 
+                         placeholder="Enter description" />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="sr-only" htmlFor="strategy">Strategy</label>
+                <select id="strategy" ref="strategy" 
+                        className="input-large" defaultValue={this.props.feature.strategy}>
+                  <option value="default">default</option>
+                </select>
+              </div>
+
+              <div className="checkbox">
+                <label>
+                  Enabled
+                  <input ref="enabled" type="checkbox" defaultValue={this.props.feature.enabled} />
+                </label>
+              </div>
+
+              <button type="submit" className="btn btn-primary pull-right" onClick={this.saveFeature}>
+                Save
+              </button>
+            </form>
+          </div>
+        );
+    },
+
+    saveFeature: function(e) {
+        e.preventDefault();
+
+        this.props.feature.name        = this.refs.name.getDOMNode().value;
+        this.props.feature.description = this.refs.description.getDOMNode().value;
+        this.props.feature.strategy    = this.refs.strategy.getDOMNode().value;
+        this.props.feature.enabled     = this.refs.enabled.getDOMNode().checked;
+
+        this.props.onSubmit(this.props.feature);
+    }
 });
 
 var SavedFeature = React.createClass({
-
     onChange: function(event) {
         this.props.onChange({
             name: this.props.feature.name,
@@ -52,8 +106,14 @@ var FeatureList = React.createClass({
     render: function() {
         var featureNodes = [];
 
-        this.props.unsavedFeatures.forEach(function(feature) {
-            featureNodes.push(<UnsavedFeature feature={feature} onSubmit={this.props.onFeatureSubmit} />);
+        this.props.unsavedFeatures.forEach(function(feature, idx) {
+            var key = 'new-' + idx;
+            featureNodes.push(
+                <UnsavedFeature
+                  key={key}
+                  feature={feature}
+                  onSubmit={this.props.onFeatureSubmit} />
+            );
         }.bind(this));
 
         this.props.savedFeatures.forEach(function(feature) {
@@ -70,7 +130,9 @@ var FeatureList = React.createClass({
                     <div className='panel-heading'>
                         <h3 className='panel-title'>Features</h3>
                         <div className='text-right'>
-                            <button type="button" className="btn btn-success btn-sm">
+                            <button type="button" 
+                                    className="btn btn-success btn-sm" 
+                                    onClick={this.props.onNewFeature}>
                                 <span className="glyphicon glyphicon-plus"></span> New
                             </button>
                         </div>
@@ -85,7 +147,6 @@ var FeatureList = React.createClass({
 });
 
 var ErrorMessages = React.createClass({
-
 
     render: function() {
         if (!this.props.errors.length) {
@@ -151,7 +212,40 @@ var Unleash = React.createClass({
     },
 
     createFeature: function (feature) {
-        console.log(feature);
+        var unsaved = [], state = this.state;
+
+        this.state.unsavedFeatures.forEach(function(f) {
+            // TODO: make sure we don't overwrite an existing feature
+            if (f.name === feature.name) {
+                state.savedFeatures.unshift(f);
+            } else {
+                unsaved.push(f);
+            }
+        });
+
+        this.setState({unsavedFeatures: unsaved});
+
+        reqwest({
+            url: 'features',
+            method: 'post',
+            type: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(feature)
+        }).then(function(r) {
+            console.log(r);
+        }.bind(this), this.handleError);
+    },
+
+    newFeature: function() {
+        var blankFeature = {
+            name: '',
+            enabled: false,
+            strategy: 'default',
+            parameters: {}
+        };
+
+        this.state.unsavedFeatures.push(blankFeature);
+        this.forceUpdate();
     },
 
     render: function() {
@@ -163,7 +257,9 @@ var Unleash = React.createClass({
                     unsavedFeatures={this.state.unsavedFeatures}
                     savedFeatures={this.state.savedFeatures}
                     onFeatureChanged={this.updateFeature}
-                    onFeatureSubmit={this.createFeature} />
+                    onFeatureSubmit={this.createFeature}
+                    onNewFeature={this.newFeature}
+                />
             </div>
         );
     }

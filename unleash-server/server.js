@@ -3,7 +3,7 @@ var express     = require('express'),
     log4js      = require('log4js'),
     logger      = require('./lib/logger'),
     routes      = require('./lib/routes'),
-    api         = require('./lib/featureApi'),
+    featureApi  = require('./lib/featureApi'),
     validator   = require('express-validator'),
     app         = express(),
     router      = express.Router(),
@@ -24,7 +24,7 @@ app.set('port', process.env.HTTP_PORT || 4242);
 app.use(baseUriPath, express.static(__dirname + '/public'));
 app.use(bodyParser.json({strict: false}));
 
-api(router);
+featureApi(router);
 routes(router);
 app.use(baseUriPath, router);
 

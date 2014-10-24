@@ -71,9 +71,33 @@ var FeatureList = React.createClass({
 
 });
 
+var ErrorMessages = React.createClass({
+
+
+    render: function() {
+        if (!this.props.errors.length) {
+            return <div/>;
+        }
+
+        var errorNodes = this.props.errors.map(function(e) {
+            return (<li>{e}</li>);
+        });
+
+        return (
+            <div className="alert alert-danger" role="alert">
+              <ul>{errorNodes}</ul>
+            </div>
+        );
+    }
+});
+
 var Unleash = React.createClass({
     getInitialState: function() {
-        return { savedFeatures: [], unsavedFeatures: [] };
+        return {
+            savedFeatures: [],
+            unsavedFeatures: [],
+            errors: []
+        };
     },
 
     componentDidMount: function () {
@@ -90,7 +114,6 @@ var Unleash = React.createClass({
     },
 
     handleError: function (error) {
-        // TODO: ErrorComponent could use <div class="alert alert-warning" role="alert">...</div>
         window.alert(error);
     },
 
@@ -122,6 +145,7 @@ var Unleash = React.createClass({
         return (
             <div>
                 <Menu />
+                <ErrorMessages errors={this.state.errors} />
                 <FeatureList
                     unsavedFeatures={this.state.unsavedFeatures}
                     savedFeatures={this.state.savedFeatures}

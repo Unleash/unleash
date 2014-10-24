@@ -57,9 +57,14 @@ var FeatureList = React.createClass({
         }.bind(this));
 
         return (
-                  <div className='panel panel-primary'>
+                <div className='panel panel-primary'>
                     <div className='panel-heading'>
-                      <h3 className='panel-title'>Features</h3>
+                        <h3 className='panel-title'>Features</h3>
+                        <div className='text-right'>
+                            <button type="button" className="btn btn-success btn-sm">
+                                <span className="glyphicon glyphicon-plus"></span> New
+                            </button>
+                        </div>    
                     </div>
 
                     <div className='panel-body'>
@@ -68,7 +73,6 @@ var FeatureList = React.createClass({
                   </div>
         );
     }
-
 });
 
 var ErrorMessages = React.createClass({

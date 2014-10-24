@@ -8,6 +8,31 @@
 //       - SavedFeature
 //
 
+var Timer = function(cb, interval) {
+    this.cb = cb;
+    this.interval = interval;
+    this.timerId = null;
+};
+
+Timer.prototype.start = function() {
+    if (this.timerId != null) {
+        console.warn("timer already started");
+    }
+
+    console.log('starting timer');
+    this.timerId = setInterval(this.cb, this.interval);
+};
+
+Timer.prototype.stop  = function() {
+    if (this.timerId == null) {
+        console.warn('no timer running');
+    } else {
+        console.log('stopping timer');
+        clearInterval(this.timerId);
+        this.timerId = null;
+    }
+};
+
 var Menu = React.createClass({
     render: function() { return (
             <nav className='navbar navbar-default' role='navigation'>
@@ -18,7 +43,6 @@ var Menu = React.createClass({
         );
     }
 });
-
 
 var UnsavedFeature = React.createClass({
     render: function() {
@@ -152,7 +176,6 @@ var FeatureList = React.createClass({
 });
 
 var ErrorMessages = React.createClass({
-
     render: function() {
         if (!this.props.errors.length) {
             return <div/>;
@@ -175,13 +198,15 @@ var Unleash = React.createClass({
         return {
             savedFeatures: [],
             unsavedFeatures: [],
-            errors: []
+            errors: [],
+            poller: null
         };
     },
 
     componentDidMount: function () {
         this.loadFeaturesFromServer();
-        setInterval(this.loadFeaturesFromServer, this.props.pollInterval);
+        this.state.timer = new Timer(this.loadFeaturesFromServer, this.props.pollInterval);
+        this.state.timer.start();
     },
 
     loadFeaturesFromServer: function () {
@@ -205,6 +230,7 @@ var Unleash = React.createClass({
         });
 
         this.setState({features: newFeatures});
+        this.state.timer.stop();
 
         reqwest({
             url: 'features/' + changeRequest.name,
@@ -213,7 +239,9 @@ var Unleash = React.createClass({
             contentType: 'application/json',
             data: JSON.stringify(changeRequest)
         }).then(function() {
-        }, this.handleError);
+            // all good
+            this.state.timer.start();
+        }.bind(this), this.handleError);
     },
 
     createFeature: function (feature) {

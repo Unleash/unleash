@@ -31,11 +31,16 @@ var FeatureList = React.createClass({
         var featureNodes = [];
 
         this.props.unsavedFeatures.forEach(function(feature) {
-            featureNodes.push(<UnsavedFeature feature={feature} />);
+            featureNodes.push(<UnsavedFeature feature={feature} onSubmit={this.props.onFeatureSubmit} />);
         });
 
         this.props.savedFeatures.forEach(function(feature) {
-            featureNodes.push(<SavedFeature key={feature.name} feature={feature} />);
+            featureNodes.push(
+                <SavedFeature 
+                  key={feature.name} 
+                  feature={feature} 
+                  onChange={this.props.onFeatureChange} />
+            );
         });
 
         return (<div>{featureNodes}</div>);
@@ -66,13 +71,23 @@ var Unleash = React.createClass({
         window.alert(error);
     },
 
+    updateFeature: function (changeRequest) {
+        console.log(changeRequest);
+    },
+
+    createFeature: function (feature) {
+        console.log(feature);
+    },
+
     render: function() {
         return (
             <div>
               <Menu />
               <FeatureList
                 unsavedFeatures={this.state.unsavedFeatures}
-                savedFeatures={this.state.savedFeatures} />
+                savedFeatures={this.state.savedFeatures}
+                onFeatureChanged={this.updateFeature}
+                onFeatureSubmit={this.createFeature} />
             </div>
         );
     }

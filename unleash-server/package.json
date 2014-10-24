@@ -19,33 +19,37 @@
     "scripts": {
         "start": "node server.js",
         "start-dev": "NODE_ENV=local supervisor --ignore ./node_modules/,./public/js server.js",
-        "test": "jshint server.js lib test && jsxhint public/js/*.jsx && mocha test test/*",
+        "test": "jshint server.js lib test && jsxhint public/js/*.jsx && mocha test test/* && npm run cover",
         "tdd": "mocha --watch test test/*",
-        "test-bamboo-ci": "mocha test test/*"
+        "test-bamboo-ci": "mocha test test/*",
+        "cover": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
     },
     "dependencies": {
         "any-db": "2.1.0",
         "any-db-postgres": "2.1.3",
         "bluebird": "2.2.2",
         "body-parser": "1.4.3",
-        "db-migrate": "^0.7.1",
+        "db-migrate": "0.7.1",
         "errorhandler": "1.1.1",
         "express": "4.9.8",
         "express-validator": "2.6.0",
         "ini": "1.3.0",
         "log4js": "0.6.21",
         "nconf": "0.6.9",
-        "pg": "^3.6.1",
-        "portfinder": "^0.2.1"
+        "pg": "3.6.1",
+        "portfinder": "0.2.1"
     },
     "devDependencies": {
         "chai": "1.9.1",
+        "coveralls": "^2.11.2",
+        "istanbul": "0.3.2",
         "jshint": "2.5.2",
         "jsxhint": "0.4.15",
         "mocha": "1.20.1",
+        "mocha-lcov-reporter": "0.0.1",
+        "mockery": "1.4.0",
         "supertest": "0.13.0",
-        "supervisor": "~0.6.0",
-        "xmlbuilder": "^2.4.4",
-        "mockery": "1.4.0"
+        "supervisor": "0.6.0",
+        "xmlbuilder": "2.4.4"
     }
 }

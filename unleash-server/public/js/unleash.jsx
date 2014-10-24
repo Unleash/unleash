@@ -78,7 +78,7 @@ var Unleash = React.createClass({
 
     componentDidMount: function () {
         this.loadFeaturesFromServer();
-        // setInterval(this.loadFeaturesFromServer, this.props.pollInterval);
+        setInterval(this.loadFeaturesFromServer, this.props.pollInterval);
     },
 
     loadFeaturesFromServer: function () {

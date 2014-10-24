@@ -27,6 +27,7 @@ describe('The api', function () {
     it('returns three mocked feature toggles', function (done) {
         request
             .get('/features')
+            .expect('Content-Type', /json/)
             .expect(200, done);
     });
 

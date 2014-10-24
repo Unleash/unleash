@@ -41,7 +41,7 @@ fs.readdir(sqlRoot, function (err, files) {
     Object.keys(changes).forEach(function (name) {
         var change = changes[name];
 
-        var el = changeLog.ele('changeSet', {id: name, author: "unleash"});
+        var el = changeLog.ele('changeSet', {id: name, author: 'unleash'});
         el.ele('sql', {}, change.up);
         el.ele('rollback', {}, change.down);
     });

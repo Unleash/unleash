@@ -16,7 +16,7 @@ var Menu = React.createClass({
 var UnsavedFeature = React.createClass({
     render: function() {
         return (
-          <div>
+          <div className="bg-info new-feature-form">
             <form className="form-inline" role="form" ref="form">
               <div className="form-group">
                 <label className="sr-only" htmlFor="name">Name</label>

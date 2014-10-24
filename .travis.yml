@@ -1,5 +1,5 @@
 language: java
-jdk: oraclejdk7
+jdk: oraclejdk8
 script:
 - cd unleash-server && npm install && npm test
 - cd .. && cd unleash-client-java && mvn test

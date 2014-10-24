@@ -56,7 +56,17 @@ var FeatureList = React.createClass({
             );
         }.bind(this));
 
-        return (<div>{featureNodes}</div>);
+        return (
+                  <div className='panel panel-primary'>
+                    <div className='panel-heading'>
+                      <h3 className='panel-title'>Features</h3>
+                    </div>
+
+                    <div className='panel-body'>
+                      {featureNodes}
+                    </div>
+                  </div>
+        );
     }
 
 });
@@ -112,18 +122,11 @@ var Unleash = React.createClass({
         return (
             <div>
                 <Menu />
-                <div className='panel panel-primary'>
-                    <div className='panel-heading'>
-                        <h3 className='panel-title'>Features</h3>
-                    </div>
-                    <div className='panel-body'>
-                        <FeatureList
-                            unsavedFeatures={this.state.unsavedFeatures}
-                            savedFeatures={this.state.savedFeatures}
-                            onFeatureChanged={this.updateFeature}
-                            onFeatureSubmit={this.createFeature} />
-                    </div>
-                </div>
+                <FeatureList
+                    unsavedFeatures={this.state.unsavedFeatures}
+                    savedFeatures={this.state.savedFeatures}
+                    onFeatureChanged={this.updateFeature}
+                    onFeatureSubmit={this.createFeature} />
             </div>
         );
     }

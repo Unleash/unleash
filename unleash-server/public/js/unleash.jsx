@@ -31,16 +31,16 @@ var UnsavedFeature = React.createClass({
 
               <div className="form-group">
                 <div className="input-group">
-                  <input className="form-control" 
-                         type="text" 
-                         ref="description" 
+                  <input className="form-control"
+                         type="text"
+                         ref="description"
                          placeholder="Enter description" />
                 </div>
               </div>
 
               <div className="form-group">
                 <label className="sr-only" htmlFor="strategy">Strategy</label>
-                <select id="strategy" ref="strategy" 
+                <select id="strategy" ref="strategy"
                         className="input-large" defaultValue={this.props.feature.strategy}>
                   <option value="default">default</option>
                 </select>
@@ -95,7 +95,9 @@ var SavedFeature = React.createClass({
                 <div
                     className='col-xs-4 col-sm-4 col-md-4 col-lg-4'
                     title='{this.props.feature.description}'>{this.props.feature.name}</div>
-                <div className='pull-right col-xs-2 col-sm-2 col-md-2 col-lg-2'>{this.props.feature.strategy}</div>
+                <div className='pull-right col-xs-2 col-sm-2 col-md-2 col-lg-2'>
+                    {this.props.feature.strategy}
+                </div>
             </div>
         );
     }
@@ -129,8 +131,8 @@ var FeatureList = React.createClass({
                     <div className='panel-heading'>
                         <h3 className='panel-title'>Features</h3>
                         <div className='text-right'>
-                            <button type="button" 
-                                    className="btn btn-success btn-sm" 
+                            <button type="button"
+                                    className="btn btn-success btn-sm"
                                     onClick={this.props.onNewFeature}>
                                 <span className="glyphicon glyphicon-plus"></span> New
                             </button>

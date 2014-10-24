@@ -1,30 +1,28 @@
 package no.finn.unleash.repository;
 
-import java.util.Collection;
 import java.util.Collections;
-import no.finn.unleash.Toggle;
 
 public final class ToggleResponse {
     enum Status {NOT_CHANGED, CHANGED}
 
     private final Status status;
-    private final Collection<Toggle> getToggles;
+    private final ToggleCollection toggleCollection;
 
-    public ToggleResponse(Status status, Collection<Toggle> getToggles) {
+    public ToggleResponse(Status status, ToggleCollection toggleCollection) {
         this.status = status;
-        this.getToggles = getToggles;
+        this.toggleCollection = toggleCollection;
     }
 
     public ToggleResponse(Status status) {
         this.status = status;
-        this.getToggles = Collections.emptyList();
+        this.toggleCollection = new ToggleCollection(Collections.emptyList());
     }
 
     public Status getStatus() {
         return status;
     }
 
-    public Collection<Toggle> getGetToggles() {
-        return getToggles;
+    public ToggleCollection getToggleCollection() {
+        return toggleCollection;
     }
 }

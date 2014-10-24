@@ -9,8 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import no.finn.unleash.Toggle;
 
 public final class HttpToggleFetcher implements ToggleFetcher {
     public static final int CONNECT_TIMEOUT = 10000;
@@ -57,7 +55,7 @@ public final class HttpToggleFetcher implements ToggleFetcher {
         try(BufferedReader reader = new BufferedReader(
                 new InputStreamReader((InputStream) request.getContent(), StandardCharsets.UTF_8))) {
 
-            Collection<Toggle> toggles = JsonToggleParser.fromJson(reader);
+            ToggleCollection toggles = JsonToggleParser.collectionFormJson(reader);
             return new ToggleResponse(ToggleResponse.Status.CHANGED, toggles);
         }
     }

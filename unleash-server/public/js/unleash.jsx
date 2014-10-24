@@ -30,10 +30,19 @@ var SavedFeature = React.createClass({
 
     render: function() {
         return (
-            <div>
-                <span title='{this.props.feature.description}'>{this.props.feature.name}</span>
-                <span>{this.props.feature.strategy}</span>
-                <input type='checkbox' checked={this.props.feature.enabled} onChange={this.onChange} />
+            <div className='row'>
+                <span>
+                <input
+                    className='pull-left'
+                    type='checkbox'
+                    checked={this.props.feature.enabled}
+                    onChange={this.onChange} />
+                    </span>
+                <span
+                    className='col-xs-4 col-sm-4 col-md-4 col-lg-4'
+                    title='{this.props.feature.description}'>{this.props.feature.name}
+                </span>
+                <span className='col-xs-4 col-sm-4 col-md-4 col-lg-4'>{this.props.feature.strategy}</span>
             </div>
         );
     }
@@ -64,7 +73,7 @@ var FeatureList = React.createClass({
                             <button type="button" className="btn btn-success btn-sm">
                                 <span className="glyphicon glyphicon-plus"></span> New
                             </button>
-                        </div>    
+                        </div>
                     </div>
 
                     <div className='panel-body'>

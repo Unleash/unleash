@@ -84,7 +84,7 @@ var ErrorMessages = React.createClass({
         }
 
         var errorNodes = this.props.errors.map(function(e) {
-            return (<li>{e}</li>);
+            return (<li key={e}>{e}</li>);
         });
 
         return (
@@ -118,7 +118,7 @@ var Unleash = React.createClass({
     },
 
     handleError: function (error) {
-        window.alert(error);
+        this.state.errors.push(error);
     },
 
     updateFeature: function (changeRequest) {
@@ -138,7 +138,7 @@ var Unleash = React.createClass({
             contentType: 'application/json',
             data: JSON.stringify(changeRequest)
         }).then(function() {
-        }, this.handleError.bind(this));
+        }, this.handleError);
     },
 
     createFeature: function (feature) {

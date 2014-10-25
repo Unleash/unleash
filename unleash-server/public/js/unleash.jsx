@@ -78,8 +78,12 @@ var UnsavedFeature = React.createClass({
               </div>
 
               <div className="form-group col-md-1">
-                <button type="submit" className="btn btn-primary btn-xs" onClick={this.saveFeature}>
+                <button className="btn btn-primary btn-xs" onClick={this.saveFeature}>
                     Save
+                </button>
+
+                <button className="btn btn-xs" onClick={this.cancelFeature}>
+                  Cancel
                 </button>
               </div>
 
@@ -97,6 +101,11 @@ var UnsavedFeature = React.createClass({
         this.props.feature.enabled     = this.refs.enabled.getDOMNode().checked;
 
         this.props.onSubmit(this.props.feature);
+    },
+
+    cancelFeature: function(e) {
+        e.preventDefault();
+        this.props.onCancel(this.props.feature);
     }
 });
 
@@ -139,7 +148,8 @@ var FeatureList = React.createClass({
                 <UnsavedFeature
                   key={key}
                   feature={feature}
-                  onSubmit={this.props.onFeatureSubmit} />
+                  onSubmit={this.props.onFeatureSubmit}
+                  onCancel={this.props.onFeatureCancel} />
             );
         }.bind(this));
 
@@ -281,6 +291,18 @@ var Unleash = React.createClass({
         this.forceUpdate();
     },
 
+    cancelNewFeature: function (feature) {
+        var unsaved = [];
+
+        this.state.unsavedFeatures.forEach(function (f) {
+            if (f.name !== feature.name) {
+                unsaved.push(f);
+            }
+        });
+
+        this.setState({unsavedFeatures: unsaved});
+    },
+
     render: function() {
         return (
             <div>
@@ -291,6 +313,7 @@ var Unleash = React.createClass({
                     savedFeatures={this.state.savedFeatures}
                     onFeatureChanged={this.updateFeature}
                     onFeatureSubmit={this.createFeature}
+                    onFeatureCancel={this.cancelNewFeature}
                     onNewFeature={this.newFeature}
                 />
             </div>

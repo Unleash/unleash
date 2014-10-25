@@ -19,8 +19,11 @@ export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
 ## Important commands:
 
 ```
+// Install dependencies
+npm install
+
 // Make sure DATABASE_URL is set and run migrations in your local DB
-db-migrate up
+./node_modules/.bin/db-migrate up
 
 // Start server in dev-mode:
 npm run start-dev

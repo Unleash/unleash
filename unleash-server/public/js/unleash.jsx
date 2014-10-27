@@ -209,7 +209,7 @@ var Unleash = React.createClass({
             savedFeatures: [],
             unsavedFeatures: [],
             errors: [],
-            poller: null
+            timer: null
         };
     },
 
@@ -217,6 +217,12 @@ var Unleash = React.createClass({
         this.loadFeaturesFromServer();
         this.state.timer = new Timer(this.loadFeaturesFromServer, this.props.pollInterval);
         this.state.timer.start();
+    },
+
+    componentWillUnmount: function () {
+        if (this.state.timer != null) {
+            this.state.timer.stop();
+        }
     },
 
     loadFeaturesFromServer: function () {

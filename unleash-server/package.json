@@ -19,11 +19,11 @@
     "scripts": {
         "start": "node server.js",
         "dev": "NODE_ENV=local supervisor --ignore ./node_modules/,./public/js server.js",
-        "test": "jshint server.js lib test && jsxhint public/js/*.jsx && mocha test test/*",
-        "test-travis": "jshint server.js lib test && jsxhint public/js/*.jsx && mocha test test/* && npm run cover",
+        "test": "jshint server.js lib test && jsxhint public/js/*.jsx && mocha test test/* && npm run coverage",
         "tdd": "mocha --watch test test/*",
         "test-bamboo-ci": "mocha test test/*",
-        "cover": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+        "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
+        "coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
     },
     "dependencies": {
         "any-db": "2.1.0",

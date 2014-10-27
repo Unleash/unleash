@@ -2,6 +2,7 @@ package no.finn.unleash;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import no.finn.unleash.repository.ToggleException;
 import no.finn.unleash.repository.ToggleRepository;
 import no.finn.unleash.strategy.DefaultStrategy;

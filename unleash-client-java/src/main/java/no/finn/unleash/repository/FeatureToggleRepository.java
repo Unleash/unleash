@@ -8,6 +8,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+
 import no.finn.unleash.Toggle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

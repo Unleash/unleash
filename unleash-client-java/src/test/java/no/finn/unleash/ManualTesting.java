@@ -2,9 +2,8 @@ package no.finn.unleash;
 
 import java.net.URI;
 import java.util.Random;
+
 import no.finn.unleash.repository.FeatureToggleRepository;
-import no.finn.unleash.repository.HTTPToggleRepository;
-import no.finn.unleash.repository.PollingToggleRepository;
 import no.finn.unleash.repository.ToggleRepository;
 
 public class ManualTesting {

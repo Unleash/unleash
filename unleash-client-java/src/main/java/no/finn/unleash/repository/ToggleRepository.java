@@ -1,6 +1,7 @@
 package no.finn.unleash.repository;
 
 import java.util.Collection;
+
 import no.finn.unleash.Toggle;
 
 public interface ToggleRepository {

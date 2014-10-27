@@ -15,6 +15,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+
 import no.finn.unleash.Toggle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,12 +53,12 @@ public class PollingToggleRepository implements ToggleRepository {
     }
 
     @Override
-    public Toggle getToggle(final String name){
+    public final Toggle getToggle(final String name){
         return togglesCache.get(name);
     }
 
     @Override
-    public Collection<Toggle> getToggles() {
+    public final Collection<Toggle> getToggles() {
         return Collections.unmodifiableCollection(togglesCache.values());
     }
 

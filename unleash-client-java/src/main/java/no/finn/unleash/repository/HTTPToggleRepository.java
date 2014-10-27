@@ -2,6 +2,7 @@ package no.finn.unleash.repository;
 
 import java.io.IOException;
 import java.util.Collection;
+
 import no.finn.unleash.Toggle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +25,7 @@ public class HTTPToggleRepository implements ToggleRepository {
     }
 
     @Override
-    public Toggle getToggle(final String name) throws ToggleException {
+    public final Toggle getToggle(final String name) throws ToggleException {
         try {
             for (Toggle toggle : fetchToggles()) {
                 if (name.equals(toggle.getName())) {
@@ -40,7 +41,7 @@ public class HTTPToggleRepository implements ToggleRepository {
     }
 
     @Override
-    public Collection<Toggle> getToggles() {
+    public final Collection<Toggle> getToggles() {
         try {
             return fetchToggles();
         } catch (IOException e) {

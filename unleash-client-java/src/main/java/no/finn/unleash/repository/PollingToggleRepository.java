@@ -32,7 +32,8 @@ public class PollingToggleRepository implements ToggleRepository {
                     thread.setDaemon(true);
                     return thread;
                 }
-            });
+            }
+    );
 
     static {
         TIMER.setRemoveOnCancelPolicy(true);
@@ -43,7 +44,7 @@ public class PollingToggleRepository implements ToggleRepository {
     private Map<String, Toggle> togglesCache;
 
 
-    public PollingToggleRepository(final ToggleRepository toggleRepository, final int pollIntervalSeconds){
+    public PollingToggleRepository(final ToggleRepository toggleRepository, final int pollIntervalSeconds) {
         this.toggleRepository = toggleRepository;
         this.pollIntervalSeconds = pollIntervalSeconds;
 
@@ -53,7 +54,7 @@ public class PollingToggleRepository implements ToggleRepository {
     }
 
     @Override
-    public final Toggle getToggle(final String name){
+    public final Toggle getToggle(final String name) {
         return togglesCache.get(name);
     }
 
@@ -66,7 +67,7 @@ public class PollingToggleRepository implements ToggleRepository {
         try {
             Map<String, Toggle> freshToggleMap = new HashMap<>();
 
-            for(Toggle toggle : fetchToggles()) {
+            for (Toggle toggle : fetchToggles()) {
                 freshToggleMap.put(toggle.getName(), toggle);
             }
 
@@ -98,7 +99,7 @@ public class PollingToggleRepository implements ToggleRepository {
             storeRepoAsTempFile(JsonToggleParser.toJsonString(toggles));
             return toggles;
         } catch (ToggleException ex) {
-            if(togglesCache.isEmpty()) {
+            if (togglesCache.isEmpty()) {
                 return loadFromTempFile();
             }
             throw ex;
@@ -108,11 +109,11 @@ public class PollingToggleRepository implements ToggleRepository {
 
     private Collection<Toggle> loadFromTempFile() throws ToggleException {
         LOG.info("Unleash will try to load feature toggle states from temporary backup");
-        try(FileReader reader = new FileReader(pathToTmpBackupFile())) {
+        try (FileReader reader = new FileReader(pathToTmpBackupFile())) {
             BufferedReader br = new BufferedReader(reader);
             StringBuilder builder = new StringBuilder();
             String line;
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 builder.append(line);
             }
             return JsonToggleParser.fromJson(builder.toString());
@@ -123,7 +124,7 @@ public class PollingToggleRepository implements ToggleRepository {
     }
 
     private void storeRepoAsTempFile(final String serverResponse) {
-        try(FileWriter writer = new FileWriter(pathToTmpBackupFile())) {
+        try (FileWriter writer = new FileWriter(pathToTmpBackupFile())) {
             writer.write(serverResponse);
         } catch (IOException e) {
             e.printStackTrace();

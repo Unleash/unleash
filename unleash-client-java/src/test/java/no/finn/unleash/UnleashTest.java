@@ -1,18 +1,11 @@
 package no.finn.unleash;
 
-import no.finn.unleash.repository.ToggleException;
-import no.finn.unleash.repository.ToggleRepository;
-import no.finn.unleash.strategy.Strategy;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.anyMap;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class UnleashTest {
 
@@ -37,13 +30,6 @@ public class UnleashTest {
         when(toggleRepository.getToggle("test")).thenReturn(new Toggle("test", true, "whoot_strat", null));
 
         assertThat(unleash.isEnabled("test"), is(false));
-    }
-
-    @Test
-    public void failing_repository_should_obey_default() {
-        when(toggleRepository.getToggle("test")).thenThrow(new ToggleException("service down"));
-
-        assertThat(unleash.isEnabled("test", true), is(true));
     }
 
     @Test

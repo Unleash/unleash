@@ -1,17 +1,10 @@
-package no.finn.unleash.repository;
+package no.finn.unleash;
 
-import java.net.URI;
-import java.util.Collection;
-import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-
-import no.finn.unleash.Toggle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.net.URI;
+import java.util.concurrent.*;
 
 public final class FeatureToggleRepository implements ToggleRepository {
     private static final Logger LOG = LogManager.getLogger();
@@ -32,16 +25,16 @@ public final class FeatureToggleRepository implements ToggleRepository {
         TIMER.setRemoveOnCancelPolicy(true);
     }
 
-    private final FeatureToggleBackupFileHandler featureToggleBackupFileHandler;
+    private final BackupFileHandler featureToggleBackupFileHandler;
     private final ToggleFetcher toggleFetcher;
 
     private ToggleCollection toggleCollection;
 
     public FeatureToggleRepository(URI featuresUri, long pollIntervalSeconds) {
-        featureToggleBackupFileHandler = new FeatureToggleBackupFileHandler();
+        featureToggleBackupFileHandler = new BackupFileHandler();
         toggleFetcher = new HttpToggleFetcher(featuresUri);
 
-        toggleCollection = featureToggleBackupFileHandler.readBackupFile();
+        toggleCollection = featureToggleBackupFileHandler.read();
         startBackgroundPolling(pollIntervalSeconds);
     }
 
@@ -50,26 +43,25 @@ public final class FeatureToggleRepository implements ToggleRepository {
             return TIMER.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
-                    ToggleResponse response = toggleFetcher.fetchToggles();
-                    if(response.getStatus() == ToggleResponse.Status.CHANGED) {
-                        featureToggleBackupFileHandler.write(toggleCollection);
-                        toggleCollection = response.getToggleCollection();
+                    try {
+                        Response response = toggleFetcher.fetchToggles();
+                        if (response.getStatus() == Response.Status.CHANGED) {
+                            featureToggleBackupFileHandler.write(toggleCollection);
+                            toggleCollection = response.getToggleCollection();
+                        }
+                    } catch (UnleashException e) {
+                        LOG.warn("Could not refresh feature toggles", e);
                     }
                 }
             }, pollIntervalSeconds, pollIntervalSeconds, TimeUnit.SECONDS);
         } catch (RejectedExecutionException ex) {
-            LOG.error("Unleash background task crashed");
+            LOG.error("Unleash background task crashed", ex);
             return null;
         }
     }
 
     @Override
-    public Toggle getToggle(String name) throws ToggleException {
+    public Toggle getToggle(String name) {
         return toggleCollection.getToggle(name);
-    }
-
-    @Override
-    public Collection<Toggle> getToggles() throws ToggleException {
-        return null;
     }
 }

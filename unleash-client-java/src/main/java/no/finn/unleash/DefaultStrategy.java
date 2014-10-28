@@ -1,9 +1,9 @@
-package no.finn.unleash.strategy;
+package no.finn.unleash;
 
 import java.util.Map;
 
-public final class UnknownStrategy implements Strategy {
-    public static final String NAME = "unknown";
+final class DefaultStrategy implements Strategy {
+    public static final String NAME = "default";
 
     @Override
     public String getName() {
@@ -12,6 +12,6 @@ public final class UnknownStrategy implements Strategy {
 
     @Override
     public boolean isEnabled(Map<String, String> parameters) {
-        return false;
+        return true;
     }
 }

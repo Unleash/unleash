@@ -1,4 +1,4 @@
-package no.finn.unleash.repository;
+package no.finn.unleash;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public final class HttpToggleFetcher implements ToggleFetcher {
+final class HttpToggleFetcher implements ToggleFetcher {
     public static final int CONNECT_TIMEOUT = 10000;
     private String etag = null;
 
@@ -20,12 +20,12 @@ public final class HttpToggleFetcher implements ToggleFetcher {
         try {
             toggleUrl = repo.toURL();
         } catch (MalformedURLException ex) {
-            throw new IllegalArgumentException("Invalid repo uri", ex);
+            throw new UnleashException("Invalid repo uri", ex);
         }
     }
 
     @Override
-    public ToggleResponse fetchToggles() throws ToggleException {
+    public Response fetchToggles() throws UnleashException {
         HttpURLConnection connection = null;
         try {
             connection = (HttpURLConnection) toggleUrl.openConnection();
@@ -38,10 +38,10 @@ public final class HttpToggleFetcher implements ToggleFetcher {
             if(responseCode < 300) {
                 return getToggleResponse(connection);
             } else {
-                return new ToggleResponse(ToggleResponse.Status.NOT_CHANGED);
+                return new Response(Response.Status.NOT_CHANGED);
             }
         } catch (IOException e) {
-            throw new ToggleException("Could not fetch toggles", e);
+            throw new UnleashException("Could not fetch toggles", e);
         } finally {
             if(connection != null) {
                 connection.disconnect();
@@ -49,14 +49,14 @@ public final class HttpToggleFetcher implements ToggleFetcher {
         }
     }
 
-    private ToggleResponse getToggleResponse(HttpURLConnection request) throws IOException {
+    private Response getToggleResponse(HttpURLConnection request) throws IOException {
         etag = request.getHeaderField("ETag");
 
         try(BufferedReader reader = new BufferedReader(
                 new InputStreamReader((InputStream) request.getContent(), StandardCharsets.UTF_8))) {
 
-            ToggleCollection toggles = JsonToggleParser.collectionFormJson(reader);
-            return new ToggleResponse(ToggleResponse.Status.CHANGED, toggles);
+            ToggleCollection toggles = JsonToggleParser.fromJson(reader);
+            return new Response(Response.Status.CHANGED, toggles);
         }
     }
 }

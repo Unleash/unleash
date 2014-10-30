@@ -5,6 +5,7 @@ var express     = require('express'),
     routes      = require('./lib/routes'),
     eventApi    = require('./lib/eventApi'),
     featureApi  = require('./lib/featureApi'),
+    strategyApi  = require('./lib/strategyApi'),
     validator   = require('express-validator'),
     app         = express(),
     router      = express.Router(),
@@ -35,6 +36,7 @@ app.use(bodyParser.json({strict: false}));
 
 eventApi(router);
 featureApi(router);
+strategyApi(router);
 routes(router);
 app.use(baseUriPath, router);
 

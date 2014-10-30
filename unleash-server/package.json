@@ -20,7 +20,7 @@
         "start": "NODE_ENV=production node server.js",
         "build": "./node_modules/.bin/webpack",
         "dev": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js server.js",
-        "test": "jshint server.js lib test && jsxhint public/js/*.jsx && mocha test test/* && npm run coverage",
+        "test": "jshint server.js lib test && jsxhint public/js/**/*.jsx && mocha test test/* && npm run coverage",
         "tdd": "mocha --watch test test/*",
         "test-bamboo-ci": "mocha test test/*",
         "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",

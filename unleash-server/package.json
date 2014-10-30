@@ -17,8 +17,9 @@
     },
     "private": true,
     "scripts": {
-        "start": "node server.js",
-        "dev": "NODE_ENV=local supervisor --ignore ./node_modules/,./public/js server.js",
+        "start": "NODE_ENV=production node server.js",
+        "build": "./node_modules/.bin/webpack",
+        "dev": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js server.js",
         "test": "jshint server.js lib test && jsxhint public/js/*.jsx && mocha test test/* && npm run coverage",
         "tdd": "mocha --watch test test/*",
         "test-bamboo-ci": "mocha test test/*",
@@ -44,12 +45,17 @@
         "coveralls": "^2.11.2",
         "istanbul": "0.3.2",
         "jshint": "2.5.2",
+        "jsx-loader": "^0.12.0",
         "jsxhint": "0.4.15",
         "mocha": "1.20.1",
         "mocha-lcov-reporter": "0.0.1",
         "mockery": "1.4.0",
+        "react": "^0.12.0",
+        "reqwest": "^1.1.4",
         "supertest": "0.13.0",
         "supervisor": "0.6.0",
+        "webpack": "^1.4.9",
+        "webpack-dev-middleware": "^1.0.11",
         "xmlbuilder": "2.4.4"
     }
 }

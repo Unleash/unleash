@@ -24,6 +24,8 @@ fs.readdir(sqlRoot, function (err, files) {
 
     var changes = {};
 
+    initialInit(changes);
+
     files.forEach(function (sqlFile) {
         var match = sqlFile.match(/(.+?)\.(up|down)\.sql/);
 
@@ -48,4 +50,10 @@ fs.readdir(sqlRoot, function (err, files) {
 
     util.puts(changeLog.end({pretty: true}));
 });
+
+function initialInit(changes) {
+    changes["init-prepare"] = {};
+    changes["init-prepare"]["up"] = fs.readFileSync(path.resolve(__dirname, './init.up.sql'), {encoding: encoding});
+    changes["init-prepare"]["down"] = fs.readFileSync(path.resolve(__dirname, './init.down.sql'), {encoding: encoding});
+}
 

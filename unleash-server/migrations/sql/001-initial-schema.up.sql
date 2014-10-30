@@ -19,8 +19,3 @@ CREATE TABLE events (
   created_by varchar(255) NOT NULL,
   data json
 );
-
-GRANT ALL ON TABLE events TO unleash_user;
-GRANT ALL ON TABLE features TO unleash_user;
-GRANT ALL ON TABLE strategies TO unleash_user;
-GRANT USAGE, SELECT ON SEQUENCE events_id_seq TO unleash_user;

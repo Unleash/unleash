@@ -30,7 +30,7 @@
     "nonbsp"        : true,
     "nonew"         : true,
     "plusplus"      : false,
-    "quotmark"      : true,
+    "quotmark"      : false,
     "undef"         : true,
     "unused"        : true,
     "strict"        : false,

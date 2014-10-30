@@ -3,7 +3,7 @@
 module.exports = {
 
     context: __dirname + '/public',
-    entry: './js/unleash',
+    entry: './js/app',
 
     output: {
         path: __dirname + '/public/js',

@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 /* jshint quotmark:false */
 
 // Unleash
@@ -281,7 +280,7 @@ var Unleash = React.createClass({
             contentType: 'application/json',
             data: JSON.stringify(feature)
         }).then(function(r) {
-            console.log(r);
+            console.log(r.statusText);
         }.bind(this), this.handleError);
     },
 
@@ -328,7 +327,7 @@ var Unleash = React.createClass({
 });
 
 
-React.renderComponent(
+React.render(
     <Unleash pollInterval={5000} />,
     document.getElementById('content')
 );

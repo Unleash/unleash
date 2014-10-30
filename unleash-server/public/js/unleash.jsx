@@ -1,5 +1,8 @@
 /* jshint quotmark:false */
 
+var React = require('react');
+var reqwest = require('reqwest');
+
 // Unleash
 //   - Menu
 //   - FeatureList
@@ -36,7 +39,7 @@ var Menu = React.createClass({
     render: function() { return (
             <nav className='navbar navbar-default' role='navigation'>
                 <div className='container'>
-                    <a className='navbar-brand' href='#'>Unleash</a>
+                    <a className='navbar-brand' href='#'>unleash admin</a>
                 </div>
             </nav>
         );

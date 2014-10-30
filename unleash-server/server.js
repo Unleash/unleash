@@ -12,6 +12,14 @@ var express     = require('express'),
 
 if(app.get('env') === 'development') {
     app.use(require('errorhandler')());
+
+    var webpack              = require('webpack'),
+        webpackDevMiddleware = require('webpack-dev-middleware'),
+        webpackConfig        = require('./webpack.config'),
+        compiler             = webpack(webpackConfig),
+        config               = { publicPath: '/js' };
+
+    app.use(baseUriPath, webpackDevMiddleware(compiler, config));
 }
 
 app.use(validator([]));

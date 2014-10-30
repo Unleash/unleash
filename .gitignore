@@ -34,7 +34,7 @@ node_modules
 # Java
 target
 
-# Local config
-/unleash-server/config/database.json
+# webpack output
+/unleash-server/public/js/bundle.js
 
 .DS_Store

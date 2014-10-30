@@ -11,9 +11,7 @@
         "after"     : false,
         "beforeEach": false,
         "afterEach" : false,
-        "contain"   : false,
-        "React"     : false,
-        "reqwest"   : false
+        "contain"   : false
     },
 
     "bitwise"       : true,

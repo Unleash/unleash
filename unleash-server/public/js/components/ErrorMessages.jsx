@@ -6,8 +6,8 @@ var ErrorMessages = React.createClass({
             return <div/>;
         }
 
-        var errorNodes = this.props.errors.map(function(e) {
-            return (<li key={e} className="largetext">{e}</li>);
+        var errorNodes = this.props.errors.map(function(e, i) {
+            return (<li key={e + i} className="largetext">{e}</li>);
         });
 
         return (

@@ -1,0 +1,2 @@
+alter default privileges for user unleash_admin grant select,insert,update,delete on tables TO unleash_user;
+alter default privileges for user unleash_admin grant select,update on sequences TO unleash_user;

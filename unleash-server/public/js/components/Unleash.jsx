@@ -1,9 +1,9 @@
 var React         = require('react');
-var reqwest       = require('reqwest');
 var Timer         = require('../utils/Timer');
 var Menu          = require('./Menu');
 var ErrorMessages = require('./ErrorMessages');
 var FeatureList   = require('./FeatureList');
+var FeatureStore  = require('../stores/FeatureStore');
 
 var Unleash = React.createClass({
     getInitialState: function() {
@@ -11,24 +11,22 @@ var Unleash = React.createClass({
             savedFeatures: [],
             unsavedFeatures: [],
             errors: [],
-            timer: null
+            featurePoller: new Timer(this.loadFeaturesFromServer, this.props.pollInterval),
+            featureStore: new FeatureStore()
         };
     },
 
     componentDidMount: function () {
         this.loadFeaturesFromServer();
-        this.state.timer = new Timer(this.loadFeaturesFromServer, this.props.pollInterval);
-        this.state.timer.start();
+        this.startFeaturePoller();
     },
 
     componentWillUnmount: function () {
-        if (this.state.timer != null) {
-            this.state.timer.stop();
-        }
+        this.stopFeaturePoller();
     },
 
     loadFeaturesFromServer: function () {
-        reqwest('features').then(this.setFeatures, this.handleError);
+        this.state.featureStore.getFeatures().then(this.setFeatures).catch(this.handleError);
     },
 
     setFeatures: function (data) {
@@ -37,6 +35,7 @@ var Unleash = React.createClass({
 
     handleError: function (error) {
         this.state.errors.push(error);
+        this.forceUpdate();
     },
 
     updateFeature: function (changeRequest) {
@@ -48,18 +47,20 @@ var Unleash = React.createClass({
         });
 
         this.setState({features: newFeatures});
-        this.state.timer.stop();
+        this.stopFeaturePoller();
+        this.state.featureStore.updateFeature(changeRequest)
+          .then(this.startFeaturePoller)
+          .catch(this.handleError);
+    },
 
-        reqwest({
-            url: 'features/' + changeRequest.name,
-            method: 'patch',
-            type: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify(changeRequest)
-        }).then(function() {
-            // all good
-            this.state.timer.start();
-        }.bind(this), this.handleError);
+    startFeaturePoller: function () {
+        this.state.featurePoller.start();
+    },
+
+    stopFeaturePoller: function () {
+        if (this.state.featurePoller != null) {
+            this.state.featurePoller.stop();
+        }
     },
 
     createFeature: function (feature) {
@@ -76,15 +77,9 @@ var Unleash = React.createClass({
 
         this.setState({unsavedFeatures: unsaved});
 
-        reqwest({
-            url: 'features',
-            method: 'post',
-            type: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify(feature)
-        }).then(function(r) {
-            console.log(r.statusText);
-        }.bind(this), this.handleError);
+        this.state.featureStore.createFeature(feature)
+          .then(function(r) { console.log(r.statusText); }.bind(this))
+          .catch(this.handleError);
     },
 
     newFeature: function() {

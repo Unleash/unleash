@@ -18,7 +18,10 @@ if(app.get('env') === 'development') {
         webpackDevMiddleware = require('webpack-dev-middleware'),
         webpackConfig        = require('./webpack.config'),
         compiler             = webpack(webpackConfig),
-        config               = { publicPath: '/js' };
+        config               = {
+            publicPath: '/js',
+            noInfo: true
+        };
 
     app.use(baseUriPath, webpackDevMiddleware(compiler, config));
 }

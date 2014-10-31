@@ -3,28 +3,29 @@ var React = require('react');
 var UnsavedFeature = React.createClass({
     render: function() {
         return (
-          <div className="bg-info new-feature-form row">
-            <form className="form-inline" role="form" ref="form">
-              <div className="checkbox col-md-1 text-right">
+          <form ref="form" className="bg-blue-xlt">
+            <div className="line mal ptl pbl">
+
+              <div className="unit prl r-size1of6">
                 <input ref="enabled" type="checkbox" defaultValue={this.props.feature.enabled} />
               </div>
 
-              <div className="form-group col-md-4">
+              <div className="unit r-size2of5">
                 <input
                    type="text"
-                   className="form-control"
+                   className="mbs"
                    id="name"
                    ref="name"
                    defaultValue={this.props.feature.name}
                    placeholder="Enter name" />
 
-                  <input className="form-control"
-                         type="text"
-                         ref="description"
-                         placeholder="Enter description" />
+                <input className=""
+                   type="text"
+                   ref="description"
+                   placeholder="Enter description" />
               </div>
 
-              <div className="form-group col-md-1 col-md-offset-5">
+              <div className="unit r-size2of6 plm">
                 <select id="strategy"
                         ref="strategy"
                         className=""
@@ -33,18 +34,17 @@ var UnsavedFeature = React.createClass({
                 </select>
               </div>
 
-              <div className="form-group col-md-1">
-                <button className="btn btn-primary btn-xs" onClick={this.saveFeature}>
-                    Save
-                </button>
+            <div className="unit r-size1of6 rightify">
+              <button className="primary mrs" onClick={this.saveFeature}>
+                  Save
+              </button>
 
-                <button className="btn btn-xs" onClick={this.cancelFeature}>
-                  Cancel
-                </button>
-              </div>
-
-            </form>
+              <button className="" onClick={this.cancelFeature}>
+                Cancel
+              </button>
+            </div>
           </div>
+          </form>
         );
     },
 

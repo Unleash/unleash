@@ -1,7 +1,8 @@
 {
   "links": {
     "build": "UNLEASH-UNLEASHGITHUB",
-    "repository": "https://github.com/finn-no/unleash"
+    "repository": "https://github.com/finn-no/unleash",
+    "issues": "https://github.com/finn-no/unleash/issues"
   },
   "versions": {
     "jdk": "1.8",

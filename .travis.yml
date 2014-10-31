@@ -2,7 +2,6 @@ language: java
 jdk: oraclejdk8
 script:
 - cd unleash-server && npm install && npm test && npm run coverage-report
-- cd .. && cd unleash-client-java && mvn test
 notifications:
   hipchat:
     rooms:

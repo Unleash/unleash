@@ -27,14 +27,12 @@ node_modules
 # Users Environment Variables
 .lock-wscript
 
-# Idea stuff
-.idea
-*.iml
-
-# Java
-target
-
 # webpack output
-/unleash-server/public/js/bundle.js
+public/js/bundle.js
 
 .DS_Store
+
+# liquibase stuff
+/sql
+unleash-db.jar
+unleash-server.tar.gz

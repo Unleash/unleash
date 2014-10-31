@@ -7,7 +7,7 @@ var events = [
         "type": "feature-create",
         "created_by": "me",
         "data": {
-            
+
         }
     },
     {

@@ -111,11 +111,17 @@ var Unleash = React.createClass({
         this.setState({unsavedFeatures: unsaved});
     },
 
+    clearErrors: function() {
+        this.setState({errors: []});
+    },
+
     render: function() {
         return (
             <div>
               <Menu />
-              <ErrorMessages errors={this.state.errors} />
+              <ErrorMessages
+                 errors={this.state.errors}
+                 onClearErrors={this.clearErrors} />
               <FeatureList
                  unsavedFeatures={this.state.unsavedFeatures}
                  savedFeatures={this.state.savedFeatures}

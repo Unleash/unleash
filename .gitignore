@@ -36,3 +36,6 @@ public/js/bundle.js
 /sql
 unleash-db.jar
 unleash-server.tar.gz
+
+# idea stuff:
+*.iml

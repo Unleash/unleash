@@ -9,6 +9,18 @@ var TabView = React.createClass({
         return {activeTab: this.props.tabPanes[0]};
     },
 
+    componentDidMount:function() {
+        var userHash = window.location.hash;
+        if(userHash) {
+            userHash = userHash.split("#")[1];
+            this.props.tabPanes.forEach(function(pane) {
+               if(pane.name === userHash) {
+                   this.setState({activeTab: pane})
+               }
+            }.bind(this));
+        }
+    },
+
     handleChangeTab: function(tabPane) {
         this.setState({activeTab: tabPane});
     },

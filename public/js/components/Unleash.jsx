@@ -64,21 +64,24 @@ var Unleash = React.createClass({
     },
 
     createFeature: function (feature) {
-        var unsaved = [], state = this.state;
+        var created = function() {
+            var unsaved = [], state = this.state;
 
-        this.state.unsavedFeatures.forEach(function(f) {
-            // TODO: make sure we don't overwrite an existing feature
-            if (f.name === feature.name) {
-                state.savedFeatures.unshift(f);
-            } else {
-                unsaved.push(f);
-            }
-        });
+            this.state.unsavedFeatures.forEach(function(f) {
+                // TODO: make sure we don't overwrite an existing feature
+                if (f.name === feature.name) {
+                    state.savedFeatures.unshift(f);
+                } else {
+                    unsaved.push(f);
+                }
+            });
 
-        this.setState({unsavedFeatures: unsaved});
+            this.setState({unsavedFeatures: unsaved});
+        }.bind(this);
+
 
         this.state.featureStore.createFeature(feature)
-          .then(function(r) { console.log(r.statusText); }.bind(this))
+          .then(created)
           .catch(this.handleError);
     },
 

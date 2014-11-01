@@ -1,17 +1,19 @@
 var React          = require('react');
 
-var StrategyList = React.createClass({
+var Strategy = React.createClass({
     propTypes: {
-        strategies: React.PropTypes.array.isRequired
+        strategy: React.PropTypes.object.isRequired
     },
 
     render: function() {
-        return (<div>
-
-                {JSON.stringify(this.props.strategies)}
+        return (
+            <div className="line mal">
+                <div className="unit r-size1of3">
+                    {this.props.strategy.name}
                 </div>
-            );
+            </div>
+        );
     }
 });
 
-module.exports = StrategyList;
+module.exports = Strategy;

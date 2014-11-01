@@ -39,6 +39,14 @@ describe('The api', function () {
             .expect(201, done);
     });
 
+    it('require new feature toggle to have a name', function (done) {
+        request
+            .post('/features')
+            .send({name: ''})
+            .set('Content-Type', 'application/json')
+            .expect(400, done);
+    });
+
     it('can not change status of feature toggle that dose not exsist', function (done) {
         request
             .patch('/features/shouldNotExsist')

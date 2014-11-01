@@ -43,21 +43,11 @@ var StrategyComponent = React.createClass({
     render: function() {
         return (
             <div>
-                <div className="line">
-                    <div className="unit r-size1of4">
-                        <h2>Strategies</h2>
-                    </div>
-
-                    <div className="unit r-size3of4 rightify prl ptm">
-                        <button className="" onClick={this.handleNewStrategy}>Create Strategy</button>
-                    </div>
-                </div>
-
                 <ErrorMessages errors={this.state.errors} onClearErrors={this.clearErrors} />
 
-                <hr />
+                 {this.state.createView ? this.renderCreateView() : this.renderCreateButton()}
 
-                {this.state.createView ? this.renderCreateView() : null}
+                <hr />
 
                 <StrategyList strategies={this.state.strategies} />
             </div>
@@ -66,6 +56,14 @@ var StrategyComponent = React.createClass({
 
     renderCreateView: function() {
         return (<CreateStrategy handleCancelNewStrategy={this.handleCancelNewStrategy} />)
+    },
+
+    renderCreateButton: function() {
+        return (
+            <p className="">
+                <button className="" onClick={this.handleNewStrategy}>Create strategy</button>
+            </p>
+            );
     }
 });
 

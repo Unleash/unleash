@@ -1,6 +1,5 @@
 var React         = require('react');
 var Timer         = require('../utils/Timer');
-var Menu          = require('./Menu');
 var ErrorMessages = require('./ErrorMessages');
 var FeatureList   = require('./FeatureList');
 var FeatureStore  = require('../stores/FeatureStore');
@@ -116,17 +115,16 @@ var Unleash = React.createClass({
     render: function() {
         return (
             <div>
-              <Menu />
-              <ErrorMessages
-                 errors={this.state.errors}
-                 onClearErrors={this.clearErrors} />
-              <FeatureList
-                 unsavedFeatures={this.state.unsavedFeatures}
-                 savedFeatures={this.state.savedFeatures}
-                 onFeatureChanged={this.updateFeature}
-                 onFeatureSubmit={this.createFeature}
-                 onFeatureCancel={this.cancelNewFeature}
-                 onNewFeature={this.newFeature} />
+                <ErrorMessages
+                errors={this.state.errors}
+                onClearErrors={this.clearErrors} />
+                <FeatureList
+                unsavedFeatures={this.state.unsavedFeatures}
+                savedFeatures={this.state.savedFeatures}
+                onFeatureChanged={this.updateFeature}
+                onFeatureSubmit={this.createFeature}
+                onFeatureCancel={this.cancelNewFeature}
+                onNewFeature={this.newFeature} />
             </div>
         );
     }

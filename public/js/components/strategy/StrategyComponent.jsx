@@ -1,6 +1,6 @@
 var React          = require('react'),
     StrategyList   = require('./StrategyList'),
-    CreateStrategy = require('./CreateStrategy'),
+    StrategyForm = require('./StrategyForm'),
     strategyStore  = require('../../stores/StrategyStore'),
     ErrorMessages  = require('../ErrorMessages');
 
@@ -40,6 +40,15 @@ var StrategyComponent = React.createClass({
         this.setState({createView: false});
     },
 
+    handleSave: function(strategy) {
+        var strategies = this.state.strategies.concat([strategy]);
+        this.setState({
+            createView: false,
+            strategies: strategies
+        });
+        console.log("Saved strategy: ", strategy);
+    },
+
     render: function() {
         return (
             <div>
@@ -55,7 +64,7 @@ var StrategyComponent = React.createClass({
     },
 
     renderCreateView: function() {
-        return (<CreateStrategy handleCancelNewStrategy={this.handleCancelNewStrategy} />)
+        return (<StrategyForm handleCancelNewStrategy={this.handleCancelNewStrategy} handleSave={this.handleSave} />)
     },
 
     renderCreateButton: function() {

@@ -21,6 +21,8 @@ module.exports = {
         ]
     },
 
+    devtool: "source-map",
+
     externals: {
         // stuff not in node_modules can be resolved here.
     }

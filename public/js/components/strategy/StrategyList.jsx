@@ -8,7 +8,7 @@ var StrategyList = React.createClass({
 
     render: function() {
         var strategyNodes = this.props.strategies.map(function(strategy) {
-            return <Strategy strategy={strategy} />;
+            return <Strategy strategy={strategy} key={strategy.name} />;
         });
         return (
             <div>{strategyNodes}</div>

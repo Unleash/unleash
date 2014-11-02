@@ -1,8 +1,8 @@
 var React   = require('react');
-var TabView  = require('./components/TabView');
-var Menu    = require('./components/Menu');
-var Unleash = require('./components/Unleash');
-var Strategy = require('./components/strategy/StrategyComponent');
+var TabView  = React.createFactory(require('./components/TabView'));
+var Menu     = React.createFactory(require('./components/Menu'));
+var Unleash  = React.createFactory(require('./components/Unleash'));
+var Strategy = React.createFactory(require('./components/strategy/StrategyComponent'));
 
 var tabPanes = [
     {
@@ -13,8 +13,6 @@ var tabPanes = [
         name: "Strategies",
         content: new Strategy({})
     }
-
-
 ];
 
 React.render(

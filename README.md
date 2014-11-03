@@ -46,3 +46,8 @@ npm test
 4. Run `npm run db-migrate-up`.
 5. Generate LB artifact using `scripts/generate-liquibase-artifact` (TODO: make this internal)
 
+## Clients
+In order to make use of unleash you will probably need a client implementation. 
+
+Known client implementations: 
+- [unleash-client-java](https://github.com/finn-no/unleash-client-java)

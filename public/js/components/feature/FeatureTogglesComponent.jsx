@@ -5,7 +5,7 @@ var FeatureList   = require('./FeatureList');
 var FeatureForm   = require('./FeatureForm');
 var FeatureStore  = require('../../stores/FeatureStore');
 
-var FeatureToggleComponent = React.createClass({
+var FeatureTogglesComponent = React.createClass({
     getInitialState: function() {
         return {
             features: [],
@@ -113,4 +113,4 @@ var FeatureToggleComponent = React.createClass({
 
 
 
-module.exports = FeatureToggleComponent;
+module.exports = FeatureTogglesComponent;

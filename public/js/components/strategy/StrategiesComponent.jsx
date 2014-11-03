@@ -4,7 +4,7 @@ var React          = require('react'),
     strategyStore  = require('../../stores/StrategyStore'),
     ErrorMessages  = require('../ErrorMessages');
 
-var StrategyComponent = React.createClass({
+var StrategiesComponent = React.createClass({
     getInitialState: function() {
         return {
             createView: false,
@@ -74,4 +74,4 @@ var StrategyComponent = React.createClass({
     }
 });
 
-module.exports = StrategyComponent;
+module.exports = StrategiesComponent;

@@ -2,14 +2,15 @@ var React         = require('react');
 var Timer         = require('../../utils/Timer');
 var ErrorMessages = require('../ErrorMessages');
 var FeatureList   = require('./FeatureList');
+var FeatureForm   = require('./FeatureForm');
 var FeatureStore  = require('../../stores/FeatureStore');
 
 var FeatureToggleComponent = React.createClass({
     getInitialState: function() {
         return {
-            savedFeatures: [],
-            unsavedFeatures: [],
+            features: [],
             errors: [],
+            createView: false,
             featurePoller: new Timer(this.loadFeaturesFromServer, this.props.pollInterval),
             featureStore: new FeatureStore()
         };
@@ -29,7 +30,7 @@ var FeatureToggleComponent = React.createClass({
     },
 
     setFeatures: function (data) {
-        this.setState({savedFeatures: data.features});
+        this.setState({features: data.features});
     },
 
     handleError: function (error) {
@@ -38,7 +39,7 @@ var FeatureToggleComponent = React.createClass({
     },
 
     updateFeature: function (changeRequest) {
-        var newFeatures = this.state.savedFeatures;
+        var newFeatures = this.state.features;
         newFeatures.forEach(function(f){
             if(f.name === changeRequest.name) {
                 f[changeRequest.field] = changeRequest.value;
@@ -63,49 +64,17 @@ var FeatureToggleComponent = React.createClass({
     },
 
     createFeature: function (feature) {
-        var created = function() {
-            var unsaved = [], state = this.state;
-
-            this.state.unsavedFeatures.forEach(function(f) {
-                // TODO: make sure we don't overwrite an existing feature
-                if (f.name === feature.name) {
-                    state.savedFeatures.unshift(f);
-                } else {
-                    unsaved.push(f);
-                }
-            });
-
-            this.setState({unsavedFeatures: unsaved});
-        }.bind(this);
-
-
         this.state.featureStore.createFeature(feature)
-          .then(created)
+          .then(this.cancelNewFeature)
           .catch(this.handleError);
     },
 
     newFeature: function() {
-        var blankFeature = {
-            name: '',
-            enabled: false,
-            strategy: 'default',
-            parameters: {}
-        };
-
-        this.state.unsavedFeatures.push(blankFeature);
-        this.forceUpdate();
+        this.setState({createView: true});
     },
 
     cancelNewFeature: function (feature) {
-        var unsaved = [];
-
-        this.state.unsavedFeatures.forEach(function (f) {
-            if (f.name !== feature.name) {
-                unsaved.push(f);
-            }
-        });
-
-        this.setState({unsavedFeatures: unsaved});
+        this.setState({createView: false});
     },
 
     clearErrors: function() {
@@ -118,16 +87,30 @@ var FeatureToggleComponent = React.createClass({
                 <ErrorMessages
                   errors={this.state.errors}
                   onClearErrors={this.clearErrors} />
+
+                {this.state.createView ? this.renderCreateView() : this.renderCreateButton()}
+
+                <hr />
+
                 <FeatureList
-                  unsavedFeatures={this.state.unsavedFeatures}
-                  savedFeatures={this.state.savedFeatures}
+                  features={this.state.features}
                   onFeatureChanged={this.updateFeature}
                   onFeatureSubmit={this.createFeature}
                   onFeatureCancel={this.cancelNewFeature}
                   onNewFeature={this.newFeature} />
             </div>
         );
+    },
+
+    renderCreateView: function() {
+        return <FeatureForm onCancel={this.cancelNewFeature} onSubmit={this.createFeature} />
+    },
+
+    renderCreateButton: function() {
+        return <button className="mal" onClick={this.newFeature}>Create feature toggle</button>
     }
 });
+
+
 
 module.exports = FeatureToggleComponent;

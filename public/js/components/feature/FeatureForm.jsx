@@ -1,13 +1,13 @@
 var React = require('react');
 
-var UnsavedFeature = React.createClass({
+var FeatureForm = React.createClass({
     render: function() {
         return (
           <form ref="form" className="bg-blue-xlt">
             <div className="line mal ptl pbl">
 
               <div className="unit prl r-size1of6">
-                <input ref="enabled" type="checkbox" defaultValue={this.props.feature.enabled} />
+                <input ref="enabled" type="checkbox" defaultValue={false} />
               </div>
 
               <div className="unit r-size2of5">
@@ -16,7 +16,6 @@ var UnsavedFeature = React.createClass({
                    className="mbs"
                    id="name"
                    ref="name"
-                   defaultValue={this.props.feature.name}
                    placeholder="Enter name" />
 
                 <input className=""
@@ -29,7 +28,7 @@ var UnsavedFeature = React.createClass({
                 <select id="strategy"
                         ref="strategy"
                         className=""
-                        defaultValue={this.props.feature.strategy}>
+                        defaultValue="default">
                   <option value="default">default</option>
                 </select>
               </div>
@@ -51,18 +50,20 @@ var UnsavedFeature = React.createClass({
     saveFeature: function(e) {
         e.preventDefault();
 
-        this.props.feature.name        = this.refs.name.getDOMNode().value;
-        this.props.feature.description = this.refs.description.getDOMNode().value;
-        this.props.feature.strategy    = this.refs.strategy.getDOMNode().value;
-        this.props.feature.enabled     = this.refs.enabled.getDOMNode().checked;
+        var feature = {
+            name: this.refs.name.getDOMNode().value,
+            description: this.refs.description.getDOMNode().value,
+            strategy: this.refs.strategy.getDOMNode().value,
+            enabled: this.refs.enabled.getDOMNode().checked
+        }
 
-        this.props.onSubmit(this.props.feature);
+        this.props.onSubmit(feature);
     },
 
     cancelFeature: function(e) {
         e.preventDefault();
-        this.props.onCancel(this.props.feature);
+        this.props.onCancel();
     }
 });
 
-module.exports = UnsavedFeature;
+module.exports = FeatureForm;

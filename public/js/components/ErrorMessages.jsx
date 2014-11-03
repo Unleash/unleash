@@ -12,23 +12,22 @@ var ErrorMessages = React.createClass({
 
         return (
             <div className="container">
-            <div className="mod shadow mtm mrn">
-              <div className="inner bg-red-lt">
-                <div className="bd">
-                  <div className="media centerify">
-	             <div className="imgExt">
-                        <a
-                           onClick={this.props.onClearErrors}
-                           className="icon-kryss1 linkblock sharp">
-                        </a>
-                     </div>
-	             <div className="bd">
-                        <ul>{errorNodes}</ul>
-                     </div>
-                  </div>
+                <div className="mod shadow mtm mrn">
+                    <div className="inner bg-red-lt">
+                        <div className="bd">
+                            <div className="media centerify">
+                                <div className="imgExt">
+                                    <a  onClick={this.props.onClearErrors}
+                                        className="icon-kryss1 linkblock sharp">
+                                    </a>
+                                </div>
+                                <div className="bd">
+                                    <ul>{errorNodes}</ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
             </div>
         );
     }

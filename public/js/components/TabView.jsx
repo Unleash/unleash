@@ -21,7 +21,7 @@ var TabView = React.createClass({
         return {activeTab: activeTab};
     },
 
-    handleChangeTab: function(tabPane) {
+    onChangeTab: function(tabPane) {
         this.setState({activeTab: tabPane});
     },
 
@@ -30,7 +30,7 @@ var TabView = React.createClass({
             return (
                 <li  key={tabPane.name} className={tabPane.name===this.state.activeTab.name ? "active": ""}>
                     <a  href={"#" + tabPane.name}
-                        onClick={this.handleChangeTab.bind(this, tabPane)}>{tabPane.name}
+                        onClick={this.onChangeTab.bind(this, tabPane)}>{tabPane.name}
                     </a>
                 </li>
             );

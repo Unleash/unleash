@@ -32,17 +32,17 @@ var StrategyForm = React.createClass({
             }
         });
 
-        this.props.handleSave(strategy);
+        this.props.onSave(strategy);
     },
 
-    handleAddParam: function(event) {
+    onAddParam: function(event) {
         event.preventDefault();
         var id = this.state.parameters.length + 1;
         var params = this.state.parameters.concat([{id:id, name: "param_" + id, label: "Parameter " +id}]);
         this.setState({parameters: params});
     },
 
-    handleRemoveParam: function(event) {
+    onRemoveParam: function(event) {
         event.preventDefault();
         var id = this.state.parameters.length + 1;
         var params = this.state.parameters.slice(0, -1);
@@ -118,14 +118,14 @@ var StrategyForm = React.createClass({
 
     renderAddLink: function() {
         if(this.state.parameters.length < this.props.maxParams) {
-            return <a href="#add" onClick={this.handleAddParam}>+ Add required parameter</a>;
+            return <a href="#add" onClick={this.onAddParam}>+ Add required parameter</a>;
         }
     },
     renderRemoveLink: function() {
         if(this.state.parameters.length > 0) {
             return (
                 <div className="formelement mtn">
-                    <a href="#add" className="negative" onClick={this.handleRemoveParam}>- Remove parameter</a>
+                    <a href="#add" className="negative" onClick={this.onRemoveParam}>- Remove parameter</a>
                 </div>
                 );
         }

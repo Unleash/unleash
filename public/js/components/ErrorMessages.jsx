@@ -12,7 +12,7 @@ var ErrorMessages = React.createClass({
 
         return (
             <div className="container">
-            <div className="mod shadow mtm">
+            <div className="mod shadow mtm mrn">
               <div className="inner bg-red-lt">
                 <div className="bd">
                   <div className="media centerify">

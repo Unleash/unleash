@@ -1,4 +1,5 @@
 var React          = require('react');
+var TextInput      = require('../form/TextInput');
 
 var StrategyForm = React.createClass({
 
@@ -18,7 +19,8 @@ var StrategyForm = React.createClass({
         event.preventDefault();
 
         var strategy = {};
-        strategy.name = this.refs.strategy_name.getDOMNode().value.trim();
+        strategy.name = this.refs.name.getValue();
+        strategy.description = this.refs.description.getValue();
         strategy.parametersTemplate = {};
 
         var that = this;
@@ -55,22 +57,23 @@ var StrategyForm = React.createClass({
                     <form onSubmit={this.onSubmit}>
                         <fieldset>
                             <legend>Create strategy</legend>
-                            <div className="formelement">
-                                <label htmlFor="strategy_name" className="t4">Name</label>
-                                <div className="input">
-                                    <input
-                                        id="trategy_name"
-                                        ref="strategy_name"
-                                        type="text"
-                                        name="name"
-                                        placeholder="Strategy name"
-                                    />
-                                </div>
-                            </div>
+
+                            <TextInput
+                                id="name"
+                                name="name"
+                                label="Name"
+                                ref="name"
+                                placeholder="Strategy name" />
+
+                            <TextInput
+                                id="description"
+                                name="description"
+                                label="Description"
+                                ref="description"
+                                placeholder="Please write a short descriptio" />
 
                             {this.renderParameters()}
                             {this.renderRemoveLink()}
-
 
                             <div className="actions">
                                 <input type="submit" value="Save" className="primary mrs" />

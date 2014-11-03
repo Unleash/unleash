@@ -27,7 +27,7 @@ var TextInput = React.createClass({
 
     render: function() {
         return (
-            <div className="formelement">
+            <div className="formelement required">
                 <label htmlFor="strategy_name" className="t4">{this.props.label}</label>
                 <div className="input">
                     <input type="text"

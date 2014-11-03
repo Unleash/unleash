@@ -20,27 +20,27 @@ var StrategiesComponent = React.createClass({
     },
 
     initError: function() {
-        this.handleError("Could not load inital strategies from server");
+        this.onError("Could not load inital strategies from server");
     },
 
     clearErrors: function() {
         this.setState({errors: []});
     },
 
-    handleError: function(error) {
+    onError: function(error) {
         var errors = this.state.errors.concat([error]);
         this.setState({errors: errors});
     },
 
-    handleNewStrategy: function() {
+    onNewStrategy: function() {
         this.setState({createView: true});
     },
 
-    handleCancelNewStrategy: function() {
+    onCancelNewStrategy: function() {
         this.setState({createView: false});
     },
 
-    handleSave: function(strategy) {
+    onSave: function(strategy) {
         var strategies = this.state.strategies.concat([strategy]);
         this.setState({
             createView: false,
@@ -64,12 +64,12 @@ var StrategiesComponent = React.createClass({
     },
 
     renderCreateView: function() {
-        return (<StrategyForm handleCancelNewStrategy={this.handleCancelNewStrategy} handleSave={this.handleSave} />)
+        return (<StrategyForm onCancelNewStrategy={this.onCancelNewStrategy} onSave={this.onSave} />)
     },
 
     renderCreateButton: function() {
         return (
-            <button className="mal" onClick={this.handleNewStrategy}>Create strategy</button>
+            <button className="mal" onClick={this.onNewStrategy}>Create strategy</button>
         );
     }
 });

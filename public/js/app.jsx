@@ -1,17 +1,17 @@
-var React                  = require('react');
-var TabView                = React.createFactory(require('./components/TabView'));
-var Menu                   = React.createFactory(require('./components/Menu'));
-var FeatureToggleComponent = React.createFactory(require('./components/feature/FeatureToggleComponent'));
-var StrategyComponent      = React.createFactory(require('./components/strategy/StrategyComponent'));
+var React                   = require('react');
+var TabView                 = React.createFactory(require('./components/TabView'));
+var Menu                    = React.createFactory(require('./components/Menu'));
+var FeatureTogglesComponent = React.createFactory(require('./components/feature/FeatureTogglesComponent'));
+var StrategiesComponent     = React.createFactory(require('./components/strategy/StrategiesComponent'));
 
 var tabPanes = [
     {
         name: "Feature Toggles",
-        content: new FeatureToggleComponent({pollInterval: 5000})
+        content: new FeatureTogglesComponent({pollInterval: 5000})
     },
     {
         name: "Strategies",
-        content: new StrategyComponent({})
+        content: new StrategiesComponent({})
     }
 ];
 

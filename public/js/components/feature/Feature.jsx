@@ -1,6 +1,6 @@
 var React = require('react');
 
-var SavedFeature = React.createClass({
+var Feature = React.createClass({
     onChange: function(event) {
         this.props.onChange({
             name: this.props.feature.name,
@@ -28,4 +28,4 @@ var SavedFeature = React.createClass({
     }
 });
 
-module.exports = SavedFeature;
+module.exports = Feature;

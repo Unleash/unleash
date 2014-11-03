@@ -69,10 +69,8 @@ var StrategyComponent = React.createClass({
 
     renderCreateButton: function() {
         return (
-            <p className="">
-                <button className="" onClick={this.handleNewStrategy}>Create strategy</button>
-            </p>
-            );
+            <button className="mal" onClick={this.handleNewStrategy}>Create strategy</button>
+        );
     }
 });
 

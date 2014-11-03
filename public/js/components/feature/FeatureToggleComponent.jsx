@@ -1,10 +1,10 @@
 var React         = require('react');
-var Timer         = require('../utils/Timer');
-var ErrorMessages = require('./ErrorMessages');
+var Timer         = require('../../utils/Timer');
+var ErrorMessages = require('../ErrorMessages');
 var FeatureList   = require('./FeatureList');
-var FeatureStore  = require('../stores/FeatureStore');
+var FeatureStore  = require('../../stores/FeatureStore');
 
-var Unleash = React.createClass({
+var FeatureToggleComponent = React.createClass({
     getInitialState: function() {
         return {
             savedFeatures: [],
@@ -116,18 +116,18 @@ var Unleash = React.createClass({
         return (
             <div>
                 <ErrorMessages
-                errors={this.state.errors}
-                onClearErrors={this.clearErrors} />
+                  errors={this.state.errors}
+                  onClearErrors={this.clearErrors} />
                 <FeatureList
-                unsavedFeatures={this.state.unsavedFeatures}
-                savedFeatures={this.state.savedFeatures}
-                onFeatureChanged={this.updateFeature}
-                onFeatureSubmit={this.createFeature}
-                onFeatureCancel={this.cancelNewFeature}
-                onNewFeature={this.newFeature} />
+                  unsavedFeatures={this.state.unsavedFeatures}
+                  savedFeatures={this.state.savedFeatures}
+                  onFeatureChanged={this.updateFeature}
+                  onFeatureSubmit={this.createFeature}
+                  onFeatureCancel={this.cancelNewFeature}
+                  onNewFeature={this.newFeature} />
             </div>
         );
     }
 });
 
-module.exports = Unleash;
+module.exports = FeatureToggleComponent;

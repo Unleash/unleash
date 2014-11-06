@@ -24,7 +24,8 @@
         "tdd": "mocha --watch test test/*",
         "test-bamboo-ci": "mocha test test/*",
         "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
-        "coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+        "coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+        "postinstall": "npm run build"
     },
     "dependencies": {
         "any-db": "2.1.0",
@@ -38,6 +39,12 @@
         "ini": "1.3.0",
         "log4js": "0.6.21",
         "nconf": "0.6.9",
+        "jsxhint": "0.4.15",
+        "jsx-loader": "^0.12.0",
+        "react": "^0.12.0",
+        "reqwest": "^1.1.4",
+        "webpack": "^1.4.9",
+        "webpack-dev-middleware": "^1.0.11",
         "pg": "3.6.1"
     },
     "devDependencies": {
@@ -45,18 +52,12 @@
         "coveralls": "^2.11.2",
         "istanbul": "0.3.2",
         "jshint": "2.5.2",
-        "jsx-loader": "^0.12.0",
-        "jsxhint": "0.4.15",
         "mocha": "1.20.1",
         "mocha-lcov-reporter": "0.0.1",
         "mockery": "1.4.0",
         "pre-commit": "0.0.9",
-        "react": "^0.12.0",
-        "reqwest": "^1.1.4",
         "supertest": "0.13.0",
         "supervisor": "0.6.0",
-        "webpack": "^1.4.9",
-        "webpack-dev-middleware": "^1.0.11",
         "xmlbuilder": "2.4.4"
     }
 }

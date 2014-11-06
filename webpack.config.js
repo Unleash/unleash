@@ -16,9 +16,9 @@ module.exports = {
     },
 
     resolve: {
-	root: [js_root],
+        root: [js_root],
         extensions: ['', '.js', '.jsx'],
-	modulesDirectories: ["web_modules", "node_modules"]
+        modulesDirectories: ["web_modules", "node_modules"]
     },
 
     module: {

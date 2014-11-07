@@ -32,7 +32,7 @@ app.set('trust proxy');
 app.locals.baseUriPath = baseUriPath;
 
 app.use(log4js.connectLogger(logger, {format: ':remote-addr :status :method :url :response-timems'}));
-app.set('port', process.env.HTTP_PORT || 4242);
+app.set('port', process.env.HTTP_PORT || process.env.PORT || 4242);
 
 app.use(baseUriPath, express.static(__dirname + '/public'));
 app.use(bodyParser.json({strict: false}));

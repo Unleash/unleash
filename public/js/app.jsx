@@ -1,6 +1,6 @@
 var React                   = require('react');
-var TabView                 = React.createFactory(require('./components/TabView'));
-var Menu                    = React.createFactory(require('./components/Menu'));
+var TabView                 = require('./components/TabView');
+var Menu                    = require('./components/Menu');
 var FeatureTogglesComponent = React.createFactory(require('./components/feature/FeatureTogglesComponent'));
 var StrategiesComponent     = React.createFactory(require('./components/strategy/StrategiesComponent'));
 

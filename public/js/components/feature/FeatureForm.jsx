@@ -33,16 +33,16 @@ var FeatureForm = React.createClass({
                 </select>
               </div>
 
-            <div className="unit r-size1of6 rightify">
-              <button className="primary mrs" onClick={this.saveFeature}>
-                  Save
-              </button>
+              <div className="unit r-size1of6 rightify">
+                <button className="primary mrs" onClick={this.saveFeature}>
+                    Save
+                </button>
 
-              <button className="" onClick={this.cancelFeature}>
-                Cancel
-              </button>
+                <button className="" onClick={this.cancelFeature}>
+                  Cancel
+                </button>
+              </div>
             </div>
-          </div>
           </form>
         );
     },

@@ -37,9 +37,11 @@ var FeatureTogglesComponent = React.createClass({
         if (this.isClientError(error)) {
             // TODO: catch SyntaxError
             var errors = JSON.parse(error.responseText)
-            errors.forEach(function(e) {  this.state.errors.push(e.msg); }.bind(this))
+            errors.forEach(function(e) { this.addError(e.msg); }.bind(this))
+        } else if (error.status === 0) {
+            this.addError("server unreachable");
         } else {
-            this.state.errors.push(error);
+            this.addError(error);
         }
 
         this.forceUpdate();
@@ -86,6 +88,12 @@ var FeatureTogglesComponent = React.createClass({
 
     clearErrors: function() {
         this.setState({errors: []});
+    },
+
+    addError: function(msg) {
+        if (this.state.errors[this.state.errors.length - 1] !== msg) {
+            this.state.errors.push(msg);
+        }
     },
 
     isClientError: function(error) {

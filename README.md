@@ -43,7 +43,7 @@ npm test
 
 1. Create `migrations/sql/NNN-your-migration-name.up.sql` with your change in SQL.
 2. Create `migrations/sql/NNN-your-migration-name.down.sql` with the rollback of your change in SQL.
-3. Run `db-migrate create your-migration-name` and edit the generated file to run the above SQL files.
+3. Run `db-migrate create your-migration-name` and edit the generated file to have this line: `module.exports = require('../lib/migrationRunner').create('NNN-your-migration-name');`
 4. Run `npm run db-migrate-up`.
 5. Generate LB artifact using `scripts/generate-liquibase-artifact` (TODO: make this internal)
 

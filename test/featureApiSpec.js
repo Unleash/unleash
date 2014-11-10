@@ -47,7 +47,7 @@ describe('The api', function () {
             .expect(400, done);
     });
 
-    it('can not change status of feature toggle that dose not exsist', function (done) {
+    it('can not change status of feature toggle that does not exist', function (done) {
         request
             .patch('/features/shouldNotExsist')
             .send({
@@ -58,7 +58,7 @@ describe('The api', function () {
             .expect(404, done);
     });
 
-    it('can change status of feature toggle that dose exsist', function (done) {
+    it('can change status of feature toggle that does exist', function (done) {
         request
             .patch('/features/featureY')
             .send({

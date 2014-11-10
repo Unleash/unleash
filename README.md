@@ -4,6 +4,15 @@
 
 unleash-server is a place to ask for the status of features.
 
+## Clients
+
+In order to make use of unleash you will probably need a client implementation.
+
+Known client implementations:
+- [unleash-client-java](https://github.com/finn-no/unleash-client-java)
+
+## Development
+
 ### Create a local unleash-db on postgres
 
 ```bash
@@ -19,13 +28,14 @@ Then set DATABASE_URI env var:
 export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
 ```
 
-## Important commands:
+### Commands
 
 ```
 // Install dependencies
 npm install
 
 // Make sure DATABASE_URL is set and run migrations in your local DB
+export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
 ./node_modules/.bin/db-migrate up
 
 // Start server in dev-mode:
@@ -41,16 +51,10 @@ http://localhost:4242/features
 npm test
 ```
 
-## Making a schema change
+### Making a schema change
 
 1. Create `migrations/sql/NNN-your-migration-name.up.sql` with your change in SQL.
 2. Create `migrations/sql/NNN-your-migration-name.down.sql` with the rollback of your change in SQL.
 3. Run `db-migrate create your-migration-name` and edit the generated file to have this line: `module.exports = require('../lib/migrationRunner').create('NNN-your-migration-name');`
 4. Run `npm run db-migrate-up`.
 5. Generate LB artifact using `scripts/generate-liquibase-artifact` (TODO: make this internal)
-
-## Clients
-In order to make use of unleash you will probably need a client implementation.
-
-Known client implementations:
-- [unleash-client-java](https://github.com/finn-no/unleash-client-java)

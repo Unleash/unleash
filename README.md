@@ -1,4 +1,6 @@
-# unleash-server [![Build Status](https://travis-ci.org/finn-no/unleash.svg?branch=master)](https://travis-ci.org/finn-no/unleash) [![Code Climate](https://codeclimate.com/github/finn-no/unleash/badges/gpa.svg)](https://codeclimate.com/github/finn-no/unleash) [![Coverage Status](https://coveralls.io/repos/finn-no/unleash/badge.png?branch=master)](https://coveralls.io/r/finn-no/unleash?branch=master) [![Dependency Status](https://david-dm.org/finn-no/unleash.png)](https://david-dm.org/finn-no/unleash) [![devDependency Status](https://david-dm.org/finn-no/unleash/dev-status.png)](https://david-dm.org/finn-no/unleash#info=devD)
+# unleash-server
+
+[![Build Status](https://travis-ci.org/finn-no/unleash.svg?branch=master)](https://travis-ci.org/finn-no/unleash) [![Code Climate](https://codeclimate.com/github/finn-no/unleash/badges/gpa.svg)](https://codeclimate.com/github/finn-no/unleash) [![Coverage Status](https://coveralls.io/repos/finn-no/unleash/badge.png?branch=master)](https://coveralls.io/r/finn-no/unleash?branch=master) [![Dependency Status](https://david-dm.org/finn-no/unleash.png)](https://david-dm.org/finn-no/unleash) [![devDependency Status](https://david-dm.org/finn-no/unleash/dev-status.png)](https://david-dm.org/finn-no/unleash#info=devD)
 
 unleash-server is a place to ask for the status of features.
 
@@ -12,7 +14,7 @@ GRANT ALL PRIVILEGES ON DATABASE unleash to unleash_user;
 SQL
 ```
 
-Then set up your DATABASE_URI env.var:
+Then set DATABASE_URI env var:
 ```
 export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
 ```
@@ -48,7 +50,7 @@ npm test
 5. Generate LB artifact using `scripts/generate-liquibase-artifact` (TODO: make this internal)
 
 ## Clients
-In order to make use of unleash you will probably need a client implementation. 
+In order to make use of unleash you will probably need a client implementation.
 
-Known client implementations: 
+Known client implementations:
 - [unleash-client-java](https://github.com/finn-no/unleash-client-java)

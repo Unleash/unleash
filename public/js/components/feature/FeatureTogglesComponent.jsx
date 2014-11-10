@@ -35,7 +35,6 @@ var FeatureTogglesComponent = React.createClass({
 
     handleError: function (error) {
         if (this.isClientError(error)) {
-            // TODO: catch SyntaxError
             var errors = JSON.parse(error.responseText)
             errors.forEach(function(e) { this.addError(e.msg); }.bind(this))
         } else if (error.status === 0) {

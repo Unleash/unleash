@@ -12,15 +12,19 @@ var Feature = React.createClass({
     render: function() {
         return (
             <div className='line mal'>
-                <div className='unit r-size1of6'>
+                <div className='unit r-size1of5'>
                     <input type='checkbox' checked={this.props.feature.enabled} onChange={this.onChange} />
                 </div>
 
-                <div className='unit r-size2of5' title={this.props.feature.description}>
+                <div className='unit r-size1of5'>
                   {this.props.feature.name}
                 </div>
 
-                <div className='unit '>
+                <div className='unit r-size2of5 opaque smalltext truncate'>
+                  {this.props.feature.description || '\u00a0'}
+                </div>
+
+                <div className='unit'>
                     {this.props.feature.strategy}
                 </div>
             </div>

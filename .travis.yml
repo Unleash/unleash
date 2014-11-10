@@ -1,8 +1,10 @@
 language: node_js
-node_js: 
+node_js:
 - "0.10"
 script:
-- npm install && npm test && npm run coverage-report
+- npm install
+- npm test
+- npm run coverage-report || true
 notifications:
   hipchat:
     rooms:

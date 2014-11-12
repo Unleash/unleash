@@ -39,7 +39,7 @@ export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
 ./node_modules/.bin/db-migrate up
 
 // Start server in dev-mode:
-npm run start-dev
+npm run dev
 
 // Admin dashboard
 http://localhost:4242

@@ -1,22 +1,42 @@
 var React = require('react');
+var FeatureForm = require('./FeatureForm');
 
 var Feature = React.createClass({
-    onChange: function(event) {
+    getInitialState: function() {
+        return {
+            editMode: false
+        };
+    },
+
+    toggleEditMode: function() {
+        this.setState({editMode: !this.state.editMode});
+    },
+
+    saveFeature: function(feature) {
         this.props.onChange({
-            name: this.props.feature.name,
+            name: feature.name,
             field: 'enabled',
-            value: event.target.checked
+            value: feature.enabled
         });
+        this.toggleEditMode();
     },
 
     render: function() {
-        return (
-            <div className='line mal'>
-                <div className='unit r-size1of5'>
-                    <input type='checkbox' checked={this.props.feature.enabled} onChange={this.onChange} />
-                </div>
+        return (<div className='line mal'>
+                {this.state.editMode ? this.renderEditMode() : this.renderViewMode()}
+                </div>);
+    },
 
-                <div className='unit r-size1of5'>
+    renderEditMode: function() {
+        return (<FeatureForm feature={this.props.feature} onSubmit={this.saveFeature} onCancel={this.toggleEditMode} />);
+
+    },
+
+    renderViewMode: function() {
+        var strikeThrough = this.props.feature.enabled ? '' : 'strikethrough';
+        return (
+            <div>
+                <div className={'unit r-size1of5 ' + strikeThrough}>
                   {this.props.feature.name}
                 </div>
 
@@ -24,8 +44,12 @@ var Feature = React.createClass({
                   {this.props.feature.description || '\u00a0'}
                 </div>
 
-                <div className='unit'>
+                <div className='unit r-size1of5'>
                     {this.props.feature.strategy}
+                </div>
+
+                <div className='unit r-size1of5'>
+                    <input type='button' value='Edit' onClick={this.toggleEditMode}/>
                 </div>
             </div>
         );

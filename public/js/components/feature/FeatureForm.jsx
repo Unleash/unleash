@@ -6,7 +6,7 @@ var FeatureForm = React.createClass({
       return {strategyOptions: []};
     },
 
-    componentDidMount: function() {
+    componentWillMount: function() {
       strategyStore.getStrategies().then(this.handleStrategyResponse);
     },
 
@@ -19,16 +19,27 @@ var FeatureForm = React.createClass({
     },
 
     render: function() {
+        var currentStrategy = this.props.feature ? this.props.feature.strategy : "";
         var strategyNodes = this.state.strategyOptions.map(function(name) {
-          return <option value={name}>{name}</option>;
+          return (
+            <option value={name} selected={name === currentStrategy}>
+              {name}
+            </option>
+            );
         });
+
+        var feature = this.props.feature || {
+          name: '',
+          strategy: 'default',
+          enabled: false
+        };
 
         return (
           <form ref="form" className="bg-blue-xlt">
             <div className="line mal ptl pbl">
 
               <div className="unit prl r-size1of6">
-                <input ref="enabled" type="checkbox" defaultValue={false} />
+                <input ref="enabled" type="checkbox" defaultChecked={feature.enabled} />
               </div>
 
               <div className="unit r-size2of5">
@@ -37,11 +48,15 @@ var FeatureForm = React.createClass({
                    className="mbs"
                    id="name"
                    ref="name"
+                   disabled={feature.name.length}
+                   defaultValue={feature.name}
                    placeholder="Enter name" />
 
                 <input className=""
                    type="text"
                    ref="description"
+                   defaultValue={feature.description}
+                   disabled={feature.name.length}
                    placeholder="Enter description" />
               </div>
 
@@ -49,7 +64,8 @@ var FeatureForm = React.createClass({
                 <select id="strategy"
                         ref="strategy"
                         className=""
-                        defaultValue="default">
+                        disabled={feature.name.length}
+                        defaultValue={feature.strategy}>
                   {strategyNodes}
                 </select>
               </div>

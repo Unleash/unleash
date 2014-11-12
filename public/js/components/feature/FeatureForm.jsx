@@ -1,7 +1,28 @@
 var React = require('react');
+var strategyStore = require('../../stores/StrategyStore');
 
 var FeatureForm = React.createClass({
+    getInitialState: function() {
+      return {strategyOptions: []};
+    },
+
+    componentDidMount: function() {
+      strategyStore.getStrategies().then(this.handleStrategyResponse);
+    },
+
+    handleStrategyResponse: function(response) {
+      var strategyNames = response.strategies.map(function(strategy) {
+        return strategy.name;
+      });
+
+      this.setState({strategyOptions: strategyNames});
+    },
+
     render: function() {
+        var strategyNodes = this.state.strategyOptions.map(function(name) {
+          return <option value={name}>{name}</option>;
+        });
+
         return (
           <form ref="form" className="bg-blue-xlt">
             <div className="line mal ptl pbl">
@@ -29,7 +50,7 @@ var FeatureForm = React.createClass({
                         ref="strategy"
                         className=""
                         defaultValue="default">
-                  <option value="default">default</option>
+                  {strategyNodes}
                 </select>
               </div>
 

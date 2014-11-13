@@ -12,7 +12,23 @@ var FeatureList = React.createClass({
             );
         }.bind(this));
 
-        return <div>{featureNodes}</div>;
+        return (
+          <div className='r-margin'>
+            <table className='outerborder'>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Strategy</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {featureNodes}
+              </tbody>
+            </table>
+          </div>
+          );
     }
 });
 

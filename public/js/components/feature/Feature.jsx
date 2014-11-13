@@ -22,36 +22,41 @@ var Feature = React.createClass({
     },
 
     render: function() {
-        return (<div className='line mal'>
-                {this.state.editMode ? this.renderEditMode() : this.renderViewMode()}
-                </div>);
+        return this.state.editMode ? this.renderEditMode() : this.renderViewMode();
     },
 
     renderEditMode: function() {
-        return (<FeatureForm feature={this.props.feature} onSubmit={this.saveFeature} onCancel={this.toggleEditMode} />);
+        return (
+            <tr>
+                <td colSpan="4">
+                    <FeatureForm feature={this.props.feature} onSubmit={this.saveFeature} onCancel={this.toggleEditMode} />
+                </td>
+            </tr>
+            );
 
     },
 
     renderViewMode: function() {
         var strikeThrough = this.props.feature.enabled ? '' : 'strikethrough';
+
         return (
-            <div>
-                <div className={'unit r-size1of5 ' + strikeThrough}>
-                  {this.props.feature.name}
-                </div>
+            <tr>
+                <td className={strikeThrough}>
+                    {this.props.feature.name}
+                </td>
 
-                <div className='unit r-size2of5 opaque smalltext truncate'>
-                  {this.props.feature.description || '\u00a0'}
-                </div>
+                <td className='opaque smalltext truncate'>
+                    {this.props.feature.description || '\u00a0'}
+                </td>
 
-                <div className='unit r-size1of5'>
+                <td>
                     {this.props.feature.strategy}
-                </div>
+                </td>
 
-                <div className='unit r-size1of5'>
+                <td>
                     <input type='button' value='Edit' onClick={this.toggleEditMode}/>
-                </div>
-            </div>
+                </td>
+            </tr>
         );
     }
 });

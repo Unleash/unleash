@@ -1,8 +1,10 @@
 var React                   = require('react');
 var TabView                 = require('./components/TabView');
 var Menu                    = require('./components/Menu');
+var EventsComponent         = React.createFactory(require('./components/event/EventsComponent'));
 var FeatureTogglesComponent = React.createFactory(require('./components/feature/FeatureTogglesComponent'));
 var StrategiesComponent     = React.createFactory(require('./components/strategy/StrategiesComponent'));
+
 
 var tabPanes = [
     {
@@ -12,6 +14,10 @@ var tabPanes = [
     {
         name: "Strategies",
         content: new StrategiesComponent({})
+    },
+    {
+        name: "Log",
+        content: new EventsComponent({})
     }
 ];
 

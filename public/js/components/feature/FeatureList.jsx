@@ -17,6 +17,7 @@ var FeatureList = React.createClass({
             <table className='outerborder'>
               <thead>
                 <tr>
+                  <th></th>
                   <th>Name</th>
                   <th>Description</th>
                   <th>Strategy</th>

@@ -37,11 +37,13 @@ var Feature = React.createClass({
     },
 
     renderViewMode: function() {
-        var strikeThrough = this.props.feature.enabled ? '' : 'strikethrough';
-
         return (
             <tr>
-                <td className={strikeThrough}>
+                <td width="20">
+                    <span className={this.props.feature.enabled ? "toggle-active" : "toggle-inactive"} title="Status">
+                    </span>
+                </td>
+                <td>
                     {this.props.feature.name}
                 </td>
 
@@ -53,7 +55,7 @@ var Feature = React.createClass({
                     {this.props.feature.strategy}
                 </td>
 
-                <td>
+                <td className="rightify">
                     <input type='button' value='Edit' onClick={this.toggleEditMode}/>
                 </td>
             </tr>

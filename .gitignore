@@ -29,6 +29,8 @@ node_modules
 
 # webpack output
 public/js/bundle.js
+public/js/bundle.js.map
+
 
 .DS_Store
 

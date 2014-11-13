@@ -28,7 +28,7 @@ var Feature = React.createClass({
     renderEditMode: function() {
         return (
             <tr>
-                <td colSpan="4">
+                <td colSpan="5">
                     <FeatureForm feature={this.props.feature} onSubmit={this.saveFeature} onCancel={this.toggleEditMode} />
                 </td>
             </tr>

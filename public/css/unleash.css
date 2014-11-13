@@ -1,0 +1,16 @@
+.toggle-active {
+    border: 1px solid black;
+    display: inline-block;
+    background-color: #3B7908;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}
+.toggle-inactive {
+    border: 1px solid black;
+    display: inline-block;
+    background-color: #E7384A;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}

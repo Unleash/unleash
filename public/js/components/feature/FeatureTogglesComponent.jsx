@@ -46,17 +46,10 @@ var FeatureTogglesComponent = React.createClass({
         this.forceUpdate();
     },
 
-    updateFeature: function (changeRequest) {
-        var newFeatures = this.state.features;
-        newFeatures.forEach(function(f){
-            if(f.name === changeRequest.name) {
-                f[changeRequest.field] = changeRequest.value;
-            }
-        });
-
-        this.setState({features: newFeatures});
+    updateFeature: function (feature) {
         this.stopFeaturePoller();
-        this.state.featureStore.updateFeature(changeRequest)
+        this.state.featureStore
+          .updateFeature(feature)
           .then(this.startFeaturePoller)
           .catch(this.handleError);
     },
@@ -140,7 +133,5 @@ var FeatureTogglesComponent = React.createClass({
         return <button className="mal" onClick={this.newFeature}>Create feature toggle</button>
     }
 });
-
-
 
 module.exports = FeatureTogglesComponent;

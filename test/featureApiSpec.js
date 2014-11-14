@@ -1,5 +1,5 @@
-var request = require('supertest'),
-    mockery = require('mockery');
+var request = require('supertest');
+var mockery = require('mockery');
 
 describe('The api', function () {
     var server;
@@ -49,24 +49,18 @@ describe('The api', function () {
 
     it('can not change status of feature toggle that does not exist', function (done) {
         request
-            .patch('/features/shouldNotExsist')
-            .send({
-                'field': 'enabled',
-                'value': true
-            })
+            .put('/features/should-not-exist')
+            .send({name: 'should-not-exist', enabled: false})
             .set('Content-Type', 'application/json')
             .expect(404, done);
     });
 
     it('can change status of feature toggle that does exist', function (done) {
         request
-            .patch('/features/featureY')
-            .send({
-                'field': 'enabled',
-                'value': true
-            })
+            .put('/features/featureY')
+            .send({name: 'featureY', enabled: true})
             .set('Content-Type', 'application/json')
-            .expect(202, done);
+            .expect(200, done);
     });
 
 });

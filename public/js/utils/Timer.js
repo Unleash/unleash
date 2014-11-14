@@ -11,6 +11,7 @@ Timer.prototype.start = function() {
 
     console.log('starting timer');
     this.timerId = setInterval(this.cb, this.interval);
+    this.cb();
 };
 
 Timer.prototype.stop  = function() {

@@ -25,10 +25,46 @@ var events = [
         "type": "feature-create",
         "created_by": "me",
         "data": {
-            "foo": "rab"
+            "foo": "rab",
+            "name": "myname"
         }
     }
 ];
+
+var filterableEvents = [
+    {
+        "id": 1,
+        "created_at": 1414159948677,
+        "type": "feature-create",
+        "created_by": "me",
+        "data": {
+            "name": "foo"
+        }
+    },
+    {
+        "id": 2,
+        "created_at": 1414159948677,
+        "type": "feature-create",
+        "created_by": "me",
+        "data": {
+            "name": "bar"
+        }
+    },
+    {
+        "id": 3,
+        "created_at": 1414159948677,
+        "type": "feature-create",
+        "created_by": "me",
+        "data": {
+            "name": "myname"
+        }
+    }
+];
+
+
+function filterEventsByName(name) {
+    return filterableEvents.filter(function (n){return n.data.name===name;});
+}
 
 function getEvent(name) {
     var eventFound;
@@ -57,6 +93,12 @@ module.exports = {
         });
     },
 
+    getEventsFilterByName: function(name) {
+        return new Promise(function (resolve) {
+            resolve(filterEventsByName(name));
+        });
+    },
+
     getEvent: function(name) {
         var event = getEvent(name);
         if(event) {
@@ -65,4 +107,5 @@ module.exports = {
             return Promise.reject("Event not found");
         }
     }
+
 };

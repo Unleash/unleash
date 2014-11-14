@@ -31,4 +31,11 @@ describe('The event api', function () {
             .expect(200, done);
     });
 
+    it('returns events given a name', function (done) {
+        request
+            .get('/events/myname')
+            .expect('Content-Type', /json/)
+            .expect(200, done);
+    });
+
 });

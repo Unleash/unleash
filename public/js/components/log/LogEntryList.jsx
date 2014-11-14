@@ -1,14 +1,14 @@
 var React = require('react'),
-    Event = require('./Event');
+    LogEntry = require('./LogEntry');
 
-var EventList = React.createClass({
+var LogEntryList = React.createClass({
     propTypes: {
         events: React.PropTypes.array.isRequired
     },
 
     render: function() {
-        var eventNodes = this.props.events.map(function(event) {
-            return <Event event={event} key={event.name} />;
+        var logEntryNodes = this.props.events.map(function(event) {
+            return <LogEntry event={event} key={event.name} />;
         });
         return (
             <div className='r-margin'>
@@ -21,7 +21,7 @@ var EventList = React.createClass({
                         </tr>
                     </thead>
                     <tbody>
-                        {eventNodes}
+                        {logEntryNodes}
                     </tbody>
                 </table>
             </div>
@@ -29,4 +29,4 @@ var EventList = React.createClass({
     }
 });
 
-module.exports = EventList;
+module.exports = LogEntryList;

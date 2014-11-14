@@ -1,6 +1,6 @@
 var React = require('react');
 
-var Event = React.createClass({
+var LogEntry = React.createClass({
     propTypes: {
         event: React.PropTypes.object.isRequired
     },
@@ -16,4 +16,4 @@ var Event = React.createClass({
     }
 });
 
-module.exports = Event;
+module.exports = LogEntry;

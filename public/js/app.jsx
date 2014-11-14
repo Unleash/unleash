@@ -1,7 +1,7 @@
 var React                   = require('react');
 var TabView                 = require('./components/TabView');
 var Menu                    = require('./components/Menu');
-var EventsComponent         = React.createFactory(require('./components/event/EventsComponent'));
+var LogEntriesComponent         = React.createFactory(require('./components/log/LogEntriesComponent'));
 var FeatureTogglesComponent = React.createFactory(require('./components/feature/FeatureTogglesComponent'));
 var StrategiesComponent     = React.createFactory(require('./components/strategy/StrategiesComponent'));
 
@@ -17,7 +17,7 @@ var tabPanes = [
     },
     {
         name: "Log",
-        content: new EventsComponent({})
+        content: new LogEntriesComponent({})
     }
 ];
 

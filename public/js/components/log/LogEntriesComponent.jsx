@@ -1,9 +1,9 @@
 var React          = require('react'),
-    EventList   = require('./EventList'),
+    LogEntryList   = require('./LogEntryList'),
     eventStore  = require('../../stores/EventStore'),
     ErrorMessages  = require('../ErrorMessages');
 
-var EventsComponent = React.createClass({
+var LogEntriesComponent = React.createClass({
     getInitialState: function() {
         return {
             createView: false,
@@ -38,10 +38,10 @@ var EventsComponent = React.createClass({
 
                 <hr />
 
-                <EventList events={this.state.events} />
+                <LogEntryList events={this.state.events} />
             </div>
             );
     },
 });
 
-module.exports = EventsComponent;
+module.exports = LogEntriesComponent;

@@ -13,11 +13,7 @@ var Feature = React.createClass({
     },
 
     saveFeature: function(feature) {
-        this.props.onChange({
-            name: feature.name,
-            field: 'enabled',
-            value: feature.enabled
-        });
+        this.props.onChange(feature);
         this.toggleEditMode();
     },
 

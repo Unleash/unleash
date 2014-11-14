@@ -7,13 +7,13 @@ FeatureStore.TYPE         = 'json';
 FeatureStore.CONTENT_TYPE = 'application/json';
 
 FeatureStore.prototype = {
-    updateFeature: function (changeRequest) {
+    updateFeature: function (feature) {
         return reqwest({
-            url: 'features/' + changeRequest.name,
-            method: 'patch',
+            url: 'features/' + feature.name,
+            method: 'put',
             type: FeatureStore.TYPE,
             contentType: FeatureStore.CONTENT_TYPE,
-            data: JSON.stringify(changeRequest)
+            data: JSON.stringify(feature)
         });
     },
 

@@ -56,7 +56,6 @@ var FeatureForm = React.createClass({
                    type="text"
                    ref="description"
                    defaultValue={feature.description}
-                   disabled={feature.name.length}
                    placeholder="Enter description" />
               </div>
 
@@ -64,7 +63,6 @@ var FeatureForm = React.createClass({
                 <select id="strategy"
                         ref="strategy"
                         className=""
-                        disabled={feature.name.length}
                         defaultValue={feature.strategy}>
                   {strategyNodes}
                 </select>

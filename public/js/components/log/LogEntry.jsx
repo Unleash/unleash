@@ -7,6 +7,9 @@ var LogEntry = React.createClass({
 
     render: function() {
         var d = new Date(this.props.event.createdAt);
+        var localEventData = JSON.parse(JSON.stringify(this.props.event.data));
+        delete localEventData.description;
+        delete localEventData.name;
         return (
             <tr>
                 <td>
@@ -14,10 +17,10 @@ var LogEntry = React.createClass({
                     kl. {d.getHours() + "." + d.getMinutes()}
                 </td>
                 <td>
-                    {this.props.event.type}
+                    <strong>{this.props.event.data.name}</strong><em>[{this.props.event.type}]</em>
                 </td>
                 <td>
-                    <code className='JSON'>{JSON.stringify(this.props.event.data)}</code>
+                    <code className='JSON'>{JSON.stringify(localEventData)}</code>
                 </td>
                 <td>{this.props.event.createdBy}</td>
             </tr>

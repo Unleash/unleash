@@ -24,9 +24,7 @@ var FeatureList = React.createClass({
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
-                {featureNodes}
-              </tbody>
+              {featureNodes}
             </table>
           </div>
           );

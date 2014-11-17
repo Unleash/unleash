@@ -43,7 +43,7 @@ var Feature = React.createClass({
                     {this.props.feature.name}
                 </td>
 
-                <td className='opaque smalltext truncate'>
+                <td className='opaque smalltext word-break' width="600">
                     {this.props.feature.description || '\u00a0'}
                 </td>
 

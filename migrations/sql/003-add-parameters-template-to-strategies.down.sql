@@ -1,0 +1,1 @@
+ALTER TABLE strategies DROP COLUMN "parameters_template";

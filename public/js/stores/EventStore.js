@@ -10,7 +10,16 @@ var EventStore = {
             method: 'get',
             type: TYPE
         });
+    },
+
+    getEventsByName: function (name) {
+        return reqwest({
+            url: 'events/' + name,
+            method: 'get',
+            type: TYPE
+        });
     }
+
 };
 
 module.exports = EventStore;

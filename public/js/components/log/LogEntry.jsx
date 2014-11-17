@@ -6,10 +6,19 @@ var LogEntry = React.createClass({
     },
 
     render: function() {
+        var d = new Date(this.props.event.createdAt);
         return (
             <tr>
-                <td>{this.props.event.data.name}</td>
-                <td>{this.props.event.type}</td>
+                <td>
+                    {d.getDate() + "." + d.getMonth() + "." + d.getFullYear()}<br />
+                    kl. {d.getHours() + "." + d.getMinutes()}
+                </td>
+                <td>
+                    {this.props.event.type}
+                </td>
+                <td>
+                    <code className='JSON'>{JSON.stringify(this.props.event.data)}</code>
+                </td>
                 <td>{this.props.event.createdBy}</td>
             </tr>
         );

@@ -15,8 +15,9 @@ var LogEntryList = React.createClass({
                 <table className='outerborder'>
                     <thead>
                         <tr>
-                            <th>Feature</th>
+                            <th>When</th>
                             <th>Action</th>
+                            <th>Data</th>
                             <th>Author</th>
                         </tr>
                     </thead>

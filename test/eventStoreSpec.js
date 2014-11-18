@@ -13,6 +13,7 @@ describe('EventStore', function () {
         });
 
         mockery.registerSubstitute('./eventDb', '../test/eventDbMock');
+        mockery.registerSubstitute('./strategyDb', '../test/strategyDbMock');
 
         eventStore = require('../lib/eventStore');
     });

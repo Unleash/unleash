@@ -13,6 +13,7 @@ describe('The routes', function () {
 
         mockery.registerSubstitute('./eventDb', '../test/eventDbMock');
         mockery.registerSubstitute('./featureDb', '../test/featureDbMock');
+        mockery.registerSubstitute('./strategyDb', '../test/strategyDbMock');
 
         server = require('../server');
         request = request('http://localhost:' + server.app.get('port'));

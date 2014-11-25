@@ -36,5 +36,13 @@ describe('The strategy api', function () {
             .expect(400, done);
     });
 
+    it('refuses to create a strategy with an existing name', function (done) {
+        request
+            .post('/strategies')
+            .send({name: 'default'})
+            .set('Content-Type', 'application/json')
+            .expect(403, done);
+    });
+
 
 });

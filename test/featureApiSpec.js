@@ -13,6 +13,13 @@ describe('The features api', function () {
             .expect(200, done);
     });
 
+    it('gets a feature by name', function (done) {
+        request
+            .get('/features/featureX')
+            .expect('Content-Type', /json/)
+            .expect(200, done);
+    });
+
     it('creates new feature toggle', function (done) {
         request
             .post('/features')

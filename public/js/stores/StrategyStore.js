@@ -1,7 +1,7 @@
 var reqwest = require('reqwest');
 
-TYPE         = 'json';
-CONTENT_TYPE = 'application/json';
+var TYPE         = 'json';
+var CONTENT_TYPE = 'application/json';
 
 var StrategyStore = {
     createStrategy: function (strategy) {

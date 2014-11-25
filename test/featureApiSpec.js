@@ -1,33 +1,21 @@
-var request = require('supertest');
-var mockery = require('mockery');
+var specHelper = require('./specHelper');
 
-describe('The api', function () {
-    var server;
+describe('The features api', function () {
+    var request;
 
-    before(function () {
-        mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-        });
-
-        mockery.registerSubstitute('./eventDb', '../test/eventDbMock');
-        mockery.registerSubstitute('./featureDb', '../test/featureDbMock');
-        mockery.registerSubstitute('./strategyDb', '../test/strategyDbMock');
-
-        server = require('../server');
-        request = request('http://localhost:' + server.app.get('port'));
-    });
-
-    after(function () {
-        mockery.disable();
-        mockery.deregisterAll();
-        server.server.close();
-    });
+    before(function () { request = specHelper.setupMockServer();  });
+    after(specHelper.tearDownMockServer);
 
     it('returns three mocked feature toggles', function (done) {
         request
             .get('/features')
+            .expect('Content-Type', /json/)
+            .expect(200, done);
+    });
+
+    it('gets a feature by name', function (done) {
+        request
+            .get('/features/featureX')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });

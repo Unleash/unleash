@@ -26,10 +26,10 @@ module.exports = {
             resolve(strategies);
         });
     },
-    getFeature: function(name) {
-        var feature = byName(name);
-        if(feature) {
-            return Promise.resolve(feature);
+    getStrategy: function(name) {
+        var strategy = byName(name);
+        if(strategy) {
+            return Promise.resolve(strategy);
         } else {
             return Promise.reject("strategy not found");
         }

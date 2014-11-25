@@ -35,6 +35,12 @@ var StrategyForm = React.createClass({
         this.props.onSave(strategy);
     },
 
+    onCancel: function(event) {
+        event.preventDefault();
+
+        this.props.onCancelNewStrategy();
+    },
+
     onAddParam: function(event) {
         event.preventDefault();
         var id = this.state.parameters.length + 1;
@@ -70,14 +76,14 @@ var StrategyForm = React.createClass({
                                 name="description"
                                 label="Description"
                                 ref="description"
-                                placeholder="Please write a short descriptio" />
+                                placeholder="Please write a short description" />
 
                             {this.renderParameters()}
                             {this.renderRemoveLink()}
 
                             <div className="actions">
                                 <input type="submit" value="Save" className="primary mrs" />
-                                <button onClick={this.props.handleCancelNewStrategy} className="mrs">Cancel</button>
+                                <button onClick={this.onCancel} className="mrs">Cancel</button>
                                 {this.renderAddLink()}
                             </div>
                         </fieldset>

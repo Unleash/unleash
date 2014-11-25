@@ -11,23 +11,11 @@ var FeatureForm = React.createClass({
     },
 
     handleStrategyResponse: function(response) {
-      var strategyNames = response.strategies.map(function(strategy) {
-        return strategy.name;
-      });
-
+      var strategyNames = response.strategies.map(function(s) { return s.name; });
       this.setState({strategyOptions: strategyNames});
     },
 
     render: function() {
-        var currentStrategy = this.props.feature ? this.props.feature.strategy : "";
-        var strategyNodes = this.state.strategyOptions.map(function(name) {
-          return (
-            <option value={name} selected={name === currentStrategy}>
-              {name}
-            </option>
-            );
-        });
-
         var feature = this.props.feature || {
           name: '',
           strategy: 'default',
@@ -64,7 +52,7 @@ var FeatureForm = React.createClass({
                         ref="strategy"
                         className=""
                         defaultValue={feature.strategy}>
-                  {strategyNodes}
+                  {this.renderStrategyOptions()}
                 </select>
               </div>
 
@@ -82,6 +70,18 @@ var FeatureForm = React.createClass({
         );
     },
 
+    renderStrategyOptions: function() {
+        var currentStrategy = this.props.feature ? this.props.feature.strategy : "";
+
+        return this.state.strategyOptions.map(function(name) {
+            return (
+              <option key={name} value={name} selected={name === currentStrategy}>
+                {name}
+              </option>
+            );
+        });
+    },
+
     saveFeature: function(e) {
         e.preventDefault();
 
@@ -90,7 +90,7 @@ var FeatureForm = React.createClass({
             description: this.refs.description.getDOMNode().value,
             strategy: this.refs.strategy.getDOMNode().value,
             enabled: this.refs.enabled.getDOMNode().checked
-        }
+        };
 
         this.props.onSubmit(feature);
     },

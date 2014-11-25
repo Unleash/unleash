@@ -68,8 +68,8 @@ var Feature = React.createClass({
                         {this.props.feature.strategy}
                     </td>
 
-                    <td className="rightify">
-                        <input type='button' value='Edit' onClick={this.toggleEditMode}/>
+                    <td>
+                        <input className="mrs mbs" type='button' value='Edit' onClick={this.toggleEditMode}/>
                         <input type='button' value='History' onClick={this.toggleHistory} />
                     </td>
                 </tr>

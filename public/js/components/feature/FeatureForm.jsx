@@ -71,7 +71,7 @@ var FeatureForm = React.createClass({
     },
 
     renderStrategyOptions: function() {
-        var currentStrategy = this.props.feature ? this.props.feature.strategy : "";
+        var currentStrategy = this.props.feature ? this.props.feature.strategy : "default";
 
         return this.state.strategyOptions.map(function(name) {
             return (

@@ -41,12 +41,20 @@ var StrategiesComponent = React.createClass({
     },
 
     onSave: function(strategy) {
-        var strategies = this.state.strategies.concat([strategy]);
-        this.setState({
-            createView: false,
-            strategies: strategies
-        });
-        console.log("Saved strategy: ", strategy);
+        function handleSuccess() {
+            var strategies = this.state.strategies.concat([strategy]);
+
+            this.setState({
+                createView: false,
+                strategies: strategies
+            });
+
+            console.log("Saved strategy: ", strategy);
+        }
+
+        strategyStore.createStrategy(strategy)
+        .then(handleSuccess.bind(this))
+        .catch(this.onError);
     },
 
     render: function() {

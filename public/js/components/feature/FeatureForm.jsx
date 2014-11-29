@@ -1,4 +1,5 @@
 var React = require('react');
+var TextInput      = require('../form/TextInput');
 var strategyStore = require('../../stores/StrategyStore');
 
 var FeatureForm = React.createClass({
@@ -22,51 +23,59 @@ var FeatureForm = React.createClass({
           enabled: false
         };
 
+        var title = this.props.feature ? "Edit '" + this.props.feature.name + "'" : "Create new toggle";
+
         return (
-          <form ref="form" className="bg-blue-xlt">
-            <div className="line mal ptl pbl">
+            <div className="bg-lilac-xlt r-pam">
+                <form ref="form" className="r-size1of2">
 
-              <div className="unit prl r-size1of6">
-                <input ref="enabled" type="checkbox" defaultChecked={feature.enabled} />
-              </div>
+                    <fieldset>
+                        <legend>{title}</legend>
 
-              <div className="unit r-size2of5">
-                <input
-                   type="text"
-                   className="mbs"
-                   id="name"
-                   ref="name"
-                   disabled={feature.name.length}
-                   defaultValue={feature.name}
-                   placeholder="Enter name" />
+                        <TextInput
+                            id="name"
+                            name="name"
+                            label="Name"
+                            value={feature.name}
+                            disabled={feature.name.length}
+                            ref="name"
+                            placeholder="Toggle name" />
 
-                <input className=""
-                   type="text"
-                   ref="description"
-                   defaultValue={feature.description}
-                   placeholder="Enter description" />
-              </div>
+                        <TextInput
+                            id="description"
+                            name="description"
+                            label="Description"
+                            value={feature.description}
+                            ref="description"
+                            placeholder="Enter description" />
 
-              <div className="unit r-size2of6 plm">
-                <select id="strategy"
-                        ref="strategy"
-                        className=""
-                        defaultValue={feature.strategy}>
-                  {this.renderStrategyOptions()}
-                </select>
-              </div>
+                        <div className="formelement">
+                            <label htmlFor="strategy">Strategy</label>
+                            <div class="input select">
+                                <select id="strategy" ref="strategy" defaultValue={feature.strategy}>
+                                    {this.renderStrategyOptions()}
+                                </select>
+                            </div>
+                        </div>
 
-              <div className="unit r-size1of6 rightify">
-                <button className="primary mrs" onClick={this.saveFeature}>
-                    Save
-                </button>
+                        <div className="formelement">
+                            <div className="input">
+                                <ul className="inputs-list">
+                                    <li>
+                                        <input id="active" ref="enabled" type="checkbox" defaultChecked={feature.enabled} />
+                                        <label htmlFor="active">Active</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </fieldset>
 
-                <button className="" onClick={this.cancelFeature}>
-                  Cancel
-                </button>
-              </div>
+                    <div className="actions">
+                        <button className="primary mrs" onClick={this.saveFeature}>Save</button>
+                        <button className="" onClick={this.cancelFeature}>Cancel</button>
+                    </div>
+                </form>
             </div>
-          </form>
         );
     },
 
@@ -86,8 +95,8 @@ var FeatureForm = React.createClass({
         e.preventDefault();
 
         var feature = {
-            name: this.refs.name.getDOMNode().value,
-            description: this.refs.description.getDOMNode().value,
+            name: this.refs.name.getValue(),
+            description: this.refs.description.getValue(),
             strategy: this.refs.strategy.getDOMNode().value,
             enabled: this.refs.enabled.getDOMNode().checked
         };

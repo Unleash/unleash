@@ -92,7 +92,7 @@ var Feature = React.createClass({
 
     renderHistory: function() {
         return (<tr>
-                    <td colSpan="5" className="pan man no-border">
+                    <td colSpan="5" className="no-border">
                         <LogEntryList events={this.state.events} />
                     </td>
                 </tr>);

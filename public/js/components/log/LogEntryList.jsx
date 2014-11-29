@@ -11,7 +11,7 @@ var LogEntryList = React.createClass({
             return <LogEntry event={event} key={event.name} />;
         });
         return (
-            <div className='phm'>
+            <div className=''>
                 <table className='outerborder zebra-striped'>
                     <thead>
                         <tr>

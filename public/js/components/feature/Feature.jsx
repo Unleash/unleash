@@ -68,9 +68,19 @@ var Feature = React.createClass({
                         {this.props.feature.strategy}
                     </td>
 
-                    <td>
-                        <input className="mrs mbs" type='button' value='Edit' onClick={this.toggleEditMode}/>
-                        <input type='button' value='History' onClick={this.toggleHistory} />
+                    <td width="100">
+                        <div className="line">
+                            <div className="unit size1of2">
+                                <button className="mrs mbs" type='button' title='Edit' onClick={this.toggleEditMode}>
+                                    <span className="icon-redigere" />
+                                </button>
+                            </div>
+                            <div className="unit size1of2">
+                                <button type='button' title='History' onClick={this.toggleHistory}>
+                                    <span className="icon-visning_liste" />
+                                </button>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 {this.state.showHistory ? this.renderHistory() : this.renderEmptyRow()}

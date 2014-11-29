@@ -35,6 +35,7 @@ var TextInput = React.createClass({
                         name={this.props.name}
                         defaultValue={this.props.value}
                         placeholder={this.props.placeholder}
+                        disabled={this.props.disabled}
                         ref="input" />
                 </div>
             </div>

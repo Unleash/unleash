@@ -58,7 +58,7 @@ var StrategyForm = React.createClass({
 
     render: function() {
         return (
-            <div className="line pam bg-blue-xlt">
+            <div className="line r-pam bg-lilac-xlt">
                 <div className="unit r-size1of2">
                     <form onSubmit={this.onSubmit}>
                         <fieldset>

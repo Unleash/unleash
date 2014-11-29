@@ -13,8 +13,8 @@ var FeatureList = React.createClass({
         }.bind(this));
 
         return (
-          <div className='r-margin'>
-            <table className='outerborder'>
+          <div className=''>
+            <table className='outerborder man'>
               <thead>
                 <tr>
                   <th></th>

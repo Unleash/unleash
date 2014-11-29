@@ -43,8 +43,8 @@ var TabView = React.createClass({
                 </ul>
                 <div className="tab-content">
                     <div className="active">
-                        <div className="mod shadow mrn prn">
-                            <div className="inner">
+                        <div className="mod shadow mrn pan">
+                            <div className="inner pan">
                                 <div className="bd">
                                     {this.state.activeTab.content}
                                 </div>

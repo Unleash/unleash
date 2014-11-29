@@ -19,8 +19,8 @@ var LogEntry = React.createClass({
                 <td>
                     <strong>{this.props.event.data.name}</strong><em>[{this.props.event.type}]</em>
                 </td>
-                <td>
-                    <code className='JSON'>{JSON.stringify(localEventData)}</code>
+                <td style={{maxWidth: 300}}>
+                    <code className='JSON smalltext'>{JSON.stringify(localEventData)}</code>
                 </td>
                 <td>{this.props.event.createdBy}</td>
             </tr>

@@ -18,3 +18,7 @@
 .no-border {
     border: none;
 }
+
+code {
+    word-wrap: break-word;;
+}

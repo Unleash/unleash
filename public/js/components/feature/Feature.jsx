@@ -33,14 +33,11 @@ var Feature = React.createClass({
         this.toggleEditMode();
     },
 
-    render: function() {
-        return this.state.editMode ? this.renderEditMode() : this.renderViewMode();
-    },
 
     renderEditMode: function() {
         return (
             <tr>
-                <td colSpan="5">
+                <td colSpan="5" className="pan man no-border">
                     <FeatureForm feature={this.props.feature} onSubmit={this.saveFeature} onCancel={this.toggleEditMode} />
                 </td>
             </tr>
@@ -48,10 +45,10 @@ var Feature = React.createClass({
 
     },
 
-    renderViewMode: function() {
+    render: function() {
         return (
             <tbody>
-                <tr>
+                <tr className={this.state.editMode ? "edit bg-lilac-xlt" : ""}>
                     <td width="20">
                         <span className={this.props.feature.enabled ? "toggle-active" : "toggle-inactive"} title="Status">
                         </span>
@@ -71,18 +68,19 @@ var Feature = React.createClass({
                     <td width="100">
                         <div className="line">
                             <div className="unit size1of2">
-                                <button className="mrs mbs" type='button' title='Edit' onClick={this.toggleEditMode}>
+                                <button className={this.state.editMode ? "primary" : ""} title='Edit' onClick={this.toggleEditMode}>
                                     <span className="icon-redigere" />
                                 </button>
                             </div>
                             <div className="unit size1of2">
-                                <button type='button' title='History' onClick={this.toggleHistory}>
+                                <button className={this.state.showHistory ? "primary" : ""} title='History' onClick={this.toggleHistory}>
                                     <span className="icon-visning_liste" />
                                 </button>
                             </div>
                         </div>
                     </td>
                 </tr>
+                {this.state.editMode ? this.renderEditMode() : this.renderEmptyRow()}
                 {this.state.showHistory ? this.renderHistory() : this.renderEmptyRow()}
             </tbody>
         );
@@ -94,7 +92,9 @@ var Feature = React.createClass({
 
     renderHistory: function() {
         return (<tr>
-                    <td colSpan="5"><LogEntryList events={this.state.events} /></td>
+                    <td colSpan="5" className="pan man no-border">
+                        <LogEntryList events={this.state.events} />
+                    </td>
                 </tr>);
     }
 

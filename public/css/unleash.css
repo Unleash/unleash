@@ -14,3 +14,7 @@
     width: 20px;
     height: 20px;
 }
+
+.no-border {
+    border: none;
+}

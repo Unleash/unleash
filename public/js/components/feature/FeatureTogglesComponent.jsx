@@ -113,8 +113,6 @@ var FeatureTogglesComponent = React.createClass({
 
                 {this.state.createView ? this.renderCreateView() : this.renderCreateButton()}
 
-                <hr />
-
                 <FeatureList
                   features={this.state.features}
                   onFeatureChanged={this.updateFeature}

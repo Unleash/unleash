@@ -23,7 +23,7 @@ var FeatureForm = React.createClass({
           enabled: false
         };
 
-        var title = this.props.feature ? "Edit '" + this.props.feature.name + "'" : "Create new toggle";
+        var title = this.props.feature ? "" : "Create new toggle";
 
         return (
             <div className="bg-lilac-xlt r-pam">

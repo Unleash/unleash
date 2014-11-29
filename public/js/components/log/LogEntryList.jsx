@@ -12,7 +12,7 @@ var LogEntryList = React.createClass({
         });
         return (
             <div className='r-margin'>
-                <table className='outerborder'>
+                <table className='condensed outerborder zebra-striped'>
                     <thead>
                         <tr>
                             <th>When</th>

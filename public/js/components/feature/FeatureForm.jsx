@@ -23,14 +23,12 @@ var FeatureForm = React.createClass({
           enabled: false
         };
 
-        var title = this.props.feature ? "" : "Create new toggle";
-
         return (
             <div className="bg-lilac-xlt r-pam">
                 <form ref="form" className="r-size1of2">
 
                     <fieldset>
-                        <legend>{title}</legend>
+                        {this.props.feature ? "" : <legend>Create new toggle</legend>}
 
                         <TextInput
                             id="name"

@@ -1,6 +1,8 @@
 var request = require('supertest');
 var mockery = require('mockery');
 
+process.env.NODE_ENV = 'test';
+
 var server;
 
 function setupMockServer() {
@@ -14,9 +16,9 @@ function setupMockServer() {
     mockery.registerSubstitute('./featureDb', '../test/featureDbMock');
     mockery.registerSubstitute('./strategyDb', '../test/strategyDbMock');
 
-    server = require('../server');
+    var app = require('../app');
 
-    return request('http://localhost:' + server.app.get('port'));
+    return request(app);
 }
 
 function tearDownMockServer() {

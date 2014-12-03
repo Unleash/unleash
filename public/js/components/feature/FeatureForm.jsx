@@ -59,6 +59,8 @@ var FeatureForm = React.createClass({
           enabled: false
         };
 
+        var idPrefix = this.props.feature ? this.props.feature.name : 'new';
+
         return (
             <div className="bg-lilac-xlt r-pam">
                 <form ref="form" className="r-size1of2">
@@ -67,7 +69,7 @@ var FeatureForm = React.createClass({
                         {this.props.feature ? "" : <legend>Create new toggle</legend>}
 
                         <TextInput
-                            id="name"
+                            id={idPrefix + "-name"}
                             name="name"
                             label="Name"
                             value={feature.name}
@@ -76,7 +78,7 @@ var FeatureForm = React.createClass({
                             placeholder="Toggle name" />
 
                         <TextInput
-                            id="description"
+                            id={idPrefix + "-description"}
                             name="description"
                             label="Description"
                             value={feature.description}
@@ -84,9 +86,9 @@ var FeatureForm = React.createClass({
                             placeholder="Enter description" />
 
                         <div className="formelement">
-                            <label htmlFor="strategy">Strategy</label>
+                            <label htmlFor={idPrefix + "-strategy"}>Strategy</label>
                             <div className="input select">
-                                <select id="strategy" ref="strategy" value={this.state.currentStrategy} onChange={this.onStrategyChange}>
+                                <select id={idPrefix + "-strategy"} ref="strategy" value={this.state.currentStrategy} onChange={this.onStrategyChange}>
                                     {this.renderStrategyOptions()}
                                 </select>
                             </div>
@@ -96,8 +98,8 @@ var FeatureForm = React.createClass({
                             <div className="input">
                                 <ul className="inputs-list">
                                     <li>
-                                        <input id="active" ref="enabled" type="checkbox" defaultChecked={feature.enabled} />
-                                        <label htmlFor="active">Active</label>
+                                        <input id={idPrefix + "-active"} ref="enabled" type="checkbox" defaultChecked={feature.enabled} />
+                                        <label htmlFor={idPrefix + "-active"}>Active</label>
                                     </li>
                                 </ul>
                             </div>

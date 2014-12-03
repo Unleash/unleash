@@ -25,7 +25,8 @@
         "test-bamboo-ci": "mocha test test/*",
         "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
         "coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-        "postinstall": "npm run build"
+        "postinstall": "npm run build",
+        "jest": "jest"
     },
     "dependencies": {
         "bluebird": "2.2.2",
@@ -50,13 +51,20 @@
         "chai": "1.9.1",
         "coveralls": "^2.11.2",
         "istanbul": "0.3.2",
+        "jest-cli": "^0.1.18",
         "jshint": "2.5.2",
         "mocha": "1.20.1",
         "mocha-lcov-reporter": "0.0.1",
         "mockery": "1.4.0",
         "pre-commit": "0.0.9",
+        "react-tools": "^0.12.0",
         "supertest": "0.13.0",
         "supervisor": "0.6.0",
         "xmlbuilder": "2.4.4"
+    },
+    "jest": {
+        "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
+        "unmockedModulePathPatterns": ["<rootDir>/node_modules/react"],
+        "moduleFileExtensions": ["jsx", "js"]
     }
 }

@@ -48,6 +48,7 @@ var FeatureTogglesComponent = React.createClass({
 
     updateFeature: function (feature) {
         this.stopFeaturePoller();
+
         this.state.featureStore
           .updateFeature(feature)
           .then(this.startFeaturePoller)
@@ -65,8 +66,12 @@ var FeatureTogglesComponent = React.createClass({
     },
 
     createFeature: function (feature) {
-        this.state.featureStore.createFeature(feature)
+        this.stopFeaturePoller();
+
+        this.state.featureStore
+          .createFeature(feature)
           .then(this.cancelNewFeature)
+          .then(this.startFeaturePoller)
           .catch(this.handleError);
     },
 

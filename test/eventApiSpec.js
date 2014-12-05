@@ -1,11 +1,6 @@
-var specHelper = require('./specHelper');
+var request = require('./specHelper').request;
 
 describe('The event api', function () {
-    var request;
-
-    before(function () { request = specHelper.setupMockServer(); });
-    after(specHelper.tearDownMockServer);
-
     it('returns events', function (done) {
         request
             .get('/events')

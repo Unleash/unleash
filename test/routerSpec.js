@@ -1,10 +1,7 @@
 var specHelper = require('./specHelper');
+var request = specHelper.request;
 
 describe('The routes', function () {
-    var request;
-
-    before(function () { request = specHelper.setupMockServer(); });
-    after(specHelper.tearDownMockServer);
 
     describe('healthcheck', function () {
         it('returns health good', function (done) {

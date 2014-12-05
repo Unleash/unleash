@@ -1,16 +1,26 @@
+var assert     = require('assert');
 var specHelper = require('./specHelper');
+var request    = specHelper.request;
+var stringify  = function (o) { return JSON.stringify(o, null, ' '); };
 
 describe('The features api', function () {
-    var request;
+    beforeEach(function (done) {
+        var d = function (err) { console.log('done', err); done.bind(null, err)(); };
 
-    before(function () { request = specHelper.setupMockServer();  });
-    after(specHelper.tearDownMockServer);
+        specHelper.db.resetAndSetup()
+            .then(d.bind(null, null))
+            .catch(d);
+    });
 
-    it('returns three mocked feature toggles', function (done) {
+    it('returns three feature toggles', function (done) {
         request
             .get('/features')
             .expect('Content-Type', /json/)
-            .expect(200, done);
+            .expect(200)
+            .end(function (err, res) {
+                assert(res.body.features.length === 3, "expected 3 features, got " + stringify(res.body));
+                done();
+            });
     });
 
     it('gets a feature by name', function (done) {
@@ -23,7 +33,7 @@ describe('The features api', function () {
     it('creates new feature toggle', function (done) {
         request
             .post('/features')
-            .send({name: 'com.test.feature', 'enabled': false})
+            .send({name: 'com.test.feature', enabled: false})
             .set('Content-Type', 'application/json')
             .expect(201, done);
     });

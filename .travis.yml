@@ -1,8 +1,11 @@
 language: node_js
 node_js:
 - "0.10"
+env: DATABASE_URL=postgres://postgres@localhost:5432/unleash_test
 before_script:
 - echo '--timeout 10000' > test/mocha.opts
+- psql -c 'create database unleash_test;' -U postgres
+- ./node_modules/.bin/db-migrate up
 script:
 - npm install
 - npm test
@@ -11,3 +14,5 @@ notifications:
   hipchat:
     rooms:
       secure: GiIDk52xccnUKnevjLE+w6eUXg0jfV7oOmagw5VnOV5jXGUxdzMk/Q9um+oSClEPE51IvF76zoFEKPIX/CNdjgalEr+CZADy1gene/YRGrNgrXmYYmiU1/dNzelpla1WpKPrY2pkbOgKxrCR9ScID+pMs6vzvJnPwK9vu66W61U=
+addons:
+  postgresql: "9.3"

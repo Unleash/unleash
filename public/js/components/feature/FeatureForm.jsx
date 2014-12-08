@@ -1,5 +1,5 @@
 var React = require('react');
-var TextInput      = require('../form/TextInput');
+var TextInput = require('../form/TextInput');
 var strategyStore = require('../../stores/StrategyStore');
 
 var FeatureForm = React.createClass({
@@ -36,20 +36,30 @@ var FeatureForm = React.createClass({
     },
 
     setSelectedStrategy: function(name) {
-        var selected = this.state.strategyOptions.filter(function(strategy) {
+        var selectedStrategy = this.state.strategyOptions.filter(function(strategy) {
             return strategy.name ===  name;
-        });
+        })[0];
 
+        if(selectedStrategy) {
+            if(selectedStrategy.parametersTemplate) {
+                this.setStrategyParams(selectedStrategy);
+            }
+        } else {
+            var updatedStrategyName = name + " (deleted)";
+            this.setState({
+                currentStrategy: updatedStrategyName,
+                strategyOptions: this.state.strategyOptions.concat([{name: updatedStrategyName}])
+            });
+        }
+    },
+
+    setStrategyParams: function(strategy) {
         var requiredParams = [];
         var key;
-
-        if(selected[0] && selected[0].parametersTemplate) {
-            for(key in selected[0].parametersTemplate) {
-                requiredParams.push({name: key, value: this.getParameterValue(key)});
-            }
+        for(key in strategy.parametersTemplate) {
+            requiredParams.push({name: key, value: this.getParameterValue(key)});
         }
         this.setState({requiredParams: requiredParams});
-
     },
 
     render: function() {

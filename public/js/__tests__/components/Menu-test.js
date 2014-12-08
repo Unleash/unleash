@@ -1,8 +1,8 @@
 /** @jsx React.DOM */
 
-jest.dontMock("../components/Menu");
+jest.dontMock("../../components/Menu");
 
-var Menu = require("../components/Menu");
+var Menu = require("../../components/Menu");
 var React = require("react/addons");
 var TestUtils = React.addons.TestUtils;
 

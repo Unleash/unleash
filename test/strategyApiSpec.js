@@ -44,5 +44,9 @@ describe('The strategy api', function () {
             .expect(403, done);
     });
 
-
+    it('deletes a new strategy', function (done) {
+        request
+            .delete('/strategies/deletable')
+            .expect(200, done);
+    });
 });

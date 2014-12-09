@@ -14,6 +14,14 @@ var StrategyStore = {
         });
     },
 
+    removeStrategy: function (strategy) {
+        return reqwest({
+            url: 'strategies/'+strategy.name,
+            method: 'delete',
+            type: TYPE
+        });
+    },
+
     getStrategies: function () {
         return reqwest({
             url: 'strategies',

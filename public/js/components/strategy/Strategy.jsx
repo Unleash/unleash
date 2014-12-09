@@ -5,12 +5,20 @@ var Strategy = React.createClass({
         strategy: React.PropTypes.object.isRequired
     },
 
+    onRemove: function(event) {
+        event.preventDefault();
+        if (confirm("Are you sure you want to delete strategy '"+this.props.strategy.name+"'?")) {
+            this.props.onRemove(this.props.strategy);
+        }
+    },
+
     render: function() {
         return (
             <div className="line mal">
                 <div className="unit">
-                    <strong>{this.props.strategy.name}</strong><br />
-                    <em>{this.props.strategy.description}</em>
+                    <strong>{this.props.strategy.name} </strong>
+                    <a href="" title="Delete strategy" onClick={this.onRemove}>(remove)</a><br />
+                    <em>{this.props.strategy.description}</em><br />
                 </div>
             </div>
         );

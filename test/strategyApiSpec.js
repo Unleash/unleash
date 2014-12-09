@@ -1,10 +1,12 @@
 var specHelper = require('./specHelper');
+var request    = specHelper.request;
 
 describe('The strategy api', function () {
-    var request;
-
-    before(function () { request = specHelper.setupMockServer(); });
-    after(specHelper.tearDownMockServer);
+    beforeEach(function (done) {
+        specHelper.db.resetAndSetup()
+            .then(done.bind(null, null))
+            .catch(done);
+    });
 
     it('gets all strategies', function (done) {
         request

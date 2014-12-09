@@ -1,37 +1,81 @@
-var request = require('supertest');
-var mockery = require('mockery');
-
 process.env.NODE_ENV = 'test';
 
-var server;
+var Promise    = require('bluebird');
+var request    = require('supertest');
+var app        = require('../app');
+var knex       = require('../lib/dbPool');
+var featureDb  = require('../lib/featureDb');
+var strategyDb = require('../lib/strategyDb');
 
-function setupMockServer() {
-    mockery.enable({
-        warnOnReplace: false,
-        warnOnUnregistered: false,
-        useCleanCache: true
-    });
+Promise.promisifyAll(request);
+request = request(app);
 
-    mockery.registerSubstitute('./eventDb', '../test/eventDbMock');
-    mockery.registerSubstitute('./featureDb', '../test/featureDbMock');
-    mockery.registerSubstitute('./strategyDb', '../test/strategyDbMock');
-
-    var app = require('../app');
-
-    return request(app);
+function createStrategies() {
+    return Promise.map([
+        {
+            name: "default",
+            description: "Default on or off Strategy."
+        },
+        {
+            name: "usersWithEmail",
+            description: "Active for users defined  in the comma-separated emails-parameter.",
+            parametersTemplate: {
+                emails: "String"
+            }
+        }
+    ], function (strategy) { return strategyDb._createStrategy(strategy); });
 }
 
-function tearDownMockServer() {
-    mockery.disable();
-    mockery.deregisterAll();
+function createFeatures() {
+    return Promise.map([
+        {
+            "name": "featureX",
+            "description": "the #1 feature",
+            "enabled": true,
+            "strategy": "default"
+        },
+        {
+            "name": "featureY",
+            "description": "soon to be the #1 feature",
+            "enabled": false,
+            "strategy": "baz",
+            "parameters": {
+                "foo": "bar"
+            }
+        },
+        {
+            "name": "featureZ",
+            "description": "terrible feature",
+            "enabled": true,
+            "strategy": "baz",
+            "parameters": {
+                "foo": "rab"
+            }
+        }
+    ], function (feature) { return featureDb._createFeature(feature);  });
+}
 
-    if (server) {
-        server.server.close();
-        server = null;
-    }
+function destroyStrategies() {
+    return knex('strategies').del();
+}
+
+function destroyFeatures() {
+    return knex('features').del();
+}
+
+function resetDatabase() {
+    return Promise.all([destroyStrategies(), destroyFeatures()]);
+}
+
+function setupDatabase() {
+    return Promise.all([createStrategies(), createFeatures()]);
 }
 
 module.exports = {
-    setupMockServer: setupMockServer,
-    tearDownMockServer: tearDownMockServer
+    request: request,
+    db: {
+        reset: resetDatabase,
+        setup: setupDatabase,
+        resetAndSetup: function () { return resetDatabase().then(setupDatabase); }
+    }
 };

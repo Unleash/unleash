@@ -66,11 +66,11 @@ function createFeatures() {
 }
 
 function destroyStrategies() {
-    return knex('strategies').delete();
+    return knex('strategies').del();
 }
 
 function destroyFeatures() {
-    return knex('features').delete();
+    return knex('features').del();
 }
 
 function resetDatabase() {

@@ -14,9 +14,16 @@ var StrategiesComponent = React.createClass({
     },
 
     componentDidMount: function () {
-        strategyStore.getStrategies().then(function(res) {
-            this.setState({strategies: res.strategies});
-        }.bind(this), this.initError);
+        this.fetchStrategies();
+    },
+
+    fetchStrategies: function(res) {
+        strategyStore.getStrategies()
+            .then(function(res) {
+                this.setState({strategies: res.strategies})
+            }.bind(this))
+            .catch(this.initError);
+
     },
 
     initError: function() {
@@ -57,6 +64,12 @@ var StrategiesComponent = React.createClass({
         .catch(this.onError);
     },
 
+    onRemove: function(strategy) {
+        strategyStore.removeStrategy(strategy)
+            .then(this.fetchStrategies)
+            .catch(this.onError);
+    },
+
     render: function() {
         return (
             <div>
@@ -66,7 +79,7 @@ var StrategiesComponent = React.createClass({
 
                 <hr />
 
-                <StrategyList strategies={this.state.strategies} />
+                <StrategyList strategies={this.state.strategies} onRemove={this.onRemove} />
             </div>
             );
     },

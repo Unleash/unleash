@@ -11,6 +11,10 @@ var strategies = [
         parametersTemplate: {
             emails: "String"
         }
+    },
+    {
+        name: "deletable",
+        description: "deletable"
     }
 ];
 

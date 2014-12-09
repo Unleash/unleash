@@ -49,6 +49,10 @@ http://localhost:4242/features
 
 // Execute tests:
 npm test
+
+
+// Run tests with postgres running in docker:
+npm run docker-test
 ```
 
 ### Making a schema change

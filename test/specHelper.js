@@ -1,9 +1,11 @@
 process.env.NODE_ENV = 'test';
 
-var Promise = require('bluebird');
-var request = require('supertest');
-var app     = require('../app');
-var knex    = require('../lib/dbPool');
+var Promise    = require('bluebird');
+var request    = require('supertest');
+var app        = require('../app');
+var knex       = require('../lib/dbPool');
+var featureDb  = require('../lib/featureDb');
+var strategyDb = require('../lib/strategyDb');
 
 Promise.promisifyAll(request);
 request = request(app);
@@ -21,13 +23,7 @@ function createStrategies() {
                 emails: "String"
             }
         }
-    ], function (strategy) {
-        return request
-            .post('/strategies').send(strategy)
-            .set('Content-Type', 'application/json')
-            .expect(201)
-            .endAsync();
-    });
+    ], function (strategy) { return strategyDb._createStrategy(strategy); });
 }
 
 function createFeatures() {
@@ -56,13 +52,7 @@ function createFeatures() {
                 "foo": "rab"
             }
         }
-    ], function (feature) {
-        return request
-            .post('/features').send(feature)
-            .set('Content-Type', 'application/json')
-            .expect(201)
-            .endAsync();
-    });
+    ], function (feature) { return featureDb._createFeature(feature);  });
 }
 
 function destroyStrategies() {

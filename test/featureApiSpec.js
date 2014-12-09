@@ -5,11 +5,9 @@ var stringify  = function (o) { return JSON.stringify(o, null, ' '); };
 
 describe('The features api', function () {
     beforeEach(function (done) {
-        var d = function (err) { console.log('done', err); done.bind(null, err)(); };
-
         specHelper.db.resetAndSetup()
-            .then(d.bind(null, null))
-            .catch(d);
+            .then(done.bind(null, null))
+            .catch(done);
     });
 
     it('returns three feature toggles', function (done) {

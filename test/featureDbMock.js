@@ -1,4 +1,5 @@
 var Promise = require("bluebird");
+var NotFoundError = require('../lib/error/NotFoundError');
 
 var features = [
     {
@@ -49,7 +50,7 @@ module.exports = {
         if(feature) {
             return Promise.resolve(feature);
         } else {
-            return Promise.reject("feature not found");
+            return Promise.reject(new NotFoundError("feature not found"));
         }
     }
 };

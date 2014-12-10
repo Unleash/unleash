@@ -1,0 +1,1464 @@
+{
+  "name": "unleash-server",
+  "version": "0.0.1",
+  "dependencies": {
+    "bluebird": {
+      "version": "2.2.2",
+      "from": "bluebird@2.2.2",
+      "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.2.2.tgz"
+    },
+    "body-parser": {
+      "version": "1.4.3",
+      "from": "body-parser@1.4.3",
+      "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-1.4.3.tgz",
+      "dependencies": {
+        "bytes": {
+          "version": "1.0.0",
+          "from": "bytes@1.0.0",
+          "resolved": "https://registry.npmjs.org/bytes/-/bytes-1.0.0.tgz"
+        },
+        "depd": {
+          "version": "0.3.0",
+          "from": "depd@0.3.0",
+          "resolved": "https://registry.npmjs.org/depd/-/depd-0.3.0.tgz"
+        },
+        "iconv-lite": {
+          "version": "0.4.3",
+          "from": "iconv-lite@0.4.3",
+          "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.3.tgz"
+        },
+        "media-typer": {
+          "version": "0.2.0",
+          "from": "media-typer@0.2.0",
+          "resolved": "http://npm.finntech.no/internal/media-typer/-/media-typer-0.2.0.tgz"
+        },
+        "qs": {
+          "version": "0.6.6",
+          "from": "qs@0.6.6",
+          "resolved": "https://registry.npmjs.org/qs/-/qs-0.6.6.tgz"
+        },
+        "raw-body": {
+          "version": "1.2.2",
+          "from": "raw-body@1.2.2",
+          "resolved": "https://registry.npmjs.org/raw-body/-/raw-body-1.2.2.tgz"
+        },
+        "type-is": {
+          "version": "1.3.1",
+          "from": "type-is@1.3.1",
+          "resolved": "https://registry.npmjs.org/type-is/-/type-is-1.3.1.tgz",
+          "dependencies": {
+            "mime-types": {
+              "version": "1.0.0",
+              "from": "mime-types@1.0.0",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-1.0.0.tgz"
+            }
+          }
+        }
+      }
+    },
+    "db-migrate": {
+      "version": "0.7.1",
+      "from": "db-migrate@0.7.1",
+      "resolved": "https://registry.npmjs.org/db-migrate/-/db-migrate-0.7.1.tgz",
+      "dependencies": {
+        "optimist": {
+          "version": "0.3.7",
+          "from": "optimist@~0.3.0",
+          "resolved": "http://npm.finntech.no/internal/optimist/-/optimist-0.3.7.tgz",
+          "dependencies": {
+            "wordwrap": {
+              "version": "0.0.2",
+              "from": "wordwrap@~0.0.2",
+              "resolved": "http://npm.finntech.no/internal/wordwrap/-/wordwrap-0.0.2.tgz"
+            }
+          }
+        },
+        "async": {
+          "version": "0.1.22",
+          "from": "async@~0.1.15",
+          "resolved": "http://npm.finntech.no/internal/async/-/async-0.1.22.tgz"
+        },
+        "semver": {
+          "version": "1.0.14",
+          "from": "semver@~1.0.14",
+          "resolved": "https://registry.npmjs.org/semver/-/semver-1.0.14.tgz"
+        },
+        "mkdirp": {
+          "version": "0.3.5",
+          "from": "mkdirp@~0.3.4",
+          "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.3.5.tgz"
+        },
+        "moment": {
+          "version": "1.7.2",
+          "from": "moment@~1.7.2",
+          "resolved": "https://registry.npmjs.org/moment/-/moment-1.7.2.tgz"
+        },
+        "pkginfo": {
+          "version": "0.3.0",
+          "from": "pkginfo@~0.3.0",
+          "resolved": "https://registry.npmjs.org/pkginfo/-/pkginfo-0.3.0.tgz"
+        },
+        "parse-database-url": {
+          "version": "0.2.1",
+          "from": "parse-database-url@~0.2.0",
+          "resolved": "https://registry.npmjs.org/parse-database-url/-/parse-database-url-0.2.1.tgz"
+        },
+        "dotenv": {
+          "version": "0.2.8",
+          "from": "dotenv@~0.2.8",
+          "resolved": "https://registry.npmjs.org/dotenv/-/dotenv-0.2.8.tgz"
+        }
+      }
+    },
+    "errorhandler": {
+      "version": "1.1.1",
+      "from": "errorhandler@1.1.1",
+      "resolved": "http://npm.finntech.no/internal/errorhandler/-/errorhandler-1.1.1.tgz",
+      "dependencies": {
+        "accepts": {
+          "version": "1.0.7",
+          "from": "accepts@~1.0.4",
+          "resolved": "http://npm.finntech.no/internal/accepts/-/accepts-1.0.7.tgz",
+          "dependencies": {
+            "mime-types": {
+              "version": "1.0.2",
+              "from": "mime-types@~1.0.0",
+              "resolved": "http://npm.finntech.no/internal/mime-types/-/mime-types-1.0.2.tgz"
+            },
+            "negotiator": {
+              "version": "0.4.7",
+              "from": "negotiator@0.4.7",
+              "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-0.4.7.tgz"
+            }
+          }
+        },
+        "escape-html": {
+          "version": "1.0.1",
+          "from": "escape-html@1.0.1",
+          "resolved": "https://registry.npmjs.org/escape-html/-/escape-html-1.0.1.tgz"
+        }
+      }
+    },
+    "express": {
+      "version": "4.9.8",
+      "from": "express@4.9.8",
+      "resolved": "https://registry.npmjs.org/express/-/express-4.9.8.tgz",
+      "dependencies": {
+        "accepts": {
+          "version": "1.1.2",
+          "from": "accepts@~1.1.2",
+          "resolved": "https://registry.npmjs.org/accepts/-/accepts-1.1.2.tgz",
+          "dependencies": {
+            "mime-types": {
+              "version": "2.0.2",
+              "from": "mime-types@~2.0.2",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.0.2.tgz",
+              "dependencies": {
+                "mime-db": {
+                  "version": "1.1.2",
+                  "from": "mime-db@~1.1.0",
+                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.1.2.tgz"
+                }
+              }
+            },
+            "negotiator": {
+              "version": "0.4.9",
+              "from": "negotiator@0.4.9",
+              "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-0.4.9.tgz"
+            }
+          }
+        },
+        "cookie-signature": {
+          "version": "1.0.5",
+          "from": "cookie-signature@1.0.5",
+          "resolved": "https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.0.5.tgz"
+        },
+        "debug": {
+          "version": "2.0.0",
+          "from": "debug@~2.0.0",
+          "resolved": "http://npm.finntech.no/internal/debug/-/debug-2.0.0.tgz",
+          "dependencies": {
+            "ms": {
+              "version": "0.6.2",
+              "from": "ms@0.6.2",
+              "resolved": "https://registry.npmjs.org/ms/-/ms-0.6.2.tgz"
+            }
+          }
+        },
+        "depd": {
+          "version": "0.4.5",
+          "from": "depd@0.4.5",
+          "resolved": "https://registry.npmjs.org/depd/-/depd-0.4.5.tgz"
+        },
+        "escape-html": {
+          "version": "1.0.1",
+          "from": "escape-html@1.0.1",
+          "resolved": "https://registry.npmjs.org/escape-html/-/escape-html-1.0.1.tgz"
+        },
+        "etag": {
+          "version": "1.4.0",
+          "from": "etag@~1.4.0",
+          "resolved": "https://registry.npmjs.org/etag/-/etag-1.4.0.tgz",
+          "dependencies": {
+            "crc": {
+              "version": "3.0.0",
+              "from": "crc@3.0.0",
+              "resolved": "https://registry.npmjs.org/crc/-/crc-3.0.0.tgz"
+            }
+          }
+        },
+        "finalhandler": {
+          "version": "0.2.0",
+          "from": "finalhandler@0.2.0",
+          "resolved": "https://registry.npmjs.org/finalhandler/-/finalhandler-0.2.0.tgz"
+        },
+        "fresh": {
+          "version": "0.2.4",
+          "from": "fresh@0.2.4",
+          "resolved": "https://registry.npmjs.org/fresh/-/fresh-0.2.4.tgz"
+        },
+        "media-typer": {
+          "version": "0.3.0",
+          "from": "media-typer@0.3.0",
+          "resolved": "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
+        },
+        "methods": {
+          "version": "1.1.0",
+          "from": "methods@1.1.0",
+          "resolved": "https://registry.npmjs.org/methods/-/methods-1.1.0.tgz"
+        },
+        "on-finished": {
+          "version": "2.1.1",
+          "from": "on-finished@~2.1.0",
+          "resolved": "https://registry.npmjs.org/on-finished/-/on-finished-2.1.1.tgz",
+          "dependencies": {
+            "ee-first": {
+              "version": "1.1.0",
+              "from": "ee-first@1.1.0",
+              "resolved": "https://registry.npmjs.org/ee-first/-/ee-first-1.1.0.tgz"
+            }
+          }
+        },
+        "parseurl": {
+          "version": "1.3.0",
+          "from": "parseurl@~1.3.0",
+          "resolved": "http://npm.finntech.no/internal/parseurl/-/parseurl-1.3.0.tgz"
+        },
+        "path-to-regexp": {
+          "version": "0.1.3",
+          "from": "path-to-regexp@0.1.3",
+          "resolved": "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.3.tgz"
+        },
+        "proxy-addr": {
+          "version": "1.0.3",
+          "from": "proxy-addr@~1.0.3",
+          "resolved": "https://registry.npmjs.org/proxy-addr/-/proxy-addr-1.0.3.tgz",
+          "dependencies": {
+            "forwarded": {
+              "version": "0.1.0",
+              "from": "forwarded@~0.1.0",
+              "resolved": "https://registry.npmjs.org/forwarded/-/forwarded-0.1.0.tgz"
+            },
+            "ipaddr.js": {
+              "version": "0.1.3",
+              "from": "ipaddr.js@0.1.3",
+              "resolved": "https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-0.1.3.tgz"
+            }
+          }
+        },
+        "qs": {
+          "version": "2.2.4",
+          "from": "qs@2.2.4",
+          "resolved": "https://registry.npmjs.org/qs/-/qs-2.2.4.tgz"
+        },
+        "range-parser": {
+          "version": "1.0.2",
+          "from": "range-parser@~1.0.2",
+          "resolved": "https://registry.npmjs.org/range-parser/-/range-parser-1.0.2.tgz"
+        },
+        "send": {
+          "version": "0.9.3",
+          "from": "send@0.9.3",
+          "resolved": "https://registry.npmjs.org/send/-/send-0.9.3.tgz",
+          "dependencies": {
+            "destroy": {
+              "version": "1.0.3",
+              "from": "destroy@1.0.3",
+              "resolved": "https://registry.npmjs.org/destroy/-/destroy-1.0.3.tgz"
+            },
+            "mime": {
+              "version": "1.2.11",
+              "from": "mime@~1.2.11",
+              "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
+            },
+            "ms": {
+              "version": "0.6.2",
+              "from": "ms@0.6.2",
+              "resolved": "https://registry.npmjs.org/ms/-/ms-0.6.2.tgz"
+            },
+            "on-finished": {
+              "version": "2.1.0",
+              "from": "on-finished@2.1.0",
+              "resolved": "http://npm.finntech.no/internal/on-finished/-/on-finished-2.1.0.tgz",
+              "dependencies": {
+                "ee-first": {
+                  "version": "1.0.5",
+                  "from": "ee-first@1.0.5",
+                  "resolved": "https://registry.npmjs.org/ee-first/-/ee-first-1.0.5.tgz"
+                }
+              }
+            }
+          }
+        },
+        "serve-static": {
+          "version": "1.6.4",
+          "from": "serve-static@~1.6.4",
+          "resolved": "https://registry.npmjs.org/serve-static/-/serve-static-1.6.4.tgz"
+        },
+        "type-is": {
+          "version": "1.5.2",
+          "from": "type-is@~1.5.2",
+          "resolved": "https://registry.npmjs.org/type-is/-/type-is-1.5.2.tgz",
+          "dependencies": {
+            "mime-types": {
+              "version": "2.0.2",
+              "from": "mime-types@~2.0.2",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.0.2.tgz",
+              "dependencies": {
+                "mime-db": {
+                  "version": "1.1.2",
+                  "from": "mime-db@~1.1.0",
+                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.1.2.tgz"
+                }
+              }
+            }
+          }
+        },
+        "vary": {
+          "version": "1.0.0",
+          "from": "vary@~1.0.0",
+          "resolved": "https://registry.npmjs.org/vary/-/vary-1.0.0.tgz"
+        },
+        "cookie": {
+          "version": "0.1.2",
+          "from": "cookie@0.1.2",
+          "resolved": "https://registry.npmjs.org/cookie/-/cookie-0.1.2.tgz"
+        },
+        "merge-descriptors": {
+          "version": "0.0.2",
+          "from": "merge-descriptors@0.0.2",
+          "resolved": "https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-0.0.2.tgz"
+        },
+        "utils-merge": {
+          "version": "1.0.0",
+          "from": "utils-merge@1.0.0",
+          "resolved": "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.0.tgz"
+        }
+      }
+    },
+    "express-validator": {
+      "version": "2.6.0",
+      "from": "express-validator@2.6.0",
+      "resolved": "https://registry.npmjs.org/express-validator/-/express-validator-2.6.0.tgz",
+      "dependencies": {
+        "validator": {
+          "version": "3.19.0",
+          "from": "validator@3.19.0",
+          "resolved": "https://registry.npmjs.org/validator/-/validator-3.19.0.tgz"
+        }
+      }
+    },
+    "ini": {
+      "version": "1.3.0",
+      "from": "ini@1.3.0",
+      "resolved": "https://registry.npmjs.org/ini/-/ini-1.3.0.tgz"
+    },
+    "jsx-loader": {
+      "version": "0.12.2",
+      "from": "jsx-loader@0.12.2",
+      "resolved": "https://registry.npmjs.org/jsx-loader/-/jsx-loader-0.12.2.tgz",
+      "dependencies": {
+        "loader-utils": {
+          "version": "0.2.5",
+          "from": "loader-utils@>=0.2.2 <0.3.0",
+          "resolved": "https://registry.npmjs.org/loader-utils/-/loader-utils-0.2.5.tgz",
+          "dependencies": {
+            "json5": {
+              "version": "0.1.0",
+              "from": "json5@>=0.1.0 <0.2.0",
+              "resolved": "https://registry.npmjs.org/json5/-/json5-0.1.0.tgz"
+            },
+            "big.js": {
+              "version": "2.5.1",
+              "from": "big.js@>=2.5.1 <2.6.0",
+              "resolved": "https://registry.npmjs.org/big.js/-/big.js-2.5.1.tgz"
+            }
+          }
+        }
+      }
+    },
+    "jsxhint": {
+      "version": "0.4.15",
+      "from": "jsxhint@0.4.15",
+      "resolved": "https://registry.npmjs.org/jsxhint/-/jsxhint-0.4.15.tgz",
+      "dependencies": {
+        "async": {
+          "version": "0.9.0",
+          "from": "async@>=0.9.0 <0.10.0",
+          "resolved": "https://registry.npmjs.org/async/-/async-0.9.0.tgz"
+        },
+        "debug": {
+          "version": "1.0.4",
+          "from": "debug@>=1.0.2 <1.1.0",
+          "resolved": "https://registry.npmjs.org/debug/-/debug-1.0.4.tgz",
+          "dependencies": {
+            "ms": {
+              "version": "0.6.2",
+              "from": "ms@0.6.2",
+              "resolved": "https://registry.npmjs.org/ms/-/ms-0.6.2.tgz"
+            }
+          }
+        },
+        "extend": {
+          "version": "2.0.0",
+          "from": "extend@>=2.0.0 <3.0.0",
+          "resolved": "https://registry.npmjs.org/extend/-/extend-2.0.0.tgz"
+        },
+        "graceful-fs": {
+          "version": "3.0.5",
+          "from": "graceful-fs@>=3.0.2 <3.1.0",
+          "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-3.0.5.tgz"
+        },
+        "jstransform": {
+          "version": "6.0.1",
+          "from": "jstransform@>=6.0.1 <6.1.0",
+          "resolved": "https://registry.npmjs.org/jstransform/-/jstransform-6.0.1.tgz",
+          "dependencies": {
+            "base62": {
+              "version": "0.1.1",
+              "from": "base62@0.1.1",
+              "resolved": "https://registry.npmjs.org/base62/-/base62-0.1.1.tgz"
+            },
+            "esprima-fb": {
+              "version": "4001.3001.0-dev-harmony-fb",
+              "from": "esprima-fb@>=4001.3001.0-dev-harmony-fb <4001.3002.0",
+              "resolved": "https://registry.npmjs.org/esprima-fb/-/esprima-fb-4001.3001.0-dev-harmony-fb.tgz"
+            },
+            "source-map": {
+              "version": "0.1.31",
+              "from": "source-map@0.1.31",
+              "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.31.tgz",
+              "dependencies": {
+                "amdefine": {
+                  "version": "0.1.0",
+                  "from": "amdefine@>=0.0.4",
+                  "resolved": "http://npm.finntech.no/internal/amdefine/-/amdefine-0.1.0.tgz"
+                }
+              }
+            }
+          }
+        },
+        "mkdirp": {
+          "version": "0.5.0",
+          "from": "mkdirp@>=0.5.0 <0.6.0",
+          "dependencies": {
+            "minimist": {
+              "version": "0.0.8",
+              "from": "minimist@0.0.8"
+            }
+          }
+        },
+        "react-tools": {
+          "version": "0.11.2",
+          "from": "react-tools@>=0.11.0 <0.12.0",
+          "resolved": "https://registry.npmjs.org/react-tools/-/react-tools-0.11.2.tgz",
+          "dependencies": {
+            "commoner": {
+              "version": "0.9.8",
+              "from": "commoner@>=0.9.6 <0.10.0",
+              "resolved": "https://registry.npmjs.org/commoner/-/commoner-0.9.8.tgz",
+              "dependencies": {
+                "q": {
+                  "version": "1.0.1",
+                  "from": "q@>=1.0.1 <1.1.0",
+                  "resolved": "https://registry.npmjs.org/q/-/q-1.0.1.tgz"
+                },
+                "recast": {
+                  "version": "0.7.5",
+                  "from": "recast@>=0.7.0 <0.8.0",
+                  "resolved": "https://registry.npmjs.org/recast/-/recast-0.7.5.tgz",
+                  "dependencies": {
+                    "esprima-fb": {
+                      "version": "6001.1001.0-dev-harmony-fb",
+                      "from": "esprima-fb@>=6001.1001.0-dev-harmony-fb <6001.1002.0",
+                      "resolved": "https://registry.npmjs.org/esprima-fb/-/esprima-fb-6001.1001.0-dev-harmony-fb.tgz"
+                    },
+                    "source-map": {
+                      "version": "0.1.32",
+                      "from": "source-map@0.1.32",
+                      "resolved": "http://npm.finntech.no/internal/source-map/-/source-map-0.1.32.tgz",
+                      "dependencies": {
+                        "amdefine": {
+                          "version": "0.1.0",
+                          "from": "amdefine@>=0.0.4",
+                          "resolved": "http://npm.finntech.no/internal/amdefine/-/amdefine-0.1.0.tgz"
+                        }
+                      }
+                    },
+                    "cls": {
+                      "version": "0.1.5",
+                      "from": "cls@>=0.1.3 <0.2.0",
+                      "resolved": "https://registry.npmjs.org/cls/-/cls-0.1.5.tgz"
+                    },
+                    "ast-types": {
+                      "version": "0.4.13",
+                      "from": "ast-types@>=0.4.7 <0.5.0",
+                      "resolved": "https://registry.npmjs.org/ast-types/-/ast-types-0.4.13.tgz",
+                      "dependencies": {
+                        "depd": {
+                          "version": "1.0.0",
+                          "from": "depd@>=1.0.0 <1.1.0",
+                          "resolved": "https://registry.npmjs.org/depd/-/depd-1.0.0.tgz"
+                        }
+                      }
+                    }
+                  }
+                },
+                "commander": {
+                  "version": "2.2.0",
+                  "from": "commander@>=2.2.0 <2.3.0",
+                  "resolved": "https://registry.npmjs.org/commander/-/commander-2.2.0.tgz"
+                },
+                "graceful-fs": {
+                  "version": "2.0.3",
+                  "from": "graceful-fs@>=2.0.3 <2.1.0",
+                  "resolved": "http://npm.finntech.no/internal/graceful-fs/-/graceful-fs-2.0.3.tgz"
+                },
+                "glob": {
+                  "version": "3.2.11",
+                  "from": "glob@>=3.2.9 <3.3.0",
+                  "resolved": "http://npm.finntech.no/internal/glob/-/glob-3.2.11.tgz",
+                  "dependencies": {
+                    "inherits": {
+                      "version": "2.0.1",
+                      "from": "inherits@>=2.0.0 <3.0.0",
+                      "resolved": "http://npm.finntech.no/internal/inherits/-/inherits-2.0.1.tgz"
+                    },
+                    "minimatch": {
+                      "version": "0.3.0",
+                      "from": "minimatch@>=0.3.0 <0.4.0",
+                      "resolved": "http://npm.finntech.no/internal/minimatch/-/minimatch-0.3.0.tgz",
+                      "dependencies": {
+                        "lru-cache": {
+                          "version": "2.5.0",
+                          "from": "lru-cache@>=2.0.0 <3.0.0",
+                          "resolved": "http://npm.finntech.no/internal/lru-cache/-/lru-cache-2.5.0.tgz"
+                        },
+                        "sigmund": {
+                          "version": "1.0.0",
+                          "from": "sigmund@>=1.0.0 <1.1.0",
+                          "resolved": "http://npm.finntech.no/internal/sigmund/-/sigmund-1.0.0.tgz"
+                        }
+                      }
+                    }
+                  }
+                },
+                "mkdirp": {
+                  "version": "0.3.5",
+                  "from": "mkdirp@>=0.3.5 <0.4.0"
+                },
+                "private": {
+                  "version": "0.1.6",
+                  "from": "private@>=0.1.2 <0.2.0",
+                  "resolved": "https://registry.npmjs.org/private/-/private-0.1.6.tgz"
+                },
+                "install": {
+                  "version": "0.1.8",
+                  "from": "install@>=0.1.7 <0.2.0",
+                  "resolved": "https://registry.npmjs.org/install/-/install-0.1.8.tgz"
+                },
+                "iconv-lite": {
+                  "version": "0.2.11",
+                  "from": "iconv-lite@>=0.2.11 <0.3.0",
+                  "resolved": "http://npm.finntech.no/internal/iconv-lite/-/iconv-lite-0.2.11.tgz"
+                }
+              }
+            },
+            "esprima-fb": {
+              "version": "6001.1.0-dev-harmony-fb",
+              "from": "esprima-fb@>=6001.1.0-dev-harmony-fb <6002.0.0",
+              "resolved": "https://registry.npmjs.org/esprima-fb/-/esprima-fb-6001.1.0-dev-harmony-fb.tgz"
+            },
+            "jstransform": {
+              "version": "6.3.2",
+              "from": "jstransform@>=6.2.0 <7.0.0",
+              "resolved": "https://registry.npmjs.org/jstransform/-/jstransform-6.3.2.tgz",
+              "dependencies": {
+                "base62": {
+                  "version": "0.1.1",
+                  "from": "base62@0.1.1",
+                  "resolved": "https://registry.npmjs.org/base62/-/base62-0.1.1.tgz"
+                },
+                "source-map": {
+                  "version": "0.1.31",
+                  "from": "source-map@0.1.31",
+                  "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.31.tgz",
+                  "dependencies": {
+                    "amdefine": {
+                      "version": "0.1.0",
+                      "from": "amdefine@>=0.0.4",
+                      "resolved": "http://npm.finntech.no/internal/amdefine/-/amdefine-0.1.0.tgz"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rimraf": {
+          "version": "2.2.8",
+          "from": "rimraf@>=2.2.8 <2.3.0",
+          "resolved": "http://npm.finntech.no/internal/rimraf/-/rimraf-2.2.8.tgz"
+        },
+        "through": {
+          "version": "2.3.6",
+          "from": "through@>=2.3.4 <2.4.0",
+          "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
+        }
+      }
+    },
+    "knex": {
+      "version": "0.7.3",
+      "from": "knex@>=0.7.3 <0.8.0",
+      "resolved": "https://registry.npmjs.org/knex/-/knex-0.7.3.tgz",
+      "dependencies": {
+        "chalk": {
+          "version": "0.5.1",
+          "from": "chalk@>=0.5.1 <0.6.0",
+          "resolved": "http://npm.finntech.no/internal/chalk/-/chalk-0.5.1.tgz",
+          "dependencies": {
+            "ansi-styles": {
+              "version": "1.1.0",
+              "from": "ansi-styles@>=1.1.0 <2.0.0",
+              "resolved": "http://npm.finntech.no/internal/ansi-styles/-/ansi-styles-1.1.0.tgz"
+            },
+            "escape-string-regexp": {
+              "version": "1.0.2",
+              "from": "escape-string-regexp@>=1.0.0 <2.0.0",
+              "resolved": "http://npm.finntech.no/internal/escape-string-regexp/-/escape-string-regexp-1.0.2.tgz"
+            },
+            "has-ansi": {
+              "version": "0.1.0",
+              "from": "has-ansi@>=0.1.0 <0.2.0",
+              "resolved": "http://npm.finntech.no/internal/has-ansi/-/has-ansi-0.1.0.tgz",
+              "dependencies": {
+                "ansi-regex": {
+                  "version": "0.2.1",
+                  "from": "ansi-regex@>=0.2.0 <0.3.0",
+                  "resolved": "http://npm.finntech.no/internal/ansi-regex/-/ansi-regex-0.2.1.tgz"
+                }
+              }
+            },
+            "strip-ansi": {
+              "version": "0.3.0",
+              "from": "strip-ansi@>=0.3.0 <0.4.0",
+              "resolved": "http://npm.finntech.no/internal/strip-ansi/-/strip-ansi-0.3.0.tgz",
+              "dependencies": {
+                "ansi-regex": {
+                  "version": "0.2.1",
+                  "from": "ansi-regex@>=0.2.0 <0.3.0",
+                  "resolved": "http://npm.finntech.no/internal/ansi-regex/-/ansi-regex-0.2.1.tgz"
+                }
+              }
+            },
+            "supports-color": {
+              "version": "0.2.0",
+              "from": "supports-color@>=0.2.0 <0.3.0",
+              "resolved": "http://npm.finntech.no/internal/supports-color/-/supports-color-0.2.0.tgz"
+            }
+          }
+        },
+        "commander": {
+          "version": "2.5.0",
+          "from": "commander@>=2.2.0 <3.0.0",
+          "resolved": "https://registry.npmjs.org/commander/-/commander-2.5.0.tgz"
+        },
+        "generic-pool-redux": {
+          "version": "0.1.0",
+          "from": "generic-pool-redux@>=0.1.0 <0.2.0",
+          "resolved": "https://registry.npmjs.org/generic-pool-redux/-/generic-pool-redux-0.1.0.tgz"
+        },
+        "inherits": {
+          "version": "2.0.1",
+          "from": "inherits@>=2.0.1 <2.1.0",
+          "resolved": "http://npm.finntech.no/internal/inherits/-/inherits-2.0.1.tgz"
+        },
+        "interpret": {
+          "version": "0.3.8",
+          "from": "interpret@>=0.3.2 <0.4.0",
+          "resolved": "https://registry.npmjs.org/interpret/-/interpret-0.3.8.tgz"
+        },
+        "liftoff": {
+          "version": "0.13.6",
+          "from": "liftoff@>=0.13.2 <0.14.0",
+          "resolved": "https://registry.npmjs.org/liftoff/-/liftoff-0.13.6.tgz",
+          "dependencies": {
+            "findup-sync": {
+              "version": "0.1.3",
+              "from": "findup-sync@>=0.1.2 <0.2.0",
+              "resolved": "http://npm.finntech.no/internal/findup-sync/-/findup-sync-0.1.3.tgz",
+              "dependencies": {
+                "glob": {
+                  "version": "3.2.11",
+                  "from": "glob@>=3.2.9 <3.3.0",
+                  "resolved": "http://npm.finntech.no/internal/glob/-/glob-3.2.11.tgz",
+                  "dependencies": {
+                    "minimatch": {
+                      "version": "0.3.0",
+                      "from": "minimatch@>=0.3.0 <0.4.0",
+                      "resolved": "http://npm.finntech.no/internal/minimatch/-/minimatch-0.3.0.tgz",
+                      "dependencies": {
+                        "lru-cache": {
+                          "version": "2.5.0",
+                          "from": "lru-cache@>=2.0.0 <3.0.0",
+                          "resolved": "http://npm.finntech.no/internal/lru-cache/-/lru-cache-2.5.0.tgz"
+                        },
+                        "sigmund": {
+                          "version": "1.0.0",
+                          "from": "sigmund@>=1.0.0 <1.1.0",
+                          "resolved": "http://npm.finntech.no/internal/sigmund/-/sigmund-1.0.0.tgz"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "resolve": {
+              "version": "1.0.0",
+              "from": "resolve@>=1.0.0 <1.1.0",
+              "resolved": "https://registry.npmjs.org/resolve/-/resolve-1.0.0.tgz"
+            },
+            "extend": {
+              "version": "1.3.0",
+              "from": "extend@>=1.3.0 <1.4.0",
+              "resolved": "http://npm.finntech.no/internal/extend/-/extend-1.3.0.tgz"
+            },
+            "flagged-respawn": {
+              "version": "0.3.1",
+              "from": "flagged-respawn@>=0.3.0 <0.4.0",
+              "resolved": "https://registry.npmjs.org/flagged-respawn/-/flagged-respawn-0.3.1.tgz"
+            }
+          }
+        },
+        "lodash": {
+          "version": "2.4.1",
+          "from": "lodash@>=2.4.0 <2.5.0",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-2.4.1.tgz"
+        },
+        "minimist": {
+          "version": "1.1.0",
+          "from": "minimist@>=1.1.0 <1.2.0",
+          "resolved": "http://npm.finntech.no/internal/minimist/-/minimist-1.1.0.tgz"
+        },
+        "mkdirp": {
+          "version": "0.5.0",
+          "from": "mkdirp@>=0.5.0 <0.6.0",
+          "dependencies": {
+            "minimist": {
+              "version": "0.0.8",
+              "from": "minimist@0.0.8"
+            }
+          }
+        },
+        "readable-stream": {
+          "version": "1.1.13",
+          "from": "readable-stream@>=1.1.12 <2.0.0",
+          "resolved": "http://npm.finntech.no/internal/readable-stream/-/readable-stream-1.1.13.tgz",
+          "dependencies": {
+            "core-util-is": {
+              "version": "1.0.1",
+              "from": "core-util-is@>=1.0.0 <1.1.0",
+              "resolved": "http://npm.finntech.no/internal/core-util-is/-/core-util-is-1.0.1.tgz"
+            },
+            "isarray": {
+              "version": "0.0.1",
+              "from": "isarray@0.0.1",
+              "resolved": "http://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+            },
+            "string_decoder": {
+              "version": "0.10.31",
+              "from": "string_decoder@>=0.10.0 <0.11.0",
+              "resolved": "http://npm.finntech.no/internal/string_decoder/-/string_decoder-0.10.31.tgz"
+            }
+          }
+        },
+        "tildify": {
+          "version": "1.0.0",
+          "from": "tildify@>=1.0.0 <1.1.0",
+          "resolved": "https://registry.npmjs.org/tildify/-/tildify-1.0.0.tgz",
+          "dependencies": {
+            "user-home": {
+              "version": "1.1.0",
+              "from": "user-home@>=1.0.0 <2.0.0",
+              "resolved": "https://registry.npmjs.org/user-home/-/user-home-1.1.0.tgz"
+            }
+          }
+        }
+      }
+    },
+    "log4js": {
+      "version": "0.6.21",
+      "from": "log4js@0.6.21",
+      "resolved": "https://registry.npmjs.org/log4js/-/log4js-0.6.21.tgz",
+      "dependencies": {
+        "async": {
+          "version": "0.2.10",
+          "from": "async@~0.2.0",
+          "resolved": "http://npm.finntech.no/internal/async/-/async-0.2.10.tgz"
+        },
+        "readable-stream": {
+          "version": "1.0.33",
+          "from": "readable-stream@~1.0.2",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
+          "dependencies": {
+            "core-util-is": {
+              "version": "1.0.1",
+              "from": "core-util-is@~1.0.0",
+              "resolved": "http://npm.finntech.no/internal/core-util-is/-/core-util-is-1.0.1.tgz"
+            },
+            "isarray": {
+              "version": "0.0.1",
+              "from": "isarray@0.0.1",
+              "resolved": "http://npm.finntech.no/internal/isarray/-/isarray-0.0.1.tgz"
+            },
+            "string_decoder": {
+              "version": "0.10.31",
+              "from": "string_decoder@~0.10.x",
+              "resolved": "http://npm.finntech.no/internal/string_decoder/-/string_decoder-0.10.31.tgz"
+            },
+            "inherits": {
+              "version": "2.0.1",
+              "from": "inherits@2",
+              "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
+            }
+          }
+        },
+        "semver": {
+          "version": "1.1.4",
+          "from": "semver@~1.1.4",
+          "resolved": "http://npm.finntech.no/internal/semver/-/semver-1.1.4.tgz"
+        }
+      }
+    },
+    "nconf": {
+      "version": "0.6.9",
+      "from": "nconf@0.6.9",
+      "resolved": "https://registry.npmjs.org/nconf/-/nconf-0.6.9.tgz",
+      "dependencies": {
+        "async": {
+          "version": "0.2.9",
+          "from": "async@0.2.9",
+          "resolved": "https://registry.npmjs.org/async/-/async-0.2.9.tgz"
+        },
+        "optimist": {
+          "version": "0.6.0",
+          "from": "optimist@0.6.0",
+          "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.6.0.tgz",
+          "dependencies": {
+            "wordwrap": {
+              "version": "0.0.2",
+              "from": "wordwrap@~0.0.2",
+              "resolved": "http://npm.finntech.no/internal/wordwrap/-/wordwrap-0.0.2.tgz"
+            },
+            "minimist": {
+              "version": "0.0.10",
+              "from": "minimist@~0.0.1",
+              "resolved": "http://npm.finntech.no/internal/minimist/-/minimist-0.0.10.tgz"
+            }
+          }
+        }
+      }
+    },
+    "pg": {
+      "version": "3.6.1",
+      "from": "pg@3.6.1",
+      "resolved": "https://registry.npmjs.org/pg/-/pg-3.6.1.tgz",
+      "dependencies": {
+        "bindings": {
+          "version": "1.2.1",
+          "from": "bindings@1.2.1",
+          "resolved": "http://npm.finntech.no/internal/bindings/-/bindings-1.2.1.tgz"
+        },
+        "buffer-writer": {
+          "version": "1.0.0",
+          "from": "buffer-writer@1.0.0",
+          "resolved": "https://registry.npmjs.org/buffer-writer/-/buffer-writer-1.0.0.tgz"
+        },
+        "generic-pool": {
+          "version": "2.1.1",
+          "from": "generic-pool@2.1.1",
+          "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-2.1.1.tgz"
+        },
+        "nan": {
+          "version": "1.3.0",
+          "from": "nan@1.3.0",
+          "resolved": "http://npm.finntech.no/internal/nan/-/nan-1.3.0.tgz"
+        },
+        "packet-reader": {
+          "version": "0.2.0",
+          "from": "packet-reader@0.2.0",
+          "resolved": "https://registry.npmjs.org/packet-reader/-/packet-reader-0.2.0.tgz"
+        },
+        "pg-connection-string": {
+          "version": "0.1.3",
+          "from": "pg-connection-string@0.1.3",
+          "resolved": "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-0.1.3.tgz"
+        },
+        "pg-types": {
+          "version": "1.6.0",
+          "from": "pg-types@1.6.0",
+          "resolved": "https://registry.npmjs.org/pg-types/-/pg-types-1.6.0.tgz"
+        },
+        "pgpass": {
+          "version": "0.0.3",
+          "from": "pgpass@0.0.3",
+          "resolved": "https://registry.npmjs.org/pgpass/-/pgpass-0.0.3.tgz",
+          "dependencies": {
+            "split": {
+              "version": "0.3.0",
+              "from": "split@~0.3",
+              "resolved": "https://registry.npmjs.org/split/-/split-0.3.0.tgz",
+              "dependencies": {
+                "through": {
+                  "version": "2.3.6",
+                  "from": "through@2",
+                  "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "react": {
+      "version": "0.12.0",
+      "from": "react@^0.12.0",
+      "resolved": "https://registry.npmjs.org/react/-/react-0.12.0.tgz",
+      "dependencies": {
+        "envify": {
+          "version": "3.0.0",
+          "from": "envify@^3.0.0",
+          "resolved": "https://registry.npmjs.org/envify/-/envify-3.0.0.tgz",
+          "dependencies": {
+            "xtend": {
+              "version": "2.1.2",
+              "from": "xtend@~2.1.2",
+              "resolved": "http://npm.finntech.no/internal/xtend/-/xtend-2.1.2.tgz",
+              "dependencies": {
+                "object-keys": {
+                  "version": "0.4.0",
+                  "from": "object-keys@~0.4.0",
+                  "resolved": "http://npm.finntech.no/internal/object-keys/-/object-keys-0.4.0.tgz"
+                }
+              }
+            },
+            "through": {
+              "version": "2.3.6",
+              "from": "through@~2.3.4",
+              "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
+            },
+            "esprima-fb": {
+              "version": "4001.3001.0-dev-harmony-fb",
+              "from": "esprima-fb@^4001.3001.0-dev-harmony-fb",
+              "resolved": "https://registry.npmjs.org/esprima-fb/-/esprima-fb-4001.3001.0-dev-harmony-fb.tgz"
+            },
+            "jstransform": {
+              "version": "6.3.2",
+              "from": "jstransform@^6.1.0",
+              "resolved": "https://registry.npmjs.org/jstransform/-/jstransform-6.3.2.tgz",
+              "dependencies": {
+                "base62": {
+                  "version": "0.1.1",
+                  "from": "base62@0.1.1",
+                  "resolved": "https://registry.npmjs.org/base62/-/base62-0.1.1.tgz"
+                },
+                "esprima-fb": {
+                  "version": "6001.1.0-dev-harmony-fb",
+                  "from": "esprima-fb@~6001.1.0-dev-harmony-fb",
+                  "resolved": "https://registry.npmjs.org/esprima-fb/-/esprima-fb-6001.1.0-dev-harmony-fb.tgz"
+                },
+                "source-map": {
+                  "version": "0.1.31",
+                  "from": "source-map@0.1.31",
+                  "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.31.tgz",
+                  "dependencies": {
+                    "amdefine": {
+                      "version": "0.1.0",
+                      "from": "amdefine@>=0.0.4",
+                      "resolved": "http://npm.finntech.no/internal/amdefine/-/amdefine-0.1.0.tgz"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "reqwest": {
+      "version": "1.1.4",
+      "from": "reqwest@^1.1.4",
+      "resolved": "https://registry.npmjs.org/reqwest/-/reqwest-1.1.4.tgz"
+    },
+    "webpack": {
+      "version": "1.4.10",
+      "from": "webpack@^1.4.9",
+      "resolved": "https://registry.npmjs.org/webpack/-/webpack-1.4.10.tgz",
+      "dependencies": {
+        "esprima": {
+          "version": "1.2.2",
+          "from": "esprima@~1.2.0",
+          "resolved": "http://npm.finntech.no/internal/esprima/-/esprima-1.2.2.tgz"
+        },
+        "mkdirp": {
+          "version": "0.5.0",
+          "from": "mkdirp@0.5.x",
+          "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.0.tgz",
+          "dependencies": {
+            "minimist": {
+              "version": "0.0.8",
+              "from": "minimist@0.0.8",
+              "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz"
+            }
+          }
+        },
+        "optimist": {
+          "version": "0.6.1",
+          "from": "optimist@~0.6.0",
+          "resolved": "http://npm.finntech.no/internal/optimist/-/optimist-0.6.1.tgz",
+          "dependencies": {
+            "wordwrap": {
+              "version": "0.0.2",
+              "from": "wordwrap@~0.0.2",
+              "resolved": "http://npm.finntech.no/internal/wordwrap/-/wordwrap-0.0.2.tgz"
+            },
+            "minimist": {
+              "version": "0.0.10",
+              "from": "minimist@~0.0.1",
+              "resolved": "http://npm.finntech.no/internal/minimist/-/minimist-0.0.10.tgz"
+            }
+          }
+        },
+        "uglify-js": {
+          "version": "2.4.15",
+          "from": "uglify-js@~2.4.13",
+          "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-2.4.15.tgz",
+          "dependencies": {
+            "async": {
+              "version": "0.2.10",
+              "from": "async@~0.2.6",
+              "resolved": "http://npm.finntech.no/internal/async/-/async-0.2.10.tgz"
+            },
+            "source-map": {
+              "version": "0.1.34",
+              "from": "source-map@0.1.34",
+              "resolved": "http://npm.finntech.no/internal/source-map/-/source-map-0.1.34.tgz",
+              "dependencies": {
+                "amdefine": {
+                  "version": "0.1.0",
+                  "from": "amdefine@>=0.0.4",
+                  "resolved": "http://npm.finntech.no/internal/amdefine/-/amdefine-0.1.0.tgz"
+                }
+              }
+            },
+            "optimist": {
+              "version": "0.3.7",
+              "from": "optimist@~0.3.5",
+              "resolved": "http://npm.finntech.no/internal/optimist/-/optimist-0.3.7.tgz",
+              "dependencies": {
+                "wordwrap": {
+                  "version": "0.0.2",
+                  "from": "wordwrap@~0.0.2",
+                  "resolved": "http://npm.finntech.no/internal/wordwrap/-/wordwrap-0.0.2.tgz"
+                }
+              }
+            },
+            "uglify-to-browserify": {
+              "version": "1.0.2",
+              "from": "uglify-to-browserify@~1.0.0",
+              "resolved": "http://npm.finntech.no/internal/uglify-to-browserify/-/uglify-to-browserify-1.0.2.tgz"
+            }
+          }
+        },
+        "async": {
+          "version": "0.9.0",
+          "from": "async@0.9.x",
+          "resolved": "http://npm.finntech.no/internal/async/-/async-0.9.0.tgz"
+        },
+        "enhanced-resolve": {
+          "version": "0.7.6",
+          "from": "enhanced-resolve@~0.7.0",
+          "resolved": "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-0.7.6.tgz",
+          "dependencies": {
+            "graceful-fs": {
+              "version": "2.0.3",
+              "from": "graceful-fs@~2.0.3",
+              "resolved": "http://npm.finntech.no/internal/graceful-fs/-/graceful-fs-2.0.3.tgz"
+            }
+          }
+        },
+        "memory-fs": {
+          "version": "0.1.0",
+          "from": "memory-fs@~0.1.0",
+          "resolved": "https://registry.npmjs.org/memory-fs/-/memory-fs-0.1.0.tgz"
+        },
+        "clone": {
+          "version": "0.1.18",
+          "from": "clone@~0.1.15",
+          "resolved": "https://registry.npmjs.org/clone/-/clone-0.1.18.tgz"
+        },
+        "webpack-core": {
+          "version": "0.4.8",
+          "from": "webpack-core@~0.4.8",
+          "resolved": "https://registry.npmjs.org/webpack-core/-/webpack-core-0.4.8.tgz",
+          "dependencies": {
+            "source-map": {
+              "version": "0.1.40",
+              "from": "source-map@~0.1.38",
+              "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.40.tgz",
+              "dependencies": {
+                "amdefine": {
+                  "version": "0.1.0",
+                  "from": "amdefine@>=0.0.4",
+                  "resolved": "http://npm.finntech.no/internal/amdefine/-/amdefine-0.1.0.tgz"
+                }
+              }
+            }
+          }
+        },
+        "node-libs-browser": {
+          "version": "0.4.0",
+          "from": "node-libs-browser@~0.4.0",
+          "resolved": "https://registry.npmjs.org/node-libs-browser/-/node-libs-browser-0.4.0.tgz",
+          "dependencies": {
+            "console-browserify": {
+              "version": "1.1.0",
+              "from": "console-browserify@^1.1.0",
+              "resolved": "http://npm.finntech.no/internal/console-browserify/-/console-browserify-1.1.0.tgz",
+              "dependencies": {
+                "date-now": {
+                  "version": "0.1.4",
+                  "from": "date-now@^0.1.4",
+                  "resolved": "http://npm.finntech.no/internal/date-now/-/date-now-0.1.4.tgz"
+                }
+              }
+            },
+            "vm-browserify": {
+              "version": "0.0.4",
+              "from": "vm-browserify@0.0.4",
+              "resolved": "https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz",
+              "dependencies": {
+                "indexof": {
+                  "version": "0.0.1",
+                  "from": "indexof@0.0.1",
+                  "resolved": "http://npm.finntech.no/internal/indexof/-/indexof-0.0.1.tgz"
+                }
+              }
+            },
+            "crypto-browserify": {
+              "version": "3.3.0",
+              "from": "crypto-browserify@^3.0.0",
+              "resolved": "https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.3.0.tgz",
+              "dependencies": {
+                "pbkdf2-compat": {
+                  "version": "2.0.1",
+                  "from": "pbkdf2-compat@2.0.1",
+                  "resolved": "https://registry.npmjs.org/pbkdf2-compat/-/pbkdf2-compat-2.0.1.tgz"
+                },
+                "ripemd160": {
+                  "version": "0.2.0",
+                  "from": "ripemd160@0.2.0",
+                  "resolved": "https://registry.npmjs.org/ripemd160/-/ripemd160-0.2.0.tgz"
+                },
+                "sha.js": {
+                  "version": "2.2.6",
+                  "from": "sha.js@2.2.6",
+                  "resolved": "http://npm.finntech.no/internal/sha.js/-/sha.js-2.2.6.tgz"
+                },
+                "browserify-aes": {
+                  "version": "0.4.0",
+                  "from": "browserify-aes@0.4.0",
+                  "resolved": "https://registry.npmjs.org/browserify-aes/-/browserify-aes-0.4.0.tgz",
+                  "dependencies": {
+                    "inherits": {
+                      "version": "2.0.1",
+                      "from": "inherits@^2.0.1",
+                      "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
+                    }
+                  }
+                }
+              }
+            },
+            "http-browserify": {
+              "version": "1.7.0",
+              "from": "http-browserify@^1.3.2",
+              "resolved": "http://npm.finntech.no/internal/http-browserify/-/http-browserify-1.7.0.tgz",
+              "dependencies": {
+                "Base64": {
+                  "version": "0.2.1",
+                  "from": "Base64@~0.2.0",
+                  "resolved": "http://npm.finntech.no/internal/Base64/-/Base64-0.2.1.tgz"
+                },
+                "inherits": {
+                  "version": "2.0.1",
+                  "from": "inherits@~2.0.1",
+                  "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
+                }
+              }
+            },
+            "browserify-zlib": {
+              "version": "0.1.4",
+              "from": "browserify-zlib@~0.1.4",
+              "resolved": "http://npm.finntech.no/internal/browserify-zlib/-/browserify-zlib-0.1.4.tgz",
+              "dependencies": {
+                "pako": {
+                  "version": "0.2.5",
+                  "from": "pako@~0.2.0",
+                  "resolved": "http://npm.finntech.no/internal/pako/-/pako-0.2.5.tgz"
+                }
+              }
+            },
+            "https-browserify": {
+              "version": "0.0.0",
+              "from": "https-browserify@0.0.0",
+              "resolved": "https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.0.tgz"
+            },
+            "tty-browserify": {
+              "version": "0.0.0",
+              "from": "tty-browserify@0.0.0",
+              "resolved": "https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz"
+            },
+            "constants-browserify": {
+              "version": "0.0.1",
+              "from": "constants-browserify@0.0.1",
+              "resolved": "http://npm.finntech.no/internal/constants-browserify/-/constants-browserify-0.0.1.tgz"
+            },
+            "os-browserify": {
+              "version": "0.1.2",
+              "from": "os-browserify@~0.1.2",
+              "resolved": "http://npm.finntech.no/internal/os-browserify/-/os-browserify-0.1.2.tgz"
+            },
+            "path-browserify": {
+              "version": "0.0.0",
+              "from": "path-browserify@0.0.0",
+              "resolved": "https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz"
+            },
+            "domain-browser": {
+              "version": "1.1.3",
+              "from": "domain-browser@^1.1.1",
+              "resolved": "https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.3.tgz"
+            },
+            "querystring-es3": {
+              "version": "0.2.1",
+              "from": "querystring-es3@~0.2.0",
+              "resolved": "https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz"
+            },
+            "timers-browserify": {
+              "version": "1.1.0",
+              "from": "timers-browserify@^1.0.1",
+              "resolved": "http://npm.finntech.no/internal/timers-browserify/-/timers-browserify-1.1.0.tgz",
+              "dependencies": {
+                "process": {
+                  "version": "0.5.2",
+                  "from": "process@~0.5.1",
+                  "resolved": "http://npm.finntech.no/internal/process/-/process-0.5.2.tgz"
+                }
+              }
+            },
+            "stream-browserify": {
+              "version": "1.0.0",
+              "from": "stream-browserify@^1.0.0",
+              "resolved": "http://npm.finntech.no/internal/stream-browserify/-/stream-browserify-1.0.0.tgz",
+              "dependencies": {
+                "inherits": {
+                  "version": "2.0.1",
+                  "from": "inherits@~2.0.1",
+                  "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
+                }
+              }
+            },
+            "readable-stream": {
+              "version": "1.1.13",
+              "from": "readable-stream@^1.1.13",
+              "resolved": "http://npm.finntech.no/internal/readable-stream/-/readable-stream-1.1.13.tgz",
+              "dependencies": {
+                "core-util-is": {
+                  "version": "1.0.1",
+                  "from": "core-util-is@~1.0.0",
+                  "resolved": "http://npm.finntech.no/internal/core-util-is/-/core-util-is-1.0.1.tgz"
+                },
+                "isarray": {
+                  "version": "0.0.1",
+                  "from": "isarray@0.0.1",
+                  "resolved": "http://npm.finntech.no/internal/isarray/-/isarray-0.0.1.tgz"
+                },
+                "inherits": {
+                  "version": "2.0.1",
+                  "from": "inherits@~2.0.1",
+                  "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
+                }
+              }
+            },
+            "string_decoder": {
+              "version": "0.10.31",
+              "from": "string_decoder@~0.10.x",
+              "resolved": "http://npm.finntech.no/internal/string_decoder/-/string_decoder-0.10.31.tgz"
+            },
+            "punycode": {
+              "version": "1.3.2",
+              "from": "punycode@>=0.2.0",
+              "resolved": "https://registry.npmjs.org/punycode/-/punycode-1.3.2.tgz"
+            },
+            "events": {
+              "version": "1.0.2",
+              "from": "events@^1.0.0",
+              "resolved": "http://npm.finntech.no/internal/events/-/events-1.0.2.tgz"
+            },
+            "util": {
+              "version": "0.10.3",
+              "from": "util@~0.10.3",
+              "resolved": "http://npm.finntech.no/internal/util/-/util-0.10.3.tgz",
+              "dependencies": {
+                "inherits": {
+                  "version": "2.0.1",
+                  "from": "inherits@~2.0.1",
+                  "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
+                }
+              }
+            },
+            "assert": {
+              "version": "1.1.2",
+              "from": "assert@^1.1.1",
+              "resolved": "http://npm.finntech.no/internal/assert/-/assert-1.1.2.tgz"
+            },
+            "buffer": {
+              "version": "2.8.1",
+              "from": "buffer@^2.3.0",
+              "resolved": "https://registry.npmjs.org/buffer/-/buffer-2.8.1.tgz",
+              "dependencies": {
+                "base64-js": {
+                  "version": "0.0.7",
+                  "from": "base64-js@0.0.7",
+                  "resolved": "http://npm.finntech.no/internal/base64-js/-/base64-js-0.0.7.tgz"
+                },
+                "ieee754": {
+                  "version": "1.1.4",
+                  "from": "ieee754@^1.1.4",
+                  "resolved": "http://npm.finntech.no/internal/ieee754/-/ieee754-1.1.4.tgz"
+                },
+                "is-array": {
+                  "version": "1.0.1",
+                  "from": "is-array@^1.0.1",
+                  "resolved": "http://npm.finntech.no/internal/is-array/-/is-array-1.0.1.tgz"
+                }
+              }
+            },
+            "url": {
+              "version": "0.10.1",
+              "from": "url@~0.10.1",
+              "resolved": "http://npm.finntech.no/internal/url/-/url-0.10.1.tgz",
+              "dependencies": {
+                "punycode": {
+                  "version": "1.2.4",
+                  "from": "punycode@1.2.4",
+                  "resolved": "http://npm.finntech.no/internal/punycode/-/punycode-1.2.4.tgz"
+                }
+              }
+            },
+            "process": {
+              "version": "0.7.0",
+              "from": "process@~0.7.0",
+              "resolved": "http://npm.finntech.no/internal/process/-/process-0.7.0.tgz"
+            }
+          }
+        },
+        "watchpack": {
+          "version": "0.1.0",
+          "from": "watchpack@~0.1.0",
+          "resolved": "https://registry.npmjs.org/watchpack/-/watchpack-0.1.0.tgz",
+          "dependencies": {
+            "chokidar": {
+              "version": "0.8.4",
+              "from": "chokidar@^0.8.2",
+              "resolved": "https://registry.npmjs.org/chokidar/-/chokidar-0.8.4.tgz",
+              "dependencies": {
+                "fsevents": {
+                  "version": "0.2.1",
+                  "from": "git://github.com/pipobscure/fsevents#7dcdf9fa3f8956610fd6f69f72c67bace2de7138",
+                  "resolved": "git://github.com/pipobscure/fsevents#7dcdf9fa3f8956610fd6f69f72c67bace2de7138",
+                  "dependencies": {
+                    "nan": {
+                      "version": "0.8.0",
+                      "from": "nan@~0.8.0",
+                      "resolved": "https://registry.npmjs.org/nan/-/nan-0.8.0.tgz"
+                    }
+                  }
+                },
+                "recursive-readdir": {
+                  "version": "0.0.2",
+                  "from": "recursive-readdir@0.0.2",
+                  "resolved": "https://registry.npmjs.org/recursive-readdir/-/recursive-readdir-0.0.2.tgz"
+                }
+              }
+            },
+            "graceful-fs": {
+              "version": "3.0.4",
+              "from": "graceful-fs@^3.0.2",
+              "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-3.0.4.tgz"
+            }
+          }
+        },
+        "tapable": {
+          "version": "0.1.8",
+          "from": "tapable@0.1.x",
+          "resolved": "https://registry.npmjs.org/tapable/-/tapable-0.1.8.tgz"
+        }
+      }
+    },
+    "webpack-dev-middleware": {
+      "version": "1.0.11",
+      "from": "webpack-dev-middleware@^1.0.11",
+      "resolved": "https://registry.npmjs.org/webpack-dev-middleware/-/webpack-dev-middleware-1.0.11.tgz",
+      "dependencies": {
+        "enhanced-resolve": {
+          "version": "0.7.6",
+          "from": "enhanced-resolve@~0.7.5",
+          "resolved": "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-0.7.6.tgz",
+          "dependencies": {
+            "tapable": {
+              "version": "0.1.8",
+              "from": "tapable@0.1.x",
+              "resolved": "https://registry.npmjs.org/tapable/-/tapable-0.1.8.tgz"
+            },
+            "graceful-fs": {
+              "version": "2.0.3",
+              "from": "graceful-fs@~2.0.0",
+              "resolved": "http://npm.finntech.no/internal/graceful-fs/-/graceful-fs-2.0.3.tgz"
+            }
+          }
+        },
+        "memory-fs": {
+          "version": "0.1.0",
+          "from": "memory-fs@~0.1.0",
+          "resolved": "https://registry.npmjs.org/memory-fs/-/memory-fs-0.1.0.tgz"
+        },
+        "mime": {
+          "version": "1.2.11",
+          "from": "mime@1.x",
+          "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
+        }
+      }
+    }
+  }
+}

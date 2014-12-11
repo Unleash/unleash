@@ -19,7 +19,6 @@ var FeatureList = React.createClass({
                 <tr>
                   <th></th>
                   <th>Name</th>
-                  <th>Description</th>
                   <th>Strategy</th>
                   <th></th>
                 </tr>

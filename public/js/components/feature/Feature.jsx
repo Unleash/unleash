@@ -37,7 +37,7 @@ var Feature = React.createClass({
     renderEditMode: function() {
         return (
             <tr>
-                <td colSpan="5" className="pan man no-border">
+                <td colSpan="4" className="pan man no-border">
                     <FeatureForm feature={this.props.feature} onSubmit={this.saveFeature} onCancel={this.toggleEditMode} />
                 </td>
             </tr>
@@ -54,18 +54,17 @@ var Feature = React.createClass({
                         </span>
                     </td>
                     <td>
-                        {this.props.feature.name}
-                    </td>
-
-                    <td className='opaque smalltext word-break' width="600">
-                        {this.props.feature.description || '\u00a0'}
+                        {this.props.feature.name} <br />
+                        <span className="opaque smalltext word-break">
+                            {this.props.feature.description || '\u00a0'}
+                        </span>
                     </td>
 
                     <td>
                         {this.props.feature.strategy}
                     </td>
 
-                    <td width="100">
+                    <td width="110">
                         <div className="line">
                             <div className="unit size1of2">
                                 <button className={this.state.editMode ? "primary" : ""} title='Edit' onClick={this.toggleEditMode}>
@@ -92,7 +91,7 @@ var Feature = React.createClass({
 
     renderHistory: function() {
         return (<tr>
-                    <td colSpan="5" className="no-border">
+                    <td colSpan="4" className="no-border">
                         <LogEntryList events={this.state.events} />
                     </td>
                 </tr>);

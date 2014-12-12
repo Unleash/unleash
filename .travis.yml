@@ -1,7 +1,7 @@
 language: node_js
 node_js:
 - "0.10"
-env: DATABASE_URL=postgres://postgres@localhost:5432/unleash_test
+env: TEST_DATABASE_URL=postgres://postgres@localhost:5432/unleash_test
 before_script:
 - echo '--timeout 10000' > test/mocha.opts
 - psql -c 'create database unleash_test;' -U postgres

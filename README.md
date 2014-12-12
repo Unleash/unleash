@@ -13,19 +13,22 @@ Known client implementations:
 
 ## Development
 
-### Create a local unleash-db on postgres
+### Create a local unleash databases in postgres
 
 ```bash
 $ psql postgres <<SQL
 CREATE USER unleash_user WITH PASSWORD 'passord';
 CREATE DATABASE unleash;
 GRANT ALL PRIVILEGES ON DATABASE unleash to unleash_user;
+CREATE DATABASE unleash_test;
+GRANT ALL PRIVILEGES ON DATABASE unleash_test to unleash_user;
 SQL
 ```
 
-Then set DATABASE_URI env var:
+Then set env vars:
 ```
 export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
+export TEST_DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash_test
 ```
 
 ### Commands
@@ -34,8 +37,11 @@ export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
 // Install dependencies
 npm install
 
-// Make sure DATABASE_URL is set and run migrations in your local DB
+// Run migrations in your local DBs
 export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
+./node_modules/.bin/db-migrate up
+
+export TEST_DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
 ./node_modules/.bin/db-migrate up
 
 // Start server in dev-mode:
@@ -49,7 +55,6 @@ http://localhost:4242/features
 
 // Execute tests:
 npm test
-
 
 // Run tests with postgres running in docker:
 npm run docker-test

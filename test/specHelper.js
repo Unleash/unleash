@@ -64,7 +64,7 @@ function destroyFeatures() {
 }
 
 function resetDatabase() {
-    return Promise.all([destroyStrategies(), destroyFeatures()]).then(function (values) { console.log(values); });
+    return Promise.all([destroyStrategies(), destroyFeatures()]);
 }
 
 function setupDatabase() {

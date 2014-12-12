@@ -38,11 +38,8 @@ export TEST_DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash_
 npm install
 
 // Run migrations in your local DBs
-export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
 ./node_modules/.bin/db-migrate up
-
-export TEST_DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
-./node_modules/.bin/db-migrate up
+DATABASE_URL=$TEST_DATABASE_URL ./node_modules/.bin/db-migrate up
 
 // Start server in dev-mode:
 npm run dev

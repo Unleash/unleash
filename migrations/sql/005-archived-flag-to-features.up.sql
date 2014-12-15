@@ -1,0 +1,1 @@
+ALTER TABLE features ADD archived integer DEFAULT 0;

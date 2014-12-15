@@ -10,7 +10,7 @@
   },
   "tasks": {
     "deploy": [
-      {"command": "npm install && npm test && npm run build"},
+      {"command": "npm install && npm run pg-virtualenv-test && npm run build"},
       {"command": "tar -cvzf unleash-server.tar.gz --exclude=unleash-server.tar.gz --exclude=.git *"},
       {
         "command": "mvn deploy:deploy-file -Durl=http://mavenproxy.finntech.no/finntech-internal-snapshot/ -DrepositoryId=finntech-internal-snapshot -Dfile=unleash-server.tar.gz -DgroupId=no.finntech.unleash -DartifactId=unleash-server -Dversion=0.1337-SNAPSHOT -Dpackaging=tar.gz",
@@ -36,7 +36,7 @@
 
     ],
     "default": [
-      {"command": "npm install && npm test"},
+      {"command": "npm install && npm run pg-virtualenv-test"},
 
     ]
   }

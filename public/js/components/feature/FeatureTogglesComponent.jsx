@@ -55,6 +55,15 @@ var FeatureTogglesComponent = React.createClass({
           .catch(this.handleError);
     },
 
+    archiveFeature: function (feature) {
+        this.stopFeaturePoller();
+
+        this.state.featureStore
+            .archiveFeature(feature)
+            .then(this.startFeaturePoller)
+            .catch(this.handleError);
+    },
+
     startFeaturePoller: function () {
         this.state.featurePoller.start();
     },
@@ -121,6 +130,7 @@ var FeatureTogglesComponent = React.createClass({
                 <FeatureList
                   features={this.state.features}
                   onFeatureChanged={this.updateFeature}
+                  onFeatureArchive={this.archiveFeature}
                   onFeatureSubmit={this.createFeature}
                   onFeatureCancel={this.cancelNewFeature}
                   onNewFeature={this.newFeature} />

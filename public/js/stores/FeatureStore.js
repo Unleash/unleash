@@ -27,6 +27,14 @@ FeatureStore.prototype = {
         });
     },
 
+    archiveFeature: function (feature) {
+        return reqwest({
+            url: 'features/' + feature.name,
+            method: 'delete',
+            type: TYPE
+        });
+    },
+
     getFeatures: function () {
         return reqwest({
             url: 'features',

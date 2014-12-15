@@ -33,6 +33,12 @@ var Feature = React.createClass({
         this.toggleEditMode();
     },
 
+    archiveFeature: function() {
+        if (confirm("Are you sure you want to delete " + this.props.feature.name + "?")) {
+            this.props.onArchive(this.props.feature);
+        }
+    },
+
 
     renderEditMode: function() {
         return (
@@ -64,14 +70,19 @@ var Feature = React.createClass({
                         {this.props.feature.strategy}
                     </td>
 
-                    <td width="110">
+                    <td width="150">
                         <div className="line">
-                            <div className="unit size1of2">
+                            <div className="unit size1of3">
+                                <button title='Archive' onClick={this.archiveFeature} title="Remove">
+                                    <span className="icon-kryss1" />
+                                </button>
+                            </div>
+                            <div className="unit size1of3">
                                 <button className={this.state.editMode ? "primary" : ""} title='Edit' onClick={this.toggleEditMode}>
                                     <span className="icon-redigere" />
                                 </button>
                             </div>
-                            <div className="unit size1of2">
+                            <div className="unit size1of3">
                                 <button className={this.state.showHistory ? "primary" : ""} title='History' onClick={this.toggleHistory}>
                                     <span className="icon-visning_liste" />
                                 </button>

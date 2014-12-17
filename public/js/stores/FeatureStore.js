@@ -1,12 +1,9 @@
 var reqwest = require('reqwest');
 
-var FeatureStore = function () {
-};
-
 var TYPE         = 'json';
 var CONTENT_TYPE = 'application/json';
 
-FeatureStore.prototype = {
+FeatureStore = {
     updateFeature: function (feature) {
         return reqwest({
             url: 'features/' + feature.name,
@@ -40,6 +37,24 @@ FeatureStore.prototype = {
             url: 'features',
             method: 'get',
             type: TYPE
+        });
+    },
+
+    getArchivedFeatures: function () {
+        return reqwest({
+            url: 'archive/features',
+            method: 'get',
+            type: TYPE
+        });
+    },
+
+    reviveFeature: function (feature) {
+        return reqwest({
+            url: 'archive/revive',
+            method: 'post',
+            type: TYPE,
+            contentType: CONTENT_TYPE,
+            data: JSON.stringify(feature)
         });
     }
 };

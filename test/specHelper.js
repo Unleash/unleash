@@ -51,6 +51,33 @@ function createFeatures() {
             "parameters": {
                 "foo": "rab"
             }
+        },
+        {
+            "name": "featureArchivedX",
+            "description": "the #1 feature",
+            "enabled": true,
+            "archived": true,
+            "strategy": "default"
+        },
+        {
+            "name": "featureArchivedY",
+            "description": "soon to be the #1 feature",
+            "enabled": false,
+            "archived": true,
+            "strategy": "baz",
+            "parameters": {
+                "foo": "bar"
+            }
+        },
+        {
+            "name": "featureArchivedZ",
+            "description": "terrible feature",
+            "enabled": true,
+            "archived": true,
+            "strategy": "baz",
+            "parameters": {
+                "foo": "rab"
+            }
         }
     ], function (feature) { return featureDb._createFeature(feature);  });
 }

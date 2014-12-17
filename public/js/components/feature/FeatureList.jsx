@@ -8,7 +8,8 @@ var FeatureList = React.createClass({
                 <Feature
                   key={feature.name}
                   feature={feature}
-                  onChange={this.props.onFeatureChanged} />
+                  onChange={this.props.onFeatureChanged}
+                  onArchive={this.props.onFeatureArchive}/>
             );
         }.bind(this));
 

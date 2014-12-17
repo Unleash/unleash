@@ -11,8 +11,7 @@ var FeatureTogglesComponent = React.createClass({
             features: [],
             errors: [],
             createView: false,
-            featurePoller: new Timer(this.loadFeaturesFromServer, this.props.pollInterval),
-            featureStore: new FeatureStore()
+            featurePoller: new Timer(this.loadFeaturesFromServer, this.props.pollInterval)
         };
     },
 
@@ -26,7 +25,7 @@ var FeatureTogglesComponent = React.createClass({
     },
 
     loadFeaturesFromServer: function () {
-        this.state.featureStore.getFeatures().then(this.setFeatures).catch(this.handleError);
+        FeatureStore.getFeatures().then(this.setFeatures).catch(this.handleError);
     },
 
     setFeatures: function (data) {
@@ -49,10 +48,23 @@ var FeatureTogglesComponent = React.createClass({
     updateFeature: function (feature) {
         this.stopFeaturePoller();
 
-        this.state.featureStore
+        FeatureStore
           .updateFeature(feature)
           .then(this.startFeaturePoller)
           .catch(this.handleError);
+    },
+
+    archiveFeature: function (feature) {
+        var updatedFeatures = this.state.features.filter(function(item) {
+            return item.name !== feature.name;
+        });
+
+        FeatureStore
+            .archiveFeature(feature)
+            .then(function() {
+                this.setState({features: updatedFeatures})
+            }.bind(this))
+            .catch(this.handleError);
     },
 
     startFeaturePoller: function () {
@@ -68,7 +80,7 @@ var FeatureTogglesComponent = React.createClass({
     createFeature: function (feature) {
         this.stopFeaturePoller();
 
-        this.state.featureStore
+        FeatureStore
           .createFeature(feature)
           .then(this.cancelNewFeature)
           .then(this.startFeaturePoller)
@@ -121,6 +133,7 @@ var FeatureTogglesComponent = React.createClass({
                 <FeatureList
                   features={this.state.features}
                   onFeatureChanged={this.updateFeature}
+                  onFeatureArchive={this.archiveFeature}
                   onFeatureSubmit={this.createFeature}
                   onFeatureCancel={this.cancelNewFeature}
                   onNewFeature={this.newFeature} />

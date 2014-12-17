@@ -60,4 +60,16 @@ describe('The features api', function () {
             .expect(200, done);
     });
 
+    it('archives a feature by name', function (done) {
+        request
+            .delete('/features/featureX')
+            .expect(200, done);
+    });
+
+    it('can not archive unknown feature', function (done) {
+        request
+            .delete('/features/featureUnknown')
+            .expect(404, done);
+    });
+
 });

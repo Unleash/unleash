@@ -53,7 +53,7 @@ var Feature = React.createClass({
 
     render: function() {
         return (
-            <tbody>
+            <tbody className="feature">
                 <tr className={this.state.editMode ? "edit bg-lilac-xlt" : ""}>
                     <td width="20">
                         <span className={this.props.feature.enabled ? "toggle-active" : "toggle-inactive"} title="Status">
@@ -66,7 +66,7 @@ var Feature = React.createClass({
                         </span>
                     </td>
 
-                    <td>
+                    <td  className="hide-lt480">
                         {this.props.feature.strategy}
                     </td>
 

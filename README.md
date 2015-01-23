@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/finn-no/unleash.svg?branch=master)](https://travis-ci.org/finn-no/unleash) [![Code Climate](https://codeclimate.com/github/finn-no/unleash/badges/gpa.svg)](https://codeclimate.com/github/finn-no/unleash) [![Coverage Status](https://coveralls.io/repos/finn-no/unleash/badge.png?branch=master)](https://coveralls.io/r/finn-no/unleash?branch=master) [![Dependency Status](https://david-dm.org/finn-no/unleash.png)](https://david-dm.org/finn-no/unleash) [![devDependency Status](https://david-dm.org/finn-no/unleash/dev-status.png)](https://david-dm.org/finn-no/unleash#info=devD)
 
-![Admin UI](https://cloud.githubusercontent.com/assets/572/5873707/9c831a84-a2f9-11e4-92c2-6fe5e0ec05a8.png)
+![Admin UI](https://cloud.githubusercontent.com/assets/572/5873775/3ddc1a66-a2fa-11e4-923c-0a9569605dad.png)
 
 [Demo](http://unleash.herokuapp.com/) instance on Heroku
 

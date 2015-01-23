@@ -1,12 +1,12 @@
-# unleash-server
+# unleash
 
 [![Build Status](https://travis-ci.org/finn-no/unleash.svg?branch=master)](https://travis-ci.org/finn-no/unleash) [![Code Climate](https://codeclimate.com/github/finn-no/unleash/badges/gpa.svg)](https://codeclimate.com/github/finn-no/unleash) [![Coverage Status](https://coveralls.io/repos/finn-no/unleash/badge.png?branch=master)](https://coveralls.io/r/finn-no/unleash?branch=master) [![Dependency Status](https://david-dm.org/finn-no/unleash.png)](https://david-dm.org/finn-no/unleash) [![devDependency Status](https://david-dm.org/finn-no/unleash/dev-status.png)](https://david-dm.org/finn-no/unleash#info=devD)
 
-unleash-server is a place to ask for the status of features.
+![Admin UI](https://cloud.githubusercontent.com/assets/572/5873707/9c831a84-a2f9-11e4-92c2-6fe5e0ec05a8.png)
 
-## Clients
+[Demo](http://unleash.herokuapp.com/) instance on Heroku
 
-In order to make use of unleash you will probably need a client implementation.
+This repo contains the unleash-server, which contains the admin UI and a place to ask for the status of features. In order to make use of unleash you will also need a client implementation.
 
 Known client implementations:
 - [unleash-client-java](https://github.com/finn-no/unleash-client-java)

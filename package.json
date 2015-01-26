@@ -36,6 +36,7 @@
         "bluebird": "2.6.2",
         "body-parser": "1.10.1",
         "db-migrate": "0.7.1",
+        "deep-diff": "^0.3.0",
         "errorhandler": "1.3.2",
         "express": "4.9.8",
         "express-validator": "2.8.0",

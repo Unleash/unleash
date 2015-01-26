@@ -23,3 +23,15 @@ code {
     word-wrap: break-word;
     white-space: pre;
 }
+
+code > .diff-N {
+    color: green;
+}
+
+code > .diff-D {
+    color: red;
+}
+
+code > .diff-A, .diff-E {
+    color: black;
+}

@@ -12,7 +12,7 @@ var TabView = React.createClass({
         if(userHash) {
             userHash = userHash.split("#")[1];
             this.props.tabPanes.forEach(function(pane) {
-                if(pane.name === userHash) {
+                if(pane.slug === userHash) {
                     activeTab = pane;
                 }
             }.bind(this));
@@ -28,8 +28,8 @@ var TabView = React.createClass({
     render: function() {
         var tabNodes = this.props.tabPanes.map(function (tabPane) {
             return (
-                <li  key={tabPane.name} className={tabPane.name===this.state.activeTab.name ? "active": ""}>
-                    <a  href={"#" + tabPane.name}
+                <li key={tabPane.name} className={tabPane.name === this.state.activeTab.name ? "active": ""}>
+                    <a  href={"#" + tabPane.slug}
                         onClick={this.onChangeTab.bind(this, tabPane)}>{tabPane.name}
                     </a>
                 </li>

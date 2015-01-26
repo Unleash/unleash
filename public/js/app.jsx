@@ -8,19 +8,23 @@ var ArchiveFeatureComponent = React.createFactory(require('./components/feature/
 
 var tabPanes = [
     {
-        name: "Feature Toggles",
+        name: 'Feature Toggles',
+        slug: 'feature-toggles',
         content: new FeatureTogglesComponent({pollInterval: 5000})
     },
     {
-        name: "Strategies",
+        name: 'Strategies',
+        slug: 'strategies',
         content: new StrategiesComponent({})
     },
     {
         name: "Log",
+        slug: 'log',
         content: new LogEntriesComponent({})
     },
     {
         name: "Archive",
+        slug: 'archive',
         content: new ArchiveFeatureComponent({})
     }
 ];

@@ -1,3 +1,6 @@
+node_modules
+.DS_Store
+
 # Logs
 logs
 *.log
@@ -13,26 +16,12 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
-
-# Dependency directory
-# Commenting this out is preferred by some people, see
-# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-
-node_modules
-
-# Users Environment Variables
-.lock-wscript
 
 # webpack output
 public/js/bundle.js
 public/js/bundle.js.map
-
-
-.DS_Store
 
 # liquibase stuff
 /sql

@@ -1,0 +1,19 @@
+{
+    "ownership": [
+        {
+            "name":     "Utviklingsproduktivitet",
+            "email":    "utviklingsproduktivitet@finn.no"
+        }
+    ],
+
+    "artifacts": {
+
+        "artifact": [
+            {
+                "name":	  "unleash-server",
+                "type":   "service",
+                "description": "Unleash"
+            }
+        ]
+    }
+}

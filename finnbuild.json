@@ -1,6 +1,6 @@
 {
   "links": {
-    "build": "UNLEASH-UNLEASHGITHUB",
+    "build": "https://travis-ci.org/finn-no/unleash/",
     "repository": "https://github.com/finn-no/unleash",
     "issues": "https://github.com/finn-no/unleash/issues"
   },

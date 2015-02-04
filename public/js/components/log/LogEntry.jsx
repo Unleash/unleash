@@ -1,4 +1,5 @@
 var React = require('react');
+var moment = require('moment');
 
 var DIFF_PREFIXES = {
     A: ' ',
@@ -20,13 +21,13 @@ var LogEntry = React.createClass({
     },
 
     render: function() {
-        var d = new Date(this.props.event.createdAt);
+        var date = moment(this.props.event.createdAt);
 
         return (
             <tr>
             <td>
-            {d.getDate() + "." + (d.getMonth() + 1) + "." + d.getFullYear()}<br />
-            kl. {d.getHours() + "." + d.getMinutes()}
+              {date.format('ll')}<br />
+              {date.format('HH:mm')}
             </td>
             <td>
             <strong>{this.props.event.data.name}</strong><em>[{this.props.event.type}]</em>

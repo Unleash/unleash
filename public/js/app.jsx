@@ -1,10 +1,13 @@
 var React                   = require('react');
 var TabView                 = require('./components/TabView');
 var Menu                    = require('./components/Menu');
+var UserStore               = require('./stores/UserStore');
 var LogEntriesComponent     = React.createFactory(require('./components/log/LogEntriesComponent'));
 var FeatureTogglesComponent = React.createFactory(require('./components/feature/FeatureTogglesComponent'));
 var StrategiesComponent     = React.createFactory(require('./components/strategy/StrategiesComponent'));
 var ArchiveFeatureComponent = React.createFactory(require('./components/feature/ArchiveFeatureComponent'));
+
+UserStore.init();
 
 var tabPanes = [
     {

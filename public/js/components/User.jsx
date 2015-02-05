@@ -10,7 +10,7 @@ var User = React.createClass({
 
   render: function() {
     return (
-      <div className="r-pam">
+      <div className="r-pvm">
         <input type="text" placeholder="username"
           ref="username"
           defaultValue={UserStore.get()}

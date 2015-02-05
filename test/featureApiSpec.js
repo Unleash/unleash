@@ -36,6 +36,22 @@ describe('The features api', function () {
             .expect(201, done);
     });
 
+    it('creates new feature toggle with createdBy', function (done) {
+        request
+            .post('/features')
+            .send({name: 'com.test.Username', enabled: false})
+            .set('Cookie', ['username=ivaosthu'])
+            .set('Content-Type', 'application/json')
+            .end(function(){
+              request
+                  .get('/events')
+                  .end(function (err, res) {
+                      assert.equal(res.body.events[0].createdBy, 'ivaosthu');
+                      done();
+                  });
+            });
+    });
+
     it('require new feature toggle to have a name', function (done) {
         request
             .post('/features')

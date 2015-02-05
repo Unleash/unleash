@@ -1,4 +1,5 @@
 var React = require('react');
+var User = require('./User');
 
 var Menu = React.createClass({
     render: function() { return (
@@ -46,6 +47,9 @@ var Menu = React.createClass({
                       unleash admin
                    </span>
                   </a>
+                  <div style={{position: "absolute", right: "0"}}>
+                    <User />
+                  </div>
                 </div>
               </div>
             </div>

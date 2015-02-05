@@ -1,80 +1,81 @@
 {
-    "name": "unleash-server",
-    "description": "unleash your features",
-    "version": "0.0.1",
-    "keywords": [
-        "unleash",
-        "feature toggle",
-        "feature",
-        "toggle"
+  "name": "unleash-server",
+  "description": "unleash your features",
+  "version": "0.0.1",
+  "keywords": [
+    "unleash",
+    "feature toggle",
+    "feature",
+    "toggle"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:finn-no/unleash.git"
+  },
+  "bugs": {
+    "url": "https://github.com/finn-no/unleash/issues"
+  },
+  "private": true,
+  "scripts": {
+    "start": "NODE_ENV=production node server.js",
+    "build": "./node_modules/.bin/webpack",
+    "dev": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js server.js",
+    "test": "export PORT=4243 ; jest && jshint server.js lib test && jsxhint public/js/**/*.jsx && mocha test test/*.js && npm run coverage",
+    "docker-test": "export PORT=4243 ; ./scripts/docker-postgres.sh",
+    "pg-virtualenv-test": "pg_virtualenv npm run pg-virtualenv-chain",
+    "pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",
+    "db-migrate-testdb": "DATABASE_URL=$TEST_DATABASE_URL ./node_modules/.bin/db-migrate up",
+    "tdd": "mocha --watch test test/*",
+    "test-bamboo-ci": "mocha test test/*",
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
+    "coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "postinstall": "npm run build",
+    "jest": "jest"
+  },
+  "dependencies": {
+    "bluebird": "2.6.2",
+    "body-parser": "1.10.1",
+    "cookie-parser": "^1.3.3",
+    "db-migrate": "0.7.1",
+    "deep-diff": "^0.3.0",
+    "errorhandler": "1.3.2",
+    "express": "4.9.8",
+    "express-validator": "2.8.0",
+    "ini": "1.3.2",
+    "jsx-loader": "0.12.2",
+    "jsxhint": "0.4.15",
+    "knex": "^0.7.3",
+    "log4js": "0.6.21",
+    "moment": "^2.9.0",
+    "nconf": "0.6.9",
+    "pg": "3.6.1",
+    "react": "^0.12.0",
+    "reqwest": "^1.1.4",
+    "webpack": "1.4.15",
+    "webpack-dev-middleware": "^1.0.11"
+  },
+  "devDependencies": {
+    "chai": "1.9.1",
+    "coveralls": "^2.11.2",
+    "istanbul": "0.3.2",
+    "jest-cli": "^0.1.18",
+    "jshint": "2.5.2",
+    "mocha": "1.20.1",
+    "mocha-lcov-reporter": "0.0.1",
+    "pre-commit": "0.0.9",
+    "react-tools": "^0.12.0",
+    "supertest": "0.13.0",
+    "supervisor": "0.6.0",
+    "xmlbuilder": "2.4.4"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react"
     ],
-    "repository": {
-        "type": "git",
-        "url": "ssh://git@github.com:finn-no/unleash.git"
-    },
-    "bugs": {
-        "url": "https://github.com/finn-no/unleash/issues"
-    },
-    "private": true,
-    "scripts": {
-        "start": "NODE_ENV=production node server.js",
-        "build": "./node_modules/.bin/webpack",
-        "dev": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js server.js",
-        "test": "export PORT=4243 ; jest && jshint server.js lib test && jsxhint public/js/**/*.jsx && mocha test test/*.js && npm run coverage",
-        "docker-test": "export PORT=4243 ; ./scripts/docker-postgres.sh",
-        "pg-virtualenv-test": "pg_virtualenv npm run pg-virtualenv-chain",
-        "pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",
-        "db-migrate-testdb": "DATABASE_URL=$TEST_DATABASE_URL ./node_modules/.bin/db-migrate up",
-        "tdd": "mocha --watch test test/*",
-        "test-bamboo-ci": "mocha test test/*",
-        "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
-        "coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-        "postinstall": "npm run build",
-        "jest": "jest"
-    },
-    "dependencies": {
-        "bluebird": "2.6.2",
-        "body-parser": "1.10.1",
-        "db-migrate": "0.7.1",
-        "deep-diff": "^0.3.0",
-        "errorhandler": "1.3.2",
-        "express": "4.9.8",
-        "express-validator": "2.8.0",
-        "ini": "1.3.2",
-        "jsx-loader": "0.12.2",
-        "jsxhint": "0.4.15",
-        "knex": "^0.7.3",
-        "log4js": "0.6.21",
-        "moment": "^2.9.0",
-        "nconf": "0.6.9",
-        "pg": "3.6.1",
-        "react": "^0.12.0",
-        "reqwest": "^1.1.4",
-        "webpack": "1.4.15",
-        "webpack-dev-middleware": "^1.0.11"
-    },
-    "devDependencies": {
-        "chai": "1.9.1",
-        "coveralls": "^2.11.2",
-        "istanbul": "0.3.2",
-        "jest-cli": "^0.1.18",
-        "jshint": "2.5.2",
-        "mocha": "1.20.1",
-        "mocha-lcov-reporter": "0.0.1",
-        "pre-commit": "0.0.9",
-        "react-tools": "^0.12.0",
-        "supertest": "0.13.0",
-        "supervisor": "0.6.0",
-        "xmlbuilder": "2.4.4"
-    },
-    "jest": {
-        "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
-        "unmockedModulePathPatterns": [
-            "<rootDir>/node_modules/react"
-        ],
-        "moduleFileExtensions": [
-            "jsx",
-            "js"
-        ]
-    }
+    "moduleFileExtensions": [
+      "jsx",
+      "js"
+    ]
+  }
 }

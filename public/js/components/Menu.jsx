@@ -6,6 +6,9 @@ var Menu = React.createClass({
           <div className="topbar mbl">
             <div className="container">
               <div className="page">
+                <div className="fright-ht768">
+                  <User />
+                </div>
                 <div className="nav-level1 h4">
                   <a href="" className="homelink pln">
                     <span className="topbar-nav-svg-home">
@@ -47,9 +50,6 @@ var Menu = React.createClass({
                       unleash admin
                    </span>
                   </a>
-                  <div style={{position: "absolute", right: "0"}}>
-                    <User />
-                  </div>
                 </div>
               </div>
             </div>

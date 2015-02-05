@@ -1,10 +1,14 @@
 var React = require('react');
+var User = require('./User');
 
 var Menu = React.createClass({
     render: function() { return (
           <div className="topbar mbl">
             <div className="container">
               <div className="page">
+                <div className="fright-ht768">
+                  <User />
+                </div>
                 <div className="nav-level1 h4">
                   <a href="" className="homelink pln">
                     <span className="topbar-nav-svg-home">

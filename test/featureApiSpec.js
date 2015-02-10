@@ -88,4 +88,12 @@ describe('The features api', function () {
             .expect(404, done);
     });
 
+    it('refuses to create a feature with an existing name', function (done) {
+        request
+            .post('/features')
+            .send({name: 'featureX'})
+            .set('Content-Type', 'application/json')
+            .expect(403, done);
+    });
+
 });

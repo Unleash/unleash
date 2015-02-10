@@ -40,6 +40,7 @@
     "maxstatements" : 10,
     "maxcomplexity" : 10,
     "maxlen"        : 120,
+    "predef": [ "-Promise" ],
 
     "asi"           : false,
     "boss"          : false,

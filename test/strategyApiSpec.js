@@ -22,6 +22,13 @@ describe('The strategy api', function () {
             .expect(200, done);
     });
 
+    it('cant get a strategy by name that dose not exist', function (done) {
+        request
+            .get('/strategies/mystrategy')
+            .expect('Content-Type', /json/)
+            .expect(404, done);
+    });
+
     it('creates a new strategy', function (done) {
         request
             .post('/strategies')

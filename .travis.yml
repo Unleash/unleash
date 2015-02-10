@@ -16,4 +16,4 @@ notifications:
     rooms:
       secure: GiIDk52xccnUKnevjLE+w6eUXg0jfV7oOmagw5VnOV5jXGUxdzMk/Q9um+oSClEPE51IvF76zoFEKPIX/CNdjgalEr+CZADy1gene/YRGrNgrXmYYmiU1/dNzelpla1WpKPrY2pkbOgKxrCR9ScID+pMs6vzvJnPwK9vu66W61U=
 addons:
-  postgresql: "9.3"
+  postgresql: "9.4"

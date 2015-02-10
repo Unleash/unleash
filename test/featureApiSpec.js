@@ -28,6 +28,13 @@ describe('The features api', function () {
             .expect(200, done);
     });
 
+    it('cant get feature that dose not exist', function (done) {
+        request
+            .get('/features/myFeature')
+            .expect('Content-Type', /json/)
+            .expect(404, done);
+    });
+
     it('creates new feature toggle', function (done) {
         request
             .post('/features')

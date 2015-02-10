@@ -28,6 +28,13 @@ describe('The features api', function () {
             .expect(200, done);
     });
 
+    it('cant get feature that dose not exist', function (done) {
+        request
+            .get('/features/myFeature')
+            .expect('Content-Type', /json/)
+            .expect(404, done);
+    });
+
     it('creates new feature toggle', function (done) {
         request
             .post('/features')
@@ -86,6 +93,14 @@ describe('The features api', function () {
         request
             .delete('/features/featureUnknown')
             .expect(404, done);
+    });
+
+    it('refuses to create a feature with an existing name', function (done) {
+        request
+            .post('/features')
+            .send({name: 'featureX'})
+            .set('Content-Type', 'application/json')
+            .expect(403, done);
     });
 
 });

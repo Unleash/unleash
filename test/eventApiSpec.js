@@ -1,6 +1,14 @@
-var request = require('./specHelper').request;
+var specHelper = require('./specHelper');
+var request    = specHelper.request;
 
 describe('The event api', function () {
+
+    beforeEach(function (done) {
+        specHelper.db.resetAndSetup()
+            .then(done.bind(null, null))
+            .catch(done);
+    });
+
     it('returns events', function (done) {
         request
             .get('/events')
@@ -10,7 +18,7 @@ describe('The event api', function () {
 
     it('returns events given a name', function (done) {
         request
-            .get('/events/myname')
+            .get('/events/featureX')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });

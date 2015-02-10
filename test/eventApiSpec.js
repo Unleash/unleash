@@ -15,4 +15,11 @@ describe('The event api', function () {
             .expect(200, done);
     });
 
+    it('cant find event that dose not exist', function (done) {
+        request
+            .get('/events/thisisnoevent')
+            .expect('Content-Type', /json/)
+            .expect(404, done);
+    });
+
 });

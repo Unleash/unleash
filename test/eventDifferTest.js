@@ -2,19 +2,19 @@ var eventDiffer = require('../lib/eventDiffer');
 var eventType   = require('../lib/eventType');
 var assert      = require('assert');
 
-describe('eventDiffer', function () {
-    it('fails if events include an unknown event type', function () {
+describe('eventDiffer', function() {
+    it('fails if events include an unknown event type', function() {
         var events = [
             {type: eventType.featureCreated, data: {}},
             {type: 'unknown-type', data: {}}
         ];
 
-        assert.throws(function () {
+        assert.throws(function() {
             eventDiffer.addDiffs(events);
         });
     });
 
-    it('diffs a feature-update event', function () {
+    it('diffs a feature-update event', function() {
         var name = 'foo';
         var desc = 'bar';
 
@@ -32,14 +32,14 @@ describe('eventDiffer', function () {
         eventDiffer.addDiffs(events);
 
         assert.deepEqual(events[0].diffs, [
-            {kind: 'E', path: ["enabled"], lhs: false, rhs: true},
-            {kind: 'E', path: ["parameters", "value"], lhs: 1, rhs: 2}
+            {kind: 'E', path: ['enabled'], lhs: false, rhs: true},
+            {kind: 'E', path: ['parameters', 'value'], lhs: 1, rhs: 2}
         ]);
 
         assert.strictEqual(events[1].diffs, null);
     });
 
-    it('diffs only against features with the same name', function () {
+    it('diffs only against features with the same name', function() {
         var events = [
             {
                 type: eventType.featureUpdated,
@@ -67,7 +67,7 @@ describe('eventDiffer', function () {
         assert.strictEqual(events[3].diffs, null);
     });
 
-    it('sets an empty array of diffs if nothing was changed', function () {
+    it('sets an empty array of diffs if nothing was changed', function() {
         var events = [
             {
                 type: eventType.featureUpdated,
@@ -83,7 +83,7 @@ describe('eventDiffer', function () {
         assert.deepEqual(events[0].diffs, []);
     });
 
-    it('sets diffs to null if there was nothing to diff against', function () {
+    it('sets diffs to null if there was nothing to diff against', function() {
         var events = [
             {
                 type: eventType.featureUpdated,

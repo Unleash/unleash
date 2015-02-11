@@ -13,73 +13,73 @@ request = request(app);
 function createStrategies() {
     return Promise.map([
         {
-            name: "default",
-            description: "Default on or off Strategy."
+            name: 'default',
+            description: 'Default on or off Strategy.'
         },
         {
-            name: "usersWithEmail",
-            description: "Active for users defined  in the comma-separated emails-parameter.",
+            name: 'usersWithEmail',
+            description: 'Active for users defined  in the comma-separated emails-parameter.',
             parametersTemplate: {
-                emails: "String"
+                emails: 'String'
             }
         }
-    ], function (strategy) { return strategyDb._createStrategy(strategy); });
+    ], function(strategy) { return strategyDb._createStrategy(strategy); });
 }
 
 function createFeatures() {
     return Promise.map([
         {
-            "name": "featureX",
-            "description": "the #1 feature",
-            "enabled": true,
-            "strategy": "default"
+            'name': 'featureX',
+            'description': 'the #1 feature',
+            'enabled': true,
+            'strategy': 'default'
         },
         {
-            "name": "featureY",
-            "description": "soon to be the #1 feature",
-            "enabled": false,
-            "strategy": "baz",
-            "parameters": {
-                "foo": "bar"
+            'name': 'featureY',
+            'description': 'soon to be the #1 feature',
+            'enabled': false,
+            'strategy': 'baz',
+            'parameters': {
+                'foo': 'bar'
             }
         },
         {
-            "name": "featureZ",
-            "description": "terrible feature",
-            "enabled": true,
-            "strategy": "baz",
-            "parameters": {
-                "foo": "rab"
+            'name': 'featureZ',
+            'description': 'terrible feature',
+            'enabled': true,
+            'strategy': 'baz',
+            'parameters': {
+                'foo': 'rab'
             }
         },
         {
-            "name": "featureArchivedX",
-            "description": "the #1 feature",
-            "enabled": true,
-            "archived": true,
-            "strategy": "default"
+            'name': 'featureArchivedX',
+            'description': 'the #1 feature',
+            'enabled': true,
+            'archived': true,
+            'strategy': 'default'
         },
         {
-            "name": "featureArchivedY",
-            "description": "soon to be the #1 feature",
-            "enabled": false,
-            "archived": true,
-            "strategy": "baz",
-            "parameters": {
-                "foo": "bar"
+            'name': 'featureArchivedY',
+            'description': 'soon to be the #1 feature',
+            'enabled': false,
+            'archived': true,
+            'strategy': 'baz',
+            'parameters': {
+                'foo': 'bar'
             }
         },
         {
-            "name": "featureArchivedZ",
-            "description": "terrible feature",
-            "enabled": true,
-            "archived": true,
-            "strategy": "baz",
-            "parameters": {
-                "foo": "rab"
+            'name': 'featureArchivedZ',
+            'description': 'terrible feature',
+            'enabled': true,
+            'archived': true,
+            'strategy': 'baz',
+            'parameters': {
+                'foo': 'rab'
             }
         }
-    ], function (feature) { return featureDb._createFeature(feature);  });
+    ], function(feature) { return featureDb._createFeature(feature);  });
 }
 
 function destroyStrategies() {
@@ -103,6 +103,6 @@ module.exports = {
     db: {
         reset: resetDatabase,
         setup: setupDatabase,
-        resetAndSetup: function () { return resetDatabase().then(setupDatabase); }
+        resetAndSetup: function() { return resetDatabase().then(setupDatabase); }
     }
 };

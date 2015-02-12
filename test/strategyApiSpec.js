@@ -55,7 +55,14 @@ describe('The strategy api', function () {
 
     it('deletes a new strategy', function (done) {
         request
-            .delete('/strategies/deletable')
+            .delete('/strategies/usersWithEmail')
             .expect(200, done);
     });
+
+    it('can\'t delete a strategy that dose not exist', function(done) {
+        request
+            .delete('/strategies/unknown')
+            .expect(404, done);
+    });
+
 });

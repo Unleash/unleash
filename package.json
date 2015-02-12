@@ -20,7 +20,7 @@
     "start": "NODE_ENV=production node server.js",
     "build": "./node_modules/.bin/webpack",
     "dev": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js server.js",
-    "test": "export PORT=4243 ; jest && jshint server.js lib test && jsxhint public/js/**/*.jsx && mocha test test/*.js && npm run coverage",
+    "test": "export PORT=4243 ; jest && npm run lint && nsp audit-package && mocha test test/*.js && npm run coverage",
     "docker-test": "export PORT=4243 ; ./scripts/docker-postgres.sh",
     "pg-virtualenv-test": "pg_virtualenv npm run pg-virtualenv-chain",
     "pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",
@@ -30,7 +30,8 @@
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
     "coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "postinstall": "npm run build",
-    "jest": "jest"
+    "jest": "jest",
+    "lint": "jshint server.js lib test && jsxhint public/js/**/*.jsx"
   },
   "dependencies": {
     "bluebird": "2.6.2",
@@ -62,6 +63,7 @@
     "jshint": "^2.6.0",
     "mocha": "^2.1.0",
     "mocha-lcov-reporter": "^0.0.1",
+    "nsp": "^1.0.0",
     "pre-commit": "^1.0.2",
     "react-tools": "^0.12.0",
     "supertest": "^0.15.0",

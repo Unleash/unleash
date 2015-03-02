@@ -4,33 +4,20 @@ var ErrorMessages = require('../ErrorMessages');
 var FeatureList   = require('./FeatureList');
 var FeatureForm   = require('./FeatureForm');
 var FeatureStore  = require('../../stores/FeatureStore');
+var FeatureStore2 = require('../../stores/FeatureStore2');
+var FeatureActions = require('../../stores/FeatureActions');
+var Reflux        = require('reflux');
 
 var FeatureTogglesComponent = React.createClass({
     getInitialState: function() {
         return {
-            features: [],
             errors: [],
             createView: false,
             featurePoller: new Timer(this.loadFeaturesFromServer, this.props.pollInterval)
         };
     },
 
-    componentDidMount: function () {
-        this.loadFeaturesFromServer();
-        this.startFeaturePoller();
-    },
-
-    componentWillUnmount: function () {
-        this.stopFeaturePoller();
-    },
-
-    loadFeaturesFromServer: function () {
-        FeatureStore.getFeatures().then(this.setFeatures).catch(this.handleError);
-    },
-
-    setFeatures: function (data) {
-        this.setState({features: data.features});
-    },
+    mixins: [Reflux.connect(FeatureStore2,"features")],
 
     handleError: function (error) {
         if (this.isClientError(error)) {
@@ -78,13 +65,20 @@ var FeatureTogglesComponent = React.createClass({
     },
 
     createFeature: function (feature) {
-        this.stopFeaturePoller();
+        //this.stopFeaturePoller();
+
+        FeatureActions.addToggle.triggerPromise(feature)
+          .then(this.cancelNewFeature)
+          .catch(this.handleError);
+
+/*
 
         FeatureStore
           .createFeature(feature)
           .then(this.cancelNewFeature)
           .then(this.startFeaturePoller)
           .catch(this.handleError);
+*/
     },
 
     newFeature: function() {

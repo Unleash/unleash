@@ -1,25 +1,33 @@
-var React         = require('react');
-var Timer         = require('../../utils/Timer');
-var ErrorMessages = require('../ErrorMessages');
-var FeatureList   = require('./FeatureList');
-var FeatureForm   = require('./FeatureForm');
-var FeatureStore  = require('../../stores/FeatureStore');
-var FeatureStore2 = require('../../stores/FeatureStore2');
-var FeatureActions = require('../../stores/FeatureActions');
-var Reflux        = require('reflux');
+var React               = require('react');
+var ErrorMessages       = require('../ErrorMessages');
+var FeatureList         = require('./FeatureList');
+var FeatureForm         = require('./FeatureForm');
+var FeatureActions      = require('../../stores/FeatureToggleActions');
+var FeatureToggleStore  = require('../../stores/FeatureToggleStore');
 
 var FeatureTogglesComponent = React.createClass({
     getInitialState: function() {
         return {
+            features: FeatureToggleStore.getFeatureToggles(),
             errors: [],
-            createView: false,
-            featurePoller: new Timer(this.loadFeaturesFromServer, this.props.pollInterval)
+            createView: false
         };
     },
 
-    mixins: [Reflux.connect(FeatureStore2,"features")],
+    onFeatureToggleChange: function() {
+        this.setState({
+            features: FeatureToggleStore.getFeatureToggles()
+        });
+    },
+    componentDidMount: function() {
+        this.unsubscribe = FeatureToggleStore.listen(this.onFeatureToggleChange);
+    },
+    componentWillUnmount: function() {
+        this.unsubscribe();
+    },
 
     handleError: function (error) {
+      console.log(error);
         if (this.isClientError(error)) {
             var errors = JSON.parse(error.responseText)
             errors.forEach(function(e) { this.addError(e.msg); }.bind(this))
@@ -28,57 +36,22 @@ var FeatureTogglesComponent = React.createClass({
         } else {
             this.addError(error);
         }
-
-        this.forceUpdate();
     },
 
     updateFeature: function (feature) {
-        this.stopFeaturePoller();
-
-        FeatureStore
-          .updateFeature(feature)
-          .then(this.startFeaturePoller)
+      FeatureActions.update.triggerPromise(feature)
           .catch(this.handleError);
     },
 
     archiveFeature: function (feature) {
-        var updatedFeatures = this.state.features.filter(function(item) {
-            return item.name !== feature.name;
-        });
-
-        FeatureStore
-            .archiveFeature(feature)
-            .then(function() {
-                this.setState({features: updatedFeatures})
-            }.bind(this))
+        FeatureActions.archive.triggerPromise(feature)
             .catch(this.handleError);
     },
 
-    startFeaturePoller: function () {
-        this.state.featurePoller.start();
-    },
-
-    stopFeaturePoller: function () {
-        if (this.state.featurePoller != null) {
-            this.state.featurePoller.stop();
-        }
-    },
-
     createFeature: function (feature) {
-        //this.stopFeaturePoller();
-
-        FeatureActions.addToggle.triggerPromise(feature)
+        FeatureActions.create.triggerPromise(feature)
           .then(this.cancelNewFeature)
           .catch(this.handleError);
-
-/*
-
-        FeatureStore
-          .createFeature(feature)
-          .then(this.cancelNewFeature)
-          .then(this.startFeaturePoller)
-          .catch(this.handleError);
-*/
     },
 
     newFeature: function() {
@@ -94,8 +67,10 @@ var FeatureTogglesComponent = React.createClass({
     },
 
     addError: function(msg) {
-        if (this.state.errors[this.state.errors.length - 1] !== msg) {
-            this.state.errors.push(msg);
+      var errors = this.state.errors;
+        if (errors[errors.length - 1] !== msg) {
+            errors.push(msg);
+            this.setState(errors);
         }
     },
 

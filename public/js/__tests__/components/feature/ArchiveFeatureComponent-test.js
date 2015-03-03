@@ -1,32 +1,28 @@
 jest.dontMock("../../../components/feature/ArchiveFeatureComponent");
+jest.mock("../../../stores/FeatureToggleServerFacade");
+jest.autoMockOff();
 
 var React = require("react/addons");
 var TestUtils = React.addons.TestUtils;
-var FeatureArchive = require("../../../components/feature/ArchiveFeatureComponent");
-var FeatureStore = require("../../../stores/FeatureStore");
+var FeatureArchive      = require("../../../components/feature/ArchiveFeatureComponent");
+var Server  = require("../../../stores/FeatureToggleServerFacade");
+var FeatureToggleStore  = require("../../../stores/FeatureToggleStore");
 
 describe("FeatureForm", function () {
     var Component;
     beforeEach(function() {
-        FeatureStore.getArchivedFeatures.mockImplementation(function() {
-            return {
-                then: function (callback) {
-                    return callback({
-                        features: [
-                            { name: "featureX" },
-                            { name: "featureY" }
-                        ]
-                    });
-                }
-            };
-        });
-        FeatureStore.reviveFeature.mockImplementation(function() {
-            return {
-                then: function (callback) {return callback();}
-            };
+        var archivedToggles = [
+            { name: "featureX" },
+            { name: "featureY" }
+        ];
+
+        Server.getArchivedFeatures.mockImplementation(function(cb) {
+          cb(archivedToggles);
         });
 
-        Component = TestUtils .renderIntoDocument(<FeatureArchive />);
+        FeatureToggleStore.initStore([], archivedToggles);
+
+        Component = TestUtils.renderIntoDocument(<FeatureArchive />);
     });
 
     afterEach(function() {
@@ -35,17 +31,15 @@ describe("FeatureForm", function () {
 
     it("should render two archived features", function() {
         var rows = Component.getDOMNode().querySelectorAll("tbody tr");
+
         expect(rows.length).toEqual(2);
     });
 
     it("should revive archived feature toggle", function() {
-        var button = Component.getDOMNode().querySelector("tbody button");
-        TestUtils.Simulate.click(button);
-        var rows = Component.getDOMNode().querySelectorAll("tbody tr");
+      var button = Component.getDOMNode().querySelector("tbody button");
+      TestUtils.Simulate.click(button);
 
-        expect(rows.length).toEqual(1);
-        expect(FeatureStore.reviveFeature).toBeCalledWith({
-            name: "featureX"
-        });
+      jest.runAllTimers();
+      expect(Server.reviveFeature).toBeCalled();
     });
 });

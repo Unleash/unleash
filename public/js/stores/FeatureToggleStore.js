@@ -1,6 +1,7 @@
 var Reflux          = require('reflux');
 var FeatureActions  = require('./FeatureToggleActions');
 var Server          = require('./FeatureToggleServerFacade');
+var Timer           = require('../utils/Timer');
 
 var _featureToggles = [];
 var _archivedToggles = [];
@@ -14,6 +15,11 @@ var FeatureStore = Reflux.createStore({
     this.listenTo(FeatureActions.archive, this.onArchive);
     this.listenTo(FeatureActions.revive,  this.onRevive);
 
+    this.timer = new Timer(this.loadDataFromServer, 30*1000);
+    this.timer.start();
+  },
+
+  loadDataFromServer: function() {
     Server.getFeatures(function(err, featureToggles) {
       this.setToggles(featureToggles);
     }.bind(this));

@@ -33,7 +33,11 @@ app.use(validator([]));
 app.set('trust proxy');
 app.locals.baseUriPath = baseUriPath;
 
-app.use(log4js.connectLogger(logger, {format: ':remote-addr :status :method :url :response-timems'}));
+app.use(log4js.connectLogger(logger, {
+    format: ':remote-addr :status :method :url :response-timems',
+    level: 'auto' // 3XX=WARN, 4xx/5xx=ERROR
+}));
+
 app.set('port', process.env.HTTP_PORT || process.env.PORT || 4242);
 
 app.use(baseUriPath, express.static(__dirname + '/public'));

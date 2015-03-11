@@ -10,6 +10,7 @@ This repo contains the unleash-server, which contains the admin UI and a place t
 
 Known client implementations:
 - [unleash-client-java](https://github.com/finn-no/unleash-client-java)
+- [unleash-client-node](https://github.com/finn-no/unleash-client-node)
 
 ## Development
 

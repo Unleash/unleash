@@ -10,10 +10,10 @@ var _archivedToggles = [];
 var FeatureStore = Reflux.createStore({
   // Initial setup
   init: function() {
-    this.listenTo(FeatureActions.create,  this.onCreate);
-    this.listenTo(FeatureActions.update,  this.onUpdate);
-    this.listenTo(FeatureActions.archive, this.onArchive);
-    this.listenTo(FeatureActions.revive,  this.onRevive);
+    this.listenTo(FeatureActions.create.completed,  this.onCreate);
+    this.listenTo(FeatureActions.update.completed,  this.onUpdate);
+    this.listenTo(FeatureActions.archive.completed, this.onArchive);
+    this.listenTo(FeatureActions.revive.completed,  this.onRevive);
 
     this.timer = new Timer(this.loadDataFromServer, 30*1000);
     this.timer.start();
@@ -31,47 +31,7 @@ var FeatureStore = Reflux.createStore({
   },
 
   onCreate: function(feature) {
-    Server.createFeature(feature, function(error) {
-      if(error) {
-        FeatureActions.create.failed(error);
-      } else {
-        this.setToggles([feature].concat(_featureToggles));
-        FeatureActions.create.completed();
-      }
-    }.bind(this));
-  },
-
-  onArchive: function(feature) {
-    Server.archiveFeature(feature, function(error) {
-      if(error) {
-        FeatureActions.archive.failed(error);
-      } else {
-        this.archiveToggle(feature);
-        FeatureActions.archive.completed();
-      }
-    }.bind(this));
-  },
-
-  onUpdate: function(feature) {
-    Server.updateFeature(feature, function(error) {
-      if(error) {
-        FeatureActions.update.failed(error);
-      } else {
-        this.updateToggle(feature);
-        FeatureActions.update.completed();
-      }
-    }.bind(this));
-  },
-
-  onRevive: function(feature) {
-    Server.reviveFeature(feature, function(error) {
-      if(error) {
-        FeatureActions.revive.failed(error);
-      } else {
-        this.revive(feature);
-        FeatureActions.revive.completed();
-      }
-    }.bind(this));
+      this.setToggles([feature].concat(_featureToggles));
   },
 
   setToggles: function(toggles) {
@@ -79,7 +39,7 @@ var FeatureStore = Reflux.createStore({
     this.trigger();
   },
 
-  updateToggle: function(feature) {
+  onUpdate: function(feature) {
     var idx;
     _featureToggles.forEach(function(item, i) {
       if(item.name === feature.name) {
@@ -90,7 +50,7 @@ var FeatureStore = Reflux.createStore({
     this.trigger();
   },
 
-  archiveToggle: function(feature) {
+  onArchive: function(feature) {
     var idx;
     _featureToggles.forEach(function(item, i) {
       if(item.name === feature.name) {
@@ -102,7 +62,7 @@ var FeatureStore = Reflux.createStore({
     this.trigger();
   },
 
-  revive: function(item) {
+  onRevive: function(item) {
     var newStore = _archivedToggles.filter(function(f) {
         return f.name !== item.name;
     });

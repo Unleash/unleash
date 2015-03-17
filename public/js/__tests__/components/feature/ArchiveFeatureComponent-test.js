@@ -6,7 +6,7 @@ var React = require("react/addons");
 var TestUtils = React.addons.TestUtils;
 var FeatureArchive      = require("../../../components/feature/ArchiveFeatureComponent");
 var Server  = require("../../../stores/FeatureToggleServerFacade");
-var FeatureToggleStore  = require("../../../stores/FeatureToggleStore");
+var FeatureToggleStore  = require("../../../stores/ArchivedToggleStore");
 
 describe("FeatureForm", function () {
     var Component;
@@ -20,7 +20,7 @@ describe("FeatureForm", function () {
           cb(archivedToggles);
         });
 
-        FeatureToggleStore.initStore([], archivedToggles);
+        FeatureToggleStore.initStore(archivedToggles);
 
         Component = TestUtils.renderIntoDocument(<FeatureArchive />);
     });

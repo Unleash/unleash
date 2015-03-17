@@ -1,6 +1,6 @@
 var React               = require("react");
 var FeatureActions      = require('../../stores/FeatureToggleActions');
-var FeatureToggleStore  = require('../../stores/FeatureToggleStore');
+var FeatureToggleStore  = require('../../stores/ArchivedToggleStore');
 
 var ArchiveFeatureComponent = React.createClass({
   getInitialState: function() {

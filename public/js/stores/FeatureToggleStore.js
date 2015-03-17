@@ -6,9 +6,7 @@ var filter          = require('lodash/collection/filter');
 var sortBy          = require('lodash/collection/sortBy');
 var findIndex       = require('lodash/array/findIndex');
 
-//TODO: have archived toggles in seperate store.
 var _featureToggles = [];
-var _archivedToggles = [];
 
 // Creates a DataStore
 var FeatureStore = Reflux.createStore({
@@ -31,11 +29,6 @@ var FeatureStore = Reflux.createStore({
     Server.getFeatures(function(err, featureToggles) {
       this.setToggles(featureToggles);
     }.bind(this));
-
-    Server.getArchivedFeatures(function(err, archivedToggles) {
-      _archivedToggles = archivedToggles;
-      this.trigger();
-    }.bind(this));
   },
 
   onCreate: function(feature) {
@@ -57,16 +50,11 @@ var FeatureStore = Reflux.createStore({
     var featureToggles = filter(_featureToggles, function(item) {
         return item.name !== feature.name;
     });
-    _archivedToggles.unshift(feature);
     this.setToggles(featureToggles);
     this.trigger();
   },
 
   onRevive: function(item) {
-    var newStore = _archivedToggles.filter(function(f) {
-        return f.name !== item.name;
-    });
-    _archivedToggles = newStore;
     this.setToggles(_featureToggles.concat([item]));
     this.trigger();
   },
@@ -75,13 +63,8 @@ var FeatureStore = Reflux.createStore({
     return _featureToggles;
   },
 
-  getArchivedToggles: function() {
-    return _archivedToggles;
-  },
-
-  initStore: function(toggles, archivedToggles) {
+  initStore: function(toggles) {
     _featureToggles = toggles;
-    _archivedToggles = archivedToggles;
   }
 });
 

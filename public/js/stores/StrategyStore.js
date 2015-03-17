@@ -1,7 +1,5 @@
 var Reflux          = require('reflux');
-var ErrorActions    = require('./ErrorActions');
 var StrategyActions = require('./StrategyActions');
-var StrategyAPI     = require('./StrategyAPI');
 var filter          = require('lodash/collection/filter');
 
 var _strategies = [];
@@ -11,22 +9,9 @@ var StrategyStore = Reflux.createStore({
 
     // Initial setup
     init: function() {
+        this.listenTo(StrategyActions.init.completed, this.setStrategies);
         this.listenTo(StrategyActions.create.completed, this.onCreate);
         this.listenTo(StrategyActions.remove.completed,  this.onRemove);
-        this.loadDataFromServer();
-    },
-
-    loadDataFromServer: function() {
-        //TODO: this should not be part of the store!
-        StrategyAPI.getStrategies(function(err, strategies) {
-
-            if(err) {
-                ErrorActions.error(err);
-                return;
-            } else {
-                this.setStrategies(strategies);
-            }
-        }.bind(this));
     },
 
     onCreate: function(strategy) {

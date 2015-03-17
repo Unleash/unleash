@@ -1,8 +1,5 @@
 var Reflux          = require('reflux');
 var FeatureActions  = require('./FeatureToggleActions');
-var ErrorActions    = require('./ErrorActions');
-var Server          = require('./FeatureToggleServerFacade');
-var Timer           = require('../utils/Timer');
 var filter          = require('lodash/collection/filter');
 var sortBy          = require('lodash/collection/sortBy');
 var findIndex       = require('lodash/array/findIndex');
@@ -15,26 +12,11 @@ var FeatureStore = Reflux.createStore({
 
   // Initial setup
   init: function() {
+    this.listenTo(FeatureActions.init.completed,    this.setToggles);
     this.listenTo(FeatureActions.create.completed,  this.onCreate);
     this.listenTo(FeatureActions.update.completed,  this.onUpdate);
     this.listenTo(FeatureActions.archive.completed, this.onArchive);
     this.listenTo(FeatureActions.revive.completed,  this.onRevive);
-
-    //TODO: this should not be part of the store!
-    this.timer = new Timer(this.loadDataFromServer, 30*1000);
-    this.timer.start();
-  },
-
-  loadDataFromServer: function() {
-    //TODO: this should not be part of the store!
-    Server.getFeatures(function(err, featureToggles) {
-        if(err) {
-            ErrorActions.error(err);
-            return;
-        } else {
-            this.setToggles(featureToggles);
-        }
-    }.bind(this));
   },
 
   onCreate: function(feature) {

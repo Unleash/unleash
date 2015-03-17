@@ -1,8 +1,5 @@
 var Reflux          = require('reflux');
 var FeatureActions  = require('./FeatureToggleActions');
-var ErrorActions    = require('./ErrorActions');
-var Timer           = require('../utils/Timer');
-var Server          = require('./FeatureToggleServerFacade');
 var filter          = require('lodash/collection/filter');
 var sortBy          = require('lodash/collection/sortBy');
 
@@ -13,26 +10,15 @@ var FeatureStore = Reflux.createStore({
 
     // Initial setup
     init: function() {
+        this.listenTo(FeatureActions.initArchive.completed, this.onInit);
         this.listenTo(FeatureActions.archive.completed, this.onArchive);
         this.listenTo(FeatureActions.revive.completed,  this.onRevive);
 
-        this.timer = new Timer(this.loadDataFromServer, 30*1000);
-        this.timer.start();
     },
 
-    loadDataFromServer: function() {
-        //TODO: this should not be part of the store!
-        Server.getArchivedFeatures(function(err, archivedToggles) {
-
-            if(err) {
-                ErrorActions.error(err);
-                return;
-            } else {
-                _archivedToggles = archivedToggles;
-                this.trigger(_archivedToggles);
-            }
-
-        }.bind(this));
+    onInit: function(toggles) {
+        _archivedToggles = toggles;
+        this.trigger();
     },
 
     onArchive: function(feature) {

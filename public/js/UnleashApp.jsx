@@ -3,6 +3,7 @@ var TabView                 = require('./components/TabView');
 var Menu                    = require('./components/Menu');
 var UserStore               = require('./stores/UserStore');
 var ErrorMessages           = require('./components/ErrorMessages');
+var initalizer              = require('./stores/initalizer');
 var LogEntriesComponent     = React.createFactory(require('./components/log/LogEntriesComponent'));
 var FeatureTogglesComponent = React.createFactory(require('./components/feature/FeatureTogglesComponent'));
 var StrategiesComponent     = React.createFactory(require('./components/strategy/StrategiesComponent'));
@@ -35,15 +36,9 @@ var tabPanes = [
 
 
 var UnleashApp = React.createClass({
-    getInitialState: function() {
-        return {
-            featureToggles: [],
-            archivedToggles: [],
-            strategies: []
-
-        };
+    componentWillMount: function() {
+        initalizer(30);
     },
-
     render: function () {
         return (
             <div>

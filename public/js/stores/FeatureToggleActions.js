@@ -2,10 +2,32 @@ var Reflux = require("reflux");
 var Server = require('./FeatureToggleServerFacade');
 
 var FeatureToggleActions = Reflux.createActions({
+    'init':     { asyncResult: true },
+    'initArchive':{ asyncResult: true },
     'create':   { asyncResult: true },
     'update':   { asyncResult: true },
     'archive':  { asyncResult: true },
     'revive':   { asyncResult: true }
+});
+
+FeatureToggleActions.init.listen(function(){
+    Server.getFeatures(function(error, features) {
+      if(error) {
+        this.failed(error);
+      } else {
+        this.completed(features);
+    }
+    }.bind(this));
+});
+
+FeatureToggleActions.initArchive.listen(function(){
+    Server.getArchivedFeatures(function(error, archivedToggles) {
+      if(error) {
+        this.failed(error);
+      } else {
+        this.completed(archivedToggles);
+    }
+    }.bind(this));
 });
 
 FeatureToggleActions.create.listen(function(feature){

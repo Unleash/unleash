@@ -1,5 +1,5 @@
 var React = require('react'),
-    LogEntry = require('./LogEntry');
+LogEntry = require('./LogEntry');
 
 var LogEntryList = React.createClass({
     propTypes: {
@@ -9,7 +9,7 @@ var LogEntryList = React.createClass({
     getInitialState: function() {
         return {
             showFullEvents: false
-        }
+        };
     },
 
     render: function() {
@@ -19,9 +19,14 @@ var LogEntryList = React.createClass({
 
         return (
             <div>
-               <label className="prs fright-ht768 smalltext">
-                 Show full events
-                 <input type="checkbox" className="mlm" value={this.state.fullEvents} onChange={this.toggleFullEvents}></input>
+                <label className="prs fright-ht768 smalltext">
+                    Show full events
+                    <input
+                        type="checkbox"
+                        className="mlm"
+                        value={this.state.fullEvents}
+                        onChange={this.toggleFullEvents}>
+                    </input>
                 </label>
 
                 <table className='outerborder zebra-striped'>
@@ -30,7 +35,7 @@ var LogEntryList = React.createClass({
                             <th>When</th>
                             <th>Action</th>
                             <th>
-                              Data
+                                Data
                             </th>
                             <th>Author</th>
                         </tr>
@@ -40,10 +45,10 @@ var LogEntryList = React.createClass({
                     </tbody>
                 </table>
             </div>
-            );
+        );
     },
 
-    toggleFullEvents: function(e) {
+    toggleFullEvents: function() {
         this.setState({showFullEvents: !this.state.showFullEvents});
     }
 

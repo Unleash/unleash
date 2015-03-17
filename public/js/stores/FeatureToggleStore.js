@@ -1,5 +1,6 @@
 var Reflux          = require('reflux');
 var FeatureActions  = require('./FeatureToggleActions');
+var ErrorActions    = require('./ErrorActions');
 var Server          = require('./FeatureToggleServerFacade');
 var Timer           = require('../utils/Timer');
 var filter          = require('lodash/collection/filter');
@@ -20,7 +21,7 @@ var FeatureStore = Reflux.createStore({
     this.listenTo(FeatureActions.revive.completed,  this.onRevive);
 
     //TODO: this should not be part of the store!
-    this.timer = new Timer(this.loadDataFromServer, 3*1000);
+    this.timer = new Timer(this.loadDataFromServer, 30*1000);
     this.timer.start();
   },
 
@@ -28,6 +29,7 @@ var FeatureStore = Reflux.createStore({
     //TODO: this should not be part of the store!
     Server.getFeatures(function(err, featureToggles) {
         if(err) {
+            ErrorActions.error(err);
             return;
         } else {
             this.setToggles(featureToggles);

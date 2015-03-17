@@ -2,6 +2,7 @@ var React                   = require('react');
 var TabView                 = require('./components/TabView');
 var Menu                    = require('./components/Menu');
 var UserStore               = require('./stores/UserStore');
+var ErrorMessages           = require('./components/ErrorMessages');
 var LogEntriesComponent     = React.createFactory(require('./components/log/LogEntriesComponent'));
 var FeatureTogglesComponent = React.createFactory(require('./components/feature/FeatureTogglesComponent'));
 var StrategiesComponent     = React.createFactory(require('./components/strategy/StrategiesComponent'));
@@ -37,10 +38,10 @@ React.render(
         <Menu />
         <div className="container">
             <div className="page">
+                <ErrorMessages />
                 <TabView tabPanes={tabPanes} />
             </div>
         </div>
-    </div>
-    ,
+    </div>,
     document.getElementById('content')
 );

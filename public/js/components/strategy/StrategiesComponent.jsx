@@ -1,36 +1,27 @@
-var React          = require('react');
-var StrategyList   = require('./StrategyList');
-var StrategyForm   = require('./StrategyForm');
-var strategyStore  = require('../../stores/StrategyStore');
-var ErrorActions   = require('../../stores/ErrorActions');
+var React             = require('react');
+var StrategyList      = require('./StrategyList');
+var StrategyForm      = require('./StrategyForm');
+var StrategyStore     = require('../../stores/StrategyStore');
+var StrategyActions   = require('../../stores/StrategyActions');
 
 var StrategiesComponent = React.createClass({
     getInitialState: function() {
         return {
             createView: false,
-            strategies: []
+            strategies: StrategyStore.getStrategies()
         };
     },
 
-    componentDidMount: function () {
-        this.fetchStrategies();
+    onStoreChange: function() {
+        this.setState({
+            strategies: StrategyStore.getStrategies()
+        });
     },
-
-    fetchStrategies: function() {
-        strategyStore.getStrategies()
-        .then(function(res) {
-            this.setState({strategies: res.strategies});
-        }.bind(this))
-        .catch(this.initError);
-
+    componentDidMount: function() {
+        this.unsubscribe = StrategyStore.listen(this.onStoreChange);
     },
-
-    initError: function() {
-        this.onError("Could not load inital strategies from server");
-    },
-
-    onError: function(error) {
-        ErrorActions.error(error);
+    componentWillUnmount: function() {
+        this.unsubscribe();
     },
 
     onNewStrategy: function() {
@@ -42,32 +33,19 @@ var StrategiesComponent = React.createClass({
     },
 
     onSave: function(strategy) {
-        function handleSuccess() {
-            var strategies = this.state.strategies.concat([strategy]);
-
-            this.setState({
-                createView: false,
-                strategies: strategies
-            });
-
-            console.log("Saved strategy: ", strategy);
-        }
-
-        strategyStore.createStrategy(strategy)
-        .then(handleSuccess.bind(this))
-        .catch(this.onError);
+        StrategyActions.create.triggerPromise(strategy)
+        .then(this.onCancelNewStrategy);
     },
 
     onRemove: function(strategy) {
-        strategyStore.removeStrategy(strategy)
-        .then(this.fetchStrategies)
-        .catch(this.onError);
+        StrategyActions.remove.triggerPromise(strategy);
     },
 
     render: function() {
         return (
             <div>
-                {this.state.createView ? this.renderCreateView() : this.renderCreateButton()}
+                {this.state.createView ?
+                    this.renderCreateView() : this.renderCreateButton()}
                 <hr />
                 <StrategyList
                     strategies={this.state.strategies}
@@ -82,15 +60,15 @@ var StrategiesComponent = React.createClass({
                 onCancelNewStrategy={this.onCancelNewStrategy}
                 onSave={this.onSave}
                 />);
-    },
+            },
 
-    renderCreateButton: function() {
-        return (
-            <button className="mal" onClick={this.onNewStrategy}>
-                Create strategy
-            </button>
-        );
-    }
-});
+            renderCreateButton: function() {
+                return (
+                    <button className="mal" onClick={this.onNewStrategy}>
+                        Create strategy
+                    </button>
+                );
+            }
+        });
 
-module.exports = StrategiesComponent;
+        module.exports = StrategiesComponent;

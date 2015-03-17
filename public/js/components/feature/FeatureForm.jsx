@@ -1,22 +1,16 @@
 var React = require('react');
 var TextInput = require('../form/TextInput');
-var strategyStore = require('../../stores/StrategyStore');
 
 var FeatureForm = React.createClass({
     getInitialState: function() {
-      return {
-          strategyOptions: [],
-          requiredParams: [],
-          currentStrategy: this.props.feature ? this.props.feature.strategy : "default"
-      };
+        return {
+            strategyOptions: this.props.strategies,
+            requiredParams: [],
+            currentStrategy: this.props.feature ? this.props.feature.strategy : "default"
+        };
     },
 
     componentWillMount: function() {
-      strategyStore.getStrategies().then(this.handleStrategyResponse);
-    },
-
-    handleStrategyResponse: function(response) {
-        this.setState({strategyOptions: response.strategies});
         if(this.props.feature) {
             this.setSelectedStrategy(this.props.feature.strategy);
         }
@@ -41,9 +35,7 @@ var FeatureForm = React.createClass({
         })[0];
 
         if(selectedStrategy) {
-            if(selectedStrategy.parametersTemplate) {
-                this.setStrategyParams(selectedStrategy);
-            }
+            this.setStrategyParams(selectedStrategy);
         } else {
             var updatedStrategyName = name + " (deleted)";
             this.setState({
@@ -64,9 +56,9 @@ var FeatureForm = React.createClass({
 
     render: function() {
         var feature = this.props.feature || {
-          name: '',
-          strategy: 'default',
-          enabled: false
+            name: '',
+            strategy: 'default',
+            enabled: false
         };
 
         var idPrefix = this.props.feature ? this.props.feature.name : 'new';
@@ -131,9 +123,9 @@ var FeatureForm = React.createClass({
     renderStrategyOptions: function() {
         return this.state.strategyOptions.map(function(strategy) {
             return (
-              <option key={strategy.name} value={strategy.name}>
-                {strategy.name}
-              </option>
+                <option key={strategy.name} value={strategy.name}>
+                    {strategy.name}
+                </option>
             );
         }.bind(this));
     },

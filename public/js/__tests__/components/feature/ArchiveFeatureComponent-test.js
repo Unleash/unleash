@@ -17,7 +17,7 @@ describe("FeatureForm", function () {
         ];
 
         Server.getArchivedFeatures.mockImplementation(function(cb) {
-          cb(archivedToggles);
+          cb(null, archivedToggles);
         });
 
         FeatureToggleStore.initStore(archivedToggles);

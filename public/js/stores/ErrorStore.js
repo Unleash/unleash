@@ -7,6 +7,7 @@ var FeatureStore = Reflux.createStore({
     // Initial setup
     init: function() {
         this.listenTo(FeatureActions.create.failed, this.onError);
+        this.listenTo(FeatureActions.init.failed, this.onError);
         this.listenTo(FeatureActions.update.failed, this.onError);
         this.listenTo(FeatureActions.archive.failed, this.onError);
         this.listenTo(FeatureActions.revive.failed, this.onError);

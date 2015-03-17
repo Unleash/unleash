@@ -1,15 +1,14 @@
-var React          = require('react'),
-    StrategyList   = require('./StrategyList'),
-    StrategyForm = require('./StrategyForm'),
-    strategyStore  = require('../../stores/StrategyStore'),
-    ErrorMessages  = require('../ErrorMessages');
+var React          = require('react');
+var StrategyList   = require('./StrategyList');
+var StrategyForm   = require('./StrategyForm');
+var strategyStore  = require('../../stores/StrategyStore');
+var ErrorActions   = require('../../stores/ErrorActions');
 
 var StrategiesComponent = React.createClass({
     getInitialState: function() {
         return {
             createView: false,
-            strategies: [],
-            errors: []
+            strategies: []
         };
     },
 
@@ -17,12 +16,12 @@ var StrategiesComponent = React.createClass({
         this.fetchStrategies();
     },
 
-    fetchStrategies: function(res) {
+    fetchStrategies: function() {
         strategyStore.getStrategies()
-            .then(function(res) {
-                this.setState({strategies: res.strategies})
-            }.bind(this))
-            .catch(this.initError);
+        .then(function(res) {
+            this.setState({strategies: res.strategies});
+        }.bind(this))
+        .catch(this.initError);
 
     },
 
@@ -30,13 +29,8 @@ var StrategiesComponent = React.createClass({
         this.onError("Could not load inital strategies from server");
     },
 
-    clearErrors: function() {
-        this.setState({errors: []});
-    },
-
     onError: function(error) {
-        var errors = this.state.errors.concat([error]);
-        this.setState({errors: errors});
+        ErrorActions.error(error);
     },
 
     onNewStrategy: function() {
@@ -66,31 +60,35 @@ var StrategiesComponent = React.createClass({
 
     onRemove: function(strategy) {
         strategyStore.removeStrategy(strategy)
-            .then(this.fetchStrategies)
-            .catch(this.onError);
+        .then(this.fetchStrategies)
+        .catch(this.onError);
     },
 
     render: function() {
         return (
             <div>
-                <ErrorMessages errors={this.state.errors} onClearErrors={this.clearErrors} />
-
-                 {this.state.createView ? this.renderCreateView() : this.renderCreateButton()}
-
+                {this.state.createView ? this.renderCreateView() : this.renderCreateButton()}
                 <hr />
-
-                <StrategyList strategies={this.state.strategies} onRemove={this.onRemove} />
+                <StrategyList
+                    strategies={this.state.strategies}
+                    onRemove={this.onRemove} />
             </div>
-            );
+        );
     },
 
     renderCreateView: function() {
-        return (<StrategyForm onCancelNewStrategy={this.onCancelNewStrategy} onSave={this.onSave} />)
+        return (
+            <StrategyForm
+                onCancelNewStrategy={this.onCancelNewStrategy}
+                onSave={this.onSave}
+                />);
     },
 
     renderCreateButton: function() {
         return (
-            <button className="mal" onClick={this.onNewStrategy}>Create strategy</button>
+            <button className="mal" onClick={this.onNewStrategy}>
+                Create strategy
+            </button>
         );
     }
 });

@@ -20,14 +20,18 @@ var FeatureStore = Reflux.createStore({
     this.listenTo(FeatureActions.revive.completed,  this.onRevive);
 
     //TODO: this should not be part of the store!
-    this.timer = new Timer(this.loadDataFromServer, 30*1000);
+    this.timer = new Timer(this.loadDataFromServer, 3*1000);
     this.timer.start();
   },
 
   loadDataFromServer: function() {
     //TODO: this should not be part of the store!
     Server.getFeatures(function(err, featureToggles) {
-      this.setToggles(featureToggles);
+        if(err) {
+            return;
+        } else {
+            this.setToggles(featureToggles);
+        }
     }.bind(this));
   },
 

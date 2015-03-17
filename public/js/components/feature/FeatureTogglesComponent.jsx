@@ -4,6 +4,7 @@ var FeatureForm         = require('./FeatureForm');
 var FeatureActions      = require('../../stores/FeatureToggleActions');
 var ErrorActions        = require('../../stores/ErrorActions');
 var FeatureToggleStore  = require('../../stores/FeatureToggleStore');
+var StrategyStore       = require('../../stores/StrategyStore');
 
 var FeatureTogglesComponent = React.createClass({
     getInitialState: function() {
@@ -59,13 +60,17 @@ var FeatureTogglesComponent = React.createClass({
                   onFeatureArchive={this.archiveFeature}
                   onFeatureSubmit={this.createFeature}
                   onFeatureCancel={this.cancelNewFeature}
-                  onNewFeature={this.newFeature} />
+                  onNewFeature={this.newFeature}
+                  strategies={StrategyStore.getStrategies()} />
             </div>
         );
     },
 
     renderCreateView: function() {
-        return <FeatureForm onCancel={this.cancelNewFeature} onSubmit={this.createFeature} />;
+        return <FeatureForm
+            onCancel={this.cancelNewFeature}
+            onSubmit={this.createFeature}
+            strategies={StrategyStore.getStrategies()} />;
     },
 
     renderCreateButton: function() {

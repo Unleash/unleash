@@ -75,7 +75,8 @@
   "jest": {
     "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
     "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react"
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/reflux"
     ],
     "moduleFileExtensions": [
       "jsx",

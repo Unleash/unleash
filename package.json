@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "unleash your features",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "keywords": [
     "unleash",
     "feature toggle",

@@ -5,7 +5,8 @@ var noop = function() {};
 
 var FeatureList = React.createClass({
     propTypes: {
-        features: React.PropTypes.array.isRequired
+        features: React.PropTypes.array.isRequired,
+        strategies: React.PropTypes.array.isRequired
     },
 
     getDefaultProps: function() {
@@ -47,7 +48,9 @@ var FeatureList = React.createClass({
                   key={feature.name}
                   feature={feature}
                   onChange={this.props.onFeatureChanged}
-                  onArchive={this.props.onFeatureArchive}/>
+                  onArchive={this.props.onFeatureArchive}
+                  strategies={this.props.strategies}
+                  />
             );
         }.bind(this));
 

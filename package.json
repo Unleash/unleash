@@ -46,11 +46,13 @@
     "jsx-loader": "0.12.2",
     "jsxhint": "0.4.15",
     "knex": "^0.7.3",
+    "lodash": "^3.5.0",
     "log4js": "0.6.21",
     "moment": "^2.9.0",
     "nconf": "0.6.9",
     "pg": "3.6.1",
     "react": "^0.12.0",
+    "reflux": "^0.2.5",
     "reqwest": "^1.1.4",
     "webpack": "1.4.15",
     "webpack-dev-middleware": "^1.0.11"
@@ -73,7 +75,8 @@
   "jest": {
     "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
     "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react"
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/reflux"
     ],
     "moduleFileExtensions": [
       "jsx",

@@ -1,28 +1,30 @@
-var React = require("react");
-var FeatureStore  = require('../../stores/FeatureStore');
+var React               = require("react");
+var FeatureActions      = require('../../stores/FeatureToggleActions');
+var FeatureToggleStore  = require('../../stores/ArchivedToggleStore');
 
 var ArchiveFeatureComponent = React.createClass({
     getInitialState: function() {
         return {
-            archivedFeatures: []
+            archivedFeatures: FeatureToggleStore.getArchivedToggles()
         };
     },
 
-    removeToggleFromState: function(item) {
-        var updatedArchive = this.state.archivedFeatures.filter(function(f) {
-            return f.name !== item.name;
+    onStoreChange: function() {
+        this.setState({
+            archivedFeatures: FeatureToggleStore.getArchivedToggles()
         });
-        this.setState({archivedFeatures: updatedArchive});
     },
 
-    onRevive: function( item) {
-        FeatureStore.reviveFeature(item).then(this.removeToggleFromState.bind(this, item));
+    componentDidMount: function() {
+        this.unsubscribe = FeatureToggleStore.listen(this.onStoreChange);
     },
 
-    componentDidMount: function () {
-        FeatureStore.getArchivedFeatures().then(function(data) {
-            this.setState({archivedFeatures: data.features});
-        }.bind(this))
+    componentWillUnmount: function() {
+        this.unsubscribe();
+    },
+
+    onRevive: function(item) {
+        FeatureActions.revive.triggerPromise(item);
     },
 
     render: function () {
@@ -41,7 +43,7 @@ var ArchiveFeatureComponent = React.createClass({
                     </tbody>
                 </table>
             </div>
-            );
+        );
     },
 
     renderArchivedItem: function(f) {
@@ -49,15 +51,14 @@ var ArchiveFeatureComponent = React.createClass({
             <tr key={f.name}>
                 <td>
                     {f.name}<br />
-                    <span className="opaque smalltext word-break">{f.description}</span>
-
-                </td>
-                <td className="rightify" width="150">
-                    <button onClick={this.onRevive.bind(this, f)} title="Revive feature toggle">
-                        <span className="icon-svar"></span>
-                    </button>
-                </td>
-            </tr>);
+                <span className="opaque smalltext word-break">{f.description}</span>
+            </td>
+            <td className="rightify" width="150">
+                <button onClick={this.onRevive.bind(this, f)} title="Revive feature toggle">
+                    <span className="icon-svar"></span>
+                </button>
+            </td>
+        </tr>);
     }
 });
 

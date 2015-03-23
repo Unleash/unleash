@@ -1,34 +1,42 @@
-var reqwest = require('reqwest');
+var Reflux          = require('reflux');
+var StrategyActions = require('./StrategyActions');
+var filter          = require('lodash/collection/filter');
 
-var TYPE         = 'json';
-var CONTENT_TYPE = 'application/json';
+var _strategies = [];
 
-var StrategyStore = {
-    createStrategy: function (strategy) {
-        return reqwest({
-            url: 'strategies',
-            method: 'post',
-            type: TYPE,
-            contentType: CONTENT_TYPE,
-            data: JSON.stringify(strategy)
-        });
+// Creates a DataStore
+var StrategyStore = Reflux.createStore({
+
+    // Initial setup
+    init: function() {
+        this.listenTo(StrategyActions.init.completed, this.setStrategies);
+        this.listenTo(StrategyActions.create.completed, this.onCreate);
+        this.listenTo(StrategyActions.remove.completed,  this.onRemove);
     },
 
-    removeStrategy: function (strategy) {
-        return reqwest({
-            url: 'strategies/'+strategy.name,
-            method: 'delete',
-            type: TYPE
-        });
+    onCreate: function(strategy) {
+        this.setStrategies(_strategies.concat([strategy]));
     },
 
-    getStrategies: function () {
-        return reqwest({
-            url: 'strategies',
-            method: 'get',
-            type: TYPE
+    onRemove: function(strategy) {
+        var strategies = filter(_strategies, function(item) {
+            return item.name !== strategy.name;
         });
+        this.setStrategies(strategies);
+    },
+
+    setStrategies: function(strategies) {
+        _strategies = strategies;
+        this.trigger(_strategies);
+    },
+
+    getStrategies: function() {
+        return _strategies;
+    },
+
+    initStore: function(strategies) {
+        _strategies = strategies;
     }
-};
+});
 
 module.exports = StrategyStore;

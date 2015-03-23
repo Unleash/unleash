@@ -44,7 +44,11 @@ var Feature = React.createClass({
         return (
             <tr>
                 <td colSpan="4" className="pan man no-border">
-                    <FeatureForm feature={this.props.feature} onSubmit={this.saveFeature} onCancel={this.toggleEditMode} />
+                    <FeatureForm
+                        feature={this.props.feature}
+                        onSubmit={this.saveFeature}
+                        onCancel={this.toggleEditMode}
+                        strategies={this.props.strategies} />
                 </td>
             </tr>
             );

@@ -1,132 +1,56 @@
-var React         = require('react');
-var Timer         = require('../../utils/Timer');
-var ErrorMessages = require('../ErrorMessages');
-var FeatureList   = require('./FeatureList');
-var FeatureForm   = require('./FeatureForm');
-var FeatureStore  = require('../../stores/FeatureStore');
+var React               = require('react');
+var FeatureList         = require('./FeatureList');
+var FeatureForm         = require('./FeatureForm');
+var FeatureActions      = require('../../stores/FeatureToggleActions');
+var ErrorActions        = require('../../stores/ErrorActions');
+var FeatureToggleStore  = require('../../stores/FeatureToggleStore');
+var StrategyStore       = require('../../stores/StrategyStore');
 
 var FeatureTogglesComponent = React.createClass({
     getInitialState: function() {
         return {
-            features: [],
-            errors: [],
-            createView: false,
-            featurePoller: new Timer(this.loadFeaturesFromServer, this.props.pollInterval)
+            features: FeatureToggleStore.getFeatureToggles(),
+            createView: false
         };
     },
 
-    componentDidMount: function () {
-        this.loadFeaturesFromServer();
-        this.startFeaturePoller();
+    onFeatureToggleChange: function() {
+        this.setState({
+            features: FeatureToggleStore.getFeatureToggles()
+        });
     },
-
-    componentWillUnmount: function () {
-        this.stopFeaturePoller();
+    componentDidMount: function() {
+        this.unsubscribe = FeatureToggleStore.listen(this.onFeatureToggleChange);
     },
-
-    loadFeaturesFromServer: function () {
-        FeatureStore.getFeatures().then(this.setFeatures).catch(this.handleError);
-    },
-
-    setFeatures: function (data) {
-        this.setState({features: data.features});
-    },
-
-    handleError: function (error) {
-        if (this.isClientError(error)) {
-            var errors = JSON.parse(error.responseText)
-            errors.forEach(function(e) { this.addError(e.msg); }.bind(this))
-        } else if (error.status === 0) {
-            this.addError("server unreachable");
-        } else {
-            this.addError(error);
-        }
-
-        this.forceUpdate();
+    componentWillUnmount: function() {
+        this.unsubscribe();
     },
 
     updateFeature: function (feature) {
-        this.stopFeaturePoller();
-
-        FeatureStore
-          .updateFeature(feature)
-          .then(this.startFeaturePoller)
-          .catch(this.handleError);
+      FeatureActions.update.triggerPromise(feature);
     },
 
     archiveFeature: function (feature) {
-        var updatedFeatures = this.state.features.filter(function(item) {
-            return item.name !== feature.name;
-        });
-
-        FeatureStore
-            .archiveFeature(feature)
-            .then(function() {
-                this.setState({features: updatedFeatures})
-            }.bind(this))
-            .catch(this.handleError);
-    },
-
-    startFeaturePoller: function () {
-        this.state.featurePoller.start();
-    },
-
-    stopFeaturePoller: function () {
-        if (this.state.featurePoller != null) {
-            this.state.featurePoller.stop();
-        }
+        FeatureActions.archive.triggerPromise(feature);
     },
 
     createFeature: function (feature) {
-        this.stopFeaturePoller();
-
-        FeatureStore
-          .createFeature(feature)
-          .then(this.cancelNewFeature)
-          .then(this.startFeaturePoller)
-          .catch(this.handleError);
+        FeatureActions.create.triggerPromise(feature)
+          .then(this.cancelNewFeature);
     },
 
     newFeature: function() {
         this.setState({createView: true});
     },
 
-    cancelNewFeature: function (feature) {
+    cancelNewFeature: function () {
         this.setState({createView: false});
-    },
-
-    clearErrors: function() {
-        this.setState({errors: []});
-    },
-
-    addError: function(msg) {
-        if (this.state.errors[this.state.errors.length - 1] !== msg) {
-            this.state.errors.push(msg);
-        }
-    },
-
-    isClientError: function(error) {
-        try {
-            return error.status >= 400 &&
-                   error.status <  500 &&
-                   JSON.parse(error.responseText);
-        } catch (e) {
-            if (e instanceof SyntaxError) {
-                // fall through;
-            } else {
-                throw e;
-            }
-        }
-
-        return false;
+        ErrorActions.clear();
     },
 
     render: function() {
         return (
             <div>
-                <ErrorMessages
-                  errors={this.state.errors}
-                  onClearErrors={this.clearErrors} />
 
                 {this.state.createView ? this.renderCreateView() : this.renderCreateButton()}
 
@@ -136,17 +60,21 @@ var FeatureTogglesComponent = React.createClass({
                   onFeatureArchive={this.archiveFeature}
                   onFeatureSubmit={this.createFeature}
                   onFeatureCancel={this.cancelNewFeature}
-                  onNewFeature={this.newFeature} />
+                  onNewFeature={this.newFeature}
+                  strategies={StrategyStore.getStrategies()} />
             </div>
         );
     },
 
     renderCreateView: function() {
-        return <FeatureForm onCancel={this.cancelNewFeature} onSubmit={this.createFeature} />
+        return <FeatureForm
+            onCancel={this.cancelNewFeature}
+            onSubmit={this.createFeature}
+            strategies={StrategyStore.getStrategies()} />;
     },
 
     renderCreateButton: function() {
-        return <button className="mal" onClick={this.newFeature}>Create feature toggle</button>
+        return <button className="mal" onClick={this.newFeature}>Create feature toggle</button>;
     }
 });
 

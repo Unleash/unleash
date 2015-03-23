@@ -28,9 +28,11 @@ var TabView = React.createClass({
     render: function() {
         var tabNodes = this.props.tabPanes.map(function (tabPane) {
             return (
-                <li key={tabPane.name} className={tabPane.name === this.state.activeTab.name ? "active": ""}>
-                    <a  href={"#" + tabPane.slug}
-                        onClick={this.onChangeTab.bind(this, tabPane)}>{tabPane.name}
+                <li key={tabPane.name} className=
+                {tabPane.name === this.state.activeTab.name ? "active": ""}>
+                    <a href={"#" + tabPane.slug}
+                        onClick={this.onChangeTab.bind(this, tabPane)}>
+                        {tabPane.name}
                     </a>
                 </li>
             );

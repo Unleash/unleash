@@ -6,9 +6,7 @@ var findIndex       = require('lodash/array/findIndex');
 
 var _featureToggles = [];
 
-// Creates a DataStore
 var FeatureStore = Reflux.createStore({
-    //The store should be split in two: toggleStore && archivedToggleStore!
 
   // Initial setup
   init: function() {

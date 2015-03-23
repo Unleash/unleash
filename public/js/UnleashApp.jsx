@@ -15,22 +15,22 @@ var tabPanes = [
 {
     name: 'Feature Toggles',
     slug: 'feature-toggles',
-    content: new FeatureTogglesComponent({})
+    content: FeatureTogglesComponent
 },
 {
     name: 'Strategies',
     slug: 'strategies',
-    content: new StrategiesComponent({})
+    content: StrategiesComponent
 },
 {
     name: "Log",
     slug: 'log',
-    content: new LogEntriesComponent({})
+    content: LogEntriesComponent
 },
 {
     name: "Archive",
     slug: 'archive',
-    content: new ArchiveFeatureComponent({})
+    content: ArchiveFeatureComponent
 }
 ];
 

@@ -48,7 +48,7 @@ var TabView = React.createClass({
                         <div className="mod shadow mrn pan">
                             <div className="inner pan">
                                 <div className="bd">
-                                    {this.state.activeTab.content}
+                                    {new this.state.activeTab.content()}
                                 </div>
                             </div>
                         </div>

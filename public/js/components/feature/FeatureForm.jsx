@@ -30,17 +30,16 @@ var FeatureForm = React.createClass({
     },
 
     setSelectedStrategy: function(name) {
-        var selectedStrategy = this.state.strategyOptions.filter(function(strategy) {
+        var selectedStrategy = this.props.strategies.filter(function(strategy) {
             return strategy.name ===  name;
         })[0];
 
         if(selectedStrategy) {
             this.setStrategyParams(selectedStrategy);
         } else {
-            var updatedStrategyName = name + " (deleted)";
             this.setState({
-                currentStrategy: updatedStrategyName,
-                strategyOptions: this.state.strategyOptions.concat([{name: updatedStrategyName}])
+                currentStrategy: 'default',
+                requiredParams: []
             });
         }
     },
@@ -129,7 +128,7 @@ var FeatureForm = React.createClass({
     },
 
     renderStrategyOptions: function() {
-        return this.state.strategyOptions.map(function(strategy) {
+        return this.props.strategies.map(function(strategy) {
             return (
                 <option key={strategy.name} value={strategy.name}>
                     {strategy.name}

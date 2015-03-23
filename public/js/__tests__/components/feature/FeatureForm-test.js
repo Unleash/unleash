@@ -24,11 +24,11 @@ describe("FeatureForm", function () {
     describe("edit", function () {
         var feature = {name: "Test", strategy: "unknown"};
 
-        it("should show unknown strategy as deleted", function () {
+        it("should show unknown strategy as default", function () {
             Component = TestUtils .renderIntoDocument(<FeatureForm feature={feature} strategies={strategies} />);
 
             var strategySelect = Component.getDOMNode().querySelector("select");
-            expect(strategySelect.value).toEqual("unknown (deleted)");
+            expect(strategySelect.value).toEqual("default");
         });
     });
 

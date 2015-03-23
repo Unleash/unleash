@@ -3,8 +3,6 @@ var FeatureForm = require('./FeatureForm');
 var LogEntryList = require('../log/LogEntryList');
 var eventStore = require('../../stores/EventStore');
 
-
-
 var Feature = React.createClass({
     getInitialState: function() {
         return {
@@ -34,7 +32,7 @@ var Feature = React.createClass({
     },
 
     archiveFeature: function() {
-        if (confirm("Are you sure you want to delete " + this.props.feature.name + "?")) {
+        if (window.confirm("Are you sure you want to delete " + this.props.feature.name + "?")) {
             this.props.onArchive(this.props.feature);
         }
     },
@@ -60,7 +58,8 @@ var Feature = React.createClass({
             <tbody className="feature">
                 <tr className={this.state.editMode ? "edit bg-lilac-xlt" : ""}>
                     <td width="20">
-                        <span className={this.props.feature.enabled ? "toggle-active" : "toggle-inactive"} title="Status">
+                        <span className=
+                        {this.props.feature.enabled ? "toggle-active" : "toggle-inactive"} title="Status">
                         </span>
                     </td>
                     <td>
@@ -77,17 +76,25 @@ var Feature = React.createClass({
                     <td width="150">
                         <div className="line">
                             <div className="unit size1of3">
-                                <button title='Archive' onClick={this.archiveFeature} title="Remove">
+                                <button
+                                    title='Archive'
+                                    onClick={this.archiveFeature}>
                                     <span className="icon-kryss1" />
                                 </button>
                             </div>
                             <div className="unit size1of3">
-                                <button className={this.state.editMode ? "primary" : ""} title='Edit' onClick={this.toggleEditMode}>
+                                <button
+                                    className={this.state.editMode ? "primary" : ""}
+                                    title='Edit'
+                                    onClick={this.toggleEditMode}>
                                     <span className="icon-redigere" />
                                 </button>
                             </div>
                             <div className="unit size1of3">
-                                <button className={this.state.showHistory ? "primary" : ""} title='History' onClick={this.toggleHistory}>
+                                <button
+                                    className={this.state.showHistory ? "primary" : ""}
+                                    title='History'
+                                    onClick={this.toggleHistory}>
                                     <span className="icon-visning_liste" />
                                 </button>
                             </div>

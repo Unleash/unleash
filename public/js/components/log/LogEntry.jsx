@@ -6,14 +6,14 @@ var DIFF_PREFIXES = {
     E: ' ',
     D: '-',
     N: '+'
-}
+};
 
 var SPADEN_CLASS = {
     A: 'blue', // array edited
     E: 'blue', // edited
     D: 'negative', // deleted
     N: 'positive', // added
-}
+};
 
 var LogEntry = React.createClass({
     propTypes: {
@@ -47,13 +47,15 @@ var LogEntry = React.createClass({
 
         var prettyPrinted = JSON.stringify(localEventData, null, 2);
 
-        return (<code className='JSON smalltext man'>{prettyPrinted}</code>)
+        return (<code className='JSON smalltext man'>{prettyPrinted}</code>);
     },
 
     renderEventDiff: function() {
         if (!this.props.showFullEvents && this.props.event.diffs) {
             var changes = this.props.event.diffs.map(this.buildDiff);
-            return (<code className='smalltext man'>{changes.length === 0 ? '(no changes)' : changes}</code>)
+            return (
+                <code className='smalltext man'>{changes.length === 0 ? '(no changes)' : changes}</code>
+            );
         } else {
             return this.renderFullEventData();
         }
@@ -71,13 +73,13 @@ var LogEntry = React.createClass({
                 </div>
             );
         } else {
-            var spadenClass = SPADEN_CLASS[diff.kind]
+            var spadenClass = SPADEN_CLASS[diff.kind];
             var prefix      = DIFF_PREFIXES[diff.kind];
 
-            change = (<div className={spadenClass}>{prefix} {key}: {JSON.stringify(diff.rhs)}</div>)
+            change = (<div className={spadenClass}>{prefix} {key}: {JSON.stringify(diff.rhs)}</div>);
         }
 
-        return (<div key={idx}>{change}</div>)
+        return (<div key={idx}>{change}</div>);
     }
 
 });

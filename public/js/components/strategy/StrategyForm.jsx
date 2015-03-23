@@ -50,7 +50,6 @@ var StrategyForm = React.createClass({
 
     onRemoveParam: function(event) {
         event.preventDefault();
-        var id = this.state.parameters.length + 1;
         var params = this.state.parameters.slice(0, -1);
 
         this.setState({parameters: params});
@@ -118,7 +117,7 @@ var StrategyForm = React.createClass({
                         </div>
                     </div>
                 </div>
-                )
+            );
         });
     },
 
@@ -131,7 +130,11 @@ var StrategyForm = React.createClass({
         if(this.state.parameters.length > 0) {
             return (
                 <div className="formelement mtn">
-                    <a href="#add" className="negative" onClick={this.onRemoveParam}>- Remove parameter</a>
+                    <a href="#add"
+                        className="negative"
+                        onClick={this.onRemoveParam}>
+                        - Remove parameter
+                    </a>
                 </div>
                 );
         }

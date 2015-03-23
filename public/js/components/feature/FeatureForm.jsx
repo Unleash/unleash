@@ -90,7 +90,10 @@ var FeatureForm = React.createClass({
                         <div className="formelement">
                             <label htmlFor={idPrefix + "-strategy"}>Strategy</label>
                             <div className="input select">
-                                <select id={idPrefix + "-strategy"} ref="strategy" value={this.state.currentStrategy} onChange={this.onStrategyChange}>
+                                <select id={idPrefix + "-strategy"}
+                                    ref="strategy"
+                                    value={this.state.currentStrategy}
+                                    onChange={this.onStrategyChange}>
                                     {this.renderStrategyOptions()}
                                 </select>
                             </div>
@@ -100,8 +103,13 @@ var FeatureForm = React.createClass({
                             <div className="input">
                                 <ul className="inputs-list">
                                     <li>
-                                        <input id={idPrefix + "-active"} ref="enabled" type="checkbox" defaultChecked={feature.enabled} />
-                                        <label htmlFor={idPrefix + "-active"}>Active</label>
+                                        <input id={idPrefix + "-active"}
+                                        ref="enabled"
+                                        type="checkbox"
+                                        defaultChecked={feature.enabled} />
+                                        <label htmlFor={idPrefix + "-active"}>
+                                            Active
+                                        </label>
                                     </li>
                                 </ul>
                             </div>
@@ -138,7 +146,7 @@ var FeatureForm = React.createClass({
                 name={param.name}
                 label={param.name}
                 ref={param.name}
-                value={param.value} />
+                value={param.value} />;
         });
     },
 

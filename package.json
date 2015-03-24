@@ -20,7 +20,7 @@
     "start": "NODE_ENV=production node server.js",
     "build": "./node_modules/.bin/webpack",
     "dev": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js server.js",
-    "test": "export PORT=4243 ; jest && npm run lint && nsp audit-package && mocha test test/*.js && npm run coverage",
+    "test": "export PORT=4243 ; jest && npm run lint && mocha test test/*.js && npm run coverage",
     "docker-test": "export PORT=4243 ; ./scripts/docker-postgres.sh",
     "pg-virtualenv-test": "pg_virtualenv npm run pg-virtualenv-chain",
     "pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",

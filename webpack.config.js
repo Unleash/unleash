@@ -7,7 +7,7 @@ var js_root = path.join(path.join(root, 'public'), 'js');
 module.exports = {
 
     context: js_root,
-    entry: 'app',
+    entry: 'UnleashApp',
 
     output: {
         path: js_root,

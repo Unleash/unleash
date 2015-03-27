@@ -1,27 +1,7 @@
 var React               = require("react");
 var FeatureActions      = require('../../stores/FeatureToggleActions');
-var FeatureToggleStore  = require('../../stores/ArchivedToggleStore');
 
 var ArchiveFeatureComponent = React.createClass({
-    getInitialState: function() {
-        return {
-            archivedFeatures: FeatureToggleStore.getArchivedToggles()
-        };
-    },
-
-    onStoreChange: function() {
-        this.setState({
-            archivedFeatures: FeatureToggleStore.getArchivedToggles()
-        });
-    },
-
-    componentDidMount: function() {
-        this.unsubscribe = FeatureToggleStore.listen(this.onStoreChange);
-    },
-
-    componentWillUnmount: function() {
-        this.unsubscribe();
-    },
 
     onRevive: function(item) {
         FeatureActions.revive.triggerPromise(item);
@@ -39,7 +19,7 @@ var ArchiveFeatureComponent = React.createClass({
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.archivedFeatures.map(this.renderArchivedItem)}
+                        {this.props.archivedFeatures.map(this.renderArchivedItem)}
                     </tbody>
                 </table>
             </div>

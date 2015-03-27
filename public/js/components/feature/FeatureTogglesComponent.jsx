@@ -3,27 +3,12 @@ var FeatureList         = require('./FeatureList');
 var FeatureForm         = require('./FeatureForm');
 var FeatureActions      = require('../../stores/FeatureToggleActions');
 var ErrorActions        = require('../../stores/ErrorActions');
-var FeatureToggleStore  = require('../../stores/FeatureToggleStore');
-var StrategyStore       = require('../../stores/StrategyStore');
 
 var FeatureTogglesComponent = React.createClass({
     getInitialState: function() {
         return {
-            features: FeatureToggleStore.getFeatureToggles(),
             createView: false
         };
-    },
-
-    onFeatureToggleChange: function() {
-        this.setState({
-            features: FeatureToggleStore.getFeatureToggles()
-        });
-    },
-    componentDidMount: function() {
-        this.unsubscribe = FeatureToggleStore.listen(this.onFeatureToggleChange);
-    },
-    componentWillUnmount: function() {
-        this.unsubscribe();
     },
 
     updateFeature: function (feature) {
@@ -55,13 +40,13 @@ var FeatureTogglesComponent = React.createClass({
                 {this.state.createView ? this.renderCreateView() : this.renderCreateButton()}
 
                 <FeatureList
-                  features={this.state.features}
+                  features={this.props.features}
                   onFeatureChanged={this.updateFeature}
                   onFeatureArchive={this.archiveFeature}
                   onFeatureSubmit={this.createFeature}
                   onFeatureCancel={this.cancelNewFeature}
                   onNewFeature={this.newFeature}
-                  strategies={StrategyStore.getStrategies()} />
+                  strategies={this.props.strategies} />
             </div>
         );
     },
@@ -70,7 +55,7 @@ var FeatureTogglesComponent = React.createClass({
         return <FeatureForm
             onCancel={this.cancelNewFeature}
             onSubmit={this.createFeature}
-            strategies={StrategyStore.getStrategies()} />;
+            strategies={this.props.strategies} />;
     },
 
     renderCreateButton: function() {

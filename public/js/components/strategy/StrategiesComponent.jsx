@@ -30,6 +30,7 @@ var StrategiesComponent = React.createClass({
     render: function() {
         return (
             <div>
+                <h1>Activation Strategies</h1>
                 {this.state.createView ?
                     this.renderCreateView() : this.renderCreateButton()}
                 <hr />

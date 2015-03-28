@@ -10,7 +10,8 @@ var ArchiveFeatureComponent = React.createClass({
     render: function () {
         return (
             <div>
-                <h1>Archived feature toggles</h1>
+                <h1>Archived Feature Toggles</h1>
+                <hr />
                 <table className="outerborder man">
                     <thead>
                         <tr>

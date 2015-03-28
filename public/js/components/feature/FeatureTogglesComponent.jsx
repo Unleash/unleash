@@ -37,6 +37,8 @@ var FeatureTogglesComponent = React.createClass({
         return (
             <div>
 
+                <h1>Feature Toggles</h1>
+
                 {this.state.createView ? this.renderCreateView() : this.renderCreateButton()}
 
                 <FeatureList

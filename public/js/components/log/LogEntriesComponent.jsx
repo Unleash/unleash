@@ -24,6 +24,7 @@ var LogEntriesComponent = React.createClass({
     render: function() {
         return (
             <div>
+                <h1>Log</h1>
                 <hr />
                 <LogEntryList events={this.state.events} />
             </div>

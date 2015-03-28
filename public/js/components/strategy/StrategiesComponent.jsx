@@ -1,27 +1,13 @@
 var React             = require('react');
 var StrategyList      = require('./StrategyList');
 var StrategyForm      = require('./StrategyForm');
-var StrategyStore     = require('../../stores/StrategyStore');
 var StrategyActions   = require('../../stores/StrategyActions');
 
 var StrategiesComponent = React.createClass({
     getInitialState: function() {
         return {
-            createView: false,
-            strategies: StrategyStore.getStrategies()
+            createView: false
         };
-    },
-
-    onStoreChange: function() {
-        this.setState({
-            strategies: StrategyStore.getStrategies()
-        });
-    },
-    componentDidMount: function() {
-        this.unsubscribe = StrategyStore.listen(this.onStoreChange);
-    },
-    componentWillUnmount: function() {
-        this.unsubscribe();
     },
 
     onNewStrategy: function() {
@@ -44,11 +30,12 @@ var StrategiesComponent = React.createClass({
     render: function() {
         return (
             <div>
+                <h1>Activation Strategies</h1>
                 {this.state.createView ?
                     this.renderCreateView() : this.renderCreateButton()}
                 <hr />
                 <StrategyList
-                    strategies={this.state.strategies}
+                    strategies={this.props.strategies}
                     onRemove={this.onRemove} />
             </div>
         );

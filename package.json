@@ -52,6 +52,7 @@
     "nconf": "0.7.1",
     "pg": "4.3.0",
     "react": "^0.13.1",
+    "react-router": "^0.13.2",
     "reflux": "^0.2.5",
     "reqwest": "^1.1.4",
     "webpack": "1.7.3",

@@ -16,13 +16,8 @@ describe("FeatureForm", function () {
             { name: "featureY" }
         ];
 
-        Server.getArchivedFeatures.mockImplementation(function(cb) {
-          cb(null, archivedToggles);
-        });
-
-        FeatureToggleStore.initStore(archivedToggles);
-
-        Component = TestUtils.renderIntoDocument(<FeatureArchive />);
+        Component = TestUtils.renderIntoDocument(
+            <FeatureArchive archivedFeatures={archivedToggles} />);
     });
 
     afterEach(function() {

@@ -10,7 +10,7 @@ var Menu = React.createClass({
       <User />
     </div>
     <div className="nav-level1 h4">
-      <a href="" className="homelink pln">
+      <a href="#" className="homelink pln">
         <span className="topbar-nav-svg-home">
           <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53M
                     y5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MjcuNDExIiBoZWlnaHQ9IjE2OS4z
@@ -50,6 +50,7 @@ var Menu = React.createClass({
           unleash admin
        </span>
       </a>
+      {this.props.children}
     </div>
   </div>
 </div>

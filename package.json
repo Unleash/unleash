@@ -18,8 +18,10 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node server.js",
-    "build": "./node_modules/.bin/webpack",
+    "build": "./node_modules/.bin/webpack -p",
     "dev": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js server.js",
+    "start-pg": "pg_virtualenv npm run start-pg-chain",
+    "start-pg-chain": "export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; db-migrate up && npm run dev",
     "test": "export PORT=4243 ; jest && npm run lint && mocha test test/*.js && npm run coverage",
     "docker-test": "export PORT=4243 ; ./scripts/docker-postgres.sh",
     "pg-virtualenv-test": "pg_virtualenv npm run pg-virtualenv-chain",

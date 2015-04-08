@@ -15,5 +15,7 @@ notifications:
   hipchat:
     rooms:
       secure: GiIDk52xccnUKnevjLE+w6eUXg0jfV7oOmagw5VnOV5jXGUxdzMk/Q9um+oSClEPE51IvF76zoFEKPIX/CNdjgalEr+CZADy1gene/YRGrNgrXmYYmiU1/dNzelpla1WpKPrY2pkbOgKxrCR9ScID+pMs6vzvJnPwK9vu66W61U=
+  slack:
+    secure: MroremSKwtQkwPbrXjgs9hIqKTCDKk7bAIXXzjcS6wXC9uRaFgwFaW8oO3vBxtWa4BL44EQBLE/rboWgqFER62+XgXNgEqGZqrcJHJvby4r+dUNMPI64OZvWdIiydIYxLo8C1C4x5PqBup0xuLq8h/SBnNvA2NLgkjuvzOi+v/Q=
 addons:
   postgresql: "9.4"

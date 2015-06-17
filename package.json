@@ -17,6 +17,7 @@
   },
   "private": true,
   "scripts": {
+    "db-migrate-and-start": "npm run db-migrate && npm run start",
     "start": "NODE_ENV=production node server.js",
     "build": "./node_modules/.bin/webpack -p",
     "dev": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js server.js",
@@ -26,6 +27,7 @@
     "docker-test": "export PORT=4243 ; ./scripts/docker-postgres.sh",
     "pg-virtualenv-test": "pg_virtualenv npm run pg-virtualenv-chain",
     "pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",
+    "db-migrate": "node_modules/.bin/db-migrate up",
     "db-migrate-testdb": "DATABASE_URL=$TEST_DATABASE_URL ./node_modules/.bin/db-migrate up",
     "tdd": "mocha --watch test test/*",
     "test-bamboo-ci": "mocha test test/*",

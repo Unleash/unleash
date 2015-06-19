@@ -30,3 +30,5 @@ unleash-server.tar.gz
 
 # idea stuff:
 *.iml
+
+.vagrant/

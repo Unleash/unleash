@@ -21,7 +21,7 @@
           }
         ]
       },
-      { "command" : "docker build -t cloudadmin/unleash-server ." },
+      { "command" : "docker build -t finntech/unleash-server:$FINNBUILD_RANDOM_HASH . && docker push finntech/unleash-server:$FINNBUILD_RANDOM_HASH" },
       { "command" : "rm -rf sql && mkdir sql"  },
       { "command" : "scripts/generate-liquibase-artifact.js > sql/db.changelog-master.xml"},
       { "command" : "jar -cf unleash-db.jar sql"},
@@ -38,7 +38,7 @@
     ],
     "default": [
       {"command": "npm install && npm run pg-virtualenv-test"},
-      {"command" : "docker build -t cloudadmin/unleash-server ." },
+      {"command" : "docker build -t finntech/unleash-server:$FINNBUILD_RANDOM_HASH ." },
 
     ]
   }

@@ -2,9 +2,8 @@ FROM nodesource/trusty:0.12
 
 COPY . .
 
-RUN curl -sL http://cldup.com/XPw5-FrHJz.gz | \
-  gunzip -c | tar -x -C /tmp/ && \
-  mv /tmp/envconsul_0.5.0_linux_amd64/envconsul /usr/bin/
+RUN curl -L https://github.com/hashicorp/envconsul/releases/download/v0.5.0/envconsul_0.5.0_linux_amd64.tar.gz | \
+    tar -zx -C /usr/bin/ --strip-components 1
 
 RUN npm install --production && \
     npm run build

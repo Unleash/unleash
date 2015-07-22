@@ -1,11 +1,11 @@
 jest.dontMock("../../../components/feature/ArchiveFeatureComponent");
-jest.mock("../../../stores/FeatureToggleServerFacade");
+jest.mock("../../../stores/FeatureToggleActions");
 jest.autoMockOff();
 
 var React = require("react/addons");
 var TestUtils = React.addons.TestUtils;
 var FeatureArchive      = require("../../../components/feature/ArchiveFeatureComponent");
-var Server  = require("../../../stores/FeatureToggleServerFacade");
+var FeatureActions  = require("../../../stores/FeatureToggleActions");
 var FeatureToggleStore  = require("../../../stores/ArchivedToggleStore");
 
 describe("FeatureForm", function () {
@@ -35,6 +35,6 @@ describe("FeatureForm", function () {
       TestUtils.Simulate.click(button);
 
       jest.runAllTimers();
-      expect(Server.reviveFeature).toBeCalled();
+      expect(FeatureActions.revive.triggerPromise).toBeCalled();
     });
 });

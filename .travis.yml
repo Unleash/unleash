@@ -1,7 +1,7 @@
 sudo: false
 language: node_js
 node_js:
-- "0.10"
+- "5.1"
 env: TEST_DATABASE_URL=postgres://postgres@localhost:5432/unleash_test
 before_script:
 - echo '--timeout 10000' > test/mocha.opts

@@ -17,7 +17,7 @@ describe("FeatureForm", function () {
         it("should render empty form", function() {
             Component = TestUtils .renderIntoDocument(<FeatureForm strategies={strategies} />);
             var name = Component.getDOMNode().querySelectorAll("input");
-            expect(name[0].value).toEqual(undefined);
+            expect(name[0].value).toEqual("");
         });
     });
 

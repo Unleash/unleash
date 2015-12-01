@@ -1,6 +1,6 @@
 web:
   build: .
-  command: run db-migrate-and-start
+  command: npm run db-migrate-and-start
   ports:
     - "4242:4242"
   links:

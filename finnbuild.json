@@ -6,7 +6,8 @@
   },
   "versions": {
     "jdk": "1.8",
-    "mvn": "3"
+    "mvn": "3",
+    "node": "5"
   },
   "tasks": {
     "deploy": [

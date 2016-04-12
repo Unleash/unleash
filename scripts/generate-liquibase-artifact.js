@@ -20,7 +20,9 @@ changeLog.att('xsi:schemaLocation',
          'http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd');
 
 fs.readdir(sqlRoot, function (err, files) {
-    if (err) { throw err; }
+    if (err) {
+        throw err;
+    }
 
     var changes = {};
 

@@ -2,14 +2,14 @@ var Reflux = require("reflux");
 var StrategyAPI = require('./StrategyAPI');
 
 var StrategyActions = Reflux.createActions({
-    'init':     { asyncResult: true },
-    'create':   { asyncResult: true },
-    'remove':   { asyncResult: true },
+    'init': { asyncResult: true },
+    'create': { asyncResult: true },
+    'remove': { asyncResult: true },
 });
 
-StrategyActions.init.listen(function(){
+StrategyActions.init.listen(function() {
     StrategyAPI.getStrategies(function(err, strategies) {
-        if(err) {
+        if (err) {
             this.failed(err);
         } else {
             this.completed(strategies);
@@ -17,9 +17,9 @@ StrategyActions.init.listen(function(){
     }.bind(this));
 });
 
-StrategyActions.create.listen(function(feature){
+StrategyActions.create.listen(function(feature) {
     StrategyAPI.createStrategy(feature, function(err) {
-        if(err) {
+        if (err) {
             this.failed(err);
         } else {
             this.completed(feature);
@@ -27,9 +27,9 @@ StrategyActions.create.listen(function(feature){
     }.bind(this));
 });
 
-StrategyActions.remove.listen(function(feature){
+StrategyActions.remove.listen(function(feature) {
     StrategyAPI.removeStrategy(feature, function(err) {
-        if(err) {
+        if (err) {
             this.failed(err);
         } else {
             this.completed(feature);

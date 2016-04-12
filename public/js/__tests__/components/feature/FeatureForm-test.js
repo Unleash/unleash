@@ -31,5 +31,4 @@ describe("FeatureForm", function () {
             expect(strategySelect.value).toEqual("default");
         });
     });
-
 });

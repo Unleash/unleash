@@ -1,9 +1,8 @@
-jest.autoMockOff()
+jest.autoMockOff();
 jest.dontMock('../../stores/FeatureToggleActions');
 jest.dontMock('../../stores/FeatureToggleStore');
 
 describe('FeatureToggleStore', function() {
-
     var Actions, Store, toggles;
 
     beforeEach(function() {
@@ -47,7 +46,6 @@ describe('FeatureToggleStore', function() {
         expect(Store.getFeatureToggles().length).toBe(0);
     });
 
-
     it('should keep toggles in sorted order', function() {
         Actions.init.completed([
             {name: "A"},
@@ -74,8 +72,4 @@ describe('FeatureToggleStore', function() {
         jest.runAllTimers();
         expect(Store.getFeatureToggles()[0].enabled).toEqual(false);
     });
-
-
-
-
 });

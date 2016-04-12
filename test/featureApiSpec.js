@@ -49,13 +49,13 @@ describe('The features api', function () {
             .send({name: 'com.test.Username', enabled: false})
             .set('Cookie', ['username=ivaosthu'])
             .set('Content-Type', 'application/json')
-            .end(function(){
-              request
-                  .get('/events')
-                  .end(function (err, res) {
-                      assert.equal(res.body.events[0].createdBy, 'ivaosthu');
-                      done();
-                  });
+            .end(function() {
+                request
+                    .get('/events')
+                    .end(function (err, res) {
+                        assert.equal(res.body.events[0].createdBy, 'ivaosthu');
+                        done();
+                    });
             });
     });
 
@@ -102,5 +102,4 @@ describe('The features api', function () {
             .set('Content-Type', 'application/json')
             .expect(403, done);
     });
-
 });

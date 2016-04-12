@@ -2,21 +2,21 @@
 
 var path = require('path');
 var root = path.normalize(path.join(__dirname, '.'));
-var js_root = path.join(path.join(root, 'public'), 'js');
+var jsroot = path.join(path.join(root, 'public'), 'js');
 
 module.exports = {
 
-    context: js_root,
+    context: jsroot,
     entry: 'app',
 
     output: {
-        path: js_root,
+        path: jsroot,
         filename: 'bundle.js',
         publicPath: '/js/'
     },
 
     resolve: {
-        root: [js_root],
+        root: [jsroot],
         extensions: ['', '.js', '.jsx'],
         modulesDirectories: ["web_modules", "node_modules"]
     },

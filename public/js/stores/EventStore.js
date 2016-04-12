@@ -1,7 +1,6 @@
 var reqwest = require('reqwest');
 
 var TYPE         = 'json';
-var CONTENT_TYPE = 'application/json';
 
 var EventStore = {
     getEvents: function () {

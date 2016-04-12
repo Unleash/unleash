@@ -14,5 +14,4 @@ describe('The event api', function () {
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
-
 });

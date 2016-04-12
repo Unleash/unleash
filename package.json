@@ -35,7 +35,7 @@
     "coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "postinstall": "npm run build",
     "jest": "jest",
-    "lint": "jshint server.js lib test && jsxhint public/js/**/*.jsx"
+    "lint": "jshint server.js lib test && jsxhint public/js/**/*.jsx && eslint ."
   },
   "dependencies": {
     "bluebird": "2.9.14",
@@ -65,6 +65,9 @@
   "devDependencies": {
     "chai": "2.1.2",
     "coveralls": "^2.11.2",
+    "eslint": "^2.7.0",
+    "eslint-config-spt": "^2.0.0",
+    "eslint-plugin-react": "^4.3.0",
     "istanbul": "^0.3.5",
     "jest-cli": "0.4.15",
     "jshint": "^2.6.0",

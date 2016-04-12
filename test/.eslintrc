@@ -1,0 +1,23 @@
+{
+    "extends": [
+        "spt",
+        "spt/env-node",
+        "spt/env-es6-false"
+    ],
+    "env": {
+        "browser": true
+    },
+    "globals": {
+        "it": false,
+        "beforeEach": false,
+        "describe": false
+    },
+    "rules": {
+        "quotes": 0,
+        "strict": 0,
+        "object-curly-spacing": 0,
+        "vars-on-top": 0,
+        "brace-style": 0,
+        "max-nested-callbacks": 0
+    }
+}

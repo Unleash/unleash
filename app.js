@@ -13,7 +13,7 @@ var express      = require('express'),
     router       = express.Router(),
     baseUriPath  = process.env.BASE_URI_PATH || '';
 
-if(app.get('env') === 'development') {
+if (app.get('env') === 'development') {
     app.use(require('errorhandler')());
 
     var webpack              = require('webpack'),

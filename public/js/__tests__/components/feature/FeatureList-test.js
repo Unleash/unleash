@@ -54,5 +54,4 @@ describe("FeatureList", function () {
         expect(features.length).toEqual(1);
         expect(features[0].textContent).toMatch(searchString);
     });
-
 });

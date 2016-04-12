@@ -34,5 +34,4 @@ describe('The archive features api', function () {
             .post('/archive/revive')
             .expect(400, done);
     });
-
 });

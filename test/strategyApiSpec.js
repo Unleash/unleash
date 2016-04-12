@@ -64,5 +64,4 @@ describe('The strategy api', function () {
             .delete('/strategies/unknown')
             .expect(404, done);
     });
-
 });

@@ -35,7 +35,7 @@
     "coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "postinstall": "npm run build",
     "jest": "jest",
-    "lint": "jshint server.js lib test && jsxhint public/js/**/*.jsx && eslint ."
+    "lint": "jshint server.js lib test && jsxhint public/js/**/*.jsx && eslint . --ignore-path public/js/bundle.js"
   },
   "dependencies": {
     "bluebird": "2.9.14",

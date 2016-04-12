@@ -9,7 +9,7 @@ describe('FeatureToggleStore', function() {
         Actions = require('../../stores/FeatureToggleActions');
         Store = require('../../stores/FeatureToggleStore');
         toggles = [
-            {name: "app.feature", enabled: true, strategy: "default"}
+            { name: "app.feature", enabled: true, strategy: "default" }
         ];
     });
 
@@ -28,7 +28,7 @@ describe('FeatureToggleStore', function() {
     it('should add a another toggle', function() {
         Actions.init.completed(toggles);
 
-        var newToggle = {name: "app.featureB", enabled: true, strategy: "default"};
+        var newToggle = { name: "app.featureB", enabled: true, strategy: "default" };
 
         Actions.create.completed(newToggle);
 
@@ -48,12 +48,12 @@ describe('FeatureToggleStore', function() {
 
     it('should keep toggles in sorted order', function() {
         Actions.init.completed([
-            {name: "A"},
-            {name: "B"},
-            {name: "C"}
+            { name: "A" },
+            { name: "B" },
+            { name: "C" }
         ]);
 
-        Actions.create.completed({name: "AA"});
+        Actions.create.completed({ name: "AA" });
 
         jest.runAllTimers();
         expect(Store.getFeatureToggles()[0].name).toEqual("A");

@@ -12,61 +12,61 @@ var FeatureToggleActions = Reflux.createActions({
 
 FeatureToggleActions.init.listen(function() {
     Server.getFeatures(function(error, features) {
-      if (error) {
-        this.failed(error);
-      } else {
-        this.completed(features);
-    }
+        if (error) {
+            this.failed(error);
+        } else {
+            this.completed(features);
+        }
     }.bind(this));
 });
 
 FeatureToggleActions.initArchive.listen(function() {
     Server.getArchivedFeatures(function(error, archivedToggles) {
-      if (error) {
-        this.failed(error);
-      } else {
-        this.completed(archivedToggles);
-    }
+        if (error) {
+            this.failed(error);
+        } else {
+            this.completed(archivedToggles);
+        }
     }.bind(this));
 });
 
 FeatureToggleActions.create.listen(function(feature) {
     Server.createFeature(feature, function(error) {
-      if (error) {
-        this.failed(error);
-      } else {
-        this.completed(feature);
-    }
+        if (error) {
+            this.failed(error);
+        } else {
+            this.completed(feature);
+        }
     }.bind(this));
 });
 
 FeatureToggleActions.update.listen(function(feature) {
     Server.updateFeature(feature, function(error) {
-      if (error) {
-        this.failed(error);
-      } else {
-        this.completed(feature);
-    }
+        if (error) {
+            this.failed(error);
+        } else {
+            this.completed(feature);
+        }
     }.bind(this));
 });
 
 FeatureToggleActions.archive.listen(function(feature) {
     Server.archiveFeature(feature, function(error) {
-      if (error) {
-        this.failed(error);
-      } else {
-        this.completed(feature);
-    }
+        if (error) {
+            this.failed(error);
+        } else {
+            this.completed(feature);
+        }
     }.bind(this));
 });
 
 FeatureToggleActions.revive.listen(function(feature) {
     Server.reviveFeature(feature, function(error) {
-      if (error) {
-        this.failed(error);
-      } else {
-        this.completed(feature);
-    }
+        if (error) {
+            this.failed(error);
+        } else {
+            this.completed(feature);
+        }
     }.bind(this));
 });
 

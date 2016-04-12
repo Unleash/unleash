@@ -1,3 +1,4 @@
+'use strict';
 var specHelper = require('./specHelper');
 var request = specHelper.request;
 

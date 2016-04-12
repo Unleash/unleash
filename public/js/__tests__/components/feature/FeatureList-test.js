@@ -14,7 +14,7 @@ describe("FeatureList", function () {
             { name: "group.featureY", strategy: "default" }
         ];
         var strategies=[
-            { name: "default"}
+            { name: "default" }
         ];
         Component = TestUtils .renderIntoDocument(<FeatureList features={features} strategies={strategies} />);
     });
@@ -30,7 +30,7 @@ describe("FeatureList", function () {
 
     it("should filter list of features", function() {
         var filterNode = Component.refs.filter.getDOMNode();
-        TestUtils.Simulate.change(filterNode, {target: {value: "group"}});
+        TestUtils.Simulate.change(filterNode, { target: { value: "group" } });
 
         var features = Component.getDOMNode().querySelectorAll(".feature");
         expect(features.length).toEqual(1);
@@ -38,7 +38,7 @@ describe("FeatureList", function () {
 
     it("should filter list of features ignoring case", function() {
         var filterNode = Component.refs.filter.getDOMNode();
-        TestUtils.Simulate.change(filterNode, {target: {value: "GROUP"}});
+        TestUtils.Simulate.change(filterNode, { target: { value: "GROUP" } });
 
         var features = Component.getDOMNode().querySelectorAll(".feature");
         expect(features.length).toEqual(1);
@@ -48,7 +48,7 @@ describe("FeatureList", function () {
     it("should filter list of features by strategy name", function() {
         var searchString = "other";
         var filterNode = Component.refs.filter.getDOMNode();
-        TestUtils.Simulate.change(filterNode, {target: {value: searchString}});
+        TestUtils.Simulate.change(filterNode, { target: { value: searchString } });
 
         var features = Component.getDOMNode().querySelectorAll(".feature");
         expect(features.length).toEqual(1);

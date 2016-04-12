@@ -1,3 +1,4 @@
+'use strict';
 var request = require('./specHelper').request;
 
 describe('The event api', function () {

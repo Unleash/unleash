@@ -39,23 +39,23 @@ fs.readdir(sqlRoot, function (err, files) {
         var direction = match[2];
 
         changes[name]            = changes[name] || {};
-        changes[name][direction] = fs.readFileSync(path.resolve(sqlRoot, sqlFile), {encoding: encoding});
+        changes[name][direction] = fs.readFileSync(path.resolve(sqlRoot, sqlFile), { encoding: encoding });
     });
 
     Object.keys(changes).forEach(function (name) {
         var change = changes[name];
 
-        var el = changeLog.ele('changeSet', {id: name, author: 'unleash'});
+        var el = changeLog.ele('changeSet', { id: name, author: 'unleash' });
         el.ele('sql', {}, change.up);
         el.ele('rollback', {}, change.down);
     });
 
-    util.puts(changeLog.end({pretty: true}));
+    util.puts(changeLog.end({ pretty: true }));
 });
 
 function initialInit(changes) {
     changes["init-prepare"] = {};
-    changes["init-prepare"]["up"] = fs.readFileSync(path.resolve(__dirname, './init.up.sql'), {encoding: encoding});
-    changes["init-prepare"]["down"] = fs.readFileSync(path.resolve(__dirname, './init.down.sql'), {encoding: encoding});
+    changes["init-prepare"]["up"] = fs.readFileSync(path.resolve(__dirname, './init.up.sql'), { encoding: encoding });
+    changes["init-prepare"]["down"] = fs.readFileSync(path.resolve(__dirname, './init.down.sql'), { encoding: encoding });
 }
 

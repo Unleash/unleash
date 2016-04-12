@@ -1,7 +1,10 @@
+'use strict';
 var assert     = require('assert');
 var specHelper = require('./specHelper');
 var request    = specHelper.request;
-var stringify  = function (o) { return JSON.stringify(o, null, ' '); };
+var stringify  = function (o) {
+    return JSON.stringify(o, null, ' ');
+};
 
 describe('The features api', function () {
     beforeEach(function (done) {
@@ -38,7 +41,7 @@ describe('The features api', function () {
     it('creates new feature toggle', function (done) {
         request
             .post('/features')
-            .send({name: 'com.test.feature', enabled: false})
+            .send({ name: 'com.test.feature', enabled: false })
             .set('Content-Type', 'application/json')
             .expect(201, done);
     });
@@ -46,7 +49,7 @@ describe('The features api', function () {
     it('creates new feature toggle with createdBy', function (done) {
         request
             .post('/features')
-            .send({name: 'com.test.Username', enabled: false})
+            .send({ name: 'com.test.Username', enabled: false })
             .set('Cookie', ['username=ivaosthu'])
             .set('Content-Type', 'application/json')
             .end(function() {
@@ -62,7 +65,7 @@ describe('The features api', function () {
     it('require new feature toggle to have a name', function (done) {
         request
             .post('/features')
-            .send({name: ''})
+            .send({ name: '' })
             .set('Content-Type', 'application/json')
             .expect(400, done);
     });
@@ -70,7 +73,7 @@ describe('The features api', function () {
     it('can not change status of feature toggle that does not exist', function (done) {
         request
             .put('/features/should-not-exist')
-            .send({name: 'should-not-exist', enabled: false})
+            .send({ name: 'should-not-exist', enabled: false })
             .set('Content-Type', 'application/json')
             .expect(404, done);
     });
@@ -78,7 +81,7 @@ describe('The features api', function () {
     it('can change status of feature toggle that does exist', function (done) {
         request
             .put('/features/featureY')
-            .send({name: 'featureY', enabled: true})
+            .send({ name: 'featureY', enabled: true })
             .set('Content-Type', 'application/json')
             .expect(200, done);
     });
@@ -98,7 +101,7 @@ describe('The features api', function () {
     it('refuses to create a feature with an existing name', function (done) {
         request
             .post('/features')
-            .send({name: 'featureX'})
+            .send({ name: 'featureX' })
             .set('Content-Type', 'application/json')
             .expect(403, done);
     });

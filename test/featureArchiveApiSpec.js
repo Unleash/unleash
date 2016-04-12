@@ -1,7 +1,10 @@
+'use strict';
 var assert     = require('assert');
 var specHelper = require('./specHelper');
 var request    = specHelper.request;
-var stringify  = function (o) { return JSON.stringify(o, null, ' '); };
+var stringify  = function (o) {
+    return JSON.stringify(o, null, ' ');
+};
 
 describe('The archive features api', function () {
     beforeEach(function (done) {
@@ -24,7 +27,7 @@ describe('The archive features api', function () {
     it('revives a feature by name', function (done) {
         request
             .post('/archive/revive')
-            .send({name: 'featureArchivedX'})
+            .send({ name: 'featureArchivedX' })
             .set('Content-Type', 'application/json')
             .expect(200, done);
     });

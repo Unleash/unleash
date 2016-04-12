@@ -17,7 +17,6 @@
     },
     "rules": {
         "quotes": 0,
-        "object-curly-spacing": 0,
         "strict": 0,
         "vars-on-top": 0,
         "no-undefined": 0,

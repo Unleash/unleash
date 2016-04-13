@@ -12,10 +12,10 @@ var StrategyAPI = {
             contentType: CONTENT_TYPE,
             data: JSON.stringify(strategy),
             error: function(error) {
-              cb(error);
+                cb(error);
             },
             success: function() {
-              cb(null, strategy);
+                cb(null, strategy);
             }
         });
     },
@@ -26,10 +26,10 @@ var StrategyAPI = {
             method: 'delete',
             type: TYPE,
             error: function(error) {
-              cb(error);
+                cb(error);
             },
             success: function() {
-              cb(null, strategy);
+                cb(null, strategy);
             }
         });
     },
@@ -40,10 +40,10 @@ var StrategyAPI = {
             method: 'get',
             type: TYPE,
             error: function(error) {
-              cb(error);
+                cb(error);
             },
             success: function(data) {
-              cb(null, data.strategies);
+                cb(null, data.strategies);
             }
         });
     }

@@ -1,3 +1,4 @@
+'use strict';
 var specHelper = require('./specHelper');
 var request    = specHelper.request;
 
@@ -32,7 +33,7 @@ describe('The strategy api', function () {
     it('creates a new strategy', function (done) {
         request
             .post('/strategies')
-            .send({name: 'myCustomStrategy', description: 'Best strategy ever.'})
+            .send({ name: 'myCustomStrategy', description: 'Best strategy ever.' })
             .set('Content-Type', 'application/json')
             .expect(201, done);
     });
@@ -40,7 +41,7 @@ describe('The strategy api', function () {
     it('requires new strategies to have a name', function (done) {
         request
             .post('/strategies')
-            .send({name: ''})
+            .send({ name: '' })
             .set('Content-Type', 'application/json')
             .expect(400, done);
     });
@@ -48,7 +49,7 @@ describe('The strategy api', function () {
     it('refuses to create a strategy with an existing name', function (done) {
         request
             .post('/strategies')
-            .send({name: 'default'})
+            .send({ name: 'default' })
             .set('Content-Type', 'application/json')
             .expect(403, done);
     });
@@ -64,5 +65,4 @@ describe('The strategy api', function () {
             .delete('/strategies/unknown')
             .expect(404, done);
     });
-
 });

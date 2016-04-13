@@ -16,10 +16,12 @@ var FeatureStore = Reflux.createStore({
         this.errors = [];
     },
 
-    onError:  function (error) {
+    onError: function (error) {
         if (this.isClientError(error)) {
             var errors = JSON.parse(error.responseText);
-            errors.forEach(function(e) { this.addError(e.msg); }.bind(this));
+            errors.forEach(function(e) {
+                this.addError(e.msg);
+            }.bind(this));
         } else if (error.status === 0) {
             this.addError("server unreachable");
         } else {

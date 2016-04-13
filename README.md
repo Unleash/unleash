@@ -12,6 +12,15 @@ Known client implementations:
 - [unleash-client-java](https://github.com/finn-no/unleash-client-java)
 - [unleash-client-node](https://github.com/finn-no/unleash-client-node)
 
+## Run with docker
+We have set up docker-compose to start postgres and the unleash server together. This makes it really fast to start up
+unleash locally without setting up a database or node.
+
+```bash
+$ docker-compose build
+$ docker-compose up
+```
+
 ## Development
 
 ### Create a local unleash databases in postgres

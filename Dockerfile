@@ -1,4 +1,4 @@
-FROM nodesource/trusty:0.12
+FROM node:5.8
 
 COPY . .
 

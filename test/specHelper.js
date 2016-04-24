@@ -1,3 +1,4 @@
+'use strict';
 process.env.NODE_ENV = 'test';
 
 var Promise    = require('bluebird');
@@ -23,7 +24,9 @@ function createStrategies() {
                 emails: "String"
             }
         }
-    ], function (strategy) { return strategyDb._createStrategy(strategy); });
+    ], function (strategy) {
+        return strategyDb._createStrategy(strategy);
+    });
 }
 
 function createFeatures() {
@@ -79,7 +82,9 @@ function createFeatures() {
                 "foo": "rab"
             }
         }
-    ], function (feature) { return featureDb._createFeature(feature);  });
+    ], function (feature) {
+        return featureDb._createFeature(feature);
+    });
 }
 
 function destroyStrategies() {
@@ -103,6 +108,8 @@ module.exports = {
     db: {
         reset: resetDatabase,
         setup: setupDatabase,
-        resetAndSetup: function () { return resetDatabase().then(setupDatabase); }
+        resetAndSetup: function () {
+            return resetDatabase().then(setupDatabase);
+        }
     }
 };

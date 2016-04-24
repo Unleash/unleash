@@ -10,10 +10,10 @@ var express      = require('express'),
     strategyApi  = require('./lib/strategyApi'),
     validator    = require('express-validator'),
     app          = express(),
-    router       = express.Router(),
+    router       = express.Router(), // eslint-disable-line
     baseUriPath  = process.env.BASE_URI_PATH || '';
 
-if(app.get('env') === 'development') {
+if (app.get('env') === 'development') {
     app.use(require('errorhandler')());
 
     var webpack              = require('webpack'),
@@ -41,7 +41,7 @@ app.use(log4js.connectLogger(logger, {
 app.set('port', process.env.HTTP_PORT || process.env.PORT || 4242);
 
 app.use(baseUriPath, express.static(__dirname + '/public'));
-app.use(bodyParser.json({strict: false}));
+app.use(bodyParser.json({ strict: false }));
 
 app.use(cookieParser());
 

@@ -12,10 +12,10 @@ var FeatureToggleServerFacade = {
             contentType: CONTENT_TYPE,
             data: JSON.stringify(feature),
             error: function(error) {
-              cb(error);
+                cb(error);
             },
             success: function() {
-              cb();
+                cb();
             }
         });
     },
@@ -28,10 +28,10 @@ var FeatureToggleServerFacade = {
             contentType: CONTENT_TYPE,
             data: JSON.stringify(feature),
             error: function(error) {
-              cb(error);
+                cb(error);
             },
             success: function() {
-              cb();
+                cb();
             }
         });
     },
@@ -42,10 +42,10 @@ var FeatureToggleServerFacade = {
             method: 'delete',
             type: TYPE,
             error: function(error) {
-              cb(error);
+                cb(error);
             },
             success: function() {
-              cb();
+                cb();
             }
         });
     },
@@ -56,10 +56,10 @@ var FeatureToggleServerFacade = {
             method: 'get',
             type: TYPE,
             error: function(error) {
-              cb(error);
+                cb(error);
             },
             success: function(data) {
-              cb(null, data.features);
+                cb(null, data.features);
             }
         });
     },
@@ -70,10 +70,10 @@ var FeatureToggleServerFacade = {
             method: 'get',
             type: TYPE,
             error: function(error) {
-              cb(error);
+                cb(error);
             },
             success: function(data) {
-              cb(null, data.features);
+                cb(null, data.features);
             }
         });
     },
@@ -86,10 +86,10 @@ var FeatureToggleServerFacade = {
             contentType: CONTENT_TYPE,
             data: JSON.stringify(feature),
             error: function(error) {
-              cb(error);
+                cb(error);
             },
             success: function() {
-              cb();
+                cb();
             }
         });
     }

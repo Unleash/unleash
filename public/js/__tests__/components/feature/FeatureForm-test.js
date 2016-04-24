@@ -7,7 +7,7 @@ var FeatureForm = require("../../../components/feature/FeatureForm");
 describe("FeatureForm", function () {
     var Component;
     var strategies = [
-        { name: "default"}
+        { name: "default" }
     ];
     afterEach(function() {
         React.unmountComponentAtNode(document.body);
@@ -22,7 +22,7 @@ describe("FeatureForm", function () {
     });
 
     describe("edit", function () {
-        var feature = {name: "Test", strategy: "unknown"};
+        var feature = { name: "Test", strategy: "unknown" };
 
         it("should show unknown strategy as default", function () {
             Component = TestUtils .renderIntoDocument(<FeatureForm feature={feature} strategies={strategies} />);
@@ -31,5 +31,4 @@ describe("FeatureForm", function () {
             expect(strategySelect.value).toEqual("default");
         });
     });
-
 });

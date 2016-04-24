@@ -1,3 +1,4 @@
+'use strict';
 var request = require('./specHelper').request;
 
 describe('The event api', function () {
@@ -14,5 +15,4 @@ describe('The event api', function () {
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
-
 });

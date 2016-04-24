@@ -6,7 +6,6 @@ var React = require("react/addons");
 var TestUtils = React.addons.TestUtils;
 var FeatureArchive      = require("../../../components/feature/ArchiveFeatureComponent");
 var FeatureActions  = require("../../../stores/FeatureToggleActions");
-var FeatureToggleStore  = require("../../../stores/ArchivedToggleStore");
 
 describe("FeatureForm", function () {
     var Component;
@@ -31,10 +30,10 @@ describe("FeatureForm", function () {
     });
 
     it("should revive archived feature toggle", function() {
-      var button = Component.getDOMNode().querySelector("tbody button");
-      TestUtils.Simulate.click(button);
+        var button = Component.getDOMNode().querySelector("tbody button");
+        TestUtils.Simulate.click(button);
 
-      jest.runAllTimers();
-      expect(FeatureActions.revive.triggerPromise).toBeCalled();
+        jest.runAllTimers();
+        expect(FeatureActions.revive.triggerPromise).toBeCalled();
     });
 });

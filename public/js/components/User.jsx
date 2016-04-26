@@ -1,14 +1,14 @@
-var React = require('react');
-var UserStore = require('../stores/UserStore');
+import React from 'react'
+import UserStore from '../stores/UserStore'
 
-var User = React.createClass({
+const User = React.createClass({
 
-  onSave: function() {
-    var value = this.refs.username.getDOMNode().value.trim();
+  onSave() {
+    let value = this.refs.username.getDOMNode().value.trim();
     UserStore.set(value);
   },
 
-  render: function() {
+  render() {
     return (
       <div className="r-pvm">
         <input type="text" placeholder="username"

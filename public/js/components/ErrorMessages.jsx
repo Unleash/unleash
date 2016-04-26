@@ -1,9 +1,9 @@
-var React       = require('react');
-var Ui          = require('./ErrorMessages.ui');
-var ErrorStore  = require('../stores/ErrorStore');
-var ErrorActions  = require('../stores/ErrorActions');
+import React from 'react'
+import Ui from './ErrorMessages.ui'
+import ErrorStore '../stores/ErrorStore'
+import ErrorActions from '../stores/ErrorActions'
 
-var ErrorMessages = React.createClass({
+const ErrorMessages = React.createClass({
     getInitialState: function() {
       return {
         errors: ErrorStore.getErrors()

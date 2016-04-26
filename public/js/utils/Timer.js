@@ -1,11 +1,11 @@
-var Timer = function(cb, interval) {
+const Timer = function(cb, interval) {
     this.cb = cb;
     this.interval = interval;
     this.timerId = null;
 };
 
 Timer.prototype.start = function() {
-    if (this.timerId != null) {
+    if (this.timerId !== null) {
         console.warn("timer already started");
     }
 
@@ -15,7 +15,7 @@ Timer.prototype.start = function() {
 };
 
 Timer.prototype.stop  = function() {
-    if (this.timerId == null) {
+    if (this.timerId === null) {
         console.warn('no timer running');
     } else {
         console.log('stopping timer');

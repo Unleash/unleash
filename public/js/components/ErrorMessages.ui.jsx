@@ -1,12 +1,12 @@
-var React = require('react');
+import React from 'react'
 
-var ErrorMessages = React.createClass({
-    render: function() {
-        if (!this.props.errors.length) {
+const ErrorMessages = ({errors}) => {
+    render() {
+        if (!errors.length) {
             return <div/>;
         }
 
-        var errorNodes = this.props.errors.map(function(e, i) {
+        var errorNodes = errors.map(function(e, i) {
             return (<li key={e + i} className="largetext">{e}</li>);
         });
 

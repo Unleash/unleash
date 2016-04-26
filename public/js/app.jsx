@@ -1,7 +1,7 @@
-var React                   = require('react');
-var Router                  = require('react-router');
-var UserStore               = require('./stores/UserStore');
-var routes                  = require('./routes');
+import React from 'react'
+import { Router } from 'react-router'
+import { Routes } from './routes'
+import UserStore from './stores/UserStore'
 
 UserStore.init();
 

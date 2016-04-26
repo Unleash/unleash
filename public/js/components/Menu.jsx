@@ -1,8 +1,9 @@
-var React = require('react');
-var User = require('./User');
+import React from 'react'
+import { User } from './User'
 
-var Menu = React.createClass({
-    render: function() { return (
+const Menu = ({children}) => {
+    render() {
+        return (
 <div className="topbar mbl">
 <div className="container">
   <div className="page">
@@ -50,13 +51,13 @@ var Menu = React.createClass({
           unleash admin
        </span>
       </a>
-      {this.props.children}
+      {children}
     </div>
   </div>
 </div>
 </div>
         );
     }
-});
+};
 
 module.exports = Menu;

@@ -1,14 +1,12 @@
-var React                   = require('react');
-var Router                  = require('react-router');
-var UnleashApp              = require('./UnleashApp');
-var LogEntriesComponent     = require('./components/log/LogEntriesComponent');
-var FeatureTogglesComponent = require('./components/feature/FeatureTogglesComponent');
-var StrategiesComponent     = require('./components/strategy/StrategiesComponent');
-var ArchiveFeatureComponent = require('./components/feature/ArchiveFeatureComponent');
-var DefaultRoute = Router.DefaultRoute;
-var Route = Router.Route;
+import React from 'react'
+import { DefaultRoute, Router, Route} from 'react-router'
+import UnleashApp from './UnleashApp'
+import LogEntriesComponent from './components/log/LogEntriesComponent'
+import FeatureTogglesComponent from './components/feature/FeatureTogglesComponent'
+import StrategiesComponent from './components/strategy/StrategiesComponent'
+import ArchiveFeatureComponent from './components/feature/ArchiveFeatureComponent'
 
-var routes = (
+const routes = (
     <Route name="app" path="/" handler={UnleashApp}>
         <Route name="strategies" handler={StrategiesComponent}/>
         <Route name="log" handler={LogEntriesComponent}/>

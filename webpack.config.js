@@ -23,7 +23,7 @@ module.exports = {
 
     module: {
         loaders: [
-            { test: /\.jsx$/, loader: 'jsx?harmony' }
+            { test: /\.js$/, loader: 'babel' }
         ]
     },
 

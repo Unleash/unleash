@@ -4,10 +4,6 @@ var express      = require('express'),
     log4js       = require('log4js'),
     logger       = require('./lib/logger'),
     routes       = require('./lib/routes'),
-    eventApi     = require('./lib/eventApi'),
-    featureApi   = require('./lib/featureApi'),
-    featureArchiveApi  = require('./lib/featureArchiveApi'),
-    strategyApi  = require('./lib/strategyApi'),
     validator    = require('express-validator'),
     app          = express(),
     router       = express.Router(), // eslint-disable-line
@@ -45,11 +41,8 @@ app.use(bodyParser.json({ strict: false }));
 
 app.use(cookieParser());
 
-eventApi(router);
-featureApi(router);
-featureArchiveApi(router);
-strategyApi(router);
-routes(router);
+routes.create(router);
+
 app.use(baseUriPath, router);
 
 module.exports = app;

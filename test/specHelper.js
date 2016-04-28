@@ -4,9 +4,9 @@ process.env.NODE_ENV = 'test';
 var Promise    = require('bluebird');
 var request    = require('supertest');
 var app        = require('../app');
-var knex       = require('../lib/dbPool');
-var featureDb  = require('../lib/featureDb');
-var strategyDb = require('../lib/strategyDb');
+var knex       = require('../lib/db/dbPool');
+var featureDb  = require('../lib/db/feature');
+var strategyDb = require('../lib/db/strategy');
 
 Promise.promisifyAll(request);
 request = request(app);

@@ -15,6 +15,9 @@
     "bugs": {
         "url": "https://github.com/finn-no/unleash/issues"
     },
+    "engines" : { 
+        "node" : ">=4.4.3" 
+    },
     "private": true,
     "scripts": {
         "db-migrate-and-start": "npm run db-migrate && npm run start",

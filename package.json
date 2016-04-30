@@ -66,21 +66,21 @@
         "webpack-dev-middleware": "^1.0.11"
     },
     "devDependencies": {
-        "chai": "2.1.2",
-        "coveralls": "^2.11.2",
-        "eslint": "^2.7.0",
+        "chai": "3.5.0",
+        "coveralls": "^2.11.9",
+        "eslint": "^2.9.0",
         "eslint-config-spt": "^2.0.0",
         "eslint-plugin-react": "^4.3.0",
-        "istanbul": "^0.3.5",
+        "istanbul": "^0.4.3",
         "jest-cli": "0.5.4",
-        "mocha": "^2.1.0",
-        "mocha-lcov-reporter": "0.0.2",
-        "nsp": "^1.0.0",
+        "mocha": "^2.4.5",
+        "mocha-lcov-reporter": "1.2.0",
+        "nsp": "^2.3.2",
         "pre-commit": "^1.0.2",
         "react-tools": "^0.13.1",
-        "supertest": "^0.15.0",
-        "supervisor": "^0.6.0",
-        "xmlbuilder": "^2.5.1"
+        "supertest": "^1.2.0",
+        "supervisor": "^0.10.0",
+        "xmlbuilder": "^8.2.2"
     },
     "jest": {
         "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",

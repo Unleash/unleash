@@ -62,8 +62,8 @@
         "react-router": "^0.13.2",
         "reflux": "^0.2.10",
         "reqwest": "^2.0.5",
-        "webpack": "1.7.3",
-        "webpack-dev-middleware": "^1.0.11"
+        "webpack": "^1.13.0",
+        "webpack-dev-middleware": "^1.6.1"
     },
     "devDependencies": {
         "chai": "3.5.0",

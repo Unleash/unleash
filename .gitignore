@@ -32,3 +32,7 @@ unleash-server.tar.gz
 *.iml
 
 .vagrant/
+
+# Visual Studio Code
+jsconfig.json
+typings

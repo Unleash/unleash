@@ -1,13 +1,13 @@
-var express      = require('express'),
-    bodyParser   = require('body-parser'),
-    cookieParser = require('cookie-parser'),
-    log4js       = require('log4js'),
-    logger       = require('./lib/logger'),
-    routes       = require('./lib/routes'),
-    validator    = require('express-validator'),
-    app          = express(),
-    router       = express.Router(), // eslint-disable-line
-    baseUriPath  = process.env.BASE_URI_PATH || '';
+var express = require('express');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var log4js = require('log4js');
+var logger = require('./lib/logger');
+var routes = require('./lib/routes');
+var validator = require('express-validator');
+var app = express();
+var router = express.Router(); // eslint-disable-line
+var baseUriPath  = process.env.BASE_URI_PATH || '';
 
 if (app.get('env') === 'development') {
     app.use(require('errorhandler')());

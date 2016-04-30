@@ -36,3 +36,4 @@ unleash-server.tar.gz
 # Visual Studio Code
 jsconfig.json
 typings
+.vscode

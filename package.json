@@ -75,7 +75,7 @@
     "eslint-config-spt": "^2.0.0",
     "eslint-plugin-react": "^4.3.0",
     "istanbul": "^0.4.3",
-    "jest-cli": "0.5.4",
+    "jest-cli": "0.5.8",
     "mocha": "^2.4.5",
     "mocha-lcov-reporter": "1.2.0",
     "nsp": "^2.3.2",
@@ -87,6 +87,9 @@
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/node_modules/npm"
+    ],
     "unmockedModulePathPatterns": [
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/reflux"

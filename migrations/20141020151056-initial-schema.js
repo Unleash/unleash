@@ -1,1 +1,1 @@
-module.exports = require('../lib/migrationRunner').create('001-initial-schema');
+module.exports = require('../scripts/migration-runner').create('001-initial-schema');

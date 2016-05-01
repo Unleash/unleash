@@ -1,11 +1,11 @@
 'use strict';
 process.env.NODE_ENV = 'test';
 
-var Promise    = require('bluebird');
-var request    = require('supertest');
-var app        = require('../app');
-var knex       = require('../lib/db/dbPool');
-var featureDb  = require('../lib/db/feature');
+var Promise = require('bluebird');
+var request = require('supertest');
+var app = require('../app')({ baseUriPath: '' });
+var knex = require('../lib/db/dbPool');
+var featureDb = require('../lib/db/feature');
 var strategyDb = require('../lib/db/strategy');
 
 Promise.promisifyAll(request);

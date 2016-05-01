@@ -1,4 +1,5 @@
 var express = require('express');
+var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var log4js = require('log4js');
@@ -23,6 +24,8 @@ if (app.get('env') === 'development') {
 
     app.use(baseUriPath, webpackDevMiddleware(compiler, config));
 }
+
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.use(validator([]));
 

@@ -86,7 +86,7 @@
     "xmlbuilder": "^8.2.2"
   },
   "jest": {
-    "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
+    "scriptPreprocessor": "<rootDir>/scripts/jest-preprocessor.js",
     "modulePathIgnorePatterns": [
       "<rootDir>/node_modules/npm"
     ],

@@ -1,1 +1,1 @@
-module.exports = require('../lib/migrationRunner').create('006-rename-eventtype');
+module.exports = require('../scripts/migration-runner').create('006-rename-eventtype');

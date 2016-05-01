@@ -1,2 +1,2 @@
-module.exports = require('../lib/migrationRunner').create('003-add-parameters-template-to-strategies');
+module.exports = require('../scripts/migration-runner').create('003-add-parameters-template-to-strategies');
 

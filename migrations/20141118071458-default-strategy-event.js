@@ -1,1 +1,1 @@
-module.exports = require('../lib/migrationRunner').create('004-insert-default-strategy-event');
+module.exports = require('../scripts/migration-runner').create('004-insert-default-strategy-event');

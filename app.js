@@ -31,7 +31,8 @@ module.exports = function(config) {
 
     app.use(cookieParser());
 
-    routes.create(router);
+    // Setup API routes
+    routes.create(router, config);
 
     app.use(baseUriPath, router);
 

@@ -1,8 +1,22 @@
 var logger = require('./lib/logger');
+var databaseUri = require('./lib/databaseConfig').getDatabaseUrl();
+
+// Database dependecies (statefull)
+var db = require('./lib/db/dbPool')(databaseUri);
+var eventDb = require('./lib/db/event')(db);
+var EventStore = require('./lib/eventStore');
+var eventStore = new EventStore(eventDb);
+var featureDb = require('./lib/db/feature')(db, eventStore);
+var strategyDb = require('./lib/db/strategy')(db, eventStore);
 
 var config = {
     baseUriPath: process.env.BASE_URI_PATH || '',
-    port: process.env.HTTP_PORT || process.env.PORT || 4242
+    port: process.env.HTTP_PORT || process.env.PORT || 4242,
+    db: db,
+    eventDb: eventDb,
+    eventStore: eventStore,
+    featureDb: featureDb,
+    strategyDb: strategyDb
 };
 
 var app = require('./app')(config);
@@ -24,7 +38,6 @@ if (app.get('env') === 'development') {
         noInfo: true
     }));
 }
-
 
 process.on('uncaughtException', function(err) {
     logger.error('Uncaught Exception:', err.message);

@@ -15,7 +15,8 @@ function createStrategies() {
     return Promise.map([
         {
             name: "default",
-            description: "Default on or off Strategy."
+            description: "Default on or off Strategy.",
+            parametersTemplate: {}
         },
         {
             name: "usersWithEmail",

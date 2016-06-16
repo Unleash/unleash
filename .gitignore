@@ -29,7 +29,7 @@ unleash-db.jar
 unleash-server.tar.gz
 
 # idea stuff:
-*.iml
+.idea/*
 
 .vagrant/
 

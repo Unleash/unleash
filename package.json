@@ -93,8 +93,7 @@
     "pre-commit": "^1.0.2",
     "react-tools": "^0.13.1",
     "supertest": "^1.2.0",
-    "supervisor": "^0.10.0",
-    "xmlbuilder": "^8.2.2"
+    "supervisor": "^0.10.0"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/scripts/jest-preprocessor.js",

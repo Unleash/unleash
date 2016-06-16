@@ -29,7 +29,6 @@
     "node": ">=4.4.3"
   },
   "main": "./server-impl.js",
-  "private": true,
   "scripts": {
     "db-migrate-and-start": "npm run db-migrate && npm run start",
     "start": "npm run build && NODE_ENV=production node server.js",

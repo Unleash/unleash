@@ -32,3 +32,8 @@ unleash-server.tar.gz
 .idea/*
 
 .vagrant/
+
+# Visual Studio Code
+jsconfig.json
+typings
+.vscode

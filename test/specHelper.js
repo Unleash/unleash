@@ -1,12 +1,24 @@
 'use strict';
 process.env.NODE_ENV = 'test';
 
-var Promise    = require('bluebird');
-var request    = require('supertest');
-var app        = require('../app');
-var knex       = require('../lib/dbPool');
-var featureDb  = require('../lib/featureDb');
-var strategyDb = require('../lib/strategyDb');
+var Promise = require('bluebird');
+var request = require('supertest');
+var databaseUri = require('./databaseConfig').getDatabaseUri();
+var knex = require('../lib/db/dbPool')(databaseUri);
+var eventDb = require('../lib/db/event')(knex);
+var EventStore = require('../lib/eventStore');
+var eventStore = new EventStore(eventDb);
+var featureDb = require('../lib/db/feature')(knex, eventStore);
+var strategyDb = require('../lib/db/strategy')(knex, eventStore);
+
+var app = require('../app')({
+    baseUriPath: '',
+    db: knex,
+    eventDb: eventDb,
+    eventStore: eventStore,
+    featureDb: featureDb,
+    strategyDb: strategyDb
+});
 
 Promise.promisifyAll(request);
 request = request(app);

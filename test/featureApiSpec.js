@@ -1,4 +1,5 @@
 'use strict';
+var logger = require('../lib/logger');
 var assert     = require('assert');
 var specHelper = require('./specHelper');
 var request    = specHelper.request;
@@ -32,6 +33,7 @@ describe('The features api', function () {
     });
 
     it('cant get feature that dose not exist', function (done) {
+        logger.setLevel('FATAL');
         request
             .get('/features/myfeature')
             .expect('Content-Type', /json/)
@@ -47,6 +49,7 @@ describe('The features api', function () {
     });
 
     it('creates new feature toggle with createdBy', function (done) {
+        logger.setLevel('FATAL');
         request
             .post('/features')
             .send({ name: 'com.test.Username', enabled: false })
@@ -63,6 +66,7 @@ describe('The features api', function () {
     });
 
     it('require new feature toggle to have a name', function (done) {
+        logger.setLevel('FATAL');
         request
             .post('/features')
             .send({ name: '' })
@@ -71,6 +75,7 @@ describe('The features api', function () {
     });
 
     it('can not change status of feature toggle that does not exist', function (done) {
+        logger.setLevel('FATAL');
         request
             .put('/features/should-not-exist')
             .send({ name: 'should-not-exist', enabled: false })
@@ -79,6 +84,7 @@ describe('The features api', function () {
     });
 
     it('can change status of feature toggle that does exist', function (done) {
+        logger.setLevel('FATAL');
         request
             .put('/features/featureY')
             .send({ name: 'featureY', enabled: true })

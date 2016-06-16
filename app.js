@@ -1,55 +1,34 @@
-var express      = require('express'),
-    bodyParser   = require('body-parser'),
-    cookieParser = require('cookie-parser'),
-    log4js       = require('log4js'),
-    logger       = require('./lib/logger'),
-    routes       = require('./lib/routes'),
-    eventApi     = require('./lib/eventApi'),
-    featureApi   = require('./lib/featureApi'),
-    featureArchiveApi  = require('./lib/featureArchiveApi'),
-    strategyApi  = require('./lib/strategyApi'),
-    validator    = require('express-validator'),
-    app          = express(),
-    router       = express.Router(), // eslint-disable-line
-    baseUriPath  = process.env.BASE_URI_PATH || '';
+var express = require('express');
+var favicon = require('serve-favicon');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var validator = require('express-validator');
+var log4js = require('log4js');
+var logger = require('./lib/logger');
+var routes = require('./lib/routes');
 
-if (app.get('env') === 'development') {
-    app.use(require('errorhandler')());
+module.exports = function(config) {
+    var app = express();
+    var router = express.Router(); // eslint-disable-line
+    var baseUriPath  = config.baseUriPath || '';
 
-    var webpack              = require('webpack'),
-        webpackDevMiddleware = require('webpack-dev-middleware'),
-        webpackConfig        = require('./webpack.config'),
-        compiler             = webpack(webpackConfig),
-        config               = {
-            publicPath: '/js',
-            noInfo: true
-        };
+    app.set('trust proxy');
+    app.set('port', config.port);
+    app.locals.baseUriPath = baseUriPath;
+    app.use(cookieParser());
 
-    app.use(baseUriPath, webpackDevMiddleware(compiler, config));
-}
+    app.use(favicon(__dirname + '/public/favicon.ico'));
+    app.use(validator([]));
+    app.use(baseUriPath, express.static(__dirname + '/public'));
+    app.use(bodyParser.json({ strict: false }));
+    app.use(log4js.connectLogger(logger, {
+        format: ':remote-addr :status :method :url :response-timems',
+        level: 'auto' // 3XX=WARN, 4xx/5xx=ERROR
+    }));
 
-app.use(validator([]));
+    // Setup API routes
+    routes.create(router, config);
+    app.use(baseUriPath, router);
 
-app.set('trust proxy');
-app.locals.baseUriPath = baseUriPath;
-
-app.use(log4js.connectLogger(logger, {
-    format: ':remote-addr :status :method :url :response-timems',
-    level: 'auto' // 3XX=WARN, 4xx/5xx=ERROR
-}));
-
-app.set('port', process.env.HTTP_PORT || process.env.PORT || 4242);
-
-app.use(baseUriPath, express.static(__dirname + '/public'));
-app.use(bodyParser.json({ strict: false }));
-
-app.use(cookieParser());
-
-eventApi(router);
-featureApi(router);
-featureArchiveApi(router);
-strategyApi(router);
-routes(router);
-app.use(baseUriPath, router);
-
-module.exports = app;
+    return app;
+};

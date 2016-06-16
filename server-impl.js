@@ -1,5 +1,5 @@
 var logger = require('./lib/logger');
-var defaultDatabaseUri = require('./lib/databaseConfig').getDatabaseUrl();
+var defaultDatabaseUri = process.env.DATABASE_URL;
 
 function start(options) {
     options = options || {};

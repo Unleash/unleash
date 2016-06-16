@@ -1,5 +1,3 @@
 .git
 docker-compose.yml
 node_modules
-artifact.json
-finnbuild.json

@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "unleash your features",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha.1",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -107,8 +107,8 @@
     "unmockedModulePathPatterns": [
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/reflux"
-  ],
-  "moduleFileExtensions": [
+    ],
+    "moduleFileExtensions": [
       "jsx",
       "js"
     ]

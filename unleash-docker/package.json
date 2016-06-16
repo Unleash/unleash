@@ -1,0 +1,14 @@
+{
+  "name": "unleash-docker",
+  "version": "1.0.0",
+  "description": "Docker images for unleash.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "unleash-server": "^1.0.0-alpha.1"
+  }
+}

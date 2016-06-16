@@ -48,7 +48,11 @@
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
     "coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "jest": "jest",
-    "lint": "eslint . --ignore-path .gitignore"
+    "lint": "eslint . --ignore-path .gitignore",
+    "release:patch": "npm version patch && npm run push-package-publish",
+    "release:minor": "npm version minor && npm run push-package-publish",
+    "release:major": "npm version major && npm run push-package-publish",
+    "push-package-publish": "git push --follow-tags && npm publish"
   },
   "dependencies": {
     "bluebird": "2.9.14",

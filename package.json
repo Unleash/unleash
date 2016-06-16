@@ -18,12 +18,13 @@
   "engines": {
     "node": ">=4.4.3"
   },
+  "main": "./server.js",
   "private": true,
   "scripts": {
     "db-migrate-and-start": "npm run db-migrate && npm run start",
-    "start": "NODE_ENV=production node server.js",
+    "start": "NODE_ENV=production node index.js",
     "build": "./node_modules/.bin/webpack -p",
-    "dev": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js server.js",
+    "dev": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js index.js",
     "start-pg": "pg_virtualenv npm run start-pg-chain",
     "start-pg-chain": "export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; db-migrate up && npm run dev",
     "test": "export PORT=4243 ; jest && npm run lint && mocha test test/*.js && npm run coverage",

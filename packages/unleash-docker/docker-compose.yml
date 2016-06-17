@@ -1,6 +1,6 @@
 web:
   build: .
-  command: npm run start:docker
+  command: npm run migrate-and-start
   ports:
     - "4242:4242"
   links:

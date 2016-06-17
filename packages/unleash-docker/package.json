@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production node index.js",
-    "start:docker": "npm run db-migrate && npm run start",
+    "migrate-and-start": "npm run db-migrate && npm run start",
     "db-migrate": "db-migrate up"
   },
   "author": "",
@@ -13,6 +13,6 @@
   "dependencies": {
     "db-migrate": "0.9.23",
     "mkdirp": "^0.5.1",
-    "unleash-server": "^1.0.0-alpha.1"
+    "unleash-server": "^1.0.0-alpha.2"
   }
 }

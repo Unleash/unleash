@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "db-migrate": "0.9.23",
+    "db-migrate": "0.9.25",
     "mkdirp": "^0.5.1",
     "unleash-server": "^1.0.0-alpha.2"
   }

@@ -4,11 +4,15 @@
   "description": "Docker images for unleash.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV=production node index.js",
+    "start:docker": "npm run db-migrate && npm run start",
+    "db-migrate": "db-migrate up"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "db-migrate": "0.9.23",
+    "mkdirp": "^0.5.1",
     "unleash-server": "^1.0.0-alpha.1"
   }
 }

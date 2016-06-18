@@ -33,9 +33,8 @@ const FeatureList = React.createClass({
             const regex = new RegExp(this.state.filter, 'i');
 
             return this.props.features.filter(item => regex.test(item.name) || regex.test(item.strategy));
-        } else {
-            return this.props.features;
         }
+        return this.props.features;
     },
 
     render() {

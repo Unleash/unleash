@@ -7,7 +7,7 @@ function readCookie(name) {
     const ca = document.cookie.split(';');
     for (let i=0;i < ca.length;i++) {
         let c = ca[i];
-        while (c.charAt(0)==' ') {
+        while (c.charAt(0)==' ') { // eslint-disable-line eqeqeq
             c = c.substring(1, c.length);
         }
         if (c.indexOf(nameEQ) === 0) {

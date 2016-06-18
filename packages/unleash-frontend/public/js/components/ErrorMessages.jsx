@@ -31,7 +31,7 @@ const ErrorMessages = React.createClass({
 
     render() {
         return (
-            <Ui errors={this.state.errors} onClearErrors={this.onClearErrors}></Ui>
+        <Ui errors={this.state.errors} onClearErrors={this.onClearErrors} />
         );
     },
 });

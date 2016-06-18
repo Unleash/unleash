@@ -25,9 +25,8 @@ const FeatureForm = React.createClass({
     getParameterValue(name) {
         if (this.props.feature && this.props.feature.parameters) {
             return this.props.feature.parameters[name];
-        } else {
-            return '';
         }
+        return '';
     },
 
     setSelectedStrategy(name) {
@@ -47,7 +46,9 @@ const FeatureForm = React.createClass({
         const requiredParams = [];
         let key;
         for (key in strategy.parametersTemplate) {
-            requiredParams.push({ name: key, value: this.getParameterValue(key) });
+            if (Object.hasOwnProperty.call(strategy.parametersTemplate, key)) {
+                requiredParams.push({ name: key, value: this.getParameterValue(key) });
+            }
         }
         this.setState({ requiredParams });
     },

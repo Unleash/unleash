@@ -52,7 +52,7 @@ const FeatureStore = Reflux.createStore({
         } catch (e) {
             if (e instanceof SyntaxError) {
                 // fall through;
-                console.log('Syntax error!');
+                console.log('Syntax error!'); // eslint-disable-line no-console
             } else {
                 throw e;
             }

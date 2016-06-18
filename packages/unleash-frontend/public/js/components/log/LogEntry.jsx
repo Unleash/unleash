@@ -57,9 +57,8 @@ const LogEntry = React.createClass({
             return (
                 <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>
             );
-        } else {
-            return this.renderFullEventData();
         }
+        return this.renderFullEventData();
     },
 
     buildDiff(diff, idx) {

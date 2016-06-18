@@ -11,7 +11,7 @@ const path = require('path');
 
 module.exports = function(config) {
     const app = express();
-    const router = express.Router();
+    const router = express.Router(); // eslint-disable-line new-cap
     const baseUriPath  = config.baseUriPath || '';
     const publicFolder = config.publicFolder;
 

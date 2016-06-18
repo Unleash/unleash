@@ -8,7 +8,7 @@ const Strategy = React.createClass({
 
     onRemove(event) {
         event.preventDefault();
-        if (window.confirm(`Are you sure you want to delete strategy '${this.props.strategy.name}'?`)) {
+        if (window.confirm(`Are you sure you want to delete strategy '${this.props.strategy.name}'?`)) {  // eslint-disable-line no-alert
             this.props.onRemove(this.props.strategy);
         }
     },

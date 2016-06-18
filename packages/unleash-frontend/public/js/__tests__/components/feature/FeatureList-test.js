@@ -8,10 +8,9 @@ const FeatureList     = require('../../../components/feature/FeatureList');
 
 describe('FeatureList', () => {
     let Component;
-    let features;
 
     beforeEach(() => {
-        features = [
+        const features = [
             { name: 'featureX', strategy: 'other' },
             { name: 'group.featureY', strategy: 'default' },
         ];
@@ -26,25 +25,25 @@ describe('FeatureList', () => {
     });
 
     it('should render all features', () => {
-        const features = Component.getDOMNode().querySelectorAll('.feature');
-        expect(features.length).toEqual(2);
+        const featuresElement = Component.getDOMNode().querySelectorAll('.feature');
+        expect(featuresElement.length).toEqual(2);
     });
 
     it('should filter list of features', () => {
         const filterNode = Component.refs.filter.getDOMNode();
         TestUtils.Simulate.change(filterNode, { target: { value: 'group' } });
 
-        const features = Component.getDOMNode().querySelectorAll('.feature');
-        expect(features.length).toEqual(1);
+        const featuresElement = Component.getDOMNode().querySelectorAll('.feature');
+        expect(featuresElement.length).toEqual(1);
     });
 
     it('should filter list of features ignoring case', () => {
         const filterNode = Component.refs.filter.getDOMNode();
         TestUtils.Simulate.change(filterNode, { target: { value: 'GROUP' } });
 
-        const features = Component.getDOMNode().querySelectorAll('.feature');
-        expect(features.length).toEqual(1);
-        expect(features[0].textContent).toMatch('group');
+        const featuresElement = Component.getDOMNode().querySelectorAll('.feature');
+        expect(featuresElement.length).toEqual(1);
+        expect(featuresElement[0].textContent).toMatch('group');
     });
 
     it('should filter list of features by strategy name', () => {
@@ -52,8 +51,8 @@ describe('FeatureList', () => {
         const filterNode = Component.refs.filter.getDOMNode();
         TestUtils.Simulate.change(filterNode, { target: { value: searchString } });
 
-        const features = Component.getDOMNode().querySelectorAll('.feature');
-        expect(features.length).toEqual(1);
-        expect(features[0].textContent).toMatch(searchString);
+        const featuresElement = Component.getDOMNode().querySelectorAll('.feature');
+        expect(featuresElement.length).toEqual(1);
+        expect(featuresElement[0].textContent).toMatch(searchString);
     });
 });

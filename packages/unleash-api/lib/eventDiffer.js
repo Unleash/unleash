@@ -19,9 +19,8 @@ function baseTypeFor(event) {
         return 'features';
     } else if (strategyTypes.indexOf(event.type) !== -1) {
         return 'strategies';
-    } else {
-        throw new Error(`unknown event type: ${JSON.stringify(event)}`);
     }
+    throw new Error(`unknown event type: ${JSON.stringify(event)}`);
 }
 
 function groupByBaseTypeAndName(events) {
@@ -46,14 +45,14 @@ function eachConsecutiveEvent(events, callback) {
         const group = groups[baseType];
 
         Object.keys(group).forEach(name => {
-            const events = group[name];
+            const currentEvents = group[name];
             let left;
             let right;
             let i;
             let l;
-            for (i = 0, l = events.length; i < l; i++) {
-                left  = events[i];
-                right = events[i + 1];
+            for (i = 0, l = currentEvents.length; i < l; i++) {
+                left  = currentEvents[i];
+                right = currentEvents[i + 1];
 
                 callback(left, right);
             }

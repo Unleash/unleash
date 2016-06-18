@@ -33,7 +33,7 @@ const Feature = React.createClass({
     },
 
     archiveFeature() {
-        if (window.confirm(`Are you sure you want to delete ${this.props.feature.name}?`)) {
+        if (window.confirm(`Are you sure you want to delete ${this.props.feature.name}?`)) {  // eslint-disable-line no-alert
             this.props.onArchive(this.props.feature);
         }
     },

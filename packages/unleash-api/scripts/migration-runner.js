@@ -3,8 +3,8 @@ const fs   = require('fs');
 const util = require('util');
 const path = require('path');
 
-const runMigration = function(path, db, callback) {
-    db.runSql(fs.readFileSync(path, { encoding: 'utf8' }), callback);
+const runMigration = function(migrationPath, db, callback) {
+    db.runSql(fs.readFileSync(migrationPath, { encoding: 'utf8' }), callback);
 };
 
 module.exports = {

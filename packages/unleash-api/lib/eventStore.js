@@ -9,9 +9,8 @@ function EventStore(eventDb) {
 util.inherits(EventStore, EventEmitter);
 
 EventStore.prototype.create = function (event) {
-    const that = this;
     return this.eventDb.store(event).then(() => {
-        that.emit(event.type, event);
+        this.emit(event.type, event);
     });
 };
 

@@ -24,10 +24,8 @@ const StrategyForm = React.createClass({
         strategy.description = this.refs.description.getValue();
         strategy.parametersTemplate = {};
 
-        const that = this;
-
         this.state.parameters.forEach(parameter => {
-            const name = that.refs[parameter.name].getDOMNode().value.trim();
+            const name = this.refs[parameter.name].getDOMNode().value.trim();
             if (name) {
                 strategy.parametersTemplate[name] = 'string';
             }

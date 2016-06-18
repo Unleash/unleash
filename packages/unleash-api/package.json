@@ -1,7 +1,7 @@
 {
   "name": "unleash-api",
   "description": "unleash your features",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -66,6 +66,7 @@
     "mocha": "^2.4.5",
     "mocha-lcov-reporter": "1.2.0",
     "supertest": "^1.2.0",
-    "supervisor": "^0.10.0"
+    "supervisor": "^0.10.0",
+    "unleash-frontend": "1.0.0-alpha.2"
   }
 }

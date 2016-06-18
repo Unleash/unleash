@@ -1,0 +1,40 @@
+{
+  "name": "unleash-server",
+  "description": "unleash your features",
+  "version": "1.0.0-alpha.1",
+  "keywords": [
+    "unleash",
+    "feature toggle",
+    "feature",
+    "toggle"
+  ],
+  "files": [
+    "server.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:finn-no/unleash.git"
+  },
+  "bugs": {
+    "url": "https://github.com/finn-no/unleash/issues"
+  },
+  "engines": {
+    "node": "6"
+  },
+  "main": "./lib/index.js",
+  "scripts": {
+    "db-migrate-and-start": "npm run db-migrate && npm run start",
+    "start": "NODE_ENV=production node server.js",
+    "test": "echo 'TODO add server tests'; exit 0;",
+    "test:ci": "npm run test"
+  },
+  "dependencies": {
+    "unleash-api": "1.0.0-alpha.1",
+    "unleash-frontend": "1.0.0-alpha.1"
+  },
+  "devDependencies": {
+
+  }
+}

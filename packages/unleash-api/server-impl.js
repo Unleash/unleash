@@ -19,7 +19,8 @@ function start(options) {
         eventDb: eventDb,
         eventStore: eventStore,
         featureDb: featureDb,
-        strategyDb: strategyDb
+        strategyDb: strategyDb,
+        publicFolder: options.publicFolder
     };
 
     var app = require('./app')(config);

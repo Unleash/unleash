@@ -1,5 +1,7 @@
 # unleash
 
+__Warning: We are in the process of splitting up unleash into multiple packages in this repository, if you want to test the previous package see [previous tag](https://github.com/finn-no/unleash/tree/v1.0.0-alpha.1) __ 
+
 [![Build Status](https://travis-ci.org/finn-no/unleash.svg?branch=master)](https://travis-ci.org/finn-no/unleash) [![Code Climate](https://codeclimate.com/github/finn-no/unleash/badges/gpa.svg)](https://codeclimate.com/github/finn-no/unleash) [![Coverage Status](https://coveralls.io/repos/finn-no/unleash/badge.png?branch=master)](https://coveralls.io/r/finn-no/unleash?branch=master) [![Dependency Status](https://david-dm.org/finn-no/unleash.png)](https://david-dm.org/finn-no/unleash) [![devDependency Status](https://david-dm.org/finn-no/unleash/dev-status.png)](https://david-dm.org/finn-no/unleash#info=devD)
 
 ![Admin UI](https://cloud.githubusercontent.com/assets/572/5873775/3ddc1a66-a2fa-11e4-923c-0a9569605dad.png)
@@ -49,12 +51,12 @@ export TEST_DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash_
 // Install dependencies
 npm install
 
-// Run migrations in your local DBs
-./node_modules/.bin/db-migrate up
-DATABASE_URL=$TEST_DATABASE_URL ./node_modules/.bin/db-migrate up
+// Run migrations in your local DBs (via unleash-api)
+npm run db-migrate
+DATABASE_URL=$TEST_DATABASE_URL npm run db-migrate
 
-// Start server in dev-mode:
-npm run dev
+// Start server
+npm start
 
 // Admin dashboard
 http://localhost:4242
@@ -62,11 +64,8 @@ http://localhost:4242
 // Feature API:
 http://localhost:4242/features
 
-// Execute tests:
+// Execute tests in all packages:
 npm test
-
-// Run tests with postgres running in docker:
-npm run docker-test
 ```
 
 ### Making a schema change
@@ -76,3 +75,13 @@ npm run docker-test
 3. Run `db-migrate create your-migration-name` and edit the generated file to have this line: `module.exports = require('../scripts/migration-runner').create('NNN-your-migration-name');`
 4. Run `db-migrate up`.
 5. Generate LB artifact using `scripts/generate-liquibase-artifact` (TODO: make this internal)
+
+
+### Publishing / Releasing new packages
+
+Please run `npm run nsp` nad `npm run lint` checks before publishing.
+
+Run `npm run publish` to start the publishing process.
+Lerna is setup with independent versioning so you will be prompted with version per package, and lerna will update all the versions across packages.
+
+`npm run publish:dry` 

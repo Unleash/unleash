@@ -21,12 +21,15 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "prepublish": "npm run bootstrap",
-    "_lint": "lerna exec eslint .",
-    "lint": "echo 'ok for naoo' && exit 0;",
+    "lint": "lerna exec eslint .",
+    "pre-commit": "echo 'no lint check' && exit 0;",
     "test": "lerna --concurrency=1 exec npm run test",
     "test:ci": "lerna --concurrency=1 exec npm run test:ci",
-    "secure": "lerna exec nsp check",
-    "start": "lerna --scope=unleash-server exec npm start"
+    "nsp": "lerna exec nsp check",
+    "start": "lerna --scope=unleash-server exec npm start",
+    "publish": "lerna publish",
+    "publish:dry": "lerna publish --skip-git --skip-npm",
+    "db-migrate": "lerna --scope=unleash-api exec npm run db-migrate"
   },
   "dependencies": {},
   "devDependencies": {
@@ -38,6 +41,6 @@
     "pre-commit": "^1.0.2"
   },
   "pre-commit": [
-    "lint"
+    "pre-commit"
   ]
 }

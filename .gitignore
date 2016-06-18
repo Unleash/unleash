@@ -22,8 +22,8 @@ coverage
 build/Release
 
 # webpack output
-public/js/bundle.js
-public/js/bundle.js.map
+packages/unleash-frontend/public/js/bundle.js
+packages/unleash-frontend/public/js/bundle.js.map
 
 # liquibase stuff
 /sql

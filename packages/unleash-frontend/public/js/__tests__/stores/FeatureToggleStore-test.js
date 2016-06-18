@@ -1,11 +1,14 @@
+'use strict';
 jest.autoMockOff();
 jest.dontMock('../../stores/FeatureToggleActions');
 jest.dontMock('../../stores/FeatureToggleStore');
 
-describe('FeatureToggleStore', function() {
-    var Actions, Store, toggles;
+describe('FeatureToggleStore', () => {
+    let Actions;
+    let Store;
+    let toggles;
 
-    beforeEach(function() {
+    beforeEach(() => {
         Actions = require('../../stores/FeatureToggleActions');
         Store = require('../../stores/FeatureToggleStore');
         toggles = [
@@ -13,11 +16,11 @@ describe('FeatureToggleStore', function() {
         ];
     });
 
-    it('should be an empty store', function() {
+    it('should be an empty store', () => {
         expect(Store.getFeatureToggles().length).toBe(0);
     });
 
-    it('should inititialize the store', function() {
+    it('should inititialize the store', () => {
         Actions.init.completed(toggles);
 
         jest.runAllTimers();
@@ -25,10 +28,10 @@ describe('FeatureToggleStore', function() {
         expect(Store.getFeatureToggles()[0].name).toEqual("app.feature");
     });
 
-    it('should add a another toggle', function() {
+    it('should add a another toggle', () => {
         Actions.init.completed(toggles);
 
-        var newToggle = { name: "app.featureB", enabled: true, strategy: "default" };
+        const newToggle = { name: "app.featureB", enabled: true, strategy: "default" };
 
         Actions.create.completed(newToggle);
 
@@ -37,7 +40,7 @@ describe('FeatureToggleStore', function() {
         expect(Store.getFeatureToggles()[1].name).toEqual("app.featureB");
     });
 
-    it('should archive toggle', function() {
+    it('should archive toggle', () => {
         Actions.init.completed(toggles);
 
         Actions.archive.completed(toggles[0]);
@@ -46,7 +49,7 @@ describe('FeatureToggleStore', function() {
         expect(Store.getFeatureToggles().length).toBe(0);
     });
 
-    it('should keep toggles in sorted order', function() {
+    it('should keep toggles in sorted order', () => {
         Actions.init.completed([
             { name: "A" },
             { name: "B" },
@@ -61,9 +64,9 @@ describe('FeatureToggleStore', function() {
         expect(Store.getFeatureToggles()[3].name).toEqual("C");
     });
 
-    it('should update toggle', function() {
+    it('should update toggle', () => {
         Actions.init.completed(toggles);
-        var toggle = toggles[0];
+        const toggle = toggles[0];
 
         toggle.enabled = false;
         Actions.update.completed(toggle);

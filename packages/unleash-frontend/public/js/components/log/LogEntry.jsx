@@ -1,27 +1,28 @@
-var React = require('react');
-var moment = require('moment');
+'use strict';
+const React = require('react');
+const moment = require('moment');
 
-var DIFF_PREFIXES = {
+const DIFF_PREFIXES = {
     A: ' ',
     E: ' ',
     D: '-',
     N: '+'
 };
 
-var SPADEN_CLASS = {
+const SPADEN_CLASS = {
     A: 'blue', // array edited
     E: 'blue', // edited
     D: 'negative', // deleted
     N: 'positive', // added
 };
 
-var LogEntry = React.createClass({
+const LogEntry = React.createClass({
     propTypes: {
         event: React.PropTypes.object.isRequired
     },
 
-    render: function() {
-        var date = moment(this.props.event.createdAt);
+    render() {
+        const date = moment(this.props.event.createdAt);
 
         return (
             <tr>
@@ -40,19 +41,19 @@ var LogEntry = React.createClass({
         );
     },
 
-    renderFullEventData: function() {
-        var localEventData = JSON.parse(JSON.stringify(this.props.event.data));
+    renderFullEventData() {
+        const localEventData = JSON.parse(JSON.stringify(this.props.event.data));
         delete localEventData.description;
         delete localEventData.name;
 
-        var prettyPrinted = JSON.stringify(localEventData, null, 2);
+        const prettyPrinted = JSON.stringify(localEventData, null, 2);
 
         return (<code className='JSON smalltext man'>{prettyPrinted}</code>);
     },
 
-    renderEventDiff: function() {
+    renderEventDiff() {
         if (!this.props.showFullEvents && this.props.event.diffs) {
-            var changes = this.props.event.diffs.map(this.buildDiff);
+            const changes = this.props.event.diffs.map(this.buildDiff);
             return (
                 <code className='smalltext man'>{changes.length === 0 ? '(no changes)' : changes}</code>
             );
@@ -61,9 +62,9 @@ var LogEntry = React.createClass({
         }
     },
 
-    buildDiff: function(diff, idx) {
-        var change;
-        var key = diff.path.join('.');
+    buildDiff(diff, idx) {
+        let change;
+        const key = diff.path.join('.');
 
         if (diff.lhs !== undefined && diff.rhs !== undefined) {
             change = (
@@ -73,8 +74,8 @@ var LogEntry = React.createClass({
                 </div>
             );
         } else {
-            var spadenClass = SPADEN_CLASS[diff.kind];
-            var prefix      = DIFF_PREFIXES[diff.kind];
+            const spadenClass = SPADEN_CLASS[diff.kind];
+            const prefix      = DIFF_PREFIXES[diff.kind];
 
             change = (<div className={spadenClass}>{prefix} {key}: {JSON.stringify(diff.rhs)}</div>);
         }

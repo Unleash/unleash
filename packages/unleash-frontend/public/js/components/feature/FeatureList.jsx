@@ -1,39 +1,38 @@
-var React   = require('react');
-var Feature = require('./Feature');
+'use strict';
+const React   = require('react');
+const Feature = require('./Feature');
 
-var noop = function() {};
+const noop = function() {};
 
-var FeatureList = React.createClass({
+const FeatureList = React.createClass({
     propTypes: {
         features: React.PropTypes.array.isRequired,
         strategies: React.PropTypes.array.isRequired
     },
 
-    getDefaultProps: function() {
+    getDefaultProps() {
         return {
             onFeatureChanged: noop,
             onFeatureArchive: noop
         };
     },
 
-    getInitialState: function() {
+    getInitialState() {
         return {
             filter: undefined
         };
     },
 
-    onFilterChange: function(e) {
+    onFilterChange(e) {
         e.preventDefault();
         this.setState({filter: e.target.value.trim()});
     },
 
-    filteredFeatures: function() {
+    filteredFeatures() {
         if(this.state.filter) {
-            var regex = new RegExp(this.state.filter, "i");
+            const regex = new RegExp(this.state.filter, "i");
 
-            return this.props.features.filter(function(item) {
-                return regex.test(item.name) || regex.test(item.strategy);
-            }.bind(this));
+            return this.props.features.filter(item => regex.test(item.name) || regex.test(item.strategy));
 
         } else {
             return this.props.features;
@@ -41,18 +40,14 @@ var FeatureList = React.createClass({
 
     },
 
-    render: function() {
-        var featureNodes = this.filteredFeatures().map(function(feature) {
-            return (
-                <Feature
-                  key={feature.name}
-                  feature={feature}
-                  onChange={this.props.onFeatureChanged}
-                  onArchive={this.props.onFeatureArchive}
-                  strategies={this.props.strategies}
-                  />
-            );
-        }.bind(this));
+    render() {
+        const featureNodes = this.filteredFeatures().map(feature => <Feature
+          key={feature.name}
+          feature={feature}
+          onChange={this.props.onFeatureChanged}
+          onArchive={this.props.onFeatureArchive}
+          strategies={this.props.strategies}
+          />);
 
         return (
             <div className=''>

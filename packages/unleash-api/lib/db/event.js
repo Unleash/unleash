@@ -1,4 +1,5 @@
-var EVENT_COLUMNS = ['id', 'type', 'created_by', 'created_at', 'data'];
+'use strict';
+const EVENT_COLUMNS = ['id', 'type', 'created_by', 'created_at', 'data'];
 
 module.exports = function(db) {
     function storeEvent(event) {
@@ -38,8 +39,8 @@ module.exports = function(db) {
 
     return {
         store: storeEvent,
-        getEvents: getEvents,
-        getEventsFilterByName: getEventsFilterByName
+        getEvents,
+        getEventsFilterByName
     };
 };
 

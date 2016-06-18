@@ -2,6 +2,8 @@
  * TODO: we should also inject config and
  * services to the routes to ease testing.
 **/
+'use strict';
+
 exports.create = function (app, config) {
     require('./event')(app, config);
     require('./feature')(app, config);

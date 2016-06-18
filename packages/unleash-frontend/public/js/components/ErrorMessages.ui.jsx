@@ -1,14 +1,13 @@
-var React = require('react');
+'use strict';
+const React = require('react');
 
-var ErrorMessages = React.createClass({
-    render: function() {
+const ErrorMessages = React.createClass({
+    render() {
         if (!this.props.errors.length) {
             return <div/>;
         }
 
-        var errorNodes = this.props.errors.map(function(e, i) {
-            return (<li key={e + i} className="largetext">{e}</li>);
-        });
+        const errorNodes = this.props.errors.map((e, i) => <li key={e + i} className="largetext">{e}</li>);
 
         return (
             <div className="container">

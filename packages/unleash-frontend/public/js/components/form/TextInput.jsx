@@ -1,6 +1,7 @@
-var React          = require('react');
+'use strict';
+const React          = require('react');
 
-var TextInput = React.createClass({
+const TextInput = React.createClass({
     propTypes: {
         name: React.PropTypes.string.isRequired,
         label: React.PropTypes.string.isRequired,
@@ -10,22 +11,22 @@ var TextInput = React.createClass({
         required: React.PropTypes.bool
     },
 
-    getDefaultProps: function() {
+    getDefaultProps() {
         return {
             required: false
         };
     },
 
-    getInitialState: function() {
+    getInitialState() {
         return {};
     },
 
-    getValue: function() {
+    getValue() {
         return this.refs.input.getDOMNode().value.trim();
     },
 
 
-    render: function() {
+    render() {
         return (
             <div className="formelement required">
                 <label htmlFor={this.props.id} className="t4">{this.props.label}</label>

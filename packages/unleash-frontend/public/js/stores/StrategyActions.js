@@ -1,40 +1,41 @@
-var Reflux = require("reflux");
-var StrategyAPI = require('./StrategyAPI');
+'use strict';
+const Reflux = require("reflux");
+const StrategyAPI = require('./StrategyAPI');
 
-var StrategyActions = Reflux.createActions({
-    'init': { asyncResult: true },
-    'create': { asyncResult: true },
-    'remove': { asyncResult: true },
+const StrategyActions = Reflux.createActions({
+    init: { asyncResult: true },
+    create: { asyncResult: true },
+    remove: { asyncResult: true },
 });
 
 StrategyActions.init.listen(function() {
-    StrategyAPI.getStrategies(function(err, strategies) {
+    StrategyAPI.getStrategies((err, strategies) => {
         if (err) {
             this.failed(err);
         } else {
             this.completed(strategies);
         }
-    }.bind(this));
+    });
 });
 
 StrategyActions.create.listen(function(feature) {
-    StrategyAPI.createStrategy(feature, function(err) {
+    StrategyAPI.createStrategy(feature, err => {
         if (err) {
             this.failed(err);
         } else {
             this.completed(feature);
         }
-    }.bind(this));
+    });
 });
 
 StrategyActions.remove.listen(function(feature) {
-    StrategyAPI.removeStrategy(feature, function(err) {
+    StrategyAPI.removeStrategy(feature, err => {
         if (err) {
             this.failed(err);
         } else {
             this.completed(feature);
         }
-    }.bind(this));
+    });
 });
 
 module.exports = StrategyActions;

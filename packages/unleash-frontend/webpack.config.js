@@ -1,8 +1,10 @@
 // docs: http://webpack.github.io/docs/configuration.html
 
-var path = require('path');
-var root = path.normalize(path.join(__dirname, '.'));
-var jsroot = path.join(path.join(root, 'public'), 'js');
+'use strict';
+
+const path = require('path');
+const root = path.normalize(path.join(__dirname, '.'));
+const jsroot = path.join(path.join(root, 'public'), 'js');
 
 module.exports = {
 

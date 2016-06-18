@@ -1,38 +1,38 @@
 'use strict';
-var logger = require('../lib/logger');
-var assert     = require('assert');
-var specHelper = require('./specHelper');
-var request    = specHelper.request;
-var stringify  = function (o) {
+const logger = require('../lib/logger');
+const assert     = require('assert');
+const specHelper = require('./specHelper');
+const request    = specHelper.request;
+const stringify  = function (o) {
     return JSON.stringify(o, null, ' ');
 };
 
-describe('The features api', function () {
-    beforeEach(function (done) {
+describe('The features api', () => {
+    beforeEach(done => {
         specHelper.db.resetAndSetup()
             .then(done.bind(null, null))
             .catch(done);
     });
 
-    it('returns three feature toggles', function (done) {
+    it('returns three feature toggles', done => {
         request
             .get('/features')
             .expect('Content-Type', /json/)
             .expect(200)
-            .end(function (err, res) {
-                assert(res.body.features.length === 3, "expected 3 features, got " + stringify(res.body));
+            .end((err, res) => {
+                assert(res.body.features.length === 3, `expected 3 features, got ${stringify(res.body)}`);
                 done();
             });
     });
 
-    it('gets a feature by name', function (done) {
+    it('gets a feature by name', done => {
         request
             .get('/features/featureX')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
 
-    it('cant get feature that dose not exist', function (done) {
+    it('cant get feature that dose not exist', done => {
         logger.setLevel('FATAL');
         request
             .get('/features/myfeature')
@@ -40,7 +40,7 @@ describe('The features api', function () {
             .expect(404, done);
     });
 
-    it('creates new feature toggle', function (done) {
+    it('creates new feature toggle', done => {
         request
             .post('/features')
             .send({ name: 'com.test.feature', enabled: false })
@@ -48,24 +48,24 @@ describe('The features api', function () {
             .expect(201, done);
     });
 
-    it('creates new feature toggle with createdBy', function (done) {
+    it('creates new feature toggle with createdBy', done => {
         logger.setLevel('FATAL');
         request
             .post('/features')
             .send({ name: 'com.test.Username', enabled: false })
             .set('Cookie', ['username=ivaosthu'])
             .set('Content-Type', 'application/json')
-            .end(function() {
+            .end(() => {
                 request
                     .get('/events')
-                    .end(function (err, res) {
+                    .end((err, res) => {
                         assert.equal(res.body.events[0].createdBy, 'ivaosthu');
                         done();
                     });
             });
     });
 
-    it('require new feature toggle to have a name', function (done) {
+    it('require new feature toggle to have a name', done => {
         logger.setLevel('FATAL');
         request
             .post('/features')
@@ -74,7 +74,7 @@ describe('The features api', function () {
             .expect(400, done);
     });
 
-    it('can not change status of feature toggle that does not exist', function (done) {
+    it('can not change status of feature toggle that does not exist', done => {
         logger.setLevel('FATAL');
         request
             .put('/features/should-not-exist')
@@ -83,7 +83,7 @@ describe('The features api', function () {
             .expect(404, done);
     });
 
-    it('can change status of feature toggle that does exist', function (done) {
+    it('can change status of feature toggle that does exist', done => {
         logger.setLevel('FATAL');
         request
             .put('/features/featureY')
@@ -92,19 +92,19 @@ describe('The features api', function () {
             .expect(200, done);
     });
 
-    it('archives a feature by name', function (done) {
+    it('archives a feature by name', done => {
         request
             .delete('/features/featureX')
             .expect(200, done);
     });
 
-    it('can not archive unknown feature', function (done) {
+    it('can not archive unknown feature', done => {
         request
             .delete('/features/featureUnknown')
             .expect(404, done);
     });
 
-    it('refuses to create a feature with an existing name', function (done) {
+    it('refuses to create a feature with an existing name', done => {
         request
             .post('/features')
             .send({ name: 'featureX' })

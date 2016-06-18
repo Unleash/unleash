@@ -1,10 +1,10 @@
 'use strict';
-var specHelper = require('./specHelper');
-var request = specHelper.request;
+const specHelper = require('./specHelper');
+const request = specHelper.request;
 
-describe('The routes', function () {
-    describe('healthcheck', function () {
-        it('returns health good', function (done) {
+describe('The routes', () => {
+    describe('healthcheck', () => {
+        it('returns health good', done => {
             request.get('/health')
             .expect('Content-Type', /json/)
             .expect(200)

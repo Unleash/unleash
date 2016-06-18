@@ -1,4 +1,5 @@
-var util = require('util');
+'use strict';
+const util = require('util');
 
 function NotFoundError(message) {
     Error.call(this);

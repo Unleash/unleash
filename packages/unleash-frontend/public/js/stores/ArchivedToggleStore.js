@@ -1,45 +1,44 @@
-var Reflux          = require('reflux');
-var FeatureActions  = require('./FeatureToggleActions');
-var filter          = require('lodash/collection/filter');
-var sortBy          = require('lodash/collection/sortBy');
+'use strict';
+const Reflux          = require('reflux');
+const FeatureActions  = require('./FeatureToggleActions');
+const filter          = require('lodash/collection/filter');
+const sortBy          = require('lodash/collection/sortBy');
 
-var _archivedToggles = [];
+let _archivedToggles = [];
 
 // Creates a DataStore
-var FeatureStore = Reflux.createStore({
+const FeatureStore = Reflux.createStore({
 
     // Initial setup
-    init: function() {
+    init() {
         this.listenTo(FeatureActions.initArchive.completed, this.onInit);
         this.listenTo(FeatureActions.archive.completed, this.onArchive);
         this.listenTo(FeatureActions.revive.completed,  this.onRevive);
     },
 
-    onInit: function(toggles) {
+    onInit(toggles) {
         _archivedToggles = toggles;
         this.trigger();
     },
 
-    onArchive: function(feature) {
-        var toggles = _archivedToggles.concat([feature]);
+    onArchive(feature) {
+        const toggles = _archivedToggles.concat([feature]);
         _archivedToggles = sortBy(toggles, 'name');
         this.trigger();
     },
 
-    onRevive: function(item) {
-        var newStore = filter(_archivedToggles, function(f) {
-            return f.name !== item.name;
-        });
+    onRevive(item) {
+        const newStore = filter(_archivedToggles, f => f.name !== item.name);
 
         _archivedToggles = sortBy(newStore, 'name');
         this.trigger();
     },
 
-    getArchivedToggles: function() {
+    getArchivedToggles() {
         return _archivedToggles;
     },
 
-    initStore: function(archivedToggles) {
+    initStore(archivedToggles) {
         _archivedToggles = archivedToggles;
     }
 });

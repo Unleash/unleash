@@ -5,5 +5,5 @@ module.exports = {
     featureArchived: 'feature-archived',
     featureRevived: 'feature-revived',
     strategyCreated: 'strategy-created',
-    strategyDeleted: 'strategy-deleted'
+    strategyDeleted: 'strategy-deleted',
 };

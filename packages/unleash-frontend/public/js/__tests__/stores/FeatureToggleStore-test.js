@@ -12,7 +12,7 @@ describe('FeatureToggleStore', () => {
         Actions = require('../../stores/FeatureToggleActions');
         Store = require('../../stores/FeatureToggleStore');
         toggles = [
-            { name: "app.feature", enabled: true, strategy: "default" }
+            { name: 'app.feature', enabled: true, strategy: 'default' },
         ];
     });
 
@@ -25,19 +25,19 @@ describe('FeatureToggleStore', () => {
 
         jest.runAllTimers();
         expect(Store.getFeatureToggles().length).toBe(1);
-        expect(Store.getFeatureToggles()[0].name).toEqual("app.feature");
+        expect(Store.getFeatureToggles()[0].name).toEqual('app.feature');
     });
 
     it('should add a another toggle', () => {
         Actions.init.completed(toggles);
 
-        const newToggle = { name: "app.featureB", enabled: true, strategy: "default" };
+        const newToggle = { name: 'app.featureB', enabled: true, strategy: 'default' };
 
         Actions.create.completed(newToggle);
 
         jest.runAllTimers();
         expect(Store.getFeatureToggles().length).toBe(2);
-        expect(Store.getFeatureToggles()[1].name).toEqual("app.featureB");
+        expect(Store.getFeatureToggles()[1].name).toEqual('app.featureB');
     });
 
     it('should archive toggle', () => {
@@ -51,17 +51,17 @@ describe('FeatureToggleStore', () => {
 
     it('should keep toggles in sorted order', () => {
         Actions.init.completed([
-            { name: "A" },
-            { name: "B" },
-            { name: "C" }
+            { name: 'A' },
+            { name: 'B' },
+            { name: 'C' },
         ]);
 
-        Actions.create.completed({ name: "AA" });
+        Actions.create.completed({ name: 'AA' });
 
         jest.runAllTimers();
-        expect(Store.getFeatureToggles()[0].name).toEqual("A");
-        expect(Store.getFeatureToggles()[1].name).toEqual("AA");
-        expect(Store.getFeatureToggles()[3].name).toEqual("C");
+        expect(Store.getFeatureToggles()[0].name).toEqual('A');
+        expect(Store.getFeatureToggles()[1].name).toEqual('AA');
+        expect(Store.getFeatureToggles()[3].name).toEqual('C');
     });
 
     it('should update toggle', () => {

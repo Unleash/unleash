@@ -4,12 +4,12 @@ const LogEntry = require('./LogEntry');
 
 const LogEntryList = React.createClass({
     propTypes: {
-        events: React.PropTypes.array.isRequired
+        events: React.PropTypes.array.isRequired,
     },
 
     getInitialState() {
         return {
-            showFullEvents: false
+            showFullEvents: false,
         };
     },
 
@@ -28,7 +28,7 @@ const LogEntryList = React.createClass({
                     </input>
                 </label>
 
-                <table className='outerborder zebra-striped'>
+                <table className="outerborder zebra-striped">
                     <thead>
                         <tr>
                             <th>When</th>
@@ -48,8 +48,8 @@ const LogEntryList = React.createClass({
     },
 
     toggleFullEvents() {
-        this.setState({showFullEvents: !this.state.showFullEvents});
-    }
+        this.setState({ showFullEvents: !this.state.showFullEvents });
+    },
 
 });
 

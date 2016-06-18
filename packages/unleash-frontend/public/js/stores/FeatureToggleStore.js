@@ -50,7 +50,7 @@ const FeatureStore = Reflux.createStore({
 
     initStore(toggles) {
         _featureToggles = toggles;
-    }
+    },
 });
 
 module.exports = FeatureStore;

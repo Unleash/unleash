@@ -40,7 +40,7 @@ module.exports = function(db, eventStore) {
         return {
             name: row.name,
             description: row.description,
-            parametersTemplate: row.parameters_template
+            parametersTemplate: row.parameters_template,
         };
     }
 
@@ -63,7 +63,7 @@ module.exports = function(db, eventStore) {
     return {
         getStrategies,
         getStrategy,
-        _createStrategy: createStrategy // visible for testing
+        _createStrategy: createStrategy, // visible for testing
     };
 };
 

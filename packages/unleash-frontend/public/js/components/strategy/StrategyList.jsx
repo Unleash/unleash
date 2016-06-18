@@ -4,7 +4,7 @@ const Strategy = require('./Strategy');
 
 const StrategyList = React.createClass({
     propTypes: {
-        strategies: React.PropTypes.array.isRequired
+        strategies: React.PropTypes.array.isRequired,
     },
 
     render() {
@@ -12,7 +12,7 @@ const StrategyList = React.createClass({
         return (
             <div>{strategyNodes}</div>
             );
-    }
+    },
 });
 
 module.exports = StrategyList;

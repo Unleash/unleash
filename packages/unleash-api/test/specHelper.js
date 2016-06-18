@@ -17,7 +17,7 @@ const app = require('../app')({
     eventDb,
     eventStore,
     featureDb,
-    strategyDb
+    strategyDb,
 });
 
 Promise.promisifyAll(request);
@@ -26,73 +26,73 @@ request = request(app);
 function createStrategies() {
     return Promise.map([
         {
-            name: "default",
-            description: "Default on or off Strategy.",
-            parametersTemplate: {}
+            name: 'default',
+            description: 'Default on or off Strategy.',
+            parametersTemplate: {},
         },
         {
-            name: "usersWithEmail",
-            description: "Active for users defined  in the comma-separated emails-parameter.",
+            name: 'usersWithEmail',
+            description: 'Active for users defined  in the comma-separated emails-parameter.',
             parametersTemplate: {
-                emails: "String"
-            }
-        }
+                emails: 'String',
+            },
+        },
     ], strategy => strategyDb._createStrategy(strategy));
 }
 
 function createFeatures() {
     return Promise.map([
         {
-            name: "featureX",
-            description: "the #1 feature",
+            name: 'featureX',
+            description: 'the #1 feature',
             enabled: true,
-            strategy: "default"
+            strategy: 'default',
         },
         {
-            name: "featureY",
-            description: "soon to be the #1 feature",
+            name: 'featureY',
+            description: 'soon to be the #1 feature',
             enabled: false,
-            strategy: "baz",
+            strategy: 'baz',
             parameters: {
-                foo: "bar"
-            }
+                foo: 'bar',
+            },
         },
         {
-            name: "featureZ",
-            description: "terrible feature",
+            name: 'featureZ',
+            description: 'terrible feature',
             enabled: true,
-            strategy: "baz",
+            strategy: 'baz',
             parameters: {
-                foo: "rab"
-            }
+                foo: 'rab',
+            },
         },
         {
-            name: "featureArchivedX",
-            description: "the #1 feature",
+            name: 'featureArchivedX',
+            description: 'the #1 feature',
             enabled: true,
             archived: true,
-            strategy: "default"
+            strategy: 'default',
         },
         {
-            name: "featureArchivedY",
-            description: "soon to be the #1 feature",
+            name: 'featureArchivedY',
+            description: 'soon to be the #1 feature',
             enabled: false,
             archived: true,
-            strategy: "baz",
+            strategy: 'baz',
             parameters: {
-                foo: "bar"
-            }
+                foo: 'bar',
+            },
         },
         {
-            name: "featureArchivedZ",
-            description: "terrible feature",
+            name: 'featureArchivedZ',
+            description: 'terrible feature',
             enabled: true,
             archived: true,
-            strategy: "baz",
+            strategy: 'baz',
             parameters: {
-                foo: "rab"
-            }
-        }
+                foo: 'rab',
+            },
+        },
     ], feature => featureDb._createFeature(feature));
 }
 
@@ -119,6 +119,6 @@ module.exports = {
         setup: setupDatabase,
         resetAndSetup() {
             return resetDatabase().then(setupDatabase);
-        }
-    }
+        },
+    },
 };

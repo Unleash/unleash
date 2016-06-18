@@ -7,16 +7,16 @@ const StrategyActions   = require('../../stores/StrategyActions');
 const StrategiesComponent = React.createClass({
     getInitialState() {
         return {
-            createView: false
+            createView: false,
         };
     },
 
     onNewStrategy() {
-        this.setState({createView: true});
+        this.setState({ createView: true });
     },
 
     onCancelNewStrategy() {
-        this.setState({createView: false});
+        this.setState({ createView: false });
     },
 
     onSave(strategy) {
@@ -48,15 +48,15 @@ const StrategiesComponent = React.createClass({
                 onCancelNewStrategy={this.onCancelNewStrategy}
                 onSave={this.onSave}
                 />);
-            },
+    },
 
-            renderCreateButton() {
-                return (
+    renderCreateButton() {
+        return (
                     <button className="mal" onClick={this.onNewStrategy}>
                         Create strategy
                     </button>
                 );
-            }
-        });
+    },
+});
 
 module.exports = StrategiesComponent;

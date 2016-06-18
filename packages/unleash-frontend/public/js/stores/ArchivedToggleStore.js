@@ -40,7 +40,7 @@ const FeatureStore = Reflux.createStore({
 
     initStore(archivedToggles) {
         _archivedToggles = archivedToggles;
-    }
+    },
 });
 
 module.exports = FeatureStore;

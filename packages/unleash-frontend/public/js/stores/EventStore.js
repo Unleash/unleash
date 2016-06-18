@@ -8,7 +8,7 @@ const EventStore = {
         return reqwest({
             url: 'events',
             method: 'get',
-            type: TYPE
+            type: TYPE,
         });
     },
 
@@ -16,9 +16,9 @@ const EventStore = {
         return reqwest({
             url: `events/${name}`,
             method: 'get',
-            type: TYPE
+            type: TYPE,
         });
-    }
+    },
 
 };
 

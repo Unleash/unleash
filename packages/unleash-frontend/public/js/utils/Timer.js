@@ -7,7 +7,7 @@ const Timer = function(cb, interval) {
 
 Timer.prototype.start = function() {
     if (this.timerId != null) {
-        console.warn("timer already started");
+        console.warn('timer already started');
     }
 
     console.log('starting timer');

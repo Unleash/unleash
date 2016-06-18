@@ -17,7 +17,7 @@ const StrategyAPI = {
             },
             success() {
                 cb(null, strategy);
-            }
+            },
         });
     },
 
@@ -31,7 +31,7 @@ const StrategyAPI = {
             },
             success() {
                 cb(null, strategy);
-            }
+            },
         });
     },
 
@@ -45,9 +45,9 @@ const StrategyAPI = {
             },
             success(data) {
                 cb(null, data.strategies);
-            }
+            },
         });
-    }
+    },
 };
 
 module.exports = StrategyAPI;

@@ -6,7 +6,7 @@ module.exports = function(db) {
         return db('events').insert({
             type: event.type,
             created_by: event.createdBy, // eslint-disable-line
-            data: event.data
+            data: event.data,
         });
     }
 
@@ -22,7 +22,7 @@ module.exports = function(db) {
         return db
         .select(EVENT_COLUMNS)
         .from('events')
-        .whereRaw("data ->> 'name' = ?", [name])
+        .whereRaw('data ->> \'name\' = ?', [name])
         .orderBy('created_at', 'desc')
         .map(rowToEvent);
     }
@@ -33,14 +33,14 @@ module.exports = function(db) {
             type: row.type,
             createdBy: row.created_by,
             createdAt: row.created_at,
-            data: row.data
+            data: row.data,
         };
     }
 
     return {
         store: storeEvent,
         getEvents,
-        getEventsFilterByName
+        getEventsFilterByName,
     };
 };
 

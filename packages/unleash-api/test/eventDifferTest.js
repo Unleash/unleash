@@ -7,7 +7,7 @@ describe('eventDiffer', () => {
     it('fails if events include an unknown event type', () => {
         const events = [
             { type: eventType.featureCreated, data: {} },
-            { type: 'unknown-type', data: {} }
+            { type: 'unknown-type', data: {} },
         ];
 
         assert.throws(() => {
@@ -22,19 +22,19 @@ describe('eventDiffer', () => {
         const events = [
             {
                 type: eventType.featureUpdated,
-                data: { name, description: desc, strategy: 'default', enabled: true, parameters: { value: 2 } }
+                data: { name, description: desc, strategy: 'default', enabled: true, parameters: { value: 2 } },
             },
             {
                 type: eventType.featureCreated,
-                data: { name, description: desc, strategy: 'default', enabled: false, parameters: { value: 1 } }
-            }
+                data: { name, description: desc, strategy: 'default', enabled: false, parameters: { value: 1 } },
+            },
         ];
 
         eventDiffer.addDiffs(events);
 
         assert.deepEqual(events[0].diffs, [
-            { kind: 'E', path: ["enabled"], lhs: false, rhs: true },
-            { kind: 'E', path: ["parameters", "value"], lhs: 1, rhs: 2 }
+            { kind: 'E', path: ['enabled'], lhs: false, rhs: true },
+            { kind: 'E', path: ['parameters', 'value'], lhs: 1, rhs: 2 },
         ]);
 
         assert.strictEqual(events[1].diffs, null);
@@ -44,20 +44,20 @@ describe('eventDiffer', () => {
         const events = [
             {
                 type: eventType.featureUpdated,
-                data: { name: 'bar', description: 'desc', strategy: 'default', enabled: true, parameters: {} }
+                data: { name: 'bar', description: 'desc', strategy: 'default', enabled: true, parameters: {} },
             },
             {
                 type: eventType.featureUpdated,
-                data: { name: 'foo', description: 'desc', strategy: 'default', enabled: false, parameters: {} }
+                data: { name: 'foo', description: 'desc', strategy: 'default', enabled: false, parameters: {} },
             },
             {
                 type: eventType.featureCreated,
-                data: { name: 'bar', description: 'desc', strategy: 'default', enabled: false, parameters: {} }
+                data: { name: 'bar', description: 'desc', strategy: 'default', enabled: false, parameters: {} },
             },
             {
                 type: eventType.featureCreated,
-                data: { name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {} }
-            }
+                data: { name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {} },
+            },
         ];
 
         eventDiffer.addDiffs(events);
@@ -72,12 +72,12 @@ describe('eventDiffer', () => {
         const events = [
             {
                 type: eventType.featureUpdated,
-                data: { name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {} }
+                data: { name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {} },
             },
             {
                 type: eventType.featureCreated,
-                data: { name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {} }
-            }
+                data: { name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {} },
+            },
         ];
 
         eventDiffer.addDiffs(events);
@@ -88,8 +88,8 @@ describe('eventDiffer', () => {
         const events = [
             {
                 type: eventType.featureUpdated,
-                data: { name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {} }
-            }
+                data: { name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {} },
+            },
         ];
 
         eventDiffer.addDiffs(events);

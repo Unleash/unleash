@@ -4,14 +4,14 @@ const diff          = require('deep-diff').diff;
 
 const strategyTypes = [
     eventType.strategyCreated,
-    eventType.strategyDeleted
+    eventType.strategyDeleted,
 ];
 
 const featureTypes  = [
     eventType.featureCreated,
     eventType.featureUpdated,
     eventType.featureArchived,
-    eventType.featureRevived
+    eventType.featureRevived,
 ];
 
 function baseTypeFor(event) {
@@ -74,5 +74,5 @@ function addDiffs(events) {
 
 
 module.exports = {
-    addDiffs
+    addDiffs,
 };

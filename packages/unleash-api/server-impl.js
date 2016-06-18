@@ -21,7 +21,7 @@ function start(options) {
         eventStore,
         featureDb,
         strategyDb,
-        publicFolder: options.publicFolder
+        publicFolder: options.publicFolder,
     };
 
     const app = require('./app')(config);
@@ -33,7 +33,7 @@ function start(options) {
     return {
         app,
         server,
-        config
+        config,
     };
 }
 
@@ -43,5 +43,5 @@ process.on('uncaughtException', err => {
 });
 
 module.exports = {
-    start
+    start,
 };

@@ -24,7 +24,7 @@ const FeatureStore = Reflux.createStore({
                 this.addError(e.msg);
             });
         } else if (error.status === 0) {
-            this.addError("server unreachable");
+            this.addError('server unreachable');
         } else {
             this.addError(error);
         }
@@ -52,7 +52,7 @@ const FeatureStore = Reflux.createStore({
         } catch (e) {
             if (e instanceof SyntaxError) {
                 // fall through;
-                console.log("Syntax error!");
+                console.log('Syntax error!');
             } else {
                 throw e;
             }
@@ -63,7 +63,7 @@ const FeatureStore = Reflux.createStore({
 
     getErrors() {
         return this.errors;
-    }
+    },
 });
 
 module.exports = FeatureStore;

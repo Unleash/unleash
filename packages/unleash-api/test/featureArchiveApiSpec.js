@@ -1,30 +1,30 @@
 'use strict';
-var assert     = require('assert');
-var specHelper = require('./specHelper');
-var request    = specHelper.request;
-var stringify  = function (o) {
+const assert     = require('assert');
+const specHelper = require('./specHelper');
+const request    = specHelper.request;
+const stringify  = function (o) {
     return JSON.stringify(o, null, ' ');
 };
 
-describe('The archive features api', function () {
-    beforeEach(function (done) {
+describe('The archive features api', () => {
+    beforeEach(done => {
         specHelper.db.resetAndSetup()
             .then(done.bind(null, null))
             .catch(done);
     });
 
-    it('returns three archived toggles', function (done) {
+    it('returns three archived toggles', done => {
         request
             .get('/archive/features')
             .expect('Content-Type', /json/)
             .expect(200)
-            .end(function (err, res) {
-                assert(res.body.features.length === 3, "expected 3 features, got " + stringify(res.body));
+            .end((err, res) => {
+                assert(res.body.features.length === 3, `expected 3 features, got ${stringify(res.body)}`);
                 done();
             });
     });
 
-    it('revives a feature by name', function (done) {
+    it('revives a feature by name', done => {
         request
             .post('/archive/revive')
             .send({ name: 'featureArchivedX' })
@@ -32,7 +32,7 @@ describe('The archive features api', function () {
             .expect(200, done);
     });
 
-    it('must set name when reviving toggle', function (done) {
+    it('must set name when reviving toggle', done => {
         request
             .post('/archive/revive')
             .expect(400, done);

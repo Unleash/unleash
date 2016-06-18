@@ -1,10 +1,11 @@
-var React = require('react');
-var FeatureForm = require('./FeatureForm');
-var LogEntryList = require('../log/LogEntryList');
-var eventStore = require('../../stores/EventStore');
+'use strict';
+const React = require('react');
+const FeatureForm = require('./FeatureForm');
+const LogEntryList = require('../log/LogEntryList');
+const eventStore = require('../../stores/EventStore');
 
-var Feature = React.createClass({
-    getInitialState: function() {
+const Feature = React.createClass({
+    getInitialState() {
         return {
             editMode: false,
             showHistory: false,
@@ -12,33 +13,33 @@ var Feature = React.createClass({
         };
     },
 
-    handleEventsResponse: function(response) {
+    handleEventsResponse(response) {
       this.setState({events: response});
     },
 
-    toggleHistory: function() {
+    toggleHistory() {
         eventStore.getEventsByName(this.props.feature.name).then(this.handleEventsResponse);
         this.setState({showHistory: !this.state.showHistory});
     },
 
 
-    toggleEditMode: function() {
+    toggleEditMode() {
         this.setState({editMode: !this.state.editMode});
     },
 
-    saveFeature: function(feature) {
+    saveFeature(feature) {
         this.props.onChange(feature);
         this.toggleEditMode();
     },
 
-    archiveFeature: function() {
-        if (window.confirm("Are you sure you want to delete " + this.props.feature.name + "?")) {
+    archiveFeature() {
+        if (window.confirm(`Are you sure you want to delete ${this.props.feature.name}?`)) {
             this.props.onArchive(this.props.feature);
         }
     },
 
 
-    renderEditMode: function() {
+    renderEditMode() {
         return (
             <tr>
                 <td colSpan="4" className="pan man no-border">
@@ -53,7 +54,7 @@ var Feature = React.createClass({
 
     },
 
-    render: function() {
+    render() {
         return (
             <tbody className="feature">
                 <tr className={this.state.editMode ? "edit bg-lilac-xlt" : ""}>
@@ -107,11 +108,11 @@ var Feature = React.createClass({
         );
     },
 
-    renderEmptyRow: function() {
+    renderEmptyRow() {
         return (<tr />);
     },
 
-    renderHistory: function() {
+    renderHistory() {
         return (<tr>
                     <td colSpan="4" className="no-border">
                         <LogEntryList events={this.state.events} />

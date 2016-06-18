@@ -1,36 +1,36 @@
 'use strict';
-var specHelper = require('./specHelper');
-var request    = specHelper.request;
+const specHelper = require('./specHelper');
+const request    = specHelper.request;
 
-describe('The strategy api', function () {
-    beforeEach(function (done) {
+describe('The strategy api', () => {
+    beforeEach(done => {
         specHelper.db.resetAndSetup()
             .then(done.bind(null, null))
             .catch(done);
     });
 
-    it('gets all strategies', function (done) {
+    it('gets all strategies', done => {
         request
             .get('/strategies')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
 
-    it('gets a strategy by name', function (done) {
+    it('gets a strategy by name', done => {
         request
             .get('/strategies/default')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
 
-    it('cant get a strategy by name that dose not exist', function (done) {
+    it('cant get a strategy by name that dose not exist', done => {
         request
             .get('/strategies/mystrategy')
             .expect('Content-Type', /json/)
             .expect(404, done);
     });
 
-    it('creates a new strategy', function (done) {
+    it('creates a new strategy', done => {
         request
             .post('/strategies')
             .send({ name: 'myCustomStrategy', description: 'Best strategy ever.' })
@@ -38,7 +38,7 @@ describe('The strategy api', function () {
             .expect(201, done);
     });
 
-    it('requires new strategies to have a name', function (done) {
+    it('requires new strategies to have a name', done => {
         request
             .post('/strategies')
             .send({ name: '' })
@@ -46,7 +46,7 @@ describe('The strategy api', function () {
             .expect(400, done);
     });
 
-    it('refuses to create a strategy with an existing name', function (done) {
+    it('refuses to create a strategy with an existing name', done => {
         request
             .post('/strategies')
             .send({ name: 'default' })
@@ -54,13 +54,13 @@ describe('The strategy api', function () {
             .expect(403, done);
     });
 
-    it('deletes a new strategy', function (done) {
+    it('deletes a new strategy', done => {
         request
             .delete('/strategies/usersWithEmail')
             .expect(200, done);
     });
 
-    it('can\'t delete a strategy that dose not exist', function(done) {
+    it('can\'t delete a strategy that dose not exist', done => {
         request
             .delete('/strategies/unknown')
             .expect(404, done);

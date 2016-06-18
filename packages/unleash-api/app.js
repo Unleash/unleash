@@ -1,18 +1,19 @@
-var express = require('express');
-var favicon = require('serve-favicon');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var validator = require('express-validator');
-var log4js = require('log4js');
-var logger = require('./lib/logger');
-var routes = require('./lib/routes');
-var path = require('path');
+'use strict';
+const express = require('express');
+const favicon = require('serve-favicon');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const validator = require('express-validator');
+const log4js = require('log4js');
+const logger = require('./lib/logger');
+const routes = require('./lib/routes');
+const path = require('path');
 
 module.exports = function(config) {
-    var app = express();
-    var router = express.Router();
-    var baseUriPath  = config.baseUriPath || '';
-    var publicFolder = config.publicFolder;
+    const app = express();
+    const router = express.Router();
+    const baseUriPath  = config.baseUriPath || '';
+    const publicFolder = config.publicFolder;
 
     app.set('trust proxy');
     app.set('port', config.port);

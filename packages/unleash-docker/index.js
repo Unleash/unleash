@@ -1,3 +1,3 @@
 'use strict';
-var unleash = require('unleash-server');
+const unleash = require('unleash-server');
 unleash.start({});

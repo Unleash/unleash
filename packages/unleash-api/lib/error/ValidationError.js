@@ -1,4 +1,5 @@
-var util = require('util');
+'use strict';
+const util = require('util');
 
 function ValidationError(message) {
     Error.call(this);

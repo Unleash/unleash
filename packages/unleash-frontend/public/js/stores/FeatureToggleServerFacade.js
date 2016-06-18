@@ -1,94 +1,95 @@
-var reqwest = require('reqwest');
+'use strict';
+const reqwest = require('reqwest');
 
-var TYPE         = 'json';
-var CONTENT_TYPE = 'application/json';
+const TYPE         = 'json';
+const CONTENT_TYPE = 'application/json';
 
-var FeatureToggleServerFacade = {
-    updateFeature: function (feature, cb) {
+const FeatureToggleServerFacade = {
+    updateFeature(feature, cb) {
         reqwest({
-            url: 'features/' + feature.name,
+            url: `features/${feature.name}`,
             method: 'put',
             type: TYPE,
             contentType: CONTENT_TYPE,
             data: JSON.stringify(feature),
-            error: function(error) {
+            error(error) {
                 cb(error);
             },
-            success: function() {
+            success() {
                 cb();
             }
         });
     },
 
-    createFeature: function (feature, cb) {
+    createFeature(feature, cb) {
         reqwest({
             url: 'features',
             method: 'post',
             type: TYPE,
             contentType: CONTENT_TYPE,
             data: JSON.stringify(feature),
-            error: function(error) {
+            error(error) {
                 cb(error);
             },
-            success: function() {
+            success() {
                 cb();
             }
         });
     },
 
-    archiveFeature: function(feature, cb) {
+    archiveFeature(feature, cb) {
         reqwest({
-            url: 'features/' + feature.name,
+            url: `features/${feature.name}`,
             method: 'delete',
             type: TYPE,
-            error: function(error) {
+            error(error) {
                 cb(error);
             },
-            success: function() {
+            success() {
                 cb();
             }
         });
     },
 
-    getFeatures: function(cb) {
+    getFeatures(cb) {
         reqwest({
             url: 'features',
             method: 'get',
             type: TYPE,
-            error: function(error) {
+            error(error) {
                 cb(error);
             },
-            success: function(data) {
+            success(data) {
                 cb(null, data.features);
             }
         });
     },
 
-    getArchivedFeatures: function(cb) {
+    getArchivedFeatures(cb) {
         reqwest({
             url: 'archive/features',
             method: 'get',
             type: TYPE,
-            error: function(error) {
+            error(error) {
                 cb(error);
             },
-            success: function(data) {
+            success(data) {
                 cb(null, data.features);
             }
         });
     },
 
-    reviveFeature: function (feature, cb) {
+    reviveFeature(feature, cb) {
         reqwest({
             url: 'archive/revive',
             method: 'post',
             type: TYPE,
             contentType: CONTENT_TYPE,
             data: JSON.stringify(feature),
-            error: function(error) {
+            error(error) {
                 cb(error);
             },
-            success: function() {
+            success() {
                 cb();
             }
         });

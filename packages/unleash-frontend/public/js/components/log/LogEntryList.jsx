@@ -1,21 +1,20 @@
-var React = require('react'),
-LogEntry = require('./LogEntry');
+'use strict';
+const React = require('react');
+const LogEntry = require('./LogEntry');
 
-var LogEntryList = React.createClass({
+const LogEntryList = React.createClass({
     propTypes: {
         events: React.PropTypes.array.isRequired
     },
 
-    getInitialState: function() {
+    getInitialState() {
         return {
             showFullEvents: false
         };
     },
 
-    render: function() {
-        var logEntryNodes = this.props.events.map(function(event) {
-            return <LogEntry event={event} key={event.id} showFullEvents={this.state.showFullEvents} />;
-        }.bind(this));
+    render() {
+        const logEntryNodes = this.props.events.map(event => <LogEntry event={event} key={event.id} showFullEvents={this.state.showFullEvents} />);
 
         return (
             <div>
@@ -48,7 +47,7 @@ var LogEntryList = React.createClass({
         );
     },
 
-    toggleFullEvents: function() {
+    toggleFullEvents() {
         this.setState({showFullEvents: !this.state.showFullEvents});
     }
 

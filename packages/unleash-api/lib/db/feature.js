@@ -1,24 +1,17 @@
-var eventType       = require('../eventType');
-var logger          = require('../logger');
-var NotFoundError   = require('../error/NotFoundError');
-var FEATURE_COLUMNS = ['name', 'description', 'enabled', 'strategy_name', 'parameters'];
+'use strict';
+const eventType       = require('../eventType');
+const logger          = require('../logger');
+const NotFoundError   = require('../error/NotFoundError');
+const FEATURE_COLUMNS = ['name', 'description', 'enabled', 'strategy_name', 'parameters'];
 
 module.exports = function(db, eventStore) {
-    eventStore.on(eventType.featureCreated, function (event) {
-        return createFeature(event.data);
-    });
+    eventStore.on(eventType.featureCreated, event => createFeature(event.data));
 
-    eventStore.on(eventType.featureUpdated, function (event) {
-        return updateFeature(event.data);
-    });
+    eventStore.on(eventType.featureUpdated, event => updateFeature(event.data));
 
-    eventStore.on(eventType.featureArchived, function (event) {
-        return archiveFeature(event.data);
-    });
+    eventStore.on(eventType.featureArchived, event => archiveFeature(event.data));
 
-    eventStore.on(eventType.featureRevived, function (event) {
-        return reviveFeature(event.data);
-    });
+    eventStore.on(eventType.featureRevived, event => reviveFeature(event.data));
 
     function getFeatures() {
         return db
@@ -33,7 +26,7 @@ module.exports = function(db, eventStore) {
         return db
             .first(FEATURE_COLUMNS)
             .from('features')
-            .where({ name: name })
+            .where({ name })
             .then(rowToFeature);
     }
 
@@ -75,7 +68,7 @@ module.exports = function(db, eventStore) {
     function createFeature(data) {
         return db('features')
             .insert(eventDataToRow(data))
-            .catch(function (err) {
+            .catch(err => {
                 logger.error('Could not insert feature, error was: ', err);
             });
     }
@@ -84,7 +77,7 @@ module.exports = function(db, eventStore) {
         return db('features')
             .where({ name: data.name })
             .update(eventDataToRow(data))
-            .catch(function (err) {
+            .catch(err => {
                 logger.error('Could not update feature, error was: ', err);
             });
     }
@@ -93,7 +86,7 @@ module.exports = function(db, eventStore) {
         return db('features')
             .where({ name: data.name })
             .update({ archived: 1 })
-            .catch(function (err) {
+            .catch(err => {
                 logger.error('Could not archive feature, error was: ', err);
             });
     }
@@ -102,16 +95,16 @@ module.exports = function(db, eventStore) {
         return db('features')
             .where({ name: data.name })
             .update({ archived: 0, enabled: 0 })
-            .catch(function (err) {
+            .catch(err => {
                 logger.error('Could not archive feature, error was: ', err);
             });
     }
 
 
     return {
-        getFeatures: getFeatures,
-        getFeature: getFeature,
-        getArchivedFeatures: getArchivedFeatures,
+        getFeatures,
+        getFeature,
+        getArchivedFeatures,
         _createFeature: createFeature, // visible for testing
         _updateFeature: updateFeature  // visible for testing
     };

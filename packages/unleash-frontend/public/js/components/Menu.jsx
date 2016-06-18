@@ -1,8 +1,9 @@
-var React = require('react');
-var User = require('./User');
+'use strict';
+const React = require('react');
+const User = require('./User');
 
-var Menu = React.createClass({
-    render: function() { return (
+const Menu = React.createClass({
+    render() { return (
 <div className="topbar mbl">
 <div className="container">
   <div className="page">

@@ -22,7 +22,7 @@ module.exports = function(db) {
         return db
         .select(EVENT_COLUMNS)
         .from('events')
-        .whereRaw('data ->> "name" = ?', [name])
+        .whereRaw('data ->> \'name\' = ?', [name])
         .orderBy('created_at', 'desc')
         .map(rowToEvent);
     }

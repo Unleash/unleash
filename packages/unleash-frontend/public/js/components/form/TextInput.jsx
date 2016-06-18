@@ -8,12 +8,12 @@ const TextInput = React.createClass({
         id: React.PropTypes.string.isRequired,
         placeholder: React.PropTypes.string,
         value: React.PropTypes.string,
-        required: React.PropTypes.bool
+        required: React.PropTypes.bool,
     },
 
     getDefaultProps() {
         return {
-            required: false
+            required: false,
         };
     },
 
@@ -41,7 +41,7 @@ const TextInput = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 module.exports = TextInput;

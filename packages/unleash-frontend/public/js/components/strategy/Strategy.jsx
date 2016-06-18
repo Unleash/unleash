@@ -3,7 +3,7 @@ const React          = require('react');
 
 const Strategy = React.createClass({
     propTypes: {
-        strategy: React.PropTypes.object.isRequired
+        strategy: React.PropTypes.object.isRequired,
     },
 
     onRemove(event) {
@@ -25,7 +25,7 @@ const Strategy = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 module.exports = Strategy;

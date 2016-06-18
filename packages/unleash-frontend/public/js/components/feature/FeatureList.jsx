@@ -7,37 +7,35 @@ const noop = function() {};
 const FeatureList = React.createClass({
     propTypes: {
         features: React.PropTypes.array.isRequired,
-        strategies: React.PropTypes.array.isRequired
+        strategies: React.PropTypes.array.isRequired,
     },
 
     getDefaultProps() {
         return {
             onFeatureChanged: noop,
-            onFeatureArchive: noop
+            onFeatureArchive: noop,
         };
     },
 
     getInitialState() {
         return {
-            filter: undefined
+            filter: undefined,
         };
     },
 
     onFilterChange(e) {
         e.preventDefault();
-        this.setState({filter: e.target.value.trim()});
+        this.setState({ filter: e.target.value.trim() });
     },
 
     filteredFeatures() {
-        if(this.state.filter) {
-            const regex = new RegExp(this.state.filter, "i");
+        if (this.state.filter) {
+            const regex = new RegExp(this.state.filter, 'i');
 
             return this.props.features.filter(item => regex.test(item.name) || regex.test(item.strategy));
-
         } else {
             return this.props.features;
         }
-
     },
 
     render() {
@@ -50,8 +48,8 @@ const FeatureList = React.createClass({
           />);
 
         return (
-            <div className=''>
-                <table className='outerborder man'>
+            <div className="">
+                <table className="outerborder man">
                     <thead>
                         <tr>
                             <th></th>
@@ -78,7 +76,7 @@ const FeatureList = React.createClass({
                 </table>
             </div>
           );
-    }
+    },
 });
 
 module.exports = FeatureList;

@@ -1,5 +1,5 @@
 'use strict';
-const Reflux = require("reflux");
+const Reflux = require('reflux');
 const StrategyAPI = require('./StrategyAPI');
 
 const StrategyActions = Reflux.createActions({

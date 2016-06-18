@@ -6,23 +6,23 @@ const ErrorActions  = require('../stores/ErrorActions');
 
 const ErrorMessages = React.createClass({
     getInitialState() {
-      return {
-        errors: ErrorStore.getErrors()
-      };
+        return {
+            errors: ErrorStore.getErrors(),
+        };
     },
 
     onStoreChange() {
-      this.setState({
-        errors: ErrorStore.getErrors()
-      });
+        this.setState({
+            errors: ErrorStore.getErrors(),
+        });
     },
 
     componentDidMount() {
-      this.unsubscribe = ErrorStore.listen(this.onStoreChange);
+        this.unsubscribe = ErrorStore.listen(this.onStoreChange);
     },
 
     componentWillUnmount() {
-      this.unsubscribe();
+        this.unsubscribe();
     },
 
     onClearErrors() {
@@ -33,7 +33,7 @@ const ErrorMessages = React.createClass({
         return (
             <Ui errors={this.state.errors} onClearErrors={this.onClearErrors}></Ui>
         );
-    }
+    },
 });
 
 module.exports = ErrorMessages;

@@ -4,13 +4,13 @@ const UserStore = require('../stores/UserStore');
 
 const User = React.createClass({
 
-  onSave() {
-    const value = this.refs.username.getDOMNode().value.trim();
-    UserStore.set(value);
-  },
+    onSave() {
+        const value = this.refs.username.getDOMNode().value.trim();
+        UserStore.set(value);
+    },
 
-  render() {
-    return (
+    render() {
+        return (
       <div className="r-pvm">
         <input type="text" placeholder="username"
           ref="username"
@@ -18,7 +18,7 @@ const User = React.createClass({
           onBlur={this.onSave} />
       </div>
     );
-  }
+    },
 });
 
 module.exports = User;

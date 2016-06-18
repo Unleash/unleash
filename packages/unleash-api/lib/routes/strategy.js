@@ -1,5 +1,5 @@
 'use strict';
-const Promise             = require("bluebird");
+const Promise             = require('bluebird');
 const eventType           = require('../eventType');
 const logger              = require('../logger');
 const NameExistsError     = require('../error/NameExistsError');
@@ -33,12 +33,12 @@ module.exports = function (app, config) {
 
         strategyDb.getStrategy(strategyName)
             .then(() => eventStore.create({
-            type: eventType.strategyDeleted,
-            createdBy: extractUser(req),
-            data: {
-                name: strategyName
-            }
-        }))
+                type: eventType.strategyDeleted,
+                createdBy: extractUser(req),
+                data: {
+                    name: strategyName,
+                },
+            }))
             .then(() => {
                 res.status(200).end();
             })
@@ -60,10 +60,10 @@ module.exports = function (app, config) {
         validateRequest(req)
             .then(validateStrategyName)
             .then(() => eventStore.create({
-            type: eventType.strategyCreated,
-            createdBy: extractUser(req),
-            data: newStrategy
-        }))
+                type: eventType.strategyCreated,
+                createdBy: extractUser(req),
+                data: newStrategy,
+            }))
             .then(() => {
                 res.status(201).end();
             })
@@ -74,7 +74,7 @@ module.exports = function (app, config) {
                 res.status(400).json(req.validationErrors());
             })
             .catch(err => {
-                logger.error("Could not create strategy", err);
+                logger.error('Could not create strategy', err);
                 res.status(500).end();
             });
     });
@@ -83,7 +83,7 @@ module.exports = function (app, config) {
         return new Promise((resolve, reject) => {
             strategyDb.getStrategy(req.body.name)
                 .then(() => {
-                    reject(new NameExistsError("Feature name already exist"));
+                    reject(new NameExistsError('Feature name already exist'));
                 }, () => {
                     resolve(req);
                 });

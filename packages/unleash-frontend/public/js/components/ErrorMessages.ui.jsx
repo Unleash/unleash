@@ -29,7 +29,7 @@ const ErrorMessages = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 module.exports = ErrorMessages;

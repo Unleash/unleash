@@ -7,38 +7,38 @@ const FeatureForm = React.createClass({
         return {
             strategyOptions: this.props.strategies,
             requiredParams: [],
-            currentStrategy: this.props.feature ? this.props.feature.strategy : "default"
+            currentStrategy: this.props.feature ? this.props.feature.strategy : 'default',
         };
     },
 
     componentWillMount() {
-        if(this.props.feature) {
+        if (this.props.feature) {
             this.setSelectedStrategy(this.props.feature.strategy);
         }
     },
 
     onStrategyChange(e) {
         this.setSelectedStrategy(e.target.value);
-        this.setState({currentStrategy: e.target.value});
+        this.setState({ currentStrategy: e.target.value });
     },
 
     getParameterValue(name) {
-        if(this.props.feature && this.props.feature.parameters) {
+        if (this.props.feature && this.props.feature.parameters) {
             return this.props.feature.parameters[name];
         } else {
-            return "";
+            return '';
         }
     },
 
     setSelectedStrategy(name) {
         const selectedStrategy = this.props.strategies.filter(strategy => strategy.name ===  name)[0];
 
-        if(selectedStrategy) {
+        if (selectedStrategy) {
             this.setStrategyParams(selectedStrategy);
         } else {
             this.setState({
                 currentStrategy: 'default',
-                requiredParams: []
+                requiredParams: [],
             });
         }
     },
@@ -46,17 +46,17 @@ const FeatureForm = React.createClass({
     setStrategyParams(strategy) {
         const requiredParams = [];
         let key;
-        for(key in strategy.parametersTemplate) {
-            requiredParams.push({name: key, value: this.getParameterValue(key)});
+        for (key in strategy.parametersTemplate) {
+            requiredParams.push({ name: key, value: this.getParameterValue(key) });
         }
-        this.setState({requiredParams});
+        this.setState({ requiredParams });
     },
 
     render() {
         const feature = this.props.feature || {
             name: '',
             strategy: 'default',
-            enabled: false
+            enabled: false,
         };
 
         const idPrefix = this.props.feature ? this.props.feature.name : 'new';
@@ -66,7 +66,7 @@ const FeatureForm = React.createClass({
                 <form ref="form" className="r-size1of2">
 
                     <fieldset>
-                        {this.props.feature ? "" : <legend>Create new toggle</legend>}
+                        {this.props.feature ? '' : <legend>Create new toggle</legend>}
 
                         <TextInput
                             id={`${idPrefix}-name`}
@@ -150,7 +150,7 @@ const FeatureForm = React.createClass({
             description: this.refs.description.getValue(),
             strategy: this.state.currentStrategy,
             enabled: this.refs.enabled.getDOMNode().checked,
-            parameters: this.getParameters()
+            parameters: this.getParameters(),
         };
 
         this.props.onSubmit(feature);
@@ -167,7 +167,7 @@ const FeatureForm = React.createClass({
             parameters[param.name] = this.refs[param.name].getValue();
         });
         return parameters;
-    }
+    },
 });
 
 module.exports = FeatureForm;

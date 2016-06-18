@@ -6,7 +6,7 @@ const DIFF_PREFIXES = {
     A: ' ',
     E: ' ',
     D: '-',
-    N: '+'
+    N: '+',
 };
 
 const SPADEN_CLASS = {
@@ -18,7 +18,7 @@ const SPADEN_CLASS = {
 
 const LogEntry = React.createClass({
     propTypes: {
-        event: React.PropTypes.object.isRequired
+        event: React.PropTypes.object.isRequired,
     },
 
     render() {
@@ -33,7 +33,7 @@ const LogEntry = React.createClass({
             <td>
             <strong>{this.props.event.data.name}</strong><em>[{this.props.event.type}]</em>
             </td>
-            <td style={{maxWidth: 300}}>
+            <td style={{ maxWidth: 300 }}>
               {this.renderEventDiff()}
             </td>
             <td>{this.props.event.createdBy}</td>
@@ -48,14 +48,14 @@ const LogEntry = React.createClass({
 
         const prettyPrinted = JSON.stringify(localEventData, null, 2);
 
-        return (<code className='JSON smalltext man'>{prettyPrinted}</code>);
+        return (<code className="JSON smalltext man">{prettyPrinted}</code>);
     },
 
     renderEventDiff() {
         if (!this.props.showFullEvents && this.props.event.diffs) {
             const changes = this.props.event.diffs.map(this.buildDiff);
             return (
-                <code className='smalltext man'>{changes.length === 0 ? '(no changes)' : changes}</code>
+                <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>
             );
         } else {
             return this.renderFullEventData();
@@ -81,7 +81,7 @@ const LogEntry = React.createClass({
         }
 
         return (<div key={idx}>{change}</div>);
-    }
+    },
 
 });
 

@@ -57,7 +57,7 @@ const Menu = React.createClass({
 </div>
 </div>
         );
-    }
+    },
 });
 
 module.exports = Menu;

@@ -8,18 +8,18 @@ const LogEntriesComponent = React.createClass({
     getInitialState() {
         return {
             createView: false,
-            events: []
+            events: [],
         };
     },
 
     componentDidMount() {
         eventStore.getEvents().then(res => {
-            this.setState({events: res.events});
+            this.setState({ events: res.events });
         }, this.initError);
     },
 
     initError() {
-        ErrorActions.error("Could not load events from server");
+        ErrorActions.error('Could not load events from server');
     },
 
     render() {

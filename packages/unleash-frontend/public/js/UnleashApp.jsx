@@ -12,32 +12,32 @@ const RouteHandler = Router.RouteHandler;
 
 const UnleashApp = React.createClass({
     contextTypes: {
-        router: React.PropTypes.func
+        router: React.PropTypes.func,
     },
 
     getInitialState() {
         return {
-            features:           FeatureToggleStore.getFeatureToggles(),
-            strategies:         StrategyStore.getStrategies(),
-            archivedFeatures:   ArchiveStore.getArchivedToggles()
+            features: FeatureToggleStore.getFeatureToggles(),
+            strategies: StrategyStore.getStrategies(),
+            archivedFeatures: ArchiveStore.getArchivedToggles(),
         };
     },
 
     onFeatureToggleChange() {
         this.setState({
-            features: FeatureToggleStore.getFeatureToggles()
+            features: FeatureToggleStore.getFeatureToggles(),
         });
     },
 
     onStrategiesChange() {
         this.setState({
-            strategies: StrategyStore.getStrategies()
+            strategies: StrategyStore.getStrategies(),
         });
     },
 
     onArchiveChange() {
         this.setState({
-            archivedFeatures: ArchiveStore.getArchivedToggles()
+            archivedFeatures: ArchiveStore.getArchivedToggles(),
         });
     },
 
@@ -68,10 +68,10 @@ const UnleashApp = React.createClass({
         return (
             <div>
                 <Menu>
-                    {this.renderLink("features",    "Toggles")}
-                    {this.renderLink("strategies",  "Strategies")}
-                    {this.renderLink("log",         "Log")}
-                    {this.renderLink("archive",     "Archive")}
+                    {this.renderLink('features',    'Toggles')}
+                    {this.renderLink('strategies',  'Strategies')}
+                    {this.renderLink('log',         'Log')}
+                    {this.renderLink('archive',     'Archive')}
                 </Menu>
                 <div className="container">
                     <div className="page">
@@ -91,7 +91,7 @@ const UnleashApp = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 

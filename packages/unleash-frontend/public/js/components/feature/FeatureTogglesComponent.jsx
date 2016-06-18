@@ -8,12 +8,12 @@ const ErrorActions        = require('../../stores/ErrorActions');
 const FeatureTogglesComponent = React.createClass({
     getInitialState() {
         return {
-            createView: false
+            createView: false,
         };
     },
 
     updateFeature(feature) {
-      FeatureActions.update.triggerPromise(feature);
+        FeatureActions.update.triggerPromise(feature);
     },
 
     archiveFeature(feature) {
@@ -26,11 +26,11 @@ const FeatureTogglesComponent = React.createClass({
     },
 
     newFeature() {
-        this.setState({createView: true});
+        this.setState({ createView: true });
     },
 
     cancelNewFeature() {
-        this.setState({createView: false});
+        this.setState({ createView: false });
         ErrorActions.clear();
     },
 
@@ -55,15 +55,15 @@ const FeatureTogglesComponent = React.createClass({
     },
 
     renderCreateView() {
-        return <FeatureForm
+        return (<FeatureForm
             onCancel={this.cancelNewFeature}
             onSubmit={this.createFeature}
-            strategies={this.props.strategies} />;
+            strategies={this.props.strategies} />);
     },
 
     renderCreateButton() {
         return <button className="mal" onClick={this.newFeature}>Create feature toggle</button>;
-    }
+    },
 });
 
 module.exports = FeatureTogglesComponent;

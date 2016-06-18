@@ -9,22 +9,22 @@ const Feature = React.createClass({
         return {
             editMode: false,
             showHistory: false,
-            events: []
+            events: [],
         };
     },
 
     handleEventsResponse(response) {
-      this.setState({events: response});
+        this.setState({ events: response });
     },
 
     toggleHistory() {
         eventStore.getEventsByName(this.props.feature.name).then(this.handleEventsResponse);
-        this.setState({showHistory: !this.state.showHistory});
+        this.setState({ showHistory: !this.state.showHistory });
     },
 
 
     toggleEditMode() {
-        this.setState({editMode: !this.state.editMode});
+        this.setState({ editMode: !this.state.editMode });
     },
 
     saveFeature(feature) {
@@ -51,16 +51,15 @@ const Feature = React.createClass({
                 </td>
             </tr>
             );
-
     },
 
     render() {
         return (
             <tbody className="feature">
-                <tr className={this.state.editMode ? "edit bg-lilac-xlt" : ""}>
+                <tr className={this.state.editMode ? 'edit bg-lilac-xlt' : ''}>
                     <td width="20">
                         <span className=
-                        {this.props.feature.enabled ? "toggle-active" : "toggle-inactive"} title="Status">
+                        {this.props.feature.enabled ? 'toggle-active' : 'toggle-inactive'} title="Status">
                         </span>
                     </td>
                     <td>
@@ -78,23 +77,23 @@ const Feature = React.createClass({
                         <div className="line">
                             <div className="unit size1of3">
                                 <button
-                                    title='Archive'
+                                    title="Archive"
                                     onClick={this.archiveFeature}>
                                     <span className="icon-kryss1" />
                                 </button>
                             </div>
                             <div className="unit size1of3">
                                 <button
-                                    className={this.state.editMode ? "primary" : ""}
-                                    title='Edit'
+                                    className={this.state.editMode ? 'primary' : ''}
+                                    title="Edit"
                                     onClick={this.toggleEditMode}>
                                     <span className="icon-redigere" />
                                 </button>
                             </div>
                             <div className="unit size1of3">
                                 <button
-                                    className={this.state.showHistory ? "primary" : ""}
-                                    title='History'
+                                    className={this.state.showHistory ? 'primary' : ''}
+                                    title="History"
                                     onClick={this.toggleHistory}>
                                     <span className="icon-visning_liste" />
                                 </button>
@@ -118,7 +117,7 @@ const Feature = React.createClass({
                         <LogEntryList events={this.state.events} />
                     </td>
                 </tr>);
-    }
+    },
 
 });
 

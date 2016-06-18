@@ -14,25 +14,25 @@ module.exports = {
     output: {
         path: jsroot,
         filename: 'bundle.js',
-        publicPath: '/js/'
+        publicPath: '/js/',
     },
 
     resolve: {
         root: [jsroot],
         extensions: ['', '.js', '.jsx'],
-        modulesDirectories: ["web_modules", "node_modules"]
+        modulesDirectories: ['web_modules', 'node_modules'],
     },
 
     module: {
         loaders: [
-            { test: /\.jsx$/, loader: 'jsx?harmony' }
-        ]
+            { test: /\.jsx$/, loader: 'jsx?harmony' },
+        ],
     },
 
-    devtool: "source-map",
+    devtool: 'source-map',
 
     externals: {
         // stuff not in node_modules can be resolved here.
-    }
+    },
 
 };

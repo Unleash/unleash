@@ -6,13 +6,13 @@ const StrategyForm = React.createClass({
 
     getDefaultProps() {
         return {
-            maxParams: 4
+            maxParams: 4,
         };
     },
 
     getInitialState() {
         return {
-            parameters: []
+            parameters: [],
         };
     },
 
@@ -27,9 +27,9 @@ const StrategyForm = React.createClass({
         const that = this;
 
         this.state.parameters.forEach(parameter => {
-           const name = that.refs[parameter.name].getDOMNode().value.trim();
-            if(name) {
-                strategy.parametersTemplate[name] = "string";
+            const name = that.refs[parameter.name].getDOMNode().value.trim();
+            if (name) {
+                strategy.parametersTemplate[name] = 'string';
             }
         });
 
@@ -45,15 +45,15 @@ const StrategyForm = React.createClass({
     onAddParam(event) {
         event.preventDefault();
         const id = this.state.parameters.length + 1;
-        const params = this.state.parameters.concat([{id, name: `param_${id}`, label: `Parameter ${id}`}]);
-        this.setState({parameters: params});
+        const params = this.state.parameters.concat([{ id, name: `param_${id}`, label: `Parameter ${id}` }]);
+        this.setState({ parameters: params });
     },
 
     onRemoveParam(event) {
         event.preventDefault();
         const params = this.state.parameters.slice(0, -1);
 
-        this.setState({parameters: params});
+        this.setState({ parameters: params });
     },
 
     render() {
@@ -119,12 +119,12 @@ const StrategyForm = React.createClass({
     },
 
     renderAddLink() {
-        if(this.state.parameters.length < this.props.maxParams) {
+        if (this.state.parameters.length < this.props.maxParams) {
             return <a href="#add" onClick={this.onAddParam}>+ Add required parameter</a>;
         }
     },
     renderRemoveLink() {
-        if(this.state.parameters.length > 0) {
+        if (this.state.parameters.length > 0) {
             return (
                 <div className="formelement mtn">
                     <a href="#add"
@@ -135,7 +135,7 @@ const StrategyForm = React.createClass({
                 </div>
                 );
         }
-    }
+    },
 });
 
 module.exports = StrategyForm;

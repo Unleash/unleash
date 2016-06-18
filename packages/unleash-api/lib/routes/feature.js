@@ -1,5 +1,5 @@
 'use strict';
-const Promise             = require("bluebird");
+const Promise             = require('bluebird');
 const logger              = require('../logger');
 const eventType           = require('../eventType');
 const NameExistsError     = require('../error/NameExistsError');
@@ -35,23 +35,23 @@ module.exports = function (app, config) {
         validateRequest(req)
             .then(validateUniqueName)
             .then(() => eventStore.create({
-            type: eventType.featureCreated,
-            createdBy: extractUser(req),
-            data: req.body
-        }))
+                type: eventType.featureCreated,
+                createdBy: extractUser(req),
+                data: req.body,
+            }))
             .then(() => {
                 res.status(201).end();
             })
             .catch(NameExistsError, () => {
                 res.status(403).json([{
-                    msg: `A feature named '${req.body.name}' already exists. It could be archived.`
+                    msg: `A feature named '${req.body.name}' already exists. It could be archived.`,
                 }]).end();
             })
             .catch(ValidationError, () => {
                 res.status(400).json(req.validationErrors());
             })
             .catch(err => {
-                logger.error("Could not create feature toggle", err);
+                logger.error('Could not create feature toggle', err);
                 res.status(500).end();
             });
     });
@@ -65,10 +65,10 @@ module.exports = function (app, config) {
 
         featureDb.getFeature(featureName)
             .then(() => eventStore.create({
-            type: eventType.featureUpdated,
-            createdBy: userName,
-            data: updatedFeature
-        }))
+                type: eventType.featureUpdated,
+                createdBy: userName,
+                data: updatedFeature,
+            }))
             .then(() => {
                 res.status(200).end();
             })
@@ -87,12 +87,12 @@ module.exports = function (app, config) {
 
         featureDb.getFeature(featureName)
             .then(() => eventStore.create({
-            type: eventType.featureArchived,
-            createdBy: userName,
-            data: {
-                name: featureName
-            }
-        }))
+                type: eventType.featureArchived,
+                createdBy: userName,
+                data: {
+                    name: featureName,
+                },
+            }))
             .then(() => {
                 res.status(200).end();
             })
@@ -109,7 +109,7 @@ module.exports = function (app, config) {
         return new Promise((resolve, reject) => {
             featureDb.getFeature(req.body.name)
                 .then(() => {
-                    reject(new NameExistsError("Feature name already exist"));
+                    reject(new NameExistsError('Feature name already exist'));
                 }, () => {
                     resolve(req);
                 });

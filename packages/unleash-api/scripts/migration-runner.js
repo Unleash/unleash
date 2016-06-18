@@ -13,7 +13,7 @@ module.exports = {
 
         return {
             up: runMigration.bind(null, util.format(format, name, 'up')),
-            down: runMigration.bind(null, util.format(format, name, 'down'))
+            down: runMigration.bind(null, util.format(format, name, 'down')),
         };
-    }
+    },
 };

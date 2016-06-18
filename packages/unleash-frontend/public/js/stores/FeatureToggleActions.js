@@ -1,5 +1,5 @@
 'use strict';
-const Reflux = require("reflux");
+const Reflux = require('reflux');
 const Server = require('./FeatureToggleServerFacade');
 
 const FeatureToggleActions = Reflux.createActions({
@@ -8,7 +8,7 @@ const FeatureToggleActions = Reflux.createActions({
     create: { asyncResult: true },
     update: { asyncResult: true },
     archive: { asyncResult: true },
-    revive: { asyncResult: true }
+    revive: { asyncResult: true },
 });
 
 FeatureToggleActions.init.listen(function() {

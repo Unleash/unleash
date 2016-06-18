@@ -35,7 +35,7 @@ const StrategyStore = Reflux.createStore({
 
     initStore(strategies) {
         _strategies = strategies;
-    }
+    },
 });
 
 module.exports = StrategyStore;

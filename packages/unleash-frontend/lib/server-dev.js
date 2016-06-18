@@ -12,5 +12,5 @@ const compiler = webpack(webpackConfig);
 
 app.use(config.baseUriPath, webpackDevMiddleware(compiler, {
     publicPath: '/js',
-    noInfo: true
+    noInfo: true,
 }));

@@ -19,7 +19,7 @@ function readCookie(name) {
 
 const UserStore = {
     init() {
-        _username = readCookie("username");
+        _username = readCookie('username');
     },
 
     set(username) {
@@ -29,7 +29,7 @@ const UserStore = {
 
     get() {
         return _username;
-    }
+    },
 };
 
 module.exports = UserStore;

@@ -17,7 +17,7 @@ const FeatureToggleServerFacade = {
             },
             success() {
                 cb();
-            }
+            },
         });
     },
 
@@ -33,7 +33,7 @@ const FeatureToggleServerFacade = {
             },
             success() {
                 cb();
-            }
+            },
         });
     },
 
@@ -47,7 +47,7 @@ const FeatureToggleServerFacade = {
             },
             success() {
                 cb();
-            }
+            },
         });
     },
 
@@ -61,7 +61,7 @@ const FeatureToggleServerFacade = {
             },
             success(data) {
                 cb(null, data.features);
-            }
+            },
         });
     },
 
@@ -75,7 +75,7 @@ const FeatureToggleServerFacade = {
             },
             success(data) {
                 cb(null, data.features);
-            }
+            },
         });
     },
 
@@ -91,9 +91,9 @@ const FeatureToggleServerFacade = {
             },
             success() {
                 cb();
-            }
+            },
         });
-    }
+    },
 };
 
 module.exports = FeatureToggleServerFacade;

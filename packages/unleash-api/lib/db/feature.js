@@ -50,7 +50,7 @@ module.exports = function(db, eventStore) {
             description: row.description,
             enabled: row.enabled > 0,
             strategy: row.strategy_name, // eslint-disable-line
-            parameters: row.parameters
+            parameters: row.parameters,
         };
     }
 
@@ -61,7 +61,7 @@ module.exports = function(db, eventStore) {
             enabled: data.enabled ? 1 : 0,
             archived: data.archived ? 1 :0,
             strategy_name: data.strategy, // eslint-disable-line
-            parameters: data.parameters
+            parameters: data.parameters,
         };
     }
 
@@ -106,6 +106,6 @@ module.exports = function(db, eventStore) {
         getFeature,
         getArchivedFeatures,
         _createFeature: createFeature, // visible for testing
-        _updateFeature: updateFeature  // visible for testing
+        _updateFeature: updateFeature,  // visible for testing
     };
 };

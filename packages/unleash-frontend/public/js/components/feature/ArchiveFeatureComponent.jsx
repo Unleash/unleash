@@ -1,5 +1,5 @@
 'use strict';
-const React               = require("react");
+const React               = require('react');
 const FeatureActions      = require('../../stores/FeatureToggleActions');
 
 const ArchiveFeatureComponent = React.createClass({
@@ -41,7 +41,7 @@ const ArchiveFeatureComponent = React.createClass({
                 </button>
             </td>
         </tr>);
-    }
+    },
 });
 
 module.exports = ArchiveFeatureComponent;

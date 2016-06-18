@@ -9,6 +9,9 @@
     "db-migrate": "db-migrate up",
     "test:ci": "echo 'no tests for unleash-docker';"
   },
+  "engines": {
+    "node": "6"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

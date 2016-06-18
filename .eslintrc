@@ -1,24 +1,5 @@
 {
     "extends": [
-        "spt",
-        "spt/env-node",
-        "spt/env-es6-false",
-        "spt/env-react"
-    ],
-    "env": {
-        "browser": true
-    },
-    "rules": {
-        "quotes": 0,
-        "strict": 0,
-        "vars-on-top": 0,
-        "no-use-before-define": 0,
-        "dot-notation": 0,
-        "eqeqeq": 0,
-        "no-eq-null": 0,
-        "no-undefined": 0,
-        "no-else-return": 0,
-        "no-shadow": 0,
-        "consistent-this": 0
-    }
+        "finn"
+    ]
 }

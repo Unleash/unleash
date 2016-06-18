@@ -1,0 +1,10 @@
+{
+    "extends": [
+        "finn",
+        "finn/es6",
+        "finn/node"
+    ],
+    "rules": {
+        "max-nested-callbacks": [0]
+    }
+}

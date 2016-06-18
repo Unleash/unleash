@@ -48,7 +48,7 @@
     "bluebird": "2.9.14",
     "body-parser": "1.15.0",
     "cookie-parser": "^1.4.1",
-    "db-migrate": "0.9.23",
+    "db-migrate": "0.9.25",
     "deep-diff": "^0.3.3",
     "errorhandler": "1.3.5",
     "express": "4.13.4",

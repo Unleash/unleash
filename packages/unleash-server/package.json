@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "unleash your features",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -31,8 +31,8 @@
     "test:ci": "npm run test"
   },
   "dependencies": {
-    "unleash-api": "1.0.0-alpha.1",
-    "unleash-frontend": "1.0.0-alpha.1"
+    "unleash-api": "1.0.0-alpha.2",
+    "unleash-frontend": "1.0.0-alpha.2"
   },
   "devDependencies": {
 

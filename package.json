@@ -21,7 +21,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "prepublish": "npm run bootstrap",
-    "lint": "lerna exec eslint .",
+    "lint": "node node_modules/eslint/bin/eslint.js packages --fix --ignore-pattern=node_modules  --ext=js,jsx",
     "pre-commit": "echo 'no lint check' && exit 0;",
     "test": "lerna --concurrency=1 exec npm run test",
     "test:ci": "lerna --concurrency=1 exec npm run test:ci",
@@ -33,8 +33,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^2.0.0",
-    "eslint-config-finn": "^1.0.0-alpha.3",
+    "eslint": "^2.12.0",
+    "eslint-config-finn": "finn-no/eslint-config-finn#master",
     "eslint-plugin-react": "^4.3.0",
     "lerna": "2.0.0-beta.20",
     "nsp": "^2.3.2",

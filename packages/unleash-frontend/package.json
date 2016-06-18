@@ -1,0 +1,74 @@
+{
+  "name": "unleash-frontend",
+  "description": "unleash your features",
+  "version": "1.0.0-alpha.1",
+  "keywords": [
+    "unleash",
+    "feature toggle",
+    "feature",
+    "toggle"
+  ],
+  "files": [
+    "public",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:finn-no/unleash.git"
+  },
+  "bugs": {
+    "url": "https://github.com/finn-no/unleash/issues"
+  },
+  "engines": {
+    "node": "6"
+  },
+  "scripts": {
+    "build": "webpack -p",
+    "start": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js lib/server-dev.js",
+    "test": "jest",
+    "test:ci": "npm run test"
+  },
+  "main": "./lib/index.js",
+  "dependencies": {
+    "jsx-loader": "0.12.2",
+    "lodash": "^3.5.0",
+    "moment": "^2.13.0",
+    "react": "^0.13.1",
+    "react-router": "^0.13.2",
+    "reflux": "^0.2.10",
+    "reqwest": "^2.0.5",
+    "webpack": "^1.13.0",
+    "webpack-dev-middleware": "^1.6.1"
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "coveralls": "^2.11.9",
+    "istanbul": "^0.4.3",
+    "jest-cli": "0.5.8",
+    "mocha": "^2.4.5",
+    "mocha-lcov-reporter": "1.2.0",
+    "nsp": "^2.3.2",
+    "react-tools": "^0.13.1",
+    "supertest": "^1.2.0",
+    "supervisor": "^0.10.0",
+    "unleash-api": "1.0.0-alpha.1"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/node_modules/npm"
+    ],
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/reflux"
+    ],
+    "moduleFileExtensions": [
+      "jsx",
+      "js"
+    ]
+  },
+  "pre-commit": [
+    "lint"
+  ]
+}

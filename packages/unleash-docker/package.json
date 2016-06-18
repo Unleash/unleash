@@ -6,7 +6,8 @@
   "scripts": {
     "start": "NODE_ENV=production node index.js",
     "migrate-and-start": "npm run db-migrate && npm run start",
-    "db-migrate": "db-migrate up"
+    "db-migrate": "db-migrate up",
+    "test:ci": "echo 'no tests for unleash-docker';"
   },
   "author": "",
   "license": "ISC",

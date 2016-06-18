@@ -1,10 +1,11 @@
-var Promise = require("bluebird");
-var ValidationError = require('./ValidationError');
+'use strict';
+const Promise = require('bluebird');
+const ValidationError = require('./ValidationError');
 
 function validateRequest(req) {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
         if (req.validationErrors()) {
-            reject(new ValidationError("Invalid syntax"));
+            reject(new ValidationError('Invalid syntax'));
         } else {
             resolve(req);
         }

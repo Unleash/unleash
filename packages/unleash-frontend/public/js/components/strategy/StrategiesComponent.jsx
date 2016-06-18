@@ -1,33 +1,34 @@
-var React             = require('react');
-var StrategyList      = require('./StrategyList');
-var StrategyForm      = require('./StrategyForm');
-var StrategyActions   = require('../../stores/StrategyActions');
+'use strict';
+const React             = require('react');
+const StrategyList      = require('./StrategyList');
+const StrategyForm      = require('./StrategyForm');
+const StrategyActions   = require('../../stores/StrategyActions');
 
-var StrategiesComponent = React.createClass({
-    getInitialState: function() {
+const StrategiesComponent = React.createClass({
+    getInitialState() {
         return {
-            createView: false
+            createView: false,
         };
     },
 
-    onNewStrategy: function() {
-        this.setState({createView: true});
+    onNewStrategy() {
+        this.setState({ createView: true });
     },
 
-    onCancelNewStrategy: function() {
-        this.setState({createView: false});
+    onCancelNewStrategy() {
+        this.setState({ createView: false });
     },
 
-    onSave: function(strategy) {
+    onSave(strategy) {
         StrategyActions.create.triggerPromise(strategy)
         .then(this.onCancelNewStrategy);
     },
 
-    onRemove: function(strategy) {
+    onRemove(strategy) {
         StrategyActions.remove.triggerPromise(strategy);
     },
 
-    render: function() {
+    render() {
         return (
             <div>
                 <h1>Activation Strategies</h1>
@@ -41,21 +42,21 @@ var StrategiesComponent = React.createClass({
         );
     },
 
-    renderCreateView: function() {
+    renderCreateView() {
         return (
             <StrategyForm
                 onCancelNewStrategy={this.onCancelNewStrategy}
                 onSave={this.onSave}
                 />);
-            },
+    },
 
-            renderCreateButton: function() {
-                return (
+    renderCreateButton() {
+        return (
                     <button className="mal" onClick={this.onNewStrategy}>
                         Create strategy
                     </button>
                 );
-            }
-        });
+    },
+});
 
-        module.exports = StrategiesComponent;
+module.exports = StrategiesComponent;

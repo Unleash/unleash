@@ -1,23 +1,23 @@
 'use strict';
 process.env.NODE_ENV = 'test';
 
-var Promise = require('bluebird');
-var request = require('supertest');
-var databaseUri = require('./databaseConfig').getDatabaseUri();
-var knex = require('../lib/db/dbPool')(databaseUri);
-var eventDb = require('../lib/db/event')(knex);
-var EventStore = require('../lib/eventStore');
-var eventStore = new EventStore(eventDb);
-var featureDb = require('../lib/db/feature')(knex, eventStore);
-var strategyDb = require('../lib/db/strategy')(knex, eventStore);
+const Promise = require('bluebird');
+let request = require('supertest');
+const databaseUri = require('./databaseConfig').getDatabaseUri();
+const knex = require('../lib/db/dbPool')(databaseUri);
+const eventDb = require('../lib/db/event')(knex);
+const EventStore = require('../lib/eventStore');
+const eventStore = new EventStore(eventDb);
+const featureDb = require('../lib/db/feature')(knex, eventStore);
+const strategyDb = require('../lib/db/strategy')(knex, eventStore);
 
-var app = require('../app')({
+const app = require('../app')({
     baseUriPath: '',
     db: knex,
-    eventDb: eventDb,
-    eventStore: eventStore,
-    featureDb: featureDb,
-    strategyDb: strategyDb
+    eventDb,
+    eventStore,
+    featureDb,
+    strategyDb,
 });
 
 Promise.promisifyAll(request);
@@ -26,78 +26,74 @@ request = request(app);
 function createStrategies() {
     return Promise.map([
         {
-            name: "default",
-            description: "Default on or off Strategy.",
-            parametersTemplate: {}
+            name: 'default',
+            description: 'Default on or off Strategy.',
+            parametersTemplate: {},
         },
         {
-            name: "usersWithEmail",
-            description: "Active for users defined  in the comma-separated emails-parameter.",
+            name: 'usersWithEmail',
+            description: 'Active for users defined  in the comma-separated emails-parameter.',
             parametersTemplate: {
-                emails: "String"
-            }
-        }
-    ], function (strategy) {
-        return strategyDb._createStrategy(strategy);
-    });
+                emails: 'String',
+            },
+        },
+    ], strategy => strategyDb._createStrategy(strategy));
 }
 
 function createFeatures() {
     return Promise.map([
         {
-            "name": "featureX",
-            "description": "the #1 feature",
-            "enabled": true,
-            "strategy": "default"
+            name: 'featureX',
+            description: 'the #1 feature',
+            enabled: true,
+            strategy: 'default',
         },
         {
-            "name": "featureY",
-            "description": "soon to be the #1 feature",
-            "enabled": false,
-            "strategy": "baz",
-            "parameters": {
-                "foo": "bar"
-            }
+            name: 'featureY',
+            description: 'soon to be the #1 feature',
+            enabled: false,
+            strategy: 'baz',
+            parameters: {
+                foo: 'bar',
+            },
         },
         {
-            "name": "featureZ",
-            "description": "terrible feature",
-            "enabled": true,
-            "strategy": "baz",
-            "parameters": {
-                "foo": "rab"
-            }
+            name: 'featureZ',
+            description: 'terrible feature',
+            enabled: true,
+            strategy: 'baz',
+            parameters: {
+                foo: 'rab',
+            },
         },
         {
-            "name": "featureArchivedX",
-            "description": "the #1 feature",
-            "enabled": true,
-            "archived": true,
-            "strategy": "default"
+            name: 'featureArchivedX',
+            description: 'the #1 feature',
+            enabled: true,
+            archived: true,
+            strategy: 'default',
         },
         {
-            "name": "featureArchivedY",
-            "description": "soon to be the #1 feature",
-            "enabled": false,
-            "archived": true,
-            "strategy": "baz",
-            "parameters": {
-                "foo": "bar"
-            }
+            name: 'featureArchivedY',
+            description: 'soon to be the #1 feature',
+            enabled: false,
+            archived: true,
+            strategy: 'baz',
+            parameters: {
+                foo: 'bar',
+            },
         },
         {
-            "name": "featureArchivedZ",
-            "description": "terrible feature",
-            "enabled": true,
-            "archived": true,
-            "strategy": "baz",
-            "parameters": {
-                "foo": "rab"
-            }
-        }
-    ], function (feature) {
-        return featureDb._createFeature(feature);
-    });
+            name: 'featureArchivedZ',
+            description: 'terrible feature',
+            enabled: true,
+            archived: true,
+            strategy: 'baz',
+            parameters: {
+                foo: 'rab',
+            },
+        },
+    ], feature => featureDb._createFeature(feature));
 }
 
 function destroyStrategies() {
@@ -117,12 +113,12 @@ function setupDatabase() {
 }
 
 module.exports = {
-    request: request,
+    request,
     db: {
         reset: resetDatabase,
         setup: setupDatabase,
-        resetAndSetup: function () {
+        resetAndSetup() {
             return resetDatabase().then(setupDatabase);
-        }
-    }
+        },
+    },
 };

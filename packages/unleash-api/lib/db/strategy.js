@@ -1,18 +1,17 @@
-var eventType       = require('../eventType');
-var logger          = require('../logger');
-var NotFoundError   = require('../error/NotFoundError');
-var STRATEGY_COLUMNS = ['name', 'description', 'parameters_template'];
+'use strict';
+const eventType       = require('../eventType');
+const logger          = require('../logger');
+const NotFoundError   = require('../error/NotFoundError');
+const STRATEGY_COLUMNS = ['name', 'description', 'parameters_template'];
 
 module.exports = function(db, eventStore) {
-    eventStore.on(eventType.strategyCreated, function (event) {
-        return createStrategy(event.data);
-    });
+    eventStore.on(eventType.strategyCreated, event => createStrategy(event.data));
 
-    eventStore.on(eventType.strategyDeleted, function (event) {
+    eventStore.on(eventType.strategyDeleted, event => {
         db('strategies')
             .where('name', event.data.name)
             .del()
-            .catch(function (err) {
+            .catch(err => {
                 logger.error('Could not delete strategy, error was: ', err);
             });
     });
@@ -29,7 +28,7 @@ module.exports = function(db, eventStore) {
         return db
             .first(STRATEGY_COLUMNS)
             .from('strategies')
-            .where({ name: name })
+            .where({ name })
             .then(rowToStrategy);
     }
 
@@ -41,7 +40,7 @@ module.exports = function(db, eventStore) {
         return {
             name: row.name,
             description: row.description,
-            parametersTemplate: row.parameters_template
+            parametersTemplate: row.parameters_template,
         };
     }
 
@@ -56,15 +55,15 @@ module.exports = function(db, eventStore) {
     function createStrategy(data) {
         db('strategies')
             .insert(eventDataToRow(data))
-            .catch(function (err) {
+            .catch(err => {
                 logger.error('Could not insert strategy, error was: ', err);
             });
     }
 
     return {
-        getStrategies: getStrategies,
-        getStrategy: getStrategy,
-        _createStrategy: createStrategy // visible for testing
+        getStrategies,
+        getStrategy,
+        _createStrategy: createStrategy, // visible for testing
     };
 };
 

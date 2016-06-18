@@ -1,19 +1,19 @@
-var React          = require('react');
+'use strict';
+const React          = require('react');
 
-var Strategy = React.createClass({
+const Strategy = React.createClass({
     propTypes: {
-        strategy: React.PropTypes.object.isRequired
+        strategy: React.PropTypes.object.isRequired,
     },
 
-    onRemove: function(event) {
+    onRemove(event) {
         event.preventDefault();
-        if (window.confirm("Are you sure you want to delete strategy '"+
-            this.props.strategy.name+"'?")) {
+        if (window.confirm(`Are you sure you want to delete strategy '${this.props.strategy.name}'?`)) {  // eslint-disable-line no-alert
             this.props.onRemove(this.props.strategy);
         }
     },
 
-    render: function() {
+    render() {
         return (
             <div className="line mal">
                 <div className="unit">
@@ -25,7 +25,7 @@ var Strategy = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 module.exports = Strategy;

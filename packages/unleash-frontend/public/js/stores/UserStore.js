@@ -1,12 +1,13 @@
-var _username;
+'use strict';
+let _username;
 
 // Ref: http://stackoverflow.com/questions/10730362/get-cookie-by-name
 function readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for (var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') {
+    const nameEQ = `${name}=`;
+    const ca = document.cookie.split(';');
+    for (let i=0;i < ca.length;i++) {
+        let c = ca[i];
+        while (c.charAt(0)==' ') { // eslint-disable-line eqeqeq
             c = c.substring(1, c.length);
         }
         if (c.indexOf(nameEQ) === 0) {
@@ -16,19 +17,19 @@ function readCookie(name) {
     return null;
 }
 
-var UserStore = {
-    init: function init() {
-        _username = readCookie("username");
+const UserStore = {
+    init() {
+        _username = readCookie('username');
     },
 
-    set: function set(username) {
+    set(username) {
         _username=username;
-        document.cookie="username="+_username+"; expires=Thu, 18 Dec 2099 12:00:00 UTC";
+        document.cookie=`username=${_username}; expires=Thu, 18 Dec 2099 12:00:00 UTC`;
     },
 
-    get: function get() {
+    get() {
         return _username;
-    }
+    },
 };
 
 module.exports = UserStore;

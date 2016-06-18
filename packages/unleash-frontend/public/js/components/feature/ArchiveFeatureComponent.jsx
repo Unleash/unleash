@@ -1,13 +1,14 @@
-var React               = require("react");
-var FeatureActions      = require('../../stores/FeatureToggleActions');
+'use strict';
+const React               = require('react');
+const FeatureActions      = require('../../stores/FeatureToggleActions');
 
-var ArchiveFeatureComponent = React.createClass({
+const ArchiveFeatureComponent = React.createClass({
 
-    onRevive: function(item) {
+    onRevive(item) {
         FeatureActions.revive.triggerPromise(item);
     },
 
-    render: function () {
+    render() {
         return (
             <div>
                 <h1>Archived Feature Toggles</h1>
@@ -27,7 +28,7 @@ var ArchiveFeatureComponent = React.createClass({
         );
     },
 
-    renderArchivedItem: function(f) {
+    renderArchivedItem(f) {
         return (
             <tr key={f.name}>
                 <td>
@@ -40,7 +41,7 @@ var ArchiveFeatureComponent = React.createClass({
                 </button>
             </td>
         </tr>);
-    }
+    },
 });
 
 module.exports = ArchiveFeatureComponent;

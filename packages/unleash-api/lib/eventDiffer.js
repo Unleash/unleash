@@ -1,16 +1,17 @@
-var eventType     = require('./eventType');
-var diff          = require('deep-diff').diff;
+'use strict';
+const eventType     = require('./eventType');
+const diff          = require('deep-diff').diff;
 
-var strategyTypes = [
+const strategyTypes = [
     eventType.strategyCreated,
-    eventType.strategyDeleted
+    eventType.strategyDeleted,
 ];
 
-var featureTypes  = [
+const featureTypes  = [
     eventType.featureCreated,
     eventType.featureUpdated,
     eventType.featureArchived,
-    eventType.featureRevived
+    eventType.featureRevived,
 ];
 
 function baseTypeFor(event) {
@@ -18,16 +19,15 @@ function baseTypeFor(event) {
         return 'features';
     } else if (strategyTypes.indexOf(event.type) !== -1) {
         return 'strategies';
-    } else {
-        throw new Error('unknown event type: ' + JSON.stringify(event));
     }
+    throw new Error(`unknown event type: ${JSON.stringify(event)}`);
 }
 
 function groupByBaseTypeAndName(events) {
-    var groups = {};
+    const groups = {};
 
-    events.forEach(function (event) {
-        var baseType = baseTypeFor(event);
+    events.forEach(event => {
+        const baseType = baseTypeFor(event);
 
         groups[baseType] = groups[baseType] || {};
         groups[baseType][event.data.name] = groups[baseType][event.data.name] || [];
@@ -39,17 +39,20 @@ function groupByBaseTypeAndName(events) {
 }
 
 function eachConsecutiveEvent(events, callback) {
-    var groups = groupByBaseTypeAndName(events);
+    const groups = groupByBaseTypeAndName(events);
 
-    Object.keys(groups).forEach(function (baseType) {
-        var group = groups[baseType];
+    Object.keys(groups).forEach(baseType => {
+        const group = groups[baseType];
 
-        Object.keys(group).forEach(function (name) {
-            var events = group[name];
-            var left, right, i, l;
-            for (i = 0, l = events.length; i < l; i++) {
-                left  = events[i];
-                right = events[i + 1];
+        Object.keys(group).forEach(name => {
+            const currentEvents = group[name];
+            let left;
+            let right;
+            let i;
+            let l;
+            for (i = 0, l = currentEvents.length; i < l; i++) {
+                left  = currentEvents[i];
+                right = currentEvents[i + 1];
 
                 callback(left, right);
             }
@@ -58,7 +61,7 @@ function eachConsecutiveEvent(events, callback) {
 }
 
 function addDiffs(events) {
-    eachConsecutiveEvent(events, function (left, right) {
+    eachConsecutiveEvent(events, (left, right) => {
         if (right) {
             left.diffs = diff(right.data, left.data);
             left.diffs = left.diffs || [];
@@ -70,5 +73,5 @@ function addDiffs(events) {
 
 
 module.exports = {
-    addDiffs: addDiffs
+    addDiffs,
 };

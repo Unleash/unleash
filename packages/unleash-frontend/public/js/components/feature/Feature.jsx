@@ -1,44 +1,45 @@
-var React = require('react');
-var FeatureForm = require('./FeatureForm');
-var LogEntryList = require('../log/LogEntryList');
-var eventStore = require('../../stores/EventStore');
+'use strict';
+const React = require('react');
+const FeatureForm = require('./FeatureForm');
+const LogEntryList = require('../log/LogEntryList');
+const eventStore = require('../../stores/EventStore');
 
-var Feature = React.createClass({
-    getInitialState: function() {
+const Feature = React.createClass({
+    getInitialState() {
         return {
             editMode: false,
             showHistory: false,
-            events: []
+            events: [],
         };
     },
 
-    handleEventsResponse: function(response) {
-      this.setState({events: response});
+    handleEventsResponse(response) {
+        this.setState({ events: response });
     },
 
-    toggleHistory: function() {
+    toggleHistory() {
         eventStore.getEventsByName(this.props.feature.name).then(this.handleEventsResponse);
-        this.setState({showHistory: !this.state.showHistory});
+        this.setState({ showHistory: !this.state.showHistory });
     },
 
 
-    toggleEditMode: function() {
-        this.setState({editMode: !this.state.editMode});
+    toggleEditMode() {
+        this.setState({ editMode: !this.state.editMode });
     },
 
-    saveFeature: function(feature) {
+    saveFeature(feature) {
         this.props.onChange(feature);
         this.toggleEditMode();
     },
 
-    archiveFeature: function() {
-        if (window.confirm("Are you sure you want to delete " + this.props.feature.name + "?")) {
+    archiveFeature() {
+        if (window.confirm(`Are you sure you want to delete ${this.props.feature.name}?`)) {  // eslint-disable-line no-alert
             this.props.onArchive(this.props.feature);
         }
     },
 
 
-    renderEditMode: function() {
+    renderEditMode() {
         return (
             <tr>
                 <td colSpan="4" className="pan man no-border">
@@ -50,16 +51,15 @@ var Feature = React.createClass({
                 </td>
             </tr>
             );
-
     },
 
-    render: function() {
+    render() {
         return (
             <tbody className="feature">
-                <tr className={this.state.editMode ? "edit bg-lilac-xlt" : ""}>
+                <tr className={this.state.editMode ? 'edit bg-lilac-xlt' : ''}>
                     <td width="20">
                         <span className=
-                        {this.props.feature.enabled ? "toggle-active" : "toggle-inactive"} title="Status">
+                        {this.props.feature.enabled ? 'toggle-active' : 'toggle-inactive'} title="Status">
                         </span>
                     </td>
                     <td>
@@ -77,23 +77,23 @@ var Feature = React.createClass({
                         <div className="line">
                             <div className="unit size1of3">
                                 <button
-                                    title='Archive'
+                                    title="Archive"
                                     onClick={this.archiveFeature}>
                                     <span className="icon-kryss1" />
                                 </button>
                             </div>
                             <div className="unit size1of3">
                                 <button
-                                    className={this.state.editMode ? "primary" : ""}
-                                    title='Edit'
+                                    className={this.state.editMode ? 'primary' : ''}
+                                    title="Edit"
                                     onClick={this.toggleEditMode}>
                                     <span className="icon-redigere" />
                                 </button>
                             </div>
                             <div className="unit size1of3">
                                 <button
-                                    className={this.state.showHistory ? "primary" : ""}
-                                    title='History'
+                                    className={this.state.showHistory ? 'primary' : ''}
+                                    title="History"
                                     onClick={this.toggleHistory}>
                                     <span className="icon-visning_liste" />
                                 </button>
@@ -107,17 +107,17 @@ var Feature = React.createClass({
         );
     },
 
-    renderEmptyRow: function() {
+    renderEmptyRow() {
         return (<tr />);
     },
 
-    renderHistory: function() {
+    renderHistory() {
         return (<tr>
                     <td colSpan="4" className="no-border">
                         <LogEntryList events={this.state.events} />
                     </td>
                 </tr>);
-    }
+    },
 
 });
 

@@ -1,14 +1,15 @@
-var React                   = require('react');
-var Router                  = require('react-router');
-var UnleashApp              = require('./UnleashApp');
-var LogEntriesComponent     = require('./components/log/LogEntriesComponent');
-var FeatureTogglesComponent = require('./components/feature/FeatureTogglesComponent');
-var StrategiesComponent     = require('./components/strategy/StrategiesComponent');
-var ArchiveFeatureComponent = require('./components/feature/ArchiveFeatureComponent');
-var DefaultRoute = Router.DefaultRoute;
-var Route = Router.Route;
+'use strict';
+const React                   = require('react');
+const Router                  = require('react-router');
+const UnleashApp              = require('./UnleashApp');
+const LogEntriesComponent     = require('./components/log/LogEntriesComponent');
+const FeatureTogglesComponent = require('./components/feature/FeatureTogglesComponent');
+const StrategiesComponent     = require('./components/strategy/StrategiesComponent');
+const ArchiveFeatureComponent = require('./components/feature/ArchiveFeatureComponent');
+const DefaultRoute = Router.DefaultRoute;
+const Route = Router.Route;
 
-var routes = (
+const routes = (
     <Route name="app" path="/" handler={UnleashApp}>
         <Route name="strategies" handler={StrategiesComponent}/>
         <Route name="log" handler={LogEntriesComponent}/>

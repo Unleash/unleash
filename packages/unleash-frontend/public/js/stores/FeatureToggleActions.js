@@ -1,73 +1,74 @@
-var Reflux = require("reflux");
-var Server = require('./FeatureToggleServerFacade');
+'use strict';
+const Reflux = require('reflux');
+const Server = require('./FeatureToggleServerFacade');
 
-var FeatureToggleActions = Reflux.createActions({
-    'init': { asyncResult: true },
-    'initArchive': { asyncResult: true },
-    'create': { asyncResult: true },
-    'update': { asyncResult: true },
-    'archive': { asyncResult: true },
-    'revive': { asyncResult: true }
+const FeatureToggleActions = Reflux.createActions({
+    init: { asyncResult: true },
+    initArchive: { asyncResult: true },
+    create: { asyncResult: true },
+    update: { asyncResult: true },
+    archive: { asyncResult: true },
+    revive: { asyncResult: true },
 });
 
 FeatureToggleActions.init.listen(function() {
-    Server.getFeatures(function(error, features) {
+    Server.getFeatures((error, features) => {
         if (error) {
             this.failed(error);
         } else {
             this.completed(features);
         }
-    }.bind(this));
+    });
 });
 
 FeatureToggleActions.initArchive.listen(function() {
-    Server.getArchivedFeatures(function(error, archivedToggles) {
+    Server.getArchivedFeatures((error, archivedToggles) => {
         if (error) {
             this.failed(error);
         } else {
             this.completed(archivedToggles);
         }
-    }.bind(this));
+    });
 });
 
 FeatureToggleActions.create.listen(function(feature) {
-    Server.createFeature(feature, function(error) {
+    Server.createFeature(feature, error => {
         if (error) {
             this.failed(error);
         } else {
             this.completed(feature);
         }
-    }.bind(this));
+    });
 });
 
 FeatureToggleActions.update.listen(function(feature) {
-    Server.updateFeature(feature, function(error) {
+    Server.updateFeature(feature, error => {
         if (error) {
             this.failed(error);
         } else {
             this.completed(feature);
         }
-    }.bind(this));
+    });
 });
 
 FeatureToggleActions.archive.listen(function(feature) {
-    Server.archiveFeature(feature, function(error) {
+    Server.archiveFeature(feature, error => {
         if (error) {
             this.failed(error);
         } else {
             this.completed(feature);
         }
-    }.bind(this));
+    });
 });
 
 FeatureToggleActions.revive.listen(function(feature) {
-    Server.reviveFeature(feature, function(error) {
+    Server.reviveFeature(feature, error => {
         if (error) {
             this.failed(error);
         } else {
             this.completed(feature);
         }
-    }.bind(this));
+    });
 });
 
 module.exports = FeatureToggleActions;

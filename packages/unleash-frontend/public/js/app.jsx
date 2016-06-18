@@ -1,10 +1,11 @@
-var React                   = require('react');
-var Router                  = require('react-router');
-var UserStore               = require('./stores/UserStore');
-var routes                  = require('./routes');
+'use strict';
+const React                   = require('react');
+const Router                  = require('react-router');
+const UserStore               = require('./stores/UserStore');
+const routes                  = require('./routes');
 
 UserStore.init();
 
-Router.run(routes, function (Handler) {
+Router.run(routes, Handler => {
     React.render(<Handler/>, document.getElementById('content'));
 });

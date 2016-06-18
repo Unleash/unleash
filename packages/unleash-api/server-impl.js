@@ -1,46 +1,47 @@
-var logger = require('./lib/logger');
-var defaultDatabaseUri = process.env.DATABASE_URL;
+'use strict';
+const logger = require('./lib/logger');
+const defaultDatabaseUri = process.env.DATABASE_URL;
 
 function start(options) {
     options = options || {};
 
-    var db = require('./lib/db/dbPool')(options.databaseUri || defaultDatabaseUri);
+    const db = require('./lib/db/dbPool')(options.databaseUri || defaultDatabaseUri);
     // Database dependecies (statefull)
-    var eventDb = require('./lib/db/event')(db);
-    var EventStore = require('./lib/eventStore');
-    var eventStore = new EventStore(eventDb);
-    var featureDb = require('./lib/db/feature')(db, eventStore);
-    var strategyDb = require('./lib/db/strategy')(db, eventStore);
+    const eventDb = require('./lib/db/event')(db);
+    const EventStore = require('./lib/eventStore');
+    const eventStore = new EventStore(eventDb);
+    const featureDb = require('./lib/db/feature')(db, eventStore);
+    const strategyDb = require('./lib/db/strategy')(db, eventStore);
 
-    var config = {
+    const config = {
         baseUriPath: process.env.BASE_URI_PATH || '',
         port: process.env.HTTP_PORT || process.env.PORT || 4242,
-        db: db,
-        eventDb: eventDb,
-        eventStore: eventStore,
-        featureDb: featureDb,
-        strategyDb: strategyDb,
-        publicFolder: options.publicFolder
+        db,
+        eventDb,
+        eventStore,
+        featureDb,
+        strategyDb,
+        publicFolder: options.publicFolder,
     };
 
-    var app = require('./app')(config);
+    const app = require('./app')(config);
 
-    var server = app.listen(app.get('port'), function() {
-        logger.info('unleash started on ' + app.get('port'));
+    const server = app.listen(app.get('port'), () => {
+        logger.info(`unleash started on ${app.get('port')}`);
     });
 
     return {
-        app: app,
-        server: server,
-        config: config
+        app,
+        server,
+        config,
     };
 }
 
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', err => {
     logger.error('Uncaught Exception:', err.message);
     logger.error(err.stack);
 });
 
 module.exports = {
-    start: start
+    start,
 };

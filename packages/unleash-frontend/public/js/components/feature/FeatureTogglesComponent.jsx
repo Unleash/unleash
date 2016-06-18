@@ -1,39 +1,40 @@
-var React               = require('react');
-var FeatureList         = require('./FeatureList');
-var FeatureForm         = require('./FeatureForm');
-var FeatureActions      = require('../../stores/FeatureToggleActions');
-var ErrorActions        = require('../../stores/ErrorActions');
+'use strict';
+const React               = require('react');
+const FeatureList         = require('./FeatureList');
+const FeatureForm         = require('./FeatureForm');
+const FeatureActions      = require('../../stores/FeatureToggleActions');
+const ErrorActions        = require('../../stores/ErrorActions');
 
-var FeatureTogglesComponent = React.createClass({
-    getInitialState: function() {
+const FeatureTogglesComponent = React.createClass({
+    getInitialState() {
         return {
-            createView: false
+            createView: false,
         };
     },
 
-    updateFeature: function (feature) {
-      FeatureActions.update.triggerPromise(feature);
+    updateFeature(feature) {
+        FeatureActions.update.triggerPromise(feature);
     },
 
-    archiveFeature: function (feature) {
+    archiveFeature(feature) {
         FeatureActions.archive.triggerPromise(feature);
     },
 
-    createFeature: function (feature) {
+    createFeature(feature) {
         FeatureActions.create.triggerPromise(feature)
           .then(this.cancelNewFeature);
     },
 
-    newFeature: function() {
-        this.setState({createView: true});
+    newFeature() {
+        this.setState({ createView: true });
     },
 
-    cancelNewFeature: function () {
-        this.setState({createView: false});
+    cancelNewFeature() {
+        this.setState({ createView: false });
         ErrorActions.clear();
     },
 
-    render: function() {
+    render() {
         return (
             <div>
 
@@ -53,16 +54,16 @@ var FeatureTogglesComponent = React.createClass({
         );
     },
 
-    renderCreateView: function() {
-        return <FeatureForm
+    renderCreateView() {
+        return (<FeatureForm
             onCancel={this.cancelNewFeature}
             onSubmit={this.createFeature}
-            strategies={this.props.strategies} />;
+            strategies={this.props.strategies} />);
     },
 
-    renderCreateButton: function() {
+    renderCreateButton() {
         return <button className="mal" onClick={this.newFeature}>Create feature toggle</button>;
-    }
+    },
 });
 
 module.exports = FeatureTogglesComponent;

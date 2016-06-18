@@ -1,14 +1,16 @@
 /** @jsx React.DOM */
 
-jest.dontMock("../../components/Menu");
+'use strict';
 
-var Menu = require("../../components/Menu");
-var React = require("react/addons");
-var TestUtils = React.addons.TestUtils;
+jest.dontMock('../../components/Menu');
 
-describe('Menu test', function () {
-    it('should include unleash in menu', function () {
-        var Compononent = TestUtils .renderIntoDocument(<Menu />);
+const Menu = require('../../components/Menu');
+const React = require('react/addons');
+const TestUtils = React.addons.TestUtils;
+
+describe('Menu test', () => {
+    it('should include unleash in menu', () => {
+        const Compononent = TestUtils .renderIntoDocument(<Menu />);
         expect(Compononent.getDOMNode().textContent).toMatch('unleash');
     });
 });

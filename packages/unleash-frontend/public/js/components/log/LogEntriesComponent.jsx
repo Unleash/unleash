@@ -1,27 +1,28 @@
-var React          = require('react');
-var LogEntryList   = require('./LogEntryList');
-var eventStore     = require('../../stores/EventStore');
-var ErrorActions   = require('../../stores/ErrorActions');
+'use strict';
+const React          = require('react');
+const LogEntryList   = require('./LogEntryList');
+const eventStore     = require('../../stores/EventStore');
+const ErrorActions   = require('../../stores/ErrorActions');
 
-var LogEntriesComponent = React.createClass({
-    getInitialState: function() {
+const LogEntriesComponent = React.createClass({
+    getInitialState() {
         return {
             createView: false,
-            events: []
+            events: [],
         };
     },
 
-    componentDidMount: function () {
-        eventStore.getEvents().then(function(res) {
-            this.setState({events: res.events});
-        }.bind(this), this.initError);
+    componentDidMount() {
+        eventStore.getEvents().then(res => {
+            this.setState({ events: res.events });
+        }, this.initError);
     },
 
-    initError: function() {
-        ErrorActions.error("Could not load events from server");
+    initError() {
+        ErrorActions.error('Could not load events from server');
     },
 
-    render: function() {
+    render() {
         return (
             <div>
                 <h1>Log</h1>

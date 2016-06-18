@@ -1,5 +1,6 @@
-var util = require('util');
-var EventEmitter = require('events').EventEmitter;
+'use strict';
+const util = require('util');
+const EventEmitter = require('events').EventEmitter;
 
 function EventStore(eventDb) {
     this.eventDb = eventDb;
@@ -8,9 +9,8 @@ function EventStore(eventDb) {
 util.inherits(EventStore, EventEmitter);
 
 EventStore.prototype.create = function (event) {
-    var that = this;
-    return this.eventDb.store(event).then(function() {
-        that.emit(event.type, event);
+    return this.eventDb.store(event).then(() => {
+        this.emit(event.type, event);
     });
 };
 

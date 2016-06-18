@@ -1,15 +1,16 @@
-var Reflux          = require('reflux');
-var FeatureActions  = require('./FeatureToggleActions');
-var filter          = require('lodash/collection/filter');
-var sortBy          = require('lodash/collection/sortBy');
-var findIndex       = require('lodash/array/findIndex');
+'use strict';
+const Reflux          = require('reflux');
+const FeatureActions  = require('./FeatureToggleActions');
+const filter          = require('lodash/collection/filter');
+const sortBy          = require('lodash/collection/sortBy');
+const findIndex       = require('lodash/array/findIndex');
 
-var _featureToggles = [];
+let _featureToggles = [];
 
-var FeatureStore = Reflux.createStore({
+const FeatureStore = Reflux.createStore({
 
   // Initial setup
-    init: function() {
+    init() {
         this.listenTo(FeatureActions.init.completed,    this.setToggles);
         this.listenTo(FeatureActions.create.completed,  this.onCreate);
         this.listenTo(FeatureActions.update.completed,  this.onUpdate);
@@ -17,41 +18,39 @@ var FeatureStore = Reflux.createStore({
         this.listenTo(FeatureActions.revive.completed,  this.onRevive);
     },
 
-    onCreate: function(feature) {
+    onCreate(feature) {
         this.setToggles([feature].concat(_featureToggles));
     },
 
-    setToggles: function(toggles) {
+    setToggles(toggles) {
         _featureToggles = sortBy(toggles, 'name');
         this.trigger();
     },
 
-    onUpdate: function(feature) {
-        var idx = findIndex(_featureToggles, 'name', feature.name);
+    onUpdate(feature) {
+        const idx = findIndex(_featureToggles, 'name', feature.name);
         _featureToggles[idx] = feature;
         this.trigger();
     },
 
-    onArchive: function(feature) {
-        var featureToggles = filter(_featureToggles, function(item) {
-            return item.name !== feature.name;
-        });
+    onArchive(feature) {
+        const featureToggles = filter(_featureToggles, item => item.name !== feature.name);
         this.setToggles(featureToggles);
         this.trigger();
     },
 
-    onRevive: function(item) {
+    onRevive(item) {
         this.setToggles(_featureToggles.concat([item]));
         this.trigger();
     },
 
-    getFeatureToggles: function() {
+    getFeatureToggles() {
         return _featureToggles;
     },
 
-    initStore: function(toggles) {
+    initStore(toggles) {
         _featureToggles = toggles;
-    }
+    },
 });
 
 module.exports = FeatureStore;

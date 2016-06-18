@@ -1,36 +1,37 @@
-jest.dontMock("../../../components/feature/ArchiveFeatureComponent");
-jest.mock("../../../stores/FeatureToggleActions");
+'use strict';
+jest.dontMock('../../../components/feature/ArchiveFeatureComponent');
+jest.mock('../../../stores/FeatureToggleActions');
 jest.autoMockOff();
 
-var React = require("react/addons");
-var TestUtils = React.addons.TestUtils;
-var FeatureArchive      = require("../../../components/feature/ArchiveFeatureComponent");
-var FeatureActions  = require("../../../stores/FeatureToggleActions");
+const React = require('react/addons');
+const TestUtils = React.addons.TestUtils;
+const FeatureArchive      = require('../../../components/feature/ArchiveFeatureComponent');
+const FeatureActions  = require('../../../stores/FeatureToggleActions');
 
-describe("FeatureForm", function () {
-    var Component;
-    beforeEach(function() {
-        var archivedToggles = [
-            { name: "featureX" },
-            { name: "featureY" }
+describe('FeatureForm', () => {
+    let Component;
+    beforeEach(() => {
+        const archivedToggles = [
+            { name: 'featureX' },
+            { name: 'featureY' },
         ];
 
         Component = TestUtils.renderIntoDocument(
             <FeatureArchive archivedFeatures={archivedToggles} />);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         React.unmountComponentAtNode(document.body);
     });
 
-    it("should render two archived features", function() {
-        var rows = Component.getDOMNode().querySelectorAll("tbody tr");
+    it('should render two archived features', () => {
+        const rows = Component.getDOMNode().querySelectorAll('tbody tr');
 
         expect(rows.length).toEqual(2);
     });
 
-    it("should revive archived feature toggle", function() {
-        var button = Component.getDOMNode().querySelector("tbody button");
+    it('should revive archived feature toggle', () => {
+        const button = Component.getDOMNode().querySelector('tbody button');
         TestUtils.Simulate.click(button);
 
         jest.runAllTimers();

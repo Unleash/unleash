@@ -1,61 +1,62 @@
-var React                   = require('react');
-var Router                  = require('react-router');
-var Menu                    = require('./components/Menu');
-var ErrorMessages           = require('./components/ErrorMessages');
-var initalizer              = require('./stores/initalizer');
-var FeatureToggleStore      = require('./stores/FeatureToggleStore');
-var StrategyStore           = require('./stores/StrategyStore');
-var ArchiveStore            = require('./stores/ArchivedToggleStore');
-var Link = Router.Link;
-var RouteHandler = Router.RouteHandler;
+'use strict';
+const React                   = require('react');
+const Router                  = require('react-router');
+const Menu                    = require('./components/Menu');
+const ErrorMessages           = require('./components/ErrorMessages');
+const initalizer              = require('./stores/initalizer');
+const FeatureToggleStore      = require('./stores/FeatureToggleStore');
+const StrategyStore           = require('./stores/StrategyStore');
+const ArchiveStore            = require('./stores/ArchivedToggleStore');
+const Link = Router.Link;
+const RouteHandler = Router.RouteHandler;
 
-var UnleashApp = React.createClass({
+const UnleashApp = React.createClass({
     contextTypes: {
-        router: React.PropTypes.func
+        router: React.PropTypes.func,
     },
 
-    getInitialState: function() {
+    getInitialState() {
         return {
-            features:           FeatureToggleStore.getFeatureToggles(),
-            strategies:         StrategyStore.getStrategies(),
-            archivedFeatures:   ArchiveStore.getArchivedToggles()
+            features: FeatureToggleStore.getFeatureToggles(),
+            strategies: StrategyStore.getStrategies(),
+            archivedFeatures: ArchiveStore.getArchivedToggles(),
         };
     },
 
-    onFeatureToggleChange: function() {
+    onFeatureToggleChange() {
         this.setState({
-            features: FeatureToggleStore.getFeatureToggles()
+            features: FeatureToggleStore.getFeatureToggles(),
         });
     },
 
-    onStrategiesChange: function() {
+    onStrategiesChange() {
         this.setState({
-            strategies: StrategyStore.getStrategies()
+            strategies: StrategyStore.getStrategies(),
         });
     },
 
-    onArchiveChange: function() {
+    onArchiveChange() {
         this.setState({
-            archivedFeatures: ArchiveStore.getArchivedToggles()
+            archivedFeatures: ArchiveStore.getArchivedToggles(),
         });
     },
 
-    componentDidMount: function() {
+    componentDidMount() {
         this.unsubscribeFS = FeatureToggleStore.listen(this.onFeatureToggleChange);
         this.unsubscribeSS = StrategyStore.listen(this.onStrategiesChange);
         this.unsubscribeAS = ArchiveStore.listen(this.onArchiveChange);
     },
-    componentWillUnmount: function() {
+    componentWillUnmount() {
         this.unsubscribeFS();
         this.unsubscribeSS();
         this.unsubscribeAS();
     },
 
-    componentWillMount: function() {
+    componentWillMount() {
         initalizer(30);
     },
 
-    renderLink: function(id, label) {
+    renderLink(id, label) {
         return    (
             <Link to={id} className="nav-element centerify" activeClassName="nav-active">
                 <span className="topbar-nav-svg-caption caption showbydefault no-break">{label}</span>
@@ -63,14 +64,14 @@ var UnleashApp = React.createClass({
         );
     },
 
-    render: function () {
+    render() {
         return (
             <div>
                 <Menu>
-                    {this.renderLink("features",    "Toggles")}
-                    {this.renderLink("strategies",  "Strategies")}
-                    {this.renderLink("log",         "Log")}
-                    {this.renderLink("archive",     "Archive")}
+                    {this.renderLink('features',    'Toggles')}
+                    {this.renderLink('strategies',  'Strategies')}
+                    {this.renderLink('log',         'Log')}
+                    {this.renderLink('archive',     'Archive')}
                 </Menu>
                 <div className="container">
                     <div className="page">
@@ -90,7 +91,7 @@ var UnleashApp = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 

@@ -1,52 +1,53 @@
-var reqwest = require('reqwest');
+'use strict';
+const reqwest = require('reqwest');
 
-var TYPE         = 'json';
-var CONTENT_TYPE = 'application/json';
+const TYPE         = 'json';
+const CONTENT_TYPE = 'application/json';
 
-var StrategyAPI = {
-    createStrategy: function (strategy, cb) {
+const StrategyAPI = {
+    createStrategy(strategy, cb) {
         reqwest({
             url: 'strategies',
             method: 'post',
             type: TYPE,
             contentType: CONTENT_TYPE,
             data: JSON.stringify(strategy),
-            error: function(error) {
+            error(error) {
                 cb(error);
             },
-            success: function() {
+            success() {
                 cb(null, strategy);
-            }
+            },
         });
     },
 
-    removeStrategy: function (strategy, cb) {
+    removeStrategy(strategy, cb) {
         reqwest({
-            url: 'strategies/'+strategy.name,
+            url: `strategies/${strategy.name}`,
             method: 'delete',
             type: TYPE,
-            error: function(error) {
+            error(error) {
                 cb(error);
             },
-            success: function() {
+            success() {
                 cb(null, strategy);
-            }
+            },
         });
     },
 
-    getStrategies: function (cb) {
+    getStrategies(cb) {
         reqwest({
             url: 'strategies',
             method: 'get',
             type: TYPE,
-            error: function(error) {
+            error(error) {
                 cb(error);
             },
-            success: function(data) {
+            success(data) {
                 cb(null, data.strategies);
-            }
+            },
         });
-    }
+    },
 };
 
 module.exports = StrategyAPI;

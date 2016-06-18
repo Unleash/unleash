@@ -1,17 +1,18 @@
-var eventDiffer = require('../eventDiffer');
+'use strict';
+const eventDiffer = require('../eventDiffer');
 
 module.exports = function (app, config) {
-    var eventDb = config.eventDb;
+    const eventDb = config.eventDb;
 
-    app.get('/events', function (req, res) {
-        eventDb.getEvents().then(function (events) {
+    app.get('/events', (req, res) => {
+        eventDb.getEvents().then(events => {
             eventDiffer.addDiffs(events);
-            res.json({ events: events });
+            res.json({ events });
         });
     });
 
-    app.get('/events/:name', function (req, res) {
-        eventDb.getEventsFilterByName(req.params.name).then(function (events) {
+    app.get('/events/:name', (req, res) => {
+        eventDb.getEventsFilterByName(req.params.name).then(events => {
             if (events) {
                 eventDiffer.addDiffs(events);
                 res.json(events);

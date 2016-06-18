@@ -1,23 +1,24 @@
-var reqwest = require('reqwest');
+'use strict';
+const reqwest = require('reqwest');
 
-var TYPE         = 'json';
+const TYPE         = 'json';
 
-var EventStore = {
-    getEvents: function () {
+const EventStore = {
+    getEvents() {
         return reqwest({
             url: 'events',
             method: 'get',
-            type: TYPE
+            type: TYPE,
         });
     },
 
-    getEventsByName: function (name) {
+    getEventsByName(name) {
         return reqwest({
-            url: 'events/' + name,
+            url: `events/${name}`,
             method: 'get',
-            type: TYPE
+            type: TYPE,
         });
-    }
+    },
 
 };
 

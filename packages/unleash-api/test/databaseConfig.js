@@ -7,5 +7,5 @@ function getDatabaseUri() {
     }
 }
 module.exports = {
-    getDatabaseUri: getDatabaseUri
+    getDatabaseUri,
 };

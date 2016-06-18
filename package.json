@@ -22,9 +22,8 @@
     "bootstrap": "lerna bootstrap",
     "prepublish": "npm run bootstrap",
     "lint": "node node_modules/eslint/bin/eslint.js packages --fix --ignore-pattern=node_modules  --ext=js,jsx",
-    "pre-commit": "echo 'no lint check' && exit 0;",
-    "test": "lerna --concurrency=1 exec npm run test",
-    "test:ci": "lerna --concurrency=1 exec npm run test:ci",
+    "test": "npm run lint && lerna --concurrency=1 exec npm run test",
+    "test:ci": "npm run lint && lerna --concurrency=1 exec npm run test:ci",
     "nsp": "lerna exec nsp check",
     "start": "lerna --scope=unleash-server exec npm start",
     "publish": "lerna publish",
@@ -37,10 +36,6 @@
     "eslint-config-finn": "^1.0.0-alpha.4",
     "eslint-plugin-react": "^4.3.0",
     "lerna": "2.0.0-beta.20",
-    "nsp": "^2.3.2",
-    "pre-commit": "^1.0.2"
-  },
-  "pre-commit": [
-    "pre-commit"
-  ]
+    "nsp": "^2.3.2"
+  }
 }

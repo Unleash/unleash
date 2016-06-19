@@ -28,7 +28,8 @@
     "start": "lerna --scope=unleash-server exec npm start",
     "publish": "lerna publish",
     "publish:dry": "lerna publish --skip-git --skip-npm",
-    "db-migrate": "lerna --scope=unleash-api exec npm run db-migrate"
+    "db-migrate": "lerna --scope=unleash-api exec npm run db-migrate",
+    "heroku-postbuild": "npm run bootstrap && lerna --scope=unleash-frontend exec npm run build"
   },
   "dependencies": {},
   "devDependencies": {

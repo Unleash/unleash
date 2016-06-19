@@ -4,15 +4,15 @@
 
 const path = require('path');
 const root = path.normalize(path.join(__dirname, '.'));
-const jsroot = path.join(path.join(root, 'public'), 'js');
+const jsroot = path.join(root, 'public', 'js');
 
 module.exports = {
 
     context: jsroot,
-    entry: 'app',
+    entry: './app.jsx',
 
     output: {
-        path: jsroot,
+        path: path.join(root, 'public'),
         filename: 'bundle.js',
         publicPath: '/js/',
     },
@@ -25,7 +25,11 @@ module.exports = {
 
     module: {
         loaders: [
-            { test: /\.jsx$/, loader: 'jsx?harmony' },
+            {
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
+                loader: 'babel',
+            },
         ],
     },
 

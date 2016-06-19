@@ -1,5 +1,5 @@
 'use strict';
-const server = require('unleash-server');
+const server = require('unleash-api');
 
 const unleash = server.start({});
 const app = unleash.app;

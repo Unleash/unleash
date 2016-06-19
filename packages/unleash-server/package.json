@@ -23,7 +23,7 @@
   "engines": {
     "node": "6"
   },
-  "main": "./lib/index.js",
+  "main": "./server.js",
   "scripts": {
     "db-migrate-and-start": "npm run db-migrate && npm run start",
     "start": "NODE_ENV=production node server.js",

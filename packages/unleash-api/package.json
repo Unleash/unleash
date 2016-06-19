@@ -13,7 +13,6 @@
     "migrations",
     "public",
     "app.js",
-    "server.js",
     "server-impl.js",
     "README.md",
     "LICENSE"
@@ -31,8 +30,8 @@
   "main": "./server-impl.js",
   "scripts": {
     "db-migrate-and-start": "npm run db-migrate && npm run start",
-    "start": "node server.js",
-    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/ server.js",
+    "start": "node dev-server.js",
+    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/ dev-server.js",
     "start:dev:pg": "pg_virtualenv npm run start:dev:pg-chain",
     "start:dev:pg-chain": "export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; db-migrate up && npm run start:dev",
     "db-migrate": "db-migrate up",

@@ -1,6 +1,6 @@
 'use strict';
-const eventType     = require('./eventType');
-const diff          = require('deep-diff').diff;
+const eventType = require('./eventType');
+const diff = require('deep-diff').diff;
 
 const strategyTypes = [
     eventType.strategyCreated,

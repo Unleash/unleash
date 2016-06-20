@@ -1,8 +1,8 @@
 'use strict';
-const logger              = require('../logger');
-const eventType           = require('../eventType');
-const ValidationError     = require('../error/ValidationError');
-const validateRequest     = require('../error/validateRequest');
+const logger = require('../logger');
+const eventType = require('../eventType');
+const ValidationError = require('../error/ValidationError');
+const validateRequest = require('../error/validateRequest');
 
 module.exports = function (app, config) {
     const featureDb = config.featureDb;

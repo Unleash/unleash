@@ -1,12 +1,12 @@
 'use strict';
-const Promise             = require('bluebird');
-const logger              = require('../logger');
-const eventType           = require('../eventType');
-const NameExistsError     = require('../error/NameExistsError');
-const NotFoundError       = require('../error/NotFoundError');
-const ValidationError     = require('../error/ValidationError');
-const validateRequest     = require('../error/validateRequest');
-const extractUser         = require('../extractUser');
+const Promise = require('bluebird');
+const logger = require('../logger');
+const eventType = require('../eventType');
+const NameExistsError = require('../error/NameExistsError');
+const NotFoundError = require('../error/NotFoundError');
+const ValidationError = require('../error/ValidationError');
+const validateRequest = require('../error/validateRequest');
+const extractUser = require('../extractUser');
 
 module.exports = function (app, config) {
     const featureDb = config.featureDb;

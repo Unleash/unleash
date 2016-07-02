@@ -9,7 +9,7 @@ const logger = require('./lib/logger');
 const routes = require('./lib/routes');
 const path = require('path');
 
-module.exports = function(config) {
+module.exports = function (config) {
     const app = express();
     const router = express.Router(); // eslint-disable-line new-cap
     const baseUriPath  = config.baseUriPath || '';

@@ -4,11 +4,11 @@ const FeatureActions      = require('../../stores/FeatureToggleActions');
 
 const ArchiveFeatureComponent = React.createClass({
 
-    onRevive(item) {
+    onRevive (item) {
         FeatureActions.revive.triggerPromise(item);
     },
 
-    render() {
+    render () {
         return (
             <div>
                 <h1>Archived Feature Toggles</h1>
@@ -28,7 +28,7 @@ const ArchiveFeatureComponent = React.createClass({
         );
     },
 
-    renderArchivedItem(f) {
+    renderArchivedItem (f) {
         return (
             <tr key={f.name}>
                 <td>

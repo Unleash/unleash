@@ -5,31 +5,31 @@ const ErrorStore  = require('../stores/ErrorStore');
 const ErrorActions  = require('../stores/ErrorActions');
 
 const ErrorMessages = React.createClass({
-    getInitialState() {
+    getInitialState () {
         return {
             errors: ErrorStore.getErrors(),
         };
     },
 
-    onStoreChange() {
+    onStoreChange () {
         this.setState({
             errors: ErrorStore.getErrors(),
         });
     },
 
-    componentDidMount() {
+    componentDidMount () {
         this.unsubscribe = ErrorStore.listen(this.onStoreChange);
     },
 
-    componentWillUnmount() {
+    componentWillUnmount () {
         this.unsubscribe();
     },
 
-    onClearErrors() {
+    onClearErrors () {
         ErrorActions.clear();
     },
 
-    render() {
+    render () {
         return (
         <Ui errors={this.state.errors} onClearErrors={this.onClearErrors} />
         );

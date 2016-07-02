@@ -5,30 +5,30 @@ const StrategyForm      = require('./StrategyForm');
 const StrategyActions   = require('../../stores/StrategyActions');
 
 const StrategiesComponent = React.createClass({
-    getInitialState() {
+    getInitialState () {
         return {
             createView: false,
         };
     },
 
-    onNewStrategy() {
+    onNewStrategy () {
         this.setState({ createView: true });
     },
 
-    onCancelNewStrategy() {
+    onCancelNewStrategy () {
         this.setState({ createView: false });
     },
 
-    onSave(strategy) {
+    onSave (strategy) {
         StrategyActions.create.triggerPromise(strategy)
         .then(this.onCancelNewStrategy);
     },
 
-    onRemove(strategy) {
+    onRemove (strategy) {
         StrategyActions.remove.triggerPromise(strategy);
     },
 
-    render() {
+    render () {
         return (
             <div>
                 <h1>Activation Strategies</h1>
@@ -42,7 +42,7 @@ const StrategiesComponent = React.createClass({
         );
     },
 
-    renderCreateView() {
+    renderCreateView () {
         return (
             <StrategyForm
                 onCancelNewStrategy={this.onCancelNewStrategy}
@@ -50,7 +50,7 @@ const StrategiesComponent = React.createClass({
                 />);
     },
 
-    renderCreateButton() {
+    renderCreateButton () {
         return (
                     <button className="mal" onClick={this.onNewStrategy}>
                         Create strategy

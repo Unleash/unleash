@@ -1,7 +1,7 @@
 'use strict';
 const util = require('util');
 
-function NameExistsError(message) {
+function NameExistsError (message) {
     Error.call(this);
     Error.captureStackTrace(this, this.constructor);
 

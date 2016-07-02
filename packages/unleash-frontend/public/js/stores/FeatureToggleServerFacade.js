@@ -5,91 +5,91 @@ const TYPE         = 'json';
 const CONTENT_TYPE = 'application/json';
 
 const FeatureToggleServerFacade = {
-    updateFeature(feature, cb) {
+    updateFeature (feature, cb) {
         reqwest({
             url: `features/${feature.name}`,
             method: 'put',
             type: TYPE,
             contentType: CONTENT_TYPE,
             data: JSON.stringify(feature),
-            error(error) {
+            error (error) {
                 cb(error);
             },
-            success() {
+            success () {
                 cb();
             },
         });
     },
 
-    createFeature(feature, cb) {
+    createFeature (feature, cb) {
         reqwest({
             url: 'features',
             method: 'post',
             type: TYPE,
             contentType: CONTENT_TYPE,
             data: JSON.stringify(feature),
-            error(error) {
+            error (error) {
                 cb(error);
             },
-            success() {
+            success () {
                 cb();
             },
         });
     },
 
-    archiveFeature(feature, cb) {
+    archiveFeature (feature, cb) {
         reqwest({
             url: `features/${feature.name}`,
             method: 'delete',
             type: TYPE,
-            error(error) {
+            error (error) {
                 cb(error);
             },
-            success() {
+            success () {
                 cb();
             },
         });
     },
 
-    getFeatures(cb) {
+    getFeatures (cb) {
         reqwest({
             url: 'features',
             method: 'get',
             type: TYPE,
-            error(error) {
+            error (error) {
                 cb(error);
             },
-            success(data) {
+            success (data) {
                 cb(null, data.features);
             },
         });
     },
 
-    getArchivedFeatures(cb) {
+    getArchivedFeatures (cb) {
         reqwest({
             url: 'archive/features',
             method: 'get',
             type: TYPE,
-            error(error) {
+            error (error) {
                 cb(error);
             },
-            success(data) {
+            success (data) {
                 cb(null, data.features);
             },
         });
     },
 
-    reviveFeature(feature, cb) {
+    reviveFeature (feature, cb) {
         reqwest({
             url: 'archive/revive',
             method: 'post',
             type: TYPE,
             contentType: CONTENT_TYPE,
             data: JSON.stringify(feature),
-            error(error) {
+            error (error) {
                 cb(error);
             },
-            success() {
+            success () {
                 cb();
             },
         });

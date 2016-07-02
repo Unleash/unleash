@@ -6,14 +6,14 @@ const Strategy = React.createClass({
         strategy: React.PropTypes.object.isRequired,
     },
 
-    onRemove(event) {
+    onRemove (event) {
         event.preventDefault();
         if (window.confirm(`Are you sure you want to delete strategy '${this.props.strategy.name}'?`)) {  // eslint-disable-line no-alert
             this.props.onRemove(this.props.strategy);
         }
     },
 
-    render() {
+    render () {
         return (
             <div className="line mal">
                 <div className="unit">

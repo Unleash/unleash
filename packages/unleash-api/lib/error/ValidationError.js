@@ -1,7 +1,7 @@
 'use strict';
 const util = require('util');
 
-function ValidationError(message) {
+function ValidationError (message) {
     Error.call(this);
     Error.captureStackTrace(this, this.constructor);
 

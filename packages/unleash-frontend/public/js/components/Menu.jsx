@@ -3,7 +3,7 @@ const React = require('react');
 const User = require('./User');
 
 const Menu = React.createClass({
-    render() {
+    render () {
         return (
             <div className="topbar mbl">
             <div className="container">

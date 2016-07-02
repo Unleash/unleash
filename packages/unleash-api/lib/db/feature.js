@@ -4,7 +4,7 @@ const logger = require('../logger');
 const NotFoundError = require('../error/NotFoundError');
 const FEATURE_COLUMNS = ['name', 'description', 'enabled', 'strategy_name', 'parameters'];
 
-module.exports = function(db, eventStore) {
+module.exports = function (db, eventStore) {
     eventStore.on(eventType.featureCreated, event => createFeature(event.data));
 
     eventStore.on(eventType.featureUpdated, event => updateFeature(event.data));
@@ -13,7 +13,7 @@ module.exports = function(db, eventStore) {
 
     eventStore.on(eventType.featureRevived, event => reviveFeature(event.data));
 
-    function getFeatures() {
+    function getFeatures () {
         return db
             .select(FEATURE_COLUMNS)
             .from('features')
@@ -22,7 +22,7 @@ module.exports = function(db, eventStore) {
             .map(rowToFeature);
     }
 
-    function getFeature(name) {
+    function getFeature (name) {
         return db
             .first(FEATURE_COLUMNS)
             .from('features')
@@ -30,7 +30,7 @@ module.exports = function(db, eventStore) {
             .then(rowToFeature);
     }
 
-    function getArchivedFeatures() {
+    function getArchivedFeatures () {
         return db
             .select(FEATURE_COLUMNS)
             .from('features')
@@ -40,7 +40,7 @@ module.exports = function(db, eventStore) {
     }
 
 
-    function rowToFeature(row) {
+    function rowToFeature (row) {
         if (!row) {
             throw new NotFoundError('No feature toggle found');
         }
@@ -54,18 +54,18 @@ module.exports = function(db, eventStore) {
         };
     }
 
-    function eventDataToRow(data) {
+    function eventDataToRow (data) {
         return {
             name: data.name,
             description: data.description,
             enabled: data.enabled ? 1 : 0,
-            archived: data.archived ? 1 :0,
+            archived: data.archived ? 1 : 0,
             strategy_name: data.strategy, // eslint-disable-line
             parameters: data.parameters,
         };
     }
 
-    function createFeature(data) {
+    function createFeature (data) {
         return db('features')
             .insert(eventDataToRow(data))
             .catch(err => {
@@ -73,7 +73,7 @@ module.exports = function(db, eventStore) {
             });
     }
 
-    function updateFeature(data) {
+    function updateFeature (data) {
         return db('features')
             .where({ name: data.name })
             .update(eventDataToRow(data))
@@ -82,7 +82,7 @@ module.exports = function(db, eventStore) {
             });
     }
 
-    function archiveFeature(data) {
+    function archiveFeature (data) {
         return db('features')
             .where({ name: data.name })
             .update({ archived: 1 })
@@ -91,7 +91,7 @@ module.exports = function(db, eventStore) {
             });
     }
 
-    function reviveFeature(data) {
+    function reviveFeature (data) {
         return db('features')
             .where({ name: data.name })
             .update({ archived: 0, enabled: 0 })

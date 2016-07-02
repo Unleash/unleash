@@ -5,45 +5,45 @@ const TYPE         = 'json';
 const CONTENT_TYPE = 'application/json';
 
 const StrategyAPI = {
-    createStrategy(strategy, cb) {
+    createStrategy (strategy, cb) {
         reqwest({
             url: 'strategies',
             method: 'post',
             type: TYPE,
             contentType: CONTENT_TYPE,
             data: JSON.stringify(strategy),
-            error(error) {
+            error (error) {
                 cb(error);
             },
-            success() {
+            success () {
                 cb(null, strategy);
             },
         });
     },
 
-    removeStrategy(strategy, cb) {
+    removeStrategy (strategy, cb) {
         reqwest({
             url: `strategies/${strategy.name}`,
             method: 'delete',
             type: TYPE,
-            error(error) {
+            error (error) {
                 cb(error);
             },
-            success() {
+            success () {
                 cb(null, strategy);
             },
         });
     },
 
-    getStrategies(cb) {
+    getStrategies (cb) {
         reqwest({
             url: 'strategies',
             method: 'get',
             type: TYPE,
-            error(error) {
+            error (error) {
                 cb(error);
             },
-            success(data) {
+            success (data) {
                 cb(null, data.strategies);
             },
         });

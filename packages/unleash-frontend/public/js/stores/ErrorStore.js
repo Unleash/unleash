@@ -6,7 +6,7 @@ const ErrorActions    = require('./ErrorActions');
 // Creates a DataStore
 const FeatureStore = Reflux.createStore({
     // Initial setup
-    init() {
+    init () {
         this.listenTo(FeatureActions.create.failed, this.onError);
         this.listenTo(FeatureActions.init.failed, this.onError);
         this.listenTo(FeatureActions.update.failed, this.onError);
@@ -17,7 +17,7 @@ const FeatureStore = Reflux.createStore({
         this.errors = [];
     },
 
-    onError(error) {
+    onError (error) {
         if (this.isClientError(error)) {
             const errors = JSON.parse(error.responseText);
             errors.forEach(e => {
@@ -30,12 +30,12 @@ const FeatureStore = Reflux.createStore({
         }
     },
 
-    onClear() {
+    onClear () {
         this.errors = [];
         this.trigger([]);
     },
 
-    addError(msg) {
+    addError (msg) {
         const errors = this.errors;
         if (errors[errors.length - 1] !== msg) {
             errors.push(msg);
@@ -44,7 +44,7 @@ const FeatureStore = Reflux.createStore({
         }
     },
 
-    isClientError(error) {
+    isClientError (error) {
         try {
             return error.status >= 400 &&
             error.status <  500 &&
@@ -61,7 +61,7 @@ const FeatureStore = Reflux.createStore({
         return false;
     },
 
-    getErrors() {
+    getErrors () {
         return this.errors;
     },
 });

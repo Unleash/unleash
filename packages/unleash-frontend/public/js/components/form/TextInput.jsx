@@ -11,22 +11,22 @@ const TextInput = React.createClass({
         required: React.PropTypes.bool,
     },
 
-    getDefaultProps() {
+    getDefaultProps () {
         return {
             required: false,
         };
     },
 
-    getInitialState() {
+    getInitialState () {
         return {};
     },
 
-    getValue() {
+    getValue () {
         return this.refs.input.getDOMNode().value.trim();
     },
 
 
-    render() {
+    render () {
         return (
             <div className="formelement required">
                 <label htmlFor={this.props.id} className="t4">{this.props.label}</label>

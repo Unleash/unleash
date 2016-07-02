@@ -1,11 +1,11 @@
 'use strict';
-const Timer = function(cb, interval) {
+const Timer = function (cb, interval) {
     this.cb = cb;
     this.interval = interval;
     this.timerId = null;
 };
 
-Timer.prototype.start = function() {
+Timer.prototype.start = function () {
     if (this.timerId != null) {
         console.warn('timer already started'); // eslint-disable-line no-console
     }
@@ -15,7 +15,7 @@ Timer.prototype.start = function() {
     this.cb();
 };
 
-Timer.prototype.stop  = function() {
+Timer.prototype.stop  = function () {
     if (this.timerId == null) {
         console.warn('no timer running'); // eslint-disable-line no-console
     } else {

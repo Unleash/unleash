@@ -2,7 +2,7 @@
 const React = require('react');
 
 const ErrorMessages = React.createClass({
-    render() {
+    render () {
         if (!this.props.errors.length) {
             return <div/>;
         }

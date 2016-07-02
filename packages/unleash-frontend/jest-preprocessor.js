@@ -3,7 +3,7 @@
 
 const ReactTools = require('react-tools');
 module.exports = {
-    process(src) {
+    process (src) {
         return ReactTools.transform(src);
     },
 };

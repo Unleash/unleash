@@ -10,7 +10,7 @@ let _featureToggles = [];
 const FeatureStore = Reflux.createStore({
 
   // Initial setup
-    init() {
+    init () {
         this.listenTo(FeatureActions.init.completed,    this.setToggles);
         this.listenTo(FeatureActions.create.completed,  this.onCreate);
         this.listenTo(FeatureActions.update.completed,  this.onUpdate);
@@ -18,37 +18,37 @@ const FeatureStore = Reflux.createStore({
         this.listenTo(FeatureActions.revive.completed,  this.onRevive);
     },
 
-    onCreate(feature) {
+    onCreate (feature) {
         this.setToggles([feature].concat(_featureToggles));
     },
 
-    setToggles(toggles) {
+    setToggles (toggles) {
         _featureToggles = sortBy(toggles, 'name');
         this.trigger();
     },
 
-    onUpdate(feature) {
+    onUpdate (feature) {
         const idx = findIndex(_featureToggles, 'name', feature.name);
         _featureToggles[idx] = feature;
         this.trigger();
     },
 
-    onArchive(feature) {
+    onArchive (feature) {
         const featureToggles = filter(_featureToggles, item => item.name !== feature.name);
         this.setToggles(featureToggles);
         this.trigger();
     },
 
-    onRevive(item) {
+    onRevive (item) {
         this.setToggles(_featureToggles.concat([item]));
         this.trigger();
     },
 
-    getFeatureToggles() {
+    getFeatureToggles () {
         return _featureToggles;
     },
 
-    initStore(toggles) {
+    initStore (toggles) {
         _featureToggles = toggles;
     },
 });

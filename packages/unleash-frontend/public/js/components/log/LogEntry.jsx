@@ -21,7 +21,7 @@ const LogEntry = React.createClass({
         event: React.PropTypes.object.isRequired,
     },
 
-    render() {
+    render () {
         const date = moment(this.props.event.createdAt);
 
         return (
@@ -41,7 +41,7 @@ const LogEntry = React.createClass({
         );
     },
 
-    renderFullEventData() {
+    renderFullEventData () {
         const localEventData = JSON.parse(JSON.stringify(this.props.event.data));
         delete localEventData.description;
         delete localEventData.name;
@@ -51,7 +51,7 @@ const LogEntry = React.createClass({
         return (<code className="JSON smalltext man">{prettyPrinted}</code>);
     },
 
-    renderEventDiff() {
+    renderEventDiff () {
         if (!this.props.showFullEvents && this.props.event.diffs) {
             const changes = this.props.event.diffs.map(this.buildDiff);
             return (
@@ -61,7 +61,7 @@ const LogEntry = React.createClass({
         return this.renderFullEventData();
     },
 
-    buildDiff(diff, idx) {
+    buildDiff (diff, idx) {
         let change;
         const key = diff.path.join('.');
 

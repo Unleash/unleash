@@ -14,7 +14,7 @@ describe('FeatureList', () => {
             { name: 'featureX', strategy: 'other' },
             { name: 'group.featureY', strategy: 'default' },
         ];
-        const strategies=[
+        const strategies = [
             { name: 'default' },
         ];
         Component = TestUtils .renderIntoDocument(<FeatureList features={features} strategies={strategies} />);

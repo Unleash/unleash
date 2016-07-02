@@ -15,7 +15,7 @@ const UnleashApp = React.createClass({
         router: React.PropTypes.func,
     },
 
-    getInitialState() {
+    getInitialState () {
         return {
             features: FeatureToggleStore.getFeatureToggles(),
             strategies: StrategyStore.getStrategies(),
@@ -23,40 +23,40 @@ const UnleashApp = React.createClass({
         };
     },
 
-    onFeatureToggleChange() {
+    onFeatureToggleChange () {
         this.setState({
             features: FeatureToggleStore.getFeatureToggles(),
         });
     },
 
-    onStrategiesChange() {
+    onStrategiesChange () {
         this.setState({
             strategies: StrategyStore.getStrategies(),
         });
     },
 
-    onArchiveChange() {
+    onArchiveChange () {
         this.setState({
             archivedFeatures: ArchiveStore.getArchivedToggles(),
         });
     },
 
-    componentDidMount() {
+    componentDidMount () {
         this.unsubscribeFS = FeatureToggleStore.listen(this.onFeatureToggleChange);
         this.unsubscribeSS = StrategyStore.listen(this.onStrategiesChange);
         this.unsubscribeAS = ArchiveStore.listen(this.onArchiveChange);
     },
-    componentWillUnmount() {
+    componentWillUnmount () {
         this.unsubscribeFS();
         this.unsubscribeSS();
         this.unsubscribeAS();
     },
 
-    componentWillMount() {
+    componentWillMount () {
         initalizer(30);
     },
 
-    renderLink(id, label) {
+    renderLink (id, label) {
         return    (
             <Link to={id} className="nav-element centerify" activeClassName="nav-active">
                 <span className="topbar-nav-svg-caption caption showbydefault no-break">{label}</span>
@@ -64,7 +64,7 @@ const UnleashApp = React.createClass({
         );
     },
 
-    render() {
+    render () {
         return (
             <div>
                 <Menu>

@@ -4,7 +4,7 @@ const reqwest = require('reqwest');
 const TYPE         = 'json';
 
 const EventStore = {
-    getEvents() {
+    getEvents () {
         return reqwest({
             url: 'events',
             method: 'get',
@@ -12,7 +12,7 @@ const EventStore = {
         });
     },
 
-    getEventsByName(name) {
+    getEventsByName (name) {
         return reqwest({
             url: `events/${name}`,
             method: 'get',

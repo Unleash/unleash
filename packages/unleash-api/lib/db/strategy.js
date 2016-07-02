@@ -4,7 +4,7 @@ const logger = require('../logger');
 const NotFoundError = require('../error/NotFoundError');
 const STRATEGY_COLUMNS = ['name', 'description', 'parameters_template'];
 
-module.exports = function(db, eventStore) {
+module.exports = function (db, eventStore) {
     eventStore.on(eventType.strategyCreated, event => createStrategy(event.data));
 
     eventStore.on(eventType.strategyDeleted, event => {
@@ -16,7 +16,7 @@ module.exports = function(db, eventStore) {
             });
     });
 
-    function getStrategies() {
+    function getStrategies () {
         return db
             .select(STRATEGY_COLUMNS)
             .from('strategies')
@@ -24,7 +24,7 @@ module.exports = function(db, eventStore) {
             .map(rowToStrategy);
     }
 
-    function getStrategy(name) {
+    function getStrategy (name) {
         return db
             .first(STRATEGY_COLUMNS)
             .from('strategies')
@@ -32,7 +32,7 @@ module.exports = function(db, eventStore) {
             .then(rowToStrategy);
     }
 
-    function rowToStrategy(row) {
+    function rowToStrategy (row) {
         if (!row) {
             throw new NotFoundError('No strategy found');
         }
@@ -44,7 +44,7 @@ module.exports = function(db, eventStore) {
         };
     }
 
-    function eventDataToRow(data) {
+    function eventDataToRow (data) {
         return {
             name: data.name,
             description: data.description,
@@ -52,7 +52,7 @@ module.exports = function(db, eventStore) {
         };
     }
 
-    function createStrategy(data) {
+    function createStrategy (data) {
         db('strategies')
             .insert(eventDataToRow(data))
             .catch(err => {

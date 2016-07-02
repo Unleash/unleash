@@ -22,11 +22,9 @@ module.exports = function (app, config) {
                 type: eventType.featureRevived,
                 createdBy: req.connection.remoteAddress,
                 data: req.body,
-            })).then(() => {
-                res.status(200).end();
-            }).catch(ValidationError, () => {
-                res.status(400).json(req.validationErrors());
-            })
+            }))
+            .then(() => res.status(200).end())
+            .catch(ValidationError, () => res.status(400).json(req.validationErrors()))
             .catch(err => {
                 logger.error('Could not revive feature toggle', err);
                 res.status(500).end();

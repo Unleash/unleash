@@ -11,7 +11,7 @@ const FeatureToggleActions = Reflux.createActions({
     revive: { asyncResult: true },
 });
 
-FeatureToggleActions.init.listen(function() {
+FeatureToggleActions.init.listen(function () {
     Server.getFeatures((error, features) => {
         if (error) {
             this.failed(error);
@@ -21,7 +21,7 @@ FeatureToggleActions.init.listen(function() {
     });
 });
 
-FeatureToggleActions.initArchive.listen(function() {
+FeatureToggleActions.initArchive.listen(function () {
     Server.getArchivedFeatures((error, archivedToggles) => {
         if (error) {
             this.failed(error);
@@ -31,7 +31,7 @@ FeatureToggleActions.initArchive.listen(function() {
     });
 });
 
-FeatureToggleActions.create.listen(function(feature) {
+FeatureToggleActions.create.listen(function (feature) {
     Server.createFeature(feature, error => {
         if (error) {
             this.failed(error);
@@ -41,7 +41,7 @@ FeatureToggleActions.create.listen(function(feature) {
     });
 });
 
-FeatureToggleActions.update.listen(function(feature) {
+FeatureToggleActions.update.listen(function (feature) {
     Server.updateFeature(feature, error => {
         if (error) {
             this.failed(error);
@@ -51,7 +51,7 @@ FeatureToggleActions.update.listen(function(feature) {
     });
 });
 
-FeatureToggleActions.archive.listen(function(feature) {
+FeatureToggleActions.archive.listen(function (feature) {
     Server.archiveFeature(feature, error => {
         if (error) {
             this.failed(error);
@@ -61,7 +61,7 @@ FeatureToggleActions.archive.listen(function(feature) {
     });
 });
 
-FeatureToggleActions.revive.listen(function(feature) {
+FeatureToggleActions.revive.listen(function (feature) {
     Server.reviveFeature(feature, error => {
         if (error) {
             this.failed(error);

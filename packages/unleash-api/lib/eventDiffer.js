@@ -14,7 +14,7 @@ const featureTypes  = [
     eventType.featureRevived,
 ];
 
-function baseTypeFor(event) {
+function baseTypeFor (event) {
     if (featureTypes.indexOf(event.type) !== -1) {
         return 'features';
     } else if (strategyTypes.indexOf(event.type) !== -1) {
@@ -23,7 +23,7 @@ function baseTypeFor(event) {
     throw new Error(`unknown event type: ${JSON.stringify(event)}`);
 }
 
-function groupByBaseTypeAndName(events) {
+function groupByBaseTypeAndName (events) {
     const groups = {};
 
     events.forEach(event => {
@@ -38,7 +38,7 @@ function groupByBaseTypeAndName(events) {
     return groups;
 }
 
-function eachConsecutiveEvent(events, callback) {
+function eachConsecutiveEvent (events, callback) {
     const groups = groupByBaseTypeAndName(events);
 
     Object.keys(groups).forEach(baseType => {
@@ -60,7 +60,7 @@ function eachConsecutiveEvent(events, callback) {
     });
 }
 
-function addDiffs(events) {
+function addDiffs (events) {
     eachConsecutiveEvent(events, (left, right) => {
         if (right) {
             left.diffs = diff(right.data, left.data);

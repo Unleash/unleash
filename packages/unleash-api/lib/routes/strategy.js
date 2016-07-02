@@ -64,22 +64,20 @@ module.exports = function (app, config) {
                 createdBy: extractUser(req),
                 data: newStrategy,
             }))
-            .then(() => {
-                res.status(201).end();
-            })
+            .then(() => res.status(201).end())
             .catch(NameExistsError, () => {
-                res.status(403).json([{ msg: `A strategy named '${req.body.name}' already exists.` }]).end();
+                res.status(403)
+                    .json([{ msg: `A strategy named '${req.body.name}' already exists.` }])
+                    .end();
             })
-            .catch(ValidationError, () => {
-                res.status(400).json(req.validationErrors());
-            })
+            .catch(ValidationError, () => res.status(400).json(req.validationErrors()))
             .catch(err => {
                 logger.error('Could not create strategy', err);
                 res.status(500).end();
             });
     });
 
-    function validateStrategyName(req) {
+    function validateStrategyName (req) {
         return new Promise((resolve, reject) => {
             strategyDb.getStrategy(req.body.name)
                 .then(() => {

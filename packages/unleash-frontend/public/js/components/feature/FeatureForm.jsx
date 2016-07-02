@@ -3,7 +3,7 @@ const React = require('react');
 const TextInput = require('../form/TextInput');
 
 const FeatureForm = React.createClass({
-    getInitialState() {
+    getInitialState () {
         return {
             strategyOptions: this.props.strategies,
             requiredParams: [],
@@ -11,25 +11,25 @@ const FeatureForm = React.createClass({
         };
     },
 
-    componentWillMount() {
+    componentWillMount () {
         if (this.props.feature) {
             this.setSelectedStrategy(this.props.feature.strategy);
         }
     },
 
-    onStrategyChange(e) {
+    onStrategyChange (e) {
         this.setSelectedStrategy(e.target.value);
         this.setState({ currentStrategy: e.target.value });
     },
 
-    getParameterValue(name) {
+    getParameterValue (name) {
         if (this.props.feature && this.props.feature.parameters) {
             return this.props.feature.parameters[name];
         }
         return '';
     },
 
-    setSelectedStrategy(name) {
+    setSelectedStrategy (name) {
         const selectedStrategy = this.props.strategies.filter(strategy => strategy.name ===  name)[0];
 
         if (selectedStrategy) {
@@ -42,7 +42,7 @@ const FeatureForm = React.createClass({
         }
     },
 
-    setStrategyParams(strategy) {
+    setStrategyParams (strategy) {
         const requiredParams = [];
         let key;
         for (key in strategy.parametersTemplate) {
@@ -53,7 +53,7 @@ const FeatureForm = React.createClass({
         this.setState({ requiredParams });
     },
 
-    render() {
+    render () {
         const feature = this.props.feature || {
             name: '',
             strategy: 'default',
@@ -127,13 +127,13 @@ const FeatureForm = React.createClass({
         );
     },
 
-    renderStrategyOptions() {
+    renderStrategyOptions () {
         return this.props.strategies.map(strategy => <option key={strategy.name} value={strategy.name}>
             {strategy.name}
         </option>);
     },
 
-    renderStrategyProperties() {
+    renderStrategyProperties () {
         return this.state.requiredParams.map(param => <TextInput
             id={`param-${param.name}`}
             key={`param-${param.name}`}
@@ -143,7 +143,7 @@ const FeatureForm = React.createClass({
             value={param.value} />);
     },
 
-    saveFeature(e) {
+    saveFeature (e) {
         e.preventDefault();
 
         const feature = {
@@ -157,12 +157,12 @@ const FeatureForm = React.createClass({
         this.props.onSubmit(feature);
     },
 
-    cancelFeature(e) {
+    cancelFeature (e) {
         e.preventDefault();
         this.props.onCancel();
     },
 
-    getParameters() {
+    getParameters () {
         const parameters = {};
         this.state.requiredParams.forEach(param => {
             parameters[param.name] = this.refs[param.name].getValue();

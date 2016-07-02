@@ -23,7 +23,7 @@ const app = require('../app')({
 Promise.promisifyAll(request);
 request = request(app);
 
-function createStrategies() {
+function createStrategies () {
     return Promise.map([
         {
             name: 'default',
@@ -40,7 +40,7 @@ function createStrategies() {
     ], strategy => strategyDb._createStrategy(strategy));
 }
 
-function createFeatures() {
+function createFeatures () {
     return Promise.map([
         {
             name: 'featureX',
@@ -96,19 +96,19 @@ function createFeatures() {
     ], feature => featureDb._createFeature(feature));
 }
 
-function destroyStrategies() {
+function destroyStrategies () {
     return knex('strategies').del();
 }
 
-function destroyFeatures() {
+function destroyFeatures () {
     return knex('features').del();
 }
 
-function resetDatabase() {
+function resetDatabase () {
     return Promise.all([destroyStrategies(), destroyFeatures()]);
 }
 
-function setupDatabase() {
+function setupDatabase () {
     return Promise.all([createStrategies(), createFeatures()]);
 }
 
@@ -117,7 +117,7 @@ module.exports = {
     db: {
         reset: resetDatabase,
         setup: setupDatabase,
-        resetAndSetup() {
+        resetAndSetup () {
             return resetDatabase().then(setupDatabase);
         },
     },

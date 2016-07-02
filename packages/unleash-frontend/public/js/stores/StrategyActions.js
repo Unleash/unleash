@@ -8,7 +8,7 @@ const StrategyActions = Reflux.createActions({
     remove: { asyncResult: true },
 });
 
-StrategyActions.init.listen(function() {
+StrategyActions.init.listen(function () {
     StrategyAPI.getStrategies((err, strategies) => {
         if (err) {
             this.failed(err);
@@ -18,7 +18,7 @@ StrategyActions.init.listen(function() {
     });
 });
 
-StrategyActions.create.listen(function(feature) {
+StrategyActions.create.listen(function (feature) {
     StrategyAPI.createStrategy(feature, err => {
         if (err) {
             this.failed(err);
@@ -28,7 +28,7 @@ StrategyActions.create.listen(function(feature) {
     });
 });
 
-StrategyActions.remove.listen(function(feature) {
+StrategyActions.remove.listen(function (feature) {
     StrategyAPI.removeStrategy(feature, err => {
         if (err) {
             this.failed(err);

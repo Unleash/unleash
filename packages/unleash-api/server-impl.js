@@ -2,7 +2,7 @@
 const logger = require('./lib/logger');
 const defaultDatabaseUri = process.env.DATABASE_URL;
 
-function start(options) {
+function start (options) {
     options = options || {};
 
     const db = require('./lib/db/dbPool')(options.databaseUri || defaultDatabaseUri);

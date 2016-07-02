@@ -4,19 +4,19 @@ const TextInput      = require('../form/TextInput');
 
 const StrategyForm = React.createClass({
 
-    getDefaultProps() {
+    getDefaultProps () {
         return {
             maxParams: 4,
         };
     },
 
-    getInitialState() {
+    getInitialState () {
         return {
             parameters: [],
         };
     },
 
-    onSubmit(event) {
+    onSubmit (event) {
         event.preventDefault();
 
         const strategy = {};
@@ -34,27 +34,27 @@ const StrategyForm = React.createClass({
         this.props.onSave(strategy);
     },
 
-    onCancel(event) {
+    onCancel (event) {
         event.preventDefault();
 
         this.props.onCancelNewStrategy();
     },
 
-    onAddParam(event) {
+    onAddParam (event) {
         event.preventDefault();
         const id = this.state.parameters.length + 1;
         const params = this.state.parameters.concat([{ id, name: `param_${id}`, label: `Parameter ${id}` }]);
         this.setState({ parameters: params });
     },
 
-    onRemoveParam(event) {
+    onRemoveParam (event) {
         event.preventDefault();
         const params = this.state.parameters.slice(0, -1);
 
         this.setState({ parameters: params });
     },
 
-    render() {
+    render () {
         return (
             <div className="line r-pam bg-lilac-xlt">
                 <div className="unit r-size1of2">
@@ -91,7 +91,7 @@ const StrategyForm = React.createClass({
         );
     },
 
-    renderParameters() {
+    renderParameters () {
         return this.state.parameters.map(param => <div className="formelement" key={param.name}>
             <label className="t4">{param.label}</label>
             <div className="input">
@@ -116,12 +116,12 @@ const StrategyForm = React.createClass({
         </div>);
     },
 
-    renderAddLink() {
+    renderAddLink () {
         if (this.state.parameters.length < this.props.maxParams) {
             return <a href="#add" onClick={this.onAddParam}>+ Add required parameter</a>;
         }
     },
-    renderRemoveLink() {
+    renderRemoveLink () {
         if (this.state.parameters.length > 0) {
             return (
                 <div className="formelement mtn">

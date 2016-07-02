@@ -2,7 +2,7 @@
 const React   = require('react');
 const Feature = require('./Feature');
 
-const noop = function() {};
+const noop = function () {};
 
 const FeatureList = React.createClass({
     propTypes: {
@@ -10,25 +10,25 @@ const FeatureList = React.createClass({
         strategies: React.PropTypes.array.isRequired,
     },
 
-    getDefaultProps() {
+    getDefaultProps () {
         return {
             onFeatureChanged: noop,
             onFeatureArchive: noop,
         };
     },
 
-    getInitialState() {
+    getInitialState () {
         return {
             filter: undefined,
         };
     },
 
-    onFilterChange(e) {
+    onFilterChange (e) {
         e.preventDefault();
         this.setState({ filter: e.target.value.trim() });
     },
 
-    filteredFeatures() {
+    filteredFeatures () {
         if (this.state.filter) {
             const regex = new RegExp(this.state.filter, 'i');
 
@@ -37,7 +37,7 @@ const FeatureList = React.createClass({
         return this.props.features;
     },
 
-    render() {
+    render () {
         const featureNodes = this.filteredFeatures().map(feature => <Feature
           key={feature.name}
           feature={feature}

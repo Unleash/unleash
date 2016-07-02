@@ -9,31 +9,31 @@ let _strategies = [];
 const StrategyStore = Reflux.createStore({
 
     // Initial setup
-    init() {
+    init () {
         this.listenTo(StrategyActions.init.completed, this.setStrategies);
         this.listenTo(StrategyActions.create.completed, this.onCreate);
         this.listenTo(StrategyActions.remove.completed,  this.onRemove);
     },
 
-    onCreate(strategy) {
+    onCreate (strategy) {
         this.setStrategies(_strategies.concat([strategy]));
     },
 
-    onRemove(strategy) {
+    onRemove (strategy) {
         const strategies = filter(_strategies, item => item.name !== strategy.name);
         this.setStrategies(strategies);
     },
 
-    setStrategies(strategies) {
+    setStrategies (strategies) {
         _strategies = strategies;
         this.trigger(_strategies);
     },
 
-    getStrategies() {
+    getStrategies () {
         return _strategies;
     },
 
-    initStore(strategies) {
+    initStore (strategies) {
         _strategies = strategies;
     },
 });

@@ -1,7 +1,7 @@
 'use strict';
 const util = require('util');
 
-function NotFoundError(message) {
+function NotFoundError (message) {
     Error.call(this);
     Error.captureStackTrace(this, this.constructor);
 

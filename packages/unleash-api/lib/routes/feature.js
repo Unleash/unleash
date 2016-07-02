@@ -45,7 +45,8 @@ module.exports = function (app, config) {
             .catch(NameExistsError, () => {
                 res.status(403).json([{
                     msg: `A feature named '${req.body.name}' already exists. It could be archived.`,
-                }]).end();
+                }])
+                .end();
             })
             .catch(ValidationError, () => {
                 res.status(400).json(req.validationErrors());
@@ -105,7 +106,7 @@ module.exports = function (app, config) {
             });
     });
 
-    function validateUniqueName(req) {
+    function validateUniqueName (req) {
         return new Promise((resolve, reject) => {
             featureDb.getFeature(req.body.name)
                 .then(() => {

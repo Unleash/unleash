@@ -1,7 +1,7 @@
 'use strict';
 const knex   = require('knex');
 
-module.exports = function(databaseConnection) {
+module.exports = function (databaseConnection) {
     return knex({
         client: 'pg',
         connection: databaseConnection,

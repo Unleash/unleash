@@ -5,24 +5,24 @@ const eventStore     = require('../../stores/EventStore');
 const ErrorActions   = require('../../stores/ErrorActions');
 
 const LogEntriesComponent = React.createClass({
-    getInitialState() {
+    getInitialState () {
         return {
             createView: false,
             events: [],
         };
     },
 
-    componentDidMount() {
+    componentDidMount () {
         eventStore.getEvents().then(res => {
             this.setState({ events: res.events });
         }, this.initError);
     },
 
-    initError() {
+    initError () {
         ErrorActions.error('Could not load events from server');
     },
 
-    render() {
+    render () {
         return (
             <div>
                 <h1>Log</h1>

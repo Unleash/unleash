@@ -5,7 +5,7 @@ const LogEntryList = require('../log/LogEntryList');
 const eventStore = require('../../stores/EventStore');
 
 const Feature = React.createClass({
-    getInitialState() {
+    getInitialState () {
         return {
             editMode: false,
             showHistory: false,
@@ -13,33 +13,33 @@ const Feature = React.createClass({
         };
     },
 
-    handleEventsResponse(response) {
+    handleEventsResponse (response) {
         this.setState({ events: response });
     },
 
-    toggleHistory() {
+    toggleHistory () {
         eventStore.getEventsByName(this.props.feature.name).then(this.handleEventsResponse);
         this.setState({ showHistory: !this.state.showHistory });
     },
 
 
-    toggleEditMode() {
+    toggleEditMode () {
         this.setState({ editMode: !this.state.editMode });
     },
 
-    saveFeature(feature) {
+    saveFeature (feature) {
         this.props.onChange(feature);
         this.toggleEditMode();
     },
 
-    archiveFeature() {
+    archiveFeature () {
         if (window.confirm(`Are you sure you want to delete ${this.props.feature.name}?`)) {  // eslint-disable-line no-alert
             this.props.onArchive(this.props.feature);
         }
     },
 
 
-    renderEditMode() {
+    renderEditMode () {
         return (
             <tr>
                 <td colSpan="4" className="pan man no-border">
@@ -53,7 +53,7 @@ const Feature = React.createClass({
             );
     },
 
-    render() {
+    render () {
         return (
             <tbody className="feature">
                 <tr className={this.state.editMode ? 'edit bg-lilac-xlt' : ''}>
@@ -107,11 +107,11 @@ const Feature = React.createClass({
         );
     },
 
-    renderEmptyRow() {
+    renderEmptyRow () {
         return (<tr />);
     },
 
-    renderHistory() {
+    renderHistory () {
         return (<tr>
                     <td colSpan="4" className="no-border">
                         <LogEntryList events={this.state.events} />

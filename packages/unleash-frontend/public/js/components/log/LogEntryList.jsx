@@ -7,14 +7,15 @@ const LogEntryList = React.createClass({
         events: React.PropTypes.array.isRequired,
     },
 
-    getInitialState() {
+    getInitialState () {
         return {
             showFullEvents: false,
         };
     },
 
-    render() {
-        const logEntryNodes = this.props.events.map(event => <LogEntry event={event} key={event.id} showFullEvents={this.state.showFullEvents} />);
+    render () {
+        const logEntryNodes = this.props.events.map(event =>
+            <LogEntry event={event} key={event.id} showFullEvents={this.state.showFullEvents} />);
 
         return (
             <div>
@@ -47,7 +48,7 @@ const LogEntryList = React.createClass({
         );
     },
 
-    toggleFullEvents() {
+    toggleFullEvents () {
         this.setState({ showFullEvents: !this.state.showFullEvents });
     },
 

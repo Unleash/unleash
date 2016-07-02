@@ -1,5 +1,5 @@
 'use strict';
-function extractUsername(req) {
+function extractUsername (req) {
     return req.cookies.username || 'unknown';
 }
 module.exports = extractUsername;

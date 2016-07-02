@@ -2,7 +2,7 @@
 const util = require('util');
 const EventEmitter = require('events').EventEmitter;
 
-function EventStore(eventDb) {
+function EventStore (eventDb) {
     this.eventDb = eventDb;
     EventEmitter.call(this);
 }

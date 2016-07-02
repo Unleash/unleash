@@ -45,4 +45,21 @@ describe('legacy-feature-mapper', () => {
         assert(mappedFeature.strategy === undefined);
         assert(mappedFeature.parameters === undefined);
     });
+
+    it('should not transform if it already is the new format', () => {
+        const feature = {
+            name: 'test',
+            enabled: 0,
+            strategies: [{
+                name: 'default',
+                parameters: {
+                    val: 'bar',
+                },
+            }],
+        };
+
+        const mappedFeature = mapper.toNewFormat(feature);
+
+        assert.equal(mappedFeature, feature);
+    });
 });

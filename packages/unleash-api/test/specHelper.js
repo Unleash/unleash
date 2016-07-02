@@ -46,52 +46,60 @@ function createFeatures () {
             name: 'featureX',
             description: 'the #1 feature',
             enabled: true,
-            strategy: 'default',
+            strategies: [{ name: 'default', parameters: {} }],
         },
         {
             name: 'featureY',
             description: 'soon to be the #1 feature',
             enabled: false,
-            strategy: 'baz',
-            parameters: {
-                foo: 'bar',
-            },
+            strategies: [{
+                name: 'baz',
+                parameters: {
+                    foo: 'bar',
+                },
+            }],
         },
         {
             name: 'featureZ',
             description: 'terrible feature',
             enabled: true,
-            strategy: 'baz',
-            parameters: {
-                foo: 'rab',
-            },
+            strategies: [{
+                name: 'baz',
+                parameters: {
+                    foo: 'rab',
+                },
+            }],
         },
         {
             name: 'featureArchivedX',
             description: 'the #1 feature',
             enabled: true,
             archived: true,
-            strategy: 'default',
+            strategies: [{ name: 'default', parameters: {} }],
         },
         {
             name: 'featureArchivedY',
             description: 'soon to be the #1 feature',
             enabled: false,
             archived: true,
-            strategy: 'baz',
-            parameters: {
-                foo: 'bar',
-            },
+            strategies: [{
+                name: 'baz',
+                parameters: {
+                    foo: 'bar',
+                },
+            }],
         },
         {
             name: 'featureArchivedZ',
             description: 'terrible feature',
             enabled: true,
             archived: true,
-            strategy: 'baz',
-            parameters: {
-                foo: 'rab',
-            },
+            strategies: [{
+                name: 'baz',
+                parameters: {
+                    foo: 'rab',
+                },
+            }],
         },
     ], feature => featureDb._createFeature(feature));
 }

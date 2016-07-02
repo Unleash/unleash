@@ -111,4 +111,35 @@ describe('The features api', () => {
             .set('Content-Type', 'application/json')
             .expect(403, done);
     });
+
+    describe('new strategies api', function () {
+        it('automatically map existing strategy to strategies array', function (done) {
+            request
+                .get('/features/featureY')
+                .expect('Content-Type', /json/)
+                .end(function (err, res) {
+                    assert.equal(res.body.strategies.length, 1, 'expected strategy added to strategies');
+                    assert.equal(res.body.strategy, res.body.strategies[0].name);
+                    assert.deepEqual(res.body.parameters, res.body.strategies[0].parameters);
+                    done();
+                });
+        });
+
+        it('can add two strategies to a feature toggle', function (done) {
+            request
+                .put('/features/featureY')
+                .send({
+                    name: 'featureY',
+                    description: 'soon to be the #14 feature',
+                    enabled: false,
+                    strategies: [
+                        {
+                            name: 'baz',
+                            parameters: { foo: 'bar' },
+                        },
+                    ] })
+                .set('Content-Type', 'application/json')
+                .expect(200, done);
+        });
+    });
 });

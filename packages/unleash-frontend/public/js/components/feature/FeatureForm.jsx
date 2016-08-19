@@ -22,15 +22,15 @@ const FeatureForm = React.createClass({
         this.setState({ currentStrategy: e.target.value });
     },
 
-    getParameterValue (name) {
+    getParameterValue (feature) {
         if (this.props.feature && this.props.feature.parameters) {
-            return this.props.feature.parameters[name];
+            return this.props.feature.parameters[feature];
         }
         return '';
     },
 
-    setSelectedStrategy (name) {
-        const selectedStrategy = this.props.strategies.filter(strategy => strategy.name ===  name)[0];
+    setSelectedStrategy (strategyName) {
+        const selectedStrategy = this.props.strategies.filter(strategy => strategy.name ===  strategyName)[0];
 
         if (selectedStrategy) {
             this.setStrategyParams(selectedStrategy);

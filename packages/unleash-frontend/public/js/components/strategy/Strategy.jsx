@@ -6,8 +6,8 @@ const Strategy = React.createClass({
         strategy: React.PropTypes.object.isRequired,
     },
 
-    onRemove (event) {
-        event.preventDefault();
+    onRemove (evt) {
+        evt.preventDefault();
         if (window.confirm(`Are you sure you want to delete strategy '${this.props.strategy.name}'?`)) {  // eslint-disable-line no-alert
             this.props.onRemove(this.props.strategy);
         }

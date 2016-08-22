@@ -3,8 +3,8 @@
 'use strict';
 
 const path = require('path');
-const root = path.normalize(path.join(__dirname, '.'));
-const jsroot = path.join(root, 'public', 'js');
+const publicRoot = path.join(__dirname, 'public');
+const jsroot = path.join(publicRoot, 'js');
 
 module.exports = {
 
@@ -12,7 +12,7 @@ module.exports = {
     entry: './app.jsx',
 
     output: {
-        path: path.join(root, 'public'),
+        path: publicRoot,
         filename: 'bundle.js',
         publicPath: '/js/',
     },

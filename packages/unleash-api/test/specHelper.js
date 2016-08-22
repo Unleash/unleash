@@ -1,7 +1,7 @@
 'use strict';
 process.env.NODE_ENV = 'test';
 
-const Promise = require('bluebird');
+const BPromise = require('bluebird');
 let request = require('supertest');
 const databaseUri = require('./databaseConfig').getDatabaseUri();
 const knex = require('../lib/db/dbPool')(databaseUri);
@@ -20,11 +20,11 @@ const app = require('../app')({
     strategyDb,
 });
 
-Promise.promisifyAll(request);
+BPromise.promisifyAll(request);
 request = request(app);
 
 function createStrategies () {
-    return Promise.map([
+    return BPromise.map([
         {
             name: 'default',
             description: 'Default on or off Strategy.',
@@ -41,7 +41,7 @@ function createStrategies () {
 }
 
 function createFeatures () {
-    return Promise.map([
+    return BPromise.map([
         {
             name: 'featureX',
             description: 'the #1 feature',
@@ -105,11 +105,11 @@ function destroyFeatures () {
 }
 
 function resetDatabase () {
-    return Promise.all([destroyStrategies(), destroyFeatures()]);
+    return BPromise.all([destroyStrategies(), destroyFeatures()]);
 }
 
 function setupDatabase () {
-    return Promise.all([createStrategies(), createFeatures()]);
+    return BPromise.all([createStrategies(), createFeatures()]);
 }
 
 module.exports = {

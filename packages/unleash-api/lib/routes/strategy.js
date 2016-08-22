@@ -1,5 +1,5 @@
 'use strict';
-const Promise = require('bluebird');
+const BPromise = require('bluebird');
 const eventType = require('../eventType');
 const logger = require('../logger');
 const NameExistsError = require('../error/NameExistsError');
@@ -78,7 +78,7 @@ module.exports = function (app, config) {
     });
 
     function validateStrategyName (req) {
-        return new Promise((resolve, reject) => {
+        return new BPromise((resolve, reject) => {
             strategyDb.getStrategy(req.body.name)
                 .then(() => {
                     reject(new NameExistsError('Feature name already exist'));

@@ -2,8 +2,8 @@
 let _username;
 
 // Ref: http://stackoverflow.com/questions/10730362/get-cookie-by-name
-function readCookie (name) {
-    const nameEQ = `${name}=`;
+function readCookie (cookieName) {
+    const nameEQ = `${cookieName}=`;
     const ca = document.cookie.split(';');
     for (let i = 0;i < ca.length;i++) {
         let c = ca[i];

@@ -14,8 +14,8 @@ const LogEntryList = React.createClass({
     },
 
     render () {
-        const logEntryNodes = this.props.events.map(event =>
-            <LogEntry event={event} key={event.id} showFullEvents={this.state.showFullEvents} />);
+        const logEntryNodes = this.props.events.map(evt =>
+            <LogEntry event={evt} key={evt.id} showFullEvents={this.state.showFullEvents} />);
 
         return (
             <div>

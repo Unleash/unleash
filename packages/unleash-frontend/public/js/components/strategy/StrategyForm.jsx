@@ -16,8 +16,8 @@ const StrategyForm = React.createClass({
         };
     },
 
-    onSubmit (event) {
-        event.preventDefault();
+    onSubmit (evt) {
+        evt.preventDefault();
 
         const strategy = {};
         strategy.name = this.refs.name.getValue();
@@ -25,30 +25,30 @@ const StrategyForm = React.createClass({
         strategy.parametersTemplate = {};
 
         this.state.parameters.forEach(parameter => {
-            const name = this.refs[parameter.name].getDOMNode().value.trim();
-            if (name) {
-                strategy.parametersTemplate[name] = 'string';
+            const value = this.refs[parameter.name].getDOMNode().value.trim();
+            if (value) {
+                strategy.parametersTemplate[value] = 'string';
             }
         });
 
         this.props.onSave(strategy);
     },
 
-    onCancel (event) {
-        event.preventDefault();
+    onCancel (evt) {
+        evt.preventDefault();
 
         this.props.onCancelNewStrategy();
     },
 
-    onAddParam (event) {
-        event.preventDefault();
+    onAddParam (evt) {
+        evt.preventDefault();
         const id = this.state.parameters.length + 1;
         const params = this.state.parameters.concat([{ id, name: `param_${id}`, label: `Parameter ${id}` }]);
         this.setState({ parameters: params });
     },
 
-    onRemoveParam (event) {
-        event.preventDefault();
+    onRemoveParam (evt) {
+        evt.preventDefault();
         const params = this.state.parameters.slice(0, -1);
 
         this.setState({ parameters: params });

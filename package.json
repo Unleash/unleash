@@ -18,10 +18,11 @@
   "engines": {
     "node": "6"
   },
+  "license": "Apache-2.0",
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "prepublish": "npm run bootstrap",
-    "lint": "node node_modules/eslint/bin/eslint.js packages --fix --ignore-pattern=node_modules  --ext=js,jsx",
+    "lint": "eslint . --ext=js,jsx",
     "test": "npm run lint && lerna --concurrency=1 exec npm run test",
     "test:ci": "npm run lint && lerna --concurrency=1 exec npm run test:ci",
     "nsp": "lerna exec nsp check",
@@ -33,8 +34,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^2.12.0",
-    "eslint-config-finn": "^1.0.0-alpha.4",
+    "eslint": "^2.13.1",
+    "eslint-config-finn": "1.0.0-alpha.8",
     "eslint-plugin-react": "^4.3.0",
     "lerna": "2.0.0-beta.20",
     "nsp": "^2.3.2"

@@ -12,9 +12,9 @@ const EventStore = {
         });
     },
 
-    getEventsByName (name) {
+    getEventsByName (eventName) {
         return reqwest({
-            url: `events/${name}`,
+            url: `events/${eventName}`,
             method: 'get',
             type: TYPE,
         });

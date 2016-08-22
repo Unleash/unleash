@@ -16,17 +16,17 @@ describe('eventDiffer', () => {
     });
 
     it('diffs a feature-update event', () => {
-        const name = 'foo';
+        const feature = 'foo';
         const desc = 'bar';
 
         const events = [
             {
                 type: eventType.featureUpdated,
-                data: { name, description: desc, strategy: 'default', enabled: true, parameters: { value: 2 } },
+                data: { name: feature, description: desc, strategy: 'default', enabled: true, parameters: { value: 2 } },
             },
             {
                 type: eventType.featureCreated,
-                data: { name, description: desc, strategy: 'default', enabled: false, parameters: { value: 1 } },
+                data: { name: feature, description: desc, strategy: 'default', enabled: false, parameters: { value: 1 } },
             },
         ];
 

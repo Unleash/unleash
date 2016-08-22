@@ -4,14 +4,14 @@ process.env.NODE_ENV = 'test';
 const BPromise = require('bluebird');
 let request = require('supertest');
 const databaseUri = require('./databaseConfig').getDatabaseUri();
-const knex = require('../lib/db/dbPool')(databaseUri);
-const eventDb = require('../lib/db/event')(knex);
-const EventStore = require('../lib/eventStore');
+const knex = require('../../lib/db/dbPool')(databaseUri);
+const eventDb = require('../../lib/db/event')(knex);
+const EventStore = require('../../lib/eventStore');
 const eventStore = new EventStore(eventDb);
-const featureDb = require('../lib/db/feature')(knex, eventStore);
-const strategyDb = require('../lib/db/strategy')(knex, eventStore);
+const featureDb = require('../../lib/db/feature')(knex, eventStore);
+const strategyDb = require('../../lib/db/strategy')(knex, eventStore);
 
-const app = require('../app')({
+const app = require('../../app')({
     baseUriPath: '',
     db: knex,
     eventDb,

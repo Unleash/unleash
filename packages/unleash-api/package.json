@@ -35,12 +35,12 @@
     "start:dev:pg": "pg_virtualenv npm run start:dev:pg-chain",
     "start:dev:pg-chain": "export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; db-migrate up && npm run start:dev",
     "db-migrate": "db-migrate up",
-    "test": "export PORT=4243 ; mocha test test/*.js && npm run test:coverage",
+    "test": "export PORT=4243 ; mocha test/**/*.js && npm run test:coverage",
     "test:ci": "npm run db-migrate && npm run test",
     "test:watch": "mocha --watch test test/*",
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",
     "test:pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",
-    "test:coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
+    "test:coverage": "istanbul cover ./node_modules/mocha/bin/_mocha test/**/*.js --report lcovonly -- -R spec",
     "test:coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "dependencies": {
@@ -64,6 +64,7 @@
     "istanbul": "^0.4.3",
     "mocha": "^2.4.5",
     "mocha-lcov-reporter": "1.2.0",
+    "sinon": "^1.17.5",
     "supertest": "^1.2.0",
     "supervisor": "^0.10.0",
     "unleash-frontend": "1.0.0-alpha.2"

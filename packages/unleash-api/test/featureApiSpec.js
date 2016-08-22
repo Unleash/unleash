@@ -141,5 +141,25 @@ describe('The features api', () => {
                 .set('Content-Type', 'application/json')
                 .expect(200, done);
         });
+
+        it('should not be allowed to post both strategy and strategies', function (done) {
+            logger.setLevel('FATAL');
+            request
+                .post('/features')
+                .send({
+                    name: 'featureConfusing',
+                    description: 'soon to be the #14 feature',
+                    enabled: false,
+                    strategy: 'baz',
+                    parameters: {},
+                    strategies: [
+                        {
+                            name: 'baz',
+                            parameters: { foo: 'bar' },
+                        },
+                    ] })
+                .set('Content-Type', 'application/json')
+                .expect(400, done);
+        });
     });
 });

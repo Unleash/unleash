@@ -32,6 +32,7 @@ module.exports = function (app, config) {
         req.checkBody('name', 'Name must match format ^[0-9a-zA-Z\\.\\-]+$').matches(/^[0-9a-zA-Z\\.\\-]+$/i);
 
         validateRequest(req)
+            .then(validateFormat)
             .then(validateUniqueName)
             .then(() => eventStore.create({
                 type: eventType.featureCreated,
@@ -101,5 +102,13 @@ module.exports = function (app, config) {
                     resolve(req);
                 });
         });
+    }
+
+    function validateFormat (req) {
+        if (req.body.strategy && req.body.strategies) {
+            return BPromise.reject(new ValidationError('Cannot use both "strategy" and "strategies".'));
+        }
+
+        return BPromise.resolve(req);
     }
 };

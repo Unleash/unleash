@@ -30,7 +30,7 @@ module.exports = function (app, config) {
 
     app.post('/features', (req, res) => {
         req.checkBody('name', 'Name is required').notEmpty();
-        req.checkBody('name', 'Name must match format ^[a-zA-Z\\.\\-]+$').matches(/^[a-zA-Z\\.\\-]+$/i);
+        req.checkBody('name', 'Name must match format ^[0-9a-zA-Z\\.\\-]+$').matches(/^[0-9a-zA-Z\\.\\-]+$/i);
 
         validateRequest(req)
             .then(validateUniqueName)

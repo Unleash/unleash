@@ -17,8 +17,7 @@ const ErrorMessages = React.createClass({
                             <div className="media centerify">
                                 <div className="imgExt">
                                     <a onClick={this.props.onClearErrors}
-                                        className="icon-kryss1 linkblock sharp">
-                                    </a>
+                                        className="icon-kryss1 linkblock sharp" />
                                 </div>
                                 <div className="bd">
                                     <ul>{errorNodes}</ul>

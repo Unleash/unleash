@@ -34,9 +34,10 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^2.13.1",
-    "eslint-config-finn": "1.0.0-alpha.8",
-    "eslint-plugin-react": "^4.3.0",
+    "eslint": "^3.4.0",
+    "eslint-config-finn": "1.0.0-alpha.9",
+    "eslint-config-finn-react": "^1.0.0-alpha.2",
+    "eslint-plugin-react": "^6.2.0",
     "lerna": "2.0.0-beta.20",
     "nsp": "^2.3.2"
   }

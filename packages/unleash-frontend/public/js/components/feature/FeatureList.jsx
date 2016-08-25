@@ -51,10 +51,10 @@ const FeatureList = React.createClass({
                 <table className="outerborder man">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th />
                             <th>Name</th>
                             <th className="hide-lt480">Strategy</th>
-                            <th></th>
+                            <th />
                         </tr>
                     </thead>
                     <tbody>

@@ -25,8 +25,7 @@ const LogEntryList = React.createClass({
                         type="checkbox"
                         className="mlm"
                         value={this.state.fullEvents}
-                        onChange={this.toggleFullEvents}>
-                    </input>
+                        onChange={this.toggleFullEvents} />
                 </label>
 
                 <table className="outerborder zebra-striped">

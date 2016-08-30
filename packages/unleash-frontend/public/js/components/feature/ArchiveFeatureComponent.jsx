@@ -17,7 +17,7 @@ const ArchiveFeatureComponent = React.createClass({
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th></th>
+                            <th />
                         </tr>
                     </thead>
                     <tbody>
@@ -37,7 +37,7 @@ const ArchiveFeatureComponent = React.createClass({
             </td>
             <td className="rightify" width="150">
                 <button onClick={this.onRevive.bind(this, f)} title="Revive feature toggle">
-                    <span className="icon-svar"></span>
+                    <span className="icon-svar" />
                 </button>
             </td>
         </tr>);

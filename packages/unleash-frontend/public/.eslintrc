@@ -2,7 +2,7 @@
     "extends": [
         "finn",
         "finn/es6",
-        "finn/react"
+        "finn-react"
     ],
     "env": {
         "browser": true,

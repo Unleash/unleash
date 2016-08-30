@@ -59,8 +59,7 @@ const Feature = React.createClass({
                 <tr className={this.state.editMode ? 'edit bg-lilac-xlt' : ''}>
                     <td width="20">
                         <span className=
-                        {this.props.feature.enabled ? 'toggle-active' : 'toggle-inactive'} title="Status">
-                        </span>
+                        {this.props.feature.enabled ? 'toggle-active' : 'toggle-inactive'} title="Status" />
                     </td>
                     <td>
                         {this.props.feature.name} <br />

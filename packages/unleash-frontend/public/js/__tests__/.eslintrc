@@ -1,8 +1,7 @@
 {
     "extends": [
         "finn",
-        "finn/node",
-        "finn/es6"
+        "finn/node"
     ],
     "env": {
         "browser": true,

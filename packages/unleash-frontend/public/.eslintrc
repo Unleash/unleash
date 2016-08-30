@@ -1,7 +1,6 @@
 {
     "extends": [
         "finn",
-        "finn/es6",
         "finn-react"
     ],
     "env": {
@@ -9,6 +8,6 @@
         "commonjs": true
     },
     "rules": {
-        "react/sort-comp": [0]
+        "react/sort-comp": "off"
     }
 }

@@ -9,6 +9,7 @@ const validateRequest = require('../error/validateRequest');
 const extractUser = require('../extractUser');
 
 const legacyFeatureMapper = require('../helper/legacy-feature-mapper');
+const version = 1;
 
 module.exports = function (app, config) {
     const featureDb = config.featureDb;
@@ -17,7 +18,7 @@ module.exports = function (app, config) {
     app.get('/features', (req, res) => {
         featureDb.getFeatures()
             .then((features) => features.map(legacyFeatureMapper.addOldFields))
-            .then(features => res.json({ features }));
+            .then(features => res.json({ version, features }));
     });
 
     app.get('/features/:featureName', (req, res) => {

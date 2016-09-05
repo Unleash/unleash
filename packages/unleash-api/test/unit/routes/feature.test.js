@@ -1,6 +1,6 @@
 'use strict';
 
-let supertest = require('supertest');
+const supertest = require('supertest');
 const BPromise = require('bluebird');
 BPromise.promisifyAll(supertest);
 const assert = require('assert');
@@ -18,7 +18,7 @@ describe('Unit: The features api', () => {
             db: sinon.stub(),
             eventDb: sinon.stub(),
             eventStore: sinon.stub(),
-            featureDb: featureDb,
+            featureDb,
             strategyDb: sinon.stub(),
         });
 
@@ -49,10 +49,23 @@ describe('Unit: The features api', () => {
                 done();
             });
     });
+
+    it('should add version numbers for /features', (done) => {
+        featureDb.addFeature( { name: 'test', strategies: [{ name: 'default' }] } );
+
+        request
+            .get('/features')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, res) => {
+                assert.equal(res.body.version, 1);
+                done();
+            });
+    });
 });
 
 function createFeatureDb () {
-    let _features = [];
+    const _features = [];
     return {
         getFeatures: () => BPromise.resolve(_features),
         addFeature: (feature) => _features.push(feature),

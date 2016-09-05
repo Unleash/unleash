@@ -16,7 +16,7 @@ describe('legacy-feature-mapper', () => {
             }],
         };
 
-        let mappedFeature = mapper.addOldFields(feature);
+        const mappedFeature = mapper.addOldFields(feature);
 
         assert.equal(mappedFeature.name, feature.name);
         assert.equal(mappedFeature.enabled, feature.enabled);

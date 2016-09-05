@@ -11,6 +11,7 @@ GET: http://unleash.host.com/features
 
 ```json
 {
+  "version": 1,
   "features": [
     {
       "name": "Feature.A",
@@ -53,7 +54,9 @@ GET: http://unleash.host.com/features
 ```
 **Important:**
 
-_strategy_ and _paramters_ are depercated fields and will go away in the next version. They are kept for backward compability with older unleash-clients. 
+_strategy_ and _paramters_ are deprecated fields and will go away in the next version, 2. 
+They are kept for backward compatibility with older unleash-clients. _version_ property indicates 
+the json-response version, making it easier for clients to parse the response. 
 
 
 ## Fetch a feature
@@ -76,4 +79,5 @@ GET: http://unleash.host.com/features/[featureName]
 }
 ```
 
+_Notice that you will not get a version property when fetching a specific feature toggle by name_.  
 

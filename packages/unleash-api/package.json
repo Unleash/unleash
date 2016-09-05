@@ -36,6 +36,7 @@
     "start:dev:pg-chain": "export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; db-migrate up && npm run start:dev",
     "db-migrate": "db-migrate up",
     "test": "export PORT=4243 ; mocha test/**/*.js && npm run test:coverage",
+    "test:unit": "mocha test/unit/**/*.js ",
     "test:ci": "npm run db-migrate && npm run test",
     "test:watch": "mocha --watch test test/*",
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",

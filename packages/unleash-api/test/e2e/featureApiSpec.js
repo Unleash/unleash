@@ -112,12 +112,12 @@ describe('The features api', () => {
             .expect(403, done);
     });
 
-    describe('new strategies api', function () {
-        it('automatically map existing strategy to strategies array', function (done) {
+    describe('new strategies api', () => {
+        it('automatically map existing strategy to strategies array', (done) => {
             request
                 .get('/features/featureY')
                 .expect('Content-Type', /json/)
-                .end(function (err, res) {
+                .end((err, res) => {
                     assert.equal(res.body.strategies.length, 1, 'expected strategy added to strategies');
                     assert.equal(res.body.strategy, res.body.strategies[0].name);
                     assert.deepEqual(res.body.parameters, res.body.strategies[0].parameters);
@@ -125,7 +125,7 @@ describe('The features api', () => {
                 });
         });
 
-        it('can add two strategies to a feature toggle', function (done) {
+        it('can add two strategies to a feature toggle', (done) => {
             request
                 .put('/features/featureY')
                 .send({
@@ -142,7 +142,7 @@ describe('The features api', () => {
                 .expect(200, done);
         });
 
-        it('should not be allowed to post both strategy and strategies', function (done) {
+        it('should not be allowed to post both strategy and strategies', (done) => {
             logger.setLevel('FATAL');
             request
                 .post('/features')

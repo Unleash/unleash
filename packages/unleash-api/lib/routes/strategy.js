@@ -7,6 +7,7 @@ const ValidationError = require('../error/ValidationError');
 const NotFoundError = require('../error/NotFoundError');
 const validateRequest = require('../error/validateRequest');
 const extractUser = require('../extractUser');
+const version = 1;
 
 module.exports = function (app, config) {
     const strategyDb = config.strategyDb;
@@ -14,7 +15,7 @@ module.exports = function (app, config) {
 
     app.get('/strategies', (req, res) => {
         strategyDb.getStrategies().then(strategies => {
-            res.json({ strategies });
+            res.json({ version, strategies });
         });
     });
 

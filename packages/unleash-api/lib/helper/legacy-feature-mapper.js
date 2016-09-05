@@ -1,7 +1,7 @@
 'use strict';
 
 function addOldFields (feature) {
-    let modifiedFeature = Object.assign({}, feature);
+    const modifiedFeature = Object.assign({}, feature);
     modifiedFeature.strategy = feature.strategies[0].name;
     modifiedFeature.parameters = Object.assign({}, feature.strategies[0].parameters);
     return modifiedFeature;

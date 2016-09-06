@@ -70,7 +70,6 @@ module.exports = function (db, eventStore) {
     }
 
     function updateFeature (data) {
-        console.log(data);
         return db('features')
             .where({ name: data.name })
             .update(eventDataToRow(data))

@@ -1,5 +1,5 @@
 'use strict';
-const logger = require('../lib/logger');
+const logger = require('../../lib/logger');
 const assert     = require('assert');
 const specHelper = require('./specHelper');
 const request    = specHelper.request;
@@ -110,5 +110,56 @@ describe('The features api', () => {
             .send({ name: 'featureX' })
             .set('Content-Type', 'application/json')
             .expect(403, done);
+    });
+
+    describe('new strategies api', () => {
+        it('automatically map existing strategy to strategies array', (done) => {
+            request
+                .get('/features/featureY')
+                .expect('Content-Type', /json/)
+                .end((err, res) => {
+                    assert.equal(res.body.strategies.length, 1, 'expected strategy added to strategies');
+                    assert.equal(res.body.strategy, res.body.strategies[0].name);
+                    assert.deepEqual(res.body.parameters, res.body.strategies[0].parameters);
+                    done();
+                });
+        });
+
+        it('can add two strategies to a feature toggle', (done) => {
+            request
+                .put('/features/featureY')
+                .send({
+                    name: 'featureY',
+                    description: 'soon to be the #14 feature',
+                    enabled: false,
+                    strategies: [
+                        {
+                            name: 'baz',
+                            parameters: { foo: 'bar' },
+                        },
+                    ] })
+                .set('Content-Type', 'application/json')
+                .expect(200, done);
+        });
+
+        it('should not be allowed to post both strategy and strategies', (done) => {
+            logger.setLevel('FATAL');
+            request
+                .post('/features')
+                .send({
+                    name: 'featureConfusing',
+                    description: 'soon to be the #14 feature',
+                    enabled: false,
+                    strategy: 'baz',
+                    parameters: {},
+                    strategies: [
+                        {
+                            name: 'baz',
+                            parameters: { foo: 'bar' },
+                        },
+                    ] })
+                .set('Content-Type', 'application/json')
+                .expect(400, done);
+        });
     });
 });

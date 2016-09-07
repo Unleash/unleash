@@ -2,7 +2,7 @@
 const eventType = require('../eventType');
 const logger = require('../logger');
 const NotFoundError = require('../error/NotFoundError');
-const FEATURE_COLUMNS = ['name', 'description', 'enabled', 'strategy_name', 'parameters'];
+const FEATURE_COLUMNS = ['name', 'description', 'enabled', 'strategies'];
 
 module.exports = function (db, eventStore) {
     eventStore.on(eventType.featureCreated, event => createFeature(event.data));
@@ -39,18 +39,15 @@ module.exports = function (db, eventStore) {
             .map(rowToFeature);
     }
 
-
     function rowToFeature (row) {
         if (!row) {
             throw new NotFoundError('No feature toggle found');
         }
-
         return {
             name: row.name,
             description: row.description,
             enabled: row.enabled > 0,
-            strategy: row.strategy_name, // eslint-disable-line
-            parameters: row.parameters,
+            strategies: row.strategies,
         };
     }
 
@@ -60,8 +57,7 @@ module.exports = function (db, eventStore) {
             description: data.description,
             enabled: data.enabled ? 1 : 0,
             archived: data.archived ? 1 : 0,
-            strategy_name: data.strategy, // eslint-disable-line
-            parameters: data.parameters,
+            strategies: JSON.stringify(data.strategies),
         };
     }
 

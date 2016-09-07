@@ -1,5 +1,6 @@
 'use strict';
 const eventDiffer = require('../eventDiffer');
+const version = 1;
 
 module.exports = function (app, config) {
     const eventDb = config.eventDb;
@@ -7,7 +8,7 @@ module.exports = function (app, config) {
     app.get('/events', (req, res) => {
         eventDb.getEvents().then(events => {
             eventDiffer.addDiffs(events);
-            res.json({ events });
+            res.json({ version, events });
         });
     });
 

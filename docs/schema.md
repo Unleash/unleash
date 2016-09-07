@@ -40,32 +40,4 @@ Used by db-migrate module to keep track of migrations.
 | enabled        | int4          | 10              | 1            | 0              |                |
 | description    | text          | 2147483647      | 1            | (null)         |                |
 | archived       | int4          | 10              | 1            | 0              |                |
-| parameters     | json          | 2147483647      | 1            | (null)         | deprecated (*) | 
-| strategy_name  | varchar       | 255             | 1            | (null)         | deprecated (*) |
 | strategies     | json          | 2147483647      | 1            | (null)         |                | 
-
-(*) we migrated from `parmaters` and `strategy_name` to `strategies` which should contain an array of these.  
-
-For [aggregate strategies](https://github.com/finn-no/unleash/issues/102) we had the following sql to migrate to the strategies column: 
-
-```sql
-ALTER TABLE features ADD "strategies" json;
-
---populate the strategies column
-UPDATE features
-SET strategies = ('[{"name":"'||f.strategy_name||'","parameters":'||f.parameters||'}]')::json
-FROM features as f
-WHERE f.name = features.name;
-``` 
-
-In order to migrate back, one can use the following sql (it will loose all, but the first activation strategy):
-
-```sql
-UPDATE features
-SET strategy_name = f.strategies->0->>'name',
-   parameters = f.strategies->0->'parameters'
-FROM features as f
-WHERE f.name = features.name;
-
-ALTER TABLE features DROP COLUMN "strategies";
-```

@@ -35,6 +35,7 @@ describe('The archive features api', () => {
     it('must set name when reviving toggle', done => {
         request
             .post('/archive/revive')
+            .send({ name: '' })
             .expect(400, done);
     });
 });

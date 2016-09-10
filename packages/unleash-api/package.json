@@ -55,9 +55,9 @@
     "express": "4.14.0",
     "express-validator": "2.20.8",
     "install": "^0.8.1",
-    "knex": "^0.10.0",
+    "knex": "^0.11.10",
     "log4js": "^0.6.38",
-    "pg": "^4.5.5",
+    "pg": "^6.1.0",
     "serve-favicon": "^2.3.0"
   },
   "devDependencies": {

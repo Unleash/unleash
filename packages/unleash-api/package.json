@@ -52,7 +52,7 @@
     "deep-diff": "^0.3.3",
     "errorhandler": "1.3.5",
     "express": "4.13.4",
-    "express-validator": "2.20.3",
+    "express-validator": "2.20.8",
     "install": "^0.6.1",
     "knex": "^0.10.0",
     "log4js": "0.6.35",

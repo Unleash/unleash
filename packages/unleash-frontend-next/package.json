@@ -23,9 +23,8 @@
   },
   "scripts": {
     "build": "webpack -p",
-    "start": "NODE_ENV=development node server",
-    "hot-dev-server": "webpack-dev-server --config webpack-hot-dev-server.config.js --hot --progress --colors --port 3000 --inline",
-    "test": "jest",
+    "start": "webpack-dev-server --config webpack.config.js --hot --progress --colors --port 3000",
+    "test": "echo 'no test'",
     "test:ci": "npm run test"
   },
   "main": "./lib/index.js",

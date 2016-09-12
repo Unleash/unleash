@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
-import { AppBar } from 'react-toolbox/lib/app_bar';
-import { Navigation} from 'react-toolbox/lib/navigation';
-import Link from 'react-toolbox/lib/link';
+import { AppBar } from 'react-toolbox';
+
+import Navigation from './Navigation';
 
 export default class App extends Component {
     render () {
         return (
-            <AppBar>
-                <div>
-                    <Navigation type='horizontal' className="navigation">
-                        <Link href='' label='Feature Toggles' />
-                        <Link href='' active label='Strategies'  />
-                        <Link href='' active label='Documentation'  />
-                    </Navigation>
-                </div>
-            </AppBar>
+            <div>
+                <AppBar flat leftIcon="(Unleash)">
+                    <Navigation />
+                </AppBar>
+                {this.props.children}
+            </div>
         );
     }
 };

@@ -4,6 +4,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: [
@@ -14,7 +15,7 @@ module.exports = {
 
     resolve: {
         root: [path.join(__dirname, 'src')],
-        extensions: ['', '.js', '.jsx'],
+        extensions: ['', '.scss', '.css', '.js', '.jsx', '.json'],
         modulesDirectories: ['web_modules', 'node_modules'],
     },
 
@@ -32,14 +33,27 @@ module.exports = {
                 loaders: ['babel'],
                 include: path.join(__dirname, 'src'),
             },
+            {
+                test: /(\.scss|\.css)$/,
+                loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass')
+                
+            },
         ],
     },
 
     plugins: [
+        new ExtractTextPlugin('bundle.css',  { allChunks: true }),
         new webpack.HotModuleReplacementPlugin(),
     ],
 
+    sassLoader: {
+        data: '@import "theme/_config.scss";',
+        includePaths: [path.resolve(__dirname, './src')]
+    },
+
     devtool: 'source-map',
+
+    toolbox: {theme: 'src/theme/_config.scss'},
 
     externals: {
         // stuff not in node_modules can be resolved here.

@@ -22,7 +22,8 @@ export default class App extends Component {
                 <Layout>
                     <NavDrawer
                         active={this.state.drawerActive}
-                        permanentAt="sm" style={{ width: '200px' }}>
+                        permanentAt="sm" style={{ width: '200px' }}
+                    >
                         <Navigation />
                     </NavDrawer>
                     <Panel scrollY={false}>

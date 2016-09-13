@@ -27,7 +27,8 @@
     "build": "webpack -p",
     "start": "NODE_ENV=development supervisor --ignore ./node_modules/,./public/js lib/server-dev.js",
     "test": "jest",
-    "test:ci": "npm run test"
+    "test:ci": "npm run test",
+    "prepublish": "npm run build"
   },
   "main": "./lib/index.js",
   "dependencies": {

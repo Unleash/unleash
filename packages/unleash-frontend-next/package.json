@@ -1,7 +1,7 @@
 {
-  "name": "unleash-frontend",
+  "name": "unleash-frontend-next",
   "description": "unleash your features",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -25,9 +25,10 @@
     "build": "webpack -p",
     "start": "webpack-dev-server --config webpack.config.js --hot --progress --colors --port 3000",
     "test": "echo 'no test'",
-    "test:ci": "npm run test"
+    "test:ci": "npm run test",
+    "prepublish": "npm run build"
   },
-  "main": "./lib/index.js",
+  "main": "./index.js",
   "dependencies": {
     "immutability-helper": "^2.0.0",
     "react": "^15.3.1",

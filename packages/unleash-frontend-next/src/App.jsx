@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import { Layout, Panel, NavDrawer } from 'react-toolbox';
-import { AppBar, IconButton } from 'react-toolbox';
+import { Layout, Panel, NavDrawer, AppBar, IconButton } from 'react-toolbox';
 import style from './style';
 
 import Navigation from './Navigation';
 
 export default class App extends Component {
-    state = {
-        drawerActive: false,
-    };
+    constructor (props) {
+        super(props);
+        this.state = { drawerActive: false };
 
-    toggleDrawerActive = () => {
-        this.setState({ drawerActive: !this.state.drawerActive });
-    };
+        this.toggleDrawerActive = () => {
+            this.setState({ drawerActive: !this.state.drawerActive });
+        };
+    }
 
     render () {
         return (
@@ -25,7 +25,7 @@ export default class App extends Component {
                         <Navigation />
                     </NavDrawer>
                     <Panel scrollY={false}>
-                        <div style={{padding: '1.8em'}}>
+                        <div style={{ padding: '1.8em' }}>
                             {this.props.children}
                         </div>
 

@@ -4,7 +4,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: [
@@ -35,8 +35,8 @@ module.exports = {
             },
             {
                 test: /(\.scss|\.css)$/,
-                loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass')
-                
+                loader: ExtractTextPlugin.extract('style',
+                'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass'),
             },
         ],
     },
@@ -48,12 +48,10 @@ module.exports = {
 
     sassLoader: {
         data: '@import "theme/_config.scss";',
-        includePaths: [path.resolve(__dirname, './src')]
+        includePaths: [path.resolve(__dirname, './src')],
     },
 
     devtool: 'source-map',
-
-    toolbox: {theme: 'src/theme/_config.scss'},
 
     externals: {
         // stuff not in node_modules can be resolved here.

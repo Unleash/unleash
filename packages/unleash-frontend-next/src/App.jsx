@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Layout, Panel, NavDrawer } from 'react-toolbox';
 import { AppBar, IconButton } from 'react-toolbox';
+import style from './style'
 
 import Navigation from './Navigation';
 
@@ -15,7 +16,7 @@ export default class App extends Component {
 
     render () {
         return (
-            <div>
+            <div className={style.container}>
                 <AppBar>
                     <IconButton icon="menu" onClick={ this.toggleDrawerActive }/>
                 </AppBar>

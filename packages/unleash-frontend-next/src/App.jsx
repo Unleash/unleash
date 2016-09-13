@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Layout, Panel, NavDrawer } from 'react-toolbox';
 import { AppBar, IconButton } from 'react-toolbox';
-import style from './style'
+import style from './style';
 
 import Navigation from './Navigation';
 
@@ -21,14 +21,11 @@ export default class App extends Component {
                     <IconButton icon="menu" onClick={ this.toggleDrawerActive }/>
                 </AppBar>
                 <Layout>
-                    <NavDrawer
-                        active={this.state.drawerActive}
-                        permanentAt="sm" style={{ width: '200px' }}
-                    >
+                    <NavDrawer active={this.state.drawerActive} permanentAt="sm" style={{ width: '200px' }}>
                         <Navigation />
                     </NavDrawer>
                     <Panel scrollY={false}>
-                        <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem', minHeight: '100%' }}>
+                        <div style={{padding: '1.8em'}}>
                             {this.props.children}
                         </div>
 

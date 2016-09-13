@@ -1,10 +1,10 @@
 @import "~react-toolbox/lib/colors";
 @import "~react-toolbox/lib/globals";
+@import "~react-toolbox/lib/mixins";
 
 $color-primary:$palette-blue-400;
 $color-primary-dark: $palette-blue-700;
 
-$appbar-height: 4.4 * $unit !default;
 $appbar-height-m-portrait: 5.6 * $unit !default;
 $appbar-height-m-landscape: 4.8 * $unit !default;
 
@@ -19,12 +19,90 @@ $navigation-drawer-mobile-width: 5 * $standard-increment-mobile !default;
 // sass doesn't like use of variable here: calc(100% - $standard-increment-mobile);
 $navigation-drawer-max-mobile-width: calc(100% - 5.6rem) !default;
 
-body {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    outline: 0;
+html {
+  font-size: 62.5%;
+}
 
+body {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: Roboto, sans-serif;
+  font-size: 1.6rem;
+  -webkit-touch-callout: none;
+  * {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  }
+}
+
+a, abbr, address, article, aside, audio, b, blockquote, body, caption, cite,
+code, dd, del, dfn, dialog, div, dl, dt, em, fieldset, figure, footer, form, h1,
+h2, h3, h4, h5, h6, header, hgroup, hr, html, i, iframe, img, ins, kbd, label,
+legend, li, mark, menu, nav, object, ol, p, pre, q, samp, section, small, span,
+strong, sub, sup, table, tbody, td, tfoot, th, thead, time, tr, ul, var, video {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: 0;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6, label, p, button, abbr, a, span, small {
+  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+}
+
+a {
+  text-decoration: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+input:not([type="checkbox"]):not([type="radio"]), button {
+  outline: none;
+  appearance: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+
+// -- Material design font sizes
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
+  @include typo-display-3($color-contrast: true);
+}
+
+h1 {
+  @include typo-display-3;
+}
+
+h2 {
+  @include typo-display-2;
+}
+
+h3 {
+  @include typo-display-1;
+}
+
+h4 {
+  @include typo-headline;
+}
+
+h5 {
+  @include typo-title;
+}
+
+h6 {
+  @include typo-subhead;
+}
+
+p {
+  @include typo-body-1;
 }
 
 

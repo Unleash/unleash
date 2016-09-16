@@ -6,9 +6,9 @@ export default class UnleashNav extends Component {
     render () {
         return (
                 <List selectable ripple>
-                    <Link to="/features"><ListItem selectable className="active" caption="Feature Toggles" /></Link>
+                    <Link to="/"><ListItem selectable className="active" caption="Feature Toggles" /></Link>
                     <Link to="/strategies"><ListItem selectable caption="Strategies" /></Link>
-                    <Link to="/log"><ListItem selectable caption="Log" /></Link>
+                    <Link to="/logs"><ListItem selectable caption="Log" /></Link>
                     <Link to="/archive"><ListItem selectable caption="Archive" /></Link>
                     <ListDivider />
                     <ListSubHeader Resources/>

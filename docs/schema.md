@@ -1,5 +1,7 @@
 # Schema
 
+This document describes our current database schama used in PostgreSQL
+
 ## Table: _migrations_
 
 Used by db-migrate module to keep track of migrations. 
@@ -22,7 +24,7 @@ Used by db-migrate module to keep track of migrations.
 | data        | json      | 2147483647  | 1        | (null)                             |
 
 
-## Table: _strategies_loc
+## Table: _strategies_
 | NAME                | TYPE      | SIZE        | NULLABLE | COLUMN_DEF | 
 | ------------------- | --------- | ----------- | -------- | ---------- | 
 | created_at          | timestamp | 29          | 1        | now()      | 

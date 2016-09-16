@@ -1,17 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, hashHistory } from 'react-router';
-import App from './App';
-import Features from './Features';
-import Strategies from './Strategies';
+import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 
-ReactDOM.render((
-    <Router history={hashHistory}>
-        <Route path="/" component={App}>
-            <Route path="/features" component={Features} />
-            <Route path="/strategies" component={Strategies} />
-            <Route path="/log" component={Strategies} />
-            <Route path="/archive" component={Strategies} />
-        </Route>
-    </Router>
-), document.getElementById('app'));
+import store from './store';
+import App from './App';
+
+import Features from './page/features';
+import Strategies from './page/strategies';
+import Logs from './page/logs';
+import Archive from './page/archive';
+
+const unleashStore = createStore(store);
+
+ReactDOM.render(
+    <Provider store={unleashStore}>
+        <Router history={hashHistory}>
+            <Route path="/" component={App}>
+                <IndexRoute component={Features} />
+                <Route path="/strategies" component={Strategies} />
+                <Route path="/logs" component={Logs} />
+                <Route path="/archive" component={Archive} />
+            </Route>
+        </Router>
+    </Provider>, document.getElementById('app'));

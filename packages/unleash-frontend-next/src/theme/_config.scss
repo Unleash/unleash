@@ -1,0 +1,22 @@
+@import "~react-toolbox/lib/colors";
+@import "~react-toolbox/lib/globals";
+@import "~react-toolbox/lib/mixins";
+@import "~react-toolbox/lib/commons";
+
+
+$color-primary:$palette-blue-400;
+$color-primary-dark: $palette-blue-700;
+
+$appbar-height-m-portrait: 5.6 * $unit !default;
+$appbar-height-m-landscape: 4.8 * $unit !default;
+
+$navigation-drawer-desktop-width: 3 * $standard-increment-desktop !default;
+$navigation-drawer-max-desktop-width: 40 * $unit !default;
+
+// Mobile:
+// Width = Screen width − 56 dp
+// Maximum width: 320dp
+$navigation-drawer-mobile-width: 5 * $standard-increment-mobile !default;
+
+// sass doesn't like use of variable here: calc(100% - $standard-increment-mobile);
+$navigation-drawer-max-mobile-width: calc(100% - 5.6rem) !default;

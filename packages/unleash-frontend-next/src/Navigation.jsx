@@ -8,7 +8,7 @@ export default class UnleashNav extends Component {
                 <List selectable ripple>
                     <Link to="/"><ListItem selectable className="active" caption="Feature Toggles" /></Link>
                     <Link to="/strategies"><ListItem selectable caption="Strategies" /></Link>
-                    <Link to="/logs"><ListItem selectable caption="Log" /></Link>
+                    <Link to="/history"><ListItem selectable caption="Event History" /></Link>
                     <Link to="/archive"><ListItem selectable caption="Archive" /></Link>
                     <ListDivider />
                     <ListSubHeader Resources/>

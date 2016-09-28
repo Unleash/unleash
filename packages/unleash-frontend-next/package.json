@@ -24,6 +24,8 @@
   "scripts": {
     "build": "webpack -p",
     "start": "webpack-dev-server --config webpack.config.js --hot --progress --colors --port 3000",
+    "start:api": "json-server --watch mock-api.json -p 3001",
+    "lint": "eslint . --ext=js,jsx",
     "test": "echo 'no test'",
     "test:ci": "npm run test",
     "prepublish": "npm run build"
@@ -38,7 +40,8 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.8.0",
     "react-toolbox": "^1.2.1",
-    "redux": "^3.6.0"
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",
@@ -49,7 +52,12 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-preset-stage-2": "^6.13.0",
     "css-loader": "^0.25.0",
+    "eslint": "^3.4.0",
+    "eslint-config-finn": "1.0.0-alpha.11",
+    "eslint-config-finn-react": "^1.0.0-alpha.2",
+    "eslint-plugin-react": "^6.2.0",
     "extract-text-webpack-plugin": "^1.0.1",
+    "json-server": "^0.8.21",
     "node-sass": "~3.7.0",
     "postcss-loader": "^0.13.0",
     "redux-devtools": "^3.3.1",

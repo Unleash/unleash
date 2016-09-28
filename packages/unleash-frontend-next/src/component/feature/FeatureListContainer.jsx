@@ -1,17 +1,15 @@
 import { connect } from 'react-redux';
-import { toggleFeature } from '../../action';
+import { toggleFeature, fetchFeatureToggles } from '../../store/actions';
 import FeatureList from './FeatureList';
 
 const mapStateToProps = (state) => ({
     features: state.features,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    onFeatureClick: (id) => {
-        dispatch(toggleFeature(id));
-    },
-});
-
+const mapDispatchToProps = {
+    onFeatureClick: toggleFeature,
+    fetchFeatureToggles,
+};
 
 const FeatureListContainer = connect(
   mapStateToProps,

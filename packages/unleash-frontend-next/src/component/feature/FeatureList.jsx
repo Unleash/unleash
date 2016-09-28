@@ -1,21 +1,33 @@
 import React, { PropTypes } from 'react';
 import Feature from './Feature';
 
-const FeatureList = ({ features, onFeatureClick }) => (
-  <ul>
-    {features.map(featureToggle =>
-      <Feature
-        key={featureToggle.id}
-        {...featureToggle}
-        onClick={() => onFeatureClick(featureToggle.id)}
-      />
-    )}
-  </ul>
-);
+export default class FeatureList extends React.Component {
+    constructor () {
+        super();
+    }
 
-FeatureList.propTypes = {
-    onFeatureClick: PropTypes.func.isRequired,
-    features: PropTypes.array.isRequired,
-};
+    static propTypes () {
+        return {
+            onFeatureClick: PropTypes.func.isRequired,
+            features: PropTypes.array.isRequired,
+            fetchFeatureToggles: PropTypes.array.isRequired,
+        };
+    }
 
-export default FeatureList;
+    componentDidMount () {
+        this.props.fetchFeatureToggles();
+    }
+
+    render () {
+        const onFeatureClick = this.props.onFeatureClick;
+        const features = this.props.features.map(featureToggle =>
+                <Feature key={featureToggle.name}
+                    {...featureToggle}
+                    onClick={() => onFeatureClick(featureToggle.name)}
+                />);
+
+        return (
+            <ul>{features}</ul>
+        );
+    }
+}

@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { createStore, applyMiddleware } from 'redux';
 
 import store from './store';
 import App from './App';
@@ -12,7 +13,12 @@ import Strategies from './page/strategies';
 import HistoryPage from './page/history';
 import Archive from './page/archive';
 
-const unleashStore = createStore(store);
+const unleashStore = createStore(
+    store,
+    applyMiddleware(
+        thunkMiddleware
+    )
+);
 
 ReactDOM.render(
     <Provider store={unleashStore}>

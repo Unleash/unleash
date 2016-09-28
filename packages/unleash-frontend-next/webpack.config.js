@@ -56,4 +56,12 @@ module.exports = {
         // stuff not in node_modules can be resolved here.
     },
 
+    devServer: {
+        proxy: {
+            '/features': {
+                target: 'http://localhost:3001/',
+                secure: false,
+            },
+        },
+    },
 };

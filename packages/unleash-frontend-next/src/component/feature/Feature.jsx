@@ -1,8 +1,10 @@
+/* eslint no-shadow: ["error", { "allow": ["name"] }]*/
+
 import React, { PropTypes } from 'react';
 
-const Feature = ({ onClick, featureName, enabled }) => (
+const Feature = ({ onClick, name, enabled }) => (
   <li>
-    {featureName} is {enabled ? 'enabled ' : 'disabled '}
+    {name} is {enabled ? 'enabled ' : 'disabled '}
     <a onClick={onClick} href="#">toggle</a>
   </li>
 );
@@ -10,7 +12,7 @@ const Feature = ({ onClick, featureName, enabled }) => (
 Feature.propTypes = {
     onClick: PropTypes.func.isRequired,
     enabled: PropTypes.bool.isRequired,
-    featureName: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
 };
 
 export default Feature;

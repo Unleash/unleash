@@ -1,6 +1,6 @@
-import React from 'react';
+import { React, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { addFeatureToggle } from '../../action';
+import { addFeatureToggle } from '../../store/actions';
 
 
 let AddFeatureToggle = ({ dispatch }) => {
@@ -27,5 +27,10 @@ let AddFeatureToggle = ({ dispatch }) => {
   );
 };
 AddFeatureToggle = connect()(AddFeatureToggle);
+
+AddFeatureToggle.propTypes = {
+    dispatch: PropTypes.func.isRequired,
+};
+
 
 export default AddFeatureToggle;

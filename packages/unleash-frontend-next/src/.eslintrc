@@ -1,24 +1,12 @@
 {
     "extends": [
         "finn",
-        "finn-react"
+        "finn-react",
+        "finn/es-modules"
     ],
     "env": {
         "browser": true,
         "commonjs": true,
 	    "es6": true
-    },
-    "rules": {
-        "react/sort-comp": "off"
-    },
-    "ecmaFeatures": {
-        "sourceType": "module"
-    },
-    "parserOptions": {
-        "sourceType": "module",
-        "ecmaFeatures": {
-            "jsx": true,
-            "experimentalObjectRestSpread": true
-        }
     }
 }

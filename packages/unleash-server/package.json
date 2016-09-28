@@ -24,6 +24,9 @@
     "node": "6"
   },
   "main": "./server.js",
+  "bin": {
+    "unleash": "NODE_ENV=production ./unleash.js"
+  },
   "scripts": {
     "db-migrate-and-start": "npm run db-migrate && npm run start",
     "start": "NODE_ENV=production node server-impl.js",
@@ -31,10 +34,9 @@
     "test:ci": "npm run test"
   },
   "dependencies": {
+    "commander": "^2.9.0",
     "unleash-api": "1.0.0-alpha.2",
     "unleash-frontend": "1.0.0-alpha.2"
   },
-  "devDependencies": {
-
-  }
+  "devDependencies": {}
 }

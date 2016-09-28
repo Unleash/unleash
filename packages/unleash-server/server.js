@@ -2,4 +2,10 @@
 const unleash = require('unleash-api');
 const { publicFolder } = require('unleash-frontend');
 
-unleash.start({ publicFolder });
+
+module.exports = {
+    start: options => {
+        const opts = Object.assign({}, { publicFolder }, options);
+        return unleash.start(opts);
+    },
+};

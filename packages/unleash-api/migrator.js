@@ -8,7 +8,7 @@ function findUnleashApiRoot () {
         return path.dirname(require.resolve('unleash-api/package.json'));
     } catch (e) {}
     try {
-        return path.dirname(require.resolve('../unleash-api'));
+        return path.dirname(require.resolve('../unleash-api/package.json'));
     } catch (e) {}
     return process.cwd();
 }

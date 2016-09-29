@@ -1,11 +1,16 @@
 'use strict';
 const logger = require('./lib/logger');
-const defaultDatabaseUri = process.env.DATABASE_URL;
+const migrator = require('./migrator');
 
-function start (options) {
-    options = options || {};
+const DEFAULT_OPTIONS = {
+    databaseUri: process.env.DATABASE_URL,
+    port: process.env.HTTP_PORT || process.env.PORT || 4242,
+    baseUriPath: process.env.BASE_URI_PATH || '',
+};
 
-    const db = require('./lib/db/dbPool')(options.databaseUri || defaultDatabaseUri);
+function createApp (options) {
+    const db = require('./lib/db/dbPool')(options.databaseUri);
+
     // Database dependecies (statefull)
     const eventDb = require('./lib/db/event')(db);
     const EventStore = require('./lib/eventStore');
@@ -14,27 +19,33 @@ function start (options) {
     const strategyDb = require('./lib/db/strategy')(db, eventStore);
 
     const config = {
-        baseUriPath: process.env.BASE_URI_PATH || '',
-        port: process.env.HTTP_PORT || process.env.PORT || 4242,
+        baseUriPath: options.baseUriPath,
+        port: options.port,
+        publicFolder: options.publicFolder,
         db,
         eventDb,
         eventStore,
         featureDb,
         strategyDb,
-        publicFolder: options.publicFolder,
     };
 
     const app = require('./app')(config);
-
     const server = app.listen(app.get('port'), () => {
-        logger.info(`unleash started on ${app.get('port')}`);
+        logger.info(`Unleash started on ${app.get('port')}`);
     });
+    return { app, server };
+}
 
-    return {
-        app,
-        server,
-        config,
-    };
+function start (opts) {
+    const options = Object.assign({}, DEFAULT_OPTIONS, opts);
+
+    if (!options.databaseUri) {
+        throw new Error('You must either pass databaseUri option or set environemnt variable DATABASE_URL');
+    }
+
+    return migrator(options.databaseUri)
+        .then(() => createApp(options))
+        .catch(err => logger.error('failed to migrate db', err));
 }
 
 process.on('uncaughtException', err => {

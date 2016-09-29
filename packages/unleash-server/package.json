@@ -25,7 +25,7 @@
   },
   "main": "./server.js",
   "bin": {
-    "unleash": "./unleash.js"
+    "unleash": "./bin/unleash.js"
   },
   "scripts": {
     "db-migrate-and-start": "npm run db-migrate && npm run start",

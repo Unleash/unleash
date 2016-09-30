@@ -38,29 +38,40 @@ class AddFeatureToggle extends React.Component {
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
-                    <Input
-                        type="text"
-                        label="Name"
-                        name="name"
-                        value={this.state.name}
-                        onChange={this.handleChange.bind(this, 'name')} />
-                    <Input
-                        type="text"
-                        multiline label="Description"
-                        value={this.state.description}
-                        onChange={this.handleChange.bind(this, 'description')} />
+                    <section>
+                        <Input
+                            type="text"
+                            label="Name"
+                            name="name"
+                            required
+                            value={this.state.name}
+                            onChange={this.handleChange.bind(this, 'name')} />
+                        <Input
+                            type="text"
+                            multiline label="Description"
+                            required
+                            value={this.state.description}
+                            onChange={this.handleChange.bind(this, 'description')} />
+
+                        <br />
+
+                        <Switch
+                            checked={this.state.enabled}
+                            label="Enabled"
+                            onChange={this.handleChange.bind(this, 'enabled')} />
+
+                        <br />
+                    </section>
+
+                    <section>
+                        <legend>Strategies</legend>
+                        <Button icon="add" floating />
+                    </section>
 
                     <br />
 
-                    <Switch
-                        checked={this.state.enabled}
-                        label="Enabled"
-                        onChange={this.handleChange.bind(this, 'enabled')} />
 
-                    <br />
-                    <Button type="submit"  raised primary>
-                        Create Feature Toggle.
-                    </Button>
+                    <Button type="submit" raised primary label="Create Feature Toggle" />
                 </form>
             </div>
         );

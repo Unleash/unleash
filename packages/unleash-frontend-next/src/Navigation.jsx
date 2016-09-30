@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ListSubHeader, List, ListItem, ListDivider } from 'react-toolbox';
+import style from './style';
 
 export default class UnleashNav extends Component {
     static contextTypes = {
@@ -9,10 +10,10 @@ export default class UnleashNav extends Component {
     render () {
         const createListItem = (path, caption) =>
             <ListItem to={this.context.router.createHref(path)} caption={caption}
-                className={this.context.router.isActive(path) ? 'active' : 'inactive'} />;
+                className={this.context.router.isActive(path) ? style.active : ''} />;
 
         return (
-                <List selectable ripple>
+                <List selectable ripple className={style.navigation}>
                     {createListItem('/features', 'Feature Toggles')}
                     {createListItem('/strategies', 'Strategies')}
                     {createListItem('/history', 'Event History')}

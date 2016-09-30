@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Panel, NavDrawer, AppBar, IconButton } from 'react-toolbox';
+import { Layout, Panel, NavDrawer, AppBar } from 'react-toolbox';
 import style from './style';
 
 import Navigation from './Navigation';
@@ -17,9 +17,7 @@ export default class App extends Component {
     render () {
         return (
             <div className={style.container}>
-                <AppBar>
-                    <IconButton icon="menu" onClick={ this.toggleDrawerActive }/>
-                </AppBar>
+                <AppBar title="Unleash Admin" leftIcon="menu" onLeftIconClick={this.toggleDrawerActive} />
                 <Layout>
                     <NavDrawer active={this.state.drawerActive} permanentAt="sm" style={{ width: '200px' }}>
                         <Navigation />

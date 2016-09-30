@@ -1,4 +1,5 @@
 {
+    "parser": "babel-eslint",
     "extends": [
         "finn",
         "finn-react",
@@ -8,5 +9,14 @@
         "browser": true,
         "commonjs": true,
 	    "es6": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 7,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "classes":true,
+            "spread":true,
+            "restParams": true
+        }
     }
 }

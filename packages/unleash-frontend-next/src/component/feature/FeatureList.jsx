@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Feature from './Feature';
+import style from './table.scss';
 
 export default class FeatureList extends React.Component {
     constructor () {
@@ -27,10 +28,23 @@ export default class FeatureList extends React.Component {
                 <Feature key={featureToggle.name}
                     {...featureToggle}
                     onClick={() => onFeatureClick(featureToggle.name)}
-                />);
+                />
+            );
 
         return (
-            <ul>{features}</ul>
+            <table className={style.ztable}>
+                <thead>
+                    <tr>
+                        <th width="80">Enabled</th>
+                        <th>Feature Toggle</th>
+                        <th>Strategies</th>
+                        <th width="100" style={{ textAlign: 'right' }}>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {features}
+                </tbody>
+            </table>
         );
     }
 }

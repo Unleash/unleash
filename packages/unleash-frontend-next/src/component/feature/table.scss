@@ -1,0 +1,12 @@
+.ztable tbody tr:nth-child(odd) {
+    background-color: #efefef;
+}
+.ztable {
+    margin: 10px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.ztable td, th {
+    padding: 4px 10px;
+}

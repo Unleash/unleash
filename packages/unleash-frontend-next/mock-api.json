@@ -11,9 +11,7 @@
             "name": "default",
             "parameters": {}
           }
-        ],
-        "strategy": "default",
-        "parameters": {}
+        ]
       },
       {
         "name": "Feature.B",
@@ -32,11 +30,44 @@
               "percentage": "10"
             }
           }
-        ],
-        "strategy": "ActiveForUserWithId",
-        "parameters": {
-          "userIdList": "123,221,998"
-        }
+        ]
+      },
+      {
+        "name": "Feature.C",
+        "description": "lorem ipsum",
+        "enabled": false,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {}
+          }
+        ]
+      },
+      {
+        "name": "Feature.D",
+        "description": "lorem ipsum",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {}
+          }
+        ]
+      },
+      {
+        "name": "Feature.E",
+        "description": "lorem ipsum",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {}
+          },
+          {
+            "name": "FancyStrat",
+            "parameters": {}
+          }
+        ]
       }
     ]
   }

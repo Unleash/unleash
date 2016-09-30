@@ -13,7 +13,7 @@ export default class Features extends Component {
         return (
             <div>
                 <h1>Feature Toggles</h1>
-                <Button href={createHref} icon="add" label="Create feature toggle"/>
+                <Button href={createHref} icon="add" raised primary label="New Feature Toggle"/>
                 <FeatureListContainer />
             </div>
         );

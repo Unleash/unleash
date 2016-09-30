@@ -64,14 +64,13 @@ class AddFeatureToggle extends React.Component {
                     </section>
 
                     <section>
-                        <legend>Strategies</legend>
-                        <Button icon="add" floating />
+                        <a href="#" onClick="">Add strategy..</a>
                     </section>
 
                     <br />
 
 
-                    <Button type="submit" raised primary label="Create Feature Toggle" />
+                    <Button type="submit" raised primary label="Create" />
                 </form>
             </div>
         );

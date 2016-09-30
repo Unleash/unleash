@@ -5,12 +5,12 @@ export const RECEIVE_FEATURE_TOGGLES = 'RECEIVE_FEATURE_TOGGLES';
 export const ERROR_RECEIVE_FEATURE_TOGGLES = 'ERROR_RECEIVE_FEATURE_TOGGLES';
 
 export const addFeatureToggle = (featureName) => ({
-    type: 'ADD_FEATURE_TOGGLE',
+    type: ADD_FEATURE_TOGGLE,
     name: featureName,
 });
 
 export const toggleFeature = (featureName) => ({
-    type: 'TOGGLE_FEATURE_TOGGLE',
+    type: TOGGLE_FEATURE_TOGGLE,
     name: featureName,
 });
 

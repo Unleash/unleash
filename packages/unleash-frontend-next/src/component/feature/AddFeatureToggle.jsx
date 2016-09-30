@@ -16,14 +16,19 @@ class AddFeatureToggle extends React.Component {
         };
     }
 
+    static contextTypes = {
+        router: React.PropTypes.object,
+    }
+
     onSubmit = (evt) => {
         evt.preventDefault();
-        this.props.dispatch(addFeatureToggle(this.state.name, this.state.enabled));
+        this.props.dispatch(addFeatureToggle(this.state.name));
+        this.context.router.push('/features');
     };
 
     handleChange = (key, value) => {
         const change = {};
-        change[name] = value;
+        change[key] = value;
 
         const newState = Object.assign({}, this.state, change);
         this.setState(newState);

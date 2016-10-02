@@ -7,10 +7,7 @@ import {
 const feature = (state = {}, action) => {
     switch (action.type) {
         case ADD_FEATURE_TOGGLE:
-            return {
-                name: action.name,
-                enabled: false,
-            };
+            return action.featureToggle;
         case TOGGLE_FEATURE_TOGGLE:
             if (state.name !== action.name) {
                 return state;

@@ -14,21 +14,24 @@ export default class App extends Component {
         };
     }
 
+    onOverlayClick = () => this.setState({ drawerActive: false });
+
     render () {
         return (
             <div className={style.container}>
-                <AppBar title="Unleash Admin" leftIcon="menu" onLeftIconClick={this.toggleDrawerActive} />
-                <Layout>
-                    <NavDrawer active={this.state.drawerActive} permanentAt="sm" style={{ width: '200px' }}>
-                        <Navigation />
-                    </NavDrawer>
-                    <Panel scrollY={false}>
-                        <div style={{ padding: '1.8em' }}>
-                            {this.props.children}
-                        </div>
-
-                    </Panel>
-                </Layout>
+                <AppBar title="Unleash Admin" leftIcon="menu" onLeftIconClick={this.toggleDrawerActive} className={style.appBar} />
+                <div className={style.container} style={{ top: '6.4rem' }}>
+                    <Layout>
+                        <NavDrawer active={this.state.drawerActive} permanentAt="sm" onOverlayClick={this.onOverlayClick} >
+                            <Navigation />
+                        </NavDrawer>
+                        <Panel scrollY>
+                            <div style={{ padding: '1.8rem' }}>
+                                {this.props.children}
+                            </div>
+                        </Panel>
+                    </Layout>
+                </div>
             </div>
         );
     }

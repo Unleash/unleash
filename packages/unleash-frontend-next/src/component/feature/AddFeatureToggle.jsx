@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Input, Switch, Button } from 'react-toolbox';
-import { addFeatureToggle } from '../../store/actions';
+import { createFeatureToggles } from '../../store/featureToggleActions';
 
 
 class AddFeatureToggle extends React.Component {
@@ -32,7 +32,7 @@ class AddFeatureToggle extends React.Component {
 
     onSubmit = (evt) => {
         evt.preventDefault();
-        this.props.dispatch(addFeatureToggle(this.state.featureToggle));
+        this.props.dispatch(createFeatureToggles(this.state.featureToggle));
         this.context.router.push('/features');
     };
 

@@ -4,9 +4,9 @@ export const REQUEST_FEATURE_TOGGLES = 'REQUEST_FEATURE_TOGGLES';
 export const RECEIVE_FEATURE_TOGGLES = 'RECEIVE_FEATURE_TOGGLES';
 export const ERROR_RECEIVE_FEATURE_TOGGLES = 'ERROR_RECEIVE_FEATURE_TOGGLES';
 
-export const addFeatureToggle = (featureName) => ({
+export const addFeatureToggle = (featureToggle) => ({
     type: ADD_FEATURE_TOGGLE,
-    name: featureName,
+    featureToggle,
 });
 
 export const toggleFeature = (featureName) => ({

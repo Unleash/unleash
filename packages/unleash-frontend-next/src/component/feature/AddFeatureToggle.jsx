@@ -7,7 +7,17 @@ import { addFeatureToggle } from '../../store/actions';
 class AddFeatureToggle extends React.Component {
     constructor () {
         super();
-        this.state = { name: '', description: '', enabled: false };
+        this.state = {
+            featureToggle: {
+                name: '',
+                description: '',
+                enabled: false,
+                strategies: [
+                    { name: 'default' },
+                ],
+            },
+            showAddStrategy: false,
+        };
     }
 
     static propTypes () {
@@ -22,17 +32,30 @@ class AddFeatureToggle extends React.Component {
 
     onSubmit = (evt) => {
         evt.preventDefault();
-        this.props.dispatch(addFeatureToggle(this.state.name));
+        this.props.dispatch(addFeatureToggle(this.state.featureToggle));
         this.context.router.push('/features');
     };
+
+    addStrategy = (evt) => {
+        evt.preventDefault();
+        this.setState({ showAddStrategy: true });
+    }
 
     handleChange = (key, value) => {
         const change = {};
         change[key] = value;
+        const updatedFeatureToggle = Object.assign({}, this.state.featureToggle, change);
 
-        const newState = Object.assign({}, this.state, change);
-        this.setState(newState);
+        this.setState({ featureToggle: updatedFeatureToggle });
     };
+
+    renderAddStrategy () {
+        if (this.state.showAddStrategy) {
+            return <h4>Adding strat</h4>;
+        } else {
+            return <a onClick={this.addStrategy} href="#addStrategy">Add strategy..</a>;
+        }
+    }
 
     render () {
         return (
@@ -44,19 +67,19 @@ class AddFeatureToggle extends React.Component {
                             label="Name"
                             name="name"
                             required
-                            value={this.state.name}
+                            value={this.state.featureToggle.name}
                             onChange={this.handleChange.bind(this, 'name')} />
                         <Input
                             type="text"
                             multiline label="Description"
                             required
-                            value={this.state.description}
+                            value={this.state.featureToggle.description}
                             onChange={this.handleChange.bind(this, 'description')} />
 
                         <br />
 
                         <Switch
-                            checked={this.state.enabled}
+                            checked={this.state.featureToggle.enabled}
                             label="Enabled"
                             onChange={this.handleChange.bind(this, 'enabled')} />
 
@@ -64,7 +87,8 @@ class AddFeatureToggle extends React.Component {
                     </section>
 
                     <section>
-                        <a href="#" onClick="">Add strategy..</a>
+                        <h3>Strategies</h3>
+                        {this.renderAddStrategy()}
                     </section>
 
                     <br />

@@ -59,7 +59,7 @@ module.exports = {
     devServer: {
         proxy: {
             '/features': {
-                target: 'http://localhost:3001/',
+                target: 'http://localhost:4242',
                 secure: false,
             },
         },

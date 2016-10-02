@@ -2,7 +2,7 @@ import {
     ADD_FEATURE_TOGGLE,
     TOGGLE_FEATURE_TOGGLE,
     RECEIVE_FEATURE_TOGGLES,
-} from './actions';
+} from './featureToggleActions';
 
 const feature = (state = {}, action) => {
     switch (action.type) {

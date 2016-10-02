@@ -2,6 +2,10 @@
 
 function addOldFields (feature) {
     const modifiedFeature = Object.assign({}, feature);
+    if (!feature.strategies) {
+        modifiedFeature.strategies = [];
+        return modifiedFeature;
+    }
     modifiedFeature.strategy = feature.strategies[0].name;
     modifiedFeature.parameters = Object.assign({}, feature.strategies[0].parameters);
     return modifiedFeature;

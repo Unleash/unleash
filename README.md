@@ -1,3 +1,5 @@
+<img src="https://cloud.githubusercontent.com/assets/288977/7201792/a93151c0-e50b-11e4-9858-ed5c10fdde67.png" alt="Unleash logo">
+
 # unleash
 
 __Warning: We are in the process of splitting up unleash into multiple packages in this repository, if you want to test the previous package see [previous tag](https://github.com/finn-no/unleash/tree/v1.0.0-alpha.2) __ 

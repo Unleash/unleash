@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import features from './features';
+import features from './feature-store';
 
 const unleashStore = combineReducers({
     features,

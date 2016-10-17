@@ -7,7 +7,7 @@ const Feature = ({ onClick, name, enabled, strategies }) => (
   <tr>
     <td style={{ paddingTop: '1.5rem' }}><Switch onChange={onClick} checked={enabled} /></td>
     <td><a href="/edit">{name}</a></td>
-    <td>{strategies.map(s => `${s.name}, `)}</td>
+    <td>{strategies.map(s => s.name).join(', ')}</td>
     <td style={{ textAlign: 'right' }}>
       <FontIcon value="edit" />
       <FontIcon value="delete"  style={{ color: 'red' }} />

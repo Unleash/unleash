@@ -62,6 +62,14 @@ module.exports = {
                 target: 'http://localhost:4242',
                 secure: false,
             },
+            '/strategies': {
+                target: 'http://localhost:4242',
+                secure: false,
+            },
+            '/archive': {
+                target: 'http://localhost:4242',
+                secure: false,
+            },
         },
     },
 };

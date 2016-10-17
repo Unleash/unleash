@@ -27,7 +27,7 @@ export default class FeatureList extends React.Component {
         const features = this.props.features.map(featureToggle =>
                 <Feature key={featureToggle.name}
                     {...featureToggle}
-                    onClick={() => onFeatureClick(featureToggle.name)}
+                    onClick={() => onFeatureClick(featureToggle)}
                 />
             );
 

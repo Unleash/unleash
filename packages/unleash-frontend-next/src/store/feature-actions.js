@@ -1,4 +1,5 @@
 import api from './feature-api';
+const debug = require('debug')('unleash:feature-actions');
 
 export const ADD_FEATURE_TOGGLE             = 'ADD_FEATURE_TOGGLE';
 export const UPDATE_FEATURE_TOGGLE          = 'UPDATE_FEATURE_TOGGLE';
@@ -42,6 +43,7 @@ function errorUpdatingFeatureToggle (statusCode) {
 }
 
 export function toggleFeature (featureToggle) {
+    debug('Toggle feature toggle ', featureToggle);
     return dispatch => {
         const newValue = Object.assign({}, featureToggle, { enabled: !featureToggle.enabled });
         dispatch(requestUpdateFeatureToggle(newValue));
@@ -84,6 +86,7 @@ function errorReceiveFeatureToggles (statusCode) {
 }
 
 export function fetchFeatureToggles () {
+    debug('Start fetching feature toggles');
     return dispatch => {
         dispatch(requestFeatureToggles());
 

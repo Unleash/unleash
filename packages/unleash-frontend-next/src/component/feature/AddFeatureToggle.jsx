@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Input, Switch, Button } from 'react-toolbox';
-import { createFeatureToggles } from '../../store/featureToggleActions';
+import { createFeatureToggles } from '../../store/feature-actions';
 
 
 class AddFeatureToggle extends React.Component {

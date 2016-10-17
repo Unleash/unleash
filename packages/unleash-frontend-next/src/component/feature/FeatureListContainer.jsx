@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { toggleFeature, fetchFeatureToggles } from '../../store/featureToggleActions';
+import { toggleFeature, fetchFeatureToggles } from '../../store/feature-actions';
 import FeatureList from './FeatureList';
 
 const mapStateToProps = (state) => ({

@@ -1,22 +1,18 @@
 import {
     ADD_FEATURE_TOGGLE,
-    TOGGLE_FEATURE_TOGGLE,
     RECEIVE_FEATURE_TOGGLES,
+    UPDATE_FEATURE_TOGGLE,
 } from './featureToggleActions';
 
 const feature = (state = {}, action) => {
     switch (action.type) {
         case ADD_FEATURE_TOGGLE:
             return action.featureToggle;
-        case TOGGLE_FEATURE_TOGGLE:
-            if (state.name !== action.name) {
+        case UPDATE_FEATURE_TOGGLE:
+            if (state.name !== action.featureToggle.name) {
                 return state;
             }
-
-            return Object.assign({}, state, {
-                enabled: !state.enabled,
-            });
-
+            return action.featureToggle;
         default:
             return state;
     }
@@ -29,7 +25,7 @@ const features = (state = [], action) => {
                 ...state,
                 feature(undefined, action),
             ];
-        case TOGGLE_FEATURE_TOGGLE:
+        case UPDATE_FEATURE_TOGGLE:
             return state.map(t =>
             feature(t, action)
         );

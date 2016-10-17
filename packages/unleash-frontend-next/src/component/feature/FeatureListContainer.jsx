@@ -3,7 +3,7 @@ import { toggleFeature, fetchFeatureToggles } from '../../store/feature-actions'
 import FeatureList from './FeatureList';
 
 const mapStateToProps = (state) => ({
-    features: state.features,
+    features: state.features.toJS(),
 });
 
 const mapDispatchToProps = {

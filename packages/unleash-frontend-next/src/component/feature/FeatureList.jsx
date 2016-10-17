@@ -16,10 +16,7 @@ export default class FeatureList extends React.Component {
     }
 
     componentDidMount () {
-        // TODO: only fetch from server if we don't know about any toggles.
-        if (this.props.features.length === 0) {
-            this.props.fetchFeatureToggles();
-        }
+        this.props.fetchFeatureToggles();
     }
 
     render () {

@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import { Input, Switch, Button } from 'react-toolbox';
 import { createFeatureToggles } from '../../store/feature-actions';
 
+const mapStateToProps = (state) => ({
+    strategies: state.strategies.toJS(),
+});
 
 class AddFeatureToggle extends React.Component {
     constructor () {
@@ -23,6 +26,7 @@ class AddFeatureToggle extends React.Component {
     static propTypes () {
         return {
             dispatch: PropTypes.func.isRequired,
+            strategies: PropTypes.array,
         };
     }
 
@@ -51,7 +55,12 @@ class AddFeatureToggle extends React.Component {
 
     renderAddStrategy () {
         if (this.state.showAddStrategy) {
-            return <h4>Adding strat</h4>;
+            return (
+                <div>
+                    <h4>Adding strat</h4>
+                    <p>Possible: {this.props.strategies.map(s => s.name).join(', ')}</p>
+                </div>
+            );
         } else {
             return <a onClick={this.addStrategy} href="#addStrategy">Add strategy..</a>;
         }
@@ -101,4 +110,4 @@ class AddFeatureToggle extends React.Component {
     }
 }
 
-export default connect()(AddFeatureToggle);
+export default connect(mapStateToProps)(AddFeatureToggle);

@@ -1,4 +1,4 @@
-import { List, Map } from 'immutable';
+import { List, Map as $Map } from 'immutable';
 
 
 import {
@@ -11,17 +11,17 @@ import {
 const features = (state = new List([]), action) => {
     switch (action.type) {
         case ADD_FEATURE_TOGGLE:
-            return state.push(new Map(action.featureToggle));
+            return state.push(new $Map(action.featureToggle));
         case UPDATE_FEATURE_TOGGLE:
-            return state.map(t => {
+            return state.$Map(t => {
                 if (t.get('name') === action.featureToggle.name) {
-                    return new Map(action.featureToggle);
+                    return new $Map(action.featureToggle);
                 } else {
                     return t;
                 }
             });
         case RECEIVE_FEATURE_TOGGLES:
-            return new List(action.featureToggles.map(t => new Map(t)));
+            return new List(action.featureToggles.$Map(t => new $Map(t)));
         default:
             return state;
     }

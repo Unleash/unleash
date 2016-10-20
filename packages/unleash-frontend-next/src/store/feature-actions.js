@@ -58,6 +58,7 @@ function requestFeatureToggles () {
 }
 
 function receiveFeatureToggles (json) {
+    debug('reviced feature toggles', json);
     return {
         type: RECEIVE_FEATURE_TOGGLES,
         featureToggles: json.features.map(features => features),

@@ -6,7 +6,7 @@ const init = new List([
         {
             name: 'ActiveForUserWithEmail',
             description: 'Active for user with specified email',
-            parametersTemplate: { emails: 'string' },
+            parametersTemplate: { emails: 'string', ids: 'string' },
         }),
 ]);
 

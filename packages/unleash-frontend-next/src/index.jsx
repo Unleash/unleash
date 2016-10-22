@@ -10,6 +10,7 @@ import App from './App';
 
 import Features from './page/features';
 import CreateFeatureToggle from './page/features/create';
+import EditFeatureToggle from './page/features/edit';
 import Strategies from './page/strategies';
 import HistoryPage from './page/history';
 import Archive from './page/archive';
@@ -28,6 +29,7 @@ ReactDOM.render(
                 <IndexRedirect to="/features" />
                 <Route path="/features" component={Features} />
                 <Route path="/features/create" component={CreateFeatureToggle} />
+                <Route path="/features/edit/:name" component={EditFeatureToggle} />
                 <Route path="/strategies" component={Strategies} />
                 <Route path="/history" component={HistoryPage} />
                 <Route path="/archive" component={Archive} />

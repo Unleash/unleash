@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { updateFeatureToggle } from '../../store/feature-actions';
+import { editFeatureToggle } from '../../store/feature-actions';
 import AddFeatureToggleUI from './AddFeatureToggleUI';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -34,7 +34,7 @@ class AddFeatureToggle extends React.Component {
 
     onSubmit = (evt) => {
         evt.preventDefault();
-        this.props.dispatch(updateFeatureToggle(this.state));
+        this.props.dispatch(editFeatureToggle(this.state));
         this.context.router.push('/features');
     };
 

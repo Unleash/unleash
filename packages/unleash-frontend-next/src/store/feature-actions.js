@@ -50,6 +50,12 @@ export function toggleFeature (featureToggle) {
     };
 };
 
+export function editFeatureToggle (featureToggle) {
+    debug('Update feature toggle ', featureToggle);
+    return dispatch => {
+        dispatch(requestUpdateFeatureToggle(featureToggle));
+    };
+};
 
 function requestFeatureToggles () {
     return {

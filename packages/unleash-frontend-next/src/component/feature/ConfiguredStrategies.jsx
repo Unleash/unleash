@@ -11,7 +11,8 @@ class ConfiguredStrategies extends React.Component {
 
     renderName (strategy) {
         const params = Object.keys(strategy.parameters)
-            .map(param => `${param}=${strategy.parameters[param]}`);
+            .map(param => `${param}='${strategy.parameters[param]}'`)
+            .join(', ');
         return <span>{strategy.name} ({params})</span>;
     }
 

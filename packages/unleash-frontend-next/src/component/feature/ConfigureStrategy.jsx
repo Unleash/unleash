@@ -41,7 +41,14 @@ class ConfigureStrategy extends React.Component {
     renderInputFields (selectedStrategy) {
         if (selectedStrategy.parametersTemplate) {
             return Object.keys(selectedStrategy.parametersTemplate).map(field => (
-                <Input key={field} name={field} label={field} onChange={this.handleConfigChange.bind(this, field)} />
+                <Input
+                    type="text"
+                    key={field}
+                    name={field}
+                    label={field}
+                    onChange={this.handleConfigChange.bind(this, field)}
+                    value={this.state.parameters[field]}
+                />
             ));
         }
     }

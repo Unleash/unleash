@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Input, Switch, Button } from 'react-toolbox';
 import { createFeatureToggles } from '../../store/feature-actions';
-import ConfigureStrategy from './ConfigureStrategy';
+import AddFeatureToggleStrategy from './AddFeatureToggleStrategy';
+import ConfiguredStrategies from './ConfiguredStrategies';
 
 const mapStateToProps = (state) => ({
     strategies: state.strategies.toJS(),
@@ -46,40 +47,17 @@ class AddFeatureToggle extends React.Component {
         this.setState({ featureToggle: updatedFeatureToggle });
     };
 
-    cancelConfig = () => {
-        this.setState({ configureStrategy: undefined });
-    };
-
-    renderAddStrategy () {
-        if (this.state.configureStrategy) {
-            return (
-                <div>
-                    <ConfigureStrategy strategy={this.state.configureStrategy} cancelConfig={this.cancelConfig} />
-                </div>
-            );
-        } else {
-            return (
-                <div>
-                    <strong>Choose an activation strategy:</strong>
-                    <ul>{this.renderPossibleStrategies()}</ul>
-                </div>
-            );
-        }
+    addStrategy = (strategy) => {
+        const strategies = this.state.featureToggle.strategies;
+        strategies.push(strategy);
+        const updatedFeatureToggle = Object.assign({}, this.state.featureToggle, { strategies });
+        this.setState({ featureToggle: updatedFeatureToggle });
     }
 
-    renderPossibleStrategies () {
-        const configure = (strategy, evt) => {
-            evt.preventDefault();
-            this.setState({
-                configureStrategy: strategy,
-            });
-        };
-        const configuredStrategies = this.state.featureToggle.strategies;
-        return this.props.strategies
-            .filter(s => !configuredStrategies.find(selected => selected.name === s.name))
-            .map((s) => (
-                <li key={s.name}><a href={`#configure-${s.name}`} onClick={configure.bind(this, s)}>{s.name}</a></li>
-            ));
+    removeStrategy = (strategy) => {
+        const strategies = this.state.featureToggle.strategies.filter(s => s !== strategy);
+        const updatedFeatureToggle = Object.assign({}, this.state.featureToggle, { strategies });
+        this.setState({ featureToggle: updatedFeatureToggle });
     }
 
     render () {
@@ -114,9 +92,15 @@ class AddFeatureToggle extends React.Component {
                     </section>
 
                     <section>
-                        <h3>Strategies</h3>
-                        {this.renderAddStrategy()}
-                        <p>Configured: {configuredStrategies.map(s => s.name).join(', ')}</p>
+                        <strong>Activation strategies</strong>
+                        <ConfiguredStrategies configuredStrategies={configuredStrategies} removeStrategy={this.removeStrategy} />
+                    </section>
+
+                    <section>
+                        <AddFeatureToggleStrategy
+                            strategies={this.props.strategies}
+                            addStrategy={this.addStrategy}
+                        />
                     </section>
 
                     <br />

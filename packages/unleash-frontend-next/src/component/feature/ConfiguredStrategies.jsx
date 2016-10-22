@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Chip } from 'react-toolbox';
+import { Avatar, Chip } from 'react-toolbox';
 
 class ConfiguredStrategies extends React.Component {
     static propTypes () {
@@ -10,9 +10,10 @@ class ConfiguredStrategies extends React.Component {
     }
 
     renderName (strategy) {
-        const params = Object.keys(strategy.parameters)
-            .map(param => `${param}='${strategy.parameters[param]}'`)
-            .join(', ');
+        const parameters = strategy.parameters || {};
+        const params = Object.keys(parameters)
+            .map(param => `${param}="${strategy.parameters[param]}"`)
+            .join('; ');
         return <span>{strategy.name} ({params})</span>;
     }
 
@@ -22,14 +23,16 @@ class ConfiguredStrategies extends React.Component {
             <Chip
                 key={`${index}-${s.name}`}
                 deletable
-                onDeleteClick={() => removeStrategy(s)}>
+                onDeleteClick={() => removeStrategy(s)}
+            >
+                <Avatar icon="edit" />
                 {this.renderName(s)}
             </Chip>
         ));
         return (
-            <div>
+            <p>
                 {strategies.length > 0 ? strategies : <p>No activation strategies added</p>}
-            </div>
+            </p>
         );
     }
 }

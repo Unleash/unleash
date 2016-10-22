@@ -72,7 +72,6 @@ class AddFeatureToggle extends React.Component {
                     removeStrategy={this.removeStrategy}
                     onSubmit={this.onSubmit}
                     onCancel={this.onCancel}
-                    
                 />
             </div>
         );

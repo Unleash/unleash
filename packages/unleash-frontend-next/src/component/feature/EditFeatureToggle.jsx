@@ -8,7 +8,7 @@ const mapStateToProps = (state, ownProps) => ({
     featureToggle: state.features.toJS().find(toggle => toggle.name === ownProps.featureToggleName) || {},
 });
 
-class AddFeatureToggle extends React.Component {
+class EditFeatureToggle extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -78,4 +78,4 @@ class AddFeatureToggle extends React.Component {
     }
 }
 
-export default connect(mapStateToProps)(AddFeatureToggle);
+export default connect(mapStateToProps)(EditFeatureToggle);

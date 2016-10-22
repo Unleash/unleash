@@ -2,6 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import { Switch, FontIcon } from 'react-toolbox';
+import { Link } from 'react-router';
 
 const Feature = ({ onClick, name, enabled, strategies }) => (
   <tr>
@@ -9,7 +10,9 @@ const Feature = ({ onClick, name, enabled, strategies }) => (
     <td><a href="/edit">{name}</a></td>
     <td>{strategies.map(s => s.name).join(', ')}</td>
     <td style={{ textAlign: 'right' }}>
-      <FontIcon value="edit" />
+      <Link to={`/features/edit/${name}`}>
+        <FontIcon value="edit" />
+      </Link>
       <FontIcon value="delete"  style={{ color: 'red' }} />
     </td>
   </tr>

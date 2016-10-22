@@ -75,8 +75,8 @@ class ConfigureStrategy extends React.Component {
 
                 {this.renderInputFields(selectedStrategy)}
 
-                <Button raised mini accent label="cancel" onClick={this.props.cancelConfig} />
-                <Button raised mini label="add strategy" onClick={this.addStrategy} />
+                <Button icon="add" accent label="add strategy" onClick={this.addStrategy} />
+                <Button label="cancel" onClick={this.props.cancelConfig} />
             </div>
         );
     }

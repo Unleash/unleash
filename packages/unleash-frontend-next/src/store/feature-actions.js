@@ -2,6 +2,7 @@ import api from './feature-api';
 const debug = require('debug')('unleash:feature-actions');
 
 export const ADD_FEATURE_TOGGLE             = 'ADD_FEATURE_TOGGLE';
+export const REMOVE_FEATURE_TOGGLE          = 'REMOVE_FEATURE_TOGGLE';
 export const UPDATE_FEATURE_TOGGLE          = 'UPDATE_FEATURE_TOGGLE';
 export const TOGGLE_FEATURE_TOGGLE          = 'TOGGLE_FEATURE_TOGGLE';
 export const REQUEST_FEATURE_TOGGLES        = 'REQUEST_FEATURE_TOGGLES';
@@ -11,6 +12,7 @@ export const RECEIVE_FEATURE_TOGGLES        = 'RECEIVE_FEATURE_TOGGLES';
 export const ERROR_RECEIVE_FEATURE_TOGGLES  = 'ERROR_RECEIVE_FEATURE_TOGGLES';
 export const ERROR_CREATING_FEATURE_TOGGLE  = 'ERROR_CREATING_FEATURE_TOGGLE';
 export const ERROR_UPDATING_FEATURE_TOGGLE  = 'ERROR_UPDATING_FEATURE_TOGGLE';
+export const ERROR_REMOVE_FEATURE_TOGGLE    = 'ERROR_REMOVE_FEATURE_TOGGLE';
 
 function addFeatureToggle (featureToggle) {
     return {
@@ -121,5 +123,12 @@ export function requestUpdateFeatureToggle (featureToggle) {
             .then(() => dispatch(updateFeatureToggle(featureToggle)))
             .catch(error => dispatch(errorUpdatingFeatureToggle(error)));
     };
+}
+
+export function removeFeatureToggle (featureToggleName) {
+    return dispatch => (api.remove(featureToggleName)
+            .then(() => dispatch({ type: REMOVE_FEATURE_TOGGLE, featureToggleName }))
+            .catch(error => dispatch({ type: ERROR_REMOVE_FEATURE_TOGGLE, featureToggleName, error }))
+    );
 }
 

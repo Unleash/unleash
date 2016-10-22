@@ -6,6 +6,7 @@ import {
     ADD_FEATURE_TOGGLE,
     RECEIVE_FEATURE_TOGGLES,
     UPDATE_FEATURE_TOGGLE,
+    REMOVE_FEATURE_TOGGLE,
 } from './feature-actions';
 
 
@@ -14,6 +15,9 @@ const features = (state = new List([]), action) => {
         case ADD_FEATURE_TOGGLE:
             debug(ADD_FEATURE_TOGGLE, action);
             return state.push(new $Map(action.featureToggle));
+        case REMOVE_FEATURE_TOGGLE:
+            debug(REMOVE_FEATURE_TOGGLE, action);
+            return state.filter(toggle => toggle.get('name') !== action.featureToggleName);
         case UPDATE_FEATURE_TOGGLE:
             debug(UPDATE_FEATURE_TOGGLE, action);
             return state.map(toggle => {

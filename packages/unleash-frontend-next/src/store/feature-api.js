@@ -36,8 +36,15 @@ function update (featureToggle) {
     }).then(throwIfNotSuccess);
 }
 
+function remove (featureToggleName) {
+    return fetch(`${URI}/${featureToggleName}`, {
+        method: 'DELETE',
+    }).then(throwIfNotSuccess);
+}
+
 module.exports = {
     fetchAll,
     create,
     update,
+    remove,
 };

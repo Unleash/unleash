@@ -10,6 +10,7 @@ export default class FeatureList extends React.Component {
     static propTypes () {
         return {
             onFeatureClick: PropTypes.func.isRequired,
+            onFeatureRemove: PropTypes.func.isRequired,
             features: PropTypes.array.isRequired,
             fetchFeatureToggles: PropTypes.array.isRequired,
         };
@@ -21,10 +22,12 @@ export default class FeatureList extends React.Component {
 
     render () {
         const onFeatureClick = this.props.onFeatureClick;
+        const onFeatureRemove = this.props.onFeatureRemove;
         const features = this.props.features.map(featureToggle =>
                 <Feature key={featureToggle.name}
                     {...featureToggle}
                     onClick={() => onFeatureClick(featureToggle)}
+                    onFeatureRemove={() => onFeatureRemove(featureToggle.name)}
                 />
             );
 

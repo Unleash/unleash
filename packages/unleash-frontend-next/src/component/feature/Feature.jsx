@@ -10,10 +10,10 @@ const Feature = ({ onClick, name, enabled, strategies }) => (
     <td><a href="/edit">{name}</a></td>
     <td>{strategies.map(s => s.name).join(', ')}</td>
     <td style={{ textAlign: 'right' }}>
-      <Link to={`/features/edit/${name}`}>
+      <Link to={`/features/edit/${name}`} title={`Edit ${name}`}>
         <FontIcon value="edit" />
       </Link>
-      <FontIcon value="delete"  style={{ color: 'red' }} />
+      <FontIcon value="delete" />
     </td>
   </tr>
 );

@@ -13,6 +13,7 @@ class AddFeatureToggleUI extends React.Component {
             removeStrategy: PropTypes.func.required,
             onSubmit: PropTypes.func.required,
             onCancel: PropTypes.func.required,
+            editmode: PropTypes.bool,
         };
     }
 
@@ -26,6 +27,7 @@ class AddFeatureToggleUI extends React.Component {
                         type="text"
                         label="Name"
                         name="name"
+                        disabled={this.props.editmode}
                         required
                         value={this.props.featureToggle.name}
                         onChange={this.props.updateField.bind(this, 'name')} />
@@ -62,7 +64,7 @@ class AddFeatureToggleUI extends React.Component {
                 <br />
 
 
-                <Button type="submit" raised primary label="Create" />
+                <Button type="submit" raised primary label={this.props.editmode ? 'Update' : 'Create'} />
                 <Button type="cancel" raised label="Cancel" onClick={this.props.onCancel} />
             </form>
         );

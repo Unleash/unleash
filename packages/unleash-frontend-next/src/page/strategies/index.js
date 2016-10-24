@@ -1,11 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
+import Strategies from '../../component/strategies';
 
-export default class Strategies extends Component {
-    render () {
-        return (
-            <div>
-                <h1>Strategies</h1>
-            </div>
-        );
-    }
-};
+export default () => (<Strategies />);

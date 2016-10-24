@@ -33,7 +33,7 @@ class AddFeatureToggleStrategy extends React.Component {
     renderAddLink () {
         return (
             <div>
-                <a href="" onClick={this.showConfigure}>Add strategy</a>
+                <a href="#" onClick={this.showConfigure}>Add strategy</a>
             </div>
         );
     }

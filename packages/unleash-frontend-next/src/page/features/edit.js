@@ -8,14 +8,10 @@ export default class Features extends Component {
         };
     }
 
-    static contextTypes = {
-        router: React.PropTypes.object,
-    }
-
     render () {
         return (
             <div>
-                <h1>Edit Feature Toggle</h1>
+                <h3>Edit feature toggle</h3>
                 <EditFeatureToggle featureToggleName={this.props.params.name} />
             </div>
         );

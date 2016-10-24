@@ -4,7 +4,6 @@ import FeatureList from './FeatureList';
 
 const mapStateToProps = (state) => ({
     features: state.features.toJS(),
-    strategies: state.strategies.toJS(),
 });
 
 const mapDispatchToProps = {

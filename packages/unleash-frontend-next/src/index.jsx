@@ -6,7 +6,7 @@ import thunkMiddleware from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 
 import store from './store';
-import App from './App';
+import App from './component/app';
 
 import Features from './page/features';
 import CreateFeatureToggle from './page/features/create';

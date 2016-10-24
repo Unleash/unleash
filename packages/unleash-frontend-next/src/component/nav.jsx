@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListSubHeader, List, ListItem, ListDivider } from 'react-toolbox';
-import style from './style';
+import style from './styles.scss';
 
 export default class UnleashNav extends Component {
     static contextTypes = {

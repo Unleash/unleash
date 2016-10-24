@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 import { Input, Switch, Button } from 'react-toolbox';
-import AddFeatureToggleStrategy from './AddFeatureToggleStrategy';
-import ConfiguredStrategies from './ConfiguredStrategies';
+import AddFeatureToggleStrategy from './strategies-for-toggle';
+import SelectedStrategies from './selected-strategies';
 
-const AddFeatureToggleUI = ({
+const AddFeatureToggleComponent = ({
     strategies,
     featureToggle,
     updateField,
@@ -50,7 +50,7 @@ const AddFeatureToggleUI = ({
 
             <section>
                 <strong>Activation strategies</strong>
-                <ConfiguredStrategies
+                <SelectedStrategies
                     configuredStrategies={configuredStrategies}
                     removeStrategy={removeStrategy} />
             </section>
@@ -69,7 +69,7 @@ const AddFeatureToggleUI = ({
     );
 };
 
-AddFeatureToggleUI.propTypes = {
+AddFeatureToggleComponent.propTypes = {
     strategies: PropTypes.array.required,
     featureToggle: PropTypes.object,
     updateField: PropTypes.func.required,
@@ -80,4 +80,4 @@ AddFeatureToggleUI.propTypes = {
     editmode: PropTypes.bool,
 };
 
-export default AddFeatureToggleUI;
+export default AddFeatureToggleComponent;

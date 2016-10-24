@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
-import Feature from './Feature';
+import Feature from './feature-component';
 import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list';
 
-export default class FeatureList extends React.Component {
+export default class FeatureListComponent extends React.Component {
 
     static propTypes () {
         return {
@@ -27,8 +27,8 @@ export default class FeatureList extends React.Component {
         return (
            <List>
                 <ListSubHeader caption="Feature toggles" />
-                {features.map(feature =>
-                    <Feature feature={feature} onFeatureClick={onFeatureClick} onFeatureRemove={onFeatureRemove}/>
+                {features.map((feature, i) =>
+                    <Feature key={i} feature={feature} onFeatureClick={onFeatureClick} onFeatureRemove={onFeatureRemove}/>
                 )}
                 <ListDivider />
                 <ListItem

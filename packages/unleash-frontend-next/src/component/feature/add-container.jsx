@@ -1,23 +1,17 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { editFeatureToggle } from '../../store/feature-actions';
-import AddFeatureToggleUI from './AddFeatureToggleUI';
+import { createFeatureToggles } from '../../store/feature-actions';
 import { fetchStrategies } from '../../store/strategy-actions';
+import AddFeatureToggleUI from './add-component';
 
-
-const mapStateToProps = (state, ownProps) => ({
-    strategies: state.strategies.get('list').toArray(),
-    featureToggle: state.features.toJS().find(toggle => toggle.name === ownProps.featureToggleName) || {},
-});
-
-class EditFeatureToggle extends React.Component {
-    constructor (props) {
-        super(props);
+class AddFeatureToggle extends React.Component {
+    constructor () {
+        super();
         this.state = {
-            name: props.featureToggle.name || '',
-            description: props.featureToggle.description || '',
-            enabled: props.featureToggle.enabled || false,
-            strategies: props.featureToggle.strategies || [],
+            name: '',
+            description: '',
+            enabled: false,
+            strategies: [],
         };
     }
 
@@ -25,14 +19,7 @@ class EditFeatureToggle extends React.Component {
         return {
             dispatch: PropTypes.func.isRequired,
             strategies: PropTypes.array,
-            featureToggle: PropTypes.featureToggle.isRequired,
-            fetchFeatureToggles: PropTypes.func.isRequired,
         };
-    }
-
-    componentDidMount () {
-        // todo fetch feature if missing? (reload of page does not fetch data from url)
-        this.props.fetchStrategies();
     }
 
     static contextTypes = {
@@ -41,7 +28,7 @@ class EditFeatureToggle extends React.Component {
 
     onSubmit = (evt) => {
         evt.preventDefault();
-        this.props.dispatch(editFeatureToggle(this.state));
+        this.props.dispatch(createFeatureToggles(this.state));
         this.context.router.push('/features');
     };
 
@@ -67,10 +54,13 @@ class EditFeatureToggle extends React.Component {
         this.setState({ strategies });
     }
 
+    componentDidMount () {
+        this.props.fetchStrategies();
+    }
+
     render () {
         return (
             <AddFeatureToggleUI
-                editmode="true"
                 strategies={this.props.strategies}
                 featureToggle={this.state}
                 updateField={this.updateField}
@@ -83,4 +73,8 @@ class EditFeatureToggle extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, { fetchStrategies })(EditFeatureToggle);
+const mapStateToProps = (state) => ({
+    strategies: state.strategies.get('list').toArray(),
+});
+
+export default connect(mapStateToProps, { fetchStrategies })(AddFeatureToggle);

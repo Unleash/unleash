@@ -2,10 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createFeatureToggles } from '../../store/feature-actions';
 import AddFeatureToggleUI from './AddFeatureToggleUI';
-
-const mapStateToProps = (state) => ({
-    strategies: state.strategies.toJS(),
-});
+import { fetchStrategies } from '../../store/strategy-actions';
 
 class AddFeatureToggle extends React.Component {
     constructor () {
@@ -57,21 +54,27 @@ class AddFeatureToggle extends React.Component {
         this.setState({ strategies });
     }
 
+    componentDidMount () {
+        this.props.fetchStrategies();
+    }
+
     render () {
         return (
-            <div>
-                <AddFeatureToggleUI
-                    strategies={this.props.strategies}
-                    featureToggle={this.state}
-                    updateField={this.updateField}
-                    addStrategy={this.addStrategy}
-                    removeStrategy={this.removeStrategy}
-                    onSubmit={this.onSubmit}
-                    onCancel={this.onCancel}
-                />
-            </div>
+            <AddFeatureToggleUI
+                strategies={this.props.strategies}
+                featureToggle={this.state}
+                updateField={this.updateField}
+                addStrategy={this.addStrategy}
+                removeStrategy={this.removeStrategy}
+                onSubmit={this.onSubmit}
+                onCancel={this.onCancel}
+            />
         );
     }
 }
 
-export default connect(mapStateToProps)(AddFeatureToggle);
+const mapStateToProps = (state) => ({
+    strategies: state.strategies.get('list').toArray(),
+});
+
+export default connect(mapStateToProps, { fetchStrategies })(AddFeatureToggle);

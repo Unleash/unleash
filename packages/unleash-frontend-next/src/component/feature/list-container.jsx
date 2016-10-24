@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { toggleFeature, fetchFeatureToggles, removeFeatureToggle } from '../../store/feature-actions';
-import FeatureList from './FeatureList';
+import FeatureListComponent from './list-component';
 
 const mapStateToProps = (state) => ({
     features: state.features.toJS(),
@@ -15,6 +15,6 @@ const mapDispatchToProps = {
 const FeatureListContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(FeatureList);
+)(FeatureListComponent);
 
 export default FeatureListContainer;

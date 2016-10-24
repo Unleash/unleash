@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Avatar, Chip } from 'react-toolbox';
 
-class ConfiguredStrategies extends React.Component {
+class SelectedStrategies extends React.Component {
     static propTypes () {
         return {
             configuredStrategies: PropTypes.array.isRequired,
@@ -30,11 +30,11 @@ class ConfiguredStrategies extends React.Component {
             </Chip>
         ));
         return (
-            <p>
+            <div>
                 {strategies.length > 0 ? strategies : <p>No activation strategies added</p>}
-            </p>
+            </div>
         );
     }
 }
 
-export default ConfiguredStrategies;
+export default SelectedStrategies;

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
-import ConfigureStrategy from './ConfigureStrategy';
+import SelectStrategies from './select-strategies';
 
-class AddFeatureToggleStrategy extends React.Component {
+class AddStrategiesToToggle extends React.Component {
     constructor () {
         super();
         this.state = {
@@ -40,7 +40,7 @@ class AddFeatureToggleStrategy extends React.Component {
 
     render () {
         return this.state.showConfigure ?
-            <ConfigureStrategy
+            <SelectStrategies
                 strategies={this.props.strategies}
                 cancelConfig={this.cancelConfig}
                 addStrategy={this.addStrategy} /> :
@@ -48,4 +48,4 @@ class AddFeatureToggleStrategy extends React.Component {
     }
 }
 
-export default AddFeatureToggleStrategy;
+export default AddStrategiesToToggle;

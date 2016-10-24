@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Layout, Panel, NavDrawer, AppBar } from 'react-toolbox';
-import style from './style';
+import style from './styles.scss';
 
-import Navigation from './Navigation';
+import Navigation from './nav';
 
 export default class App extends Component {
     constructor (props) {

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Button, Input } from 'react-toolbox';
 
-class ConfigureStrategy extends React.Component {
+class SelectStrategies extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -82,4 +82,4 @@ class ConfigureStrategy extends React.Component {
     }
 }
 
-export default ConfigureStrategy;
+export default SelectStrategies;

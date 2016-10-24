@@ -1,5 +1,5 @@
 import React from 'react';
-import AddFeatureToggle from '../../component/feature/AddFeatureToggle';
+import AddFeatureToggle from '../../component/feature/add-container';
 
 const render = () => (
     <div>

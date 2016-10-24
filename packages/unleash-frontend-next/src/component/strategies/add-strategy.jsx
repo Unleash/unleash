@@ -1,16 +1,13 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 
 import Input from 'react-toolbox/lib/input';
 import Button from 'react-toolbox/lib/button';
 
-import { createMapper, createActions } from '../input-helpers';
-import { createStrategy } from '../../store/strategy-actions';
-
 function gerArrayWithEntries (num) {
     return Array.from(Array(num));
 }
-const PARAM_PREFIX = 'param_';
+export const PARAM_PREFIX = 'param_';
+
 const genParams = (input, num = 0, setValue) => {
     return (<div>{gerArrayWithEntries(num).map((v, i) => {
         const key = `${PARAM_PREFIX}${i + 1}`;
@@ -76,36 +73,4 @@ AddStrategy.propTypes = {
     onSubmit: PropTypes.func,
 };
 
-const ID = 'add-strategy';
-
-const actions = createActions(ID, (methods, dispatch) => {
-    methods.onSubmit = (input) => (
-        (e) => {
-            e.preventDefault();
-
-            const parametersTemplate = {};
-            Object.keys(input).forEach(key => {
-                if (key.startsWith(PARAM_PREFIX)) {
-                    parametersTemplate[input[key]] = 'string';
-                }
-            });
-            input.parametersTemplate = parametersTemplate;
-
-            createStrategy(input)(dispatch)
-                .then(() => methods.clear())
-                // somewhat quickfix / hacky to go back..
-                .then(() => window.history.back());
-        }
-    );
-
-    methods.onCancel = (e) => {
-        e.preventDefault();
-        // somewhat quickfix / hacky to go back..
-        window.history.back();
-    };
-
-
-    return methods;
-});
-
-export default connect(createMapper(ID), actions)(AddStrategy);
+export default AddStrategy;

@@ -1,11 +1,8 @@
 import React, { PropTypes } from 'react';
 import Feature from './Feature';
-import style from './table.scss';
+import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list';
 
 export default class FeatureList extends React.Component {
-    constructor () {
-        super();
-    }
 
     static propTypes () {
         return {
@@ -16,35 +13,28 @@ export default class FeatureList extends React.Component {
         };
     }
 
+    static contextTypes = {
+        router: React.PropTypes.object,
+    }
+
     componentDidMount () {
         this.props.fetchFeatureToggles();
     }
 
     render () {
-        const onFeatureClick = this.props.onFeatureClick;
-        const onFeatureRemove = this.props.onFeatureRemove;
-        const features = this.props.features.map(featureToggle =>
-                <Feature key={featureToggle.name}
-                    {...featureToggle}
-                    onClick={() => onFeatureClick(featureToggle)}
-                    onFeatureRemove={() => onFeatureRemove(featureToggle.name)}
-                />
-            );
+        const { features, onFeatureClick, onFeatureRemove } = this.props;
 
         return (
-            <table className={style.ztable}>
-                <thead>
-                    <tr>
-                        <th width="80">Enabled</th>
-                        <th>Feature Toggle</th>
-                        <th>Strategies</th>
-                        <th width="100" style={{ textAlign: 'right' }}>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {features}
-                </tbody>
-            </table>
+           <List>
+                <ListSubHeader caption="Feature toggles" />
+                {features.map(feature =>
+                    <Feature feature={feature} onFeatureClick={onFeatureClick} onFeatureRemove={onFeatureRemove}/>
+                )}
+                <ListDivider />
+                <ListItem
+                    onClick={() => this.context.router.push('/features/create')}
+                    caption="Add" legend="new feature toggle" leftIcon="add" />
+           </List>
         );
     }
 }

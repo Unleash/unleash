@@ -1,21 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import FeatureListContainer from '../../component/feature/FeatureListContainer';
-import { Button } from 'react-toolbox';
+
+const render = () => (<FeatureListContainer />);
+
+export default render;
 
 
-export default class Features extends Component {
-    static contextTypes = {
-        router: React.PropTypes.object,
-    }
-
-    render () {
-        const createHref = this.context.router.createHref('/features/create');
-        return (
-            <div>
-                <h1>Feature Toggles</h1>
-                <Button href={createHref} icon="add" raised primary label="New Feature Toggle"/>
-                <FeatureListContainer />
-            </div>
-        );
-    }
-};

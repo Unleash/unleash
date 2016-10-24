@@ -2,9 +2,11 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { editFeatureToggle } from '../../store/feature-actions';
 import AddFeatureToggleUI from './AddFeatureToggleUI';
+import { fetchStrategies } from '../../store/strategy-actions';
+
 
 const mapStateToProps = (state, ownProps) => ({
-    strategies: state.strategies.toJS(),
+    strategies: state.strategies.get('list').toArray(),
     featureToggle: state.features.toJS().find(toggle => toggle.name === ownProps.featureToggleName) || {},
 });
 
@@ -26,6 +28,11 @@ class EditFeatureToggle extends React.Component {
             featureToggle: PropTypes.featureToggle.isRequired,
             fetchFeatureToggles: PropTypes.func.isRequired,
         };
+    }
+
+    componentDidMount () {
+        // todo fetch feature if missing? (reload of page does not fetch data from url)
+        this.props.fetchStrategies();
     }
 
     static contextTypes = {
@@ -62,20 +69,18 @@ class EditFeatureToggle extends React.Component {
 
     render () {
         return (
-            <div>
-                <AddFeatureToggleUI
-                    editmode="true"
-                    strategies={this.props.strategies}
-                    featureToggle={this.state}
-                    updateField={this.updateField}
-                    addStrategy={this.addStrategy}
-                    removeStrategy={this.removeStrategy}
-                    onSubmit={this.onSubmit}
-                    onCancel={this.onCancel}
-                />
-            </div>
+            <AddFeatureToggleUI
+                editmode="true"
+                strategies={this.props.strategies}
+                featureToggle={this.state}
+                updateField={this.updateField}
+                addStrategy={this.addStrategy}
+                removeStrategy={this.removeStrategy}
+                onSubmit={this.onSubmit}
+                onCancel={this.onCancel}
+            />
         );
     }
 }
 
-export default connect(mapStateToProps)(EditFeatureToggle);
+export default connect(mapStateToProps, { fetchStrategies })(EditFeatureToggle);

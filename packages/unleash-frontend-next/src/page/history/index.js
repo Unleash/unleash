@@ -4,7 +4,7 @@ export default class EventHisotry extends Component {
     render () {
         return (
             <div>
-                <h1>Event history</h1>
+                <h2>Event history</h2>
             </div>
         );
     }

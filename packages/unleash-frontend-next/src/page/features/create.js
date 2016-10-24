@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import AddFeatureToggle from '../../component/feature/AddFeatureToggle';
 
-export default class Features extends Component {
-    render () {
-        return (
-            <div>
-                <h1>Create Feature Toggle</h1>
-                <AddFeatureToggle />
-            </div>
-        );
-    }
-};
+const render = () => (
+    <div>
+        <h3>Create feature toggle</h3>
+        <AddFeatureToggle />
+    </div>
+);
+
+export default render;

@@ -15,7 +15,7 @@ const genParams = (input, num = 0, setValue) => (<div>{gerArrayWithEntries(num).
             type="text"
             label={`Parameter name ${i + 1}`}
             name={key} key={key}
-            onChange={(value) => git statugitsetValue(key, value)}
+            onChange={(value) => setValue(key, value)}
             value={input[key]} />
     );
 })}</div>);

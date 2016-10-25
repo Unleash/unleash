@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
-import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list';
-import FontIcon from 'react-toolbox/lib/font_icon';
-import Chip from 'react-toolbox/lib/chip';
+import { List, ListItem, ListSubHeader } from 'react-toolbox/lib/list';
 
-class StrategiesListComponent extends Component {
-
-    static contextTypes = {
-        router: React.PropTypes.object,
-    }
+class HistoryList extends Component {
 
     componentDidMount () {
         this.props.fetchHistory();
@@ -33,7 +27,7 @@ class StrategiesListComponent extends Component {
     }
 
     render () {
-        const { history } = this.props;
+        const { history } = this.props; // eslint-disable-line no-shadow
 
         return (
             <List ripple >
@@ -61,4 +55,4 @@ class StrategiesListComponent extends Component {
 }
 
 
-export default StrategiesListComponent;
+export default HistoryList;

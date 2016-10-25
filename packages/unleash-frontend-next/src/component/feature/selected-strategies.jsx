@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
-import { Avatar, Chip } from 'react-toolbox';
+import Chip from 'react-toolbox/lib/chip';
+import Avatar from 'react-toolbox/lib/avatar';
 
 class SelectedStrategies extends React.Component {
     static propTypes () {

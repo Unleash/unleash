@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import FontIcon from 'react-toolbox/lib/font_icon';
 import Switch from 'react-toolbox/lib/switch';
 import { ListItem } from 'react-toolbox/lib/list';
+import Chip from 'react-toolbox/lib/chip';
 
 import style from './feature.scss';
 
@@ -11,7 +12,7 @@ const Feature = ({ feature, onFeatureClick, onFeatureRemove }) => {
     const { name, description, enabled, strategies } = feature; // eslint-disable-line no-shadow
 
     const actions = [
-        strategies.map(s => s.name).join(', '),
+        <div>{strategies.map(s => <Chip><small>{s.name}</small></Chip>)}</div>,
         <Link to={`/features/edit/${name}`} title={`Edit ${name}`}>
             <FontIcon value="edit" className={style.action} />
         </Link>,

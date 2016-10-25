@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list';
 import FontIcon from 'react-toolbox/lib/font_icon';
+import Chip from 'react-toolbox/lib/chip';
+
 import style from './strategies.scss';
 
 class StrategiesListComponent extends Component {
@@ -15,7 +17,7 @@ class StrategiesListComponent extends Component {
 
     getParameterMap ({ parametersTemplate }) {
         return Object.keys(parametersTemplate || {}).map(k => (
-            <span className={style.label} key={k}>{k}</span>
+            <Chip key={k}><small>{k}</small></Chip>
         ));
     }
 

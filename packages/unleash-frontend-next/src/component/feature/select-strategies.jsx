@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
-import { Button, Input } from 'react-toolbox';
+import Input from 'react-toolbox/lib/input';
+import Button from 'react-toolbox/lib/button';
 
 class SelectStrategies extends React.Component {
     constructor (props) {

@@ -61,7 +61,11 @@ class AddFeatureToggleComponent extends Component {
 
                 <section>
                     <div>
-                        <h5 style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)', paddingBottom: '5px', marginBottom: '10px' }}>Strategies:</h5>
+                        <h5 style={{
+                            borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+                            paddingBottom: '5px',
+                            marginBottom: '10px',
+                        }}>Strategies:</h5>
                     </div>
 
                     <SelectedStrategies

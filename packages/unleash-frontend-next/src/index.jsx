@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRedirect, useRouterHistory } from 'react-router';
-import { createHashHistory } from 'history';
+import { Router, Route, IndexRedirect, hashHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
@@ -17,8 +16,6 @@ import CreateStrategies from './page/strategies/create';
 import HistoryPage from './page/history';
 import Archive from './page/archive';
 
-const appHistory = useRouterHistory(createHashHistory)({ queryKey: false });
-
 const unleashStore = createStore(
     store,
     applyMiddleware(
@@ -28,7 +25,7 @@ const unleashStore = createStore(
 
 ReactDOM.render(
     <Provider store={unleashStore}>
-        <Router history={appHistory}>
+        <Router history={hashHistory}>
             <Route path="/" component={App}>
                 <IndexRedirect to="/features" />
                 <Route path="/features" component={Features} />

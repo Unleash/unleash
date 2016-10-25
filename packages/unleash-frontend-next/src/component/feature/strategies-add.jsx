@@ -1,13 +1,7 @@
 import React, { PropTypes } from 'react';
-import { Button } from 'react-toolbox';
+import { Button, Dropdown } from 'react-toolbox';
 
 class AddStrategy extends React.Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            selectedStrategy: props.strategies[0],
-        };
-    }
 
     static propTypes () {
         return {
@@ -17,22 +11,8 @@ class AddStrategy extends React.Component {
         };
     }
 
-    componentWillReceiveProps (nextProps) {
-        // this will fix async strategies list loading after mounted
-        if (!this.state.selectedStrategy && nextProps.strategies.length > 0) {
-            this.setState({ selectedStrategy: nextProps.strategies[0] });
-        }
-    }
-
-    handleChange = (evt) => {
-        const strategyName = evt.target.value;
+    addStrategy = (strategyName) => {
         const selectedStrategy = this.props.strategies.find(s => s.name === strategyName);
-        this.setState({ selectedStrategy });
-    }
-
-    addStrategy = (evt) => {
-        evt.preventDefault();
-        const selectedStrategy =  this.state.selectedStrategy;
         const parameters = {};
         const keys = Object.keys(selectedStrategy.parametersTemplate || {});
         keys.forEach(prop => { parameters[prop] = ''; });
@@ -44,27 +24,48 @@ class AddStrategy extends React.Component {
         });
     };
 
+    customItem (item) {
+        const containerStyle = {
+            display: 'flex',
+            flexDirection: 'row',
+        };
+
+
+        const contentStyle = {
+            display: 'flex',
+            flexDirection: 'column',
+            flexGrow: 2,
+        };
+
+        return (
+        <div style={containerStyle}>
+            <div style={contentStyle}>
+            <strong>{item.name}</strong>
+            <small>{item.description}</small>
+            </div>
+        </div>
+        );
+    }
+
     render () {
-        const strategies = this.props.strategies.map(s => (
-            <option key={s.name} value={s.name}>{s.name}</option>
-        ));
-
-        const selectedStrategy = this.state.selectedStrategy || this.props.strategies[0];
-
-        if (!selectedStrategy) {
-            return <i>Strategies loading...</i>;
-        }
+        const strats = this.props.strategies.map(s => {
+            s.value = s.name;
+            return s;
+        });
 
         return (
             <div>
-                <select value={selectedStrategy.name} onChange={this.handleChange}>
-                    {strategies}
-                </select>
-                <Button icon="add" accent flat label="add strategy" onClick={this.addStrategy} />
-                <p><strong>Description:</strong> {selectedStrategy.description}</p>
+                <Dropdown
+                    auto={false}
+                    source={strats}
+                    onChange={this.addStrategy}
+                    label="Select activation strategy to add"
+                    template={this.customItem}
+                />
             </div>
         );
     }
 }
+
 
 export default AddStrategy;

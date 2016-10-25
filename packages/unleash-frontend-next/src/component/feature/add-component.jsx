@@ -2,8 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Input from 'react-toolbox/lib/input';
 import Button from 'react-toolbox/lib/button';
 import Switch from 'react-toolbox/lib/switch';
-import SelectStrategies from './strategies-for-toggle-container';
-import SelectedStrategies from './selected-strategies';
+import StrategiesSection from './strategies-section-container';
 
 class AddFeatureToggleComponent extends Component {
 
@@ -20,6 +19,7 @@ class AddFeatureToggleComponent extends Component {
             setValue,
             addStrategy,
             removeStrategy,
+            updateStrategy,
             onSubmit,
             onCancel,
             editmode = false,
@@ -59,23 +59,11 @@ class AddFeatureToggleComponent extends Component {
                     <br />
                 </section>
 
-                <section>
-                    <div>
-                        <h5 style={{
-                            borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-                            paddingBottom: '5px',
-                            marginBottom: '10px',
-                        }}>Strategies:</h5>
-                    </div>
-
-                    <SelectedStrategies
-                        configuredStrategies={configuredStrategies}
-                        removeStrategy={removeStrategy} />
-                </section>
-
-                <section>
-                    <SelectStrategies addStrategy={addStrategy} />
-                </section>
+                <StrategiesSection
+                    configuredStrategies={configuredStrategies}
+                    addStrategy={addStrategy}
+                    updateStrategy={updateStrategy}
+                    removeStrategy={removeStrategy} />
 
                 <br />
 
@@ -89,13 +77,13 @@ class AddFeatureToggleComponent extends Component {
 };
 
 AddFeatureToggleComponent.propTypes = {
-    strategies: PropTypes.array.required,
     input: PropTypes.object,
-    setValue: PropTypes.func.required,
-    addStrategy: PropTypes.func.required,
-    removeStrategy: PropTypes.func.required,
-    onSubmit: PropTypes.func.required,
-    onCancel: PropTypes.func.required,
+    setValue: PropTypes.func.isRequired,
+    addStrategy: PropTypes.func.isRequired,
+    removeStrategy: PropTypes.func.isRequired,
+    updateStrategy: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
     editmode: PropTypes.bool,
 };
 

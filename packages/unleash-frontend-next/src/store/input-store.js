@@ -48,6 +48,13 @@ function addToList (state, { id, key, value }) {
     return state.updateIn(id.concat([key]), (list) => list.push(value));
 }
 
+function updateInList (state, { id, key, value, newValue }) {
+    state = assertId(state, id);
+    state = assertList(state, id, key);
+
+    return state.updateIn(id.concat([key]), (list) => list.set(list.indexOf(value), newValue));
+}
+
 function removeFromList (state, { id, key, value }) {
     state = assertId(state, id);
     state = assertList(state, id, key);
@@ -74,6 +81,8 @@ const inputState = (state = getInitState(), action) => {
             return addToList(state, action);
         case actions.LIST_POP:
             return removeFromList(state, action);
+        case actions.LIST_UP:
+            return updateInList(state, action);
         case actions.CLEAR:
             return clear(state, action);
         default:

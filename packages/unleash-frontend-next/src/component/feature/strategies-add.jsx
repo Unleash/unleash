@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Button, Input } from 'react-toolbox';
+import { Button } from 'react-toolbox';
 
 class AddStrategy extends React.Component {
     constructor (props) {
@@ -15,11 +15,6 @@ class AddStrategy extends React.Component {
             addStrategy: PropTypes.func.isRequired,
             fetchStrategies: PropTypes.func.isRequired,
         };
-    }
-
-    componentWillMount () {
-        // TODO: move somewhere appropriate?
-        this.props.fetchStrategies();
     }
 
     componentWillReceiveProps (nextProps) {
@@ -65,9 +60,7 @@ class AddStrategy extends React.Component {
                 <select value={selectedStrategy.name} onChange={this.handleChange}>
                     {strategies}
                 </select>
-
                 <Button icon="add" accent flat label="add strategy" onClick={this.addStrategy} />
-
                 <p><strong>Description:</strong> {selectedStrategy.description}</p>
             </div>
         );

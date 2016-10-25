@@ -55,6 +55,7 @@ class AddStrategy extends React.Component {
 
         return (
             <Dropdown
+                allowBlank={false}
                 source={strats}
                 onChange={this.addStrategy}
                 label="+ Add strategy"

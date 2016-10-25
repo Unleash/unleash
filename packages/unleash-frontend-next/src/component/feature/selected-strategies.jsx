@@ -11,7 +11,12 @@ class SelectedStrategies extends React.Component {
 
     renderName (strategy) {
         const parameters = strategy.parameters || {};
-        const params = Object.keys(parameters)
+        const keys = Object.keys(parameters);
+        if (keys.length === 0) {
+            return <span>{strategy.name}</span>;
+        }
+
+        const params = keys
             .map(param => `${param}="${strategy.parameters[param]}"`)
             .join('; ');
         return <span>{strategy.name} ({params})</span>;
@@ -21,7 +26,7 @@ class SelectedStrategies extends React.Component {
         const removeStrategy = this.props.removeStrategy;
         const configuredStrategies = this.props.configuredStrategies.map((s, index) => (
             <Chip
-                style={{ marginRight: '10px' }}
+                style={{ marginRight: '10px', marginBottom: '10px' }}
                 key={`${index}-${s.name}`}
                 deletable
                 onDeleteClick={() => removeStrategy(s)}

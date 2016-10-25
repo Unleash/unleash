@@ -70,6 +70,10 @@ module.exports = {
                 target: 'http://localhost:4242',
                 secure: false,
             },
+            '/events': {
+                target: 'http://localhost:4242',
+                secure: false,
+            },
         },
     },
 };

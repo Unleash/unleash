@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import SelectStrategies from './select-strategies';
+import SelectStrategies from './select-strategies-container';
 
 class AddStrategiesToToggle extends React.Component {
     constructor () {
@@ -11,7 +11,6 @@ class AddStrategiesToToggle extends React.Component {
 
     static propTypes () {
         return {
-            strategies: PropTypes.array.isRequired,
             addStrategy: PropTypes.func.isRequired,
         };
     }
@@ -39,12 +38,11 @@ class AddStrategiesToToggle extends React.Component {
     }
 
     render () {
-        return this.state.showConfigure ?
-            <SelectStrategies
-                strategies={this.props.strategies}
-                cancelConfig={this.cancelConfig}
-                addStrategy={this.addStrategy} /> :
-            this.renderAddLink();
+        return (
+            this.state.showConfigure ?
+            <SelectStrategies cancelConfig={this.cancelConfig} addStrategy={this.addStrategy} /> :
+            this.renderAddLink()
+        );
     }
 }
 

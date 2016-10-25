@@ -19,7 +19,7 @@ class SelectedStrategies extends React.Component {
 
     render () {
         const removeStrategy = this.props.removeStrategy;
-        const strategies = this.props.configuredStrategies.map((s, index) => (
+        const configuredStrategies = this.props.configuredStrategies.map((s, index) => (
             <Chip
                 key={`${index}-${s.name}`}
                 deletable
@@ -31,7 +31,7 @@ class SelectedStrategies extends React.Component {
         ));
         return (
             <div>
-                {strategies.length > 0 ? strategies : <p>No activation strategies added</p>}
+                {configuredStrategies.length > 0 ? configuredStrategies : <p>No activation strategies added</p>}
             </div>
         );
     }

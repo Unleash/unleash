@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { hashHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 
 
 import { createFeatureToggles } from '../../store/feature-actions';
@@ -21,7 +21,7 @@ const prepare = (methods, dispatch) => {
 
     methods.onCancel = (evt) => {
         evt.preventDefault();
-        hashHistory.push('/features');
+        browserHistory.push('/features');
     };
 
     methods.addStrategy = (v) => {

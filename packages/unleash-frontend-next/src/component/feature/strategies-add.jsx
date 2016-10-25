@@ -55,7 +55,6 @@ class AddStrategy extends React.Component {
 
         return (
             <Dropdown
-                auto={false}
                 source={strats}
                 onChange={this.addStrategy}
                 label="Select activation strategy to add"

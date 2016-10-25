@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
-import { Button, Dropdown } from 'react-toolbox';
+import Dropdown from 'react-toolbox/lib/dropdown';
+import FontIcon from 'react-toolbox/lib/font_icon';
 
 class AddStrategy extends React.Component {
 
@@ -35,10 +36,12 @@ class AddStrategy extends React.Component {
             display: 'flex',
             flexDirection: 'column',
             flexGrow: 2,
+            marginLeft: '10px',
         };
 
         return (
         <div style={containerStyle}>
+            <FontIcon value="add" floating mini />
             <div style={contentStyle}>
                 <strong>{item.name}</strong>
                 <small>{item.description}</small>

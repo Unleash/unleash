@@ -57,9 +57,8 @@ class AddStrategy extends React.Component {
             <Dropdown
                 source={strats}
                 onChange={this.addStrategy}
-                label="Select activation strategy to add"
+                label="+ Add strategy"
                 template={this.customItem}
-                value={this.props.strategies[0].name}
             />
         );
     }

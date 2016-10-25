@@ -53,11 +53,9 @@ export function createStrategy (strategy) {
 
 
 export function removeStrategy (strategy) {
-    return dispatch => {
-        return api.remove(strategy)
+    return dispatch => api.remove(strategy)
             .then(() => dispatch(createRemoveStrategy(strategy)))
             .catch(error => dispatch(errorCreatingStrategy(error)));
-    };
 }
 
 

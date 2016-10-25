@@ -8,19 +8,17 @@ function gerArrayWithEntries (num) {
 }
 export const PARAM_PREFIX = 'param_';
 
-const genParams = (input, num = 0, setValue) => {
-    return (<div>{gerArrayWithEntries(num).map((v, i) => {
-        const key = `${PARAM_PREFIX}${i + 1}`;
-        return (
-            <Input
-                type="text"
-                label={`Parameter name ${i + 1}`}
-                name={key} key={key}
-                onChange={(value) => setValue(key, value)}
-                value={input[key]} />
-        );
-    })}</div>);
-};
+const genParams = (input, num = 0, setValue) => (<div>{gerArrayWithEntries(num).map((v, i) => {
+    const key = `${PARAM_PREFIX}${i + 1}`;
+    return (
+        <Input
+            type="text"
+            label={`Parameter name ${i + 1}`}
+            name={key} key={key}
+            onChange={(value) => git statugitsetValue(key, value)}
+            value={input[key]} />
+    );
+})}</div>);
 
 const AddStrategy = ({
     input,

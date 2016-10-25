@@ -1,11 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
+import HistoryComponent from '../../component/history/history-container';
 
-export default class EventHisotry extends Component {
-    render () {
-        return (
-            <div>
-                <h2>Event history</h2>
-            </div>
-        );
-    }
-};
+const render = () => <HistoryComponent />;
+
+export default render;

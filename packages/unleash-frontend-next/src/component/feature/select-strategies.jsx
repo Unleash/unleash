@@ -18,6 +18,17 @@ class SelectStrategies extends React.Component {
         };
     }
 
+    componentWillMount () {
+        this.props.fetchStrategies();
+    }
+
+    componentWillReceiveProps (nextProps) {
+        // this will fix async strategies list loading after mounted
+        if (!this.state.selectedStrategy && nextProps.strategies.length > 0) {
+            this.setState({ selectedStrategy: nextProps.strategies[0] });
+        }
+    }
+
     handleChange = (evt) => {
         const strategyName = evt.target.value;
         const selectedStrategy = this.props.strategies.find(s => s.name === strategyName);
@@ -63,7 +74,11 @@ class SelectStrategies extends React.Component {
             padding: '10px',
         };
 
-        const selectedStrategy = this.state.selectedStrategy;
+        const selectedStrategy = this.state.selectedStrategy || this.props.strategies[0];
+
+        if (!selectedStrategy) {
+            return <div>Strategies loading...</div>;
+        }
 
         return (
             <div style={style}>

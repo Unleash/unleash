@@ -1,32 +1,63 @@
-import { createInc, createClear, createSet } from '../store/input-actions';
+import {
+    createInc,
+    createClear,
+    createSet,
+    createPop,
+    createPush,
+    createInit,
+} from '../store/input-actions';
 
-export function createMapper (id, prepare = (v) => v) {
-    return (state) => {
+function getId (id, ownProps) {
+    if (typeof id === 'function') {
+        return id(ownProps); // should return array...
+    }
+    return [id];
+}
+
+export function createMapper ({ id, getDefault, prepare = (v) => v }) {
+    return (state, ownProps) => {
         let input;
-        if (state.input.has(id)) {
-            input = state.input.get(id).toJS();
+        let initCallRequired = false;
+        const scope = getId(id, ownProps);
+        if (state.input.hasIn(scope)) {
+            input = state.input.getIn(scope).toJS();
         } else {
-            input = {};
+            initCallRequired = true;
+            input = getDefault ? getDefault(state, ownProps) : {};
         }
 
         return prepare({
+            initCallRequired,
             input,
-        }, state);
+        }, state, ownProps);
     };
 }
 
-export function createActions (id, prepare = (v) => v) {
-    return (dispatch) => (prepare({
+export function createActions ({ id, prepare = (v) => v }) {
+    return (dispatch, ownProps) => (prepare({
+
         clear () {
-            dispatch(createClear({ id }));
+            dispatch(createClear({ id: getId(id, ownProps) }));
+        },
+
+        init (value) {
+            dispatch(createInit({ id: getId(id, ownProps), value }));
         },
 
         setValue (key, value) {
-            dispatch(createSet({ id, key, value }));
+            dispatch(createSet({ id: getId(id, ownProps), key, value }));
+        },
+
+        pushToList (key, value) {
+            dispatch(createPush({ id: getId(id, ownProps), key, value }));
+        },
+
+        removeFromList (key, value) {
+            dispatch(createPop({ id: getId(id, ownProps), key, value }));
         },
 
         incValue (key) {
-            dispatch(createInc({ id, key }));
+            dispatch(createInc({ id: getId(id, ownProps), key }));
         },
-    }, dispatch));
+    }, dispatch, ownProps));
 }

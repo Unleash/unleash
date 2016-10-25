@@ -1,86 +1,62 @@
-import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { editFeatureToggle } from '../../store/feature-actions';
-import AddFeatureToggleComponent from './add-component';
-import { fetchStrategies } from '../../store/strategy-actions';
 
+import { requestUpdateFeatureToggle } from '../../store/feature-actions';
+import AddComponent from './add-component';
+import { createMapper, createActions } from '../input-helpers';
 
-const mapStateToProps = (state, ownProps) => ({
-    strategies: state.strategies.get('list').toArray(),
-    featureToggle: state.features.toJS().find(toggle => toggle.name === ownProps.featureToggleName) || {},
+const ID = 'edit-feature-toggle';
+function getId (props) {
+    return [ID, props.featureToggleName];
+}
+// TODO: need to scope to the active featureToggle
+// best is to emulate the "input-storage"?
+const mapStateToProps = createMapper({
+    id: getId,
+    getDefault: (state, ownProps) => {
+        if (ownProps.featureToggleName) {
+            const match = state.features.findEntry((entry) => entry.get('name') === ownProps.featureToggleName);
+
+            if (match && match[1]) {
+                return match[1].toJS();
+            }
+        }
+        return {};
+    },
+    prepare: (props) => {
+        props.editmode = true;
+        return props;
+    },
 });
 
-class EditFeatureToggle extends React.Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            name: props.featureToggle.name || '',
-            description: props.featureToggle.description || '',
-            enabled: props.featureToggle.enabled || false,
-            strategies: props.featureToggle.strategies || [],
-        };
-    }
+const prepare =  (methods, dispatch) => {
+    methods.onSubmit = (input) => (
+        (e) => {
+            e.preventDefault();
+             // TODO: should add error handling
+            requestUpdateFeatureToggle(input)(dispatch)
+                .then(() => methods.clear())
+                .then(() => window.history.back());
+        }
+    );
 
-    static propTypes () {
-        return {
-            dispatch: PropTypes.func.isRequired,
-            strategies: PropTypes.array,
-            featureToggle: PropTypes.featureToggle.isRequired,
-            fetchFeatureToggles: PropTypes.func.isRequired,
-        };
-    }
-
-    componentDidMount () {
-        // todo fetch feature if missing? (reload of page does not fetch data from url)
-        this.props.fetchStrategies();
-    }
-
-    static contextTypes = {
-        router: React.PropTypes.object,
-    }
-
-    onSubmit = (evt) => {
-        evt.preventDefault();
-        this.props.dispatch(editFeatureToggle(this.state));
-        this.context.router.push('/features');
+    methods.onCancel = () => {
+        window.history.back();
     };
 
-    onCancel = (evt) => {
-        evt.preventDefault();
-        this.context.router.push('/features');
+    methods.addStrategy = (v) => {
+        methods.pushToList('strategies', v);
     };
 
-    updateField = (key, value) => {
-        const change = {};
-        change[key] = value;
-        this.setState(change);
+    methods.removeStrategy = (v) => {
+        methods.removeFromList('strategies', v);
     };
 
-    addStrategy = (strategy) => {
-        const strategies = this.state.strategies;
-        strategies.push(strategy);
-        this.setState({ strategies });
-    }
+    return methods;
+};
 
-    removeStrategy = (strategy) => {
-        const strategies = this.state.strategies.filter(s => s !== strategy);
-        this.setState({ strategies });
-    }
+const actions = createActions({
+    id: getId,
+    prepare,
+});
 
-    render () {
-        return (
-            <AddFeatureToggleComponent
-                editmode="true"
-                strategies={this.props.strategies}
-                featureToggle={this.state}
-                updateField={this.updateField}
-                addStrategy={this.addStrategy}
-                removeStrategy={this.removeStrategy}
-                onSubmit={this.onSubmit}
-                onCancel={this.onCancel}
-            />
-        );
-    }
-}
-
-export default connect(mapStateToProps, { fetchStrategies })(EditFeatureToggle);
+export default connect(mapStateToProps, actions)(AddComponent);

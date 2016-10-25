@@ -7,7 +7,7 @@ import AddStrategy, { PARAM_PREFIX } from './add-strategy';
 
 const ID = 'add-strategy';
 
-const actions = createActions(ID, (methods, dispatch) => {
+const prepare = (methods, dispatch) => {
     methods.onSubmit = (input) => (
         (e) => {
             e.preventDefault();
@@ -35,6 +35,11 @@ const actions = createActions(ID, (methods, dispatch) => {
 
 
     return methods;
+};
+
+const actions = createActions({
+    id: ID,
+    prepare,
 });
 
-export default connect(createMapper(ID), actions)(AddStrategy);
+export default connect(createMapper({ id: ID }), actions)(AddStrategy);

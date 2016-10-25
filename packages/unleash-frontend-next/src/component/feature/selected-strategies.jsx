@@ -21,6 +21,7 @@ class SelectedStrategies extends React.Component {
         const removeStrategy = this.props.removeStrategy;
         const configuredStrategies = this.props.configuredStrategies.map((s, index) => (
             <Chip
+                style={{ marginRight: '10px' }}
                 key={`${index}-${s.name}`}
                 deletable
                 onDeleteClick={() => removeStrategy(s)}

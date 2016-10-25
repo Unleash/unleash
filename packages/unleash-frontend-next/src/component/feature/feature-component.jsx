@@ -12,7 +12,7 @@ const Feature = ({ feature, onFeatureClick, onFeatureRemove }) => {
     const { name, description, enabled, strategies } = feature; // eslint-disable-line no-shadow
 
     const actions = [
-        <div>{strategies.map(s => <Chip><small>{s.name}</small></Chip>)}</div>,
+        <div>{strategies && strategies.map(s => <Chip><small>{s.name}</small></Chip>)}</div>,
         <Link to={`/features/edit/${name}`} title={`Edit ${name}`}>
             <FontIcon value="edit" className={style.action} />
         </Link>,

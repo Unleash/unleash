@@ -18,11 +18,16 @@ const prepare = (methods, dispatch) => {
     );
 
     methods.onCancel = () => {
+        debugger;
         window.history.back();
     };
 
     methods.addStrategy = (v) => {
         methods.pushToList('strategies', v);
+    };
+
+    methods.updateStrategy = (v, n) => {
+        methods.updateInList('strategies', v, n);
     };
 
     methods.removeStrategy = (v) => {

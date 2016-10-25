@@ -51,6 +51,10 @@ const prepare =  (methods, dispatch) => {
         methods.removeFromList('strategies', v);
     };
 
+    methods.updateStrategy = (v, n) => {
+        methods.updateInList('strategies', v, n);
+    };
+
     return methods;
 };
 

@@ -4,6 +4,7 @@ import {
     createSet,
     createPop,
     createPush,
+    createUp,
     createInit,
 } from '../store/input-actions';
 
@@ -54,6 +55,10 @@ export function createActions ({ id, prepare = (v) => v }) {
 
         removeFromList (key, value) {
             dispatch(createPop({ id: getId(id, ownProps), key, value }));
+        },
+
+        updateInList (key, value, newValue) {
+            dispatch(createUp({ id: getId(id, ownProps), key, value, newValue }));
         },
 
         incValue (key) {

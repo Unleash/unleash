@@ -63,7 +63,7 @@ class ConfigureStrategies extends React.Component {
             );
         }
 
-        const inputFields = this.renderInputFields(this.props.strategyDefinition);
+        const inputFields = this.renderInputFields(this.props.strategyDefinition) || [];
 
         return (
             <ListItem leftActions={leftActions}

@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import SelectStrategies from './select-strategies-container';
+import Button from 'react-toolbox/lib/button';
 
 class AddStrategiesToToggle extends React.Component {
     constructor () {
@@ -32,7 +33,7 @@ class AddStrategiesToToggle extends React.Component {
     renderAddLink () {
         return (
             <div>
-                <a href="#" onClick={this.showConfigure}>Add strategy</a>
+                <Button icon="add" accent onClick={this.showConfigure}>Add strategy</Button>
             </div>
         );
     }

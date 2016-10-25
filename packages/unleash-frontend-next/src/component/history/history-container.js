@@ -10,6 +10,6 @@ const mapStateToProps = (state) => {
     };
 };
 
-const StrategiesListContainer = connect(mapStateToProps, { fetchHistory })(ListComponent);
+const HistoryListContainer = connect(mapStateToProps, { fetchHistory })(ListComponent);
 
-export default StrategiesListContainer;
+export default HistoryListContainer;

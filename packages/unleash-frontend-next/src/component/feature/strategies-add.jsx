@@ -40,8 +40,8 @@ class AddStrategy extends React.Component {
         return (
         <div style={containerStyle}>
             <div style={contentStyle}>
-            <strong>{item.name}</strong>
-            <small>{item.description}</small>
+                <strong>{item.name}</strong>
+                <small>{item.description}</small>
             </div>
         </div>
         );
@@ -54,15 +54,14 @@ class AddStrategy extends React.Component {
         });
 
         return (
-            <div>
-                <Dropdown
-                    auto={false}
-                    source={strats}
-                    onChange={this.addStrategy}
-                    label="Select activation strategy to add"
-                    template={this.customItem}
-                />
-            </div>
+            <Dropdown
+                auto={false}
+                source={strats}
+                onChange={this.addStrategy}
+                label="Select activation strategy to add"
+                template={this.customItem}
+                value={this.props.strategies[0].name}
+            />
         );
     }
 }

@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
-import { Button, Input } from 'react-toolbox';
+import Input from 'react-toolbox/lib/input';
+import Button from 'react-toolbox/lib/button';
+import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list';
 
 class ConfigureStrategies extends React.Component {
 
@@ -35,7 +37,6 @@ class ConfigureStrategies extends React.Component {
     }
 
     renderInputFields (strategyDefinition) {
-        
 
         if (strategyDefinition.parametersTemplate) {
             return Object.keys(strategyDefinition.parametersTemplate).map(field => (
@@ -52,24 +53,24 @@ class ConfigureStrategies extends React.Component {
     }
 
     render () {
+        const leftActions = [
+            <Button onClick={this.handleRemove} icon="remove" floating accent mini />,
+        ];
+
         if (!this.props.strategyDefinition) {
             return (
-                <div>
-                    <span style={{ color: 'red' }}>Strategy "{this.props.strategy.name}" deleted</span>
-                    <Button title="Remove Strategy" onClick={this.handleRemove} icon="remove" floating accent mini />
-                </div>
-            )
+                <ListItem leftActions={leftActions} caption={<span style={{ color: 'red' }}>Strategy "{this.props.strategy.name}" deleted</span>}/>
+            );
         }
 
         const inputFields = this.renderInputFields(this.props.strategyDefinition);
 
         return (
-            <div>
-                <strong>{this.props.strategy.name}</strong>
-                <Button title="Remove Strategy" onClick={this.handleRemove} icon="remove" floating accent mini />
-                <p><i>{this.props.strategyDefinition.description}</i></p>
-                {inputFields}
-            </div>
+            <ListItem leftActions={leftActions}
+                caption={this.props.strategy.name}
+                legend={this.props.strategyDefinition.description}
+                rightActions={inputFields}
+            />
         );
     }
 }

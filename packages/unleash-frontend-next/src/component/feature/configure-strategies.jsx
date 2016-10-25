@@ -1,5 +1,8 @@
 import React, { PropTypes } from 'react';
 import ConfigureStrategy from './configure-strategy';
+import { List } from 'react-toolbox/lib/list';
+
+
 class ConfigureStrategies extends React.Component {
 
     static propTypes () {
@@ -30,9 +33,9 @@ class ConfigureStrategies extends React.Component {
                 strategyDefinition={strategies.find(s => s.name === strat.name)} />
         ));
         return (
-            <div>
+            <List>
                 {blocks}
-            </div>
+            </List>
         );
     }
 }

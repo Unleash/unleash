@@ -35,6 +35,8 @@ class ConfigureStrategies extends React.Component {
     }
 
     renderInputFields (strategyDefinition) {
+        
+
         if (strategyDefinition.parametersTemplate) {
             return Object.keys(strategyDefinition.parametersTemplate).map(field => (
                 <Input
@@ -50,7 +52,17 @@ class ConfigureStrategies extends React.Component {
     }
 
     render () {
+        if (!this.props.strategyDefinition) {
+            return (
+                <div>
+                    <span style={{ color: 'red' }}>Strategy "{this.props.strategy.name}" deleted</span>
+                    <Button title="Remove Strategy" onClick={this.handleRemove} icon="remove" floating accent mini />
+                </div>
+            )
+        }
+
         const inputFields = this.renderInputFields(this.props.strategyDefinition);
+
         return (
             <div>
                 <strong>{this.props.strategy.name}</strong>

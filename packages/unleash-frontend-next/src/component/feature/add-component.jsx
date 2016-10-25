@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Input from 'react-toolbox/lib/input';
 import Button from 'react-toolbox/lib/button';
 import Switch from 'react-toolbox/lib/switch';
-import SelectStrategies from './strategies-for-toggle';
+import SelectStrategies from './strategies-for-toggle-container';
 import SelectedStrategies from './selected-strategies';
 
 class AddFeatureToggleComponent extends Component {

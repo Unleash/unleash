@@ -1,13 +1,14 @@
 import { connect } from 'react-redux';
 import ErrorComponent from './error-component';
-import { muteErrors } from '../../store/error-actions';
+import { muteError } from '../../store/error-actions';
 
 
 const mapDispatchToProps = {
-    muteErrors,
+    muteError,
 };
 
-export default connect((state) => ({
+const mapStateToProps = (state) =>  ({
     errors: state.error.get('list').toArray(),
-    showError: state.error.get('showError'),
-}), mapDispatchToProps)(ErrorComponent);
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ErrorComponent);

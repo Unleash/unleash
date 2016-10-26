@@ -53,7 +53,7 @@ class StrategyConfigure extends React.Component {
 
     render () {
         const leftActions = [
-            <Button onClick={this.handleRemove} icon="remove" floating accent mini />,
+            <Button key="remove" onClick={this.handleRemove} icon="remove" floating accent mini />,
         ];
 
         if (!this.props.strategyDefinition) {

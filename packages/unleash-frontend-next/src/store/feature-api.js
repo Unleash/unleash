@@ -8,7 +8,8 @@ const headers = {
 function throwIfNotSuccess (response) {
     if (!response.ok) {
         let error = new Error('API call failed');
-        error.status = response.status;
+        error.statusCode = response.status;
+        error.msg = response.json();
         throw error;
     }
     return response;

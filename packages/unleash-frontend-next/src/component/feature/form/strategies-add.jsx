@@ -41,7 +41,7 @@ class AddStrategy extends React.Component {
 
         return (
         <div style={containerStyle}>
-            <FontIcon value="add" floating mini />
+            <FontIcon value="add" />
             <div style={contentStyle}>
                 <strong>{item.name}</strong>
                 <small>{item.description}</small>

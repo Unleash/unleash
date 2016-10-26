@@ -1,6 +1,10 @@
 import { List, Map as $Map } from 'immutable';
-import { ERROR_RECEIVE_FEATURE_TOGGLES } from './feature-actions';
 import { MUTE_ERRORS } from './error-actions';
+import {
+    ERROR_RECEIVE_FEATURE_TOGGLES,
+    ERROR_CREATING_FEATURE_TOGGLE,
+} from './feature-actions';
+
 const debug = require('debug')('unleash:error-store');
 
 function getInitState () {
@@ -12,10 +16,11 @@ function getInitState () {
 
 const strategies = (state = getInitState(), action) => {
     switch (action.type) {
+        case ERROR_CREATING_FEATURE_TOGGLE:
         case ERROR_RECEIVE_FEATURE_TOGGLES:
             debug('Got error', action);
             return state
-                .update('list', (list) => list.push('Failed fetching feature toggles'))
+                .update('list', (list) => list.push(action.errorMsg))
                 .set('showError', true);
         case MUTE_ERRORS:
             debug('muting errors');

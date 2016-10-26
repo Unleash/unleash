@@ -5,45 +5,15 @@ export const ADD_FEATURE_TOGGLE             = 'ADD_FEATURE_TOGGLE';
 export const REMOVE_FEATURE_TOGGLE          = 'REMOVE_FEATURE_TOGGLE';
 export const UPDATE_FEATURE_TOGGLE          = 'UPDATE_FEATURE_TOGGLE';
 export const TOGGLE_FEATURE_TOGGLE          = 'TOGGLE_FEATURE_TOGGLE';
-export const REQUEST_FEATURE_TOGGLES        = 'REQUEST_FEATURE_TOGGLES';
+export const START_FETCH_FEATURE_TOGGLES    = 'START_FETCH_FEATURE_TOGGLES';
 export const START_UPDATE_FEATURE_TOGGLE    = 'START_UPDATE_FEATURE_TOGGLE';
 export const START_CREATE_FEATURE_TOGGLE    = 'START_CREATE_FEATURE_TOGGLE';
+export const START_REMOVE_FEATURE_TOGGLE    = 'START_REMOVE_FEATURE_TOGGLE';
 export const RECEIVE_FEATURE_TOGGLES        = 'RECEIVE_FEATURE_TOGGLES';
-export const ERROR_RECEIVE_FEATURE_TOGGLES  = 'ERROR_RECEIVE_FEATURE_TOGGLES';
+export const ERROR_FETCH_FEATURE_TOGGLES    = 'ERROR_FETCH_FEATURE_TOGGLES';
 export const ERROR_CREATING_FEATURE_TOGGLE  = 'ERROR_CREATING_FEATURE_TOGGLE';
-export const ERROR_UPDATING_FEATURE_TOGGLE  = 'ERROR_UPDATING_FEATURE_TOGGLE';
+export const ERROR_UPDATE_FEATURE_TOGGLE    = 'ERROR_UPDATE_FEATURE_TOGGLE';
 export const ERROR_REMOVE_FEATURE_TOGGLE    = 'ERROR_REMOVE_FEATURE_TOGGLE';
-
-function addFeatureToggle (featureToggle) {
-    return {
-        type: ADD_FEATURE_TOGGLE,
-        featureToggle,
-    };
-};
-
-function updateFeatureToggle (featureToggle) {
-    return {
-        type: UPDATE_FEATURE_TOGGLE,
-        featureToggle,
-    };
-};
-
-function errorCreatingFeatureToggle (error) {
-    return {
-        type: ERROR_CREATING_FEATURE_TOGGLE,
-        statusCode: error.statusCode,
-        errorMsg: error.msg,
-        receivedAt: Date.now(),
-    };
-}
-
-function errorUpdatingFeatureToggle (statusCode) {
-    return {
-        type: ERROR_UPDATING_FEATURE_TOGGLE,
-        statusCode,
-        receivedAt: Date.now(),
-    };
-}
 
 export function toggleFeature (featureToggle) {
     debug('Toggle feature toggle ', featureToggle);
@@ -60,11 +30,6 @@ export function editFeatureToggle (featureToggle) {
     };
 };
 
-function requestFeatureToggles () {
-    return {
-        type: REQUEST_FEATURE_TOGGLES,
-    };
-}
 
 function receiveFeatureToggles (json) {
     debug('reviced feature toggles', json);
@@ -75,61 +40,51 @@ function receiveFeatureToggles (json) {
     };
 }
 
-function startUpdateFeatureToggle () {
-    return {
-        type: START_UPDATE_FEATURE_TOGGLE,
-    };
-}
-
-function startCreateFeatureToggle () {
-    return {
-        type: START_CREATE_FEATURE_TOGGLE,
-    };
-}
-
-function errorReceiveFeatureToggles (statusCode) {
-    return {
-        type: ERROR_RECEIVE_FEATURE_TOGGLES,
-        statusCode,
-        receivedAt: Date.now(),
+function dispatchAndThrow (dispatch, type) {
+    return (error) => {
+        dispatch({ type, error, receivedAt: Date.now() });
+        throw error;
     };
 }
 
 export function fetchFeatureToggles () {
     debug('Start fetching feature toggles');
     return dispatch => {
-        dispatch(requestFeatureToggles());
+        dispatch({ type: START_FETCH_FEATURE_TOGGLES });
 
         return api.fetchAll()
             .then(json => dispatch(receiveFeatureToggles(json)))
-            .catch(error => dispatch(errorReceiveFeatureToggles(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_TOGGLES));
     };
 }
 
 export function createFeatureToggles (featureToggle) {
     return dispatch => {
-        dispatch(startCreateFeatureToggle());
+        dispatch({ type: START_CREATE_FEATURE_TOGGLE });
 
         return api.create(featureToggle)
-            .then(() => dispatch(addFeatureToggle(featureToggle)))
-            .catch(error => dispatch(errorCreatingFeatureToggle(error)));
+            .then(() => dispatch({ type: ADD_FEATURE_TOGGLE, featureToggle }))
+            .catch(dispatchAndThrow(dispatch, ERROR_CREATING_FEATURE_TOGGLE));
     };
 }
 
 export function requestUpdateFeatureToggle (featureToggle) {
     return dispatch => {
-        dispatch(startUpdateFeatureToggle());
+        dispatch({ type: START_UPDATE_FEATURE_TOGGLE });
 
         return api.update(featureToggle)
-            .then(() => dispatch(updateFeatureToggle(featureToggle)))
-            .catch(error => dispatch(errorUpdatingFeatureToggle(error)));
+            .then(() => dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle }))
+            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
 
 export function removeFeatureToggle (featureToggleName) {
-    return dispatch => (api.remove(featureToggleName)
+    return dispatch => {
+        dispatch({ type: START_REMOVE_FEATURE_TOGGLE });
+
+        return api.remove(featureToggleName)
             .then(() => dispatch({ type: REMOVE_FEATURE_TOGGLE, featureToggleName }))
-            .catch(error => dispatch({ type: ERROR_REMOVE_FEATURE_TOGGLE, featureToggleName, error }))
-    );
+            .catch(dispatchAndThrow(dispatch, ERROR_REMOVE_FEATURE_TOGGLE));
+    };
 }
 

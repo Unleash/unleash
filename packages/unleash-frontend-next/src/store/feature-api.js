@@ -7,12 +7,20 @@ const headers = {
 
 function throwIfNotSuccess (response) {
     if (!response.ok) {
-        let error = new Error('API call failed');
-        error.statusCode = response.status;
-        error.msg = response.json();
-        throw error;
+        if (response.status > 400 && response.status < 404) {
+            return new Promise((resolve, reject) => {
+                response.json().then(body => {
+                    const errorMsg = body && body.length > 0 ? body[0].msg : 'API call failed';
+                    let error = new Error(errorMsg);
+                    error.statusCode = response.status;
+                    reject(error);
+                });
+            });
+        } else {
+            return Promise.reject(new Error(response.statusText));
+        }
     }
-    return response;
+    return Promise.resolve(response);
 }
 
 function fetchAll () {

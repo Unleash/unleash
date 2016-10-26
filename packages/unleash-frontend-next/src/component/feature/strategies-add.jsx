@@ -61,7 +61,7 @@ class AddStrategy extends React.Component {
                 allowBlank={false}
                 source={strats}
                 onChange={this.addStrategy}
-                label="+ Add strategy"
+                label="Add an activation strategy"
                 template={this.customItem}
             />
         );

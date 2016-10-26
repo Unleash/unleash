@@ -10,10 +10,9 @@ const prepare = (methods, dispatch) => {
     methods.onSubmit = (input) => (
         (e) => {
             e.preventDefault();
-            // TODO: should add error handling
             createFeatureToggles(input)(dispatch)
                 .then(() => methods.clear())
-                .then(() => window.history.back());
+                .then(() => hashHistory.push('/features'));
         }
     );
 

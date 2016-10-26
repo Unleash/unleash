@@ -3,7 +3,7 @@ import Input from 'react-toolbox/lib/input';
 import Button from 'react-toolbox/lib/button';
 import { ListItem } from 'react-toolbox/lib/list';
 
-class ConfigureStrategies extends React.Component {
+class StrategyConfigure extends React.Component {
 
     static propTypes () {
         return {
@@ -77,4 +77,4 @@ class ConfigureStrategies extends React.Component {
     }
 }
 
-export default ConfigureStrategies;
+export default StrategyConfigure;

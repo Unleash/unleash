@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import ConfigureStrategies from './configure-strategies';
+import StrategiesList from './strategies-list';
 import AddStrategy from './strategies-add';
 
 const headerStyle = {
@@ -33,7 +33,7 @@ class StrategiesSection extends React.Component {
             <div>
                  <div>
                     <h5 style={headerStyle}>Strategies:</h5>
-                    <ConfigureStrategies {...this.props} />
+                    <StrategiesList {...this.props} />
                     <AddStrategy {...this.props} />
                 </div>
             </div>

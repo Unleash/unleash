@@ -3,7 +3,7 @@ import { hashHistory } from 'react-router';
 
 
 import { createFeatureToggles } from '../../store/feature-actions';
-import AddComponent from './add-component';
+import AddComponent from './form/add-component';
 import { createMapper, createActions } from '../input-helpers';
 
 const ID = 'add-feature-toggle';

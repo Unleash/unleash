@@ -28,10 +28,11 @@ function updateFeatureToggle (featureToggle) {
     };
 };
 
-function errorCreatingFeatureToggle (statusCode) {
+function errorCreatingFeatureToggle (error) {
     return {
         type: ERROR_CREATING_FEATURE_TOGGLE,
-        statusCode,
+        statusCode: error.statusCode,
+        errorMsg: error.msg,
         receivedAt: Date.now(),
     };
 }

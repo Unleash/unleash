@@ -19,7 +19,6 @@ class ErrorComponent extends React.Component {
                 icon="question_answer"
                 label={snackbarMsg}
                 ref="snackbar"
-                timeout={2000}
                 onClick={this.props.muteErrors}
                 onTimeout={this.props.muteErrors}
                 type="warning"

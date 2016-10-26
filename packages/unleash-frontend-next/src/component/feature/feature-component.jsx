@@ -12,24 +12,23 @@ const Feature = ({ feature, onFeatureClick, onFeatureRemove }) => {
     const { name, description, enabled, strategies } = feature; // eslint-disable-line no-shadow
 
     const actions = [
-        <div>{strategies && strategies.map(s => <Chip><small>{s.name}</small></Chip>)}</div>,
-        <Link to={`/features/edit/${name}`} title={`Edit ${name}`}>
+        <div key="strategies">{strategies && strategies.map((s, i) => <Chip key={i}><small>{s.name}</small></Chip>)}</div>,
+        <Link key="change" to={`/features/edit/${name}`} title={`Edit ${name}`}>
             <FontIcon value="edit" className={style.action} />
         </Link>,
-        <FontIcon className={style.action} value="delete" onClick={() => onFeatureRemove(name)} />,
+        <FontIcon key="delete" className={style.action} value="delete" onClick={() => onFeatureRemove(name)} />,
     ];
 
     const leftActions = [
-        <Switch onChange={() => onFeatureClick(feature)} checked={enabled} />,
+        <Switch key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />,
     ];
 
     return (
         <ListItem
+            key={name}
             leftActions={leftActions}
             rightActions={actions}
-            caption={<Link to={`/features/edit/${name}`} title={`Edit ${name}`} className={style.link}>
-                {name}
-            </Link>}
+            caption={name}
             legend={(description && description.substring(0, 100)) || '-'}
         />
     );

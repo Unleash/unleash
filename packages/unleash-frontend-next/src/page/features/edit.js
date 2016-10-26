@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import EditFeatureToggle from '../../component/feature/edit-container';
+import EditFeatureToggleForm from '../../component/feature/form-edit-container';
 
 export default class Features extends Component {
     static propTypes () {
@@ -12,7 +12,7 @@ export default class Features extends Component {
         return (
             <div>
                 <h3>Edit feature toggle</h3>
-                <EditFeatureToggle featureToggleName={this.props.params.name} />
+                <EditFeatureToggleForm featureToggleName={this.props.params.name} />
             </div>
         );
     }

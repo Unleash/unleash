@@ -1,4 +1,5 @@
 'use strict';
+
 const FeatureToggleActions = require('./FeatureToggleActions');
 const StrategyActions = require('./StrategyActions');
 const Timer = require('../utils/Timer');

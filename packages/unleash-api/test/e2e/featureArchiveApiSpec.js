@@ -1,4 +1,5 @@
 'use strict';
+
 const assert     = require('assert');
 const specHelper = require('./specHelper');
 const request    = specHelper.request;

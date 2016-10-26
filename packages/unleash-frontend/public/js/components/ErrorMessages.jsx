@@ -1,4 +1,5 @@
 'use strict';
+
 const React       = require('react');
 const Ui          = require('./ErrorMessages.ui');
 const ErrorStore  = require('../stores/ErrorStore');

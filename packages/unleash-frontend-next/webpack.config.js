@@ -1,5 +1,4 @@
 // docs: http://webpack.github.io/docs/configuration.html
-
 'use strict';
 
 const path = require('path');

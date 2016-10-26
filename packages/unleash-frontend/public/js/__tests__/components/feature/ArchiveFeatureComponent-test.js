@@ -1,4 +1,5 @@
 'use strict';
+
 jest.dontMock('../../../components/feature/ArchiveFeatureComponent');
 jest.mock('../../../stores/FeatureToggleActions');
 jest.autoMockOff();

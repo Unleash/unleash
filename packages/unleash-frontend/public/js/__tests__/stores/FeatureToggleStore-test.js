@@ -1,4 +1,5 @@
 'use strict';
+
 jest.autoMockOff();
 jest.dontMock('../../stores/FeatureToggleActions');
 jest.dontMock('../../stores/FeatureToggleStore');

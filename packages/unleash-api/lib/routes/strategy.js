@@ -1,4 +1,5 @@
 'use strict';
+
 const BPromise = require('bluebird');
 const eventType = require('../eventType');
 const logger = require('../logger');

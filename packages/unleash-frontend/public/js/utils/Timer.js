@@ -1,4 +1,5 @@
 'use strict';
+
 const Timer = function (cb, interval) {
     this.cb = cb;
     this.interval = interval;

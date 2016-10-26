@@ -1,4 +1,5 @@
 'use strict';
+
 const Reflux          = require('reflux');
 const StrategyActions = require('./StrategyActions');
 const filter          = require('lodash/collection/filter');

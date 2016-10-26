@@ -1,4 +1,5 @@
 'use strict';
+
 const reqwest = require('reqwest');
 
 const TYPE         = 'json';

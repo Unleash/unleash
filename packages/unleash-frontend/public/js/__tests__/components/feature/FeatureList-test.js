@@ -1,4 +1,5 @@
 'use strict';
+
 jest.dontMock('../../../components/feature/FeatureList');
 jest.dontMock('../../../components/feature/Feature');
 

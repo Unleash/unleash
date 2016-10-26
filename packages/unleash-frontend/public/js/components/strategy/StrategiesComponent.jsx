@@ -1,4 +1,5 @@
 'use strict';
+
 const React             = require('react');
 const StrategyList      = require('./StrategyList');
 const StrategyForm      = require('./StrategyForm');

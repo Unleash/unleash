@@ -1,4 +1,5 @@
 'use strict';
+
 const React          = require('react');
 const LogEntryList   = require('./LogEntryList');
 const eventStore     = require('../../stores/EventStore');

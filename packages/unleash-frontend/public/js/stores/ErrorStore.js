@@ -1,4 +1,5 @@
 'use strict';
+
 const Reflux          = require('reflux');
 const FeatureActions  = require('./FeatureToggleActions');
 const ErrorActions    = require('./ErrorActions');

@@ -1,4 +1,5 @@
 'use strict';
+
 let _username;
 
 // Ref: http://stackoverflow.com/questions/10730362/get-cookie-by-name

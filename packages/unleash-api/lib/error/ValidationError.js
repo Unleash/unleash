@@ -1,4 +1,5 @@
 'use strict';
+
 const util = require('util');
 
 function ValidationError (message) {

@@ -1,4 +1,5 @@
 'use strict';
+
 const logger = require('../logger');
 const eventType = require('../eventType');
 const ValidationError = require('../error/ValidationError');

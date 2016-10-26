@@ -1,4 +1,5 @@
 'use strict';
+
 const logger = require('./lib/logger');
 const migrator = require('./migrator');
 

@@ -1,4 +1,5 @@
 'use strict';
+
 const EVENT_COLUMNS = ['id', 'type', 'created_by', 'created_at', 'data'];
 
 module.exports = function (db) {

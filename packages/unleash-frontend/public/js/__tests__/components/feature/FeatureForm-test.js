@@ -1,4 +1,5 @@
 'use strict';
+
 jest.dontMock('../../../components/feature/FeatureForm');
 
 const React = require('react/addons');

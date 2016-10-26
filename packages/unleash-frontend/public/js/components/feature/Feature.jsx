@@ -1,4 +1,5 @@
 'use strict';
+
 const React = require('react');
 const FeatureForm = require('./FeatureForm');
 const LogEntryList = require('../log/LogEntryList');

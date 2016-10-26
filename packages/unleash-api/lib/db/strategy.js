@@ -1,4 +1,5 @@
 'use strict';
+
 const eventType = require('../eventType');
 const logger = require('../logger');
 const NotFoundError = require('../error/NotFoundError');

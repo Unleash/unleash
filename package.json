@@ -35,11 +35,11 @@
   "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^7.0.0",
-    "eslint": "^3.4.0",
-    "eslint-config-finn": "1.0.0-alpha.11",
+    "eslint": "^3.8.1",
+    "eslint-config-finn": "1.0.0-beta.1",
     "eslint-config-finn-react": "^1.0.0-alpha.2",
-    "eslint-plugin-react": "^6.2.0",
-    "lerna": "2.0.0-beta.29",
-    "nsp": "^2.3.2"
+    "eslint-plugin-react": "^6.4.1",
+    "lerna": "2.0.0-beta.30",
+    "nsp": "^2.6.2"
   }
 }

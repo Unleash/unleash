@@ -1,4 +1,5 @@
 'use strict';
+
 const eventDiffer = require('../eventDiffer');
 const version = 1;
 

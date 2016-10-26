@@ -1,4 +1,5 @@
 'use strict';
+
 const assert = require('assert');
 
 const mapper = require('../../../lib/helper/legacy-feature-mapper');

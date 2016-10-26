@@ -1,5 +1,4 @@
 /** @jsx React.DOM */
-
 'use strict';
 
 jest.dontMock('../../components/Menu');

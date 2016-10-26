@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Input from 'react-toolbox/lib/input';
 import Button from 'react-toolbox/lib/button';
-import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list';
+import { ListItem } from 'react-toolbox/lib/list';
 
 class ConfigureStrategies extends React.Component {
 
@@ -37,7 +37,6 @@ class ConfigureStrategies extends React.Component {
     }
 
     renderInputFields (strategyDefinition) {
-
         if (strategyDefinition.parametersTemplate) {
             return Object.keys(strategyDefinition.parametersTemplate).map(field => (
                 <Input
@@ -59,7 +58,10 @@ class ConfigureStrategies extends React.Component {
 
         if (!this.props.strategyDefinition) {
             return (
-                <ListItem leftActions={leftActions} caption={<span style={{ color: 'red' }}>Strategy "{this.props.strategy.name}" deleted</span>}/>
+                <ListItem
+                    leftActions={leftActions}
+                    caption={<span style={{ color: 'red' }}>Strategy "{this.props.strategy.name}" deleted</span>}
+                />
             );
         }
 

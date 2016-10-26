@@ -1,4 +1,5 @@
 'use strict';
+
 const React = require('react');
 const UserStore = require('../stores/UserStore');
 

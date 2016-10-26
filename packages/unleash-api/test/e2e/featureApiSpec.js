@@ -1,4 +1,5 @@
 'use strict';
+
 const logger = require('../../lib/logger');
 const assert     = require('assert');
 const specHelper = require('./specHelper');

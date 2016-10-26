@@ -1,4 +1,5 @@
 'use strict';
+
 process.env.NODE_ENV = 'test';
 
 const BPromise = require('bluebird');

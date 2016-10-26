@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 
 import { requestUpdateFeatureToggle } from '../../store/feature-actions';
-import AddComponent from './add-component';
+import AddComponent from './form/add-component';
 import { createMapper, createActions } from '../input-helpers';
 
 const ID = 'edit-feature-toggle';

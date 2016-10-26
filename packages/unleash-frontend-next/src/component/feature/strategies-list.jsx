@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
-import ConfigureStrategy from './configure-strategy';
+import ConfigureStrategy from './strategy-configure';
 import { List } from 'react-toolbox/lib/list';
 
 
-class ConfigureStrategies extends React.Component {
+class StrategiesList extends React.Component {
 
     static propTypes () {
         return {
@@ -40,4 +40,4 @@ class ConfigureStrategies extends React.Component {
     }
 }
 
-export default ConfigureStrategies;
+export default StrategiesList;

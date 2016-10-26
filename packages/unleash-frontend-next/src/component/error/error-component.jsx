@@ -5,22 +5,20 @@ class ErrorComponent extends React.Component {
     static propTypes () {
         return {
             errors: PropTypes.array.isRequired,
-            showError: PropTypes.bool,
-            muteErrors: PropTypes.func.isRequired,
+            muteError: PropTypes.func.isRequired,
         };
     }
 
     render () {
-        const snackbarMsg = this.props.errors.join(', ');
+        const showError = this.props.errors.length > 0;
+        const error = showError ? this.props.errors[0] : undefined;
         return (
             <Snackbar
                 action="Dismiss"
-                active={this.props.showError}
+                active={showError}
                 icon="question_answer"
-                label={snackbarMsg}
-                ref="snackbar"
-                onClick={this.props.muteErrors}
-                onTimeout={this.props.muteErrors}
+                label={error}
+                onClick={() => this.props.muteError(error)}
                 type="warning"
             />
         );

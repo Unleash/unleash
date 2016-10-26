@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Layout, Panel, NavDrawer, AppBar } from 'react-toolbox';
 import style from './styles.scss';
+import ErrorContainer from './error/error-container';
 
 import Navigation from './nav';
 
@@ -30,6 +31,7 @@ export default class App extends Component {
                                 {this.props.children}
                             </div>
                         </Panel>
+                        <ErrorContainer />
                     </Layout>
                 </div>
             </div>

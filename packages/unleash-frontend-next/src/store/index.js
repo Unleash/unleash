@@ -4,6 +4,7 @@ import strategies from './strategy-store';
 import input from './input-store';
 import history from './history-store'; // eslint-disable-line
 import archive from './archive-store';
+import error from './error-store';
 
 const unleashStore = combineReducers({
     features,
@@ -11,6 +12,7 @@ const unleashStore = combineReducers({
     input,
     history,
     archive,
+    error,
 });
 
 export default unleashStore;

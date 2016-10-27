@@ -6,7 +6,7 @@ module.exports = class UnleashClientMetrics {
         this.apps = [];
         this.clients = {};
         this.strategies = {};
-        this.store = {};
+        this.buckets = {};
     }
 
     toJSON () {
@@ -21,7 +21,7 @@ module.exports = class UnleashClientMetrics {
             apps: this.apps,
             clients: this.clients,
             strategies: this.strategies,
-            store: this.store,
+            buckets: this.buckets,
         };
     }
 
@@ -29,28 +29,25 @@ module.exports = class UnleashClientMetrics {
         this.addApp(data.appName);
         this.addClient(data.appName, data.instanceId, data.clientInitTime);
         this.addStrategies(data.appName, data.strategies);
-        this.addStore(data.appName, data.instanceId, data.store);
+        this.addBucket(data.appName, data.instanceId, data.bucket);
     }
 
-    addStore (appName, instanceId, instanceStore) {
+    addBucket (appName, instanceId, bucket) {
         // TODO normalize time client-server-time / NTP?
-        const normalizeTimeEntries = (entry) => Object.assign({ appName, instanceId }, entry);
         let count = 0;
-
-        Object.keys(instanceStore).forEach((n) => {
-            if (n.startsWith('_')) {
-                return;
-            }
-            if (this.store[n]) {
-                this.store[n].yes = this.store[n].yes.concat(instanceStore[n].yes.map(normalizeTimeEntries));
-                this.store[n].no = this.store[n].no.concat(instanceStore[n].no.map(normalizeTimeEntries));
+        const { start, stop, toggles } = bucket;
+        Object.keys(toggles).forEach((n) => {
+            if (this.buckets[n]) {
+                this.buckets[n].yes.push({ start, stop, count: toggles[n].yes });
+                this.buckets[n].no.push({ start, stop, count: toggles[n].no });
             } else {
-                this.store[n] = {
-                    yes: instanceStore[n].yes.map(normalizeTimeEntries),
-                    no: instanceStore[n].no.map(normalizeTimeEntries),
+                this.buckets[n] = {
+                    yes: [{ start, stop, count: toggles[n].yes }],
+                    no: [{ start, stop, count: toggles[n].no }],
                 };
             }
-            count += (instanceStore[n].yes.length + instanceStore[n].no.length);
+
+            count += (toggles[n].yes + toggles[n].no);
         });
         this.addClientCount(instanceId, count);
     }

@@ -14,10 +14,11 @@ export default class UnleashNav extends Component {
 
         return (
                 <List selectable ripple className={style.navigation}>
-                    {createListItem('/features', 'Feature Toggles')}
+                    {createListItem('/features', 'Feature toggles')}
                     {createListItem('/strategies', 'Strategies')}
-                    {createListItem('/history', 'Event History')}
-                    {createListItem('/archive', 'Archived Toggles')}
+                    {createListItem('/history', 'Event history')}
+                    {createListItem('/archive', 'Archived toggles')}
+                    {createListItem('/metrics', 'Client metrics')}
 
                     <ListDivider />
 

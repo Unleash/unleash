@@ -73,6 +73,10 @@ module.exports = {
                 target: 'http://localhost:4242',
                 secure: false,
             },
+            '/metrics': {
+                target: 'http://localhost:4242',
+                secure: false,
+            },
         },
     },
 };

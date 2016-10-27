@@ -1,4 +1,5 @@
 'use strict';
+
 const POLL_INTERVAL = 10000;
 
 module.exports = class UnleashClientMetrics {
@@ -14,7 +15,9 @@ module.exports = class UnleashClientMetrics {
 
     addMetrics (metrics) {
         metrics.forEach(m => this.metrics.push(m));
-        this.highestIdSeen = this.metrics[this.metrics.length - 1].id;
+        if (this.metrics && this.metrics.length > 0) {
+            this.highestIdSeen = this.metrics[this.metrics.length - 1].id;
+        }
     }
 
     startPoller () {

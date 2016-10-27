@@ -4,10 +4,10 @@ process.env.NODE_ENV = 'test';
 
 const BPromise = require('bluebird');
 let request = require('supertest');
-const databaseUri = require('./databaseConfig').getDatabaseUri();
-const knex = require('../../lib/db/dbPool')(databaseUri);
+const databaseUri = require('./database-config').getDatabaseUri();
+const knex = require('../../lib/db/db-pool')(databaseUri);
 const eventDb = require('../../lib/db/event')(knex);
-const EventStore = require('../../lib/eventStore');
+const EventStore = require('../../lib/event-store');
 const eventStore = new EventStore(eventDb);
 const featureDb = require('../../lib/db/feature')(knex, eventStore);
 const strategyDb = require('../../lib/db/strategy')(knex, eventStore);

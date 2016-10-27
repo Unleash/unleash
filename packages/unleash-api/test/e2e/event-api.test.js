@@ -1,6 +1,6 @@
 'use strict';
 
-const request = require('./specHelper').request;
+const request = require('./test-helper').request;
 
 describe('The event api', () => {
     it('returns events', done => {

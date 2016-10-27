@@ -1,6 +1,6 @@
 'use strict';
 
-const eventDiffer = require('../eventDiffer');
+const eventDiffer = require('../event-differ');
 const version = 1;
 
 module.exports = function (app, config) {

@@ -1,8 +1,8 @@
 'use strict';
 
-const eventType = require('../eventType');
+const eventType = require('../event-type');
 const logger = require('../logger');
-const NotFoundError = require('../error/NotFoundError');
+const NotFoundError = require('../error/notfound-error');
 const STRATEGY_COLUMNS = ['name', 'description', 'parameters_template'];
 
 module.exports = function (db, eventStore) {

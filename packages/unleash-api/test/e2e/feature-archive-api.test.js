@@ -1,7 +1,7 @@
 'use strict';
 
 const assert     = require('assert');
-const specHelper = require('./specHelper');
+const specHelper = require('./test-helper');
 const request    = specHelper.request;
 const stringify  = function (o) {
     return JSON.stringify(o, null, ' ');

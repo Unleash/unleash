@@ -10,11 +10,11 @@ const DEFAULT_OPTIONS = {
 };
 
 function createApp (options) {
-    const db = require('./lib/db/dbPool')(options.databaseUri);
+    const db = require('./lib/db/db-pool')(options.databaseUri);
 
     // Database dependecies (statefull)
     const eventDb = require('./lib/db/event')(db);
-    const EventStore = require('./lib/eventStore');
+    const EventStore = require('./lib/event-store');
     const eventStore = new EventStore(eventDb);
     const featureDb = require('./lib/db/feature')(db, eventStore);
     const strategyDb = require('./lib/db/strategy')(db, eventStore);

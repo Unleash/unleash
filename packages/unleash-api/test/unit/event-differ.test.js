@@ -1,7 +1,7 @@
 'use strict';
 
-const eventDiffer = require('../../lib/eventDiffer');
-const eventType   = require('../../lib/eventType');
+const eventDiffer = require('../../lib/event-differ');
+const eventType   = require('../../lib/event-type');
 const assert      = require('assert');
 
 describe('eventDiffer', () => {

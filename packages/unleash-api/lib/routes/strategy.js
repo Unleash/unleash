@@ -1,13 +1,13 @@
 'use strict';
 
 const BPromise = require('bluebird');
-const eventType = require('../eventType');
+const eventType = require('../event-type');
 const logger = require('../logger');
-const NameExistsError = require('../error/NameExistsError');
-const ValidationError = require('../error/ValidationError');
-const NotFoundError = require('../error/NotFoundError');
-const validateRequest = require('../error/validateRequest');
-const extractUser = require('../extractUser');
+const NameExistsError = require('../error/name-exists-error');
+const ValidationError = require('../error/validation-error.js');
+const NotFoundError = require('../error/notfound-error');
+const validateRequest = require('../error/validate-request');
+const extractUser = require('../extract-user');
 const version = 1;
 
 module.exports = function (app, config) {

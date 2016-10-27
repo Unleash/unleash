@@ -1,6 +1,6 @@
 'use strict';
 
-const specHelper = require('./specHelper');
+const specHelper = require('./test-helper');
 const request    = specHelper.request;
 
 describe('The strategy api', () => {

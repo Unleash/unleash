@@ -6,4 +6,5 @@ exports.create = function (app, config) {
     require('./feature-archive')(app, config);
     require('./strategy')(app, config);
     require('./health-check')(app, config);
+    require('./metrics')(app, config);
 };

@@ -18,6 +18,7 @@ function createApp (options) {
     const eventStore = new EventStore(eventDb);
     const featureDb = require('./lib/db/feature')(db, eventStore);
     const strategyDb = require('./lib/db/strategy')(db, eventStore);
+    const metricsDb = require('./lib/db/metrics')(db);
 
     const config = {
         baseUriPath: options.baseUriPath,
@@ -28,6 +29,7 @@ function createApp (options) {
         eventStore,
         featureDb,
         strategyDb,
+        metricsDb,
     };
 
     const app = require('./app')(config);

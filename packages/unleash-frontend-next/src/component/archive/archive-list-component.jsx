@@ -5,7 +5,7 @@ import Chip from 'react-toolbox/lib/chip';
 import Switch from 'react-toolbox/lib/switch';
 
 const ArchivedFeature = ({ feature, revive }) => {
-    const { name, description, enabled, strategies } = feature; // eslint-disable-line no-shadow
+    const { name, description, enabled, strategies } = feature;
     const actions = [
         <div>{strategies && strategies.map(s => <Chip><small>{s.name}</small></Chip>)}</div>,
         <FontIcon style={{ cursor: 'pointer' }} value="restore" onClick={() => revive(feature)} />,

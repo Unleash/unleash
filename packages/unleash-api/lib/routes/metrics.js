@@ -17,7 +17,6 @@ module.exports = function (app, config) {
     });
 
     app.post('/metrics', (req, res) => {
-        
         // TODO: validate input and reply with http errorcode
         try {
             // not required with header: Content-Type: application/json

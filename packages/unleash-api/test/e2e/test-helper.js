@@ -11,6 +11,8 @@ const EventStore = require('../../lib/event-store');
 const eventStore = new EventStore(eventDb);
 const featureDb = require('../../lib/db/feature')(knex, eventStore);
 const strategyDb = require('../../lib/db/strategy')(knex, eventStore);
+const metricsDb = require('../../lib/db/metrics')(knex);
+
 
 const app = require('../../app')({
     baseUriPath: '',
@@ -19,6 +21,7 @@ const app = require('../../app')({
     eventStore,
     featureDb,
     strategyDb,
+    metricsDb,
 });
 
 BPromise.promisifyAll(request);

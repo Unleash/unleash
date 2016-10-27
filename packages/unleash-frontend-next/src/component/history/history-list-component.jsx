@@ -27,7 +27,7 @@ class HistoryList extends Component {
     }
 
     render () {
-        const { history } = this.props; // eslint-disable-line no-shadow
+        const { history } = this.props;
 
         return (
             <List ripple >

@@ -18,5 +18,8 @@
             "spread":true,
             "restParams": true
         }
+    },
+    "rules": {
+        "no-shadow": 0
     }
 }

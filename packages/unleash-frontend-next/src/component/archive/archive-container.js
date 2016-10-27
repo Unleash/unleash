@@ -3,7 +3,7 @@ import ListComponent from './archive-list-component';
 import { fetchArchive, revive } from '../../store/archive-actions';
 
 const mapStateToProps = (state) => {
-    const archive = state.archive.get('list').toArray(); // eslint-disable-line no-shadow
+    const archive = state.archive.get('list').toArray();
 
     return {
         archive,

@@ -15,6 +15,7 @@ module.exports = function (db) {
         return db
             .select(EVENT_COLUMNS)
             .from('events')
+            .limit(100)
             .orderBy('created_at', 'desc')
             .map(rowToEvent);
     }
@@ -23,6 +24,7 @@ module.exports = function (db) {
         return db
         .select(EVENT_COLUMNS)
         .from('events')
+        .limit(100)
         .whereRaw('data ->> \'name\' = ?', [name])
         .orderBy('created_at', 'desc')
         .map(rowToEvent);

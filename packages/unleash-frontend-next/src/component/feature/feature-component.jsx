@@ -9,7 +9,7 @@ import Chip from 'react-toolbox/lib/chip';
 import style from './feature.scss';
 
 const Feature = ({ feature, onFeatureClick, onFeatureRemove }) => {
-    const { name, description, enabled, strategies } = feature; // eslint-disable-line no-shadow
+    const { name, description, enabled, strategies } = feature;
 
     const actions = [
         <div key="strategies">{strategies && strategies.map((s, i) => <Chip key={i}><small>{s.name}</small></Chip>)}</div>,

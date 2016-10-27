@@ -1,7 +1,7 @@
 'use strict';
 
 const BPromise = require('bluebird');
-const ValidationError = require('./ValidationError');
+const ValidationError = require('./validation-error');
 
 function validateRequest (req) {
     return new BPromise((resolve, reject) => {

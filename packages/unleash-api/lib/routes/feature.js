@@ -2,12 +2,12 @@
 
 const BPromise = require('bluebird');
 const logger = require('../logger');
-const eventType = require('../eventType');
-const NameExistsError = require('../error/NameExistsError');
-const NotFoundError = require('../error/NotFoundError');
-const ValidationError = require('../error/ValidationError');
-const validateRequest = require('../error/validateRequest');
-const extractUser = require('../extractUser');
+const eventType = require('../event-type');
+const NameExistsError = require('../error/name-exists-error');
+const NotFoundError = require('../error/notfound-error');
+const ValidationError = require('../error/validation-error.js');
+const validateRequest = require('../error/validate-request');
+const extractUser = require('../extract-user');
 
 const legacyFeatureMapper = require('../helper/legacy-feature-mapper');
 const version = 1;

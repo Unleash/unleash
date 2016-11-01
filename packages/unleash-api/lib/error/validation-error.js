@@ -1,15 +1,13 @@
 'use strict';
 
-const util = require('util');
+class ValidationError extends Error {
+    constructor (message) {
+        super();
+        Error.captureStackTrace(this, this.constructor);
 
-function ValidationError (message) {
-    Error.call(this);
-    Error.captureStackTrace(this, this.constructor);
-
-    this.name = this.constructor.name;
-    this.message = message;
+        this.name = this.constructor.name;
+        this.message = message;
+    }
 }
-
-util.inherits(ValidationError, Error);
 
 module.exports = ValidationError;

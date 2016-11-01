@@ -1,16 +1,15 @@
 'use strict';
 
-const util = require('util');
 const EventEmitter = require('events').EventEmitter;
 
-function EventStore (eventDb) {
-    this.eventDb = eventDb;
-    EventEmitter.call(this);
-}
-util.inherits(EventStore, EventEmitter);
+module.exports = class EventStore extends EventEmitter {
+    constructor (eventDb) {
+        super();
+        this.eventDb = eventDb;
+    }
 
-EventStore.prototype.create = function (event) {
-    return this.eventDb.store(event).then(() => this.emit(event.type, event));
+    create  (event) {
+        return this.eventDb.store(event).then(() => this.emit(event.type, event));
+    }
 };
 
-module.exports = EventStore;

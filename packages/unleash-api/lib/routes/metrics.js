@@ -5,9 +5,13 @@ const ClientMetrics = require('../client-metrics');
 const ClientMetricsService = require('../client-metrics-service');
 
 module.exports = function (app, config) {
-    const metricsDb = config.metricsDb;
+    const { metricsDb, clientStrategiesDb } = config;
     const metrics = new ClientMetrics();
     const service = new ClientMetricsService(metricsDb);
+
+    // Just som dummo demo data
+    clientStrategiesDb.insertOrUpdate('demo-app', ['default', 'test']).then(() => console.log('inserted client_strategies'));
+
 
     service.on('metrics', (entries) => {
         entries.forEach((m) => metrics.addPayload(m.metrics));
@@ -42,5 +46,9 @@ module.exports = function (app, config) {
         }
 
         res.end();
+    });
+
+    app.get('/client/strategies', (req, res) => {
+        clientStrategiesDb.getAll().then(data => res.json(data));
     });
 };

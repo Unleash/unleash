@@ -19,6 +19,7 @@ function createApp (options) {
     const featureDb = require('./lib/db/feature')(db, eventStore);
     const strategyDb = require('./lib/db/strategy')(db, eventStore);
     const metricsDb = require('./lib/db/metrics')(db);
+    const clientStrategiesDb = require('./lib/db/client-strategies')(db);
 
     const config = {
         baseUriPath: options.baseUriPath,
@@ -30,6 +31,7 @@ function createApp (options) {
         featureDb,
         strategyDb,
         metricsDb,
+        clientStrategiesDb,
     };
 
     const app = require('./app')(config);

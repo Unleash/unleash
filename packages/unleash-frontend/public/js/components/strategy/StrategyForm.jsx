@@ -132,7 +132,7 @@ const StrategyForm = React.createClass({
                         - Remove parameter
                     </a>
                 </div>
-                );
+            );
         }
     },
 });

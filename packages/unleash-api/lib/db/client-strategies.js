@@ -26,7 +26,11 @@ module.exports = function (db) {
             .where('app_name', appName)
             .map(row => ({ count: row.count }))
             .then(rows => {
-                return rows[0].count > 0 ? update(appName, strategies) : insert(appName, strategies);
+                if (rows[0].count > 0) {
+                    return update(appName, strategies);
+                } else {
+                    return insert(appName, strategies);
+                }
             });
     }
 

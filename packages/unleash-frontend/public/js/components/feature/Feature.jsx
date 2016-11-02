@@ -51,7 +51,7 @@ const Feature = React.createClass({
                         strategies={this.props.strategies} />
                 </td>
             </tr>
-            );
+        );
     },
 
     render () {

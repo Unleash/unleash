@@ -75,7 +75,7 @@ const FeatureList = React.createClass({
                     {featureNodes}
                 </table>
             </div>
-          );
+        );
     },
 });
 

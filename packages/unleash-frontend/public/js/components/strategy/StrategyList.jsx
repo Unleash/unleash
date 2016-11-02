@@ -13,7 +13,7 @@ const StrategyList = React.createClass({
             <Strategy strategy={strategy} key={strategy.name} onRemove={this.props.onRemove} />);
         return (
             <div>{strategyNodes}</div>
-            );
+        );
     },
 });
 

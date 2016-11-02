@@ -56,7 +56,7 @@ const StrategiesComponent = React.createClass({
                     <button className="mal" onClick={this.onNewStrategy}>
                         Create strategy
                     </button>
-                );
+        );
     },
 });
 

@@ -18,7 +18,7 @@ const User = React.createClass({
           defaultValue={UserStore.get()}
           onBlur={this.onSave} />
       </div>
-    );
+        );
     },
 });
 

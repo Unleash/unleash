@@ -30,7 +30,7 @@ const LogEntriesComponent = React.createClass({
                 <hr />
                 <LogEntryList events={this.state.events} />
             </div>
-            );
+        );
     },
 });
 

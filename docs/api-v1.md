@@ -199,25 +199,25 @@ Used to fetch all defined strategies and their defined paramters.
 
  ```json
 {
-    version: 1,
-    strategies: [
+    "version": 1,
+    "strategies": [
         {
-        name: "default",
-        description: "Default on/off strategy.",
-            parametersTemplate: null
+        "name": "default",
+        "description": "Default on/off strategy.",
+            "parametersTemplate": null
         },
         {
-            name: "ActiveForUserWithEmail",
-            description: "A comma separated list of email adresses this feature should be active for.",
-            parametersTemplate: {
-                emails: "string"
+            "name": "ActiveForUserWithEmail",
+            "description": "A comma separated list of email adresses this feature should be active for.",
+            "parametersTemplate": {
+                "emails": "string"
             }
         },
         {
-            name: "Accounts",
-            description: "Enable for user accounts",
-            parametersTemplate: {
-                Accountname: "string"
+            "name": "Accounts",
+            "description": "Enable for user accounts",
+            "parametersTemplate": {
+                "Accountname": "string"
             }
         }
 ]}
@@ -231,10 +231,10 @@ Used to fetch all defined strategies and their defined paramters.
 
 ```json
 {
-    name: "ActiveForUserWithEmail",
-    description: "A comma separated list of email adresses this feature should be active for.",
-    parametersTemplate: {
-        emails: "string"
+    "name": "ActiveForUserWithEmail",
+    "description": "A comma separated list of email adresses this feature should be active for.",
+    "parametersTemplate": {
+        "emails": "string"
     }
 }
 ```

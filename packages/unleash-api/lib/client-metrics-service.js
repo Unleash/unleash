@@ -1,16 +1,25 @@
 'use strict';
 
 const POLL_INTERVAL = 10000;
+const { EventEmitter } = require('events');
 
-module.exports = class UnleashClientMetrics {
+module.exports = class UnleashClientMetricsService extends EventEmitter {
     constructor (metricsDb) {
+        super();
         this.metricsDb = metricsDb;
         this.metrics = [];
         this.highestIdSeen = 0;
-        metricsDb.getMetricsLastWeek().then(metrics => {
-            this.addMetrics(metrics);
-            this.startPoller();
-        });
+        this.fetch();
+    }
+
+    fetch () {
+        return this.metricsDb
+            .getNewMetrics(this.highestIdSeen)
+            .then(metrics => {
+                this.startTimer();
+                this.addMetrics(metrics);
+                return metrics;
+            });
     }
 
     addMetrics (metrics) {
@@ -18,13 +27,11 @@ module.exports = class UnleashClientMetrics {
         if (this.metrics && this.metrics.length > 0) {
             this.highestIdSeen = this.metrics[this.metrics.length - 1].id;
         }
+        this.emit('metrics', metrics);
     }
 
-    startPoller () {
-        setInterval(() => {
-            this.metricsDb.getNewMetrics(this.highestIdSeen)
-                .then(metrics => this.addMetrics(metrics));
-        }, POLL_INTERVAL).unref();
+    startTimer () {
+        setInterval(() => this.fetch(), POLL_INTERVAL).unref();
     }
 
     getMetrics () {
@@ -32,6 +39,6 @@ module.exports = class UnleashClientMetrics {
     }
 
     insert (metrics) {
-        this.metricsDb.insert(metrics).then(() => console.log('new metrics inserted!'));
+        return this.metricsDb.insert(metrics);
     }
 };

@@ -14,8 +14,7 @@ module.exports = class UnleashClientMetrics {
     }
 
     getState () {
-        // TODO this payload will be WAY to big, need to flatten the store
-        // and possibly evict/flag stale clients
+        // TODO need to flatten the store / possibly evict/flag stale clients
         return {
             globalCount: this.globalCount,
             apps: this.apps,
@@ -25,10 +24,13 @@ module.exports = class UnleashClientMetrics {
         };
     }
 
-    addPayload (data) {
-        this.addApp(data.appName);
-        this.addClient(data.appName, data.instanceId, data.clientInitTime);
+    registerClient (data) {
+        this.addClient(data.appName, data.instanceId, data.started);
         this.addStrategies(data.appName, data.strategies);
+    }
+
+    addPayload (data) {
+        this.addClient(data.appName, data.instanceId);
         this.addBucket(data.appName, data.instanceId, data.bucket);
     }
 
@@ -70,7 +72,8 @@ module.exports = class UnleashClientMetrics {
         }
     }
 
-    addClient (appName, instanceId, clientInitTime) {
+    addClient (appName, instanceId, started = new Date()) {
+        this.addApp(appName);
         if (instanceId) {
             if (this.clients[instanceId]) {
                 this.clients[instanceId].ping = new Date();
@@ -78,7 +81,7 @@ module.exports = class UnleashClientMetrics {
                 this.clients[instanceId] = {
                     appName,
                     count: 0,
-                    clientInit: clientInitTime,
+                    started,
                     init: new Date(),
                     ping: new Date(),
                 };

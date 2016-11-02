@@ -9,28 +9,38 @@ module.exports = function (app, config) {
     const metrics = new ClientMetrics();
     const service = new ClientMetricsService(metricsDb);
 
-    app.get('/metrics', (req, res) => {
-        res.json(service.getMetrics());
-
-        // Your stuff:
-        // res.json(metrics.getState());
+    service.on('metrics', (entries) => {
+        entries.forEach((m) => metrics.addPayload(m.metrics));
     });
 
-    app.post('/metrics', (req, res) => {
-        // TODO: validate input and reply with http errorcode
+    app.get('/service-metrics', (req, res) => {
+        res.json(service.getMetrics());
+    });
+
+    app.get('/metrics', (req, res) => {
+        res.json(metrics.getState());
+    });
+
+    app.post('/client/metrics', (req, res) => {
         try {
-            // not required with header: Content-Type: application/json
-            // const data = JSON.parse(req.body);
-            // metrics.addPayload(data);
-            service.insert(req.body);
+            const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+            metrics.addPayload(data);
+            service.insert(data);
         } catch (e) {
-            logger.error('Error recieving metrics', e);
+            logger.error('Error receiving metrics', e);
         }
 
         res.end();
     });
 
-    app.get('/metrics', (req, res) => {
-        res.json(metrics.getState());
+    app.post('/client/register', (req, res) => {
+        try {
+            const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+            metrics.registerClient(data);
+        } catch (e) {
+            logger.error('Error registering client', e);
+        }
+
+        res.end();
     });
 };

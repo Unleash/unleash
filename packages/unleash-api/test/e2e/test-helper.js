@@ -12,6 +12,7 @@ const eventStore = new EventStore(eventDb);
 const featureDb = require('../../lib/db/feature')(knex, eventStore);
 const strategyDb = require('../../lib/db/strategy')(knex, eventStore);
 const metricsDb = require('../../lib/db/metrics')(knex);
+const clientStrategiesDb = require('../../lib/db/client-strategies')(knex);
 
 
 const app = require('../../app')({
@@ -22,6 +23,7 @@ const app = require('../../app')({
     featureDb,
     strategyDb,
     metricsDb,
+    clientStrategiesDb,
 });
 
 BPromise.promisifyAll(request);

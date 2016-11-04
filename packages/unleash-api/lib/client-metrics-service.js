@@ -3,42 +3,32 @@
 const POLL_INTERVAL = 10000;
 const { EventEmitter } = require('events');
 
-module.exports = class UnleashClientMetricsService extends EventEmitter {
+module.exports = class UnleashClientMetrics extends EventEmitter {
     constructor (metricsDb) {
         super();
-        this.metricsDb = metricsDb;
-        this.metrics = [];
+        this.db = metricsDb;
         this.highestIdSeen = 0;
-        this.fetch();
-    }
-
-    fetch () {
-        return this.metricsDb
-            .getNewMetrics(this.highestIdSeen)
-            .then(metrics => {
-                this.startTimer();
-                this.addMetrics(metrics);
-                return metrics;
-            });
+        this.db.getMetricsLastWeek().then(metrics => {
+            this.addMetrics(metrics);
+            this.startPoller();
+        });
     }
 
     addMetrics (metrics) {
-        metrics.forEach(m => this.metrics.push(m));
-        if (this.metrics && this.metrics.length > 0) {
-            this.highestIdSeen = this.metrics[this.metrics.length - 1].id;
+        if (metrics && metrics.length > 0) {
+            this.highestIdSeen = metrics[metrics.length - 1].id;
         }
         this.emit('metrics', metrics);
     }
 
-    startTimer () {
-        setInterval(() => this.fetch(), POLL_INTERVAL).unref();
-    }
-
-    getMetrics () {
-        return this.metrics;
+    startPoller () {
+        setInterval(() => {
+            this.db.getNewMetrics(this.highestIdSeen)
+                .then(metrics => this.addMetrics(metrics));
+        }, POLL_INTERVAL).unref();
     }
 
     insert (metrics) {
-        return this.metricsDb.insert(metrics);
+        return this.db.insert(metrics);
     }
 };

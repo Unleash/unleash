@@ -18,13 +18,17 @@ export default class UnleashNav extends Component {
                     {createListItem('/strategies', 'Strategies')}
                     {createListItem('/history', 'Event history')}
                     {createListItem('/archive', 'Archived toggles')}
+
+                    <ListDivider />
+                    
+                    <ListSubHeader caption="Clients" />
                     {createListItem('/metrics', 'Client metrics')}
                     {createListItem('/client-strategies', 'Client strategies')}
+                    {createListItem('/client-instances', 'Client instances')}
 
                     <ListDivider />
 
-                    <ListSubHeader Resources/>
-
+                    <ListSubHeader caption="Resources" />
                     {createListItem('/docs', 'Documentation')}
                     <a href="https://github.com/finn-no/unleash/" target="_blank">
                         <ListItem caption="GitHub" />

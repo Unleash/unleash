@@ -1,27 +1,40 @@
 'use strict';
 
+const Projection = require('./projection.js');
+const TTLList = require('./ttl-list.js');
+
 module.exports = class UnleashClientMetrics {
     constructor () {
         this.globalCount = 0;
-        this.apps = [];
+        this.apps = {};
         this.clients = {};
         this.strategies = {};
         this.buckets = {};
+
+        this.hourProjectionValue = new Projection();
+        this.oneHourLruCache = new TTLList();
+        this.oneHourLruCache.on('expire', (toggles) => {
+            Object.keys(toggles).forEach(toggleName => {
+                this.hourProjectionValue.substract(toggleName, toggles[toggleName]);
+            });
+        });
     }
 
     toJSON () {
-        return JSON.stringify(this.getState(), null, 4);
+        return JSON.stringify(this.getMetricsOverview(), null, 4);
     }
 
-    getState () {
-        // TODO need to flatten the store / possibly evict/flag stale clients
+    getMetricsOverview () {
         return {
             globalCount: this.globalCount,
             apps: this.apps,
             clients: this.clients,
             strategies: this.strategies,
-            buckets: this.buckets,
         };
+    }
+
+    getTogglesMetrics () {
+        return this.hourProjectionValue.getProjection();
     }
 
     registerClient (data) {
@@ -35,23 +48,19 @@ module.exports = class UnleashClientMetrics {
     }
 
     addBucket (appName, instanceId, bucket) {
-        // TODO normalize time client-server-time / NTP?
         let count = 0;
-        const { start, stop, toggles } = bucket;
-        Object.keys(toggles).forEach((n) => {
-            if (this.buckets[n]) {
-                this.buckets[n].yes.push({ start, stop, count: toggles[n].yes });
-                this.buckets[n].no.push({ start, stop, count: toggles[n].no });
-            } else {
-                this.buckets[n] = {
-                    yes: [{ start, stop, count: toggles[n].yes }],
-                    no: [{ start, stop, count: toggles[n].no }],
-                };
-            }
+        // TODO stop should be createdAt
+        const { stop, toggles } = bucket;
 
-            count += (toggles[n].yes + toggles[n].no);
+        Object.keys(toggles).forEach((n) => {
+            const entry = toggles[n];
+            this.hourProjectionValue.add(n, entry);
+            count += (entry.yes + entry.no);
         });
-        this.addClientCount(instanceId, count);
+
+        this.oneHourLruCache.add(toggles, stop);
+
+        this.addClientCount(appName, instanceId, count);
     }
 
     addStrategies (appName, strategyNames) {
@@ -63,7 +72,7 @@ module.exports = class UnleashClientMetrics {
         });
     }
 
-    addClientCount (instanceId, count) {
+    addClientCount (appName, instanceId, count) {
         if (typeof count === 'number' && count > 0) {
             this.globalCount += count;
             if (this.clients[instanceId]) {
@@ -73,7 +82,7 @@ module.exports = class UnleashClientMetrics {
     }
 
     addClient (appName, instanceId, started = new Date()) {
-        this.addApp(appName);
+        this.addApp(appName, instanceId);
         if (instanceId) {
             if (this.clients[instanceId]) {
                 this.clients[instanceId].ping = new Date();
@@ -89,9 +98,16 @@ module.exports = class UnleashClientMetrics {
         }
     }
 
-    addApp (v) {
-        if (v && !this.apps.includes(v)) {
-            this.apps.push(v);
+    addApp (appName, instanceId) {
+        if (appName && !this.apps[appName]) {
+            this.apps[appName] = {
+                count: 0,
+                clients: [],
+            };
+        }
+
+        if (instanceId && !this.apps[appName].clients.includes(instanceId)) {
+            this.apps[appName].clients.push(instanceId);
         }
     }
 };

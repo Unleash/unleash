@@ -11,8 +11,7 @@ const EventStore = require('../../lib/event-store');
 const eventStore = new EventStore(eventDb);
 const featureDb = require('../../lib/db/feature')(knex, eventStore);
 const strategyDb = require('../../lib/db/strategy')(knex, eventStore);
-const metricsDb = require('../../lib/db/metrics')(knex);
-const clientStrategiesDb = require('../../lib/db/client-strategies')(knex);
+const { clientInstancesDb, clientStrategiesDb, clientMetricsDb } = require('../../lib/db')(knex);
 
 
 const app = require('../../app')({
@@ -22,8 +21,9 @@ const app = require('../../app')({
     eventStore,
     featureDb,
     strategyDb,
-    metricsDb,
     clientStrategiesDb,
+    clientInstancesDb,
+    clientMetricsDb,
 });
 
 BPromise.promisifyAll(request);

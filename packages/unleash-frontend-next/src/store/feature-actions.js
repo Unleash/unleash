@@ -1,4 +1,4 @@
-import api from './feature-api';
+import api from '../data/feature-api';
 const debug = require('debug')('unleash:feature-actions');
 
 export const ADD_FEATURE_TOGGLE             = 'ADD_FEATURE_TOGGLE';

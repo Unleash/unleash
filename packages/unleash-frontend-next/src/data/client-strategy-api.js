@@ -1,16 +1,9 @@
+import { throwIfNotSuccess, headers } from './helper';
+
 const URI = '/client/strategies';
 
-function throwIfNotSuccess (response) {
-    if (!response.ok) {
-        let error = new Error('API call failed');
-        error.status = response.status;
-        throw error;
-    }
-    return response;
-}
-
 function fetchAll () {
-    return fetch(URI)
+    return fetch(URI, { headers })
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }

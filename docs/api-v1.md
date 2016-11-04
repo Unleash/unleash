@@ -283,3 +283,64 @@ Event types:
     ]
 }
 ```
+
+
+# Metrics
+
+**GET: http://unleash.host.com/metrics**
+
+Get aggregated state of metrics 
+
+```
+{
+    
+}
+```
+
+
+**GET: http://unleash.host.com/toggle-metrics**
+
+Get last hour of metrics per toggle 
+
+```
+{
+    
+}
+```
+
+**POST: http://unleash.host.com/client/register**
+
+Register a client instance with the unleash server
+
+```json
+{
+    "appName": "appName",
+    "instanceId": "instanceId",
+    "strategies": ["default", "some-strategy-1"],
+    "started": "2016-11-03T07:16:43.572Z",
+    "interval": 10000,
+}
+```
+
+**POST: http://unleash.host.com/client/metrics**
+
+Register a metrics payload with a timed bucket
+
+```json
+{
+    "appName": "appName",
+    "instanceId": "instanceId",
+    "bucket": {
+        "start": "2016-11-03T07:16:43.572Z",
+        "stop": "2016-11-03T07:16:53.572Z",
+        "toggles": {
+            "toggle-name-1": {
+                "yes": 123,
+                "no": 321
+            }
+        }
+    },
+}
+```
+
+

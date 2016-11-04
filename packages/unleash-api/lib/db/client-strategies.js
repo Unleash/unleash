@@ -4,7 +4,7 @@ const COLUMNS = ['app_name', 'strategies'];
 const TABLE = 'client_strategies';
 
 module.exports = function (db) {
-    function update (appName, strategies) {
+    function updateRow (appName, strategies) {
         return db(TABLE)
             .where('app_name', appName)  // eslint-disable-line
             .update({
@@ -13,23 +13,23 @@ module.exports = function (db) {
             });
     }
 
-    function insert (appName, strategies) {
+    function insertNewRow (appName, strategies) {
         return db(TABLE).insert({
             app_name: appName,  // eslint-disable-line
             strategies: JSON.stringify(strategies),
         });
     }
 
-    function insertOrUpdate (appName, strategies) {
+    function insert (appName, strategies) {
         return db(TABLE)
             .count('*')
             .where('app_name', appName)
             .map(row => ({ count: row.count }))
             .then(rows => {
                 if (rows[0].count > 0) {
-                    return update(appName, strategies);
+                    return updateRow(appName, strategies);
                 } else {
-                    return insert(appName, strategies);
+                    return insertNewRow(appName, strategies);
                 }
             });
     }
@@ -48,5 +48,5 @@ module.exports = function (db) {
         };
     }
 
-    return { insertOrUpdate, getAll };
+    return { insert, getAll };
 };

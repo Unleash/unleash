@@ -8,7 +8,6 @@ module.exports = class UnleashClientMetrics {
         this.globalCount = 0;
         this.apps = {};
         this.clients = {};
-        this.strategies = {};
         this.buckets = {};
 
         this.hourProjectionValue = new Projection();
@@ -29,17 +28,11 @@ module.exports = class UnleashClientMetrics {
             globalCount: this.globalCount,
             apps: this.apps,
             clients: this.clients,
-            strategies: this.strategies,
         };
     }
 
     getTogglesMetrics () {
         return this.hourProjectionValue.getProjection();
-    }
-
-    registerClient (data) {
-        this.addClient(data.appName, data.instanceId, data.started);
-        this.addStrategies(data.appName, data.strategies);
     }
 
     addPayload (data) {
@@ -61,15 +54,6 @@ module.exports = class UnleashClientMetrics {
         this.oneHourLruCache.add(toggles, stop);
 
         this.addClientCount(appName, instanceId, count);
-    }
-
-    addStrategies (appName, strategyNames) {
-        strategyNames.forEach((name) => {
-            if (!this.strategies[name]) {
-                this.strategies[name] = {};
-            }
-            this.strategies[name][appName] = true;
-        });
     }
 
     addClientCount (appName, instanceId, count) {

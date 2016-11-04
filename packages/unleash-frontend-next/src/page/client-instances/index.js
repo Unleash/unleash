@@ -1,6 +1,6 @@
 import React from 'react';
-import ClientStrategy from '../../component/client-strategy/strategy-container';
+import ClientInstance from '../../component/client-instance/client-instance-container';
 
-const render = () => <ClientStrategy />;
+const render = () => <ClientInstance />;
 
 export default render;

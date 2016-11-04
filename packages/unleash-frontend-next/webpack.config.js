@@ -77,6 +77,10 @@ module.exports = {
                 target: 'http://localhost:4242',
                 secure: false,
             },
+            '/client/strategies': {
+                target: 'http://localhost:4242',
+                secure: false,
+            },
         },
     },
 };

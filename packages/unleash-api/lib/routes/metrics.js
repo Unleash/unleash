@@ -2,7 +2,7 @@
 
 const logger = require('../logger');
 const ClientMetrics = require('../client-metrics');
-const ClientMetricsService = require('../client-metrics-service');
+const ClientMetricsService = require('../client-metrics/service');
 
 module.exports = function (app, config) {
     const { clientMetricsDb, clientStrategiesDb } = config;

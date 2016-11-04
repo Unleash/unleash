@@ -14,6 +14,7 @@ module.exports = function (db) {
         return db
             .select(METRICS_COLUMNS)
             .from(TABLE)
+            .limit(2000)
             .whereRaw('created_at > now() - interval \'7 day\'')
             .orderBy('created_at', 'asc')
             .map(mapRow);
@@ -24,6 +25,7 @@ module.exports = function (db) {
         return db
             .select(METRICS_COLUMNS)
             .from(TABLE)
+            .limit(1000)
             .where('id', '>', lastKnownId)
             .orderBy('created_at', 'asc')
             .map(mapRow);

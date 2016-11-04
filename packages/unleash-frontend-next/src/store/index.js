@@ -7,6 +7,7 @@ import archive from './archive-store';
 import error from './error-store';
 import metrics from './metrics-store';
 import clientStrategies from './client-strategy-store';
+import clientInstances from './client-instance-store';
 
 const unleashStore = combineReducers({
     features,
@@ -17,6 +18,7 @@ const unleashStore = combineReducers({
     error,
     metrics,
     clientStrategies,
+    clientInstances,
 });
 
 export default unleashStore;

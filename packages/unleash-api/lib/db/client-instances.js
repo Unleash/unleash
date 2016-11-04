@@ -43,6 +43,7 @@ module.exports = function (db) {
         return db
             .select(COLUMNS)
             .from(TABLE)
+            .orderBy('last_seen', 'desc')
             .map(mapRow);
     }
 

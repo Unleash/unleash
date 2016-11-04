@@ -8,7 +8,7 @@ module.exports = class UnleashClientMetrics extends EventEmitter {
         super();
         this.db = metricsDb;
         this.highestIdSeen = 0;
-        this.db.getMetricsLastWeek().then(metrics => {
+        this.db.getMetricsLastHour().then(metrics => {
             this.addMetrics(metrics);
             this.startPoller();
         });

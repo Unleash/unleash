@@ -16,7 +16,7 @@ import CreateStrategies from './page/strategies/create';
 import HistoryPage from './page/history';
 import Archive from './page/archive';
 import Metrics from './page/metrics';
-import Clients from './page/clients';
+import ClientStrategies from './page/client-strategies';
 
 const unleashStore = createStore(
     store,
@@ -38,7 +38,7 @@ ReactDOM.render(
                 <Route path="/history" component={HistoryPage} />
                 <Route path="/archive" component={Archive} />
                 <Route path="/metrics" component={Metrics} />
-                <Route path="/clients" component={Clients} />
+                <Route path="/client-strategies" component={ClientStrategies} />
             </Route>
         </Router>
     </Provider>, document.getElementById('app'));

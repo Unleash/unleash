@@ -1,13 +1,6 @@
-const URI = '/metrics';
+import { throwIfNotSuccess } from './helper';
 
-function throwIfNotSuccess (response) {
-    if (!response.ok) {
-        let error = new Error('API call failed');
-        error.status = response.status;
-        throw error;
-    }
-    return response;
-}
+const URI = '/metrics';
 
 function fetchAll () {
     return fetch(URI)

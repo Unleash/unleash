@@ -20,7 +20,7 @@ export default class UnleashNav extends Component {
                     {createListItem('/archive', 'Archived toggles')}
 
                     <ListDivider />
-                    
+
                     <ListSubHeader caption="Clients" />
                     {createListItem('/metrics', 'Client metrics')}
                     {createListItem('/client-strategies', 'Client strategies')}

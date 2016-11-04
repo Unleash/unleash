@@ -32,4 +32,4 @@ module.exports = class Projection {
             };
         }
     }
-}
+};

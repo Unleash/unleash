@@ -14,22 +14,25 @@ module.exports = function (app, config) {
 
 
     service.on('metrics', (entries) => {
-        entries.forEach((m) => metrics.addPayload(m.metrics));
-    });
-
-    app.get('/service-metrics', (req, res) => {
-        res.json(service.getMetrics());
+        entries.forEach((m) => {
+            metrics.addPayload(m.metrics);
+        });
     });
 
     app.get('/metrics', (req, res) => {
-        res.json(metrics.getState());
+        res.json(metrics.getMetricsOverview());
+    });
+
+    app.get('/toggle-metrics', (req, res) => {
+        res.json(metrics.getTogglesMetrics());
     });
 
     app.post('/client/metrics', (req, res) => {
         try {
             const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-            metrics.addPayload(data);
-            service.insert(data);
+            service
+                .insert(data)
+                .catch(e => logger.error('Error inserting metrics data', e));
         } catch (e) {
             logger.error('Error receiving metrics', e);
         }

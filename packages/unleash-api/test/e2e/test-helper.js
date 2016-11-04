@@ -6,12 +6,11 @@ const BPromise = require('bluebird');
 let request = require('supertest');
 const databaseUri = require('./database-config').getDatabaseUri();
 const knex = require('../../lib/db/db-pool')(databaseUri);
-const eventDb = require('../../lib/db/event')(knex);
+const { eventDb, clientInstancesDb, clientStrategiesDb, clientMetricsDb } = require('../../lib/db')(knex);
 const EventStore = require('../../lib/event-store');
 const eventStore = new EventStore(eventDb);
 const featureDb = require('../../lib/db/feature')(knex, eventStore);
 const strategyDb = require('../../lib/db/strategy')(knex, eventStore);
-const { clientInstancesDb, clientStrategiesDb, clientMetricsDb } = require('../../lib/db')(knex);
 
 
 const app = require('../../app')({

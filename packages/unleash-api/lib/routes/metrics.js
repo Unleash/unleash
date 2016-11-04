@@ -5,9 +5,9 @@ const ClientMetrics = require('../client-metrics');
 const ClientMetricsService = require('../client-metrics-service');
 
 module.exports = function (app, config) {
-    const { metricsDb, clientStrategiesDb } = config;
+    const { clientMetricsDb, clientStrategiesDb } = config;
     const metrics = new ClientMetrics();
-    const service = new ClientMetricsService(metricsDb);
+    const service = new ClientMetricsService(clientMetricsDb);
 
     // Just som dummo demo data
     clientStrategiesDb.insertOrUpdate('demo-app', ['default', 'test']).then(() => console.log('inserted client_strategies'));

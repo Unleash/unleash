@@ -19,6 +19,7 @@ export default class UnleashNav extends Component {
                     {createListItem('/history', 'Event history')}
                     {createListItem('/archive', 'Archived toggles')}
                     {createListItem('/metrics', 'Client metrics')}
+                    {createListItem('/Clients', 'Clients')}
 
                     <ListDivider />
 

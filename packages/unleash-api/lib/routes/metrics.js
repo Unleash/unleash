@@ -6,12 +6,12 @@ const ClientMetricsService = require('../client-metrics/service');
 
 module.exports = function (app, config) {
     const {
-        clientMetricsDb,
+        clientMetricsStore,
         clientStrategiesDb,
         clientInstancesDb,
     } = config;
     const metrics = new ClientMetrics();
-    const service = new ClientMetricsService(clientMetricsDb);
+    const service = new ClientMetricsService(clientMetricsStore);
 
     service.on('metrics', (entries) => {
         entries.forEach((m) => {

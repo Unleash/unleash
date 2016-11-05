@@ -18,7 +18,7 @@ function createApp (options) {
         featureToggleStore,
         strategyStore,
         clientInstancesDb,
-        clientMetricsDb,
+        clientMetricsStore,
         clientStrategiesDb,
     } = require('./lib/db')(db);
 
@@ -30,7 +30,7 @@ function createApp (options) {
         eventStore,
         featureToggleStore,
         strategyStore,
-        clientMetricsDb,
+        clientMetricsStore,
         clientStrategiesDb,
         clientInstancesDb,
     };

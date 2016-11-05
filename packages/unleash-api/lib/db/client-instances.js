@@ -9,9 +9,9 @@ module.exports = function (db) {
         return db(TABLE)
             .where('app_name', details.appName)
             .where('instance_id', details.instanceId)
-            .where('client_ip', details.clientIp)
             .update({
                 last_seen: 'now()',
+                client_ip: details.clientIp,
             });
     }
 
@@ -24,11 +24,11 @@ module.exports = function (db) {
     }
 
     function insert (details) {
+        console.log(details);
         return db(TABLE)
             .count('*')
             .where('app_name', details.appName)
             .where('instance_id', details.instanceId)
-            .where('client_ip', details.clientIp)
             .map(row => ({ count: row.count }))
             .then(rows => {
                 if (rows[0].count > 0) {

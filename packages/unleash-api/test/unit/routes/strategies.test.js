@@ -1,25 +1,30 @@
 'use strict';
 
+const clientMetricsStore = require('./mocks/fake-metrics-store');
+const featureToggleStore = require('./mocks/fake-feature-toggle-store');
+const strategyStore = require('./mocks/fake-strategies-store');
+
 const supertest = require('supertest');
-const BPromise = require('bluebird');
-BPromise.promisifyAll(supertest);
 const assert = require('assert');
 const sinon = require('sinon');
 
 let request;
-let stratDb;
 
 describe('Unit: The strategies api', () => {
     beforeEach(done => {
-        stratDb = createStrategyDb();
+        strategyStore.reset();
 
         const app = require('../../../app')({
             baseUriPath: '',
-            db: sinon.stub(),
-            eventDb: sinon.stub(),
-            eventStore: sinon.stub(),
-            featureDb: sinon.stub(),
-            strategyDb: stratDb,
+            stores: {
+                db: sinon.stub(),
+                eventStore: sinon.stub(),
+                featureToggleStore,
+                clientMetricsStore,
+                strategyStore,
+                clientStrategyStore: sinon.stub(),
+                clientInstanceStore: sinon.stub(),
+            },
         });
 
         request = supertest(app);
@@ -37,11 +42,3 @@ describe('Unit: The strategies api', () => {
             });
     });
 });
-
-function createStrategyDb () {
-    const _strategies = [{ name: 'default', parameters: {} }];
-    return {
-        getStrategies: () => BPromise.resolve(_strategies),
-        addStrategy: (strat) => _strategies.push(strat),
-    };
-}

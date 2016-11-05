@@ -1,25 +1,30 @@
 'use strict';
 
+const clientMetricsStore = require('./mocks/fake-metrics-store');
+const featureToggleStore = require('./mocks/fake-feature-toggle-store');
+const strategyStore = require('./mocks/fake-strategies-store');
+
 const supertest = require('supertest');
-const BPromise = require('bluebird');
-BPromise.promisifyAll(supertest);
 const assert = require('assert');
 const sinon = require('sinon');
 
 let request;
-let featureDb;
 
 describe('Unit: The features api', () => {
     beforeEach(done => {
-        featureDb = createFeatureDb();
+        featureToggleStore.reset();
 
         const app = require('../../../app')({
             baseUriPath: '',
-            db: sinon.stub(),
-            eventDb: sinon.stub(),
-            eventStore: sinon.stub(),
-            featureDb,
-            strategyDb: sinon.stub(),
+            stores: {
+                db: sinon.stub(),
+                eventStore: sinon.stub(),
+                featureToggleStore,
+                clientMetricsStore,
+                strategyStore,
+                clientStrategyStore: sinon.stub(),
+                clientInstanceStore: sinon.stub(),
+            },
         });
 
         request = supertest(app);
@@ -38,7 +43,7 @@ describe('Unit: The features api', () => {
     });
 
     it('should get one getFeature', (done) => {
-        featureDb.addFeature( { name: 'test', strategies: [{ name: 'default' }] } );
+        featureToggleStore.addFeature( { name: 'test', strategies: [{ name: 'default' }] } );
 
         request
             .get('/features')
@@ -51,7 +56,7 @@ describe('Unit: The features api', () => {
     });
 
     it('should add version numbers for /features', (done) => {
-        featureDb.addFeature( { name: 'test', strategies: [{ name: 'default' }] } );
+        featureToggleStore.addFeature( { name: 'test', strategies: [{ name: 'default' }] } );
 
         request
             .get('/features')
@@ -63,11 +68,3 @@ describe('Unit: The features api', () => {
             });
     });
 });
-
-function createFeatureDb () {
-    const _features = [];
-    return {
-        getFeatures: () => BPromise.resolve(_features),
-        addFeature: (feature) => _features.push(feature),
-    };
-}

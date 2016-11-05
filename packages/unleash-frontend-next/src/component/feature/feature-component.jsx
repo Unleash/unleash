@@ -9,10 +9,12 @@ import Chip from 'react-toolbox/lib/chip';
 import style from './feature.scss';
 
 const Feature = ({ feature, onFeatureClick, onFeatureRemove, metrics = { yes: 0, no: 0, hasData: false } }) => {
-    const { name, description, enabled, strategies } = feature;
+    const { name, description, enabled, strategies, createdAt } = feature;
+    const created = new Date(createdAt);
 
     const actions = [
         <div key="strategies">{strategies && strategies.map((s, i) => <Chip key={i}><small>{s.name}</small></Chip>)}</div>,
+        <div key="created"><small>({created.toLocaleDateString('nb-NO')})</small></div>,
         <Link key="change" to={`/features/edit/${name}`} title={`Edit ${name}`}>
             <FontIcon value="edit" className={style.action} />
         </Link>,

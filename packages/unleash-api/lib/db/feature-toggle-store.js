@@ -3,7 +3,7 @@
 const eventType = require('../event-type');
 const logger = require('../logger');
 const NotFoundError = require('../error/notfound-error');
-const FEATURE_COLUMNS = ['name', 'description', 'enabled', 'strategies'];
+const FEATURE_COLUMNS = ['name', 'description', 'enabled', 'strategies', 'created_at'];
 
 class FeatureToggleStore {
     constructor (db, eventStore) {
@@ -49,6 +49,7 @@ class FeatureToggleStore {
             description: row.description,
             enabled: row.enabled > 0,
             strategies: row.strategies,
+            createdAt: row.created_at,
         };
     }
 

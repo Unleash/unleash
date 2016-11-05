@@ -29,7 +29,6 @@ module.exports = class TTLList extends EventEmitter {
         let done = false;
         // TODO: might use internal linkedlist
         this.cache.forEachReverse((entry, index) => {
-            console.log(now.format(), entry.ttl.format());
             if (done) {
                 return;
             } else if (now.isBefore(entry.ttl)) {

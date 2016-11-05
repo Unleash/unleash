@@ -13,7 +13,6 @@ class FeatureToggleStore {
         eventStore.on(eventType.featureArchived, event => this._archiveFeature(event.data));
         eventStore.on(eventType.featureRevived, event => this._reviveFeature(event.data));
     }
-    
 
     getFeatures () {
         return this.db

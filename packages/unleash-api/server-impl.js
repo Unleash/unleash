@@ -13,23 +13,23 @@ function createApp (options) {
     const db = require('./lib/db/db-pool')(options.databaseUri);
 
     // Database dependecies (statefull)
-    const { eventDb, clientInstancesDb, clientMetricsDb, clientStrategiesDb } = require('./lib/db')(db);
-
-    // Needs some cleanup!
-    const EventStore = require('./lib/event-store');
-    const eventStore = new EventStore(eventDb);
-    const featureDb = require('./lib/db/feature')(db, eventStore);
-    const strategyDb = require('./lib/db/strategy')(db, eventStore);
+    const {
+        eventStore,
+        featureToggleStore,
+        strategyStore,
+        clientInstancesDb,
+        clientMetricsDb,
+        clientStrategiesDb,
+    } = require('./lib/db')(db);
 
     const config = {
         baseUriPath: options.baseUriPath,
         port: options.port,
         publicFolder: options.publicFolder,
         db,
-        eventDb,
         eventStore,
-        featureDb,
-        strategyDb,
+        featureToggleStore,
+        strategyStore,
         clientMetricsDb,
         clientStrategiesDb,
         clientInstancesDb,

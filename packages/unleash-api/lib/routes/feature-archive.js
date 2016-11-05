@@ -6,11 +6,11 @@ const ValidationError = require('../error/validation-error');
 const validateRequest = require('../error/validate-request');
 
 module.exports = function (app, config) {
-    const featureDb = config.featureDb;
+    const featureToggleStore = config.featureToggleStore;
     const eventStore = config.eventStore;
 
     app.get('/archive/features', (req, res) => {
-        featureDb.getArchivedFeatures().then(archivedFeatures => {
+        featureToggleStore.getArchivedFeatures().then(archivedFeatures => {
             res.json({ features: archivedFeatures });
         });
     });
@@ -19,7 +19,7 @@ module.exports = function (app, config) {
         req.checkBody('name', 'Name is required').notEmpty();
 
         validateRequest(req)
-            .then(() => eventStore.create({
+            .then(() => eventStore.store({
                 type: eventType.featureRevived,
                 createdBy: req.connection.remoteAddress,
                 data: req.body,

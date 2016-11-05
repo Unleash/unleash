@@ -11,17 +11,17 @@ const extractUser = require('../extract-user');
 const version = 1;
 
 module.exports = function (app, config) {
-    const strategyDb = config.strategyDb;
+    const strategyStore = config.strategyStore;
     const eventStore = config.eventStore;
 
     app.get('/strategies', (req, res) => {
-        strategyDb.getStrategies().then(strategies => {
+        strategyStore.getStrategies().then(strategies => {
             res.json({ version, strategies });
         });
     });
 
     app.get('/strategies/:name', (req, res) => {
-        strategyDb.getStrategy(req.params.name)
+        strategyStore.getStrategy(req.params.name)
             .then(strategy => {
                 res.json(strategy);
             })
@@ -33,8 +33,8 @@ module.exports = function (app, config) {
     app.delete('/strategies/:name', (req, res) => {
         const strategyName = req.params.name;
 
-        strategyDb.getStrategy(strategyName)
-            .then(() => eventStore.create({
+        strategyStore.getStrategy(strategyName)
+            .then(() => eventStore.store({
                 type: eventType.strategyDeleted,
                 createdBy: extractUser(req),
                 data: {
@@ -61,7 +61,7 @@ module.exports = function (app, config) {
 
         validateRequest(req)
             .then(validateStrategyName)
-            .then(() => eventStore.create({
+            .then(() => eventStore.store({
                 type: eventType.strategyCreated,
                 createdBy: extractUser(req),
                 data: newStrategy,
@@ -81,7 +81,7 @@ module.exports = function (app, config) {
 
     function validateStrategyName (req) {
         return new BPromise((resolve, reject) => {
-            strategyDb.getStrategy(req.body.name)
+            strategyStore.getStrategy(req.body.name)
                 .then(() => {
                     reject(new NameExistsError('Feature name already exist'));
                 }, () => {

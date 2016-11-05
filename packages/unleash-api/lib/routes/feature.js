@@ -13,8 +13,7 @@ const legacyFeatureMapper = require('../helper/legacy-feature-mapper');
 const version = 1;
 
 module.exports = function (app, config) {
-    const featureToggleStore = config.featureToggleStore;
-    const eventStore = config.eventStore;
+    const { featureToggleStore, eventStore } = config.stores;
 
     app.get('/features', (req, res) => {
         featureToggleStore.getFeatures()

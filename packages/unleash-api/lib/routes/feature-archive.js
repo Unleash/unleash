@@ -6,8 +6,7 @@ const ValidationError = require('../error/validation-error');
 const validateRequest = require('../error/validate-request');
 
 module.exports = function (app, config) {
-    const featureToggleStore = config.featureToggleStore;
-    const eventStore = config.eventStore;
+    const { featureToggleStore, eventStore } = config.stores;
 
     app.get('/archive/features', (req, res) => {
         featureToggleStore.getArchivedFeatures().then(archivedFeatures => {

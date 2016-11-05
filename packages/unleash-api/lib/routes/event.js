@@ -4,7 +4,7 @@ const eventDiffer = require('../event-differ');
 const version = 1;
 
 module.exports = function (app, config) {
-    const eventStore = config.eventStore;
+    const { eventStore } = config.stores;
 
     app.get('/events', (req, res) => {
         eventStore.getEvents().then(events => {

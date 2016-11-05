@@ -8,7 +8,7 @@ import Chip from 'react-toolbox/lib/chip';
 
 import style from './feature.scss';
 
-const Feature = ({ feature, onFeatureClick, onFeatureRemove }) => {
+const Feature = ({ feature, onFeatureClick, onFeatureRemove, metrics = { yes: 0, no: 0, hasData: false } }) => {
     const { name, description, enabled, strategies } = feature;
 
     const actions = [
@@ -20,6 +20,7 @@ const Feature = ({ feature, onFeatureClick, onFeatureRemove }) => {
     ];
 
     const leftActions = [
+        <Chip><span className={style.yes}>{metrics.yes}</span> / <span className={style.no}>{metrics.no}</span></Chip>,
         <Switch key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />,
     ];
 

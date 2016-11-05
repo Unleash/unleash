@@ -9,7 +9,9 @@ export default class FeatureListComponent extends React.Component {
             onFeatureClick: PropTypes.func.isRequired,
             onFeatureRemove: PropTypes.func.isRequired,
             features: PropTypes.array.isRequired,
-            fetchFeatureToggles: PropTypes.array.isRequired,
+            featureMetrics: PropTypes.object.isRequired,
+            fetchFeatureToggles: PropTypes.func.isRequired,
+            fetchFeatureMetrics: PropTypes.func.isRequired,
         };
     }
 
@@ -19,16 +21,24 @@ export default class FeatureListComponent extends React.Component {
 
     componentDidMount () {
         this.props.fetchFeatureToggles();
+        this.props.fetchFeatureMetrics();
+        this.timer = setInterval(() => {
+            this.props.fetchFeatureMetrics();
+        }, 5000);
+    }
+
+    componentWillUnmount () {
+        clearInterval(this.timer);
     }
 
     render () {
-        const { features, onFeatureClick, onFeatureRemove } = this.props;
+        const { features, onFeatureClick, onFeatureRemove, featureMetrics } = this.props;
 
         return (
            <List>
                 <ListSubHeader caption="Feature toggles" />
                 {features.map((feature, i) =>
-                    <Feature key={i} feature={feature} onFeatureClick={onFeatureClick} onFeatureRemove={onFeatureRemove}/>
+                    <Feature key={i} metrics={featureMetrics[feature.name]} feature={feature} onFeatureClick={onFeatureClick} onFeatureRemove={onFeatureRemove}/>
                 )}
                 <ListDivider />
                 <ListItem

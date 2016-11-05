@@ -23,7 +23,7 @@ module.exports = function (app, config) {
         res.json(metrics.getMetricsOverview());
     });
 
-    app.get('/toggle-metrics', (req, res) => {
+    app.get('/metrics/features', (req, res) => {
         res.json(metrics.getTogglesMetrics());
     });
 

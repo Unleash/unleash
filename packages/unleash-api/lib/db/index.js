@@ -1,21 +1,24 @@
 'use strict';
 
+const { createDb } = require('./db-pool');
 const EventStore = require('./event-store');
 const FeatureToggleStore = require('./feature-toggle-store');
 const StrategyStore = require('./strategy-store');
-const clientInstancesDbCreator = require('./client-instances');
+const ClientInstanceStore = require('./client-instance-store');
 const ClientMetricsStore = require('./client-metrics-store');
-const clientStrategiesDbCreator = require('./client-strategies');
+const ClientStrategyStore = require('./client-strategy-store');
 
-module.exports = (db) => {
+module.exports.createStores = (config) => {
+    const db = createDb(config.databaseUri);
     const eventStore = new EventStore(db);
 
     return {
+        db,
         eventStore,
         featureToggleStore: new FeatureToggleStore(db, eventStore),
         strategyStore: new StrategyStore(db, eventStore),
-        clientInstancesDb: clientInstancesDbCreator(db),
+        clientInstanceStore: new ClientInstanceStore(db),
         clientMetricsStore: new ClientMetricsStore(db),
-        clientStrategiesDb: clientStrategiesDbCreator(db),
+        clientStrategyStore: new ClientStrategyStore(db),
     };
 };

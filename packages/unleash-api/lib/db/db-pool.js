@@ -2,7 +2,7 @@
 
 const knex   = require('knex');
 
-module.exports = function (databaseConnection) {
+module.exports.createDb = function (databaseConnection) {
     return knex({
         client: 'pg',
         connection: databaseConnection,

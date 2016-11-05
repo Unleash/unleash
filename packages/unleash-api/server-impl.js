@@ -2,6 +2,7 @@
 
 const logger = require('./lib/logger');
 const migrator = require('./migrator');
+const { createStores } = require('./lib/db');
 
 const DEFAULT_OPTIONS = {
     databaseUri: process.env.DATABASE_URL || 'postgres://unleash_user:passord@localhost:5432/unleash',
@@ -10,29 +11,14 @@ const DEFAULT_OPTIONS = {
 };
 
 function createApp (options) {
-    const db = require('./lib/db/db-pool')(options.databaseUri);
-
     // Database dependecies (statefull)
-    const {
-        eventStore,
-        featureToggleStore,
-        strategyStore,
-        clientInstancesDb,
-        clientMetricsStore,
-        clientStrategiesDb,
-    } = require('./lib/db')(db);
+    const stores = createStores(options);
 
     const config = {
         baseUriPath: options.baseUriPath,
         port: options.port,
         publicFolder: options.publicFolder,
-        db,
-        eventStore,
-        featureToggleStore,
-        strategyStore,
-        clientMetricsStore,
-        clientStrategiesDb,
-        clientInstancesDb,
+        stores,
     };
 
     const app = require('./app')(config);

@@ -11,8 +11,7 @@ const extractUser = require('../extract-user');
 const version = 1;
 
 module.exports = function (app, config) {
-    const strategyStore = config.strategyStore;
-    const eventStore = config.eventStore;
+    const { strategyStore, eventStore } = config.stores;
 
     app.get('/strategies', (req, res) => {
         strategyStore.getStrategies().then(strategies => {

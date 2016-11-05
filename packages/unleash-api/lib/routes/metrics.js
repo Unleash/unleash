@@ -7,9 +7,9 @@ const ClientMetricsService = require('../client-metrics/service');
 module.exports = function (app, config) {
     const {
         clientMetricsStore,
-        clientStrategiesDb,
-        clientInstancesDb,
-    } = config;
+        clientStrategyStore,
+        clientInstanceStore,
+    } = config.stores;
     const metrics = new ClientMetrics();
     const service = new ClientMetricsService(clientMetricsStore);
 
@@ -43,8 +43,8 @@ module.exports = function (app, config) {
     app.post('/client/register', (req, res) => {
         const data = req.body;
         const clientIp = req.ip;
-        clientStrategiesDb.insert(data.appName, data.strategies)
-            .then(() => clientInstancesDb.insert({
+        clientStrategyStore.insert(data.appName, data.strategies)
+            .then(() => clientStrategyStore.insert({
                 appName: data.appName,
                 instanceId: data.instanceId,
                 clientIp,
@@ -56,11 +56,11 @@ module.exports = function (app, config) {
     });
 
     app.get('/client/strategies', (req, res) => {
-        clientStrategiesDb.getAll().then(data => res.json(data));
+        clientStrategyStore.getAll().then(data => res.json(data));
     });
 
     app.get('/client/instances', (req, res) => {
-        clientInstancesDb.getAll()
+        clientInstanceStore.getAll()
             .then(data => res.json(data))
             .catch(err => console.error(err));
     });

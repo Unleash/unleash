@@ -4,7 +4,7 @@ const logger = require('../logger');
 
 module.exports = function (app, config) {
     app.get('/health', (req, res) => {
-        config.db.select(1)
+        config.stores.db.select(1)
             .from('features')
             .then(() => {
                 res.json({ health: 'GOOD' });

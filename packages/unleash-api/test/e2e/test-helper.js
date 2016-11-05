@@ -4,27 +4,18 @@ process.env.NODE_ENV = 'test';
 
 const BPromise = require('bluebird');
 let request = require('supertest');
-const databaseUri = require('./database-config').getDatabaseUri();
-const knex = require('../../lib/db/db-pool')(databaseUri);
-const {
-    eventStore,
-    featureToggleStore,
-    strategyStore,
-    clientInstancesDb,
-    clientStrategiesDb,
-    clientMetricsStore,
-} = require('../../lib/db')(knex);
 
+const options = {
+    databaseUri: require('./database-config').getDatabaseUri(),
+};
+
+const { createStores } = require('../../lib/db');
+
+const stores = createStores(options);
 
 const app = require('../../app')({
     baseUriPath: '',
-    db: knex,
-    eventStore,
-    featureToggleStore,
-    strategyStore,
-    clientStrategiesDb,
-    clientInstancesDb,
-    clientMetricsStore,
+    stores,
 });
 
 BPromise.promisifyAll(request);
@@ -44,7 +35,7 @@ function createStrategies () {
                 emails: 'String',
             },
         },
-    ], strategy => strategyStore._createStrategy(strategy));
+    ], strategy => stores.strategyStore._createStrategy(strategy));
 }
 
 function createFeatures () {
@@ -108,15 +99,15 @@ function createFeatures () {
                 },
             }],
         },
-    ], feature => featureToggleStore._createFeature(feature));
+    ], feature => stores.featureToggleStore._createFeature(feature));
 }
 
 function destroyStrategies () {
-    return knex('strategies').del();
+    return stores.db('strategies').del();
 }
 
 function destroyFeatures () {
-    return knex('features').del();
+    return stores.db('features').del();
 }
 
 function resetDatabase () {

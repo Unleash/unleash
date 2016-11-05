@@ -2,7 +2,7 @@ const defaultErrorMessage = 'Unexptected exception when talking to unleash-api';
 
 export function throwIfNotSuccess (response) {
     if (!response.ok) {
-        if (response.status > 400 && response.status < 404) {
+        if (response.status > 399 && response.status < 404) {
             return new Promise((resolve, reject) => {
                 response.json().then(body => {
                     const errorMsg = body && body.length > 0 ? body[0].msg : defaultErrorMessage;

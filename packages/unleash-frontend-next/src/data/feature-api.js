@@ -1,6 +1,7 @@
 import { throwIfNotSuccess, headers } from './helper';
 
 const URI = '/features';
+const URI_VALIDATE = '/features-validate';
 
 function fetchAll () {
     return fetch(URI)
@@ -10,6 +11,14 @@ function fetchAll () {
 
 function create (featureToggle) {
     return fetch(URI, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(featureToggle),
+    }).then(throwIfNotSuccess);
+}
+
+function validate (featureToggle) {
+    return fetch(URI_VALIDATE, {
         method: 'POST',
         headers,
         body: JSON.stringify(featureToggle),
@@ -33,6 +42,7 @@ function remove (featureToggleName) {
 module.exports = {
     fetchAll,
     create,
+    validate,
     update,
     remove,
 };

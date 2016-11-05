@@ -88,3 +88,6 @@ export function removeFeatureToggle (featureToggleName) {
     };
 }
 
+export function validateName (featureToggleName) {
+    return api.validate({ name: featureToggleName });
+}

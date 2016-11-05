@@ -57,6 +57,8 @@ const prepare =  (methods, dispatch) => {
         methods.updateInList('strategies', v, n);
     };
 
+    methods.validateName = () => {};
+
     return methods;
 };
 

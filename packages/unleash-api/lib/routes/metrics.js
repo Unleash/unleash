@@ -42,11 +42,12 @@ module.exports = function (app, config) {
 
     app.post('/client/register', (req, res) => {
         const data = req.body;
+        const clientIp = req.ip;
         clientStrategiesDb.insert(data.appName, data.strategies)
             .then(() => clientInstancesDb.insert({
                 appName: data.appName,
                 instanceId: data.instanceId,
-                clientIp: req.ip,
+                clientIp,
             }))
             .then(() => console.log('new client registerd'))
             .catch((error) => logger.error('Error registering client', error));

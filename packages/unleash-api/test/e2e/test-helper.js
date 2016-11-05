@@ -2,8 +2,12 @@
 
 process.env.NODE_ENV = 'test';
 
+// Mute migrator
+require('db-migrate-shared').log.silence(true);
+
 const BPromise = require('bluebird');
 let request = require('supertest');
+const migrator = require('../../migrator');
 
 const options = {
     databaseUri: require('./database-config').getDatabaseUri(),
@@ -115,7 +119,7 @@ function resetDatabase () {
 }
 
 function setupDatabase () {
-    return BPromise.all([createStrategies(), createFeatures()]);
+    return BPromise.all([migrator(options.databaseUri), createStrategies(), createFeatures()]);
 }
 
 module.exports = {

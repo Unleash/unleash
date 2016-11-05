@@ -5,6 +5,21 @@ const eventType = require('../event-type');
 const ValidationError = require('../error/validation-error');
 const validateRequest = require('../error/validate-request');
 
+const handleErrors = (req, res, error) => {
+    switch (error.constructor) {
+        case ValidationError:
+            return res
+                .status(400)
+                .json(req.validationErrors())
+                .end();
+        default:
+            logger.error('Server failed executing request', error);
+            return res
+                .status(500)
+                .end();
+    }
+};
+
 module.exports = function (app, config) {
     const { featureToggleStore, eventStore } = config.stores;
 
@@ -24,10 +39,6 @@ module.exports = function (app, config) {
                 data: req.body,
             }))
             .then(() => res.status(200).end())
-            .catch(ValidationError, () => res.status(400).json(req.validationErrors()))
-            .catch(err => {
-                logger.error('Could not revive feature toggle', err);
-                res.status(500).end();
-            });
+            .catch(error => handleErrors(req, res, error));
     });
 };

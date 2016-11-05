@@ -47,7 +47,6 @@
     "test:coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "dependencies": {
-    "bluebird": "^3.4.6",
     "body-parser": "1.15.2",
     "cookie-parser": "^1.4.1",
     "db-migrate": "0.10.0-beta.17",
@@ -65,6 +64,7 @@
     "yallist": "^2.0.0"
   },
   "devDependencies": {
+    "bluebird": "^3.4.6",
     "coveralls": "^2.11.12",
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",

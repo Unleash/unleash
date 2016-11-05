@@ -113,6 +113,14 @@ describe('The features api', () => {
             .expect(403, done);
     });
 
+    it('refuses to validate a feature with an existing name', done => {
+        request
+            .post('/features-validate')
+            .send({ name: 'featureX' })
+            .set('Content-Type', 'application/json')
+            .expect(403, done);
+    });
+
     describe('new strategies api', () => {
         it('automatically map existing strategy to strategies array', (done) => {
             request

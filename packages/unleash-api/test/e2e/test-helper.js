@@ -12,7 +12,7 @@ const {
     strategyStore,
     clientInstancesDb,
     clientStrategiesDb,
-    clientMetricsDb,
+    clientMetricsStore,
 } = require('../../lib/db')(knex);
 
 
@@ -24,7 +24,7 @@ const app = require('../../app')({
     strategyStore,
     clientStrategiesDb,
     clientInstancesDb,
-    clientMetricsDb,
+    clientMetricsStore,
 });
 
 BPromise.promisifyAll(request);

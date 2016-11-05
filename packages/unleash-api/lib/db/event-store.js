@@ -1,36 +1,45 @@
 'use strict';
 
+const { EventEmitter } = require('events');
+
 const EVENT_COLUMNS = ['id', 'type', 'created_by', 'created_at', 'data'];
 
-module.exports = function (db) {
-    function storeEvent (event) {
-        return db('events').insert({
+class EventStore extends EventEmitter {
+
+    constructor (db) {
+        super();
+        this.db = db;
+    }
+
+    store (event) {
+        return this.db('events').insert({
             type: event.type,
             created_by: event.createdBy, // eslint-disable-line
             data: event.data,
-        });
+        })
+        .then(() => this.emit(event.type, event));
     }
 
-    function getEvents () {
-        return db
+    getEvents () {
+        return this.db
             .select(EVENT_COLUMNS)
             .from('events')
             .limit(100)
             .orderBy('created_at', 'desc')
-            .map(rowToEvent);
+            .map(this.rowToEvent);
     }
 
-    function getEventsFilterByName (name) {
-        return db
+    getEventsFilterByName (name) {
+        return this.db
         .select(EVENT_COLUMNS)
         .from('events')
         .limit(100)
         .whereRaw('data ->> \'name\' = ?', [name])
         .orderBy('created_at', 'desc')
-        .map(rowToEvent);
+        .map(this.rowToEvent);
     }
 
-    function rowToEvent (row) {
+    rowToEvent (row) {
         return {
             id: row.id,
             type: row.type,
@@ -39,11 +48,7 @@ module.exports = function (db) {
             data: row.data,
         };
     }
-
-    return {
-        store: storeEvent,
-        getEvents,
-        getEventsFilterByName,
-    };
 };
+
+module.exports = EventStore;
 

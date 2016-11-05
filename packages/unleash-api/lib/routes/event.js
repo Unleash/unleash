@@ -4,17 +4,17 @@ const eventDiffer = require('../event-differ');
 const version = 1;
 
 module.exports = function (app, config) {
-    const eventDb = config.eventDb;
+    const eventStore = config.eventStore;
 
     app.get('/events', (req, res) => {
-        eventDb.getEvents().then(events => {
+        eventStore.getEvents().then(events => {
             eventDiffer.addDiffs(events);
             res.json({ version, events });
         });
     });
 
     app.get('/events/:name', (req, res) => {
-        eventDb.getEventsFilterByName(req.params.name).then(events => {
+        eventStore.getEventsFilterByName(req.params.name).then(events => {
             if (events) {
                 eventDiffer.addDiffs(events);
                 res.json(events);

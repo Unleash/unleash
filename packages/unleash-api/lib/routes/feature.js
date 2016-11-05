@@ -13,17 +13,17 @@ const legacyFeatureMapper = require('../helper/legacy-feature-mapper');
 const version = 1;
 
 module.exports = function (app, config) {
-    const featureDb = config.featureDb;
+    const featureToggleStore = config.featureToggleStore;
     const eventStore = config.eventStore;
 
     app.get('/features', (req, res) => {
-        featureDb.getFeatures()
+        featureToggleStore.getFeatures()
             .then((features) => features.map(legacyFeatureMapper.addOldFields))
             .then(features => res.json({ version, features }));
     });
 
     app.get('/features/:featureName', (req, res) => {
-        featureDb.getFeature(req.params.featureName)
+        featureToggleStore.getFeature(req.params.featureName)
             .then(legacyFeatureMapper.addOldFields)
             .then(feature => res.json(feature).end())
             .catch(() => res.status(404).json({ error: 'Could not find feature' }));
@@ -36,7 +36,7 @@ module.exports = function (app, config) {
         validateRequest(req)
             .then(validateFormat)
             .then(validateUniqueName)
-            .then(() => eventStore.create({
+            .then(() => eventStore.store({
                 type: eventType.featureCreated,
                 createdBy: extractUser(req),
                 data: legacyFeatureMapper.toNewFormat(req.body),
@@ -61,8 +61,8 @@ module.exports = function (app, config) {
 
         updatedFeature.name = featureName;
 
-        featureDb.getFeature(featureName)
-            .then(() => eventStore.create({
+        featureToggleStore.getFeature(featureName)
+            .then(() => eventStore.store({
                 type: eventType.featureUpdated,
                 createdBy: userName,
                 data: updatedFeature,
@@ -79,8 +79,8 @@ module.exports = function (app, config) {
         const featureName    = req.params.featureName;
         const userName       = extractUser(req);
 
-        featureDb.getFeature(featureName)
-            .then(() => eventStore.create({
+        featureToggleStore.getFeature(featureName)
+            .then(() => eventStore.store({
                 type: eventType.featureArchived,
                 createdBy: userName,
                 data: {
@@ -97,7 +97,7 @@ module.exports = function (app, config) {
 
     function validateUniqueName (req) {
         return new BPromise((resolve, reject) => {
-            featureDb.getFeature(req.body.name)
+            featureToggleStore.getFeature(req.body.name)
                 .then(() => {
                     reject(new NameExistsError('Feature name already exist'));
                 }, () => {

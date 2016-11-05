@@ -4,36 +4,39 @@ const eventType = require('../event-type');
 const logger = require('../logger');
 const NotFoundError = require('../error/notfound-error');
 const STRATEGY_COLUMNS = ['name', 'description', 'parameters_template'];
+const TABLE = 'strategies';
 
-module.exports = function (db, eventStore) {
-    eventStore.on(eventType.strategyCreated, event => createStrategy(event.data));
+class StrategyStore {
+    constructor (db, eventStore) {
+        this.db = db;
+        eventStore.on(eventType.strategyCreated, event => this._createStrategy(event.data));
+        eventStore.on(eventType.strategyDeleted, event => {
+            db(TABLE)
+                .where('name', event.data.name)
+                .del()
+                .catch(err => {
+                    logger.error('Could not delete strategy, error was: ', err);
+                });
+        });
+    }
 
-    eventStore.on(eventType.strategyDeleted, event => {
-        db('strategies')
-            .where('name', event.data.name)
-            .del()
-            .catch(err => {
-                logger.error('Could not delete strategy, error was: ', err);
-            });
-    });
-
-    function getStrategies () {
-        return db
+    getStrategies () {
+        return this.db
             .select(STRATEGY_COLUMNS)
-            .from('strategies')
+            .from(TABLE)
             .orderBy('created_at', 'asc')
-            .map(rowToStrategy);
+            .map(this.rowToStrategy);
     }
 
-    function getStrategy (name) {
-        return db
+    getStrategy (name) {
+        return this.db
             .first(STRATEGY_COLUMNS)
-            .from('strategies')
+            .from(TABLE)
             .where({ name })
-            .then(rowToStrategy);
+            .then(this.rowToStrategy);
     }
 
-    function rowToStrategy (row) {
+    rowToStrategy (row) {
         if (!row) {
             throw new NotFoundError('No strategy found');
         }
@@ -45,7 +48,7 @@ module.exports = function (db, eventStore) {
         };
     }
 
-    function eventDataToRow (data) {
+    eventDataToRow (data) {
         return {
             name: data.name,
             description: data.description,
@@ -53,18 +56,14 @@ module.exports = function (db, eventStore) {
         };
     }
 
-    function createStrategy (data) {
-        db('strategies')
-            .insert(eventDataToRow(data))
+    _createStrategy (data) {
+        this.db(TABLE)
+            .insert(this.eventDataToRow(data))
             .catch(err => {
                 logger.error('Could not insert strategy, error was: ', err);
             });
     }
-
-    return {
-        getStrategies,
-        getStrategy,
-        _createStrategy: createStrategy, // visible for testing
-    };
 };
+
+module.exports = StrategyStore;
 

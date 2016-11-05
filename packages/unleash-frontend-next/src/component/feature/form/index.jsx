@@ -17,6 +17,7 @@ class AddFeatureToggleComponent extends Component {
         const {
             input,
             setValue,
+            validateName,
             addStrategy,
             removeStrategy,
             updateStrategy,
@@ -27,6 +28,7 @@ class AddFeatureToggleComponent extends Component {
 
         const {
             name, // eslint-disable-line
+            nameError,
             description,
             enabled,
         } = input;
@@ -42,6 +44,8 @@ class AddFeatureToggleComponent extends Component {
                         disabled={editmode}
                         required
                         value={name}
+                        error={nameError}
+                        onBlur={(v) => validateName(v)}
                         onChange={(v) => setValue('name', v)} />
                     <Input
                         type="text"
@@ -84,6 +88,7 @@ AddFeatureToggleComponent.propTypes = {
     updateStrategy: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    validateName: PropTypes.func.isRequired,
     editmode: PropTypes.bool,
 };
 

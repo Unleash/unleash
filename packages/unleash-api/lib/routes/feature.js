@@ -29,6 +29,26 @@ module.exports = function (app, config) {
             .catch(() => res.status(404).json({ error: 'Could not find feature' }));
     });
 
+    app.post('/features-validate', (req, res) => {
+        req.checkBody('name', 'Name is required').notEmpty();
+        req.checkBody('name', 'Name must match format ^[0-9a-zA-Z\\.\\-]+$').matches(/^[0-9a-zA-Z\\.\\-]+$/i);
+
+        validateRequest(req)
+            .then(validateFormat)
+            .then(validateUniqueName)
+            .then(() => res.status(201).end())
+            .catch(NameExistsError, () => {
+                res.status(403)
+                    .json([{ msg: `A feature named '${req.body.name}' already exists.` }])
+                    .end();
+            })
+            .catch(ValidationError, () => res.status(400).json(req.validationErrors()))
+            .catch(err => {
+                logger.error('Could not create feature toggle', err);
+                res.status(500).end();
+            });
+    });
+
     app.post('/features', (req, res) => {
         req.checkBody('name', 'Name is required').notEmpty();
         req.checkBody('name', 'Name must match format ^[0-9a-zA-Z\\.\\-]+$').matches(/^[0-9a-zA-Z\\.\\-]+$/i);

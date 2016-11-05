@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
-import { createFeatureToggles } from '../../store/feature-actions';
+import { createFeatureToggles, validateName } from '../../store/feature-actions';
 import { createMapper, createActions } from '../input-helpers';
 import FormComponent from './form';
 
@@ -31,6 +31,13 @@ const prepare = (methods, dispatch) => {
 
     methods.removeStrategy = (v) => {
         methods.removeFromList('strategies', v);
+    };
+
+    methods.validateName = (v) => {
+        const featureToggleName = v.target.value;
+        validateName(featureToggleName)
+            .then(()  => methods.setValue('nameError', undefined))
+            .catch((err) => methods.setValue('nameError', err.message));
     };
 
     return methods;

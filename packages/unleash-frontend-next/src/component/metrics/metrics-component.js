@@ -9,7 +9,7 @@ class Metrics extends Component {
     }
 
     render () {
-        const { globalCount, apps, clientList } = this.props;
+        const { globalCount, clientList } = this.props;
 
         return (
             <List>

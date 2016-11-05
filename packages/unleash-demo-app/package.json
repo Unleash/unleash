@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "test:ci": "echo 'success'"
   },
   "dependencies": {
     "express": "^4.14.0",

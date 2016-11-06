@@ -1,47 +1,44 @@
 'use strict';
 
 const { EventEmitter } = require('events');
-const yallist = require('yallist');
+const List = require('./list');
 const moment = require('moment');
 
-// this list must have entires with sorted ttl range
-module.exports = class TTLList extends EventEmitter {
-    constructor () {
+// this list must have entries with sorted ttl range
+module.exports = class FIFOTTLList extends EventEmitter {
+    constructor ({
+        interval = 1000,
+        expireAmount = 1,
+        expireType = 'hours',
+    } = {}) {
         super();
-        this.cache = yallist.create();
-        setInterval(() => {
+        this.expireAmount = expireAmount;
+        this.expireType = expireType;
+
+        this.list = new List();
+
+        this.list.on('evicted', ({ value, ttl }) => {
+            this.emit('expire', value, ttl);
+        });
+
+        this.timer = setInterval(() => {
             this.timedCheck();
-        }, 1000);
+        }, interval);
     }
 
-    expire (entry) {
-        this.emit('expire', entry.value);
-    }
-
-    add (value, timestamp) {
-        const ttl = moment(timestamp).add(1, 'hour');
-        this.cache.push({ ttl, value });
+    add (value, timestamp = new Date()) {
+        const ttl = moment(timestamp).add(this.expireAmount, this.expireType);
+        this.list.add({ ttl, value });
     }
 
     timedCheck () {
         const now = moment(new Date());
-        // find index to remove
-        let done = false;
-        // TODO: might use internal linkedlist
-        this.cache.forEachReverse((entry, index) => {
-            if (done) {
-                return;
-            } else if (now.isBefore(entry.ttl)) {
-                // When we hit a valid ttl, remove next items in list (iteration is reversed)
-                this.cache = this.cache.slice(0, index + 1);
-                done = true;
-            } else if (index === 0) {
-                this.expire(entry);
-                // if rest of list has timed out, let it DIE!
-                this.cache = yallist.create(); // empty=
-            } else {
-                this.expire(entry);
-            }
-        });
+        this.list.reverseRemoveUntilTrue(({ value }) => now.isBefore(value.ttl));
+    }
+
+    destroy () {
+        clearTimeout(this.timer);
+        delete this.timer;
+        this.list = null;
     }
 };

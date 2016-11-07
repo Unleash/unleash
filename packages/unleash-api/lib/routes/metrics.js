@@ -43,8 +43,9 @@ module.exports = function (app, config) {
     app.post('/client/register', (req, res) => {
         const data = req.body;
         const clientIp = req.ip;
+        console.log(data);
         clientStrategyStore.insert(data.appName, data.strategies)
-            .then(() => clientStrategyStore.insert({
+            .then(() => clientInstanceStore.insert({
                 appName: data.appName,
                 instanceId: data.instanceId,
                 clientIp,

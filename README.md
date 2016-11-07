@@ -2,7 +2,7 @@
 
 __Warning: We are in the process of splitting up unleash into multiple packages in this repository, if you want to test the previous package see [previous tag](https://github.com/finn-no/unleash/tree/v1.0.0-alpha.2) __ 
 
-[![Build Status](https://travis-ci.org/finn-no/unleash.svg?branch=master)](https://travis-ci.org/finn-no/unleash)
+[![Build Status](https://travis-ci.org/Unleash/unleash.svg?branch=master)](https://travis-ci.org/Unleash/unleash)
 [![Code Climate](https://codeclimate.com/github/finn-no/unleash/badges/gpa.svg)](https://codeclimate.com/github/finn-no/unleash)
 [![Coverage Status](https://coveralls.io/repos/finn-no/unleash/badge.svg?branch=master)](https://coveralls.io/r/finn-no/unleash?branch=master)
 [![Dependency Status](https://david-dm.org/finn-no/unleash.svg)](https://david-dm.org/finn-no/unleash)

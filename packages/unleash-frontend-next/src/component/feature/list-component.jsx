@@ -38,8 +38,12 @@ export default class FeatureListComponent extends React.Component {
            <List>
                 <ListSubHeader caption="Feature toggles" />
                 {features.map((feature, i) =>
-                    <Feature key={i} metrics={featureMetrics[feature.name]} feature={feature}
-                    onFeatureClick={onFeatureClick} onFeatureRemove={onFeatureRemove}/>
+                    <Feature key={i}
+                        metricsLastHour={featureMetrics.lastHour[feature.name]}
+                        metricsLastMinute={featureMetrics.lastMinute[feature.name]}
+                        feature={feature}
+                        onFeatureClick={onFeatureClick}
+                        onFeatureRemove={onFeatureRemove}/>
                 )}
                 <ListDivider />
                 <ListItem

@@ -2,6 +2,7 @@
 
 const Projection = require('./projection.js');
 const TTLList = require('./ttl-list.js');
+const moment = require('moment');
 
 module.exports = class UnleashClientMetrics {
     constructor () {
@@ -10,11 +11,26 @@ module.exports = class UnleashClientMetrics {
         this.clients = {};
         this.buckets = {};
 
-        this.hourProjectionValue = new Projection();
-        this.oneHourLruCache = new TTLList();
-        this.oneHourLruCache.on('expire', (toggles) => {
+        this.lastHourProjection = new Projection();
+        this.lastMinuteProjection = new Projection();
+
+        this.lastHourList = new TTLList({
+            interval: 10000,
+        });
+        this.lastMinuteList = new TTLList({
+            interval: 10000,
+            expireType: 'minutes',
+            expireAmount: 1,
+        });
+
+        this.lastHourList.on('expire', (toggles) => {
             Object.keys(toggles).forEach(toggleName => {
-                this.hourProjectionValue.substract(toggleName, toggles[toggleName]);
+                this.lastHourProjection.substract(toggleName, toggles[toggleName]);
+            });
+        });
+        this.lastMinuteList.on('expire', (toggles) => {
+            Object.keys(toggles).forEach(toggleName => {
+                this.lastMinuteProjection.substract(toggleName, toggles[toggleName]);
             });
         });
     }
@@ -32,7 +48,10 @@ module.exports = class UnleashClientMetrics {
     }
 
     getTogglesMetrics () {
-        return this.hourProjectionValue.getProjection();
+        return {
+            lastHour: this.lastHourProjection.getProjection(),
+            lastMinute: this.lastMinuteProjection.getProjection(),
+        };
     }
 
     addPayload (data) {
@@ -47,11 +66,13 @@ module.exports = class UnleashClientMetrics {
 
         Object.keys(toggles).forEach((n) => {
             const entry = toggles[n];
-            this.hourProjectionValue.add(n, entry);
+            this.lastHourProjection.add(n, entry);
+            this.lastMinuteProjection.add(n, entry);
             count += (entry.yes + entry.no);
         });
 
-        this.oneHourLruCache.add(toggles, stop);
+        this.lastHourList.add(toggles, stop);
+        this.lastMinuteList.add(toggles, stop);
 
         this.addClientCount(appName, instanceId, count);
     }

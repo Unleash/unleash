@@ -11,6 +11,7 @@ class Node {
     link (next) {
         this.next = next;
         next.prev = this;
+        return this;
     }
 }
 
@@ -30,9 +31,8 @@ module.exports = class List extends EventEmitter {
 
     add (obj) {
         const node = new Node(obj);
-        if (this.tail) {
-            this.tail.link(node);
-            this.tail = node;
+        if (this.start) {
+            this.start = node.link(this.start);
         } else {
             this.start = node;
             this.tail = node;

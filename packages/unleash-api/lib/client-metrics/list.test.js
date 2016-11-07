@@ -51,10 +51,10 @@ test('list should be able remove until given value', (t) => {
     list.reverseRemoveUntilTrue(({ value }) => value === 4);
     t.true(list.toArray().length === 4);
 
-    list.reverseRemoveUntilTrue(({ value }) => value === 3);
+    list.reverseRemoveUntilTrue(({ value }) => value === 5);
     t.true(list.toArray().length === 3);
 
-    list.reverseRemoveUntilTrue(({ value }) => value === 3);
+    list.reverseRemoveUntilTrue(({ value }) => value === 5);
     t.true(list.toArray().length === 3);
 });
 
@@ -98,7 +98,7 @@ test('should reverse iterate', (t) => {
     let iterateCount = 0;
     list.iterateReverse(({ value }) => {
         iterateCount++;
-        if (value === 3) {
+        if (value === 5) {
             return false;
         }
         return true;

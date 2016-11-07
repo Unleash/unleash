@@ -8,7 +8,13 @@ import Chip from 'react-toolbox/lib/chip';
 
 import style from './feature.scss';
 
-const Feature = ({ feature, onFeatureClick, onFeatureRemove, metrics = { yes: 0, no: 0, hasData: false } }) => {
+const Feature = ({
+    feature,
+    onFeatureClick,
+    onFeatureRemove,
+    metricsLastHour = { yes: 0, no: 0, hasData: false },
+    metricsLastMinute = { yes: 0, no: 0, hasData: false },
+}) => {
     const { name, description, enabled, strategies, createdAt } = feature;
     const created = new Date(createdAt);
 
@@ -22,7 +28,8 @@ const Feature = ({ feature, onFeatureClick, onFeatureRemove, metrics = { yes: 0,
     ];
 
     const leftActions = [
-        <Chip><span className={style.yes}>{metrics.yes}</span> / <span className={style.no}>{metrics.no}</span></Chip>,
+        <Chip><span className={style.yes}>{metricsLastHour.yes}</span> / <span className={style.no}>{metricsLastHour.no}</span></Chip>,
+        <Chip><span className={style.yes}>{metricsLastMinute.yes}</span> / <span className={style.no}>{metricsLastMinute.no}</span></Chip>,
         <Switch key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />,
     ];
 

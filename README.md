@@ -3,8 +3,7 @@
 __Warning: We are in the process of splitting up unleash into multiple packages in this repository, if you want to test the previous package see [previous tag](https://github.com/finn-no/unleash/tree/v1.0.0-alpha.2) __ 
 
 [![Build Status](https://travis-ci.org/Unleash/unleash.svg?branch=master)](https://travis-ci.org/Unleash/unleash)
-[![Code Climate](https://codeclimate.com/github/Unleash/unleash/badges/gpa.svg)](https://codeclimate.com/github/Unleash/unleash)
-[![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master&path=packages/unleash-api)](https://coveralls.io/github/Unleash/unleash?branch=master)
 [![Dependency Status](https://david-dm.org/Unleash/unleash.svg?path=packages/unleash-api)](https://david-dm.org/Unleash/unleash?path=packages/unleash-api)
 [![devDependency Status](https://david-dm.org/Unleash/unleash/dev-status.svg?path=packages/unleash-api)](https://david-dm.org/Unleash/unleash?path=packages/unleash-api#info=devD)
 ![Admin UI](https://cloud.githubusercontent.com/assets/572/5873775/3ddc1a66-a2fa-11e4-923c-0a9569605dad.png)

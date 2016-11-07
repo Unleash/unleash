@@ -4,7 +4,7 @@ __Warning: We are in the process of splitting up unleash into multiple packages 
 
 [![Build Status](https://travis-ci.org/Unleash/unleash.svg?branch=master)](https://travis-ci.org/Unleash/unleash)
 [![Code Climate](https://codeclimate.com/github/finn-no/unleash/badges/gpa.svg)](https://codeclimate.com/github/finn-no/unleash)
-[![Coverage Status](https://coveralls.io/repos/finn-no/unleash/badge.svg?branch=master)](https://coveralls.io/r/finn-no/unleash?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master)
 [![Dependency Status](https://david-dm.org/finn-no/unleash.svg)](https://david-dm.org/finn-no/unleash)
 [![devDependency Status](https://david-dm.org/finn-no/unleash/dev-status.svg)](https://david-dm.org/finn-no/unleash#info=devD)
 

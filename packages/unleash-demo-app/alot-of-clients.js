@@ -9,7 +9,7 @@ new Array(1000)
         const instance = new unleash.Unleash({
             appName: `demo-app-${index % 5}`,
             instanceId: `index-${index}`,
-            url: 'http://10.200.229.88:4242/',
+            url: 'http://localhost:4242/',
             refreshIntervall: 4000,
             metricsInterval: 10000,
             strategies: [

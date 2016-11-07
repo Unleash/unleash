@@ -28,16 +28,13 @@ test.cb('should slice off list', (t) => {
     });
 
     // console.time('4');
-    list.add({ n: '4' }, moment().add(300, 'milliseconds'));
-
     // console.time('3');
-    list.add({ n: '3' }, moment().add(200, 'milliseconds'));
-
     // console.time('2');
-    list.add({ n: '2' }, moment().add(50, 'milliseconds'));
-
     // console.time('1');
     list.add({ n: '1' }, moment().add(1, 'milliseconds'));
+    list.add({ n: '2' }, moment().add(50, 'milliseconds'));
+    list.add({ n: '3' }, moment().add(200, 'milliseconds'));
+    list.add({ n: '4' }, moment().add(300, 'milliseconds'));
 
     const expired = [];
 

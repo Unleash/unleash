@@ -40,6 +40,7 @@
     "test": "export PORT=4243 ; mocha --recursive test && npm run test:coverage",
     "test:unit": "mocha test/unit/**/*.js ",
     "test:ci": "npm run db-migrate && npm run test",
+    "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "mocha --watch test test/*",
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",
     "test:pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",

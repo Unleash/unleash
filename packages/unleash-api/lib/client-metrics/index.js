@@ -2,7 +2,6 @@
 
 const Projection = require('./projection.js');
 const TTLList = require('./ttl-list.js');
-const moment = require('moment');
 
 module.exports = class UnleashClientMetrics {
     constructor () {

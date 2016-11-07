@@ -22,7 +22,7 @@ do
 done
 
 
-export TEST_DATABASE_URL=postgres://postgres:unleash@$database_host:$PGPORT/postgres
+export TEST_DATABASE_URL=postgres://postgres:$POSTGRES_PASSWORD@$database_host:$PGPORT/postgres
 
 npm install
 DATABASE_URL=$TEST_DATABASE_URL ./node_modules/.bin/db-migrate up

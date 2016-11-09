@@ -57,6 +57,7 @@
     "express": "4.14.0",
     "express-validator": "2.20.8",
     "install": "^0.8.1",
+    "joi": "^9.2.0",
     "knex": "^0.12.6",
     "log4js": "^0.6.38",
     "moment": "^2.15.2",

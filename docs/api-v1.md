@@ -6,6 +6,11 @@
 
 **GET: http://unleash.host.com/features**
 
+**HEADERS:**
+
+* UNLEASH-APPNAME: appName
+* UNLEASH-INSTANCEID: instanceId
+
 This endpoint is the one all clients should use to fetch all available feature toggles 
 from the _unleash-server_. The response returns all active feature toggles and their 
 current strategy configuration. A feature toggle will have _at least_ one configured strategy. 

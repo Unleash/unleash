@@ -58,7 +58,7 @@ describe('The features api', () => {
             .set('Content-Type', 'application/json')
             .end(() => {
                 request
-                    .get('/events')
+                    .get('/api/events')
                     .end((err, res) => {
                         assert.equal(res.body.events[0].createdBy, 'ivaosthu');
                         done();

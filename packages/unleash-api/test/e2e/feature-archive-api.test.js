@@ -16,7 +16,7 @@ describe('The archive features api', () => {
 
     it('returns three archived toggles', done => {
         request
-            .get('/archive/features')
+            .get('/api/archive/features')
             .expect('Content-Type', /json/)
             .expect(200)
             .end((err, res) => {
@@ -27,7 +27,7 @@ describe('The archive features api', () => {
 
     it('revives a feature by name', done => {
         request
-            .post('/archive/revive')
+            .post('/api/archive/revive')
             .send({ name: 'featureArchivedX' })
             .set('Content-Type', 'application/json')
             .expect(200, done);
@@ -35,7 +35,7 @@ describe('The archive features api', () => {
 
     it('must set name when reviving toggle', done => {
         request
-            .post('/archive/revive')
+            .post('/api/archive/revive')
             .send({ name: '' })
             .expect(400, done);
     });

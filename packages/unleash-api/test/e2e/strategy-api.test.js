@@ -12,28 +12,28 @@ describe('The strategy api', () => {
 
     it('gets all strategies', done => {
         request
-            .get('/strategies')
+            .get('/api/strategies')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
 
     it('gets a strategy by name', done => {
         request
-            .get('/strategies/default')
+            .get('/api/strategies/default')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
 
     it('cant get a strategy by name that dose not exist', done => {
         request
-            .get('/strategies/mystrategy')
+            .get('/api/strategies/mystrategy')
             .expect('Content-Type', /json/)
             .expect(404, done);
     });
 
     it('creates a new strategy', done => {
         request
-            .post('/strategies')
+            .post('/api/strategies')
             .send({ name: 'myCustomStrategy', description: 'Best strategy ever.' })
             .set('Content-Type', 'application/json')
             .expect(201, done);
@@ -41,7 +41,7 @@ describe('The strategy api', () => {
 
     it('requires new strategies to have a name', done => {
         request
-            .post('/strategies')
+            .post('/api/strategies')
             .send({ name: '' })
             .set('Content-Type', 'application/json')
             .expect(400, done);
@@ -49,7 +49,7 @@ describe('The strategy api', () => {
 
     it('refuses to create a strategy with an existing name', done => {
         request
-            .post('/strategies')
+            .post('/api/strategies')
             .send({ name: 'default' })
             .set('Content-Type', 'application/json')
             .expect(403, done);
@@ -57,13 +57,13 @@ describe('The strategy api', () => {
 
     it('deletes a new strategy', done => {
         request
-            .delete('/strategies/usersWithEmail')
+            .delete('/api/strategies/usersWithEmail')
             .expect(200, done);
     });
 
     it('can\'t delete a strategy that dose not exist', done => {
         request
-            .delete('/strategies/unknown')
+            .delete('/api/strategies/unknown')
             .expect(404, done);
     });
 });

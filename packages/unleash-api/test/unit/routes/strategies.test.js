@@ -33,7 +33,7 @@ describe('Unit: The strategies api', () => {
 
     it('should add version numbers for /stategies', (done) => {
         request
-            .get('/strategies')
+            .get('/api/strategies')
             .expect('Content-Type', /json/)
             .expect(200)
             .end((err, res) => {

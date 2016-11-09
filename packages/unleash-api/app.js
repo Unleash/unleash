@@ -12,7 +12,7 @@ const path = require('path');
 
 module.exports = function (config) {
     const app = express();
-    const router = express.Router(); // eslint-disable-line new-cap
+
     const baseUriPath  = config.baseUriPath || '';
     const publicFolder = config.publicFolder;
 
@@ -37,7 +37,13 @@ module.exports = function (config) {
     }));
 
     // Setup API routes
-    routes.create(router, config);
+    const apiRouter = express.Router(); // eslint-disable-line new-cap
+    routes.createAPI(apiRouter, config);
+    app.use(`${baseUriPath}/api/`, apiRouter);
+
+    // Setup deprecated routes
+    const router = express.Router(); // eslint-disable-line new-cap
+    routes.createLegacy(router, config);
     app.use(baseUriPath, router);
 
     if (process.env.NODE_ENV !== 'production') {

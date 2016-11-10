@@ -22,7 +22,9 @@
     "node": "6"
   },
   "scripts": {
-    "build": "webpack -p",
+    "build": "npm run build:assets && npm run build:html",
+    "build:assets": "webpack -p",
+    "build:html": "cp public/index.html dist/index.html",
     "start": "webpack-dev-server --config webpack.config.js --hot --progress --colors --port 3000",
     "start:api": "json-server --watch mock-api.json -p 3001",
     "lint": "eslint . --ext=js,jsx",

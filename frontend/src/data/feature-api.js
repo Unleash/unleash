@@ -1,7 +1,7 @@
 import { throwIfNotSuccess, headers } from './helper';
 
-const URI = '/features';
-const URI_VALIDATE = '/features-validate';
+const URI = '/api/features';
+const URI_VALIDATE = '/api/features-validate';
 
 function fetchAll () {
     return fetch(URI)

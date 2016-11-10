@@ -2,7 +2,6 @@
 
 process.env.NODE_ENV = 'test';
 
-const BPromise = require('bluebird');
 let supertest = require('supertest');
 
 const options = {

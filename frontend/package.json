@@ -31,8 +31,7 @@
     "lint": "eslint . --ext=js,jsx",
     "test": "echo 'no test'",
     "test:ci": "npm run test",
-    "prepublish": "npm run build",
-    "postinstall": "npm run build"
+    "prepublish": "npm run build"
   },
   "main": "./index.js",
   "dependencies": {

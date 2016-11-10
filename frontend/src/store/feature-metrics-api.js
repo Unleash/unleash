@@ -1,5 +1,7 @@
 const defaultErrorMessage = 'Unexptected exception when talking to unleash-api';
 
+const URI = '/api/metrics/features';
+
 function throwIfNotSuccess (response) {
     if (!response.ok) {
         if (response.status > 400 && response.status < 404) {
@@ -19,7 +21,7 @@ function throwIfNotSuccess (response) {
 }
 
 function fetchFeatureMetrics () {
-    return fetch('/metrics/features')
+    return fetch(URI)
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }

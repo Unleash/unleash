@@ -8,10 +8,6 @@
     "feature",
     "toggle"
   ],
-  "files": [
-    "dist",
-    "index.js"
-  ],
   "repository": {
     "type": "git",
     "url": "ssh://git@github.com:finn-no/unleash.git"

@@ -4,7 +4,7 @@
 process.env.NODE_ENV = 'production';
 
 const program = require('commander');
-const unleash = require('../server.js');
+const unleash = require('../server-prod.js');
 
 
 program

@@ -2,30 +2,25 @@
 
 process.env.NODE_ENV = 'test';
 
-// Mute migrator
-require('db-migrate-shared').log.silence(true);
-
 const BPromise = require('bluebird');
-let request = require('supertest');
-const migrator = require('../../migrator');
+let supertest = require('supertest');
 
 const options = {
     databaseUri: require('./database-config').getDatabaseUri(),
 };
 
-const { createStores } = require('../../lib/db');
+const migrator = require('../../../migrator');
+const { createStores } = require('../../../lib/db');
 
-const stores = createStores(options);
+process.env.DATABASE_URL = options.databaseUri
 
-const app = require('../../app')({
-    baseUriPath: '',
-    stores,
+const createApp =  migrator(options.databaseUri).then(() => {
+    const stores = createStores(options);
+    const app = require('../../../app')({stores});
+    return { stores, request: supertest(app) };
 });
 
-BPromise.promisifyAll(request);
-request = request(app);
-
-function createStrategies () {
+function createStrategies (stores) {
     return BPromise.map([
         {
             name: 'default',
@@ -42,7 +37,7 @@ function createStrategies () {
     ], strategy => stores.strategyStore._createStrategy(strategy));
 }
 
-function createFeatures () {
+function createFeatures (stores) {
     return BPromise.map([
         {
             name: 'featureX',
@@ -106,29 +101,28 @@ function createFeatures () {
     ], feature => stores.featureToggleStore._createFeature(feature));
 }
 
-function destroyStrategies () {
+function destroyStrategies (stores) {
     return stores.db('strategies').del();
 }
 
-function destroyFeatures () {
+function destroyFeatures (stores) {
     return stores.db('features').del();
 }
 
-function resetDatabase () {
-    return BPromise.all([destroyStrategies(), destroyFeatures()]);
+function resetDatabase (stores) {
+    return BPromise.all([destroyStrategies(stores), destroyFeatures(stores)]);
 }
 
-function setupDatabase () {
-    return BPromise.all([migrator(options.databaseUri), createStrategies(), createFeatures()]);
+function setupDatabase (stores) {
+    return BPromise.all([createStrategies(stores), createFeatures(stores)]);
 }
 
 module.exports = {
-    request,
-    db: {
-        reset: resetDatabase,
-        setup: setupDatabase,
-        resetAndSetup () {
-            return resetDatabase().then(setupDatabase);
-        },
-    },
+    setupApp () {
+        return createApp.then((app) => {
+            return resetDatabase(app.stores)
+            .then(() => setupDatabase(app.stores))
+            .then(() => app);
+        });
+    }
 };

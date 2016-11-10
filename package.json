@@ -33,16 +33,14 @@
     "unleash": "./bin/unleash.js"
   },
   "scripts": {
-    "db-migrate-and-start": "npm run db-migrate && npm run start",
-    "start": "node dev-server.js",
-    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/ dev-server.js",
+    "start": "node server-dev.js",
+    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/ server-dev.js",
     "start:dev:pg": "pg_virtualenv npm run start:dev:pg-chain",
     "start:dev:pg-chain": "export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; db-migrate up && npm run start:dev",
     "db-migrate": "db-migrate up",
     "db-migrate:down": "db-migrate down",
     "test": "export PORT=4243 ; mocha --recursive test && npm run test:coverage",
     "test:unit": "mocha test/unit/**/*.js ",
-    "test:ci": "npm run db-migrate && npm run test",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "mocha --watch test test/*",
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",
@@ -52,10 +50,10 @@
   },
   "dependencies": {
     "body-parser": "1.15.2",
-    "cookie-parser": "^1.4.1",
     "commander": "^2.9.0",
-    "db-migrate": "0.10.0-beta.17",
-    "db-migrate-pg": "0.1.10",
+    "cookie-parser": "^1.4.1",
+    "db-migrate": "0.10.0-beta.20",
+    "db-migrate-pg": "0.1.11",
     "deep-diff": "^0.3.3",
     "errorhandler": "^1.4.3",
     "express": "4.14.0",
@@ -67,6 +65,7 @@
     "moment": "^2.15.2",
     "pg": "^6.1.0",
     "serve-favicon": "^2.3.0",
+    "unleash-frontend": "github:unleash/unleash-frontend",
     "yallist": "^2.0.0"
   },
   "devDependencies": {

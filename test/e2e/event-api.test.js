@@ -1,8 +1,16 @@
 'use strict';
 
-const request = require('./test-helper').request;
+const specHelper = require('./util/test-helper');
+let request;
 
 describe('The event api', () => {
+    beforeEach(done => {
+        specHelper.setupApp().then((app) => {
+            request = app.request;
+            done();
+        });
+    });
+
     it('returns events', done => {
         request
             .get('/api/events')

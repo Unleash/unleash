@@ -1,5 +1,9 @@
 {
     "extends": [
-        "finn"
-    ]
+        "finn",
+        "finn/node"
+    ],
+    "rules": {
+        "max-nested-callbacks": "off"
+    }
 }

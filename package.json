@@ -1,5 +1,5 @@
 {
-  "name": "unleash-project",
+  "name": "unleash-server",
   "description": "unleash your features",
   "version": "1.0.0-alpha.2",
   "keywords": [
@@ -7,6 +7,15 @@
     "feature toggle",
     "feature",
     "toggle"
+  ],
+  "files": [
+    "lib",
+    "migrations",
+    "public",
+    "app.js",
+    "server-impl.js",
+    "README.md",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
@@ -19,27 +28,57 @@
     "node": "6"
   },
   "license": "Apache-2.0",
-  "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "prepublish": "npm run bootstrap",
-    "lint": "eslint . --ext=js,jsx",
-    "test": "npm run lint && lerna --concurrency=1 exec npm run test",
-    "test:ci": "npm run lint && lerna --concurrency=1 exec npm run test:ci",
-    "nsp": "lerna exec nsp check",
-    "start": "lerna --scope=unleash-server exec npm start",
-    "publish": "lerna publish",
-    "publish:dry": "lerna publish --skip-git --skip-npm",
-    "db-migrate": "lerna --scope=unleash-api exec npm run db-migrate",
-    "heroku-postbuild": "npm run bootstrap && lerna --scope=unleash-frontend exec npm run build"
+  "main": "./server.js",
+  "bin": {
+    "unleash": "./bin/unleash.js"
   },
-  "dependencies": {},
+  "scripts": {
+    "db-migrate-and-start": "npm run db-migrate && npm run start",
+    "start": "node dev-server.js",
+    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/ dev-server.js",
+    "start:dev:pg": "pg_virtualenv npm run start:dev:pg-chain",
+    "start:dev:pg-chain": "export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; db-migrate up && npm run start:dev",
+    "db-migrate": "db-migrate up",
+    "db-migrate:down": "db-migrate down",
+    "test": "export PORT=4243 ; mocha --recursive test && npm run test:coverage",
+    "test:unit": "mocha test/unit/**/*.js ",
+    "test:ci": "npm run db-migrate && npm run test",
+    "test:docker": "./scripts/docker-postgres.sh",
+    "test:watch": "mocha --watch test test/*",
+    "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",
+    "test:pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",
+    "test:coverage": "istanbul cover ./node_modules/mocha/bin/_mocha test --report lcovonly -- -R spec --recursive",
+    "test:coverage-report": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "dependencies": {
+    "body-parser": "1.15.2",
+    "cookie-parser": "^1.4.1",
+    "commander": "^2.9.0",
+    "db-migrate": "0.10.0-beta.17",
+    "db-migrate-pg": "0.1.10",
+    "deep-diff": "^0.3.3",
+    "errorhandler": "^1.4.3",
+    "express": "4.14.0",
+    "express-validator": "2.20.8",
+    "install": "^0.8.1",
+    "joi": "^9.2.0",
+    "knex": "^0.12.6",
+    "log4js": "^0.6.38",
+    "moment": "^2.15.2",
+    "pg": "^6.1.0",
+    "serve-favicon": "^2.3.0",
+    "yallist": "^2.0.0"
+  },
   "devDependencies": {
-    "babel-eslint": "^7.0.0",
-    "eslint": "^3.9.1",
-    "eslint-config-finn": "1.0.0-beta.1",
-    "eslint-config-finn-react": "^1.0.0-alpha.2",
-    "eslint-plugin-react": "^6.4.1",
-    "lerna": "2.0.0-beta.30",
-    "nsp": "^2.6.2"
+    "bluebird": "^3.4.6",
+    "ava": "^0.16.0",
+    "coveralls": "^2.11.12",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.0.2",
+    "mocha-lcov-reporter": "1.2.0",
+    "sinon": "^1.17.5",
+    "supertest": "^2.0.0",
+    "supervisor": "^0.11.0",
+    "unleash-frontend": "1.0.0-alpha.2"
   }
 }

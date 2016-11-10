@@ -1,8 +1,7 @@
 'use strict';
 
-const unleash = require('unleash-api');
+const unleash = require('./server-impl');
 const { publicFolder } = require('unleash-frontend');
-
 
 module.exports = {
     start: options => {

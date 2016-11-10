@@ -5,12 +5,24 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const entry = ['./src/index'];
+const plugins = [new ExtractTextPlugin('bundle.css',  { allChunks: true })];
+
+if (process.env.NODE_ENV === 'development') {
+    entry.push('webpack-dev-server/client?http://localhost:3000');
+    entry.push('webpack/hot/only-dev-server');
+    plugins.push(new webpack.HotModuleReplacementPlugin());
+} else {
+    plugins.push(new webpack.DefinePlugin({
+        'process.env': {
+            NODE_ENV: JSON.stringify('production'),
+        },
+    }));
+}
+
+
 module.exports = {
-    entry: [
-        'webpack-dev-server/client?http://localhost:3000',
-        'webpack/hot/only-dev-server',
-        './src/index',
-    ],
+    entry,
 
     resolve: {
         root: [path.join(__dirname, 'src')],
@@ -39,10 +51,7 @@ module.exports = {
         ],
     },
 
-    plugins: [
-        new ExtractTextPlugin('bundle.css',  { allChunks: true }),
-        new webpack.HotModuleReplacementPlugin(),
-    ],
+    plugins,
 
     sassLoader: {
         data: '@import "theme/_config.scss";',
@@ -57,27 +66,7 @@ module.exports = {
 
     devServer: {
         proxy: {
-            '/features': {
-                target: 'http://localhost:4242',
-                secure: false,
-            },
-            '/strategies': {
-                target: 'http://localhost:4242',
-                secure: false,
-            },
-            '/archive': {
-                target: 'http://localhost:4242',
-                secure: false,
-            },
-            '/events': {
-                target: 'http://localhost:4242',
-                secure: false,
-            },
-            '/metrics': {
-                target: 'http://localhost:4242',
-                secure: false,
-            },
-            '/client': {
+            '/api': {
                 target: 'http://localhost:4242',
                 secure: false,
             },

@@ -69,9 +69,8 @@
     "yallist": "^2.0.0"
   },
   "devDependencies": {
-    "bluebird": "^3.4.6",
     "ava": "^0.16.0",
-    "coveralls": "^2.11.12",
+    "coveralls": "^2.11.14",
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
     "mocha-lcov-reporter": "1.2.0",

@@ -1,12 +1,9 @@
-## Start developing:
+# Developing
 
-1. start mock-api:
+You need to first start the unleash-api on port 4242 
+before you can start working on unleash-frontend.  
 
-```bash
-npm run start:api 
-```
-
-2. start webpack-dev-server with hot-reload:
+Start webpack-dev-server with hot-reload:
 ```bash
 npm run start 
 ```

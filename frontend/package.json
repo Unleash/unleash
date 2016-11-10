@@ -1,0 +1,89 @@
+{
+  "name": "unleash-frontend-next",
+  "description": "unleash your features",
+  "version": "1.0.0",
+  "keywords": [
+    "unleash",
+    "feature toggle",
+    "feature",
+    "toggle"
+  ],
+  "files": [
+    "public"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:finn-no/unleash.git"
+  },
+  "bugs": {
+    "url": "https://github.com/finn-no/unleash/issues"
+  },
+  "engines": {
+    "node": "6"
+  },
+  "scripts": {
+    "build": "webpack -p",
+    "start": "webpack-dev-server --config webpack.config.js --hot --progress --colors --port 3000",
+    "start:api": "json-server --watch mock-api.json -p 3001",
+    "lint": "eslint . --ext=js,jsx",
+    "test": "echo 'no test'",
+    "test:ci": "npm run test",
+    "prepublish": "npm run build"
+  },
+  "main": "./index.js",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "immutability-helper": "^2.0.0",
+    "immutable": "^3.8.1",
+    "normalize.css": "^4.2.0",
+    "react": "^15.3.1",
+    "react-addons-css-transition-group": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.8.0",
+    "react-toolbox": "^1.2.1",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-react-hmre": "^1.1.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-preset-stage-2": "^6.13.0",
+    "css-loader": "^0.25.0",
+    "eslint": "^3.4.0",
+    "eslint-config-finn": "1.0.0-alpha.11",
+    "eslint-config-finn-react": "^1.0.0-alpha.2",
+    "eslint-plugin-react": "^6.2.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "json-server": "^0.8.21",
+    "node-sass": "~3.7.0",
+    "postcss-loader": "^0.13.0",
+    "redux-devtools": "^3.3.1",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
+    "toolbox-loader": "0.0.3",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.1"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/node_modules/npm"
+    ],
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/reflux"
+    ],
+    "moduleFileExtensions": [
+      "jsx",
+      "js"
+    ]
+  },
+  "pre-commit": [
+    "lint"
+  ]
+}

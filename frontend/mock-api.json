@@ -1,0 +1,74 @@
+{
+  "features": {
+    "version": 1,
+    "features": [
+      {
+        "name": "Feature.A",
+        "description": "lorem ipsum",
+        "enabled": false,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {}
+          }
+        ]
+      },
+      {
+        "name": "Feature.B",
+        "description": "lorem ipsum",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "ActiveForUserWithId",
+            "parameters": {
+              "userIdList": "123,221,998"
+            }
+          },
+          {
+            "name": "GradualRolloutRandom",
+            "parameters": {
+              "percentage": "10"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Feature.C",
+        "description": "lorem ipsum",
+        "enabled": false,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {}
+          }
+        ]
+      },
+      {
+        "name": "Feature.D",
+        "description": "lorem ipsum",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {}
+          }
+        ]
+      },
+      {
+        "name": "Feature.E",
+        "description": "lorem ipsum",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {}
+          },
+          {
+            "name": "FancyStrat",
+            "parameters": {}
+          }
+        ]
+      }
+    ]
+  }
+}

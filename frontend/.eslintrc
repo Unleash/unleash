@@ -1,0 +1,9 @@
+{
+    "extends": [
+        "finn",
+        "finn/node"
+    ],
+    "rules": {
+        "no-shadow": 0
+    }
+}

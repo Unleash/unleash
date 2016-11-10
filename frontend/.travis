@@ -1,0 +1,8 @@
+sudo: false
+language: node_js
+node_js:
+- "6"
+script:
+- npm install
+- npm run lint
+- npm run build

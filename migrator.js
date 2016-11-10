@@ -3,20 +3,11 @@
 const DBMigrate = require('db-migrate');
 const path = require('path');
 
-function findUnleashApiRoot () {
-    try {
-        return path.dirname(require.resolve('unleash-api/package.json'));
-    } catch (e) {}
-    try {
-        return path.dirname(require.resolve('../unleash-api/package.json'));
-    } catch (e) {}
-    return process.cwd();
-}
-
 function migrateDb (dbUri) {
+    console.log(dbUri);
     const dbmigrate = DBMigrate.getInstance(true, {
-        cwd: findUnleashApiRoot(),
-        config: { custom: dbUri },
+        cwd: __dirname,
+        config: { "custom": dbUri},
         env: 'custom' }
     );
     return dbmigrate.up();

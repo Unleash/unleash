@@ -1,13 +1,14 @@
 'use strict';
 
-const specHelper = require('./test-helper');
-const request    = specHelper.request;
+const specHelper = require('./util/test-helper');
+let request;
 
 describe('The strategy api', () => {
     beforeEach(done => {
-        specHelper.db.resetAndSetup()
-            .then(done.bind(null, null))
-            .catch(done);
+        specHelper.setupApp().then((app) => {
+            request = app.request;
+            done();
+        });
     });
 
     it('gets all strategies', done => {

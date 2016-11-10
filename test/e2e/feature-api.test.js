@@ -2,17 +2,19 @@
 
 const logger = require('../../lib/logger');
 const assert     = require('assert');
-const specHelper = require('./test-helper');
-const request    = specHelper.request;
+const specHelper = require('./util/test-helper');
 const stringify  = function (o) {
     return JSON.stringify(o, null, ' ');
 };
 
+let request;
+
 describe('The features api', () => {
     beforeEach(done => {
-        specHelper.db.resetAndSetup()
-            .then(done.bind(null, null))
-            .catch(done);
+        specHelper.setupApp().then((app) => {
+            request = app.request;
+            done();
+        });
     });
 
     it('returns three feature toggles', done => {

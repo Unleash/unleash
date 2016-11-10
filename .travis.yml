@@ -9,6 +9,8 @@ before_script:
 script:
 - npm install
 - npm run test
+- npm run test:coverage-report
+- npm run test:coverage
 notifications:
   slack:
     secure: MroremSKwtQkwPbrXjgs9hIqKTCDKk7bAIXXzjcS6wXC9uRaFgwFaW8oO3vBxtWa4BL44EQBLE/rboWgqFER62+XgXNgEqGZqrcJHJvby4r+dUNMPI64OZvWdIiydIYxLo8C1C4x5PqBup0xuLq8h/SBnNvA2NLgkjuvzOi+v/Q=

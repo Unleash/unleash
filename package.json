@@ -57,7 +57,7 @@
     "deep-diff": "^0.3.3",
     "errorhandler": "^1.4.3",
     "express": "4.14.0",
-    "express-validator": "2.20.8",
+    "express-validator": "2.21.0",
     "install": "^0.8.1",
     "joi": "^9.2.0",
     "knex": "^0.12.6",

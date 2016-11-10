@@ -20,7 +20,7 @@ const createApp =  migrator(options.databaseUri).then(() => {
 });
 
 function createStrategies (stores) {
-    return BPromise.map([
+    return [
         {
             name: 'default',
             description: 'Default on or off Strategy.',
@@ -33,11 +33,11 @@ function createStrategies (stores) {
                 emails: 'String',
             },
         },
-    ], strategy => stores.strategyStore._createStrategy(strategy));
+    ].map(strategy => stores.strategyStore._createStrategy(strategy));
 }
 
 function createFeatures (stores) {
-    return BPromise.map([
+    return [
         {
             name: 'featureX',
             description: 'the #1 feature',
@@ -97,7 +97,7 @@ function createFeatures (stores) {
                 },
             }],
         },
-    ], feature => stores.featureToggleStore._createFeature(feature));
+    ].map(feature => stores.featureToggleStore._createFeature(feature));
 }
 
 function destroyStrategies (stores) {
@@ -109,11 +109,11 @@ function destroyFeatures (stores) {
 }
 
 function resetDatabase (stores) {
-    return BPromise.all([destroyStrategies(stores), destroyFeatures(stores)]);
+    return Promise.all([destroyStrategies(stores), destroyFeatures(stores)]);
 }
 
 function setupDatabase (stores) {
-    return BPromise.all([createStrategies(stores), createFeatures(stores)]);
+    return Promise.all(createStrategies(stores).concat(createFeatures(stores)))
 }
 
 module.exports = {

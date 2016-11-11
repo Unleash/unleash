@@ -23,11 +23,20 @@ describe('Unit: The health cheack api', () => {
     });
 
     it('should give 500 when db is failing', (done) => {
-        db.select = () => from = () => Promise.reject();
+        db.select = () => {
+            return {
+                from: () => Promise.reject(new Error('db error'))
+            }
+        }
 
         request
             .get('/health')
-            .expect(500, done);
+            .expect(500)
+            .end((err, res) => {
+                assert.equal(res.status, 500)
+                assert.equal(res.body.health, 'BAD');
+                done();
+            });
     });
 
     it('should give 200 when db is not failing', (done) => {

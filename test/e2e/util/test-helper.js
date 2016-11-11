@@ -36,6 +36,30 @@ function createStrategies (stores) {
     ].map(strategy => stores.strategyStore._createStrategy(strategy));
 }
 
+function createClientStrategy (stores) {
+    return [
+        {
+            appName: 'demo-sed',
+            instanceId: 'test-1',
+            strategies: ['default'],
+            started: Date.now(),
+            interval: 10 
+        },
+    ].map(client => stores.clientStrategyStore.insert(client));
+}
+
+function createClientInstance (stores) {
+    return [
+        {
+            appName: 'demo-seed',
+            instanceId: 'test-1',
+            strategies: ['default'],
+            started: Date.now(),
+            interval: 10 
+        },
+    ].map(client => stores.clientInstanceStore.insert(client));
+}
+
 function createFeatures (stores) {
     return [
         {
@@ -100,20 +124,21 @@ function createFeatures (stores) {
     ].map(feature => stores.featureToggleStore._createFeature(feature));
 }
 
-function destroyStrategies (stores) {
-    return stores.db('strategies').del();
-}
-
-function destroyFeatures (stores) {
-    return stores.db('features').del();
-}
-
 function resetDatabase (stores) {
-    return Promise.all([destroyStrategies(stores), destroyFeatures(stores)]);
+    return Promise.all([
+        stores.db('strategies').del(), 
+        stores.db('features').del(),
+        stores.db('client_strategies').del(),
+        stores.db('client_instances').del()
+    ]);
 }
 
 function setupDatabase (stores) {
-    return Promise.all(createStrategies(stores).concat(createFeatures(stores)))
+    return Promise.all(
+        createStrategies(stores)
+        .concat(createFeatures(stores)
+        .concat(createClientInstance(stores))
+        .concat(createClientStrategy(stores))))
 }
 
 module.exports = {

@@ -1,32 +1,23 @@
 'use strict';
 
-const clientMetricsStore = require('./mocks/fake-metrics-store');
-const featureToggleStore = require('./mocks/fake-feature-toggle-store');
-const strategyStore = require('./mocks/fake-strategies-store');
+const store = require('./mocks/store');
 
 const supertest = require('supertest');
 const assert = require('assert');
-const sinon = require('sinon');
+
 
 let request;
+let featureToggleStore;
 
 describe('Unit: The features api', () => {
     beforeEach(done => {
-        featureToggleStore.reset();
-
+        const stores = store.createStores(); 
         const app = require('../../../app')({
             baseUriPath: '',
-            stores: {
-                db: sinon.stub(),
-                eventStore: sinon.stub(),
-                featureToggleStore,
-                clientMetricsStore,
-                strategyStore,
-                clientStrategyStore: sinon.stub(),
-                clientInstanceStore: sinon.stub(),
-            },
+            stores: stores,
         });
 
+        featureToggleStore = stores.featureToggleStore;
         request = supertest(app);
         done();
     });

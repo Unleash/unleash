@@ -1,28 +1,17 @@
 'use strict';
 
-const clientMetricsStore = require('./mocks/fake-metrics-store');
-const clientStrategyStore = require('./mocks/fake-client-strategy-store');
-const clientInstanceStore = require('./mocks/fake-client-instance-store');
-
+const store = require('./mocks/store');
 const supertest = require('supertest');
 const assert = require('assert');
-const sinon = require('sinon');
 
 let request;
 
 describe('Unit: The metrics api', () => {
     beforeEach(done => {
+        const stores = store.createStores(); 
         const app = require('../../../app')({
             baseUriPath: '',
-            stores: {
-                db: sinon.stub(),
-                eventStore: sinon.stub(),
-                featureToggleStore: sinon.stub(),
-                clientMetricsStore,
-                strategyStore: sinon.stub(),
-                clientStrategyStore,
-                clientInstanceStore,
-            },
+            stores: stores,
         });
 
         request = supertest(app);
@@ -32,13 +21,48 @@ describe('Unit: The metrics api', () => {
     it('should register client', (done) => {
         request
             .post('/api/client/register')
-            .send({ appName: 'demo', instanceId: 'test', strategies: ['default'], started: Date.now(), interval: 10 })
-            .expect(200, done);
+            .send({ 
+                appName: 'demo',
+                instanceId: 'test',
+                strategies: ['default'],
+                started: Date.now(),
+                interval: 10 
+            })
+            .expect(202, done);
     });
 
     it('should require appName field', (done) => {
         request
             .post('/api/client/register')
             .expect(400, done)
+    });
+
+    it('should require strategies field', (done) => {
+        request
+            .post('/api/client/register')
+            .send({ 
+                appName: 'demo',
+                instanceId: 'test',
+                //strategies: ['default'],
+                started: Date.now(),
+                interval: 10 
+            })
+            .expect(400, done)
+    });
+
+
+    it('should accept client metrics', (done) => {
+        request
+            .post('/api/client/metrics')
+            .send({ 
+                appName: 'demo',
+                instanceId: '1',
+                bucket: {
+                    start: Date.now(),
+                    stop: Date.now(),
+                    toggles: {}
+                }
+            })
+            .expect(202, done)
     });
 });

@@ -6,18 +6,24 @@ let supertest = require('supertest');
 
 const options = {
     databaseUri: require('./database-config').getDatabaseUri(),
+    databaseSchema: 'test'
 };
 
 const migrator = require('../../../migrator');
 const { createStores } = require('../../../lib/db');
 
-process.env.DATABASE_URL = options.databaseUri
+// because of migrator bug
+delete process.env.DATABASE_URL;
 
-const createApp =  migrator(options.databaseUri).then(() => {
-    const stores = createStores(options);
-    const app = require('../../../app')({stores});
-    return { stores, request: supertest(app) };
-});
+const db = require('../../../lib/db/db-pool').createDb(options.databaseUri);
+
+const createApp = db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`)
+    .then(() => migrator(options.databaseUri, options.databaseSchema))
+    .then(() => {
+        const stores = createStores(options);
+        const app = require('../../../app')({stores});
+        return { stores, request: supertest(app) };
+    });
 
 function createStrategies (stores) {
     return [

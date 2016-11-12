@@ -63,6 +63,7 @@
     "knex": "^0.12.6",
     "log4js": "^1.0.1",
     "moment": "^2.15.2",
+    "parse-database-url": "^0.3.0",
     "pg": "^6.1.0",
     "serve-favicon": "^2.3.0",
     "unleash-frontend": "github:unleash/unleash-frontend",

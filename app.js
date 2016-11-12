@@ -21,10 +21,10 @@ module.exports = function (config) {
     app.locals.baseUriPath = baseUriPath;
     app.use(cookieParser());
 
-/*    if (publicFolder) {
+    if (publicFolder) {
         app.use(favicon(path.join(publicFolder, 'favicon.ico')));
     }
-*/
+
     app.use(validator([]));
     if (publicFolder) {
         app.use(baseUriPath, express.static(publicFolder));

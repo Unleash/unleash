@@ -35,7 +35,7 @@ export default class UnleashNav extends Component {
                     </a>
 
                     <ListDivider />
-                    <ListItem selectable={false} ripple="false">
+                    <ListItem selectable={false} ripple={false}>
                         <p>A product by <a href="https://finn.no" target="_blank">FINN.no</a></p>
                     </ListItem>
                 </List>

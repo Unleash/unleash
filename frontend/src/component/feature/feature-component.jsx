@@ -28,8 +28,12 @@ const Feature = ({
     ];
 
     const leftActions = [
-        <Chip><span className={style.yes}>{metricsLastHour.yes}</span> / <span className={style.no}>{metricsLastHour.no}</span></Chip>,
-        <Chip><span className={style.yes}>{metricsLastMinute.yes}</span> / <span className={style.no}>{metricsLastMinute.no}</span></Chip>,
+        <Chip key="m.hour">
+            <span className={style.yes}>{metricsLastHour.yes}</span> / <span className={style.no}>{metricsLastHour.no}</span>
+        </Chip>,
+        <Chip key="m.min">
+            <span className={style.yes}>{metricsLastMinute.yes}</span> / <span className={style.no}>{metricsLastMinute.no}</span>
+        </Chip>,
         <Switch key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />,
     ];
 

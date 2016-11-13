@@ -13,7 +13,7 @@ class Metrics extends Component {
 
         return (
             <List>
-                <ListSubHeader caption={<span>Total of {globalCount} toggles </span>} />
+                <ListSubHeader caption={`Total of ${globalCount} toggles`} />
                 <ListDivider />
                 {clientList.map(({ name, count, ping, appName }, i) =>
                     <ListItem

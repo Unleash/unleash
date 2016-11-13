@@ -3,6 +3,16 @@ import { throwIfNotSuccess, headers } from './helper';
 const URI = '/api/features';
 const URI_VALIDATE = '/api/features-validate';
 
+function validateToggle (featureToggle) {
+    return new Promise((resolve, reject) => {
+        if (!featureToggle.strategies || featureToggle.strategies.length === 0) {
+            reject(new Error('You must add at least one activation strategy'));
+        } else {
+            resolve(featureToggle);
+        }
+    });
+}
+
 function fetchAll () {
     return fetch(URI)
         .then(throwIfNotSuccess)
@@ -10,11 +20,13 @@ function fetchAll () {
 }
 
 function create (featureToggle) {
-    return fetch(URI, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(featureToggle),
-    }).then(throwIfNotSuccess);
+    return validateToggle(featureToggle)
+        .then(() => fetch(URI, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(featureToggle),
+        }))
+        .then(throwIfNotSuccess);
 }
 
 function validate (featureToggle) {
@@ -26,11 +38,13 @@ function validate (featureToggle) {
 }
 
 function update (featureToggle) {
-    return fetch(`${URI}/${featureToggle.name}`, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify(featureToggle),
-    }).then(throwIfNotSuccess);
+    return validateToggle(featureToggle)
+        .then(() => fetch(`${URI}/${featureToggle.name}`, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify(featureToggle),
+        }))
+        .then(throwIfNotSuccess);
 }
 
 function remove (featureToggleName) {

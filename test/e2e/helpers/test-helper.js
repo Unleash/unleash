@@ -6,7 +6,7 @@ const supertest = require('supertest');
 const migrator = require('../../../migrator');
 const { createStores } = require('../../../lib/db');
 const { createDb } = require('../../../lib/db/db-pool');
-const _app = require('../../../app');
+const getApp = require('../../../lib/app');
 require('db-migrate-shared').log.silence(true);
 
 // because of migrator bug
@@ -26,7 +26,7 @@ function createApp (databaseSchema = 'test') {
         .then(() => {
             db.destroy();
             const stores = createStores(options);
-            const app = _app({ stores });
+            const app = getApp({ stores });
             return {
                 stores,
                 request: supertest(app),

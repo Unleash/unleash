@@ -1,6 +1,6 @@
 import { throwIfNotSuccess } from './helper';
 
-const URI = '/api/api/events';
+const URI = '/api/events';
 
 function fetchAll () {
     return fetch(URI)

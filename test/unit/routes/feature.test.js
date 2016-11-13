@@ -4,6 +4,7 @@ const test = require('ava');
 const store = require('./fixtures/store');
 const supertest = require('supertest');
 const logger = require('../../../lib/logger');
+const getApp = require('../../../lib/app');
 
 test.beforeEach(() =>  {
     logger.setLevel('FATAL');
@@ -12,7 +13,7 @@ test.beforeEach(() =>  {
 function getSetup () {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = store.createStores();
-    const app = require('../../../app')({
+    const app = getApp({
         baseUriPath: base,
         stores,
     });

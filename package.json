@@ -47,6 +47,13 @@
     "test:coverage": "nyc npm run test",
     "test:coverage-report": "nyc report --reporter=text-lcov | coveralls"
   },
+  "nyc": {
+    "all": true,
+    "include": [
+      "bin/**/*.js",
+      "lib/**/*.js"
+    ]
+  },
   "dependencies": {
     "body-parser": "1.15.2",
     "commander": "^2.9.0",

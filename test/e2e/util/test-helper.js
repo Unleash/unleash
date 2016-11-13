@@ -2,28 +2,39 @@
 
 process.env.NODE_ENV = 'test';
 
-let supertest = require('supertest');
-
-const options = {
-    databaseUri: require('./database-config').getDatabaseUri(),
-    databaseSchema: 'test'
-};
-
+const supertest = require('supertest');
 const migrator = require('../../../migrator');
 const { createStores } = require('../../../lib/db');
+const { createDb } = require('../../../lib/db/db-pool');
+const _app = require('../../../app');
 
 // because of migrator bug
 delete process.env.DATABASE_URL;
 
-const db = require('../../../lib/db/db-pool').createDb(options.databaseUri);
+function createApp (databaseSchema = 'test') {
+    const options = {
+        databaseUri: require('./database-config').getDatabaseUri(),
+        databaseSchema,
+        minPool: 0,
+        maxPool: 0,
+    };
+    const db = createDb({ databaseUri: options.databaseUri, minPool: 0, maxPool: 0 });
 
-const createApp = db.raw(`DROP SCHEMA IF EXISTS ${options.databaseSchema} CASCADE; CREATE SCHEMA ${options.databaseSchema}`)
-    .then(() => migrator(options.databaseUri, options.databaseSchema))
-    .then(() => {
-        const stores = createStores(options);
-        const app = require('../../../app')({stores});
-        return { stores, request: supertest(app) };
-    });
+    return db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`)
+        .then(() => migrator(options))
+        .then(() => {
+            db.destroy();
+            const stores = createStores(options);
+            const app = _app({ stores });
+            return {
+                stores,
+                request: supertest(app),
+                destroy () {
+                    return stores.db.destroy();
+                },
+            };
+        });
+}
 
 function createStrategies (stores) {
     return [
@@ -49,7 +60,7 @@ function createClientStrategy (stores) {
             instanceId: 'test-1',
             strategies: ['default'],
             started: Date.now(),
-            interval: 10 
+            interval: 10,
         },
     ].map(client => stores.clientStrategyStore.insert(client));
 }
@@ -61,7 +72,7 @@ function createClientInstance (stores) {
             instanceId: 'test-1',
             strategies: ['default'],
             started: Date.now(),
-            interval: 10 
+            interval: 10,
         },
     ].map(client => stores.clientInstanceStore.insert(client));
 }
@@ -132,10 +143,10 @@ function createFeatures (stores) {
 
 function resetDatabase (stores) {
     return Promise.all([
-        stores.db('strategies').del(), 
+        stores.db('strategies').del(),
         stores.db('features').del(),
         stores.db('client_strategies').del(),
-        stores.db('client_instances').del()
+        stores.db('client_instances').del(),
     ]);
 }
 
@@ -144,15 +155,15 @@ function setupDatabase (stores) {
         createStrategies(stores)
         .concat(createFeatures(stores)
         .concat(createClientInstance(stores))
-        .concat(createClientStrategy(stores))))
+        .concat(createClientStrategy(stores))));
 }
 
 module.exports = {
-    setupApp () {
-        return createApp.then((app) => {
+    setupApp (name) {
+        return createApp(name).then((app) => {
             return resetDatabase(app.stores)
-            .then(() => setupDatabase(app.stores))
-            .then(() => app);
+                .then(() => setupDatabase(app.stores))
+                .then(() => app);
         });
-    }
+    },
 };

@@ -1,4 +1,4 @@
-const sinon = require('sinon');
+'use strict';
 
 const clientMetricsStore = require('./fake-metrics-store');
 const clientStrategyStore = require('./fake-client-strategy-store');
@@ -11,27 +11,18 @@ const strategyStore = require('./fake-strategies-store');
 module.exports = {
     createStores: () => {
         const db = {
-            select: () => {
-                return {
-                    from: () => Promise.resolve()
-                }
-            }
-        }
-
-        clientMetricsStore.reset();
-        clientStrategyStore.reset();
-        clientInstanceStore.reset();
-        featureToggleStore.reset();
-        strategyStore.reset();
+            select: () => ({
+                from: () => Promise.resolve(),
+            }),
+        };
 
         return {
             db,
-            clientMetricsStore,
-            clientStrategyStore,
-            clientInstanceStore,
-            featureToggleStore,
-            strategyStore,
-        }
-
-    }
+            clientMetricsStore: clientMetricsStore(),
+            clientStrategyStore: clientStrategyStore(),
+            clientInstanceStore: clientInstanceStore(),
+            featureToggleStore: featureToggleStore(),
+            strategyStore: strategyStore(),
+        };
+    },
 };

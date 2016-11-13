@@ -1,6 +1,6 @@
 # unleash
 
-__Warning: We are in the process of splitting up unleash into multiple packages in this repository, if you want to test the previous package see [previous tag](https://github.com/finn-no/unleash/tree/v1.0.0-alpha.2) __ 
+__Warning: We are in the process of splitting up unleash into multiple packages in this repository, if you want to test the previous package see [previous tag](https://github.com/unleash/unleash/tree/v1.0.0-alpha.2) __ 
 
 [![Build Status](https://travis-ci.org/Unleash/unleash.svg?branch=master)](https://travis-ci.org/Unleash/unleash)
 [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master)
@@ -12,11 +12,11 @@ __Warning: We are in the process of splitting up unleash into multiple packages 
 This repo contains the unleash-server, which contains the admin UI and a place to ask for the status of features. In order to make use of unleash you will also need a client implementation.
 
 Known client implementations:
-- [unleash-client-java](https://github.com/finn-no/unleash-client-java)
-- [unleash-client-node](https://github.com/finn-no/unleash-client-node)
+- [unleash-client-java](https://github.com/unleash/unleash-client-java)
+- [unleash-client-node](https://github.com/unleash/unleash-client-node)
 
 ## Project details
-- [Project Roadmap](https://github.com/finn-no/unleash/wiki/Roadmap)
+- [Project Roadmap](https://github.com/unleash/unleash/wiki/Roadmap)
 
 ## Run with docker
 We have set up docker-compose to start postgres and the unleash server together. This makes it really fast to start up

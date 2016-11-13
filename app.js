@@ -9,6 +9,7 @@ const log4js = require('log4js');
 const logger = require('./lib/logger');
 const routes = require('./lib/routes');
 const path = require('path');
+const errorHandler = require('errorhandler');
 
 module.exports = function (config) {
     const app = express();
@@ -47,7 +48,7 @@ module.exports = function (config) {
     app.use(baseUriPath, router);
 
     if (process.env.NODE_ENV !== 'production') {
-        app.use(require('errorhandler')());
+        app.use(errorHandler());
     }
 
     return app;

@@ -8,8 +8,8 @@ before_script:
 - psql -c 'create database unleash_test;' -U postgres
 script:
 - npm install
-- npm run test
 - npm run test:coverage
+after_success:
 - npm run test:coverage-report
 notifications:
   slack:

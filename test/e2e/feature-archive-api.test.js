@@ -1,45 +1,40 @@
 'use strict';
 
-const assert     = require('assert');
-const specHelper = require('./util/test-helper');
-const stringify  = function (o) {
-    return JSON.stringify(o, null, ' ');
-};
+const test = require('ava');
+const { setupApp } = require('./util/test-helper');
+const logger = require('../../lib/logger');
 
-let request;
+test.beforeEach(() =>  {
+    logger.setLevel('FATAL');
+});
 
-describe('The archive features api', () => {
-    beforeEach(done => {
-        specHelper.setupApp().then((app) => {
-            request = app.request;
-            done();
-        });
-    });    
+test.serial('returns three archived toggles', async t => {
+    const { request, destroy } = await setupApp('archive_serial');
+    return request
+        .get('/api/archive/features')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            t.true(res.body.features.length === 3);
+        })
+        .then(destroy);
+});
 
+test.serial('revives a feature by name', async t => {
+    const { request, destroy  } = await setupApp('archive_serial');
+    return request
+        .post('/api/archive/revive')
+        .send({ name: 'featureArchivedX' })
+        .set('Content-Type', 'application/json')
+        .expect(200)
+        .then(destroy);
+});
 
-    it('returns three archived toggles', done => {
-        request
-            .get('/api/archive/features')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((err, res) => {
-                assert(res.body.features.length === 3, `expected 3 features, got ${stringify(res.body)}`);
-                done();
-            });
-    });
-
-    it('revives a feature by name', done => {
-        request
-            .post('/api/archive/revive')
-            .send({ name: 'featureArchivedX' })
-            .set('Content-Type', 'application/json')
-            .expect(200, done);
-    });
-
-    it('must set name when reviving toggle', done => {
-        request
-            .post('/api/archive/revive')
-            .send({ name: '' })
-            .expect(400, done);
-    });
+test.serial('must set name when reviving toggle', async t => {
+    const { request, destroy  } = await setupApp('archive_serial');
+    return request
+        .post('/api/archive/revive')
+        .send({ name: '' })
+        .expect(400)
+        .then(destroy);
 });

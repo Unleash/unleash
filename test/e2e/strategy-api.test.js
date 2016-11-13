@@ -1,70 +1,81 @@
 'use strict';
 
-const specHelper = require('./util/test-helper');
-let request;
+const test = require('ava');
+const { setupApp } = require('./util/test-helper');
+const logger = require('../../lib/logger');
 
-describe('The strategy api', () => {
-    beforeEach(done => {
-        specHelper.setupApp().then((app) => {
-            request = app.request;
-            done();
-        });
-    });
+test.beforeEach(() =>  {
+    logger.setLevel('FATAL');
+});
 
-    it('gets all strategies', done => {
-        request
-            .get('/api/strategies')
-            .expect('Content-Type', /json/)
-            .expect(200, done);
-    });
+test.serial('gets all strategies', async (t) => {
+    const { request, destroy } = await setupApp('strategy_api_serial');
+    return request
+        .get('/api/strategies')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then(destroy);
+});
 
-    it('gets a strategy by name', done => {
-        request
-            .get('/api/strategies/default')
-            .expect('Content-Type', /json/)
-            .expect(200, done);
-    });
+test.serial('gets a strategy by name', async (t) => {
+    const { request, destroy } = await setupApp('strategy_api_serial');
+    return request
+        .get('/api/strategies/default')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then(destroy);
+});
 
-    it('cant get a strategy by name that dose not exist', done => {
-        request
-            .get('/api/strategies/mystrategy')
-            .expect('Content-Type', /json/)
-            .expect(404, done);
-    });
+test.serial('cant get a strategy by name that dose not exist', async (t) => {
+    const { request, destroy } = await setupApp('strategy_api_serial');
+    return request
+        .get('/api/strategies/mystrategy')
+        .expect('Content-Type', /json/)
+        .expect(404)
+        .then(destroy);
+});
 
-    it('creates a new strategy', done => {
-        request
-            .post('/api/strategies')
-            .send({ name: 'myCustomStrategy', description: 'Best strategy ever.' })
-            .set('Content-Type', 'application/json')
-            .expect(201, done);
-    });
+test.serial('creates a new strategy', async (t) => {
+    const { request, destroy } = await setupApp('strategy_api_serial');
+    return request
+        .post('/api/strategies')
+        .send({ name: 'myCustomStrategy', description: 'Best strategy ever.' })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .then(destroy);
+});
 
-    it('requires new strategies to have a name', done => {
-        request
-            .post('/api/strategies')
-            .send({ name: '' })
-            .set('Content-Type', 'application/json')
-            .expect(400, done);
-    });
+test.serial('requires new strategies to have a name', async (t) => {
+    const { request, destroy } = await setupApp('strategy_api_serial');
+    return request
+        .post('/api/strategies')
+        .send({ name: '' })
+        .set('Content-Type', 'application/json')
+        .expect(400)
+        .then(destroy);
+});
 
-    it('refuses to create a strategy with an existing name', done => {
-        request
-            .post('/api/strategies')
-            .send({ name: 'default' })
-            .set('Content-Type', 'application/json')
-            .expect(403, done);
-    });
+test.serial('refuses to create a strategy with an existing name', async (t) => {
+    const { request, destroy } = await setupApp('strategy_api_serial');
+    return request
+        .post('/api/strategies')
+        .send({ name: 'default' })
+        .set('Content-Type', 'application/json')
+        .expect(403)
+        .then(destroy);
+});
 
-    it('deletes a new strategy', done => {
-        request
-            .delete('/api/strategies/usersWithEmail')
-            .expect(200, done);
-    });
+test.serial('deletes a new strategy', async (t) => {
+    const { request, destroy } = await setupApp('strategy_api_serial');
+    return request
+        .delete('/api/strategies/usersWithEmail')
+        .expect(200)
+        .then(destroy);
+});
 
-    it('can\'t delete a strategy that dose not exist', done => {
-        request
-            .delete('/api/strategies/unknown')
-            .expect(404, done);
-    });
+test.serial('can\'t delete a strategy that dose not exist', async (t) => {
+    const { request, destroy } = await setupApp('strategy_api_serial', false);
+    return request
+        .delete('/api/strategies/unknown')
+        .expect(404);
 });

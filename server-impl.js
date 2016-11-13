@@ -3,6 +3,7 @@
 const logger = require('./lib/logger');
 const migrator = require('./migrator');
 const { createStores } = require('./lib/db');
+const getApp = require('./app');
 
 const DEFAULT_OPTIONS = {
     databaseUri: process.env.DATABASE_URL || 'postgres://unleash_user:passord@localhost:5432/unleash',
@@ -21,7 +22,7 @@ function createApp (options) {
         stores,
     };
 
-    const app = require('./app')(config);
+    const app = getApp(config);
     const server = app.listen(app.get('port'), () => {
         logger.info(`Unleash started on ${app.get('port')}`);
     });

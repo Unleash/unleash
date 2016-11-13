@@ -1,6 +1,5 @@
 'use strict';
 
-module.exports = {
-    reset: () => {},
+module.exports = () => ({
     insert: () => Promise.resolve(),
-};
+});

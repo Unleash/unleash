@@ -1,27 +1,27 @@
 'use strict';
 
-const specHelper = require('./util/test-helper');
-let request;
+const test = require('ava');
+const { setupApp } = require('./util/test-helper');
+const logger = require('../../lib/logger');
 
-describe('The event api', () => {
-    beforeEach(done => {
-        specHelper.setupApp().then((app) => {
-            request = app.request;
-            done();
-        });
-    });
+test.beforeEach(() =>  {
+    logger.setLevel('FATAL');
+});
 
-    it('returns events', done => {
-        request
-            .get('/api/events')
-            .expect('Content-Type', /json/)
-            .expect(200, done);
-    });
+test.serial('returns events', async (t) => {
+    const { request, destroy } = await setupApp('event_api_serial');
+    return request
+        .get('/api/events')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then(destroy);
+});
 
-    it('returns events given a name', done => {
-        request
-            .get('/api/events/myname')
-            .expect('Content-Type', /json/)
-            .expect(200, done);
-    });
+test.serial('returns events given a name', async (t) => {
+    const { request, destroy } = await setupApp('event_api_serial');
+    return request
+        .get('/api/events/myname')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then(destroy);
 });

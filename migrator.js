@@ -1,13 +1,12 @@
 'use strict';
 
-const DBMigrate = require('db-migrate');
-const path = require('path');
+const { getInstance } = require('db-migrate');
 const parseDbUrl = require('parse-database-url');
 
-function migrateDb (dbUrl, schema = "public") {
-    const custom = parseDbUrl(dbUrl);
-    custom.schema = schema;
-    const dbmigrate = DBMigrate.getInstance(true, {
+function migrateDb ({ databaseUri, databaseSchema = 'public' }) {
+    const custom = parseDbUrl(databaseUri);
+    custom.schema = databaseSchema;
+    const dbmigrate = getInstance(true, {
         cwd: __dirname,
         config: { custom },
         env: 'custom' }

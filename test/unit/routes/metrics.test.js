@@ -1,68 +1,74 @@
 'use strict';
 
+const test = require('ava');
 const store = require('./mocks/store');
 const supertest = require('supertest');
-const assert = require('assert');
+const logger = require('../../../lib/logger');
 
-let request;
+test.beforeEach(() =>  {
+    logger.setLevel('FATAL');
+});
 
-describe('Unit: The metrics api', () => {
-    beforeEach(done => {
-        const stores = store.createStores(); 
-        const app = require('../../../app')({
-            baseUriPath: '',
-            stores: stores,
-        });
-
-        request = supertest(app);
-        done();
+function getSetup () {
+    const stores = store.createStores();
+    const app = require('../../../app')({
+        baseUriPath: '',
+        stores,
     });
 
-    it('should register client', (done) => {
-        request
-            .post('/api/client/register')
-            .send({ 
-                appName: 'demo',
-                instanceId: 'test',
-                strategies: ['default'],
-                started: Date.now(),
-                interval: 10 
-            })
-            .expect(202, done);
-    });
+    return {
+        request: supertest(app),
+    };
+}
 
-    it('should require appName field', (done) => {
-        request
-            .post('/api/client/register')
-            .expect(400, done)
-    });
+test('should register client', () => {
+    const { request } = getSetup();
+    return request
+        .post('/api/client/register')
+        .send({
+            appName: 'demo',
+            instanceId: 'test',
+            strategies: ['default'],
+            started: Date.now(),
+            interval: 10,
+        })
+        .expect(202);
+});
 
-    it('should require strategies field', (done) => {
-        request
-            .post('/api/client/register')
-            .send({ 
-                appName: 'demo',
-                instanceId: 'test',
-                //strategies: ['default'],
-                started: Date.now(),
-                interval: 10 
-            })
-            .expect(400, done)
-    });
+test('should require appName field', () => {
+    const { request } = getSetup();
+    return request
+        .post('/api/client/register')
+        .expect(400);
+});
+
+test('should require strategies field', () => {
+    const { request } = getSetup();
+    return request
+        .post('/api/client/register')
+        .send({
+            appName: 'demo',
+            instanceId: 'test',
+            // strategies: ['default'],
+            started: Date.now(),
+            interval: 10,
+        })
+        .expect(400);
+});
 
 
-    it('should accept client metrics', (done) => {
-        request
-            .post('/api/client/metrics')
-            .send({ 
-                appName: 'demo',
-                instanceId: '1',
-                bucket: {
-                    start: Date.now(),
-                    stop: Date.now(),
-                    toggles: {}
-                }
-            })
-            .expect(202, done)
-    });
+test('should accept client metrics', () => {
+    const { request } = getSetup();
+    return request
+        .post('/api/client/metrics')
+        .send({
+            appName: 'demo',
+            instanceId: '1',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {},
+            },
+        })
+        .expect(202);
 });

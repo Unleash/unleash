@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const store = require('./mocks/store');
+const store = require('./fixtures/store');
 const supertest = require('supertest');
 const logger = require('../../../lib/logger');
 

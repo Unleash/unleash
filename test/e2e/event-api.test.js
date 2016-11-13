@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const { setupApp } = require('./util/test-helper');
+const { setupApp } = require('./helpers/test-helper');
 const logger = require('../../lib/logger');
 
 test.beforeEach(() =>  {

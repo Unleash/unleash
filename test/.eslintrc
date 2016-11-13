@@ -1,6 +1,0 @@
-{
-    "env": {
-        "browser": true,
-        "mocha": true
-    }
-}

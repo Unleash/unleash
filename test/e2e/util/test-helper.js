@@ -17,7 +17,7 @@ delete process.env.DATABASE_URL;
 
 const db = require('../../../lib/db/db-pool').createDb(options.databaseUri);
 
-const createApp = db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`)
+const createApp = db.raw(`DROP SCHEMA ${options.databaseSchema} CASCADE; CREATE SCHEMA ${options.databaseSchema}`)
     .then(() => migrator(options.databaseUri, options.databaseSchema))
     .then(() => {
         const stores = createStores(options);

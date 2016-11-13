@@ -4,7 +4,7 @@
 
 ### Fetching Feature Toggles
 
-**GET: http://unleash.host.com/features**
+**GET: http://unleash.host.com/api/features**
 
 **HEADERS:**
 
@@ -69,7 +69,7 @@ has the latest response locally.
 }
 ```
 
-**GET: http://unleash.host.com/features/:featureName**
+**GET: http://unleash.host.com/api/features/:featureName**
 
 Used to fetch details about a specific featureToggle. This is mostly provded to make it easy to 
 debug the API and should not be used by the client implementations.
@@ -95,7 +95,7 @@ debug the API and should not be used by the client implementations.
 
 ### Create a new Feature Toggle
 
-**POST: http://unleash.host.com/features/**
+**POST: http://unleash.host.com/api/features/**
 
 **Body:**
  ```json
@@ -119,7 +119,7 @@ Returns 200-respose if the feature toggle was created successfully.
 
 ### Update a Feature Toggle
 
-**PUT: http://unleash.host.com/features/:toggleName**
+**PUT: http://unleash.host.com/api/features/:toggleName**
 
 **Body:**
  ```json
@@ -143,7 +143,7 @@ Returns 200-respose if the feature toggle was updated successfully.
 
 ### Archive a Feature Toggle
 
-**DELETE: http://unleash.host.com/features/:toggleName**
+**DELETE: http://unleash.host.com/api/features/:toggleName**
 
 Used to archive a feature toggle. A feature toggle can never be totally be deleted, 
 but can be archived. This is a design decision to make sure that a old feature 
@@ -153,7 +153,7 @@ toggle suddnely reapear by some one else reusing the same name.
 
 ### Fetch archived toggles
 
-**GET http://unleash.host.com/archive/features**
+**GET http://unleash.host.com/api/archive/features**
 
 Used to fetch list of archived feature toggles
 
@@ -181,7 +181,7 @@ Used to fetch list of archived feature toggles
 
 ### Revive feature toggle
 
-**POST http://unleash.host.com//archive/revive**
+**POST http://unleash.host.com/api/archive/revive**
 
 **Body:**
  ```json
@@ -196,7 +196,7 @@ Used to revive a feature toggle.
 ## Strategies
 
 ### Fetch Strategies 
-**GET: http://unleash.host.com/strategies**
+**GET: http://unleash.host.com/api/strategies**
 
 Used to fetch all defined strategies and their defined paramters. 
 
@@ -230,7 +230,7 @@ Used to fetch all defined strategies and their defined paramters.
 
 ### Create strategy
 
-**POST: http://unleash.host.com/strategies**
+**POST: http://unleash.host.com/api/strategies**
 
 **Body**
 
@@ -250,7 +250,7 @@ Used to create a new Strategy. Name must be unique.
 
 # Events
 
-**GET: http://unleash.host.com/events**
+**GET: http://unleash.host.com/api/events**
 
 Used to fetch all changes in the unleash system.
 
@@ -292,28 +292,72 @@ Event types:
 
 # Metrics
 
-**GET: http://unleash.host.com/metrics**
+**GET: http://unleash.host.com/api/metrics**
 
 Get aggregated state of metrics 
 
-```
+```json
 {
-    
+    "globalCount": 1420,
+    "apps": {
+        "app-name": {
+            "count": 1420,
+            "clients": [
+                "instance-id"
+            ]
+        }
+    },
+    "clients": {
+        "instance-id": {
+            "appName": "app-name",
+            "count": 1420,
+            "started": "2016-11-13T19:50:54.395Z",
+            "init": "2016-11-13T19:50:54.395Z",
+            "ping": "2016-11-13T19:51:14.403Z"
+        }
+    }
 }
 ```
 
 
-**GET: http://unleash.host.com/toggle-metrics**
+**GET: http://unleash.host.com/api/metrics/features**
 
-Get last hour of metrics per toggle 
+Get metrics per toggle 
 
-```
+```json
 {
-    
+    "lastHour": {
+        "toggle-name-1": {
+            "yes": 0,
+            "no": 720
+        },
+        "toggle-name-2": {
+            "yes": 0,
+            "no": 463
+        },
+        "toggle-name-3": {
+            "yes": 237,
+            "no": 0
+        }
+    },
+    "lastMinute": {
+        "toggle-name-1": {
+            "yes": 0,
+            "no": 0
+        },
+        "toggle-name-2": {
+            "yes": 0,
+            "no": 0
+        },
+        "toggle-name-3": {
+            "yes": 0,
+            "no": 0
+        }
+    }
 }
 ```
 
-**POST: http://unleash.host.com/client/register**
+**POST: http://unleash.host.com/api/client/register**
 
 Register a client instance with the unleash server
 
@@ -327,7 +371,7 @@ Register a client instance with the unleash server
 }
 ```
 
-**POST: http://unleash.host.com/client/metrics**
+**POST: http://unleash.host.com/api/client/metrics**
 
 Register a metrics payload with a timed bucket
 

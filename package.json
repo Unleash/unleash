@@ -45,7 +45,7 @@
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",
     "test:pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",
     "test:coverage": "nyc npm run test",
-    "test:coverage-report": "nyc report --reporter=text-lcov | coveralls && rm -rf ./coverage"
+    "test:coverage-report": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
     "body-parser": "1.15.2",

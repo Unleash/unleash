@@ -36,9 +36,10 @@ function start (opts) {
         throw new Error('You must either pass databaseUri option or set environemnt variable DATABASE_URL');
     }
 
-    return migrator(options.databaseUri)
+    return migrator({ databaseUri: options.databaseUri })
+        .catch(err => logger.error('failed to migrate db', err))
         .then(() => createApp(options))
-        .catch(err => logger.error('failed to migrate db', err));
+        .catch(err => logger.error('failed creating app', err));
 }
 
 process.on('uncaughtException', err => {

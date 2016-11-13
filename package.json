@@ -19,10 +19,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com:finn-no/unleash.git"
+    "url": "ssh://git@github.com:unleash/unleash.git"
   },
   "bugs": {
-    "url": "https://github.com/finn-no/unleash/issues"
+    "url": "https://github.com/unleash/unleash/issues"
   },
   "engines": {
     "node": "6"

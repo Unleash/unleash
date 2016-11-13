@@ -20,7 +20,7 @@ function createApp (databaseSchema = 'test') {
     };
     const db = createDb({ databaseUri: options.databaseUri, minPool: 0, maxPool: 0 });
 
-    return db.raw(`DROP SCHEMA IF EXISTS ${options.databaseSchema} CASCADE; CREATE SCHEMA ${options.databaseSchema}`)
+    return db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`)
         .then(() => migrator(options))
         .then(() => {
             db.destroy();

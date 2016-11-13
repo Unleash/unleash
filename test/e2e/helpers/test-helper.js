@@ -7,6 +7,7 @@ const migrator = require('../../../migrator');
 const { createStores } = require('../../../lib/db');
 const { createDb } = require('../../../lib/db/db-pool');
 const _app = require('../../../app');
+require('db-migrate-shared').log.silence(true);
 
 // because of migrator bug
 delete process.env.DATABASE_URL;

@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const store = require('./mocks/store');
+const store = require('./fixtures/store');
 const supertest = require('supertest');
 const logger = require('../../../lib/logger');
 
@@ -29,7 +29,6 @@ test('should give 500 when db is failing', t => {
     db.select = () => ({
         from: () => Promise.reject(new Error('db error')),
     });
-
     return request
         .get('/health')
         .expect(500)

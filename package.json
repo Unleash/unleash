@@ -39,7 +39,7 @@
     "start:dev:pg-chain": "export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; db-migrate up && npm run start:dev",
     "db-migrate": "db-migrate up",
     "db-migrate:down": "db-migrate down",
-    "test": "PORT=4243 ava **/**/*test.js",
+    "test": "PORT=4243 ava test lib/*/*.test.js",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "npm run test -- --watch",
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",

@@ -1,7 +1,6 @@
 'use strict';
 
-module.exports = {
-    reset: () => {},
+module.exports = () => ({
     getMetricsLastHour: () => Promise.resolve([]),
     insert: () => Promise.resolve(),
-};
+});

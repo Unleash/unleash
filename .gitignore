@@ -39,3 +39,4 @@ unleash-server.tar.gz
 jsconfig.json
 typings
 .vscode
+.nyc_output

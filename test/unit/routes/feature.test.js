@@ -1,61 +1,63 @@
 'use strict';
 
+const test = require('ava');
 const store = require('./mocks/store');
-
 const supertest = require('supertest');
-const assert = require('assert');
+const logger = require('../../../lib/logger');
 
-
-let request;
-let featureToggleStore;
-
-describe('Unit: The features api', () => {
-    beforeEach(done => {
-        const stores = store.createStores(); 
-        const app = require('../../../app')({
-            baseUriPath: '',
-            stores: stores,
-        });
-
-        featureToggleStore = stores.featureToggleStore;
-        request = supertest(app);
-        done();
-    });
-
-    it('should get empty getFeatures', (done) => {
-        request
-            .get('/features')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((err, res) => {
-                assert(res.body.features.length === 0);
-                done();
-            });
-    });
-
-    it('should get one getFeature', (done) => {
-        featureToggleStore.addFeature( { name: 'test', strategies: [{ name: 'default' }] } );
-
-        request
-            .get('/features')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((err, res) => {
-                assert(res.body.features.length === 1);
-                done();
-            });
-    });
-
-    it('should add version numbers for /features', (done) => {
-        featureToggleStore.addFeature( { name: 'test', strategies: [{ name: 'default' }] } );
-
-        request
-            .get('/features')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((err, res) => {
-                assert.equal(res.body.version, 1);
-                done();
-            });
-    });
+test.beforeEach(() =>  {
+    logger.setLevel('FATAL');
 });
+
+function getSetup () {
+    const base = `/random${Math.round(Math.random() * 1000)}`;
+    const stores = store.createStores();
+    const app = require('../../../app')({
+        baseUriPath: base,
+        stores,
+    });
+
+    return {
+        base,
+        featureToggleStore: stores.featureToggleStore,
+        request: supertest(app),
+    };
+}
+
+test('should get empty getFeatures', t => {
+    const { request, base } = getSetup();
+    return request
+        .get(`${base}/features`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            t.true(res.body.features.length === 0);
+        });
+});
+
+test('should get one getFeature', t => {
+    const { request, featureToggleStore, base } = getSetup();
+    featureToggleStore.addFeature({ name: 'test_', strategies: [{ name: 'default_' }] });
+
+    return request
+        .get(`${base}/features`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            t.true(res.body.features.length === 1);
+        });
+});
+
+test('should add version numbers for /features', t => {
+    const { request, featureToggleStore, base } = getSetup();
+    featureToggleStore.addFeature({ name: 'test2', strategies: [{ name: 'default' }] });
+
+    return request
+        .get(`${base}/features`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            t.true(res.body.version === 1);
+        });
+});
+

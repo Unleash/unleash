@@ -43,7 +43,7 @@ test.serial('creates new feature toggle', async t => {
     const { request, destroy } = await setupApp('feature_api_serial');
     return request
         .post('/features')
-        .send({ name: 'com.test.feature', enabled: false })
+        .send({ name: 'com.test.feature', enabled: false, strategies: [{name: 'default'}] })
         .set('Content-Type', 'application/json')
         .expect(201)
         .then(destroy);
@@ -54,7 +54,7 @@ test.serial('creates new feature toggle with createdBy', async t => {
     logger.setLevel('FATAL');
     request
         .post('/features')
-        .send({ name: 'com.test.Username', enabled: false })
+        .send({ name: 'com.test.Username', enabled: false, strategies: [{name: 'default'}]  })
         .set('Cookie', ['username=ivaosthu'])
         .set('Content-Type', 'application/json')
         .end(() => {
@@ -93,7 +93,7 @@ test.serial('can change status of feature toggle that does exist', async t => {
     logger.setLevel('FATAL');
     return request
         .put('/features/featureY')
-        .send({ name: 'featureY', enabled: true })
+        .send({ name: 'featureY', enabled: true, strategies: [{name: 'default'}] })
         .set('Content-Type', 'application/json')
         .expect(200).then(destroy);
 });

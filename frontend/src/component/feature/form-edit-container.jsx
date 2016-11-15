@@ -7,22 +7,13 @@ import FormComponent from './form';
 
 const ID = 'edit-feature-toggle';
 function getId (props) {
-    return [ID, props.featureToggleName];
+    return [ID, props.featureToggle.name];
 }
 // TODO: need to scope to the active featureToggle
 // best is to emulate the "input-storage"?
 const mapStateToProps = createMapper({
     id: getId,
-    getDefault: (state, ownProps) => {
-        if (ownProps.featureToggleName) {
-            const match = state.features.findEntry((entry) => entry.get('name') === ownProps.featureToggleName);
-
-            if (match && match[1]) {
-                return match[1].toJS();
-            }
-        }
-        return {};
-    },
+    getDefault: (state, ownProps) => ownProps.featureToggle,
     prepare: (props) => {
         props.editmode = true;
         return props;

@@ -30,7 +30,7 @@ export default class UnleashNav extends Component {
 
                     <ListSubHeader caption="Resources" />
                     {createListItem('/docs', 'Documentation')}
-                    <a href="https://github.com/finn-no/unleash/" target="_blank">
+                    <a href="https://github.com/Unleash/unleash/" target="_blank">
                         <ListItem caption="GitHub" />
                     </a>
 

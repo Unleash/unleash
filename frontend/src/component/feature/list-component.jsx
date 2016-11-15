@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Feature from './feature-component';
+import { Link } from 'react-router';
 import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list';
 
 export default class FeatureListComponent extends React.Component {
@@ -46,9 +47,9 @@ export default class FeatureListComponent extends React.Component {
                         onFeatureRemove={onFeatureRemove}/>
                 )}
                 <ListDivider />
-                <ListItem
-                    onClick={() => this.context.router.push('/features/create')}
-                    caption="Add" legend="new feature toggle" leftIcon="add" />
+                <Link to="/features/create">
+                    <ListItem caption="Add" legend="new feature toggle" leftIcon="add" />
+                </Link>
            </List>
         );
     }

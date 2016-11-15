@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import Input from 'react-toolbox/lib/input';
 import Button from 'react-toolbox/lib/button';
-import { ListItem } from 'react-toolbox/lib/list';
 
 class StrategyConfigure extends React.Component {
 

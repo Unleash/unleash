@@ -1,7 +1,5 @@
 import React, { PropTypes } from 'react';
 import ConfigureStrategy from './strategy-configure';
-import { List } from 'react-toolbox/lib/list';
-
 
 class StrategiesList extends React.Component {
 

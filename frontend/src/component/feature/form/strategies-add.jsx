@@ -57,13 +57,16 @@ class AddStrategy extends React.Component {
         });
 
         return (
-            <Dropdown
-                allowBlank={false}
-                source={strats}
-                onChange={this.addStrategy}
-                label="Add an activation strategy"
-                template={this.customItem}
-            />
+            <div style={{ maxWidth: '400px', marginTop: '20px' }}>
+                <Dropdown
+                    allowBlank={false}
+                    auto
+                    source={strats}
+                    onChange={this.addStrategy}
+                    label="Click to add activation strategy"
+                    template={this.customItem}
+                />
+            </div>
         );
     }
 }

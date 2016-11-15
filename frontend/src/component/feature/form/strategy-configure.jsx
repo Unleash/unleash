@@ -23,7 +23,7 @@ class StrategyConfigure extends React.Component {
     };
 
     handleConfigChange = (key, value) => {
-        const parameters = {};
+        const parameters = this.props.strategy.parameters || {};
         parameters[key] = value;
 
         const updatedStrategy = Object.assign({}, this.props.strategy, { parameters });
@@ -52,27 +52,28 @@ class StrategyConfigure extends React.Component {
     }
 
     render () {
-        const leftActions = [
-            <Button key="remove" onClick={this.handleRemove} icon="remove" floating accent mini />,
-        ];
-
         if (!this.props.strategyDefinition) {
             return (
-                <ListItem
-                    leftActions={leftActions}
-                    caption={<span style={{ color: 'red' }}>Strategy "{this.props.strategy.name}" deleted</span>}
-                />
+                <div>
+                    <h6><span style={{ color: 'red' }}>Strategy "{this.props.strategy.name}" deleted</span></h6>
+                    <Button onClick={this.handleRemove} icon="remove" label="remove strategy" flat/>
+                </div>
             );
         }
 
         const inputFields = this.renderInputFields(this.props.strategyDefinition) || [];
 
         return (
-            <ListItem leftActions={leftActions}
-                caption={this.props.strategy.name}
-                legend={this.props.strategyDefinition.description}
-                rightActions={inputFields}
-            />
+            <div style={{ padding: '5px 15px', backgroundColor: '#f7f8ff', marginBottom: '10px' }}>
+                <h6>
+                    <strong>{this.props.strategy.name} </strong>
+                    (<a style={{ color: '#ff4081' }} onClick={this.handleRemove} href="#remove-strat">remove</a>)
+                </h6>
+                <small>{this.props.strategyDefinition.description}</small>
+                <div>
+                    {inputFields}
+                </div>
+            </div>
         );
     }
 }

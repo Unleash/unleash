@@ -71,6 +71,8 @@ class AddFeatureToggleComponent extends Component {
 
                 <br />
 
+                <hr />
+
                 <Button type="submit" raised primary label={editmode ? 'Update' : 'Create'} />
                 &nbsp;
                 <Button type="cancel" raised label="Cancel" onClick={onCancel} />

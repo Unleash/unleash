@@ -3,8 +3,6 @@ import StrategiesList from './strategies-list';
 import AddStrategy from './strategies-add';
 
 const headerStyle = {
-    borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-    paddingBottom: '5px',
     marginBottom: '10px',
 };
 
@@ -31,11 +29,9 @@ class StrategiesSection extends React.Component {
 
         return (
             <div>
-                 <div>
-                    <h5 style={headerStyle}>Strategies:</h5>
-                    <StrategiesList {...this.props} />
-                    <AddStrategy {...this.props} />
-                </div>
+                <h5 style={headerStyle}>Activation strategies</h5>
+                <StrategiesList {...this.props} />
+                <AddStrategy {...this.props} />
             </div>
         );
     }

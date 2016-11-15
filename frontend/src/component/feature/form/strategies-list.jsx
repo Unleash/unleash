@@ -21,7 +21,7 @@ class StrategiesList extends React.Component {
         } = this.props;
 
         if (!configuredStrategies || configuredStrategies.length === 0) {
-            return <i>No strategies added</i>;
+            return <i style={{ color: 'red' }}>No strategies added</i>;
         }
 
         const blocks = configuredStrategies.map((strat, i) => (
@@ -33,9 +33,9 @@ class StrategiesList extends React.Component {
                 strategyDefinition={strategies.find(s => s.name === strat.name)} />
         ));
         return (
-            <List>
+            <div>
                 {blocks}
-            </List>
+            </div>
         );
     }
 }

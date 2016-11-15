@@ -62,3 +62,23 @@ test('should add version numbers for /features', t => {
         });
 });
 
+test('should require at least one strategy when creating a feature toggle', t => {
+    const { request, base } = getSetup();
+
+    return request
+        .post(`${base}/features`)
+        .send({ name: 'sample.missing.strategy' })
+        .set('Content-Type', 'application/json')
+        .expect(400)
+});
+
+test('should require at least one strategy when updating a feature toggle', t => {
+    const { request, featureToggleStore, base } = getSetup();
+    featureToggleStore.addFeature({ name: 'ts', strategies: [{ name: 'default' }] });
+
+    return request
+        .put(`${base}/features/ts`)
+        .send({ name: 'ts' })
+        .set('Content-Type', 'application/json')
+        .expect(400)
+});

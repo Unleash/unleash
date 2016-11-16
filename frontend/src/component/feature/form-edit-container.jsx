@@ -33,6 +33,7 @@ const prepare =  (methods, dispatch) => {
 
     methods.onCancel = (evt) => {
         evt.preventDefault();
+        methods.clear();
         hashHistory.push('/features');
     };
 

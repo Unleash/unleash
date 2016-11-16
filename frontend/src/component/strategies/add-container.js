@@ -29,6 +29,7 @@ const prepare = (methods, dispatch) => {
 
     methods.onCancel = (e) => {
         e.preventDefault();
+        methods.clear();
         // somewhat quickfix / hacky to go back..
         window.history.back();
     };

@@ -5,7 +5,7 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const entry = ['./src/index'];
+const entry = ['whatwg-fetch', './src/index'];
 const plugins = [new ExtractTextPlugin('bundle.css',  { allChunks: true })];
 
 if (process.env.NODE_ENV === 'development') {

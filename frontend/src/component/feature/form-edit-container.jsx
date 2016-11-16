@@ -40,12 +40,12 @@ const prepare =  (methods, dispatch) => {
         methods.pushToList('strategies', v);
     };
 
-    methods.removeStrategy = (v) => {
-        methods.removeFromList('strategies', v);
+    methods.removeStrategy = (index) => {
+        methods.removeFromList('strategies', index);
     };
 
-    methods.updateStrategy = (v, n) => {
-        methods.updateInList('strategies', v, n);
+    methods.updateStrategy = (index, n) => {
+        methods.updateInList('strategies', index, n);
     };
 
     methods.validateName = () => {};

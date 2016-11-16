@@ -53,12 +53,12 @@ export function createActions ({ id, prepare = (v) => v }) {
             dispatch(createPush({ id: getId(id, ownProps), key, value }));
         },
 
-        removeFromList (key, value) {
-            dispatch(createPop({ id: getId(id, ownProps), key, value }));
+        removeFromList (key, index) {
+            dispatch(createPop({ id: getId(id, ownProps), key, index }));
         },
 
-        updateInList (key, value, newValue) {
-            dispatch(createUp({ id: getId(id, ownProps), key, value, newValue }));
+        updateInList (key, index, newValue) {
+            dispatch(createUp({ id: getId(id, ownProps), key, index, newValue }));
         },
 
         incValue (key) {

@@ -48,7 +48,7 @@ export default class FeatureListComponent extends React.Component {
                 )}
                 <ListDivider />
                 <Link to="/features/create">
-                    <ListItem caption="Add" legend="new feature toggle" leftIcon="add" />
+                    <ListItem caption="Create" legend="new feature toggle" leftIcon="add" />
                 </Link>
            </List>
         );

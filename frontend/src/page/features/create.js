@@ -3,7 +3,7 @@ import AddFeatureToggleForm from '../../component/feature/form-add-container';
 
 const render = () => (
     <div>
-        <h3>Create feature toggle</h3>
+        <h6>Create feature toggle</h6>
         <AddFeatureToggleForm />
     </div>
 );

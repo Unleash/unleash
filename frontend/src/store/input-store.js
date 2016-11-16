@@ -48,18 +48,18 @@ function addToList (state, { id, key, value }) {
     return state.updateIn(id.concat([key]), (list) => list.push(value));
 }
 
-function updateInList (state, { id, key, value, newValue }) {
+function updateInList (state, { id, key, index, newValue }) {
     state = assertId(state, id);
     state = assertList(state, id, key);
 
-    return state.updateIn(id.concat([key]), (list) => list.set(list.indexOf(value), newValue));
+    return state.updateIn(id.concat([key]), (list) => list.set(index, newValue));
 }
 
-function removeFromList (state, { id, key, value }) {
+function removeFromList (state, { id, key, index }) {
     state = assertId(state, id);
     state = assertList(state, id, key);
 
-    return state.updateIn(id.concat([key]), (list) => list.remove(list.indexOf(value)));
+    return state.updateIn(id.concat([key]), (list) => list.remove(index));
 }
 
 const inputState = (state = getInitState(), action) => {

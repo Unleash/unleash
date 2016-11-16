@@ -11,7 +11,7 @@ export default class Features extends Component {
     render () {
         return (
             <div>
-                <h3>Edit feature toggle</h3>
+                <h6>Edit feature toggle</h6>
                 <EditFeatureToggleForm featureToggleName={this.props.params.name} />
             </div>
         );

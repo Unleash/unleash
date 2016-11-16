@@ -26,8 +26,8 @@ class StrategiesList extends React.Component {
             <ConfigureStrategy
                 key={`${strat.name}-${i}`}
                 strategy={strat}
-                removeStrategy={this.props.removeStrategy}
-                updateStrategy={this.props.updateStrategy}
+                removeStrategy={this.props.removeStrategy.bind(null, i)}
+                updateStrategy={this.props.updateStrategy.bind(null, i)}
                 strategyDefinition={strategies.find(s => s.name === strat.name)} />
         ));
         return (

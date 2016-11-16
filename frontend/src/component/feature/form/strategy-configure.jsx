@@ -13,26 +13,18 @@ class StrategyConfigure extends React.Component {
         };
     }
 
-    updateStrategy = (evt) => {
-        evt.preventDefault();
-        this.props.updateStrategy({
-            name: this.state.selectedStrategy.name,
-            parameters: this.state.parameters,
-        });
-    };
-
     handleConfigChange = (key, value) => {
         const parameters = this.props.strategy.parameters || {};
         parameters[key] = value;
 
         const updatedStrategy = Object.assign({}, this.props.strategy, { parameters });
 
-        this.props.updateStrategy(this.props.strategy, updatedStrategy);
+        this.props.updateStrategy(updatedStrategy);
     };
 
     handleRemove = (evt) => {
         evt.preventDefault();
-        this.props.removeStrategy(this.props.strategy);
+        this.props.removeStrategy();
     }
 
     renderInputFields (strategyDefinition) {

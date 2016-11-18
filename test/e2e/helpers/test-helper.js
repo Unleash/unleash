@@ -2,6 +2,9 @@
 
 process.env.NODE_ENV = 'test';
 
+// because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
+process.setMaxListeners(0);
+
 const supertest = require('supertest');
 const migrator = require('../../../migrator');
 const { createStores } = require('../../../lib/db');

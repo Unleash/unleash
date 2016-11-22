@@ -1,0 +1,78 @@
+.history {
+    width:100%;
+    border-collapse: collapse;
+
+    td {
+        vertical-align: top;
+        padding: 8px;
+        margin-bottom: 4px;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: #efefef;
+    }
+
+    td + td {
+        border-left: 1px solid white;
+    }
+
+    tr {
+        display: flex;
+        align-items: stretch;
+    }
+    
+    td:last-child {
+        flex: 1;
+        display:inline-block;
+        /* to keep IE happy */
+    }
+    
+    code {
+        word-wrap: break-word;
+        white-space: pre;
+        font-family: monospace;
+        line-height: 100%;
+        color: #0B8C8F
+    }
+
+    code > .diff-N {
+        color: green;
+    }
+
+    code > .diff-D {
+        color: red;
+    }
+
+    code > .diff-A, .diff-E {
+        color: black;
+    }
+
+    .negative {
+        color: red;
+    }
+
+    .positive {
+        color: green;
+    }
+
+    .blue {
+        color: blue;
+    }
+
+
+    dl {
+        padding: 0.5em;
+    }
+
+    dt {
+        float: left;
+        clear: left;
+        width: 100px;
+        font-weight: bold;
+    }
+
+    dd {
+        margin: 0 0 0 110px;
+        padding: 0 0 0.5em 0;
+    }
+}

@@ -1,58 +1,48 @@
 import React, { Component } from 'react';
-import { List, ListItem, ListSubHeader } from 'react-toolbox/lib/list';
+import HistoryItem from './history-item';
+import Switch from 'react-toolbox/lib/switch';
+
+import style from './history.scss';
 
 class HistoryList extends Component {
+
+    constructor (props) {
+        super(props);
+        this.state = { showData: false };
+    }
 
     componentDidMount () {
         this.props.fetchHistory();
     }
 
-    getIcon (type) {
-        if (type.indexOf('created') > -1 ) {
-            return 'add';
-        }
-
-        if (type.indexOf('deleted') > -1 ) {
-            return 'remove';
-        }
-
-        if (type.indexOf('updated') > -1 ) {
-            return 'update';
-        }
-
-        if (type.indexOf('archived') > -1 ) {
-            return 'archived';
-        }
-        return 'bookmark';
+    toggleShowDiff () {
+        this.setState({ showData: !this.state.showData });
     }
 
     render () {
         const { history } = this.props;
+        if (history.length < 0) {
+            return;
+        }
+
+
+        const entries =  history.map((entry) => <HistoryItem  key={`log${entry.id}`} entry={entry} showData={this.state.showData} />);
 
         return (
-            <List ripple >
-                <ListSubHeader caption="History" />
-                {history.length > 0 ? history.map((log, i) => {
-                    const actions = [];
-
-
-                    const icon = this.getIcon(log.type);
-
-                    const caption = <div>{log.data.name} <small>{log.type}</small></div>;
-
-                    return (
-                        <ListItem key={i}
-                            leftIcon={icon}
-                            rightActions={actions}
-                            caption={caption}
-                            legend={log.createdAt} />
-                    );
-                }) : <ListItem caption="No log entries" />}
-
-            </List>
+            <div>
+                <h5>History</h5>
+                <Switch
+                    checked={this.state.showData}
+                    label="Show full events"
+                    onChange={this.toggleShowDiff.bind(this)}
+                    />
+                <table className={style.history}>
+                    <tbody>
+                        {entries}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }
-
-
 export default HistoryList;

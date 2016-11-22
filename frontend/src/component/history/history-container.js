@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ListComponent from './history-list-component';
+import HistoryComponent from './history-component';
 import { fetchHistory } from '../../store/history-actions';
 
 const mapStateToProps = (state) => {
@@ -10,6 +10,6 @@ const mapStateToProps = (state) => {
     };
 };
 
-const HistoryListContainer = connect(mapStateToProps, { fetchHistory })(ListComponent);
+const HistoryListContainer = connect(mapStateToProps, { fetchHistory })(HistoryComponent);
 
 export default HistoryListContainer;

@@ -8,7 +8,7 @@ const ArchivedFeature = ({ feature, revive }) => {
     const { name, description, enabled, strategies } = feature;
     const actions = [
         <div>{strategies && strategies.map(s => <Chip><small>{s.name}</small></Chip>)}</div>,
-        <FontIcon style={{ cursor: 'pointer' }} value="restore" onClick={() => revive(feature)} />,
+        <FontIcon style={{ cursor: 'pointer' }} value="undo" onClick={() => revive(feature)} />,
     ];
 
     const leftActions = [

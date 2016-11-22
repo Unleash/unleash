@@ -8,6 +8,13 @@ function fetchAll () {
         .then(response => response.json());
 }
 
+function fetchHistoryForToggle (toggleName) {
+    return fetch(`${URI}/${toggleName}`)
+        .then(throwIfNotSuccess)
+        .then(response => response.json());
+}
+
 module.exports = {
     fetchAll,
+    fetchHistoryForToggle,
 };

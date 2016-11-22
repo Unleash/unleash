@@ -11,26 +11,20 @@ class HistoryList extends Component {
         this.state = { showData: false };
     }
 
-    componentDidMount () {
-        this.props.fetchHistory();
-    }
-
     toggleShowDiff () {
         this.setState({ showData: !this.state.showData });
     }
 
     render () {
         const { history } = this.props;
-        if (history.length < 0) {
-            return;
+        if (!history || history.length < 0) {
+            return null;
         }
-
 
         const entries =  history.map((entry) => <HistoryItem  key={`log${entry.id}`} entry={entry} showData={this.state.showData} />);
 
         return (
             <div>
-                <h5>History</h5>
                 <Switch
                     checked={this.state.showData}
                     label="Show full events"

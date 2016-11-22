@@ -15,6 +15,7 @@ import EditFeatureToggle from './page/features/edit';
 import Strategies from './page/strategies';
 import CreateStrategies from './page/strategies/create';
 import HistoryPage from './page/history';
+import HistoryTogglePage from './page/history/toggle';
 import Archive from './page/archive';
 import Metrics from './page/metrics';
 import ClientStrategies from './page/client-strategies';
@@ -38,6 +39,7 @@ ReactDOM.render(
                 <Route path="/strategies" component={Strategies} />
                 <Route path="/strategies/create" component={CreateStrategies} />
                 <Route path="/history" component={HistoryPage} />
+                <Route path="/history/:toggleName" component={HistoryTogglePage} />
                 <Route path="/archive" component={Archive} />
                 <Route path="/metrics" component={Metrics} />
                 <Route path="/client-strategies" component={ClientStrategies} />

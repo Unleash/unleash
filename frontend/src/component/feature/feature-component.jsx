@@ -24,6 +24,9 @@ const Feature = ({
         <Link key="change" to={`/features/edit/${name}`} title={`Edit ${name}`}>
             <FontIcon value="edit" className={style.action} />
         </Link>,
+        <Link key="history" to={`/history/${name}`} title={`History for ${name}`}>
+            <FontIcon value="history" className={style.action} />
+        </Link>,
         <FontIcon key="delete" className={style.action} value="delete" onClick={() => onFeatureRemove(name)} />,
     ];
 

@@ -3,6 +3,8 @@ import { Layout, Panel, NavDrawer, AppBar } from 'react-toolbox';
 import style from './styles.scss';
 import ErrorContainer from './error/error-container';
 
+import UserContainer from './user/user-container';
+
 import Navigation from './nav';
 
 export default class App extends Component {
@@ -28,6 +30,7 @@ export default class App extends Component {
                         </NavDrawer>
                         <Panel scrollY>
                             <div style={{ padding: '1.8rem' }}>
+                                <UserContainer />
                                 {this.props.children}
                             </div>
                         </Panel>

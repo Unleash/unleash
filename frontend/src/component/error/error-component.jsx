@@ -12,13 +12,16 @@ class ErrorComponent extends React.Component {
     render () {
         const showError = this.props.errors.length > 0;
         const error = showError ? this.props.errors[0] : undefined;
+        const muteError = () => this.props.muteError(error);
         return (
             <Snackbar
                 action="Dismiss"
                 active={showError}
                 icon="question_answer"
+                timeout={10000}
                 label={error}
-                onClick={() => this.props.muteError(error)}
+                onClick={muteError}
+                onTimeout={muteError}
                 type="warning"
             />
         );

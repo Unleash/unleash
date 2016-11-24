@@ -40,7 +40,6 @@ class ErrorComponent extends React.Component {
                         onChange={(v) => this.props.updateUserName(v)}
                     />
                 </form>
-                
             </Dialog>
         );
     }

@@ -19,22 +19,13 @@ const SPADEN_CLASS = {
 };
 
 function getIcon (type) {
-    if (type.indexOf('created') > -1 ) {
-        return 'add';
+    switch (type) {
+        case 'feature-updated': return 'autorenew';
+        case 'feature-created': return 'add';
+        case 'feature-deleted': return 'remove';
+        case 'feature-archived': return 'archived';
+        default: return 'star';
     }
-
-    if (type.indexOf('deleted') > -1 ) {
-        return 'remove';
-    }
-
-    if (type.indexOf('updated') > -1 ) {
-        return 'update';
-    }
-
-    if (type.indexOf('archived') > -1 ) {
-        return 'archived';
-    }
-    return 'bookmark';
 }
 
 function buildItemDiff (diff, key) {

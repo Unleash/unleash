@@ -24,6 +24,7 @@ function create (featureToggle) {
         .then(() => fetch(URI, {
             method: 'POST',
             headers,
+            credentials: 'include',
             body: JSON.stringify(featureToggle),
         }))
         .then(throwIfNotSuccess);
@@ -33,6 +34,7 @@ function validate (featureToggle) {
     return fetch(URI_VALIDATE, {
         method: 'POST',
         headers,
+        credentials: 'include',
         body: JSON.stringify(featureToggle),
     }).then(throwIfNotSuccess);
 }
@@ -42,6 +44,7 @@ function update (featureToggle) {
         .then(() => fetch(`${URI}/${featureToggle.name}`, {
             method: 'PUT',
             headers,
+            credentials: 'include',
             body: JSON.stringify(featureToggle),
         }))
         .then(throwIfNotSuccess);
@@ -50,6 +53,7 @@ function update (featureToggle) {
 function remove (featureToggleName) {
     return fetch(`${URI}/${featureToggleName}`, {
         method: 'DELETE',
+        credentials: 'include',
     }).then(throwIfNotSuccess);
 }
 

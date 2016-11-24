@@ -13,6 +13,7 @@ function create (strategy) {
         method: 'POST',
         headers,
         body: JSON.stringify(strategy),
+        credentials: 'include',
     }).then(throwIfNotSuccess);
 }
 
@@ -20,6 +21,7 @@ function remove (strategy) {
     return fetch(`${URI}/${strategy.name}`, {
         method: 'DELETE',
         headers,
+        credentials: 'include',
     }).then(throwIfNotSuccess);
 }
 

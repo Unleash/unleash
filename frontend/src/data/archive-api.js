@@ -13,6 +13,7 @@ function revive (feature) {
         method: 'POST',
         headers,
         body: JSON.stringify(feature),
+        credentials: 'include',
     }).then(throwIfNotSuccess);
 }
 

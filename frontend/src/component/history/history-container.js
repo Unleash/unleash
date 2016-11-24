@@ -4,7 +4,6 @@ import { fetchHistory } from '../../store/history-actions';
 
 const mapStateToProps = (state) => {
     const history = state.history.get('list').toArray();
-
     return {
         history,
     };

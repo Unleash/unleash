@@ -6,27 +6,23 @@ import style from './history.scss';
 
 class HistoryList extends Component {
 
-    constructor (props) {
-        super(props);
-        this.state = { showData: false };
-    }
-
     toggleShowDiff () {
-        this.setState({ showData: !this.state.showData });
+        this.props.updateSetting('showData', !this.props.settings.showData);
     }
 
     render () {
+        const showData = this.props.settings.showData;
         const { history } = this.props;
         if (!history || history.length < 0) {
             return null;
         }
 
-        const entries =  history.map((entry) => <HistoryItem  key={`log${entry.id}`} entry={entry} showData={this.state.showData} />);
+        const entries =  history.map((entry) => <HistoryItem  key={`log${entry.id}`} entry={entry} showData={showData} />);
 
         return (
             <div>
                 <Switch
-                    checked={this.state.showData}
+                    checked={showData}
                     label="Show full events"
                     onChange={this.toggleShowDiff.bind(this)}
                     />

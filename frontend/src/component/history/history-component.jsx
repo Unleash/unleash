@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import HistoryList from './history-list-component';
+import HistoryList from './history-list-container';
 
 class History extends Component {
 

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import ListComponent from './history-list-component';
+import ListComponent from './history-list-container';
 import { fetchHistoryForToggle } from '../../data/history-api';
 
 class HistoryListToggle extends Component {

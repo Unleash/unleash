@@ -15,13 +15,7 @@ function getInitState () {
 }
 
 function updateSetting (state, action) {
-    let newState;
-    if (state.get(action.group)) {
-        newState = state.updateIn([action.group, action.field], () => action.value);
-    } else {
-        newState = state.set(action.group, new $Map())
-            .updateIn([action.group, action.field], () => action.value);
-    }
+    const newState = state.updateIn([action.group, action.field], () => action.value);
 
     localStorage.setItem(SETTINGS, JSON.stringify(newState.toJSON()));
     return newState;

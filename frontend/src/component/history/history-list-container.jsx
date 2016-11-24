@@ -3,11 +3,7 @@ import HistoryListComponent from './history-list-component';
 import { updateSettingForGroup } from '../../store/settings/actions';
 
 const mapStateToProps = (state) => {
-    let settings = {};
-    const historySettings =  state.settings.get('history');
-    if (historySettings) {
-        settings = historySettings.toJS();
-    }
+    const settings = state.settings.toJS().history || {};
 
     return {
         settings,

@@ -1,5 +1,5 @@
 import { Map as $Map } from 'immutable';
-import { USER_UPDATE_USERNAME, USER_SAVE } from './actions';
+import { USER_UPDATE_USERNAME, USER_SAVE, USER_EDIT } from './actions';
 
 const COOKIE_NAME = 'username';
 
@@ -49,6 +49,8 @@ const settingStore = (state = getInitState(), action) => {
             return updateUserName(state, action);
         case USER_SAVE:
             return save(state);
+        case USER_EDIT:
+            return state.set('showDialog', true);
         default:
             return state;
     }

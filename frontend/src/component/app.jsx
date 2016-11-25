@@ -4,6 +4,7 @@ import style from './styles.scss';
 import ErrorContainer from './error/error-container';
 
 import UserContainer from './user/user-container';
+import ShowUserContainer from './user/show-user-container';
 
 import Navigation from './nav';
 
@@ -22,7 +23,9 @@ export default class App extends Component {
     render () {
         return (
             <div className={style.container}>
-                <AppBar title="Unleash Admin" leftIcon="menu" onLeftIconClick={this.toggleDrawerActive} className={style.appBar} />
+                <AppBar title="Unleash Admin" leftIcon="menu" onLeftIconClick={this.toggleDrawerActive} className={style.appBar}>
+                    <ShowUserContainer />
+                </AppBar>
                 <div className={style.container} style={{ top: '6.4rem' }}>
                     <Layout>
                         <NavDrawer active={this.state.drawerActive} permanentAt="sm" onOverlayClick={this.onOverlayClick} >

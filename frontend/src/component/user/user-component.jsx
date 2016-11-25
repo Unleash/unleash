@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Dialog from 'react-toolbox/lib/dialog';
 import Input from 'react-toolbox/lib/input';
 
-class ErrorComponent extends React.Component {
+class EditUserComponent extends React.Component {
     static propTypes () {
         return {
             user: PropTypes.object.isRequired,
@@ -45,4 +45,4 @@ class ErrorComponent extends React.Component {
     }
 }
 
-export default ErrorComponent;
+export default EditUserComponent;

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import HistoryList from './history-list-container';
 
-class History extends Component {
+class History extends PureComponent {
 
     componentDidMount () {
         this.props.fetchHistory();

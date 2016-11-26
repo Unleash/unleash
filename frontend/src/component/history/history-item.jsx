@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, PureComponent } from 'react';
 
 import FontIcon from 'react-toolbox/lib/font_icon';
 
@@ -70,7 +70,7 @@ function buildDiff (diff, idx) {
     return (<div key={idx}>{change}</div>);
 }
 
-class HistoryItem extends Component {
+class HistoryItem extends PureComponent {
 
     static propTypes () {
         return {

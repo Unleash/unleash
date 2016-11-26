@@ -3,7 +3,7 @@ import Feature from './feature-component';
 import { Link } from 'react-router';
 import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list';
 
-export default class FeatureListComponent extends React.Component {
+export default class FeatureListComponent extends React.PureComponent {
 
     static propTypes () {
         return {

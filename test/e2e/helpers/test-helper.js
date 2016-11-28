@@ -78,6 +78,13 @@ function createClientInstance (stores) {
             started: Date.now(),
             interval: 10,
         },
+        {
+            appName: 'demo-seed-2',
+            instanceId: 'test-2',
+            strategies: ['default'],
+            started: Date.now(),
+            interval: 10,
+        },
     ].map(client => stores.clientInstanceStore.insert(client));
 }
 

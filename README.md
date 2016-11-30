@@ -1,6 +1,6 @@
 # unleash
 
-__Warning: We will soon release the first official version of Unleash (1.0.0). If you want to test the previous package see [previous tag](https://github.com/unleash/unleash/tree/v1.0.0-alpha.2) __ 
+__Warning: We will soon release the first official version of Unleash (1.0.0). If you want to test the previous package see [previous tag](https://github.com/unleash/unleash/tree/v1.0.0-alpha.2)__ 
 
 [![Build Status](https://travis-ci.org/Unleash/unleash.svg?branch=master)](https://travis-ci.org/Unleash/unleash)
 [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master)

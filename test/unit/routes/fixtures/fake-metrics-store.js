@@ -3,4 +3,5 @@
 module.exports = () => ({
     getMetricsLastHour: () => Promise.resolve([]),
     insert: () => Promise.resolve(),
+    on: () => {}
 });

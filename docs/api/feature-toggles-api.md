@@ -1,10 +1,6 @@
-# API
-
-## Feature Toggles
-
 ### Fetching Feature Toggles
 
-**GET: http://unleash.host.com/api/features**
+`GET: http://unleash.host.com/api/features`
 
 **HEADERS:**
 
@@ -69,7 +65,7 @@ has the latest response locally.
 }
 ```
 
-**GET: http://unleash.host.com/api/features/:featureName**
+`GET: http://unleash.host.com/api/features/:featureName`
 
 Used to fetch details about a specific featureToggle. This is mostly provded to make it easy to 
 debug the API and should not be used by the client implementations.
@@ -95,7 +91,7 @@ debug the API and should not be used by the client implementations.
 
 ### Create a new Feature Toggle
 
-**POST: http://unleash.host.com/api/features/**
+`POST: http://unleash.host.com/api/features/`
 
 **Body:**
  ```json
@@ -119,7 +115,7 @@ Returns 200-respose if the feature toggle was created successfully.
 
 ### Update a Feature Toggle
 
-**PUT: http://unleash.host.com/api/features/:toggleName**
+`PUT: http://unleash.host.com/api/features/:toggleName`
 
 **Body:**
  ```json
@@ -143,7 +139,7 @@ Returns 200-respose if the feature toggle was updated successfully.
 
 ### Archive a Feature Toggle
 
-**DELETE: http://unleash.host.com/api/features/:toggleName**
+`DELETE: http://unleash.host.com/api/features/:toggleName`
 
 Used to archive a feature toggle. A feature toggle can never be totally be deleted, 
 but can be archived. This is a design decision to make sure that a old feature 
@@ -153,7 +149,7 @@ toggle suddnely reapear by some one else reusing the same name.
 
 ### Fetch archived toggles
 
-**GET http://unleash.host.com/api/archive/features**
+`GET http://unleash.host.com/api/archive/features`
 
 Used to fetch list of archived feature toggles
 
@@ -181,7 +177,7 @@ Used to fetch list of archived feature toggles
 
 ### Revive feature toggle
 
-**POST http://unleash.host.com/api/archive/revive**
+`POST http://unleash.host.com/api/archive/revive`
 
 **Body:**
  ```json
@@ -191,106 +187,3 @@ Used to fetch list of archived feature toggles
 ```
 
 Used to revive a feature toggle. 
-
-
-## Strategies
-
-### Fetch Strategies 
-**GET: http://unleash.host.com/api/strategies**
-
-Used to fetch all defined strategies and their defined paramters. 
-
-**Response**
-
- ```json
-{
-    "version": 1,
-    "strategies": [
-        {
-        "name": "default",
-        "description": "Default on/off strategy.",
-            "parametersTemplate": null
-        },
-        {
-            "name": "ActiveForUserWithEmail",
-            "description": "A comma separated list of email adresses this feature should be active for.",
-            "parametersTemplate": {
-                "emails": "string"
-            }
-        },
-        {
-            "name": "Accounts",
-            "description": "Enable for user accounts",
-            "parametersTemplate": {
-                "Accountname": "string"
-            }
-        }
-]}
-```
-
-### Create strategy
-
-**POST: http://unleash.host.com/api/strategies**
-
-**Body**
-
-```json
-{
-    "name": "ActiveForUserWithEmail",
-    "description": "A comma separated list of email adresses this feature should be active for.",
-    "parametersTemplate": {
-        "emails": "string"
-    }
-}
-```
-
-Used to create a new Strategy. Name must be unique. 
-
-
-
-# Events
-
-**GET: http://unleash.host.com/api/events**
-
-Used to fetch all changes in the unleash system.
-
-Event types:
-
-- feature-created
-- feature-updated
-- feature-archived
-- feature-revived
-- strategy-created
-- strategy-deleted
-
-**Response**
-
- ```json
-{
-    "version": 1,
-    "events":[
-        {
-            "id":454,
-            "type":"feature-updated",
-            "createdBy":"unknown",
-            "createdAt":"2016-08-24T11:22:01.354Z",
-            "data": {
-                "name":"eid.bankid.mobile",
-                "description":"",
-                "strategy":"default",
-                "enabled":true,
-                "parameters":{}
-            },
-            "diffs": [
-                {"kind":"E","path":["enabled"],"lhs":false,"rhs":true}
-            ]
-        }
-    ]
-}
-```
-
-
-# Metrics
-
-[Metrics](api/metrics.md)
-

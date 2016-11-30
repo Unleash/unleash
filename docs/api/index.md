@@ -1,6 +1,8 @@
 # API Documentation
 
-Contents:
+Version: 1.0
+
+**Contents:**
 
 * [Feature Toggles API](feature-toggles-api.md)
 * [Strategies API](strategies-api.md)

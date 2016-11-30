@@ -1,6 +1,6 @@
 const defaultErrorMessage = 'Unexptected exception when talking to unleash-api';
 
-const URI = '/api/metrics/features';
+const URI = '/api/metrics/feature-toggles';
 
 function throwIfNotSuccess (response) {
     if (!response.ok) {

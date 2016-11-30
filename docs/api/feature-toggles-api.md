@@ -143,7 +143,7 @@ Returns 200-respose if the feature toggle was updated successfully.
 
 Used to archive a feature toggle. A feature toggle can never be totally be deleted, 
 but can be archived. This is a design decision to make sure that a old feature 
-toggle suddnely reapear by some one else reusing the same name.
+toggle suddenly reappears becuase someone else re-using the same name.
 
 ## Archive
 

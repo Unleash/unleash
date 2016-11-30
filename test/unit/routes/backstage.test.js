@@ -13,10 +13,11 @@ test.beforeEach(() =>  {
     logger.setLevel('FATAL');
 });
 
-test('should add version numbers for /stategies', t => {
+test('should use enable prometheus', t => {
     const stores = store.createStores();
     const app = getApp({
         baseUriPath: '',
+        serverMetrics: true,
         stores,
         eventBus,
     });
@@ -24,10 +25,7 @@ test('should add version numbers for /stategies', t => {
     const request = supertest(app);
 
     return request
-        .get('/api/strategies')
-        .expect('Content-Type', /json/)
+        .get('/internal-backstage/prometheus')
+        .expect('Content-Type', /text/)
         .expect(200)
-        .expect((res) => {
-            t.true(res.body.version === 1);
-        });
 });

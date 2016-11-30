@@ -71,6 +71,7 @@
     "moment": "^2.15.2",
     "parse-database-url": "^0.3.0",
     "pg": "^6.1.0",
+    "prom-client": "^6.1.2",
     "serve-favicon": "^2.3.0",
     "unleash-frontend": "github:unleash/unleash-frontend",
     "yallist": "^2.0.0"

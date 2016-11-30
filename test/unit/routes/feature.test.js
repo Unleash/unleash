@@ -6,6 +6,9 @@ const supertest = require('supertest');
 const logger = require('../../../lib/logger');
 const getApp = require('../../../lib/app');
 
+const { EventEmitter } = require('events');
+const eventBus = new EventEmitter();
+
 test.beforeEach(() =>  {
     logger.setLevel('FATAL');
 });
@@ -16,6 +19,7 @@ function getSetup () {
     const app = getApp({
         baseUriPath: base,
         stores,
+        eventBus,
     });
 
     return {

@@ -15,6 +15,9 @@ require('db-migrate-shared').log.silence(true);
 // because of migrator bug
 delete process.env.DATABASE_URL;
 
+const { EventEmitter } = require('events');
+const eventBus = new EventEmitter();
+
 function createApp (databaseSchema = 'test') {
     const options = {
         databaseUri: require('./database-config').getDatabaseUri(),
@@ -29,7 +32,7 @@ function createApp (databaseSchema = 'test') {
         .then(() => {
             db.destroy();
             const stores = createStores(options);
-            const app = getApp({ stores });
+            const app = getApp({ stores, eventBus });
             return {
                 stores,
                 request: supertest(app),

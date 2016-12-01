@@ -96,7 +96,7 @@ will in most cases remember seen-toggles for applications longer
 
 ### Feature-Toggles metrics
 
-`GET http://unleash.host.com/api/metrics/feature-toggles`
+`GET http://unleash.host.com/api/client/metrics/feature-toggles`
 
 This endpoint gives _last minute_ and _last hour_ metrics for all active toggles. This is based on 
 metrics reported by client applications. Yes is the number of times a given feature toggle 

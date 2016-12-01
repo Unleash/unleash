@@ -1,6 +1,6 @@
 'use strict';
 
-const clientMetricsStore = require('./fake-metrics-store');
+const ClientMetricsStore = require('./fake-metrics-store');
 const clientStrategyStore = require('./fake-client-strategy-store');
 const clientInstanceStore = require('./fake-client-instance-store');
 const featureToggleStore = require('./fake-feature-toggle-store');
@@ -19,7 +19,7 @@ module.exports = {
 
         return {
             db,
-            clientMetricsStore: clientMetricsStore(),
+            clientMetricsStore: new ClientMetricsStore(),
             clientStrategyStore: clientStrategyStore(),
             clientInstanceStore: clientInstanceStore(),
             featureToggleStore: featureToggleStore(),

@@ -16,6 +16,29 @@ Known client implementations:
 - [unleash-client-node](https://github.com/unleash/unleash-client-node)
 - (you implementaiton here!)
 
+# Running Unleash 
+
+## Requirements
+
+You will need a __PostreSQL__ 9.3+ database instance to be able to run Unleash.
+
+When starting Unleash you must specify a database uri (can be set as environment variable DATABASE_URL) 
+which includes a username and password,  that have rights to migrate the database.
+
+_Unleash_ will, at startup, check whether database migration is needed, and perform necessary migrations.
+
+## Start Unleash 
+### 1. The simplest way to get started:
+
+```bash
+$ npm install unleash-server -g
+$ unleash -d postgres://unleash_user:passord@localhost:5432/unleash -p 4242
+
+Unleash started on port:4242
+```
+
+You can also require Unleash as a lib and expend it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md). 
+
 ## Project details
 - [Project Roadmap](https://github.com/unleash/unleash/wiki/Roadmap)
 

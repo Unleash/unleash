@@ -1,6 +1,6 @@
 # Developer Guide
 
-## Postgre
+## PostgreSQL
 To run and develop unleash you need to have PostgreSQL databse (PostgreSQL v.9.5.x or newer) locally.
 
 

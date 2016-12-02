@@ -62,6 +62,14 @@ test('should require strategies field', () => {
         .expect(400);
 });
 
+test('should validate client metrics', () => {
+    const { request } = getSetup();
+    return request
+        .post('/api/client/metrics')
+        .send({random: 'blush'})
+        .expect(400);
+});
+
 
 test('should accept client metrics', () => {
     const { request } = getSetup();

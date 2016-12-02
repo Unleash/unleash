@@ -22,6 +22,27 @@ test.serial('should register client', async (t) => {
         .then(destroy);
 });
 
+test.serial('should allow client to register multiple times', async (t) => {
+    const { request, destroy  } = await setupApp('metrics_serial');
+    const clientRegistration = {
+            appName: 'multipleRegistration',
+            instanceId: 'test',
+            strategies: ['default', 'another'],
+            started: Date.now(),
+            interval: 10
+    };
+
+    return request
+        .post('/api/client/register')
+        .send(clientRegistration)
+        .expect(202)
+        .then(() => request
+            .post('/api/client/register')
+            .send(clientRegistration)
+            .expect(202))
+        .then(destroy);
+});
+
 test.serial('should accept client metrics', async t => {
     const { request, destroy  } = await setupApp('metrics_serial');
     return request
@@ -75,4 +96,3 @@ test.serial('should get list of applications', async t => {
         })
         .then(destroy);
 });
-

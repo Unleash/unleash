@@ -4,7 +4,6 @@
 process.env.NODE_ENV = 'production';
 
 const program = require('commander');
-const { createOptions } = require('../lib/options.js');
 const serverImpl = require('../lib/server-impl.js');
 
 program
@@ -13,14 +12,16 @@ program
     .parse(process.argv);
 
 const userOpts = {};
+
 if(program.databaseUri) {
     userOpts.databaseUri = program.databaseUri;
 }
+
 if(program.port) {
     userOpts.port = program.port;
 }
 
-serverImpl.start(createOptions(userOpts))
+serverImpl.start(userOpts)
     .then(conf => console.log(`Unleash started on http://localhost:${conf.app.get('port')}`))
     .catch(console.err);
 

@@ -3,20 +3,24 @@
 
 process.env.NODE_ENV = 'production';
 
-const { publicFolder } = require('unleash-frontend');
 const program = require('commander');
-const unleash = require('../lib/server-impl.js');
+const { createOptions } = require('../lib/options.js');
+const serverImpl = require('../lib/server-impl.js');
 
 program
     .option('-p, --port <port>', 'The port you want to start unleash on')
     .option('-d, --databaseUri <databaseUri>', 'The full databaseUri to connect to, including username and password')
     .parse(process.argv);
 
-unleash.start({
-    databaseUri: program.databaseUri || process.env.DATABASE_URL,
-    port: program.port || process.env.PORT || 4242,
-    publicFolder,
-}).then(conf => {
-    console.log(`Unleash started on port:${conf.app.get('port')}`);
-});
+const userOpts = {};
+if(program.databaseUri) {
+    userOpts.databaseUri = program.databaseUri;
+}
+if(program.port) {
+    userOpts.port = program.port;
+}
+
+serverImpl.start(createOptions(userOpts))
+    .then(conf => console.log(`Unleash started on http://localhost:${conf.app.get('port')}`))
+    .catch(console.err);
 

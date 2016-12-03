@@ -6,15 +6,49 @@ __Warning: We will soon release the first official version of Unleash (1.0.0). I
 [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master)
 [![Dependency Status](https://david-dm.org/Unleash/unleash.svg)](https://david-dm.org/Unleash/unleash)
 [![devDependency Status](https://david-dm.org/Unleash/unleash/dev-status.svg)](https://david-dm.org/Unleash/unleash#info=devD)
-![Admin UI](https://cloud.githubusercontent.com/assets/572/5873775/3ddc1a66-a2fa-11e4-923c-0a9569605dad.png)
-[Demo](http://unleash.herokuapp.com/) instance on Heroku
 
-This repo contains the unleash-server, which contains the admin UI and a place to ask for the status of features. In order to make use of unleash you will also need a client implementation.
 
-Known client implementations:
+Unleash is a feature toggle system, that gives you a great overview over all feature toggles across 
+all your applications and services. It comes with client implementations for Java and Node, and it is 
+easy fairly easy to develop client implementaiton for your favourite language. 
+
+The main motivation for doing feature toggling is to decouple the process for deploying code to production 
+and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
+
+> Decoupling  **deployment** of code  and  **release** of new features
+
+
+This repo contains the unleash-server, which contains the admin UI and a place to ask for the status of features. 
+In order to make use of unleash you will also need a client implementation.
+
+## Activation strategies
+It's fine to have a system for turning stuff on and off. But some times we want more granular controll, 
+we want to decide who to the toggle should be enabled for. This is where activation strategies comes in to 
+the picture. Activation strategies takes arbitrary config and allows us to enable a toggle in various ways.
+
+Common activation strategies includes:
+- Active For users with a specified userId
+- GradualRollout to X-percent of our users
+- Active for our beta users
+- Active only for application instances running on host x. 
+
+Read more about activation strategies in [docs/acitvation-strategues.md](docs/acitvation-strategues.md)
+
+## Client implementations
 - [unleash-client-java](https://github.com/unleash/unleash-client-java)
 - [unleash-client-node](https://github.com/unleash/unleash-client-node)
 - (you implementaiton here!)
+
+Client implentations makes it is easy for developers to check whether a toggle is enabled or disabled. 
+
+```
+if(unleash.isEnabled("AwesomeFeature")) {
+  //do some magic
+} else {
+  //do old boring stuff
+}
+```
+
 
 # Running Unleash 
 

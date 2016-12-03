@@ -23,9 +23,6 @@ const argv = require('yargs')
     })
     .argv
 
-console.log(argv.databaseUrl);
-
 serverImpl.start(argv)
     .then(conf => console.log(`Unleash started on http://localhost:${conf.app.get('port')}`))
     .catch(console.err);
-

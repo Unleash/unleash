@@ -32,7 +32,7 @@ Common activation strategies includes:
 - Active for our beta users
 - Active only for application instances running on host x. 
 
-Read more about activation strategies in [docs/acitvation-strategues.md](docs/acitvation-strategues.md)
+Read more about activation strategies in [docs/activation-strategies.md](./docs/activation-strategies.md)
 
 ## Client implementations
 - [unleash-client-java](https://github.com/unleash/unleash-client-java)

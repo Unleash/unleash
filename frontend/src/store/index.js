@@ -11,6 +11,7 @@ import clientStrategies from './client-strategy-store';
 import clientInstances from './client-instance-store';
 import settings from './settings';
 import user from './user';
+import applications from './application';
 
 const unleashStore = combineReducers({
     features,
@@ -25,6 +26,7 @@ const unleashStore = combineReducers({
     clientInstances,
     settings,
     user,
+    applications,
 });
 
 export default unleashStore;

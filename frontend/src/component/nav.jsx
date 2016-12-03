@@ -22,9 +22,8 @@ export default class UnleashNav extends Component {
                     <ListDivider />
 
                     <ListSubHeader caption="Clients" />
-                    {createListItem('/metrics', 'Client metrics')}
+                    {createListItem('/applications', 'Client applications')}
                     {createListItem('/client-strategies', 'Client strategies')}
-                    {createListItem('/client-instances', 'Client instances')}
 
                     <ListDivider />
 

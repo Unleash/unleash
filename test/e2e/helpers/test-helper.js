@@ -20,12 +20,12 @@ const eventBus = new EventEmitter();
 
 function createApp (databaseSchema = 'test') {
     const options = {
-        databaseUri: require('./database-config').getDatabaseUri(),
+        databaseUrl: require('./database-config').getDatabaseUrl(),
         databaseSchema,
         minPool: 0,
         maxPool: 0,
     };
-    const db = createDb({ databaseUri: options.databaseUri, minPool: 0, maxPool: 0 });
+    const db = createDb({ databaseUrl: options.databaseUrl, minPool: 0, maxPool: 0 });
 
     return db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`)
         .then(() => migrator(options))

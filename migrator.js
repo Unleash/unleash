@@ -3,8 +3,8 @@
 const { getInstance } = require('db-migrate');
 const parseDbUrl = require('parse-database-url');
 
-function migrateDb ({ databaseUri, databaseSchema = 'public' }) {
-    const custom = parseDbUrl(databaseUri);
+function migrateDb ({ databaseUrl, databaseSchema = 'public' }) {
+    const custom = parseDbUrl(databaseUrl);
     custom.schema = databaseSchema;
     const dbmigrate = getInstance(true, {
         cwd: __dirname,

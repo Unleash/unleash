@@ -1,6 +1,6 @@
 'use strict';
 
-function getDatabaseUri () {
+function getDatabaseUrl () {
     if (process.env.TEST_DATABASE_URL) {
         return process.env.TEST_DATABASE_URL;
     } else {
@@ -9,5 +9,5 @@ function getDatabaseUri () {
 }
 
 module.exports = {
-    getDatabaseUri,
+    getDatabaseUrl,
 };

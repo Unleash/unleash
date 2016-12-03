@@ -75,7 +75,8 @@
     "response-time": "^2.3.2",
     "serve-favicon": "^2.3.0",
     "unleash-frontend": "github:unleash/unleash-frontend",
-    "yallist": "^2.0.0"
+    "yallist": "^2.0.0",
+    "yargs": "^6.5.0"
   },
   "devDependencies": {
     "@types/node": "^6.0.46",

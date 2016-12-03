@@ -79,24 +79,16 @@ class HistoryItem extends PureComponent {
     }
 
     renderEventDiff (logEntry) {
-        if (!logEntry.diffs) {
-            return;
+        let changes;
+
+        if (logEntry.diffs) {
+            changes = logEntry.diffs.map(buildDiff);
+        } else {
+            // Just show the data if there is no diff yet.
+            changes = <div className={SPADEN_CLASS.N}>{JSON.stringify(logEntry.data, null, 2)}</div>;
         }
-        const changes = logEntry.diffs.map(buildDiff);
-        return (
-            <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>
-        );
-    }
 
-    renderFullEventData (logEntry) {
-        const localEventData = JSON.parse(JSON.stringify(logEntry));
-        delete localEventData.description;
-        delete localEventData.name;
-        delete localEventData.diffs;
-
-        const prettyPrinted = JSON.stringify(localEventData, null, 2);
-
-        return (<code className="JSON smalltext man">{prettyPrinted}</code>);
+        return <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>;
     }
 
     render () {
@@ -109,26 +101,26 @@ class HistoryItem extends PureComponent {
         const createdAt = (new Date(this.props.entry.createdAt)).toLocaleString('nb-NO');
         const icon = getIcon(type);
 
-        const data = this.props.showData ?
-            this.renderFullEventData(this.props.entry) : this.renderEventDiff(this.props.entry);
+        const data = this.renderEventDiff(this.props.entry);
 
         return (
-            <tr>
-                <td>
-                    <FontIcon value={icon} title={type} /> {type}
-                    <dl>
-                        <dt>Id:</dt>
-                        <dd>{id}</dd>
-                        <dt>Type:</dt>
-                        <dd>{type}</dd>
-                        <dt>Timestamp:</dt>
-                        <dd>{createdAt}</dd>
-                        <dt>Username:</dt>
-                        <dd>{createdBy}</dd>
-                    </dl>
-                </td>
-                <td>{data}</td>
-             </tr>
+            <div className={style['history-item']}>
+                <dl>
+                    <dt>Id:</dt>
+                    <dd>{id}</dd>
+                    <dt>Type:</dt>
+                    <dd>
+                        <FontIcon value={icon} title={type} style={{ fontSize: '1.6rem' }} />
+                        <span> {type}</span>
+                    </dd>
+                    <dt>Timestamp:</dt>
+                    <dd>{createdAt}</dd>
+                    <dt>Username:</dt>
+                    <dd>{createdBy}</dd>
+                    <dt>Diff</dt>
+                    <dd>{data}</dd>
+                </dl>
+             </div>
         );
     }
 }

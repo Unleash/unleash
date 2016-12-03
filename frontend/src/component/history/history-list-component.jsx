@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import HistoryItem from './history-item';
+import HistoryItemDiff from './history-item-diff';
+import HistoryItemJson from './history-item-json';
 import Switch from 'react-toolbox/lib/switch';
 
 import style from './history.scss';
@@ -17,20 +18,22 @@ class HistoryList extends Component {
             return null;
         }
 
-        const entries =  history.map((entry) => <HistoryItem  key={`log${entry.id}`} entry={entry} showData={showData} />);
+        let entries;
+
+        if (showData) {
+            entries =  history.map((entry) => <HistoryItemJson  key={`log${entry.id}`} entry={entry} />);
+        } else {
+            entries =  history.map((entry) => <HistoryItemDiff  key={`log${entry.id}`} entry={entry} />);
+        }
 
         return (
-            <div>
+            <div className={style.history}>
                 <Switch
                     checked={showData}
                     label="Show full events"
                     onChange={this.toggleShowDiff.bind(this)}
                     />
-                <table className={style.history}>
-                    <tbody>
-                        {entries}
-                    </tbody>
-                </table>
+               {entries}
             </div>
         );
     }

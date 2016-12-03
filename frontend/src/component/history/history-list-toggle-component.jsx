@@ -27,6 +27,7 @@ class HistoryListToggle extends Component {
         if (this.state.fetching) {
             return <span>fetching..</span>;
         }
+
         return (
             <div>
                 <h5>Showing history for toggle: <strong>{this.props.toggleName}</strong></h5>

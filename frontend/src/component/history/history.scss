@@ -1,31 +1,6 @@
 .history {
     width:100%;
     border-collapse: collapse;
-
-    td {
-        vertical-align: top;
-        padding: 8px;
-        margin-bottom: 4px;
-    }
-
-    tbody tr:nth-child(odd) {
-        background-color: #efefef;
-    }
-
-    td + td {
-        border-left: 1px solid white;
-    }
-
-    tr {
-        display: flex;
-        align-items: stretch;
-    }
-    
-    td:last-child {
-        flex: 1;
-        display:inline-block;
-        /* to keep IE happy */
-    }
     
     code {
         word-wrap: break-word;
@@ -75,4 +50,8 @@
         margin: 0 0 0 110px;
         padding: 0 0 0.5em 0;
     }
+}
+
+.history-item:nth-child(odd) {
+    background-color: #efefef;
 }

@@ -3,6 +3,14 @@ import React, { PropTypes } from 'react';
 import Input from 'react-toolbox/lib/input';
 import Button from 'react-toolbox/lib/button';
 
+const trim = (value) => {
+    if (value && value.trim) {
+        return value.trim();
+    } else {
+        return value;
+    }
+};
+
 function gerArrayWithEntries (num) {
     return Array.from(Array(num));
 }
@@ -33,7 +41,7 @@ const AddStrategy = ({
             <Input type="text" label="Strategy name"
                 name="name" required
                 pattern="^[0-9a-zA-Z\.\-]+$"
-                onChange={(value) => setValue('name', value)}
+                onChange={(value) => setValue('name', trim(value))}
                 value={input.name}
                 />
             <Input type="text" multiline label="Description"

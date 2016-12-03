@@ -4,6 +4,14 @@ import Button from 'react-toolbox/lib/button';
 import Switch from 'react-toolbox/lib/switch';
 import StrategiesSection from './strategies-section-container';
 
+const trim = (value) => {
+    if (value && value.trim) {
+        return value.trim();
+    } else {
+        return value;
+    }
+};
+
 class AddFeatureToggleComponent extends Component {
 
     componentWillMount () {
@@ -46,7 +54,7 @@ class AddFeatureToggleComponent extends Component {
                         value={name}
                         error={nameError}
                         onBlur={(v) => validateName(v)}
-                        onChange={(v) => setValue('name', v)} />
+                        onChange={(v) => setValue('name', trim(v))} />
                     <Input
                         type="text"
                         multiline label="Description"

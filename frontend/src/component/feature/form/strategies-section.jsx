@@ -29,9 +29,8 @@ class StrategiesSection extends React.Component {
 
         return (
             <div>
-                <h5 style={headerStyle}>Activation strategies</h5>
+                <h5 style={headerStyle}>Activation strategies <AddStrategy {...this.props} /> </h5>
                 <StrategiesList {...this.props} />
-                <AddStrategy {...this.props} />
             </div>
         );
     }

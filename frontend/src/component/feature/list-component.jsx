@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Feature from './feature-component';
 import { Link } from 'react-router';
-import { Icon, Chip, ChipContact, IconButton, Button, FABButton, Textfield, Menu, MenuItem } from 'react-mdl';
+import { Icon, Chip, ChipContact, IconButton, FABButton, Textfield, Menu, MenuItem } from 'react-mdl';
 
 import styles from './feature.scss';
 
@@ -114,9 +114,10 @@ export default class FeatureListComponent extends React.PureComponent {
                 )}
                 </ul>
                 <hr />
-                <Link to="/features/create">
-                    <Icon name="add" />
-                    <strong>Create </strong><small>new feature toggle</small>
+                <Link to="/features/create" className={styles.topListItem0}>
+                    <FABButton ripple component="span" mini>
+                        <Icon name="add" />
+                    </FABButton>
                 </Link>
            </div>
         );

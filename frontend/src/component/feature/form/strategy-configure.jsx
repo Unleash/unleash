@@ -12,9 +12,9 @@ class StrategyConfigure extends React.Component {
         };
     }
 
-    handleConfigChange = (key, value) => {
+    handleConfigChange = (key, e) => {
         const parameters = this.props.strategy.parameters || {};
-        parameters[key] = value;
+        parameters[key] = e.target.value;
 
         const updatedStrategy = Object.assign({}, this.props.strategy, { parameters });
 
@@ -30,7 +30,6 @@ class StrategyConfigure extends React.Component {
         if (strategyDefinition.parametersTemplate) {
             return Object.keys(strategyDefinition.parametersTemplate).map(field => (
                 <Textfield
-                    type="text"
                     key={field}
                     name={field}
                     label={field}

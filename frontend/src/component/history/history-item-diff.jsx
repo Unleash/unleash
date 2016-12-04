@@ -1,6 +1,5 @@
 import React, { PropTypes, PureComponent } from 'react';
-
-import FontIcon from 'react-toolbox/lib/font_icon';
+import { Icon } from 'react-mdl';
 
 import style from './history.scss';
 
@@ -110,7 +109,7 @@ class HistoryItem extends PureComponent {
                     <dd>{id}</dd>
                     <dt>Type:</dt>
                     <dd>
-                        <FontIcon value={icon} title={type} style={{ fontSize: '1.6rem' }} />
+                        <Icon name={icon} title={type} style={{ fontSize: '1.6rem' }} />
                         <span> {type}</span>
                     </dd>
                     <dt>Timestamp:</dt>

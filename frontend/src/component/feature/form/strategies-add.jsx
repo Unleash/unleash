@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
-import Dropdown from 'react-toolbox/lib/dropdown';
-import FontIcon from 'react-toolbox/lib/font_icon';
+// import Dropdown from 'react-toolbox/lib/dropdown';
+// TODO use menu
+import { Icon }  from 'react-mdl';
 
 class AddStrategy extends React.Component {
 
@@ -41,7 +42,7 @@ class AddStrategy extends React.Component {
 
         return (
         <div style={containerStyle}>
-            <FontIcon value="add" />
+            <Icon value="add" />
             <div style={contentStyle}>
                 <strong>{item.name}</strong>
                 <small>{item.description}</small>
@@ -56,9 +57,9 @@ class AddStrategy extends React.Component {
             return s;
         });
 
-        return (
-            <div style={{ maxWidth: '400px', marginTop: '20px' }}>
-                <Dropdown
+/*
+
+<Dropdown
                     allowBlank={false}
                     auto
                     source={strats}
@@ -66,6 +67,12 @@ class AddStrategy extends React.Component {
                     label="Click to add activation strategy"
                     template={this.customItem}
                 />
+                
+*/
+
+        return (
+            <div style={{ maxWidth: '400px', marginTop: '20px' }}>
+                
             </div>
         );
     }

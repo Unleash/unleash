@@ -1,13 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import Table from 'react-toolbox/lib/table';
-
-const Model = {
-    appName: { type: String, title: 'Application Name' },
-    instanceId: { type: String },
-    clientIp: { type: String },
-    createdAt: { type: String },
-    lastSeen: { type: String },
-};
+import { DataTable, TableHeader }  from 'react-mdl';
 
 class ClientStrategies extends Component {
     static propTypes () {
@@ -25,11 +17,20 @@ class ClientStrategies extends Component {
         const source = this.props.clientInstances;
 
         return (
-            <Table
-                model={Model}
-                source={source}
+            <DataTable
+                style={{ width: '100%' }}
+                rows={source}
                 selectable={false}
-            />
+            >
+                                
+                                
+                <TableHeader name="instanceId">Instance ID</TableHeader>
+                <TableHeader name="appName">Application name</TableHeader>
+                <TableHeader name="clientIp">IP</TableHeader>
+                <TableHeader name="createdAt">Created</TableHeader>
+                <TableHeader name="lastSeen">Last Seen</TableHeader>
+                
+            </DataTable>
         );
     }
 }

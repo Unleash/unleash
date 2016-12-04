@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import HistoryItemDiff from './history-item-diff';
 import HistoryItemJson from './history-item-json';
-import Switch from 'react-toolbox/lib/switch';
+import { Switch } from 'react-mdl';
 
 import style from './history.scss';
 
@@ -28,11 +28,7 @@ class HistoryList extends Component {
 
         return (
             <div className={style.history}>
-                <Switch
-                    checked={showData}
-                    label="Show full events"
-                    onChange={this.toggleShowDiff.bind(this)}
-                    />
+                <Switch checked={showData} onChange={this.toggleShowDiff.bind(this)}>Show full events</Switch>
                {entries}
             </div>
         );

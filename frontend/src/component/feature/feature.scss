@@ -1,7 +1,3 @@
-.link {
-    color: #212121;
-}
-
 .action {
     color: #aaa !important;
     cursor: pointer;
@@ -13,4 +9,53 @@
 
 .no {
     color: red;
+}
+
+.link {
+    color: #212121;
+    text-decoration: none;
+}
+
+.link small {
+    color: #aaa;
+    font-weight: 100;
+}
+
+.link:hover {
+    color: #000;
+}
+
+.iconList {
+    display: flex;
+}
+
+.iconListItem {
+    flex: 1;
+    color: #bbb !important;
+}
+.iconListItem *:hover {
+    color: #333;
+}
+
+.iconListItemChip {
+    flex: 1;
+    margin-left: 5px !important;
+}
+
+.topList {
+    display: flex;
+    margin: 10px 10px 10px 10px;
+}
+
+.topListItem0 {
+    flex: 1;
+    flex-grow: 0;
+}
+
+.topListItem {
+    flex: 1;
+}
+
+.topListItem2 {
+    flex: 2;
 }

@@ -1,0 +1,17 @@
+.path {
+    stroke: #3f51b5;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 5s ease 0s;
+}
+
+.trail {
+    stroke: #d6d6d6;
+}
+
+.text {
+    fill: rgba(0, 0, 0, 0.7);
+    font-size: 25px;
+    line-height: 25px;
+    dominant-baseline: middle;
+    text-anchor: middle;
+}

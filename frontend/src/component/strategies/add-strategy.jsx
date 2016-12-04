@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import Input from 'react-toolbox/lib/input';
-import Button from 'react-toolbox/lib/button';
+import { Textfield, Button, IconButton } from 'react-mdl';
 
 const trim = (value) => {
     if (value && value.trim) {
@@ -19,11 +18,10 @@ export const PARAM_PREFIX = 'param_';
 const genParams = (input, num = 0, setValue) => (<div>{gerArrayWithEntries(num).map((v, i) => {
     const key = `${PARAM_PREFIX}${i + 1}`;
     return (
-        <Input
-            type="text"
+        <Textfield
             label={`Parameter name ${i + 1}`}
             name={key} key={key}
-            onChange={(value) => setValue(key, value)}
+            onChange={({ target }) => setValue(key, target.value)}
             value={input[key]} />
     );
 })}</div>);
@@ -38,22 +36,25 @@ const AddStrategy = ({
 }) => (
     <form onSubmit={onSubmit(input)}>
         <section>
-            <Input type="text" label="Strategy name"
+            <Textfield label="Strategy name"
                 name="name" required
                 pattern="^[0-9a-zA-Z\.\-]+$"
-                onChange={(value) => setValue('name', trim(value))}
+                onChange={({ target }) => setValue('name', trim(target.value))}
                 value={input.name}
                 />
-            <Input type="text" multiline label="Description"
+            <br />
+            <Textfield
+                rows={2}
+                label="Description"
                 name="description"
-                onChange={(value) => setValue('description', value)}
+                onChange={({ target }) => setValue('description', target.value)}
                 value={input.description}
                 />
         </section>
 
         <section>
             {genParams(input, input._params, setValue)}
-            <Button icon="add" accent label="Add parameter" onClick={(e) => {
+            <IconButton name="add" title="Add parameter" onClick={(e) => {
                 e.preventDefault();
                 incValue('_params');
             }}/>
@@ -63,9 +64,9 @@ const AddStrategy = ({
         <hr />
 
         <section>
-            <Button type="submit" raised primary label="Create" />
+            <Button type="submit" raised primary >Create</Button>
             &nbsp;
-            <Button type="cancel" raised label="Cancel" onClick={onCancel} />
+            <Button type="cancel" raised onClick={onCancel}>Cancel</Button>
         </section>
     </form>
 );

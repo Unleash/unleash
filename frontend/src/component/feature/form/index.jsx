@@ -1,7 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import Input from 'react-toolbox/lib/input';
-import Button from 'react-toolbox/lib/button';
-import Switch from 'react-toolbox/lib/switch';
+import { Textfield, Button, Switch } from 'react-mdl';
 import StrategiesSection from './strategies-section-container';
 
 const trim = (value) => {
@@ -45,29 +43,31 @@ class AddFeatureToggleComponent extends Component {
         return (
             <form onSubmit={onSubmit(input)}>
                 <section>
-                    <Input
-                        type="text"
+                    <Textfield
                         label="Name"
                         name="name"
                         disabled={editmode}
                         required
                         value={name}
                         error={nameError}
-                        onBlur={(v) => validateName(v)}
-                        onChange={(v) => setValue('name', trim(v))} />
-                    <Input
-                        type="text"
-                        multiline label="Description"
+                        onBlur={(v) => validateName(v.target.value)}
+                        onChange={(v) => setValue('name', trim(v.target.value))} />
+                    <br />
+                    <Textfield
+                        rows={2}
+                        label="Description"
                         required
                         value={description}
-                        onChange={(v) => setValue('description', v)} />
+                        onChange={(v) => setValue('description', v.target.value)} />
 
                     <br />
 
                     <Switch
                         checked={enabled}
-                        label="Enabled"
-                        onChange={(v) => setValue('enabled', v)} />
+                        onChange={(v) => {
+                                                // todo is wrong way to get value?
+                            setValue('enabled', (console.log(v.target) && v.target.value === 'on'));
+                        }}>Enabled</Switch>
                     <br />
                 </section>
 
@@ -78,12 +78,9 @@ class AddFeatureToggleComponent extends Component {
                     removeStrategy={removeStrategy} />
 
                 <br />
-
-                <hr />
-
-                <Button type="submit" raised primary label={editmode ? 'Update' : 'Create'} />
+                <Button type="submit" raised primary>{editmode ? 'Update' : 'Create'}</Button>
                 &nbsp;
-                <Button type="cancel" raised label="Cancel" onClick={onCancel} />
+                <Button type="cancel" raised onClick={onCancel}>Cancel</Button>
             </form>
         );
     }

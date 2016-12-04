@@ -1,30 +1,5 @@
 import React, { Component } from 'react';
-import { List, ListItem, ListSubHeader } from 'react-toolbox/lib/list';
-import FontIcon from 'react-toolbox/lib/font_icon';
-import Chip from 'react-toolbox/lib/chip';
-import Switch from 'react-toolbox/lib/switch';
-
-const ArchivedFeature = ({ feature, revive }) => {
-    const { name, description, enabled, strategies } = feature;
-    const actions = [
-        <div>{strategies && strategies.map(s => <Chip><small>{s.name}</small></Chip>)}</div>,
-        <FontIcon style={{ cursor: 'pointer' }} value="undo" onClick={() => revive(feature)} />,
-    ];
-
-    const leftActions = [
-        <Switch disabled checked={enabled} />,
-    ];
-
-    return (
-        <ListItem
-            key={name}
-            leftActions={leftActions}
-            rightActions={actions}
-            caption={name}
-            legend={(description && description.substring(0, 100)) || '-'}
-        />
-    );
-};
+import { DataTable, TableHeader, Chip, Switch, IconButton } from 'react-mdl';
 
 class ArchiveList extends Component {
     componentDidMount () {
@@ -34,12 +9,20 @@ class ArchiveList extends Component {
     render () {
         const { archive, revive } = this.props;
         return (
-            <List ripple >
-                <ListSubHeader caption="Archive" />
-                {archive.length > 0 ?
-                    archive.map((feature, i) => <ArchivedFeature key={i} feature={feature} revive={revive} />) :
-                    <ListItem caption="No archived feature toggles" />}
-            </List>
+            <div>
+                <h6>Toggle Archive</h6>
+                        
+                <DataTable
+                    rows={archive}
+                    style={{ width: '100%' }}>
+                    <TableHeader style={{ width: '25px' }} name="strategies" cellFormatter={(name) => (
+                        <IconButton colored name="undo" onClick={() => revive(name)} />
+                    )}>Revive</TableHeader>
+                    <TableHeader style={{ width: '25px' }} name="enabled" cellFormatter={(v) => (v ? 'Yes' : '-')}>Enabled</TableHeader>
+                    <TableHeader name="name">Toggle name</TableHeader>
+                    <TableHeader numeric name="createdAt">Created</TableHeader>
+                </DataTable>
+            </div>
         );
     }
 }

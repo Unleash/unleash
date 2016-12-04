@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import Table from 'react-toolbox/lib/table';
-
-const Model = {
-    appName: { type: String, title: 'Application Name' },
-    strategies: { type: String },
-};
+import { DataTable, TableHeader }  from 'react-mdl';
 
 class ClientStrategies extends Component {
 
@@ -13,19 +8,25 @@ class ClientStrategies extends Component {
     }
 
     render () {
-        const source = this.props.clientStrategies.map(item => (
+        const source = this.props.clientStrategies
+        // temp hack for ignoring dumb data
+        .filter(item => item.strategies)
+        .map(item => (
             {
                 appName: item.appName,
-                strategies: item.strategies.join(', '),
+                strategies: item.strategies && item.strategies.join(', '),
             })
         );
 
         return (
-            <Table
-                model={Model}
-                source={source}
+            <DataTable
+                style={{ width: '100%' }}
+                rows={source}
                 selectable={false}
-            />
+            >
+                <TableHeader name="appName">Application name</TableHeader>
+                <TableHeader name="strategies">Strategies</TableHeader>
+            </DataTable>
         );
     }
 }

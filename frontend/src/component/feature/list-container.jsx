@@ -1,19 +1,79 @@
 import { connect } from 'react-redux';
 import { toggleFeature, fetchFeatureToggles, removeFeatureToggle } from '../../store/feature-actions';
 import { fetchFeatureMetrics } from '../../store/feature-metrics-actions';
+import { updateSettingForGroup } from '../../store/settings/actions';
+
 
 import FeatureListComponent from './list-component';
 
-const mapStateToProps = (state) => ({
-    features: state.features.toJS(),
-    featureMetrics: state.featureMetrics.toJS(),
-});
+const mapStateToProps = (state) => {
+    const featureMetrics = state.featureMetrics.toJS();
+    const settings = state.settings.toJS().feature || {};
+    let features = state.features.toJS();
+    if (settings.filter) {
+        features = features.filter(feature =>
+            (
+                feature.name.indexOf(settings.filter) > -1 ||
+                feature.description.indexOf(settings.filter) > -1 ||
+                feature.strategies.some(s => s && s.name && s.name.indexOf(settings.filter) > -1)
+            )
+        );
+    }
+
+    if (settings.sort) {
+        if (settings.sort === 'enabled') {
+            features = features.sort((a, b) => (
+                // eslint-disable-next-line
+                a.enabled === b.enabled ? 0 : a.enabled ? -1 : 1
+            ));
+        } else if (settings.sort === 'appName') {
+            // AppName
+            // features = features.sort((a, b) => {
+            //     if (a.appName < b.appName) { return -1; }
+            //     if (a.appName > b.appName) { return 1; }
+            //     return 0;
+            // });
+        } else if (settings.sort === 'created') {
+            features = features.sort((a, b) => (
+                new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1
+            ));
+        } else if (settings.sort === 'name') {
+            features = features.sort((a, b) => {
+                if (a.name < b.name) { return -1; }
+                if (a.name > b.name) { return 1; }
+                return 0;
+            });
+        } else if (settings.sort === 'strategies') {
+            features = features.sort((a, b) => (
+                a.strategies.length > b.strategies.length ? -1 : 1
+            ));
+        } else if (settings.sort === 'metrics') {
+            const target = settings.showLastHour ? featureMetrics.lastHour : featureMetrics.lastMinute;
+            
+            features = features.sort((a, b) => {
+                if (!target[a.name]) { return 1; }
+                if (!target[b.name]) { return -1; }
+                if (target[a.name].yes > target[b.name].yes) {
+                    return -1;
+                }
+                return 1;
+            });
+        }
+    }
+
+    return {
+        features,
+        featureMetrics,
+        settings,
+    };
+};
 
 const mapDispatchToProps = {
     onFeatureClick: toggleFeature,
     onFeatureRemove: removeFeatureToggle,
     fetchFeatureToggles,
     fetchFeatureMetrics,
+    updateSetting: updateSettingForGroup('feature'),
 };
 
 const FeatureListContainer = connect(

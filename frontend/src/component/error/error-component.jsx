@@ -1,5 +1,6 @@
-import Snackbar from 'react-toolbox/lib/snackbar';
 import React, { PropTypes } from 'react';
+
+import { Snackbar }  from 'react-mdl';
 
 class ErrorComponent extends React.Component {
     static propTypes () {

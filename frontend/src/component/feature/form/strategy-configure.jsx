@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
-import Input from 'react-toolbox/lib/input';
-import Button from 'react-toolbox/lib/button';
+import { Textfield, Button }  from 'react-mdl';
 
 class StrategyConfigure extends React.Component {
 
@@ -30,7 +29,7 @@ class StrategyConfigure extends React.Component {
     renderInputFields (strategyDefinition) {
         if (strategyDefinition.parametersTemplate) {
             return Object.keys(strategyDefinition.parametersTemplate).map(field => (
-                <Input
+                <Textfield
                     type="text"
                     key={field}
                     name={field}

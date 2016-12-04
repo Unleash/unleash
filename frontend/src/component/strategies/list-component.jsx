@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list';
-import FontIcon from 'react-toolbox/lib/font_icon';
-import Chip from 'react-toolbox/lib/chip';
+
+import { List, ListItem, ListItemContent, Icon, IconButton, Chip } from 'react-mdl';
 
 import style from './strategies.scss';
 
@@ -25,27 +24,24 @@ class StrategiesListComponent extends Component {
         const { strategies, removeStrategy } = this.props;
 
         return (
-            <List ripple >
-                <ListSubHeader caption="Strategies" />
+            <div>
+            <h5>Strategies</h5>
+            <IconButton name="add" onClick={() => this.context.router.push('/strategies/create')} title="Add new strategy"/>
+
+            <hr />
+            <List>
                 {strategies.length > 0 ? strategies.map((strategy, i) => {
-                    const actions = this.getParameterMap(strategy).concat([
-                        <button className={style['non-style-button']} key="1" onClick={() => removeStrategy(strategy)}>
-                            <FontIcon value="delete" />
-                        </button>,
-                    ]);
-
-
                     return (
-                        <ListItem key={i} rightActions={actions}
-                            caption={strategy.name}
-                            legend={strategy.description} />
+                        <ListItem key={i}>
+                            <ListItemContent><strong>{strategy.name}</strong> {strategy.description}</ListItemContent>
+                            <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
+                        </ListItem>
                     );
-                }) : <ListItem caption="No entries" />}
-                <ListDivider />
-                <ListItem
-                    onClick={() => this.context.router.push('/strategies/create')}
-                    caption="Add" legend="new strategy" leftIcon="add" />
+                }) : <ListItem>No entries</ListItem>}
+                
+
             </List>
+            </div>
         );
     }
 }

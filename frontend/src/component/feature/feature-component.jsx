@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
-
 import { Link } from 'react-router';
-import FontIcon from 'react-toolbox/lib/font_icon';
-import Switch from 'react-toolbox/lib/switch';
-import { ListItem } from 'react-toolbox/lib/list';
-import Chip from 'react-toolbox/lib/chip';
+import { Chip, Switch, Icon, Tooltip, IconButton, ChipContact } from 'react-mdl';
+import percentLib from 'percent';
+import Progress from './progress';
+
+
 
 import style from './feature.scss';
 
@@ -12,42 +12,55 @@ const Feature = ({
     feature,
     onFeatureClick,
     onFeatureRemove,
-    metricsLastHour = { yes: 0, no: 0, hasData: false },
-    metricsLastMinute = { yes: 0, no: 0, hasData: false },
+    settings,
+    metricsLastHour = { yes: 0, no: 0, isFallback: true },
+    metricsLastMinute = { yes: 0, no: 0, isFallback: true },
 }) => {
-    const { name, description, enabled, strategies, createdAt } = feature;
-    const created = new Date(createdAt);
+    const { name, description, enabled, strategies } = feature;
 
-    const actions = [
-        <div key="strategies">{strategies && strategies.map((s, i) => <Chip key={i}><small>{s.name}</small></Chip>)}</div>,
-        <div key="created"><small>({created.toLocaleDateString('nb-NO')})</small></div>,
-        <Link key="change" to={`/features/edit/${name}`} title={`Edit ${name}`}>
-            <FontIcon value="edit" className={style.action} />
-        </Link>,
-        <Link key="history" to={`/history/${name}`} title={`History for ${name}`}>
-            <FontIcon value="history" className={style.action} />
-        </Link>,
-        <FontIcon key="delete" className={style.action} value="delete" onClick={() => onFeatureRemove(name)} />,
-    ];
+    const { showLastHour = false } = settings;
+    const isStale = showLastHour ? metricsLastHour.isFallback : metricsLastMinute.isFallback;
 
-    const leftActions = [
-        <Chip key="m.hour">
-            <span className={style.yes}>{metricsLastHour.yes}</span> / <span className={style.no}>{metricsLastHour.no}</span>
-        </Chip>,
-        <Chip key="m.min">
-            <span className={style.yes}>{metricsLastMinute.yes}</span> / <span className={style.no}>{metricsLastMinute.no}</span>
-        </Chip>,
-        <Switch key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />,
-    ];
-
+    const percent = 1 * (showLastHour ?
+        percentLib.calc(metricsLastHour.yes, metricsLastHour.yes + metricsLastHour.no, 0) :
+        percentLib.calc(metricsLastMinute.yes, metricsLastMinute.yes + metricsLastMinute.no, 0)
+    );
     return (
-        <ListItem
-            key={name}
-            leftActions={leftActions}
-            rightActions={actions}
-            caption={name}
-            legend={(description && description.substring(0, 100)) || '-'}
-        />
+        <li key={name} className="mdl-list__item">
+            <span className="mdl-list__item-primary-content">
+                <div style={{ width: '40px', textAlign: 'center' }}>
+                    {
+                        isStale ?
+                        <Icon style={{ width: '25px', marginTop: '4px', fontSize: '25px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
+                        <div>
+                            <Progress strokeWidth={15} percentage={percent} width="50" />
+                        </div>
+                    }
+                </div>
+
+                &nbsp;
+            <span style={{ display: 'inline-block', width: '45px' }} title={`Toggle ${name}`}>
+                    <Switch title="test" key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />
+                </span>
+                <Link to={`/features/edit/${name}`} className={style.link}>
+                    {name} <small>{(description && description.substring(0, 100)) || ''}</small>
+                </Link>
+            </span>
+
+            <span className={style.iconList} >
+                {strategies && strategies.map((s, i) => <Chip className={style.iconListItemChip} key={i}>
+                    <small>{s.name}</small>
+                </Chip>)}
+                <Link to={`/features/edit/${name}`} title={`Edit ${name}`} className={style.iconListItem}>
+                    <IconButton name="edit" />
+                </Link>
+                <Link to={`/history/${name}`} title={`History htmlFor ${name}`} className={style.iconListItem}>
+                    <IconButton name="history" />
+                </Link>
+                <IconButton name="delete" onClick={() => onFeatureRemove(name)} className={style.iconListItem} />
+            </span>
+
+        </li>
     );
 };
 

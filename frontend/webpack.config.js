@@ -54,7 +54,7 @@ module.exports = {
     plugins,
 
     sassLoader: {
-        data: '@import "theme/_config.scss";',
+        // data: '@import "theme/_config.scss";',
         includePaths: [path.resolve(__dirname, './src')],
     },
 

@@ -18,7 +18,7 @@ export default class ShowUserComponent extends React.Component {
             <div style={{ textAlign: 'right' }}>
                 <p>
                     You are logged in as:
-                    <strong> <a href="#edit-user" onClick={this.openEdit}>{this.props.user.userName}</a></strong>
+                    <strong> <a href="#edit-user" onClick={this.openEdit}>{this.props.user.userName || 'unknown'}</a></strong>
                 </p>
             </div>
         );

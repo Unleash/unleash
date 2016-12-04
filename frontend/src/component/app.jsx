@@ -68,7 +68,7 @@ export default class App extends Component {
                         </Navigation>
                     </Drawer>
                     <Content>
-                        <Grid noSpacing>
+                        <Grid>
                             <Cell col={12}>
                                 {this.props.children}
                                 <ErrorContainer />

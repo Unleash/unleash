@@ -24,11 +24,16 @@ class AddStrategy extends React.Component {
         });
     };
 
+    stopPropagation (e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
     render () {
         return (
             <div style={{ position: 'relative', width: '25px', height: '25px', display: 'inline-block' }} >
-                <IconButton name="add" id="demo-menu-top-right" colored title="Sort" />
-                <Menu target="demo-menu-top-right" valign="bottom" align="center" ripple onClick={
+                <IconButton name="add" id="strategies-add" colored title="Sort" onClick={this.stopPropagation}/>
+                <Menu target="strategies-add" valign="bottom" align="left" ripple onClick={
                     (e) => this.setSort(e.target.getAttribute('data-target'))}>
                     <MenuItem disabled>Add Strategy:</MenuItem>
                     {this.props.strategies.map((s) => <MenuItem key={s.name} onClick={() => this.addStrategy(s.name)}>{s.name}</MenuItem>)}

@@ -1,0 +1,5 @@
+{
+  "globalDependencies": {
+    "react-mdl": "registry:dt/react-mdl#0.0.0+20160830142027"
+  }
+}

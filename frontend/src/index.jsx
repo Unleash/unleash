@@ -32,16 +32,16 @@ ReactDOM.render(
         <Router history={hashHistory}>
             <Route path="/" component={App}>
                 <IndexRedirect to="/features" />
-                <Route path="/features" component={Features} />
-                <Route path="/features/create" component={CreateFeatureToggle} />
-                <Route path="/features/edit/:name" component={EditFeatureToggle} />
-                <Route path="/strategies" component={Strategies} />
-                <Route path="/strategies/create" component={CreateStrategies} />
-                <Route path="/history" component={HistoryPage} />
-                <Route path="/history/:toggleName" component={HistoryTogglePage} />
-                <Route path="/archive" component={Archive} />
-                <Route path="/applications" component={Applications} />
-                <Route path="/client-strategies" component={ClientStrategies} />
+                <Route pageTitle="Features" path="/features" component={Features} />
+                <Route pageTitle="Features" path="/features/create" component={CreateFeatureToggle} />
+                <Route pageTitle="Features" path="/features/edit/:name" component={EditFeatureToggle} />
+                <Route pageTitle="Strategies" path="/strategies" component={Strategies} />
+                <Route pageTitle="Strategies" path="/strategies/create" component={CreateStrategies} />
+                <Route pageTitle="History"  path="/history" component={HistoryPage} />
+                <Route pageTitle="History" path="/history/:toggleName" component={HistoryTogglePage} />
+                <Route pageTitle="Archive" path="/archive" component={Archive} />
+                <Route pageTitle="Applications" path="/applications" component={Applications} />
+                <Route pageTitle="Client strategies" ppath="/client-strategies" component={ClientStrategies} />
             </Route>
         </Router>
     </Provider>, document.getElementById('app'));

@@ -25,6 +25,16 @@ export default class App extends Component {
         router: React.PropTypes.object,
     }
 
+    componentDidMount () {
+        document.title = `${this.getCurrentSection()} - Unleash Admin`;
+    }
+
+    getCurrentSection () {
+        const { routes } = this.props;
+        const lastRoute = routes[routes.length - 1];
+        return lastRoute ? lastRoute.pageTitle : '';
+    }
+
     onOverlayClick = () => this.setState({ drawerActive: false });
 
     render () {
@@ -39,7 +49,7 @@ export default class App extends Component {
             <div style={{}}>
                 <UserContainer />
                 <Layout fixedHeader>
-                    <Header title={<span><span style={{ color: '#ddd' }}>Unleash Admin / </span><strong>The Title</strong></span>}>
+                    <Header title={<span><span style={{ color: '#ddd' }}>Unleash Admin / </span><strong>{this.getCurrentSection()}</strong></span>}>
                         <Navigation>
                             <a href="https://github.com/Unleash" target="_blank">Github</a>
                             <ShowUserContainer />

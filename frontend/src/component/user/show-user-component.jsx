@@ -15,12 +15,10 @@ export default class ShowUserComponent extends React.Component {
 
     render () {
         return (
-            <div style={{ textAlign: 'right' }}>
-                <p>
-                    You are logged in as:
-                    <strong> <a href="#edit-user" onClick={this.openEdit}>{this.props.user.userName || 'unknown'}</a></strong>
-                </p>
-            </div>
+            <a className="mdl-navigation__link" href="#edit-user" onClick={this.openEdit} style={{}}>
+                Username:&nbsp;
+                <strong>{this.props.user.userName || 'Unknown'}</strong>
+            </a>
         );
     }
 }

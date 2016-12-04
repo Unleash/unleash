@@ -23,7 +23,7 @@ function getSetup () {
 
     return {
         request: supertest(app),
-        stores
+        stores,
     };
 }
 
@@ -66,7 +66,7 @@ test('should validate client metrics', () => {
     const { request } = getSetup();
     return request
         .post('/api/client/metrics')
-        .send({random: 'blush'})
+        .send({ random: 'blush' })
         .expect(400);
 });
 
@@ -99,7 +99,7 @@ test('should return seen toggles even when there is nothing', t => {
 
 test('should return list of seen-toggles per app', t => {
     const { request, stores } = getSetup();
-    const appName = 'asd!23'
+    const appName = 'asd!23';
     stores.clientMetricsStore.emit('metrics', {
         appName,
         instanceId: 'instanceId',
@@ -107,8 +107,8 @@ test('should return list of seen-toggles per app', t => {
             start: new Date(),
             stop: new Date(),
             toggles: {
-                toggleX: {yes: 123,no: 0},
-                toggleY: {yes: 123,no: 0}
+                toggleX: { yes: 123, no: 0 },
+                toggleY: { yes: 123, no: 0 }
             },
         },
     });
@@ -117,7 +117,7 @@ test('should return list of seen-toggles per app', t => {
         .get('/api/client/seen-toggles')
         .expect(200)
         .expect((res) => {
-            const seenAppsWithToggles = res.body; 
+            const seenAppsWithToggles = res.body;
             t.true(seenAppsWithToggles.length === 1);
             t.true(seenAppsWithToggles[0].appName === appName);
             t.true(seenAppsWithToggles[0].seenToggles.length === 2);
@@ -128,12 +128,12 @@ test('should return feature-toggles metrics even when there is nothing', t => {
     const { request } = getSetup();
     return request
         .get('/api/client/metrics/feature-toggles')
-        .expect(200)
+        .expect(200);
 });
 
 test('should return metrics for all toggles', t => {
     const { request, stores } = getSetup();
-    const appName = 'asd!23'
+    const appName = 'asd!23';
     stores.clientMetricsStore.emit('metrics', {
         appName,
         instanceId: 'instanceId',
@@ -141,8 +141,8 @@ test('should return metrics for all toggles', t => {
             start: new Date(),
             stop: new Date(),
             toggles: {
-                toggleX: {yes: 123,no: 0},
-                toggleY: {yes: 123,no: 0}
+                toggleX: { yes: 123, no: 0 },
+                toggleY: { yes: 123, no: 0 },
             },
         },
     });
@@ -151,8 +151,8 @@ test('should return metrics for all toggles', t => {
         .get('/api/client/metrics/feature-toggles')
         .expect(200)
         .expect((res) => {
-            
-            const metrics = res.body; 
+
+            const metrics = res.body;
             t.true(metrics.lastHour !== undefined);
             t.true(metrics.lastMinute !== undefined);
         });
@@ -160,7 +160,7 @@ test('should return metrics for all toggles', t => {
 
 
 test('should return list of client strategies', t => {
-    const { request, stores } = getSetup();
+    const { request } = getSetup();
     return request
         .get('/api/client/strategies')
         .expect(200)
@@ -170,7 +170,7 @@ test('should return list of client strategies', t => {
 });
 
 test('should return list of client applications', t => {
-    const { request, stores } = getSetup();
+    const { request } = getSetup();
     return request
         .get('/api/client/applications')
         .expect(200)

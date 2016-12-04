@@ -68,22 +68,5 @@
     "toolbox-loader": "0.0.3",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.15.1"
-  },
-  "jest": {
-    "scriptPreprocessor": "<rootDir>/jest-preprocessor.js",
-    "modulePathIgnorePatterns": [
-      "<rootDir>/node_modules/npm"
-    ],
-    "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react",
-      "<rootDir>/node_modules/reflux"
-    ],
-    "moduleFileExtensions": [
-      "jsx",
-      "js"
-    ]
-  },
-  "pre-commit": [
-    "lint"
-  ]
+  }
 }

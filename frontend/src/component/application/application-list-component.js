@@ -17,11 +17,15 @@ class ClientStrategies extends Component {
         }
         return (
             <div>
+                <ul>
                 {applications.map(item => (
-                    <Link key={item.appName} to={`/applications/${item.appName}`}>
-                        Link: {item.appName}
-                    </Link>
+                    <li>
+                        <Link key={item.appName} to={`/applications/${item.appName}`}>
+                            Link: {item.appName}
+                        </Link>
+                    </li>
                 ))}
+                </ul>
             </div>
         );
     }

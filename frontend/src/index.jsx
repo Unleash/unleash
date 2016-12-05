@@ -13,6 +13,7 @@ import Features from './page/features';
 import CreateFeatureToggle from './page/features/create';
 import EditFeatureToggle from './page/features/edit';
 import Strategies from './page/strategies';
+import StrategyView from './page/strategies/show';
 import CreateStrategies from './page/strategies/create';
 import HistoryPage from './page/history';
 import HistoryTogglePage from './page/history/toggle';
@@ -38,6 +39,7 @@ ReactDOM.render(
                 <Route pageTitle="Features" path="/features/edit/:name" component={EditFeatureToggle} />
                 <Route pageTitle="Strategies" path="/strategies" component={Strategies} />
                 <Route pageTitle="Strategies" path="/strategies/create" component={CreateStrategies} />
+                <Route pageTitle="Strategies" path="/strategies/view/:strategyName" component={StrategyView} />
                 <Route pageTitle="History"  path="/history" component={HistoryPage} />
                 <Route pageTitle="History" path="/history/:toggleName" component={HistoryTogglePage} />
                 <Route pageTitle="Archive" path="/archive" component={Archive} />

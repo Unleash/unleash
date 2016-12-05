@@ -77,7 +77,7 @@ class EditFeatureToggleWrapper extends React.Component {
                                 <Progress strokeWidth={10} percentage={lastMinutePercent} width="50" />
                             </div>
                         }
-                        <p><strong>Last minute:</strong> Yes {lastMinute.yes}, No: {lastMinute.no}</p>
+                        <p><strong>Last minute</strong><br /> Yes {lastMinute.yes}, No: {lastMinute.no}</p>
                     </Cell>
                     <Cell col={3}>
                         {
@@ -87,7 +87,7 @@ class EditFeatureToggleWrapper extends React.Component {
                                 <Progress strokeWidth={10} percentage={lastHourPercent} width="50" />
                             </div>
                         }
-                        <p><strong>Last hour:</strong> Yes {lastHour.yes}, No: {lastHour.no}</p>
+                        <p><strong>Last hour</strong><br /> Yes {lastHour.yes}, No: {lastHour.no}</p>
                     </Cell>
                     <Cell col={3}>
                         {seenApps.length > 0 ?

@@ -9,7 +9,6 @@ import {
 const metrics = (state = fromJS({ lastHour: {}, lastMinute: {}, seenApps: {} }), action) => {
     switch (action.type) {
         case RECEIVE_SEEN_APPS:
-            console.log('RECEIVE_SEEN_APPS', action.value);
             return state.set('seenApps', new $Map(action.value));
         case RECEIVE_FEATURE_METRICS:
             return state.withMutations((ctx) => {

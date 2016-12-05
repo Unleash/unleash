@@ -42,6 +42,20 @@ export default class App extends Component {
         document.title = `${this.getCurrentSection()} - Unleash Admin`;
     }
 
+    componentWillReceiveProps (nextProps) {
+        // copied from https://github.com/react-mdl/react-mdl/issues/254
+        // If our locations are different and drawer is open,
+        // force a close
+        if (this.props.location.pathname !== nextProps.location.pathname) {
+            const layout = document.querySelector('.mdl-js-layout');
+            const drawer = document.querySelector('.mdl-layout__drawer');
+
+            if (layout.classList.contains('is-small-screen') && drawer.classList.contains('is-visible')) {
+                layout.MaterialLayout.toggleDrawer();
+            }
+        }
+    }
+
     getCurrentSection () {
         const { routes } = this.props;
         const lastRoute = routes[routes.length - 1];

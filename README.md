@@ -10,7 +10,7 @@ __Warning: We will soon release the first official version of Unleash (1.0.0). I
 
 Unleash is a feature toggle system, that gives you a great overview over all feature toggles across 
 all your applications and services. It comes with client implementations for Java and Node, and it is 
-easy fairly easy to develop client implementaiton for your favourite language. 
+easy fairly easy to develop client implementation for your favourite language. 
 
 The main motivation for doing feature toggling is to decouple the process for deploying code to production 
 and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
@@ -37,7 +37,7 @@ Read more about activation strategies in [docs/activation-strategies.md](./docs/
 ## Client implementations
 - [unleash-client-java](https://github.com/unleash/unleash-client-java)
 - [unleash-client-node](https://github.com/unleash/unleash-client-node)
-- (you implementaiton here!)
+- (your implementation here!)
 
 Client implentations makes it is easy for developers to check whether a toggle is enabled or disabled. 
 

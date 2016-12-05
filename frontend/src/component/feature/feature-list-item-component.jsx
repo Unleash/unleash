@@ -1,10 +1,8 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import { Chip, Switch, Icon, Tooltip, IconButton, ChipContact } from 'react-mdl';
+import { Chip, Switch, Icon, IconButton } from 'react-mdl';
 import percentLib from 'percent';
 import Progress from './progress';
-
-
 
 import style from './feature.scss';
 

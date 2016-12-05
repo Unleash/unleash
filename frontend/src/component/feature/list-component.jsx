@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Feature from './feature-component';
+import Feature from './feature-list-item-component';
 import { Link } from 'react-router';
 import { Icon, Chip, ChipContact, IconButton, FABButton, Textfield, Menu, MenuItem } from 'react-mdl';
 

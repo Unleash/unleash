@@ -3,7 +3,7 @@ import { hashHistory } from 'react-router';
 
 import { requestUpdateFeatureToggle } from '../../store/feature-actions';
 import { createMapper, createActions } from '../input-helpers';
-import EditAndView from './view-and-edit';
+import FormComponent from './form';
 
 const ID = 'edit-feature-toggle';
 function getId (props) {
@@ -59,4 +59,4 @@ const actions = createActions({
     prepare,
 });
 
-export default connect(mapStateToProps, actions)(EditAndView);
+export default connect(mapStateToProps, actions)(FormComponent);

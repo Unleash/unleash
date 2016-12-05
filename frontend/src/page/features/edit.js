@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import EditFeatureToggleForm from '../../component/feature/form-edit-wrap';
+import EditFeatureToggleForm from '../../component/feature/view-edit-container';
 
 export default class Features extends Component {
     static propTypes () {

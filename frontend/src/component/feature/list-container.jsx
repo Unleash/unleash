@@ -49,7 +49,7 @@ const mapStateToProps = (state) => {
             ));
         } else if (settings.sort === 'metrics') {
             const target = settings.showLastHour ? featureMetrics.lastHour : featureMetrics.lastMinute;
-            
+
             features = features.sort((a, b) => {
                 if (!target[a.name]) { return 1; }
                 if (!target[b.name]) { return -1; }

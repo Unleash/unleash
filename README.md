@@ -71,14 +71,14 @@ $ unleash -d postgres://unleash_user:passord@localhost:5432/unleash -p 4242
 Unleash started on port:4242
 ```
 
-You can also require Unleash as a lib and expend it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md). 
+You can also require Unleash as a lib and expand it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md). 
 
 ## Project details
 - [Project Roadmap](https://github.com/unleash/unleash/wiki/Roadmap)
 
 ## Developer Guide
-If you want to contribute to this project you are encuraged to send issue request, or provie pull-requests. 
+If you want to contribute to this project you are encuraged to send issue request, or provide pull-requests. 
 Please read the [unleas developer guide](./docs/developer-guide.md) to learn more on how you can contribute. 
 
 ## Run with docker
-We have made a sperate project which runs unleash inside docker. Please see [unelash-docker](https://github.com/Unleash/unleash-docker)
+We have made a separate project which runs unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker)

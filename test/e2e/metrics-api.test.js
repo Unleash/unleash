@@ -92,7 +92,7 @@ test.serial('should get list of applications', async t => {
         .expect('Content-Type', /json/)
         .expect((res) => {
             t.true(res.status === 200);
-            t.true(res.body.applications.length === 2);
+            t.true(res.body.applications.length === 1);
         })
         .then(destroy);
 });

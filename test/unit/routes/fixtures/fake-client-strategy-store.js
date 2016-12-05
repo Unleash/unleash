@@ -1,6 +1,14 @@
 'use strict';
 
-module.exports = () => ({
-    insert: () => Promise.resolve(),
-    getAll: () => Promise.resolve([])
-});
+module.exports = () => {
+    const _instances = [];
+
+    return {
+        insert: () => {
+            _instances.push();
+            return Promise.resolve();
+        },
+        getAll: () => Promise.resolve(_instances),
+        getApplications: () => Promise.resolve([]),
+    };
+};

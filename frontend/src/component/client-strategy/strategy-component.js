@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { DataTable, TableHeader }  from 'react-mdl';
+import { Link } from 'react-router';
 
 class ClientStrategies extends Component {
 
@@ -13,8 +14,8 @@ class ClientStrategies extends Component {
         .filter(item => item.strategies)
         .map(item => (
             {
-                appName: item.appName,
-                strategies: item.strategies && item.strategies.join(', '),
+                appName: <Link to={`/applications/${item.appName}`}>{item.appName}</Link>,
+                strategies: item.strategies && item.strategies.map(name => (<Link to={`/strategies/${name}`}>{name}</Link>)),
             })
         );
 

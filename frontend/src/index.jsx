@@ -60,7 +60,7 @@ ReactDOM.render(
                     <Route pageTitle=":name" path="/applications/:name" component={ApplicationView} />
                 </Route>
                 
-                <Route pageTitle="Client strategies" ppath="/client-strategies" component={ClientStrategies} />
+                <Route pageTitle="Client strategies" path="/client-strategies" component={ClientStrategies} />
             </Route>
         </Router>
     </Provider>, document.getElementById('app'));

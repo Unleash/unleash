@@ -68,8 +68,8 @@ export default class App extends Component {
 
         // mutate document.title:
         document.title = result
-            .reverse()
             .map(e => e.name)
+            .reverse()
             .join(' - ');
 
         if (result.length > 2) {

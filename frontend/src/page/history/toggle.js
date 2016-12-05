@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import HistoryListToggle from '../../component/history/history-list-toggle-component';
+import HistoryListToggle from '../../component/history/history-list-toggle-container';
 
 const render = ({ params }) => <HistoryListToggle toggleName={params.toggleName} />;
 

@@ -150,7 +150,7 @@ function getHistoryFromToggle (state, toggleName) {
     if (!toggleName) {
         return [];
     }
-    
+
     if (state.history.hasIn(['toggles', toggleName])) {
         return state.history
             .getIn(['toggles', toggleName])

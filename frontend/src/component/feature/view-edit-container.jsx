@@ -26,10 +26,14 @@ class EditFeatureToggleWrapper extends React.Component {
         }
         this.props.fetchSeenApps();
         this.props.fetchFeatureMetrics();
-        setInterval(() => {
+        this.timer = setInterval(() => {
             this.props.fetchSeenApps();
             this.props.fetchFeatureMetrics();
         }, 5000);
+    }
+
+    componentWillUnmount () {
+        clearInterval(this.timer);
     }
 
     render () {

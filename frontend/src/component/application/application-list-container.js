@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import ApplicationList from './application-list-component';
-import { fetchApplications } from '../../store/application/actions';
+import { fetchAll } from '../../store/application/actions';
 
-const mapStateToProps = (state) => ({ applications: state.applications.toJS() });
+const mapStateToProps = (state) => ({ applications: state.applications.get('list').toJS() });
 
-const StrategiesContainer = connect(mapStateToProps, { fetchApplications })(ApplicationList);
+const Container = connect(mapStateToProps, { fetchAll })(ApplicationList);
 
-export default StrategiesContainer;
+export default Container;

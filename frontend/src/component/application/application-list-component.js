@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
 class ClientStrategies extends Component {
 
     componentDidMount () {
-        this.props.fetchApplications();
+        this.props.fetchAll();
     }
 
     render () {
-        if (!this.props.applications) {
-            return null;
-        }
-        const source = this.props.applications.map(item => item.appName).join(', ');
+        const {
+            applications,
+        } = this.props;
 
+        if (!applications) {
+            return <div>loading...</div>;
+        }
         return (
             <div>
-                {source}
+                {applications.map(item => (
+                    <Link key={item.appName} to={`/applications/${item.appName}`}>
+                        Link: {item.appName}
+                    </Link>
+                ))}
             </div>
         );
     }

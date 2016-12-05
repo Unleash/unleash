@@ -18,6 +18,7 @@ import HistoryPage from './page/history';
 import HistoryTogglePage from './page/history/toggle';
 import Archive from './page/archive';
 import Applications from './page/applications';
+import ApplicationView from './page/applications/view';
 import ClientStrategies from './page/client-strategies';
 
 const unleashStore = createStore(
@@ -41,6 +42,7 @@ ReactDOM.render(
                 <Route pageTitle="History" path="/history/:toggleName" component={HistoryTogglePage} />
                 <Route pageTitle="Archive" path="/archive" component={Archive} />
                 <Route pageTitle="Applications" path="/applications" component={Applications} />
+                <Route pageTitle="Applications" path="/applications/:name" component={ApplicationView} />
                 <Route pageTitle="Client strategies" ppath="/client-strategies" component={ClientStrategies} />
             </Route>
         </Router>

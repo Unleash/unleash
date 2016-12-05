@@ -8,6 +8,13 @@ function fetchAll () {
         .then(response => response.json());
 }
 
+function fetchApplication (appName) {
+    return fetch(`${URI}/${appName}`, { headers })
+        .then(throwIfNotSuccess)
+        .then(response => response.json());
+}
+
 module.exports = {
+    fetchApplication,
     fetchAll,
 };

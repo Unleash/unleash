@@ -1,14 +1,16 @@
-import { fromJS } from 'immutable';
-import { RECEIVE_APPLICATINS } from './actions';
+import { fromJS, List, Map } from 'immutable';
+import { RECEIVE_ALL_APPLICATIONS, RECEIVE_APPLICATION } from './actions';
 
 function getInitState () {
-    return fromJS([]);
+    return fromJS({ list: [], apps: {} });
 }
 
 const store = (state = getInitState(), action) => {
     switch (action.type) {
-        case RECEIVE_APPLICATINS:
-            return fromJS(action.value.applications);
+        case RECEIVE_APPLICATION:
+            return state.setIn(['apps', action.value.appName], new Map(action.value));
+        case RECEIVE_ALL_APPLICATIONS:
+            return state.set('list', new List(action.value.applications));
         default:
             return state;
     }

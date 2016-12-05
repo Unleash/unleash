@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Layout, Drawer, Header, Navigation, Content,
     Footer, FooterSection, FooterDropDownSection, FooterLinkList,
-    Grid, Cell
+    Grid, Cell,
 } from 'react-mdl';
 import style from './styles.scss';
 import ErrorContainer from './error/error-container';
@@ -9,10 +9,7 @@ import ErrorContainer from './error/error-container';
 import UserContainer from './user/user-container';
 import ShowUserContainer from './user/show-user-container';
 
-
-
 export default class App extends Component {
-
     constructor (props) {
         super(props);
         this.state = { drawerActive: false };
@@ -40,7 +37,7 @@ export default class App extends Component {
     render () {
         const createListItem = (path, caption) =>
             <a
-                href={this.context.router.createHref(path)} 
+                href={this.context.router.createHref(path)}
                 className={this.context.router.isActive(path) ? style.active : ''}>
                 {caption}
             </a>;
@@ -62,6 +59,7 @@ export default class App extends Component {
                             {createListItem('/history', 'Event history')}
                             {createListItem('/archive', 'Archived toggles')}
                             <hr />
+                            {createListItem('/applications', 'Applications')}
                             {createListItem('/metrics', 'Client metrics')}
                             {createListItem('/client-strategies', 'Client strategies')}
                             {createListItem('/client-instances', 'Client instances')}
@@ -86,6 +84,7 @@ export default class App extends Component {
                                 </FooterDropDownSection>
                                 <FooterDropDownSection title="Metrics">
                                     <FooterLinkList>
+                                        {createListItem('/applications', 'Applications')}
                                         {createListItem('/metrics', 'Client metrics')}
                                         {createListItem('/client-strategies', 'Client strategies')}
                                         {createListItem('/client-instances', 'Client instances')}

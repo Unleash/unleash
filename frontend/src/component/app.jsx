@@ -38,10 +38,6 @@ export default class App extends Component {
         router: React.PropTypes.object,
     }
 
-    componentDidMount () {
-        document.title = `${this.getCurrentSection()} - Unleash Admin`;
-    }
-
     componentWillReceiveProps (nextProps) {
         // copied from https://github.com/react-mdl/react-mdl/issues/254
         // If our locations are different and drawer is open,
@@ -56,13 +52,7 @@ export default class App extends Component {
         }
     }
 
-    getCurrentSection () {
-        const { routes } = this.props;
-        const lastRoute = routes[routes.length - 1];
-        return lastRoute ? lastRoute.pageTitle : '';
-    }
-
-    getTitleWithLinks () {
+    getSections () {
         const { routes, params } = this.props;
         const unique = {};
         let result = [base].concat(routes.splice(1).map((routeEntry) => ({
@@ -76,9 +66,21 @@ export default class App extends Component {
             return false;
         });
 
+        // mutate document.title:
+        document.title = result
+            .reverse()
+            .map(e => e.name)
+            .join(' - ');
+
         if (result.length > 2) {
             result = result.splice(1);
         }
+
+        return result;
+    }
+
+    getTitleWithLinks () {
+        const result = this.getSections();
         return (
             <span>
                 {result.map((entry, index) => (

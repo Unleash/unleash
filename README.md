@@ -15,7 +15,7 @@ easy fairly easy to develop client implementation for your favourite language.
 The main motivation for doing feature toggling is to decouple the process for deploying code to production 
 and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
 
-> Decoupling  **deployment** of code  and  **release** of new features
+> Feature toggles decouple **deployment** of code  from  **release** of new features
 
 
 This repo contains the unleash-server, which contains the admin UI and a place to ask for the status of features. 

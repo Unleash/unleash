@@ -14,7 +14,14 @@ function fetchApplication (appName) {
         .then(response => response.json());
 }
 
+function fetchApplicationsWithStrategyName (strategyName) {
+    return fetch(`${URI}?strategyName=${strategyName}`, { headers })
+        .then(throwIfNotSuccess)
+        .then(response => response.json());
+}
+
 module.exports = {
     fetchApplication,
     fetchAll,
+    fetchApplicationsWithStrategyName,
 };

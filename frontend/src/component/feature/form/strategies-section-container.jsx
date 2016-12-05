@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import StrategiesSection from './strategies-section';
-import { fetchStrategies } from '../../../store/strategy-actions';
+import { fetchStrategies } from '../../../store/strategy/actions';
 
 
 export default connect((state) => ({

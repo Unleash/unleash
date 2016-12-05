@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { createMapper, createActions } from '../input-helpers';
-import { createStrategy } from '../../store/strategy-actions';
+import { createStrategy } from '../../store/strategy/actions';
 
 import AddStrategy, { PARAM_PREFIX } from './add-strategy';
 

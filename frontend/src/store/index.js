@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import features from './feature-store';
 import featureMetrics from './feature-metrics-store';
-import strategies from './strategy-store';
+import strategies from './strategy';
 import input from './input-store';
 import history from './history-store'; // eslint-disable-line
 import archive from './archive-store';

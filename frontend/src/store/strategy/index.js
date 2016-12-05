@@ -1,5 +1,5 @@
 import { List, Map as $Map } from 'immutable';
-import { RECEIVE_STRATEGIES, REMOVE_STRATEGY, ADD_STRATEGY } from './strategy-actions';
+import { RECEIVE_STRATEGIES, REMOVE_STRATEGY, ADD_STRATEGY } from './actions';
 
 function getInitState () {
     return new $Map({ list: new List() });

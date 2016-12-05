@@ -1,4 +1,5 @@
-import api from '../data/strategy-api';
+import api from '../../data/strategy-api';
+import { fetchApplicationsWithStrategyName } from '../../data/applications-api';
 
 export const ADD_STRATEGY             = 'ADD_STRATEGY';
 export const REMOVE_STRATEGY          = 'REMOVE_STRATEGY';
@@ -58,4 +59,7 @@ export function removeStrategy (strategy) {
             .catch(error => dispatch(errorCreatingStrategy(error)));
 }
 
+export function getApplicationsWithStrategy (strategyName) {
+    return fetchApplicationsWithStrategyName(strategyName);
+}
 

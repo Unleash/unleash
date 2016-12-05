@@ -178,6 +178,14 @@ a link to follow for more datails.
 }
 ```
 
+#### Query Params
+You can also specify the query param: _strategyName_, which will return all applications 
+implementing the given strategy.
+
+`GET  http://unleash.host.com/api/client/applications?strategyName=someStrategyName`
+
+
+
 
 ### Application Details
 

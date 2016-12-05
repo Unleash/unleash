@@ -1,4 +1,4 @@
-# unleash
+# Unleash
 
 __Warning: We will soon release the first official version of Unleash (1.0.0). If you want to test the previous package see [previous tag](https://github.com/unleash/unleash/tree/v1.0.0-alpha.2)__ 
 
@@ -10,7 +10,7 @@ __Warning: We will soon release the first official version of Unleash (1.0.0). I
 
 Unleash is a feature toggle system, that gives you a great overview over all feature toggles across 
 all your applications and services. It comes with client implementations for Java and Node, and it is 
-easy fairly easy to develop client implementation for your favourite language. 
+fairly easy to develop client implementation for your favourite language. 
 
 The main motivation for doing feature toggling is to decouple the process for deploying code to production 
 and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
@@ -62,7 +62,9 @@ which includes a username and password,  that have rights to migrate the databas
 _Unleash_ will, at startup, check whether database migration is needed, and perform necessary migrations.
 
 ## Start Unleash 
-### 1. The simplest way to get started:
+
+**The simplest way to get started:**
+(database-url can also be set as a environment variable: DATABASE_URL)
 
 ```bash
 $ npm install unleash-server -g

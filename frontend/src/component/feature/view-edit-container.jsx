@@ -154,7 +154,7 @@ function getHistoryFromToggle (state, toggleName) {
     if (state.history.hasIn(['toggles', toggleName])) {
         return state.history
             .getIn(['toggles', toggleName])
-            .slice(0, 10)
+            .slice(0, 5)
             .toJS()
             .map(({ createdAt, createdBy, type }) => ({
                 createdAt: new Date(createdAt).toString(),

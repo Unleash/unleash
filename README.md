@@ -10,7 +10,7 @@ __Warning: We will soon release the first official version of Unleash (1.0.0). I
 
 Unleash is a feature toggle system, that gives you a great overview over all feature toggles across 
 all your applications and services. It comes with client implementations for Java and Node, and it is 
-easy fairly easy to develop client implementaiton for your favourite language. 
+easy fairly easy to develop client implementation for your favourite language. 
 
 The main motivation for doing feature toggling is to decouple the process for deploying code to production 
 and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
@@ -37,7 +37,7 @@ Read more about activation strategies in [docs/activation-strategies.md](./docs/
 ## Client implementations
 - [unleash-client-java](https://github.com/unleash/unleash-client-java)
 - [unleash-client-node](https://github.com/unleash/unleash-client-node)
-- (you implementaiton here!)
+- (your implementation here!)
 
 Client implentations makes it is easy for developers to check whether a toggle is enabled or disabled. 
 
@@ -71,14 +71,14 @@ $ unleash -d postgres://unleash_user:passord@localhost:5432/unleash -p 4242
 Unleash started on port:4242
 ```
 
-You can also require Unleash as a lib and expend it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md). 
+You can also require Unleash as a lib and expand it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md). 
 
 ## Project details
 - [Project Roadmap](https://github.com/unleash/unleash/wiki/Roadmap)
 
 ## Developer Guide
-If you want to contribute to this project you are encuraged to send issue request, or provie pull-requests. 
+If you want to contribute to this project you are encuraged to send issue request, or provide pull-requests. 
 Please read the [unleas developer guide](./docs/developer-guide.md) to learn more on how you can contribute. 
 
 ## Run with docker
-We have made a sperate project which runs unleash inside docker. Please see [unelash-docker](https://github.com/Unleash/unleash-docker)
+We have made a separate project which runs unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker)

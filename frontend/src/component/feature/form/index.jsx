@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Textfield, Button, Switch } from 'react-mdl';
+import { Textfield, Button, Switch, Icon } from 'react-mdl';
 import StrategiesSection from './strategies-section-container';
 
 const trim = (value) => {
@@ -78,9 +78,15 @@ class AddFeatureToggleComponent extends Component {
                     removeStrategy={removeStrategy} />
 
                 <br />
-                <Button type="submit" raised primary>{editmode ? 'Update' : 'Create'}</Button>
+                <Button type="submit" ripple raised primary icon="add">
+                    <Icon name="add" />&nbsp;&nbsp;&nbsp;
+                    {editmode ? 'Update' : 'Create'}
+                </Button>
                 &nbsp;
-                <Button type="cancel" raised onClick={onCancel}>Cancel</Button>
+                <Button type="cancel" ripple raised onClick={onCancel} style={{ float: 'right' }}>
+                    <Icon name="cancel" />&nbsp;&nbsp;&nbsp;
+                    Cancel
+                </Button>
             </form>
         );
     }

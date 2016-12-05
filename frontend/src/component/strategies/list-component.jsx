@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
-import { List, ListItem, ListItemContent, Icon, IconButton, Chip } from 'react-mdl';
-
-import style from './strategies.scss';
+import { List, ListItem, ListItemContent, IconButton, Chip } from 'react-mdl';
 
 class StrategiesListComponent extends Component {
 
@@ -33,7 +32,11 @@ class StrategiesListComponent extends Component {
                 {strategies.length > 0 ? strategies.map((strategy, i) => {
                     return (
                         <ListItem key={i}>
-                            <ListItemContent><strong>{strategy.name}</strong> {strategy.description}</ListItemContent>
+                            <ListItemContent>
+                                <Link to={`/strategies/view/${strategy.name}`}>
+                                    <strong>{strategy.name}</strong>
+                                </Link> 
+                                <span> {strategy.description}</span></ListItemContent>
                             <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
                         </ListItem>
                     );

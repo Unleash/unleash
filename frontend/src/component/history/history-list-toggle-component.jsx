@@ -20,7 +20,7 @@ class HistoryListToggle extends Component {
 
     componentDidMount () {
         fetchHistoryForToggle(this.props.toggleName)
-            .then((res) => this.setState({ history: res, fetching: false }));
+            .then((res) => this.setState({ history: res.events, fetching: false }));
     }
 
     render () {

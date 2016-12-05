@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import EditFeatureToggle from './form-edit-container.jsx';
 import { fetchFeatureToggles, toggleFeature } from '../../store/feature-actions';
 import { fetchFeatureMetrics, fetchSeenApps } from '../../store/feature-metrics-actions';
+import { fetchHistoryForToggle } from '../../store/history-actions';
 
 class EditFeatureToggleWrapper extends React.Component {
 
@@ -25,6 +26,7 @@ class EditFeatureToggleWrapper extends React.Component {
             this.props.fetchFeatureToggles();
         }
         this.props.fetchSeenApps();
+        this.props.fetchHistoryForToggle(this.props.featureToggleName);
         this.props.fetchFeatureMetrics();
         this.timer = setInterval(() => {
             this.props.fetchSeenApps();
@@ -38,6 +40,7 @@ class EditFeatureToggleWrapper extends React.Component {
 
     render () {
         const {
+            history,
             toggleFeature,
             features,
             featureToggleName,
@@ -109,7 +112,14 @@ class EditFeatureToggleWrapper extends React.Component {
                         <p>add instances count?</p>
                     </Cell>
                     <Cell col={3}>
-                            <p>add history</p>
+                            <div><strong>History</strong></div>
+                            <ol>
+                                {history.map(({ createdAt, type, createdBy }) => 
+                                    <li><small>{createdAt}</small> {type} {createdBy}</li>)}
+                            </ol>
+                            <Link to={`/history/${featureToggleName}`}>
+                                See all events.
+                            </Link>
                     </Cell>
                 </Grid>
                 <hr />
@@ -136,13 +146,35 @@ function getMetricsForToggle (state, toggleName) {
     return result;
 }
 
+function getHistoryFromToggle (state, toggleName) {
+    if (!toggleName) {
+        return [];
+    }
+    
+    if (state.history.hasIn(['toggles', toggleName])) {
+        return state.history
+            .getIn(['toggles', toggleName])
+            .slice(0, 10)
+            .toJS()
+            .map(({ createdAt, createdBy, type }) => ({
+                createdAt: new Date(createdAt).toString(),
+                createdBy,
+                type,
+            }));
+    }
+
+    return [];
+}
+
 
 export default connect((state, props) => ({
     features: state.features.toJS(),
     metrics: getMetricsForToggle(state, props.featureToggleName),
+    history: getHistoryFromToggle(state, props.featureToggleName),
 }), {
     fetchFeatureMetrics,
     fetchFeatureToggles,
     toggleFeature,
     fetchSeenApps,
+    fetchHistoryForToggle,
 })(EditFeatureToggleWrapper);

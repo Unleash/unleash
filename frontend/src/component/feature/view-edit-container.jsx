@@ -1,18 +1,13 @@
 import React, { PropTypes } from 'react';
-import { Grid, Cell, Icon } from 'react-mdl';
+import { Grid, Cell, Icon, Switch } from 'react-mdl';
 
 import percentLib from 'percent';
 import Progress from './progress';
 
 import { connect } from 'react-redux';
 import EditFeatureToggle from './form-edit-container.jsx';
-import { fetchFeatureToggles } from '../../store/feature-actions';
+import { fetchFeatureToggles, toggleFeature } from '../../store/feature-actions';
 import { fetchFeatureMetrics } from '../../store/feature-metrics-actions';
-
-
-
-// import { toggleFeature, fetchFeatureToggles, removeFeatureToggle } from '../../store/feature-actions';
-
 
 class EditFeatureToggleWrapper extends React.Component {
 
@@ -36,6 +31,7 @@ class EditFeatureToggleWrapper extends React.Component {
 
     render () {
         const {
+            toggleFeature,
             features,
             featureToggleName,
             metrics = {
@@ -44,9 +40,8 @@ class EditFeatureToggleWrapper extends React.Component {
             },
         } = this.props;
 
-        const lastHourPercent = percentLib.calc(metrics.lastHour.yes, metrics.lastHour.yes + metrics.lastHour.no, 0);
-        const lastMinutePercent = percentLib.calc(metrics.lastMinute.yes, metrics.lastMinute.yes + metrics.lastMinute.no, 0);
-    
+        const lastHourPercent = 1 * percentLib.calc(metrics.lastHour.yes, metrics.lastHour.yes + metrics.lastHour.no, 0);
+        const lastMinutePercent = 1 * percentLib.calc(metrics.lastMinute.yes, metrics.lastMinute.yes + metrics.lastMinute.no, 0);
 
         const featureToggle = features.find(toggle => toggle.name === featureToggleName);
 
@@ -57,43 +52,47 @@ class EditFeatureToggleWrapper extends React.Component {
             return <span>Could not find {this.props.featureToggleName}</span>;
         }
 
-
         return (
             <div>
-                    <h4>{featureToggle.name}</h4>
-                    <Grid>
-                        <Cell col={3} style={{ textAlign: 'center' }}>
-                            {
-                                metrics.lastMinute.isFallback ?
-                                <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
-                                <div>
-                                    <Progress strokeWidth={15} percentage={lastMinutePercent} width="50" />
-                                </div>
-                            }
-                            <p><strong>Last minute:</strong> Yes {metrics.lastMinute.yes}, No: {metrics.lastMinute.no}</p>
-                        </Cell>
-                        <Cell col={3} style={{ textAlign: 'center' }}>
-                            {
-                                metrics.lastHour.isFallback ?
-                                <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
-                                <div>
-                                    <Progress strokeWidth={15} percentage={lastHourPercent} width="50" />
-                                </div>
-                            }
-                            <p><strong>Last hour:</strong> Yes {metrics.lastHour.yes}, No: {metrics.lastHour.no}</p>
-                        </Cell>
-                        <Cell col={3}>
-                            <p>add apps</p>
-                        </Cell>
-                        <Cell col={3}>
-                             <p>add instances</p>
-                        </Cell>
-                    </Grid>
-                    
-                    
-                   
-                    
-                    <EditFeatureToggle featureToggle={featureToggle} />
+                <h4>{featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small></h4>
+                <hr />
+                <div style={{ maxWidth: '150px' }} >
+                    <Switch style={{ cursor: 'pointer' }} onChange={() => toggleFeature(featureToggle)} checked={featureToggle.enabled}>
+                        Toggle {featureToggle.name}
+                    </Switch>
+                </div>
+                <hr />
+                <Grid>
+                    <Cell col={3} style={{ textAlign: 'center' }}>
+                        {
+                            metrics.lastMinute.isFallback ?
+                            <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
+                            <div>
+                                <Progress strokeWidth={10} percentage={lastMinutePercent} width="50" />
+                            </div>
+                        }
+                        <p><strong>Last minute:</strong> Yes {metrics.lastMinute.yes}, No: {metrics.lastMinute.no}</p>
+                    </Cell>
+                    <Cell col={3} style={{ textAlign: 'center' }}>
+                        {
+                            metrics.lastHour.isFallback ?
+                            <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
+                            <div>
+                                <Progress strokeWidth={10} percentage={lastHourPercent} width="50" />
+                            </div>
+                        }
+                        <p><strong>Last hour:</strong> Yes {metrics.lastHour.yes}, No: {metrics.lastHour.no}</p>
+                    </Cell>
+                    <Cell col={3}>
+                        <p>add apps</p>
+                    </Cell>
+                    <Cell col={3}>
+                            <p>add instances</p>
+                    </Cell>
+                </Grid>
+                <hr />
+                <h4>Edit</h4>
+                <EditFeatureToggle featureToggle={featureToggle} />
             </div>
         );
     }
@@ -118,4 +117,5 @@ export default connect((state, props) => ({
 }), {
     fetchFeatureMetrics,
     fetchFeatureToggles,
+    toggleFeature,
 })(EditFeatureToggleWrapper);

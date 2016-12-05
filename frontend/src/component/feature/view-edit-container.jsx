@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Grid, Cell, Icon, Switch } from 'react-mdl';
+import { Link } from 'react-router';
 
 import percentLib from 'percent';
 import Progress from './progress';
@@ -7,7 +8,7 @@ import Progress from './progress';
 import { connect } from 'react-redux';
 import EditFeatureToggle from './form-edit-container.jsx';
 import { fetchFeatureToggles, toggleFeature } from '../../store/feature-actions';
-import { fetchFeatureMetrics } from '../../store/feature-metrics-actions';
+import { fetchFeatureMetrics, fetchSeenApps } from '../../store/feature-metrics-actions';
 
 class EditFeatureToggleWrapper extends React.Component {
 
@@ -23,6 +24,7 @@ class EditFeatureToggleWrapper extends React.Component {
         if (this.props.features.length === 0) {
             this.props.fetchFeatureToggles();
         }
+        this.props.fetchSeenApps();
         this.props.fetchFeatureMetrics();
         setInterval(() => {
             this.props.fetchFeatureMetrics();
@@ -34,14 +36,17 @@ class EditFeatureToggleWrapper extends React.Component {
             toggleFeature,
             features,
             featureToggleName,
-            metrics = {
-                lastHour: { yes: 0, no: 0, isFallback: true },
-                lastMinute: { yes: 0, no: 0, isFallback: true },
-            },
+            metrics = {},
         } = this.props;
 
-        const lastHourPercent = 1 * percentLib.calc(metrics.lastHour.yes, metrics.lastHour.yes + metrics.lastHour.no, 0);
-        const lastMinutePercent = 1 * percentLib.calc(metrics.lastMinute.yes, metrics.lastMinute.yes + metrics.lastMinute.no, 0);
+        const {
+            lastHour = { yes: 0, no: 0, isFallback: true },
+            lastMinute = { yes: 0, no: 0, isFallback: true },
+            seenApps = [],
+        } = metrics;
+
+        const lastHourPercent = 1 * percentLib.calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
+        const lastMinutePercent = 1 * percentLib.calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
 
         const featureToggle = features.find(toggle => toggle.name === featureToggleName);
 
@@ -56,38 +61,50 @@ class EditFeatureToggleWrapper extends React.Component {
             <div>
                 <h4>{featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small></h4>
                 <hr />
-                <div style={{ maxWidth: '150px' }} >
+                <div style={{ maxWidth: '200px' }} >
                     <Switch style={{ cursor: 'pointer' }} onChange={() => toggleFeature(featureToggle)} checked={featureToggle.enabled}>
                         Toggle {featureToggle.name}
                     </Switch>
                 </div>
                 <hr />
-                <Grid>
-                    <Cell col={3} style={{ textAlign: 'center' }}>
+                <Grid style={{ textAlign: 'center' }}>
+                    <Cell col={3}>
                         {
-                            metrics.lastMinute.isFallback ?
+                            lastMinute.isFallback ?
                             <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
                             <div>
                                 <Progress strokeWidth={10} percentage={lastMinutePercent} width="50" />
                             </div>
                         }
-                        <p><strong>Last minute:</strong> Yes {metrics.lastMinute.yes}, No: {metrics.lastMinute.no}</p>
+                        <p><strong>Last minute:</strong> Yes {lastMinute.yes}, No: {lastMinute.no}</p>
                     </Cell>
-                    <Cell col={3} style={{ textAlign: 'center' }}>
+                    <Cell col={3}>
                         {
-                            metrics.lastHour.isFallback ?
+                            lastHour.isFallback ?
                             <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
                             <div>
                                 <Progress strokeWidth={10} percentage={lastHourPercent} width="50" />
                             </div>
                         }
-                        <p><strong>Last hour:</strong> Yes {metrics.lastHour.yes}, No: {metrics.lastHour.no}</p>
+                        <p><strong>Last hour:</strong> Yes {lastHour.yes}, No: {lastHour.no}</p>
                     </Cell>
                     <Cell col={3}>
-                        <p>add apps</p>
+                        {seenApps.length > 0 ?
+                            (<div><strong>Seen in applications:</strong></div>) :
+                            <div>
+                                <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }} name="report problem" title="Not used in a app in the last hour" />
+                                <div><small><strong>Not used in a app in the last hour.</strong> This might be due to your client implementation is not reporting usage.</small></div>
+                            </div>
+                        }
+                        {seenApps.length > 0 && seenApps.map((appName) => (
+                            <Link key={appName} to={`/applications/${appName}`}>
+                                {appName}
+                            </Link>
+                        ))}
+                        <p>add instances count?</p>
                     </Cell>
                     <Cell col={3}>
-                            <p>add instances</p>
+                            <p>add history</p>
                     </Cell>
                 </Grid>
                 <hr />
@@ -102,12 +119,16 @@ function getMetricsForToggle (state, toggleName) {
     if (!toggleName) {
         return;
     }
-    if (state.featureMetrics.hasIn(['lastHour', toggleName])) {
-        return {
-            lastHour: state.featureMetrics.getIn(['lastHour', toggleName]),
-            lastMinute: state.featureMetrics.getIn(['lastMinute', toggleName]),
-        };
+    const result = {};
+
+    if (state.featureMetrics.hasIn(['seenApps', toggleName])) {
+        result.seenApps = state.featureMetrics.getIn(['seenApps', toggleName]);
     }
+    if (state.featureMetrics.hasIn(['lastHour', toggleName])) {
+        result.lastHour = state.featureMetrics.getIn(['lastHour', toggleName]);
+        result.lastMinute = state.featureMetrics.getIn(['lastMinute', toggleName]);
+    }
+    return result;
 }
 
 
@@ -118,4 +139,5 @@ export default connect((state, props) => ({
     fetchFeatureMetrics,
     fetchFeatureToggles,
     toggleFeature,
+    fetchSeenApps,
 })(EditFeatureToggleWrapper);

@@ -2,15 +2,19 @@ import { Map as $Map, fromJS } from 'immutable';
 
 import {
     RECEIVE_FEATURE_METRICS,
+    RECEIVE_SEEN_APPS,
 } from './feature-metrics-actions';
 
 
-const metrics = (state = fromJS({ lastHour: {}, lastMinute: {} }), action) => {
+const metrics = (state = fromJS({ lastHour: {}, lastMinute: {}, seenApps: {} }), action) => {
     switch (action.type) {
+        case RECEIVE_SEEN_APPS:
+            console.log('RECEIVE_SEEN_APPS', action.value);
+            return state.set('seenApps', new $Map(action.value));
         case RECEIVE_FEATURE_METRICS:
             return state.withMutations((ctx) => {
-                ctx.set('lastHour', new $Map(action.metrics.lastHour));
-                ctx.set('lastMinute', new $Map(action.metrics.lastMinute));
+                ctx.set('lastHour', new $Map(action.value.lastHour));
+                ctx.set('lastMinute', new $Map(action.value.lastMinute));
                 return ctx;
             });
         default:

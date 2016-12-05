@@ -17,7 +17,7 @@ const SPADEN_CLASS = {
     N: style.positive, // added
 };
 
-function getIcon (type) {
+export function getIcon (type) {
     switch (type) {
         case 'feature-updated': return 'autorenew';
         case 'feature-created': return 'add';

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Grid, Cell, Icon, Switch } from 'react-mdl';
+import { Grid, Cell, Icon, Switch, List, ListItem, ListItemContent } from 'react-mdl';
 import { Link } from 'react-router';
 
 import percentLib from 'percent';
@@ -10,6 +10,7 @@ import EditFeatureToggle from './form-edit-container.jsx';
 import { fetchFeatureToggles, toggleFeature } from '../../store/feature-actions';
 import { fetchFeatureMetrics, fetchSeenApps } from '../../store/feature-metrics-actions';
 import { fetchHistoryForToggle } from '../../store/history-actions';
+import { getIcon } from '../history/history-item-diff';
 
 class EditFeatureToggleWrapper extends React.Component {
 
@@ -113,10 +114,14 @@ class EditFeatureToggleWrapper extends React.Component {
                     </Cell>
                     <Cell col={3}>
                             <div><strong>History</strong></div>
-                            <ol>
+                            <List style={{ textAlign: 'left' }}>
                                 {history.map(({ createdAt, type, createdBy }) => 
-                                    <li><small>{createdAt}</small> {type} {createdBy}</li>)}
-                            </ol>
+                                    <ListItem twoLine>
+                                        <ListItemContent avatar={getIcon(type)} subtitle={createdAt}>
+                                            {createdBy}
+                                        </ListItemContent>
+                                    </ListItem>)}
+                            </List>
                             <Link to={`/history/${featureToggleName}`}>
                                 See all events.
                             </Link>
@@ -157,7 +162,7 @@ function getHistoryFromToggle (state, toggleName) {
             .slice(0, 5)
             .toJS()
             .map(({ createdAt, createdBy, type }) => ({
-                createdAt: new Date(createdAt).toString(),
+                createdAt: new Date(createdAt).toLocaleString('nb-NO'),
                 createdBy,
                 type,
             }));

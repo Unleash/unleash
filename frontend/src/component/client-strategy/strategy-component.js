@@ -15,7 +15,7 @@ class ClientStrategies extends Component {
         .map(item => (
             {
                 appName: <Link to={`/applications/${item.appName}`}>{item.appName}</Link>,
-                strategies: item.strategies && item.strategies.map(name => (<Link to={`/strategies/${name}`}>{name}</Link>)),
+                strategies: item.strategies && item.strategies.map(name => (<Link key={name} style={{ marginRight: '5px' }} to={`/strategies/${name}`}>{name}</Link>)),
             })
         );
 

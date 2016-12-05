@@ -115,9 +115,9 @@ class EditFeatureToggleWrapper extends React.Component {
                     <Cell col={3}>
                             <div><strong>History</strong></div>
                             <List style={{ textAlign: 'left' }}>
-                                {history.map(({ createdAt, type, createdBy }) => 
-                                    <ListItem twoLine>
-                                        <ListItemContent avatar={getIcon(type)} subtitle={createdAt}>
+                                {history.map(({ createdAt, type, createdBy }, i) => 
+                                    <ListItem twoLine key={i}>
+                                        <ListItemContent title={type} avatar={getIcon(type)} subtitle={createdAt}>
                                             {createdBy}
                                         </ListItemContent>
                                     </ListItem>)}

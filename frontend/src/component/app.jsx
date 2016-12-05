@@ -3,11 +3,27 @@ import { Layout, Drawer, Header, Navigation, Content,
     Footer, FooterSection, FooterDropDownSection, FooterLinkList,
     Grid, Cell,
 } from 'react-mdl';
+import { Link } from 'react-router';
 import style from './styles.scss';
 import ErrorContainer from './error/error-container';
 
 import UserContainer from './user/user-container';
 import ShowUserContainer from './user/show-user-container';
+
+const base = {
+    name: 'Unleash',
+    link: '/',
+};
+
+function replace (input, params) {
+    if (!params) {
+        return input;
+    }
+    Object.keys(params).forEach(key => {
+        input = input.replace(`:${key}`, params[key]);
+    });
+    return input;
+}
 
 export default class App extends Component {
     constructor (props) {
@@ -32,6 +48,34 @@ export default class App extends Component {
         return lastRoute ? lastRoute.pageTitle : '';
     }
 
+    getTitleWithLinks () {
+        const { routes, params } = this.props;
+        const unique = {};
+        let result = [base].concat(routes.splice(1).map((routeEntry) => ({
+            name: replace(routeEntry.pageTitle, params),
+            link: replace(routeEntry.link || routeEntry.path, params),
+        }))).filter(entry => {
+            if (!unique[entry.link]) {
+                unique[entry.link] = true;
+                return true;
+            }
+            return false;
+        });
+
+        if (result.length > 2) {
+            result = result.splice(1);
+        }
+        return (
+            <span>
+                {result.map((entry, index) => (
+                    <span><Link style={{ color: '#f1f1f1', textDecoration: 'none' }} key={entry.link + index} to={entry.link}>
+                        {entry.name}
+                    </Link> {(index + 1) < result.length ? ' / ' : null}</span>
+                ))}
+            </span>
+        );
+    }
+
     onOverlayClick = () => this.setState({ drawerActive: false });
 
     render () {
@@ -46,7 +90,7 @@ export default class App extends Component {
             <div style={{}}>
                 <UserContainer />
                 <Layout fixedHeader>
-                    <Header title={<span><span style={{ color: '#ddd' }}>Unleash Admin / </span><strong>{this.getCurrentSection()}</strong></span>}>
+                    <Header title={this.getTitleWithLinks()}>
                         <Navigation>
                             <a href="https://github.com/Unleash" target="_blank">Github</a>
                             <ShowUserContainer />

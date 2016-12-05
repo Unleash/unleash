@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Snackbar }  from 'react-mdl';
+import { Snackbar, Icon }  from 'react-mdl';
 
 class ErrorComponent extends React.Component {
     static propTypes () {
@@ -18,13 +18,12 @@ class ErrorComponent extends React.Component {
             <Snackbar
                 action="Dismiss"
                 active={showError}
-                icon="question_answer"
-                timeout={10000}
-                label={error}
-                onClick={muteError}
+                onActionClick={muteError}
                 onTimeout={muteError}
-                type="warning"
-            />
+                timeout={10000}
+            >
+                <Icon name="question_answer" /> {error}
+            </Snackbar>
         );
     }
 }

@@ -46,7 +46,7 @@ export default class App extends Component {
             const layout = document.querySelector('.mdl-js-layout');
             const drawer = document.querySelector('.mdl-layout__drawer');
 
-            if (layout.classList.contains('is-small-screen') && drawer.classList.contains('is-visible')) {
+            if (drawer.classList.contains('is-visible')) {
                 layout.MaterialLayout.toggleDrawer();
             }
         }
@@ -126,7 +126,7 @@ export default class App extends Component {
                         </Navigation>
                     </Drawer>
                     <Content>
-                        <Grid>
+                        <Grid shadow={1} style={{ maxWidth: '1200px', margin: '0 auto' }}>
                             <Cell col={12}>
                                 {this.props.children}
                                 <ErrorContainer />

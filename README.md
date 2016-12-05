@@ -39,7 +39,7 @@ Read more about activation strategies in [docs/activation-strategies.md](./docs/
 - [unleash-client-node](https://github.com/unleash/unleash-client-node)
 - (your implementation here!)
 
-Client implentations makes it is easy for developers to check whether a toggle is enabled or disabled. 
+Client implementations makes it is easy for developers to check whether a toggle is enabled or disabled. 
 
 ```
 if(unleash.isEnabled("AwesomeFeature")) {
@@ -77,8 +77,8 @@ You can also require Unleash as a lib and expand it with more options. Read more
 - [Project Roadmap](https://github.com/unleash/unleash/wiki/Roadmap)
 
 ## Developer Guide
-If you want to contribute to this project you are encuraged to send issue request, or provide pull-requests. 
-Please read the [unleas developer guide](./docs/developer-guide.md) to learn more on how you can contribute. 
+If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. 
+Please read the [unleash developer guide](./docs/developer-guide.md) to learn more on how you can contribute. 
 
 ## Run with docker
 We have made a separate project which runs unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker)

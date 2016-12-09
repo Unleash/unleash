@@ -2,5 +2,5 @@
 
 module.exports = () => ({
     upsert: () => Promise.resolve(),
-    getApplicationMetaData: () => Promise.resolve([]),
+    getApplications: () => Promise.resolve([]),
 });

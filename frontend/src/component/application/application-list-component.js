@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { List, ListItem, ListItemContent } from 'react-mdl';
-import { Link } from 'react-router';
+import { AppsLinkList } from '../common';
 
 class ClientStrategies extends Component {
 
@@ -14,23 +13,13 @@ class ClientStrategies extends Component {
         } = this.props;
 
         if (!applications) {
-            return <div>loading...</div>;
+            return <div>Loading...</div>;
         }
         return (
             <div>
                 <h5>Applications</h5>
                 <hr />
-                <List>
-                {applications.map(({ appName, data = {} }) => (
-                    <ListItem key={appName} twoLine>
-                        <ListItemContent avatar={data.icon || 'apps'} subtitle={data.description}>
-                            <Link to={`/applications/${appName}`}>
-                                {appName}
-                            </Link>
-                        </ListItemContent>
-                    </ListItem>
-                ))}
-                </List>
+                <AppsLinkList apps={applications} />
             </div>
         );
     }

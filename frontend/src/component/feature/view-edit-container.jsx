@@ -12,6 +12,8 @@ import { fetchFeatureMetrics, fetchSeenApps } from '../../store/feature-metrics-
 import { fetchHistoryForToggle } from '../../store/history-actions';
 import { getIcon } from '../history/history-item-diff';
 
+import { AppsLinkList } from '../common';
+
 class EditFeatureToggleWrapper extends React.Component {
 
     static propTypes () {
@@ -30,7 +32,6 @@ class EditFeatureToggleWrapper extends React.Component {
         this.props.fetchHistoryForToggle(this.props.featureToggleName);
         this.props.fetchFeatureMetrics();
         this.timer = setInterval(() => {
-            this.props.fetchSeenApps();
             this.props.fetchFeatureMetrics();
         }, 5000);
     }
@@ -63,7 +64,7 @@ class EditFeatureToggleWrapper extends React.Component {
             if (features.length === 0 ) {
                 return <span>Loading</span>;
             }
-            return <span>Could not find {this.props.featureToggleName}</span>;
+            return <span>Could not find the toggle "{this.props.featureToggleName}"</span>;
         }
 
         return (
@@ -105,17 +106,7 @@ class EditFeatureToggleWrapper extends React.Component {
                                 <div><small><strong>Not used in a app in the last hour.</strong> This might be due to your client implementation is not reporting usage.</small></div>
                             </div>
                         }
-                        <List style={{ textAlign: 'left' }}>
-                        {seenApps.length > 0 && seenApps.map(({ appName, data = {} }) => (
-                            <ListItem twoLine>
-                                <ListItemContent avatar={data.icon || 'apps'} subtitle={data.description || '-'}>
-                                    <Link key={appName} to={`/applications/${appName}`}>
-                                        {appName}
-                                    </Link>
-                                </ListItemContent>
-                            </ListItem>
-                        ))}
-                        </List>
+                        <AppsLinkList apps={seenApps} />
                     </Cell>
                     <Cell col={3}>
                             <div><strong>History</strong></div>

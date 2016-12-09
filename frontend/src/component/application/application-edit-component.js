@@ -43,13 +43,16 @@ class ClientStrategies extends PureComponent {
             instances,
             strategies,
             seenToggles,
-            data = {},
+            url,
+            description,
+            icon = 'apps',
+            color,
         } = application;
 
         return (
             <div>
-                <h5><Icon name={data.icon || 'apps'} /> {appName}</h5>
-                {data.description && <p>{data.description} </p>}
+                <h5><Icon name={icon} /> {appName}</h5>
+                {description && <p>{description} </p>}
                 <Grid>
                     <Cell col={3}>
                         <h6> Toggles</h6>
@@ -86,7 +89,11 @@ class ClientStrategies extends PureComponent {
                         <List>
                         {instances.map(({ instanceId, clientIp, lastSeen }, i) => (
                             <ListItem key={i} twoLine>
-                                <ListItemContent icon="timeline" subtitle={<span>{clientIp} last seen at <small>{new Date(lastSeen).toLocaleString('nb-NO')}</small></span>}>
+                                <ListItemContent
+                                    icon="timeline"
+                                    subtitle={
+                                        <span>{clientIp} last seen at <small>{new Date(lastSeen).toLocaleString('nb-NO')}</small></span>
+                                    }>
                                     {instanceId}
                                 </ListItemContent>
                             </ListItem>
@@ -98,12 +105,17 @@ class ClientStrategies extends PureComponent {
                         <h5>Edit app meta data</h5>
                     </Cell>
                     <Cell col={6}>
-                        <StatefulTextfield value={data.url} label="URL" onBlur={(e) => storeApplicationMetaData(appName, 'url', e.target.value)} /><br />
-                        <StatefulTextfield value={data.description} label="Description" rows={5} onBlur={(e) => storeApplicationMetaData(appName, 'description', e.target.value)} />
+                        <StatefulTextfield
+                            value={url} label="URL" onBlur={(e) => storeApplicationMetaData(appName, 'url', e.target.value)} /><br />
+                        <StatefulTextfield
+                            value={description}
+                            label="Description" rows={5} onBlur={(e) => storeApplicationMetaData(appName, 'description', e.target.value)} />
                     </Cell>
                     <Cell col={6}>
-                        <StatefulTextfield value={data.icon} label="Select icon" onBlur={(e) => storeApplicationMetaData(appName, 'icon', e.target.value)} />
-                        <StatefulTextfield value={data.color} label="Select color" onBlur={(e) => storeApplicationMetaData(appName, 'color', e.target.value)} />
+                        <StatefulTextfield
+                            value={icon} label="Select icon" onBlur={(e) => storeApplicationMetaData(appName, 'icon', e.target.value)} />
+                        <StatefulTextfield
+                            value={color} label="Select color" onBlur={(e) => storeApplicationMetaData(appName, 'color', e.target.value)} />
                     </Cell>
                 </Grid>
             </div>

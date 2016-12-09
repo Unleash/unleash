@@ -8,11 +8,10 @@ function fetchAll () {
         .then(response => response.json());
 }
 
-function revive (feature) {
-    return fetch(`${URI}/revive`, {
+function revive (featureName) {
+    return fetch(`${URI}/revive/${featureName}`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(feature),
         credentials: 'include',
     }).then(throwIfNotSuccess);
 }

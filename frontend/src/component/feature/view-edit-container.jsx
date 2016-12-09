@@ -105,17 +105,22 @@ class EditFeatureToggleWrapper extends React.Component {
                                 <div><small><strong>Not used in a app in the last hour.</strong> This might be due to your client implementation is not reporting usage.</small></div>
                             </div>
                         }
-                        {seenApps.length > 0 && seenApps.map((appName) => (
-                            <Link key={appName} to={`/applications/${appName}`}>
-                                {appName}
-                            </Link>
+                        <List style={{ textAlign: 'left' }}>
+                        {seenApps.length > 0 && seenApps.map(({ appName, data = {} }) => (
+                            <ListItem twoLine>
+                                <ListItemContent avatar={data.icon || 'apps'} subtitle={data.description || '-'}>
+                                    <Link key={appName} to={`/applications/${appName}`}>
+                                        {appName}
+                                    </Link>
+                                </ListItemContent>
+                            </ListItem>
                         ))}
-                        <p>add instances count?</p>
+                        </List>
                     </Cell>
                     <Cell col={3}>
                             <div><strong>History</strong></div>
                             <List style={{ textAlign: 'left' }}>
-                                {history.map(({ createdAt, type, createdBy }, i) => 
+                                {history.map(({ createdAt, type, createdBy }, i) =>
                                     <ListItem twoLine key={i}>
                                         <ListItemContent title={type} avatar={getIcon(type)} subtitle={createdAt}>
                                             {createdBy}

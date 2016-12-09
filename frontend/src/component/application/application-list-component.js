@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { List, ListItem, ListItemContent } from 'react-mdl';
 import { Link } from 'react-router';
 
 class ClientStrategies extends Component {
@@ -17,15 +18,19 @@ class ClientStrategies extends Component {
         }
         return (
             <div>
-                <ul>
-                {applications.map(item => (
-                    <li>
-                        <Link key={item.appName} to={`/applications/${item.appName}`}>
-                            Link: {item.appName}
-                        </Link>
-                    </li>
+                <h5>Applications</h5>
+                <hr />
+                <List>
+                {applications.map(({ appName, data = {} }) => (
+                    <ListItem key={appName} twoLine>
+                        <ListItemContent avatar={data.icon || 'apps'} subtitle={data.description}>
+                            <Link to={`/applications/${appName}`}>
+                                {appName}
+                            </Link>
+                        </ListItemContent>
+                    </ListItem>
                 ))}
-                </ul>
+                </List>
             </div>
         );
     }

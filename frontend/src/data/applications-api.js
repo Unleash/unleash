@@ -20,8 +20,20 @@ function fetchApplicationsWithStrategyName (strategyName) {
         .then(response => response.json());
 }
 
+function storeApplicationMetaData (appName, key, value) {
+    const data = {};
+    data[key] = value;
+    return fetch(`${URI}/${appName}`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data),
+            credentials: 'include',
+        }).then(throwIfNotSuccess);
+}
+
 module.exports = {
     fetchApplication,
     fetchAll,
     fetchApplicationsWithStrategyName,
+    storeApplicationMetaData,
 };

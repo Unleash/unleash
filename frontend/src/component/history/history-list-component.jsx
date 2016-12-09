@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import HistoryItemDiff from './history-item-diff';
 import HistoryItemJson from './history-item-json';
-import { Switch } from 'react-mdl';
+import { Switch, Table, TableHeader, Grid, Cell } from 'react-mdl';
 
 import style from './history.scss';
 
@@ -23,13 +23,30 @@ class HistoryList extends Component {
         if (showData) {
             entries =  history.map((entry) => <HistoryItemJson  key={`log${entry.id}`} entry={entry} />);
         } else {
-            entries =  history.map((entry) => <HistoryItemDiff  key={`log${entry.id}`} entry={entry} />);
+            entries = (<Table
+                    sortable
+                    rows={
+                        history.map((entry) => Object.assign({
+                            diff: (<HistoryItemDiff  entry={entry} />),
+                        }, entry))
+                    }
+                    style={{ width: '100%' }}
+                >
+                <TableHeader name="type">Type</TableHeader>
+                <TableHeader name="createdBy">User</TableHeader>
+                <TableHeader name="diff">Diff</TableHeader>
+                <TableHeader numeric name="createdAt">Time</TableHeader>
+            </Table>);
         }
 
         return (
             <div className={style.history}>
-                <Switch checked={showData} onChange={this.toggleShowDiff.bind(this)}>Show full events</Switch>
-               {entries}
+                <Grid>
+                    <Cell>
+                         <Switch checked={showData} onChange={this.toggleShowDiff.bind(this)}>Show full events</Switch>
+                    </Cell>
+                </Grid>
+                {entries}
             </div>
         );
     }

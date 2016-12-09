@@ -64,9 +64,8 @@ class AddFeatureToggleComponent extends Component {
 
                     <Switch
                         checked={enabled}
-                        onChange={(v) => {
-                                                // todo is wrong way to get value?
-                            setValue('enabled', (console.log(v.target) && v.target.value === 'on'));
+                        onChange={() => {
+                            setValue('enabled', !enabled);
                         }}>Enabled</Switch>
                     <br />
                 </section>

@@ -151,21 +151,9 @@ test('should return metrics for all toggles', t => {
         .get('/api/client/metrics/feature-toggles')
         .expect(200)
         .expect((res) => {
-
             const metrics = res.body;
             t.true(metrics.lastHour !== undefined);
             t.true(metrics.lastMinute !== undefined);
-        });
-});
-
-
-test('should return list of client strategies', t => {
-    const { request } = getSetup();
-    return request
-        .get('/api/client/strategies')
-        .expect(200)
-        .expect((res) => {
-            t.true(res.body.length === 0);
         });
 });
 

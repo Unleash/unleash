@@ -60,10 +60,13 @@ We use database migrations to track database changes.
 
 ### Making a schema change
 
-1. Create `migrations/sql/NNN-your-migration-name.up.sql` with your change in SQL.
-2. Create `migrations/sql/NNN-your-migration-name.down.sql` with the rollback of your change in SQL.
-3. Run `db-migrate create your-migration-name` and edit the generated file to have this line: `module.exports = require('../scripts/migration-runner').create('NNN-your-migration-name');`
-4. Run `db-migrate up`.
+Use db-migrate to create new migrations file. 
+
+```bash
+> ./node_modules/.bin/db-migrate create your-migration-name
+```
+
+
 
 
 ## Publishing / Releasing new packages

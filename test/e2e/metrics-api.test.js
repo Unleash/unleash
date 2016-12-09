@@ -60,26 +60,14 @@ test.serial('should accept client metrics', async t => {
         .then(destroy);
 });
 
-test.serial('should get client strategies', async t => {
-    const { request, destroy  } = await setupApp('metrics_serial');
-    return request
-        .get('/api/client/strategies')
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            t.true(res.status === 200);
-            t.true(res.body.length === 1);
-        })
-        .then(destroy);
-});
-
 test.serial('should get application details', async t => {
     const { request, destroy  } = await setupApp('metrics_serial');
     return request
-        .get('/api/client/applications/demo-seed')
+        .get('/api/client/applications/demo-app-1')
         .expect('Content-Type', /json/)
         .expect((res) => {
             t.true(res.status === 200);
-            t.true(res.body.appName === 'demo-seed');
+            t.true(res.body.appName === 'demo-app-1');
             t.true(res.body.instances.length === 1);
         })
         .then(destroy);
@@ -92,7 +80,7 @@ test.serial('should get list of applications', async t => {
         .expect('Content-Type', /json/)
         .expect((res) => {
             t.true(res.status === 200);
-            t.true(res.body.applications.length === 1);
+            t.true(res.body.applications.length === 2);
         })
         .then(destroy);
 });

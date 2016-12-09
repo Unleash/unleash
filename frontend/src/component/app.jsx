@@ -118,10 +118,9 @@ export default class App extends Component {
                             {createListItem('/strategies', 'Strategies')}
                             {createListItem('/history', 'Event history')}
                             {createListItem('/archive', 'Archived toggles')}
-                            <hr />
                             {createListItem('/applications', 'Applications')}
                             {/*createListItem('/metrics', 'Client metrics')*/}
-                            {createListItem('/client-strategies', 'Client strategies')}
+                            {/*createListItem('/client-strategies', 'Client strategies')*/}
                             {/*createListItem('/client-instances', 'Client instances')*/}
                         </Navigation>
                     </Drawer>
@@ -146,7 +145,7 @@ export default class App extends Component {
                                     <FooterLinkList>
                                         {createListItem('/applications', 'Applications')}
                                         {/*createListItem('/metrics', 'Client metrics')*/}
-                                        {createListItem('/client-strategies', 'Client strategies')}
+                                        {/*createListItem('/client-strategies', 'Client strategies')*/}
                                         {/*createListItem('/client-instances', 'Client instances')*/}
                                     </FooterLinkList>
                                 </FooterDropDownSection>

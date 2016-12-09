@@ -84,7 +84,7 @@ export default class App extends Component {
         return (
             <span>
                 {result.map((entry, index) => (
-                    <span><Link style={{ color: '#f1f1f1', textDecoration: 'none' }} key={entry.link + index} to={entry.link}>
+                    <span key={entry.link + index}><Link style={{ color: '#f1f1f1', textDecoration: 'none' }} to={entry.link}>
                         {entry.name}
                     </Link> {(index + 1) < result.length ? ' / ' : null}</span>
                 ))}
@@ -185,7 +185,7 @@ export default class App extends Component {
         return (
             <div className={style.container}>
                 <AppBar title="Unleash Admin" leftIcon="menu" onLeftIconClick={this.toggleDrawerActive} className={style.appBar}>
-                    
+
                 </AppBar>
                 <div className={style.container} style={{ top: '6.4rem' }}>
                     <Layout>
@@ -194,11 +194,11 @@ export default class App extends Component {
                         </NavDrawer>
                         <Panel scrollY>
                             <div style={{ padding: '1.8rem' }}>
-                                
+
                                 {this.props.children}
                             </div>
                         </Panel>
-                        
+
                     </Layout>
                 </div>
             </div>

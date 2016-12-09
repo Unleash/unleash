@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import { Grid, Cell } from 'react-mdl';
 
-class ShowStrategyComponent extends Component {
-    constructor (props) {
-        super(props);
-        this.state = { applications: [] };
-    }
+import { AppsLinkList } from '../common';
 
+class ShowStrategyComponent extends Component {
     componentDidMount () {
         if (!this.props.strategy) {
             this.props.fetchStrategies();
         };
-
-        this.props.getApplications()
-            .then(res => this.setState({ applications: res.applications }));
+        if (!this.props.applications || this.props.applications.length === 0) {
+            this.props.fetchApplications();
+        }
     }
 
     renderParameters (parametersTemplate) {
@@ -28,15 +24,21 @@ class ShowStrategyComponent extends Component {
     }
 
     render () {
-        if (!this.props.strategy) {
-            return null;
+        const {
+            strategy,
+            strategyName,
+            applications,
+        } = this.props;
+
+        if (!strategy) {
+            return <div>Cannot find Strategy "{strategyName}".</div>;
         }
 
         const {
             name,
             description,
             parametersTemplate = {},
-        } = this.props.strategy;
+        } = strategy;
 
 
         return (
@@ -44,26 +46,19 @@ class ShowStrategyComponent extends Component {
                 <h4>{name}</h4>
                 <p>{description}</p>
                 <Grid>
-                    <Cell col={4}>
+                    <Cell col={6}>
                         <h6>Parameters</h6>
+                        <hr />
                         <ol className="demo-list-item mdl-list">
                             {this.renderParameters(parametersTemplate)}
                         </ol>
                     </Cell>
 
-                    <Cell col={4}>
+                    <Cell col={6}>
                         <h6>Applications using this strategy</h6>
-                        <ol className="demo-list-item mdl-list">
-                            {this.state.applications.map(({ appName }, i) => (
-                                <li key={`${appName}-${i}`}>
-                                    <Link to={`/applications/${appName}`}>
-                                        {appName}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ol>
+                        <hr />
+                        <AppsLinkList apps={applications} />
                     </Cell>
-
                 </Grid>
             </div>
         );

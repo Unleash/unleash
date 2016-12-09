@@ -24,11 +24,11 @@ function storeApplicationMetaData (appName, key, value) {
     const data = {};
     data[key] = value;
     return fetch(`${URI}/${appName}`, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(data),
-            credentials: 'include',
-        }).then(throwIfNotSuccess);
+        method: 'POST',
+        headers,
+        body: JSON.stringify(data),
+        credentials: 'include',
+    }).then(throwIfNotSuccess);
 }
 
 module.exports = {

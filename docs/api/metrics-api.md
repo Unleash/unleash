@@ -157,21 +157,27 @@ a link to follow for more datails.
 {
   "applications": [
     {
-      "appName": "test",
+      "appName": "another",
+      "strategies": [
+        "default",
+        "other",
+        "brother"
+      ],
+      "createdAt": "2016-12-09T14:56:36.730Z",
       "links": {
-        "appDetails": "/api/client/applications/test"
+        "appDetails": "/api/client/applications/another"
       }
     },
     {
-      "appName": "demo-app-2",
+      "appName": "bow",
+      "strategies": [
+        "default",
+        "other",
+        "brother"
+      ],
+      "createdAt": "2016-12-09T14:56:36.730Z",
       "links": {
-        "appDetails": "/api/client/applications/demo-app-2"
-      }
-    },
-    {
-      "appName": "demo-app",
-      "links": {
-        "appDetails": "/api/client/applications/demo-app"
+        "appDetails": "/api/client/applications/bow"
       }
     }
   ]

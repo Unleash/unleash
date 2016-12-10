@@ -10,9 +10,8 @@ import EditFeatureToggle from './form-edit-container.jsx';
 import { fetchFeatureToggles, toggleFeature } from '../../store/feature-actions';
 import { fetchFeatureMetrics, fetchSeenApps } from '../../store/feature-metrics-actions';
 import { fetchHistoryForToggle } from '../../store/history-actions';
-import { getIcon } from '../history/history-item-diff';
 
-import { AppsLinkList, SwitchWithLabel } from '../common';
+import { AppsLinkList, SwitchWithLabel, getIcon } from '../common';
 
 class EditFeatureToggleWrapper extends React.Component {
 

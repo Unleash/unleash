@@ -1,7 +1,6 @@
 const React = require('react');
 const {
     List, ListItem, ListItemContent,
-    Grid, Cell,
     Button, Icon,
     Switch,
 } = require('react-mdl');
@@ -70,3 +69,13 @@ export const TogglesLinkList = ({ toggles }) => (
     ))}
     </List>
 );
+
+export function getIcon (type) {
+    switch (type) {
+        case 'feature-updated': return 'autorenew';
+        case 'feature-created': return 'add';
+        case 'feature-deleted': return 'remove';
+        case 'feature-archived': return 'archived';
+        default: return 'star';
+    }
+};

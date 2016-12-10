@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import HistoryItemDiff from './history-item-diff';
 import HistoryItemJson from './history-item-json';
 import { Switch, Table, TableHeader, Grid, Cell } from 'react-mdl';
-import { HeaderTitle } from '../common';
+import { HeaderTitle, SwitchWithLabel } from '../common';
 
 import style from './history.scss';
 
@@ -42,7 +42,9 @@ class HistoryList extends Component {
 
         return (
             <div className={style.history}>
-                <HeaderTitle title={this.props.title} actions={<Switch checked={showData} onChange={this.toggleShowDiff.bind(this)}>Show full events</Switch>}/>
+                <HeaderTitle title={this.props.title} actions={
+                    <SwitchWithLabel checked={showData} onChange={this.toggleShowDiff.bind(this)}>Show full events</SwitchWithLabel>
+                }/>
                 {entries}
             </div>
         );

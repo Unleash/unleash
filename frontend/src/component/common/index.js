@@ -3,6 +3,7 @@ const {
     List, ListItem, ListItemContent,
     Grid, Cell,
     Button, Icon,
+    Switch,
 } = require('react-mdl');
 const { Link } = require('react-router');
 
@@ -21,13 +22,16 @@ export const AppsLinkList = ({ apps }) => (
 );
 
 export const HeaderTitle = ({ title, actions, subtitle }) => (
-    <Grid style={{ borderBottom: '1px solid #f1f1f1', marginBottom: '10px' }}>
-        <Cell col={6}>
-            <h4 className="mdl-typography--subhead">{title}</h4>
-            {subtitle && <small>{subtitle}</small>}
-        </Cell>
-        <Cell col={6} style={{ textAlign: 'right' }}>{actions}</Cell>
-    </Grid>
+    <div style={{ display: 'flex', borderBottom: '1px solid #f1f1f1', marginBottom: '10px', padding: '16px 20px ' }}>
+            <div style={{ flex: '1' }}>
+                <h6 style={{ margin: 0 }}>{title}</h6>
+                {subtitle && <small>{subtitle}</small>}
+            </div>
+
+            <div style={{ flex: '1', textAlign: 'right' }}>
+                {actions}
+            </div>
+    </div>
 );
 
 export const FormButtons = ({ submitText = 'Create', onCancel }) => (
@@ -43,3 +47,13 @@ export const FormButtons = ({ submitText = 'Create', onCancel }) => (
         </Button>
     </div>
 );
+
+export const SwitchWithLabel = ({ onChange, children, checked }) => (
+    <span>
+        <span style={{ cursor: 'pointer', display: 'inline-block', width: '45px' }}>
+            <Switch onChange={onChange} checked={checked} />
+        </span>
+        <span>{children}</span>
+    </span>
+);
+

@@ -12,7 +12,7 @@ import { fetchFeatureMetrics, fetchSeenApps } from '../../store/feature-metrics-
 import { fetchHistoryForToggle } from '../../store/history-actions';
 import { getIcon } from '../history/history-item-diff';
 
-import { AppsLinkList } from '../common';
+import { AppsLinkList, SwitchWithLabel } from '../common';
 
 class EditFeatureToggleWrapper extends React.Component {
 
@@ -71,11 +71,9 @@ class EditFeatureToggleWrapper extends React.Component {
             <div>
                 <h4>{featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small></h4>
                 <hr />
-                <div style={{ maxWidth: '350px' }} >
-                    <Switch style={{ cursor: 'pointer' }} onChange={() => toggleFeature(featureToggle)} checked={featureToggle.enabled}>
-                        Toggle {featureToggle.name}
-                    </Switch>
-                </div>
+                <SwitchWithLabel
+                    checked={featureToggle.enabled}
+                    onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
                 <hr />
                 <Grid style={{ textAlign: 'center' }}>
                     <Cell col={3}>

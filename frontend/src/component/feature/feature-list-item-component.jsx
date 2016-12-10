@@ -37,11 +37,11 @@ const Feature = ({
                 </div>
 
                 &nbsp;
-            <span style={{ display: 'inline-block', width: '45px' }} title={`Toggle ${name}`}>
+                <span style={{ display: 'inline-block', width: '45px' }} title={`Toggle ${name}`}>
                     <Switch title="test" key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />
                 </span>
                 <Link to={`/features/edit/${name}`} className={style.link}>
-                    {name} <small>{(description && description.substring(0, 100)) || ''}</small>
+                    {name} <small>{(description && description.substring(0, 30)) || ''}</small>
                 </Link>
             </span>
 

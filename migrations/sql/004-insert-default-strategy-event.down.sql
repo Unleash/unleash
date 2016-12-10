@@ -1,1 +1,0 @@
-delete from events where type='strategy-created' and data->>'name' = 'default';

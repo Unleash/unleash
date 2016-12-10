@@ -1,1 +1,0 @@
-INSERT INTO events(type, created_by, data) values ('strategy-created', 'migration', '{"name":"default","description":"Default on or off Strategy."}');

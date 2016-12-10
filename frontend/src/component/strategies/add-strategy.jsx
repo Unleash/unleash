@@ -78,7 +78,7 @@ const AddStrategy = ({
             <IconButton raised name="add" title="Add parameter" onClick={(e) => {
                 e.preventDefault();
                 incValue('_params');
-            }}/> &nsbp;Add parameter
+            }}/> &nbsp;Add parameter
         </section>
 
         <br />

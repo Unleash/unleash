@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Textfield, Button, Card, CardTitle, CardText, CardActions, CardMenu, IconButton }  from 'react-mdl';
 import { Link } from 'react-router';
+import StrategyInputPersentage from './strategy-input-persentage';
 
 const style = {
     flex: '1',
@@ -39,18 +40,27 @@ class StrategyConfigure extends React.Component {
             if (keys.length === 0) {
                 return null;
             }
-            return keys.map(field => (
-                <Textfield
-                    floatingLabel
-                    rows={2}
-                    style={{ width: '100%' }}
-                    key={field}
-                    name={field}
-                    label={field}
-                    onChange={this.handleConfigChange.bind(this, field)}
-                    value={this.props.strategy.parameters[field]}
-                />
-            ));
+            return keys.map(field => {
+                if (strategyDefinition.parametersTemplate[field] === 'percentage') {
+                    return (<StrategyInputPersentage
+                        field={field}
+                        onChange={this.handleConfigChange.bind(this, field)}
+                        value={this.props.strategy.parameters[field]} />);
+                } else {
+                    return (
+                        <Textfield
+                            floatingLabel
+                            rows={2}
+                            style={{ width: '100%' }}
+                            key={field}
+                            name={field}
+                            label={field}
+                            onChange={this.handleConfigChange.bind(this, field)}
+                            value={this.props.strategy.parameters[field]}
+                        />
+                    );
+                }
+            });
         }
         return null;
     }

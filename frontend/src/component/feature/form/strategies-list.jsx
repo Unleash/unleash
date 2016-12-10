@@ -31,7 +31,7 @@ class StrategiesList extends React.Component {
                 strategyDefinition={strategies.find(s => s.name === strat.name)} />
         ));
         return (
-            <div>
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {blocks}
             </div>
         );

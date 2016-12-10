@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Textfield, Button }  from 'react-mdl';
+import { Textfield, Button, Card, CardTitle, CardText, CardActions, CardMenu, IconButton }  from 'react-mdl';
 
 class StrategyConfigure extends React.Component {
 
@@ -28,9 +28,14 @@ class StrategyConfigure extends React.Component {
 
     renderInputFields (strategyDefinition) {
         if (strategyDefinition.parametersTemplate) {
-            return Object.keys(strategyDefinition.parametersTemplate).map(field => (
+            const keys = Object.keys(strategyDefinition.parametersTemplate);
+            if (keys.length === 0) {
+                return null;
+            }
+            return keys.map(field => (
                 <Textfield
                     floatingLabel
+                    rows={2}
                     style={{ width: '100%' }}
                     key={field}
                     name={field}
@@ -40,6 +45,7 @@ class StrategyConfigure extends React.Component {
                 />
             ));
         }
+        return null;
     }
 
     render () {
@@ -52,19 +58,34 @@ class StrategyConfigure extends React.Component {
             );
         }
 
-        const inputFields = this.renderInputFields(this.props.strategyDefinition) || [];
+        const inputFields = this.renderInputFields(this.props.strategyDefinition);
+
+        const { name } = this.props.strategy;
 
         return (
-            <div style={{ padding: '5px 15px', backgroundColor: '#f7f8ff', marginBottom: '10px' }}>
-                <h6>
-                    <strong>{this.props.strategy.name} </strong>
-                    (<a style={{ color: '#ff4081' }} onClick={this.handleRemove} href="#remove-strat">remove</a>)
-                </h6>
-                <small>{this.props.strategyDefinition.description}</small>
-                <div>
-                    {inputFields}
-                </div>
-            </div>
+            <Card shadow={0} style={{
+                flex: '1',
+                minWidth: '300px',
+                maxWidth: '100%',
+                // flexBasis: '1',
+                margin: '5px 20px 15px 0px',
+            }}>
+                <CardTitle style={{ color: '#fff', height: '65px', background: '#607d8b' }}>
+                    { name }
+                </CardTitle>
+                <CardText>
+                    {this.props.strategyDefinition.description}
+                </CardText>
+                {
+                    inputFields && <CardActions border >
+                        {inputFields}
+                    </CardActions>
+                }
+
+                <CardMenu style={{ color: '#fff' }}>
+                    <IconButton name="delete" onClick={this.handleRemove} />
+                </CardMenu>
+            </Card>
         );
     }
 }

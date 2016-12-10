@@ -62,7 +62,7 @@ export const TogglesLinkList = ({ toggles }) => (
     {toggles.length > 0 && toggles.map(({ name, description = '-', icon = 'toggle' }) => (
         <ListItem twoLine key={name}>
             <ListItemContent avatar={icon} subtitle={description}>
-                <Link key={name} to={`/features/edit//${name}`}>
+                <Link key={name} to={`/features/edit/${name}`}>
                     {name}
                 </Link>
             </ListItemContent>

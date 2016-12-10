@@ -2,7 +2,7 @@
 import React, { Component, PureComponent } from 'react';
 
 import { Link } from 'react-router';
-import { Grid, Cell, List, ListItem, ListItemContent, Textfield, Icon } from 'react-mdl';
+import { Grid, Cell, List, ListItem, ListItemContent, Textfield, Icon, ProgressBar } from 'react-mdl';
 import { HeaderTitle } from '../common';
 
 class StatefulTextfield extends Component {
@@ -32,7 +32,7 @@ class ClientStrategies extends PureComponent {
 
     render () {
         if (!this.props.application) {
-            return <div>Loading application info...</div>;
+            return <ProgressBar indeterminate />;
         }
         const {
             application,

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Grid, Cell, Icon, Switch, List, ListItem, ListItemContent } from 'react-mdl';
+import { Grid, Cell, Icon, ProgressBar, List, ListItem, ListItemContent } from 'react-mdl';
 import { Link } from 'react-router';
 
 import percentLib from 'percent';
@@ -61,7 +61,7 @@ class EditFeatureToggleWrapper extends React.Component {
 
         if (!featureToggle) {
             if (features.length === 0 ) {
-                return <span>Loading</span>;
+                return <ProgressBar indeterminate />;
             }
             return <span>Could not find the toggle "{this.props.featureToggleName}"</span>;
         }

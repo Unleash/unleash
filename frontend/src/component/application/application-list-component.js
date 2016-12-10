@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { ProgressBar } from 'react-mdl';
 import { AppsLinkList, HeaderTitle } from '../common';
 
 class ClientStrategies extends Component {
@@ -13,7 +14,7 @@ class ClientStrategies extends Component {
         } = this.props;
 
         if (!applications) {
-            return <div>Loading...</div>;
+            return <ProgressBar indeterminate />;
         }
         return (
             <div>

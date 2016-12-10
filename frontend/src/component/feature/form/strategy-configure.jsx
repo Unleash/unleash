@@ -1,7 +1,12 @@
 import React, { PropTypes } from 'react';
-import { Textfield, Button, Card, CardTitle, CardText, CardActions, CardMenu, IconButton, Icon }  from 'react-mdl';
+import {
+    Textfield, Button,
+    Card, CardTitle, CardText, CardActions, CardMenu,
+    IconButton, Icon,
+}  from 'react-mdl';
 import { Link } from 'react-router';
 import StrategyInputPersentage from './strategy-input-persentage';
+import StrategyInputList from './strategy-input-list';
 
 const style = {
     flex: '1',
@@ -20,14 +25,22 @@ class StrategyConfigure extends React.Component {
         };
     }
 
+    // shouldComponentUpdate (props, nextProps) {
+    //     console.log({ props, nextProps });
+    // }
+
     handleConfigChange = (key, e) => {
+        this.setConfig(key, e.target.value);
+    };
+
+    setConfig = (key, value) => {
         const parameters = this.props.strategy.parameters || {};
-        parameters[key] = e.target.value;
+        parameters[key] = value;
 
         const updatedStrategy = Object.assign({}, this.props.strategy, { parameters });
 
         this.props.updateStrategy(updatedStrategy);
-    };
+    }
 
     handleRemove = (evt) => {
         evt.preventDefault();
@@ -41,8 +54,9 @@ class StrategyConfigure extends React.Component {
                 return null;
             }
             return keys.map(field => {
-                if (strategyDefinition.parametersTemplate[field] === 'percentage') {
-                    let value = this.props.strategy.parameters[field];
+                const type = strategyDefinition.parametersTemplate[field];
+                let value = this.props.strategy.parameters[field];
+                if (type === 'percentage') {
                     if (value == null || (typeof value === 'string' && value === '')) {
                         value = 50; // default value
                     }
@@ -51,6 +65,12 @@ class StrategyConfigure extends React.Component {
                         field={field}
                         onChange={this.handleConfigChange.bind(this, field)}
                         value={1 * value} />);
+                } else if (type === 'list') {
+                    let list = [];
+                    if (typeof value === 'string') {
+                        list = value.split(',');
+                    }
+                    return (<StrategyInputList field={field} list={list} setConfig={this.setConfig} />);
                 } else {
                     return (
                         <Textfield
@@ -61,7 +81,7 @@ class StrategyConfigure extends React.Component {
                             name={field}
                             label={field}
                             onChange={this.handleConfigChange.bind(this, field)}
-                            value={this.props.strategy.parameters[field]}
+                            value={value}
                         />
                     );
                 }

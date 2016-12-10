@@ -74,7 +74,7 @@ class AddFeatureToggleComponent extends Component {
                         onChange={() => {
                             setValue('enabled', !enabled);
                         }}>Enabled</Switch>
-                    <br />
+                    <hr />
                 </section>
 
                 <StrategiesSection

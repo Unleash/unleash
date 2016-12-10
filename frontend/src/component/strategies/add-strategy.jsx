@@ -16,17 +16,29 @@ function gerArrayWithEntries (num) {
     return Array.from(Array(num));
 }
 export const PARAM_PREFIX = 'param_';
+export const TYPE_PREFIX = 'type_';
 
 const genParams = (input, num = 0, setValue) => (<div>{gerArrayWithEntries(num).map((v, i) => {
     const key = `${PARAM_PREFIX}${i + 1}`;
+    const typeKey = `${TYPE_PREFIX}${i + 1}`;
     return (
-        <Textfield
-            style={{ width: '100%' }}
-            floatingLabel
-            label={`Parameter name ${i + 1}`}
-            name={key} key={key}
-            onChange={({ target }) => setValue(key, target.value)}
-            value={input[key]} />
+        <div key={key}>
+            <Textfield
+                style={{ width: '50%' }}
+                floatingLabel
+                label={`Parameter name ${i + 1}`}
+                name={key}
+                onChange={({ target }) => setValue(key, target.value)}
+                value={input[key]} />
+            <Textfield
+                style={{ width: '50%' }}
+                floatingLabel
+                label={`Type ${i + 1}`}
+                name={typeKey}
+                onChange={({ target }) => setValue(typeKey, target.value)}
+                value={input[typeKey]} />
+
+        </div>
     );
 })}</div>);
 
@@ -63,10 +75,10 @@ const AddStrategy = ({
 
         <section style={{ margin: '0 20px' }}>
             {genParams(input, input._params, setValue)}
-            <IconButton name="add" title="Add parameter" onClick={(e) => {
+            <IconButton raised name="add" title="Add parameter" onClick={(e) => {
                 e.preventDefault();
                 incValue('_params');
-            }}/> Add parameter
+            }}/> &nsbp;Add parameter
         </section>
 
         <br />

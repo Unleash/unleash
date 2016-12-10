@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createMapper, createActions } from '../input-helpers';
 import { createStrategy } from '../../store/strategy/actions';
 
-import AddStrategy, { PARAM_PREFIX } from './add-strategy';
+import AddStrategy, { PARAM_PREFIX, TYPE_PREFIX } from './add-strategy';
 
 const ID = 'add-strategy';
 
@@ -15,7 +15,7 @@ const prepare = (methods, dispatch) => {
             const parametersTemplate = {};
             Object.keys(input).forEach(key => {
                 if (key.startsWith(PARAM_PREFIX)) {
-                    parametersTemplate[input[key]] = 'string';
+                    parametersTemplate[input[key]] = input[key.replace(PARAM_PREFIX, TYPE_PREFIX)] || 'string';
                 }
             });
             input.parametersTemplate = parametersTemplate;

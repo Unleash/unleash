@@ -52,7 +52,6 @@ export default class FeatureListComponent extends React.PureComponent {
         return (
            <div>
                 <div className={styles.topList}>
-                    
                     <Chip onClick={() => this.toggleMetrics()} className={styles.topListItem0}>
                         { settings.showLastHour &&
                             <ChipContact className="mdl-color--teal mdl-color-text--white">
@@ -68,8 +67,7 @@ export default class FeatureListComponent extends React.PureComponent {
                             </ChipContact> }
                         { '1 minute' }
                     </Chip>
-                        
-                    
+
                     <div className={styles.topListItem2} style={{ margin: '-10px 10px 0 10px'  }}>
                         <Textfield
                             floatingLabel
@@ -79,7 +77,7 @@ export default class FeatureListComponent extends React.PureComponent {
                             style={{ width: '100%' }}
                         />
                     </div>
-                    
+
                     <div style={{ position: 'relative' }} className={styles.topListItem0}>
                         <IconButton name="sort" id="demo-menu-top-right" colored title="Sort" />
                         <Menu target="demo-menu-top-right" valign="bottom" align="right" ripple onClick={
@@ -95,23 +93,20 @@ export default class FeatureListComponent extends React.PureComponent {
                         </Menu>
                     </div>
                     <Link to="/features/create" className={styles.topListItem0}>
-                        <FABButton ripple component="span" mini>
-                            <Icon name="add" />
-                        </FABButton>
+                        <IconButton ripple raised name="add" component="span" mini style={{ color: 'black' }}/>
                     </Link>
-                    
                 </div>
 
                 <ul className="demo-list-item mdl-list">
-                {features.map((feature, i) =>
-                    <Feature key={i}
-                        settings={settings}
-                        metricsLastHour={featureMetrics.lastHour[feature.name]}
-                        metricsLastMinute={featureMetrics.lastMinute[feature.name]}
-                        feature={feature}
-                        onFeatureClick={onFeatureClick}
-                        onFeatureRemove={onFeatureRemove}/>
-                )}
+                    {features.map((feature, i) =>
+                        <Feature key={i}
+                            settings={settings}
+                            metricsLastHour={featureMetrics.lastHour[feature.name]}
+                            metricsLastMinute={featureMetrics.lastMinute[feature.name]}
+                            feature={feature}
+                            onFeatureClick={onFeatureClick}
+                            onFeatureRemove={onFeatureRemove}/>
+                    )}
                 </ul>
                 <hr />
                 <Link to="/features/create" className={styles.topListItem0}>

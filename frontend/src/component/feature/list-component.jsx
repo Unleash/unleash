@@ -93,7 +93,7 @@ export default class FeatureListComponent extends React.PureComponent {
                         </Menu>
                     </div>
                     <Link to="/features/create" className={styles.topListItem0}>
-                        <IconButton ripple raised name="add" component="span" mini style={{ color: 'black' }}/>
+                        <IconButton ripple raised name="add" component="span" style={{ color: 'black' }}/>
                     </Link>
                 </div>
 

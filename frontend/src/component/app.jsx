@@ -99,7 +99,7 @@ export default class App extends Component {
             <a
                 href={this.context.router.createHref(path)}
                 className={this.context.router.isActive(path) ? style.active : ''}>
-                <Icon name={icon} /> {caption}
+                {icon && <Icon name={icon} />} {caption}
             </a>;
 
         return (

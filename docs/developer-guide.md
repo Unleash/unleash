@@ -66,6 +66,25 @@ Use db-migrate to create new migrations file.
 > ./node_modules/.bin/db-migrate create your-migration-name
 ```
 
+All migrations requires on `up` and one `down` method. 
+
+Example of a typical migration:
+
+```js
+/* eslint camelcase: "off" */
+'use strict';
+
+exports.up = function (db, cb) {
+    db.createTable('examples', {
+        id: { type: 'int', primaryKey: true, notNull: true },
+        created_at: { type: 'timestamp', defaultValue: 'now()' },
+    }, cb);
+};
+
+exports.down = function (db, cb) {
+    return db.dropTable('examples', cb);
+};
+``` 
 
 
 

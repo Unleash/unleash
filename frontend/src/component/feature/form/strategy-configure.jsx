@@ -42,10 +42,15 @@ class StrategyConfigure extends React.Component {
             }
             return keys.map(field => {
                 if (strategyDefinition.parametersTemplate[field] === 'percentage') {
+                    let value = this.props.strategy.parameters[field];
+                    if (value == null || (typeof value === 'string' && value === '')) {
+                        value = 50; // default value
+                    }
                     return (<StrategyInputPersentage
+                        key={field}
                         field={field}
                         onChange={this.handleConfigChange.bind(this, field)}
-                        value={this.props.strategy.parameters[field]} />);
+                        value={1 * value} />);
                 } else {
                     return (
                         <Textfield

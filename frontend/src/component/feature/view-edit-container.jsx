@@ -69,6 +69,7 @@ class EditFeatureToggleWrapper extends React.Component {
         return (
             <div>
                 <h4>{featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small></h4>
+                <p>{featureToggle.description}</p>
                 <hr />
                 <SwitchWithLabel
                     checked={featureToggle.enabled}
@@ -120,7 +121,6 @@ class EditFeatureToggleWrapper extends React.Component {
                             </Link>
                     </Cell>
                 </Grid>
-                <p>{featureToggle.description}</p>
 
                 <hr />
 

@@ -3,7 +3,7 @@ import React, { Component, PureComponent } from 'react';
 
 import { Link } from 'react-router';
 import { Grid, Cell, List, ListItem, ListItemContent, Textfield, Icon, ProgressBar } from 'react-mdl';
-import { HeaderTitle } from '../common';
+import { HeaderTitle, ExternalIconLink } from '../common';
 
 class StatefulTextfield extends Component {
     constructor (props) {
@@ -51,7 +51,9 @@ class ClientStrategies extends PureComponent {
 
         return (
             <div>
-                <HeaderTitle title={<span><Icon name={icon} /> {appName}</span>} subtitle={description} />
+                <HeaderTitle title={<span><Icon name={icon} /> {appName}</span>} subtitle={description}
+                    actions={url && <ExternalIconLink url={url}>Visit site</ExternalIconLink>}
+                />
                 <Grid>
                     <Cell col={3}>
                         <h6> Toggles</h6>

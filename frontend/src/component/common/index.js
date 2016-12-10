@@ -79,3 +79,17 @@ export function getIcon (type) {
         default: return 'star';
     }
 };
+
+
+export const IconLink = ({ icon, children, ...props }) => (
+    <a {...props} style={{ textDecoration: 'none' }}>
+         <Icon name={icon} style={{ marginRight: '5px', verticalAlign: 'middle' }}/>
+         <span style={{ textDecoration: 'none', verticalAlign: 'middle' }}>{children}</span>
+    </a>
+);
+
+export const ExternalIconLink = ({ url, children }) => (
+    <IconLink icon="queue" href={url} target="_blank" rel="noopener">
+        {children}
+    </IconLink>
+);

@@ -1,3 +1,10 @@
 'use strict';
 
-module.exports = require('../scripts/migration-runner').create('002-add-description-to-features');
+exports.up = function (db, callback) {
+    db.runSql('ALTER TABLE features ADD "description" text;', callback);
+};
+
+
+exports.down = function (db, callback) {
+    db.runSql('ALTER TABLE features DROP COLUMN "description";', callback);
+};

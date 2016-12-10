@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Cell } from 'react-mdl';
 
-import { AppsLinkList, HeaderTitle } from '../common';
+import { AppsLinkList, TogglesLinkList, HeaderTitle } from '../common';
 
 class ShowStrategyComponent extends Component {
     componentDidMount () {
@@ -10,6 +10,9 @@ class ShowStrategyComponent extends Component {
         };
         if (!this.props.applications || this.props.applications.length === 0) {
             this.props.fetchApplications();
+        }
+        if (!this.props.toggles || this.props.toggles.length === 0) {
+            this.props.fetchFeatureToggles();
         }
     }
 
@@ -28,6 +31,7 @@ class ShowStrategyComponent extends Component {
             strategy,
             strategyName,
             applications,
+            toggles,
         } = this.props;
 
         if (!strategy) {
@@ -40,12 +44,11 @@ class ShowStrategyComponent extends Component {
             parametersTemplate = {},
         } = strategy;
 
-
         return (
             <div>
                 <HeaderTitle title={name} subtitle={description} />
                 <Grid>
-                    <Cell col={6}>
+                    <Cell col={4}>
                         <h6>Parameters</h6>
                         <hr />
                         <ol className="demo-list-item mdl-list">
@@ -53,10 +56,16 @@ class ShowStrategyComponent extends Component {
                         </ol>
                     </Cell>
 
-                    <Cell col={6}>
+                    <Cell col={4}>
                         <h6>Applications using this strategy</h6>
                         <hr />
                         <AppsLinkList apps={applications} />
+                    </Cell>
+
+                    <Cell col={4}>
+                        <h6>Toggles using this strategy</h6>
+                        <hr />
+                        <TogglesLinkList toggles={toggles} />
                     </Cell>
                 </Grid>
             </div>

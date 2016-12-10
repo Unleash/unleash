@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import ShowStrategy from './show-strategy-component';
 import { fetchStrategies } from '../../store/strategy/actions';
 import { fetchAll } from '../../store/application/actions';
+import { fetchFeatureToggles } from '../../store/feature-actions';
 
 const mapStateToProps = (state, props) => {
     let strategy = state.strategies
@@ -10,16 +11,21 @@ const mapStateToProps = (state, props) => {
     const applications = state.applications
         .get('list')
         .filter(app => app.strategies.includes(props.strategyName));
+    const toggles = state.features
+        .filter(toggle =>
+            toggle.get('strategies').findIndex(s => s.name === props.strategyName) > -1);
 
     return {
         strategy,
         applications: applications && applications.toJS(),
+        toggles: toggles && toggles.toJS(),
     };
 };
 
 const Constainer = connect(mapStateToProps, {
     fetchStrategies,
     fetchApplications: fetchAll,
+    fetchFeatureToggles,
 })(ShowStrategy);
 
 export default Constainer;

@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Chip, Switch, Icon, IconButton } from 'react-mdl';
 import percentLib from 'percent';
 import Progress from './progress';
+import { shorten } from '../common';
 
 import style from './feature.scss';
 
@@ -41,7 +42,7 @@ const Feature = ({
                     <Switch title="test" key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />
                 </span>
                 <Link to={`/features/edit/${name}`} className={style.link}>
-                    {name} <small>{(description && description.substring(0, 30)) || ''}</small>
+                    {name} <small>{shorten(description, 30) || ''}</small>
                 </Link>
             </span>
 

@@ -6,11 +6,13 @@ const {
 } = require('react-mdl');
 const { Link } = require('react-router');
 
+export const shorten = (str, len = 50) => (str && str.length > len ? `${str.substring(0, len)}...` : str);
+
 export const AppsLinkList = ({ apps }) => (
     <List style={{ textAlign: 'left' }}>
     {apps.length > 0 && apps.map(({ appName, description = '-', icon = 'apps' }) => (
         <ListItem twoLine key={appName}>
-            <ListItemContent avatar={icon} subtitle={description}>
+            <ListItemContent avatar={icon} subtitle={shorten(description)}>
                 <Link key={appName} to={`/applications/${appName}`}>
                     {appName}
                 </Link>

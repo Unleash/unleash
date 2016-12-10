@@ -15,7 +15,9 @@ class StatefulTextfield extends Component {
     }
 
     render () {
-        return (<Textfield label={this.props.label}
+        return (<Textfield
+            style={{ width: '100%' }}
+            label={this.props.label}
             floatingLabel
             rows={this.props.rows}
             value={this.state.value}

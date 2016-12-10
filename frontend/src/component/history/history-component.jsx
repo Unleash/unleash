@@ -18,10 +18,7 @@ class History extends PureComponent {
         }
 
         return (
-            <div>
-                <h5>Last 100 changes</h5>
-                <HistoryList history={history} />
-            </div>
+            <HistoryList history={history} title="Last 100 changes" />
         );
     }
 }

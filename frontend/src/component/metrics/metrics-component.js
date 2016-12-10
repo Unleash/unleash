@@ -21,10 +21,10 @@ class Metrics extends Component {
                     <TableHeader name="name">Instance</TableHeader>
                     <TableHeader name="appName">Application name</TableHeader>
                     <TableHeader numeric name="ping" cellFormatter={
-                        (v) => (v.toString()) 
+                        (v) => (v.toString())
                     }>Last seen</TableHeader>
                     <TableHeader numeric name="count">Counted</TableHeader>
-                    
+
                 </DataTable>
             </div>
         );

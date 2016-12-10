@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppsLinkList } from '../common';
+import { AppsLinkList, HeaderTitle } from '../common';
 
 class ClientStrategies extends Component {
 
@@ -17,8 +17,7 @@ class ClientStrategies extends Component {
         }
         return (
             <div>
-                <h5>Applications</h5>
-                <hr />
+                <HeaderTitle title="Applications" />
                 <AppsLinkList apps={applications} />
             </div>
         );

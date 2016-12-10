@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 
-import { Textfield, Button, IconButton } from 'react-mdl';
+import { Textfield, IconButton } from 'react-mdl';
+import { HeaderTitle, FormButtons } from '../common';
+
 
 const trim = (value) => {
     if (value && value.trim) {
@@ -35,6 +37,7 @@ const AddStrategy = ({
     onSubmit,
 }) => (
     <form onSubmit={onSubmit(input)}>
+        <HeaderTitle title="Create new strategy"/>
         <section>
             <Textfield label="Strategy name"
                 name="name" required
@@ -63,11 +66,9 @@ const AddStrategy = ({
         <br />
         <hr />
 
-        <section>
-            <Button type="submit" raised primary >Create</Button>
-            &nbsp;
-            <Button type="cancel" raised onClick={onCancel}>Cancel</Button>
-        </section>
+        <FormButtons
+            onCancel={onCancel}
+        />
     </form>
 );
 

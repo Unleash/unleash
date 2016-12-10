@@ -20,10 +20,9 @@ class HistoryListToggle extends Component {
         }
         const { history, toggleName } = this.props;
         return (
-            <div>
-                <h5>Showing history for toggle: <Link to={`/features/edit/${toggleName}`}><strong>{toggleName}</strong></Link></h5>
-                <ListComponent history={history} />
-            </div>
+                <ListComponent
+                    history={history}
+                    title={<span>Showing history for toggle: <Link to={`/features/edit/${toggleName}`}><strong>{toggleName}</strong></Link></span>}/>
         );
     }
 }

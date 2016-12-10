@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 import { List, ListItem, ListItemContent, IconButton, Chip } from 'react-mdl';
+import { HeaderTitle } from '../common';
 
 class StrategiesListComponent extends Component {
 
@@ -24,26 +25,21 @@ class StrategiesListComponent extends Component {
 
         return (
             <div>
-            <h5>Strategies</h5>
-            <IconButton name="add" onClick={() => this.context.router.push('/strategies/create')} title="Add new strategy"/>
-
-            <hr />
-            <List>
-                {strategies.length > 0 ? strategies.map((strategy, i) => {
-                    return (
-                        <ListItem key={i}>
-                            <ListItemContent>
-                                <Link to={`/strategies/view/${strategy.name}`}>
-                                    <strong>{strategy.name}</strong>
-                                </Link> 
-                                <span> {strategy.description}</span></ListItemContent>
-                            <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
-                        </ListItem>
-                    );
-                }) : <ListItem>No entries</ListItem>}
-                
-
-            </List>
+                <HeaderTitle title="Strategies" actions={<IconButton name="add" onClick={() => this.context.router.push('/strategies/create')} title="Add new strategy"/>} />
+                <List>
+                    {strategies.length > 0 ? strategies.map((strategy, i) => {
+                        return (
+                            <ListItem key={i}>
+                                <ListItemContent>
+                                    <Link to={`/strategies/view/${strategy.name}`}>
+                                        <strong>{strategy.name}</strong>
+                                    </Link>
+                                    <span> {strategy.description}</span></ListItemContent>
+                                <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
+                            </ListItem>
+                        );
+                    }) : <ListItem>No entries</ListItem>}
+                </List>
             </div>
         );
     }

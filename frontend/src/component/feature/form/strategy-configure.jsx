@@ -30,6 +30,8 @@ class StrategyConfigure extends React.Component {
         if (strategyDefinition.parametersTemplate) {
             return Object.keys(strategyDefinition.parametersTemplate).map(field => (
                 <Textfield
+                    floatingLabel
+                    style={{ width: '100%' }}
                     key={field}
                     name={field}
                     label={field}

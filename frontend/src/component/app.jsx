@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Layout, Drawer, Header, Navigation, Content,
     Footer, FooterSection, FooterDropDownSection, FooterLinkList,
-    Grid, Cell,
+    Grid, Cell, Icon,
 } from 'react-mdl';
 import { Link } from 'react-router';
 import style from './styles.scss';
@@ -95,11 +95,11 @@ export default class App extends Component {
     onOverlayClick = () => this.setState({ drawerActive: false });
 
     render () {
-        const createListItem = (path, caption) =>
+        const createListItem = (path, caption, icon) =>
             <a
                 href={this.context.router.createHref(path)}
                 className={this.context.router.isActive(path) ? style.active : ''}>
-                {caption}
+                <Icon name={icon} /> {caption}
             </a>;
 
         return (
@@ -114,11 +114,11 @@ export default class App extends Component {
                     </Header>
                     <Drawer title="Unleash Admin">
                         <Navigation>
-                            {createListItem('/features', 'Feature toggles')}
-                            {createListItem('/strategies', 'Strategies')}
-                            {createListItem('/history', 'Event history')}
-                            {createListItem('/archive', 'Archived toggles')}
-                            {createListItem('/applications', 'Applications')}
+                            {createListItem('/features', 'Feature toggles', 'list')}
+                            {createListItem('/strategies', 'Strategies', 'extension')}
+                            {createListItem('/history', 'Event history', 'history')}
+                            {createListItem('/archive', 'Archived toggles', 'archive')}
+                            {createListItem('/applications', 'Applications', 'apps')}
                             {/*createListItem('/metrics', 'Client metrics')*/}
                             {/*createListItem('/client-strategies', 'Client strategies')*/}
                             {/*createListItem('/client-instances', 'Client instances')*/}

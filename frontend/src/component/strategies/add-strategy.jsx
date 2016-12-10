@@ -21,6 +21,8 @@ const genParams = (input, num = 0, setValue) => (<div>{gerArrayWithEntries(num).
     const key = `${PARAM_PREFIX}${i + 1}`;
     return (
         <Textfield
+            style={{ width: '100%' }}
+            floatingLabel
             label={`Parameter name ${i + 1}`}
             name={key} key={key}
             onChange={({ target }) => setValue(key, target.value)}
@@ -37,16 +39,20 @@ const AddStrategy = ({
     onSubmit,
 }) => (
     <form onSubmit={onSubmit(input)}>
-        <HeaderTitle title="Create new strategy"/>
-        <section>
+        <HeaderTitle title="Create new strategy" subtitle="It is not possible to edit a strategy after it is created."/>
+        <section style={{ margin: '16px 20px' }}>
             <Textfield label="Strategy name"
-                name="name" required
+                floatingLabel
+                name="name"
+                required
                 pattern="^[0-9a-zA-Z\.\-]+$"
                 onChange={({ target }) => setValue('name', trim(target.value))}
                 value={input.name}
                 />
             <br />
             <Textfield
+                floatingLabel
+                style={{ width: '100%' }}
                 rows={2}
                 label="Description"
                 name="description"
@@ -55,12 +61,12 @@ const AddStrategy = ({
                 />
         </section>
 
-        <section>
+        <section style={{ margin: '0 20px' }}>
             {genParams(input, input._params, setValue)}
             <IconButton name="add" title="Add parameter" onClick={(e) => {
                 e.preventDefault();
                 incValue('_params');
-            }}/>
+            }}/> Add parameter
         </section>
 
         <br />

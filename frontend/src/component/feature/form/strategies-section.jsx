@@ -1,10 +1,7 @@
 import React, { PropTypes } from 'react';
 import StrategiesList from './strategies-list';
 import AddStrategy from './strategies-add';
-
-const headerStyle = {
-    marginBottom: '10px',
-};
+import { HeaderTitle } from '../../common';
 
 class StrategiesSection extends React.Component {
 
@@ -29,7 +26,7 @@ class StrategiesSection extends React.Component {
 
         return (
             <div>
-                <h5 style={headerStyle}>Activation strategies <AddStrategy {...this.props} /> </h5>
+                <HeaderTitle title="Activation strategies" actions={<AddStrategy {...this.props} />} />
                 <StrategiesList {...this.props} />
             </div>
         );

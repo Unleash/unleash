@@ -1,6 +1,13 @@
 import React, { PropTypes } from 'react';
 import { Textfield, Button, Card, CardTitle, CardText, CardActions, CardMenu, IconButton }  from 'react-mdl';
+import { Link } from 'react-router';
 
+const style = {
+    flex: '1',
+    minWidth: '300px',
+    maxWidth: '100%',
+    margin: '5px 20px 15px 0px',
+};
 class StrategyConfigure extends React.Component {
 
     static propTypes () {
@@ -50,11 +57,19 @@ class StrategyConfigure extends React.Component {
 
     render () {
         if (!this.props.strategyDefinition) {
+            const { name } = this.props.strategy;
             return (
-                <div>
-                    <h6><span style={{ color: 'red' }}>Strategy "{this.props.strategy.name}" deleted</span></h6>
-                    <Button onClick={this.handleRemove} icon="remove" label="remove strategy" flat/>
-                </div>
+                <Card shadow={0} style={style}>
+                    <CardTitle>"{name}" deleted?</CardTitle>
+                    <CardText>
+                        The strategy "{name}" does not exist on this this server.
+                        <Link to={`/strategies/create?name=${name}`}>Want to create it now?</Link>
+                    </CardText>
+                    <CardActions>
+                        <Button onClick={this.handleRemove} label="remove strategy" accent raised>Remove</Button>
+                    </CardActions>
+
+                </Card>
             );
         }
 
@@ -63,13 +78,7 @@ class StrategyConfigure extends React.Component {
         const { name } = this.props.strategy;
 
         return (
-            <Card shadow={0} style={{
-                flex: '1',
-                minWidth: '300px',
-                maxWidth: '100%',
-                // flexBasis: '1',
-                margin: '5px 20px 15px 0px',
-            }}>
+            <Card shadow={0} style={style}>
                 <CardTitle style={{ color: '#fff', height: '65px', background: '#607d8b' }}>
                     { name }
                 </CardTitle>

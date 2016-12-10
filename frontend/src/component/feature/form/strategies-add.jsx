@@ -30,10 +30,15 @@ class AddStrategy extends React.Component {
     }
 
     render () {
+        const menuStyle = {
+            maxHeight: '300px',
+            overflowY: 'auto',
+            backgroundColor: 'rgb(247, 248, 255)',
+        };
         return (
             <div style={{ position: 'relative', width: '25px', height: '25px', display: 'inline-block' }} >
                 <IconButton name="add" id="strategies-add" colored title="Sort" onClick={this.stopPropagation}/>
-                <Menu target="strategies-add" valign="bottom" align="right" ripple onClick={
+                <Menu target="strategies-add" valign="top" align="left" ripple style={menuStyle} onClick={
                     (e) => this.setSort(e.target.getAttribute('data-target'))}>
                     <MenuItem disabled>Add Strategy:</MenuItem>
                     {this.props.strategies.map((s) => <MenuItem key={s.name} onClick={() => this.addStrategy(s.name)}>{s.name}</MenuItem>)}

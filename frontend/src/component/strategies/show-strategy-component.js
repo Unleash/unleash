@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Cell } from 'react-mdl';
 
-import { AppsLinkList } from '../common';
+import { AppsLinkList, HeaderTitle } from '../common';
 
 class ShowStrategyComponent extends Component {
     componentDidMount () {
@@ -43,8 +43,7 @@ class ShowStrategyComponent extends Component {
 
         return (
             <div>
-                <h4>{name}</h4>
-                <p>{description}</p>
+                <HeaderTitle title={name} subtitle={description} />
                 <Grid>
                     <Cell col={6}>
                         <h6>Parameters</h6>

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Textfield, Switch } from 'react-mdl';
 import StrategiesSection from './strategies-section-container';
 
-import { FormButtons } from '../../common';
+import { FormButtons, HeaderTitle } from '../../common';
 
 const trim = (value) => {
     if (value && value.trim) {
@@ -32,6 +32,7 @@ class AddFeatureToggleComponent extends Component {
             onSubmit,
             onCancel,
             editmode = false,
+            title,
         } = this.props;
 
         const {
@@ -44,8 +45,10 @@ class AddFeatureToggleComponent extends Component {
 
         return (
             <form onSubmit={onSubmit(input)}>
+                <HeaderTitle title={title} />
                 <section>
                     <Textfield
+                        floatingLabel
                         label="Name"
                         name="name"
                         disabled={editmode}
@@ -56,7 +59,9 @@ class AddFeatureToggleComponent extends Component {
                         onChange={(v) => setValue('name', trim(v.target.value))} />
                     <br />
                     <Textfield
-                        rows={2}
+                        floatingLabel
+                        style={{ width: '100%' }}
+                        rows={5}
                         label="Description"
                         required
                         value={description}

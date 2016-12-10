@@ -124,8 +124,8 @@ class EditFeatureToggleWrapper extends React.Component {
                 <p>{featureToggle.description}</p>
 
                 <hr />
-                <h4>Edit</h4>
-                <EditFeatureToggle featureToggle={featureToggle} />
+
+                <EditFeatureToggle title="Edit" featureToggle={featureToggle} />
             </div>
         );
     }

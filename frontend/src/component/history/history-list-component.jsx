@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import HistoryItemDiff from './history-item-diff';
 import HistoryItemJson from './history-item-json';
-import { Switch, Table, TableHeader, Grid, Cell } from 'react-mdl';
+import { Table, TableHeader, Icon } from 'react-mdl';
 import { HeaderTitle, SwitchWithLabel } from '../common';
 
 import style from './history.scss';
@@ -36,7 +36,7 @@ class HistoryList extends Component {
                 <TableHeader name="type">Type</TableHeader>
                 <TableHeader name="createdBy">User</TableHeader>
                 <TableHeader name="diff">Diff</TableHeader>
-                <TableHeader numeric name="createdAt">Time</TableHeader>
+                <TableHeader numeric name="createdAt" cellFormatter={(v) => (new Date(v)).toLocaleString('nb-NO')}>Time</TableHeader>
             </Table>);
         }
 

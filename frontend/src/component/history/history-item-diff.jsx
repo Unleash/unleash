@@ -17,16 +17,6 @@ const KLASSES = {
     N: style.positive, // added
 };
 
-export function getIcon (type) {
-    switch (type) {
-        case 'feature-updated': return 'autorenew';
-        case 'feature-created': return 'add';
-        case 'feature-deleted': return 'remove';
-        case 'feature-archived': return 'archived';
-        default: return 'star';
-    }
-}
-
 function buildItemDiff (diff, key) {
     let change;
     if (diff.lhs !== undefined) {
@@ -77,52 +67,20 @@ class HistoryItem extends PureComponent {
         };
     }
 
-    renderEventDiff (logEntry) {
+    render () {
+        const entry = this.props.entry;
         let changes;
 
-        if (logEntry.diffs) {
-            changes = logEntry.diffs.map(buildDiff);
+        if (entry.diffs) {
+            changes = entry.diffs.map(buildDiff);
         } else {
             // Just show the data if there is no diff yet.
-            changes = <div className={KLASSES.N}>{JSON.stringify(logEntry.data, null, 2)}</div>;
+            changes = <div className={KLASSES.N}>{JSON.stringify(entry.data, null, 2)}</div>;
         }
 
-        return <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>;
-    }
-
-    render () {
-        const {
-            createdBy,
-            id,
-            type,
-        } = this.props.entry;
-
-        const createdAt = (new Date(this.props.entry.createdAt)).toLocaleString('nb-NO');
-        const icon = getIcon(type);
-
-        const data = this.renderEventDiff(this.props.entry);
-
-        return data;
-
-        return (
-            <div className={style['history-item']}>
-                <dl>
-                    <dt>Id:</dt>
-                    <dd>{id}</dd>
-                    <dt>Type:</dt>
-                    <dd>
-                        <Icon name={icon} title={type} style={{ fontSize: '1.6rem' }} />
-                        <span> {type}</span>
-                    </dd>
-                    <dt>Timestamp:</dt>
-                    <dd>{createdAt}</dd>
-                    <dt>Username:</dt>
-                    <dd>{createdBy}</dd>
-                    <dt>Diff</dt>
-                    <dd>{data}</dd>
-                </dl>
-             </div>
-        );
+        return (<pre style={{ maxWidth: '500px', overflowX: 'auto', overflowY: 'hidden', width: 'auto' }}>
+            <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>
+        </pre>);
     }
 }
 

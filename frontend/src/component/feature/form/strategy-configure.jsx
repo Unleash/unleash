@@ -73,7 +73,7 @@ class StrategyConfigure extends React.Component {
                             .split(',')
                             .filter(Boolean);
                     }
-                    return (<StrategyInputList field={field} list={list} setConfig={this.setConfig} />);
+                    return (<StrategyInputList key={field} field={field} list={list} setConfig={this.setConfig} />);
                 } else {
                     return (
                         <Textfield

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Textfield, IconButton } from 'react-mdl';
+import { Textfield, IconButton, Menu, MenuItem } from 'react-mdl';
 import { HeaderTitle, FormButtons } from '../common';
 
 
@@ -30,14 +30,18 @@ const genParams = (input, num = 0, setValue) => (<div>{gerArrayWithEntries(num).
                 name={key}
                 onChange={({ target }) => setValue(key, target.value)}
                 value={input[key]} />
-            <Textfield
-                style={{ width: '50%' }}
-                floatingLabel
-                label={`Type ${i + 1}`}
-                name={typeKey}
-                onChange={({ target }) => setValue(typeKey, target.value)}
-                value={input[typeKey]} />
-
+                <div style={{ position: 'relative', display: 'inline-block' }}>
+                    <span id={`${key}-type-menu`}>
+                        {input[typeKey] || 'string'}
+                        <IconButton name="arrow_drop_down" onClick={(evt) => evt.preventDefault()} />
+                    </span>
+                    <Menu target={`${key}-type-menu`} align="right">
+                        <MenuItem onClick={() => setValue(typeKey, 'string')}>String</MenuItem>
+                        <MenuItem onClick={() => setValue(typeKey, 'percentage')}>Percentage</MenuItem>
+                        <MenuItem onClick={() => setValue(typeKey, 'list')}>List of values</MenuItem>
+                        <MenuItem onClick={() => setValue(typeKey, 'number')}>Number</MenuItem>
+                    </Menu>
+                </div>
         </div>
     );
 })}</div>);

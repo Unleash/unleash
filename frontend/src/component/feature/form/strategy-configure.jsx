@@ -74,6 +74,20 @@ class StrategyConfigure extends React.Component {
                             .filter(Boolean);
                     }
                     return (<StrategyInputList key={field} field={field} list={list} setConfig={this.setConfig} />);
+                } else if (type === 'number') {
+                    return (
+                        <Textfield
+                            pattern="-?[0-9]*(\.[0-9]+)?"
+                            error={`${field} is not a number!`}
+                            floatingLabel
+                            style={{ width: '100%' }}
+                            key={field}
+                            name={field}
+                            label={field}
+                            onChange={this.handleConfigChange.bind(this, field)}
+                            value={value}
+                        />
+                    );
                 } else {
                     return (
                         <Textfield
@@ -124,7 +138,7 @@ class StrategyConfigure extends React.Component {
                     {this.props.strategyDefinition.description}
                 </CardText>
                 {
-                    inputFields && <CardActions border >
+                    inputFields && <CardActions border style={{ padding: '20px' }}>
                         {inputFields}
                     </CardActions>
                 }

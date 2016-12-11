@@ -2,7 +2,7 @@ import React from 'react';
 import { Slider }  from 'react-mdl';
 
 const labelStyle = {
-    margin: '10px',
+    margin: '20px 0',
     textAlign: 'center',
     color: '#3f51b5',
     fontSize: '12px',

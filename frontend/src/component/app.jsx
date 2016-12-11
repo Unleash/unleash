@@ -26,29 +26,26 @@ function replace (input, params) {
 }
 
 export default class App extends Component {
-    constructor (props) {
-        super(props);
-        this.state = { drawerActive: false };
 
-        this.toggleDrawerActive = () => {
-            this.setState({ drawerActive: !this.state.drawerActive });
-        };
-    }
     static contextTypes = {
         router: React.PropTypes.object,
     }
 
     componentWillReceiveProps (nextProps) {
-        // copied from https://github.com/react-mdl/react-mdl/issues/254
-        // If our locations are different and drawer is open,
-        // force a close
         if (this.props.location.pathname !== nextProps.location.pathname) {
-            const layout = document.querySelector('.mdl-js-layout');
-            const drawer = document.querySelector('.mdl-layout__drawer');
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                window.requestAnimationFrame(() => {
+                    document.querySelector('.mdl-layout__content').scrollTop = 0;
+                });
 
-            if (drawer.classList.contains('is-visible')) {
-                layout.MaterialLayout.toggleDrawer();
-            }
+                const layout = document.querySelector('.mdl-js-layout');
+                const drawer = document.querySelector('.mdl-layout__drawer');
+                // hack, might get a built in alternative later
+                if (drawer.classList.contains('is-visible')) {
+                    layout.MaterialLayout.toggleDrawer();
+                }
+            }, 10);
         }
     }
 
@@ -91,8 +88,6 @@ export default class App extends Component {
             </span>
         );
     }
-
-    onOverlayClick = () => this.setState({ drawerActive: false });
 
     render () {
         const createListItem = (path, caption, icon) =>
@@ -167,30 +162,6 @@ export default class App extends Component {
                         </Footer>
                     </Content>
                 </Layout>
-            </div>
-        );
-
-
-
-        return (
-            <div className={style.container}>
-                <AppBar title="Unleash Admin" leftIcon="menu" onLeftIconClick={this.toggleDrawerActive} className={style.appBar}>
-
-                </AppBar>
-                <div className={style.container} style={{ top: '6.4rem' }}>
-                    <Layout>
-                        <NavDrawer active={this.state.drawerActive} permanentAt="sm" onOverlayClick={this.onOverlayClick} >
-                            <Navigation />
-                        </NavDrawer>
-                        <Panel scrollY>
-                            <div style={{ padding: '1.8rem' }}>
-
-                                {this.props.children}
-                            </div>
-                        </Panel>
-
-                    </Layout>
-                </div>
             </div>
         );
     }

@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { ProgressBar } from 'react-mdl';
 import StrategiesList from './strategies-list';
 import AddStrategy from './strategies-add';
 import { HeaderTitle } from '../../common';
@@ -21,7 +22,7 @@ class StrategiesSection extends React.Component {
 
     render () {
         if (!this.props.strategies || this.props.strategies.length === 0) {
-            return <i>Loding available strategies</i>;
+            return <ProgressBar indeterminate />;
         }
 
         return (

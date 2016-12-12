@@ -59,11 +59,14 @@ npm test
 We use database migrations to track database changes. 
 
 ### Making a schema change
+In order to run migrations you will set the environment variable for DATABASE_URL
+
+`export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash`
 
 Use db-migrate to create new migrations file. 
 
 ```bash
-> ./node_modules/.bin/db-migrate create your-migration-name
+> npm run db-migrate -- create YOUR-MIGRATION-NAME
 ```
 
 All migrations requires on `up` and one `down` method. 
@@ -86,6 +89,12 @@ exports.down = function (db, cb) {
 };
 ``` 
 
+Test your migrations:
+
+```bash
+> npm run db-migrate -- up
+> npm run db-migrate -- down
+```
 
 
 ## Publishing / Releasing new packages

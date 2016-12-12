@@ -48,14 +48,14 @@ function createStrategies (stores) {
         {
             name: 'default',
             description: 'Default on or off Strategy.',
-            parametersTemplate: {},
+            parameters: [],
         },
         {
             name: 'usersWithEmail',
             description: 'Active for users defined  in the comma-separated emails-parameter.',
-            parametersTemplate: {
-                emails: 'String',
-            },
+            parameters: [
+                { name: 'emails', type: 'string' },
+            ],
         },
     ].map(strategy => stores.strategyStore._createStrategy(strategy));
 }

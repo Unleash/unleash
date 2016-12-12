@@ -10,7 +10,7 @@ exports.up = function (db, callback) {
               .map(({ name, parameters_template }) => {
                   const parameters = [];
                   Object.keys(parameters_template || {}).forEach(p => {
-                      parameters.push({ name: p, type: parameters_template[p], description: '' });
+                      parameters.push({ name: p, type: parameters_template[p], description: '', required: false });
                   });
                   return { name, parameters };
               })

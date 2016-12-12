@@ -14,6 +14,9 @@ test.serial('gets all strategies', async (t) => {
         .get('/api/strategies')
         .expect('Content-Type', /json/)
         .expect(200)
+        .expect((res) => {
+            t.true(res.body.strategies.length === 2, 'expected to have two strategies');
+        })
         .then(destroy);
 });
 

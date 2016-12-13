@@ -20,7 +20,7 @@ class StrategiesListComponent extends Component {
         return (
             <div>
                 <HeaderTitle title="Strategies"
-                    actions={<IconButton mini raised name="add" onClick={() => this.context.router.push('/strategies/create')} title="Add new strategy" />} />
+                    actions={<IconButton raised name="add" onClick={() => this.context.router.push('/strategies/create')} title="Add new strategy" />} />
                 <List>
                     {strategies.length > 0 ? strategies.map((strategy, i) => {
                         return (

@@ -45,7 +45,7 @@ class AddFeatureToggleComponent extends Component {
 
         return (
             <form onSubmit={onSubmit(input)}>
-                <HeaderTitle title={title} />
+                {title && <HeaderTitle title={title} />}
                 <section>
                     <Textfield
                         floatingLabel

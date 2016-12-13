@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Grid, Cell, Icon, ProgressBar, List, ListItem, ListItemContent } from 'react-mdl';
+import { Tabs, Tab, Grid, Cell, Icon, ProgressBar, List, ListItem, ListItemContent } from 'react-mdl';
 import { Link } from 'react-router';
 
 import percentLib from 'percent';
@@ -14,6 +14,12 @@ import { fetchHistoryForToggle } from '../../store/history-actions';
 import { AppsLinkList, SwitchWithLabel, getIcon } from '../common';
 
 class EditFeatureToggleWrapper extends React.Component {
+
+    constructor (props) {
+        super(props);
+
+        this.state = { activeTab: 0 };
+    }
 
     static propTypes () {
         return {
@@ -66,14 +72,11 @@ class EditFeatureToggleWrapper extends React.Component {
             return <span>Could not find the toggle "{this.props.featureToggleName}"</span>;
         }
 
-        return (
+        const content = this.state.activeTab === 0 ? (
             <div>
-                <h4>{featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small></h4>
-                <p>{featureToggle.description}</p>
-                <hr />
                 <SwitchWithLabel
-                    checked={featureToggle.enabled}
-                    onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
+                checked={featureToggle.enabled}
+                onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
                 <hr />
                 <Grid style={{ textAlign: 'center' }}>
                     <Cell col={3}>
@@ -121,10 +124,24 @@ class EditFeatureToggleWrapper extends React.Component {
                             </Link>
                     </Cell>
                 </Grid>
+            </div>
+            ) : (
+                <EditFeatureToggle featureToggle={featureToggle} />
+            );
 
-                <hr />
+        return (
+            <div>
+                <h4>{featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small></h4>
+                <div>{featureToggle.description}</div>
+                <Tabs activeTab={this.state.activeTab}
+                    onChange={(tabId) => this.setState({ activeTab: tabId })}
+                    ripple
+                    style={{ marginBottom: '10px' }}>
+                    <Tab>Metrics</Tab>
+                    <Tab>Edit</Tab>
+                </Tabs>
 
-                <EditFeatureToggle title="Edit" featureToggle={featureToggle} />
+                {content}
             </div>
         );
     }

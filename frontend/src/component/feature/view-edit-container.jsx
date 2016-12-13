@@ -131,7 +131,7 @@ class EditFeatureToggleWrapper extends React.Component {
 
         return (
             <div>
-                <h4>{featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small></h4>
+                <h4>{featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small> <small style={{ float: 'right', lineHeight: '38px' }}>Created {(new Date(featureToggle.createdAt)).toLocaleString('nb-NO')}</small></h4>
                 <div>{featureToggle.description}</div>
                 <Tabs activeTab={this.state.activeTab}
                     onChange={(tabId) => this.setState({ activeTab: tabId })}

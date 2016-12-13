@@ -12,7 +12,7 @@ const prepare = (methods, dispatch) => {
             e.preventDefault();
             createFeatureToggles(input)(dispatch)
                 .then(() => methods.clear())
-                .then(() => hashHistory.push('/features'));
+                .then(() => hashHistory.push(`/features/edit/${input.name}`));
         }
     );
 

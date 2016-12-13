@@ -7,6 +7,7 @@ import {
     List, ListItem, ListItemContent,
     Textfield, Icon, ProgressBar,
     Tabs, Tab,
+    Switch,
 } from 'react-mdl';
 import { HeaderTitle, ExternalIconLink } from '../common';
 
@@ -67,9 +68,18 @@ class ClientApplications extends PureComponent {
                     <h6> Toggles</h6>
                     <hr />
                     <List>
-                    {seenToggles.map((name, i) =>
-                        <ListItem key={i}>
-                            <ListItemContent icon="check box">
+                    {seenToggles.map(({ name, description, enabled, notFound }, i) =>
+                        notFound ?
+                        <ListItem twoLine key={i}>
+                            <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
+                                <Link to={`/features/create?name=${name}`}>
+                                    {name}
+                                </Link>
+                            </ListItemContent>
+                        </ListItem> :
+                        <ListItem twoLine key={i}>
+                            <ListItemContent icon={<span><Switch disabled checked={!!enabled} /></span>} subtitle={description}>
+
                                 <Link to={`/features/edit/${name}`}>
                                     {name}
                                 </Link>
@@ -81,9 +91,17 @@ class ClientApplications extends PureComponent {
                     <h6>Implemented strategies</h6>
                     <hr />
                     <List>
-                        {strategies.map((name, i) => (
-                            <ListItem key={`${name}-${i}`}>
-                                <ListItemContent icon="toc">
+                        {strategies.map(({ name, description, notFound }, i) => (
+                            notFound ?
+                            <ListItem twoLine key={`${name}-${i}`}>
+                                <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
+                                    <Link to={`/strategies/create?name=${name}`}>
+                                        {name}
+                                    </Link>
+                                </ListItemContent>
+                            </ListItem> :
+                            <ListItem twoLine key={`${name}-${i}`}>
+                                <ListItemContent icon={'toc'} subtitle={description}>
                                     <Link to={`/strategies/view/${name}`}>
                                         {name}
                                     </Link>

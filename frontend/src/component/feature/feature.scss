@@ -59,3 +59,9 @@
 .topListItem2 {
     flex: 2;
 }
+
+@media (max-width: 960px) {
+    .iconListItemChip {
+        display: none;
+    }
+}

@@ -12,25 +12,41 @@ Used to fetch all defined strategies and their defined paramters.
     "version": 1,
     "strategies": [
         {
-        "name": "default",
-        "description": "Default on/off strategy.",
-            "parametersTemplate": null
+            "name": "default",
+            "description": "Default on/off strategy.",
+            "parameters": []
         },
         {
-            "name": "ActiveForUserWithEmail",
-            "description": "A comma separated list of email adresses this feature should be active for.",
-            "parametersTemplate": {
-                "emails": "string"
-            }
+            "name": "userWithId",
+            "description": "Active for userId specified in the comma seperated 'userIds' parameter.",
+            "parameters": [
+                {
+                    "name": "userIds",
+                    "type": "list",
+                    "description": "List of unique userIds the feature should be active for.",
+                    "required": true
+                }
+            ]
         },
         {
-            "name": "Accounts",
-            "description": "Enable for user accounts",
-            "parametersTemplate": {
-                "Accountname": "string"
-            }
-        }
-]}
+            "name": "gradualRollout",
+            "description": "Gradual rollout to logged in users",
+            "parameters": [
+                {
+                    "name": "percentage",
+                    "type": "percentage",
+                    "description": "How many percent should the new feature be active for.",
+                    "required": false
+                },
+                {
+                    "name": "group",
+                    "type": "string",
+                    "description": "Group key to use when hasing the userId. Makes sure that the same user get different value for different groups",
+                    "required": false
+                }
+            ]
+        },
+    ]}
 ```
 
 ### Create strategy
@@ -41,12 +57,23 @@ Used to fetch all defined strategies and their defined paramters.
 
 ```json
 {
-    "name": "ActiveForUserWithEmail",
-    "description": "A comma separated list of email adresses this feature should be active for.",
-    "parametersTemplate": {
-        "emails": "string"
-    }
-}
+    "name": "gradualRollout",
+    "description": "Gradual rollout to logged in users",
+    "parameters": [
+        {
+            "name": "percentage",
+            "type": "percentage",
+            "description": "How many percent should the new feature be active for.",
+            "required": false
+        },
+        {
+            "name": "group",
+            "type": "string",
+            "description": "Group key to use when hasing the userId. Makes sure that the same user get different value for different groups",
+            "required": false
+        }
+    ]
+},
 ```
 
-Used to create a new Strategy. Name must be unique. 
+Used to create a new Strategy. Name is required and must be unique. It is also required to have a parameters array, but it can be empty. 

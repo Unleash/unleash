@@ -1,5 +1,7 @@
 'use strict';
 
+require('db-migrate-shared').log.setLogLevel('error');
+
 const { getInstance } = require('db-migrate');
 const parseDbUrl = require('parse-database-url');
 

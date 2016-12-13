@@ -14,6 +14,9 @@ test.serial('gets all strategies', async (t) => {
         .get('/api/strategies')
         .expect('Content-Type', /json/)
         .expect(200)
+        .expect((res) => {
+            t.true(res.body.strategies.length === 2, 'expected to have two strategies');
+        })
         .then(destroy);
 });
 
@@ -39,7 +42,7 @@ test.serial('creates a new strategy', async (t) => {
     const { request, destroy } = await setupApp('strategy_api_serial');
     return request
         .post('/api/strategies')
-        .send({ name: 'myCustomStrategy', description: 'Best strategy ever.' })
+        .send({ name: 'myCustomStrategy', description: 'Best strategy ever.', parameters: [] })
         .set('Content-Type', 'application/json')
         .expect(201)
         .then(destroy);
@@ -59,7 +62,7 @@ test.serial('refuses to create a strategy with an existing name', async (t) => {
     const { request, destroy } = await setupApp('strategy_api_serial');
     return request
         .post('/api/strategies')
-        .send({ name: 'default' })
+        .send({ name: 'default', parameters: [] })
         .set('Content-Type', 'application/json')
         .expect(403)
         .then(destroy);

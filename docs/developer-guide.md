@@ -99,9 +99,8 @@ Test your migrations:
 
 ## Publishing / Releasing new packages
 
-Please run `npm run nsp` nad `npm run lint` checks before publishing.
+Please run `npm run nsp` nad `npm run test` checks before publishing.
 
 Run `npm run publish` to start the publishing process.
-Lerna is setup with independent versioning so you will be prompted with version per package, and lerna will update all the versions across packages.
 
 `npm run publish:dry` 

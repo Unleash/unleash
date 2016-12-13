@@ -24,7 +24,7 @@ export const AppsLinkList = ({ apps }) => (
 
 export const HeaderTitle = ({ title, actions, subtitle }) => (
     <div style={{ display: 'flex', borderBottom: '1px solid #f1f1f1', marginBottom: '10px', padding: '16px 20px ' }}>
-            <div style={{ flex: '1' }}>
+            <div style={{ flex: '2' }}>
                 <h6 style={{ margin: 0 }}>{title}</h6>
                 {subtitle && <small>{subtitle}</small>}
             </div>

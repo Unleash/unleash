@@ -48,11 +48,18 @@ function addToList (state, { id, key, value }) {
     return state.updateIn(id.concat([key]), (list) => list.push(value));
 }
 
-function updateInList (state, { id, key, index, newValue }) {
+function updateInList (state, { id, key, index, newValue, merge }) {
     state = assertId(state, id);
     state = assertList(state, id, key);
 
-    return state.updateIn(id.concat([key]), (list) => list.set(index, newValue));
+    return state.updateIn(id.concat([key]), (list) => {
+        if (merge && list.has(index)) {
+            newValue = list.get(index).merge(new $Map(newValue));
+        } else if (typeof newValue !== 'string' ) {
+            newValue = fromJS(newValue);
+        }
+        return list.set(index, newValue);
+    });
 }
 
 function removeFromList (state, { id, key, index }) {

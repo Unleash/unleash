@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
-import { List, ListItem, ListItemContent, Chip, Icon, IconButton } from 'react-mdl';
+import { List, ListItem, ListItemContent, IconButton } from 'react-mdl';
 import { HeaderTitle } from '../common';
 
 class StrategiesListComponent extends Component {
@@ -12,12 +12,6 @@ class StrategiesListComponent extends Component {
 
     componentDidMount () {
         this.props.fetchStrategies();
-    }
-
-    getParameterMap ({ parametersTemplate }) {
-        return Object.keys(parametersTemplate || {}).map(k => (
-            <Chip key={k}><small>{k}</small></Chip>
-        ));
     }
 
     render () {

@@ -14,9 +14,8 @@ class AddStrategy extends React.Component {
     addStrategy = (strategyName) => {
         const selectedStrategy = this.props.strategies.find(s => s.name === strategyName);
         const parameters = {};
-        const keys = Object.keys(selectedStrategy.parametersTemplate || {});
-        keys.forEach(prop => { parameters[prop] = ''; });
 
+        selectedStrategy.parameters.forEach(({ name }) => { parameters[name] = ''; });
 
         this.props.addStrategy({
             name: selectedStrategy.name,
@@ -40,7 +39,9 @@ class AddStrategy extends React.Component {
                 <IconButton name="add" id="strategies-add" raised accent title="Add Strategy" onClick={this.stopPropagation}/>
                 <Menu target="strategies-add" valign="bottom" align="right" ripple style={menuStyle}>
                     <MenuItem disabled>Add Strategy:</MenuItem>
-                    {this.props.strategies.map((s) => <MenuItem key={s.name} onClick={() => this.addStrategy(s.name)}>{s.name}</MenuItem>)}
+                    {this.props.strategies.map((s) =>
+                        <MenuItem key={s.name} title={s.description} onClick={() => this.addStrategy(s.name)}>{s.name}</MenuItem>)
+                    }
                 </Menu>
             </div>
         );

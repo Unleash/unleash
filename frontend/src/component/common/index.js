@@ -29,9 +29,7 @@ export const HeaderTitle = ({ title, actions, subtitle }) => (
                 {subtitle && <small>{subtitle}</small>}
             </div>
 
-            <div style={{ flex: '1', textAlign: 'right' }}>
-                {actions}
-            </div>
+            {actions && <div style={{ flex: '1', textAlign: 'right' }}>{actions}</div>}
     </div>
 );
 

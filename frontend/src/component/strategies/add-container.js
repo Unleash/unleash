@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createMapper, createActions } from '../input-helpers';
 import { createStrategy } from '../../store/strategy/actions';
 
-import AddStrategy, { PARAM_PREFIX, TYPE_PREFIX } from './add-strategy';
+import AddStrategy from './add-strategy';
 
 const ID = 'add-strategy';
 
@@ -12,15 +12,28 @@ const prepare = (methods, dispatch) => {
         (e) => {
             e.preventDefault();
 
-            const parametersTemplate = {};
-            Object.keys(input).forEach(key => {
-                if (key.startsWith(PARAM_PREFIX)) {
-                    parametersTemplate[input[key]] = input[key.replace(PARAM_PREFIX, TYPE_PREFIX)] || 'string';
-                }
-            });
-            input.parametersTemplate = parametersTemplate;
 
-            createStrategy(input)(dispatch)
+
+            // clean
+            const parameters = input.parameters
+                .filter((name) => !!name)
+                .map(({
+                    name,
+                    type = 'string',
+                    description = '',
+                    required = false,
+                }) => ({
+                    name,
+                    type,
+                    description,
+                    required,
+                }));
+
+            createStrategy({
+                name: input.name,
+                description: input.description,
+                parameters,
+            })(dispatch)
                 .then(() => methods.clear())
                 // somewhat quickfix / hacky to go back..
                 .then(() => window.history.back());

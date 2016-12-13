@@ -47,24 +47,23 @@ class StrategyConfigure extends React.Component {
         this.props.removeStrategy();
     }
 
-    renderInputFields (strategyDefinition) {
-        if (strategyDefinition.parametersTemplate) {
-            const keys = Object.keys(strategyDefinition.parametersTemplate);
-            if (keys.length === 0) {
-                return null;
-            }
-            return keys.map(field => {
-                const type = strategyDefinition.parametersTemplate[field];
-                let value = this.props.strategy.parameters[field];
+    renderInputFields ({ parameters }) {
+        if (parameters && parameters.length > 0) {
+            return parameters.map(({ name, type, description, required }) => {
+                let value = this.props.strategy.parameters[name];
                 if (type === 'percentage') {
                     if (value == null || (typeof value === 'string' && value === '')) {
                         value = 50; // default value
                     }
-                    return (<StrategyInputPersentage
-                        key={field}
-                        field={field}
-                        onChange={this.handleConfigChange.bind(this, field)}
-                        value={1 * value} />);
+                    return (
+                        <div key={name}>
+                            <StrategyInputPersentage
+                                name={name}
+                                onChange={this.handleConfigChange.bind(this, name)}
+                                value={1 * value} />
+                            {description && <p>{description}</p>}
+                        </div>
+                    );
                 } else if (type === 'list') {
                     let list = [];
                     if (typeof value === 'string') {
@@ -73,33 +72,44 @@ class StrategyConfigure extends React.Component {
                             .split(',')
                             .filter(Boolean);
                     }
-                    return (<StrategyInputList key={field} field={field} list={list} setConfig={this.setConfig} />);
+                    return (
+                        <div key={name}>
+                            <StrategyInputList name={name} list={list} setConfig={this.setConfig} />
+                            {description && <p>{description}</p>}
+                        </div>
+                    );
                 } else if (type === 'number') {
                     return (
-                        <Textfield
-                            pattern="-?[0-9]*(\.[0-9]+)?"
-                            error={`${field} is not a number!`}
-                            floatingLabel
-                            style={{ width: '100%' }}
-                            key={field}
-                            name={field}
-                            label={field}
-                            onChange={this.handleConfigChange.bind(this, field)}
-                            value={value}
-                        />
+                        <div key={name}>
+                            <Textfield
+                                pattern="-?[0-9]*(\.[0-9]+)?"
+                                error={`${name} is not a number!`}
+                                floatingLabel
+                                required={required}
+                                style={{ width: '100%' }}
+                                name={name}
+                                label={name}
+                                onChange={this.handleConfigChange.bind(this, name)}
+                                value={value}
+                            />
+                            {description && <p>{description}</p>}
+                        </div>
                     );
                 } else {
                     return (
-                        <Textfield
-                            floatingLabel
-                            rows={2}
-                            style={{ width: '100%' }}
-                            key={field}
-                            name={field}
-                            label={field}
-                            onChange={this.handleConfigChange.bind(this, field)}
-                            value={value}
-                        />
+                        <div key={name}>
+                            <Textfield
+                                floatingLabel
+                                rows={2}
+                                style={{ width: '100%' }}
+                                required={required}
+                                name={name}
+                                label={name}
+                                onChange={this.handleConfigChange.bind(this, name)}
+                                value={value}
+                            />
+                            {description && <p>{description}</p>}
+                        </div>
                     );
                 }
             });

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Cell } from 'react-mdl';
-
+import { Grid, Cell, List, ListItem, ListItemContent } from 'react-mdl';
 import { AppsLinkList, TogglesLinkList, HeaderTitle } from '../common';
 
 class ShowStrategyComponent extends Component {
@@ -16,13 +15,17 @@ class ShowStrategyComponent extends Component {
         }
     }
 
-    renderParameters (parametersTemplate) {
-        if (parametersTemplate) {
-            return Object.keys(parametersTemplate).map((name, i) => (
-                <li key={`${name}-${i}`}><strong>{name}</strong> ({parametersTemplate[name]})</li>
+    renderParameters (params) {
+        if (params) {
+            return params.map(({ name, type, description, required }, i) => (
+                <ListItem twoLine key={`${name}-${i}`} title={required ? 'Required' : ''}>
+                    <ListItemContent avatar={required ? 'add' : ' '} subtitle={description}>
+                        {name} <small>({type})</small>
+                    </ListItemContent>
+                </ListItem>
             ));
         } else {
-            return <li>(no params)</li>;
+            return <ListItem>(no params)</ListItem>;
         }
     }
 
@@ -41,28 +44,28 @@ class ShowStrategyComponent extends Component {
         const {
             name,
             description,
-            parametersTemplate = {},
+            parameters = [],
         } = strategy;
 
         return (
             <div>
                 <HeaderTitle title={name} subtitle={description} />
                 <Grid>
-                    <Cell col={4}>
+                    <Cell col={12}>
                         <h6>Parameters</h6>
                         <hr />
-                        <ol className="demo-list-item mdl-list">
-                            {this.renderParameters(parametersTemplate)}
-                        </ol>
+                        <List>
+                            {this.renderParameters(parameters)}
+                        </List>
                     </Cell>
 
-                    <Cell col={4}>
+                    <Cell col={6}>
                         <h6>Applications using this strategy</h6>
                         <hr />
                         <AppsLinkList apps={applications} />
                     </Cell>
 
-                    <Cell col={4}>
+                    <Cell col={6}>
                         <h6>Toggles using this strategy</h6>
                         <hr />
                         <TogglesLinkList toggles={toggles} />

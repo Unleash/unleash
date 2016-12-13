@@ -99,7 +99,7 @@ class EditFeatureToggleWrapper extends React.Component {
                         }
                         <p><strong>Last hour</strong><br /> Yes {lastHour.yes}, No: {lastHour.no}</p>
                     </Cell>
-                    <Cell col={3}>
+                    <Cell col={6}>
                         {seenApps.length > 0 ?
                             (<div><strong>Seen in applications:</strong></div>) :
                             <div>
@@ -109,24 +109,24 @@ class EditFeatureToggleWrapper extends React.Component {
                         }
                         <AppsLinkList apps={seenApps} />
                     </Cell>
-                    <Cell col={3}>
-                            <div><strong>History</strong></div>
-                            <List style={{ textAlign: 'left' }}>
-                                {history.map(({ createdAt, type, createdBy }, i) =>
-                                    <ListItem twoLine key={i}>
-                                        <ListItemContent title={type} avatar={getIcon(type)} subtitle={createdAt}>
-                                            {createdBy}
-                                        </ListItemContent>
-                                    </ListItem>)}
-                            </List>
-                            <Link to={`/history/${featureToggleName}`}>
-                                See all events.
-                            </Link>
-                    </Cell>
                 </Grid>
             </div>
-            ) : (
+            ) : this.state.activeTab === 1 ? (
                 <EditFeatureToggle featureToggle={featureToggle} />
+            ) : (
+                <div>
+                    <List style={{ textAlign: 'left' }}>
+                        {history.map(({ createdAt, type, createdBy }, i) =>
+                            <ListItem twoLine key={i}>
+                                <ListItemContent title={type} avatar={getIcon(type)} subtitle={createdAt}>
+                                    {createdBy}
+                                </ListItemContent>
+                            </ListItem>)}
+                    </List>
+                    <Link to={`/history/${featureToggleName}`}>
+                        See all events.
+                    </Link>
+                </div>
             );
 
         return (
@@ -139,6 +139,7 @@ class EditFeatureToggleWrapper extends React.Component {
                     style={{ marginBottom: '10px' }}>
                     <Tab>Metrics</Tab>
                     <Tab>Edit</Tab>
+                    <Tab>History</Tab>
                 </Tabs>
 
                 {content}

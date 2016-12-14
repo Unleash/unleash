@@ -13,6 +13,62 @@ import { fetchHistoryForToggle } from '../../store/history-actions';
 
 import { AppsLinkList, SwitchWithLabel, getIcon } from '../common';
 
+
+const MetricTab = ({ metrics, featureToggle, toggleFeature }) => {
+    const {
+            lastHour = { yes: 0, no: 0, isFallback: true },
+            lastMinute = { yes: 0, no: 0, isFallback: true },
+            seenApps = [],
+        } = metrics;
+
+    const lastHourPercent = 1 * percentLib.calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
+    const lastMinutePercent = 1 * percentLib.calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
+
+    return (<div>
+        <SwitchWithLabel
+        checked={featureToggle.enabled}
+        onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
+        <hr />
+        <Grid style={{ textAlign: 'center' }}>
+            <Cell col={3}>
+                {
+                    lastMinute.isFallback ?
+                    <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }}
+                    name="report problem" title="No metrics avaiable" /> :
+                    <div>
+                        <Progress strokeWidth={10} percentage={lastMinutePercent} width="50" />
+                    </div>
+                }
+                <p><strong>Last minute</strong><br /> Yes {lastMinute.yes}, No: {lastMinute.no}</p>
+            </Cell>
+            <Cell col={3}>
+                {
+                    lastHour.isFallback ?
+                    <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }}
+                    name="report problem" title="No metrics avaiable" /> :
+                    <div>
+                        <Progress strokeWidth={10} percentage={lastHourPercent} width="50" />
+                    </div>
+                }
+                <p><strong>Last hour</strong><br /> Yes {lastHour.yes}, No: {lastHour.no}</p>
+            </Cell>
+            <Cell col={6}>
+                {seenApps.length > 0 ?
+                    (<div><strong>Seen in applications:</strong></div>) :
+                    <div>
+                        <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }}
+                        name="report problem" title="Not used in a app in the last hour" />
+                        <div><small><strong>Not used in a app in the last hour.</strong>
+                        This might be due to your client implementation is not reporting usage.</small></div>
+                    </div>
+                }
+                <AppsLinkList apps={seenApps} />
+            </Cell>
+        </Grid>
+    </div>);
+
+};
+
 class EditFeatureToggleWrapper extends React.Component {
 
     constructor (props) {
@@ -54,15 +110,6 @@ class EditFeatureToggleWrapper extends React.Component {
             metrics = {},
         } = this.props;
 
-        const {
-            lastHour = { yes: 0, no: 0, isFallback: true },
-            lastMinute = { yes: 0, no: 0, isFallback: true },
-            seenApps = [],
-        } = metrics;
-
-        const lastHourPercent = 1 * percentLib.calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
-        const lastMinutePercent = 1 * percentLib.calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
-
         const featureToggle = features.find(toggle => toggle.name === featureToggleName);
 
         if (!featureToggle) {
@@ -72,48 +119,13 @@ class EditFeatureToggleWrapper extends React.Component {
             return <span>Could not find the toggle "{this.props.featureToggleName}"</span>;
         }
 
-        const content = this.state.activeTab === 0 ? (
-            <div>
-                <SwitchWithLabel
-                checked={featureToggle.enabled}
-                onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
-                <hr />
-                <Grid style={{ textAlign: 'center' }}>
-                    <Cell col={3}>
-                        {
-                            lastMinute.isFallback ?
-                            <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
-                            <div>
-                                <Progress strokeWidth={10} percentage={lastMinutePercent} width="50" />
-                            </div>
-                        }
-                        <p><strong>Last minute</strong><br /> Yes {lastMinute.yes}, No: {lastMinute.no}</p>
-                    </Cell>
-                    <Cell col={3}>
-                        {
-                            lastHour.isFallback ?
-                            <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
-                            <div>
-                                <Progress strokeWidth={10} percentage={lastHourPercent} width="50" />
-                            </div>
-                        }
-                        <p><strong>Last hour</strong><br /> Yes {lastHour.yes}, No: {lastHour.no}</p>
-                    </Cell>
-                    <Cell col={6}>
-                        {seenApps.length > 0 ?
-                            (<div><strong>Seen in applications:</strong></div>) :
-                            <div>
-                                <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }} name="report problem" title="Not used in a app in the last hour" />
-                                <div><small><strong>Not used in a app in the last hour.</strong> This might be due to your client implementation is not reporting usage.</small></div>
-                            </div>
-                        }
-                        <AppsLinkList apps={seenApps} />
-                    </Cell>
-                </Grid>
-            </div>
-            ) : this.state.activeTab === 1 ? (
-                <EditFeatureToggle featureToggle={featureToggle} />
-            ) : (
+        let tabContent;
+        if (this.state.activeTab === 0) {
+            tabContent = <MetricTab metrics={metrics} toggleFeature={toggleFeature} featureToggle={featureToggle} />;
+        } else if (this.state.activeTab === 1) {
+            tabContent = <EditFeatureToggle featureToggle={featureToggle} />;
+        } else {
+            tabContent = (
                 <div>
                     <List style={{ textAlign: 'left' }}>
                         {history.map(({ createdAt, type, createdBy }, i) =>
@@ -128,6 +140,7 @@ class EditFeatureToggleWrapper extends React.Component {
                     </Link>
                 </div>
             );
+        }
 
         return (
             <div>
@@ -142,7 +155,7 @@ class EditFeatureToggleWrapper extends React.Component {
                     <Tab>History</Tab>
                 </Tabs>
 
-                {content}
+                {tabContent}
             </div>
         );
     }

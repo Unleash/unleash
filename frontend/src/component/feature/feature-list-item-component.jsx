@@ -30,7 +30,9 @@ const Feature = ({
                 <div style={{ width: '40px', textAlign: 'center' }}>
                     {
                         isStale ?
-                        <Icon style={{ width: '25px', marginTop: '4px', fontSize: '25px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
+                        <Icon
+                            style={{ width: '25px', marginTop: '4px', fontSize: '25px', color: '#ccc' }}
+                            name="report problem" title="No metrics avaiable" /> :
                         <div>
                             <Progress strokeWidth={15} percentage={percent} width="50" />
                         </div>

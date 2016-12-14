@@ -22,7 +22,11 @@ class HistoryListToggle extends Component {
         return (
                 <ListComponent
                     history={history}
-                    title={<span>Showing history for toggle: <Link to={`/features/edit/${toggleName}`}><strong>{toggleName}</strong></Link></span>}/>
+                    title={
+                        <span>Showing history for toggle: <Link to={`/features/edit/${toggleName}`}>
+                            <strong>{toggleName}</strong>
+                            </Link>
+                        </span>}/>
         );
     }
 }

@@ -1,5 +1,4 @@
 import React, { PropTypes, PureComponent } from 'react';
-import { Icon } from 'react-mdl';
 
 import style from './history.scss';
 

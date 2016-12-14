@@ -41,13 +41,13 @@ ReactDOM.render(
                     <Route pageTitle="New" path="/features/create" component={CreateFeatureToggle} />
                     <Route pageTitle=":name" path="/features/edit/:name" component={EditFeatureToggle} />
                 </Route>
-                
+
                 <Route pageTitle="Strategies" link="/strategies">
                     <Route pageTitle="Strategies" path="/strategies" component={Strategies} />
                     <Route pageTitle="New" path="/strategies/create" component={CreateStrategies} />
                     <Route pageTitle=":strategyName" path="/strategies/view/:strategyName" component={StrategyView} />
                 </Route>
-                
+
                 <Route pageTitle="History" link="/history">
                     <Route pageTitle="History"  path="/history" component={HistoryPage} />
                     <Route pageTitle=":toggleName" path="/history/:toggleName" component={HistoryTogglePage} />
@@ -58,7 +58,7 @@ ReactDOM.render(
                     <Route pageTitle="Applications" path="/applications" component={Applications} />
                     <Route pageTitle=":name" path="/applications/:name" component={ApplicationView} />
                 </Route>
-                
+
             </Route>
         </Router>
     </Provider>, document.getElementById('app'));

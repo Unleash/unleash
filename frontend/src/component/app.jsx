@@ -114,9 +114,9 @@ export default class App extends Component {
                             {createListItem('/history', 'Event history', 'history')}
                             {createListItem('/archive', 'Archived toggles', 'archive')}
                             {createListItem('/applications', 'Applications', 'apps')}
-                            {/*createListItem('/metrics', 'Client metrics')*/}
-                            {/*createListItem('/client-strategies', 'Client strategies')*/}
-                            {/*createListItem('/client-instances', 'Client instances')*/}
+                            {/* createListItem('/metrics', 'Client metrics')*/}
+                            {/* createListItem('/client-strategies', 'Client strategies')*/}
+                            {/* createListItem('/client-instances', 'Client instances')*/}
                         </Navigation>
                     </Drawer>
                     <Content>
@@ -139,9 +139,9 @@ export default class App extends Component {
                                 <FooterDropDownSection title="Metrics">
                                     <FooterLinkList>
                                         {createListItem('/applications', 'Applications')}
-                                        {/*createListItem('/metrics', 'Client metrics')*/}
-                                        {/*createListItem('/client-strategies', 'Client strategies')*/}
-                                        {/*createListItem('/client-instances', 'Client instances')*/}
+                                        {/* createListItem('/metrics', 'Client metrics')*/}
+                                        {/* createListItem('/client-strategies', 'Client strategies')*/}
+                                        {/* createListItem('/client-instances', 'Client instances')*/}
                                     </FooterLinkList>
                                 </FooterDropDownSection>
                                 <FooterDropDownSection title="Clients">

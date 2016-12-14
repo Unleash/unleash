@@ -20,10 +20,13 @@ class StrategiesListComponent extends Component {
         return (
             <div>
                 <HeaderTitle title="Strategies"
-                    actions={<IconButton raised name="add" onClick={() => this.context.router.push('/strategies/create')} title="Add new strategy" />} />
+                    actions={
+                        <IconButton raised
+                            name="add"
+                            onClick={() => this.context.router.push('/strategies/create')}
+                            title="Add new strategy" />} />
                 <List>
-                    {strategies.length > 0 ? strategies.map((strategy, i) => {
-                        return (
+                    {strategies.length > 0 ? strategies.map((strategy, i) => (
                             <ListItem key={i} twoLine>
                                 <ListItemContent icon="extension" subtitle={strategy.description}>
                                     <Link to={`/strategies/view/${strategy.name}`}>
@@ -32,8 +35,7 @@ class StrategiesListComponent extends Component {
                                     </ListItemContent>
                                 <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
                             </ListItem>
-                        );
-                    }) : <ListItem>No entries</ListItem>}
+                        )) : <ListItem>No entries</ListItem>}
                 </List>
             </div>
         );

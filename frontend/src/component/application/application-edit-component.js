@@ -69,7 +69,7 @@ class ClientApplications extends PureComponent {
                     <hr />
                     <List>
                     {seenToggles.map(({ name, description, enabled, notFound }, i) =>
-                        notFound ?
+                        (notFound ?
                         <ListItem twoLine key={i}>
                             <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
                                 <Link to={`/features/create?name=${name}`}>
@@ -84,7 +84,8 @@ class ClientApplications extends PureComponent {
                                     {name}
                                 </Link>
                             </ListItemContent>
-                    </ListItem>)}
+                        </ListItem>)
+                    )}
                     </List>
                 </Cell>
                 <Cell col={3}>
@@ -146,7 +147,6 @@ class ClientApplications extends PureComponent {
                         value={color} label="Select color" onBlur={(e) => storeApplicationMetaData(appName, 'color', e.target.value)} />
                 </Cell>
             </Grid>);
-
 
 
         return (

@@ -154,7 +154,12 @@ class StrategyConfigure extends React.Component {
                 }
 
                 <CardMenu style={{ color: '#fff' }}>
-                    <Link title="View / Edit stratgy" to={`/strategies/view/${name}`} style={{ color: '#fff', display: 'inline-block', verticalAlign: 'bottom', marginRight: '5px' }}><Icon name="edit" /></Link>
+                    <Link
+                        title="View / Edit stratgy"
+                        to={`/strategies/view/${name}`}
+                        style={{ color: '#fff', display: 'inline-block', verticalAlign: 'bottom', marginRight: '5px' }}>
+                        <Icon name="edit" />
+                    </Link>
                     <IconButton title="Remove strategy from toggle" name="delete" onClick={this.handleRemove} />
                 </CardMenu>
             </Card>

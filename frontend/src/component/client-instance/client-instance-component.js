@@ -22,14 +22,14 @@ class ClientStrategies extends Component {
                 rows={source}
                 selectable={false}
             >
-                                
-                                
+
+
                 <TableHeader name="instanceId">Instance ID</TableHeader>
                 <TableHeader name="appName">Application name</TableHeader>
                 <TableHeader name="clientIp">IP</TableHeader>
                 <TableHeader name="createdAt">Created</TableHeader>
                 <TableHeader name="lastSeen">Last Seen</TableHeader>
-                
+
             </DataTable>
         );
     }

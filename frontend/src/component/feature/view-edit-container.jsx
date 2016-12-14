@@ -130,7 +130,7 @@ class EditFeatureToggleWrapper extends React.Component {
                         {history.map(({ createdAt, type, createdBy }, i) =>
                             <ListItem twoLine key={i}>
                                 <ListItemContent title={type} avatar={getIcon(type)} subtitle={createdAt}>
-                                    {createdBy}
+                                    {type} <small>{createdBy}</small>
                                 </ListItemContent>
                             </ListItem>)}
                     </List>
@@ -188,7 +188,7 @@ function getHistoryFromToggle (state, toggleName) {
     if (state.history.hasIn(['toggles', toggleName])) {
         return state.history
             .getIn(['toggles', toggleName])
-            .slice(0, 5)
+            .slice(0, 10)
             .toJS()
             .map(({ createdAt, createdBy, type }) => ({
                 createdAt: new Date(createdAt).toLocaleString('nb-NO'),

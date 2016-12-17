@@ -8,7 +8,7 @@ import {
 export default class InputList extends Component {
 
     static propTypes = {
-        field: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
         list: PropTypes.array.isRequired,
         setConfig: PropTypes.func.isRequired,
     }
@@ -38,12 +38,12 @@ export default class InputList extends Component {
             e.stopPropagation();
         }
 
-        const { field, list, setConfig } = this.props;
-        const inputValue = document.querySelector(`[name="${field}_input"]`);
+        const { name, list, setConfig } = this.props;
+        const inputValue = document.querySelector(`[name="${name}_input"]`);
         if (inputValue && inputValue.value) {
             list.push(inputValue.value);
             inputValue.value = '';
-            setConfig(field, list.join(','));
+            setConfig(name, list.join(','));
         }
     }
 

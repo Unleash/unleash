@@ -78,3 +78,35 @@ test('should not be possible to override name', () => {
         .send({ name: 'Testing', parameters: [] })
         .expect(403);
 });
+
+test('should update strategy', () => {
+    const name = 'AnotherStrat';
+    const { request, base, strategyStore } = getSetup();
+    strategyStore.addStrategy({ name, parameters: [] });
+
+    return request
+        .put(`${base}/api/strategies/${name}`)
+        .send({ name, parameters: [], description: 'added' })
+        .expect(200);
+});
+
+test('should not update uknown strategy', () => {
+    const name = 'UnknownStrat';
+    const { request, base } = getSetup();
+
+    return request
+        .put(`${base}/api/strategies/${name}`)
+        .send({ name, parameters: [], description: 'added' })
+        .expect(404);
+});
+
+test('should validate format when updating strategy', () => {
+    const name = 'AnotherStrat';
+    const { request, base, strategyStore } = getSetup();
+    strategyStore.addStrategy({ name, parameters: [] });
+
+    return request
+        .put(`${base}/api/strategies/${name}`)
+        .send({  })
+        .expect(400);
+});

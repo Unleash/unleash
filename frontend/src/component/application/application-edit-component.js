@@ -64,7 +64,7 @@ class ClientApplications extends PureComponent {
 
         const content = this.state.activeTab === 0 ? (
             <Grid>
-                <Cell col={3}>
+                <Cell col={3} tablet={4} phone={12}>
                     <h6> Toggles</h6>
                     <hr />
                     <List>
@@ -88,7 +88,7 @@ class ClientApplications extends PureComponent {
                     )}
                     </List>
                 </Cell>
-                <Cell col={3}>
+                <Cell col={3} tablet={4} phone={12}>
                     <h6>Implemented strategies</h6>
                     <hr />
                     <List>
@@ -111,7 +111,7 @@ class ClientApplications extends PureComponent {
                         ))}
                     </List>
                 </Cell>
-                <Cell col={6}>
+                <Cell col={6} tablet={12}>
                     <h6>{instances.length} Instances connected</h6>
                     <hr />
                     <List>

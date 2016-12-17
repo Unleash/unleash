@@ -29,7 +29,7 @@ const MetricTab = ({ metrics, featureToggle, toggleFeature }) => {
         onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
         <hr />
         <Grid style={{ textAlign: 'center' }}>
-            <Cell col={3}>
+            <Cell tablet={4} col={3} phone={12}>
                 {
                     lastMinute.isFallback ?
                     <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }}
@@ -40,7 +40,7 @@ const MetricTab = ({ metrics, featureToggle, toggleFeature }) => {
                 }
                 <p><strong>Last minute</strong><br /> Yes {lastMinute.yes}, No: {lastMinute.no}</p>
             </Cell>
-            <Cell col={3}>
+            <Cell col={3} tablet={4} phone={12}>
                 {
                     lastHour.isFallback ?
                     <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }}
@@ -51,7 +51,7 @@ const MetricTab = ({ metrics, featureToggle, toggleFeature }) => {
                 }
                 <p><strong>Last hour</strong><br /> Yes {lastHour.yes}, No: {lastHour.no}</p>
             </Cell>
-            <Cell col={6}>
+            <Cell col={6}  tablet={12}>
                 {seenApps.length > 0 ?
                     (<div><strong>Seen in applications:</strong></div>) :
                     <div>

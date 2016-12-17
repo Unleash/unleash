@@ -33,7 +33,7 @@ class ShowStrategyComponent extends PureComponent {
             <div>
 
                 <Grid>
-                    <Cell col={12}>
+                    <Cell col={12} >
                         <h6>Parameters</h6>
                         <hr />
                         <List>
@@ -41,13 +41,13 @@ class ShowStrategyComponent extends PureComponent {
                         </List>
                     </Cell>
 
-                    <Cell col={6}>
+                    <Cell col={6} tablet={12}>
                         <h6>Applications using this strategy</h6>
                         <hr />
                         <AppsLinkList apps={applications} />
                     </Cell>
 
-                    <Cell col={6}>
+                    <Cell col={6} tablet={12}>
                         <h6>Toggles using this strategy</h6>
                         <hr />
                         <TogglesLinkList toggles={toggles} />

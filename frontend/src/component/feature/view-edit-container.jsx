@@ -36,7 +36,7 @@ const MetricTab = ({ metrics, featureToggle, toggleFeature }) => {
                     <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }}
                     name="report problem" title="No metrics avaiable" /> :
                     <div>
-                        <Progress strokeWidth={10} percentage={lastMinutePercent} width="50" />
+                        <Progress animatePercentageText strokeWidth={10} percentage={lastMinutePercent} width="50" />
                     </div>
                 }
                 <p><strong>Last minute</strong><br /> Yes {lastMinute.yes}, No: {lastMinute.no}</p>

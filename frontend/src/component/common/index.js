@@ -1,4 +1,7 @@
 const React = require('react');
+import styles from './common.scss';
+
+
 const {
     List, ListItem, ListItemContent,
     Button, Icon,
@@ -57,7 +60,7 @@ export const SwitchWithLabel = ({ onChange, children, checked }) => (
 );
 
 export const TogglesLinkList = ({ toggles }) => (
-    <List style={{ textAlign: 'left' }}>
+    <List style={{ textAlign: 'left' }} className={styles.truncate}>
     {toggles.length > 0 && toggles.map(({ name, description = '-', icon = 'toggle' }) => (
         <ListItem twoLine key={name}>
             <ListItemContent avatar={icon} subtitle={description}>

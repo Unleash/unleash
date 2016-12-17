@@ -82,3 +82,23 @@ test.serial('can\'t delete a strategy that dose not exist', async (t) => {
         .delete('/api/strategies/unknown')
         .expect(404);
 });
+
+test.serial('updates a exiting strategy', async (t) => {
+    const { request, destroy } = await setupApp('strategy_api_serial');
+    return request
+        .put('/api/strategies/default')
+        .send({ name: 'default', description: 'Default is the best!', parameters: [] })
+        .set('Content-Type', 'application/json')
+        .expect(200)
+        .then(destroy);
+});
+
+test.serial('cant update a unknown strategy', async (t) => {
+    const { request, destroy } = await setupApp('strategy_api_serial');
+    return request
+        .put('/api/strategies/unknown')
+        .send({ name: 'unkown', parameters: [] })
+        .set('Content-Type', 'application/json')
+        .expect(404)
+        .then(destroy);
+});

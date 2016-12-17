@@ -124,7 +124,7 @@ class StrategyConfigure extends React.Component {
                 <Card shadow={0} style={style}>
                     <CardTitle>"{name}" deleted?</CardTitle>
                     <CardText>
-                        The strategy "{name}" does not exist on this this server.
+                        The strategy "{name}" does not exist on this server.
                         <Link to={`/strategies/create?name=${name}`}>Want to create it now?</Link>
                     </CardText>
                     <CardActions>

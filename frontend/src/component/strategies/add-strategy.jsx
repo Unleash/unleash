@@ -58,7 +58,7 @@ const EditHeader = () => (
     <div>
         <h4>Edit strategy</h4>
         <p style={{ background: '#ffb7b7', padding: '5px'  }}>
-            Be carefull! Changing a strategy definition might also require changes
+            Be carefull! Changing a strategy definition might also require changes to the
             implementation in the clients.
         </p>
     </div>

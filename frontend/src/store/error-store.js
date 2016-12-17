@@ -7,6 +7,13 @@ import {
     ERROR_UPDATE_FEATURE_TOGGLE,
 } from './feature-actions';
 
+import {
+    ERROR_UPDATING_STRATEGY,
+    ERROR_CREATING_STRATEGY,
+    ERROR_RECEIVE_STRATEGIES,
+
+} from './strategy/actions';
+
 const debug = require('debug')('unleash:error-store');
 
 function getInitState () {
@@ -29,6 +36,9 @@ const strategies = (state = getInitState(), action) => {
         case ERROR_REMOVE_FEATURE_TOGGLE:
         case ERROR_FETCH_FEATURE_TOGGLES:
         case ERROR_UPDATE_FEATURE_TOGGLE:
+        case ERROR_UPDATING_STRATEGY:
+        case ERROR_CREATING_STRATEGY:
+        case ERROR_RECEIVE_STRATEGIES:
             return addErrorIfNotAlreadyInList(state, action.error.message);
         case MUTE_ERROR:
             return state.update('list', (list) => list.remove(list.indexOf(action.error)));

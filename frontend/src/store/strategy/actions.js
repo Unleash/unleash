@@ -21,11 +21,6 @@ const errorCreatingStrategy = (statusCode) => ({
     statusCode,
 });
 
-const errorUpdatingStrategy = (statusCode) => ({
-    type: ERROR_UPDATING_STRATEGY,
-    statusCode,
-});
-
 const startRequest = () => ({ type: REQUEST_STRATEGIES });
 
 
@@ -42,6 +37,13 @@ const errorReceiveStrategies = (statusCode) => ({
 });
 
 const startUpdate = () => ({ type: START_UPDATE_STRATEGY });
+
+function dispatchAndThrow (dispatch, type) {
+    return (error) => {
+        dispatch({ type, error, receivedAt: Date.now() });
+        throw error;
+    };
+}
 
 export function fetchStrategies () {
     return dispatch => {
@@ -69,7 +71,7 @@ export function updateStrategy (strategy) {
 
         return api.update(strategy)
             .then(() => dispatch(updatedStrategy(strategy)))
-            .catch(error => dispatch(errorUpdatingStrategy(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_UPDATING_STRATEGY));
     };
 }
 

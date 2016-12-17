@@ -12,7 +12,7 @@ const prepare = (methods, dispatch) => {
         (e) => {
             e.preventDefault();
             // clean
-            const parameters = input.parameters
+            const parameters = (input.parameters || [])
                 .filter((name) => !!name)
                 .map(({
                     name,

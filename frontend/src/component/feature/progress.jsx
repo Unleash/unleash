@@ -1,5 +1,11 @@
 import React, { PropTypes, Component } from 'react';
 import styles from './progress-styles.scss';
+import easing from 'bezier-easing';
+
+const fn = easing(0, 0, 1, 0.5);
+
+window.easing = easing;
+// console.log(s);
 
 class Progress extends Component {
     constructor (props) {
@@ -37,30 +43,17 @@ class Progress extends Component {
 
     getTarget (target) {
         const start = this.state.percentageText;
-        const TOTAL_ANIMATION_TIME = 10000;
+        const TOTAL_ANIMATION_TIME = 5000;
         const diff = start > target ? -(start - target) : target - start;
         const perCycle = TOTAL_ANIMATION_TIME / diff;
         const cyclesCounter = Math.round(Math.abs(TOTAL_ANIMATION_TIME / perCycle));
         const perCycleTime = Math.round(Math.abs(perCycle));
 
-        let usedTime = 0;
-        // this initial value could be tweaked more
-        let lastTime = perCycleTime / 4;
         return {
             start,
             target,
             cyclesCounter,
-            getTimer () {
-                /* Somewhat tweaked values to get a curve on the counting */
-                if (usedTime > (TOTAL_ANIMATION_TIME / 2)) {
-                    // if halfway, lets speed up timeouts
-                    lastTime *= 0.95;
-                } else {
-                    lastTime *= 1.1;
-                }
-                usedTime += lastTime;
-                return lastTime;
-            },
+            perCycleTime,
             increment: diff / cyclesCounter,
         };
     }
@@ -82,7 +75,7 @@ class Progress extends Component {
             this.setState({ percentageText: next });
             this.nextTimer = setTimeout(() => {
                 this.animateTo(next, targetState);
-            }, targetState.getTimer());
+            }, targetState.perCycleTime);
         });
     }
 

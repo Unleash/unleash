@@ -77,3 +77,34 @@ Used to fetch all defined strategies and their defined paramters.
 ```
 
 Used to create a new Strategy. Name is required and must be unique. It is also required to have a parameters array, but it can be empty. 
+
+
+### Update strategy
+
+`PUT: http://unleash.host.com/api/strategies/:name`
+
+**Body**
+
+```json
+{
+    "name": "gradualRollout",
+    "description": "Gradual rollout to logged in users with updated desc",
+    "parameters": [
+        {
+            "name": "percentage",
+            "type": "percentage",
+            "description": "How many percent should the new feature be active for.",
+            "required": false
+        },
+        {
+            "name": "group",
+            "type": "string",
+            "description": "Group key to use when hasing the userId. Makes sure that the same user get different value for different groups",
+            "required": false
+        }
+    ]
+},
+```
+
+Used to update a Strategy definition. Name can't be changed. 
+**PS! I can be dangerous to change a implemnted strategy as the implementation also might need to be changed** 

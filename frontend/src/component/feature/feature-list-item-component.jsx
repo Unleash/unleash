@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { Chip, Switch, Icon, IconButton } from 'react-mdl';
-import percentLib from 'percent';
 import Progress from './progress';
-import { shorten } from '../common';
+import { shorten, calc } from '../common';
 
 import style from './feature.scss';
 
@@ -21,8 +20,8 @@ const Feature = ({
     const isStale = showLastHour ? metricsLastHour.isFallback : metricsLastMinute.isFallback;
 
     const percent = 1 * (showLastHour ?
-        percentLib.calc(metricsLastHour.yes, metricsLastHour.yes + metricsLastHour.no, 0) :
-        percentLib.calc(metricsLastMinute.yes, metricsLastMinute.yes + metricsLastMinute.no, 0)
+        calc(metricsLastHour.yes, metricsLastHour.yes + metricsLastHour.no, 0) :
+        calc(metricsLastMinute.yes, metricsLastMinute.yes + metricsLastMinute.no, 0)
     );
     return (
         <li key={name} className="mdl-list__item">
@@ -30,12 +29,12 @@ const Feature = ({
                 <div style={{ width: '40px', textAlign: 'center' }}>
                     {
                         isStale ?
-                        <Icon
-                            style={{ width: '25px', marginTop: '4px', fontSize: '25px', color: '#ccc' }}
-                            name="report problem" title="No metrics avaiable" /> :
-                        <div>
-                            <Progress strokeWidth={15} percentage={percent} width="50" />
-                        </div>
+                            <Icon
+                                style={{ width: '25px', marginTop: '4px', fontSize: '25px', color: '#ccc' }}
+                                name="report problem" title="No metrics avaiable" /> :
+                            <div>
+                                <Progress strokeWidth={15} percentage={percent} width="50" />
+                            </div>
                     }
                 </div>
 

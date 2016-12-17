@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { Tabs, Tab, Grid, Cell, Icon, ProgressBar, List, ListItem, ListItemContent } from 'react-mdl';
 import { Link } from 'react-router';
 
-import percentLib from 'percent';
 import Progress from './progress';
 
 import { connect } from 'react-redux';
@@ -11,7 +10,7 @@ import { fetchFeatureToggles, toggleFeature } from '../../store/feature-actions'
 import { fetchFeatureMetrics, fetchSeenApps } from '../../store/feature-metrics-actions';
 import { fetchHistoryForToggle } from '../../store/history-actions';
 
-import { AppsLinkList, SwitchWithLabel, getIcon } from '../common';
+import { AppsLinkList, SwitchWithLabel, getIcon, calc } from '../common';
 
 
 const MetricTab = ({ metrics, featureToggle, toggleFeature }) => {
@@ -21,8 +20,8 @@ const MetricTab = ({ metrics, featureToggle, toggleFeature }) => {
             seenApps = [],
         } = metrics;
 
-    const lastHourPercent = 1 * percentLib.calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
-    const lastMinutePercent = 1 * percentLib.calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
+    const lastHourPercent = 1 * calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
+    const lastMinutePercent = 1 * calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
 
     return (<div>
         <SwitchWithLabel

@@ -96,3 +96,24 @@ export const ExternalIconLink = ({ url, children }) => (
         {children}
     </IconLink>
 );
+
+const badNumbers = [NaN, Infinity, -Infinity];
+export function calc (value, total, decimal) {
+    if (typeof value !== 'number' ||
+        typeof total !== 'number' ||
+        typeof decimal !== 'number') {
+        return null;
+    }
+
+    if (total === 0) {
+        return 0;
+    }
+
+    badNumbers.forEach((number) => {
+        if ([value, total, decimal].indexOf(number) > -1) {
+            return number;
+        }
+    });
+
+    return (value / total * 100).toFixed(decimal);
+};

@@ -1,11 +1,5 @@
 import React, { PropTypes, Component } from 'react';
 import styles from './progress-styles.scss';
-import easing from 'bezier-easing';
-
-const fn = easing(0, 0, 1, 0.5);
-
-window.easing = easing;
-// console.log(s);
 
 class Progress extends Component {
     constructor (props) {

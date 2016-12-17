@@ -31,7 +31,7 @@ class ShowStrategyComponent extends PureComponent {
 
         return (
             <div>
-                
+
                 <Grid>
                     <Cell col={12}>
                         <h6>Parameters</h6>

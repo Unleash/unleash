@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 
-import { Textfield, IconButton, Menu, MenuItem, Checkbox, Card, CardTitle, CardText } from 'react-mdl';
+import { Textfield, IconButton, Menu, MenuItem, Checkbox } from 'react-mdl';
 import { FormButtons } from '../common';
 
 

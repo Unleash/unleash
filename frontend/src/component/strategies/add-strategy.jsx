@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 
-import { Textfield, IconButton, Menu, MenuItem, Checkbox } from 'react-mdl';
-import { HeaderTitle, FormButtons } from '../common';
+import { Textfield, IconButton, Menu, MenuItem, Checkbox, Card, CardTitle, CardText } from 'react-mdl';
+import { FormButtons } from '../common';
 
 
 const trim = (value) => {
@@ -54,6 +54,23 @@ const Parameter = ({ set, input = {}, index }) => (
     </div>
 );
 
+const EditHeader = () => (
+    <div>
+        <h4>Edit strategy</h4>
+        <p style={{ background: '#ffb7b7', padding: '5px'  }}>
+            Be carefull! Changing a strategy definition might also require changes
+            implementation in the clients.
+        </p>
+    </div>
+);
+
+const CreateHeader = () => (
+    <div>
+        <h4>Create a new Strategy definition</h4>
+    </div>
+);
+
+
 const Parameters = ({ input = [], count = 0, updateInList }) => (
 <div>{
     gerArrayWithEntries(count)
@@ -86,7 +103,9 @@ class AddStrategy extends Component {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {
             this.props.init(this.props.input);
-            this.props.setValue('_params', this.props.input.parameters.length);
+            if (this.props.input.parameters) {
+                this.props.setValue('_params', this.props.input.parameters.length);
+            }
         }
     }
 
@@ -104,7 +123,7 @@ class AddStrategy extends Component {
 
         return (
              <form onSubmit={onSubmit(input)}>
-                <HeaderTitle title="Create new strategy" subtitle="It is not possible to edit a strategy after it is created."/>
+                {editmode ? <EditHeader /> : <CreateHeader />}
                 <section style={{ margin: '16px 20px' }}>
                     <Textfield label="Strategy name"
                         floatingLabel

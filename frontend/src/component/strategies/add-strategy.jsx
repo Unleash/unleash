@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
 
 import { Textfield, IconButton, Menu, MenuItem, Checkbox } from 'react-mdl';
 import { HeaderTitle, FormButtons } from '../common';
@@ -65,63 +65,85 @@ const Parameters = ({ input = [], count = 0, updateInList }) => (
     />)
 }</div>);
 
-const AddStrategy = ({
-    input,
-    setValue,
-    updateInList,
-    incValue,
-    // clear,
-    onCancel,
-    onSubmit,
-}) => (
-    <form onSubmit={onSubmit(input)}>
-        <HeaderTitle title="Create new strategy" subtitle="It is not possible to edit a strategy after it is created."/>
-        <section style={{ margin: '16px 20px' }}>
-            <Textfield label="Strategy name"
-                floatingLabel
-                name="name"
-                required
-                pattern="^[0-9a-zA-Z\.\-]+$"
-                onChange={({ target }) => setValue('name', trim(target.value))}
-                value={input.name}
+class AddStrategy extends Component {
+
+    static propTypes () {
+        return {
+            input: PropTypes.object,
+            setValue: PropTypes.func,
+            updateInList: PropTypes.func,
+            incValue: PropTypes.func,
+            clear: PropTypes.func,
+            onCancel: PropTypes.func,
+            onSubmit: PropTypes.func,
+            editmode: PropTypes.bool,
+            initCallRequired: PropTypes.bool,
+            init: PropTypes.func,
+        };
+    }
+
+    componentWillMount () {
+        // TODO unwind this stuff
+        if (this.props.initCallRequired === true) {
+            this.props.init(this.props.input);
+        }
+    }
+
+
+    render () {
+        const {
+            input,
+            setValue,
+            updateInList,
+            incValue,
+            onCancel,
+            editmode = false,
+            onSubmit,
+        } = this.props;
+
+        return (
+             <form onSubmit={onSubmit(input)}>
+                <HeaderTitle title="Create new strategy" subtitle="It is not possible to edit a strategy after it is created."/>
+                <section style={{ margin: '16px 20px' }}>
+                    <Textfield label="Strategy name"
+                        floatingLabel
+                        name="name"
+                        required
+                        disabled={editmode}
+                        pattern="^[0-9a-zA-Z\.\-]+$"
+                        onChange={({ target }) => setValue('name', trim(target.value))}
+                        value={input.name}
+                        />
+                    <br />
+                    <Textfield
+                        floatingLabel
+                        style={{ width: '100%' }}
+                        rows={2}
+                        label="Description"
+                        name="description"
+                        onChange={({ target }) => setValue('description', target.value)}
+                        value={input.description}
+                        />
+                </section>
+
+                <section style={{ margin: '0 20px' }}>
+                    <Parameters input={input.parameters} count={input._params} updateInList={updateInList} />
+                    <IconButton raised name="add" title="Add parameter" onClick={(e) => {
+                        e.preventDefault();
+                        incValue('_params');
+                    }}/> &nbsp;Add parameter
+                </section>
+
+                <br />
+                <hr />
+
+                <FormButtons
+                    submitText={editmode ? 'Update' : 'Create'}
+                    onCancel={onCancel}
                 />
-            <br />
-            <Textfield
-                floatingLabel
-                style={{ width: '100%' }}
-                rows={2}
-                label="Description"
-                name="description"
-                onChange={({ target }) => setValue('description', target.value)}
-                value={input.description}
-                />
-        </section>
-
-        <section style={{ margin: '0 20px' }}>
-            <Parameters input={input.parameters} count={input._params} updateInList={updateInList} />
-            <IconButton raised name="add" title="Add parameter" onClick={(e) => {
-                e.preventDefault();
-                incValue('_params');
-            }}/> &nbsp;Add parameter
-        </section>
-
-        <br />
-        <hr />
-
-        <FormButtons
-            onCancel={onCancel}
-        />
-    </form>
-);
-
-AddStrategy.propTypes = {
-    input: PropTypes.object,
-    setValue: PropTypes.func,
-    updateInList: PropTypes.func,
-    incValue: PropTypes.func,
-    clear: PropTypes.func,
-    onCancel: PropTypes.func,
-    onSubmit: PropTypes.func,
-};
+            </form>
+        );
+    }
+}
 
 export default AddStrategy;

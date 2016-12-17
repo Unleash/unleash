@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ShowStrategy from './show-strategy-component';
+import ShowStrategy from './strategy-details-component';
 import { fetchStrategies } from '../../store/strategy/actions';
 import { fetchAll } from '../../store/application/actions';
 import { fetchFeatureToggles } from '../../store/feature-actions';

@@ -1,19 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Grid, Cell, List, ListItem, ListItemContent } from 'react-mdl';
-import { AppsLinkList, TogglesLinkList, HeaderTitle } from '../common';
+import { AppsLinkList, TogglesLinkList } from '../common';
 
-class ShowStrategyComponent extends Component {
-    componentDidMount () {
-        if (!this.props.strategy) {
-            this.props.fetchStrategies();
-        };
-        if (!this.props.applications || this.props.applications.length === 0) {
-            this.props.fetchApplications();
-        }
-        if (!this.props.toggles || this.props.toggles.length === 0) {
-            this.props.fetchFeatureToggles();
-        }
-    }
+class ShowStrategyComponent extends PureComponent {
 
     renderParameters (params) {
         if (params) {
@@ -32,24 +21,17 @@ class ShowStrategyComponent extends Component {
     render () {
         const {
             strategy,
-            strategyName,
             applications,
             toggles,
         } = this.props;
 
-        if (!strategy) {
-            return <div>Cannot find Strategy "{strategyName}".</div>;
-        }
-
         const {
-            name,
-            description,
             parameters = [],
         } = strategy;
 
         return (
             <div>
-                <HeaderTitle title={name} subtitle={description} />
+                
                 <Grid>
                     <Cell col={12}>
                         <h6>Parameters</h6>

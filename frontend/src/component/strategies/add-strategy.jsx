@@ -86,6 +86,7 @@ class AddStrategy extends Component {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {
             this.props.init(this.props.input);
+            this.props.setValue('_params', this.props.input.parameters.length);
         }
     }
 

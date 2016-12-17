@@ -133,14 +133,14 @@ class ClientApplications extends PureComponent {
                 <Cell col={12}>
                     <h5>Edit app meta data</h5>
                 </Cell>
-                <Cell col={6}>
+                <Cell col={6} tablet={12}>
                     <StatefulTextfield
                         value={url} label="URL" onBlur={(e) => storeApplicationMetaData(appName, 'url', e.target.value)} /><br />
                     <StatefulTextfield
                         value={description}
                         label="Description" rows={5} onBlur={(e) => storeApplicationMetaData(appName, 'description', e.target.value)} />
                 </Cell>
-                <Cell col={6}>
+                <Cell col={6} tablet={12}>
                     <StatefulTextfield
                         value={icon} label="Select icon" onBlur={(e) => storeApplicationMetaData(appName, 'icon', e.target.value)} />
                     <StatefulTextfield

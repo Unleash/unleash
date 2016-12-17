@@ -21,7 +21,7 @@ class EditUserComponent extends React.Component {
                     <DialogTitle>Action required</DialogTitle>
                     <DialogContent>
                         <p>
-                            You are logged in as:You hav to specify a username to use Unleash. This will allow us to track changes.
+                            You hav to specify a username to use Unleash. This will allow us to track changes.
                         </p>
                         <form onSubmit={this.handleSubmit}>
                             <Textfield

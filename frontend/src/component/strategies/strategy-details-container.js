@@ -17,8 +17,10 @@ const mapStateToProps = (state, props) => {
 
     return {
         strategy,
+        strategyName: props.strategyName,
         applications: applications && applications.toJS(),
         toggles: toggles && toggles.toJS(),
+        activeTab: props.activeTab,
     };
 };
 

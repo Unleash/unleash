@@ -1,15 +1,24 @@
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
+import { hashHistory } from 'react-router';
 import { Tabs, Tab, ProgressBar } from 'react-mdl';
 import ShowStrategy from './show-strategy-component';
 import EditStrategy from './edit-container';
 import { HeaderTitle } from '../common';
 
-const EDIT = 1;
+const TABS = {
+    view: 0,
+    edit: 1,
+};
 
 export default class StrategyDetails extends Component {
-    constructor (props) {
-        super(props);
-        this.state = { activeTab: 0 };
+    static propTypes () {
+        return {
+            activeTab: PropTypes.string.isRequired,
+            strategy: PropTypes.object.isRequired,
+            fetchStrategies: PropTypes.func.isRequired,
+            fetchApplications: PropTypes.func.isRequired,
+            fetchFeatureToggles: PropTypes.func.isRequired,
+        };
     }
 
     componentDidMount () {
@@ -24,8 +33,8 @@ export default class StrategyDetails extends Component {
         }
     }
 
-    getTabContent (id) {
-        if (id === EDIT) {
+    getTabContent (activeTabId) {
+        if (activeTabId === TABS.edit) {
             return <EditStrategy strategy={this.props.strategy} />;
         } else {
             return (<ShowStrategy
@@ -35,21 +44,25 @@ export default class StrategyDetails extends Component {
         }
     }
 
+    goToTab (tabName) {
+        hashHistory.push(`/strategies/${tabName}/${this.props.strategyName}`);
+    }
+
     render () {
+        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.view;
         const strategy = this.props.strategy;
         if (!strategy) {
             return <ProgressBar indeterminate />;
         }
 
-        const tabContent = this.getTabContent(this.state.activeTab);
+        const tabContent = this.getTabContent(activeTabId);
 
         return (
             <div>
                 <HeaderTitle title={strategy.name} subtitle={strategy.description} />
-                <Tabs activeTab={this.state.activeTab}
-                    onChange={(tabId) => this.setState({ activeTab: tabId })} ripple>
-                    <Tab>Details</Tab>
-                    <Tab>Edit</Tab>
+                <Tabs activeTab={activeTabId} ripple>
+                    <Tab onClick={() => this.goToTab('view')}>Details</Tab>
+                    <Tab onClick={() => this.goToTab('edit')}>Edit</Tab>
                 </Tabs>
                 <section>
                     <div className="content">

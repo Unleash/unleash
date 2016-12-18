@@ -45,7 +45,7 @@ ReactDOM.render(
                 <Route pageTitle="Strategies" link="/strategies">
                     <Route pageTitle="Strategies" path="/strategies" component={Strategies} />
                     <Route pageTitle="New" path="/strategies/create" component={CreateStrategies} />
-                    <Route pageTitle=":strategyName" path="/strategies/view/:strategyName" component={StrategyView} />
+                    <Route pageTitle=":strategyName" path="/strategies/:activeTab/:strategyName" component={StrategyView} />
                 </Route>
 
                 <Route pageTitle="History" link="/history">

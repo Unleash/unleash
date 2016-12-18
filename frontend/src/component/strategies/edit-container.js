@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-
+import { hashHistory } from 'react-router';
 import { createMapper, createActions } from '../input-helpers';
 import { updateStrategy } from '../../store/strategy/actions';
 
@@ -47,8 +47,7 @@ const prepare = (methods, dispatch) => {
                 parameters,
             })(dispatch)
                 .then(() => methods.clear())
-                // somewhat quickfix / hacky to go back..
-                .then(() => window.history.back());
+                .then(() => hashHistory.push(`/strategies/view/${input.name}`));
         }
     );
 

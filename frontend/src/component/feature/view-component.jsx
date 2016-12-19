@@ -1,25 +1,30 @@
 import React, { PropTypes } from 'react';
-import { Tabs, Tab, ProgressBar, List, ListItem, ListItemContent } from 'react-mdl';
-import { Link } from 'react-router';
+import { Tabs, Tab, ProgressBar } from 'react-mdl';
+import { hashHistory } from 'react-router';
 
 import HistoryComponent from '../history/history-list-toggle-container';
-import MetricComponent from './metric-component';
+import MetricComponent from './metric-container';
 import EditFeatureToggle from './form-edit-container.jsx';
-import { getIcon } from '../common';
+
+const TABS = {
+    view: 0,
+    edit: 1,
+    history: 2,
+};
 
 export default class ViewFeatureToggleComponent extends React.Component {
 
     constructor (props) {
         super(props);
-
-        this.state = { activeTab: 0 };
     }
 
     static propTypes () {
         return {
+            activeTab: PropTypes.string.isRequired,
             featureToggleName: PropTypes.string.isRequired,
             features: PropTypes.array.isRequired,
             fetchFeatureToggles: PropTypes.array.isRequired,
+            featureToggle: PropTypes.object.isRequired,
         };
     }
 
@@ -27,42 +32,44 @@ export default class ViewFeatureToggleComponent extends React.Component {
         if (this.props.features.length === 0) {
             this.props.fetchFeatureToggles();
         }
-        this.props.fetchSeenApps();
-        this.props.fetchFeatureMetrics();
-        this.timer = setInterval(() => {
-            this.props.fetchFeatureMetrics();
-        }, 5000);
     }
 
-    componentWillUnmount () {
-        clearInterval(this.timer);
+    getTabContent (activeTab) {
+        const {
+            featureToggle,
+            featureToggleName,
+        } = this.props;
+
+        if (TABS[activeTab] === TABS.history) {
+            return <HistoryComponent toggleName={featureToggleName} />;
+        } else if (TABS[activeTab] === TABS.edit) {
+            return <EditFeatureToggle featureToggle={featureToggle} />;
+        } else {
+            return <MetricComponent featureToggle={featureToggle} />;
+        }
+    }
+
+    goToTab (tabName, featureToggleName) {
+        hashHistory.push(`/features/${tabName}/${featureToggleName}`);
     }
 
     render () {
         const {
-            toggleFeature,
+            featureToggle,
             features,
+            activeTab,
             featureToggleName,
-            metrics = {},
         } = this.props;
-
-        const featureToggle = features.find(toggle => toggle.name === featureToggleName);
 
         if (!featureToggle) {
             if (features.length === 0 ) {
                 return <ProgressBar indeterminate />;
             }
-            return <span>Could not find the toggle "{this.props.featureToggleName}"</span>;
+            return <span>Could not find the toggle "{featureToggleName}"</span>;
         }
 
-        let tabContent;
-        if (this.state.activeTab === 0) {
-            tabContent = <MetricComponent metrics={metrics} toggleFeature={toggleFeature} featureToggle={featureToggle} />;
-        } else if (this.state.activeTab === 1) {
-            tabContent = <EditFeatureToggle featureToggle={featureToggle} />;
-        } else {
-            tabContent = <HistoryComponent toggleName={featureToggleName} />;
-        }
+        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.view;
+        const tabContent = this.getTabContent(activeTab);
 
         return (
             <div>
@@ -72,13 +79,10 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     </small>
                 </h4>
                 <div>{featureToggle.description}</div>
-                <Tabs activeTab={this.state.activeTab}
-                    onChange={(tabId) => this.setState({ activeTab: tabId })}
-                    ripple
-                    style={{ marginBottom: '10px' }}>
-                    <Tab>Metrics</Tab>
-                    <Tab>Edit</Tab>
-                    <Tab>History</Tab>
+                <Tabs activeTab={activeTabId} ripple style={{ marginBottom: '10px' }}>
+                    <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
+                    <Tab onClick={() => this.goToTab('edit', featureToggleName)}>Edit</Tab>
+                    <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
                 </Tabs>
 
                 {tabContent}

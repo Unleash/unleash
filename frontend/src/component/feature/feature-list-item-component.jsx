@@ -42,7 +42,7 @@ const Feature = ({
                 <span style={{ display: 'inline-block', width: '45px' }} title={`Toggle ${name}`}>
                     <Switch title="test" key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />
                 </span>
-                <Link to={`/features/edit/${name}`} className={style.link}>
+                <Link to={`/features/view/${name}`} className={style.link}>
                     {name} <small>{shorten(description, 30) || ''}</small>
                 </Link>
             </span>
@@ -54,7 +54,7 @@ const Feature = ({
                 <Link to={`/features/edit/${name}`} title={`Edit ${name}`} className={style.iconListItem}>
                     <IconButton name="edit" />
                 </Link>
-                <Link to={`/history/${name}`} title={`History htmlFor ${name}`} className={style.iconListItem}>
+                <Link to={`features/history/${name}`} title={`History htmlFor ${name}`} className={style.iconListItem}>
                     <IconButton name="history" />
                 </Link>
                 <IconButton name="delete" onClick={() => onFeatureRemove(name)} className={style.iconListItem} />

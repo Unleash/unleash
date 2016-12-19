@@ -11,7 +11,7 @@ import App from './component/app';
 
 import Features from './page/features';
 import CreateFeatureToggle from './page/features/create';
-import EditFeatureToggle from './page/features/edit';
+import ViewFeatureToggle from './page/features/show';
 import Strategies from './page/strategies';
 import StrategyView from './page/strategies/show';
 import CreateStrategies from './page/strategies/create';
@@ -39,7 +39,7 @@ ReactDOM.render(
                 <Route pageTitle="Features" link="/features">
                     <Route pageTitle="Features" path="/features" component={Features} />
                     <Route pageTitle="New" path="/features/create" component={CreateFeatureToggle} />
-                    <Route pageTitle=":name" path="/features/edit/:name" component={EditFeatureToggle} />
+                    <Route pageTitle=":name" path="/features/:activeTab/:name" component={ViewFeatureToggle} />
                 </Route>
 
                 <Route pageTitle="Strategies" link="/strategies">

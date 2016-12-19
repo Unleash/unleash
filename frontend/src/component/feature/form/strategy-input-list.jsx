@@ -48,9 +48,9 @@ export default class InputList extends Component {
     }
 
     onClose (index) {
-        const { field, list, setConfig } = this.props;
+        const { name, list, setConfig } = this.props;
         list[index] = null;
-        setConfig(field, list.length === 1 ? '' : list.filter(Boolean).join(','));
+        setConfig(name, list.length === 1 ? '' : list.filter(Boolean).join(','));
     }
 
     render () {

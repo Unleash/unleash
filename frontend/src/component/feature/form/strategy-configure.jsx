@@ -13,6 +13,7 @@ const style = {
     minWidth: '300px',
     maxWidth: '100%',
     margin: '5px 20px 15px 0px',
+    background: '#f2f9fc',
 };
 class StrategyConfigure extends React.Component {
 

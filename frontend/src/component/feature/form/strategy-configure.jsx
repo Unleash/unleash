@@ -143,7 +143,7 @@ class StrategyConfigure extends React.Component {
         return (
             <Card shadow={0} style={style}>
                 <CardTitle style={{ color: '#fff', height: '65px', background: '#607d8b' }}>
-                    { name }
+                    <Icon name="extension" />&nbsp;{ name }
                 </CardTitle>
                 <CardText>
                     {this.props.strategyDefinition.description}
@@ -156,10 +156,10 @@ class StrategyConfigure extends React.Component {
 
                 <CardMenu style={{ color: '#fff' }}>
                     <Link
-                        title="View / Edit stratgy"
+                        title="View strategy"
                         to={`/strategies/view/${name}`}
                         style={{ color: '#fff', display: 'inline-block', verticalAlign: 'bottom', marginRight: '5px' }}>
-                        <Icon name="edit" />
+                        <Icon name="link" />
                     </Link>
                     <IconButton title="Remove strategy from toggle" name="delete" onClick={this.handleRemove} />
                 </CardMenu>

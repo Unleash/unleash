@@ -17,7 +17,7 @@ function gerArrayWithEntries (num) {
 }
 
 const Parameter = ({ set, input = {}, index }) => (
-    <div  style={{ background: '#f1f1f1', margin: '20px 0', padding: '10px' }}>
+    <div  style={{ background: '#f1f1f1', margin: '20px 0', padding: '16px 20px' }}>
         <Textfield
             style={{ width: '50%' }}
             floatingLabel
@@ -25,15 +25,23 @@ const Parameter = ({ set, input = {}, index }) => (
             onChange={({ target }) => set({ name: target.value }, true)}
             value={input.name} />
         <div style={{ position: 'relative', display: 'inline-block' }}>
-            <span id={`${index}-type-menu`}>
+            <span className="mdl-outline" id={`${index}-type-menu`} style={{
+                borderRadius: '2px',
+                cursor: 'pointer',
+                boxShadow: '0 2px 2px 0 rgba(0,0,0,.04),0 3px 1px -2px rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.12)',
+                marginLeft: '10px',
+                border: '1px solid #f1f1f1',
+                backgroundColor: 'white',
+                padding: '10px 2px 10px 20px',
+            }}>
                 {input.type || 'string'}
                 <IconButton name="arrow_drop_down" onClick={(evt) => evt.preventDefault()} />
             </span>
             <Menu target={`${index}-type-menu`} align="right">
-                <MenuItem onClick={() => set({ type: 'string' })}>String</MenuItem>
-                <MenuItem onClick={() => set({ type: 'percentage' })}>Percentage</MenuItem>
-                <MenuItem onClick={() => set({ type: 'list' })}>List of values</MenuItem>
-                <MenuItem onClick={() => set({ type: 'number' })}>Number</MenuItem>
+                <MenuItem onClick={() => set({ type: 'string' })}>string</MenuItem>
+                <MenuItem onClick={() => set({ type: 'percentage' })}>percentage</MenuItem>
+                <MenuItem onClick={() => set({ type: 'list' })}>list</MenuItem>
+                <MenuItem onClick={() => set({ type: 'number' })}>number</MenuItem>
             </Menu>
         </div>
         <Textfield

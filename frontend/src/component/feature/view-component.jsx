@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Tabs, Tab, ProgressBar } from 'react-mdl';
-import { hashHistory } from 'react-router';
+import { hashHistory, Link } from 'react-router';
 
 import HistoryComponent from '../history/history-list-toggle-container';
 import MetricComponent from './metric-container';
@@ -65,7 +65,9 @@ export default class ViewFeatureToggleComponent extends React.Component {
             if (features.length === 0 ) {
                 return <ProgressBar indeterminate />;
             }
-            return <span>Could not find the toggle "{featureToggleName}"</span>;
+            return (
+                <span>Could not find the toggle <Link to={{ pathname: '/features/create', query: { name: featureToggleName } }}>{featureToggleName}</Link></span>
+            );
         }
 
         const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.view;

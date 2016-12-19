@@ -17,7 +17,7 @@ function gerArrayWithEntries (num) {
 }
 
 const Parameter = ({ set, input = {}, index }) => (
-    <div  style={{ background: '#f1f1f1', margin: '20px 0', padding: '16px 20px' }}>
+    <div  style={{ background: '#f1f1f1', padding: '16px 20px', marginBottom: '20px' }}>
         <Textfield
             style={{ width: '50%' }}
             floatingLabel
@@ -65,7 +65,7 @@ const Parameter = ({ set, input = {}, index }) => (
 const EditHeader = () => (
     <div>
         <h4>Edit strategy</h4>
-        <p style={{ background: '#ffb7b7', padding: '5px'  }}>
+        <p style={{ background: '#ffb7b7', padding: '16px 20px'  }}>
             Be carefull! Changing a strategy definition might also require changes to the
             implementation in the clients.
         </p>
@@ -132,35 +132,33 @@ class AddStrategy extends Component {
         return (
              <form onSubmit={onSubmit(input)}>
                 {editmode ? <EditHeader /> : <CreateHeader />}
-                <section style={{ margin: '16px 20px' }}>
-                    <Textfield label="Strategy name"
-                        floatingLabel
-                        name="name"
-                        required
-                        disabled={editmode}
-                        pattern="^[0-9a-zA-Z\.\-]+$"
-                        onChange={({ target }) => setValue('name', trim(target.value))}
-                        value={input.name}
-                        />
-                    <br />
-                    <Textfield
-                        floatingLabel
-                        style={{ width: '100%' }}
-                        rows={2}
-                        label="Description"
-                        name="description"
-                        onChange={({ target }) => setValue('description', target.value)}
-                        value={input.description}
-                        />
-                </section>
+                <Textfield label="Strategy name"
+                    floatingLabel
+                    name="name"
+                    required
+                    disabled={editmode}
+                    pattern="^[0-9a-zA-Z\.\-]+$"
+                    onChange={({ target }) => setValue('name', trim(target.value))}
+                    value={input.name}
+                    />
+                <br />
+                <Textfield
+                    floatingLabel
+                    style={{ width: '100%' }}
+                    rows={2}
+                    label="Description"
+                    name="description"
+                    onChange={({ target }) => setValue('description', target.value)}
+                    value={input.description}
+                    />
 
-                <section style={{ margin: '0 20px' }}>
-                    <Parameters input={input.parameters} count={input._params} updateInList={updateInList} />
-                    <IconButton raised name="add" title="Add parameter" onClick={(e) => {
-                        e.preventDefault();
-                        incValue('_params');
-                    }}/> &nbsp;Add parameter
-                </section>
+
+                <Parameters input={input.parameters} count={input._params} updateInList={updateInList} />
+                <IconButton raised name="add" title="Add parameter" onClick={(e) => {
+                    e.preventDefault();
+                    incValue('_params');
+                }}/> &nbsp;Add parameter
+
 
                 <br />
                 <hr />

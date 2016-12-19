@@ -102,7 +102,7 @@ class ClientApplications extends PureComponent {
                                 </ListItemContent>
                             </ListItem> :
                             <ListItem twoLine key={`${name}-${i}`}>
-                                <ListItemContent icon={'toc'} subtitle={description}>
+                                <ListItemContent icon={'extension'} subtitle={description}>
                                     <Link to={`/strategies/view/${name}`}>
                                         {name}
                                     </Link>

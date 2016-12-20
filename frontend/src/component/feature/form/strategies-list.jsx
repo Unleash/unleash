@@ -22,16 +22,16 @@ class StrategiesList extends React.Component {
             return <i style={{ color: 'red' }}>No strategies added</i>;
         }
 
-        const blocks = configuredStrategies.map((strat, i) => (
+        const blocks = configuredStrategies.map((strategy, i) => (
             <ConfigureStrategy
-                key={`${strat.name}-${i}`}
-                strategy={strat}
+                key={`${strategy.name}-${i}`}
+                strategy={strategy}
                 removeStrategy={this.props.removeStrategy.bind(null, i)}
                 updateStrategy={this.props.updateStrategy.bind(null, i)}
-                strategyDefinition={strategies.find(s => s.name === strat.name)} />
+                strategyDefinition={strategies.find(s => s.name === strategy.name)} />
         ));
         return (
-            <div>
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {blocks}
             </div>
         );

@@ -1,5 +1,5 @@
 import { List, Map as $Map } from 'immutable';
-import { RECEIVE_STRATEGIES, REMOVE_STRATEGY, ADD_STRATEGY } from './strategy-actions';
+import { RECEIVE_STRATEGIES, REMOVE_STRATEGY, ADD_STRATEGY, UPDATE_STRATEGY } from './actions';
 
 function getInitState () {
     return new $Map({ list: new List() });
@@ -13,6 +13,16 @@ function removeStrategy (state, action) {
     return state;
 }
 
+function updateStrategy (state, action) {
+    return state.update('list', (list) => list.map(strategy => {
+        if (strategy.name === action.strategy.name) {
+            return action.strategy;
+        } else {
+            return strategy;
+        }
+    }));
+}
+
 const strategies = (state = getInitState(), action) => {
     switch (action.type) {
         case RECEIVE_STRATEGIES:
@@ -21,6 +31,8 @@ const strategies = (state = getInitState(), action) => {
             return removeStrategy(state, action);
         case ADD_STRATEGY:
             return state.update('list', (list) => list.push(action.strategy));
+        case UPDATE_STRATEGY:
+            return updateStrategy(state, action);
         default:
             return state;
     }

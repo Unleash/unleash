@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { Textfield, Button, Switch } from 'react-mdl';
+import { Textfield, Switch } from 'react-mdl';
 import StrategiesSection from './strategies-section-container';
+
+import { FormButtons, HeaderTitle } from '../../common';
 
 const trim = (value) => {
     if (value && value.trim) {
@@ -30,6 +32,7 @@ class AddFeatureToggleComponent extends Component {
             onSubmit,
             onCancel,
             editmode = false,
+            title,
         } = this.props;
 
         const {
@@ -42,8 +45,10 @@ class AddFeatureToggleComponent extends Component {
 
         return (
             <form onSubmit={onSubmit(input)}>
+                {title && <HeaderTitle title={title} />}
                 <section>
                     <Textfield
+                        floatingLabel
                         label="Name"
                         name="name"
                         disabled={editmode}
@@ -54,7 +59,9 @@ class AddFeatureToggleComponent extends Component {
                         onChange={(v) => setValue('name', trim(v.target.value))} />
                     <br />
                     <Textfield
-                        rows={2}
+                        floatingLabel
+                        style={{ width: '100%' }}
+                        rows={5}
                         label="Description"
                         required
                         value={description}
@@ -64,11 +71,10 @@ class AddFeatureToggleComponent extends Component {
 
                     <Switch
                         checked={enabled}
-                        onChange={(v) => {
-                                                // todo is wrong way to get value?
-                            setValue('enabled', (console.log(v.target) && v.target.value === 'on'));
+                        onChange={() => {
+                            setValue('enabled', !enabled);
                         }}>Enabled</Switch>
-                    <br />
+                    <hr />
                 </section>
 
                 <StrategiesSection
@@ -78,9 +84,10 @@ class AddFeatureToggleComponent extends Component {
                     removeStrategy={removeStrategy} />
 
                 <br />
-                <Button type="submit" raised primary>{editmode ? 'Update' : 'Create'}</Button>
-                &nbsp;
-                <Button type="cancel" raised onClick={onCancel}>Cancel</Button>
+                <FormButtons
+                    submitText={editmode ? 'Update' : 'Create'}
+                    onCancel={onCancel}
+                />
             </form>
         );
     }

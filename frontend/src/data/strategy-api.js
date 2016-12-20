@@ -17,6 +17,15 @@ function create (strategy) {
     }).then(throwIfNotSuccess);
 }
 
+function update (strategy) {
+    return fetch(`${URI}/${strategy.name}`, {
+        method: 'put',
+        headers,
+        body: JSON.stringify(strategy),
+        credentials: 'include',
+    }).then(throwIfNotSuccess);
+}
+
 function remove (strategy) {
     return fetch(`${URI}/${strategy.name}`, {
         method: 'DELETE',
@@ -28,5 +37,6 @@ function remove (strategy) {
 module.exports = {
     fetchAll,
     create,
+    update,
     remove,
 };

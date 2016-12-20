@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import ApplicationEdit from './application-edit-component';
-import { fetchApplication } from '../../store/application/actions';
+import { fetchApplication, storeApplicationMetaData } from '../../store/application/actions';
 
 const mapStateToProps = (state, props) => {
     let application = state.applications.getIn(['apps', props.appName]);
@@ -12,6 +12,9 @@ const mapStateToProps = (state, props) => {
     };
 };
 
-const Constainer = connect(mapStateToProps, { fetchApplication })(ApplicationEdit);
+const Constainer = connect(mapStateToProps, {
+    fetchApplication,
+    storeApplicationMetaData,
+})(ApplicationEdit);
 
 export default Constainer;

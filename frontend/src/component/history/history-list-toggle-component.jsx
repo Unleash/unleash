@@ -1,16 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import ListComponent from './history-list-container';
-import { fetchHistoryForToggle } from '../../data/history-api';
+import { Link } from 'react-router';
 
 class HistoryListToggle extends Component {
-
-    constructor (props) {
-        super(props);
-        this.state = {
-            fetching: true,
-            history: undefined,
-        };
-    }
 
     static propTypes () {
         return {
@@ -19,21 +11,24 @@ class HistoryListToggle extends Component {
     }
 
     componentDidMount () {
-        fetchHistoryForToggle(this.props.toggleName)
-            .then((res) => this.setState({ history: res, fetching: false }));
+        this.props.fetchHistoryForToggle(this.props.toggleName);
     }
 
     render () {
-        if (this.state.fetching) {
+        if (!this.props.history || this.props.history.length === 0) {
             return <span>fetching..</span>;
         }
-
+        const { history, toggleName } = this.props;
         return (
-            <div>
-                <h5>Showing history for toggle: <strong>{this.props.toggleName}</strong></h5>
-                <ListComponent history={this.state.history} />
-            </div>
+                <ListComponent
+                    history={history}
+                    title={
+                        <span>Showing history for toggle: <Link to={`/features/edit/${toggleName}`}>
+                            <strong>{toggleName}</strong>
+                            </Link>
+                        </span>}/>
         );
     }
 }
+
 export default HistoryListToggle;

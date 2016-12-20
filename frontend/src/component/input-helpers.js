@@ -57,8 +57,8 @@ export function createActions ({ id, prepare = (v) => v }) {
             dispatch(createPop({ id: getId(id, ownProps), key, index }));
         },
 
-        updateInList (key, index, newValue) {
-            dispatch(createUp({ id: getId(id, ownProps), key, index, newValue }));
+        updateInList (key, index, newValue, merge = false) {
+            dispatch(createUp({ id: getId(id, ownProps), key, index, newValue, merge }));
         },
 
         incValue (key) {

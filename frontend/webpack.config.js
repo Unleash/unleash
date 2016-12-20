@@ -38,15 +38,19 @@ module.exports = {
     module: {
         loaders: [
             {
-                test: /\.jsx?$/,
+                test: /\.(jsx|js)$/,
                 exclude: /node_modules/,
                 loaders: ['babel'],
                 include: path.join(__dirname, 'src'),
             },
             {
-                test: /(\.scss|\.css)$/,
+                test: /(\.scss)$/,
                 loader: ExtractTextPlugin.extract('style',
                 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass'),
+            },
+            {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader',
             },
         ],
     },

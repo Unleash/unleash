@@ -1,5 +1,4 @@
 import React, { PropTypes, PureComponent } from 'react';
-import { Icon } from 'react-mdl';
 
 import style from './history.scss';
 
@@ -10,35 +9,25 @@ const DIFF_PREFIXES = {
     N: '+',
 };
 
-const SPADEN_CLASS = {
+const KLASSES = {
     A: style.blue, // array edited
     E: style.blue, // edited
     D: style.negative, // deleted
     N: style.positive, // added
 };
 
-function getIcon (type) {
-    switch (type) {
-        case 'feature-updated': return 'autorenew';
-        case 'feature-created': return 'add';
-        case 'feature-deleted': return 'remove';
-        case 'feature-archived': return 'archived';
-        default: return 'star';
-    }
-}
-
 function buildItemDiff (diff, key) {
     let change;
     if (diff.lhs !== undefined) {
         change = (
             <div>
-                <div className={SPADEN_CLASS.D}>- {key}: {JSON.stringify(diff.lhs)}</div>
+                <div className={KLASSES.D}>- {key}: {JSON.stringify(diff.lhs)}</div>
             </div>
         );
     } else if (diff.rhs !== undefined) {
         change = (
             <div>
-                <div className={SPADEN_CLASS.N}>+ {key}: {JSON.stringify(diff.rhs)}</div>
+                <div className={KLASSES.N}>+ {key}: {JSON.stringify(diff.rhs)}</div>
             </div>
         );
     }
@@ -55,12 +44,12 @@ function buildDiff (diff, idx) {
     } else if (diff.lhs !== undefined && diff.rhs !== undefined) {
         change = (
             <div>
-                <div className={SPADEN_CLASS.D}>- {key}: {JSON.stringify(diff.lhs)}</div>
-                <div className={SPADEN_CLASS.N}>+ {key}: {JSON.stringify(diff.rhs)}</div>
+                <div className={KLASSES.D}>- {key}: {JSON.stringify(diff.lhs)}</div>
+                <div className={KLASSES.N}>+ {key}: {JSON.stringify(diff.rhs)}</div>
             </div>
         );
     } else {
-        const spadenClass = SPADEN_CLASS[diff.kind];
+        const spadenClass = KLASSES[diff.kind];
         const prefix      = DIFF_PREFIXES[diff.kind];
 
         change = (<div className={spadenClass}>{prefix} {key}: {JSON.stringify(diff.rhs || diff.item)}</div>);
@@ -77,50 +66,20 @@ class HistoryItem extends PureComponent {
         };
     }
 
-    renderEventDiff (logEntry) {
+    render () {
+        const entry = this.props.entry;
         let changes;
 
-        if (logEntry.diffs) {
-            changes = logEntry.diffs.map(buildDiff);
+        if (entry.diffs) {
+            changes = entry.diffs.map(buildDiff);
         } else {
             // Just show the data if there is no diff yet.
-            changes = <div className={SPADEN_CLASS.N}>{JSON.stringify(logEntry.data, null, 2)}</div>;
+            changes = <div className={KLASSES.N}>{JSON.stringify(entry.data, null, 2)}</div>;
         }
 
-        return <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>;
-    }
-
-    render () {
-        const {
-            createdBy,
-            id,
-            type,
-        } = this.props.entry;
-
-        const createdAt = (new Date(this.props.entry.createdAt)).toLocaleString('nb-NO');
-        const icon = getIcon(type);
-
-        const data = this.renderEventDiff(this.props.entry);
-
-        return (
-            <div className={style['history-item']}>
-                <dl>
-                    <dt>Id:</dt>
-                    <dd>{id}</dd>
-                    <dt>Type:</dt>
-                    <dd>
-                        <Icon name={icon} title={type} style={{ fontSize: '1.6rem' }} />
-                        <span> {type}</span>
-                    </dd>
-                    <dt>Timestamp:</dt>
-                    <dd>{createdAt}</dd>
-                    <dt>Username:</dt>
-                    <dd>{createdBy}</dd>
-                    <dt>Diff</dt>
-                    <dd>{data}</dd>
-                </dl>
-             </div>
-        );
+        return (<pre style={{ maxWidth: '500px', overflowX: 'auto', overflowY: 'hidden', width: 'auto' }}>
+            <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>
+        </pre>);
     }
 }
 

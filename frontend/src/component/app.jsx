@@ -1,52 +1,114 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Layout, Drawer, Header, Navigation, Content,
     Footer, FooterSection, FooterDropDownSection, FooterLinkList,
-    Grid, Cell,
+    Grid, Cell, Icon,
 } from 'react-mdl';
+import { Link } from 'react-router';
 import style from './styles.scss';
 import ErrorContainer from './error/error-container';
 
 import UserContainer from './user/user-container';
 import ShowUserContainer from './user/show-user-container';
 
-export default class App extends Component {
-    constructor (props) {
-        super(props);
-        this.state = { drawerActive: false };
+const base = {
+    name: 'Unleash',
+    link: '/',
+};
 
-        this.toggleDrawerActive = () => {
-            this.setState({ drawerActive: !this.state.drawerActive });
+function replace (input, params) {
+    if (!params) {
+        return input;
+    }
+    Object.keys(params).forEach(key => {
+        input = input.replace(`:${key}`, params[key]);
+    });
+    return input;
+}
+
+export default class App extends Component {
+    static propTypes () {
+        return {
+            location: PropTypes.object.isRequired,
+            params: PropTypes.object.isRequired,
+            routes: PropTypes.array.isRequired,
         };
     }
+
     static contextTypes = {
         router: React.PropTypes.object,
     }
 
-    componentDidMount () {
-        document.title = `${this.getCurrentSection()} - Unleash Admin`;
+    componentWillReceiveProps (nextProps) {
+        if (this.props.location.pathname !== nextProps.location.pathname) {
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                window.requestAnimationFrame(() => {
+                    document.querySelector('.mdl-layout__content').scrollTop = 0;
+                });
+
+                const layout = document.querySelector('.mdl-js-layout');
+                const drawer = document.querySelector('.mdl-layout__drawer');
+                // hack, might get a built in alternative later
+                if (drawer.classList.contains('is-visible')) {
+                    layout.MaterialLayout.toggleDrawer();
+                }
+            }, 10);
+        }
     }
 
-    getCurrentSection () {
-        const { routes } = this.props;
-        const lastRoute = routes[routes.length - 1];
-        return lastRoute ? lastRoute.pageTitle : '';
+    getSections () {
+        const { routes, params } = this.props;
+        const unique = {};
+        let result = [base].concat(routes.splice(1).map((routeEntry) => ({
+            name: replace(routeEntry.pageTitle, params),
+            link: replace(routeEntry.link || routeEntry.path, params),
+        }))).filter(entry => {
+            if (!unique[entry.link]) {
+                unique[entry.link] = true;
+                return true;
+            }
+            return false;
+        });
+
+        // mutate document.title:
+        document.title = result
+            .map(e => e.name)
+            .reverse()
+            .join(' - ');
+
+        if (result.length > 2) {
+            result = result.splice(1);
+        }
+
+        return result;
     }
 
-    onOverlayClick = () => this.setState({ drawerActive: false });
+    getTitleWithLinks () {
+        const result = this.getSections();
+        return (
+            <span>
+                {result.map((entry, index) => (
+                    <span key={entry.link + index}><Link style={{ color: '#f1f1f1', textDecoration: 'none' }} to={entry.link}>
+                        {entry.name}
+                    </Link> {(index + 1) < result.length ? ' / ' : null}</span>
+                ))}
+            </span>
+        );
+    }
 
     render () {
-        const createListItem = (path, caption) =>
+        const createListItem = (path, caption, icon) =>
             <a
                 href={this.context.router.createHref(path)}
                 className={this.context.router.isActive(path) ? style.active : ''}>
-                {caption}
+                {icon && <Icon name={icon} />} {caption}
             </a>;
 
         return (
             <div style={{}}>
                 <UserContainer />
                 <Layout fixedHeader>
-                    <Header title={<span><span style={{ color: '#ddd' }}>Unleash Admin / </span><strong>{this.getCurrentSection()}</strong></span>}>
+                    <Header title={this.getTitleWithLinks()}>
                         <Navigation>
                             <a href="https://github.com/Unleash" target="_blank">Github</a>
                             <ShowUserContainer />
@@ -54,19 +116,15 @@ export default class App extends Component {
                     </Header>
                     <Drawer title="Unleash Admin">
                         <Navigation>
-                            {createListItem('/features', 'Feature toggles')}
-                            {createListItem('/strategies', 'Strategies')}
-                            {createListItem('/history', 'Event history')}
-                            {createListItem('/archive', 'Archived toggles')}
-                            <hr />
-                            {createListItem('/applications', 'Applications')}
-                            {createListItem('/metrics', 'Client metrics')}
-                            {createListItem('/client-strategies', 'Client strategies')}
-                            {createListItem('/client-instances', 'Client instances')}
+                            {createListItem('/features', 'Feature toggles', 'list')}
+                            {createListItem('/strategies', 'Strategies', 'extension')}
+                            {createListItem('/history', 'Event history', 'history')}
+                            {createListItem('/archive', 'Archived toggles', 'archive')}
+                            {createListItem('/applications', 'Applications', 'apps')}
                         </Navigation>
                     </Drawer>
                     <Content>
-                        <Grid>
+                        <Grid shadow={1} style={{ maxWidth: '1200px', margin: '0 auto' }}>
                             <Cell col={12}>
                                 {this.props.children}
                                 <ErrorContainer />
@@ -85,18 +143,6 @@ export default class App extends Component {
                                 <FooterDropDownSection title="Metrics">
                                     <FooterLinkList>
                                         {createListItem('/applications', 'Applications')}
-                                        {createListItem('/metrics', 'Client metrics')}
-                                        {createListItem('/client-strategies', 'Client strategies')}
-                                        {createListItem('/client-instances', 'Client instances')}
-                                    </FooterLinkList>
-                                </FooterDropDownSection>
-                                <FooterDropDownSection title="FAQ">
-                                    <FooterLinkList>
-                                        <a href="#">Help</a>
-                                        <a href="#">Privacy & Terms</a>
-                                        <a href="#">Questions</a>
-                                        <a href="#">Answers</a>
-                                        <a href="#">Contact Us</a>
                                     </FooterLinkList>
                                 </FooterDropDownSection>
                                 <FooterDropDownSection title="Clients">
@@ -117,30 +163,6 @@ export default class App extends Component {
                         </Footer>
                     </Content>
                 </Layout>
-            </div>
-        );
-
-
-
-        return (
-            <div className={style.container}>
-                <AppBar title="Unleash Admin" leftIcon="menu" onLeftIconClick={this.toggleDrawerActive} className={style.appBar}>
-                    
-                </AppBar>
-                <div className={style.container} style={{ top: '6.4rem' }}>
-                    <Layout>
-                        <NavDrawer active={this.state.drawerActive} permanentAt="sm" onOverlayClick={this.onOverlayClick} >
-                            <Navigation />
-                        </NavDrawer>
-                        <Panel scrollY>
-                            <div style={{ padding: '1.8rem' }}>
-                                
-                                {this.props.children}
-                            </div>
-                        </Panel>
-                        
-                    </Layout>
-                </div>
             </div>
         );
     }

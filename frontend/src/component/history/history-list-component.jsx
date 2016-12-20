@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import HistoryItemDiff from './history-item-diff';
 import HistoryItemJson from './history-item-json';
-import { Switch } from 'react-mdl';
+import { Table, TableHeader } from 'react-mdl';
+import { HeaderTitle, SwitchWithLabel } from '../common';
 
 import style from './history.scss';
 
@@ -23,13 +24,28 @@ class HistoryList extends Component {
         if (showData) {
             entries =  history.map((entry) => <HistoryItemJson  key={`log${entry.id}`} entry={entry} />);
         } else {
-            entries =  history.map((entry) => <HistoryItemDiff  key={`log${entry.id}`} entry={entry} />);
+            entries = (<Table
+                    sortable
+                    rows={
+                        history.map((entry) => Object.assign({
+                            diff: (<HistoryItemDiff  entry={entry} />),
+                        }, entry))
+                    }
+                    style={{ width: '100%' }}
+                >
+                <TableHeader name="type">Type</TableHeader>
+                <TableHeader name="createdBy">User</TableHeader>
+                <TableHeader name="diff">Diff</TableHeader>
+                <TableHeader numeric name="createdAt" cellFormatter={(v) => (new Date(v)).toLocaleString('nb-NO')}>Time</TableHeader>
+            </Table>);
         }
 
         return (
             <div className={style.history}>
-                <Switch checked={showData} onChange={this.toggleShowDiff.bind(this)}>Show full events</Switch>
-               {entries}
+                <HeaderTitle title={this.props.title} actions={
+                    <SwitchWithLabel checked={showData} onChange={this.toggleShowDiff.bind(this)}>Show full events</SwitchWithLabel>
+                }/>
+                {entries}
             </div>
         );
     }

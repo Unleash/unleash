@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { ProgressBar } from 'react-mdl';
+import { AppsLinkList, HeaderTitle } from '../common';
 
 class ClientStrategies extends Component {
 
@@ -13,15 +14,12 @@ class ClientStrategies extends Component {
         } = this.props;
 
         if (!applications) {
-            return <div>loading...</div>;
+            return <ProgressBar indeterminate />;
         }
         return (
             <div>
-                {applications.map(item => (
-                    <Link key={item.appName} to={`/applications/${item.appName}`}>
-                        Link: {item.appName}
-                    </Link>
-                ))}
+                <HeaderTitle title="Applications" />
+                <AppsLinkList apps={applications} />
             </div>
         );
     }

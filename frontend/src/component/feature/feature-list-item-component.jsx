@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { Chip, Switch, Icon, IconButton } from 'react-mdl';
-import percentLib from 'percent';
 import Progress from './progress';
+import { shorten, calc } from '../common';
 
 import style from './feature.scss';
 
@@ -20,8 +20,8 @@ const Feature = ({
     const isStale = showLastHour ? metricsLastHour.isFallback : metricsLastMinute.isFallback;
 
     const percent = 1 * (showLastHour ?
-        percentLib.calc(metricsLastHour.yes, metricsLastHour.yes + metricsLastHour.no, 0) :
-        percentLib.calc(metricsLastMinute.yes, metricsLastMinute.yes + metricsLastMinute.no, 0)
+        calc(metricsLastHour.yes, metricsLastHour.yes + metricsLastHour.no, 0) :
+        calc(metricsLastMinute.yes, metricsLastMinute.yes + metricsLastMinute.no, 0)
     );
     return (
         <li key={name} className="mdl-list__item">
@@ -29,19 +29,21 @@ const Feature = ({
                 <div style={{ width: '40px', textAlign: 'center' }}>
                     {
                         isStale ?
-                        <Icon style={{ width: '25px', marginTop: '4px', fontSize: '25px', color: '#ccc' }} name="report problem" title="No metrics avaiable" /> :
-                        <div>
-                            <Progress strokeWidth={15} percentage={percent} width="50" />
-                        </div>
+                            <Icon
+                                style={{ width: '25px', marginTop: '4px', fontSize: '25px', color: '#ccc' }}
+                                name="report problem" title="No metrics avaiable" /> :
+                            <div>
+                                <Progress strokeWidth={15} percentage={percent} width="50" />
+                            </div>
                     }
                 </div>
 
                 &nbsp;
-            <span style={{ display: 'inline-block', width: '45px' }} title={`Toggle ${name}`}>
+                <span style={{ display: 'inline-block', width: '45px' }} title={`Toggle ${name}`}>
                     <Switch title="test" key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />
                 </span>
-                <Link to={`/features/edit/${name}`} className={style.link}>
-                    {name} <small>{(description && description.substring(0, 100)) || ''}</small>
+                <Link to={`/features/view/${name}`} className={style.link}>
+                    {name} <small>{shorten(description, 30) || ''}</small>
                 </Link>
             </span>
 
@@ -52,7 +54,7 @@ const Feature = ({
                 <Link to={`/features/edit/${name}`} title={`Edit ${name}`} className={style.iconListItem}>
                     <IconButton name="edit" />
                 </Link>
-                <Link to={`/history/${name}`} title={`History htmlFor ${name}`} className={style.iconListItem}>
+                <Link to={`features/history/${name}`} title={`History htmlFor ${name}`} className={style.iconListItem}>
                     <IconButton name="history" />
                 </Link>
                 <IconButton name="delete" onClick={() => onFeatureRemove(name)} className={style.iconListItem} />

@@ -1,11 +1,26 @@
 import { connect } from 'react-redux';
-
+import { hashHistory } from 'react-router';
 import { createMapper, createActions } from '../input-helpers';
-import { createStrategy } from '../../store/strategy/actions';
+import { updateStrategy } from '../../store/strategy/actions';
 
 import AddStrategy from './add-strategy';
 
-const ID = 'add-strategy';
+const ID = 'edit-strategy';
+
+function getId (props) {
+    return [ID, props.strategy.name];
+}
+
+// TODO: need to scope to the active strategy
+// best is to emulate the "input-storage"?
+const mapStateToProps = createMapper({
+    id: getId,
+    getDefault: (state, ownProps) => ownProps.strategy,
+    prepare: (props) => {
+        props.editmode = true;
+        return props;
+    },
+});
 
 const prepare = (methods, dispatch) => {
     methods.onSubmit = (input) => (
@@ -26,14 +41,13 @@ const prepare = (methods, dispatch) => {
                     required,
                 }));
 
-            createStrategy({
+            updateStrategy({
                 name: input.name,
                 description: input.description,
                 parameters,
             })(dispatch)
                 .then(() => methods.clear())
-                // somewhat quickfix / hacky to go back..
-                .then(() => window.history.back());
+                .then(() => hashHistory.push(`/strategies/view/${input.name}`));
         }
     );
 
@@ -49,17 +63,8 @@ const prepare = (methods, dispatch) => {
 };
 
 const actions = createActions({
-    id: ID,
+    id: getId,
     prepare,
 });
 
-export default connect(createMapper({
-    id: ID,
-    getDefault () {
-        let name;
-        try {
-            [, name] = document.location.hash.match(/name=([a-z0-9-_]+)/i);
-        } catch (e) {}
-        return { name };
-    },
-}), actions)(AddStrategy);
+export default connect(mapStateToProps, actions)(AddStrategy);

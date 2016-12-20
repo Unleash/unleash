@@ -5,14 +5,23 @@ import { createMapper, createActions } from '../input-helpers';
 import FormComponent from './form';
 
 const ID = 'add-feature-toggle';
-const mapStateToProps = createMapper({ id: ID });
+const mapStateToProps = createMapper({
+    id: ID,
+    getDefault () {
+        let name;
+        try {
+            [, name] = document.location.hash.match(/name=([a-z0-9-_]+)/i);
+        } catch (e) {}
+        return { name };
+    },
+});
 const prepare = (methods, dispatch) => {
     methods.onSubmit = (input) => (
         (e) => {
             e.preventDefault();
             createFeatureToggles(input)(dispatch)
                 .then(() => methods.clear())
-                .then(() => hashHistory.push('/features'));
+                .then(() => hashHistory.push(`/features/edit/${input.name}`));
         }
     );
 

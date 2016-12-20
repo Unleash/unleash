@@ -6,6 +6,7 @@ class EditUserComponent extends React.Component {
         return {
             user: PropTypes.object.isRequired,
             updateUserName: PropTypes.func.isRequired,
+            save: PropTypes.func.isRequired,
         };
     }
 

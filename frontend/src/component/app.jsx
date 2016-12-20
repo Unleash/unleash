@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Layout, Drawer, Header, Navigation, Content,
     Footer, FooterSection, FooterDropDownSection, FooterLinkList,
     Grid, Cell, Icon,
@@ -26,6 +26,13 @@ function replace (input, params) {
 }
 
 export default class App extends Component {
+    static propTypes () {
+        return {
+            location: PropTypes.object.isRequired,
+            params: PropTypes.object.isRequired,
+            routes: PropTypes.array.isRequired,
+        };
+    }
 
     static contextTypes = {
         router: React.PropTypes.object,

@@ -13,6 +13,9 @@ const TABS = {
 export default class StrategyDetails extends Component {
     static propTypes () {
         return {
+            strategyName: PropTypes.string.isRequired,
+            toggles: PropTypes.array,
+            applications: PropTypes.array,
             activeTab: PropTypes.string.isRequired,
             strategy: PropTypes.object.isRequired,
             fetchStrategies: PropTypes.func.isRequired,

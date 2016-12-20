@@ -1,8 +1,15 @@
-import React, { PureComponent } from 'react';
+import React, { PropTypes, PureComponent } from 'react';
 import { Grid, Cell, List, ListItem, ListItemContent } from 'react-mdl';
 import { AppsLinkList, TogglesLinkList } from '../common';
 
 class ShowStrategyComponent extends PureComponent {
+    static propTypes () {
+        return {
+            toggles: PropTypes.array,
+            applications: PropTypes.array,
+            strategy: PropTypes.object.isRequired,
+        };
+    }
 
     renderParameters (params) {
         if (params) {

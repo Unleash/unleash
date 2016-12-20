@@ -1,4 +1,7 @@
+import 'react-mdl/extra/material.css';
+import 'react-mdl/extra/material.js';
 import 'whatwg-fetch';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRedirect, hashHistory } from 'react-router';

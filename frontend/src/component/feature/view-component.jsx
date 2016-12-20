@@ -66,7 +66,10 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 return <ProgressBar indeterminate />;
             }
             return (
-                <span>Could not find the toggle <Link to={{ pathname: '/features/create', query: { name: featureToggleName } }}>{featureToggleName}</Link></span>
+                <span>
+                    Could not find the toggle <Link to={{ pathname: '/features/create', query: { name: featureToggleName } }}>
+                    {featureToggleName}</Link>
+                </span>
             );
         }
 

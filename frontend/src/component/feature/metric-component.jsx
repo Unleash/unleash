@@ -39,7 +39,9 @@ export default class MetricComponent extends React.Component {
         const lastMinutePercent = 1 * calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
 
         return (<div>
-            <SwitchWithLabel checked={featureToggle.enabled} onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
+            <SwitchWithLabel
+                checked={featureToggle.enabled}
+                onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
             <hr />
             <Grid style={{ textAlign: 'center' }}>
                 <Cell tablet={4} col={3} phone={12}>

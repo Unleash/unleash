@@ -1,6 +1,7 @@
+import 'dialog-polyfill/dialog-polyfill.css';
+import 'whatwg-fetch';
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
-import 'whatwg-fetch';
 
 import React from 'react';
 import ReactDOM from 'react-dom';

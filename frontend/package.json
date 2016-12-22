@@ -31,6 +31,7 @@
   "main": "./index.js",
   "dependencies": {
     "debug": "^2.2.0",
+    "dialog-polyfill": "^0.4.5",
     "immutability-helper": "^2.0.0",
     "immutable": "^3.8.1",
     "normalize.css": "^5.0.0",

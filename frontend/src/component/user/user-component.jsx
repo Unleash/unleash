@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Textfield, Dialog, DialogTitle, DialogContent, DialogActions, Button } from 'react-mdl';
+import dialogPolyfill from 'dialog-polyfill/dialog-polyfill.js';
 
 class EditUserComponent extends React.Component {
     static propTypes () {
@@ -10,9 +11,18 @@ class EditUserComponent extends React.Component {
         };
     }
 
+    componentDidMount () {
+        this.initPolyfill();
+    }
+
     handleSubmit = (evt) => {
         evt.preventDefault();
         this.props.save();
+    }
+
+    initPolyfill () {
+        const dialogs = document.querySelectorAll('dialog');
+        [].slice.call(dialogs).forEach(dialog => dialogPolyfill.registerDialog(dialog));
     }
 
     render () {

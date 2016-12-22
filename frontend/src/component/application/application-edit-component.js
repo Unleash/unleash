@@ -79,8 +79,7 @@ class ClientApplications extends PureComponent {
                         </ListItem> :
                         <ListItem twoLine key={i}>
                             <ListItemContent icon={<span><Switch disabled checked={!!enabled} /></span>} subtitle={description}>
-
-                                <Link to={`/features/edit/${name}`}>
+                                <Link to={`/features/view/${name}`}>
                                     {name}
                                 </Link>
                             </ListItemContent>

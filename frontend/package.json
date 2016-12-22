@@ -31,7 +31,6 @@
   "main": "./index.js",
   "dependencies": {
     "debug": "^2.2.0",
-    "dialog-polyfill": "^0.4.5",
     "immutability-helper": "^2.0.0",
     "immutable": "^3.8.1",
     "normalize.css": "^5.0.0",
@@ -39,6 +38,7 @@
     "react-addons-css-transition-group": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-mdl": "^1.9.0",
+    "react-modal": "^1.6.4",
     "react-redux": "^4.4.5",
     "react-router": "^3.0.0",
     "redux": "^3.6.0",

@@ -1,4 +1,3 @@
-import 'dialog-polyfill/dialog-polyfill.css';
 import 'whatwg-fetch';
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';

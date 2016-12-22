@@ -112,7 +112,7 @@ class ClientApplications extends PureComponent {
                     </List>
                 </Cell>
                 <Cell col={6} tablet={12}>
-                    <h6>{instances.length} Instances connected</h6>
+                    <h6>{instances.length} Instances registered</h6>
                     <hr />
                     <List>
                     {instances.map(({ instanceId, clientIp, lastSeen }, i) => (

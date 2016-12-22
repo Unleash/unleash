@@ -43,20 +43,14 @@ const Feature = ({
                     <Switch title="test" key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />
                 </span>
                 <Link to={`/features/view/${name}`} className={style.link}>
-                    {name} <small>{shorten(description, 30) || ''}</small>
+                    {name} <small className={style.hideLt960}>{shorten(description, 30) || ''}</small>
                 </Link>
             </span>
 
             <span className={style.iconList} >
-                {strategies && strategies.map((s, i) => <Chip className={style.iconListItemChip} key={i}>
+                {strategies && strategies.map((s, i) => <Chip className={[style.iconListItemChip, style.hideLt960].join(' ')} key={i}>
                     <small>{s.name}</small>
                 </Chip>)}
-                <Link to={`/features/edit/${name}`} title={`Edit ${name}`} className={style.iconListItem}>
-                    <IconButton name="edit" />
-                </Link>
-                <Link to={`features/history/${name}`} title={`History htmlFor ${name}`} className={style.iconListItem}>
-                    <IconButton name="history" />
-                </Link>
                 <IconButton name="delete" onClick={() => onFeatureRemove(name)} className={style.iconListItem} />
             </span>
 

@@ -57,6 +57,9 @@ export default class App extends Component {
     }
 
     getSections () {
+        if (window.innerWidth < 768) {
+            return [base];
+        }
         const { routes, params } = this.props;
         const unique = {};
         let result = [base].concat(routes.splice(1).map((routeEntry) => ({
@@ -75,10 +78,6 @@ export default class App extends Component {
             .map(e => e.name)
             .reverse()
             .join(' - ');
-
-        if (result.length > 2) {
-            result = result.splice(1);
-        }
 
         return result;
     }

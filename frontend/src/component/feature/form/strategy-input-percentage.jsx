@@ -9,7 +9,7 @@ const labelStyle = {
 };
 
 export default ({ name, value, onChange }) => (
-    <div>
+    <div style={{ marginBottom: '20px' }}>
         <div style={labelStyle}>{name}: {value}%</div>
         <Slider min={0} max={100} defaultValue={value} value={value} onChange={onChange} label={name} />
     </div>

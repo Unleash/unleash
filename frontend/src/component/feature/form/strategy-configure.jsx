@@ -5,7 +5,7 @@ import {
     IconButton, Icon,
 }  from 'react-mdl';
 import { Link } from 'react-router';
-import StrategyInputPersentage from './strategy-input-persentage';
+import StrategyInputPercentage from './strategy-input-percentage';
 import StrategyInputList from './strategy-input-list';
 
 const style = {
@@ -14,6 +14,12 @@ const style = {
     maxWidth: '100%',
     margin: '5px 20px 15px 0px',
     background: '#f2f9fc',
+};
+
+const helpText = {
+    color: 'rgba(0,0,0, 0.54)',
+    fontSize: '12px',
+    lineHeight: '14px',
 };
 class StrategyConfigure extends React.Component {
 
@@ -58,11 +64,11 @@ class StrategyConfigure extends React.Component {
                     }
                     return (
                         <div key={name}>
-                            <StrategyInputPersentage
+                            <StrategyInputPercentage
                                 name={name}
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={1 * value} />
-                            {description && <p>{description}</p>}
+                            {description && <p style={helpText}>{description}</p>}
                         </div>
                     );
                 } else if (type === 'list') {
@@ -76,7 +82,7 @@ class StrategyConfigure extends React.Component {
                     return (
                         <div key={name}>
                             <StrategyInputList name={name} list={list} setConfig={this.setConfig} />
-                            {description && <p>{description}</p>}
+                            {description && <p style={helpText}>{description}</p>}
                         </div>
                     );
                 } else if (type === 'number') {
@@ -93,7 +99,7 @@ class StrategyConfigure extends React.Component {
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={value}
                             />
-                            {description && <p>{description}</p>}
+                            {description && <p style={helpText}>{description}</p>}
                         </div>
                     );
                 } else {
@@ -101,7 +107,7 @@ class StrategyConfigure extends React.Component {
                         <div key={name}>
                             <Textfield
                                 floatingLabel
-                                rows={2}
+                                rows={1}
                                 style={{ width: '100%' }}
                                 required={required}
                                 name={name}
@@ -109,7 +115,7 @@ class StrategyConfigure extends React.Component {
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={value}
                             />
-                            {description && <p>{description}</p>}
+                            {description && <p style={helpText}>{description}</p>}
                         </div>
                     );
                 }

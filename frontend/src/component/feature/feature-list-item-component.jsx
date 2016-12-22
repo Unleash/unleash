@@ -23,6 +23,13 @@ const Feature = ({
         calc(metricsLastHour.yes, metricsLastHour.yes + metricsLastHour.no, 0) :
         calc(metricsLastMinute.yes, metricsLastMinute.yes + metricsLastMinute.no, 0)
     );
+
+    const removeToggle = () => {
+        if (window.confirm('Are you sure you want to remove this toggle?')) {  // eslint-disable-line no-alert
+            onFeatureRemove(name);
+        }
+    };
+
     return (
         <li key={name} className="mdl-list__item">
             <span className="mdl-list__item-primary-content">
@@ -51,7 +58,7 @@ const Feature = ({
                 {strategies && strategies.map((s, i) => <Chip className={[style.iconListItemChip, style.hideLt960].join(' ')} key={i}>
                     <small>{s.name}</small>
                 </Chip>)}
-                <IconButton name="delete" onClick={() => onFeatureRemove(name)} className={style.iconListItem} />
+                <IconButton name="delete" onClick={removeToggle} className={style.iconListItem} />
             </span>
 
         </li>

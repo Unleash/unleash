@@ -145,7 +145,7 @@ class AddStrategy extends Component {
                 <Textfield
                     floatingLabel
                     style={{ width: '100%' }}
-                    rows={2}
+                    rows={1}
                     label="Description"
                     name="description"
                     onChange={({ target }) => setValue('description', target.value)}

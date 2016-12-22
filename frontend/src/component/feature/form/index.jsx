@@ -61,7 +61,7 @@ class AddFeatureToggleComponent extends Component {
                     <Textfield
                         floatingLabel
                         style={{ width: '100%' }}
-                        rows={5}
+                        rows={1}
                         label="Description"
                         required
                         value={description}

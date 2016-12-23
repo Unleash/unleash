@@ -2,7 +2,7 @@
 
 ## Upgrading from v1.0 to 2.0
 
-### Cavat 1: Not used db-migrate to migrate the unleash database
+### Caveat 1: Not used db-migrate to migrate the unleash database
 In FINN we used, for internal reasons, liquebase to migrate our database.  
 Because unleash from version 2.0 migrates the datbase internally, with db-migrate, 
 you need to make sure that all previous migrations for version 1 exists, so unleash

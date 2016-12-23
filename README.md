@@ -1,6 +1,6 @@
 # Unleash
 
-__Warning: We will soon release the next version of Unleash (2.0.0).__
+__We will soon release Unleash v2.0.0.__
 
 [![Build Status](https://travis-ci.org/Unleash/unleash.svg?branch=master)](https://travis-ci.org/Unleash/unleash)
 [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master)

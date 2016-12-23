@@ -1,12 +1,16 @@
 {
   "name": "unleash-frontend",
   "description": "unleash your features",
-  "version": "1.0.0-alpha.2",
+  "version": "2.0.0-alpha.1",
   "keywords": [
     "unleash",
     "feature toggle",
     "feature",
     "toggle"
+  ],
+  "files": [
+    "index.js",
+    "dist/"
   ],
   "repository": {
     "type": "git",

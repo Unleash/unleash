@@ -1,12 +1,11 @@
 # Unleash
 
-__Warning: We will soon release the first official version of Unleash (1.0.0). If you want to test the previous package see [previous tag](https://github.com/unleash/unleash/tree/v1.0.0-alpha.2)__ 
+__Warning: We will soon release the next version of Unleash (2.0.0).
 
 [![Build Status](https://travis-ci.org/Unleash/unleash.svg?branch=master)](https://travis-ci.org/Unleash/unleash)
 [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master)
 [![Dependency Status](https://david-dm.org/Unleash/unleash.svg)](https://david-dm.org/Unleash/unleash)
 [![devDependency Status](https://david-dm.org/Unleash/unleash/dev-status.svg)](https://david-dm.org/Unleash/unleash#info=devD)
-
 
 Unleash is a feature toggle system, that gives you a great overview over all feature toggles across 
 all your applications and services. It comes with client implementations for Java and Node, and it is 
@@ -17,9 +16,14 @@ and releasing new features. This helps reducing risk, and allow us to easily man
 
 > Feature toggles decouple **deployment** of code  from  **release** of new features
 
-
 This repo contains the unleash-server, which contains the admin UI and a place to ask for the status of features. 
 In order to make use of unleash you will also need a client implementation.
+
+<kbd>
+![image](https://cloud.githubusercontent.com/assets/158948/21451706/53a9481c-c901-11e6-80b0-ae74ac34dfb4.png)
+</kbd>
+
+Online demo [version availble on heroku](https://unleash-new-ui.herokuapp.com/#/features).
 
 ## Activation strategies
 It's fine to have a system for turning stuff on and off. But some times we want more granular controll, 

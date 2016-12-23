@@ -75,7 +75,7 @@
     "prom-client": "^6.1.2",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.3.0",
-    "unleash-frontend": "github:unleash/unleash-frontend",
+    "unleash-frontend": "^2.0.0-alpha.2",
     "yallist": "^2.0.0",
     "yargs": "^6.5.0"
   },
@@ -89,7 +89,6 @@
     "sinon": "^1.17.5",
     "superagent": "^2.3.0",
     "supertest": "^2.0.1",
-    "supervisor": "^0.12.0",
-    "unleash-frontend": "1.0.0-alpha.2"
+    "supervisor": "^0.12.0"
   }
 }

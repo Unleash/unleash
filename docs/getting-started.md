@@ -1,4 +1,4 @@
-# Getting stated (v.1.0.x)
+# Getting stated
 
 ## Requirements
 

@@ -50,7 +50,7 @@ const Feature = ({
                     <Switch title="test" key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />
                 </span>
                 <Link to={`/features/view/${name}`} className={style.link}>
-                    {name} <small className={style.hideLt960}>{shorten(description, 30) || ''}</small>
+                    {shorten(name, 50)} <small className={style.hideLt960}>{shorten(description, 30) || ''}</small>
                 </Link>
             </span>
 

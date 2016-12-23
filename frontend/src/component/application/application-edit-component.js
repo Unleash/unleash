@@ -9,7 +9,7 @@ import {
     Tabs, Tab,
     Switch,
 } from 'react-mdl';
-import { HeaderTitle, ExternalIconLink } from '../common';
+import { HeaderTitle, ExternalIconLink, shorten } from '../common';
 
 class StatefulTextfield extends Component {
     constructor (props) {
@@ -78,9 +78,9 @@ class ClientApplications extends PureComponent {
                             </ListItemContent>
                         </ListItem> :
                         <ListItem twoLine key={i}>
-                            <ListItemContent icon={<span><Switch disabled checked={!!enabled} /></span>} subtitle={description}>
+                            <ListItemContent icon={<span><Switch disabled checked={!!enabled} /></span>} subtitle={shorten(description, 60)}>
                                 <Link to={`/features/view/${name}`}>
-                                    {name}
+                                    {shorten(name, 50)}
                                 </Link>
                             </ListItemContent>
                         </ListItem>)
@@ -101,9 +101,9 @@ class ClientApplications extends PureComponent {
                                 </ListItemContent>
                             </ListItem> :
                             <ListItem twoLine key={`${name}-${i}`}>
-                                <ListItemContent icon={'extension'} subtitle={description}>
+                                <ListItemContent icon={'extension'} subtitle={shorten(description, 60)}>
                                     <Link to={`/strategies/view/${name}`}>
-                                        {name}
+                                        {shorten(name, 50)}
                                     </Link>
                                 </ListItemContent>
                             </ListItem>

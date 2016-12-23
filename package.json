@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "unleash your features",
-  "version": "1.0.0-alpha.2",
+  "version": "2.0.0-alpha.1",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -10,12 +10,11 @@
   ],
   "files": [
     "lib",
+    "docs",
+    "bin",
     "migrations",
-    "public",
-    "app.js",
-    "server-impl.js",
-    "README.md",
-    "LICENSE"
+    "server.js",
+    "migrator.js"
   ],
   "repository": {
     "type": "git",

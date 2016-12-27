@@ -35,6 +35,6 @@ unleash.start({
 
 Available unleash options includes:
 
-- databaseURI 
+- databaseUrl 
 - port
 - logLevel - ('INFO', 'ERROR',)

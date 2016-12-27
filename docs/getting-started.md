@@ -26,7 +26,7 @@ You can also depend on unleash
 const unleash = require('unleash-server');
 
 unleash.start({
-  databaseUri: 'postgres://unleash_user:passord@localhost:5432/unleash'
+  databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash'
   port: 4242
 }).then(unleash => {
     console.log(`Unleash started on port:${unleash.app.get('port')}`);

@@ -1,6 +1,6 @@
 const { throwIfNotSuccess } = require('./helper');
 
-const URI = '/api/client/metrics/feature-toggles';
+const URI = 'api/client/metrics/feature-toggles';
 
 function fetchFeatureMetrics () {
     return fetch(URI)
@@ -8,7 +8,7 @@ function fetchFeatureMetrics () {
         .then(response => response.json());
 }
 
-const seenURI = '/api/client/seen-apps';
+const seenURI = 'api/client/seen-apps';
 
 function fetchSeenApps () {
     return fetch(seenURI)

@@ -1,6 +1,6 @@
 import { throwIfNotSuccess, headers } from './helper';
 
-const URI = '/api/client/applications';
+const URI = 'api/client/applications';
 
 function fetchAll () {
     return fetch(URI, { headers })

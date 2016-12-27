@@ -1,7 +1,7 @@
 import { throwIfNotSuccess, headers } from './helper';
 
-const URI = '/api/features';
-const URI_VALIDATE = '/api/features-validate';
+const URI = 'api/features';
+const URI_VALIDATE = 'api/features-validate';
 
 function validateToggle (featureToggle) {
     return new Promise((resolve, reject) => {

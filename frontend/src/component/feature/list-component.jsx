@@ -39,7 +39,7 @@ export default class FeatureListComponent extends React.PureComponent {
     }
 
     setFilter (v) {
-        this.props.updateSetting('filter', typeof v === 'string' ? v.trim() : '');
+        this.props.updateSetting('filter', typeof v === 'string' ? v : '');
     }
 
     setSort (v) {

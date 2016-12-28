@@ -9,7 +9,7 @@ you need to make sure that all previous migrations for version 1 exists, so unle
 does not try to create tables that already exists. 
 
 #### How to check?
-If you don't a "migrations" table with _7 unique migrations_ you are affected by this. 
+If you don't have a "migrations" table with _7 unique migrations_ you are affected by this. 
 
 #### How to fix?
 Before starting unleash version 2 you have to run the SQL located under `scripts/fix-migrations-version-1.sql`

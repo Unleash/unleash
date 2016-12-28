@@ -13,3 +13,6 @@ If you don't a "migrations" table with _7 unique migrations_ you are affected by
 
 #### How to fix?
 Before starting unleash version 2 you have to run the SQL located under `scripts/fix-migrations-version-1.sql`
+
+### Caveat 2: databaseUrl (not database*Uri*)
+Using unleash as a lib and injecting your own config? Then you should know that we changed the databaseUri config param name to **databaseUrl**. This to align it with the environment variable (DATABASE_URL), avoiding multiple names for same config param. 

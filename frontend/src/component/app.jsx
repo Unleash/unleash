@@ -93,12 +93,19 @@ export default class App extends Component {
     }
 
     render () {
+        const shouldUpdateScroll = (prevRouterProps, { location }) => {
+            if (prevRouterProps && location.pathname !== prevRouterProps.location.pathname) {
+                return location.action === 'POP';
+            } else {
+                return [0, 0];
+            }
+        };
         const createListItem = (path, caption, icon) =>
-            <a
-                href={this.context.router.createHref(path)}
+            <Link
+                to={path}
                 className={this.context.router.isActive(path) ? style.active : ''}>
                 {icon && <Icon name={icon} />} {caption}
-            </a>;
+            </Link>;
 
         return (
             <div style={{}}>
@@ -119,7 +126,7 @@ export default class App extends Component {
                             {createListItem('/applications', 'Applications', 'apps')}
                         </Navigation>
                     </Drawer>
-                    <ScrollContainer scrollKey={window.location.pathname}>
+                    <ScrollContainer scrollKey="container" shouldUpdateScroll={shouldUpdateScroll}>
                     <Content>
                         <Grid shadow={1} style={{ maxWidth: '1200px', margin: '0 auto' }}>
                             <Cell col={12}>

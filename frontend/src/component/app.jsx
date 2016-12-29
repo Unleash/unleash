@@ -119,7 +119,7 @@ export default class App extends Component {
                             {createListItem('/applications', 'Applications', 'apps')}
                         </Navigation>
                     </Drawer>
-                    <ScrollContainer scrollKey="main">
+                    <ScrollContainer scrollKey={window.location.pathname}>
                     <Content>
                         <Grid shadow={1} style={{ maxWidth: '1200px', margin: '0 auto' }}>
                             <Cell col={12}>

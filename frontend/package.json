@@ -28,7 +28,7 @@
     "build:html": "cp public/*.* dist/.",
     "start": "NODE_ENV=development webpack-dev-server --config webpack.config.js --progress --colors --port 3000",
     "lint": "eslint . --ext=js,jsx",
-    "test": "echo 'no test'",
+    "test": "npm run build",
     "test:ci": "npm run test",
     "prepublish": "npm run build"
   },

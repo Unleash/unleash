@@ -85,6 +85,7 @@
     "eslint": "^3.11.1",
     "eslint-config-finn": "^1.0.0-beta.1",
     "nyc": "^9.0.1",
+    "proxyquire": "^1.7.10",
     "sinon": "^1.17.5",
     "superagent": "^2.3.0",
     "supertest": "^2.0.1",

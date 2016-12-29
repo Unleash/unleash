@@ -4,7 +4,8 @@ import 'react-mdl/extra/material.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRedirect, hashHistory } from 'react-router';
+import { applyRouterMiddleware, Router, Route, IndexRedirect, hashHistory } from 'react-router';
+import { useScroll } from 'react-router-scroll';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
@@ -35,7 +36,7 @@ const unleashStore = createStore(
 
 ReactDOM.render(
     <Provider store={unleashStore}>
-        <Router history={hashHistory}>
+        <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
             <Route path="/" component={App}>
                 <IndexRedirect to="/features" />
 

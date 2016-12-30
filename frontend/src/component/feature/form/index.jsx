@@ -29,6 +29,7 @@ class AddFeatureToggleComponent extends Component {
             addStrategy,
             removeStrategy,
             updateStrategy,
+            moveStrategy,
             onSubmit,
             onCancel,
             editmode = false,
@@ -81,6 +82,7 @@ class AddFeatureToggleComponent extends Component {
                     configuredStrategies={configuredStrategies}
                     addStrategy={addStrategy}
                     updateStrategy={updateStrategy}
+                    moveStrategy={moveStrategy}
                     removeStrategy={removeStrategy} />
 
                 <br />

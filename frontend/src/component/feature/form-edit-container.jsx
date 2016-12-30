@@ -45,6 +45,10 @@ const prepare =  (methods, dispatch) => {
         methods.removeFromList('strategies', index);
     };
 
+    methods.moveStrategy = (index, toIndex) => {
+        methods.moveItem('strategies', index, toIndex);
+    };
+
     methods.updateStrategy = (index, n) => {
         methods.updateInList('strategies', index, n);
     };

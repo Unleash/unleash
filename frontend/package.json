@@ -40,6 +40,8 @@
     "normalize.css": "^5.0.0",
     "react": "^15.3.1",
     "react-addons-css-transition-group": "^15.3.1",
+    "react-dnd": "^2.1.4",
+    "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^15.3.1",
     "react-mdl": "^1.9.0",
     "react-modal": "^1.6.4",

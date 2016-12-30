@@ -6,6 +6,7 @@ import {
     createPush,
     createUp,
     createInit,
+    createMove,
 } from '../store/input-actions';
 
 function getId (id, ownProps) {
@@ -55,6 +56,10 @@ export function createActions ({ id, prepare = (v) => v }) {
 
         removeFromList (key, index) {
             dispatch(createPop({ id: getId(id, ownProps), key, index }));
+        },
+
+        moveItem (key, index, toIndex) {
+            dispatch(createMove({ id: getId(id, ownProps), key, index, toIndex }));
         },
 
         updateInList (key, index, newValue, merge = false) {

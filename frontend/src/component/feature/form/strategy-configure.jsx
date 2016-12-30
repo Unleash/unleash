@@ -3,7 +3,8 @@ import {
     Textfield, Button,
     Card, CardTitle, CardText, CardActions, CardMenu,
     IconButton, Icon,
-}  from 'react-mdl';
+} from 'react-mdl';
+import { DragSource, DropTarget } from 'react-dnd';
 import { Link } from 'react-router';
 import StrategyInputPercentage from './strategy-input-percentage';
 import StrategyInputList from './strategy-input-list';
@@ -13,7 +14,6 @@ const style = {
     minWidth: '300px',
     maxWidth: '100%',
     margin: '5px 20px 15px 0px',
-    background: '#f2f9fc',
 };
 
 const helpText = {
@@ -21,6 +21,34 @@ const helpText = {
     fontSize: '12px',
     lineHeight: '14px',
 };
+
+
+const dragSource = {
+    beginDrag (props) {
+        return {
+            index: props.index,
+        };
+    },
+};
+
+const dragTarget = {
+    drop (props, monitor) {
+        const dragIndex = monitor.getItem().index;
+        const toIndex = props.index;
+        if (dragIndex !== toIndex) {
+            props.moveStrategy(dragIndex, toIndex);
+        }
+    },
+};
+
+@DropTarget('strategy', dragTarget, connect => ({ // eslint-disable-line new-cap
+    connectDropTarget: connect.dropTarget(),
+}))
+@DragSource('strategy', dragSource, (connect, monitor) => ({ // eslint-disable-line new-cap
+    connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
+    isDragging: monitor.isDragging(),
+}))
 class StrategyConfigure extends React.Component {
 
     static propTypes () {
@@ -29,12 +57,13 @@ class StrategyConfigure extends React.Component {
             strategyDefinition: PropTypes.object.isRequired,
             updateStrategy: PropTypes.func.isRequired,
             removeStrategy: PropTypes.func.isRequired,
+            moveStrategy: PropTypes.func.isRequired,
+            isDragging: PropTypes.bool.isRequired,
+            connectDragPreview: PropTypes.func.isRequired,
+            connectDragSource: PropTypes.func.isRequired,
+            connectDropTarget: PropTypes.func.isRequired,
         };
     }
-
-    // shouldComponentUpdate (props, nextProps) {
-    //     console.log({ props, nextProps });
-    // }
 
     handleConfigChange = (key, e) => {
         this.setConfig(key, e.target.value);
@@ -98,7 +127,7 @@ class StrategyConfigure extends React.Component {
                                 label={name}
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={value}
-                            />
+                                />
                             {description && <p style={helpText}>{description}</p>}
                         </div>
                     );
@@ -114,7 +143,7 @@ class StrategyConfigure extends React.Component {
                                 label={name}
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={value}
-                            />
+                                />
                             {description && <p style={helpText}>{description}</p>}
                         </div>
                     );
@@ -125,9 +154,46 @@ class StrategyConfigure extends React.Component {
     }
 
     render () {
-        if (!this.props.strategyDefinition) {
+        const { isDragging, connectDragPreview, connectDragSource, connectDropTarget } = this.props;
+
+        let item;
+        if (this.props.strategyDefinition) {
+            const inputFields = this.renderInputFields(this.props.strategyDefinition);
             const { name } = this.props.strategy;
-            return (
+            item = (
+                <Card shadow={0} style={{ background: '#f2f9fc', width: '100%', display: 'block', opacity: isDragging ? '0.1' : '1' }}>
+                    <CardTitle style={{ color: '#fff', height: '65px', background: '#607d8b' }}>
+                        <Icon name="extension" />&nbsp;{name}
+                    </CardTitle>
+                    <CardText>
+                        {this.props.strategyDefinition.description}
+                    </CardText>
+                    {
+                        inputFields && <CardActions border style={{ padding: '20px' }}>
+                            {inputFields}
+                        </CardActions>
+                    }
+
+                    <CardMenu style={{ color: '#fff' }}>
+                        <Link
+                            title="View strategy"
+                            to={`/strategies/view/${name}`}
+                            style={{ color: '#fff', display: 'inline-block', verticalAlign: 'bottom', marginRight: '5px' }}>
+                            <Icon name="link" />
+                        </Link>
+                        <IconButton title="Remove strategy from toggle" name="delete" onClick={this.handleRemove} />
+                        {connectDragSource(
+                            <span style={{
+                                cursor: 'pointer',
+                                display: 'inline-block',
+                                verticalAlign: 'bottom',
+                            }}><Icon name="reorder" /></span>)}
+                    </CardMenu>
+                </Card>
+            );
+        } else {
+            const { name } = this.props.strategy;
+            item = (
                 <Card shadow={0} style={style}>
                     <CardTitle>"{name}" deleted?</CardTitle>
                     <CardText>
@@ -142,35 +208,9 @@ class StrategyConfigure extends React.Component {
             );
         }
 
-        const inputFields = this.renderInputFields(this.props.strategyDefinition);
-
-        const { name } = this.props.strategy;
-
-        return (
-            <Card shadow={0} style={style}>
-                <CardTitle style={{ color: '#fff', height: '65px', background: '#607d8b' }}>
-                    <Icon name="extension" />&nbsp;{ name }
-                </CardTitle>
-                <CardText>
-                    {this.props.strategyDefinition.description}
-                </CardText>
-                {
-                    inputFields && <CardActions border style={{ padding: '20px' }}>
-                        {inputFields}
-                    </CardActions>
-                }
-
-                <CardMenu style={{ color: '#fff' }}>
-                    <Link
-                        title="View strategy"
-                        to={`/strategies/view/${name}`}
-                        style={{ color: '#fff', display: 'inline-block', verticalAlign: 'bottom', marginRight: '5px' }}>
-                        <Icon name="link" />
-                    </Link>
-                    <IconButton title="Remove strategy from toggle" name="delete" onClick={this.handleRemove} />
-                </CardMenu>
-            </Card>
-        );
+        return (connectDropTarget(connectDragPreview(
+            <div style={style}>{item}</div>
+        )));
     }
 }
 

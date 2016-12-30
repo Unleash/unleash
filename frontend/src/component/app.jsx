@@ -9,6 +9,7 @@ import ErrorContainer from './error/error-container';
 
 import UserContainer from './user/user-container';
 import ShowUserContainer from './user/show-user-container';
+import { ScrollContainer } from 'react-router-scroll';
 
 const base = {
     name: 'Unleash',
@@ -42,10 +43,6 @@ export default class App extends Component {
         if (this.props.location.pathname !== nextProps.location.pathname) {
             clearTimeout(this.timer);
             this.timer = setTimeout(() => {
-                window.requestAnimationFrame(() => {
-                    document.querySelector('.mdl-layout__content').scrollTop = 0;
-                });
-
                 const layout = document.querySelector('.mdl-js-layout');
                 const drawer = document.querySelector('.mdl-layout__drawer');
                 // hack, might get a built in alternative later
@@ -96,12 +93,19 @@ export default class App extends Component {
     }
 
     render () {
+        const shouldUpdateScroll = (prevRouterProps, { location }) => {
+            if (prevRouterProps && location.pathname !== prevRouterProps.location.pathname) {
+                return location.action === 'POP';
+            } else {
+                return [0, 0];
+            }
+        };
         const createListItem = (path, caption, icon) =>
-            <a
-                href={this.context.router.createHref(path)}
+            <Link
+                to={path}
                 className={this.context.router.isActive(path) ? style.active : ''}>
                 {icon && <Icon name={icon} />} {caption}
-            </a>;
+            </Link>;
 
         return (
             <div style={{}}>
@@ -122,6 +126,7 @@ export default class App extends Component {
                             {createListItem('/applications', 'Applications', 'apps')}
                         </Navigation>
                     </Drawer>
+                    <ScrollContainer scrollKey="container" shouldUpdateScroll={shouldUpdateScroll}>
                     <Content>
                         <Grid shadow={1} style={{ maxWidth: '1200px', margin: '0 auto' }}>
                             <Cell col={12}>
@@ -161,6 +166,7 @@ export default class App extends Component {
                             </FooterSection>
                         </Footer>
                     </Content>
+                    </ScrollContainer>
                 </Layout>
             </div>
         );

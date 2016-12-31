@@ -32,6 +32,7 @@ const prepare = (methods, dispatch) => {
     };
 
     methods.addStrategy = (v) => {
+        v.id = Math.round(Math.random() * 10000000);
         methods.pushToList('strategies', v);
     };
 
@@ -39,12 +40,15 @@ const prepare = (methods, dispatch) => {
         methods.updateInList('strategies', index, n);
     };
 
+    methods.moveStrategy = (index, toIndex) => {
+        methods.moveItem('strategies', index, toIndex);
+    };
+
     methods.removeStrategy = (index) => {
         methods.removeFromList('strategies', index);
     };
 
-    methods.validateName = (v) => {
-        const featureToggleName = v.target.value;
+    methods.validateName = (featureToggleName) => {
         validateName(featureToggleName)
             .then(()  => methods.setValue('nameError', undefined))
             .catch((err) => methods.setValue('nameError', err.message));

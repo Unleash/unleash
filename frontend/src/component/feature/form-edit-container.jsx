@@ -13,7 +13,12 @@ function getId (props) {
 // best is to emulate the "input-storage"?
 const mapStateToProps = createMapper({
     id: getId,
-    getDefault: (state, ownProps) => ownProps.featureToggle,
+    getDefault: (state, ownProps) => {
+        ownProps.featureToggle.strategies.forEach((strategy, index) => {
+            strategy.id = Math.round(Math.random() * 1000000 * (1 + index));
+        });
+        return ownProps.featureToggle;
+    },
     prepare: (props) => {
         props.editmode = true;
         return props;
@@ -38,11 +43,16 @@ const prepare =  (methods, dispatch) => {
     };
 
     methods.addStrategy = (v) => {
+        v.id = Math.round(Math.random() * 10000000);
         methods.pushToList('strategies', v);
     };
 
     methods.removeStrategy = (index) => {
         methods.removeFromList('strategies', index);
+    };
+
+    methods.moveStrategy = (index, toIndex) => {
+        methods.moveItem('strategies', index, toIndex);
     };
 
     methods.updateStrategy = (index, n) => {

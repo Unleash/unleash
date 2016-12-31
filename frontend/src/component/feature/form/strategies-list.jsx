@@ -1,6 +1,9 @@
 import React, { PropTypes } from 'react';
 import ConfigureStrategy from './strategy-configure';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
+@DragDropContext(HTML5Backend) // eslint-disable-line new-cap
 class StrategiesList extends React.Component {
 
     static propTypes () {
@@ -9,6 +12,7 @@ class StrategiesList extends React.Component {
             configuredStrategies: PropTypes.array.isRequired,
             updateStrategy: PropTypes.func.isRequired,
             removeStrategy: PropTypes.func.isRequired,
+            moveStrategy: PropTypes.func.isRequired,
         };
     }
 
@@ -16,6 +20,9 @@ class StrategiesList extends React.Component {
         const {
             strategies,
             configuredStrategies,
+            moveStrategy,
+            removeStrategy,
+            updateStrategy,
         } = this.props;
 
         if (!configuredStrategies || configuredStrategies.length === 0) {
@@ -24,10 +31,12 @@ class StrategiesList extends React.Component {
 
         const blocks = configuredStrategies.map((strategy, i) => (
             <ConfigureStrategy
-                key={`${strategy.name}-${i}`}
+                index={i}
+                key={strategy.id}
                 strategy={strategy}
-                removeStrategy={this.props.removeStrategy.bind(null, i)}
-                updateStrategy={this.props.updateStrategy.bind(null, i)}
+                moveStrategy={moveStrategy}
+                removeStrategy={removeStrategy.bind(null, i)}
+                updateStrategy={updateStrategy.bind(null, i)}
                 strategyDefinition={strategies.find(s => s.name === strategy.name)} />
         ));
         return (

@@ -1,5 +1,6 @@
 {
   "globalDependencies": {
+    "react-dnd": "registry:dt/react-dnd#2.0.2+20161111212335",
     "react-mdl": "registry:dt/react-mdl#0.0.0+20160830142027"
   }
 }

@@ -69,6 +69,13 @@ function removeFromList (state, { id, key, index }) {
     return state.updateIn(id.concat([key]), (list) => list.remove(index));
 }
 
+function move (state, { id, key, index, toIndex }) {
+    return state.updateIn(id.concat([key]), list => {
+        const olditem = list.get(index);
+        return list.delete(index).insert(toIndex, olditem);
+    });
+}
+
 const inputState = (state = getInitState(), action) => {
     if (!action.id) {
         return state;
@@ -88,6 +95,8 @@ const inputState = (state = getInitState(), action) => {
             return addToList(state, action);
         case actions.LIST_POP:
             return removeFromList(state, action);
+        case actions.MOVE:
+            return move(state, action);
         case actions.LIST_UP:
             return updateInList(state, action);
         case actions.CLEAR:

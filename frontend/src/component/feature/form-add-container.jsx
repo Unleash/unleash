@@ -48,8 +48,7 @@ const prepare = (methods, dispatch) => {
         methods.removeFromList('strategies', index);
     };
 
-    methods.validateName = (v) => {
-        const featureToggleName = v.target.value;
+    methods.validateName = (featureToggleName) => {
         validateName(featureToggleName)
             .then(()  => methods.setValue('nameError', undefined))
             .catch((err) => methods.setValue('nameError', err.message));

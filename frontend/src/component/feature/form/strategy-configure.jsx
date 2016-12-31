@@ -26,18 +26,26 @@ const helpText = {
 const dragSource = {
     beginDrag (props) {
         return {
+            id: props.id,
             index: props.index,
         };
+    },
+    endDrag (props, monitor) {
+        if (!monitor.didDrop()) {
+            return;
+        }
+        const result = monitor.getDropResult();
+        if (typeof result.index === 'number' && props.index !== result.index) {
+            props.moveStrategy(props.index, result.index);
+        }
     },
 };
 
 const dragTarget = {
-    drop (props, monitor) {
-        const dragIndex = monitor.getItem().index;
-        const toIndex = props.index;
-        if (dragIndex !== toIndex) {
-            props.moveStrategy(dragIndex, toIndex);
-        }
+    drop (props) {
+        return {
+            index: props.index,
+        };
     },
 };
 

@@ -32,6 +32,7 @@ const prepare = (methods, dispatch) => {
     };
 
     methods.addStrategy = (v) => {
+        v.id = Math.round(Math.random() * 10000000);
         methods.pushToList('strategies', v);
     };
 

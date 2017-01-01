@@ -1,8 +1,25 @@
 import React, { PropTypes } from 'react';
-import { Grid, Cell, Icon } from 'react-mdl';
+import { Grid, Cell, Icon, Chip, ChipContact } from 'react-mdl';
 import Progress from './progress';
+import { Link } from 'react-router';
 import { AppsLinkList, SwitchWithLabel, calc } from '../common';
+import styles from './metrics.scss';
 
+const StrategyChipItem = ({ strategy }) => (
+    <Chip className={styles.chip}>
+        <ChipContact className="mdl-color--blue-grey mdl-color-text--white">
+            <Icon style={{ marginTop: '3px' }} name="link" />
+        </ChipContact>
+        <Link to={`/strategies/view/${strategy.name}`} className="mdl-color-text--blue-grey">{strategy.name}</Link>
+    </Chip>
+);
+
+// TODO what about "missing" strategies here?
+const StrategiesList = ({ strategies }) => (
+    <div style={{ verticalAlign: 'middle', textAlign: 'center' }}>With {strategies.length > 1 ? 'strategies' : 'strategy'} {
+        strategies.map((strategy, i) => <StrategyChipItem key={i}  strategy={strategy} />)
+    }</div>
+);
 
 export default class MetricComponent extends React.Component {
     static propTypes () {
@@ -47,8 +64,7 @@ export default class MetricComponent extends React.Component {
                 <Cell tablet={4} col={3} phone={12}>
                     {
                         lastMinute.isFallback ?
-                        <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }}
-                        name="report problem" title="No metrics avaiable" /> :
+                        <Icon className={styles.problemIcon} name="report problem" title="No metrics avaiable" /> :
                         <div>
                             <Progress animatePercentageText strokeWidth={10} percentage={lastMinutePercent} width="50" />
                         </div>
@@ -58,8 +74,7 @@ export default class MetricComponent extends React.Component {
                 <Cell col={3} tablet={4} phone={12}>
                     {
                         lastHour.isFallback ?
-                        <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }}
-                        name="report problem" title="No metrics avaiable" /> :
+                        <Icon className={styles.problemIcon} name="report problem" title="No metrics avaiable" /> :
                         <div>
                             <Progress strokeWidth={10} percentage={lastHourPercent} width="50" />
                         </div>
@@ -70,8 +85,7 @@ export default class MetricComponent extends React.Component {
                     {seenApps.length > 0 ?
                         (<div><strong>Seen in applications:</strong></div>) :
                         <div>
-                            <Icon style={{ width: '100px', height: '100px', fontSize: '100px', color: '#ccc' }}
-                            name="report problem" title="Not used in a app in the last hour" />
+                            <Icon className={styles.problemIcon} name="report problem" title="Not used in a app in the last hour" />
                             <div><small><strong>Not used in a app in the last hour.</strong>
                             This might be due to your client implementation is not reporting usage.</small></div>
                         </div>
@@ -79,6 +93,8 @@ export default class MetricComponent extends React.Component {
                     <AppsLinkList apps={seenApps} />
                 </Cell>
             </Grid>
+            <hr />
+            <StrategiesList strategies={featureToggle.strategies}/>
         </div>);
     }
 }

@@ -1,0 +1,58 @@
+.item {
+    flex: 1;
+    min-width: 300px;
+    max-width: 100%;
+    margin: 5px 0px 15px 35px;
+    position: relative;
+    z-index: 1;
+};
+
+.card {
+    width: 100%;
+    display: block;
+    background-color: #f2f9fc;
+}
+
+.item:first-child {
+    margin-left: 0;
+}
+
+.item:not(:first-child):after {
+    content: " OR ";
+    position: absolute;
+    left: -30px;
+    top: 45%;
+    color: #ccc;
+    width: 25px;
+    line-height: 32px;
+    font-size: 14px;
+    text-align: center;
+    height: 100%;
+    z-index: 2;
+}
+
+.cardTitle {
+    color: #fff;
+    height: 65px;
+    background-color: #607d8b !important;
+}
+
+.helpText {
+    color: rgba(0,0,0, 0.54);
+    font-size: 12px;
+    line-height: 14px;
+};
+
+
+.editLink {
+    color: #fff;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-right: 5px;
+}
+
+.reorderIcon {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: bottom;
+}

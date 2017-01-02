@@ -8,20 +8,7 @@ import { DragSource, DropTarget } from 'react-dnd';
 import { Link } from 'react-router';
 import StrategyInputPercentage from './strategy-input-percentage';
 import StrategyInputList from './strategy-input-list';
-
-const style = {
-    flex: '1',
-    minWidth: '300px',
-    maxWidth: '100%',
-    margin: '5px 20px 15px 0px',
-};
-
-const helpText = {
-    color: 'rgba(0,0,0, 0.54)',
-    fontSize: '12px',
-    lineHeight: '14px',
-};
-
+import styles from './strategy.scss';
 
 const dragSource = {
     beginDrag (props) {
@@ -105,7 +92,7 @@ class StrategyConfigure extends React.Component {
                                 name={name}
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={1 * value} />
-                            {description && <p style={helpText}>{description}</p>}
+                            {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );
                 } else if (type === 'list') {
@@ -119,7 +106,7 @@ class StrategyConfigure extends React.Component {
                     return (
                         <div key={name}>
                             <StrategyInputList name={name} list={list} setConfig={this.setConfig} />
-                            {description && <p style={helpText}>{description}</p>}
+                            {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );
                 } else if (type === 'number') {
@@ -136,7 +123,7 @@ class StrategyConfigure extends React.Component {
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={value}
                                 />
-                            {description && <p style={helpText}>{description}</p>}
+                            {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );
                 } else {
@@ -152,7 +139,7 @@ class StrategyConfigure extends React.Component {
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={value}
                                 />
-                            {description && <p style={helpText}>{description}</p>}
+                            {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );
                 }
@@ -169,8 +156,8 @@ class StrategyConfigure extends React.Component {
             const inputFields = this.renderInputFields(this.props.strategyDefinition);
             const { name } = this.props.strategy;
             item = (
-                <Card shadow={0} style={{ background: '#f2f9fc', width: '100%', display: 'block', opacity: isDragging ? '0.1' : '1' }}>
-                    <CardTitle style={{ color: '#fff', height: '65px', background: '#607d8b' }}>
+                <Card shadow={0} className={styles.card} style={{ opacity: isDragging ? '0.1' : '1' }}>
+                    <CardTitle className={styles.cardTitle}>
                         <Icon name="extension" />&nbsp;{name}
                     </CardTitle>
                     <CardText>
@@ -182,27 +169,23 @@ class StrategyConfigure extends React.Component {
                         </CardActions>
                     }
 
-                    <CardMenu style={{ color: '#fff' }}>
+                    <CardMenu className="mdl-color-text--white">
                         <Link
                             title="View strategy"
                             to={`/strategies/view/${name}`}
-                            style={{ color: '#fff', display: 'inline-block', verticalAlign: 'bottom', marginRight: '5px' }}>
+                            className={styles.editLink}>
                             <Icon name="link" />
                         </Link>
                         <IconButton title="Remove strategy from toggle" name="delete" onClick={this.handleRemove} />
                         {connectDragSource(
-                            <span style={{
-                                cursor: 'pointer',
-                                display: 'inline-block',
-                                verticalAlign: 'bottom',
-                            }}><Icon name="reorder" /></span>)}
+                            <span className={styles.reorderIcon}><Icon name="reorder" /></span>)}
                     </CardMenu>
                 </Card>
             );
         } else {
             const { name } = this.props.strategy;
             item = (
-                <Card shadow={0} style={style}>
+                <Card shadow={0} className={styles.card}>
                     <CardTitle>"{name}" deleted?</CardTitle>
                     <CardText>
                         The strategy "{name}" does not exist on this server.
@@ -217,7 +200,7 @@ class StrategyConfigure extends React.Component {
         }
 
         return (connectDropTarget(connectDragPreview(
-            <div style={style}>{item}</div>
+            <div className={styles.item}>{item}</div>
         )));
     }
 }

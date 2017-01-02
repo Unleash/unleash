@@ -31,9 +31,9 @@ const Feature = ({
     };
 
     return (
-        <li key={name} className="mdl-list__item">
+        <li key={name} className="mdl-list__item mdl-list__item--two-line">
             <span className="mdl-list__item-secondary-action">
-                <div style={{ width: '40px', textAlign: 'center' }}>
+                <div style={{ width: '40px', textAlign: 'center', marginRight: '5px' }}>
                     {
                         isStale ?
                             <Icon
@@ -50,9 +50,10 @@ const Feature = ({
             </span>
             <span className="mdl-list__item-primary-content">
                 <Link to={`/features/view/${name}`} className={style.link} style={{ display: 'inline-block', width: '100%' }}>
-                    {shorten(name, 50)} <small className={style.hideLt960}>{shorten(description, 30) || ''}</small>
+                    {shorten(name, 75)} <small className={[style.hideLt960, 'mdl-list__item-sub-title'].join(' ')}>{shorten(description, 75) || ''}</small>
                 </Link>
             </span>
+
             <span className="mdl-list__item-secondary-action">
                 {strategies && strategies.map((s, i) => <span className={[style.iconListItemChip, style.hideLt960].join(' ')} key={i}>
                     {s.name}

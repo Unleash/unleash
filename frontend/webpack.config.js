@@ -71,7 +71,8 @@ module.exports = {
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://localhost:4242',
+                target: process.env.UNLEASH_API || 'http://localhost:4242',
+                changeOrigin: true,
                 secure: false,
             },
         },

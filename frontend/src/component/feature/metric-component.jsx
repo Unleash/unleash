@@ -68,7 +68,7 @@ export default class MetricComponent extends React.Component {
                         lastMinute.isFallback ?
                         <Icon className={styles.problemIcon} name="report problem" title="No metrics avaiable" /> :
                         <div>
-                            <Progress animatePercentageText strokeWidth={10} percentage={lastMinutePercent} width="50" />
+                            <Progress color="#e91e63" animatePercentageText strokeWidth={10} percentage={lastMinutePercent} width="50" />
                         </div>
                     }
                     <p><strong>Last minute</strong><br /> Yes {lastMinute.yes}, No: {lastMinute.no}</p>

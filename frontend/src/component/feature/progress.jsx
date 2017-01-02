@@ -82,7 +82,7 @@ class Progress extends Component {
     }
 
     render () {
-        const { strokeWidth } = this.props;
+        const { strokeWidth, color } = this.props;
         const radius = (50 - strokeWidth / 2);
         const pathDescription = `
       M 50,50 m 0,-${radius}
@@ -92,6 +92,7 @@ class Progress extends Component {
 
         const diameter = Math.PI * 2 * radius;
         const progressStyle = {
+            stroke: color,
             strokeDasharray: `${diameter}px ${diameter}px`,
             strokeDashoffset: `${((100 - this.state.percentage) / 100 * diameter)}px`,
         };

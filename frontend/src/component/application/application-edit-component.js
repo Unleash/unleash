@@ -157,7 +157,7 @@ class ClientApplications extends PureComponent {
                 />
 
                 <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })} ripple>
-                    <Tab>Metrics</Tab>
+                    <Tab>Details</Tab>
                     <Tab>Edit</Tab>
                 </Tabs>
 

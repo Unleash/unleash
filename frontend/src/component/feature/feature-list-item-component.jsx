@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import { Chip, Switch, Icon, IconButton } from 'react-mdl';
+import { Switch, Icon, IconButton } from 'react-mdl';
 import Progress from './progress';
 import { shorten, calc } from '../common';
 
@@ -54,9 +54,9 @@ const Feature = ({
                 </Link>
             </span>
             <span className="mdl-list__item-secondary-action">
-                {strategies && strategies.map((s, i) => <Chip className={[style.iconListItemChip, style.hideLt960].join(' ')} key={i}>
-                    <small>{s.name}</small>
-                </Chip>)}
+                {strategies && strategies.map((s, i) => <span className={[style.iconListItemChip, style.hideLt960].join(' ')} key={i}>
+                    {s.name}
+                </span>)}
             </span>
             <span className="mdl-list__item-secondary-action">
                 <IconButton name="delete" onClick={removeToggle} className={style.iconListItem} />

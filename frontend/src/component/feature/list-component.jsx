@@ -97,7 +97,7 @@ export default class FeatureListComponent extends React.PureComponent {
                     </Link>
                 </div>
 
-                <ul className="demo-list-item mdl-list">
+                <ul className="mdl-list">
                     {features.map((feature, i) =>
                         <Feature key={i}
                             settings={settings}

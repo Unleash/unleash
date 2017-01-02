@@ -32,7 +32,7 @@ const Feature = ({
 
     return (
         <li key={name} className="mdl-list__item">
-            <span className="mdl-list__item-primary-content">
+            <span className="mdl-list__item-secondary-action">
                 <div style={{ width: '40px', textAlign: 'center' }}>
                     {
                         isStale ?
@@ -44,23 +44,23 @@ const Feature = ({
                             </div>
                     }
                 </div>
-
-                &nbsp;
-                <span style={{ display: 'inline-block', width: '45px' }} title={`Toggle ${name}`}>
-                    <Switch title="test" key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />
-                </span>
-                <Link to={`/features/view/${name}`} className={style.link}>
+            </span>
+            <span className="mdl-list__item-secondary-action" style={{ width: '45px' }} title={`Toggle ${name}`}>
+                <Switch title="test" key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />
+            </span>
+            <span className="mdl-list__item-primary-content">
+                <Link to={`/features/view/${name}`} className={style.link} style={{ display: 'inline-block', width: '100%' }}>
                     {shorten(name, 50)} <small className={style.hideLt960}>{shorten(description, 30) || ''}</small>
                 </Link>
             </span>
-
-            <span className={style.iconList} >
+            <span className="mdl-list__item-secondary-action">
                 {strategies && strategies.map((s, i) => <Chip className={[style.iconListItemChip, style.hideLt960].join(' ')} key={i}>
                     <small>{s.name}</small>
                 </Chip>)}
+            </span>
+            <span className="mdl-list__item-secondary-action">
                 <IconButton name="delete" onClick={removeToggle} className={style.iconListItem} />
             </span>
-
         </li>
     );
 };

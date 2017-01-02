@@ -25,12 +25,7 @@
     color: #000;
 }
 
-.iconList {
-    display: flex;
-}
-
 .iconListItem {
-    flex: 1;
     color: #bbb !important;
 }
 .iconListItem *:hover {
@@ -38,7 +33,6 @@
 }
 
 .iconListItemChip {
-    flex: 1;
     margin-left: 5px !important;
 }
 

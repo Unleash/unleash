@@ -16,7 +16,7 @@ const StrategyChipItem = ({ strategy }) => (
 
 // TODO what about "missing" strategies here?
 const StrategiesList = ({ strategies }) => (
-    <div style={{ verticalAlign: 'middle', textAlign: 'center' }}>With {strategies.length > 1 ? 'strategies' : 'strategy'} {
+    <div style={{ verticalAlign: 'middle' }}>With {strategies.length > 1 ? 'strategies' : 'strategy'} {
         strategies.map((strategy, i) => <StrategyChipItem key={i}  strategy={strategy} />)
     }</div>
 );
@@ -56,10 +56,12 @@ export default class MetricComponent extends React.Component {
         const lastMinutePercent = 1 * calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
 
         return (<div>
-            <SwitchWithLabel
-                checked={featureToggle.enabled}
-                onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
-            <hr />
+            <div style={{ paddingTop: '4px' }}>
+                <SwitchWithLabel
+                    checked={featureToggle.enabled}
+                    onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
+            </div>
+            <hr style={{ borderColor: '#e0e0e0' }} />
             <Grid style={{ textAlign: 'center' }}>
                 <Cell tablet={4} col={3} phone={12}>
                     {
@@ -93,7 +95,7 @@ export default class MetricComponent extends React.Component {
                     <AppsLinkList apps={seenApps} />
                 </Cell>
             </Grid>
-            <hr />
+            <hr style={{ borderColor: '#e0e0e0' }} />
             <StrategiesList strategies={featureToggle.strategies}/>
         </div>);
     }

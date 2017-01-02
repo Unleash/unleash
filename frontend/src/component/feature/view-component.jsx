@@ -83,7 +83,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
                         Created {(new Date(featureToggle.createdAt)).toLocaleString('nb-NO')}
                     </small>
                 </h4>
-                <div>{featureToggle.description}</div>
+                <div className="mdl-color-text--grey"><small>{featureToggle.description}</small></div>
                 <Tabs activeTab={activeTabId} ripple style={{ marginBottom: '10px' }}>
                     <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
                     <Tab onClick={() => this.goToTab('edit', featureToggleName)}>Edit</Tab>

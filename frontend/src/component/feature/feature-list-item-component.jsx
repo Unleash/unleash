@@ -50,7 +50,8 @@ const Feature = ({
             </span>
             <span className="mdl-list__item-primary-content">
                 <Link to={`/features/view/${name}`} className={style.link} style={{ display: 'inline-block', width: '100%' }}>
-                    {shorten(name, 75)} <small className={[style.hideLt960, 'mdl-list__item-sub-title'].join(' ')}>{shorten(description, 75) || ''}</small>
+                    {shorten(name, 75)} <small className={[style.hideLt960, 'mdl-list__item-sub-title'].join(' ')}>
+                        {shorten(description, 75) || ''}</small>
                 </Link>
             </span>
 

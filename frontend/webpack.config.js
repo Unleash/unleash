@@ -76,5 +76,6 @@ module.exports = {
                 secure: false,
             },
         },
+        port: process.env.PORT || 3000,
     },
 };

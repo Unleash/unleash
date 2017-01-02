@@ -26,7 +26,7 @@
     "build": "npm run build:assets && npm run build:html",
     "build:assets": "NODE_ENV=production webpack -p",
     "build:html": "cp public/*.* dist/.",
-    "start": "NODE_ENV=development webpack-dev-server --config webpack.config.js --progress --colors --port 3000",
+    "start": "NODE_ENV=development webpack-dev-server --config webpack.config.js --progress --colors",
     "start:heroku": "UNLEASH_API=http://unleash.herokuapp.com npm run start",
     "lint": "eslint . --ext=js,jsx",
     "test": "npm run build",

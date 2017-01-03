@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
-import { Grid, Cell, Icon, Chip, ChipContact } from 'react-mdl';
+import { Grid, Cell, Icon, Chip, ChipContact, IconButton } from 'react-mdl';
 import Progress from './progress';
-import { Link } from 'react-router';
-import { AppsLinkList, SwitchWithLabel, calc } from '../common';
+import { Link, hashHistory } from 'react-router';
+import { AppsLinkList, SwitchWithLabel, calc, styles as commonStyles } from '../common';
 import styles from './metrics.scss';
 
 const StrategyChipItem = ({ strategy }) => (
@@ -29,6 +29,7 @@ export default class MetricComponent extends React.Component {
             toggleFeature: PropTypes.func.isRequired,
             fetchSeenApps: PropTypes.func.isRequired,
             fetchFeatureMetrics: PropTypes.func.isRequired,
+            removeFeatureToggle: PropTypes.func.isRequired,
         };
     }
 
@@ -45,7 +46,7 @@ export default class MetricComponent extends React.Component {
     }
 
     render () {
-        const { metrics = {}, featureToggle, toggleFeature } = this.props;
+        const { metrics = {}, featureToggle, toggleFeature, removeFeatureToggle } = this.props;
         const {
             lastHour = { yes: 0, no: 0, isFallback: true },
             lastMinute = { yes: 0, no: 0, isFallback: true },
@@ -55,13 +56,24 @@ export default class MetricComponent extends React.Component {
         const lastHourPercent = 1 * calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
         const lastMinutePercent = 1 * calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
 
+
+        const removeToggle = () => {
+            if (window.confirm('Are you sure you want to remove this toggle?')) {  // eslint-disable-line no-alert
+                removeFeatureToggle(featureToggle.name);
+                hashHistory.push('/features');
+            }
+        };
+
         return (<div>
-            <div style={{ paddingTop: '4px' }}>
-                <SwitchWithLabel
-                    checked={featureToggle.enabled}
-                    onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span className={commonStyles.truncate} style={{ paddingTop: '4px' }}>
+                    <SwitchWithLabel
+                        checked={featureToggle.enabled}
+                        onChange={() => toggleFeature(featureToggle)}>Toggle {featureToggle.name}</SwitchWithLabel>
+                </span>
+                <IconButton name="delete" onClick={removeToggle} className="mdl-color-text--grey-600"/>
             </div>
-            <hr style={{ borderColor: '#e0e0e0' }} />
+            <hr className={commonStyles.divider}/>
             <Grid style={{ textAlign: 'center' }}>
                 <Cell tablet={4} col={3} phone={12}>
                     {
@@ -95,7 +107,7 @@ export default class MetricComponent extends React.Component {
                     <AppsLinkList apps={seenApps} />
                 </Cell>
             </Grid>
-            <hr style={{ borderColor: '#e0e0e0' }} />
+            <hr  className={commonStyles.divider}/>
             <StrategiesList strategies={featureToggle.strategies}/>
         </div>);
     }

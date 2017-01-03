@@ -9,6 +9,8 @@ const {
 } = require('react-mdl');
 const { Link } = require('react-router');
 
+export { styles };
+
 export const shorten = (str, len = 50) => (str && str.length > len ? `${str.substring(0, len)}...` : str);
 
 export const AppsLinkList = ({ apps }) => (
@@ -52,10 +54,10 @@ export const FormButtons = ({ submitText = 'Create', onCancel }) => (
 
 export const SwitchWithLabel = ({ onChange, children, checked }) => (
     <span>
-        <span style={{ cursor: 'pointer', display: 'inline-block', width: '45px' }}>
+        <span style={{ cursor: 'pointer', display: 'inline-block', width: '52px' }}>
             <Switch onChange={onChange} checked={checked} />
         </span>
-        <span>{children}</span>
+        <span style={{ fontSize: '16px', lineHeight: '24px' }}>{children}</span>
     </span>
 );
 

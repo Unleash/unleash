@@ -3,3 +3,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.divider {
+    border-color: #e1e1e1;
+}
+
+@media (max-width: 960px) {
+    .hideLt960 {
+        display: none;
+    }
+}

@@ -14,30 +14,26 @@
 .link {
     color: #212121;
     text-decoration: none;
-}
-
-.link small {
-    color: #aaa;
-    font-weight: 100;
+    font-weight: normal;
+    display: block;
 }
 
 .link:hover {
     color: #000;
 }
 
-.iconListItem {
-    color: #bbb !important;
+.iconListItemProgress {
+    float: left;
+    margin-right: 16px;
 }
-.iconListItem *:hover {
-    color: #333;
+
+.iconListItemToggle {
+    float: left;
+    margin-right: 16px;
+    width: 40px;
 }
 
 .iconListItemChip {
-    font-size: 10px;
-    line-height: 12px;
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    padding: 5px 8px 4px 8px;
     margin-left: 5px !important;
 }
 
@@ -57,10 +53,4 @@
 
 .topListItem2 {
     flex: 2;
-}
-
-@media (max-width: 960px) {
-    .hideLt960 {
-        display: none;
-    }
 }

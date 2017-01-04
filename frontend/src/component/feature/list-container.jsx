@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { toggleFeature, fetchFeatureToggles, removeFeatureToggle } from '../../store/feature-actions';
+import { toggleFeature, fetchFeatureToggles } from '../../store/feature-actions';
 import { fetchFeatureMetrics } from '../../store/feature-metrics-actions';
 import { updateSettingForGroup } from '../../store/settings/actions';
 
@@ -71,7 +71,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
     onFeatureClick: toggleFeature,
-    onFeatureRemove: removeFeatureToggle,
     fetchFeatureToggles,
     fetchFeatureMetrics,
     updateSetting: updateSettingForGroup('feature'),

@@ -10,7 +10,6 @@ export default class FeatureListComponent extends React.PureComponent {
     static propTypes () {
         return {
             onFeatureClick: PropTypes.func.isRequired,
-            onFeatureRemove: PropTypes.func.isRequired,
             features: PropTypes.array.isRequired,
             featureMetrics: PropTypes.object.isRequired,
             fetchFeatureToggles: PropTypes.func.isRequired,
@@ -47,7 +46,7 @@ export default class FeatureListComponent extends React.PureComponent {
     }
 
     render () {
-        const { features, onFeatureClick, onFeatureRemove, featureMetrics, settings } = this.props;
+        const { features, onFeatureClick, featureMetrics, settings } = this.props;
 
         return (
            <div>
@@ -104,8 +103,7 @@ export default class FeatureListComponent extends React.PureComponent {
                             metricsLastHour={featureMetrics.lastHour[feature.name]}
                             metricsLastMinute={featureMetrics.lastMinute[feature.name]}
                             feature={feature}
-                            onFeatureClick={onFeatureClick}
-                            onFeatureRemove={onFeatureRemove}/>
+                            onFeatureClick={onFeatureClick}/>
                     )}
                 </ul>
                 <hr />

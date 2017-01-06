@@ -236,3 +236,49 @@ strategies implemented and seen toogles.
   ]
 }
 ```
+
+### Seen applications
+
+`GET  http://unleash.host.com/api//client/seen-apps`
+
+This endpoint gives insight into details about application seen per feature toggle.
+
+
+```json
+{
+  "my-toggle": [
+    {
+      "appName": "my-app",
+      "createdAt": "2016-12-28T10:39:24.966Z",
+      "updatedAt": "2017-01-06T15:32:41.932Z",
+      "description": "our main app",
+      "strategies": [
+        "gradualRolloutRandom",
+        "abTest",
+        "default",
+        "betaUser",
+        "userWithId",
+        "byHostName",
+        "gradualRolloutWithSessionId",
+        "gradualRollout",
+        "byRemoteAddr"
+      ],
+      "url": "http://example.com",
+      "color": null,
+      "icon": "terrain"
+    },
+    {
+      "appName": "my-other-app",
+      "createdAt": "2016-12-28T10:39:24.966Z",
+      "updatedAt": "2017-01-06T15:32:41.932Z",
+      "description": "our other app",
+      "strategies": [
+        "default",
+      ],
+      "url": "http://example.com",
+      "color": null,
+      "icon": "desktop"
+    }
+  ]
+}
+```

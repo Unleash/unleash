@@ -2,7 +2,6 @@
 import { connect } from 'react-redux';
 
 import { fetchFeatureMetrics, fetchSeenApps } from '../../store/feature-metrics-actions';
-import { toggleFeature, removeFeatureToggle } from '../../store/feature-actions';
 
 import MatricComponent from './metric-component';
 
@@ -26,7 +25,5 @@ export default connect((state, props) => ({
     metrics: getMetricsForToggle(state, props.featureToggle.name),
 }), {
     fetchFeatureMetrics,
-    toggleFeature,
     fetchSeenApps,
-    removeFeatureToggle,
 })(MatricComponent);

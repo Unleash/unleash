@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import { Chip, Switch, Icon } from 'react-mdl';
+import { Switch, Icon } from 'react-mdl';
 import Progress from './progress';
 import { shorten, calc, styles as commonStyles } from '../common';
 
@@ -48,9 +48,9 @@ const Feature = ({
                 </Link>
             </span>
             <span className={commonStyles.hideLt960}>
-                {strategies && strategies.map((s, i) => <Chip className={styles.iconListItemChip} key={i}>
+                {strategies && strategies.map((s, i) => <span className={[styles.iconListItemChip, styles.hideLt960].join(' ')} key={i}>
                     {s.name}
-                </Chip>)}
+                </span>)}
             </span>
         </li>
     );

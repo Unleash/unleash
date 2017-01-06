@@ -5,6 +5,7 @@ import { hashHistory, Link } from 'react-router';
 import HistoryComponent from '../history/history-list-toggle-container';
 import MetricComponent from './metric-container';
 import EditFeatureToggle from './form-edit-container.jsx';
+import { formatFullDateTime } from '../common/util';
 
 const TABS = {
     view: 0,
@@ -80,7 +81,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
             <div>
                 <h4>{featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small>
                     <small style={{ float: 'right', lineHeight: '38px' }}>
-                        Created {(new Date(featureToggle.createdAt)).toLocaleString('nb-NO')}
+                        Created {formatFullDateTime(featureToggle.createdAt)}
                     </small>
                 </h4>
                 <div className="mdl-color-text--grey"><small>{featureToggle.description}</small></div>

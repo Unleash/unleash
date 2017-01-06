@@ -10,6 +10,7 @@ import {
     Switch,
 } from 'react-mdl';
 import { HeaderTitle, ExternalIconLink, shorten } from '../common';
+import { formatFullDateTime } from '../common/util';
 
 class StatefulTextfield extends Component {
     constructor (props) {
@@ -121,7 +122,7 @@ class ClientApplications extends PureComponent {
                             <ListItemContent
                                 icon="timeline"
                                 subtitle={
-                                    <span>{clientIp} last seen at <small>{new Date(lastSeen).toLocaleString('nb-NO')}</small></span>
+                                    <span>{clientIp} last seen at <small>{formatFullDateTime(lastSeen)}</small></span>
                                 }>
                                 {instanceId}
                             </ListItemContent>

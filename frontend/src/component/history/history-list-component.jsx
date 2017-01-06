@@ -3,12 +3,9 @@ import HistoryItemDiff from './history-item-diff';
 import HistoryItemJson from './history-item-json';
 import { Table, TableHeader } from 'react-mdl';
 import { HeaderTitle, SwitchWithLabel } from '../common';
+import { formatFullDateTime } from '../common/util';
 
 import style from './history.scss';
-
-const dateOptions = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-
-const formatDate = v => (new Date(v)).toLocaleString('nb-NO', dateOptions);
 
 class HistoryList extends Component {
 
@@ -40,7 +37,7 @@ class HistoryList extends Component {
                 <TableHeader name="type">Type</TableHeader>
                 <TableHeader name="createdBy">User</TableHeader>
                 <TableHeader name="diff">Diff</TableHeader>
-                <TableHeader numeric name="createdAt" cellFormatter={formatDate}>Time</TableHeader>
+                <TableHeader numeric name="createdAt" cellFormatter={formatFullDateTime}>Time</TableHeader>
             </Table>);
         }
 

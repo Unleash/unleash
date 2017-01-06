@@ -10,6 +10,9 @@
         "commonjs": true,
 	    "es6": true
     },
+    "globals": {
+        "process": false
+    },
     "parserOptions": {
         "ecmaVersion": 7,
         "ecmaFeatures": {

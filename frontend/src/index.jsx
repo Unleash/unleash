@@ -8,7 +8,7 @@ import { applyRouterMiddleware, Router, Route, IndexRedirect, hashHistory } from
 import { useScroll } from 'react-router-scroll';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 
 import store from './store';
 import App from './component/app';
@@ -25,10 +25,18 @@ import Archive from './page/archive';
 import Applications from './page/applications';
 import ApplicationView from './page/applications/view';
 
+let composeEnhancers;
+
+if (process.env.NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+    composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+} else {
+    composeEnhancers = compose;
+}
+
 const unleashStore = createStore(
     store,
-    applyMiddleware(
-        thunkMiddleware
+    composeEnhancers(
+        applyMiddleware(thunkMiddleware)
     )
 );
 

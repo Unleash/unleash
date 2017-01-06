@@ -20,6 +20,6 @@
 
 
 
-## 1.0.0 (Januar 2014)
+## 1.0.0 (January 2014)
 - Initial public release
 

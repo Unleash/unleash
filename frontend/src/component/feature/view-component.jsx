@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
-import { Tabs, Tab, ProgressBar } from 'react-mdl';
+import { Tabs, Tab, ProgressBar, IconButton } from 'react-mdl';
 import { hashHistory, Link } from 'react-router';
 
 import HistoryComponent from '../history/history-list-toggle-container';
 import MetricComponent from './metric-container';
 import EditFeatureToggle from './form-edit-container.jsx';
+import { SwitchWithLabel } from '../common';
 import { formatFullDateTime } from '../common/util';
 
 const TABS = {
@@ -24,6 +25,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
             activeTab: PropTypes.string.isRequired,
             featureToggleName: PropTypes.string.isRequired,
             features: PropTypes.array.isRequired,
+            toggleFeature: PropTypes.func.isRequired,
+            removeFeatureToggle: PropTypes.func.isRequired,
             fetchFeatureToggles: PropTypes.array.isRequired,
             featureToggle: PropTypes.object.isRequired,
         };
@@ -60,6 +63,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
             features,
             activeTab,
             featureToggleName,
+            toggleFeature,
+            removeFeatureToggle,
         } = this.props;
 
         if (!featureToggle) {
@@ -77,9 +82,20 @@ export default class ViewFeatureToggleComponent extends React.Component {
         const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.view;
         const tabContent = this.getTabContent(activeTab);
 
+        const removeToggle = () => {
+            if (window.confirm('Are you sure you want to remove this toggle?')) {  // eslint-disable-line no-alert
+                removeFeatureToggle(featureToggle.name);
+                hashHistory.push('/features');
+            }
+        };
+
         return (
             <div>
-                <h4>{featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small>
+                <h4>
+                    <SwitchWithLabel checked={featureToggle.enabled} onChange={() => toggleFeature(featureToggle)} />
+                    {featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small>
+
+                    <IconButton style={{ float: 'right' }} name="delete" onClick={removeToggle} className="mdl-color-text--grey-600" />
                     <small style={{ float: 'right', lineHeight: '38px' }}>
                         Created {formatFullDateTime(featureToggle.createdAt)}
                     </small>

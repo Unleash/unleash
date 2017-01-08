@@ -1,7 +1,7 @@
 
 import { connect } from 'react-redux';
 
-import { fetchFeatureToggles } from '../../store/feature-actions';
+import { fetchFeatureToggles, toggleFeature, removeFeatureToggle } from '../../store/feature-actions';
 
 import ViewToggleComponent from './view-component';
 
@@ -11,4 +11,6 @@ export default connect((state, props) => ({
     activeTab: props.activeTab,
 }), {
     fetchFeatureToggles,
+    toggleFeature,
+    removeFeatureToggle,
 })(ViewToggleComponent);

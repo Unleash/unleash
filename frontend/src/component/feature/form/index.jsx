@@ -68,14 +68,15 @@ class AddFeatureToggleComponent extends Component {
                         value={description}
                         onChange={(v) => setValue('description', v.target.value)} />
 
-                    <br />
-
-                    <Switch
+                    {!editmode && <div>
+                        <br />
+                        <Switch
                         checked={enabled}
                         onChange={() => {
                             setValue('enabled', !enabled);
                         }}>Enabled</Switch>
-                    <hr />
+                        <hr />
+                    </div>}
                 </section>
 
                 <StrategiesSection

@@ -50,6 +50,15 @@ function update (featureToggle) {
         .then(throwIfNotSuccess);
 }
 
+function toggle (name) {
+    return fetch(`${URI}/${name}/toggle`, {
+        method: 'POST',
+        headers,
+        credentials: 'include',
+    })
+    .then(throwIfNotSuccess);
+}
+
 function remove (featureToggleName) {
     return fetch(`${URI}/${featureToggleName}`, {
         method: 'DELETE',
@@ -62,5 +71,6 @@ module.exports = {
     create,
     validate,
     update,
+    toggle,
     remove,
 };

@@ -19,6 +19,11 @@ const prepare = (methods, dispatch) => {
     methods.onSubmit = (input) => (
         (e) => {
             e.preventDefault();
+
+            input.strategies.forEach((s) => {
+                delete s.id;
+            });
+
             createFeatureToggles(input)(dispatch)
                 .then(() => methods.clear())
                 .then(() => hashHistory.push(`/features/edit/${input.name}`));

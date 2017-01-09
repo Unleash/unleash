@@ -92,7 +92,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         return (
             <div>
                 <h4>
-                    <SwitchWithLabel checked={featureToggle.enabled} onChange={() => toggleFeature(featureToggle)} />
+                    <SwitchWithLabel checked={featureToggle.enabled} onChange={() => toggleFeature(featureToggle.name)} />
                     {featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small>
 
                     <IconButton style={{ float: 'right' }} name="delete" onClick={removeToggle} className="mdl-color-text--grey-600" />

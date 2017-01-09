@@ -8,7 +8,7 @@ import styles from './feature.scss';
 
 const Feature = ({
     feature,
-    onFeatureClick,
+    toggleFeature,
     settings,
     metricsLastHour = { yes: 0, no: 0, isFallback: true },
     metricsLastMinute = { yes: 0, no: 0, isFallback: true },
@@ -39,7 +39,7 @@ const Feature = ({
                 </div>
             </span>
             <span className={styles.iconListItemToggle}>
-                <Switch title={`Toggle ${name}`} key="left-actions" onChange={() => onFeatureClick(feature)} checked={enabled} />
+                <Switch title={`Toggle ${name}`} key="left-actions" onChange={() => toggleFeature(name)} checked={enabled} />
             </span>
             <span className={['mdl-list__item-primary-content', commonStyles.truncate].join(' ')}>
                 <Link to={`/features/view/${name}`} className={[styles.link, commonStyles.truncate].join(' ')}>
@@ -58,7 +58,7 @@ const Feature = ({
 
 Feature.propTypes = {
     feature: PropTypes.object,
-    onFeatureClick: PropTypes.func,
+    toggleFeature: PropTypes.func,
 };
 
 export default Feature;

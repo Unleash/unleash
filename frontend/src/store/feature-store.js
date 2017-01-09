@@ -7,6 +7,7 @@ import {
     RECEIVE_FEATURE_TOGGLES,
     UPDATE_FEATURE_TOGGLE,
     REMOVE_FEATURE_TOGGLE,
+    TOGGLE_FEATURE_TOGGLE,
 } from './feature-actions';
 
 
@@ -18,6 +19,15 @@ const features = (state = new List([]), action) => {
         case REMOVE_FEATURE_TOGGLE:
             debug(REMOVE_FEATURE_TOGGLE, action);
             return state.filter(toggle => toggle.get('name') !== action.featureToggleName);
+        case TOGGLE_FEATURE_TOGGLE:
+            debug(TOGGLE_FEATURE_TOGGLE, action);
+            return state.map(toggle => {
+                if (toggle.get('name') === action.name) {
+                    return toggle.set('enabled', !toggle.get('enabled'));
+                } else {
+                    return toggle;
+                }
+            });
         case UPDATE_FEATURE_TOGGLE:
             debug(UPDATE_FEATURE_TOGGLE, action);
             return state.map(toggle => {

@@ -151,8 +151,9 @@ export default class App extends Component {
                                 </FooterDropDownSection>
                                 <FooterDropDownSection title="Clients">
                                     <FooterLinkList>
-                                        <a href="https://github.com/Unleash/unleash-node-client/">Node.js</a>
-                                        <a href="https://github.com/Unleash/unleash-java-client/">Java</a>
+                                        <a href="https://github.com/Unleash/unleash-client-node/">Node.js</a>
+                                        <a href="https://github.com/Unleash/unleash-client-java/">Java</a>
+                                        <a href="https://github.com/Unleash/unleash-client-go/">Go</a>
                                     </FooterLinkList>
                                 </FooterDropDownSection>
                             </FooterSection>

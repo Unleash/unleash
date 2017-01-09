@@ -98,6 +98,24 @@ test.serial('can change status of feature toggle that does exist', async t => {
         .expect(200).then(destroy);
 });
 
+test.serial('can not toggle of feature that does not exist', async t => {
+    const { request, destroy } = await setupApp('feature_api_serial');
+    logger.setLevel('FATAL');
+    return request
+        .post('/features/should-not-exist/toggle')
+        .set('Content-Type', 'application/json')
+        .expect(404).then(destroy);
+});
+
+test.serial('can toggle a feature that does exist', async t => {
+    const { request, destroy } = await setupApp('feature_api_serial');
+    logger.setLevel('FATAL');
+    return request
+        .post('/features/featureY/toggle')
+        .set('Content-Type', 'application/json')
+        .expect(200).then(destroy);
+});
+
 test.serial('archives a feature by name', async t => {
     const { request, destroy } = await setupApp('feature_api_serial');
     return request

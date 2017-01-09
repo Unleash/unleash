@@ -15,11 +15,10 @@ export const ERROR_CREATING_FEATURE_TOGGLE  = 'ERROR_CREATING_FEATURE_TOGGLE';
 export const ERROR_UPDATE_FEATURE_TOGGLE    = 'ERROR_UPDATE_FEATURE_TOGGLE';
 export const ERROR_REMOVE_FEATURE_TOGGLE    = 'ERROR_REMOVE_FEATURE_TOGGLE';
 
-export function toggleFeature (featureToggle) {
-    debug('Toggle feature toggle ', featureToggle);
+export function toggleFeature (name) {
+    debug('Toggle feature toggle ', name);
     return dispatch => {
-        const newValue = Object.assign({}, featureToggle, { enabled: !featureToggle.enabled });
-        dispatch(requestUpdateFeatureToggle(newValue));
+        dispatch(requestToggleFeatureToggle(name));
     };
 };
 
@@ -65,6 +64,16 @@ export function createFeatureToggles (featureToggle) {
         return api.create(featureToggle)
             .then(() => dispatch({ type: ADD_FEATURE_TOGGLE, featureToggle }))
             .catch(dispatchAndThrow(dispatch, ERROR_CREATING_FEATURE_TOGGLE));
+    };
+}
+
+export function requestToggleFeatureToggle (name) {
+    return dispatch => {
+        dispatch({ type: START_UPDATE_FEATURE_TOGGLE });
+
+        return api.toggle(name)
+            .then(() => dispatch({ type: TOGGLE_FEATURE_TOGGLE, name }))
+            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
 

@@ -29,6 +29,10 @@ const prepare =  (methods, dispatch) => {
     methods.onSubmit = (input) => (
         (e) => {
             e.preventDefault();
+
+            input.strategies.forEach((s) => {
+                delete s.id;
+            });
              // TODO: should add error handling
             requestUpdateFeatureToggle(input)(dispatch)
                 .then(() => methods.clear())

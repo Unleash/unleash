@@ -70,7 +70,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    onFeatureClick: toggleFeature,
+    toggleFeature,
     fetchFeatureToggles,
     fetchFeatureMetrics,
     updateSetting: updateSettingForGroup('feature'),

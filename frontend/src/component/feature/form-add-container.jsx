@@ -20,9 +20,12 @@ const prepare = (methods, dispatch) => {
         (e) => {
             e.preventDefault();
 
-            input.strategies.forEach((s) => {
-                delete s.id;
-            });
+            if (Array.isArray(input.strategies)) {
+                input.strategies.forEach((s) => {
+                    delete s.id;
+                });
+            }
+
 
             createFeatureToggles(input)(dispatch)
                 .then(() => methods.clear())

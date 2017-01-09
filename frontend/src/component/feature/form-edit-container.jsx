@@ -30,9 +30,11 @@ const prepare =  (methods, dispatch) => {
         (e) => {
             e.preventDefault();
 
-            input.strategies.forEach((s) => {
-                delete s.id;
-            });
+            if (Array.isArray(input.strategies)) {
+                input.strategies.forEach((s) => {
+                    delete s.id;
+                });
+            }
              // TODO: should add error handling
             requestUpdateFeatureToggle(input)(dispatch)
                 .then(() => methods.clear())

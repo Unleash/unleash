@@ -16,7 +16,7 @@ const StrategyChipItem = ({ strategy }) => (
 
 // TODO what about "missing" strategies here?
 const StrategiesList = ({ strategies }) => (
-    <div style={{ verticalAlign: 'middle' }}>With {strategies.length > 1 ? 'strategies' : 'strategy'} {
+    <div style={{ verticalAlign: 'middle', paddingTop: '14px' }}>With {strategies.length > 1 ? 'strategies' : 'strategy'} {
         strategies.map((strategy, i) => <StrategyChipItem key={i}  strategy={strategy} />)
     }</div>
 );

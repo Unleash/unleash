@@ -4,7 +4,8 @@ import { Layout, Drawer, Header, Navigation, Content,
     Grid, Cell, Icon,
 } from 'react-mdl';
 import { Link } from 'react-router';
-import style from './styles.scss';
+import styles from './styles.scss';
+import { styles as commonStyles } from './common';
 import ErrorContainer from './error/error-container';
 
 import UserContainer from './user/user-container';
@@ -100,30 +101,49 @@ export default class App extends Component {
                 return [0, 0];
             }
         };
-        const createListItem = (path, caption, icon) =>
-            <Link
-                to={path}
-                className={this.context.router.isActive(path) ? style.active : ''}>
-                {icon && <Icon name={icon} />} {caption}
-            </Link>;
+        const createListItem = (path, caption, icon, isDrawerNavigation = false) => {
+            const linkColor = isDrawerNavigation &&
+                this.context.router.isActive(path) ? 'mdl-color-text--black' : 'mdl-color-text--grey-900';
+            const iconColor = isDrawerNavigation &&
+                this.context.router.isActive(path) ? 'mdl-color-text--black' : 'mdl-color-text--grey-600';
+            return (
+                <Link
+                    to={path}
+                    className={isDrawerNavigation && [styles.navigationLink, linkColor].join(' ')}>
+                    {icon && <Icon name={icon} className={isDrawerNavigation && [styles.navigationIcon, iconColor].join(' ')}/>}{caption}
+                </Link>
+            );
+        };
 
         return (
-            <div style={{}}>
+            <div>
                 <UserContainer />
                 <Layout fixedHeader>
                     <Header title={this.getTitleWithLinks()}>
                         <Navigation>
-                            <a href="https://github.com/Unleash" target="_blank">Github</a>
                             <ShowUserContainer />
                         </Navigation>
                     </Header>
-                    <Drawer title="Unleash Admin">
-                        <Navigation>
-                            {createListItem('/features', 'Feature toggles', 'list')}
-                            {createListItem('/strategies', 'Strategies', 'extension')}
-                            {createListItem('/history', 'Event history', 'history')}
-                            {createListItem('/archive', 'Archived toggles', 'archive')}
-                            {createListItem('/applications', 'Applications', 'apps')}
+                    <Drawer className="mdl-color--white">
+                        <span className={[styles.title, 'mdl-layout-title'].join(' ')}>Unleash</span>
+                        <hr className={commonStyles.divider}/>
+                        <Navigation className={styles.navigation}>
+                            {createListItem('/features', 'Feature toggles', 'list', true)}
+                            {createListItem('/strategies', 'Strategies', 'extension', true)}
+                            {createListItem('/history', 'Event history', 'history', true)}
+                            {createListItem('/archive', 'Archived toggles', 'archive', true)}
+                            {createListItem('/applications', 'Applications', 'apps', true)}
+                        </Navigation>
+                        <hr className={commonStyles.divider}/>
+                        <Navigation className={styles.navigation}>
+                            <a href="https://github.com/Unleash" target="_blank" className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}>
+                                <i className={[
+                                    'material-icons',
+                                    styles.navigationIcon,
+                                    styles.githubIcon,
+                                    'mdl-color-text--grey-600',
+                                ].join(' ')}/>GitHub
+                            </a>
                         </Navigation>
                     </Drawer>
                     <ScrollContainer scrollKey="container" shouldUpdateScroll={shouldUpdateScroll}>

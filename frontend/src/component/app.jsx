@@ -12,11 +12,6 @@ import UserContainer from './user/user-container';
 import ShowUserContainer from './user/show-user-container';
 import { ScrollContainer } from 'react-router-scroll';
 
-const base = {
-    name: 'Unleash',
-    link: '/',
-};
-
 function replace (input, params) {
     if (!params) {
         return input;
@@ -55,27 +50,27 @@ export default class App extends Component {
     }
 
     getSections () {
-        if (window.innerWidth < 768) {
-            return [base];
-        }
         const { routes, params } = this.props;
         const unique = {};
-        let result = [base].concat(routes.splice(1).map((routeEntry) => ({
-            name: replace(routeEntry.pageTitle, params),
-            link: replace(routeEntry.link || routeEntry.path, params),
-        }))).filter(entry => {
-            if (!unique[entry.link]) {
-                unique[entry.link] = true;
-                return true;
-            }
-            return false;
-        });
+        const result = routes.splice(1)
+            .map((routeEntry) => ({
+                name: replace(routeEntry.pageTitle, params),
+                link: replace(routeEntry.link || routeEntry.path, params),
+            }))
+            .filter(entry => {
+                if (!unique[entry.link]) {
+                    unique[entry.link] = true;
+                    return true;
+                }
+                return false;
+            });
 
         // mutate document.title:
         document.title = result
             .map(e => e.name)
             .reverse()
-            .join(' - ');
+            .concat('Unleash')
+            .join(' – ');
 
         return result;
     }
@@ -85,9 +80,12 @@ export default class App extends Component {
         return (
             <span>
                 {result.map((entry, index) => (
-                    <span key={entry.link + index}><Link style={{ color: '#f1f1f1', textDecoration: 'none' }} to={entry.link}>
-                        {entry.name}
-                    </Link> {(index + 1) < result.length ? ' / ' : null}</span>
+                    <span key={entry.link + index} className={index > 0 ? 'mdl-layout--large-screen-only' : ''}>
+                        {index > 0 ? ' › ' : null}
+                        <Link className={[styles.headerTitleLink, 'mdl-color-text--primary-contrast'].join(' ')} to={entry.link}>
+                            {entry.name}
+                        </Link>
+                    </span>
                 ))}
             </span>
         );
@@ -125,7 +123,7 @@ export default class App extends Component {
                         </Navigation>
                     </Header>
                     <Drawer className="mdl-color--white">
-                        <span className={[styles.title, 'mdl-layout-title'].join(' ')}>Unleash</span>
+                        <span className={[styles.drawerTitle, 'mdl-layout-title'].join(' ')}>Unleash</span>
                         <hr className={commonStyles.divider}/>
                         <Navigation className={styles.navigation}>
                             {createListItem('/features', 'Feature toggles', 'list', true)}

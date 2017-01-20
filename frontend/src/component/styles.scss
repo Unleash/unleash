@@ -1,8 +1,12 @@
-.title {
+.headerTitleLink {
+    text-decoration: none;
+}
+
+.drawerTitle {
     padding-left: 24px !important;
 }
 @media screen and (max-width: 1024px) {
-    .title {
+    .drawerTitle {
         padding-left: 16px !important;
     }
 }

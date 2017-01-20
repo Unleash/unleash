@@ -1,0 +1,13 @@
+# Change Log
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
+and this project adheres to [Semantic Versioning](http://semver.org/).
+
+The latest version of this document is always available in
+[releases][releases-url].
+
+## [Unreleased]
+
+## [2.1.0] - 2017-01-20
+- Adjust header #51 #52

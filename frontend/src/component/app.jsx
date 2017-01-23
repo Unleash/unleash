@@ -145,8 +145,8 @@ export default class App extends Component {
                         </Navigation>
                     </Drawer>
                     <ScrollContainer scrollKey="container" shouldUpdateScroll={shouldUpdateScroll}>
-                    <Content>
-                        <Grid shadow={1} style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                    <Content className="mdl-color--grey-50">
+                        <Grid noSpacing className={styles.content}>
                             <Cell col={12}>
                                 {this.props.children}
                                 <ErrorContainer />

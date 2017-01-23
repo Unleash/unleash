@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ProgressBar } from 'react-mdl';
+import { ProgressBar, Grid, Cell } from 'react-mdl';
 import { AppsLinkList, HeaderTitle } from '../common';
 
 class ClientStrategies extends Component {
@@ -17,10 +17,12 @@ class ClientStrategies extends Component {
             return <ProgressBar indeterminate />;
         }
         return (
-            <div>
-                <HeaderTitle title="Applications" />
-                <AppsLinkList apps={applications} />
-            </div>
+            <Grid className="mdl-color--white">
+                <Cell col={12}>
+                    <HeaderTitle title="Applications" />
+                    <AppsLinkList apps={applications} />
+                </Cell>
+            </Grid>
         );
     }
 }

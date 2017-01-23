@@ -55,7 +55,7 @@ const Feature = ({
                     <span className={['mdl-list__item-sub-title', commonStyles.truncate].join(' ')}>{description}</span>
                 </Link>
             </span>
-            <span className={commonStyles.hideLt960} style={{ flexShrink: 0 }}>
+            <span className={commonStyles.hideLt920} style={{ flexShrink: 0 }}>
                 {strategyChips}
                 {summaryChip}
             </span>

@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { hashHistory } from 'react-router';
-import { Tabs, Tab, ProgressBar } from 'react-mdl';
+import { Tabs, Tab, ProgressBar, Grid, Cell } from 'react-mdl';
 import ShowStrategy from './show-strategy-component';
 import EditStrategy from './edit-container';
 import { HeaderTitle } from '../common';
@@ -61,18 +61,20 @@ export default class StrategyDetails extends Component {
         const tabContent = this.getTabContent(activeTabId);
 
         return (
-            <div>
-                <HeaderTitle title={strategy.name} subtitle={strategy.description} />
-                <Tabs activeTab={activeTabId} ripple>
-                    <Tab onClick={() => this.goToTab('view')}>Details</Tab>
-                    <Tab onClick={() => this.goToTab('edit')}>Edit</Tab>
-                </Tabs>
-                <section>
-                    <div className="content">
-                        {tabContent}
-                    </div>
-                </section>
-            </div>
+            <Grid className="mdl-color--white">
+                <Cell col={12}>
+                    <HeaderTitle title={strategy.name} subtitle={strategy.description} />
+                    <Tabs activeTab={activeTabId} ripple>
+                        <Tab onClick={() => this.goToTab('view')}>Details</Tab>
+                        <Tab onClick={() => this.goToTab('edit')}>Edit</Tab>
+                    </Tabs>
+                    <section>
+                        <div className="content">
+                            {tabContent}
+                        </div>
+                    </section>
+                </Cell>
+            </Grid>
         );
     }
 }

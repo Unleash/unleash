@@ -4,13 +4,21 @@
     text-overflow: ellipsis;
 }
 
+.fullwidth {
+    width: 100%;
+}
+
 .divider {
     margin: 0;
     border-color: rgba(0,0,0,.12);
 }
 
-@media (max-width: 960px) {
-    .hideLt960 {
+.list {
+    margin: 0;
+}
+
+@media (max-width: 920px) {
+    .hideLt920 {
         display: none;
     }
 }

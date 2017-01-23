@@ -152,18 +152,20 @@ class ClientApplications extends PureComponent {
 
 
         return (
-            <div>
-                <HeaderTitle title={<span><Icon name={icon} /> {appName}</span>} subtitle={description}
-                    actions={url && <ExternalIconLink url={url}>Visit site</ExternalIconLink>}
-                />
+            <Grid className="mdl-color--white">
+                <Cell col={12}>
+                    <HeaderTitle title={<span><Icon name={icon} /> {appName}</span>} subtitle={description}
+                        actions={url && <ExternalIconLink url={url}>Visit site</ExternalIconLink>}
+                    />
 
-                <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })} ripple>
-                    <Tab>Details</Tab>
-                    <Tab>Edit</Tab>
-                </Tabs>
+                    <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })} ripple>
+                        <Tab>Details</Tab>
+                        <Tab>Edit</Tab>
+                    </Tabs>
 
-               {content}
-            </div>
+                    {content}
+                </Cell>
+            </Grid>
         );
     }
 }

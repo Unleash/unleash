@@ -77,7 +77,7 @@ class HistoryItem extends PureComponent {
             changes = <div className={KLASSES.N}>{JSON.stringify(entry.data, null, 2)}</div>;
         }
 
-        return (<pre style={{ maxWidth: '500px', overflowX: 'auto', overflowY: 'hidden', width: 'auto' }}>
+        return (<pre style={{ maxWidth: '354px', overflowX: 'auto', overflowY: 'hidden', width: 'auto' }}>
             <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>
         </pre>);
     }

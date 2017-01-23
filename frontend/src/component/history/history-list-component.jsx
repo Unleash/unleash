@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import HistoryItemDiff from './history-item-diff';
 import HistoryItemJson from './history-item-json';
 import { Table, TableHeader } from 'react-mdl';
-import { HeaderTitle, SwitchWithLabel } from '../common';
+import { HeaderTitle, SwitchWithLabel, styles as commonStyles } from '../common';
 import { formatFullDateTime } from '../common/util';
 
-import style from './history.scss';
+import styles from './history.scss';
 
 class HistoryList extends Component {
 
@@ -32,7 +32,8 @@ class HistoryList extends Component {
                             diff: (<HistoryItemDiff  entry={entry} />),
                         }, entry))
                     }
-                    style={{ width: '100%' }}
+                    className={commonStyles.fullwidth}
+                    style={{ border: 0 }}
                 >
                 <TableHeader name="type">Type</TableHeader>
                 <TableHeader name="createdBy">User</TableHeader>
@@ -42,11 +43,13 @@ class HistoryList extends Component {
         }
 
         return (
-            <div className={style.history}>
+            <div className={styles.history}>
                 <HeaderTitle title={this.props.title} actions={
                     <SwitchWithLabel checked={showData} onChange={this.toggleShowDiff.bind(this)}>Show full events</SwitchWithLabel>
                 }/>
-                {entries}
+                <div style={{ overflowX: 'scroll' }}>
+                    {entries}
+                </div>
             </div>
         );
     }

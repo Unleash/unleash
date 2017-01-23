@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Tabs, Tab, ProgressBar, IconButton } from 'react-mdl';
+import { Tabs, Tab, ProgressBar, IconButton, Grid, Cell } from 'react-mdl';
 import { hashHistory, Link } from 'react-router';
 
 import HistoryComponent from '../history/history-list-toggle-container';
@@ -90,25 +90,27 @@ export default class ViewFeatureToggleComponent extends React.Component {
         };
 
         return (
-            <div>
-                <h4>
-                    <SwitchWithLabel checked={featureToggle.enabled} onChange={() => toggleFeature(featureToggle.name)} />
-                    {featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small>
+            <Grid className="mdl-color--white">
+                <Cell col={12}>
+                    <h4 style={{ marginTop: '16px' }}>
+                        <SwitchWithLabel checked={featureToggle.enabled} onChange={() => toggleFeature(featureToggle.name)} />
+                        {featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small>
 
-                    <IconButton style={{ float: 'right' }} name="delete" onClick={removeToggle} className="mdl-color-text--grey-600" />
-                    <small style={{ float: 'right', lineHeight: '38px' }}>
-                        Created {formatFullDateTime(featureToggle.createdAt)}
-                    </small>
-                </h4>
-                <div className="mdl-color-text--grey"><small>{featureToggle.description}</small></div>
-                <Tabs activeTab={activeTabId} ripple style={{ marginBottom: '10px' }}>
-                    <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
-                    <Tab onClick={() => this.goToTab('edit', featureToggleName)}>Edit</Tab>
-                    <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
-                </Tabs>
+                        <IconButton style={{ float: 'right' }} name="delete" onClick={removeToggle} className="mdl-color-text--grey-600" />
+                        <small style={{ float: 'right', lineHeight: '38px' }}>
+                            Created {formatFullDateTime(featureToggle.createdAt)}
+                        </small>
+                    </h4>
+                    <div className="mdl-color-text--grey"><small>{featureToggle.description}</small></div>
+                    <Tabs activeTab={activeTabId} ripple style={{ marginBottom: '10px' }} tabBarProps={{ style: { width: '100%' } }}>
+                        <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
+                        <Tab onClick={() => this.goToTab('edit', featureToggleName)}>Edit</Tab>
+                        <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
+                    </Tabs>
 
-                {tabContent}
-            </div>
+                    {tabContent}
+                </Cell>
+            </Grid>
         );
     }
 }

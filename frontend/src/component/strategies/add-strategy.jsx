@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 
-import { Textfield, IconButton, Menu, MenuItem, Checkbox } from 'react-mdl';
+import { Textfield, IconButton, Menu, MenuItem, Checkbox, Grid, Cell } from 'react-mdl';
 import { FormButtons } from '../common';
 
 
@@ -64,7 +64,7 @@ const Parameter = ({ set, input = {}, index }) => (
 
 const EditHeader = () => (
     <div>
-        <h4>Edit strategy</h4>
+        <h4 style={{ marginTop: '16px' }}>Edit strategy</h4>
         <p style={{ background: '#ffb7b7', padding: '16px 20px'  }}>
             Be carefull! Changing a strategy definition might also require changes to the
             implementation in the clients.
@@ -74,7 +74,7 @@ const EditHeader = () => (
 
 const CreateHeader = () => (
     <div>
-        <h4>Create a new Strategy definition</h4>
+        <h4 style={{ marginTop: '16px' }}>Create a new Strategy definition</h4>
     </div>
 );
 
@@ -130,44 +130,48 @@ class AddStrategy extends Component {
         } = this.props;
 
         return (
-             <form onSubmit={onSubmit(input)}>
-                {editmode ? <EditHeader /> : <CreateHeader />}
-                <Textfield label="Strategy name"
-                    floatingLabel
-                    name="name"
-                    required
-                    disabled={editmode}
-                    pattern="^[0-9a-zA-Z\.\-]+$"
-                    onChange={({ target }) => setValue('name', trim(target.value))}
-                    value={input.name}
-                    />
-                <br />
-                <Textfield
-                    floatingLabel
-                    style={{ width: '100%' }}
-                    rows={1}
-                    label="Description"
-                    name="description"
-                    onChange={({ target }) => setValue('description', target.value)}
-                    value={input.description}
-                    />
+            <Grid className="mdl-color--white">
+                <Cell col={12}>
+                    <form onSubmit={onSubmit(input)}>
+                        {editmode ? <EditHeader /> : <CreateHeader />}
+                        <Textfield label="Strategy name"
+                            floatingLabel
+                            name="name"
+                            required
+                            disabled={editmode}
+                            pattern="^[0-9a-zA-Z\.\-]+$"
+                            onChange={({ target }) => setValue('name', trim(target.value))}
+                            value={input.name}
+                            />
+                        <br />
+                        <Textfield
+                            floatingLabel
+                            style={{ width: '100%' }}
+                            rows={1}
+                            label="Description"
+                            name="description"
+                            onChange={({ target }) => setValue('description', target.value)}
+                            value={input.description}
+                            />
 
 
-                <Parameters input={input.parameters} count={input._params} updateInList={updateInList} />
-                <IconButton raised name="add" title="Add parameter" onClick={(e) => {
-                    e.preventDefault();
-                    incValue('_params');
-                }}/> &nbsp;Add parameter
+                        <Parameters input={input.parameters} count={input._params} updateInList={updateInList} />
+                        <IconButton raised name="add" title="Add parameter" onClick={(e) => {
+                            e.preventDefault();
+                            incValue('_params');
+                        }}/> &nbsp;Add parameter
 
 
-                <br />
-                <hr />
+                        <br />
+                        <hr />
 
-                <FormButtons
-                    submitText={editmode ? 'Update' : 'Create'}
-                    onCancel={onCancel}
-                />
-            </form>
+                        <FormButtons
+                            submitText={editmode ? 'Update' : 'Create'}
+                            onCancel={onCancel}
+                        />
+                    </form>
+                </Cell>
+            </Grid>
         );
     }
 }

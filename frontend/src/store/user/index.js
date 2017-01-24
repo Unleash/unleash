@@ -24,7 +24,7 @@ function writeCookie (userName) {
 
 
 function getInitState () {
-    const userName = readCookie(COOKIE_NAME);
+    const userName = decodeURIComponent(readCookie(COOKIE_NAME));
     const showDialog = !userName;
     return new $Map({ userName, showDialog });
 }

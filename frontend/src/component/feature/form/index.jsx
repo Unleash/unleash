@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { Textfield, Switch, Grid, Cell } from 'react-mdl';
+import { Textfield, Switch } from 'react-mdl';
 import StrategiesSection from './strategies-section-container';
 
-import { FormButtons, HeaderTitle } from '../../common';
+import { FormButtons } from '../../common';
 
 const trim = (value) => {
     if (value && value.trim) {
@@ -33,7 +33,6 @@ class AddFeatureToggleComponent extends Component {
             onSubmit,
             onCancel,
             editmode = false,
-            title,
         } = this.props;
 
         const {
@@ -45,57 +44,52 @@ class AddFeatureToggleComponent extends Component {
         const configuredStrategies = input.strategies || [];
 
         return (
-            <Grid className="mdl-color--white">
-                <Cell col={12}>
-                    <form onSubmit={onSubmit(input)}>
-                        {title && <HeaderTitle title={title} />}
-                        <section>
-                            <Textfield
-                                floatingLabel
-                                label="Name"
-                                name="name"
-                                disabled={editmode}
-                                required
-                                value={name}
-                                error={nameError}
-                                onBlur={(v) => validateName(v.target.value)}
-                                onChange={(v) => setValue('name', trim(v.target.value))} />
-                            <br />
-                            <Textfield
-                                floatingLabel
-                                style={{ width: '100%' }}
-                                rows={1}
-                                label="Description"
-                                required
-                                value={description}
-                                onChange={(v) => setValue('description', v.target.value)} />
+            <form onSubmit={onSubmit(input)}>
+                <section style={{ padding: '16px' }}>
+                    <Textfield
+                        floatingLabel
+                        label="Name"
+                        name="name"
+                        disabled={editmode}
+                        required
+                        value={name}
+                        error={nameError}
+                        onBlur={(v) => validateName(v.target.value)}
+                        onChange={(v) => setValue('name', trim(v.target.value))} />
+                    <br />
+                    <Textfield
+                        floatingLabel
+                        style={{ width: '100%' }}
+                        rows={1}
+                        label="Description"
+                        required
+                        value={description}
+                        onChange={(v) => setValue('description', v.target.value)} />
 
-                            {!editmode && <div>
-                                <br />
-                                <Switch
-                                checked={enabled}
-                                onChange={() => {
-                                    setValue('enabled', !enabled);
-                                }}>Enabled</Switch>
-                                <hr />
-                            </div>}
-                        </section>
-
-                        <StrategiesSection
-                            configuredStrategies={configuredStrategies}
-                            addStrategy={addStrategy}
-                            updateStrategy={updateStrategy}
-                            moveStrategy={moveStrategy}
-                            removeStrategy={removeStrategy} />
-
+                    {!editmode && <div>
                         <br />
-                        <FormButtons
-                            submitText={editmode ? 'Update' : 'Create'}
-                            onCancel={onCancel}
-                        />
-                    </form>
-                </Cell>
-            </Grid>
+                        <Switch
+                        checked={enabled}
+                        onChange={() => {
+                            setValue('enabled', !enabled);
+                        }}>Enabled</Switch>
+                        <hr />
+                    </div>}
+
+                    <StrategiesSection
+                        configuredStrategies={configuredStrategies}
+                        addStrategy={addStrategy}
+                        updateStrategy={updateStrategy}
+                        moveStrategy={moveStrategy}
+                        removeStrategy={removeStrategy} />
+
+                    <br />
+                    <FormButtons
+                        submitText={editmode ? 'Update' : 'Create'}
+                        onCancel={onCancel}
+                    />
+                </section>
+            </form>
         );
     }
 

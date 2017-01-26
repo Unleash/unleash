@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import HistoryItemDiff from './history-item-diff';
 import HistoryItemJson from './history-item-json';
 import { Table, TableHeader } from 'react-mdl';
-import { HeaderTitle, SwitchWithLabel, styles as commonStyles } from '../common';
+import { DataTableHeader, SwitchWithLabel, styles as commonStyles } from '../common';
 import { formatFullDateTime } from '../common/util';
 
 import styles from './history.scss';
@@ -44,10 +44,12 @@ class HistoryList extends Component {
 
         return (
             <div className={styles.history}>
-                <HeaderTitle title={this.props.title} actions={
-                    <SwitchWithLabel checked={showData} onChange={this.toggleShowDiff.bind(this)}>Show full events</SwitchWithLabel>
+                <DataTableHeader title={this.props.title} actions={
+                    <SwitchWithLabel checked={showData} onChange={this.toggleShowDiff.bind(this)}>
+                        Full events
+                    </SwitchWithLabel>
                 }/>
-                <div style={{ overflowX: 'scroll' }}>
+                <div className={commonStyles.horizontalScroll}>
                     {entries}
                 </div>
             </div>

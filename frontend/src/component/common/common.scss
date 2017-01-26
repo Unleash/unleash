@@ -8,6 +8,15 @@
     width: 100%;
 }
 
+.horizontalScroll {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.horizontalScroll::-webkit-scrollbar {
+    display: none;
+}
+
 .divider {
     margin: 0;
     border-color: rgba(0,0,0,.12);
@@ -20,5 +29,38 @@
 @media (max-width: 920px) {
     .hideLt920 {
         display: none;
+    }
+}
+
+.dataTableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+
+    .title {
+        padding: 20px 16px 20px 24px;
+    }
+
+    .titleText {
+        margin: 0;
+        font-size: 20px;
+        line-height: 24px
+    }
+
+    .actions {
+        flex-shrink: 0;
+        padding: 20px 14px 20px 16px;
+    }
+}
+
+.switchWithLabel {
+    .label {
+        padding-right: 16px;
+        line-height: 24px;
+    }
+    .switch {
+        display: inline-block;
+        padding-right: 8px;
     }
 }

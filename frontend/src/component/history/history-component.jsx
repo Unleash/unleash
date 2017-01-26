@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Grid, Cell } from 'react-mdl';
+import { Card } from 'react-mdl';
 import HistoryList from './history-list-container';
+import { styles as commonStyles } from '../common';
+
 class History extends PureComponent {
 
     componentDidMount () {
@@ -18,11 +20,9 @@ class History extends PureComponent {
         }
 
         return (
-            <Grid className="mdl-color--white">
-                <Cell col={12}>
-                    <HistoryList history={history} title="Last 100 changes" />
-                </Cell>
-            </Grid>
+            <Card shadow={0} className={commonStyles.fullwidth}>
+                <HistoryList history={history} title="Recent changes" />
+            </Card>
         );
     }
 }

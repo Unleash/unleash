@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import ListComponent from './history-list-container';
-import { Link } from 'react-router';
+import HistoryList from './history-list-container';
 
 class HistoryListToggle extends Component {
 
@@ -18,15 +17,11 @@ class HistoryListToggle extends Component {
         if (!this.props.history || this.props.history.length === 0) {
             return <span>fetching..</span>;
         }
-        const { history, toggleName } = this.props;
+        const { history } = this.props;
         return (
-                <ListComponent
+                <HistoryList
                     history={history}
-                    title={
-                        <span>Showing history for toggle: <Link to={`/features/edit/${toggleName}`}>
-                            <strong>{toggleName}</strong>
-                            </Link>
-                        </span>}/>
+                    title="Change log"/>
         );
     }
 }

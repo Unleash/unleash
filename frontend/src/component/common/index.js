@@ -38,6 +38,19 @@ export const HeaderTitle = ({ title, actions, subtitle }) => (
     </div>
 );
 
+export const DataTableHeader = ({ title, actions }) => (
+    <div className={styles.dataTableHeader}>
+        <div className={styles.title}>
+            <h2 className={styles.titleText}>{title}</h2>
+        </div>
+        {actions &&
+            <div className={styles.actions}>
+                {actions}
+            </div>
+        }
+    </div>
+);
+
 export const FormButtons = ({ submitText = 'Create', onCancel }) => (
     <div>
         <Button type="submit" ripple raised primary icon="add">
@@ -52,12 +65,12 @@ export const FormButtons = ({ submitText = 'Create', onCancel }) => (
     </div>
 );
 
-export const SwitchWithLabel = ({ onChange, children, checked }) => (
-    <span>
-        <span style={{ cursor: 'pointer', display: 'inline-block', width: '52px' }}>
-            <Switch onChange={onChange} checked={checked} />
+export const SwitchWithLabel = ({ onChange, checked, children, ...switchProps }) => (
+    <span className={styles.switchWithLabel}>
+        <span className={styles.label}>{children}</span>
+        <span className={styles.switch}>
+            <Switch checked={checked} onChange={onChange} {...switchProps} />
         </span>
-        <span style={{ fontSize: '16px', lineHeight: '24px' }}>{children}</span>
     </span>
 );
 

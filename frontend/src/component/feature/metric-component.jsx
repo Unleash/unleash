@@ -3,6 +3,7 @@ import { Grid, Cell, Icon, Chip, ChipContact } from 'react-mdl';
 import Progress from './progress';
 import { Link } from 'react-router';
 import { AppsLinkList, calc, styles as commonStyles } from '../common';
+import { formatFullDateTime } from '../common/util';
 import styles from './metrics.scss';
 
 const StrategyChipItem = ({ strategy }) => (
@@ -54,12 +55,12 @@ export default class MetricComponent extends React.Component {
         const lastHourPercent = 1 * calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
         const lastMinutePercent = 1 * calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
 
-        return (<div>
+        return (<div style={{ padding: '16px' }}>
             <Grid style={{ textAlign: 'center' }}>
                 <Cell tablet={4} col={3} phone={12}>
                     {
                         lastMinute.isFallback ?
-                        <Icon className={styles.problemIcon} name="report problem" title="No metrics avaiable" /> :
+                        <Icon className={styles.problemIcon} name="report problem" title="No metrics available" /> :
                         <div>
                             <Progress color="#e91e63" animatePercentageText strokeWidth={10} percentage={lastMinutePercent} width="50" />
                         </div>
@@ -69,7 +70,7 @@ export default class MetricComponent extends React.Component {
                 <Cell col={3} tablet={4} phone={12}>
                     {
                         lastHour.isFallback ?
-                        <Icon className={styles.problemIcon} name="report problem" title="No metrics avaiable" /> :
+                        <Icon className={styles.problemIcon} name="report problem" title="No metrics available" /> :
                         <div>
                             <Progress strokeWidth={10} percentage={lastHourPercent} width="50" />
                         </div>
@@ -80,12 +81,13 @@ export default class MetricComponent extends React.Component {
                     {seenApps.length > 0 ?
                         (<div><strong>Seen in applications:</strong></div>) :
                         <div>
-                            <Icon className={styles.problemIcon} name="report problem" title="Not used in a app in the last hour" />
-                            <div><small><strong>Not used in a app in the last hour.</strong>
+                            <Icon className={styles.problemIcon} name="report problem" title="Not used in an app in the last hour" />
+                            <div><small><strong>Not used in an app in the last hour.</strong>
                             This might be due to your client implementation is not reporting usage.</small></div>
                         </div>
                     }
                     <AppsLinkList apps={seenApps} />
+                    <span>Created {formatFullDateTime(featureToggle.createdAt)}</span>
                 </Cell>
             </Grid>
             <hr  className={commonStyles.divider}/>

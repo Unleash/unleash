@@ -1,12 +1,11 @@
 import React, { PropTypes } from 'react';
-import { Tabs, Tab, ProgressBar, IconButton, Grid, Cell } from 'react-mdl';
+import { Tabs, Tab, ProgressBar, Button, Card, CardTitle, CardText, CardActions, Switch } from 'react-mdl';
 import { hashHistory, Link } from 'react-router';
 
 import HistoryComponent from '../history/history-list-toggle-container';
 import MetricComponent from './metric-container';
 import EditFeatureToggle from './form-edit-container.jsx';
-import { SwitchWithLabel } from '../common';
-import { formatFullDateTime } from '../common/util';
+import { styles as commonStyles } from '../common';
 
 const TABS = {
     view: 0,
@@ -90,27 +89,23 @@ export default class ViewFeatureToggleComponent extends React.Component {
         };
 
         return (
-            <Grid className="mdl-color--white">
-                <Cell col={12}>
-                    <h4 style={{ marginTop: '16px' }}>
-                        <SwitchWithLabel checked={featureToggle.enabled} onChange={() => toggleFeature(featureToggle.name)} />
-                        {featureToggle.name} <small>{featureToggle.enabled ? 'is enabled' : 'is disabled'}</small>
-
-                        <IconButton style={{ float: 'right' }} name="delete" onClick={removeToggle} className="mdl-color-text--grey-600" />
-                        <small style={{ float: 'right', lineHeight: '38px' }}>
-                            Created {formatFullDateTime(featureToggle.createdAt)}
-                        </small>
-                    </h4>
-                    <div className="mdl-color-text--grey"><small>{featureToggle.description}</small></div>
-                    <Tabs activeTab={activeTabId} ripple style={{ marginBottom: '10px' }} tabBarProps={{ style: { width: '100%' } }}>
-                        <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
-                        <Tab onClick={() => this.goToTab('edit', featureToggleName)}>Edit</Tab>
-                        <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
-                    </Tabs>
-
-                    {tabContent}
-                </Cell>
-            </Grid>
+            <Card shadow={0} className={commonStyles.fullwidth}>
+                <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
+                <CardText>{featureToggle.description}</CardText>
+                <CardActions border style={{ display: 'flex', alignItems: 'center' }}>
+                    <Switch ripple checked={featureToggle.enabled} onChange={() => toggleFeature(featureToggle.name)}>
+                        {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                    </Switch>
+                    <Button onClick={removeToggle} style={{ flexShrink: 0 }}>Archive</Button>
+                </CardActions>
+                <hr className={commonStyles.divider}/>
+                <Tabs activeTab={activeTabId} ripple tabBarProps={{ style: { width: '100%' } }} className="mdl-color--grey-100">
+                    <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
+                    <Tab onClick={() => this.goToTab('edit', featureToggleName)}>Edit</Tab>
+                    <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
+                </Tabs>
+                {tabContent}
+            </Card>
         );
     }
 }

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 import { createFeatureToggles, validateName } from '../../store/feature-actions';
 import { createMapper, createActions } from '../input-helpers';
-import FormComponent from './form';
+import FormAddComponent from './form-add-component';
 
 const ID = 'add-feature-toggle';
 const mapStateToProps = createMapper({
@@ -66,4 +66,9 @@ const prepare = (methods, dispatch) => {
 };
 const actions = createActions({ id: ID, prepare });
 
-export default connect(mapStateToProps, actions)(FormComponent);
+const FormAddContainer = connect(
+    mapStateToProps,
+    actions
+)(FormAddComponent);
+
+export default FormAddContainer;

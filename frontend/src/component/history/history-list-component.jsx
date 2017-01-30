@@ -49,7 +49,7 @@ class HistoryList extends Component {
                         Full events
                     </SwitchWithLabel>
                 }/>
-                <div className={commonStyles.horizontalScroll}>
+                <div className={commonStyles.horisontalScroll}>
                     {entries}
                 </div>
             </div>

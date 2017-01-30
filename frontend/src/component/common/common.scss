@@ -8,12 +8,12 @@
     width: 100%;
 }
 
-.horizontalScroll {
+.horisontalScroll {
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
 }
 
-.horizontalScroll::-webkit-scrollbar {
+.horisontalScroll::-webkit-scrollbar {
     display: none;
 }
 
@@ -64,4 +64,12 @@
         display: inline-block;
         padding-right: 8px;
     }
+}
+
+.emptyState {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 200px;
 }

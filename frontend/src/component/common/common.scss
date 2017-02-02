@@ -56,6 +56,8 @@
 }
 
 .switchWithLabel {
+    display: flex;
+    
     .label {
         padding-right: 16px;
         line-height: 24px;

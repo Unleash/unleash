@@ -92,10 +92,12 @@ export default class ViewFeatureToggleComponent extends React.Component {
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                 <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
                 <CardText>{featureToggle.description}</CardText>
-                <CardActions border style={{ display: 'flex', alignItems: 'center' }}>
-                    <Switch ripple checked={featureToggle.enabled} onChange={() => toggleFeature(featureToggle.name)}>
-                        {featureToggle.enabled ? 'Enabled' : 'Disabled'}
-                    </Switch>
+                <CardActions border style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ paddingRight: '24px' }}>
+                        <Switch ripple checked={featureToggle.enabled} onChange={() => toggleFeature(featureToggle.name)}>
+                            {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                        </Switch>
+                    </span>
                     <Button onClick={removeToggle} style={{ flexShrink: 0 }}>Archive</Button>
                 </CardActions>
                 <hr className={commonStyles.divider}/>

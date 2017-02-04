@@ -27,13 +27,6 @@ const mapStateToProps = (state) => {
                 // eslint-disable-next-line
                 a.enabled === b.enabled ? 0 : a.enabled ? -1 : 1
             ));
-        } else if (settings.sort === 'appName') {
-            // AppName
-            // features = features.sort((a, b) => {
-            //     if (a.appName < b.appName) { return -1; }
-            //     if (a.appName > b.appName) { return 1; }
-            //     return 0;
-            // });
         } else if (settings.sort === 'created') {
             features = features.sort((a, b) => (
                 new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1

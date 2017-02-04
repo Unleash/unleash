@@ -1,56 +1,34 @@
-.action {
-    color: #aaa !important;
-    cursor: pointer;
+.toolbar {
+    position: relative;
+    padding: 0 104px 16px 24px;
 }
 
-.yes {
-    color: green;
+.toolbarButton {
+    position: absolute;
+    top: 56px;
+    right: 24px;
+    z-index: 2;
 }
 
-.no {
-    color: red;
-}
-
-.link {
-    color: #212121;
-    text-decoration: none;
-    font-weight: normal;
-    display: block;
-}
-
-.link:hover {
-    color: #000;
-}
-
-.iconListItemProgress {
+.listItemMetric {
     float: left;
     margin-right: 16px;
 }
 
-.iconListItemToggle {
-    float: left;
+.listItemToggle {
     margin-right: 16px;
     width: 40px;
+    flex-shrink: 0;
 }
 
-.iconListItemChip {
+.listItemLink {
+    min-width: 0;
+}
+
+.listItemStrategies {
+    flex-shrink: 0;
+}
+
+.strategyChip {
     margin-left: 8px !important;
-}
-
-.topList {
-    display: flex;
-    margin: 8px;
-}
-
-.topListItem0 {
-    flex: 1;
-    flex-grow: 0;
-}
-
-.topListItem {
-    flex: 1;
-}
-
-.topListItem2 {
-    flex: 2;
 }

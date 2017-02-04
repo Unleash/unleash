@@ -5,7 +5,7 @@ import styles from './common.scss';
 const {
     List, ListItem, ListItemContent,
     Button, Icon,
-    Switch,
+    Switch, MenuItem,
 } = require('react-mdl');
 const { Link } = require('react-router');
 
@@ -110,6 +110,20 @@ export const ExternalIconLink = ({ url, children }) => (
     <IconLink icon="queue" href={url} target="_blank" rel="noopener">
         {children}
     </IconLink>
+);
+
+export const DropdownButton = ({ label, id }) => (
+    <Button id={id} className={styles.dropdownButton}>
+        {label}
+        <Icon name="arrow_drop_down" className="mdl-color-text--grey-600"/>
+    </Button>
+);
+
+export const MenuItemWithIcon = ({ icon, label, disabled, ...menuItemProps }) => (
+    <MenuItem disabled={disabled} style={{ display: 'flex', alignItems: 'center' }} {...menuItemProps}>
+        <Icon name={icon} style={{ paddingRight: '16px' }}/>
+        {label}
+    </MenuItem>
 );
 
 const badNumbers = [NaN, Infinity, -Infinity];

@@ -11,14 +11,15 @@
 }
 
 .listItemMetric {
-    float: left;
+    width: 40px;
+    flex-shrink: 0;
     margin-right: 16px;
 }
 
 .listItemToggle {
-    margin-right: 16px;
-    width: 40px;
+    width: 36px;
     flex-shrink: 0;
+    margin-right: 16px;
 }
 
 .listItemLink {

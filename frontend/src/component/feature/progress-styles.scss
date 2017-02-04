@@ -1,17 +1,17 @@
 .path {
-    stroke: #3f51b5;
+    stroke: currentColor;
     stroke-linecap: round;
     transition: stroke-dashoffset 5s ease 0s;
 }
 
 .trail {
-    stroke: #d6d6d6;
+    stroke: currentColor;
 }
 
 .text {
-    fill: rgba(0, 0, 0, 0.7);
-    font-size: 25px;
-    line-height: 25px;
+    fill: currentColor;
+    font-size: 24px;
+    line-height: 24px;
     dominant-baseline: middle;
     text-anchor: middle;
 }

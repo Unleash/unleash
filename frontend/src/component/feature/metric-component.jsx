@@ -57,27 +57,22 @@ export default class MetricComponent extends React.Component {
 
         return (<div style={{ padding: '16px' }}>
             <Grid style={{ textAlign: 'center' }}>
-                <Cell tablet={4} col={3} phone={12}>
-                    {
-                        lastMinute.isFallback ?
-                        <Icon className={styles.problemIcon} name="report problem" title="No metrics available" /> :
-                        <div>
-                            <Progress color="#e91e63" animatePercentageText strokeWidth={10} percentage={lastMinutePercent} width="50" />
-                        </div>
+                <Cell col={4} tablet={4} phone={12}>
+                    <Progress percentage={lastMinutePercent} isFallback={lastMinute.isFallback}
+                        colorClassName="mdl-color-text--accent" animatePercentageText/>
+                    {lastMinute.isFallback ?
+                        <p className="mdl-color-text--grey-500">No metrics available</p> :
+                        <p><strong>Last minute</strong><br /> Yes {lastMinute.yes}, No: {lastMinute.no}</p>
                     }
-                    <p><strong>Last minute</strong><br /> Yes {lastMinute.yes}, No: {lastMinute.no}</p>
                 </Cell>
-                <Cell col={3} tablet={4} phone={12}>
-                    {
-                        lastHour.isFallback ?
-                        <Icon className={styles.problemIcon} name="report problem" title="No metrics available" /> :
-                        <div>
-                            <Progress strokeWidth={10} percentage={lastHourPercent} width="50" />
-                        </div>
+                <Cell col={4} tablet={4} phone={12}>
+                    <Progress percentage={lastHourPercent} isFallback={lastHour.isFallback}/>
+                    {lastHour.isFallback ?
+                        <p className="mdl-color-text--grey-500">No metrics available</p> :
+                        <p><strong>Last hour</strong><br /> Yes {lastHour.yes}, No: {lastHour.no}</p>
                     }
-                    <p><strong>Last hour</strong><br /> Yes {lastHour.yes}, No: {lastHour.no}</p>
                 </Cell>
-                <Cell col={6}  tablet={12}>
+                <Cell col={4} tablet={12}>
                     {seenApps.length > 0 ?
                         (<div><strong>Seen in applications:</strong></div>) :
                         <div>

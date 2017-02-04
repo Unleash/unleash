@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import { Switch, Icon, Chip, ListItem } from 'react-mdl';
+import { Switch, Chip, ListItem } from 'react-mdl';
 import Progress from './progress';
 import { calc, styles as commonStyles } from '../common';
 
@@ -34,17 +34,7 @@ const Feature = ({
     return (
         <ListItem twoLine>
             <span className={styles.listItemMetric}>
-                <div style={{ width: '40px', textAlign: 'center' }}>
-                    {
-                        isStale ?
-                            <Icon
-                                style={{ width: '25px', marginTop: '4px', fontSize: '25px', color: '#ccc' }}
-                                name="report problem" title="No metrics available" /> :
-                            <div>
-                                <Progress strokeWidth={15} percentage={percent} width="50" />
-                            </div>
-                    }
-                </div>
+                <Progress strokeWidth={15} percentage={percent} isFallback={isStale}/>
             </span>
             <span className={styles.listItemToggle}>
                 <Switch title={`Toggle ${name}`} key="left-actions" onChange={() => toggleFeature(name)} checked={enabled} />

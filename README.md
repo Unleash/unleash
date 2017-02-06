@@ -18,7 +18,7 @@ This repo contains the unleash-server, which contains the admin UI and a place t
 In order to make use of unleash you will also need a client implementation.
 
 <kbd>
-![2016-12-28-211658_1115x752_scrot](https://cloud.githubusercontent.com/assets/158948/21530723/069c3002-cd43-11e6-9837-7509dfbf0678.png)
+![2016-12-28-211658_1115x752_scrot](https://github.com/Unleash/unleash/raw/master/docs/2017-02-06-130615_942x802_scrot.png)
 </kbd>
 
 Online demo [version availble on heroku](https://unleash-new-ui.herokuapp.com/#/features).

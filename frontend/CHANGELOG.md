@@ -9,5 +9,10 @@ The latest version of this document is always available in
 
 ## [Unreleased]
 
+## [2.2.0] - 2017-01-20
+- clean filter/sorting and fabbutton #61
+- nicer fallback image for metric progress
+- fix switch width issue
+
 ## [2.1.0] - 2017-01-20
 - Adjust header #51 #52

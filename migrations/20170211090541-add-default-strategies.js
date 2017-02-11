@@ -23,6 +23,22 @@ function insertEventsSQL (strategy) {
         );`;
 }
 
+function removeEventsSQL (strategy) {
+    return `
+        INSERT INTO events (type, created_by, data)
+        SELECT 'strategy-deleted', 'migration', '${JSON.stringify(strategy)}'
+        WHERE
+            EXISTS (
+                SELECT name FROM strategies WHERE name = '${strategy.name}' AND built_in = 1
+        );`;
+}
+
+function removeStrategySQL (strategy) {
+    return `
+        DELETE FROM strategies
+        WHERE name = '${strategy.name}' AND built_in = 1`;
+}
+
 exports.up = function (db, callback) {
     const insertStrategies = strategies.map((s) => (cb) => {
         db.runSql(insertEventsSQL(s), cb);
@@ -31,6 +47,13 @@ exports.up = function (db, callback) {
     async.series(insertStrategies, callback);
 };
 
-exports.down = function (db, cb) {
-    return cb();
+exports.down = function (db, callback) {
+    const removeStrategies = strategies
+        .filter(s => s.name !== 'default')
+        .map((s) => (cb) => {
+            db.runSql(removeEventsSQL(s), cb);
+            db.runSql(removeStrategySQL(s), cb);
+        });
+
+    async.series(removeStrategies, callback);
 };

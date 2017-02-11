@@ -1,7 +1,7 @@
 # Unleash Context
 
 In order to standardise a few activation strategies we also needed to 
-standardize a unleash context, which contains some fields that varies 
+standardise a unleash context, which contains some fields that varies 
 per requests, needed to implement the activation strategies. 
 
 The unleash context is defined by these fields:

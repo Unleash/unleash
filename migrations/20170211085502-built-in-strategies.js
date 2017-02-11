@@ -1,4 +1,3 @@
-/* eslint camelcase: "off" */
 'use strict';
 
 const async = require('async');

@@ -1,6 +1,6 @@
 # Unleash Context
 
-In order to standardize a few activation strategies we also needed to 
+In order to standardise a few activation strategies we also needed to 
 standardize a unleash context, which contains some fields that varies 
 per requests, needed to implement the activation strategies. 
 
@@ -19,4 +19,4 @@ E.g. the userWithId-strategy obviously depends on the userId field.
 The properties field is more generic and can be used to probide more abritary 
 data to the strategies. A common usage is to add more metadata, e.g. that the 
 current user is a beta user, and thus the betaUser-strategy will use this info
-in it's implementation.
+in its implementation.

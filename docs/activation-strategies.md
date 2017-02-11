@@ -16,27 +16,39 @@ Active for users with a userId defined in the userIds-list. Typically I want to 
 - userIds - *List of user ids you want the feature toggle should be enabled for*
 
 ## gradualRolloutUserId
-Gradually activate feature toggle for logged in users. Stickiness based on user id. ers. This strategy guarantees that the same user gets the same experience every time, across devices. It also guarantees that a user which is among the first 10% will also be among 20% roll-out degree. Thus we ensures that users gets the same experience, even if we gradually increase the number of users we expose the feature to. To achieve this we use a clever hash-algorithm where we normalize the user-id to a number between 1 and 100. 
+Gradually activate feature toggle for logged in users. Stickiness based on user id. 
+This strategy guarantees that the same user gets the same experience every time, 
+across devices. It also guarantees that a user which is among the first 10% will also 
+be among 20% roll-out degree. Thus we ensure that users gets the same experience, 
+even if we gradually increase the number of users we expose the feature to. To 
+achieve this we use a hash-algorithm where we normalize the user-id to a number 
+between 1 and 100. 
 
 **Parameters**
 - percentage - *The percentage (0-100) you want to enable to feature toggle for.*
 - groupId - *Used to define a activation groups, which allows you to correlate across feature toggles.*
 
 ## gradualRolloutSessionId
-Gradually activate feature toggle. Stickiness based on session id. It is almost identical to the gradualRolloutUserId-strategy, with the exception that it works on session ids. This makes it possible to target all users (not just logged in users), guaranteeing that a user will get the same experience within a session. But might get different experience in different sessions. 
+Gradually activate feature toggle. Stickiness based on session id. It is almost 
+identical to the `gradualRolloutUserId` strategy, with the exception that it works 
+on session ids. This makes it possible to target all users (not just logged in 
+users), guaranteeing that a user will get the same experience within a session.
 
 **Parameters**
 - percentage - *The percentage (0-100) you want to enable to feature toggle for.*
 - groupId - *Used to define a activation groups, which allows you to correlate across feature toggles.*
 
 ## gradualRolloutRandom 
-Randomly activate the feature toggle. No stickiness. We have found this rollout strategy very useful in some scenarios, especially when we are enabling a feature which is not visible to the user. It is also the strategy we use to sample metrics and error reports.
+Randomly activate the feature toggle. No stickiness. We have found this rollout strategy 
+very useful in some scenarios, especially when we are enabling a feature which is not 
+visible to the user. It is also the strategy we use to sample metrics and error reports.
 
 **Parameters**
 - percentage - *The percentage (0-100) you want to enable to feature toggle for.*
 
 ## remoteAddress
-Active for remote addresses defined in the IPs list. We sometimes use this strategy to enable a feature only for IP's in our office network.
+Active for remote addresses defined in the IPs list. We sometimes use this strategy to 
+enable a feature only for IP's in our office network.
 
 **Parameters**
 - IPS - *List of IPs to enable the feature for.*

@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.1.0
-- Provide a set of defined activation strategies:
+- Provide a set of pre-defined activation strategies:
     - applicationHostname
     - gradualRolloutRandom
     - gradualRolloutSessionId

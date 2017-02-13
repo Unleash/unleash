@@ -18,11 +18,13 @@ Active for users with a userId defined in the userIds-list. Typically I want to 
 ## gradualRolloutUserId
 Gradually activate feature toggle for logged in users. Stickiness based on user id. 
 This strategy guarantees that the same user gets the same experience every time, 
-across devices. It also guarantees that a user which is among the first 10% will also 
-be among 20% roll-out degree. Thus we ensure that users gets the same experience, 
-even if we gradually increase the number of users we expose the feature to. To 
-achieve this we use a hash-algorithm where we normalize the user-id to a number 
-between 1 and 100. 
+across devices. It also guarantees that a user which is among the first 10% will 
+also be among the first 20% of the users. Thus we ensure that users get the same 
+experience. Even if we gradually increase the number of users who are exposed to 
+a particular feature. To achieve this we hash the user id and normalise the hash 
+value to a number between 1 and 100 with a simple modulo operator. 
+
+![hash_and_normalise](assets/hash_and_normalise.png)
 
 **Parameters**
 - percentage - *The percentage (0-100) you want to enable to feature toggle for.*

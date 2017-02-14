@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ProgressBar, Card } from 'react-mdl';
-import { AppsLinkList, HeaderTitle, styles as commonStyles } from '../common';
+import { AppsLinkList, styles as commonStyles } from '../common';
 
 class ClientStrategies extends Component {
 

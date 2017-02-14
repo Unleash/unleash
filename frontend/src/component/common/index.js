@@ -17,12 +17,13 @@ export const AppsLinkList = ({ apps }) => (
     <List>
     {apps.length > 0 && apps.map(({ appName, description = '-', icon = 'apps' }) => (
         <ListItem twoLine key={appName}>
-            <ListItemContent avatar={icon}>
+            <span className="mdl-list__item-primary-content">
+                <Icon name={icon} className="mdl-list__item-avatar"/>
                 <Link to={`/applications/${appName}`} className={[styles.listLink, styles.truncate].join(' ')}>
                     {appName}
                     <span className={['mdl-list__item-sub-title', styles.truncate].join(' ')}>{description}</span>
                 </Link>
-            </ListItemContent>
+            </span>
         </ListItem>
     ))}
     </List>

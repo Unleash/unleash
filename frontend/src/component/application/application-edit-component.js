@@ -3,13 +3,13 @@ import React, { Component, PureComponent } from 'react';
 
 import { Link } from 'react-router';
 import {
-    Grid, Cell,
+    Grid, Cell, Card, CardTitle, CardText, CardMenu,
     List, ListItem, ListItemContent,
     Textfield, Icon, ProgressBar,
     Tabs, Tab,
     Switch,
 } from 'react-mdl';
-import { HeaderTitle, ExternalIconLink, shorten } from '../common';
+import { IconLink, shorten, styles as commonStyles } from '../common';
 import { formatFullDateTime } from '../common/util';
 
 class StatefulTextfield extends Component {
@@ -152,20 +152,25 @@ class ClientApplications extends PureComponent {
 
 
         return (
-            <Grid className="mdl-color--white">
-                <Cell col={12}>
-                    <HeaderTitle title={<span><Icon name={icon} /> {appName}</span>} subtitle={description}
-                        actions={url && <ExternalIconLink url={url}>Visit site</ExternalIconLink>}
-                    />
+            <Card shadow={0} className={commonStyles.fullwidth}>
+                <CardTitle style={{ paddingTop: '24px', paddingRight: '64px', wordBreak: 'break-all' }}>
+                    <Icon name={icon} /> {appName}
+                </CardTitle>
+                {description &&
+                    <CardText>{description}</CardText>
+                }
+                {url &&
+                    <CardMenu><IconLink url={url} icon="link"/></CardMenu>
+                }
+                <hr className={commonStyles.divider}/>
+                <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })} ripple
+                    tabBarProps={{ style: { width: '100%' } }} className="mdl-color--grey-100">
+                    <Tab>Details</Tab>
+                    <Tab>Edit</Tab>
+                </Tabs>
 
-                    <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })} ripple>
-                        <Tab>Details</Tab>
-                        <Tab>Edit</Tab>
-                    </Tabs>
-
-                    {content}
-                </Cell>
-            </Grid>
+                {content}
+            </Card>
         );
     }
 }

@@ -66,7 +66,7 @@ export default class FeatureListComponent extends React.PureComponent {
                     </FABButton>
                 </Link>
             </div>
-            <Card shadow={0} className={commonStyles.fullwidth}>
+            <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                 <CardActions>
                     <DropdownButton id="metric" label={`Last ${settings.showLastHour ? 'hour' : 'minute'}`}/>
                     <Menu target="metric" onClick={() => this.toggleMetrics()}
@@ -79,7 +79,7 @@ export default class FeatureListComponent extends React.PureComponent {
                     <DropdownButton id="sorting" label={`By ${settings.sort}`}/>
                     <Menu target="sorting" onClick={(e) => this.setSort(e.target.getAttribute('data-target'))}
                         style={{ width: '168px' }}>
-                        <MenuItem disabled={!settings.sort || settings.sort === 'name'} data-target="name">Name</MenuItem>
+                        <MenuItem disabled={settings.sort === 'name'} data-target="name">Name</MenuItem>
                         <MenuItem disabled={settings.sort === 'enabled'} data-target="enabled">Enabled</MenuItem>
                         <MenuItem disabled={settings.sort === 'created'} data-target="created">Created</MenuItem>
                         <MenuItem disabled={settings.sort === 'strategies'} data-target="strategies">Strategies</MenuItem>

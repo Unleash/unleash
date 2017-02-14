@@ -21,38 +21,40 @@ const mapStateToProps = (state) => {
         );
     }
 
-    if (settings.sort) {
-        if (settings.sort === 'enabled') {
-            features = features.sort((a, b) => (
-                // eslint-disable-next-line
-                a.enabled === b.enabled ? 0 : a.enabled ? -1 : 1
-            ));
-        } else if (settings.sort === 'created') {
-            features = features.sort((a, b) => (
-                new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1
-            ));
-        } else if (settings.sort === 'name') {
-            features = features.sort((a, b) => {
-                if (a.name < b.name) { return -1; }
-                if (a.name > b.name) { return 1; }
-                return 0;
-            });
-        } else if (settings.sort === 'strategies') {
-            features = features.sort((a, b) => (
-                a.strategies.length > b.strategies.length ? -1 : 1
-            ));
-        } else if (settings.sort === 'metrics') {
-            const target = settings.showLastHour ? featureMetrics.lastHour : featureMetrics.lastMinute;
+    if (!settings.sort) {
+        settings.sort = 'name';
+    }
 
-            features = features.sort((a, b) => {
-                if (!target[a.name]) { return 1; }
-                if (!target[b.name]) { return -1; }
-                if (target[a.name].yes > target[b.name].yes) {
-                    return -1;
-                }
-                return 1;
-            });
-        }
+    if (settings.sort === 'enabled') {
+        features = features.sort((a, b) => (
+            // eslint-disable-next-line
+            a.enabled === b.enabled ? 0 : a.enabled ? -1 : 1
+        ));
+    } else if (settings.sort === 'created') {
+        features = features.sort((a, b) => (
+            new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1
+        ));
+    } else if (settings.sort === 'name') {
+        features = features.sort((a, b) => {
+            if (a.name < b.name) { return -1; }
+            if (a.name > b.name) { return 1; }
+            return 0;
+        });
+    } else if (settings.sort === 'strategies') {
+        features = features.sort((a, b) => (
+            a.strategies.length > b.strategies.length ? -1 : 1
+        ));
+    } else if (settings.sort === 'metrics') {
+        const target = settings.showLastHour ? featureMetrics.lastHour : featureMetrics.lastMinute;
+
+        features = features.sort((a, b) => {
+            if (!target[a.name]) { return 1; }
+            if (!target[b.name]) { return -1; }
+            if (target[a.name].yes > target[b.name].yes) {
+                return -1;
+            }
+            return 1;
+        });
     }
 
     return {

@@ -36,19 +36,14 @@ We have created a script to ease this process: `scripts/docker-postgres.sh`
 // Install dependencies
 npm install
 
-// Build unleash-frontend 
-// (yes this is a bit wierd and be easier when we have a release of the frontend artifact).
-// You can of course "npm link unleash-frontend" instead 
-cd node_modules/unleash-frontend && npm install
-
 // Start server in development
 npm start:dev
 
-// Admin dashboard
+// Unleash UI
 http://localhost:4242
 
-// Feature API:
-http://localhost:4242/api/features
+// API:
+http://localhost:4242/api/
 
 // Execute tests in all packages:
 npm test

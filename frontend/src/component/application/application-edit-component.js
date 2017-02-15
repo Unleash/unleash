@@ -64,7 +64,7 @@ class ClientApplications extends PureComponent {
         } = application;
 
         const content = this.state.activeTab === 0 ? (
-            <Grid>
+            <Grid style={{ margin: 0 }}>
                 <Cell col={6} tablet={4} phone={12}>
                     <h6> Toggles</h6>
                     <hr />

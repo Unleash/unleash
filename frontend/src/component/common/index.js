@@ -14,14 +14,16 @@ export { styles };
 export const shorten = (str, len = 50) => (str && str.length > len ? `${str.substring(0, len)}...` : str);
 
 export const AppsLinkList = ({ apps }) => (
-    <List style={{ textAlign: 'left' }}>
+    <List>
     {apps.length > 0 && apps.map(({ appName, description = '-', icon = 'apps' }) => (
         <ListItem twoLine key={appName}>
-            <ListItemContent avatar={icon} subtitle={shorten(description)}>
-                <Link key={appName} to={`/applications/${appName}`}>
+            <span className="mdl-list__item-primary-content">
+                <Icon name={icon} className="mdl-list__item-avatar"/>
+                <Link to={`/applications/${appName}`} className={[styles.listLink, styles.truncate].join(' ')}>
                     {appName}
+                    <span className={['mdl-list__item-sub-title', styles.truncate].join(' ')}>{description}</span>
                 </Link>
-            </ListItemContent>
+            </span>
         </ListItem>
     ))}
     </List>
@@ -99,17 +101,10 @@ export function getIcon (type) {
 };
 
 
-export const IconLink = ({ icon, children, ...props }) => (
-    <a {...props} style={{ textDecoration: 'none' }}>
-         <Icon name={icon} style={{ marginRight: '5px', verticalAlign: 'middle' }}/>
-         <span style={{ textDecoration: 'none', verticalAlign: 'middle' }}>{children}</span>
+export const IconLink = ({ url, icon }) => (
+    <a href={url} target="_blank" rel="noopener" className="mdl-color-text--grey-600">
+         <Icon name={icon}/>
     </a>
-);
-
-export const ExternalIconLink = ({ url, children }) => (
-    <IconLink icon="queue" href={url} target="_blank" rel="noopener">
-        {children}
-    </IconLink>
 );
 
 export const DropdownButton = ({ label, id }) => (

@@ -1,6 +1,6 @@
 {
   "name": "unleash-server",
-  "description": "unleash your features",
+  "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
   "version": "2.1.0",
   "keywords": [
     "unleash",
@@ -74,7 +74,7 @@
     "prom-client": "^6.1.2",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.3.0",
-    "unleash-frontend": "^2.2.1",
+    "unleash-frontend": "^2.2.2",
     "yallist": "^2.0.0",
     "yargs": "^6.5.0"
   },

@@ -17,9 +17,7 @@ and releasing new features. This helps reducing risk, and allow us to easily man
 This repo contains the unleash-server, which contains the admin UI and a place to ask for the status of features. 
 In order to make use of unleash you will also need a client implementation.
 
-<kbd>
-![Unleash UI](https://github.com/Unleash/unleash/raw/master/docs/assets/dashboard.png)
-</kbd>
+<img src="https://github.com/Unleash/unleash/raw/master/docs/assets/dashboard.png" alt="Unleash UI" width="600" />
 
 Online demo [version availble on heroku](https://unleash-new-ui.herokuapp.com/#/features).
 

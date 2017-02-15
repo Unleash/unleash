@@ -84,7 +84,7 @@ class StrategyConfigure extends React.Component {
                 let value = this.props.strategy.parameters[name];
                 if (type === 'percentage') {
                     if (value == null || (typeof value === 'string' && value === '')) {
-                        value = 50; // default value
+                        this.setConfig(name, 50);
                     }
                     return (
                         <div key={name}>

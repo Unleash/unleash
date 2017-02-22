@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.2
+- Bugfix for migration: avoid multiple calls on same callback.
+
 ## 2.1.0
 - Provide a set of pre-defined activation strategies. These will automatically be defined by the migrator as long as they don't exist already. 
     - applicationHostname

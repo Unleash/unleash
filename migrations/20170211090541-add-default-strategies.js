@@ -41,8 +41,10 @@ function removeStrategySQL (strategy) {
 
 exports.up = function (db, callback) {
     const insertStrategies = strategies.map((s) => (cb) => {
-        db.runSql(insertEventsSQL(s), cb);
-        db.runSql(insertStrategySQL(s), cb);
+        async.series([
+            db.runSql.bind(db, insertEventsSQL(s)),
+            db.runSql.bind(db, insertStrategySQL(s)),
+        ], cb);
     });
     async.series(insertStrategies, callback);
 };
@@ -51,8 +53,10 @@ exports.down = function (db, callback) {
     const removeStrategies = strategies
         .filter(s => s.name !== 'default')
         .map((s) => (cb) => {
-            db.runSql(removeEventsSQL(s), cb);
-            db.runSql(removeStrategySQL(s), cb);
+            async.series([
+                db.runSql.bind(db, removeEventsSQL(s)),
+                db.runSql.bind(db, removeStrategySQL(s)),
+            ], cb);
         });
 
     async.series(removeStrategies, callback);

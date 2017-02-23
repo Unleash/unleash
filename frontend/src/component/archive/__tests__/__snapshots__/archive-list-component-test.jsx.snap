@@ -1,0 +1,114 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with archived toggles 1`] = `
+<react-mdl-Card
+  className="fullwidth"
+  shadow={0}
+>
+  <div
+    className="horisontalScroll"
+  >
+    <react-mdl-DataTable
+      className="fullwidth"
+      rows={
+        Array [
+          Object {
+            "createdAt": "2016-10-25T15:38:28.573Z",
+            "description": "Disables the confirm-functionality from API",
+            "enabled": false,
+            "name": "adin-pay-confirm-disabled",
+            "reviveName": "adin-pay-confirm-disabled",
+            "strategies": Array [
+              Object {
+                "name": "default",
+                "parameters": Object {},
+              },
+            ],
+          },
+          Object {
+            "createdAt": "2016-08-03T12:41:35.631Z",
+            "description": "Enables use of schibsted payment from order-payment-management",
+            "enabled": true,
+            "name": "adin-pay-platform-sch-payment",
+            "reviveName": "adin-pay-platform-sch-payment",
+            "strategies": Array [
+              Object {
+                "name": "default",
+                "parameters": Object {},
+              },
+            ],
+          },
+        ]
+      }
+      style={
+        Object {
+          "border": 0,
+        }
+      }
+    >
+      <react-mdl-TableHeader
+        cellFormatter={[Function]}
+        name="reviveName"
+        style={
+          Object {
+            "width": "25px",
+          }
+        }
+      >
+        Revive
+      </react-mdl-TableHeader>
+      <react-mdl-TableHeader
+        cellFormatter={[Function]}
+        name="enabled"
+        style={
+          Object {
+            "width": "25px",
+          }
+        }
+      >
+        Enabled
+      </react-mdl-TableHeader>
+      <react-mdl-TableHeader
+        name="name"
+      >
+        Toggle name
+      </react-mdl-TableHeader>
+      <react-mdl-TableHeader
+        name="createdAt"
+        numeric={true}
+      >
+        Created
+      </react-mdl-TableHeader>
+    </react-mdl-DataTable>
+  </div>
+</react-mdl-Card>
+`;
+
+exports[`renders correctly with no archived toggles 1`] = `
+<react-mdl-Card
+  className="fullwidth"
+  shadow={0}
+>
+  <div
+    className="emptyState"
+  >
+    <react-mdl-Icon
+      className="mdl-color-text--grey-300"
+      name="archive"
+      style={
+        Object {
+          "fontSize": "56px",
+        }
+      }
+    />
+    <br />
+    No archived feature toggles, go see 
+    <a
+      onClick={[Function]}
+      style={Object {}}
+    >
+      active toggles here
+    </a>
+  </div>
+</react-mdl-Card>
+`;

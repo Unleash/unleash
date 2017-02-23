@@ -28,9 +28,9 @@
     "build:html": "cp public/*.* dist/.",
     "start": "NODE_ENV=development webpack-dev-server --config webpack.config.js --progress --colors",
     "start:heroku": "UNLEASH_API=http://unleash.herokuapp.com npm run start",
-    "lint": "eslint . --ext=js,jsx",
-    "test": "npm run build",
-    "test:ci": "npm run test",
+    "lint": "eslint . --ext js,jsx",
+    "test": "jest",
+    "test:ci": "npm run lint && npm run build && npm run test",
     "prepublish": "npm run build"
   },
   "main": "./index.js",
@@ -69,13 +69,25 @@
     "eslint-config-finn-react": "^1.0.0-alpha.2",
     "eslint-plugin-react": "^6.2.0",
     "extract-text-webpack-plugin": "^1.0.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^19.0.2",
     "node-sass": "~3.12.1",
     "postcss-loader": "^0.13.0",
+    "react-test-renderer": "^15.4.2",
     "redux-devtools": "^3.3.1",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "toolbox-loader": "0.0.3",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.15.1"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js",
+      "\\.(css|scss)$": "identity-obj-proxy"
+    },
+    "setupFiles": [
+      "<rootDir>/jest-setup.js"
+    ]
   }
 }

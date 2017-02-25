@@ -83,5 +83,6 @@ Please read the [unleash developer guide](./docs/developer-guide.md) to learn mo
 We have made a separate project which runs unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker)
 
 ## I want to learn more
-- [Presentation on feature toggles](http://ivarconr.github.io/feature-toggles-presentation/sch-dev-lunch-2017/#1)
+- [Blog: Unleash your features gradually!](http://bytes.schibsted.com/unleash-features-gradually/)
+- [Presentation: Unleash your features gradually!](http://ivarconr.github.io/feature-toggles-presentation/sch-dev-lunch-2017/#1)
 - http://martinfowler.com/bliki/FeatureToggle.html

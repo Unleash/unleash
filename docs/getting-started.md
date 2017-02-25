@@ -16,7 +16,7 @@ _Unleash_ will, at startup, check whether database migration is needed, and perf
 $ npm install unleash-server -g
 $ unleash -d postgres://unleash_user:passord@localhost:5432/unleash -p 4242
 
-Unleash started on port:4242
+Unleash started on http://localhost:4242
 ```
 
 ### 2. Or programmatically:
@@ -29,7 +29,7 @@ unleash.start({
   databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash'
   port: 4242
 }).then(unleash => {
-    console.log(`Unleash started on port:${unleash.app.get('port')}`);
+    console.log(`Unleash started on http://localhost:${unleash.app.get('port')}`);
 });
 ```
 

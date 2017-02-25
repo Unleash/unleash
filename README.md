@@ -75,12 +75,13 @@ Unleash started on http://localhost:4242
 
 You can also require Unleash as a lib and expand it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md). 
 
-## Project details
-- [Project Roadmap](https://github.com/unleash/unleash/wiki/Roadmap)
-
 ## Developer Guide
 If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. 
 Please read the [unleash developer guide](./docs/developer-guide.md) to learn more on how you can contribute. 
 
 ## Run with docker
 We have made a separate project which runs unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker)
+
+## I want to learn more
+- [Presentation on feature toggles](http://ivarconr.github.io/feature-toggles-presentation/sch-dev-lunch-2017/#1)
+- http://martinfowler.com/bliki/FeatureToggle.html

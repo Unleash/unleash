@@ -12,21 +12,19 @@ fairly easy to develop client implementation for your favourite language.
 The main motivation for doing feature toggling is to decouple the process for deploying code to production 
 and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
 
-> Feature toggles decouple **deployment** of code  from  **release** of new features
+> Feature toggles decouple **deployment** of code from **release** of new features
 
 This repo contains the unleash-server, which contains the admin UI and a place to ask for the status of features. 
 In order to make use of unleash you will also need a client implementation.
 
-<kbd>
-![2016-12-28-211658_1115x752_scrot](https://cloud.githubusercontent.com/assets/158948/21530723/069c3002-cd43-11e6-9837-7509dfbf0678.png)
-</kbd>
+<img src="https://github.com/Unleash/unleash/raw/master/docs/assets/dashboard.png" alt="Unleash UI" width="600" />
 
 Online demo [version availble on heroku](https://unleash-new-ui.herokuapp.com/#/features).
 
 ## Activation strategies
-It's fine to have a system for turning stuff on and off. But some times we want more granular controll, 
+It's fine to have a system for turning stuff on and off. But some times we want more granular control, 
 we want to decide who to the toggle should be enabled for. This is where activation strategies comes in to 
-the picture. Activation strategies takes arbitrary config and allows us to enable a toggle in various ways.
+the picture. Activation strategies take arbitrary config and allows us to enable a toggle in various ways.
 
 Common activation strategies includes:
 - Active For users with a specified userId
@@ -56,10 +54,10 @@ if(unleash.isEnabled("AwesomeFeature")) {
 
 ## Requirements
 
-You will need a __PostreSQL__ 9.3+ database instance to be able to run Unleash.
+You will need a __PostgreSQL__ 9.3+ database instance to be able to run Unleash.
 
-When starting Unleash you must specify a database uri (can be set as environment variable DATABASE_URL) 
-which includes a username and password,  that have rights to migrate the database.
+When starting Unleash you must specify a database URI (can be set as environment variable DATABASE_URL) 
+which includes a username and password, which has the rights to migrate the database.
 
 _Unleash_ will, at startup, check whether database migration is needed, and perform necessary migrations.
 
@@ -70,9 +68,9 @@ _Unleash_ will, at startup, check whether database migration is needed, and perf
 
 ```bash
 $ npm install unleash-server -g
-$ unleash -d postgres://unleash_user:passord@localhost:5432/unleash -p 4242
+$ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 
-Unleash started on port:4242
+Unleash started on http://localhost:4242
 ```
 
 You can also require Unleash as a lib and expand it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md). 

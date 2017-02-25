@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.1.2
+- Bugfix for migration: avoid multiple calls on same callback.
+
+## 2.1.0
+- Provide a set of pre-defined activation strategies. These will automatically be defined by the migrator as long as they don't exist already. 
+    - applicationHostname
+    - gradualRolloutRandom
+    - gradualRolloutSessionId
+    - gradualRolloutUserId
+    - remoteAddress
+    - userWithId
+
+## 2.0.4
+- bump unleash-frontend which includes a lot of UI improvements and bug-fixes.
+- Fix error message when trying to create a archived feature toggle. 
+
 ## 2.0.0 (January 2017)
 
 - Support multiple strategies. This makes it easy to use multiple activation strategies in combination.

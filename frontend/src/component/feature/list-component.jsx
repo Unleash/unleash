@@ -86,8 +86,8 @@ export default class FeatureListComponent extends React.PureComponent {
                         <MenuItem disabled={settings.sort === 'metrics'} data-target="metrics">Metrics</MenuItem>
                     </Menu>
                 </CardActions>
-                <hr className={commonStyles.divider}/>
-                <List className={commonStyles.list}>
+                <hr/>
+                <List>
                     {features.map((feature, i) =>
                         <Feature key={i}
                             settings={settings}

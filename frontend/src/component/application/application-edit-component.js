@@ -162,7 +162,7 @@ class ClientApplications extends PureComponent {
                 {url &&
                     <CardMenu><IconLink url={url} icon="link"/></CardMenu>
                 }
-                <hr className={commonStyles.divider}/>
+                <hr/>
                 <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })} ripple
                     tabBarProps={{ style: { width: '100%' } }} className="mdl-color--grey-100">
                     <Tab>Details</Tab>

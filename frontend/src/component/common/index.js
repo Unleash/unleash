@@ -17,7 +17,7 @@ export const AppsLinkList = ({ apps }) => (
     <List>
     {apps.length > 0 && apps.map(({ appName, description = '-', icon = 'apps' }) => (
         <ListItem twoLine key={appName}>
-            <span className="mdl-list__item-primary-content">
+            <span className="mdl-list__item-primary-content" style={{ minWidth: 0 }}>
                 <Icon name={icon} className="mdl-list__item-avatar"/>
                 <Link to={`/applications/${appName}`} className={[styles.listLink, styles.truncate].join(' ')}>
                     {appName}

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { Grid, Cell, Icon, Chip, ChipContact } from 'react-mdl';
 import Progress from './progress';
 import { Link } from 'react-router';
-import { AppsLinkList, calc, styles as commonStyles } from '../common';
+import { AppsLinkList, calc } from '../common';
 import { formatFullDateTime } from '../common/util';
 import styles from './metrics.scss';
 
@@ -85,7 +85,7 @@ export default class MetricComponent extends React.Component {
                     <span>Created {formatFullDateTime(featureToggle.createdAt)}</span>
                 </Cell>
             </Grid>
-            <hr  className={commonStyles.divider}/>
+            <hr/>
             <StrategiesList strategies={featureToggle.strategies}/>
         </div>);
     }

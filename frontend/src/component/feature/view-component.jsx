@@ -100,7 +100,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     </span>
                     <Button onClick={removeToggle} style={{ flexShrink: 0 }}>Archive</Button>
                 </CardActions>
-                <hr className={commonStyles.divider}/>
+                <hr/>
                 <Tabs activeTab={activeTabId} ripple tabBarProps={{ style: { width: '100%' } }} className="mdl-color--grey-100">
                     <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
                     <Tab onClick={() => this.goToTab('edit', featureToggleName)}>Edit</Tab>

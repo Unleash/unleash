@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 import { List, ListItem, ListItemContent, IconButton, Grid, Cell } from 'react-mdl';
-import { HeaderTitle, styles as commonStyles } from '../common';
+import { HeaderTitle } from '../common';
 
 class StrategiesListComponent extends Component {
 
@@ -26,7 +26,7 @@ class StrategiesListComponent extends Component {
                                 name="add"
                                 onClick={() => this.context.router.push('/strategies/create')}
                                 title="Add new strategy" />} />
-                    <List className={commonStyles.list}>
+                    <List>
                         {strategies.length > 0 ? strategies.map((strategy, i) => (
                                 <ListItem key={i} twoLine>
                                     <ListItemContent icon="extension" subtitle={strategy.description}>

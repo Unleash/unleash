@@ -5,7 +5,6 @@ import { Layout, Drawer, Header, Navigation, Content,
 } from 'react-mdl';
 import { Link } from 'react-router';
 import styles from './styles.scss';
-import { styles as commonStyles } from './common';
 import ErrorContainer from './error/error-container';
 
 import UserContainer from './user/user-container';
@@ -114,7 +113,7 @@ export default class App extends Component {
         };
 
         return (
-            <div>
+            <div className={styles.container}>
                 <UserContainer />
                 <Layout fixedHeader>
                     <Header title={this.getTitleWithLinks()}>
@@ -124,7 +123,7 @@ export default class App extends Component {
                     </Header>
                     <Drawer className="mdl-color--white">
                         <span className={[styles.drawerTitle, 'mdl-layout-title'].join(' ')}>Unleash</span>
-                        <hr className={commonStyles.divider}/>
+                        <hr/>
                         <Navigation className={styles.navigation}>
                             {createListItem('/features', 'Feature toggles', 'list', true)}
                             {createListItem('/strategies', 'Strategies', 'extension', true)}
@@ -132,14 +131,13 @@ export default class App extends Component {
                             {createListItem('/archive', 'Archived toggles', 'archive', true)}
                             {createListItem('/applications', 'Applications', 'apps', true)}
                         </Navigation>
-                        <hr className={commonStyles.divider}/>
+                        <hr/>
                         <Navigation className={styles.navigation}>
                             <a href="https://github.com/Unleash" target="_blank" className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}>
                                 <i className={[
                                     'material-icons',
                                     styles.navigationIcon,
-                                    styles.githubIcon,
-                                    'mdl-color-text--grey-600',
+                                    styles.iconGitHub,
                                 ].join(' ')}/>GitHub
                             </a>
                         </Navigation>

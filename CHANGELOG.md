@@ -36,6 +36,6 @@
 
 
 
-## 1.0.0 (January 2014)
+## 1.0.0 (January 2015)
 - Initial public release
 

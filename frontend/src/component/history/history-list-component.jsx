@@ -20,6 +20,10 @@ class HistoryList extends Component {
             return null;
         }
 
+        const truncateTableCell = v => (
+            <span className={commonStyles.truncate} style={{ display: 'inline-block', verticalAlign: 'middle', width: '100%' }}>{v}</span>
+        );
+
         let entries;
 
         if (showData) {
@@ -33,12 +37,12 @@ class HistoryList extends Component {
                         }, entry))
                     }
                     className={commonStyles.fullwidth}
-                    style={{ border: 0 }}
+                    style={{ border: 0, tableLayout: 'fixed', minWidth: '840px' }}
                 >
-                <TableHeader name="type">Type</TableHeader>
-                <TableHeader name="createdBy">User</TableHeader>
+                <TableHeader name="type" cellFormatter={truncateTableCell} style={{ width: '136px' }}>Type</TableHeader>
+                <TableHeader name="createdBy" cellFormatter={truncateTableCell} style={{ width: '115px' }}>User</TableHeader>
                 <TableHeader name="diff">Diff</TableHeader>
-                <TableHeader numeric name="createdAt" cellFormatter={formatFullDateTime}>Time</TableHeader>
+                <TableHeader numeric name="createdAt" cellFormatter={formatFullDateTime} style={{ width: '165px' }}>Time</TableHeader>
             </Table>);
         }
 

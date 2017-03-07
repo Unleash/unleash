@@ -45,12 +45,24 @@
 }
 
 .drawerTitle {
+    line-height: 1 !important;
+    padding-top: 16px;
+    padding-bottom: 16px;
     padding-left: 24px !important;
 }
 @media screen and (max-width: 1024px) {
     .drawerTitle {
+        padding-top: 12px;
+        padding-bottom: 12px;
         padding-left: 16px !important;
     }
+}
+.drawerTitleLogo {
+    padding-right: 16px;
+}
+.drawerTitleText {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .navigation {

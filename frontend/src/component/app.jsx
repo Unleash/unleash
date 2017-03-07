@@ -122,7 +122,10 @@ export default class App extends Component {
                         </Navigation>
                     </Header>
                     <Drawer className="mdl-color--white">
-                        <span className={[styles.drawerTitle, 'mdl-layout-title'].join(' ')}>Unleash</span>
+                        <span className={[styles.drawerTitle, 'mdl-layout-title'].join(' ')}>
+                            <img src="/public/logo.png" width="32" height="32" className={styles.drawerTitleLogo}/>
+                            <span className={styles.drawerTitleText}>Unleash</span>
+                        </span>
                         <hr/>
                         <Navigation className={styles.navigation}>
                             {createListItem('/features', 'Feature toggles', 'list', true)}
@@ -173,7 +176,7 @@ export default class App extends Component {
                                     </FooterLinkList>
                                 </FooterDropDownSection>
                             </FooterSection>
-                            <FooterSection type="bottom" logo="Unleash Admin">
+                            <FooterSection type="bottom" logo="Unleash">
                                 <FooterLinkList>
                                     <a href="https://github.com/Unleash/unleash/" target="_blank">
                                             GitHub

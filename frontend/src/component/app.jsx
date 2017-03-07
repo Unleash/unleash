@@ -128,10 +128,10 @@ export default class App extends Component {
                         </span>
                         <hr/>
                         <Navigation className={styles.navigation}>
-                            {createListItem('/features', 'Feature toggles', 'list', true)}
+                            {createListItem('/features', 'Feature Toggles', 'list', true)}
                             {createListItem('/strategies', 'Strategies', 'extension', true)}
-                            {createListItem('/history', 'Event history', 'history', true)}
-                            {createListItem('/archive', 'Archived toggles', 'archive', true)}
+                            {createListItem('/history', 'Event History', 'history', true)}
+                            {createListItem('/archive', 'Archived Toggles', 'archive', true)}
                             {createListItem('/applications', 'Applications', 'apps', true)}
                         </Navigation>
                         <hr/>
@@ -157,14 +157,10 @@ export default class App extends Component {
                             <FooterSection type="middle">
                                 <FooterDropDownSection title="Menu">
                                     <FooterLinkList>
-                                        {createListItem('/features', 'Feature toggles')}
+                                        {createListItem('/features', 'Feature Toggles')}
                                         {createListItem('/strategies', 'Strategies')}
-                                        {createListItem('/history', 'Event history')}
-                                        {createListItem('/archive', 'Archived toggles')}
-                                    </FooterLinkList>
-                                </FooterDropDownSection>
-                                <FooterDropDownSection title="Metrics">
-                                    <FooterLinkList>
+                                        {createListItem('/history', 'Event History')}
+                                        {createListItem('/archive', 'Archived Toggles')}
                                         {createListItem('/applications', 'Applications')}
                                     </FooterLinkList>
                                 </FooterDropDownSection>

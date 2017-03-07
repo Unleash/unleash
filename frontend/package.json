@@ -24,9 +24,11 @@
   },
   "license": "Apache-2.0",
   "scripts": {
-    "build": "npm run build:assets && npm run build:html",
+    "build": "rm -rf dist && mkdir -p dist/public && npm run build:assets && npm run build:html && npm run build:img && npm run build:ico",
     "build:assets": "NODE_ENV=production webpack -p",
-    "build:html": "cp public/*.* dist/.",
+    "build:html": "cp public/*.html dist/.",
+    "build:ico": "cp public/*.ico dist/.",
+    "build:img": "cp public/*.png dist/public/.",
     "start": "NODE_ENV=development webpack-dev-server --config webpack.config.js --progress --colors",
     "start:heroku": "UNLEASH_API=http://unleash.herokuapp.com npm run start",
     "lint": "eslint . --ext js,jsx",

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.4
+- Bump unleash-fronted to 2.2.4
+
 ## 2.1.3
 - Bugfix for db: timestamps should be with time zone.
 - Bump unleash-fronted to 2.2.3

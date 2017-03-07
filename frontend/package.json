@@ -22,6 +22,7 @@
   "engines": {
     "node": "6"
   },
+  "license": "Apache-2.0",
   "scripts": {
     "build": "npm run build:assets && npm run build:html",
     "build:assets": "NODE_ENV=production webpack -p",

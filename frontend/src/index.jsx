@@ -48,7 +48,7 @@ ReactDOM.render(
             <Route path="/" component={App}>
                 <IndexRedirect to="/features" />
 
-                <Route pageTitle="Feature toggles" link="/features">
+                <Route pageTitle="Feature Toggles" link="/features">
                     <Route pageTitle="Feature toggles" path="/features" component={Features} />
                     <Route pageTitle="New" path="/features/create" component={CreateFeatureToggle} />
                     <Route pageTitle=":name" path="/features/:activeTab/:name" component={ViewFeatureToggle} />
@@ -60,12 +60,12 @@ ReactDOM.render(
                     <Route pageTitle=":strategyName" path="/strategies/:activeTab/:strategyName" component={StrategyView} />
                 </Route>
 
-                <Route pageTitle="Event history" link="/history">
+                <Route pageTitle="Event History" link="/history">
                     <Route pageTitle="Event history"  path="/history" component={HistoryPage} />
                     <Route pageTitle=":toggleName" path="/history/:toggleName" component={HistoryTogglePage} />
                 </Route>
 
-                <Route pageTitle="Archived toggles" path="/archive" component={Archive} />
+                <Route pageTitle="Archived Toggles" path="/archive" component={Archive} />
                 <Route pageTitle="Applications" link="/applications">
                     <Route pageTitle="Applications" path="/applications" component={Applications} />
                     <Route pageTitle=":name" path="/applications/:name" component={ApplicationView} />

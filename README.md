@@ -6,8 +6,7 @@
 [![devDependency Status](https://david-dm.org/Unleash/unleash/dev-status.svg)](https://david-dm.org/Unleash/unleash#info=devD)
 
 Unleash is a feature toggle system, that gives you a great overview over all feature toggles across 
-all your applications and services. It comes with client implementations for Java and Node, and it is 
-fairly easy to develop client implementation for your favourite language. 
+all your applications and services. It comes with official client implementations for Java, Node.js and Go.
 
 The main motivation for doing feature toggling is to decouple the process for deploying code to production 
 and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
@@ -35,14 +34,16 @@ Common activation strategies includes:
 Read more about activation strategies in [docs/activation-strategies.md](./docs/activation-strategies.md)
 
 ## Client implementations
+We have offical SDK's for Java, Node.js and Go. And we will be happy to add implementations in other langugages written by you! These libraries makes it very easy to use Unleash in you application.
+
 - [unleash-client-java](https://github.com/unleash/unleash-client-java)
 - [unleash-client-node](https://github.com/unleash/unleash-client-node)
+- [unleash-client-go](https://github.com/unleash/unleash-client-go)
 - (your implementation here!)
 
-Client implementations makes it is easy for developers to check whether a toggle is enabled or disabled. 
 
-```
-if(unleash.isEnabled("AwesomeFeature")) {
+```java
+if (unleash.isEnabled("AwesomeFeature")) {
   //do some magic
 } else {
   //do old boring stuff
@@ -75,14 +76,14 @@ Unleash started on http://localhost:4242
 
 You can also require Unleash as a lib and expand it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md). 
 
-## Developer Guide
-If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. 
-Please read the [unleash developer guide](./docs/developer-guide.md) to learn more on how you can contribute. 
-
 ## Run with docker
 We have made a separate project which runs unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker)
 
-## I want to learn more
+# Developer Guide
+If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. 
+Please read the [unleash developer guide](./docs/developer-guide.md) to learn more on how you can contribute. 
+
+# I want to learn more
 - [Blog: Unleash your features gradually!](http://bytes.schibsted.com/unleash-features-gradually/)
 - [Presentation: Unleash your features gradually!](http://ivarconr.github.io/feature-toggles-presentation/sch-dev-lunch-2017/#1)
 - http://martinfowler.com/bliki/FeatureToggle.html

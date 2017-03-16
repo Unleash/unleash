@@ -1,6 +1,17 @@
 # Client Specification 1.0
 
-This document describes the client contract. 
+This document attempts to guide developers in implementing a Unleash Client SDK. 
+
+## System system Overview
+Unleash is comprised of three parts:
+
+- **Unleash API** - The service holding all feature toggles and their configurations. Configurations declare which activation strategies to use and which parameters they should get.
+- **Unleash UI** - The dashboard used to manage feature toggles, define new strategies, look at metrics, etc.
+- **Unleash SDK** - Used by clients to check if a feature is enabled or disabled. The SDK also collects metrics and sends them to the Unleash API. Activation Strategies are also implemented in the SDK. Unleash currently provides official SDKs for Java and Node.js
+
+![system_overview](https://raw.githubusercontent.com/Unleash/unleash/master/docs/assets/unleash-diagram.png "System Overview")
+
+In order to be super fast, the client SDK caches all feature toggles and their current configuration in memory. The activation strategies are also implemented in the SDK. This makes it really fast to check if a toggle is on or off because it is just a simple function operating on local state, without the need to poll data from the database.
 
 ## The basics
 All client implementations should strive to have a simple and consistent user API. 
@@ -54,7 +65,7 @@ A feature toggle is defined as:
 A simple demo of the isEnable function in JavaScript-style (most implementation will probalby be more functional):
 
 ```javascript
-function isEnabled(name, defaultValue) {
+function isEnabled(name, unleashContext = {}, defaultValue = false) {
     const toggle = toggleRepository.get(name);
     let enabled = false;
     
@@ -66,7 +77,7 @@ function isEnabled(name, defaultValue) {
         for(let i=0;i<toggle.strategies.length;i++) {
             let strategyDef = toggle.strategies[i];
             let strategyImpl = strategyImplRepository.get(strategyDef.name);
-            if(strategyImpl.isEnabled) {
+            if(strategyImpl.isEnabled(toggle.parameters, unleashContext)) {
                 return true;
             }
         }
@@ -106,9 +117,9 @@ The registration must include all fields specified.
 
 
 ## Metrics
-Clients are expectedd to send metrics back to the api regualry. The metrics is a list of used toggles and how 
-many times they evaluated to true or false in the current period. 
-[metrics-api](api/metrics-api.md).
+Clients are expectedd to send metrics back to Unleash API at regualr intervals. The metrics is a list 
+of used toggles and how many times they evaluated to *yes* or *no* in the current period. 
+Read more about how to send the metrics in the [metrics-api](api/metrics-api.md) documentation.
 
 
 ## Backup feature toggles

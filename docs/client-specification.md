@@ -79,10 +79,18 @@ function isEnabled(name, defaultValue) {
 
 
 ## Actication Strategies
-Activation strategies are defined and confured in the unleash-service. It is up to the client
-to provide the actual implementation of each actication strategy. Client implementation should 
-also provide a defined interface to make it easier for the user to implement their own 
-activation strategies, and register those in the unleash client. 
+Activation strategies are defined and configured in the unleash-service. It is up to the client
+to provide the actual implementation of each actication strategy. 
+
+Unleash also ships with a few built-in strategies and it is expected that client SDK's implement 
+these. Read more about these [activation strategies](activation-strategies.md). For the built-in
+strategies to work as expected the client should also allow the user to define a 
+[unleash-context](unleash-context.md). The context should be possible to pass in as part of 
+the `isEnabled` call.
+
+### Extenstion points
+Client implementation should  also provide a defined interface to make it easier for 
+the user to implement their own activation strategies, and register those in the unleash client. 
 
 
 ## Fetching feature toggles (polling)
@@ -93,14 +101,20 @@ The default poll interval should be **15 seconds**, and it should be configurabl
 
 ## Client registration
 Client implementation should at initialization register with the unleash-server. 
-The should send a registration as specified in the [api documentation](https://github.com/Unleash/unleash/blob/master/docs/api/metrics-api.md#client-registration).
+The should send a registration as specified in the [api documentation](api/metrics-api.md#client-registration).
 The registration must include all fields specified.
 
 
-
-
 ## Metrics
+Clients are expectedd to send metrics back to the api regualry. The metrics is a list of used toggles and how 
+many times they evaluated to true or false in the current period. 
+[metrics-api](api/metrics-api.md).
+
 
 ## Backup feature toggles
+The SDK also persists the latest known state to a local file at the instance where the client is running. 
+It will persist a local copy every time the client detects changes from the API. Having a local backup of 
+the latest known state minimises the consequence of clients not being able to to talk to Unleash API at 
+startup. This is required because network is unreliable.
 
 

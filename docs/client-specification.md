@@ -13,12 +13,12 @@ Unleash is comprised of three parts:
 
 In order to be super fast, the client SDK caches all feature toggles and their current configuration in memory. The activation strategies are also implemented in the SDK. This makes it really fast to check if a toggle is on or off because it is just a simple function operating on local state, without the need to poll data from the database.
 
-## The basics
+## The Basics
 All client implementations should strive to have a simple and consistent user API. 
 It should be a simple method, called isEnabled, to check if a feature toggle is enabled 
 or not. The method should return a `boolean` value, true or false. 
 
-```
+```javascript
 unleash.isEnabled("myAwesomeToggle")
 ```
 
@@ -26,12 +26,14 @@ The basic `isEnabled` method should also accept a default value. This should be 
 the client does not know anything about that that toggle name. If the user does not specify
 a default value, false should be returned for unknown feature toggles. 
 
-Example:
+**Calling unleash with default value:**
 
-``` 
+```javascript 
 boolean value = unleash.isEnabled("unknownFeatureToggle", false);
 //value==false because default value was used. 
 ```
+
+
 
 ### Implementation of isEnabled
 A feature toggle is defined as: 

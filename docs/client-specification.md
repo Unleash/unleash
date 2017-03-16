@@ -2,7 +2,7 @@
 
 This document attempts to guide developers in implementing a Unleash Client SDK. 
 
-## System system Overview
+## System Overview
 Unleash is comprised of three parts:
 
 - **Unleash API** - The service holding all feature toggles and their configurations. Configurations declare which activation strategies to use and which parameters they should get.
@@ -89,7 +89,7 @@ function isEnabled(name, unleashContext = {}, defaultValue = false) {
 ```
 
 
-## Actication Strategies
+## Activation Strategies
 Activation strategies are defined and configured in the unleash-service. It is up to the client
 to provide the actual implementation of each actication strategy. 
 
@@ -99,7 +99,7 @@ strategies to work as expected the client should also allow the user to define a
 [unleash-context](unleash-context.md). The context should be possible to pass in as part of 
 the `isEnabled` call.
 
-### Extenstion points
+### Extension points
 Client implementation should  also provide a defined interface to make it easier for 
 the user to implement their own activation strategies, and register those in the unleash client. 
 
@@ -122,7 +122,7 @@ of used toggles and how many times they evaluated to *yes* or *no* in the curren
 Read more about how to send the metrics in the [metrics-api](api/metrics-api.md) documentation.
 
 
-## Backup feature toggles
+## Backup Feature Toggles
 The SDK also persists the latest known state to a local file at the instance where the client is running. 
 It will persist a local copy every time the client detects changes from the API. Having a local backup of 
 the latest known state minimises the consequence of clients not being able to to talk to Unleash API at 

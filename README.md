@@ -18,7 +18,7 @@ In order to make use of unleash you will also need a client implementation.
 
 <img src="https://github.com/Unleash/unleash/raw/master/docs/assets/dashboard.png" alt="Unleash UI" width="600" />
 
-Online demo [version availble on heroku](https://unleash-new-ui.herokuapp.com/#/features).
+[Online demo version available on heroku](https://unleash.herokuapp.com/#/features).
 
 ## Activation strategies
 It's fine to have a system for turning stuff on and off. But some times we want more granular control, 

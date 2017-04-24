@@ -75,7 +75,7 @@
     "prom-client": "^7.1.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.3.0",
-    "unleash-frontend": "^2.2.5",
+    "unleash-frontend": "^2.2.6",
     "yallist": "^2.0.0",
     "yargs": "^6.5.0"
   },

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.7
+- Bump unleash-frontend to 2.2.6
+
 ## 2.1.6
 - Added strategies validation when updating feature toggle
 - Allow node newer than 6 to run the app

@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.15
+## 2.1.6
 - Added strategies validation when updating feature toggle
 - Allow node newer than 6 to run the app
 

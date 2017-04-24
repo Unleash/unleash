@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.15
+- Added strategies validation when updating feature toggle
+- Allow node newer than 6 to run the app
+
 ## 2.1.4
 - Bump unleash-fronted to 2.2.4
 

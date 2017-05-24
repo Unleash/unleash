@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "async": "^2.1.5",
-    "body-parser": "1.16.1",
+    "body-parser": "1.17.2",
     "commander": "^2.9.0",
     "cookie-parser": "^1.4.1",
     "db-migrate": "0.10.0-beta.20",

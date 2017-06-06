@@ -3,6 +3,9 @@
         "finn",
         "finn/node"
     ],
+    "parserOptions": {
+        "ecmaVersion": "2017"
+    },
     "rules": {
         "max-nested-callbacks": "off"
     }

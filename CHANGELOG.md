@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.0
+- Expose hooks in main export #223
+
 ## 2.1.7
 - Bump unleash-frontend to 2.2.6
 

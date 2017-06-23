@@ -1,9 +1,9 @@
 import { throwIfNotSuccess, headers } from './helper';
 
-const URI = 'api/strategies';
+const URI = 'api/admin/strategies';
 
 function fetchAll () {
-    return fetch(URI)
+    return fetch(URI, { credentials: 'include' })
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }

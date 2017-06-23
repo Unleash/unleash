@@ -1,21 +1,24 @@
 import { throwIfNotSuccess, headers } from './helper';
 
-const URI = 'api/client/applications';
+const URI = 'api/admin/metrics/applications';
 
 function fetchAll () {
-    return fetch(URI, { headers })
+    return fetch(URI, { headers, credentials: 'include' })
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }
 
 function fetchApplication (appName) {
-    return fetch(`${URI}/${appName}`, { headers })
+    return fetch(`${URI}/${appName}`, { headers, credentials: 'include' })
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }
 
 function fetchApplicationsWithStrategyName (strategyName) {
-    return fetch(`${URI}?strategyName=${strategyName}`, { headers })
+    return fetch(`${URI}?strategyName=${strategyName}`, {
+        headers,
+        credentials: 'include',
+    })
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }

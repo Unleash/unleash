@@ -31,6 +31,30 @@ test.serial('revives a feature by name', async t => {
         .then(destroy);
 });
 
+test.serial(
+    'archived feature is not accessible via /features/:featureName',
+    async t => {
+        t.plan(0);
+        const { request, destroy } = await setupApp('archive_serial2');
+
+        await request
+            .get('/api/admin/features/featureX')
+            .set('Content-Type', 'application/json')
+            .expect(200);
+
+        await request
+            .delete('/api/admin/features/featureX')
+            .set('Content-Type', 'application/json')
+            .expect(200);
+
+        return request
+            .get('/api/admin/features/featureX')
+            .set('Content-Type', 'application/json')
+            .expect(404)
+            .then(destroy);
+    }
+);
+
 test.serial('must set name when reviving toggle', async t => {
     t.plan(0);
     const { request, destroy } = await setupApp('archive_serial');

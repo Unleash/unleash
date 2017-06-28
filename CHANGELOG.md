@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+- moved api endpoints to /api/admin/* and /api/client/*
+- refactored all routes to use a standalone router per file
+- removed v.1 legacy data support
+- removed v.1 legacy /features endpoint
+- added prettier and upgraded eslint
+
 ## 2.2.0
 - Expose hooks in main export #223
 

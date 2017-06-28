@@ -58,9 +58,9 @@
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.1.tgz#2cf42972d0931c1060c7d5fa6627fce6bd876f2f"
 
-"@types/node@*", "@types/node@^7.0.5":
-  version "7.0.32"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.32.tgz#6afe6c66520a4c316623a14aef123908d01b4bba"
+"@types/node@*", "@types/node@^8.0.4":
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.4.tgz#d0ca03fa4a3d7ab66c1f4e78a0fd06e30e46a7a9"
 
 "@types/serve-static@*":
   version "1.7.31"
@@ -822,7 +822,7 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-camelcase@^4.0.0:
+camelcase@^4.0.0, camelcase@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-4.1.0.tgz#d545635be1e33c542649c69173e5de6acfae34dd"
 
@@ -1347,7 +1347,7 @@ diff-match-patch@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/diff-match-patch/-/diff-match-patch-1.0.0.tgz#1cc3c83a490d67f95d91e39f6ad1f2e086b63048"
 
-diff@^3.0.0, diff@^3.0.1:
+diff@^3.0.0, diff@^3.0.1, diff@^3.1.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.2.0.tgz#c9ce393a4b7cbd0b058a725c93df299027868ff9"
 
@@ -1801,7 +1801,7 @@ find-cache-dir@^0.1.1:
     mkdirp "^0.5.1"
     pkg-dir "^1.0.0"
 
-find-up@^1.0.0, find-up@^1.1.2:
+find-up@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-1.1.2.tgz#6b2e9822b1a2ce0a60ab64d610eccad53cb24d0f"
   dependencies:
@@ -1850,7 +1850,7 @@ for-own@^0.1.4:
   dependencies:
     for-in "^1.0.1"
 
-foreground-child@^1.3.3, foreground-child@^1.5.3:
+foreground-child@^1.5.3, foreground-child@^1.5.6:
   version "1.5.6"
   resolved "https://registry.yarnpkg.com/foreground-child/-/foreground-child-1.5.6.tgz#4fd71ad2dfde96789b980a5c0a295937cb2f5ce9"
   dependencies:
@@ -1877,11 +1877,11 @@ form-data@~2.1.1:
     combined-stream "^1.0.5"
     mime-types "^2.1.12"
 
-formatio@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/formatio/-/formatio-1.1.1.tgz#5ed3ccd636551097383465d996199100e86161e9"
+formatio@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/formatio/-/formatio-1.2.0.tgz#f3b2167d9068c4698a8d51f4f760a39a54d818eb"
   dependencies:
-    samsam "~1.1"
+    samsam "1.x"
 
 formidable@^1.1.1:
   version "1.1.1"
@@ -2294,10 +2294,6 @@ inherits@2, inherits@2.0.3, inherits@^2.0.1, inherits@^2.0.3, inherits@~2.0.0, i
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
 
-inherits@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.1.tgz#b17d08d326b4423e568eff719f91b0b1cbdf69f1"
-
 ini@^1.3.4, ini@~1.3.0:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.4.tgz#0537cb79daf59b59a1a517dff706c86ec039162e"
@@ -2563,17 +2559,17 @@ isstream@0.1.x, isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-istanbul-lib-coverage@^1.1.0, istanbul-lib-coverage@^1.1.1:
+istanbul-lib-coverage@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/istanbul-lib-coverage/-/istanbul-lib-coverage-1.1.1.tgz#73bfb998885299415c93d38a3e9adf784a77a9da"
 
-istanbul-lib-hook@^1.0.6:
+istanbul-lib-hook@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/istanbul-lib-hook/-/istanbul-lib-hook-1.0.7.tgz#dd6607f03076578fe7d6f2a630cf143b49bacddc"
   dependencies:
     append-transform "^0.4.0"
 
-istanbul-lib-instrument@^1.7.1:
+istanbul-lib-instrument@^1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/istanbul-lib-instrument/-/istanbul-lib-instrument-1.7.3.tgz#925b239163eabdd68cc4048f52c2fa4f899ecfa7"
   dependencies:
@@ -2585,7 +2581,7 @@ istanbul-lib-instrument@^1.7.1:
     istanbul-lib-coverage "^1.1.1"
     semver "^5.3.0"
 
-istanbul-lib-report@^1.1.0:
+istanbul-lib-report@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/istanbul-lib-report/-/istanbul-lib-report-1.1.1.tgz#f0e55f56655ffa34222080b7a0cd4760e1405fc9"
   dependencies:
@@ -2594,7 +2590,7 @@ istanbul-lib-report@^1.1.0:
     path-parse "^1.0.5"
     supports-color "^3.1.2"
 
-istanbul-lib-source-maps@^1.2.0:
+istanbul-lib-source-maps@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/istanbul-lib-source-maps/-/istanbul-lib-source-maps-1.2.1.tgz#a6fe1acba8ce08eebc638e572e294d267008aa0c"
   dependencies:
@@ -2604,7 +2600,7 @@ istanbul-lib-source-maps@^1.2.0:
     rimraf "^2.6.1"
     source-map "^0.5.3"
 
-istanbul-reports@^1.1.0:
+istanbul-reports@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-1.1.1.tgz#042be5c89e175bc3f86523caab29c014e77fee4e"
   dependencies:
@@ -3007,9 +3003,9 @@ log4js@^1.0.1:
     semver "^5.3.0"
     streamroller "^0.4.0"
 
-lolex@1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/lolex/-/lolex-1.3.2.tgz#7c3da62ffcb30f0f5a80a2566ca24e45d8a01f31"
+lolex@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/lolex/-/lolex-1.6.0.tgz#3a9a0283452a47d7439e72731b9e07d7386e49f6"
 
 longest@^1.0.1:
   version "1.0.1"
@@ -3074,6 +3070,12 @@ md5-o-matic@^0.1.1:
 media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
+
+mem@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/mem/-/mem-1.1.0.tgz#5edd52b485ca1d900fe64895505399a0dfa45f76"
+  dependencies:
+    mimic-fn "^1.0.0"
 
 meow@^3.7.0:
   version "3.7.0"
@@ -3209,6 +3211,10 @@ nan@^2.3.0:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.6.2.tgz#e4ff34e6c95fdfb5aecc08de6596f43605a7db45"
 
+native-promise-only@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/native-promise-only/-/native-promise-only-0.8.1.tgz#20a318c30cb45f71fe7adfbf7b21c99c1472ef11"
+
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
@@ -3315,9 +3321,9 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
-nyc@^10.1.2:
-  version "10.3.2"
-  resolved "https://registry.yarnpkg.com/nyc/-/nyc-10.3.2.tgz#f27f4d91f2a9db36c24f574ff5c6efff0233de46"
+nyc@^11.0.3:
+  version "11.0.3"
+  resolved "https://registry.yarnpkg.com/nyc/-/nyc-11.0.3.tgz#0c28bc669a851621709bf7a08503034bee3812b6"
   dependencies:
     archy "^1.0.0"
     arrify "^1.0.1"
@@ -3326,15 +3332,15 @@ nyc@^10.1.2:
     debug-log "^1.0.1"
     default-require-extensions "^1.0.0"
     find-cache-dir "^0.1.1"
-    find-up "^1.1.2"
+    find-up "^2.1.0"
     foreground-child "^1.5.3"
     glob "^7.0.6"
-    istanbul-lib-coverage "^1.1.0"
-    istanbul-lib-hook "^1.0.6"
-    istanbul-lib-instrument "^1.7.1"
-    istanbul-lib-report "^1.1.0"
-    istanbul-lib-source-maps "^1.2.0"
-    istanbul-reports "^1.1.0"
+    istanbul-lib-coverage "^1.1.1"
+    istanbul-lib-hook "^1.0.7"
+    istanbul-lib-instrument "^1.7.3"
+    istanbul-lib-report "^1.1.1"
+    istanbul-lib-source-maps "^1.2.1"
+    istanbul-reports "^1.1.1"
     md5-hex "^1.2.0"
     merge-source-map "^1.0.2"
     micromatch "^2.3.11"
@@ -3342,9 +3348,9 @@ nyc@^10.1.2:
     resolve-from "^2.0.0"
     rimraf "^2.5.4"
     signal-exit "^3.0.1"
-    spawn-wrap "1.2.4"
-    test-exclude "^4.1.0"
-    yargs "^7.1.0"
+    spawn-wrap "^1.3.7"
+    test-exclude "^4.1.1"
+    yargs "^8.0.1"
     yargs-parser "^5.0.0"
 
 oauth-sign@~0.8.1:
@@ -3441,6 +3447,14 @@ os-locale@^1.4.0:
   resolved "https://registry.yarnpkg.com/os-locale/-/os-locale-1.4.0.tgz#20f9f17ae29ed345e8bde583b13d2009803c14d9"
   dependencies:
     lcid "^1.0.0"
+
+os-locale@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/os-locale/-/os-locale-2.0.0.tgz#15918ded510522b81ee7ae5a309d54f639fc39a4"
+  dependencies:
+    execa "^0.5.0"
+    lcid "^1.0.0"
+    mem "^1.1.0"
 
 os-tmpdir@^1.0.0, os-tmpdir@^1.0.1, os-tmpdir@~1.0.1:
   version "1.0.2"
@@ -3573,6 +3587,12 @@ path-parse@^1.0.5:
 path-to-regexp@0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
+
+path-to-regexp@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-1.7.0.tgz#59fde0f435badacba103a84e9d3bc64e96b9937d"
+  dependencies:
+    isarray "0.0.1"
 
 path-type@^1.0.0:
   version "1.1.0"
@@ -4323,9 +4343,9 @@ safe-buffer@^5.0.1, safe-buffer@~5.1.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
 
-samsam@1.1.2, samsam@~1.1:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/samsam/-/samsam-1.1.2.tgz#bec11fdc83a9fda063401210e40176c3024d1567"
+samsam@1.x, samsam@^1.1.3:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/samsam/-/samsam-1.2.1.tgz#edd39093a3184370cb859243b2bdf255e7d8ea67"
 
 scroll-behavior@^0.9.3:
   version "0.9.3"
@@ -4411,22 +4431,22 @@ shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
 
-signal-exit@^2.0.0:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-2.1.2.tgz#375879b1f92ebc3b334480d038dc546a6d558564"
-
 signal-exit@^3.0.0, signal-exit@^3.0.1, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-sinon@^1.17.7:
-  version "1.17.7"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-1.17.7.tgz#4542a4f49ba0c45c05eb2e9dd9d203e2b8efe0bf"
+sinon@^2.3.5:
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-2.3.5.tgz#9a2fc0ff8d526da716f30953aa2c65d518917f6c"
   dependencies:
-    formatio "1.1.1"
-    lolex "1.3.2"
-    samsam "1.1.2"
-    util ">=0.10.3 <1"
+    diff "^3.1.0"
+    formatio "1.2.0"
+    lolex "^1.6.0"
+    native-promise-only "^0.8.1"
+    path-to-regexp "^1.7.0"
+    samsam "^1.1.3"
+    text-encoding "0.6.4"
+    type-detect "^4.0.0"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -4468,15 +4488,15 @@ source-map@^0.5.0, source-map@^0.5.3, source-map@^0.5.6, source-map@~0.5.1:
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.6.tgz#75ce38f52bf0733c5a7f0c118d81334a2bb5f412"
 
-spawn-wrap@1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/spawn-wrap/-/spawn-wrap-1.2.4.tgz#920eb211a769c093eebfbd5b0e7a5d2e68ab2e40"
+spawn-wrap@^1.3.7:
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/spawn-wrap/-/spawn-wrap-1.3.7.tgz#beb8bf4426d64b2b06871e0d7dee2643f1f8d1bc"
   dependencies:
-    foreground-child "^1.3.3"
+    foreground-child "^1.5.6"
     mkdirp "^0.5.0"
     os-homedir "^1.0.1"
     rimraf "^2.3.3"
-    signal-exit "^2.0.0"
+    signal-exit "^3.0.2"
     which "^1.2.4"
 
 spdx-correct@~1.0.0:
@@ -4741,7 +4761,7 @@ term-size@^0.1.0:
   dependencies:
     execa "^0.4.0"
 
-test-exclude@^4.1.0:
+test-exclude@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/test-exclude/-/test-exclude-4.1.1.tgz#4d84964b0966b0087ecc334a2ce002d3d9341e26"
   dependencies:
@@ -4750,6 +4770,10 @@ test-exclude@^4.1.0:
     object-assign "^4.1.0"
     read-pkg-up "^1.0.1"
     require-main-filename "^1.0.1"
+
+text-encoding@0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/text-encoding/-/text-encoding-0.6.4.tgz#e399a982257a276dae428bb92845cb71bdc26d19"
 
 text-table@^0.2.0, text-table@~0.2.0:
   version "0.2.0"
@@ -4846,6 +4870,10 @@ type-check@~0.3.2:
   resolved "https://registry.yarnpkg.com/type-check/-/type-check-0.3.2.tgz#5884cab512cf1d355e3fb784f30804b2b520db72"
   dependencies:
     prelude-ls "~1.1.2"
+
+type-detect@^4.0.0:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.3.tgz#0e3f2670b44099b0b46c284d136a7ef49c74c2ea"
 
 type-is@~1.6.15:
   version "1.6.15"
@@ -4958,12 +4986,6 @@ util-extend@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/util-extend/-/util-extend-1.0.3.tgz#a7c216d267545169637b3b6edc6ca9119e2ff93f"
 
-"util@>=0.10.3 <1":
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/util/-/util-0.10.3.tgz#7afb1afe50805246489e3db7fe0ed379336ac0f9"
-  dependencies:
-    inherits "2.0.1"
-
 utile@0.3.x:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/utile/-/utile-0.3.0.tgz#1352c340eb820e4d8ddba039a4fbfaa32ed4ef3a"
@@ -5027,6 +5049,10 @@ when@~2.0.1:
 which-module@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/which-module/-/which-module-1.0.0.tgz#bba63ca861948994ff307736089e3b96026c2a4f"
+
+which-module@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/which-module/-/which-module-2.0.0.tgz#d9ef07dce77b9902b8a3a8fa4b31c3e3f7e6e87a"
 
 which@^1.2.10, which@^1.2.12, which@^1.2.4, which@^1.2.8, which@^1.2.9:
   version "1.2.14"
@@ -5153,6 +5179,12 @@ yargs-parser@^5.0.0:
   dependencies:
     camelcase "^3.0.0"
 
+yargs-parser@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-7.0.0.tgz#8d0ac42f16ea55debd332caf4c4038b3e3f5dfd9"
+  dependencies:
+    camelcase "^4.1.0"
+
 yargs@^6.5.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-6.6.0.tgz#782ec21ef403345f830a808ca3d513af56065208"
@@ -5171,23 +5203,23 @@ yargs@^6.5.0:
     y18n "^3.2.1"
     yargs-parser "^4.2.0"
 
-yargs@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-7.1.0.tgz#6ba318eb16961727f5d284f8ea003e8d6154d0c8"
+yargs@^8.0.1:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-8.0.2.tgz#6299a9055b1cefc969ff7e79c1d918dceb22c360"
   dependencies:
-    camelcase "^3.0.0"
+    camelcase "^4.1.0"
     cliui "^3.2.0"
     decamelize "^1.1.1"
     get-caller-file "^1.0.1"
-    os-locale "^1.4.0"
-    read-pkg-up "^1.0.1"
+    os-locale "^2.0.0"
+    read-pkg-up "^2.0.0"
     require-directory "^2.1.1"
     require-main-filename "^1.0.1"
     set-blocking "^2.0.0"
-    string-width "^1.0.2"
-    which-module "^1.0.0"
+    string-width "^2.0.0"
+    which-module "^2.0.0"
     y18n "^3.2.1"
-    yargs-parser "^5.0.0"
+    yargs-parser "^7.0.0"
 
 yargs@~3.10.0:
   version "3.10.0"

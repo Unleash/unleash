@@ -81,7 +81,7 @@
     "yargs": "^6.5.0"
   },
   "devDependencies": {
-    "@types/node": "^7.0.5",
+    "@types/node": "^8.0.4",
     "ava": "^0.19.1",
     "coveralls": "^2.11.16",
     "eslint": "^4.1.1",
@@ -89,10 +89,10 @@
     "eslint-config-finn-prettier": "^3.0.0",
     "husky": "^0.14.1",
     "lint-staged": "^4.0.0",
-    "nyc": "^10.1.2",
+    "nyc": "^11.0.3",
     "prettier": "^1.5.2",
     "proxyquire": "^1.7.11",
-    "sinon": "^1.17.7",
+    "sinon": "^2.3.5",
     "superagent": "^3.5.0",
     "supertest": "^3.0.0",
     "supervisor": "^0.12.0"

@@ -1644,9 +1644,9 @@ expand-tilde@^1.2.2:
   dependencies:
     os-homedir "^1.0.1"
 
-express-validator@3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-3.1.2.tgz#bae23dfa11191398d5fcada3dd7c54f28428195a"
+express-validator@^3.1.2:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-3.2.0.tgz#9537abeb0f66e439f9e30b4ed16c4c6c231318e2"
   dependencies:
     "@types/bluebird" "~3.0.36"
     "@types/express" "~4.0.34"

@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+
+## 3.0.0-alpha.1
+- upgrade unleash-frontend to 3.0.0-alpha.1
 - moved api endpoints to /api/admin/* and /api/client/*
 - refactored all routes to use a standalone router per file
 - removed v.1 legacy data support

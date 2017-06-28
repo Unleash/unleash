@@ -1,7 +1,7 @@
 ## Strategies API
 
 ### Fetch Strategies 
-`GET: http://unleash.host.com/api/strategies`
+`GET: http://unleash.host.com/api/admin/strategies`
 
 Used to fetch all defined strategies and their defined paramters. 
 
@@ -51,7 +51,7 @@ Used to fetch all defined strategies and their defined paramters.
 
 ### Create strategy
 
-`POST: http://unleash.host.com/api/strategies`
+`POST: http://unleash.host.com/api/admin/strategies`
 
 **Body**
 
@@ -81,7 +81,7 @@ Used to create a new Strategy. Name is required and must be unique. It is also r
 
 ### Update strategy
 
-`PUT: http://unleash.host.com/api/strategies/:name`
+`PUT: http://unleash.host.com/api/admin/strategies/:name`
 
 **Body**
 

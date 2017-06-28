@@ -45,7 +45,8 @@
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",
     "test:pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",
     "test:coverage": "nyc npm run test",
-    "test:coverage-report": "nyc report --reporter=text-lcov | coveralls"
+    "test:coverage-report": "nyc report --reporter=text-lcov | coveralls",
+    "precommit": "lint-staged"
   },
   "nyc": {
     "all": true,
@@ -83,13 +84,23 @@
     "@types/node": "^7.0.5",
     "ava": "^0.18.2",
     "coveralls": "^2.11.16",
-    "eslint": "^3.16.1",
-    "eslint-config-finn": "^1.0.0-beta.1",
+    "eslint": "^4.1.1",
+    "eslint-config-finn": "^2.0.0",
+    "eslint-config-finn-prettier": "^3.0.0",
+    "husky": "^0.14.1",
+    "lint-staged": "^4.0.0",
     "nyc": "^10.1.2",
+    "prettier": "^1.5.2",
     "proxyquire": "^1.7.11",
     "sinon": "^1.17.7",
     "superagent": "^3.5.0",
     "supertest": "^3.0.0",
     "supervisor": "^0.12.0"
+  },
+   "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }

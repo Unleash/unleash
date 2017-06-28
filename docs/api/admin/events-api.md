@@ -1,6 +1,6 @@
 # Events API
 
-`GET: http://unleash.host.com/api/events`
+`GET: http://unleash.host.com/api/admin/events`
 
 Used to fetch all changes in the unleash system.
 

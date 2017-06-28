@@ -1,61 +1,9 @@
-# This document describes the client metrics endpoints
-
-### Client registration
-
-`POST: http://unleash.host.com/api/client/register`
-
-Register a client instance with the unleash server. The client should send all fields specified. 
-
-```json
-{
-    "appName": "appName",
-    "instanceId": "instanceId",
-    "strategies": ["default", "some-strategy-1"],
-    "started": "2016-11-03T07:16:43.572Z",
-    "interval": 10000,
-}
-```
-
-
-**Fields:**
-
-* **appName** - Name of the application seen by unleash-server
-* **instanceId** - Instance id for this application (typically hostname, podId or similar)
-* **strategies** - List of strategies implemented by this application
-* **started** - When this client started. Should be reported as UTC time.
-* **interval** - At wich interval will this client be expected to send metrics? 
-
-### Send metrics
-
-`POST http://unleash.host.com/api/client/metrics`
-
-Register a metrics payload with a timed bucket. 
-
-```json
-{
-    "appName": "appName",
-    "instanceId": "instanceId",
-    "bucket": {
-        "start": "2016-11-03T07:16:43.572Z",
-        "stop": "2016-11-03T07:16:53.572Z",
-        "toggles": {
-            "toggle-name-1": {
-                "yes": 123,
-                "no": 321
-            },
-            "toggle-name-2": {
-                "yes": 111,
-                "no": 0
-            }
-        }
-    },
-}
-```
+# This document describes the metrics endpoint for admin ui
 
 
 ### Seen-toggles
 
-`GET http://unleash.host.com/api/client/seen-toggles`
+`GET http://unleash.host.com/api/admin/seen-toggles`
 
 This enpoints returns a list of applications and what toogles 
 unleash has seend for each application. It will only guarantee 
@@ -96,7 +44,7 @@ will in most cases remember seen-toggles for applications longer
 
 ### Feature-Toggles metrics
 
-`GET http://unleash.host.com/api/client/metrics/feature-toggles`
+`GET http://unleash.host.com/api/admin/metrics/feature-toggles`
 
 This endpoint gives _last minute_ and _last hour_ metrics for all active toggles. This is based on 
 metrics reported by client applications. Yes is the number of times a given feature toggle 
@@ -147,7 +95,7 @@ was evaluated to enabled in a client applcation, and no is the number it avaluat
 
 ### Applications
 
-`GET  http://unleash.host.com/api/client/applications`
+`GET  http://unleash.host.com/api/admin/applications`
 
 This endpoint returns a list of known applications (seen the last two days) and 
 a link to follow for more datails.  
@@ -165,7 +113,7 @@ a link to follow for more datails.
       ],
       "createdAt": "2016-12-09T14:56:36.730Z",
       "links": {
-        "appDetails": "/api/client/applications/another"
+        "appDetails": "/api/admin/applications/another"
       }
     },
     {
@@ -177,7 +125,7 @@ a link to follow for more datails.
       ],
       "createdAt": "2016-12-09T14:56:36.730Z",
       "links": {
-        "appDetails": "/api/client/applications/bow"
+        "appDetails": "/api/admin/applications/bow"
       }
     }
   ]
@@ -188,14 +136,14 @@ a link to follow for more datails.
 You can also specify the query param: _strategyName_, which will return all applications 
 implementing the given strategy.
 
-`GET  http://unleash.host.com/api/client/applications?strategyName=someStrategyName`
+`GET  http://unleash.host.com/api/admin/applications?strategyName=someStrategyName`
 
 
 
 
 ### Application Details
 
-`GET  http://unleash.host.com/api/client/applications/:appName`
+`GET  http://unleash.host.com/api/admin/applications/:appName`
 
 This endpoint gives insight into details about a client applcation, such as instances, 
 strategies implemented and seen toogles. 
@@ -239,7 +187,7 @@ strategies implemented and seen toogles.
 
 ### Seen applications
 
-`GET  http://unleash.host.com/api//client/seen-apps`
+`GET  http://unleash.host.com/api/admin/seen-apps`
 
 This endpoint gives insight into details about application seen per feature toggle.
 

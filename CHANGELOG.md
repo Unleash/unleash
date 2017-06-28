@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Add sdkVersion in client registration
 
 ## 3.0.0-alpha.1
 - upgrade unleash-frontend to 3.0.0-alpha.1

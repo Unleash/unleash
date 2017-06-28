@@ -4645,9 +4645,9 @@ unique-temp-dir@^1.0.0:
     os-tmpdir "^1.0.1"
     uid2 "0.0.3"
 
-unleash-frontend@^2.2.6:
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-2.2.6.tgz#e135ee5cd77494c6b65c02fa619ed073196d48b7"
+unleash-frontend@^3.0.0-alpha.1:
+  version "3.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.0.0-alpha.1.tgz#a4fbd91b0058f41738de8aec17c90bf7e3146e46"
   dependencies:
     debug "^2.2.0"
     immutability-helper "^2.0.0"

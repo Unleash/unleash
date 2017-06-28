@@ -1,7 +1,8 @@
 'use strict';
 
-exports.up = function (db, callback) {
-    db.runSql(`
+exports.up = function(db, callback) {
+    db.runSql(
+        `
 --create new strategies-column
 ALTER TABLE features ADD "strategies" json;
 
@@ -14,12 +15,14 @@ WHERE f.name = features.name;
 --delete old strategy-columns
 ALTER TABLE features DROP COLUMN "strategy_name";
 ALTER TABLE features DROP COLUMN "parameters";
-       `, callback);
+       `,
+        callback
+    );
 };
 
-
-exports.down = function (db, callback) {
-    db.runSql(`
+exports.down = function(db, callback) {
+    db.runSql(
+        `
 --create old columns
 ALTER TABLE features ADD "parameters" json;
 ALTER TABLE features ADD "strategy_name" varchar(255);
@@ -33,5 +36,7 @@ WHERE f.name = features.name;
 
 --drop new column
 ALTER TABLE features DROP COLUMN "strategies";
-    `, callback);
+    `,
+        callback
+    );
 };

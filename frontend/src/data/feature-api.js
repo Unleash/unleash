@@ -1,7 +1,6 @@
 import { throwIfNotSuccess, headers } from './helper';
 
-const URI = 'api/features';
-const URI_VALIDATE = 'api/features-validate';
+const URI = 'api/admin/features';
 
 function validateToggle (featureToggle) {
     return new Promise((resolve, reject) => {
@@ -14,7 +13,7 @@ function validateToggle (featureToggle) {
 }
 
 function fetchAll () {
-    return fetch(URI)
+    return fetch(URI, { credentials: 'include' })
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }
@@ -31,7 +30,7 @@ function create (featureToggle) {
 }
 
 function validate (featureToggle) {
-    return fetch(URI_VALIDATE, {
+    return fetch(`${URI}/validate`, {
         method: 'POST',
         headers,
         credentials: 'include',

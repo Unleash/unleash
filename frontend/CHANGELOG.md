@@ -8,6 +8,7 @@ The latest version of this document is always available in
 [releases][releases-url].
 
 ## [Unreleased]
+- updated paths to use new admin api paths
 
 ## [2.2.0] - 2017-01-20
 - clean filter/sorting and fabbutton #61

@@ -1,17 +1,17 @@
 const { throwIfNotSuccess } = require('./helper');
 
-const URI = 'api/client/metrics/feature-toggles';
+const URI = 'api/admin/metrics/feature-toggles';
 
 function fetchFeatureMetrics () {
-    return fetch(URI)
+    return fetch(URI, { credentials: 'include' })
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }
 
-const seenURI = 'api/client/seen-apps';
+const seenURI = 'api/admin/metrics/seen-apps';
 
 function fetchSeenApps () {
-    return fetch(seenURI)
+    return fetch(seenURI, { credentials: 'include' })
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }

@@ -17,12 +17,17 @@ const argv = require('yargs')
     })
     .option('databaseUrl', {
         alias: 'd',
-        describe: 'The full databaseUrl to connect to, including username and password',
+        describe:
+            'The full databaseUrl to connect to, including username and password',
         demand: true,
         type: 'string',
-    })
-    .argv
+    }).argv;
 
-serverImpl.start(argv)
-    .then(conf => console.log(`Unleash started on http://localhost:${conf.app.get('port')}`))
+serverImpl
+    .start(argv)
+    .then(conf =>
+        console.log(
+            `Unleash started on http://localhost:${conf.app.get('port')}`
+        )
+    )
     .catch(console.err);

@@ -1,7 +1,8 @@
 'use strict';
 
-exports.up = function (db, callback) {
-    db.runSql(`
+exports.up = function(db, callback) {
+    db.runSql(
+        `
 CREATE TABLE strategies (
   created_at timestamp default now(),
   name varchar(255) PRIMARY KEY NOT NULL,
@@ -23,14 +24,18 @@ CREATE TABLE events (
   created_by varchar(255) NOT NULL,
   data json
 );
-       `, callback);
+       `,
+        callback
+    );
 };
 
-
-exports.down = function (db, callback) {
-    db.runSql(`
+exports.down = function(db, callback) {
+    db.runSql(
+        `
 DROP TABLE events;
 DROP TABLE features;
 DROP TABLE strategies;
-        `, callback);
+        `,
+        callback
+    );
 };

@@ -73,12 +73,12 @@
     "moment": "^2.15.2",
     "parse-database-url": "^0.3.0",
     "pg": "^6.1.0",
-    "prom-client": "^7.1.0",
+    "prom-client": "^9.1.1",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.3.0",
     "unleash-frontend": "^3.0.0-alpha.1",
     "yallist": "^2.0.0",
-    "yargs": "^6.5.0"
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
     "@types/node": "^8.0.4",

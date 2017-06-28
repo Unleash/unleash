@@ -8,6 +8,8 @@ The latest version of this document is always available in
 [releases][releases-url].
 
 ## [Unreleased]
+
+## [3.0.0-alpha.1] - 2017-06-28
 - updated paths to use new admin api paths
 
 ## [2.2.0] - 2017-01-20

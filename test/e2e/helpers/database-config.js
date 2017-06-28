@@ -1,6 +1,6 @@
 'use strict';
 
-function getDatabaseUrl () {
+function getDatabaseUrl() {
     if (process.env.TEST_DATABASE_URL) {
         return process.env.TEST_DATABASE_URL;
     } else {

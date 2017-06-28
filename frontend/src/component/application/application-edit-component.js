@@ -117,14 +117,14 @@ class ClientApplications extends PureComponent {
                     <h6>{instances.length} Instances registered</h6>
                     <hr />
                     <List>
-                    {instances.map(({ instanceId, clientIp, lastSeen }, i) => (
+                    {instances.map(({ instanceId, clientIp, lastSeen, sdkVersion }, i) => (
                         <ListItem key={i} twoLine>
                             <ListItemContent
                                 icon="timeline"
                                 subtitle={
                                     <span>{clientIp} last seen at <small>{formatFullDateTime(lastSeen)}</small></span>
                                 }>
-                                {instanceId}
+                                {instanceId} {sdkVersion ? `(${sdkVersion})` : ''}
                             </ListItemContent>
                         </ListItem>
                     ))}

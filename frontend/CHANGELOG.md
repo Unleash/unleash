@@ -8,6 +8,7 @@ The latest version of this document is always available in
 [releases][releases-url].
 
 ## [Unreleased]
+- show sdk version as part of instances details.  
 
 ## [3.0.0-alpha.1] - 2017-06-28
 - updated paths to use new admin api paths

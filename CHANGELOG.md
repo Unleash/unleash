@@ -3,6 +3,8 @@
 ## [Unreleased]
 - Add sdkVersion in client registration
 - disable edit of built-in strategies
+- Strip uknown fields in client requests.
+- Disable x-powered-by header
 
 ## 3.0.0-alpha.1
 - upgrade unleash-frontend to 3.0.0-alpha.1

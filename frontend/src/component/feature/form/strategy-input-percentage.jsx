@@ -1,5 +1,5 @@
 import React from 'react';
-import { Slider }  from 'react-mdl';
+import { Slider } from 'react-mdl';
 
 const labelStyle = {
     margin: '20px 0',

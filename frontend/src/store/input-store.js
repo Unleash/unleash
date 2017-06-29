@@ -31,7 +31,7 @@ function setKeyValue (state, { id, key, value }) {
 
 function increment (state, { id, key }) {
     state = assertId(state, id);
-    return state.updateIn(id.concat([key]), (value = 0)  => value + 1);
+    return state.updateIn(id.concat([key]), (value = 0) => value + 1);
 }
 
 function clear (state, { id }) {

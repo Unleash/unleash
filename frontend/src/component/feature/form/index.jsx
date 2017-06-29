@@ -13,7 +13,6 @@ const trim = (value) => {
 };
 
 class AddFeatureToggleComponent extends Component {
-
     componentWillMount () {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {
@@ -69,10 +68,10 @@ class AddFeatureToggleComponent extends Component {
                     {!editmode && <div>
                         <br />
                         <Switch
-                        checked={enabled}
-                        onChange={() => {
-                            setValue('enabled', !enabled);
-                        }}>Enabled</Switch>
+                            checked={enabled}
+                            onChange={() => {
+                                setValue('enabled', !enabled);
+                            }}>Enabled</Switch>
                         <hr />
                     </div>}
 
@@ -92,7 +91,6 @@ class AddFeatureToggleComponent extends Component {
             </form>
         );
     }
-
 };
 
 AddFeatureToggleComponent.propTypes = {

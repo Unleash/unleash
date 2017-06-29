@@ -3,7 +3,6 @@ import { ProgressBar, Card } from 'react-mdl';
 import { AppsLinkList, styles as commonStyles } from '../common';
 
 class ClientStrategies extends Component {
-
     componentDidMount () {
         this.props.fetchAll();
     }

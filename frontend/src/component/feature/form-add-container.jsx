@@ -58,7 +58,7 @@ const prepare = (methods, dispatch) => {
 
     methods.validateName = (featureToggleName) => {
         validateName(featureToggleName)
-            .then(()  => methods.setValue('nameError', undefined))
+            .then(() => methods.setValue('nameError', undefined))
             .catch((err) => methods.setValue('nameError', err.message));
     };
 

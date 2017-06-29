@@ -61,7 +61,7 @@ ReactDOM.render(
                 </Route>
 
                 <Route pageTitle="Event History" link="/history">
-                    <Route pageTitle="Event history"  path="/history" component={HistoryPage} />
+                    <Route pageTitle="Event history" path="/history" component={HistoryPage} />
                     <Route pageTitle=":toggleName" path="/history/:toggleName" component={HistoryTogglePage} />
                 </Route>
 

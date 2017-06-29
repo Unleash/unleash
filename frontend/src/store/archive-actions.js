@@ -1,8 +1,8 @@
 import api from '../data/archive-api';
 
-export const REVIVE_TOGGLE          = 'REVIVE_TOGGLE';
-export const RECEIVE_ARCHIVE        = 'RECEIVE_ARCHIVE';
-export const ERROR_RECEIVE_ARCHIVE  = 'ERROR_RECEIVE_ARCHIVE';
+export const REVIVE_TOGGLE = 'REVIVE_TOGGLE';
+export const RECEIVE_ARCHIVE = 'RECEIVE_ARCHIVE';
+export const ERROR_RECEIVE_ARCHIVE = 'ERROR_RECEIVE_ARCHIVE';
 
 const receiveArchive = (json) => ({
     type: RECEIVE_ARCHIVE,

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { DataTable, TableHeader }  from 'react-mdl';
+import { DataTable, TableHeader } from 'react-mdl';
 
 class ClientStrategies extends Component {
     static propTypes () {

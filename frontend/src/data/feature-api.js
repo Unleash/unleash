@@ -55,7 +55,7 @@ function toggle (name) {
         headers,
         credentials: 'include',
     })
-    .then(throwIfNotSuccess);
+        .then(throwIfNotSuccess);
 }
 
 function remove (featureToggleName) {

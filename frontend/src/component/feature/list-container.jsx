@@ -14,7 +14,7 @@ const mapStateToProps = (state) => {
         const regex = new RegExp(settings.filter, 'i');
         features = features.filter(feature =>
             (
-                regex.test(feature.name) ||
+            regex.test(feature.name) ||
                 regex.test(feature.description) ||
                 feature.strategies.some(s => s && s.name && regex.test(s.name))
             )
@@ -72,8 +72,8 @@ const mapDispatchToProps = {
 };
 
 const FeatureListContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(FeatureListComponent);
 
 export default FeatureListContainer;

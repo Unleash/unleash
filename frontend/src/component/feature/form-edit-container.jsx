@@ -25,7 +25,7 @@ const mapStateToProps = createMapper({
     },
 });
 
-const prepare =  (methods, dispatch) => {
+const prepare = (methods, dispatch) => {
     methods.onSubmit = (input) => (
         (e) => {
             e.preventDefault();
@@ -35,7 +35,7 @@ const prepare =  (methods, dispatch) => {
                     delete s.id;
                 });
             }
-             // TODO: should add error handling
+            // TODO: should add error handling
             requestUpdateFeatureToggle(input)(dispatch)
                 .then(() => methods.clear())
                 .then(() => hashHistory.push(`/features/view/${input.name}`));

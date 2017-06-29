@@ -14,7 +14,6 @@ const TABS = {
 };
 
 export default class ViewFeatureToggleComponent extends React.Component {
-
     constructor (props) {
         super(props);
     }
@@ -73,7 +72,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
             return (
                 <span>
                     Could not find the toggle <Link to={{ pathname: '/features/create', query: { name: featureToggleName } }}>
-                    {featureToggleName}</Link>
+                        {featureToggleName}</Link>
                 </span>
             );
         }
@@ -82,7 +81,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         const tabContent = this.getTabContent(activeTab);
 
         const removeToggle = () => {
-            if (window.confirm('Are you sure you want to remove this toggle?')) {  // eslint-disable-line no-alert
+            if (window.confirm('Are you sure you want to remove this toggle?')) { // eslint-disable-line no-alert
                 removeFeatureToggle(featureToggle.name);
                 hashHistory.push('/features');
             }

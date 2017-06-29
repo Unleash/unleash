@@ -7,7 +7,6 @@ import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../com
 import styles from './feature.scss';
 
 export default class FeatureListComponent extends React.PureComponent {
-
     static propTypes () {
         return {
             toggleFeature: PropTypes.func.isRequired,
@@ -89,16 +88,16 @@ export default class FeatureListComponent extends React.PureComponent {
                 <hr/>
                 <List>
                     {features.map((feature, i) =>
-                        <Feature key={i}
+                        (<Feature key={i}
                             settings={settings}
                             metricsLastHour={featureMetrics.lastHour[feature.name]}
                             metricsLastMinute={featureMetrics.lastMinute[feature.name]}
                             feature={feature}
-                            toggleFeature={toggleFeature}/>
+                            toggleFeature={toggleFeature}/>)
                     )}
                 </List>
             </Card>
-            </div>
+        </div>
         );
     }
 }

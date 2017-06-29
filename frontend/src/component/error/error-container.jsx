@@ -7,7 +7,7 @@ const mapDispatchToProps = {
     muteError,
 };
 
-const mapStateToProps = (state) =>  ({
+const mapStateToProps = (state) => ({
     errors: state.error.get('list').toArray(),
 });
 

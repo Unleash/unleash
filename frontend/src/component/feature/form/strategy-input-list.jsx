@@ -3,10 +3,9 @@ import {
     Textfield,
     IconButton,
     Chip,
-}  from 'react-mdl';
+} from 'react-mdl';
 
 export default class InputList extends Component {
-
     static propTypes = {
         name: PropTypes.string.isRequired,
         list: PropTypes.array.isRequired,
@@ -18,7 +17,7 @@ export default class InputList extends Component {
         window.removeEventListener('keydown', this.onKeyHandler, false);
     }
 
-    onFocus  = (e) => {
+    onFocus = (e) => {
         e.preventDefault();
         e.stopPropagation();
         window.addEventListener('keydown', this.onKeyHandler, false);

@@ -8,7 +8,6 @@ import { formatFullDateTime } from '../common/util';
 import styles from './history.scss';
 
 class HistoryList extends Component {
-
     toggleShowDiff () {
         this.props.updateSetting('showData', !this.props.settings.showData);
     }
@@ -27,18 +26,18 @@ class HistoryList extends Component {
         let entries;
 
         if (showData) {
-            entries =  history.map((entry) => <HistoryItemJson  key={`log${entry.id}`} entry={entry} />);
+            entries = history.map((entry) => <HistoryItemJson key={`log${entry.id}`} entry={entry} />);
         } else {
             entries = (<Table
-                    sortable
-                    rows={
-                        history.map((entry) => Object.assign({
-                            diff: (<HistoryItemDiff  entry={entry} />),
-                        }, entry))
-                    }
-                    className={commonStyles.fullwidth}
-                    style={{ border: 0, tableLayout: 'fixed', minWidth: '840px' }}
-                >
+                sortable
+                rows={
+                    history.map((entry) => Object.assign({
+                        diff: (<HistoryItemDiff entry={entry} />),
+                    }, entry))
+                }
+                className={commonStyles.fullwidth}
+                style={{ border: 0, tableLayout: 'fixed', minWidth: '840px' }}
+            >
                 <TableHeader name="type" cellFormatter={truncateTableCell} style={{ width: '136px' }}>Type</TableHeader>
                 <TableHeader name="createdBy" cellFormatter={truncateTableCell} style={{ width: '115px' }}>User</TableHeader>
                 <TableHeader name="diff">Diff</TableHeader>

@@ -5,7 +5,6 @@ import { List, ListItem, ListItemContent, IconButton, Grid, Cell } from 'react-m
 import { HeaderTitle } from '../common';
 
 class StrategiesListComponent extends Component {
-
     static contextTypes = {
         router: React.PropTypes.object,
     }
@@ -28,15 +27,15 @@ class StrategiesListComponent extends Component {
                                 title="Add new strategy" />} />
                     <List>
                         {strategies.length > 0 ? strategies.map((strategy, i) => (
-                                <ListItem key={i} twoLine>
-                                    <ListItemContent icon="extension" subtitle={strategy.description}>
-                                        <Link to={`/strategies/view/${strategy.name}`}>
-                                            <strong>{strategy.name}</strong>
-                                        </Link>
-                                        </ListItemContent>
-                                    <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
-                                </ListItem>
-                            )) : <ListItem>No entries</ListItem>}
+                            <ListItem key={i} twoLine>
+                                <ListItemContent icon="extension" subtitle={strategy.description}>
+                                    <Link to={`/strategies/view/${strategy.name}`}>
+                                        <strong>{strategy.name}</strong>
+                                    </Link>
+                                </ListItemContent>
+                                <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
+                            </ListItem>
+                        )) : <ListItem>No entries</ListItem>}
                     </List>
                 </Cell>
             </Grid>

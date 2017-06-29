@@ -69,25 +69,25 @@ class ClientApplications extends PureComponent {
                     <h6> Toggles</h6>
                     <hr />
                     <List>
-                    {seenToggles.map(({ name, description, enabled, notFound }, i) =>
-                        (notFound ?
-                        <ListItem twoLine key={i}>
-                            <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
-                                <Link to={`/features/create?name=${name}`}>
-                                    {name}
-                                </Link>
-                            </ListItemContent>
-                        </ListItem> :
-                        <ListItem twoLine key={i}>
-                            <ListItemContent
-                                icon={<span><Switch disabled checked={!!enabled} /></span>}
-                                subtitle={shorten(description, 60)}>
-                                <Link to={`/features/view/${name}`}>
-                                    {shorten(name, 50)}
-                                </Link>
-                            </ListItemContent>
-                        </ListItem>)
-                    )}
+                        {seenToggles.map(({ name, description, enabled, notFound }, i) =>
+                            (notFound ?
+                                <ListItem twoLine key={i}>
+                                    <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
+                                        <Link to={`/features/create?name=${name}`}>
+                                            {name}
+                                        </Link>
+                                    </ListItemContent>
+                                </ListItem> :
+                                <ListItem twoLine key={i}>
+                                    <ListItemContent
+                                        icon={<span><Switch disabled checked={!!enabled} /></span>}
+                                        subtitle={shorten(description, 60)}>
+                                        <Link to={`/features/view/${name}`}>
+                                            {shorten(name, 50)}
+                                        </Link>
+                                    </ListItemContent>
+                                </ListItem>)
+                        )}
                     </List>
                 </Cell>
                 <Cell col={6} tablet={4} phone={12}>
@@ -96,20 +96,20 @@ class ClientApplications extends PureComponent {
                     <List>
                         {strategies.map(({ name, description, notFound }, i) => (
                             notFound ?
-                            <ListItem twoLine key={`${name}-${i}`}>
-                                <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
-                                    <Link to={`/strategies/create?name=${name}`}>
-                                        {name}
-                                    </Link>
-                                </ListItemContent>
-                            </ListItem> :
-                            <ListItem twoLine key={`${name}-${i}`}>
-                                <ListItemContent icon={'extension'} subtitle={shorten(description, 60)}>
-                                    <Link to={`/strategies/view/${name}`}>
-                                        {shorten(name, 50)}
-                                    </Link>
-                                </ListItemContent>
-                            </ListItem>
+                                <ListItem twoLine key={`${name}-${i}`}>
+                                    <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
+                                        <Link to={`/strategies/create?name=${name}`}>
+                                            {name}
+                                        </Link>
+                                    </ListItemContent>
+                                </ListItem> :
+                                <ListItem twoLine key={`${name}-${i}`}>
+                                    <ListItemContent icon={'extension'} subtitle={shorten(description, 60)}>
+                                        <Link to={`/strategies/view/${name}`}>
+                                            {shorten(name, 50)}
+                                        </Link>
+                                    </ListItemContent>
+                                </ListItem>
                         ))}
                     </List>
                 </Cell>
@@ -117,17 +117,17 @@ class ClientApplications extends PureComponent {
                     <h6>{instances.length} Instances registered</h6>
                     <hr />
                     <List>
-                    {instances.map(({ instanceId, clientIp, lastSeen }, i) => (
-                        <ListItem key={i} twoLine>
-                            <ListItemContent
-                                icon="timeline"
-                                subtitle={
-                                    <span>{clientIp} last seen at <small>{formatFullDateTime(lastSeen)}</small></span>
-                                }>
-                                {instanceId}
-                            </ListItemContent>
-                        </ListItem>
-                    ))}
+                        {instances.map(({ instanceId, clientIp, lastSeen }, i) => (
+                            <ListItem key={i} twoLine>
+                                <ListItemContent
+                                    icon="timeline"
+                                    subtitle={
+                                        <span>{clientIp} last seen at <small>{formatFullDateTime(lastSeen)}</small></span>
+                                    }>
+                                    {instanceId}
+                                </ListItemContent>
+                            </ListItem>
+                        ))}
                     </List>
                 </Cell>
             </Grid>) : (

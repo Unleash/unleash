@@ -61,23 +61,23 @@ export default class StrategyDetails extends Component {
         const tabContent = this.getTabContent(activeTabId);
 
         return (<Grid className="mdl-color--white">
-                <Cell col={12}>
-                    <HeaderTitle title={strategy.name} subtitle={strategy.description} />
-                    {strategy.editable === false ? '' : <Tabs activeTab={activeTabId} ripple>
-                        <Tab onClick={() => this.goToTab('view')}>
+            <Cell col={12}>
+                <HeaderTitle title={strategy.name} subtitle={strategy.description} />
+                {strategy.editable === false ? '' : <Tabs activeTab={activeTabId} ripple>
+                    <Tab onClick={() => this.goToTab('view')}>
                             Details
-                        </Tab>
-                        <Tab onClick={() => this.goToTab('edit')}>
+                    </Tab>
+                    <Tab onClick={() => this.goToTab('edit')}>
                             Edit
-                        </Tab>
-                    </Tabs>}
+                    </Tab>
+                </Tabs>}
 
-                    <section>
-                        <div className="content">
-                            {tabContent}
-                        </div>
-                    </section>
-                </Cell>
-            </Grid>);
+                <section>
+                    <div className="content">
+                        {tabContent}
+                    </div>
+                </section>
+            </Cell>
+        </Grid>);
     }
 }

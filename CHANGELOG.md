@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Add sdkVersion in client registration
 - disable edit of built-in strategies
 
 ## 3.0.0-alpha.1

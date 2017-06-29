@@ -3,7 +3,7 @@
 const NotFoundError = require('../../lib/error/notfound-error');
 
 module.exports = () => {
-    const _strategies = [{ name: 'default', parameters: {} }];
+    const _strategies = [{ name: 'default', editable: false, parameters: {} }];
 
     return {
         getStrategies: () => Promise.resolve(_strategies),

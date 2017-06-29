@@ -4,7 +4,6 @@ import HistoryList from './history-list-container';
 import { styles as commonStyles } from '../common';
 
 class History extends PureComponent {
-
     componentDidMount () {
         this.props.fetchHistory();
     }

@@ -78,8 +78,8 @@ export function updateStrategy (strategy) {
 
 export function removeStrategy (strategy) {
     return dispatch => api.remove(strategy)
-            .then(() => dispatch(createRemoveStrategy(strategy)))
-            .catch(error => dispatch(errorCreatingStrategy(error)));
+        .then(() => dispatch(createRemoveStrategy(strategy)))
+        .catch(error => dispatch(errorCreatingStrategy(error)));
 }
 
 export function getApplicationsWithStrategy (strategyName) {

@@ -146,42 +146,42 @@ export default class App extends Component {
                         </Navigation>
                     </Drawer>
                     <ScrollContainer scrollKey="container" shouldUpdateScroll={shouldUpdateScroll}>
-                    <Content className="mdl-color--grey-50">
-                        <Grid noSpacing className={styles.content}>
-                            <Cell col={12}>
-                                {this.props.children}
-                                <ErrorContainer />
-                            </Cell>
-                        </Grid>
-                        <Footer size="mega">
-                            <FooterSection type="middle">
-                                <FooterDropDownSection title="Menu">
+                        <Content className="mdl-color--grey-50">
+                            <Grid noSpacing className={styles.content}>
+                                <Cell col={12}>
+                                    {this.props.children}
+                                    <ErrorContainer />
+                                </Cell>
+                            </Grid>
+                            <Footer size="mega">
+                                <FooterSection type="middle">
+                                    <FooterDropDownSection title="Menu">
+                                        <FooterLinkList>
+                                            {createListItem('/features', 'Feature Toggles')}
+                                            {createListItem('/strategies', 'Strategies')}
+                                            {createListItem('/history', 'Event History')}
+                                            {createListItem('/archive', 'Archived Toggles')}
+                                            {createListItem('/applications', 'Applications')}
+                                        </FooterLinkList>
+                                    </FooterDropDownSection>
+                                    <FooterDropDownSection title="Clients">
+                                        <FooterLinkList>
+                                            <a href="https://github.com/Unleash/unleash-client-node/">Node.js</a>
+                                            <a href="https://github.com/Unleash/unleash-client-java/">Java</a>
+                                            <a href="https://github.com/Unleash/unleash-client-go/">Go</a>
+                                        </FooterLinkList>
+                                    </FooterDropDownSection>
+                                </FooterSection>
+                                <FooterSection type="bottom" logo="Unleash">
                                     <FooterLinkList>
-                                        {createListItem('/features', 'Feature Toggles')}
-                                        {createListItem('/strategies', 'Strategies')}
-                                        {createListItem('/history', 'Event History')}
-                                        {createListItem('/archive', 'Archived Toggles')}
-                                        {createListItem('/applications', 'Applications')}
-                                    </FooterLinkList>
-                                </FooterDropDownSection>
-                                <FooterDropDownSection title="Clients">
-                                    <FooterLinkList>
-                                        <a href="https://github.com/Unleash/unleash-client-node/">Node.js</a>
-                                        <a href="https://github.com/Unleash/unleash-client-java/">Java</a>
-                                        <a href="https://github.com/Unleash/unleash-client-go/">Go</a>
-                                    </FooterLinkList>
-                                </FooterDropDownSection>
-                            </FooterSection>
-                            <FooterSection type="bottom" logo="Unleash">
-                                <FooterLinkList>
-                                    <a href="https://github.com/Unleash/unleash/" target="_blank">
+                                        <a href="https://github.com/Unleash/unleash/" target="_blank">
                                             GitHub
-                                    </a>
-                                    <a href="https://finn.no" target="_blank"><small>A product by</small> FINN.no</a>
-                                </FooterLinkList>
-                            </FooterSection>
-                        </Footer>
-                    </Content>
+                                        </a>
+                                        <a href="https://finn.no" target="_blank"><small>A product by</small> FINN.no</a>
+                                    </FooterLinkList>
+                                </FooterSection>
+                            </Footer>
+                        </Content>
                     </ScrollContainer>
                 </Layout>
             </div>

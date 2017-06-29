@@ -50,7 +50,7 @@ function buildDiff (diff, idx) {
         );
     } else {
         const spadenClass = KLASSES[diff.kind];
-        const prefix      = DIFF_PREFIXES[diff.kind];
+        const prefix = DIFF_PREFIXES[diff.kind];
 
         change = (<div className={spadenClass}>{prefix} {key}: {JSON.stringify(diff.rhs || diff.item)}</div>);
     }
@@ -59,7 +59,6 @@ function buildDiff (diff, idx) {
 }
 
 class HistoryItem extends PureComponent {
-
     static propTypes () {
         return {
             entry: PropTypes.object,

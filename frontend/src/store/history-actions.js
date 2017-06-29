@@ -1,9 +1,9 @@
 import api from '../data/history-api';
 
-export const RECEIVE_HISTORY        = 'RECEIVE_HISTORY';
-export const ERROR_RECEIVE_HISTORY  = 'ERROR_RECEIVE_HISTORY';
+export const RECEIVE_HISTORY = 'RECEIVE_HISTORY';
+export const ERROR_RECEIVE_HISTORY = 'ERROR_RECEIVE_HISTORY';
 
-export const RECEIVE_HISTORY_FOR_TOGGLE        = 'RECEIVE_HISTORY_FOR_TOGGLE';
+export const RECEIVE_HISTORY_FOR_TOGGLE = 'RECEIVE_HISTORY_FOR_TOGGLE';
 
 const receiveHistory = (json) => ({
     type: RECEIVE_HISTORY,

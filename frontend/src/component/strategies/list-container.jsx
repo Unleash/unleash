@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
     removeStrategy: (strategy) => {
-        if (window.confirm('Are you sure you want to remove this strategy?')) {  // eslint-disable-line no-alert
+        if (window.confirm('Are you sure you want to remove this strategy?')) { // eslint-disable-line no-alert
             removeStrategy(strategy)(dispatch);
         }
     },

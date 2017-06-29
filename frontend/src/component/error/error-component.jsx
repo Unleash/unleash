@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Snackbar, Icon }  from 'react-mdl';
+import { Snackbar, Icon } from 'react-mdl';
 
 class ErrorComponent extends React.Component {
     static propTypes () {

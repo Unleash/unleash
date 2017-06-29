@@ -5,7 +5,6 @@ import AddStrategy from './strategies-add';
 import { HeaderTitle } from '../../common';
 
 class StrategiesSection extends React.Component {
-
     static propTypes () {
         return {
             strategies: PropTypes.array.isRequired,

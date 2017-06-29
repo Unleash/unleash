@@ -45,7 +45,6 @@ const dragTarget = {
     isDragging: monitor.isDragging(),
 }))
 class StrategyConfigure extends React.Component {
-
     static propTypes () {
         return {
             strategy: PropTypes.object.isRequired,
@@ -122,7 +121,7 @@ class StrategyConfigure extends React.Component {
                                 label={name}
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={value}
-                                />
+                            />
                             {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );
@@ -138,7 +137,7 @@ class StrategyConfigure extends React.Component {
                                 label={name}
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={value}
-                                />
+                            />
                             {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );
@@ -165,8 +164,8 @@ class StrategyConfigure extends React.Component {
                     </CardText>
                     {
                         inputFields && <CardActions border style={{ padding: '20px' }}>
-                            {inputFields}
-                        </CardActions>
+                        {inputFields}
+                    </CardActions>
                     }
 
                     <CardMenu className="mdl-color-text--white">

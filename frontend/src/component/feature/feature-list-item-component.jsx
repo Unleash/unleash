@@ -27,7 +27,7 @@ const Feature = ({
     const remainingStrategies = strategies.length - strategiesToShow;
 
     const strategyChips = strategies && strategies.slice(0, strategiesToShow).map((s, i) =>
-            <Chip className={styles.strategyChip} key={i}>{s.name}</Chip>);
+        <Chip className={styles.strategyChip} key={i}>{s.name}</Chip>);
     const summaryChip = remainingStrategies > 0 &&
             <Chip className={styles.strategyChip}>+{remainingStrategies}</Chip>;
 

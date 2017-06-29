@@ -8,7 +8,7 @@ const mapDispatchToProps = {
     save,
 };
 
-const mapStateToProps = (state) =>  ({
+const mapStateToProps = (state) => ({
     user: state.user.toJS(),
 });
 

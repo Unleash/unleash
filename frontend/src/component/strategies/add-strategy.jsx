@@ -17,7 +17,7 @@ function gerArrayWithEntries (num) {
 }
 
 const Parameter = ({ set, input = {}, index }) => (
-    <div  style={{ background: '#f1f1f1', padding: '16px 20px', marginBottom: '20px' }}>
+    <div style={{ background: '#f1f1f1', padding: '16px 20px', marginBottom: '20px' }}>
         <Textfield
             style={{ width: '50%' }}
             floatingLabel
@@ -65,7 +65,7 @@ const Parameter = ({ set, input = {}, index }) => (
 const EditHeader = () => (
     <div>
         <h4 style={{ marginTop: '16px' }}>Edit strategy</h4>
-        <p style={{ background: '#ffb7b7', padding: '16px 20px'  }}>
+        <p style={{ background: '#ffb7b7', padding: '16px 20px' }}>
             Be carefull! Changing a strategy definition might also require changes to the
             implementation in the clients.
         </p>
@@ -80,18 +80,17 @@ const CreateHeader = () => (
 
 
 const Parameters = ({ input = [], count = 0, updateInList }) => (
-<div>{
-    gerArrayWithEntries(count)
-    .map((v, i) => <Parameter
-        key={i}
-        set={(v) => updateInList('parameters', i, v, true)}
-        index={i}
-        input={input[i]}
-    />)
-}</div>);
+    <div>{
+        gerArrayWithEntries(count)
+            .map((v, i) => (<Parameter
+                key={i}
+                set={(v) => updateInList('parameters', i, v, true)}
+                index={i}
+                input={input[i]}
+            />))
+    }</div>);
 
 class AddStrategy extends Component {
-
     static propTypes () {
         return {
             input: PropTypes.object,
@@ -142,7 +141,7 @@ class AddStrategy extends Component {
                             pattern="^[0-9a-zA-Z\.\-]+$"
                             onChange={({ target }) => setValue('name', trim(target.value))}
                             value={input.name}
-                            />
+                        />
                         <br />
                         <Textfield
                             floatingLabel
@@ -152,7 +151,7 @@ class AddStrategy extends Component {
                             name="description"
                             onChange={({ target }) => setValue('description', target.value)}
                             value={input.description}
-                            />
+                        />
 
 
                         <Parameters input={input.parameters} count={input._params} updateInList={updateInList} />

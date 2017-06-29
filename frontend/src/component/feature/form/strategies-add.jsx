@@ -1,8 +1,7 @@
 import React, { PropTypes } from 'react';
-import { Menu, MenuItem, IconButton }  from 'react-mdl';
+import { Menu, MenuItem, IconButton } from 'react-mdl';
 
 class AddStrategy extends React.Component {
-
     static propTypes () {
         return {
             strategies: PropTypes.array.isRequired,

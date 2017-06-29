@@ -33,7 +33,11 @@ class StrategiesListComponent extends Component {
                                         <strong>{strategy.name}</strong>
                                     </Link>
                                 </ListItemContent>
-                                <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
+                                {
+                                    strategy.editable === false ?
+                                        '' :
+                                        <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
+                                }
                             </ListItem>
                         )) : <ListItem>No entries</ListItem>}
                     </List>

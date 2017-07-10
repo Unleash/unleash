@@ -91,19 +91,17 @@ const Parameters = ({ input = [], count = 0, updateInList }) => (
     }</div>);
 
 class AddStrategy extends Component {
-    static propTypes () {
-        return {
-            input: PropTypes.object,
-            setValue: PropTypes.func,
-            updateInList: PropTypes.func,
-            incValue: PropTypes.func,
-            clear: PropTypes.func,
-            onCancel: PropTypes.func,
-            onSubmit: PropTypes.func,
-            editmode: PropTypes.bool,
-            initCallRequired: PropTypes.bool,
-            init: PropTypes.func,
-        };
+    static propTypes = {
+        input: PropTypes.object,
+        setValue: PropTypes.func,
+        updateInList: PropTypes.func,
+        incValue: PropTypes.func,
+        clear: PropTypes.func,
+        onCancel: PropTypes.func,
+        onSubmit: PropTypes.func,
+        editmode: PropTypes.bool,
+        initCallRequired: PropTypes.bool,
+        init: PropTypes.func,
     }
 
     componentWillMount () {

@@ -5,14 +5,12 @@ import HTML5Backend from 'react-dnd-html5-backend';
 
 @DragDropContext(HTML5Backend) // eslint-disable-line new-cap
 class StrategiesList extends React.Component {
-    static propTypes () {
-        return {
-            strategies: PropTypes.array.isRequired,
-            configuredStrategies: PropTypes.array.isRequired,
-            updateStrategy: PropTypes.func.isRequired,
-            removeStrategy: PropTypes.func.isRequired,
-            moveStrategy: PropTypes.func.isRequired,
-        };
+    static propTypes = {
+        strategies: PropTypes.array.isRequired,
+        configuredStrategies: PropTypes.array.isRequired,
+        updateStrategy: PropTypes.func.isRequired,
+        removeStrategy: PropTypes.func.isRequired,
+        moveStrategy: PropTypes.func.isRequired,
     }
 
     render () {

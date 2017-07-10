@@ -5,14 +5,12 @@ import AddStrategy from './strategies-add';
 import { HeaderTitle } from '../../common';
 
 class StrategiesSection extends React.Component {
-    static propTypes () {
-        return {
-            strategies: PropTypes.array.isRequired,
-            addStrategy: PropTypes.func.isRequired,
-            removeStrategy: PropTypes.func.isRequired,
-            updateStrategy: PropTypes.func.isRequired,
-            fetchStrategies: PropTypes.func.isRequired,
-        };
+    static propTypes = {
+        strategies: PropTypes.array.isRequired,
+        addStrategy: PropTypes.func.isRequired,
+        removeStrategy: PropTypes.func.isRequired,
+        updateStrategy: PropTypes.func.isRequired,
+        fetchStrategies: PropTypes.func.isRequired,
     }
 
     componentWillMount () {

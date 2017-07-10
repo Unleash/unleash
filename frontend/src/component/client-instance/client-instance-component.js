@@ -2,11 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { DataTable, TableHeader } from 'react-mdl';
 
 class ClientStrategies extends Component {
-    static propTypes () {
-        return {
-            fetchClientInstances: PropTypes.func.isRequired,
-            clientInstances: PropTypes.array.isRequired,
-        };
+    static propTypes = {
+        fetchClientInstances: PropTypes.func.isRequired,
+        clientInstances: PropTypes.array.isRequired,
     }
 
     componentDidMount () {

@@ -45,18 +45,16 @@ const dragTarget = {
     isDragging: monitor.isDragging(),
 }))
 class StrategyConfigure extends React.Component {
-    static propTypes () {
-        return {
-            strategy: PropTypes.object.isRequired,
-            strategyDefinition: PropTypes.object.isRequired,
-            updateStrategy: PropTypes.func.isRequired,
-            removeStrategy: PropTypes.func.isRequired,
-            moveStrategy: PropTypes.func.isRequired,
-            isDragging: PropTypes.bool.isRequired,
-            connectDragPreview: PropTypes.func.isRequired,
-            connectDragSource: PropTypes.func.isRequired,
-            connectDropTarget: PropTypes.func.isRequired,
-        };
+    static propTypes = {
+        strategy: PropTypes.object.isRequired,
+        strategyDefinition: PropTypes.object.isRequired,
+        updateStrategy: PropTypes.func.isRequired,
+        removeStrategy: PropTypes.func.isRequired,
+        moveStrategy: PropTypes.func.isRequired,
+        isDragging: PropTypes.bool.isRequired,
+        connectDragPreview: PropTypes.func.isRequired,
+        connectDragSource: PropTypes.func.isRequired,
+        connectDropTarget: PropTypes.func.isRequired,
     }
 
     handleConfigChange = (key, e) => {

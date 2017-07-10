@@ -59,10 +59,8 @@ function buildDiff (diff, idx) {
 }
 
 class HistoryItem extends PureComponent {
-    static propTypes () {
-        return {
-            entry: PropTypes.object,
-        };
+    static propTypes = {
+        entry: PropTypes.object,
     }
 
     render () {

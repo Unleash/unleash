@@ -2,10 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import HistoryList from './history-list-container';
 
 class HistoryListToggle extends Component {
-    static propTypes () {
-        return {
-            toggleName: PropTypes.string.isRequired,
-        };
+    static propTypes = {
+        toggleName: PropTypes.string.isRequired,
     }
 
     componentDidMount () {

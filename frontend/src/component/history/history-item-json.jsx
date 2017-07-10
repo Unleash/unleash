@@ -3,10 +3,8 @@ import React, { PropTypes, PureComponent } from 'react';
 import style from './history.scss';
 
 class HistoryItem extends PureComponent {
-    static propTypes () {
-        return {
-            entry: PropTypes.object,
-        };
+    static propTypes = {
+        entry: PropTypes.object,
     }
 
     render () {

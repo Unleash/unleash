@@ -23,13 +23,11 @@ const StrategiesList = ({ strategies }) => (
 );
 
 export default class MetricComponent extends React.Component {
-    static propTypes () {
-        return {
-            metrics: PropTypes.object.isRequired,
-            featureToggle: PropTypes.object.isRequired,
-            fetchSeenApps: PropTypes.func.isRequired,
-            fetchFeatureMetrics: PropTypes.func.isRequired,
-        };
+    static propTypes = {
+        metrics: PropTypes.object.isRequired,
+        featureToggle: PropTypes.object.isRequired,
+        fetchSeenApps: PropTypes.func.isRequired,
+        fetchFeatureMetrics: PropTypes.func.isRequired,
     }
 
     componentWillMount () {

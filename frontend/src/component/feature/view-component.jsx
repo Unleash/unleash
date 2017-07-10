@@ -18,16 +18,14 @@ export default class ViewFeatureToggleComponent extends React.Component {
         super(props);
     }
 
-    static propTypes () {
-        return {
-            activeTab: PropTypes.string.isRequired,
-            featureToggleName: PropTypes.string.isRequired,
-            features: PropTypes.array.isRequired,
-            toggleFeature: PropTypes.func.isRequired,
-            removeFeatureToggle: PropTypes.func.isRequired,
-            fetchFeatureToggles: PropTypes.array.isRequired,
-            featureToggle: PropTypes.object.isRequired,
-        };
+    static propTypes = {
+        activeTab: PropTypes.string.isRequired,
+        featureToggleName: PropTypes.string.isRequired,
+        features: PropTypes.array.isRequired,
+        toggleFeature: PropTypes.func.isRequired,
+        removeFeatureToggle: PropTypes.func.isRequired,
+        fetchFeatureToggles: PropTypes.array.isRequired,
+        featureToggle: PropTypes.object.isRequired,
     }
 
     componentWillMount () {

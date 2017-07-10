@@ -3,12 +3,10 @@ import { Grid, Cell, List, ListItem, ListItemContent } from 'react-mdl';
 import { AppsLinkList, TogglesLinkList } from '../common';
 
 class ShowStrategyComponent extends PureComponent {
-    static propTypes () {
-        return {
-            toggles: PropTypes.array,
-            applications: PropTypes.array,
-            strategy: PropTypes.object.isRequired,
-        };
+    static propTypes = {
+        toggles: PropTypes.array,
+        applications: PropTypes.array,
+        strategy: PropTypes.object.isRequired,
     }
 
     renderParameters (params) {

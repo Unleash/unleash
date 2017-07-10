@@ -2,12 +2,10 @@ import React, { PropTypes } from 'react';
 import { Icon, Tooltip } from 'react-mdl';
 
 export default class ShowUserComponent extends React.Component {
-    static propTypes () {
-        return {
-            user: PropTypes.object.isRequired,
-            openEdit: PropTypes.func.isRequired,
-        };
-    }
+    static propTypes = {
+        user: PropTypes.object.isRequired,
+        openEdit: PropTypes.func.isRequired,
+    };
 
     openEdit = (evt) => {
         evt.preventDefault();

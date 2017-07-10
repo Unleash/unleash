@@ -24,12 +24,10 @@ const customStyles = {
 };
 
 class EditUserComponent extends React.Component {
-    static propTypes () {
-        return {
-            user: PropTypes.object.isRequired,
-            updateUserName: PropTypes.func.isRequired,
-            save: PropTypes.func.isRequired,
-        };
+    static propTypes = {
+        user: PropTypes.object.isRequired,
+        updateUserName: PropTypes.func.isRequired,
+        save: PropTypes.func.isRequired,
     }
 
     handleSubmit = (evt) => {

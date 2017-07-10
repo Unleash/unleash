@@ -3,11 +3,9 @@ import React, { PropTypes } from 'react';
 import { Snackbar, Icon } from 'react-mdl';
 
 class ErrorComponent extends React.Component {
-    static propTypes () {
-        return {
-            errors: PropTypes.array.isRequired,
-            muteError: PropTypes.func.isRequired,
-        };
+    static propTypes = {
+        errors: PropTypes.array.isRequired,
+        muteError: PropTypes.func.isRequired,
     }
 
     render () {

@@ -22,12 +22,10 @@ function replace (input, params) {
 }
 
 export default class App extends Component {
-    static propTypes () {
-        return {
-            location: PropTypes.object.isRequired,
-            params: PropTypes.object.isRequired,
-            routes: PropTypes.array.isRequired,
-        };
+    static propTypes = {
+        location: PropTypes.object.isRequired,
+        params: PropTypes.object.isRequired,
+        routes: PropTypes.array.isRequired,
     }
 
     static contextTypes = {

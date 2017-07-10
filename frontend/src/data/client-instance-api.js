@@ -8,6 +8,6 @@ function fetchAll () {
         .then(response => response.json());
 }
 
-module.exports = {
+export default {
     fetchAll,
 };

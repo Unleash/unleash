@@ -1,5 +1,5 @@
 import api from '../../data/strategy-api';
-import { fetchApplicationsWithStrategyName } from '../../data/applications-api';
+import applicationApi from '../../data/applications-api';
 
 export const ADD_STRATEGY = 'ADD_STRATEGY';
 export const UPDATE_STRATEGY = 'UPDATE_STRATEGY';
@@ -83,6 +83,6 @@ export function removeStrategy (strategy) {
 }
 
 export function getApplicationsWithStrategy (strategyName) {
-    return fetchApplicationsWithStrategyName(strategyName);
+    return applicationApi.fetchApplicationsWithStrategyName(strategyName);
 }
 

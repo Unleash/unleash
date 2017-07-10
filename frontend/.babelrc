@@ -1,9 +1,12 @@
 {
-  "presets": ["react", "es2015", "stage-2"],
+  "presets": ["react", ["es2015", {"modules": false}], "stage-2"],
   "plugins": ["transform-decorators-legacy"],
   "env": {
     "development": {
       "presets": ["react-hmre"]
+    },
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
     }
   }
 }

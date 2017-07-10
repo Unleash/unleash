@@ -14,7 +14,7 @@ function fetchHistoryForToggle (toggleName) {
         .then(response => response.json());
 }
 
-module.exports = {
+export default {
     fetchAll,
     fetchHistoryForToggle,
 };

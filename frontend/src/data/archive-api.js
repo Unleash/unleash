@@ -17,7 +17,7 @@ function revive (featureName) {
 }
 
 
-module.exports = {
+export default {
     fetchAll,
     revive,
 };

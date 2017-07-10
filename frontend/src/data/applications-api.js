@@ -34,7 +34,7 @@ function storeApplicationMetaData (appName, key, value) {
     }).then(throwIfNotSuccess);
 }
 
-module.exports = {
+export default {
     fetchApplication,
     fetchAll,
     fetchApplicationsWithStrategyName,

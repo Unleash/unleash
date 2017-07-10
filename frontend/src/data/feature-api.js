@@ -65,7 +65,7 @@ function remove (featureToggleName) {
     }).then(throwIfNotSuccess);
 }
 
-module.exports = {
+export default {
     fetchAll,
     create,
     validate,

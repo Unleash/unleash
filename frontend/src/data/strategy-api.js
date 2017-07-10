@@ -34,7 +34,7 @@ function remove (strategy) {
     }).then(throwIfNotSuccess);
 }
 
-module.exports = {
+export default {
     fetchAll,
     create,
     update,

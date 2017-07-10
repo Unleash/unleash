@@ -13,6 +13,7 @@ const plugins = [
             NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
         },
     }),
+    new webpack.optimize.ModuleConcatenationPlugin(),
 ];
 
 if (process.env.NODE_ENV === 'development') {
@@ -25,8 +26,7 @@ module.exports = {
     entry,
 
     resolve: {
-        root: [path.join(__dirname, 'src')],
-        extensions: ['', '.scss', '.css', '.js', '.jsx', '.json'],
+        extensions: ['.scss', '.css', '.js', '.jsx', '.json'],
     },
 
     output: {
@@ -36,37 +36,47 @@ module.exports = {
     },
 
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: 'babel',
+                loader: 'babel-loader',
                 include: path.join(__dirname, 'src'),
             },
             {
                 test: /(\.scss)$/,
-                loader: ExtractTextPlugin.extract('style',
-                    'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass'),
+                loader: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: [
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                sourceMap: true,
+                                modules: true,
+                                importLoaders: 1,
+                                localIdentName: '[name]__[local]___[hash:base64:5]',
+                            },
+                        },
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                // data: '@import "theme/_config.scss";',
+                                includePaths: [path.resolve(__dirname, './src')],
+                            },
+                        },
+                    ],
+                }),
             },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract('style', 'css'),
+                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }),
             },
         ],
     },
 
     plugins,
 
-    sassLoader: {
-        // data: '@import "theme/_config.scss";',
-        includePaths: [path.resolve(__dirname, './src')],
-    },
-
     devtool: 'source-map',
-
-    externals: {
-        // stuff not in node_modules can be resolved here.
-    },
 
     devServer: {
         proxy: {

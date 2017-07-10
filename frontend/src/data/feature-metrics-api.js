@@ -16,7 +16,7 @@ function fetchSeenApps () {
         .then(response => response.json());
 }
 
-module.exports = {
+export default {
     fetchFeatureMetrics,
     fetchSeenApps,
 };

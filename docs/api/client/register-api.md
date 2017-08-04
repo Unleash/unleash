@@ -25,4 +25,4 @@ Register a client instance with the unleash server. The client should send all f
 * **sdkVersion** - Optional field that describes the sdk version (name:version)
 * **strategies** - List of strategies implemented by this application
 * **started** - When this client started. Should be reported as UTC time.
-* **interval** - At wich interval will this client be expected to send metrics? 
+* **interval** - At wich interval, in milliseconds, will this client be expected to send metrics

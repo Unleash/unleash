@@ -29,7 +29,7 @@
     "build:html": "cp public/*.html dist/.",
     "build:ico": "cp public/*.ico dist/.",
     "build:img": "cp public/*.png dist/public/.",
-    "start": "NODE_ENV=development webpack-dev-server --progress --colors --display-optimization-bailout",
+    "start": "NODE_ENV=development webpack-dev-server --progress --colors",
     "start:heroku": "UNLEASH_API=http://unleash.herokuapp.com npm run start",
     "lint": "eslint . --ext js,jsx",
     "test": "jest",
@@ -81,7 +81,7 @@
     "style-loader": "^0.18.2",
     "toolbox-loader": "0.0.3",
     "webpack": "^3.1.0",
-    "webpack-dev-server": "^2.5.1"
+    "webpack-dev-server": "^2.6.1"
   },
   "jest": {
     "moduleNameMapper": {

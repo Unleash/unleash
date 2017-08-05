@@ -50,10 +50,10 @@ A logger provider is a function which takes the name of a logger and returns a l
 function consoleLoggerProvider (name) {
   // do something with the name
   return {
-    debug: console.debug.bind(console),
-    info: console.info.bind(console),
-    warn: console.warn.bind(console),
-    error: console.error.bind(console)
+    debug: console.log,
+    info: console.log,
+    warn: console.log,
+    error: console.error
   };
 }
 ```

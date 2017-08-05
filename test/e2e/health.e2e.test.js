@@ -2,11 +2,6 @@
 
 const { test } = require('ava');
 const { setupApp } = require('./helpers/test-helper');
-const logger = require('../../lib/logger');
-
-test.beforeEach(() => {
-    logger.setLevel('FATAL');
-});
 
 test('returns health good', async t => {
     t.plan(0);

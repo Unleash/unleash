@@ -39,7 +39,7 @@
     "db-migrate": "db-migrate",
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "PORT=4243 ava lib/*.test.js lib/**/*.test.js lib/**/**/*.test.js lib/**/**/**/*.test.js test",
+    "test": "NODE_ENV=test PORT=4243 ava lib/*.test.js lib/**/*.test.js lib/**/**/*.test.js lib/**/**/**/*.test.js test",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "npm run test -- --watch",
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",

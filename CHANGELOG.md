@@ -5,6 +5,7 @@
 - disable edit of built-in strategies
 - Strip uknown fields in client requests.
 - Disable x-powered-by header
+- Add posibility to inject custom logger provider
 
 ## 3.0.0-alpha.1
 - upgrade unleash-frontend to 3.0.0-alpha.1

@@ -71,3 +71,4 @@ unleashLogger.setLoggerProvider(consoleLoggerProvider);
  
 // then require unleash-server and continue as normal
 const unleash = require('unleash-server');
+```

@@ -2,11 +2,6 @@
 
 const { test } = require('ava');
 const { setupApp } = require('./../../helpers/test-helper');
-const logger = require('../../../../lib/logger');
-
-test.beforeEach(() => {
-    logger.setLevel('FATAL');
-});
 
 test.serial('returns three feature toggles', async t => {
     const { request, destroy } = await setupApp('feature_api_serial');

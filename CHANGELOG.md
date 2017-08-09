@@ -5,6 +5,7 @@
 - disable edit of built-in strategies
 - Strip uknown fields in client requests.
 - Disable x-powered-by header
+- Improved client-metrics validation to avoid NaN
 - Add posibility to inject custom logger provider
 
 ## 3.0.0-alpha.1

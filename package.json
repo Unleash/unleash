@@ -72,7 +72,7 @@
     "log4js": "^1.0.1",
     "moment": "^2.15.2",
     "parse-database-url": "^0.3.0",
-    "pg": "^6.1.0",
+    "pg": "^6.4.2",
     "prom-client": "^9.1.1",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.3.0",

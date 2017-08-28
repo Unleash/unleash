@@ -28,24 +28,26 @@ class EditUserComponent extends React.Component {
         user: PropTypes.object.isRequired,
         updateUserName: PropTypes.func.isRequired,
         save: PropTypes.func.isRequired,
-    }
+    };
 
-    handleSubmit = (evt) => {
+    handleSubmit = evt => {
         evt.preventDefault();
         this.props.save();
-    }
+    };
 
-    render () {
+    render() {
         return (
             <div>
                 <Modal
                     isOpen={this.props.user.showDialog}
                     contentLabel="test"
-                    style={customStyles} >
+                    style={customStyles}
+                >
                     <h2>Action required</h2>
                     <div>
                         <p>
-                            You have to specify a username to use Unleash. This will allow us to track your changes.
+                            You have to specify a username to use Unleash. This
+                            will allow us to track your changes.
                         </p>
                         <form onSubmit={this.handleSubmit}>
                             <Textfield
@@ -53,10 +55,13 @@ class EditUserComponent extends React.Component {
                                 name="username"
                                 required
                                 value={this.props.user.userName}
-                                onChange={(e) => this.props.updateUserName(e.target.value)}
+                                onChange={e =>
+                                    this.props.updateUserName(e.target.value)}
                             />
                             <br />
-                            <Button raised accent>Save</Button>
+                            <Button raised accent>
+                                Save
+                            </Button>
                         </form>
                     </div>
                 </Modal>

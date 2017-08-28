@@ -11,20 +11,23 @@ class StrategiesSection extends React.Component {
         removeStrategy: PropTypes.func.isRequired,
         updateStrategy: PropTypes.func.isRequired,
         fetchStrategies: PropTypes.func.isRequired,
-    }
+    };
 
-    componentWillMount () {
+    componentWillMount() {
         this.props.fetchStrategies();
     }
 
-    render () {
+    render() {
         if (!this.props.strategies || this.props.strategies.length === 0) {
             return <ProgressBar indeterminate />;
         }
 
         return (
             <div>
-                <HeaderTitle title="Activation strategies" actions={<AddStrategy {...this.props} />} />
+                <HeaderTitle
+                    title="Activation strategies"
+                    actions={<AddStrategy {...this.props} />}
+                />
                 <StrategiesList {...this.props} />
             </div>
         );

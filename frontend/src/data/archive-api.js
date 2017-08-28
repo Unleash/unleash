@@ -2,13 +2,13 @@ import { throwIfNotSuccess, headers } from './helper';
 
 const URI = 'api/admin/archive';
 
-function fetchAll () {
+function fetchAll() {
     return fetch(`${URI}/features`, { credentials: 'include' })
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }
 
-function revive (featureName) {
+function revive(featureName) {
     return fetch(`${URI}/revive/${featureName}`, {
         method: 'POST',
         headers,
@@ -16,9 +16,7 @@ function revive (featureName) {
     }).then(throwIfNotSuccess);
 }
 
-
 export default {
     fetchAll,
     revive,
 };
-

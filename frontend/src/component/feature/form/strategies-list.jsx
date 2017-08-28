@@ -11,9 +11,9 @@ class StrategiesList extends React.Component {
         updateStrategy: PropTypes.func.isRequired,
         removeStrategy: PropTypes.func.isRequired,
         moveStrategy: PropTypes.func.isRequired,
-    }
+    };
 
-    render () {
+    render() {
         const {
             strategies,
             configuredStrategies,
@@ -34,12 +34,13 @@ class StrategiesList extends React.Component {
                 moveStrategy={moveStrategy}
                 removeStrategy={removeStrategy.bind(null, i)}
                 updateStrategy={updateStrategy.bind(null, i)}
-                strategyDefinition={strategies.find(s => s.name === strategy.name)} />
+                strategyDefinition={strategies.find(
+                    s => s.name === strategy.name
+                )}
+            />
         ));
         return (
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                {blocks}
-            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>{blocks}</div>
         );
     }
 }

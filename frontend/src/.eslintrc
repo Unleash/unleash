@@ -3,7 +3,9 @@
     "extends": [
         "finn",
         "finn-react",
-        "finn/es-modules"
+        "finn/es-modules",
+        "finn-prettier",
+        "finn-prettier/react"
     ],
     "env": {
         "browser": true,
@@ -16,10 +18,7 @@
     "parserOptions": {
         "ecmaVersion": 7,
         "ecmaFeatures": {
-            "experimentalObjectRestSpread": true,
-            "classes":true,
-            "spread":true,
-            "restParams": true
+            "experimentalObjectRestSpread": true
         }
     },
     "rules": {

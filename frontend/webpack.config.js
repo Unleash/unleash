@@ -54,14 +54,17 @@ module.exports = {
                                 sourceMap: true,
                                 modules: true,
                                 importLoaders: 1,
-                                localIdentName: '[name]__[local]___[hash:base64:5]',
+                                localIdentName:
+                                    '[name]__[local]___[hash:base64:5]',
                             },
                         },
                         {
                             loader: 'sass-loader',
                             options: {
                                 // data: '@import "theme/_config.scss";',
-                                includePaths: [path.resolve(__dirname, './src')],
+                                includePaths: [
+                                    path.resolve(__dirname, './src'),
+                                ],
                             },
                         },
                     ],
@@ -69,7 +72,10 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }),
+                loader: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: 'css-loader',
+                }),
             },
         ],
     },

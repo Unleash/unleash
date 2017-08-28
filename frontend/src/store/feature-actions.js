@@ -15,22 +15,21 @@ export const ERROR_CREATING_FEATURE_TOGGLE = 'ERROR_CREATING_FEATURE_TOGGLE';
 export const ERROR_UPDATE_FEATURE_TOGGLE = 'ERROR_UPDATE_FEATURE_TOGGLE';
 export const ERROR_REMOVE_FEATURE_TOGGLE = 'ERROR_REMOVE_FEATURE_TOGGLE';
 
-export function toggleFeature (name) {
+export function toggleFeature(name) {
     debug('Toggle feature toggle ', name);
     return dispatch => {
         dispatch(requestToggleFeatureToggle(name));
     };
-};
+}
 
-export function editFeatureToggle (featureToggle) {
+export function editFeatureToggle(featureToggle) {
     debug('Update feature toggle ', featureToggle);
     return dispatch => {
         dispatch(requestUpdateFeatureToggle(featureToggle));
     };
-};
+}
 
-
-function receiveFeatureToggles (json) {
+function receiveFeatureToggles(json) {
     debug('reviced feature toggles', json);
     return {
         type: RECEIVE_FEATURE_TOGGLES,
@@ -39,64 +38,73 @@ function receiveFeatureToggles (json) {
     };
 }
 
-function dispatchAndThrow (dispatch, type) {
-    return (error) => {
+function dispatchAndThrow(dispatch, type) {
+    return error => {
         dispatch({ type, error, receivedAt: Date.now() });
         throw error;
     };
 }
 
-export function fetchFeatureToggles () {
+export function fetchFeatureToggles() {
     debug('Start fetching feature toggles');
     return dispatch => {
         dispatch({ type: START_FETCH_FEATURE_TOGGLES });
 
-        return api.fetchAll()
+        return api
+            .fetchAll()
             .then(json => dispatch(receiveFeatureToggles(json)))
             .catch(dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_TOGGLES));
     };
 }
 
-export function createFeatureToggles (featureToggle) {
+export function createFeatureToggles(featureToggle) {
     return dispatch => {
         dispatch({ type: START_CREATE_FEATURE_TOGGLE });
 
-        return api.create(featureToggle)
+        return api
+            .create(featureToggle)
             .then(() => dispatch({ type: ADD_FEATURE_TOGGLE, featureToggle }))
             .catch(dispatchAndThrow(dispatch, ERROR_CREATING_FEATURE_TOGGLE));
     };
 }
 
-export function requestToggleFeatureToggle (name) {
+export function requestToggleFeatureToggle(name) {
     return dispatch => {
         dispatch({ type: START_UPDATE_FEATURE_TOGGLE });
 
-        return api.toggle(name)
+        return api
+            .toggle(name)
             .then(() => dispatch({ type: TOGGLE_FEATURE_TOGGLE, name }))
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
 
-export function requestUpdateFeatureToggle (featureToggle) {
+export function requestUpdateFeatureToggle(featureToggle) {
     return dispatch => {
         dispatch({ type: START_UPDATE_FEATURE_TOGGLE });
 
-        return api.update(featureToggle)
-            .then(() => dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle }))
+        return api
+            .update(featureToggle)
+            .then(() =>
+                dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle })
+            )
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
 
-export function removeFeatureToggle (featureToggleName) {
+export function removeFeatureToggle(featureToggleName) {
     return dispatch => {
         dispatch({ type: START_REMOVE_FEATURE_TOGGLE });
 
-        return api.remove(featureToggleName)
-            .then(() => dispatch({ type: REMOVE_FEATURE_TOGGLE, featureToggleName }))
+        return api
+            .remove(featureToggleName)
+            .then(() =>
+                dispatch({ type: REMOVE_FEATURE_TOGGLE, featureToggleName })
+            )
             .catch(dispatchAndThrow(dispatch, ERROR_REMOVE_FEATURE_TOGGLE));
     };
 }
 
-export function validateName (featureToggleName) {
+export function validateName(featureToggleName) {
     return api.validate({ name: featureToggleName });
 }

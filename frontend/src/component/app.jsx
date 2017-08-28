@@ -1,7 +1,17 @@
 import React, { Component, PropTypes } from 'react';
-import { Layout, Drawer, Header, Navigation, Content,
-    Footer, FooterSection, FooterDropDownSection, FooterLinkList,
-    Grid, Cell, Icon,
+import {
+    Layout,
+    Drawer,
+    Header,
+    Navigation,
+    Content,
+    Footer,
+    FooterSection,
+    FooterDropDownSection,
+    FooterLinkList,
+    Grid,
+    Cell,
+    Icon,
 } from 'react-mdl';
 import { Link } from 'react-router';
 import styles from './styles.scss';
@@ -11,7 +21,7 @@ import UserContainer from './user/user-container';
 import ShowUserContainer from './user/show-user-container';
 import { ScrollContainer } from 'react-router-scroll';
 
-function replace (input, params) {
+function replace(input, params) {
     if (!params) {
         return input;
     }
@@ -26,13 +36,13 @@ export default class App extends Component {
         location: PropTypes.object.isRequired,
         params: PropTypes.object.isRequired,
         routes: PropTypes.array.isRequired,
-    }
+    };
 
     static contextTypes = {
         router: React.PropTypes.object,
-    }
+    };
 
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
         if (this.props.location.pathname !== nextProps.location.pathname) {
             clearTimeout(this.timer);
             this.timer = setTimeout(() => {
@@ -46,11 +56,12 @@ export default class App extends Component {
         }
     }
 
-    getSections () {
+    getSections() {
         const { routes, params } = this.props;
         const unique = {};
-        const result = routes.splice(1)
-            .map((routeEntry) => ({
+        const result = routes
+            .splice(1)
+            .map(routeEntry => ({
                 name: replace(routeEntry.pageTitle, params),
                 link: replace(routeEntry.link || routeEntry.path, params),
             }))
@@ -72,14 +83,25 @@ export default class App extends Component {
         return result;
     }
 
-    getTitleWithLinks () {
+    getTitleWithLinks() {
         const result = this.getSections();
         return (
             <span>
                 {result.map((entry, index) => (
-                    <span key={entry.link + index} className={index > 0 ? 'mdl-layout--large-screen-only' : ''}>
+                    <span
+                        key={entry.link + index}
+                        className={
+                            index > 0 ? 'mdl-layout--large-screen-only' : ''
+                        }
+                    >
                         {index > 0 ? ' › ' : null}
-                        <Link className={[styles.headerTitleLink, 'mdl-color-text--primary-contrast'].join(' ')} to={entry.link}>
+                        <Link
+                            className={[
+                                styles.headerTitleLink,
+                                'mdl-color-text--primary-contrast',
+                            ].join(' ')}
+                            to={entry.link}
+                        >
                             {entry.name}
                         </Link>
                     </span>
@@ -88,24 +110,49 @@ export default class App extends Component {
         );
     }
 
-    render () {
+    render() {
         const shouldUpdateScroll = (prevRouterProps, { location }) => {
-            if (prevRouterProps && location.pathname !== prevRouterProps.location.pathname) {
+            if (
+                prevRouterProps &&
+                location.pathname !== prevRouterProps.location.pathname
+            ) {
                 return location.action === 'POP';
             } else {
                 return [0, 0];
             }
         };
-        const createListItem = (path, caption, icon, isDrawerNavigation = false) => {
-            const linkColor = isDrawerNavigation &&
-                this.context.router.isActive(path) ? 'mdl-color-text--black' : 'mdl-color-text--grey-900';
-            const iconColor = isDrawerNavigation &&
-                this.context.router.isActive(path) ? 'mdl-color-text--black' : 'mdl-color-text--grey-600';
+        const createListItem = (
+            path,
+            caption,
+            icon,
+            isDrawerNavigation = false
+        ) => {
+            const linkColor =
+                isDrawerNavigation && this.context.router.isActive(path)
+                    ? 'mdl-color-text--black'
+                    : 'mdl-color-text--grey-900';
+            const iconColor =
+                isDrawerNavigation && this.context.router.isActive(path)
+                    ? 'mdl-color-text--black'
+                    : 'mdl-color-text--grey-600';
             return (
                 <Link
                     to={path}
-                    className={isDrawerNavigation && [styles.navigationLink, linkColor].join(' ')}>
-                    {icon && <Icon name={icon} className={isDrawerNavigation && [styles.navigationIcon, iconColor].join(' ')}/>}{caption}
+                    className={
+                        isDrawerNavigation &&
+                        [styles.navigationLink, linkColor].join(' ')
+                    }
+                >
+                    {icon && (
+                        <Icon
+                            name={icon}
+                            className={
+                                isDrawerNavigation &&
+                                [styles.navigationIcon, iconColor].join(' ')
+                            }
+                        />
+                    )}
+                    {caption}
                 </Link>
             );
         };
@@ -120,30 +167,79 @@ export default class App extends Component {
                         </Navigation>
                     </Header>
                     <Drawer className="mdl-color--white">
-                        <span className={[styles.drawerTitle, 'mdl-layout-title'].join(' ')}>
-                            <img src="public/logo.png" width="32" height="32" className={styles.drawerTitleLogo}/>
-                            <span className={styles.drawerTitleText}>Unleash</span>
+                        <span
+                            className={[
+                                styles.drawerTitle,
+                                'mdl-layout-title',
+                            ].join(' ')}
+                        >
+                            <img
+                                src="public/logo.png"
+                                width="32"
+                                height="32"
+                                className={styles.drawerTitleLogo}
+                            />
+                            <span className={styles.drawerTitleText}>
+                                Unleash
+                            </span>
                         </span>
-                        <hr/>
+                        <hr />
                         <Navigation className={styles.navigation}>
-                            {createListItem('/features', 'Feature Toggles', 'list', true)}
-                            {createListItem('/strategies', 'Strategies', 'extension', true)}
-                            {createListItem('/history', 'Event History', 'history', true)}
-                            {createListItem('/archive', 'Archived Toggles', 'archive', true)}
-                            {createListItem('/applications', 'Applications', 'apps', true)}
+                            {createListItem(
+                                '/features',
+                                'Feature Toggles',
+                                'list',
+                                true
+                            )}
+                            {createListItem(
+                                '/strategies',
+                                'Strategies',
+                                'extension',
+                                true
+                            )}
+                            {createListItem(
+                                '/history',
+                                'Event History',
+                                'history',
+                                true
+                            )}
+                            {createListItem(
+                                '/archive',
+                                'Archived Toggles',
+                                'archive',
+                                true
+                            )}
+                            {createListItem(
+                                '/applications',
+                                'Applications',
+                                'apps',
+                                true
+                            )}
                         </Navigation>
-                        <hr/>
+                        <hr />
                         <Navigation className={styles.navigation}>
-                            <a href="https://github.com/Unleash" target="_blank" className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}>
-                                <i className={[
-                                    'material-icons',
-                                    styles.navigationIcon,
-                                    styles.iconGitHub,
-                                ].join(' ')}/>GitHub
+                            <a
+                                href="https://github.com/Unleash"
+                                target="_blank"
+                                className={[
+                                    styles.navigationLink,
+                                    'mdl-color-text--grey-900',
+                                ].join(' ')}
+                            >
+                                <i
+                                    className={[
+                                        'material-icons',
+                                        styles.navigationIcon,
+                                        styles.iconGitHub,
+                                    ].join(' ')}
+                                />GitHub
                             </a>
                         </Navigation>
                     </Drawer>
-                    <ScrollContainer scrollKey="container" shouldUpdateScroll={shouldUpdateScroll}>
+                    <ScrollContainer
+                        scrollKey="container"
+                        shouldUpdateScroll={shouldUpdateScroll}
+                    >
                         <Content className="mdl-color--grey-50">
                             <Grid noSpacing className={styles.content}>
                                 <Cell col={12}>
@@ -155,27 +251,56 @@ export default class App extends Component {
                                 <FooterSection type="middle">
                                     <FooterDropDownSection title="Menu">
                                         <FooterLinkList>
-                                            {createListItem('/features', 'Feature Toggles')}
-                                            {createListItem('/strategies', 'Strategies')}
-                                            {createListItem('/history', 'Event History')}
-                                            {createListItem('/archive', 'Archived Toggles')}
-                                            {createListItem('/applications', 'Applications')}
+                                            {createListItem(
+                                                '/features',
+                                                'Feature Toggles'
+                                            )}
+                                            {createListItem(
+                                                '/strategies',
+                                                'Strategies'
+                                            )}
+                                            {createListItem(
+                                                '/history',
+                                                'Event History'
+                                            )}
+                                            {createListItem(
+                                                '/archive',
+                                                'Archived Toggles'
+                                            )}
+                                            {createListItem(
+                                                '/applications',
+                                                'Applications'
+                                            )}
                                         </FooterLinkList>
                                     </FooterDropDownSection>
                                     <FooterDropDownSection title="Clients">
                                         <FooterLinkList>
-                                            <a href="https://github.com/Unleash/unleash-client-node/">Node.js</a>
-                                            <a href="https://github.com/Unleash/unleash-client-java/">Java</a>
-                                            <a href="https://github.com/Unleash/unleash-client-go/">Go</a>
+                                            <a href="https://github.com/Unleash/unleash-client-node/">
+                                                Node.js
+                                            </a>
+                                            <a href="https://github.com/Unleash/unleash-client-java/">
+                                                Java
+                                            </a>
+                                            <a href="https://github.com/Unleash/unleash-client-go/">
+                                                Go
+                                            </a>
                                         </FooterLinkList>
                                     </FooterDropDownSection>
                                 </FooterSection>
                                 <FooterSection type="bottom" logo="Unleash">
                                     <FooterLinkList>
-                                        <a href="https://github.com/Unleash/unleash/" target="_blank">
+                                        <a
+                                            href="https://github.com/Unleash/unleash/"
+                                            target="_blank"
+                                        >
                                             GitHub
                                         </a>
-                                        <a href="https://finn.no" target="_blank"><small>A product by</small> FINN.no</a>
+                                        <a
+                                            href="https://finn.no"
+                                            target="_blank"
+                                        >
+                                            <small>A product by</small> FINN.no
+                                        </a>
                                     </FooterLinkList>
                                 </FooterSection>
                             </Footer>
@@ -185,4 +310,4 @@ export default class App extends Component {
             </div>
         );
     }
-};
+}

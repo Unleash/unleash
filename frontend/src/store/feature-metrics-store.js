@@ -5,13 +5,15 @@ import {
     RECEIVE_SEEN_APPS,
 } from './feature-metrics-actions';
 
-
-const metrics = (state = fromJS({ lastHour: {}, lastMinute: {}, seenApps: {} }), action) => {
+const metrics = (
+    state = fromJS({ lastHour: {}, lastMinute: {}, seenApps: {} }),
+    action
+) => {
     switch (action.type) {
         case RECEIVE_SEEN_APPS:
             return state.set('seenApps', new $Map(action.value));
         case RECEIVE_FEATURE_METRICS:
-            return state.withMutations((ctx) => {
+            return state.withMutations(ctx => {
                 ctx.set('lastHour', new $Map(action.value.lastHour));
                 ctx.set('lastMinute', new $Map(action.value.lastMinute));
                 return ctx;

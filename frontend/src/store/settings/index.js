@@ -5,7 +5,7 @@ import { UPDATE_SETTING } from './actions';
 const localStorage = window.localStorage || {};
 const SETTINGS = 'settings';
 
-function getInitState () {
+function getInitState() {
     try {
         const state = JSON.parse(localStorage.getItem(SETTINGS));
         return state ? fromJS(state) : new $Map();
@@ -14,8 +14,11 @@ function getInitState () {
     }
 }
 
-function updateSetting (state, action) {
-    const newState = state.updateIn([action.group, action.field], () => action.value);
+function updateSetting(state, action) {
+    const newState = state.updateIn(
+        [action.group, action.field],
+        () => action.value
+    );
 
     localStorage.setItem(SETTINGS, JSON.stringify(newState.toJSON()));
     return newState;

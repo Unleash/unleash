@@ -3,14 +3,12 @@ import { ProgressBar, Card } from 'react-mdl';
 import { AppsLinkList, styles as commonStyles } from '../common';
 
 class ClientStrategies extends Component {
-    componentDidMount () {
+    componentDidMount() {
         this.props.fetchAll();
     }
 
-    render () {
-        const {
-            applications,
-        } = this.props;
+    render() {
+        const { applications } = this.props;
 
         if (!applications) {
             return <ProgressBar indeterminate />;
@@ -22,6 +20,5 @@ class ClientStrategies extends Component {
         );
     }
 }
-
 
 export default ClientStrategies;

@@ -4,7 +4,7 @@ import StrategiesSection from './strategies-section-container';
 
 import { FormButtons } from '../../common';
 
-const trim = (value) => {
+const trim = value => {
     if (value && value.trim) {
         return value.trim();
     } else {
@@ -13,14 +13,14 @@ const trim = (value) => {
 };
 
 class AddFeatureToggleComponent extends Component {
-    componentWillMount () {
+    componentWillMount() {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {
             this.props.init(this.props.input);
         }
     }
 
-    render () {
+    render() {
         const {
             input,
             setValue,
@@ -53,8 +53,9 @@ class AddFeatureToggleComponent extends Component {
                         required
                         value={name}
                         error={nameError}
-                        onBlur={(v) => validateName(v.target.value)}
-                        onChange={(v) => setValue('name', trim(v.target.value))} />
+                        onBlur={v => validateName(v.target.value)}
+                        onChange={v => setValue('name', trim(v.target.value))}
+                    />
                     <br />
                     <Textfield
                         floatingLabel
@@ -63,24 +64,31 @@ class AddFeatureToggleComponent extends Component {
                         label="Description"
                         required
                         value={description}
-                        onChange={(v) => setValue('description', v.target.value)} />
+                        onChange={v => setValue('description', v.target.value)}
+                    />
 
-                    {!editmode && <div>
-                        <br />
-                        <Switch
-                            checked={enabled}
-                            onChange={() => {
-                                setValue('enabled', !enabled);
-                            }}>Enabled</Switch>
-                        <hr />
-                    </div>}
+                    {!editmode && (
+                        <div>
+                            <br />
+                            <Switch
+                                checked={enabled}
+                                onChange={() => {
+                                    setValue('enabled', !enabled);
+                                }}
+                            >
+                                Enabled
+                            </Switch>
+                            <hr />
+                        </div>
+                    )}
 
                     <StrategiesSection
                         configuredStrategies={configuredStrategies}
                         addStrategy={addStrategy}
                         updateStrategy={updateStrategy}
                         moveStrategy={moveStrategy}
-                        removeStrategy={removeStrategy} />
+                        removeStrategy={removeStrategy}
+                    />
 
                     <br />
                     <FormButtons
@@ -91,7 +99,7 @@ class AddFeatureToggleComponent extends Component {
             </form>
         );
     }
-};
+}
 
 AddFeatureToggleComponent.propTypes = {
     input: PropTypes.object,

@@ -2,7 +2,7 @@ const { throwIfNotSuccess } = require('./helper');
 
 const URI = 'api/admin/metrics/feature-toggles';
 
-function fetchFeatureMetrics () {
+function fetchFeatureMetrics() {
     return fetch(URI, { credentials: 'include' })
         .then(throwIfNotSuccess)
         .then(response => response.json());
@@ -10,7 +10,7 @@ function fetchFeatureMetrics () {
 
 const seenURI = 'api/admin/metrics/seen-apps';
 
-function fetchSeenApps () {
+function fetchSeenApps() {
     return fetch(seenURI, { credentials: 'include' })
         .then(throwIfNotSuccess)
         .then(response => response.json());

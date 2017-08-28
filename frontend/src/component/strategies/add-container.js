@@ -8,13 +8,13 @@ import AddStrategy from './add-strategy';
 const ID = 'add-strategy';
 
 const prepare = (methods, dispatch) => {
-    methods.onSubmit = (input) => (
-        (e) => {
-            e.preventDefault();
-            // clean
-            const parameters = (input.parameters || [])
-                .filter((name) => !!name)
-                .map(({
+    methods.onSubmit = input => e => {
+        e.preventDefault();
+        // clean
+        const parameters = (input.parameters || [])
+            .filter(name => !!name)
+            .map(
+                ({
                     name,
                     type = 'string',
                     description = '',
@@ -24,26 +24,25 @@ const prepare = (methods, dispatch) => {
                     type,
                     description,
                     required,
-                }));
+                })
+            );
 
-            createStrategy({
-                name: input.name,
-                description: input.description,
-                parameters,
-            })(dispatch)
-                .then(() => methods.clear())
-                // somewhat quickfix / hacky to go back..
-                .then(() => window.history.back());
-        }
-    );
+        createStrategy({
+            name: input.name,
+            description: input.description,
+            parameters,
+        })(dispatch)
+            .then(() => methods.clear())
+            // somewhat quickfix / hacky to go back..
+            .then(() => window.history.back());
+    };
 
-    methods.onCancel = (e) => {
+    methods.onCancel = e => {
         e.preventDefault();
         methods.clear();
         // somewhat quickfix / hacky to go back..
         window.history.back();
     };
-
 
     return methods;
 };
@@ -53,13 +52,16 @@ const actions = createActions({
     prepare,
 });
 
-export default connect(createMapper({
-    id: ID,
-    getDefault () {
-        let name;
-        try {
-            [, name] = document.location.hash.match(/name=([a-z0-9-_.]+)/i);
-        } catch (e) {}
-        return { name };
-    },
-}), actions)(AddStrategy);
+export default connect(
+    createMapper({
+        id: ID,
+        getDefault() {
+            let name;
+            try {
+                [, name] = document.location.hash.match(/name=([a-z0-9-_.]+)/i);
+            } catch (e) {}
+            return { name };
+        },
+    }),
+    actions
+)(AddStrategy);

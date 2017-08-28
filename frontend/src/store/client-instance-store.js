@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 import { RECEIVE_CLIENT_INSTANCES } from './client-instance-actions';
 
-function getInitState () {
+function getInitState() {
     return fromJS([]);
 }
 

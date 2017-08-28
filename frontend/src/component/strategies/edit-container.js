@@ -7,7 +7,7 @@ import AddStrategy from './add-strategy';
 
 const ID = 'edit-strategy';
 
-function getId (props) {
+function getId(props) {
     return [ID, props.strategy.name];
 }
 
@@ -16,20 +16,20 @@ function getId (props) {
 const mapStateToProps = createMapper({
     id: getId,
     getDefault: (state, ownProps) => ownProps.strategy,
-    prepare: (props) => {
+    prepare: props => {
         props.editmode = true;
         return props;
     },
 });
 
 const prepare = (methods, dispatch) => {
-    methods.onSubmit = (input) => (
-        (e) => {
-            e.preventDefault();
-            // clean
-            const parameters = (input.parameters || [])
-                .filter((name) => !!name)
-                .map(({
+    methods.onSubmit = input => e => {
+        e.preventDefault();
+        // clean
+        const parameters = (input.parameters || [])
+            .filter(name => !!name)
+            .map(
+                ({
                     name,
                     type = 'string',
                     description = '',
@@ -39,25 +39,24 @@ const prepare = (methods, dispatch) => {
                     type,
                     description,
                     required,
-                }));
+                })
+            );
 
-            updateStrategy({
-                name: input.name,
-                description: input.description,
-                parameters,
-            })(dispatch)
-                .then(() => methods.clear())
-                .then(() => hashHistory.push(`/strategies/view/${input.name}`));
-        }
-    );
+        updateStrategy({
+            name: input.name,
+            description: input.description,
+            parameters,
+        })(dispatch)
+            .then(() => methods.clear())
+            .then(() => hashHistory.push(`/strategies/view/${input.name}`));
+    };
 
-    methods.onCancel = (e) => {
+    methods.onCancel = e => {
         e.preventDefault();
         methods.clear();
         // somewhat quickfix / hacky to go back..
         window.history.back();
     };
-
 
     return methods;
 };

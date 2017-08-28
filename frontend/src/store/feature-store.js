@@ -1,7 +1,6 @@
 import { List, Map as $Map } from 'immutable';
 const debug = require('debug')('unleash:feature-store');
 
-
 import {
     ADD_FEATURE_TOGGLE,
     RECEIVE_FEATURE_TOGGLES,
@@ -10,7 +9,6 @@ import {
     TOGGLE_FEATURE_TOGGLE,
 } from './feature-actions';
 
-
 const features = (state = new List([]), action) => {
     switch (action.type) {
         case ADD_FEATURE_TOGGLE:
@@ -18,7 +16,9 @@ const features = (state = new List([]), action) => {
             return state.push(new $Map(action.featureToggle));
         case REMOVE_FEATURE_TOGGLE:
             debug(REMOVE_FEATURE_TOGGLE, action);
-            return state.filter(toggle => toggle.get('name') !== action.featureToggleName);
+            return state.filter(
+                toggle => toggle.get('name') !== action.featureToggleName
+            );
         case TOGGLE_FEATURE_TOGGLE:
             debug(TOGGLE_FEATURE_TOGGLE, action);
             return state.map(toggle => {

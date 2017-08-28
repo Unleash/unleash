@@ -6,7 +6,7 @@ import { createMapper, createActions } from '../input-helpers';
 import FormComponent from './form';
 
 const ID = 'edit-feature-toggle';
-function getId (props) {
+function getId(props) {
     return [ID, props.featureToggle.name];
 }
 // TODO: need to scope to the active featureToggle
@@ -19,41 +19,39 @@ const mapStateToProps = createMapper({
         });
         return ownProps.featureToggle;
     },
-    prepare: (props) => {
+    prepare: props => {
         props.editmode = true;
         return props;
     },
 });
 
 const prepare = (methods, dispatch) => {
-    methods.onSubmit = (input) => (
-        (e) => {
-            e.preventDefault();
+    methods.onSubmit = input => e => {
+        e.preventDefault();
 
-            if (Array.isArray(input.strategies)) {
-                input.strategies.forEach((s) => {
-                    delete s.id;
-                });
-            }
-            // TODO: should add error handling
-            requestUpdateFeatureToggle(input)(dispatch)
-                .then(() => methods.clear())
-                .then(() => hashHistory.push(`/features/view/${input.name}`));
+        if (Array.isArray(input.strategies)) {
+            input.strategies.forEach(s => {
+                delete s.id;
+            });
         }
-    );
+        // TODO: should add error handling
+        requestUpdateFeatureToggle(input)(dispatch)
+            .then(() => methods.clear())
+            .then(() => hashHistory.push(`/features/view/${input.name}`));
+    };
 
-    methods.onCancel = (evt) => {
+    methods.onCancel = evt => {
         evt.preventDefault();
         methods.clear();
         window.history.back();
     };
 
-    methods.addStrategy = (v) => {
+    methods.addStrategy = v => {
         v.id = Math.round(Math.random() * 10000000);
         methods.pushToList('strategies', v);
     };
 
-    methods.removeStrategy = (index) => {
+    methods.removeStrategy = index => {
         methods.removeFromList('strategies', index);
     };
 

@@ -16,18 +16,22 @@ const KLASSES = {
     N: style.positive, // added
 };
 
-function buildItemDiff (diff, key) {
+function buildItemDiff(diff, key) {
     let change;
     if (diff.lhs !== undefined) {
         change = (
             <div>
-                <div className={KLASSES.D}>- {key}: {JSON.stringify(diff.lhs)}</div>
+                <div className={KLASSES.D}>
+                    - {key}: {JSON.stringify(diff.lhs)}
+                </div>
             </div>
         );
     } else if (diff.rhs !== undefined) {
         change = (
             <div>
-                <div className={KLASSES.N}>+ {key}: {JSON.stringify(diff.rhs)}</div>
+                <div className={KLASSES.N}>
+                    + {key}: {JSON.stringify(diff.rhs)}
+                </div>
             </div>
         );
     }
@@ -35,7 +39,7 @@ function buildItemDiff (diff, key) {
     return change;
 }
 
-function buildDiff (diff, idx) {
+function buildDiff(diff, idx) {
     let change;
     const key = diff.path.join('.');
 
@@ -44,26 +48,34 @@ function buildDiff (diff, idx) {
     } else if (diff.lhs !== undefined && diff.rhs !== undefined) {
         change = (
             <div>
-                <div className={KLASSES.D}>- {key}: {JSON.stringify(diff.lhs)}</div>
-                <div className={KLASSES.N}>+ {key}: {JSON.stringify(diff.rhs)}</div>
+                <div className={KLASSES.D}>
+                    - {key}: {JSON.stringify(diff.lhs)}
+                </div>
+                <div className={KLASSES.N}>
+                    + {key}: {JSON.stringify(diff.rhs)}
+                </div>
             </div>
         );
     } else {
         const spadenClass = KLASSES[diff.kind];
         const prefix = DIFF_PREFIXES[diff.kind];
 
-        change = (<div className={spadenClass}>{prefix} {key}: {JSON.stringify(diff.rhs || diff.item)}</div>);
+        change = (
+            <div className={spadenClass}>
+                {prefix} {key}: {JSON.stringify(diff.rhs || diff.item)}
+            </div>
+        );
     }
 
-    return (<div key={idx}>{change}</div>);
+    return <div key={idx}>{change}</div>;
 }
 
 class HistoryItem extends PureComponent {
     static propTypes = {
         entry: PropTypes.object,
-    }
+    };
 
-    render () {
+    render() {
         const entry = this.props.entry;
         let changes;
 
@@ -71,12 +83,20 @@ class HistoryItem extends PureComponent {
             changes = entry.diffs.map(buildDiff);
         } else {
             // Just show the data if there is no diff yet.
-            changes = <div className={KLASSES.N}>{JSON.stringify(entry.data, null, 2)}</div>;
+            changes = (
+                <div className={KLASSES.N}>
+                    {JSON.stringify(entry.data, null, 2)}
+                </div>
+            );
         }
 
-        return (<pre style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-            <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>
-        </pre>);
+        return (
+            <pre style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+                <code className="smalltext man">
+                    {changes.length === 0 ? '(no changes)' : changes}
+                </code>
+            </pre>
+        );
     }
 }
 

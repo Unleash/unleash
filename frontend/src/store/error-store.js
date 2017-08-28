@@ -11,21 +11,20 @@ import {
     ERROR_UPDATING_STRATEGY,
     ERROR_CREATING_STRATEGY,
     ERROR_RECEIVE_STRATEGIES,
-
 } from './strategy/actions';
 
 const debug = require('debug')('unleash:error-store');
 
-function getInitState () {
+function getInitState() {
     return new $Map({
         list: new List(),
     });
 }
 
-function addErrorIfNotAlreadyInList (state, error) {
+function addErrorIfNotAlreadyInList(state, error) {
     debug('Got error', error);
     if (state.get('list').indexOf(error) < 0) {
-        return state.update('list', (list) => list.push(error));
+        return state.update('list', list => list.push(error));
     }
     return state;
 }
@@ -41,7 +40,9 @@ const strategies = (state = getInitState(), action) => {
         case ERROR_RECEIVE_STRATEGIES:
             return addErrorIfNotAlreadyInList(state, action.error.message);
         case MUTE_ERROR:
-            return state.update('list', (list) => list.remove(list.indexOf(action.error)));
+            return state.update('list', list =>
+                list.remove(list.indexOf(action.error))
+            );
         default:
             return state;
     }

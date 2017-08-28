@@ -7,16 +7,20 @@ export default class ShowUserComponent extends React.Component {
         openEdit: PropTypes.func.isRequired,
     };
 
-    openEdit = (evt) => {
+    openEdit = evt => {
         evt.preventDefault();
         this.props.openEdit();
-    }
+    };
 
-    render () {
+    render() {
         return (
-            <a className="mdl-navigation__link" href="#edit-user" onClick={this.openEdit}>
+            <a
+                className="mdl-navigation__link"
+                href="#edit-user"
+                onClick={this.openEdit}
+            >
                 <Tooltip label={this.props.user.userName || 'Unknown'} large>
-                    <Icon name="account_circle"/>
+                    <Icon name="account_circle" />
                 </Tooltip>
             </a>
         );

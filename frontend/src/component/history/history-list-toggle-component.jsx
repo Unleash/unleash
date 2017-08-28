@@ -4,22 +4,18 @@ import HistoryList from './history-list-container';
 class HistoryListToggle extends Component {
     static propTypes = {
         toggleName: PropTypes.string.isRequired,
-    }
+    };
 
-    componentDidMount () {
+    componentDidMount() {
         this.props.fetchHistoryForToggle(this.props.toggleName);
     }
 
-    render () {
+    render() {
         if (!this.props.history || this.props.history.length === 0) {
             return <span>fetching..</span>;
         }
         const { history } = this.props;
-        return (
-            <HistoryList
-                history={history}
-                title="Change log"/>
-        );
+        return <HistoryList history={history} title="Change log" />;
     }
 }
 

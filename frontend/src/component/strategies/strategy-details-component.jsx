@@ -20,12 +20,12 @@ export default class StrategyDetails extends Component {
         fetchStrategies: PropTypes.func.isRequired,
         fetchApplications: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
-    }
+    };
 
-    componentDidMount () {
+    componentDidMount() {
         if (!this.props.strategy) {
             this.props.fetchStrategies();
-        };
+        }
         if (!this.props.applications || this.props.applications.length === 0) {
             this.props.fetchApplications();
         }
@@ -34,23 +34,28 @@ export default class StrategyDetails extends Component {
         }
     }
 
-    getTabContent (activeTabId) {
+    getTabContent(activeTabId) {
         if (activeTabId === TABS.edit) {
             return <EditStrategy strategy={this.props.strategy} />;
         } else {
-            return (<ShowStrategy
-                strategy={this.props.strategy}
-                toggles={this.props.toggles}
-                applications={this.props.applications} />);
+            return (
+                <ShowStrategy
+                    strategy={this.props.strategy}
+                    toggles={this.props.toggles}
+                    applications={this.props.applications}
+                />
+            );
         }
     }
 
-    goToTab (tabName) {
+    goToTab(tabName) {
         hashHistory.push(`/strategies/${tabName}/${this.props.strategyName}`);
     }
 
-    render () {
-        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.view;
+    render() {
+        const activeTabId = TABS[this.props.activeTab]
+            ? TABS[this.props.activeTab]
+            : TABS.view;
         const strategy = this.props.strategy;
         if (!strategy) {
             return <ProgressBar indeterminate />;
@@ -58,24 +63,29 @@ export default class StrategyDetails extends Component {
 
         const tabContent = this.getTabContent(activeTabId);
 
-        return (<Grid className="mdl-color--white">
-            <Cell col={12}>
-                <HeaderTitle title={strategy.name} subtitle={strategy.description} />
-                {strategy.editable === false ? '' : <Tabs activeTab={activeTabId} ripple>
-                    <Tab onClick={() => this.goToTab('view')}>
-                            Details
-                    </Tab>
-                    <Tab onClick={() => this.goToTab('edit')}>
-                            Edit
-                    </Tab>
-                </Tabs>}
+        return (
+            <Grid className="mdl-color--white">
+                <Cell col={12}>
+                    <HeaderTitle
+                        title={strategy.name}
+                        subtitle={strategy.description}
+                    />
+                    {strategy.editable === false ? (
+                        ''
+                    ) : (
+                        <Tabs activeTab={activeTabId} ripple>
+                            <Tab onClick={() => this.goToTab('view')}>
+                                Details
+                            </Tab>
+                            <Tab onClick={() => this.goToTab('edit')}>Edit</Tab>
+                        </Tabs>
+                    )}
 
-                <section>
-                    <div className="content">
-                        {tabContent}
-                    </div>
-                </section>
-            </Cell>
-        </Grid>);
+                    <section>
+                        <div className="content">{tabContent}</div>
+                    </section>
+                </Cell>
+            </Grid>
+        );
     }
 }

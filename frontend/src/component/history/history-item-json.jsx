@@ -5,9 +5,9 @@ import style from './history.scss';
 class HistoryItem extends PureComponent {
     static propTypes = {
         entry: PropTypes.object,
-    }
+    };
 
-    render () {
+    render() {
         const localEventData = JSON.parse(JSON.stringify(this.props.entry));
         delete localEventData.description;
         delete localEventData.name;

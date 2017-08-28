@@ -1,10 +1,17 @@
 import React, { PropTypes, Component } from 'react';
 
-import { Textfield, IconButton, Menu, MenuItem, Checkbox, Grid, Cell } from 'react-mdl';
+import {
+    Textfield,
+    IconButton,
+    Menu,
+    MenuItem,
+    Checkbox,
+    Grid,
+    Cell,
+} from 'react-mdl';
 import { FormButtons } from '../common';
 
-
-const trim = (value) => {
+const trim = value => {
     if (value && value.trim) {
         return value.trim();
     } else {
@@ -12,36 +19,57 @@ const trim = (value) => {
     }
 };
 
-function gerArrayWithEntries (num) {
+function gerArrayWithEntries(num) {
     return Array.from(Array(num));
 }
 
 const Parameter = ({ set, input = {}, index }) => (
-    <div style={{ background: '#f1f1f1', padding: '16px 20px', marginBottom: '20px' }}>
+    <div
+        style={{
+            background: '#f1f1f1',
+            padding: '16px 20px',
+            marginBottom: '20px',
+        }}
+    >
         <Textfield
             style={{ width: '50%' }}
             floatingLabel
             label={`Parameter name ${index + 1}`}
             onChange={({ target }) => set({ name: target.value }, true)}
-            value={input.name} />
+            value={input.name}
+        />
         <div style={{ position: 'relative', display: 'inline-block' }}>
-            <span className="mdl-outline" id={`${index}-type-menu`} style={{
-                borderRadius: '2px',
-                cursor: 'pointer',
-                boxShadow: '0 2px 2px 0 rgba(0,0,0,.04),0 3px 1px -2px rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.12)',
-                marginLeft: '10px',
-                border: '1px solid #f1f1f1',
-                backgroundColor: 'white',
-                padding: '10px 2px 10px 20px',
-            }}>
+            <span
+                className="mdl-outline"
+                id={`${index}-type-menu`}
+                style={{
+                    borderRadius: '2px',
+                    cursor: 'pointer',
+                    boxShadow:
+                        '0 2px 2px 0 rgba(0,0,0,.04),0 3px 1px -2px rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.12)',
+                    marginLeft: '10px',
+                    border: '1px solid #f1f1f1',
+                    backgroundColor: 'white',
+                    padding: '10px 2px 10px 20px',
+                }}
+            >
                 {input.type || 'string'}
-                <IconButton name="arrow_drop_down" onClick={(evt) => evt.preventDefault()} />
+                <IconButton
+                    name="arrow_drop_down"
+                    onClick={evt => evt.preventDefault()}
+                />
             </span>
             <Menu target={`${index}-type-menu`} align="right">
-                <MenuItem onClick={() => set({ type: 'string' })}>string</MenuItem>
-                <MenuItem onClick={() => set({ type: 'percentage' })}>percentage</MenuItem>
+                <MenuItem onClick={() => set({ type: 'string' })}>
+                    string
+                </MenuItem>
+                <MenuItem onClick={() => set({ type: 'percentage' })}>
+                    percentage
+                </MenuItem>
                 <MenuItem onClick={() => set({ type: 'list' })}>list</MenuItem>
-                <MenuItem onClick={() => set({ type: 'number' })}>number</MenuItem>
+                <MenuItem onClick={() => set({ type: 'number' })}>
+                    number
+                </MenuItem>
             </Menu>
         </div>
         <Textfield
@@ -66,8 +94,8 @@ const EditHeader = () => (
     <div>
         <h4 style={{ marginTop: '16px' }}>Edit strategy</h4>
         <p style={{ background: '#ffb7b7', padding: '16px 20px' }}>
-            Be carefull! Changing a strategy definition might also require changes to the
-            implementation in the clients.
+            Be carefull! Changing a strategy definition might also require
+            changes to the implementation in the clients.
         </p>
     </div>
 );
@@ -78,17 +106,18 @@ const CreateHeader = () => (
     </div>
 );
 
-
 const Parameters = ({ input = [], count = 0, updateInList }) => (
-    <div>{
-        gerArrayWithEntries(count)
-            .map((v, i) => (<Parameter
+    <div>
+        {gerArrayWithEntries(count).map((v, i) => (
+            <Parameter
                 key={i}
-                set={(v) => updateInList('parameters', i, v, true)}
+                set={v => updateInList('parameters', i, v, true)}
                 index={i}
                 input={input[i]}
-            />))
-    }</div>);
+            />
+        ))}
+    </div>
+);
 
 class AddStrategy extends Component {
     static propTypes = {
@@ -102,20 +131,22 @@ class AddStrategy extends Component {
         editmode: PropTypes.bool,
         initCallRequired: PropTypes.bool,
         init: PropTypes.func,
-    }
+    };
 
-    componentWillMount () {
+    componentWillMount() {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {
             this.props.init(this.props.input);
             if (this.props.input.parameters) {
-                this.props.setValue('_params', this.props.input.parameters.length);
+                this.props.setValue(
+                    '_params',
+                    this.props.input.parameters.length
+                );
             }
         }
     }
 
-
-    render () {
+    render() {
         const {
             input,
             setValue,
@@ -131,13 +162,15 @@ class AddStrategy extends Component {
                 <Cell col={12}>
                     <form onSubmit={onSubmit(input)}>
                         {editmode ? <EditHeader /> : <CreateHeader />}
-                        <Textfield label="Strategy name"
+                        <Textfield
+                            label="Strategy name"
                             floatingLabel
                             name="name"
                             required
                             disabled={editmode}
                             pattern="^[0-9a-zA-Z\.\-]+$"
-                            onChange={({ target }) => setValue('name', trim(target.value))}
+                            onChange={({ target }) =>
+                                setValue('name', trim(target.value))}
                             value={input.name}
                         />
                         <br />
@@ -147,21 +180,27 @@ class AddStrategy extends Component {
                             rows={1}
                             label="Description"
                             name="description"
-                            onChange={({ target }) => setValue('description', target.value)}
+                            onChange={({ target }) =>
+                                setValue('description', target.value)}
                             value={input.description}
                         />
-
-
-                        <Parameters input={input.parameters} count={input._params} updateInList={updateInList} />
-                        <IconButton raised name="add" title="Add parameter" onClick={(e) => {
-                            e.preventDefault();
-                            incValue('_params');
-                        }}/> &nbsp;Add parameter
-
-
+                        <Parameters
+                            input={input.parameters}
+                            count={input._params}
+                            updateInList={updateInList}
+                        />
+                        <IconButton
+                            raised
+                            name="add"
+                            title="Add parameter"
+                            onClick={e => {
+                                e.preventDefault();
+                                incValue('_params');
+                            }}
+                        />{' '}
+                        &nbsp;Add parameter
                         <br />
                         <hr />
-
                         <FormButtons
                             submitText={editmode ? 'Update' : 'Create'}
                             onCancel={onCancel}

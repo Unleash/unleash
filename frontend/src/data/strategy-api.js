@@ -2,13 +2,13 @@ import { throwIfNotSuccess, headers } from './helper';
 
 const URI = 'api/admin/strategies';
 
-function fetchAll () {
+function fetchAll() {
     return fetch(URI, { credentials: 'include' })
         .then(throwIfNotSuccess)
         .then(response => response.json());
 }
 
-function create (strategy) {
+function create(strategy) {
     return fetch(URI, {
         method: 'POST',
         headers,
@@ -17,7 +17,7 @@ function create (strategy) {
     }).then(throwIfNotSuccess);
 }
 
-function update (strategy) {
+function update(strategy) {
     return fetch(`${URI}/${strategy.name}`, {
         method: 'put',
         headers,
@@ -26,7 +26,7 @@ function update (strategy) {
     }).then(throwIfNotSuccess);
 }
 
-function remove (strategy) {
+function remove(strategy) {
     return fetch(`${URI}/${strategy.name}`, {
         method: 'DELETE',
         headers,

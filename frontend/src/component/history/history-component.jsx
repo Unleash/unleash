@@ -4,15 +4,15 @@ import HistoryList from './history-list-container';
 import { styles as commonStyles } from '../common';
 
 class History extends PureComponent {
-    componentDidMount () {
+    componentDidMount() {
         this.props.fetchHistory();
     }
 
-    toggleShowDiff () {
+    toggleShowDiff() {
         this.setState({ showData: !this.state.showData });
     }
 
-    render () {
+    render() {
         const { history } = this.props;
         if (history.length < 0) {
             return;

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
     Layout,
     Drawer,
@@ -39,7 +40,7 @@ export default class App extends Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object,
+        router: PropTypes.object,
     };
 
     componentWillReceiveProps(nextProps) {

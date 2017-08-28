@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { hashHistory } from 'react-router';
 import { Tabs, Tab, ProgressBar, Grid, Cell } from 'react-mdl';
 import ShowStrategy from './show-strategy-component';

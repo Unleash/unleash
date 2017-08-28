@@ -1,4 +1,5 @@
-import React, { PropTypes, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Cell, List, ListItem, ListItemContent } from 'react-mdl';
 import { AppsLinkList, TogglesLinkList } from '../common';
 

@@ -1,4 +1,4 @@
-const { throwIfNotSuccess } = require('./helper');
+import { throwIfNotSuccess } from './helper';
 
 const URI = 'api/admin/metrics/feature-toggles';
 

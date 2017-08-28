@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Feature from './feature-list-item-component';
 import { Link } from 'react-router';
 import {
@@ -26,11 +27,11 @@ export default class FeatureListComponent extends React.PureComponent {
         fetchFeatureToggles: PropTypes.func.isRequired,
         fetchFeatureMetrics: PropTypes.func.isRequired,
         updateSetting: PropTypes.func.isRequired,
-        settings: React.PropTypes.object,
+        settings: PropTypes.object,
     };
 
     static contextTypes = {
-        router: React.PropTypes.object,
+        router: PropTypes.object,
     };
 
     componentDidMount() {

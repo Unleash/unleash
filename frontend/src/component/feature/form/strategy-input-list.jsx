@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Textfield, IconButton, Chip } from 'react-mdl';
 
 export default class InputList extends Component {

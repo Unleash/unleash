@@ -1,7 +1,6 @@
-const React = require('react');
-import styles from './common.scss';
-
-const {
+import React from 'react';
+import { Link } from 'react-router';
+import {
     List,
     ListItem,
     ListItemContent,
@@ -9,8 +8,8 @@ const {
     Icon,
     Switch,
     MenuItem,
-} = require('react-mdl');
-const { Link } = require('react-router');
+} from 'react-mdl';
+import styles from './common.scss';
 
 export { styles };
 

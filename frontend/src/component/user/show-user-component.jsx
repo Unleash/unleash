@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon, Tooltip } from 'react-mdl';
 
 export default class ShowUserComponent extends React.Component {

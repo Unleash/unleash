@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { ProgressBar } from 'react-mdl';
 import StrategiesList from './strategies-list';
 import AddStrategy from './strategies-add';

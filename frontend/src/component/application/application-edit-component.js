@@ -61,16 +61,7 @@ class ClientApplications extends PureComponent {
             return <ProgressBar indeterminate />;
         }
         const { application, storeApplicationMetaData } = this.props;
-        const {
-            appName,
-            instances,
-            strategies,
-            seenToggles,
-            url,
-            description,
-            icon = 'apps',
-            color,
-        } = application;
+        const { appName, instances, strategies, seenToggles, url, description, icon = 'apps', color } = application;
 
         const content =
             this.state.activeTab === 0 ? (
@@ -83,17 +74,8 @@ class ClientApplications extends PureComponent {
                                 ({ name, description, enabled, notFound }, i) =>
                                     notFound ? (
                                         <ListItem twoLine key={i}>
-                                            <ListItemContent
-                                                icon={'report'}
-                                                subtitle={
-                                                    'Missing, want to create?'
-                                                }
-                                            >
-                                                <Link
-                                                    to={`/features/create?name=${name}`}
-                                                >
-                                                    {name}
-                                                </Link>
+                                            <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
+                                                <Link to={`/features/create?name=${name}`}>{name}</Link>
                                             </ListItemContent>
                                         </ListItem>
                                     ) : (
@@ -101,22 +83,12 @@ class ClientApplications extends PureComponent {
                                             <ListItemContent
                                                 icon={
                                                     <span>
-                                                        <Switch
-                                                            disabled
-                                                            checked={!!enabled}
-                                                        />
+                                                        <Switch disabled checked={!!enabled} />
                                                     </span>
                                                 }
-                                                subtitle={shorten(
-                                                    description,
-                                                    60
-                                                )}
+                                                subtitle={shorten(description, 60)}
                                             >
-                                                <Link
-                                                    to={`/features/view/${name}`}
-                                                >
-                                                    {shorten(name, 50)}
-                                                </Link>
+                                                <Link to={`/features/view/${name}`}>{shorten(name, 50)}</Link>
                                             </ListItemContent>
                                         </ListItem>
                                     )
@@ -131,33 +103,14 @@ class ClientApplications extends PureComponent {
                                 ({ name, description, notFound }, i) =>
                                     notFound ? (
                                         <ListItem twoLine key={`${name}-${i}`}>
-                                            <ListItemContent
-                                                icon={'report'}
-                                                subtitle={
-                                                    'Missing, want to create?'
-                                                }
-                                            >
-                                                <Link
-                                                    to={`/strategies/create?name=${name}`}
-                                                >
-                                                    {name}
-                                                </Link>
+                                            <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
+                                                <Link to={`/strategies/create?name=${name}`}>{name}</Link>
                                             </ListItemContent>
                                         </ListItem>
                                     ) : (
                                         <ListItem twoLine key={`${name}-${i}`}>
-                                            <ListItemContent
-                                                icon={'extension'}
-                                                subtitle={shorten(
-                                                    description,
-                                                    60
-                                                )}
-                                            >
-                                                <Link
-                                                    to={`/strategies/view/${name}`}
-                                                >
-                                                    {shorten(name, 50)}
-                                                </Link>
+                                            <ListItemContent icon={'extension'} subtitle={shorten(description, 60)}>
+                                                <Link to={`/strategies/view/${name}`}>{shorten(name, 50)}</Link>
                                             </ListItemContent>
                                         </ListItem>
                                     )
@@ -168,32 +121,20 @@ class ClientApplications extends PureComponent {
                         <h6>{instances.length} Instances registered</h6>
                         <hr />
                         <List>
-                            {instances.map(
-                                (
-                                    {
-                                        instanceId,
-                                        clientIp,
-                                        lastSeen,
-                                        sdkVersion,
-                                    },
-                                    i
-                                ) => (
-                                    <ListItem key={i} twoLine>
-                                        <ListItemContent
-                                            icon="timeline"
-                                            subtitle={
-                                                <span>
-                                                    {clientIp} last seen at{' '}
-                                                    <small>{formatFullDateTime(lastSeen)}</small>
-                                                </span>
-                                            }
-                                        >
-                                            {instanceId}{' '}
-                                            {sdkVersion ? `(${sdkVersion})` : ''}
-                                        </ListItemContent>
-                                    </ListItem>
-                                )
-                            )}
+                            {instances.map(({ instanceId, clientIp, lastSeen, sdkVersion }, i) => (
+                                <ListItem key={i} twoLine>
+                                    <ListItemContent
+                                        icon="timeline"
+                                        subtitle={
+                                            <span>
+                                                {clientIp} last seen at <small>{formatFullDateTime(lastSeen)}</small>
+                                            </span>
+                                        }
+                                    >
+                                        {instanceId} {sdkVersion ? `(${sdkVersion})` : ''}
+                                    </ListItemContent>
+                                </ListItem>
+                            ))}
                         </List>
                     </Cell>
                 </Grid>
@@ -206,46 +147,26 @@ class ClientApplications extends PureComponent {
                         <StatefulTextfield
                             value={url}
                             label="URL"
-                            onBlur={e =>
-                                storeApplicationMetaData(
-                                    appName,
-                                    'url',
-                                    e.target.value
-                                )}
+                            onBlur={e => storeApplicationMetaData(appName, 'url', e.target.value)}
                         />
                         <br />
                         <StatefulTextfield
                             value={description}
                             label="Description"
                             rows={5}
-                            onBlur={e =>
-                                storeApplicationMetaData(
-                                    appName,
-                                    'description',
-                                    e.target.value
-                                )}
+                            onBlur={e => storeApplicationMetaData(appName, 'description', e.target.value)}
                         />
                     </Cell>
                     <Cell col={6} tablet={12}>
                         <StatefulTextfield
                             value={icon}
                             label="Select icon"
-                            onBlur={e =>
-                                storeApplicationMetaData(
-                                    appName,
-                                    'icon',
-                                    e.target.value
-                                )}
+                            onBlur={e => storeApplicationMetaData(appName, 'icon', e.target.value)}
                         />
                         <StatefulTextfield
                             value={color}
                             label="Select color"
-                            onBlur={e =>
-                                storeApplicationMetaData(
-                                    appName,
-                                    'color',
-                                    e.target.value
-                                )}
+                            onBlur={e => storeApplicationMetaData(appName, 'color', e.target.value)}
                         />
                     </Cell>
                 </Grid>
@@ -253,13 +174,7 @@ class ClientApplications extends PureComponent {
 
         return (
             <Card shadow={0} className={commonStyles.fullwidth}>
-                <CardTitle
-                    style={{
-                        paddingTop: '24px',
-                        paddingRight: '64px',
-                        wordBreak: 'break-all',
-                    }}
-                >
+                <CardTitle style={{ paddingTop: '24px', paddingRight: '64px', wordBreak: 'break-all' }}>
                     <Icon name={icon} /> {appName}
                 </CardTitle>
                 {description && <CardText>{description}</CardText>}

@@ -9,8 +9,6 @@ const mapStateToProps = state => {
     };
 };
 
-const HistoryListContainer = connect(mapStateToProps, { fetchHistory })(
-    HistoryComponent
-);
+const HistoryListContainer = connect(mapStateToProps, { fetchHistory })(HistoryComponent);
 
 export default HistoryListContainer;

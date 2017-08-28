@@ -1,9 +1,6 @@
 import { connect } from 'react-redux';
 
-import {
-    fetchFeatureMetrics,
-    fetchSeenApps,
-} from '../../store/feature-metrics-actions';
+import { fetchFeatureMetrics, fetchSeenApps } from '../../store/feature-metrics-actions';
 
 import MatricComponent from './metric-component';
 
@@ -18,10 +15,7 @@ function getMetricsForToggle(state, toggleName) {
     }
     if (state.featureMetrics.hasIn(['lastHour', toggleName])) {
         result.lastHour = state.featureMetrics.getIn(['lastHour', toggleName]);
-        result.lastMinute = state.featureMetrics.getIn([
-            'lastMinute',
-            toggleName,
-        ]);
+        result.lastMinute = state.featureMetrics.getIn(['lastMinute', toggleName]);
     }
     return result;
 }

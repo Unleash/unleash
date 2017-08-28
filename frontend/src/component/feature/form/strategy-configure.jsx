@@ -1,16 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    Textfield,
-    Button,
-    Card,
-    CardTitle,
-    CardText,
-    CardActions,
-    CardMenu,
-    IconButton,
-    Icon,
-} from 'react-mdl';
+import { Textfield, Button, Card, CardTitle, CardText, CardActions, CardMenu, IconButton, Icon } from 'react-mdl';
 import { DragSource, DropTarget } from 'react-dnd';
 import { Link } from 'react-router';
 import StrategyInputPercentage from './strategy-input-percentage';
@@ -91,25 +81,17 @@ class StrategyConfigure extends React.Component {
             return parameters.map(({ name, type, description, required }) => {
                 let value = this.props.strategy.parameters[name];
                 if (type === 'percentage') {
-                    if (
-                        value == null ||
-                        (typeof value === 'string' && value === '')
-                    ) {
+                    if (value == null || (typeof value === 'string' && value === '')) {
                         this.setConfig(name, 50);
                     }
                     return (
                         <div key={name}>
                             <StrategyInputPercentage
                                 name={name}
-                                onChange={this.handleConfigChange.bind(
-                                    this,
-                                    name
-                                )}
+                                onChange={this.handleConfigChange.bind(this, name)}
                                 value={1 * value}
                             />
-                            {description && (
-                                <p className={styles.helpText}>{description}</p>
-                            )}
+                            {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );
                 } else if (type === 'list') {
@@ -122,14 +104,8 @@ class StrategyConfigure extends React.Component {
                     }
                     return (
                         <div key={name}>
-                            <StrategyInputList
-                                name={name}
-                                list={list}
-                                setConfig={this.setConfig}
-                            />
-                            {description && (
-                                <p className={styles.helpText}>{description}</p>
-                            )}
+                            <StrategyInputList name={name} list={list} setConfig={this.setConfig} />
+                            {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );
                 } else if (type === 'number') {
@@ -143,15 +119,10 @@ class StrategyConfigure extends React.Component {
                                 style={{ width: '100%' }}
                                 name={name}
                                 label={name}
-                                onChange={this.handleConfigChange.bind(
-                                    this,
-                                    name
-                                )}
+                                onChange={this.handleConfigChange.bind(this, name)}
                                 value={value}
                             />
-                            {description && (
-                                <p className={styles.helpText}>{description}</p>
-                            )}
+                            {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );
                 } else {
@@ -164,15 +135,10 @@ class StrategyConfigure extends React.Component {
                                 required={required}
                                 name={name}
                                 label={name}
-                                onChange={this.handleConfigChange.bind(
-                                    this,
-                                    name
-                                )}
+                                onChange={this.handleConfigChange.bind(this, name)}
                                 value={value}
                             />
-                            {description && (
-                                <p className={styles.helpText}>{description}</p>
-                            )}
+                            {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );
                 }
@@ -182,31 +148,18 @@ class StrategyConfigure extends React.Component {
     }
 
     render() {
-        const {
-            isDragging,
-            connectDragPreview,
-            connectDragSource,
-            connectDropTarget,
-        } = this.props;
+        const { isDragging, connectDragPreview, connectDragSource, connectDropTarget } = this.props;
 
         let item;
         if (this.props.strategyDefinition) {
-            const inputFields = this.renderInputFields(
-                this.props.strategyDefinition
-            );
+            const inputFields = this.renderInputFields(this.props.strategyDefinition);
             const { name } = this.props.strategy;
             item = (
-                <Card
-                    shadow={0}
-                    className={styles.card}
-                    style={{ opacity: isDragging ? '0.1' : '1' }}
-                >
+                <Card shadow={0} className={styles.card} style={{ opacity: isDragging ? '0.1' : '1' }}>
                     <CardTitle className={styles.cardTitle}>
                         <Icon name="extension" />&nbsp;{name}
                     </CardTitle>
-                    <CardText>
-                        {this.props.strategyDefinition.description}
-                    </CardText>
+                    <CardText>{this.props.strategyDefinition.description}</CardText>
                     {inputFields && (
                         <CardActions border style={{ padding: '20px' }}>
                             {inputFields}
@@ -214,18 +167,10 @@ class StrategyConfigure extends React.Component {
                     )}
 
                     <CardMenu className="mdl-color-text--white">
-                        <Link
-                            title="View strategy"
-                            to={`/strategies/view/${name}`}
-                            className={styles.editLink}
-                        >
+                        <Link title="View strategy" to={`/strategies/view/${name}`} className={styles.editLink}>
                             <Icon name="link" />
                         </Link>
-                        <IconButton
-                            title="Remove strategy from toggle"
-                            name="delete"
-                            onClick={this.handleRemove}
-                        />
+                        <IconButton title="Remove strategy from toggle" name="delete" onClick={this.handleRemove} />
                         {connectDragSource(
                             <span className={styles.reorderIcon}>
                                 <Icon name="reorder" />
@@ -241,17 +186,10 @@ class StrategyConfigure extends React.Component {
                     <CardTitle>"{name}" deleted?</CardTitle>
                     <CardText>
                         The strategy "{name}" does not exist on this server.
-                        <Link to={`/strategies/create?name=${name}`}>
-                            Want to create it now?
-                        </Link>
+                        <Link to={`/strategies/create?name=${name}`}>Want to create it now?</Link>
                     </CardText>
                     <CardActions>
-                        <Button
-                            onClick={this.handleRemove}
-                            label="remove strategy"
-                            accent
-                            raised
-                        >
+                        <Button onClick={this.handleRemove} label="remove strategy" accent raised>
                             Remove
                         </Button>
                     </CardActions>
@@ -259,9 +197,7 @@ class StrategyConfigure extends React.Component {
             );
         }
 
-        return connectDropTarget(
-            connectDragPreview(<div className={styles.item}>{item}</div>)
-        );
+        return connectDropTarget(connectDragPreview(<div className={styles.item}>{item}</div>));
     }
 }
 

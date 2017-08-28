@@ -84,18 +84,12 @@ class HistoryItem extends PureComponent {
             changes = entry.diffs.map(buildDiff);
         } else {
             // Just show the data if there is no diff yet.
-            changes = (
-                <div className={KLASSES.N}>
-                    {JSON.stringify(entry.data, null, 2)}
-                </div>
-            );
+            changes = <div className={KLASSES.N}>{JSON.stringify(entry.data, null, 2)}</div>;
         }
 
         return (
             <pre style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-                <code className="smalltext man">
-                    {changes.length === 0 ? '(no changes)' : changes}
-                </code>
+                <code className="smalltext man">{changes.length === 0 ? '(no changes)' : changes}</code>
             </pre>
         );
     }

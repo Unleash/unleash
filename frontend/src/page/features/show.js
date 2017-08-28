@@ -9,11 +9,6 @@ export default class Features extends PureComponent {
 
     render() {
         const { params } = this.props;
-        return (
-            <ViewFeatureToggle
-                featureToggleName={params.name}
-                activeTab={params.activeTab}
-            />
-        );
+        return <ViewFeatureToggle featureToggleName={params.name} activeTab={params.activeTab} />;
     }
 }

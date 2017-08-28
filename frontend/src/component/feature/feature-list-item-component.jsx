@@ -17,23 +17,13 @@ const Feature = ({
     const { name, description, enabled, strategies } = feature;
 
     const { showLastHour = false } = settings;
-    const isStale = showLastHour
-        ? metricsLastHour.isFallback
-        : metricsLastMinute.isFallback;
+    const isStale = showLastHour ? metricsLastHour.isFallback : metricsLastMinute.isFallback;
 
     const percent =
         1 *
         (showLastHour
-            ? calc(
-                  metricsLastHour.yes,
-                  metricsLastHour.yes + metricsLastHour.no,
-                  0
-              )
-            : calc(
-                  metricsLastMinute.yes,
-                  metricsLastMinute.yes + metricsLastMinute.no,
-                  0
-              ));
+            ? calc(metricsLastHour.yes, metricsLastHour.yes + metricsLastHour.no, 0)
+            : calc(metricsLastMinute.yes, metricsLastMinute.yes + metricsLastMinute.no, 0));
 
     const strategiesToShow = Math.min(strategies.length, 3);
     const remainingStrategies = strategies.length - strategiesToShow;
@@ -45,18 +35,12 @@ const Feature = ({
                 {s.name}
             </Chip>
         ));
-    const summaryChip = remainingStrategies > 0 && (
-        <Chip className={styles.strategyChip}>+{remainingStrategies}</Chip>
-    );
+    const summaryChip = remainingStrategies > 0 && <Chip className={styles.strategyChip}>+{remainingStrategies}</Chip>;
 
     return (
         <ListItem twoLine>
             <span className={styles.listItemMetric}>
-                <Progress
-                    strokeWidth={15}
-                    percentage={percent}
-                    isFallback={isStale}
-                />
+                <Progress strokeWidth={15} percentage={percent} isFallback={isStale} />
             </span>
             <span className={styles.listItemToggle}>
                 <Switch
@@ -66,36 +50,16 @@ const Feature = ({
                     checked={enabled}
                 />
             </span>
-            <span
-                className={[
-                    'mdl-list__item-primary-content',
-                    styles.listItemLink,
-                ].join(' ')}
-            >
+            <span className={['mdl-list__item-primary-content', styles.listItemLink].join(' ')}>
                 <Link
                     to={`/features/view/${name}`}
-                    className={[
-                        commonStyles.listLink,
-                        commonStyles.truncate,
-                    ].join(' ')}
+                    className={[commonStyles.listLink, commonStyles.truncate].join(' ')}
                 >
                     {name}
-                    <span
-                        className={[
-                            'mdl-list__item-sub-title',
-                            commonStyles.truncate,
-                        ].join(' ')}
-                    >
-                        {description}
-                    </span>
+                    <span className={['mdl-list__item-sub-title', commonStyles.truncate].join(' ')}>{description}</span>
                 </Link>
             </span>
-            <span
-                className={[
-                    styles.listItemStrategies,
-                    commonStyles.hideLt920,
-                ].join(' ')}
-            >
+            <span className={[styles.listItemStrategies, commonStyles.hideLt920].join(' ')}>
                 {strategyChips}
                 {summaryChip}
             </span>

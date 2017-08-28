@@ -52,44 +52,23 @@ export function createActions({ id, prepare = v => v }) {
                 },
 
                 setValue(key, value) {
-                    dispatch(
-                        createSet({ id: getId(id, ownProps), key, value })
-                    );
+                    dispatch(createSet({ id: getId(id, ownProps), key, value }));
                 },
 
                 pushToList(key, value) {
-                    dispatch(
-                        createPush({ id: getId(id, ownProps), key, value })
-                    );
+                    dispatch(createPush({ id: getId(id, ownProps), key, value }));
                 },
 
                 removeFromList(key, index) {
-                    dispatch(
-                        createPop({ id: getId(id, ownProps), key, index })
-                    );
+                    dispatch(createPop({ id: getId(id, ownProps), key, index }));
                 },
 
                 moveItem(key, index, toIndex) {
-                    dispatch(
-                        createMove({
-                            id: getId(id, ownProps),
-                            key,
-                            index,
-                            toIndex,
-                        })
-                    );
+                    dispatch(createMove({ id: getId(id, ownProps), key, index, toIndex }));
                 },
 
                 updateInList(key, index, newValue, merge = false) {
-                    dispatch(
-                        createUp({
-                            id: getId(id, ownProps),
-                            key,
-                            index,
-                            newValue,
-                            merge,
-                        })
-                    );
+                    dispatch(createUp({ id: getId(id, ownProps), key, index, newValue, merge }));
                 },
 
                 incValue(key) {

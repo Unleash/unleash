@@ -1,9 +1,6 @@
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
-import {
-    createFeatureToggles,
-    validateName,
-} from '../../store/feature-actions';
+import { createFeatureToggles, validateName } from '../../store/feature-actions';
 import { createMapper, createActions } from '../input-helpers';
 import FormAddComponent from './form-add-component';
 

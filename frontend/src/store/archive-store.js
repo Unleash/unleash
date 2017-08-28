@@ -8,9 +8,7 @@ function getInitState() {
 const archiveStore = (state = getInitState(), action) => {
     switch (action.type) {
         case REVIVE_TOGGLE:
-            return state.update('list', list =>
-                list.filter(item => item.name !== action.value)
-            );
+            return state.update('list', list => list.filter(item => item.name !== action.value));
         case RECEIVE_ARCHIVE:
             return state.set('list', new List(action.value));
         default:

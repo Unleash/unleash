@@ -13,15 +13,8 @@ class ShowStrategyComponent extends PureComponent {
     renderParameters(params) {
         if (params) {
             return params.map(({ name, type, description, required }, i) => (
-                <ListItem
-                    twoLine
-                    key={`${name}-${i}`}
-                    title={required ? 'Required' : ''}
-                >
-                    <ListItemContent
-                        avatar={required ? 'add' : ' '}
-                        subtitle={description}
-                    >
+                <ListItem twoLine key={`${name}-${i}`} title={required ? 'Required' : ''}>
+                    <ListItemContent avatar={required ? 'add' : ' '} subtitle={description}>
                         {name} <small>({type})</small>
                     </ListItemContent>
                 </ListItem>

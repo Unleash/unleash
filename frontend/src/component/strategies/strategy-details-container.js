@@ -5,17 +5,10 @@ import { fetchAll } from '../../store/application/actions';
 import { fetchFeatureToggles } from '../../store/feature-actions';
 
 const mapStateToProps = (state, props) => {
-    let strategy = state.strategies
-        .get('list')
-        .find(n => n.name === props.strategyName);
-    const applications = state.applications
-        .get('list')
-        .filter(app => app.strategies.includes(props.strategyName));
+    let strategy = state.strategies.get('list').find(n => n.name === props.strategyName);
+    const applications = state.applications.get('list').filter(app => app.strategies.includes(props.strategyName));
     const toggles = state.features.filter(
-        toggle =>
-            toggle
-                .get('strategies')
-                .findIndex(s => s.name === props.strategyName) > -1
+        toggle => toggle.get('strategies').findIndex(s => s.name === props.strategyName) > -1
     );
 
     return {

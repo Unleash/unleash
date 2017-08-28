@@ -15,11 +15,7 @@ export default class ShowUserComponent extends React.Component {
 
     render() {
         return (
-            <a
-                className="mdl-navigation__link"
-                href="#edit-user"
-                onClick={this.openEdit}
-            >
+            <a className="mdl-navigation__link" href="#edit-user" onClick={this.openEdit}>
                 <Tooltip label={this.props.user.userName || 'Unknown'} large>
                     <Icon name="account_circle" />
                 </Tooltip>

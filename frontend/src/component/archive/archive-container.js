@@ -10,8 +10,6 @@ const mapStateToProps = state => {
     };
 };
 
-const ArchiveListContainer = connect(mapStateToProps, { fetchArchive, revive })(
-    ListComponent
-);
+const ArchiveListContainer = connect(mapStateToProps, { fetchArchive, revive })(ListComponent);
 
 export default ArchiveListContainer;

@@ -10,9 +10,7 @@ class AddStrategy extends React.Component {
     };
 
     addStrategy = strategyName => {
-        const selectedStrategy = this.props.strategies.find(
-            s => s.name === strategyName
-        );
+        const selectedStrategy = this.props.strategies.find(s => s.name === strategyName);
         const parameters = {};
 
         selectedStrategy.parameters.forEach(({ name }) => {
@@ -37,14 +35,7 @@ class AddStrategy extends React.Component {
             backgroundColor: 'rgb(247, 248, 255)',
         };
         return (
-            <div
-                style={{
-                    position: 'relative',
-                    width: '25px',
-                    height: '25px',
-                    display: 'inline-block',
-                }}
-            >
+            <div style={{ position: 'relative', width: '25px', height: '25px', display: 'inline-block' }}>
                 <IconButton
                     name="add"
                     id="strategies-add"
@@ -53,20 +44,10 @@ class AddStrategy extends React.Component {
                     title="Add Strategy"
                     onClick={this.stopPropagation}
                 />
-                <Menu
-                    target="strategies-add"
-                    valign="bottom"
-                    align="right"
-                    ripple
-                    style={menuStyle}
-                >
+                <Menu target="strategies-add" valign="bottom" align="right" ripple style={menuStyle}>
                     <MenuItem disabled>Add Strategy:</MenuItem>
                     {this.props.strategies.map(s => (
-                        <MenuItem
-                            key={s.name}
-                            title={s.description}
-                            onClick={() => this.addStrategy(s.name)}
-                        >
+                        <MenuItem key={s.name} title={s.description} onClick={() => this.addStrategy(s.name)}>
                             {s.name}
                         </MenuItem>
                     ))}

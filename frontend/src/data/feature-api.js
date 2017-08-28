@@ -4,10 +4,7 @@ const URI = 'api/admin/features';
 
 function validateToggle(featureToggle) {
     return new Promise((resolve, reject) => {
-        if (
-            !featureToggle.strategies ||
-            featureToggle.strategies.length === 0
-        ) {
+        if (!featureToggle.strategies || featureToggle.strategies.length === 0) {
             reject(new Error('You must add at least one activation strategy'));
         } else {
             resolve(featureToggle);

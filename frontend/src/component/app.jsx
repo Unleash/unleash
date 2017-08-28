@@ -89,18 +89,10 @@ export default class App extends Component {
         return (
             <span>
                 {result.map((entry, index) => (
-                    <span
-                        key={entry.link + index}
-                        className={
-                            index > 0 ? 'mdl-layout--large-screen-only' : ''
-                        }
-                    >
+                    <span key={entry.link + index} className={index > 0 ? 'mdl-layout--large-screen-only' : ''}>
                         {index > 0 ? ' › ' : null}
                         <Link
-                            className={[
-                                styles.headerTitleLink,
-                                'mdl-color-text--primary-contrast',
-                            ].join(' ')}
+                            className={[styles.headerTitleLink, 'mdl-color-text--primary-contrast'].join(' ')}
                             to={entry.link}
                         >
                             {entry.name}
@@ -113,21 +105,13 @@ export default class App extends Component {
 
     render() {
         const shouldUpdateScroll = (prevRouterProps, { location }) => {
-            if (
-                prevRouterProps &&
-                location.pathname !== prevRouterProps.location.pathname
-            ) {
+            if (prevRouterProps && location.pathname !== prevRouterProps.location.pathname) {
                 return location.action === 'POP';
             } else {
                 return [0, 0];
             }
         };
-        const createListItem = (
-            path,
-            caption,
-            icon,
-            isDrawerNavigation = false
-        ) => {
+        const createListItem = (path, caption, icon, isDrawerNavigation = false) => {
             const linkColor =
                 isDrawerNavigation && this.context.router.isActive(path)
                     ? 'mdl-color-text--black'
@@ -137,20 +121,11 @@ export default class App extends Component {
                     ? 'mdl-color-text--black'
                     : 'mdl-color-text--grey-600';
             return (
-                <Link
-                    to={path}
-                    className={
-                        isDrawerNavigation &&
-                        [styles.navigationLink, linkColor].join(' ')
-                    }
-                >
+                <Link to={path} className={isDrawerNavigation && [styles.navigationLink, linkColor].join(' ')}>
                     {icon && (
                         <Icon
                             name={icon}
-                            className={
-                                isDrawerNavigation &&
-                                [styles.navigationIcon, iconColor].join(' ')
-                            }
+                            className={isDrawerNavigation && [styles.navigationIcon, iconColor].join(' ')}
                         />
                     )}
                     {caption}
@@ -168,79 +143,32 @@ export default class App extends Component {
                         </Navigation>
                     </Header>
                     <Drawer className="mdl-color--white">
-                        <span
-                            className={[
-                                styles.drawerTitle,
-                                'mdl-layout-title',
-                            ].join(' ')}
-                        >
-                            <img
-                                src="public/logo.png"
-                                width="32"
-                                height="32"
-                                className={styles.drawerTitleLogo}
-                            />
-                            <span className={styles.drawerTitleText}>
-                                Unleash
-                            </span>
+                        <span className={[styles.drawerTitle, 'mdl-layout-title'].join(' ')}>
+                            <img src="public/logo.png" width="32" height="32" className={styles.drawerTitleLogo} />
+                            <span className={styles.drawerTitleText}>Unleash</span>
                         </span>
                         <hr />
                         <Navigation className={styles.navigation}>
-                            {createListItem(
-                                '/features',
-                                'Feature Toggles',
-                                'list',
-                                true
-                            )}
-                            {createListItem(
-                                '/strategies',
-                                'Strategies',
-                                'extension',
-                                true
-                            )}
-                            {createListItem(
-                                '/history',
-                                'Event History',
-                                'history',
-                                true
-                            )}
-                            {createListItem(
-                                '/archive',
-                                'Archived Toggles',
-                                'archive',
-                                true
-                            )}
-                            {createListItem(
-                                '/applications',
-                                'Applications',
-                                'apps',
-                                true
-                            )}
+                            {createListItem('/features', 'Feature Toggles', 'list', true)}
+                            {createListItem('/strategies', 'Strategies', 'extension', true)}
+                            {createListItem('/history', 'Event History', 'history', true)}
+                            {createListItem('/archive', 'Archived Toggles', 'archive', true)}
+                            {createListItem('/applications', 'Applications', 'apps', true)}
                         </Navigation>
                         <hr />
                         <Navigation className={styles.navigation}>
                             <a
                                 href="https://github.com/Unleash"
                                 target="_blank"
-                                className={[
-                                    styles.navigationLink,
-                                    'mdl-color-text--grey-900',
-                                ].join(' ')}
+                                className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
                             >
                                 <i
-                                    className={[
-                                        'material-icons',
-                                        styles.navigationIcon,
-                                        styles.iconGitHub,
-                                    ].join(' ')}
+                                    className={['material-icons', styles.navigationIcon, styles.iconGitHub].join(' ')}
                                 />GitHub
                             </a>
                         </Navigation>
                     </Drawer>
-                    <ScrollContainer
-                        scrollKey="container"
-                        shouldUpdateScroll={shouldUpdateScroll}
-                    >
+                    <ScrollContainer scrollKey="container" shouldUpdateScroll={shouldUpdateScroll}>
                         <Content className="mdl-color--grey-50">
                             <Grid noSpacing className={styles.content}>
                                 <Cell col={12}>
@@ -252,54 +180,27 @@ export default class App extends Component {
                                 <FooterSection type="middle">
                                     <FooterDropDownSection title="Menu">
                                         <FooterLinkList>
-                                            {createListItem(
-                                                '/features',
-                                                'Feature Toggles'
-                                            )}
-                                            {createListItem(
-                                                '/strategies',
-                                                'Strategies'
-                                            )}
-                                            {createListItem(
-                                                '/history',
-                                                'Event History'
-                                            )}
-                                            {createListItem(
-                                                '/archive',
-                                                'Archived Toggles'
-                                            )}
-                                            {createListItem(
-                                                '/applications',
-                                                'Applications'
-                                            )}
+                                            {createListItem('/features', 'Feature Toggles')}
+                                            {createListItem('/strategies', 'Strategies')}
+                                            {createListItem('/history', 'Event History')}
+                                            {createListItem('/archive', 'Archived Toggles')}
+                                            {createListItem('/applications', 'Applications')}
                                         </FooterLinkList>
                                     </FooterDropDownSection>
                                     <FooterDropDownSection title="Clients">
                                         <FooterLinkList>
-                                            <a href="https://github.com/Unleash/unleash-client-node/">
-                                                Node.js
-                                            </a>
-                                            <a href="https://github.com/Unleash/unleash-client-java/">
-                                                Java
-                                            </a>
-                                            <a href="https://github.com/Unleash/unleash-client-go/">
-                                                Go
-                                            </a>
+                                            <a href="https://github.com/Unleash/unleash-client-node/">Node.js</a>
+                                            <a href="https://github.com/Unleash/unleash-client-java/">Java</a>
+                                            <a href="https://github.com/Unleash/unleash-client-go/">Go</a>
                                         </FooterLinkList>
                                     </FooterDropDownSection>
                                 </FooterSection>
                                 <FooterSection type="bottom" logo="Unleash">
                                     <FooterLinkList>
-                                        <a
-                                            href="https://github.com/Unleash/unleash/"
-                                            target="_blank"
-                                        >
+                                        <a href="https://github.com/Unleash/unleash/" target="_blank">
                                             GitHub
                                         </a>
-                                        <a
-                                            href="https://finn.no"
-                                            target="_blank"
-                                        >
+                                        <a href="https://finn.no" target="_blank">
                                             <small>A product by</small> FINN.no
                                         </a>
                                     </FooterLinkList>

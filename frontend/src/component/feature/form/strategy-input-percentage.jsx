@@ -13,13 +13,6 @@ export default ({ name, value, onChange }) => (
         <div style={labelStyle}>
             {name}: {value}%
         </div>
-        <Slider
-            min={0}
-            max={100}
-            defaultValue={value}
-            value={value}
-            onChange={onChange}
-            label={name}
-        />
+        <Slider min={0} max={100} defaultValue={value} value={value} onChange={onChange} label={name} />
     </div>
 );

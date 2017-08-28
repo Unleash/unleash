@@ -41,9 +41,7 @@ class Progress extends Component {
         const TOTAL_ANIMATION_TIME = 5000;
         const diff = start > target ? -(start - target) : target - start;
         const perCycle = TOTAL_ANIMATION_TIME / diff;
-        const cyclesCounter = Math.round(
-            Math.abs(TOTAL_ANIMATION_TIME / perCycle)
-        );
+        const cyclesCounter = Math.round(Math.abs(TOTAL_ANIMATION_TIME / perCycle));
         const perCycleTime = Math.round(Math.abs(perCycle));
 
         return {
@@ -95,9 +93,7 @@ class Progress extends Component {
         const diameter = Math.PI * 2 * radius;
         const progressStyle = {
             strokeDasharray: `${diameter}px ${diameter}px`,
-            strokeDashoffset: `${(100 - this.state.percentage) /
-                100 *
-                diameter}px`,
+            strokeDashoffset: `${(100 - this.state.percentage) / 100 * diameter}px`,
         };
 
         return isFallback ? (
@@ -113,9 +109,7 @@ class Progress extends Component {
         ) : (
             <svg viewBox="0 0 100 100">
                 <path
-                    className={[styles.trail, 'mdl-color-text--grey-300'].join(
-                        ' '
-                    )}
+                    className={[styles.trail, 'mdl-color-text--grey-300'].join(' ')}
                     d={pathDescription}
                     strokeWidth={strokeWidth}
                     fillOpacity={0}

@@ -85,9 +85,7 @@ export function requestUpdateFeatureToggle(featureToggle) {
 
         return api
             .update(featureToggle)
-            .then(() =>
-                dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle })
-            )
+            .then(() => dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle }))
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
@@ -98,9 +96,7 @@ export function removeFeatureToggle(featureToggleName) {
 
         return api
             .remove(featureToggleName)
-            .then(() =>
-                dispatch({ type: REMOVE_FEATURE_TOGGLE, featureToggleName })
-            )
+            .then(() => dispatch({ type: REMOVE_FEATURE_TOGGLE, featureToggleName }))
             .catch(dispatchAndThrow(dispatch, ERROR_REMOVE_FEATURE_TOGGLE));
     };
 }

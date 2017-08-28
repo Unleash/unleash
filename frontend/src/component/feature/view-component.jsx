@@ -1,16 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    Tabs,
-    Tab,
-    ProgressBar,
-    Button,
-    Card,
-    CardTitle,
-    CardText,
-    CardActions,
-    Switch,
-} from 'react-mdl';
+import { Tabs, Tab, ProgressBar, Button, Card, CardTitle, CardText, CardActions, Switch } from 'react-mdl';
 import { hashHistory, Link } from 'react-router';
 
 import HistoryComponent from '../history/history-list-toggle-container';
@@ -90,9 +80,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
             );
         }
 
-        const activeTabId = TABS[this.props.activeTab]
-            ? TABS[this.props.activeTab]
-            : TABS.view;
+        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.view;
         const tabContent = this.getTabContent(activeTab);
 
         const removeToggle = () => {
@@ -106,16 +94,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
         };
 
         return (
-            <Card
-                shadow={0}
-                className={commonStyles.fullwidth}
-                style={{ overflow: 'visible' }}
-            >
-                <CardTitle
-                    style={{ paddingTop: '24px', wordBreak: 'break-all' }}
-                >
-                    {featureToggle.name}
-                </CardTitle>
+            <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
+                <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
                 <CardText>{featureToggle.description}</CardText>
                 <CardActions
                     border
@@ -145,22 +125,9 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     tabBarProps={{ style: { width: '100%' } }}
                     className="mdl-color--grey-100"
                 >
-                    <Tab
-                        onClick={() => this.goToTab('view', featureToggleName)}
-                    >
-                        Metrics
-                    </Tab>
-                    <Tab
-                        onClick={() => this.goToTab('edit', featureToggleName)}
-                    >
-                        Edit
-                    </Tab>
-                    <Tab
-                        onClick={() =>
-                            this.goToTab('history', featureToggleName)}
-                    >
-                        History
-                    </Tab>
+                    <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
+                    <Tab onClick={() => this.goToTab('edit', featureToggleName)}>Edit</Tab>
+                    <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
                 </Tabs>
                 {tabContent}
             </Card>

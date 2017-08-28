@@ -2,14 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 
-import {
-    List,
-    ListItem,
-    ListItemContent,
-    IconButton,
-    Grid,
-    Cell,
-} from 'react-mdl';
+import { List, ListItem, ListItemContent, IconButton, Grid, Cell } from 'react-mdl';
 import { HeaderTitle } from '../common';
 
 class StrategiesListComponent extends Component {
@@ -33,10 +26,7 @@ class StrategiesListComponent extends Component {
                             <IconButton
                                 raised
                                 name="add"
-                                onClick={() =>
-                                    this.context.router.push(
-                                        '/strategies/create'
-                                    )}
+                                onClick={() => this.context.router.push('/strategies/create')}
                                 title="Add new strategy"
                             />
                         }
@@ -45,24 +35,15 @@ class StrategiesListComponent extends Component {
                         {strategies.length > 0 ? (
                             strategies.map((strategy, i) => (
                                 <ListItem key={i} twoLine>
-                                    <ListItemContent
-                                        icon="extension"
-                                        subtitle={strategy.description}
-                                    >
-                                        <Link
-                                            to={`/strategies/view/${strategy.name}`}
-                                        >
+                                    <ListItemContent icon="extension" subtitle={strategy.description}>
+                                        <Link to={`/strategies/view/${strategy.name}`}>
                                             <strong>{strategy.name}</strong>
                                         </Link>
                                     </ListItemContent>
                                     {strategy.editable === false ? (
                                         ''
                                     ) : (
-                                        <IconButton
-                                            name="delete"
-                                            onClick={() =>
-                                                removeStrategy(strategy)}
-                                        />
+                                        <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
                                     )}
                                 </ListItem>
                             ))

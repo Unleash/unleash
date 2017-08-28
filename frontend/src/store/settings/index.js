@@ -15,10 +15,7 @@ function getInitState() {
 }
 
 function updateSetting(state, action) {
-    const newState = state.updateIn(
-        [action.group, action.field],
-        () => action.value
-    );
+    const newState = state.updateIn([action.group, action.field], () => action.value);
 
     localStorage.setItem(SETTINGS, JSON.stringify(newState.toJSON()));
     return newState;

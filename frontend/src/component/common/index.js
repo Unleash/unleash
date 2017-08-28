@@ -1,44 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router';
-import {
-    List,
-    ListItem,
-    ListItemContent,
-    Button,
-    Icon,
-    Switch,
-    MenuItem,
-} from 'react-mdl';
+import { List, ListItem, ListItemContent, Button, Icon, Switch, MenuItem } from 'react-mdl';
 import styles from './common.scss';
 
 export { styles };
 
-export const shorten = (str, len = 50) =>
-    str && str.length > len ? `${str.substring(0, len)}...` : str;
+export const shorten = (str, len = 50) => (str && str.length > len ? `${str.substring(0, len)}...` : str);
 
 export const AppsLinkList = ({ apps }) => (
     <List>
         {apps.length > 0 &&
             apps.map(({ appName, description = '-', icon = 'apps' }) => (
                 <ListItem twoLine key={appName}>
-                    <span
-                        className="mdl-list__item-primary-content"
-                        style={{ minWidth: 0 }}
-                    >
+                    <span className="mdl-list__item-primary-content" style={{ minWidth: 0 }}>
                         <Icon name={icon} className="mdl-list__item-avatar" />
-                        <Link
-                            to={`/applications/${appName}`}
-                            className={[styles.listLink, styles.truncate].join(
-                                ' '
-                            )}
-                        >
+                        <Link to={`/applications/${appName}`} className={[styles.listLink, styles.truncate].join(' ')}>
                             {appName}
-                            <span
-                                className={[
-                                    'mdl-list__item-sub-title',
-                                    styles.truncate,
-                                ].join(' ')}
-                            >
+                            <span className={['mdl-list__item-sub-title', styles.truncate].join(' ')}>
                                 {description}
                             </span>
                         </Link>
@@ -62,9 +40,7 @@ export const HeaderTitle = ({ title, actions, subtitle }) => (
             {subtitle && <small>{subtitle}</small>}
         </div>
 
-        {actions && (
-            <div style={{ flex: '1', textAlign: 'right' }}>{actions}</div>
-        )}
+        {actions && <div style={{ flex: '1', textAlign: 'right' }}>{actions}</div>}
     </div>
 );
 
@@ -84,24 +60,13 @@ export const FormButtons = ({ submitText = 'Create', onCancel }) => (
             {submitText}
         </Button>
         &nbsp;
-        <Button
-            type="cancel"
-            ripple
-            raised
-            onClick={onCancel}
-            style={{ float: 'right' }}
-        >
+        <Button type="cancel" ripple raised onClick={onCancel} style={{ float: 'right' }}>
             <Icon name="cancel" />&nbsp;&nbsp;&nbsp; Cancel
         </Button>
     </div>
 );
 
-export const SwitchWithLabel = ({
-    onChange,
-    checked,
-    children,
-    ...switchProps
-}) => (
+export const SwitchWithLabel = ({ onChange, checked, children, ...switchProps }) => (
     <span className={styles.switchWithLabel}>
         <span className={styles.label}>{children}</span>
         <span className={styles.switch}>
@@ -141,12 +106,7 @@ export function getIcon(type) {
 }
 
 export const IconLink = ({ url, icon }) => (
-    <a
-        href={url}
-        target="_blank"
-        rel="noopener"
-        className="mdl-color-text--grey-600"
-    >
+    <a href={url} target="_blank" rel="noopener" className="mdl-color-text--grey-600">
         <Icon name={icon} />
     </a>
 );
@@ -158,17 +118,8 @@ export const DropdownButton = ({ label, id }) => (
     </Button>
 );
 
-export const MenuItemWithIcon = ({
-    icon,
-    label,
-    disabled,
-    ...menuItemProps
-}) => (
-    <MenuItem
-        disabled={disabled}
-        style={{ display: 'flex', alignItems: 'center' }}
-        {...menuItemProps}
-    >
+export const MenuItemWithIcon = ({ icon, label, disabled, ...menuItemProps }) => (
+    <MenuItem disabled={disabled} style={{ display: 'flex', alignItems: 'center' }} {...menuItemProps}>
         <Icon name={icon} style={{ paddingRight: '16px' }} />
         {label}
     </MenuItem>
@@ -176,11 +127,7 @@ export const MenuItemWithIcon = ({
 
 const badNumbers = [NaN, Infinity, -Infinity];
 export function calc(value, total, decimal) {
-    if (
-        typeof value !== 'number' ||
-        typeof total !== 'number' ||
-        typeof decimal !== 'number'
-    ) {
+    if (typeof value !== 'number' || typeof total !== 'number' || typeof decimal !== 'number') {
         return null;
     }
 

@@ -16,11 +16,7 @@ class ClientStrategies extends Component {
         const source = this.props.clientInstances;
 
         return (
-            <DataTable
-                style={{ width: '100%' }}
-                rows={source}
-                selectable={false}
-            >
+            <DataTable style={{ width: '100%' }} rows={source} selectable={false}>
                 <TableHeader name="instanceId">Instance ID</TableHeader>
                 <TableHeader name="appName">Application name</TableHeader>
                 <TableHeader name="clientIp">IP</TableHeader>

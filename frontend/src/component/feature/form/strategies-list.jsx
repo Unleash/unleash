@@ -15,13 +15,7 @@ class StrategiesList extends React.Component {
     };
 
     render() {
-        const {
-            strategies,
-            configuredStrategies,
-            moveStrategy,
-            removeStrategy,
-            updateStrategy,
-        } = this.props;
+        const { strategies, configuredStrategies, moveStrategy, removeStrategy, updateStrategy } = this.props;
 
         if (!configuredStrategies || configuredStrategies.length === 0) {
             return <i style={{ color: 'red' }}>No strategies added</i>;
@@ -35,14 +29,10 @@ class StrategiesList extends React.Component {
                 moveStrategy={moveStrategy}
                 removeStrategy={removeStrategy.bind(null, i)}
                 updateStrategy={updateStrategy.bind(null, i)}
-                strategyDefinition={strategies.find(
-                    s => s.name === strategy.name
-                )}
+                strategyDefinition={strategies.find(s => s.name === strategy.name)}
             />
         ));
-        return (
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>{blocks}</div>
-        );
+        return <div style={{ display: 'flex', flexWrap: 'wrap' }}>{blocks}</div>;
     }
 }
 

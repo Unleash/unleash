@@ -8,13 +8,7 @@ const ErrorComponent = ({ errors, ...props }) => {
     const error = showError ? errors[0] : undefined;
     const muteError = () => props.muteError(error);
     return (
-        <Snackbar
-            action="Dismiss"
-            active={showError}
-            onActionClick={muteError}
-            onTimeout={muteError}
-            timeout={10000}
-        >
+        <Snackbar action="Dismiss" active={showError} onActionClick={muteError} onTimeout={muteError} timeout={10000}>
             <Icon name="question_answer" /> {error}
         </Snackbar>
     );

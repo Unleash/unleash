@@ -54,9 +54,7 @@ export default class StrategyDetails extends Component {
     }
 
     render() {
-        const activeTabId = TABS[this.props.activeTab]
-            ? TABS[this.props.activeTab]
-            : TABS.view;
+        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.view;
         const strategy = this.props.strategy;
         if (!strategy) {
             return <ProgressBar indeterminate />;
@@ -67,17 +65,12 @@ export default class StrategyDetails extends Component {
         return (
             <Grid className="mdl-color--white">
                 <Cell col={12}>
-                    <HeaderTitle
-                        title={strategy.name}
-                        subtitle={strategy.description}
-                    />
+                    <HeaderTitle title={strategy.name} subtitle={strategy.description} />
                     {strategy.editable === false ? (
                         ''
                     ) : (
                         <Tabs activeTab={activeTabId} ripple>
-                            <Tab onClick={() => this.goToTab('view')}>
-                                Details
-                            </Tab>
+                            <Tab onClick={() => this.goToTab('view')}>Details</Tab>
                             <Tab onClick={() => this.goToTab('edit')}>Edit</Tab>
                         </Tabs>
                     )}

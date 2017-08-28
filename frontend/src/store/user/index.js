@@ -20,9 +20,7 @@ function readCookie() {
 }
 
 function writeCookie(userName) {
-    document.cookie = `${COOKIE_NAME}=${encodeURIComponent(
-        userName
-    )}; expires=Thu, 18 Dec 2099 12:00:00 UTC`;
+    document.cookie = `${COOKIE_NAME}=${encodeURIComponent(userName)}; expires=Thu, 18 Dec 2099 12:00:00 UTC`;
 }
 
 function getInitState() {

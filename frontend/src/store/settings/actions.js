@@ -7,5 +7,4 @@ export const updateSetting = (group, field, value) => ({
     value,
 });
 
-export const updateSettingForGroup = group => (field, value) =>
-    updateSetting(group, field, value);
+export const updateSettingForGroup = group => (field, value) => updateSetting(group, field, value);

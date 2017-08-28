@@ -12,10 +12,7 @@ const StrategyChipItem = ({ strategy }) => (
         <ChipContact className="mdl-color--blue-grey mdl-color-text--white">
             <Icon style={{ marginTop: '3px' }} name="link" />
         </ChipContact>
-        <Link
-            to={`/strategies/view/${strategy.name}`}
-            className="mdl-color-text--blue-grey"
-        >
+        <Link to={`/strategies/view/${strategy.name}`} className="mdl-color-text--blue-grey">
             {strategy.name}
         </Link>
     </Chip>
@@ -25,9 +22,7 @@ const StrategyChipItem = ({ strategy }) => (
 const StrategiesList = ({ strategies }) => (
     <div style={{ verticalAlign: 'middle', paddingTop: '14px' }}>
         With {strategies.length > 1 ? 'strategies' : 'strategy'}{' '}
-        {strategies.map((strategy, i) => (
-            <StrategyChipItem key={i} strategy={strategy} />
-        ))}
+        {strategies.map((strategy, i) => <StrategyChipItem key={i} strategy={strategy} />)}
     </div>
 );
 
@@ -59,10 +54,8 @@ export default class MetricComponent extends React.Component {
             seenApps = [],
         } = metrics;
 
-        const lastHourPercent =
-            1 * calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
-        const lastMinutePercent =
-            1 * calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
+        const lastHourPercent = 1 * calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
+        const lastMinutePercent = 1 * calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
 
         return (
             <div style={{ padding: '16px' }}>
@@ -75,9 +68,7 @@ export default class MetricComponent extends React.Component {
                             animatePercentageText
                         />
                         {lastMinute.isFallback ? (
-                            <p className="mdl-color-text--grey-500">
-                                No metrics available
-                            </p>
+                            <p className="mdl-color-text--grey-500">No metrics available</p>
                         ) : (
                             <p>
                                 <strong>Last minute</strong>
@@ -86,14 +77,9 @@ export default class MetricComponent extends React.Component {
                         )}
                     </Cell>
                     <Cell col={4} tablet={4} phone={12}>
-                        <Progress
-                            percentage={lastHourPercent}
-                            isFallback={lastHour.isFallback}
-                        />
+                        <Progress percentage={lastHourPercent} isFallback={lastHour.isFallback} />
                         {lastHour.isFallback ? (
-                            <p className="mdl-color-text--grey-500">
-                                No metrics available
-                            </p>
+                            <p className="mdl-color-text--grey-500">No metrics available</p>
                         ) : (
                             <p>
                                 <strong>Last hour</strong>
@@ -115,20 +101,14 @@ export default class MetricComponent extends React.Component {
                                 />
                                 <div>
                                     <small>
-                                        <strong>
-                                            Not used in an app in the last hour.
-                                        </strong>
-                                        This might be due to your client
-                                        implementation is not reporting usage.
+                                        <strong>Not used in an app in the last hour.</strong>
+                                        This might be due to your client implementation is not reporting usage.
                                     </small>
                                 </div>
                             </div>
                         )}
                         <AppsLinkList apps={seenApps} />
-                        <span>
-                            Created{' '}
-                            {formatFullDateTime(featureToggle.createdAt)}
-                        </span>
+                        <span>Created {formatFullDateTime(featureToggle.createdAt)}</span>
                     </Cell>
                 </Grid>
                 <hr />

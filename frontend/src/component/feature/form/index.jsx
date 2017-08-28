@@ -92,10 +92,7 @@ class AddFeatureToggleComponent extends Component {
                     />
 
                     <br />
-                    <FormButtons
-                        submitText={editmode ? 'Update' : 'Create'}
-                        onCancel={onCancel}
-                    />
+                    <FormButtons submitText={editmode ? 'Update' : 'Create'} onCancel={onCancel} />
                 </section>
             </form>
         );

@@ -16,8 +16,7 @@ const archive = [
     },
     {
         name: 'adin-pay-platform-sch-payment',
-        description:
-            'Enables use of schibsted payment from order-payment-management',
+        description: 'Enables use of schibsted payment from order-payment-management',
         enabled: true,
         strategies: [{ name: 'default', parameters: {} }],
         createdAt: '2016-08-03T12:41:35.631Z',
@@ -26,17 +25,13 @@ const archive = [
 ];
 
 test('renders correctly with no archived toggles', () => {
-    const tree = renderer
-        .create(<ArchiveList fetchArchive={jest.fn()} archive={[]} />)
-        .toJSON();
+    const tree = renderer.create(<ArchiveList fetchArchive={jest.fn()} archive={[]} />).toJSON();
 
     expect(tree).toMatchSnapshot();
 });
 
 test('renders correctly with archived toggles', () => {
-    const tree = renderer
-        .create(<ArchiveList fetchArchive={jest.fn()} archive={archive} />)
-        .toJSON();
+    const tree = renderer.create(<ArchiveList fetchArchive={jest.fn()} archive={archive} />).toJSON();
 
     expect(tree).toMatchSnapshot();
 });

@@ -7,5 +7,4 @@ const dateTimeOptions = {
     second: '2-digit',
 };
 
-export const formatFullDateTime = v =>
-    new Date(v).toLocaleString('nb-NO', dateTimeOptions);
+export const formatFullDateTime = v => new Date(v).toLocaleString('nb-NO', dateTimeOptions);

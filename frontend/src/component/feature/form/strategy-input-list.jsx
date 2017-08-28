@@ -46,10 +46,7 @@ export default class InputList extends Component {
     onClose(index) {
         const { name, list, setConfig } = this.props;
         list[index] = null;
-        setConfig(
-            name,
-            list.length === 1 ? '' : list.filter(Boolean).join(',')
-        );
+        setConfig(name, list.length === 1 ? '' : list.filter(Boolean).join(','));
     }
 
     render() {
@@ -58,11 +55,7 @@ export default class InputList extends Component {
             <div>
                 <p>{name}</p>
                 {list.map((entryValue, index) => (
-                    <Chip
-                        key={index + entryValue}
-                        style={{ marginRight: '3px' }}
-                        onClose={() => this.onClose(index)}
-                    >
+                    <Chip key={index + entryValue} style={{ marginRight: '3px' }} onClose={() => this.onClose(index)}>
                         {entryValue}
                     </Chip>
                 ))}
@@ -79,11 +72,7 @@ export default class InputList extends Component {
                     <IconButton
                         name="add"
                         raised
-                        style={{
-                            flex: 1,
-                            flexGrow: 0,
-                            margin: '20px 0 0 10px',
-                        }}
+                        style={{ flex: 1, flexGrow: 0, margin: '20px 0 0 10px' }}
                         onClick={this.setValue}
                     />
                 </div>

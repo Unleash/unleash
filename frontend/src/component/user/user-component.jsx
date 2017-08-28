@@ -39,25 +39,17 @@ class EditUserComponent extends React.Component {
     render() {
         return (
             <div>
-                <Modal
-                    isOpen={this.props.user.showDialog}
-                    contentLabel="test"
-                    style={customStyles}
-                >
+                <Modal isOpen={this.props.user.showDialog} contentLabel="test" style={customStyles}>
                     <h2>Action required</h2>
                     <div>
-                        <p>
-                            You have to specify a username to use Unleash. This
-                            will allow us to track your changes.
-                        </p>
+                        <p>You have to specify a username to use Unleash. This will allow us to track your changes.</p>
                         <form onSubmit={this.handleSubmit}>
                             <Textfield
                                 label="Username"
                                 name="username"
                                 required
                                 value={this.props.user.userName}
-                                onChange={e =>
-                                    this.props.updateUserName(e.target.value)}
+                                onChange={e => this.props.updateUserName(e.target.value)}
                             />
                             <br />
                             <Button raised accent>

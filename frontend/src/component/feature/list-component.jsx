@@ -2,22 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Feature from './feature-list-item-component';
 import { Link } from 'react-router';
-import {
-    Icon,
-    FABButton,
-    Textfield,
-    Menu,
-    MenuItem,
-    Card,
-    CardActions,
-    List,
-} from 'react-mdl';
+import { Icon, FABButton, Textfield, Menu, MenuItem, Card, CardActions, List } from 'react-mdl';
 
-import {
-    MenuItemWithIcon,
-    DropdownButton,
-    styles as commonStyles,
-} from '../common';
+import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
 import styles from './feature.scss';
 
 export default class FeatureListComponent extends React.PureComponent {
@@ -47,10 +34,7 @@ export default class FeatureListComponent extends React.PureComponent {
     }
 
     toggleMetrics() {
-        this.props.updateSetting(
-            'showLastHour',
-            !this.props.settings.showLastHour
-        );
+        this.props.updateSetting('showLastHour', !this.props.settings.showLastHour);
     }
 
     setFilter(v) {
@@ -62,12 +46,7 @@ export default class FeatureListComponent extends React.PureComponent {
     }
 
     render() {
-        const {
-            features,
-            toggleFeature,
-            featureMetrics,
-            settings,
-        } = this.props;
+        const { features, toggleFeature, featureMetrics, settings } = this.props;
 
         return (
             <div>
@@ -81,32 +60,16 @@ export default class FeatureListComponent extends React.PureComponent {
                         label="Search"
                         style={{ width: '100%' }}
                     />
-                    <Link
-                        to="/features/create"
-                        className={styles.toolbarButton}
-                    >
+                    <Link to="/features/create" className={styles.toolbarButton}>
                         <FABButton accent title="Create feature toggle">
                             <Icon name="add" />
                         </FABButton>
                     </Link>
                 </div>
-                <Card
-                    shadow={0}
-                    className={commonStyles.fullwidth}
-                    style={{ overflow: 'visible' }}
-                >
+                <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                     <CardActions>
-                        <DropdownButton
-                            id="metric"
-                            label={`Last ${settings.showLastHour
-                                ? 'hour'
-                                : 'minute'}`}
-                        />
-                        <Menu
-                            target="metric"
-                            onClick={() => this.toggleMetrics()}
-                            style={{ width: '168px' }}
-                        >
+                        <DropdownButton id="metric" label={`Last ${settings.showLastHour ? 'hour' : 'minute'}`} />
+                        <Menu target="metric" onClick={() => this.toggleMetrics()} style={{ width: '168px' }}>
                             <MenuItemWithIcon
                                 icon="hourglass_empty"
                                 disabled={!settings.showLastHour}
@@ -120,46 +83,25 @@ export default class FeatureListComponent extends React.PureComponent {
                                 label="Last hour"
                             />
                         </Menu>
-                        <DropdownButton
-                            id="sorting"
-                            label={`By ${settings.sort}`}
-                        />
+                        <DropdownButton id="sorting" label={`By ${settings.sort}`} />
                         <Menu
                             target="sorting"
-                            onClick={e =>
-                                this.setSort(
-                                    e.target.getAttribute('data-target')
-                                )}
+                            onClick={e => this.setSort(e.target.getAttribute('data-target'))}
                             style={{ width: '168px' }}
                         >
-                            <MenuItem
-                                disabled={settings.sort === 'name'}
-                                data-target="name"
-                            >
+                            <MenuItem disabled={settings.sort === 'name'} data-target="name">
                                 Name
                             </MenuItem>
-                            <MenuItem
-                                disabled={settings.sort === 'enabled'}
-                                data-target="enabled"
-                            >
+                            <MenuItem disabled={settings.sort === 'enabled'} data-target="enabled">
                                 Enabled
                             </MenuItem>
-                            <MenuItem
-                                disabled={settings.sort === 'created'}
-                                data-target="created"
-                            >
+                            <MenuItem disabled={settings.sort === 'created'} data-target="created">
                                 Created
                             </MenuItem>
-                            <MenuItem
-                                disabled={settings.sort === 'strategies'}
-                                data-target="strategies"
-                            >
+                            <MenuItem disabled={settings.sort === 'strategies'} data-target="strategies">
                                 Strategies
                             </MenuItem>
-                            <MenuItem
-                                disabled={settings.sort === 'metrics'}
-                                data-target="metrics"
-                            >
+                            <MenuItem disabled={settings.sort === 'metrics'} data-target="metrics">
                                 Metrics
                             </MenuItem>
                         </Menu>
@@ -170,12 +112,8 @@ export default class FeatureListComponent extends React.PureComponent {
                             <Feature
                                 key={i}
                                 settings={settings}
-                                metricsLastHour={
-                                    featureMetrics.lastHour[feature.name]
-                                }
-                                metricsLastMinute={
-                                    featureMetrics.lastMinute[feature.name]
-                                }
+                                metricsLastHour={featureMetrics.lastHour[feature.name]}
+                                metricsLastMinute={featureMetrics.lastMinute[feature.name]}
                                 feature={feature}
                                 toggleFeature={toggleFeature}
                             />

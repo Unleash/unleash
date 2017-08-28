@@ -17,20 +17,12 @@ class ArchiveList extends Component {
             <Card shadow={0} className={commonStyles.fullwidth}>
                 {archive.length > 0 ? (
                     <div className={commonStyles.horisontalScroll}>
-                        <DataTable
-                            rows={archive}
-                            className={commonStyles.fullwidth}
-                            style={{ border: 0 }}
-                        >
+                        <DataTable rows={archive} className={commonStyles.fullwidth} style={{ border: 0 }}>
                             <TableHeader
                                 style={{ width: '25px' }}
                                 name="reviveName"
                                 cellFormatter={reviveName => (
-                                    <IconButton
-                                        colored
-                                        name="undo"
-                                        onClick={() => revive(reviveName)}
-                                    />
+                                    <IconButton colored name="undo" onClick={() => revive(reviveName)} />
                                 )}
                             >
                                 Revive
@@ -50,14 +42,9 @@ class ArchiveList extends Component {
                     </div>
                 ) : (
                     <div className={commonStyles.emptyState}>
-                        <Icon
-                            name="archive"
-                            className="mdl-color-text--grey-300"
-                            style={{ fontSize: '56px' }}
-                        />
+                        <Icon name="archive" className="mdl-color-text--grey-300" style={{ fontSize: '56px' }} />
                         <br />
-                        No archived feature toggles, go see{' '}
-                        <Link to="/features">active toggles here</Link>
+                        No archived feature toggles, go see <Link to="/features">active toggles here</Link>
                     </div>
                 )}
             </Card>

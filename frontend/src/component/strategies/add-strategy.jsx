@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-    Textfield,
-    IconButton,
-    Menu,
-    MenuItem,
-    Checkbox,
-    Grid,
-    Cell,
-} from 'react-mdl';
+import { Textfield, IconButton, Menu, MenuItem, Checkbox, Grid, Cell } from 'react-mdl';
 import { FormButtons } from '../common';
 
 const trim = value => {
@@ -25,13 +17,7 @@ function gerArrayWithEntries(num) {
 }
 
 const Parameter = ({ set, input = {}, index }) => (
-    <div
-        style={{
-            background: '#f1f1f1',
-            padding: '16px 20px',
-            marginBottom: '20px',
-        }}
-    >
+    <div style={{ background: '#f1f1f1', padding: '16px 20px', marginBottom: '20px' }}>
         <Textfield
             style={{ width: '50%' }}
             floatingLabel
@@ -46,8 +32,7 @@ const Parameter = ({ set, input = {}, index }) => (
                 style={{
                     borderRadius: '2px',
                     cursor: 'pointer',
-                    boxShadow:
-                        '0 2px 2px 0 rgba(0,0,0,.04),0 3px 1px -2px rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.12)',
+                    boxShadow: '0 2px 2px 0 rgba(0,0,0,.04),0 3px 1px -2px rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.12)',
                     marginLeft: '10px',
                     border: '1px solid #f1f1f1',
                     backgroundColor: 'white',
@@ -55,22 +40,13 @@ const Parameter = ({ set, input = {}, index }) => (
                 }}
             >
                 {input.type || 'string'}
-                <IconButton
-                    name="arrow_drop_down"
-                    onClick={evt => evt.preventDefault()}
-                />
+                <IconButton name="arrow_drop_down" onClick={evt => evt.preventDefault()} />
             </span>
             <Menu target={`${index}-type-menu`} align="right">
-                <MenuItem onClick={() => set({ type: 'string' })}>
-                    string
-                </MenuItem>
-                <MenuItem onClick={() => set({ type: 'percentage' })}>
-                    percentage
-                </MenuItem>
+                <MenuItem onClick={() => set({ type: 'string' })}>string</MenuItem>
+                <MenuItem onClick={() => set({ type: 'percentage' })}>percentage</MenuItem>
                 <MenuItem onClick={() => set({ type: 'list' })}>list</MenuItem>
-                <MenuItem onClick={() => set({ type: 'number' })}>
-                    number
-                </MenuItem>
+                <MenuItem onClick={() => set({ type: 'number' })}>number</MenuItem>
             </Menu>
         </div>
         <Textfield
@@ -95,8 +71,7 @@ const EditHeader = () => (
     <div>
         <h4 style={{ marginTop: '16px' }}>Edit strategy</h4>
         <p style={{ background: '#ffb7b7', padding: '16px 20px' }}>
-            Be carefull! Changing a strategy definition might also require
-            changes to the implementation in the clients.
+            Be carefull! Changing a strategy definition might also require changes to the implementation in the clients.
         </p>
     </div>
 );
@@ -110,12 +85,7 @@ const CreateHeader = () => (
 const Parameters = ({ input = [], count = 0, updateInList }) => (
     <div>
         {gerArrayWithEntries(count).map((v, i) => (
-            <Parameter
-                key={i}
-                set={v => updateInList('parameters', i, v, true)}
-                index={i}
-                input={input[i]}
-            />
+            <Parameter key={i} set={v => updateInList('parameters', i, v, true)} index={i} input={input[i]} />
         ))}
     </div>
 );
@@ -139,24 +109,13 @@ class AddStrategy extends Component {
         if (this.props.initCallRequired === true) {
             this.props.init(this.props.input);
             if (this.props.input.parameters) {
-                this.props.setValue(
-                    '_params',
-                    this.props.input.parameters.length
-                );
+                this.props.setValue('_params', this.props.input.parameters.length);
             }
         }
     }
 
     render() {
-        const {
-            input,
-            setValue,
-            updateInList,
-            incValue,
-            onCancel,
-            editmode = false,
-            onSubmit,
-        } = this.props;
+        const { input, setValue, updateInList, incValue, onCancel, editmode = false, onSubmit } = this.props;
 
         return (
             <Grid className="mdl-color--white">
@@ -170,8 +129,7 @@ class AddStrategy extends Component {
                             required
                             disabled={editmode}
                             pattern="^[0-9a-zA-Z\.\-]+$"
-                            onChange={({ target }) =>
-                                setValue('name', trim(target.value))}
+                            onChange={({ target }) => setValue('name', trim(target.value))}
                             value={input.name}
                         />
                         <br />
@@ -181,15 +139,10 @@ class AddStrategy extends Component {
                             rows={1}
                             label="Description"
                             name="description"
-                            onChange={({ target }) =>
-                                setValue('description', target.value)}
+                            onChange={({ target }) => setValue('description', target.value)}
                             value={input.description}
                         />
-                        <Parameters
-                            input={input.parameters}
-                            count={input._params}
-                            updateInList={updateInList}
-                        />
+                        <Parameters input={input.parameters} count={input._params} updateInList={updateInList} />
                         <IconButton
                             raised
                             name="add"
@@ -202,10 +155,7 @@ class AddStrategy extends Component {
                         &nbsp;Add parameter
                         <br />
                         <hr />
-                        <FormButtons
-                            submitText={editmode ? 'Update' : 'Create'}
-                            onCancel={onCancel}
-                        />
+                        <FormButtons submitText={editmode ? 'Update' : 'Create'} onCancel={onCancel} />
                     </form>
                 </Cell>
             </Grid>

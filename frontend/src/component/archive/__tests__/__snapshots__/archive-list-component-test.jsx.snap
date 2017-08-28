@@ -102,8 +102,7 @@ exports[`renders correctly with no archived toggles 1`] = `
       }
     />
     <br />
-    No archived feature toggles, go see
-     
+    No archived feature toggles, go see 
     <a
       onClick={[Function]}
       style={Object {}}

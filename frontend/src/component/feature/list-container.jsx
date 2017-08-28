@@ -1,8 +1,5 @@
 import { connect } from 'react-redux';
-import {
-    toggleFeature,
-    fetchFeatureToggles,
-} from '../../store/feature-actions';
+import { toggleFeature, fetchFeatureToggles } from '../../store/feature-actions';
 import { fetchFeatureMetrics } from '../../store/feature-metrics-actions';
 import { updateSettingForGroup } from '../../store/settings/actions';
 
@@ -33,9 +30,7 @@ const mapStateToProps = state => {
             a.enabled === b.enabled ? 0 : a.enabled ? -1 : 1
         );
     } else if (settings.sort === 'created') {
-        features = features.sort(
-            (a, b) => (new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1)
-        );
+        features = features.sort((a, b) => (new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1));
     } else if (settings.sort === 'name') {
         features = features.sort((a, b) => {
             if (a.name < b.name) {
@@ -47,13 +42,9 @@ const mapStateToProps = state => {
             return 0;
         });
     } else if (settings.sort === 'strategies') {
-        features = features.sort(
-            (a, b) => (a.strategies.length > b.strategies.length ? -1 : 1)
-        );
+        features = features.sort((a, b) => (a.strategies.length > b.strategies.length ? -1 : 1));
     } else if (settings.sort === 'metrics') {
-        const target = settings.showLastHour
-            ? featureMetrics.lastHour
-            : featureMetrics.lastMinute;
+        const target = settings.showLastHour ? featureMetrics.lastHour : featureMetrics.lastMinute;
 
         features = features.sort((a, b) => {
             if (!target[a.name]) {
@@ -83,8 +74,6 @@ const mapDispatchToProps = {
     updateSetting: updateSettingForGroup('feature'),
 };
 
-const FeatureListContainer = connect(mapStateToProps, mapDispatchToProps)(
-    FeatureListComponent
-);
+const FeatureListContainer = connect(mapStateToProps, mapDispatchToProps)(FeatureListComponent);
 
 export default FeatureListContainer;

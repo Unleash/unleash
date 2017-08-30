@@ -67,7 +67,7 @@ has the latest response locally.
 
 ### Query Parameters
 The api has support for querying. You may specify the following query paramters:
-- **name** - A regex to match on feature toggle name. Eg.g: `^test-.*`
+- **name** - Query a toggle with a name that starts with a specified prefix. 
 - **enabled** - Specify whether toggles should be `true` or `false`. 
 
 Example usage with query params:

@@ -35,8 +35,9 @@ unleash.start({
 
 Available unleash options includes:
 
-- databaseUrl 
-- port
+- **databaseUrl** - the postgress database url to connect to. Should include username/password. 
+- **port** - Which port should the unleash-server bind to?
+- **enableLegacyRoutes** (boolean) - allows you to turn on/off support for legacy routes to support older clients. 
 
 ## How do I configure the log output?
  

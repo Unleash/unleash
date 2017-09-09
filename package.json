@@ -73,6 +73,7 @@
     "moment": "^2.15.2",
     "parse-database-url": "^0.3.0",
     "pg": "^6.4.2",
+    "project-version": "^1.0.0",
     "prom-client": "^10.0.4",
     "prometheus-gc-stats": "^0.5.0",
     "response-time": "^2.3.2",

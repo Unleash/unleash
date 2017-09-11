@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## 3.0.0-alpha.2
 - Add sdkVersion in client registration
 - disable edit of built-in strategies
 - Strip uknown fields in client requests.

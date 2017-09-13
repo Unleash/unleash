@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.0-alpha.3
+- Bump unleash-frontend
+
 ## 3.0.0-alpha.2
 - Add sdkVersion in client registration
 - disable edit of built-in strategies

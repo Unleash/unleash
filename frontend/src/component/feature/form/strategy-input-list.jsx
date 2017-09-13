@@ -34,7 +34,6 @@ export default class InputList extends Component {
             e.stopPropagation();
         }
 
-
         const { name, list, setConfig } = this.props;
         const inputValue = this.refs.input.inputRef;
         if (inputValue && inputValue.value) {

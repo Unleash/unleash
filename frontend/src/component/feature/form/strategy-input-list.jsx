@@ -34,8 +34,9 @@ export default class InputList extends Component {
             e.stopPropagation();
         }
 
+
         const { name, list, setConfig } = this.props;
-        const inputValue = document.querySelector(`[name="${name}_input"]`);
+        const inputValue = this.refs.input.inputRef;
         if (inputValue && inputValue.value) {
             list.push(inputValue.value);
             inputValue.value = '';
@@ -68,6 +69,7 @@ export default class InputList extends Component {
                         label="Add list entry"
                         onFocus={this.onFocus}
                         onBlur={this.onBlur}
+                        ref="input"
                     />
                     <IconButton
                         name="add"

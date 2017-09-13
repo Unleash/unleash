@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
-## [Unreleased]
+## [3.0.0-alpha.2]
 - show sdk version as part of instances details.  
+- Bugfix: multiple strategies with list-inputs should work. 
 
 ## [3.0.0-alpha.1] - 2017-06-28
 - updated paths to use new admin api paths

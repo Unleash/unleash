@@ -128,7 +128,6 @@ class AddStrategy extends Component {
                             name="name"
                             required
                             disabled={editmode}
-                            pattern="^[0-9a-zA-Z\.\-\_]+$"
                             onChange={({ target }) => setValue('name', trim(target.value))}
                             value={input.name}
                         />

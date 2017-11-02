@@ -11,15 +11,11 @@ export const RECEIVE_STRATEGIES = 'RECEIVE_STRATEGIES';
 export const ERROR_RECEIVE_STRATEGIES = 'ERROR_RECEIVE_STRATEGIES';
 export const ERROR_CREATING_STRATEGY = 'ERROR_CREATING_STRATEGY';
 export const ERROR_UPDATING_STRATEGY = 'ERROR_UPDATING_STRATEGY';
+export const ERROR_REMOVING_STRATEGY = 'ERROR_REMOVING_STRATEGY';
 
 const addStrategy = strategy => ({ type: ADD_STRATEGY, strategy });
 const createRemoveStrategy = strategy => ({ type: REMOVE_STRATEGY, strategy });
 const updatedStrategy = strategy => ({ type: UPDATE_STRATEGY, strategy });
-
-const errorCreatingStrategy = statusCode => ({
-    type: ERROR_CREATING_STRATEGY,
-    statusCode,
-});
 
 const startRequest = () => ({ type: REQUEST_STRATEGIES });
 
@@ -62,7 +58,7 @@ export function createStrategy(strategy) {
         return api
             .create(strategy)
             .then(() => dispatch(addStrategy(strategy)))
-            .catch(error => dispatch(errorCreatingStrategy(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_CREATING_STRATEGY));
     };
 }
 
@@ -82,7 +78,7 @@ export function removeStrategy(strategy) {
         api
             .remove(strategy)
             .then(() => dispatch(createRemoveStrategy(strategy)))
-            .catch(error => dispatch(errorCreatingStrategy(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_REMOVING_STRATEGY));
 }
 
 export function getApplicationsWithStrategy(strategyName) {

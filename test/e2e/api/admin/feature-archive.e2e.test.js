@@ -32,18 +32,8 @@ test.serial(
         t.plan(0);
         const { request, destroy } = await setupApp('archive_serial2');
 
-        await request
-            .get('/api/admin/features/featureX')
-            .set('Content-Type', 'application/json')
-            .expect(200);
-
-        await request
-            .delete('/api/admin/features/featureX')
-            .set('Content-Type', 'application/json')
-            .expect(200);
-
         return request
-            .get('/api/admin/features/featureX')
+            .get('/api/admin/features/featureArchivedX')
             .set('Content-Type', 'application/json')
             .expect(404)
             .then(destroy);

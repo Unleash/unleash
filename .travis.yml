@@ -7,12 +7,14 @@ env:
 before_script:
 - psql -c 'create database unleash_test;' -U postgres
 script:
-- npm install
-- npm run test:coverage
+- yarn
+- yarn run test:coverage
 after_success:
-- npm run test:coverage-report
+- yarn run test:coverage-report
 notifications:
   slack:
     secure: MroremSKwtQkwPbrXjgs9hIqKTCDKk7bAIXXzjcS6wXC9uRaFgwFaW8oO3vBxtWa4BL44EQBLE/rboWgqFER62+XgXNgEqGZqrcJHJvby4r+dUNMPI64OZvWdIiydIYxLo8C1C4x5PqBup0xuLq8h/SBnNvA2NLgkjuvzOi+v/Q=
 addons:
   postgresql: "9.4"
+cache:
+  yarn: true

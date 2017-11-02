@@ -53,5 +53,8 @@ test.serial(
 test.serial('must set name when reviving toggle', async t => {
     t.plan(0);
     const { request, destroy } = await setupApp('archive_serial');
-    return request.post('/api/admin/archive/revive/').expect(404).then(destroy);
+    return request
+        .post('/api/admin/archive/revive/')
+        .expect(404)
+        .then(destroy);
 });

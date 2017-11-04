@@ -1,59 +1,21 @@
 import { Map as $Map } from 'immutable';
-import { USER_UPDATE_USERNAME, USER_SAVE, USER_EDIT } from './actions';
+import { UPDATE_USER } from './actions';
+import { AUTH_REQUIRED } from '../util';
 
-const COOKIE_NAME = 'username';
-
-// Ref: http://stackoverflow.com/questions/10730362/get-cookie-by-name
-function readCookie() {
-    const nameEQ = `${COOKIE_NAME}=`;
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        // eslint-disable-next-line eqeqeq
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1, c.length);
-        }
-        if (c.indexOf(nameEQ) === 0) {
-            return c.substring(nameEQ.length, c.length);
-        }
-    }
-}
-
-function writeCookie(userName) {
-    document.cookie = `${COOKIE_NAME}=${encodeURIComponent(userName)}; expires=Thu, 18 Dec 2099 12:00:00 UTC`;
-}
-
-function getInitState() {
-    const userName = decodeURIComponent(readCookie(COOKIE_NAME));
-    const showDialog = !userName;
-    return new $Map({ userName, showDialog });
-}
-
-function updateUserName(state, action) {
-    return state.set('userName', action.value);
-}
-
-function save(state) {
-    const userName = state.get('userName');
-    if (userName) {
-        writeCookie(userName);
-        return state.set('showDialog', false);
-    } else {
-        return state;
-    }
-}
-
-const settingStore = (state = getInitState(), action) => {
+const userStore = (state = new $Map(), action) => {
     switch (action.type) {
-        case USER_UPDATE_USERNAME:
-            return updateUserName(state, action);
-        case USER_SAVE:
-            return save(state);
-        case USER_EDIT:
-            return state.set('showDialog', true);
+        case UPDATE_USER:
+            state = state
+                .set('profile', action.value)
+                .set('showDialog', false)
+                .set('authDetails', undefined);
+            return state;
+        case AUTH_REQUIRED:
+            state = state.set('authDetails', action.error.body).set('showDialog', true);
+            return state;
         default:
             return state;
     }
 };
 
-export default settingStore;
+export default userStore;

@@ -1,5 +1,6 @@
 import api from '../../data/strategy-api';
 import applicationApi from '../../data/applications-api';
+import { dispatchAndThrow } from '../util';
 
 export const ADD_STRATEGY = 'ADD_STRATEGY';
 export const UPDATE_STRATEGY = 'UPDATE_STRATEGY';
@@ -26,19 +27,7 @@ const receiveStrategies = json => ({
 
 const startCreate = () => ({ type: START_CREATE_STRATEGY });
 
-const errorReceiveStrategies = statusCode => ({
-    type: ERROR_RECEIVE_STRATEGIES,
-    statusCode,
-});
-
 const startUpdate = () => ({ type: START_UPDATE_STRATEGY });
-
-function dispatchAndThrow(dispatch, type) {
-    return error => {
-        dispatch({ type, error, receivedAt: Date.now() });
-        throw error;
-    };
-}
 
 export function fetchStrategies() {
     return dispatch => {
@@ -47,7 +36,7 @@ export function fetchStrategies() {
         return api
             .fetchAll()
             .then(json => dispatch(receiveStrategies(json)))
-            .catch(error => dispatch(errorReceiveStrategies(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_STRATEGIES));
     };
 }
 

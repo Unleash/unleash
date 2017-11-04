@@ -9,6 +9,8 @@ import {
 
 import { ERROR_UPDATING_STRATEGY, ERROR_CREATING_STRATEGY, ERROR_RECEIVE_STRATEGIES } from './strategy/actions';
 
+import { FORBIDDEN } from './util';
+
 const debug = require('debug')('unleash:error-store');
 
 function getInitState() {
@@ -35,6 +37,8 @@ const strategies = (state = getInitState(), action) => {
         case ERROR_CREATING_STRATEGY:
         case ERROR_RECEIVE_STRATEGIES:
             return addErrorIfNotAlreadyInList(state, action.error.message);
+        case FORBIDDEN:
+            return addErrorIfNotAlreadyInList(state, '403 Forbidden');
         case MUTE_ERROR:
             return state.update('list', list => list.remove(list.indexOf(action.error)));
         default:

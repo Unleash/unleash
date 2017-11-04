@@ -1,25 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Tooltip } from 'react-mdl';
+import styles from './user.scss';
 
 export default class ShowUserComponent extends React.Component {
     static propTypes = {
-        user: PropTypes.object.isRequired,
-        openEdit: PropTypes.func.isRequired,
+        profile: PropTypes.object,
     };
 
-    openEdit = evt => {
-        evt.preventDefault();
-        this.props.openEdit();
-    };
+    componentDidMount() {
+        this.props.fetchUser();
+    }
 
     render() {
+        const email = this.props.profile ? this.props.profile.email : '';
+        const imageUrl = email ? this.props.profile.imageUrl : '';
         return (
-            <a className="mdl-navigation__link" href="#edit-user" onClick={this.openEdit}>
-                <Tooltip label={this.props.user.userName || 'Unknown'} large>
-                    <Icon name="account_circle" />
-                </Tooltip>
-            </a>
+            <div className={styles.showUser}>
+                <img src={imageUrl} title={email} alt={email} />
+            </div>
         );
     }
 }

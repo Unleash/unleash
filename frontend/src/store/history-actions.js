@@ -1,4 +1,5 @@
 import api from '../data/history-api';
+import { dispatchAndThrow } from './util';
 
 export const RECEIVE_HISTORY = 'RECEIVE_HISTORY';
 export const ERROR_RECEIVE_HISTORY = 'ERROR_RECEIVE_HISTORY';
@@ -15,17 +16,12 @@ const receiveHistoryforToggle = json => ({
     value: json,
 });
 
-const errorReceiveHistory = statusCode => ({
-    type: ERROR_RECEIVE_HISTORY,
-    statusCode,
-});
-
 export function fetchHistory() {
     return dispatch =>
         api
             .fetchAll()
             .then(json => dispatch(receiveHistory(json)))
-            .catch(error => dispatch(errorReceiveHistory(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_HISTORY));
 }
 
 export function fetchHistoryForToggle(toggleName) {
@@ -33,5 +29,5 @@ export function fetchHistoryForToggle(toggleName) {
         api
             .fetchHistoryForToggle(toggleName)
             .then(json => dispatch(receiveHistoryforToggle(json)))
-            .catch(error => dispatch(errorReceiveHistory(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_HISTORY));
 }

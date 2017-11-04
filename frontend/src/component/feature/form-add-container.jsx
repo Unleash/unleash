@@ -12,7 +12,7 @@ const mapStateToProps = createMapper({
         try {
             [, name] = document.location.hash.match(/name=([a-z0-9-_.]+)/i);
         } catch (e) {
-            // nothing
+            // hide error
         }
         return { name };
     },

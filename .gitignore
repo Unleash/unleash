@@ -40,3 +40,6 @@ jsconfig.json
 typings
 .vscode
 .nyc_output
+
+# We use yarn.lock
+package-lock.json

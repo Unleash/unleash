@@ -42,14 +42,14 @@
     "immutable": "^3.8.1",
     "normalize.css": "^7.0.0",
     "prop-types": "^15.5.10",
-    "react": "^16.1.0",
+    "react": "^15.6.1",
     "react-dnd": "^2.1.4",
     "react-dnd-html5-backend": "^2.1.2",
-    "react-dom": "^16.1.0",
+    "react-dom": "^15.6.1",
     "react-mdl": "^1.9.0",
-    "react-modal": "^3.1.2",
-    "react-redux": "^5.0.6",
-    "react-router": "^4.2.0",
+    "react-modal": "^1.6.4",
+    "react-redux": "^4.4.5",
+    "react-router": "^3.0.0",
     "react-router-scroll": "^0.4.1",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
@@ -76,7 +76,7 @@
     "jest": "^21.0.0",
     "node-sass": "^4.5.3",
     "prettier": "^1.8.2",
-    "react-test-renderer": "^16.1.0",
+    "react-test-renderer": "^15.6.1",
     "redux-devtools": "^3.3.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.0",
@@ -91,6 +91,16 @@
     },
     "setupFiles": [
       "<rootDir>/jest-setup.js"
+    ]
+  },
+  "greenkeeper": {
+    "ignore": [
+      "react",
+      "react-dom",
+      "react-modal",
+      "react-redux",
+      "react-router",
+      "react-test-renderer"
     ]
   }
 }

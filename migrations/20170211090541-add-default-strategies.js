@@ -31,7 +31,9 @@ function removeEventsSQL(strategy) {
         SELECT 'strategy-deleted', 'migration', '${JSON.stringify(strategy)}'
         WHERE
             EXISTS (
-                SELECT name FROM strategies WHERE name = '${strategy.name}' AND built_in = 1
+                SELECT name FROM strategies WHERE name = '${
+                    strategy.name
+                }' AND built_in = 1
         );`;
 }
 

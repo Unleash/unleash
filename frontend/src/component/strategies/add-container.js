@@ -52,7 +52,9 @@ export default connect(
             let name;
             try {
                 [, name] = document.location.hash.match(/name=([a-z0-9-_.]+)/i);
-            } catch (e) {}
+            } catch (e) {
+                // nothing
+            }
             return { name };
         },
     }),

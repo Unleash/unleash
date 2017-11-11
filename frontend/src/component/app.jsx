@@ -162,9 +162,7 @@ export default class App extends Component {
                                 target="_blank"
                                 className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
                             >
-                                <i
-                                    className={['material-icons', styles.navigationIcon, styles.iconGitHub].join(' ')}
-                                />GitHub
+                                <i className={['material-icons', styles.navigationIcon, styles.iconGitHub].join(' ')} />GitHub
                             </a>
                         </Navigation>
                     </Drawer>

@@ -26,6 +26,9 @@ value to a number between 1 and 100 with a simple modulo operator.
 
 ![hash_and_normalise](assets/hash_and_normalise.png)
 
+Starting from v3.x all clients should use the 32bit Murmur-hash algorithm to normalize values. 
+([issue 247](https://github.com/Unleash/unleash/issues/247))
+
 **Parameters**
 - percentage - *The percentage (0-100) you want to enable to feature toggle for.*
 - groupId - *Used to define a activation groups, which allows you to correlate across feature toggles.*

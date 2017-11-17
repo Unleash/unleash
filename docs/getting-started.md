@@ -37,7 +37,10 @@ Available unleash options includes:
 
 - **databaseUrl** - the postgress database url to connect to. Should include username/password. 
 - **port** - Which port should the unleash-server bind to?
-- **enableLegacyRoutes** (boolean) - allows you to turn on/off support for legacy routes to support older clients. 
+- **enableLegacyRoutes** (boolean) - allows you to turn on/off support for legacy routes to support older clients. Enabled by default.
+- **serverMetrics** (boolean) - Use this option to turn of prometheus metrics. 
+- **preHook** (function) - This is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first arguement. 
+- **preRouterHook** (function) - Use this to register custom express middlewares before the `unleash` specific routers are added. This is typically how you would register custom middlewares to handle authentication. 
 
 ## How do I configure the log output?
  

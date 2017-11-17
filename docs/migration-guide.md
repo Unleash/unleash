@@ -3,10 +3,9 @@ Generally the intention is that `unleash-server` should always provide support f
 
 
 ## Upgrading from v2.x to v3.x
-Upgrade `unleash-server` to v3, which still supports v2 clients. Then upgrade all your clients to v3. When you have upgraded all your clients you should consider to turn off legacy routes, used by v2 clients. Read more about this option in in the [gettings started guide](https://github.com/Unleash/unleash/blob/master/docs/getting-started.md#2-or-programmatically)
+First your should upgrade the `unleash-server` to v3 (which still supports v2 clients). After this is done you should upgrade all your clients to v3. 
 
-
-
+After upgrading all your clients you should consider turning off legacy routes, used by v2 clients. Read more about this option in in the [gettings started guide](https://github.com/Unleash/unleash/blob/master/docs/getting-started.md#2-or-programmatically)
 
 ## Upgrading from v1.0 to v2.0
 

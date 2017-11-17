@@ -1,6 +1,13 @@
 # Migrations guide
+Generally the intention is that `unleash-server` should always provide support for clients one lower major version. This should make it easier to upgrade `unleash` gradually. 
 
-## Upgrading from v1.0 to 2.0
+
+## Upgrading from v2.x to v3.x
+First your should upgrade the `unleash-server` to v3 (which still supports v2 clients). After this is done you should upgrade all your clients to v3. 
+
+After upgrading all your clients you should consider turning off legacy routes, used by v2 clients. Read more about this option in in the [gettings started guide](https://github.com/Unleash/unleash/blob/master/docs/getting-started.md#2-or-programmatically)
+
+## Upgrading from v1.0 to v2.0
 
 ### Caveat 1: Not used db-migrate to migrate the unleash database?
 In FINN we used, for internal reasons, liquebase to migrate our database.  

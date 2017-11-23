@@ -1357,7 +1357,7 @@ db-migrate-shared@^1.1.2:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/db-migrate-shared/-/db-migrate-shared-1.1.3.tgz#edb3c817b295022c61984c187267419bb36a2d58"
 
-db-migrate@0.10.0:
+db-migrate@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/db-migrate/-/db-migrate-0.10.0.tgz#60f7f2c0a0ca09c8d934dfc8efd5bfaed412aed4"
   dependencies:

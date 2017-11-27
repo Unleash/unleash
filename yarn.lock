@@ -344,7 +344,7 @@ ava-init@^0.2.0:
     read-pkg-up "^2.0.0"
     write-pkg "^3.1.0"
 
-ava@0.24.0:
+ava@^0.24.0:
   version "0.24.0"
   resolved "https://registry.yarnpkg.com/ava/-/ava-0.24.0.tgz#dd0ab33a0b3ad2ac582f55e9a61caf8bcf7a9af1"
   dependencies:

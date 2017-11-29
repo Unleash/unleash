@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.0-alpha.5
+## 3.0.0-alpha.6
 - Expose vresion number in /api and in user interface. 
 - Housekeeping: Upgrading a lot of dependencies
 

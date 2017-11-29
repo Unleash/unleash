@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FooterSection, FooterLinkList } from 'react-mdl';
 
-export default class ShowApiDetailsComponent extends React.Component {
+class ShowApiDetailsComponent extends Component {
     static propTypes = {
         apiDetails: PropTypes.object.isRequired,
         fetchAll: PropTypes.func.isRequired,
@@ -28,3 +28,5 @@ export default class ShowApiDetailsComponent extends React.Component {
         );
     }
 }
+
+export default ShowApiDetailsComponent;

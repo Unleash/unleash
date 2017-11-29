@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with details 1`] = `
+<react-mdl-FooterSection
+  logo="Unleash 1.1.0"
+  type="bottom"
+>
+  <react-mdl-FooterLinkList>
+    <a
+      href="https://github.com/Unleash/unleash/"
+      target="_blank"
+    >
+      GitHub
+    </a>
+    <a
+      href="https://www.finn.no"
+      target="_blank"
+    >
+      <small>
+        A product by
+      </small>
+       FINN.no
+    </a>
+  </react-mdl-FooterLinkList>
+</react-mdl-FooterSection>
+`;
+
+exports[`renders correctly with empty api details 1`] = `
+<react-mdl-FooterSection
+  logo="Unleash "
+  type="bottom"
+>
+  <react-mdl-FooterLinkList>
+    <a
+      href="https://github.com/Unleash/unleash/"
+      target="_blank"
+    >
+      GitHub
+    </a>
+    <a
+      href="https://www.finn.no"
+      target="_blank"
+    >
+      <small>
+        A product by
+      </small>
+       FINN.no
+    </a>
+  </react-mdl-FooterLinkList>
+</react-mdl-FooterSection>
+`;

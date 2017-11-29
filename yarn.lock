@@ -3760,9 +3760,9 @@ normalize-path@^2.0.0, normalize-path@^2.0.1:
   dependencies:
     remove-trailing-separator "^1.0.1"
 
-normalize.css@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-5.0.0.tgz#7cec875ce8178a5333c4de80b68ea9c18b9d7c37"
+normalize.css@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-7.0.0.tgz#abfb1dd82470674e0322b53ceb1aaf412938e4bf"
 
 npm-path@^2.0.2:
   version "2.0.3"
@@ -5637,13 +5637,13 @@ unique-temp-dir@^1.0.0:
     os-tmpdir "^1.0.1"
     uid2 "0.0.3"
 
-unleash-frontend@^3.0.0-alpha.3:
-  version "3.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.0.0-alpha.3.tgz#f28b135a2c5e041314793390bcc400a3ea0bdbcd"
+unleash-frontend@^3.0.0-alpha.4:
+  version "3.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.0.0-alpha.4.tgz#d252c84fd6d9bd9972402013a6109f695207894d"
   dependencies:
-    debug "^2.2.0"
+    debug "^3.1.0"
     immutable "^3.8.1"
-    normalize.css "^5.0.0"
+    normalize.css "^7.0.0"
     prop-types "^15.5.10"
     react "^15.6.1"
     react-dnd "^2.1.4"

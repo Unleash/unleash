@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.0-alpha.5
+- Expose vresion number in /api and in user interface. 
+- Housekeeping: Upgrading a lot of dependencies
+
 ## 3.0.0-alpha.3
 - Bump unleash-frontend
 

@@ -20,6 +20,7 @@ import ErrorContainer from './error/error-container';
 
 import UserContainer from './user/user-container';
 import ShowUserContainer from './user/show-user-container';
+import ShowApiDetailsContainer from './api/show-api-details-container';
 import { ScrollContainer } from 'react-router-scroll';
 
 function replace(input, params) {
@@ -193,16 +194,7 @@ export default class App extends Component {
                                         </FooterLinkList>
                                     </FooterDropDownSection>
                                 </FooterSection>
-                                <FooterSection type="bottom" logo="Unleash">
-                                    <FooterLinkList>
-                                        <a href="https://github.com/Unleash/unleash/" target="_blank">
-                                            GitHub
-                                        </a>
-                                        <a href="https://finn.no" target="_blank">
-                                            <small>A product by</small> FINN.no
-                                        </a>
-                                    </FooterLinkList>
-                                </FooterSection>
+                                <ShowApiDetailsContainer />
                             </Footer>
                         </Content>
                     </ScrollContainer>

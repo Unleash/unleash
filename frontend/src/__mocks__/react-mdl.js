@@ -17,4 +17,6 @@ module.exports = {
     Tabs: 'react-mdl-Tabs',
     TableHeader: 'react-mdl-TableHeader',
     Textfield: 'react-mdl-Textfield',
+    FooterSection: 'react-mdl-FooterSection',
+    FooterLinkList: 'react-mdl-FooterLinkList',
 };

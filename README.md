@@ -42,6 +42,10 @@ We have offical SDK's for Java, Node.js and Go. And we will be happy to add impl
 - [unleash-client-go](https://github.com/unleash/unleash-client-go)
 - (your implementation here!)
 
+Unofficial clients:
+- [unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)
+- [unleash-client-python](https://github.com/aes/unleash-client-python) (Python 3)
+
 
 ```java
 if (unleash.isEnabled("AwesomeFeature")) {

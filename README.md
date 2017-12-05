@@ -37,14 +37,14 @@ Read more about activation strategies in [docs/activation-strategies.md](./docs/
 ## Client implementations
 We have offical SDK's for Java, Node.js and Go. And we will be happy to add implementations in other langugages written by you! These libraries makes it very easy to use Unleash in you application.
 
-- [unleash-client-java](https://github.com/unleash/unleash-client-java)
-- [unleash-client-node](https://github.com/unleash/unleash-client-node)
-- [unleash-client-go](https://github.com/unleash/unleash-client-go)
-- (your implementation here!)
+- [unleash/unleash-client-java](https://github.com/unleash/unleash-client-java)
+- [unleash/unleash-client-node](https://github.com/unleash/unleash-client-node)
+- [unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)
 
-Unofficial clients:
-- [unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)
-- [unleash-client-python](https://github.com/aes/unleash-client-python) (Python 3)
+Clients written by awesome enthusiasts: 
+- [stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)
+- [onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)
+- [aes/unleash-client-python](https://github.com/aes/unleash-client-python) (Python 3)
 
 
 ```java

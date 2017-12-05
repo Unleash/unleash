@@ -46,6 +46,9 @@ Clients written by awesome enthusiasts:
 - [onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)
 - [aes/unleash-client-python](https://github.com/aes/unleash-client-python) (Python 3)
 
+### The Client API
+
+The client SDKs provides a simple abstraction making it easy to check feature toggles in your application. The code snippet below shows how you would use `Unleash` in Java.
 
 ```java
 if (unleash.isEnabled("AwesomeFeature")) {

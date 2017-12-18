@@ -23,6 +23,6 @@ Register a metrics payload with a timed bucket.
                 "no": 0
             }
         }
-    },
+    }
 }
 ```

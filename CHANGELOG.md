@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.0-alpha.7
+- Bugfix: Should not allow creation of archived toggle #284
+
 ## 3.0.0-alpha.6
 - Expose vresion number in /api and in user interface. 
 - Housekeeping: Upgrading a lot of dependencies

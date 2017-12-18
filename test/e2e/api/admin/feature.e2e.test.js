@@ -193,3 +193,18 @@ test.serial(
             .then(destroy);
     }
 );
+
+test.serial('should not be possible to create archived toggle', async t => {
+    t.plan(0);
+    const { request, destroy } = await setupApp('feature_api_serial');
+    return request
+        .post('/api/admin/features')
+        .send({
+            name: 'featureArchivedX',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(403)
+        .then(destroy);
+});

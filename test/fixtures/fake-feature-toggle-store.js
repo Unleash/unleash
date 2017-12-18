@@ -12,6 +12,7 @@ module.exports = () => {
             }
         },
         getFeatures: () => Promise.resolve(_features),
+        hasFeatureName: () => Promise.resolve(false),
         addFeature: feature => _features.push(feature),
     };
 };

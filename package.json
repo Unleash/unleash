@@ -84,7 +84,7 @@
     "yargs": "^10.0.3"
   },
   "devDependencies": {
-    "@types/node": "^8.0.4",
+    "@types/node": "^9.3.0",
     "ava": "^0.24.0",
     "coveralls": "^3.0.0",
     "eslint": "^4.1.1",

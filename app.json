@@ -1,0 +1,7 @@
+{
+    "name": "Unleash",
+    "description": "A default setup of Unleash",
+    "repository": "https://github.com/heroku/node-js-sample",
+    "logo": "https://node-js-sample.herokuapp.com/node.png",
+    "keywords": ["node", "feature toggles", "release"]
+  }

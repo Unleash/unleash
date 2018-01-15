@@ -3,5 +3,13 @@
     "description": "A default setup of Unleash",
     "repository": "https://github.com/heroku/node-js-sample",
     "logo": "https://github.com/Unleash/unleash/blob/master/docs/assets/logo.png?raw=true",
-    "keywords": ["node", "feature toggles", "release"]
-  }
+    "keywords": ["node", "feature toggles", "release"],
+    "addons": [
+        {
+            "plan": "heroku-postgresql",
+            "options": {
+                "version": "9.5"
+            }
+        }
+    ]
+}

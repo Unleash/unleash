@@ -5,6 +5,7 @@
 [![Dependency Status](https://david-dm.org/Unleash/unleash.svg)](https://david-dm.org/Unleash/unleash)
 [![devDependency Status](https://david-dm.org/Unleash/unleash/dev-status.svg)](https://david-dm.org/Unleash/unleash?type=dev)
 [![Greenkeeper badge](https://badges.greenkeeper.io/Unleash/unleash.svg)](https://greenkeeper.io/)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 Unleash is a feature toggle system, that gives you a great overview over all feature toggles across 
 all your applications and services. It comes with official client implementations for Java, Node.js and Go.

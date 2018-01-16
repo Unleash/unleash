@@ -20,7 +20,6 @@ unleash.start({
 }).then(unleash => {
     console.log(`Unleash started on http://localhost:${unleash.app.get('port')}`);
 });
-
 ```
 
 Examples on custom authentication hooks:
@@ -42,7 +41,7 @@ UnleashConfig unleashConfig = UnleashConfig.builder()
   .build();
 ```
 
-On the unleash server side you need to implement a preRouterHook hook which verifies that all calls to `/api/client` includes this pre shared key in the defined header. This could look something like this:
+On the unleash server side you need to implement a preRouter hook which verifies that all calls to `/api/client` includes this pre shared key in the defined header. This could look something like this:
 
 ```javascript
 const unleash = require('unleash-server');

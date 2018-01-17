@@ -1,0 +1,113 @@
+{
+	"strategies": [
+        {
+			"name": "default",
+			"description": "Default on or off Strategy.",
+			"parameters": []
+		},
+		{
+			"name": "usersWithEmail",
+			"description": "Active for users defined  in the comma-separated emails-parameter.",
+			"parameters": [{
+				"name": "emails",
+				"type": "string"
+			}]
+		}
+    ],
+    "applications": [
+        {
+            "appName": "demo-app-1",
+            "strategies": ["default"]
+        },
+        {
+            "appName": "demo-app-2",
+            "strategies": ["default",
+                "extra"
+            ],
+            "description": "hello"
+        }
+    ],
+    "clientInstances": [
+        {
+            "appName": "demo-app-1",
+            "instanceId": "test-1",
+            "strategies": ["default"],
+            "started": 1516026938494,
+            "interval": 10
+        },
+        {
+            "appName": "demo-seed-2",
+            "instanceId": "test-2",
+            "strategies": ["default"],
+            "started": 1516026938494,
+            "interval": 10
+        }
+    ],
+    "features": [
+        {
+            "name": "featureX",
+            "description": "the #1 feature",
+            "enabled": true,
+            "strategies": [{
+                "name": "default",
+                "parameters": {}
+            }]
+        },
+        {
+            "name": "featureY",
+            "description": "soon to be the #1 feature",
+            "enabled": false,
+            "strategies": [{
+                "name": "baz",
+                "parameters": {
+                    "foo": "bar"
+                }
+            }]
+        },
+        {
+            "name": "featureZ",
+            "description": "terrible feature",
+            "enabled": true,
+            "strategies": [{
+                "name": "baz",
+                "parameters": {
+                    "foo": "rab"
+                }
+            }]
+        },
+        {
+            "name": "featureArchivedX",
+            "description": "the #1 feature",
+            "enabled": true,
+            "archived": true,
+            "strategies": [{
+                "name": "default",
+                "parameters": {}
+            }]
+        },
+        {
+            "name": "featureArchivedY",
+            "description": "soon to be the #1 feature",
+            "enabled": false,
+            "archived": true,
+            "strategies": [{
+                "name": "baz",
+                "parameters": {
+                    "foo": "bar"
+                }
+            }]
+        },
+        {
+            "name": "featureArchivedZ",
+            "description": "terrible feature",
+            "enabled": true,
+            "archived": true,
+            "strategies": [{
+                "name": "baz",
+                "parameters": {
+                    "foo": "rab"
+                }
+            }]
+        }
+    ]
+}

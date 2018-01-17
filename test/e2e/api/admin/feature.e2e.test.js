@@ -50,22 +50,18 @@ test.serial('creates new feature toggle', async t => {
         .then(destroy);
 });
 
-test.serial('creates new feature toggle with createdBy', async t => {
+test.serial('creates new feature toggle with createdBy unknown', async t => {
     t.plan(1);
     const { request, destroy } = await setupApp('feature_api_serial');
-    await request
-        .post('/api/admin/features')
-        .send({
-            name: 'com.test.Username',
-            enabled: false,
-            strategies: [{ name: 'default' }],
-        })
-        .set('Cookie', ['username=ivaosthu'])
-        .set('Content-Type', 'application/json');
+    await request.post('/api/admin/features').send({
+        name: 'com.test.Username',
+        enabled: false,
+        strategies: [{ name: 'default' }],
+    });
     await request
         .get('/api/admin/events')
         .expect(res => {
-            t.true(res.body.events[0].createdBy === 'ivaosthu');
+            t.true(res.body.events[0].createdBy === 'unknown');
         })
         .then(destroy);
 });

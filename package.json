@@ -56,7 +56,6 @@
     ]
   },
   "dependencies": {
-    "assert": "^1.4.1",
     "async": "^2.1.5",
     "body-parser": "^1.18.2",
     "commander": "^2.9.0",

@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.0-alpha.8
+- [Auth] User-provider ([#261](https://github.com/Unleash/unleash/issues/261))
+- [Auth] Document how to secure Unleash ([#234](https://github.com/Unleash/unleash/issues/234))
+- [Auth] Admin UI should handle 401 ([#232](https://github.com/Unleash/unleash/issues/232))
+- [Auth] Client API authentication ([#231](https://github.com/Unleash/unleash/issues/231))
+- [Auth] Handle 403 (Forbidden) with custom auth.
+- [Auth] Support sign out ([#288](https://github.com/Unleash/unleash/issues/288))
+
 ## 3.0.0-alpha.7
 - Bugfix: Should not allow creation of archived toggle #284
 

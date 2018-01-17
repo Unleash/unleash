@@ -9,10 +9,7 @@ const sharedSecret = '12312Random';
 unleash
     .start({
         databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash',
-<<<<<<< HEAD
         enableLegacyRoutes: false,
-=======
->>>>>>> 0681945... Document how to secure client api #231
         preRouterHook: app => {
             app.use('/api/client', (req, res, next) => {
                 if (req.headers.authorization === sharedSecret) {

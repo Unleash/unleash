@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.0.0-alpha.5]
+- Add support for simple builtin authentication provider
+- Add support for custom authentication provider (aka Oauth2, etc)
+
 ## [3.0.0-alpha.4]
 - Added unleash-version details in footer. 
 - Some house-keeping

@@ -1,4 +1,5 @@
 import api from '../../data/applications-api';
+import { dispatchAndThrow } from '../util';
 
 export const RECEIVE_ALL_APPLICATIONS = 'RECEIVE_ALL_APPLICATIONS';
 export const ERROR_RECEIVE_ALL_APPLICATIONS = 'ERROR_RECEIVE_ALL_APPLICATIONS';
@@ -16,24 +17,19 @@ const recieveApplication = json => ({
     value: json,
 });
 
-const errorReceiveApplications = (statusCode, type = ERROR_RECEIVE_ALL_APPLICATIONS) => ({
-    type,
-    statusCode,
-});
-
 export function fetchAll() {
     return dispatch =>
         api
             .fetchAll()
             .then(json => dispatch(recieveAllApplications(json)))
-            .catch(error => dispatch(errorReceiveApplications(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_ALL_APPLICATIONS));
 }
 
 export function storeApplicationMetaData(appName, key, value) {
     return dispatch =>
         api
             .storeApplicationMetaData(appName, key, value)
-            .catch(error => dispatch(errorReceiveApplications(error, ERROR_UPDATING_APPLICATION_DATA)));
+            .catch(dispatchAndThrow(dispatch, ERROR_UPDATING_APPLICATION_DATA));
 }
 
 export function fetchApplication(appName) {
@@ -41,5 +37,5 @@ export function fetchApplication(appName) {
         api
             .fetchApplication(appName)
             .then(json => dispatch(recieveApplication(json)))
-            .catch(error => dispatch(errorReceiveApplications(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_ALL_APPLICATIONS));
 }

@@ -1,5 +1,6 @@
 import api from '../data/feature-api';
 const debug = require('debug')('unleash:feature-actions');
+import { dispatchAndThrow } from './util';
 
 export const ADD_FEATURE_TOGGLE = 'ADD_FEATURE_TOGGLE';
 export const REMOVE_FEATURE_TOGGLE = 'REMOVE_FEATURE_TOGGLE';
@@ -35,13 +36,6 @@ function receiveFeatureToggles(json) {
         type: RECEIVE_FEATURE_TOGGLES,
         featureToggles: json.features.map(features => features),
         receivedAt: Date.now(),
-    };
-}
-
-function dispatchAndThrow(dispatch, type) {
-    return error => {
-        dispatch({ type, error, receivedAt: Date.now() });
-        throw error;
     };
 }
 

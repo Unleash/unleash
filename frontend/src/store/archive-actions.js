@@ -1,4 +1,5 @@
 import api from '../data/archive-api';
+import { dispatchAndThrow } from './util';
 
 export const REVIVE_TOGGLE = 'REVIVE_TOGGLE';
 export const RECEIVE_ARCHIVE = 'RECEIVE_ARCHIVE';
@@ -14,17 +15,12 @@ const reviveToggle = archiveFeatureToggle => ({
     value: archiveFeatureToggle,
 });
 
-const errorReceiveArchive = statusCode => ({
-    type: ERROR_RECEIVE_ARCHIVE,
-    statusCode,
-});
-
 export function revive(featureToggle) {
     return dispatch =>
         api
             .revive(featureToggle)
             .then(() => dispatch(reviveToggle(featureToggle)))
-            .catch(error => dispatch(errorReceiveArchive(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_ARCHIVE));
 }
 
 export function fetchArchive() {
@@ -32,5 +28,5 @@ export function fetchArchive() {
         api
             .fetchAll()
             .then(json => dispatch(receiveArchive(json)))
-            .catch(error => dispatch(errorReceiveArchive(error)));
+            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_ARCHIVE));
 }

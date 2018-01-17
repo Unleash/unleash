@@ -7,9 +7,29 @@ function extractLegacyMsg(body) {
     return body && body.length > 0 ? body[0].msg : defaultErrorMessage;
 }
 
+class ServiceError extends Error {
+    constructor() {
+        super(defaultErrorMessage);
+        this.name = 'ServiceError';
+    }
+}
+
+export class AuthenticationError extends Error {
+    constructor(statusCode, body) {
+        super('Authentication required');
+        this.name = 'AuthenticationError';
+        this.statusCode = statusCode;
+        this.body = body;
+    }
+}
+
 export function throwIfNotSuccess(response) {
     if (!response.ok) {
-        if (response.status > 399 && response.status < 404) {
+        if (response.status === 401) {
+            return new Promise((resolve, reject) => {
+                response.json().then(body => reject(new AuthenticationError(response.status, body)));
+            });
+        } else if (response.status > 399 && response.status < 404) {
             return new Promise((resolve, reject) => {
                 response.json().then(body => {
                     const errorMsg = body && body.isJoi ? extractJoiMsg(body) : extractLegacyMsg(body);
@@ -19,7 +39,7 @@ export function throwIfNotSuccess(response) {
                 });
             });
         } else {
-            return Promise.reject(new Error(defaultErrorMessage));
+            return Promise.reject(new ServiceError());
         }
     }
     return Promise.resolve(response);

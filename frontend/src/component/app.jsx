@@ -18,7 +18,7 @@ import { Link } from 'react-router';
 import styles from './styles.scss';
 import ErrorContainer from './error/error-container';
 
-import UserContainer from './user/user-container';
+import AuthenticationContainer from './user/authentication-container';
 import ShowUserContainer from './user/show-user-container';
 import ShowApiDetailsContainer from './api/show-api-details-container';
 import { ScrollContainer } from 'react-router-scroll';
@@ -136,7 +136,7 @@ export default class App extends Component {
 
         return (
             <div className={styles.container}>
-                <UserContainer />
+                <AuthenticationContainer />
                 <Layout fixedHeader>
                     <Header title={this.getTitleWithLinks()}>
                         <Navigation>
@@ -184,6 +184,7 @@ export default class App extends Component {
                                             {createListItem('/history', 'Event History')}
                                             {createListItem('/archive', 'Archived Toggles')}
                                             {createListItem('/applications', 'Applications')}
+                                            <a href="/api/admin/user/logout">Sign out</a>
                                         </FooterLinkList>
                                     </FooterDropDownSection>
                                     <FooterDropDownSection title="Clients">

@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 import ShowUserComponent from './show-user-component';
-import { openEdit } from '../../store/user/actions';
+import { fetchUser } from '../../store/user/actions';
 
 const mapDispatchToProps = {
-    openEdit,
+    fetchUser,
 };
 
 const mapStateToProps = state => ({
-    user: state.user.toJS(),
+    profile: state.user.get('profile'),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShowUserComponent);

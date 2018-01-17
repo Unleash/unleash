@@ -33,15 +33,15 @@ class SimpleAuthenticationComponent extends React.Component {
                     This instance of Unleash is not set up with a secure authentication provider. You can read more
                     about{' '}
                     <a href="https://github.com/Unleash/unleash/blob/master/docs/securing-unleash.md" target="_blank">
-                        securing unleash on GitHub
+                        securing Unleash on GitHub
                     </a>
                 </p>
                 <Textfield label="Email" name="email" required type="email" ref="email" />
                 <br />
 
                 <CardActions style={{ textAlign: 'center' }}>
-                    <Button raised accent colored>
-                        Unsecure Login
+                    <Button raised colored>
+                        Sign in
                     </Button>
                 </CardActions>
             </form>

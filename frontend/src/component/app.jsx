@@ -184,6 +184,7 @@ export default class App extends Component {
                                             {createListItem('/history', 'Event History')}
                                             {createListItem('/archive', 'Archived Toggles')}
                                             {createListItem('/applications', 'Applications')}
+                                            <a href="/api/admin/user/logout">Sign out</a>
                                         </FooterLinkList>
                                     </FooterDropDownSection>
                                     <FooterDropDownSection title="Clients">

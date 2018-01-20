@@ -10,13 +10,17 @@ const mapStateToProps = state => {
     const settings = state.settings.toJS().feature || {};
     let features = state.features.toJS();
     if (settings.filter) {
-        const regex = new RegExp(settings.filter, 'i');
-        features = features.filter(
-            feature =>
-                regex.test(feature.name) ||
-                regex.test(feature.description) ||
-                feature.strategies.some(s => s && s.name && regex.test(s.name))
-        );
+        try {
+            const regex = new RegExp(settings.filter, 'i');
+            features = features.filter(
+                feature =>
+                    regex.test(feature.name) ||
+                    regex.test(feature.description) ||
+                    feature.strategies.some(s => s && s.name && regex.test(s.name))
+            );
+        } catch (e) {
+            // Invalid filter regex
+        }
     }
 
     if (!settings.sort) {

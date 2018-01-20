@@ -16,7 +16,10 @@ function basicAuthentication(app) {
             return res
                 .status('401')
                 .set({ 'WWW-Authenticate': 'Basic realm="example"' })
-                .end('access denied');
+                .send({
+                    message: 'You must be authenticated to use Unleash',
+                    path: '/custom/login',
+                });
         }
     });
 

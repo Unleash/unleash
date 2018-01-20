@@ -38,7 +38,7 @@ const strategies = (state = getInitState(), action) => {
         case ERROR_RECEIVE_STRATEGIES:
             return addErrorIfNotAlreadyInList(state, action.error.message);
         case FORBIDDEN:
-            return addErrorIfNotAlreadyInList(state, '403 Forbidden');
+            return addErrorIfNotAlreadyInList(state, action.error.message || '403 Forbidden');
         case MUTE_ERROR:
             return state.update('list', list => list.remove(list.indexOf(action.error)));
         default:

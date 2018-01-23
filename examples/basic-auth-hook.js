@@ -16,7 +16,7 @@ function basicAuthentication(app) {
             return res
                 .status('401')
                 .set({ 'WWW-Authenticate': 'Basic realm="example"' })
-                .send('access denied');
+                .end('access denied');
         }
     });
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.0-alpha.9
+- Bugfix: more informative name validation errors ([#292](https://github.com/Unleash/unleash/pull/292))
+
 ## 3.0.0-alpha.8
 - [Auth] User-provider ([#261](https://github.com/Unleash/unleash/issues/261))
 - [Auth] Document how to secure Unleash ([#234](https://github.com/Unleash/unleash/issues/234))

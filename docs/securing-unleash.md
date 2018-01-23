@@ -27,7 +27,7 @@ protected routes. The response body must contain a `message` and a `path` used t
 
 ```json
 {
-    "message": "You must be logged in to use Unlseash",
+    "message": "You must be logged in to use Unleash",
     "path": "/custom/login"
 }
 ```

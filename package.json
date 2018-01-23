@@ -85,7 +85,7 @@
     "serve-favicon": "^2.3.0",
     "unleash-frontend": "^3.0.0-alpha.6",
     "yallist": "^3.0.2",
-    "yargs": "^10.0.3"
+    "yargs": "^11.0.0"
   },
   "devDependencies": {
     "@types/node": "^9.3.0",

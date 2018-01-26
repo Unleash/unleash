@@ -79,7 +79,7 @@
     "react-test-renderer": "^15.6.1",
     "redux-devtools": "^3.3.1",
     "sass-loader": "^6.0.6",
-    "style-loader": "^0.19.0",
+    "style-loader": "^0.20.0",
     "toolbox-loader": "0.0.3",
     "webpack": "^3.1.0",
     "webpack-dev-server": "^2.6.1"

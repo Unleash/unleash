@@ -1380,13 +1380,13 @@ db-migrate-base@^1.5.2:
   dependencies:
     bluebird "^3.1.1"
 
-db-migrate-pg@^0.2.4:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/db-migrate-pg/-/db-migrate-pg-0.2.5.tgz#94d98243ee0daeb37aafce4d8b48341de41105c1"
+db-migrate-pg@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/db-migrate-pg/-/db-migrate-pg-0.3.0.tgz#7e5fd18e6f1f4566db7b4064161b0ad79697f6c6"
   dependencies:
     bluebird "^3.1.1"
     db-migrate-base "^1.5.2"
-    pg "^4.5.7"
+    pg "^7.0.0"
     semver "^5.0.3"
 
 db-migrate-shared@^1.1.2:
@@ -2226,10 +2226,6 @@ generate-object-property@^1.1.0:
   resolved "https://registry.yarnpkg.com/generate-object-property/-/generate-object-property-1.2.0.tgz#9c0e1c40308ce804f4783618b937fa88f99d50d0"
   dependencies:
     is-property "^1.0.0"
-
-generic-pool@2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.4.2.tgz#886bc5bf0beb7db96e81bcbba078818de5a62683"
 
 generic-pool@^3.1.7:
   version "3.2.0"
@@ -4137,10 +4133,6 @@ package-json@^4.0.0:
     registry-url "^3.0.3"
     semver "^5.1.0"
 
-packet-reader@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/packet-reader/-/packet-reader-0.2.0.tgz#819df4d010b82d5ea5671f8a1a3acf039bcd7700"
-
 packet-reader@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/packet-reader/-/packet-reader-0.3.1.tgz#cd62e60af8d7fea8a705ec4ff990871c46871f27"
@@ -4298,7 +4290,7 @@ pg-pool@~2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-2.0.3.tgz#c022032c8949f312a4f91fb6409ce04076be3257"
 
-pg-types@1.*, pg-types@~1.12.1:
+pg-types@~1.12.1:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/pg-types/-/pg-types-1.12.1.tgz#d64087e3903b58ffaad279e7595c52208a14c3d2"
   dependencies:
@@ -4307,18 +4299,18 @@ pg-types@1.*, pg-types@~1.12.1:
     postgres-date "~1.0.0"
     postgres-interval "^1.1.0"
 
-pg@^4.5.7:
-  version "4.5.7"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-4.5.7.tgz#45ae16b23706a6345a03279decc6af795c16d29b"
+pg@^7.0.0:
+  version "7.4.1"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-7.4.1.tgz#f3411c8ddf9f692322fe05e7017a1888e47f78f1"
   dependencies:
     buffer-writer "1.0.1"
-    generic-pool "2.4.2"
     js-string-escape "1.0.1"
-    packet-reader "0.2.0"
+    packet-reader "0.3.1"
     pg-connection-string "0.1.3"
-    pg-types "1.*"
-    pgpass "0.0.3"
-    semver "^4.1.0"
+    pg-pool "~2.0.3"
+    pg-types "~1.12.1"
+    pgpass "1.x"
+    semver "4.3.2"
 
 pg@^7.4.0:
   version "7.4.0"
@@ -4332,12 +4324,6 @@ pg@^7.4.0:
     pg-types "~1.12.1"
     pgpass "1.x"
     semver "4.3.2"
-
-pgpass@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/pgpass/-/pgpass-0.0.3.tgz#12e67e343b3189c2f31206ebc9cc0befffcf9140"
-  dependencies:
-    split "~0.3"
 
 pgpass@1.x:
   version "1.0.2"
@@ -5121,10 +5107,6 @@ semver@4.3.2:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.2.tgz#c7a07158a80bedd052355b770d82d6640f803be7"
 
-semver@^4.1.0:
-  version "4.3.6"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.6.tgz#300bc6e0e86374f7ba61068b5b1ecd57fc6532da"
-
 semver@~5.0.1:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.0.3.tgz#77466de589cd5d3c95f138aa78bc569a3cb5d27a"
@@ -5333,12 +5315,6 @@ spdx-license-ids@^1.0.2:
 split@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/split/-/split-1.0.1.tgz#605bd9be303aa59fb35f9229fbea0ddec9ea07d9"
-  dependencies:
-    through "2"
-
-split@~0.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/split/-/split-0.3.3.tgz#cd0eea5e63a211dfff7eb0f091c4133e2d0dd28f"
   dependencies:
     through "2"
 

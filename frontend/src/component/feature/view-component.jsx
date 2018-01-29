@@ -25,8 +25,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
         features: PropTypes.array.isRequired,
         toggleFeature: PropTypes.func.isRequired,
         removeFeatureToggle: PropTypes.func.isRequired,
-        fetchFeatureToggles: PropTypes.array.isRequired,
-        featureToggle: PropTypes.object.isRequired,
+        fetchFeatureToggles: PropTypes.func.isRequired,
+        featureToggle: PropTypes.object,
     };
 
     componentWillMount() {

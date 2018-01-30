@@ -24,6 +24,14 @@ This endpoint is the one all admin ui should use to fetch all available feature 
           "name": "default",
           "parameters": {}
         }
+      ],
+      "variants": [
+        {
+          "name": "variant1",
+        },
+        {
+          "name": "variant2",
+        }
       ]
     },
     {
@@ -43,7 +51,8 @@ This endpoint is the one all admin ui should use to fetch all available feature 
             "percentage": "10"
           }
         }
-      ]
+      ],
+      "variants": []
     }
   ]
 }
@@ -63,7 +72,8 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
       "name": "default",
       "parameters": {}
     }
-  ]
+  ],
+  "variants": []
 }
 ```
 
@@ -107,7 +117,8 @@ Returns 200-respose if the feature toggle was created successfully.
       "name": "default",
       "parameters": {}
     }
-  ]
+  ],
+  "variants": []
 }
 ```
 
@@ -145,6 +156,7 @@ Used to fetch list of archived feature toggles
           "parameters": {}
         }
       ],
+      "variants": [],
       "strategy": "default",
       "parameters": {}
     }

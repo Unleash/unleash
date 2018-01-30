@@ -50,6 +50,27 @@ test.serial('creates new feature toggle', async t => {
         .then(destroy);
 });
 
+test.serial('creates new feature toggle with variations', async t => {
+    t.plan(1);
+    const { request, destroy } = await setupApp('feature_api_serial');
+    await request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.feature',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+            variations: [{ name: 'variation1' }, { name: 'variation2' }],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await request
+        .get('/api/admin/features/com.test.feature')
+        .expect(res => {
+            t.true(res.body.variations.length === 2);
+        })
+        .then(destroy);
+});
+
 test.serial('creates new feature toggle with createdBy unknown', async t => {
     t.plan(1);
     const { request, destroy } = await setupApp('feature_api_serial');

@@ -37,13 +37,6 @@ export default class MetricComponent extends React.Component {
     componentWillMount() {
         this.props.fetchSeenApps();
         this.props.fetchFeatureMetrics();
-        this.timer = setInterval(() => {
-            this.props.fetchFeatureMetrics();
-        }, 5000);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.timer);
     }
 
     render() {

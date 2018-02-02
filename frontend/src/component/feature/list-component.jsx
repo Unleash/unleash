@@ -12,7 +12,6 @@ export default class FeatureListComponent extends React.PureComponent {
         features: PropTypes.array.isRequired,
         featureMetrics: PropTypes.object.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
-        fetchFeatureMetrics: PropTypes.func.isRequired,
         updateSetting: PropTypes.func.isRequired,
         settings: PropTypes.object,
     };
@@ -23,15 +22,6 @@ export default class FeatureListComponent extends React.PureComponent {
 
     componentDidMount() {
         this.props.fetchFeatureToggles();
-        this.props.fetchFeatureMetrics();
-        this.timer = setInterval(() => {
-            // this.props.fetchFeatureToggles();
-            this.props.fetchFeatureMetrics();
-        }, 5000);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.timer);
     }
 
     toggleMetrics() {

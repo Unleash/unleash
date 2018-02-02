@@ -11,6 +11,7 @@ import thunkMiddleware from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
 
 import store from './store';
+import MetricsPoller from './metrics-poller';
 import App from './component/app';
 
 import Features from './page/features';
@@ -34,6 +35,8 @@ if (process.env.NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION_C
 }
 
 const unleashStore = createStore(store, composeEnhancers(applyMiddleware(thunkMiddleware)));
+const metricsPoller = new MetricsPoller(unleashStore);
+metricsPoller.start();
 
 // "pageTitle" and "link" attributes are for internal usage only
 

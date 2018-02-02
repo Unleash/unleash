@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [Unreleased] 
+- Move metrics poller to seperate class
+
 ## [3.0.0-alpha.6]
 - Bugfix: actions should always throw errors
 - Bugfix: filter regex should never throw. 

@@ -9,7 +9,7 @@ class MetricsPoller {
     start() {
         this.store.subscribe(() => {
             const features = this.store.getState().features;
-            if (!this.timer && features.length > 0) {
+            if (!this.timer && features.size > 0) {
                 this.timer = setInterval(this.fetchMetrics.bind(this), 5000);
                 this.fetchMetrics();
             }

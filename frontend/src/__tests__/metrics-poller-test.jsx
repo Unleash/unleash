@@ -1,4 +1,5 @@
 import configureStore from 'redux-mock-store';
+import { List } from 'immutable';
 import thunkMiddleware from 'redux-thunk';
 import fetchMock from 'fetch-mock';
 import MetricsPoller from '../metrics-poller';
@@ -12,7 +13,7 @@ describe('metrics-poller.js', () => {
     });
 
     test('Should not start poller before toggles are recieved', () => {
-        const initialState = { features: [{ name: 'test1' }] };
+        const initialState = { features: List.of([{ name: 'test1' }]) };
         const store = mockStore(initialState);
         fetchMock.getOnce('api/admin/metrics/feature-toggles', {
             body: { lastHour: {}, lastMinute: {} },
@@ -26,7 +27,7 @@ describe('metrics-poller.js', () => {
     });
 
     test('Should not start poller when state does not contain toggles', () => {
-        const initialState = { features: [] };
+        const initialState = { features: new List([]) };
         const store = mockStore(initialState);
 
         const metricsPoller = new MetricsPoller(store);
@@ -46,7 +47,7 @@ describe('metrics-poller.js', () => {
             headers: { 'content-type': 'application/json' },
         });
 
-        const initialState = { features: [{ name: 'test1' }] };
+        const initialState = { features: List.of([{ name: 'test1' }]) };
         const store = mockStore(initialState);
 
         const metricsPoller = new MetricsPoller(store);

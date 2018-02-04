@@ -21,6 +21,8 @@ const prepare = (methods, dispatch) => {
     methods.onSubmit = input => e => {
         e.preventDefault();
 
+        input.createdAt = new Date();
+
         if (Array.isArray(input.strategies)) {
             input.strategies.forEach(s => {
                 delete s.id;

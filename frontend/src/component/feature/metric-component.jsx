@@ -17,6 +17,9 @@ const StrategyChipItem = ({ strategy }) => (
         </Link>
     </Chip>
 );
+StrategyChipItem.propTypes = {
+    strategy: PropTypes.object.isRequired,
+};
 
 // TODO what about "missing" strategies here?
 const StrategiesList = ({ strategies }) => (
@@ -25,6 +28,9 @@ const StrategiesList = ({ strategies }) => (
         {strategies.map((strategy, i) => <StrategyChipItem key={i} strategy={strategy} />)}
     </div>
 );
+StrategiesList.propTypes = {
+    strategies: PropTypes.array.isRequired,
+};
 
 export default class MetricComponent extends React.Component {
     static propTypes = {

@@ -66,6 +66,11 @@ const Parameter = ({ set, input = {}, index }) => (
         />
     </div>
 );
+Parameter.propTypes = {
+    input: PropTypes.object,
+    set: PropTypes.func,
+    index: PropTypes.number,
+};
 
 const EditHeader = () => (
     <div>
@@ -89,6 +94,12 @@ const Parameters = ({ input = [], count = 0, updateInList }) => (
         ))}
     </div>
 );
+
+Parameters.propTypes = {
+    input: PropTypes.array,
+    updateInList: PropTypes.func.isRequired,
+    count: PropTypes.number,
+};
 
 class AddStrategy extends Component {
     static propTypes = {

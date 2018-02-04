@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Slider } from 'react-mdl';
 
 const labelStyle = {
@@ -8,7 +9,7 @@ const labelStyle = {
     fontSize: '12px',
 };
 
-export default ({ name, value, onChange }) => (
+const InputPercentage = ({ name, value, onChange }) => (
     <div style={{ marginBottom: '20px' }}>
         <div style={labelStyle}>
             {name}: {value}%
@@ -16,3 +17,11 @@ export default ({ name, value, onChange }) => (
         <Slider min={0} max={100} defaultValue={value} value={value} onChange={onChange} label={name} />
     </div>
 );
+
+InputPercentage.propTypes = {
+    name: PropTypes.string,
+    value: PropTypes.number,
+    onChange: PropTypes.func.isRequired,
+};
+
+export default InputPercentage;

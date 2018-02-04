@@ -1,5 +1,6 @@
 /* eslint react/no-multi-comp:off */
 import React, { Component, PureComponent } from 'react';
+import PropTypes from 'prop-types';
 
 import { Link } from 'react-router';
 import {
@@ -23,6 +24,13 @@ import { IconLink, shorten, styles as commonStyles } from '../common';
 import { formatFullDateTime } from '../common/util';
 
 class StatefulTextfield extends Component {
+    static propTypes = {
+        value: PropTypes.string,
+        label: PropTypes.string,
+        rows: PropTypes.number,
+        onBlur: PropTypes.func.isRequired,
+    };
+
     constructor(props) {
         super(props);
         this.state = { value: props.value };
@@ -47,6 +55,13 @@ class StatefulTextfield extends Component {
 }
 
 class ClientApplications extends PureComponent {
+    static propTypes = {
+        fetchApplication: PropTypes.func.isRequired,
+        appName: PropTypes.string,
+        application: PropTypes.object,
+        storeApplicationMetaData: PropTypes.func.isRequired,
+    };
+
     constructor(props) {
         super(props);
         this.state = { activeTab: 0 };

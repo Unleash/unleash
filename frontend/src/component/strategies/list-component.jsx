@@ -6,6 +6,12 @@ import { List, ListItem, ListItemContent, IconButton, Grid, Cell } from 'react-m
 import { HeaderTitle } from '../common';
 
 class StrategiesListComponent extends Component {
+    static propTypes = {
+        strategies: PropTypes.array.isRequired,
+        fetchStrategies: PropTypes.func.isRequired,
+        removeStrategy: PropTypes.func.isRequired,
+    };
+
     static contextTypes = {
         router: PropTypes.object,
     };

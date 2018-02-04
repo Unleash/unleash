@@ -5,6 +5,7 @@ import styles from './user.scss';
 export default class ShowUserComponent extends React.Component {
     static propTypes = {
         profile: PropTypes.object,
+        fetchUser: PropTypes.func.isRequired,
     };
 
     componentDidMount() {

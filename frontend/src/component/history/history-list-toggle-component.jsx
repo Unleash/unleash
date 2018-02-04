@@ -5,6 +5,8 @@ import HistoryList from './history-list-container';
 class HistoryListToggle extends Component {
     static propTypes = {
         toggleName: PropTypes.string.isRequired,
+        history: PropTypes.array,
+        fetchHistoryForToggle: PropTypes.func.isRequired,
     };
 
     componentDidMount() {

@@ -104,11 +104,14 @@ AddFeatureToggleComponent.propTypes = {
     setValue: PropTypes.func.isRequired,
     addStrategy: PropTypes.func.isRequired,
     removeStrategy: PropTypes.func.isRequired,
+    moveStrategy: PropTypes.func.isRequired,
     updateStrategy: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     validateName: PropTypes.func.isRequired,
     editmode: PropTypes.bool,
+    initCallRequired: PropTypes.bool,
+    init: PropTypes.func,
 };
 
 export default AddFeatureToggleComponent;

@@ -10,6 +10,7 @@ The latest version of this document is always available in
 ## [Unreleased] 
 - Move metrics poller to seperate class
 - Bugfix: CreatedAt set when creating new toggle
+- chore(lint): Added propTypes to all components
 
 ## [3.0.0-alpha.6]
 - Bugfix: actions should always throw errors

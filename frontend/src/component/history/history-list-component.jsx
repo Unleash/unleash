@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import HistoryItemDiff from './history-item-diff';
 import HistoryItemJson from './history-item-json';
 import { Table, TableHeader } from 'react-mdl';
@@ -8,6 +9,13 @@ import { formatFullDateTime } from '../common/util';
 import styles from './history.scss';
 
 class HistoryList extends Component {
+    static propTypes = {
+        title: PropTypes.string,
+        history: PropTypes.array,
+        settings: PropTypes.object,
+        updateSetting: PropTypes.func.isRequired,
+    };
+
     toggleShowDiff() {
         this.props.updateSetting('showData', !this.props.settings.showData);
     }

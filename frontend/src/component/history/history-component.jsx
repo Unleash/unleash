@@ -1,9 +1,15 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { Card } from 'react-mdl';
 import HistoryList from './history-list-container';
 import { styles as commonStyles } from '../common';
 
 class History extends PureComponent {
+    static propTypes = {
+        fetchHistory: PropTypes.func.isRequired,
+        history: PropTypes.array.isRequired,
+    };
+
     componentDidMount() {
         this.props.fetchHistory();
     }

@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { DataTable, TableHeader, IconButton, Icon, Card } from 'react-mdl';
 import { styles as commonStyles } from '../common';
 
 class ArchiveList extends Component {
+    static propTypes = {
+        archive: PropTypes.array,
+        fetchArchive: PropTypes.func,
+        revive: PropTypes.func,
+    };
+
     componentDidMount() {
         this.props.fetchArchive();
     }

@@ -6,7 +6,9 @@ import renderer from 'react-test-renderer';
 jest.mock('react-mdl');
 
 test('renders correctly if no application', () => {
-    const tree = renderer.create(<ClientApplications fetchApplication={jest.fn()} />).toJSON();
+    const tree = renderer
+        .create(<ClientApplications fetchApplication={jest.fn()} storeApplicationMetaData={jest.fn()} />)
+        .toJSON();
 
     expect(tree).toMatchSnapshot();
 });

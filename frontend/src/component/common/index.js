@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { List, ListItem, ListItemContent, Button, Icon, Switch, MenuItem } from 'react-mdl';
 import styles from './common.scss';
@@ -25,6 +26,9 @@ export const AppsLinkList = ({ apps }) => (
             ))}
     </List>
 );
+AppsLinkList.propTypes = {
+    apps: PropTypes.array.isRequired,
+};
 
 export const HeaderTitle = ({ title, actions, subtitle }) => (
     <div
@@ -43,6 +47,11 @@ export const HeaderTitle = ({ title, actions, subtitle }) => (
         {actions && <div style={{ flex: '1', textAlign: 'right' }}>{actions}</div>}
     </div>
 );
+HeaderTitle.propTypes = {
+    title: PropTypes.string,
+    subtitle: PropTypes.string,
+    actions: PropTypes.any,
+};
 
 export const DataTableHeader = ({ title, actions }) => (
     <div className={styles.dataTableHeader}>
@@ -52,6 +61,10 @@ export const DataTableHeader = ({ title, actions }) => (
         {actions && <div className={styles.actions}>{actions}</div>}
     </div>
 );
+DataTableHeader.propTypes = {
+    title: PropTypes.string,
+    actions: PropTypes.any,
+};
 
 export const FormButtons = ({ submitText = 'Create', onCancel }) => (
     <div>
@@ -65,6 +78,10 @@ export const FormButtons = ({ submitText = 'Create', onCancel }) => (
         </Button>
     </div>
 );
+FormButtons.propTypes = {
+    submitText: PropTypes.string,
+    onCancel: PropTypes.func.isRequired,
+};
 
 export const SwitchWithLabel = ({ onChange, checked, children, ...switchProps }) => (
     <span className={styles.switchWithLabel}>
@@ -74,6 +91,10 @@ export const SwitchWithLabel = ({ onChange, checked, children, ...switchProps })
         </span>
     </span>
 );
+SwitchWithLabel.propTypes = {
+    checked: PropTypes.bool,
+    onChange: PropTypes.func,
+};
 
 export const TogglesLinkList = ({ toggles }) => (
     <List style={{ textAlign: 'left' }} className={styles.truncate}>
@@ -89,6 +110,9 @@ export const TogglesLinkList = ({ toggles }) => (
             ))}
     </List>
 );
+TogglesLinkList.propTypes = {
+    toggles: PropTypes.array,
+};
 
 export function getIcon(type) {
     switch (type) {
@@ -110,6 +134,10 @@ export const IconLink = ({ url, icon }) => (
         <Icon name={icon} />
     </a>
 );
+IconLink.propTypes = {
+    url: PropTypes.string,
+    icon: PropTypes.string,
+};
 
 export const DropdownButton = ({ label, id }) => (
     <Button id={id} className={styles.dropdownButton}>
@@ -117,6 +145,10 @@ export const DropdownButton = ({ label, id }) => (
         <Icon name="arrow_drop_down" className="mdl-color-text--grey-600" />
     </Button>
 );
+DropdownButton.propTypes = {
+    label: PropTypes.string,
+    id: PropTypes.string,
+};
 
 export const MenuItemWithIcon = ({ icon, label, disabled, ...menuItemProps }) => (
     <MenuItem disabled={disabled} style={{ display: 'flex', alignItems: 'center' }} {...menuItemProps}>
@@ -124,6 +156,11 @@ export const MenuItemWithIcon = ({ icon, label, disabled, ...menuItemProps }) =>
         {label}
     </MenuItem>
 );
+MenuItemWithIcon.propTypes = {
+    icon: PropTypes.string,
+    label: PropTypes.string,
+    disabled: PropTypes.bool,
+};
 
 const badNumbers = [NaN, Infinity, -Infinity];
 export function calc(value, total, decimal) {

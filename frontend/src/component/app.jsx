@@ -122,11 +122,14 @@ export default class App extends Component {
                     ? 'mdl-color-text--black'
                     : 'mdl-color-text--grey-600';
             return (
-                <Link to={path} className={isDrawerNavigation && [styles.navigationLink, linkColor].join(' ')}>
+                <Link
+                    to={path}
+                    className={isDrawerNavigation ? [styles.navigationLink, linkColor].join(' ') : undefined}
+                >
                     {icon && (
                         <Icon
                             name={icon}
-                            className={isDrawerNavigation && [styles.navigationIcon, iconColor].join(' ')}
+                            className={isDrawerNavigation ? [styles.navigationIcon, iconColor].join(' ') : undefined}
                         />
                     )}
                     {caption}

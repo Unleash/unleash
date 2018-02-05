@@ -22,12 +22,12 @@ A strategy will have a `name` and `parameters` map.
           "parameters": {}
         }
       ],
-      "variations": [
+      "variants": [
         {
-          "name": "variation1",
+          "name": "variant1",
         },
         {
-          "name": "variation2",
+          "name": "variant2",
         }
       ]
     },
@@ -49,7 +49,7 @@ A strategy will have a `name` and `parameters` map.
           }
         }
       ],
-      "variations": []
+      "variants": []
     }
   ]
 }
@@ -71,7 +71,7 @@ debug the API and should not be used by the client implementations.
       "parameters": {}
     }
   ],
-  "variations": []
+  "variants": []
 }
 ```
 
@@ -116,7 +116,7 @@ Returns 200-respose if the feature toggle was created successfully.
       "parameters": {}
     }
   ],
-  "variations": []
+  "variants": []
 }
 ```
 
@@ -156,7 +156,7 @@ Used to fetch list of archived feature toggles
           "parameters": {}
         }
       ],
-      "variations": [],
+      "variants": [],
       "strategy": "default",
       "parameters": {}
     }

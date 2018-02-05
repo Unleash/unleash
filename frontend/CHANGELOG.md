@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
-## [Unreleased] 
+## [3.0.0-alpha.7] 
 - Move metrics poller to seperate class
 - Bugfix: CreatedAt set when creating new toggle
 - chore(lint): Added propTypes to all components

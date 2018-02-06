@@ -5,6 +5,7 @@ const dateTimeOptions = {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
+    timeZone: 'UTC',
 };
 
 export const formatFullDateTime = v => new Date(v).toLocaleString('nb-NO', dateTimeOptions);

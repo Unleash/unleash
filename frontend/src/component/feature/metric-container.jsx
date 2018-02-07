@@ -23,6 +23,7 @@ function getMetricsForToggle(state, toggleName) {
 export default connect(
     (state, props) => ({
         metrics: getMetricsForToggle(state, props.featureToggle.name),
+        location: state.settings.toJS().location || {},
     }),
     {
         fetchFeatureMetrics,

@@ -4,7 +4,7 @@ import { Grid, Cell, Icon, Chip, ChipContact } from 'react-mdl';
 import Progress from './progress';
 import { Link } from 'react-router';
 import { AppsLinkList, calc } from '../common';
-import { formatFullDateTime } from '../common/util';
+import { formatFullDateTimeWithLocale } from '../common/util';
 import styles from './metrics.scss';
 
 const StrategyChipItem = ({ strategy }) => (
@@ -38,13 +38,16 @@ export default class MetricComponent extends React.Component {
         featureToggle: PropTypes.object.isRequired,
         fetchSeenApps: PropTypes.func.isRequired,
         fetchFeatureMetrics: PropTypes.func.isRequired,
+        location: PropTypes.object,
     };
 
     componentWillMount() {
         this.props.fetchSeenApps();
         this.props.fetchFeatureMetrics();
     }
-
+    formatFulldateTime(v) {
+        return formatFullDateTimeWithLocale(v, this.props.location.locale);
+    }
     render() {
         const { metrics = {}, featureToggle } = this.props;
         const {
@@ -107,7 +110,7 @@ export default class MetricComponent extends React.Component {
                             </div>
                         )}
                         <AppsLinkList apps={seenApps} />
-                        <span>Created {formatFullDateTime(featureToggle.createdAt)}</span>
+                        <span>Created {this.formatFulldateTime(featureToggle.createdAt)}</span>
                     </Cell>
                 </Grid>
                 <hr />

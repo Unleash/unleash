@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.0-alpha.10
+- chore(package.json): Bump unleash-frontend to 3.0.0-alpha.7
+- fix(store): DB should not override createdAt if set.
+
 ## 3.0.0-alpha.9
 - Bugfix: more informative name validation errors ([#292](https://github.com/Unleash/unleash/pull/292))
 

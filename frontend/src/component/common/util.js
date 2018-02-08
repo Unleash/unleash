@@ -26,5 +26,3 @@ export const formatFullDateTimeWithLocale = (v, locale) => {
     dateTimeOptions.timeZone = found ? found.timezone : 'UTC';
     return new Date(v).toLocaleString(locale, dateTimeOptions);
 };
-
-export const formatFullDateTime = v => formatFullDateTimeWithLocale(v, 'nb-NO');

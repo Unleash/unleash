@@ -45,7 +45,7 @@ export default class MetricComponent extends React.Component {
         this.props.fetchSeenApps();
         this.props.fetchFeatureMetrics();
     }
-    formatFulldateTime(v) {
+    formatFullDateTime(v) {
         return formatFullDateTimeWithLocale(v, this.props.location.locale);
     }
     render() {
@@ -110,7 +110,7 @@ export default class MetricComponent extends React.Component {
                             </div>
                         )}
                         <AppsLinkList apps={seenApps} />
-                        <span>Created {this.formatFulldateTime(featureToggle.createdAt)}</span>
+                        <span>Created {this.formatFullDateTime(featureToggle.createdAt)}</span>
                     </Cell>
                 </Grid>
                 <hr />

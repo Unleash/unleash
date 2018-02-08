@@ -4,11 +4,13 @@ import { fetchApplication, storeApplicationMetaData } from '../../store/applicat
 
 const mapStateToProps = (state, props) => {
     let application = state.applications.getIn(['apps', props.appName]);
+    const location = state.settings.toJS().location || {};
     if (application) {
         application = application.toJS();
     }
     return {
         application,
+        location,
     };
 };
 

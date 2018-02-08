@@ -145,7 +145,8 @@ class ClientApplications extends PureComponent {
                                         icon="timeline"
                                         subtitle={
                                             <span>
-                                                {clientIp} last seen at <small>{this.formatFullDateTime(lastSeen)}</small>
+                                                {clientIp} last seen at{' '}
+                                                <small>{this.formatFullDateTime(lastSeen)}</small>
                                             </span>
                                         }
                                     >

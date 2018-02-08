@@ -66,8 +66,11 @@ ReactDOM.render(
                     <Route pageTitle="Event history" path="/history" component={HistoryPage} />
                     <Route pageTitle=":toggleName" path="/history/:toggleName" component={HistoryTogglePage} />
                 </Route>
+                <Route pageTitle="Archived Toggles" link="/archive">
+                    <Route pageTitle="Archived Toggles" path="/archive" component={Archive} />
+                    <Route pageTitle=":name" path="/archive/:name" component={Archive} />
+                </Route>
 
-                <Route pageTitle="Archived Toggles" path="/archive" component={Archive} />
                 <Route pageTitle="Applications" link="/applications">
                     <Route pageTitle="Applications" path="/applications" component={Applications} />
                     <Route pageTitle=":name" path="/applications/:name" component={ApplicationView} />

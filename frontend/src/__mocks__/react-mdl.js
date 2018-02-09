@@ -11,6 +11,7 @@ module.exports = {
     List: 'react-mdl-List',
     ListItem: 'react-mdl-ListItem',
     ListItemContent: 'react-mdl-ListItemContent',
+    ListItemAction: 'react-mdl-ListItemAction',
     ProgressBar: 'react-mdl-ProgressBar',
     Switch: 'react-mdl-Switch',
     Tab: 'react-mdl-Tab',

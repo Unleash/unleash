@@ -5,81 +5,94 @@ exports[`renders correctly with archived toggles 1`] = `
   className="fullwidth"
   shadow={0}
 >
-  <div
-    className="horisontalScroll"
-  >
-    <react-mdl-DataTable
-      className="fullwidth"
-      rows={
-        Array [
-          Object {
-            "createdAt": "2016-10-25T15:38:28.573Z",
-            "description": "Disables the confirm-functionality from API",
-            "enabled": false,
-            "name": "adin-pay-confirm-disabled",
-            "reviveName": "adin-pay-confirm-disabled",
-            "strategies": Array [
-              Object {
-                "name": "default",
-                "parameters": Object {},
-              },
-            ],
-          },
-          Object {
-            "createdAt": "2016-08-03T12:41:35.631Z",
-            "description": "Enables use of schibsted payment from order-payment-management",
-            "enabled": true,
-            "name": "adin-pay-platform-sch-payment",
-            "reviveName": "adin-pay-platform-sch-payment",
-            "strategies": Array [
-              Object {
-                "name": "default",
-                "parameters": Object {},
-              },
-            ],
-          },
-        ]
-      }
+  <div>
+    <div
       style={
         Object {
-          "border": 0,
+          "position": "relative",
         }
       }
     >
-      <react-mdl-TableHeader
-        cellFormatter={[Function]}
-        name="reviveName"
-        style={
-          Object {
-            "width": "25px",
-          }
-        }
-      >
-        Revive
-      </react-mdl-TableHeader>
-      <react-mdl-TableHeader
-        cellFormatter={[Function]}
-        name="enabled"
-        style={
-          Object {
-            "width": "25px",
-          }
-        }
-      >
-        Enabled
-      </react-mdl-TableHeader>
-      <react-mdl-TableHeader
-        name="name"
-      >
-        Toggle name
-      </react-mdl-TableHeader>
-      <react-mdl-TableHeader
-        name="createdAt"
-        numeric={true}
-      >
-        Created
-      </react-mdl-TableHeader>
-    </react-mdl-DataTable>
+      <react-mdl-List>
+        <react-mdl-ListItem
+          className="archiveList"
+        >
+          <span
+            className="listItemToggle"
+          >
+            Toggle name
+          </span>
+          <span
+            className="listItemRevive"
+          >
+            Revive
+          </span>
+        </react-mdl-ListItem>
+        <hr />
+        <react-mdl-List>
+          <react-mdl-ListItem
+            twoLine={true}
+          >
+            <react-mdl-ListItemAction>
+              <react-mdl-Icon
+                name="keyboard_arrow_right"
+              />
+            </react-mdl-ListItemAction>
+            <react-mdl-ListItemContent>
+              <a
+                className="listLink truncate"
+                onClick={[Function]}
+                style={Object {}}
+              >
+                adin-pay-confirm-disabled
+                <div
+                  className="toggleDetails"
+                >
+                  Disables the confirm-functionality from API
+                </div>
+              </a>
+            </react-mdl-ListItemContent>
+            <react-mdl-ListItemAction
+              onClick={[Function]}
+            >
+              <react-mdl-Icon
+                name="undo"
+              />
+            </react-mdl-ListItemAction>
+          </react-mdl-ListItem>
+          <react-mdl-ListItem
+            twoLine={true}
+          >
+            <react-mdl-ListItemAction>
+              <react-mdl-Icon
+                name="keyboard_arrow_right"
+              />
+            </react-mdl-ListItemAction>
+            <react-mdl-ListItemContent>
+              <a
+                className="listLink truncate"
+                onClick={[Function]}
+                style={Object {}}
+              >
+                adin-pay-platform-sch-payment
+                <div
+                  className="toggleDetails"
+                >
+                  Enables use of schibsted payment from order-payment-management
+                </div>
+              </a>
+            </react-mdl-ListItemContent>
+            <react-mdl-ListItemAction
+              onClick={[Function]}
+            >
+              <react-mdl-Icon
+                name="undo"
+              />
+            </react-mdl-ListItemAction>
+          </react-mdl-ListItem>
+        </react-mdl-List>
+      </react-mdl-List>
+    </div>
   </div>
 </react-mdl-Card>
 `;

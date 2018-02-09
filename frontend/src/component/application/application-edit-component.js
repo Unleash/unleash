@@ -21,7 +21,7 @@ import {
     Switch,
 } from 'react-mdl';
 import { IconLink, shorten, styles as commonStyles } from '../common';
-import { formatFullDateTime } from '../common/util';
+import { formatFullDateTimeWithLocale } from '../common/util';
 
 class StatefulTextfield extends Component {
     static propTypes = {
@@ -59,6 +59,7 @@ class ClientApplications extends PureComponent {
         fetchApplication: PropTypes.func.isRequired,
         appName: PropTypes.string,
         application: PropTypes.object,
+        location: PropTypes.object,
         storeApplicationMetaData: PropTypes.func.isRequired,
     };
 
@@ -70,7 +71,9 @@ class ClientApplications extends PureComponent {
     componentDidMount() {
         this.props.fetchApplication(this.props.appName);
     }
-
+    formatFullDateTime(v) {
+        return formatFullDateTimeWithLocale(v, this.props.location.locale);
+    }
     render() {
         if (!this.props.application) {
             return <ProgressBar indeterminate />;
@@ -142,7 +145,8 @@ class ClientApplications extends PureComponent {
                                         icon="timeline"
                                         subtitle={
                                             <span>
-                                                {clientIp} last seen at <small>{formatFullDateTime(lastSeen)}</small>
+                                                {clientIp} last seen at{' '}
+                                                <small>{this.formatFullDateTime(lastSeen)}</small>
                                             </span>
                                         }
                                     >

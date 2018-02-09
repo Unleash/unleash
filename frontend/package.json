@@ -1,7 +1,7 @@
 {
   "name": "unleash-frontend",
   "description": "unleash your features",
-  "version": "3.0.0-alpha.7",
+  "version": "3.0.0-alpha.8",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -32,6 +32,7 @@
     "start": "NODE_ENV=development webpack-dev-server --progress --colors",
     "start:heroku": "UNLEASH_API=http://unleash.herokuapp.com npm run start",
     "lint": "eslint . --ext js,jsx",
+    "lint:fix": "eslint . --ext js,jsx --fix",
     "test": "jest",
     "test:ci": "npm run lint && npm run build && npm run test",
     "prepublish": "npm run build"
@@ -40,13 +41,13 @@
   "dependencies": {
     "debug": "^3.1.0",
     "immutable": "^3.8.1",
-    "normalize.css": "^7.0.0",
+    "normalize.css": "^8.0.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dnd": "^2.1.4",
     "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^15.6.1",
-    "react-mdl": "^1.9.0",
+    "react-mdl": "^1.11.0",
     "react-modal": "^1.6.4",
     "react-redux": "^4.4.5",
     "react-router": "^3.0.0",

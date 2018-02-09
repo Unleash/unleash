@@ -4,7 +4,7 @@ import HistoryItemDiff from './history-item-diff';
 import HistoryItemJson from './history-item-json';
 import { Table, TableHeader } from 'react-mdl';
 import { DataTableHeader, SwitchWithLabel, styles as commonStyles } from '../common';
-import { formatFullDateTime } from '../common/util';
+import { formatFullDateTimeWithLocale } from '../common/util';
 
 import styles from './history.scss';
 
@@ -13,13 +13,16 @@ class HistoryList extends Component {
         title: PropTypes.string,
         history: PropTypes.array,
         settings: PropTypes.object,
+        location: PropTypes.object,
         updateSetting: PropTypes.func.isRequired,
     };
 
     toggleShowDiff() {
         this.props.updateSetting('showData', !this.props.settings.showData);
     }
-
+    formatFulldateTime(v) {
+        return formatFullDateTimeWithLocale(v, this.props.location.locale);
+    }
     render() {
         const showData = this.props.settings.showData;
         const { history } = this.props;
@@ -62,7 +65,12 @@ class HistoryList extends Component {
                         User
                     </TableHeader>
                     <TableHeader name="diff">Diff</TableHeader>
-                    <TableHeader numeric name="createdAt" cellFormatter={formatFullDateTime} style={{ width: '165px' }}>
+                    <TableHeader
+                        numeric
+                        name="createdAt"
+                        cellFormatter={this.formatFulldateTime.bind(this)}
+                        style={{ width: '165px' }}
+                    >
                         Time
                     </TableHeader>
                 </Table>

@@ -5,6 +5,7 @@ module.exports = {
     CardMenu: 'react-mdl-CardMenu',
     DataTable: 'react-mdl-DataTable',
     Cell: 'react-mdl-Cell',
+    Chip: 'react-mdl-Chip',
     Grid: 'react-mdl-Grid',
     Icon: 'react-mdl-Icon',
     IconButton: 'react-mdl-IconButton',

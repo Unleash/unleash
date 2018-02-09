@@ -45,8 +45,19 @@ exports[`renders correctly with archived toggles 1`] = `
                 style={Object {}}
               >
                 adin-pay-confirm-disabled
+                <span>
+                  <span
+                    className="strategiesList hideLt920"
+                  >
+                    <react-mdl-Chip
+                      className="strategyChip"
+                    >
+                      default
+                    </react-mdl-Chip>
+                  </span>
+                </span>
                 <div
-                  className="toggleDetails"
+                  className="mdl-list__item-sub-title"
                 >
                   Disables the confirm-functionality from API
                 </div>
@@ -75,8 +86,19 @@ exports[`renders correctly with archived toggles 1`] = `
                 style={Object {}}
               >
                 adin-pay-platform-sch-payment
+                <span>
+                  <span
+                    className="strategiesList hideLt920"
+                  >
+                    <react-mdl-Chip
+                      className="strategyChip"
+                    >
+                      default
+                    </react-mdl-Chip>
+                  </span>
+                </span>
                 <div
-                  className="toggleDetails"
+                  className="mdl-list__item-sub-title"
                 >
                   Enables use of schibsted payment from order-payment-management
                 </div>

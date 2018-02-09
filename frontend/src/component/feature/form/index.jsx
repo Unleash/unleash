@@ -82,7 +82,6 @@ class AddFeatureToggleComponent extends Component {
                             <hr />
                         </div>
                     )}
-
                     <StrategiesSection
                         configuredStrategies={configuredStrategies}
                         addStrategy={addStrategy}

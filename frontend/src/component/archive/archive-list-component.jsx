@@ -22,9 +22,7 @@ class ArchiveList extends Component {
                 {feature.strategies.map((s, i) => (
                     <span style={{ marginLeft: `8px` }} key={i}>
                         <strong>{s.name}</strong>
-                        {Object.keys(s.parameters).map((p, j) => (
-                            <i key={j}> {s.parameters[p]}</i>
-                        ))}
+                        {Object.keys(s.parameters).map((p, j) => <i key={j}> {s.parameters[p]}</i>)}
                     </span>
                 ))}
             </span>

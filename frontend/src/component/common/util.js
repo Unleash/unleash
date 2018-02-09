@@ -6,5 +6,9 @@ const dateTimeOptions = {
     minute: '2-digit',
     second: '2-digit',
 };
-
-export const formatFullDateTime = v => new Date(v).toLocaleString('nb-NO', dateTimeOptions);
+export const formatFullDateTimeWithLocale = (v, locale, tz) => {
+    if (tz) {
+        dateTimeOptions.timeZone = tz;
+    }
+    return new Date(v).toLocaleString(locale, dateTimeOptions);
+};

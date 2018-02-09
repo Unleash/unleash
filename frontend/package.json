@@ -32,6 +32,7 @@
     "start": "NODE_ENV=development webpack-dev-server --progress --colors",
     "start:heroku": "UNLEASH_API=http://unleash.herokuapp.com npm run start",
     "lint": "eslint . --ext js,jsx",
+    "lint:fix": "eslint . --ext js,jsx --fix",
     "test": "jest",
     "test:ci": "npm run lint && npm run build && npm run test",
     "prepublish": "npm run build"

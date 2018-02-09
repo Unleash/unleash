@@ -3879,9 +3879,9 @@ normalize-path@^2.0.0, normalize-path@^2.0.1:
   dependencies:
     remove-trailing-separator "^1.0.1"
 
-normalize.css@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-7.0.0.tgz#abfb1dd82470674e0322b53ceb1aaf412938e4bf"
+normalize.css@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.0.tgz#14ac5e461612538a4ce9be90a7da23f86e718493"
 
 npm-path@^2.0.2:
   version "2.0.3"
@@ -4635,9 +4635,9 @@ react-dom@^15.6.1:
     object-assign "^4.1.0"
     prop-types "^15.5.10"
 
-react-mdl@^1.9.0:
-  version "1.10.3"
-  resolved "https://registry.yarnpkg.com/react-mdl/-/react-mdl-1.10.3.tgz#f783e26a5eea4154a32129ab2562c09d5eeacf0d"
+react-mdl@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/react-mdl/-/react-mdl-1.11.0.tgz#7e07ee1009dd9b358b616dc400ff2ae1845a2e67"
   dependencies:
     clamp "^1.0.1"
     classnames "^2.2.3"
@@ -5777,19 +5777,19 @@ unique-temp-dir@^1.0.0:
     os-tmpdir "^1.0.1"
     uid2 "0.0.3"
 
-unleash-frontend@^3.0.0-alpha.7:
-  version "3.0.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.0.0-alpha.7.tgz#1d333342241818928e0956f025fef28fe78aca06"
+unleash-frontend@^3.0.0-alpha.8:
+  version "3.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.0.0-alpha.8.tgz#be9a4e187a3b95377dfcb788a845acac03d94cff"
   dependencies:
     debug "^3.1.0"
     immutable "^3.8.1"
-    normalize.css "^7.0.0"
+    normalize.css "^8.0.0"
     prop-types "^15.5.10"
     react "^15.6.1"
     react-dnd "^2.1.4"
     react-dnd-html5-backend "^2.1.2"
     react-dom "^15.6.1"
-    react-mdl "^1.9.0"
+    react-mdl "^1.11.0"
     react-modal "^1.6.4"
     react-redux "^4.4.5"
     react-router "^3.0.0"

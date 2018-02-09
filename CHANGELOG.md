@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- fix(package): Upgrade unleash-frontend to version 3.0.0-alpha.8
+
 ## 3.0.0-alpha.10
 - chore(package.json): Bump unleash-frontend to 3.0.0-alpha.7
 - fix(store): DB should not override createdAt if set.

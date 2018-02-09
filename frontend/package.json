@@ -40,7 +40,7 @@
   "dependencies": {
     "debug": "^3.1.0",
     "immutable": "^3.8.1",
-    "normalize.css": "^7.0.0",
+    "normalize.css": "^8.0.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dnd": "^2.1.4",

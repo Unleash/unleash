@@ -22,7 +22,7 @@ unleash.start({
 });
 ```
 
-Additionally, you can trigger the admin interfact to prompt the user to sign in by configuring your middleware to return a `401` status on
+Additionally, you can trigger the admin interface to prompt the user to sign in by configuring your middleware to return a `401` status on
 protected routes. The response body must contain a `message` and a `path` used to redirect the user to the proper login route.
 
 ```json
@@ -79,4 +79,4 @@ unleash.start({
 [client-auth-unleash.js](https://github.com/Unleash/unleash/blob/master/examples/client-auth-unleash.js)
 
 
-PS! Remember to disable legacy route with by setting the `enableLegacyRoutes` option to false. This will require all your clients to be on v3.x. 
+PS! Remember to disable legacy route by setting the `enableLegacyRoutes` option to false. This will require all your clients to be on v3.x. 

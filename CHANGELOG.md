@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
-- fix(package): Upgrade unleash-frontend to version 3.0.0-alpha.8
+## 3.0.0 (10.02.2018)
+- All changes in all 3.0.0 alpha-releases is included in this version
+- fix(package): Upgrade unleash-frontend to version 3.0.0
+
 
 ## 3.0.0-alpha.10
 - chore(package.json): Bump unleash-frontend to 3.0.0-alpha.7

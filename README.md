@@ -71,7 +71,7 @@ which includes a username and password, which has the rights to migrate the data
 
 _Unleash_ will, at startup, check whether database migration is needed, and perform necessary migrations.
 
-## Start Unleash 
+## Using Unleash 
 
 **The simplest way to get started:**
 (database-url can also be set as a environment variable: DATABASE_URL)
@@ -83,7 +83,10 @@ $ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 Unleash started on http://localhost:4242
 ```
 
-You can also require Unleash as a lib and expand it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md). 
+You can also require Unleash as a lib (recommended) and expand it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md).
+
+### Securing Unleash
+Unleash also have extension points where you can integrate Unleash with your authentication provider (OAuth 2.0). Read more about [securing unleash](./docs/securing-unleash.md).
 
 ## Run with docker
 We have made a separate project which runs unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker)

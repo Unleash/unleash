@@ -53,45 +53,9 @@
     pretty-ms "^0.2.1"
     text-table "^0.2.0"
 
-"@types/body-parser@*":
-  version "1.16.8"
-  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.16.8.tgz#687ec34140624a3bec2b1a8ea9268478ae8f3be3"
-  dependencies:
-    "@types/express" "*"
-    "@types/node" "*"
-
-"@types/express-serve-static-core@*":
-  version "4.0.56"
-  resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.0.56.tgz#4ed556dcff9012cce6b016e214fdc5ef6e99db7d"
-  dependencies:
-    "@types/node" "*"
-
-"@types/express@*", "@types/express@~4.0.34":
-  version "4.0.39"
-  resolved "https://registry.yarnpkg.com/@types/express/-/express-4.0.39.tgz#1441f21d52b33be8d4fa8a865c15a6a91cd0fa09"
-  dependencies:
-    "@types/body-parser" "*"
-    "@types/express-serve-static-core" "*"
-    "@types/serve-static" "*"
-
-"@types/mime@*":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.0.tgz#5a7306e367c539b9f6543499de8dd519fac37a8b"
-
-"@types/node@*":
-  version "8.0.51"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.51.tgz#b31d716fb8d58eeb95c068a039b9b6292817d5fb"
-
 "@types/node@^9.3.0":
   version "9.3.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.3.0.tgz#3a129cda7c4e5df2409702626892cb4b96546dd5"
-
-"@types/serve-static@*":
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.13.1.tgz#1d2801fa635d274cd97d4ec07e26b21b44127492"
-  dependencies:
-    "@types/express-serve-static-core" "*"
-    "@types/mime" "*"
 
 abbrev@1:
   version "1.1.1"
@@ -1859,13 +1823,12 @@ expand-tilde@^2.0.2:
   dependencies:
     homedir-polyfill "^1.0.1"
 
-express-validator@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-4.3.0.tgz#60218a5778c59d5e778b89ae4e00b76f8510ef78"
+express-validator@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-5.0.0.tgz#68aeacb0781f7270013235b7826f0abd83656468"
   dependencies:
-    "@types/express" "~4.0.34"
     lodash "^4.16.0"
-    validator "~8.2.0"
+    validator "^9.4.0"
 
 express@^4.16.2:
   version "4.16.2"
@@ -5862,9 +5825,9 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
 
-validator@~8.2.0:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/validator/-/validator-8.2.0.tgz#3c1237290e37092355344fef78c231249dab77b9"
+validator@^9.4.0:
+  version "9.4.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-9.4.0.tgz#c503ef88f7e6b8fb7688599267b309482d81ae60"
 
 vary@~1.1.2:
   version "1.1.2"

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.0.0]
+- Nothing new, just locking down the version.
+
 ## [3.0.0-alpha.8]
 - feat(timestamps): Make formatting of timestamps configurable. 
 - fix(package): Update react-mdl to version 1.11.0

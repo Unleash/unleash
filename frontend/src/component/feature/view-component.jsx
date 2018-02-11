@@ -96,7 +96,6 @@ export default class ViewFeatureToggleComponent extends React.Component {
         return (
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                 <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
-                <CardText>{featureToggle.description}</CardText>
                 <CardActions
                     border
                     style={{

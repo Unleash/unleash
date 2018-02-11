@@ -9,8 +9,8 @@ import EditFeatureToggle from './form-edit-container.jsx';
 import { styles as commonStyles } from '../common';
 
 const TABS = {
-    view: 0,
-    edit: 1,
+    strategies: 0,
+    view: 1,
     history: 2,
 };
 
@@ -40,7 +40,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
 
         if (TABS[activeTab] === TABS.history) {
             return <HistoryComponent toggleName={featureToggleName} />;
-        } else if (TABS[activeTab] === TABS.edit) {
+        } else if (TABS[activeTab] === TABS.strategies) {
             return <EditFeatureToggle featureToggle={featureToggle} />;
         } else {
             return <MetricComponent featureToggle={featureToggle} />;
@@ -80,7 +80,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
             );
         }
 
-        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.view;
+        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.strategies;
         const tabContent = this.getTabContent(activeTab);
 
         const removeToggle = () => {
@@ -125,8 +125,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     tabBarProps={{ style: { width: '100%' } }}
                     className="mdl-color--grey-100"
                 >
+                    <Tab onClick={() => this.goToTab('strategies', featureToggleName)}>Strategies</Tab>
                     <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
-                    <Tab onClick={() => this.goToTab('edit', featureToggleName)}>Edit</Tab>
                     <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
                 </Tabs>
                 {tabContent}

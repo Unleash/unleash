@@ -37,7 +37,7 @@ const prepare = (methods, dispatch) => {
         // TODO: should add error handling
         requestUpdateFeatureToggle(input)(dispatch)
             .then(() => methods.clear())
-            .then(() => hashHistory.push(`/features/view/${input.name}`));
+            .then(() => hashHistory.push(`/features/strategies/${input.name}`));
     };
 
     methods.onCancel = evt => {

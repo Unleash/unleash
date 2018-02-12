@@ -5,6 +5,14 @@ import StrategiesSection from './strategies-section-container';
 
 import { FormButtons } from '../../common';
 
+const trim = value => {
+    if (value && value.trim) {
+        return value.trim();
+    } else {
+        return value;
+    }
+};
+
 class AddFeatureToggleComponent extends Component {
     componentWillMount() {
         // TODO unwind this stuff
@@ -17,6 +25,7 @@ class AddFeatureToggleComponent extends Component {
         const {
             input,
             setValue,
+            validateName,
             addStrategy,
             removeStrategy,
             updateStrategy,
@@ -26,12 +35,30 @@ class AddFeatureToggleComponent extends Component {
             editmode = false,
         } = this.props;
 
-        const { description, enabled } = input;
+        const {
+            name, // eslint-disable-line
+            nameError,
+            description,
+            enabled,
+        } = input;
         const configuredStrategies = input.strategies || [];
 
         return (
             <form onSubmit={onSubmit(input)}>
                 <section style={{ padding: '16px' }}>
+                    {!editmode && (
+                        <Textfield
+                            floatingLabel
+                            label="Name"
+                            name="name"
+                            disabled={editmode}
+                            required
+                            value={name}
+                            error={nameError}
+                            onBlur={v => validateName(v.target.value)}
+                            onChange={v => setValue('name', trim(v.target.value))}
+                        />
+                    )}
                     <Textfield
                         floatingLabel
                         style={{ width: '100%' }}

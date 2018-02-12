@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, Tab, ProgressBar, Button, Card, CardTitle, CardText, CardActions, Switch } from 'react-mdl';
+import { Tabs, Tab, ProgressBar, Button, Card, CardTitle, CardActions, Switch } from 'react-mdl';
 import { hashHistory, Link } from 'react-router';
 
 import HistoryComponent from '../history/history-list-toggle-container';

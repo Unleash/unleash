@@ -48,7 +48,7 @@
     "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^16.2.0",
     "react-mdl": "^1.11.0",
-    "react-modal": "^1.6.4",
+    "react-modal": "^3.1.13",
     "react-redux": "^4.4.5",
     "react-router": "^3.0.0",
     "react-router-scroll": "^0.4.1",

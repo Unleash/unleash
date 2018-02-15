@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+
+## [Unrelesed]
+- fix(package): Upgrade react to version 16.2.0
+
 ## [3.0.0]
 - Nothing new, just locking down the version.
 

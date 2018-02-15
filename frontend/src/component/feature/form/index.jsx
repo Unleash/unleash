@@ -42,7 +42,7 @@ class AddFeatureToggleComponent extends Component {
             enabled,
         } = input;
         const configuredStrategies = input.strategies || [];
-        input.editmode = editmode;
+
         return (
             <form onSubmit={onSubmit(input)}>
                 <section style={{ padding: '16px' }}>

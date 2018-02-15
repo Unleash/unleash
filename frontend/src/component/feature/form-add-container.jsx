@@ -31,7 +31,7 @@ const prepare = (methods, dispatch) => {
 
         createFeatureToggles(input)(dispatch)
             .then(() => methods.clear())
-            .then(() => hashHistory.push(`/features/edit/${input.name}`));
+            .then(() => hashHistory.push(`/features/strategies/${input.name}`));
     };
 
     methods.onCancel = evt => {

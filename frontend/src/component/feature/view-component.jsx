@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, Tab, ProgressBar, Button, Card, CardTitle, CardActions, Switch } from 'react-mdl';
+import { Tabs, Tab, ProgressBar, Button, Card, CardText, CardTitle, CardActions, Textfield, Switch } from 'react-mdl';
 import { hashHistory, Link } from 'react-router';
 
 import HistoryComponent from '../history/history-list-toggle-container';
@@ -26,6 +26,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         toggleFeature: PropTypes.func.isRequired,
         removeFeatureToggle: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
+        editFeatureToggle: PropTypes.func.isRequired,
         featureToggle: PropTypes.object,
     };
 
@@ -56,6 +57,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
             featureToggle,
             features,
             activeTab,
+            // setValue,
             featureToggleName,
             toggleFeature,
             removeFeatureToggle,
@@ -92,10 +94,37 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 hashHistory.push('/features');
             }
         };
+        const updateFeatureToggle = () => {
+            let feature = { ...featureToggle };
+            if (Array.isArray(feature.strategies)) {
+                feature.strategies.forEach(s => {
+                    delete s.id;
+                });
+            }
+
+            this.props.editFeatureToggle(feature);
+        };
+        const setValue = (v, event) => {
+            featureToggle[v] = event.target.value;
+            this.forceUpdate();
+        };
 
         return (
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                 <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
+                <CardText>
+                    <Textfield
+                        floatingLabel
+                        style={{ width: '100%' }}
+                        rows={1}
+                        label="Description"
+                        required
+                        value={featureToggle.description}
+                        onChange={v => setValue('description', v)}
+                        onBlur={updateFeatureToggle}
+                    />
+                </CardText>
+
                 <CardActions
                     border
                     style={{

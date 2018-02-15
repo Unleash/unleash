@@ -34,6 +34,10 @@ const prepare = (methods, dispatch) => {
                 delete s.id;
             });
         }
+        if (input.editmode) {
+            delete input.description;
+        }
+
         // TODO: should add error handling
         requestUpdateFeatureToggle(input)(dispatch)
             .then(() => methods.clear())

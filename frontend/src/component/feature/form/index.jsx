@@ -42,7 +42,7 @@ class AddFeatureToggleComponent extends Component {
             enabled,
         } = input;
         const configuredStrategies = input.strategies || [];
-
+        input.editmode = editmode;
         return (
             <form onSubmit={onSubmit(input)}>
                 <section style={{ padding: '16px' }}>
@@ -59,16 +59,17 @@ class AddFeatureToggleComponent extends Component {
                             onChange={v => setValue('name', trim(v.target.value))}
                         />
                     )}
-                    <Textfield
-                        floatingLabel
-                        style={{ width: '100%' }}
-                        rows={1}
-                        label="Description"
-                        required
-                        value={description}
-                        onChange={v => setValue('description', v.target.value)}
-                    />
-
+                    {!editmode && (
+                        <Textfield
+                            floatingLabel
+                            style={{ width: '100%' }}
+                            rows={1}
+                            label="Description"
+                            required
+                            value={description}
+                            onChange={v => setValue('description', v.target.value)}
+                        />
+                    )}
                     {!editmode && (
                         <div>
                             <br />

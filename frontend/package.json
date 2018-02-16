@@ -35,6 +35,7 @@
     "lint:fix": "eslint . --ext js,jsx --fix",
     "test": "jest",
     "test:ci": "npm run lint && npm run build && npm run test",
+    "test:debug": "./node_modules/.bin/node-debug ./node_modules/.bin/jest -i --watch",
     "prepublish": "npm run build"
   },
   "main": "./index.js",
@@ -67,6 +68,8 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-preset-stage-2": "^6.13.0",
     "css-loader": "^0.28.4",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.5.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.0",
@@ -92,6 +95,7 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js",
       "\\.(css|scss)$": "identity-obj-proxy"
     },
+    "setupTestFrameworkScriptFile": "<rootDir>/src/setupTests.js",
     "setupFiles": [
       "<rootDir>/jest-setup.js"
     ]

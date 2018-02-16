@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Textfield, Switch } from 'react-mdl';
 import StrategiesSection from './strategies-section-container';
 
-import { FormButtons, getDisplayName } from './../../common';
+import { FormButtons } from './../../common';
 
 const trim = value => {
     if (value && value.trim) {
@@ -14,7 +14,7 @@ const trim = value => {
 };
 
 class AddFeatureComponent extends Component {
-    static displayName = `Add2FeatureToggleComponent${getDisplayName(Component)}`;
+    //static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
     componentWillMount() {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {

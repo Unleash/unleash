@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders strategy with empty list as param 1`] = `
+<div>
+  <p>
+    featureName
+  </p>
+  <div
+    style={
+      Object {
+        "display": "flex",
+      }
+    }
+  >
+    <react-mdl-Textfield
+      floatingLabel={true}
+      label="Add list entry"
+      name="featureName_input"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      style={
+        Object {
+          "flex": 1,
+          "width": "100%",
+        }
+      }
+    />
+    <react-mdl-IconButton
+      name="add"
+      onClick={[Function]}
+      raised={true}
+      style={
+        Object {
+          "flex": 1,
+          "flexGrow": 0,
+          "margin": "20px 0 0 10px",
+        }
+      }
+    />
+  </div>
+</div>
+`;
+
+exports[`renders strategy with list as param 1`] = `
+<div>
+  <p>
+    featureName
+  </p>
+  <react-mdl-Chip
+    onClose={[Function]}
+    style={
+      Object {
+        "marginRight": "3px",
+      }
+    }
+  >
+    item1
+  </react-mdl-Chip>
+  <react-mdl-Chip
+    onClose={[Function]}
+    style={
+      Object {
+        "marginRight": "3px",
+      }
+    }
+  >
+    item2
+  </react-mdl-Chip>
+  <div
+    style={
+      Object {
+        "display": "flex",
+      }
+    }
+  >
+    <react-mdl-Textfield
+      floatingLabel={true}
+      label="Add list entry"
+      name="featureName_input"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      style={
+        Object {
+          "flex": 1,
+          "width": "100%",
+        }
+      }
+    />
+    <react-mdl-IconButton
+      name="add"
+      onClick={[Function]}
+      raised={true}
+      style={
+        Object {
+          "flex": 1,
+          "flexGrow": 0,
+          "margin": "20px 0 0 10px",
+        }
+      }
+    />
+  </div>
+</div>
+`;

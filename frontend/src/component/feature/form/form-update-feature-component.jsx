@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import StrategiesSection from './strategies-section-container';
 
-import { FormButtons, getDisplayName } from './../../common';
+import { FormButtons } from './../../common';
 
 class UpdateFeatureComponent extends Component {
-    static displayName = `AddFeatureToggleComponent${getDisplayName(Component)}`;
+    //static displayName = `UpdateFeatureComponent-{getDisplayName(Component)}`;
     componentWillMount() {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {

@@ -180,3 +180,6 @@ export function calc(value, total, decimal) {
 
     return (value / total * 100).toFixed(decimal);
 }
+export function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+};

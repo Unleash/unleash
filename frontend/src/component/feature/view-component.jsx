@@ -5,7 +5,7 @@ import { hashHistory, Link } from 'react-router';
 
 import HistoryComponent from '../history/history-list-toggle-container';
 import MetricComponent from './metric-container';
-import EditFeatureToggle from './form-edit-container.jsx';
+import EditFeatureToggle from './form/form-update-feature-container';
 import { styles as commonStyles } from '../common';
 
 const TABS = {

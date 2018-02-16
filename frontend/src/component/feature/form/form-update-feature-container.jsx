@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { requestUpdateFeatureToggle } from '../../store/feature-actions';
-import { createMapper, createActions } from '../input-helpers';
-import FormComponent from './form';
+import { requestUpdateFeatureToggle } from '../../../store/feature-actions';
+import { createMapper, createActions } from '../../input-helpers';
+import UpdateFeatureToggleComponent from './form-update-feature-component';
 
 const ID = 'edit-feature-toggle';
 function getId(props) {
@@ -76,4 +76,4 @@ const actions = createActions({
     prepare,
 });
 
-export default connect(mapStateToProps, actions)(FormComponent);
+export default connect(mapStateToProps, actions)(UpdateFeatureToggleComponent);

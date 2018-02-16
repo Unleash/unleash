@@ -5,7 +5,7 @@ import {
     toggleFeature,
     removeFeatureToggle,
     editFeatureToggle,
-} from '../../store/feature-actions';
+} from './../../store/feature-actions';
 
 import ViewToggleComponent from './view-component';
 

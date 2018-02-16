@@ -182,4 +182,4 @@ export function calc(value, total, decimal) {
 }
 export function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component';
-};
+}

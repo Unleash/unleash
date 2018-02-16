@@ -5,7 +5,7 @@ import StrategiesSection from './strategies-section-container';
 import { FormButtons } from './../../common';
 
 class UpdateFeatureComponent extends Component {
-    //static displayName = `UpdateFeatureComponent-{getDisplayName(Component)}`;
+    // static displayName = `UpdateFeatureComponent-{getDisplayName(Component)}`;
     componentWillMount() {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {

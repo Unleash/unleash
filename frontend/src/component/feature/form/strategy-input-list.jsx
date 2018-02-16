@@ -67,7 +67,9 @@ export default class InputList extends Component {
                         label="Add list entry"
                         onFocus={this.onFocus.bind(this)}
                         onBlur={this.onBlur.bind(this)}
-                        ref={(input) => { this.textInput = input; }}
+                        ref={input => {
+                            this.textInput = input;
+                        }}
                     />
                     <IconButton
                         name="add"

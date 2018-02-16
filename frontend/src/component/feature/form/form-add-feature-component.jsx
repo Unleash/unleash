@@ -14,7 +14,7 @@ const trim = value => {
 };
 
 class AddFeatureComponent extends Component {
-    //static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
+    // static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
     componentWillMount() {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {

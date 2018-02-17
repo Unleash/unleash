@@ -66,3 +66,16 @@ it('spy onBlur', () => {
     wrapper.find('react-mdl-Textfield').simulate('blur', focusMock);
     expect(onFocus).toHaveBeenCalled();
 });
+
+it('spy onClose', () => {
+    let list = ['item1'];
+    const name = 'featureName';
+    const onClose = jest.spyOn(InputList.prototype, 'onClose');
+    let closeMock = {
+        preventDefault: () => {},
+        stopPropagation: () => {},
+    };
+    const wrapper = shallow(<InputList list={list} name={name} setConfig={jest.fn()} />);
+    wrapper.find('react-mdl-Chip').simulate('close', closeMock);
+    expect(onClose).toHaveBeenCalled();
+});

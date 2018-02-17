@@ -35,7 +35,6 @@
     "lint:fix": "eslint . --ext js,jsx --fix",
     "test": "jest",
     "test:ci": "npm run lint && npm run build && npm run test",
-    "test:debug": "./node_modules/.bin/node-debug ./node_modules/.bin/jest -i --watch",
     "prepublish": "npm run build"
   },
   "main": "./index.js",

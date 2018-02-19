@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Textfield, Switch } from 'react-mdl';
 import StrategiesSection from './strategies-section-container';
 
-import { FormButtons } from '../../common';
+import { FormButtons } from './../../common';
 
 const trim = value => {
     if (value && value.trim) {
@@ -13,7 +13,8 @@ const trim = value => {
     }
 };
 
-class AddFeatureToggleComponent extends Component {
+class AddFeatureComponent extends Component {
+    // static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
     componentWillMount() {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {
@@ -32,7 +33,6 @@ class AddFeatureToggleComponent extends Component {
             moveStrategy,
             onSubmit,
             onCancel,
-            editmode = false,
         } = this.props;
 
         const {
@@ -50,14 +50,12 @@ class AddFeatureToggleComponent extends Component {
                         floatingLabel
                         label="Name"
                         name="name"
-                        disabled={editmode}
                         required
                         value={name}
                         error={nameError}
                         onBlur={v => validateName(v.target.value)}
                         onChange={v => setValue('name', trim(v.target.value))}
                     />
-                    <br />
                     <Textfield
                         floatingLabel
                         style={{ width: '100%' }}
@@ -67,21 +65,19 @@ class AddFeatureToggleComponent extends Component {
                         value={description}
                         onChange={v => setValue('description', v.target.value)}
                     />
+                    <div>
+                        <br />
+                        <Switch
+                            checked={enabled}
+                            onChange={() => {
+                                setValue('enabled', !enabled);
+                            }}
+                        >
+                            Enabled
+                        </Switch>
+                        <hr />
+                    </div>
 
-                    {!editmode && (
-                        <div>
-                            <br />
-                            <Switch
-                                checked={enabled}
-                                onChange={() => {
-                                    setValue('enabled', !enabled);
-                                }}
-                            >
-                                Enabled
-                            </Switch>
-                            <hr />
-                        </div>
-                    )}
                     <StrategiesSection
                         configuredStrategies={configuredStrategies}
                         addStrategy={addStrategy}
@@ -91,14 +87,14 @@ class AddFeatureToggleComponent extends Component {
                     />
 
                     <br />
-                    <FormButtons submitText={editmode ? 'Update' : 'Create'} onCancel={onCancel} />
+                    <FormButtons submitText={'Create'} onCancel={onCancel} />
                 </section>
             </form>
         );
     }
 }
 
-AddFeatureToggleComponent.propTypes = {
+AddFeatureComponent.propTypes = {
     input: PropTypes.object,
     setValue: PropTypes.func.isRequired,
     addStrategy: PropTypes.func.isRequired,
@@ -108,9 +104,8 @@ AddFeatureToggleComponent.propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     validateName: PropTypes.func.isRequired,
-    editmode: PropTypes.bool,
     initCallRequired: PropTypes.bool,
     init: PropTypes.func,
 };
 
-export default AddFeatureToggleComponent;
+export default AddFeatureComponent;

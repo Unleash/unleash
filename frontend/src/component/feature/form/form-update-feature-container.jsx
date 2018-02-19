@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { requestUpdateFeatureToggle } from '../../store/feature-actions';
-import { createMapper, createActions } from '../input-helpers';
-import FormComponent from './form';
+import { requestUpdateFeatureToggle } from '../../../store/feature-actions';
+import { createMapper, createActions } from '../../input-helpers';
+import UpdateFeatureToggleComponent from './form-update-feature-component';
 
 const ID = 'edit-feature-toggle';
 function getId(props) {
@@ -34,10 +34,12 @@ const prepare = (methods, dispatch) => {
                 delete s.id;
             });
         }
+        delete input.description;
+
         // TODO: should add error handling
         requestUpdateFeatureToggle(input)(dispatch)
             .then(() => methods.clear())
-            .then(() => hashHistory.push(`/features/view/${input.name}`));
+            .then(() => hashHistory.push(`/features`));
     };
 
     methods.onCancel = evt => {
@@ -73,4 +75,4 @@ const actions = createActions({
     prepare,
 });
 
-export default connect(mapStateToProps, actions)(FormComponent);
+export default connect(mapStateToProps, actions)(UpdateFeatureToggleComponent);

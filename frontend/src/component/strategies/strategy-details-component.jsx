@@ -54,7 +54,7 @@ export default class StrategyDetails extends Component {
     }
 
     render() {
-        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.view;
+        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.strategies;
         const strategy = this.props.strategy;
         if (!strategy) {
             return <ProgressBar indeterminate />;

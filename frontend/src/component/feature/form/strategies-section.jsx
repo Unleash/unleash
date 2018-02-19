@@ -5,7 +5,7 @@ import StrategiesList from './strategies-list';
 import AddStrategy from './strategies-add';
 import { HeaderTitle } from '../../common';
 
-class StrategiesSection extends React.Component {
+class StrategiesSectionComponent extends React.Component {
     static propTypes = {
         strategies: PropTypes.array.isRequired,
         addStrategy: PropTypes.func.isRequired,
@@ -32,4 +32,4 @@ class StrategiesSection extends React.Component {
     }
 }
 
-export default StrategiesSection;
+export default StrategiesSectionComponent;

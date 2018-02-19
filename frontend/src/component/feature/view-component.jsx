@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, Tab, ProgressBar, Button, Card, CardTitle, CardText, CardActions, Switch } from 'react-mdl';
+import { Tabs, Tab, ProgressBar, Button, Card, CardText, CardTitle, CardActions, Textfield, Switch } from 'react-mdl';
 import { hashHistory, Link } from 'react-router';
 
 import HistoryComponent from '../history/history-list-toggle-container';
 import MetricComponent from './metric-container';
-import EditFeatureToggle from './form-edit-container.jsx';
+import EditFeatureToggle from './form/form-update-feature-container';
 import { styles as commonStyles } from '../common';
 
 const TABS = {
-    view: 0,
-    edit: 1,
+    strategies: 0,
+    view: 1,
     history: 2,
 };
 
@@ -26,6 +26,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         toggleFeature: PropTypes.func.isRequired,
         removeFeatureToggle: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
+        editFeatureToggle: PropTypes.func.isRequired,
         featureToggle: PropTypes.object,
     };
 
@@ -40,7 +41,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
 
         if (TABS[activeTab] === TABS.history) {
             return <HistoryComponent toggleName={featureToggleName} />;
-        } else if (TABS[activeTab] === TABS.edit) {
+        } else if (TABS[activeTab] === TABS.strategies) {
             return <EditFeatureToggle featureToggle={featureToggle} />;
         } else {
             return <MetricComponent featureToggle={featureToggle} />;
@@ -56,6 +57,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
             featureToggle,
             features,
             activeTab,
+            // setValue,
             featureToggleName,
             toggleFeature,
             removeFeatureToggle,
@@ -80,7 +82,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
             );
         }
 
-        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.view;
+        const activeTabId = TABS[this.props.activeTab] ? TABS[this.props.activeTab] : TABS.strategies;
         const tabContent = this.getTabContent(activeTab);
 
         const removeToggle = () => {
@@ -92,11 +94,37 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 hashHistory.push('/features');
             }
         };
+        const updateFeatureToggle = () => {
+            let feature = { ...featureToggle };
+            if (Array.isArray(feature.strategies)) {
+                feature.strategies.forEach(s => {
+                    delete s.id;
+                });
+            }
+
+            this.props.editFeatureToggle(feature);
+        };
+        const setValue = (v, event) => {
+            featureToggle[v] = event.target.value;
+            this.forceUpdate();
+        };
 
         return (
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                 <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
-                <CardText>{featureToggle.description}</CardText>
+                <CardText>
+                    <Textfield
+                        floatingLabel
+                        style={{ width: '100%' }}
+                        rows={1}
+                        label="Description"
+                        required
+                        value={featureToggle.description}
+                        onChange={v => setValue('description', v)}
+                        onBlur={updateFeatureToggle}
+                    />
+                </CardText>
+
                 <CardActions
                     border
                     style={{
@@ -125,8 +153,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     tabBarProps={{ style: { width: '100%' } }}
                     className="mdl-color--grey-100"
                 >
+                    <Tab onClick={() => this.goToTab('strategies', featureToggleName)}>Strategies</Tab>
                     <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
-                    <Tab onClick={() => this.goToTab('edit', featureToggleName)}>Edit</Tab>
                     <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
                 </Tabs>
                 {tabContent}

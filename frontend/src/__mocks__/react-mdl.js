@@ -13,6 +13,8 @@ module.exports = {
     ListItem: 'react-mdl-ListItem',
     ListItemContent: 'react-mdl-ListItemContent',
     ListItemAction: 'react-mdl-ListItemAction',
+    Menu: 'react-mdl-Menu',
+    MenuItem: 'react-mdl-MenuItem',
     ProgressBar: 'react-mdl-ProgressBar',
     Switch: 'react-mdl-Switch',
     Tab: 'react-mdl-Tab',

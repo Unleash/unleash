@@ -9,7 +9,7 @@ class AddStrategy extends React.Component {
         fetchStrategies: PropTypes.func.isRequired,
     };
 
-    addStrategy = strategyName => {
+    addStrategy(strategyName) {
         const selectedStrategy = this.props.strategies.find(s => s.name === strategyName);
         const parameters = {};
 
@@ -21,7 +21,7 @@ class AddStrategy extends React.Component {
             name: selectedStrategy.name,
             parameters,
         });
-    };
+    }
 
     stopPropagation(e) {
         e.stopPropagation();

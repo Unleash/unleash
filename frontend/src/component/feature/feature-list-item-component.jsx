@@ -52,7 +52,7 @@ const Feature = ({
             </span>
             <span className={['mdl-list__item-primary-content', styles.listItemLink].join(' ')}>
                 <Link
-                    to={`/features/view/${name}`}
+                    to={`/features/strategies/${name}`}
                     className={[commonStyles.listLink, commonStyles.truncate].join(' ')}
                 >
                     {name}

@@ -9,16 +9,16 @@ export default class InputList extends Component {
         setConfig: PropTypes.func.isRequired,
     };
 
-    onBlur = e => {
+    onBlur(e) {
         this.setValue(e);
         window.removeEventListener('keydown', this.onKeyHandler, false);
-    };
+    }
 
-    onFocus = e => {
+    onFocus(e) {
         e.preventDefault();
         e.stopPropagation();
         window.addEventListener('keydown', this.onKeyHandler, false);
-    };
+    }
 
     onKeyHandler = e => {
         if (e.key === 'Enter') {
@@ -35,10 +35,9 @@ export default class InputList extends Component {
         }
 
         const { name, list, setConfig } = this.props;
-        const inputValue = this.refs.input.inputRef;
-        if (inputValue && inputValue.value) {
-            list.push(inputValue.value);
-            inputValue.value = '';
+        if (this.textInput && this.textInput.inputRef && this.textInput.inputRef.value) {
+            list.push(this.textInput.inputRef.value);
+            this.textInput.inputRef.value = '';
             setConfig(name, list.join(','));
         }
     };
@@ -66,9 +65,11 @@ export default class InputList extends Component {
                         style={{ width: '100%', flex: 1 }}
                         floatingLabel
                         label="Add list entry"
-                        onFocus={this.onFocus}
-                        onBlur={this.onBlur}
-                        ref="input"
+                        onFocus={this.onFocus.bind(this)}
+                        onBlur={this.onBlur.bind(this)}
+                        ref={input => {
+                            this.textInput = input;
+                        }}
                     />
                     <IconButton
                         name="add"

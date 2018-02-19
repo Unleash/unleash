@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
-import StrategiesSection from './strategies-section';
+import StrategiesSectionComponent from './strategies-section';
 import { fetchStrategies } from '../../../store/strategy/actions';
 
-export default connect(
+const StrategiesSection = connect(
     state => ({
         strategies: state.strategies.get('list').toArray(),
     }),
     { fetchStrategies }
-)(StrategiesSection);
+)(StrategiesSectionComponent);
+export default StrategiesSection;

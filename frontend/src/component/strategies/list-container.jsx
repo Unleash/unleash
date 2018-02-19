@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import StrategiesListComponent from './list-component.jsx';
-import { fetchStrategies, removeStrategy } from '../../store/strategy/actions';
+import { fetchStrategies, removeStrategy } from './../../store/strategy/actions';
 
 const mapStateToProps = state => {
     const list = state.strategies.get('list').toArray();

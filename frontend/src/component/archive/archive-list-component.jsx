@@ -27,6 +27,7 @@ class ArchiveList extends Component {
                 ))}
             </span>
         );
+
         return strategiesList;
     }
     renderStrategiesInList(feature) {

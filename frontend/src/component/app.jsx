@@ -112,7 +112,7 @@ export default class App extends Component {
                 return [0, 0];
             }
         };
-        const createListItem = (path, caption, icon, isDrawerNavigation = false) => {
+        const createListItem = (path, caption, icon, isDrawerNavigation = false, isAnchor = false) => {
             const linkColor =
                 isDrawerNavigation && this.context.router.isActive(path)
                     ? 'mdl-color-text--black'
@@ -121,17 +121,26 @@ export default class App extends Component {
                 isDrawerNavigation && this.context.router.isActive(path)
                     ? 'mdl-color-text--black'
                     : 'mdl-color-text--grey-600';
-            return (
+            const renderIcon = (
+                <Icon
+                    name={icon}
+                    className={isDrawerNavigation ? [styles.navigationIcon, iconColor].join(' ') : undefined}
+                />
+            );
+            return isAnchor ? (
+                <a
+                    href={path}
+                    className={isDrawerNavigation ? [styles.navigationLink, linkColor].join(' ') : undefined}
+                >
+                    {icon && renderIcon}
+                    {caption}
+                </a>
+            ) : (
                 <Link
                     to={path}
                     className={isDrawerNavigation ? [styles.navigationLink, linkColor].join(' ') : undefined}
                 >
-                    {icon && (
-                        <Icon
-                            name={icon}
-                            className={isDrawerNavigation ? [styles.navigationIcon, iconColor].join(' ') : undefined}
-                        />
-                    )}
+                    {icon && renderIcon}
                     {caption}
                 </Link>
             );
@@ -158,6 +167,7 @@ export default class App extends Component {
                             {createListItem('/history', 'Event History', 'history', true)}
                             {createListItem('/archive', 'Archived Toggles', 'archive', true)}
                             {createListItem('/applications', 'Applications', 'apps', true)}
+                            {createListItem('/api/admin/user/logout', 'Sign out', 'exit_to_app', true, true)}
                         </Navigation>
                         <hr />
                         <Navigation className={styles.navigation}>

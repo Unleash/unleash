@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import Feature from './../feature/feature-list-item-component';
-import { Icon, Card, List, ListItem, ListItemContent, ListItemAction, Chip } from 'react-mdl';
-//import { Textfield, Menu, MenuItem, Card, CardActions, List, Chip, MenuItemWithIcon, DropdownButton } from 'react-mdl';
+import { Icon, Card, List, ListItem, Chip } from 'react-mdl';
 import { styles as commonStyles } from '../common';
 import styles from './archive.scss';
 
@@ -60,82 +59,6 @@ class ArchiveList extends React.PureComponent {
         }
         return display;
     }
-
-    // render() {
-    //     const { archive, featureMetrics, settings, revive } = this.props;
-    //     archive.forEach(e => {
-    //         e.reviveName = e.name;
-    //     });
-    //     return (
-    //         <div>
-    //             <div className={styles.toolbar}>
-    //                 <Textfield
-    //                     floatingLabel
-    //                     value={settings.filter}
-    //                     onChange={e => {
-    //                         this.setFilter(e.target.value);
-    //                     }}
-    //                     label="Search"
-    //                     style={{ width: '100%' }}
-    //                 />
-    //             </div>
-    //             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
-    //                 <CardActions>
-    //                     <DropdownButton id="metric" label={`Last ${settings.showLastHour ? 'hour' : 'minute'}`} />
-    //                     <Menu target="metric" onClick={() => this.toggleMetrics()} style={{ width: '168px' }}>
-    //                         <MenuItemWithIcon
-    //                             icon="hourglass_empty"
-    //                             disabled={!settings.showLastHour}
-    //                             data-target="minute"
-    //                             label="Last minute"
-    //                         />
-    //                         <MenuItemWithIcon
-    //                             icon="hourglass_full"
-    //                             disabled={settings.showLastHour}
-    //                             data-target="hour"
-    //                             label="Last hour"
-    //                         />
-    //                     </Menu>
-    //                     <DropdownButton id="sorting" label={`By ${settings.sort}`} />
-    //                     <Menu
-    //                         target="sorting"
-    //                         onClick={e => this.setSort(e.target.getAttribute('data-target'))}
-    //                         style={{ width: '168px' }}
-    //                     >
-    //                         <MenuItem disabled={settings.sort === 'name'} data-target="name">
-    //                             Name
-    //                         </MenuItem>
-    //                         <MenuItem disabled={settings.sort === 'enabled'} data-target="enabled">
-    //                             Enabled
-    //                         </MenuItem>
-    //                         <MenuItem disabled={settings.sort === 'created'} data-target="created">
-    //                             Created
-    //                         </MenuItem>
-    //                         <MenuItem disabled={settings.sort === 'strategies'} data-target="strategies">
-    //                             Strategies
-    //                         </MenuItem>
-    //                         <MenuItem disabled={settings.sort === 'metrics'} data-target="metrics">
-    //                             Metrics
-    //                         </MenuItem>
-    //                     </Menu>
-    //                 </CardActions>
-    //                 <hr />
-    //                 <List>
-    //                     {archive.map((feature, i) => (
-    //                         <Feature
-    //                             key={i}
-    //                             settings={settings}
-    //                             metricsLastHour={featureMetrics.lastHour[feature.name]}
-    //                             metricsLastMinute={featureMetrics.lastMinute[feature.name]}
-    //                             feature={feature}
-    //                             revive={revive}
-    //                         />
-    //                     ))}
-    //                 </List>
-    //             </Card>
-    //         </div>
-    //     );
-    // }
 
     render() {
         const { archive, featureMetrics, settings, revive } = this.props;

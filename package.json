@@ -98,7 +98,7 @@
     "lolex": "^2.1.2",
     "nyc": "^11.0.3",
     "prettier": "^1.8.2",
-    "proxyquire": "^1.7.11",
+    "proxyquire": "^2.0.0",
     "superagent": "^3.8.1",
     "supertest": "^3.0.0",
     "supervisor": "^0.12.0"

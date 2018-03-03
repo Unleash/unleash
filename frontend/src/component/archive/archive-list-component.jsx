@@ -1,16 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import Feature from './../feature/feature-list-item-component';
 import { Icon, Card, List, ListItem, ListItemContent, ListItemAction, Chip } from 'react-mdl';
+//import { Textfield, Menu, MenuItem, Card, CardActions, List, Chip, MenuItemWithIcon, DropdownButton } from 'react-mdl';
 import { styles as commonStyles } from '../common';
 import styles from './archive.scss';
 
-class ArchiveList extends Component {
+class ArchiveList extends React.PureComponent {
     static propTypes = {
         name: PropTypes.string,
-        archive: PropTypes.array,
+        archive: PropTypes.array.isRequired,
         fetchArchive: PropTypes.func,
-        revive: PropTypes.func,
+        featureMetrics: PropTypes.object.isRequired,
+        updateSetting: PropTypes.func.isRequired,
+        settings: PropTypes.object,
+        revive: PropTypes.func.optional,
     };
 
     componentDidMount() {
@@ -55,8 +60,86 @@ class ArchiveList extends Component {
         }
         return display;
     }
+
+    // render() {
+    //     const { archive, featureMetrics, settings, revive } = this.props;
+    //     archive.forEach(e => {
+    //         e.reviveName = e.name;
+    //     });
+    //     return (
+    //         <div>
+    //             <div className={styles.toolbar}>
+    //                 <Textfield
+    //                     floatingLabel
+    //                     value={settings.filter}
+    //                     onChange={e => {
+    //                         this.setFilter(e.target.value);
+    //                     }}
+    //                     label="Search"
+    //                     style={{ width: '100%' }}
+    //                 />
+    //             </div>
+    //             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
+    //                 <CardActions>
+    //                     <DropdownButton id="metric" label={`Last ${settings.showLastHour ? 'hour' : 'minute'}`} />
+    //                     <Menu target="metric" onClick={() => this.toggleMetrics()} style={{ width: '168px' }}>
+    //                         <MenuItemWithIcon
+    //                             icon="hourglass_empty"
+    //                             disabled={!settings.showLastHour}
+    //                             data-target="minute"
+    //                             label="Last minute"
+    //                         />
+    //                         <MenuItemWithIcon
+    //                             icon="hourglass_full"
+    //                             disabled={settings.showLastHour}
+    //                             data-target="hour"
+    //                             label="Last hour"
+    //                         />
+    //                     </Menu>
+    //                     <DropdownButton id="sorting" label={`By ${settings.sort}`} />
+    //                     <Menu
+    //                         target="sorting"
+    //                         onClick={e => this.setSort(e.target.getAttribute('data-target'))}
+    //                         style={{ width: '168px' }}
+    //                     >
+    //                         <MenuItem disabled={settings.sort === 'name'} data-target="name">
+    //                             Name
+    //                         </MenuItem>
+    //                         <MenuItem disabled={settings.sort === 'enabled'} data-target="enabled">
+    //                             Enabled
+    //                         </MenuItem>
+    //                         <MenuItem disabled={settings.sort === 'created'} data-target="created">
+    //                             Created
+    //                         </MenuItem>
+    //                         <MenuItem disabled={settings.sort === 'strategies'} data-target="strategies">
+    //                             Strategies
+    //                         </MenuItem>
+    //                         <MenuItem disabled={settings.sort === 'metrics'} data-target="metrics">
+    //                             Metrics
+    //                         </MenuItem>
+    //                     </Menu>
+    //                 </CardActions>
+    //                 <hr />
+    //                 <List>
+    //                     {archive.map((feature, i) => (
+    //                         <Feature
+    //                             key={i}
+    //                             settings={settings}
+    //                             metricsLastHour={featureMetrics.lastHour[feature.name]}
+    //                             metricsLastMinute={featureMetrics.lastMinute[feature.name]}
+    //                             feature={feature}
+    //                             revive={revive}
+    //                         />
+    //                     ))}
+    //                 </List>
+    //             </Card>
+    //         </div>
+    //     );
+    // }
+
     render() {
-        const { archive, revive } = this.props;
+        const { archive, featureMetrics, settings, revive } = this.props;
+
         archive.forEach(e => {
             e.reviveName = e.name;
         });
@@ -73,57 +156,14 @@ class ArchiveList extends Component {
                                 <hr />
                                 <List>
                                     {archive.map((feature, i) => (
-                                        <ListItem key={i} twoLine>
-                                            <ListItemAction>
-                                                {this.props.name && feature.name === this.props.name ? (
-                                                    <Icon name="keyboard_arrow_down" />
-                                                ) : (
-                                                    <Icon name="keyboard_arrow_right" />
-                                                )}
-                                            </ListItemAction>
-                                            <ListItemContent>
-                                                {this.props.name && feature.name === this.props.name ? (
-                                                    <Link
-                                                        to={`/archive`}
-                                                        className={[commonStyles.listLink, commonStyles.truncate].join(
-                                                            ' '
-                                                        )}
-                                                    >
-                                                        {this.renderStrategiesInList(feature).map((strategyChip, i) => (
-                                                            <span key={i}>{strategyChip}</span>
-                                                        ))}
-
-                                                        {feature.name}
-                                                        <div className={'mdl-list__item-sub-title'}>
-                                                            {feature.description}
-                                                        </div>
-                                                        <div className={'mdl-list__item-sub-title'}>
-                                                            {this.renderStrategyDetail(feature)}
-                                                        </div>
-                                                    </Link>
-                                                ) : (
-                                                    <Link
-                                                        to={`/archive/${feature.name}`}
-                                                        className={[commonStyles.listLink, commonStyles.truncate].join(
-                                                            ' '
-                                                        )}
-                                                    >
-                                                        {feature.name}
-
-                                                        {this.renderStrategiesInList(feature).map((strategyChip, i) => (
-                                                            <span key={i}>{strategyChip}</span>
-                                                        ))}
-
-                                                        <div className={'mdl-list__item-sub-title'}>
-                                                            {feature.description}
-                                                        </div>
-                                                    </Link>
-                                                )}
-                                            </ListItemContent>
-                                            <ListItemAction onClick={() => revive(feature.name)}>
-                                                <Icon name="undo" />
-                                            </ListItemAction>
-                                        </ListItem>
+                                        <Feature
+                                            key={i}
+                                            settings={settings}
+                                            metricsLastHour={featureMetrics.lastHour[feature.name]}
+                                            metricsLastMinute={featureMetrics.lastMinute[feature.name]}
+                                            feature={feature}
+                                            revive={revive}
+                                        />
                                     ))}
                                 </List>
                             </List>

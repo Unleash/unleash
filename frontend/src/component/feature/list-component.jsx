@@ -13,7 +13,7 @@ export default class FeatureListComponent extends React.PureComponent {
         featureMetrics: PropTypes.object.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
         updateSetting: PropTypes.func.isRequired,
-        toggleFeature: PropTypes.func.isRequired,
+        toggleFeature: PropTypes.func,
         settings: PropTypes.object,
     };
 

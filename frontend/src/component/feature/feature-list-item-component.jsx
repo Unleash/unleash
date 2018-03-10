@@ -43,7 +43,7 @@ const Feature = ({
             <span className={styles.listItemMetric}>
                 <Progress strokeWidth={15} percentage={percent} isFallback={isStale} />
             </span>
-            {toggleFeature ? ( // display feature list
+            {toggleFeature ? ( // display feature list, toggleFeature is available
                 <span className={styles.listItemToggle}>
                     <Switch
                         title={`Toggle ${name}`}
@@ -53,17 +53,31 @@ const Feature = ({
                     />
                 </span>
             ) : (
-                // display archive
+                // display archive, toggleFeature is undefined
                 <span />
             )}
             <span className={['mdl-list__item-primary-content', styles.listItemLink].join(' ')}>
-                <Link
-                    to={`/features/strategies/${name}`}
-                    className={[commonStyles.listLink, commonStyles.truncate].join(' ')}
-                >
-                    {name}
-                    <span className={['mdl-list__item-sub-title', commonStyles.truncate].join(' ')}>{description}</span>
-                </Link>
+                {toggleFeature ? ( // display feature list, toggleFeature is available
+                    <Link
+                        to={`/features/strategies/${name}`}
+                        className={[commonStyles.listLink, commonStyles.truncate].join(' ')}
+                    >
+                        {name}
+                        <span className={['mdl-list__item-sub-title', commonStyles.truncate].join(' ')}>
+                            {description}
+                        </span>
+                    </Link>
+                ) : (
+                    <Link
+                        to={`/archive/strategies/${name}`}
+                        className={[commonStyles.listLink, commonStyles.truncate].join(' ')}
+                    >
+                        {name}
+                        <span className={['mdl-list__item-sub-title', commonStyles.truncate].join(' ')}>
+                            {description}
+                        </span>
+                    </Link>
+                )}
             </span>
             <span className={[styles.listItemStrategies, commonStyles.hideLt920].join(' ')}>
                 {strategyChips}

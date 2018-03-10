@@ -11,10 +11,10 @@ class ArchiveList extends React.PureComponent {
         name: PropTypes.string,
         archive: PropTypes.array.isRequired,
         fetchArchive: PropTypes.func,
-        featureMetrics: PropTypes.object.isRequired,
-        updateSetting: PropTypes.func.isRequired,
+        featureMetrics: PropTypes.object,
+        updateSetting: PropTypes.func,
         settings: PropTypes.object,
-        revive: PropTypes.func.optional,
+        revive: PropTypes.func,
     };
 
     componentDidMount() {

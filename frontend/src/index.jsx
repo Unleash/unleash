@@ -23,6 +23,7 @@ import CreateStrategies from './page/strategies/create';
 import HistoryPage from './page/history';
 import HistoryTogglePage from './page/history/toggle';
 import Archive from './page/archive';
+import ShowArchive from './page/archive/show';
 import Applications from './page/applications';
 import ApplicationView from './page/applications/view';
 
@@ -68,7 +69,7 @@ ReactDOM.render(
                 </Route>
                 <Route pageTitle="Archived Toggles" link="/archive">
                     <Route pageTitle="Archived Toggles" path="/archive" component={Archive} />
-                    <Route pageTitle=":name" path="/archive/:name" component={Archive} />
+                    <Route pageTitle=":name" path="/archive/:activeTab/:name" component={ShowArchive} />
                 </Route>
 
                 <Route pageTitle="Applications" link="/applications">

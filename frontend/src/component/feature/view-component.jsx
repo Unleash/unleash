@@ -15,24 +15,31 @@ const TABS = {
 };
 
 export default class ViewFeatureToggleComponent extends React.Component {
+    isFeatureView;
     constructor(props) {
         super(props);
+        this.isFeatureView = !!props.fetchFeatureToggles;
     }
 
     static propTypes = {
         activeTab: PropTypes.string.isRequired,
         featureToggleName: PropTypes.string.isRequired,
         features: PropTypes.array.isRequired,
-        toggleFeature: PropTypes.func.isRequired,
-        removeFeatureToggle: PropTypes.func.isRequired,
-        fetchFeatureToggles: PropTypes.func.isRequired,
-        editFeatureToggle: PropTypes.func.isRequired,
+        toggleFeature: PropTypes.func,
+        removeFeatureToggle: PropTypes.func,
+        fetchArchive: PropTypes.func,
+        fetchFeatureToggles: PropTypes.func,
+        editFeatureToggle: PropTypes.func,
         featureToggle: PropTypes.object,
     };
 
     componentWillMount() {
         if (this.props.features.length === 0) {
-            this.props.fetchFeatureToggles();
+            if (this.isFeatureView) {
+                this.props.fetchFeatureToggles();
+            } else {
+                this.props.fetchArchive();
+            }
         }
     }
 
@@ -42,14 +49,16 @@ export default class ViewFeatureToggleComponent extends React.Component {
         if (TABS[activeTab] === TABS.history) {
             return <HistoryComponent toggleName={featureToggleName} />;
         } else if (TABS[activeTab] === TABS.strategies) {
-            return <EditFeatureToggle featureToggle={featureToggle} />;
+            return <EditFeatureToggle featureToggle={featureToggle} />
+
         } else {
             return <MetricComponent featureToggle={featureToggle} />;
         }
     }
 
     goToTab(tabName, featureToggleName) {
-        hashHistory.push(`/features/${tabName}/${featureToggleName}`);
+        let view = this.props.fetchFeatureToggles ? 'features' : 'archive';
+        hashHistory.push(`/${view}/${tabName}/${featureToggleName}`);
     }
 
     render() {
@@ -113,16 +122,28 @@ export default class ViewFeatureToggleComponent extends React.Component {
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                 <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
                 <CardText>
-                    <Textfield
-                        floatingLabel
-                        style={{ width: '100%' }}
-                        rows={1}
-                        label="Description"
-                        required
-                        value={featureToggle.description}
-                        onChange={v => setValue('description', v)}
-                        onBlur={updateFeatureToggle}
-                    />
+                    {this.isFeatureView ? (
+                        <Textfield
+                            floatingLabel
+                            style={{ width: '100%' }}
+                            rows={1}
+                            label="Description"
+                            required
+                            value={featureToggle.description}
+                            onChange={v => setValue('description', v)}
+                            onBlur={updateFeatureToggle}
+                        />
+                    ) : (
+                        <Textfield
+                            disabled
+                            floatingLabel
+                            style={{ width: '100%' }}
+                            rows={1}
+                            label="Description"
+                            required
+                            value={featureToggle.description}
+                        />
+                    )}
                 </CardText>
 
                 <CardActions
@@ -134,17 +155,33 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     }}
                 >
                     <span style={{ paddingRight: '24px' }}>
-                        <Switch
-                            ripple
-                            checked={featureToggle.enabled}
-                            onChange={() => toggleFeature(featureToggle.name)}
-                        >
-                            {featureToggle.enabled ? 'Enabled' : 'Disabled'}
-                        </Switch>
+                        {this.isFeatureView ? (
+                            <Switch
+                                ripple
+                                checked={featureToggle.enabled}
+                                onChange={() => toggleFeature(featureToggle.name)}
+                            >
+                                {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                            </Switch>
+                        ) : (
+                            <Switch
+                                disabled
+                                ripple
+                                checked={featureToggle.enabled}
+                                onChange={() => toggleFeature(featureToggle.name)}
+                            >
+                                {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                            </Switch>
+                        )}
                     </span>
-                    <Button onClick={removeToggle} style={{ flexShrink: 0 }}>
-                        Archive
-                    </Button>
+
+                    {this.isFeatureView ? (
+                        <Button onClick={removeToggle} style={{ flexShrink: 0 }}>
+                            Archive
+                        </Button>
+                    ) : (
+                        <span />
+                    )}
                 </CardActions>
                 <hr />
                 <Tabs

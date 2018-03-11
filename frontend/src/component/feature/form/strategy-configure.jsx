@@ -47,9 +47,9 @@ class StrategyConfigure extends React.Component {
     static propTypes = {
         strategy: PropTypes.object.isRequired,
         strategyDefinition: PropTypes.object.isRequired,
-        updateStrategy: PropTypes.func.isRequired,
-        removeStrategy: PropTypes.func.isRequired,
-        moveStrategy: PropTypes.func.isRequired,
+        updateStrategy: PropTypes.func,
+        removeStrategy: PropTypes.func,
+        moveStrategy: PropTypes.func,
         isDragging: PropTypes.bool.isRequired,
         connectDragPreview: PropTypes.func.isRequired,
         connectDragSource: PropTypes.func.isRequired,
@@ -170,7 +170,11 @@ class StrategyConfigure extends React.Component {
                         <Link title="View strategy" to={`/strategies/view/${name}`} className={styles.editLink}>
                             <Icon name="link" />
                         </Link>
-                        <IconButton title="Remove strategy from toggle" name="delete" onClick={this.handleRemove} />
+                        {this.props.removeStrategy ? (
+                            <IconButton title="Remove strategy from toggle" name="delete" onClick={this.handleRemove} />
+                        ) : (
+                            <span />
+                        )}
                         {connectDragSource(
                             <span className={styles.reorderIcon}>
                                 <Icon name="reorder" />

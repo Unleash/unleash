@@ -6,6 +6,7 @@ import { hashHistory, Link } from 'react-router';
 import HistoryComponent from '../history/history-list-toggle-container';
 import MetricComponent from './metric-container';
 import EditFeatureToggle from './form/form-update-feature-container';
+import ViewFeatureToggle from './form/form-view-feature-container';
 import { styles as commonStyles } from '../common';
 
 const TABS = {
@@ -49,7 +50,10 @@ export default class ViewFeatureToggleComponent extends React.Component {
         if (TABS[activeTab] === TABS.history) {
             return <HistoryComponent toggleName={featureToggleName} />;
         } else if (TABS[activeTab] === TABS.strategies) {
-            return <EditFeatureToggle featureToggle={featureToggle} />
+            if (this.isFeatureView) {
+                return <EditFeatureToggle featureToggle={featureToggle} />
+            }
+            return <ViewFeatureToggle featureToggle={featureToggle} />
 
         } else {
             return <MetricComponent featureToggle={featureToggle} />;

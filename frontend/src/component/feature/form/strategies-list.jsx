@@ -9,9 +9,9 @@ class StrategiesList extends React.Component {
     static propTypes = {
         strategies: PropTypes.array.isRequired,
         configuredStrategies: PropTypes.array.isRequired,
-        updateStrategy: PropTypes.func.isRequired,
-        removeStrategy: PropTypes.func.isRequired,
-        moveStrategy: PropTypes.func.isRequired,
+        updateStrategy: PropTypes.func,
+        removeStrategy: PropTypes.func,
+        moveStrategy: PropTypes.func,
     };
 
     render() {
@@ -27,8 +27,8 @@ class StrategiesList extends React.Component {
                 key={strategy.id}
                 strategy={strategy}
                 moveStrategy={moveStrategy}
-                removeStrategy={removeStrategy.bind(null, i)}
-                updateStrategy={updateStrategy.bind(null, i)}
+                removeStrategy={removeStrategy ? removeStrategy.bind(null, i) : null}
+                updateStrategy={updateStrategy ? updateStrategy.bind(null, i) : null}
                 strategyDefinition={strategies.find(s => s.name === strategy.name)}
             />
         ));

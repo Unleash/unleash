@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import Feature from './../feature/feature-list-item-component';
 import { CardActions, Menu, MenuItem, Icon, Card, List, Chip } from 'react-mdl';
-import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
-import styles from './archive.scss';
+import { MenuItemWithIcon, DropdownButton, styles } from '../common';
+// import styles from './archive.scss';
 
 class ArchiveList extends React.PureComponent {
     static propTypes = {
@@ -49,12 +49,12 @@ class ArchiveList extends React.PureComponent {
             const strategyChips =
                 feature.strategies &&
                 feature.strategies.slice(0, strategiesToShow).map((s, i) => (
-                    <span key={i} className={[styles.strategiesList, commonStyles.hideLt920].join(' ')}>
+                    <span key={i} className={[styles.strategiesList, styles.hideLt920].join(' ')}>
                         <Chip className={styles.strategyChip}>{s.name}</Chip>
                     </span>
                 ));
             const remaining = (
-                <span className={[styles.strategiesList, commonStyles.hideLt920].join(' ')}>
+                <span className={[styles.strategiesList, styles.hideLt920].join(' ')}>
                     <Chip className={styles.strategyChip}>+{remainingStrategies}</Chip>
                 </span>
             );
@@ -73,7 +73,7 @@ class ArchiveList extends React.PureComponent {
             e.reviveName = e.name;
         });
         return (
-            <Card shadow={0} className={commonStyles.fullwidth}>
+            <Card shadow={0} className={styles.fullwidth}>
                 <CardActions>
                     <DropdownButton id="metric" label={`Last ${settings.showLastHour ? 'hour' : 'minute'}`} />
                     <Menu target="metric" onClick={() => this.toggleMetrics()} style={{ width: '168px' }}>
@@ -128,7 +128,7 @@ class ArchiveList extends React.PureComponent {
                         ))}
                     </List>
                 ) : (
-                    <div className={commonStyles.emptyState}>
+                    <div className={styles.emptyState}>
                         <Icon name="archive" className="mdl-color-text--grey-300" style={{ fontSize: '56px' }} />
                         <br />
                         No archived feature toggles, go see <Link to="/features">active toggles here</Link>

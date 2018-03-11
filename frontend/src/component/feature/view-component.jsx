@@ -51,10 +51,9 @@ export default class ViewFeatureToggleComponent extends React.Component {
             return <HistoryComponent toggleName={featureToggleName} />;
         } else if (TABS[activeTab] === TABS.strategies) {
             if (this.isFeatureView) {
-                return <EditFeatureToggle featureToggle={featureToggle} />
+                return <EditFeatureToggle featureToggle={featureToggle} />;
             }
-            return <ViewFeatureToggle featureToggle={featureToggle} />
-
+            return <ViewFeatureToggle featureToggle={featureToggle} />;
         } else {
             return <MetricComponent featureToggle={featureToggle} />;
         }

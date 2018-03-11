@@ -51,5 +51,6 @@ exports[`renders correctly with one feature 1`] = `
       gradualRolloutRandom
     </react-mdl-Chip>
   </span>
+  <span />
 </react-mdl-ListItem>
 `;

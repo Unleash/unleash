@@ -46,7 +46,7 @@ class StrategyConfigure extends React.Component {
     /* eslint-enable */
     static propTypes = {
         strategy: PropTypes.object.isRequired,
-        strategyDefinition: PropTypes.object.isRequired,
+        strategyDefinition: PropTypes.object,
         updateStrategy: PropTypes.func,
         removeStrategy: PropTypes.func,
         moveStrategy: PropTypes.func,

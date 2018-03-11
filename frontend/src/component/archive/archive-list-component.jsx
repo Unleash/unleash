@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import Feature from './../feature/feature-list-item-component';
-import { Icon, Card, List, ListItem, Chip } from 'react-mdl';
-import { styles as commonStyles } from '../common';
+import { CardActions, Menu, MenuItem, Icon, Card, List, Chip } from 'react-mdl';
+import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
 import styles from './archive.scss';
 
 class ArchiveList extends React.PureComponent {
@@ -19,6 +19,12 @@ class ArchiveList extends React.PureComponent {
 
     componentDidMount() {
         this.props.fetchArchive();
+    }
+    setSort(v) {
+        this.props.updateSetting('sort', typeof v === 'string' ? v.trim() : '');
+    }
+    toggleMetrics() {
+        this.props.updateSetting('showLastHour', !this.props.settings.showLastHour);
     }
     renderStrategyDetail(feature) {
         let strategiesList = (
@@ -68,30 +74,59 @@ class ArchiveList extends React.PureComponent {
         });
         return (
             <Card shadow={0} className={commonStyles.fullwidth}>
+                <CardActions>
+                    <DropdownButton id="metric" label={`Last ${settings.showLastHour ? 'hour' : 'minute'}`} />
+                    <Menu target="metric" onClick={() => this.toggleMetrics()} style={{ width: '168px' }}>
+                        <MenuItemWithIcon
+                            icon="hourglass_empty"
+                            disabled={!settings.showLastHour}
+                            data-target="minute"
+                            label="Last minute"
+                        />
+                        <MenuItemWithIcon
+                            icon="hourglass_full"
+                            disabled={settings.showLastHour}
+                            data-target="hour"
+                            label="Last hour"
+                        />
+                    </Menu>
+                    <DropdownButton id="sorting" label={`By ${settings.sort}`} />
+                    <Menu
+                        target="sorting"
+                        onClick={e => this.setSort(e.target.getAttribute('data-target'))}
+                        style={{ width: '168px' }}
+                    >
+                        <MenuItem disabled={settings.sort === 'name'} data-target="name">
+                            Name
+                        </MenuItem>
+                        <MenuItem disabled={settings.sort === 'enabled'} data-target="enabled">
+                            Enabled
+                        </MenuItem>
+                        <MenuItem disabled={settings.sort === 'created'} data-target="created">
+                            Created
+                        </MenuItem>
+                        <MenuItem disabled={settings.sort === 'strategies'} data-target="strategies">
+                            Strategies
+                        </MenuItem>
+                        <MenuItem disabled={settings.sort === 'metrics'} data-target="metrics">
+                            Metrics
+                        </MenuItem>
+                    </Menu>
+                </CardActions>
+                <hr />
                 {archive && archive.length > 0 ? (
-                    <div>
-                        <div style={{ position: 'relative' }}>
-                            <List>
-                                <ListItem className={styles.archiveList}>
-                                    <span className={styles.listItemToggle}>Toggle name</span>
-                                    <span className={styles.listItemRevive}>Revive</span>
-                                </ListItem>
-                                <hr />
-                                <List>
-                                    {archive.map((feature, i) => (
-                                        <Feature
-                                            key={i}
-                                            settings={settings}
-                                            metricsLastHour={featureMetrics.lastHour[feature.name]}
-                                            metricsLastMinute={featureMetrics.lastMinute[feature.name]}
-                                            feature={feature}
-                                            revive={revive}
-                                        />
-                                    ))}
-                                </List>
-                            </List>
-                        </div>
-                    </div>
+                    <List>
+                        {archive.map((feature, i) => (
+                            <Feature
+                                key={i}
+                                settings={settings}
+                                metricsLastHour={featureMetrics.lastHour[feature.name]}
+                                metricsLastMinute={featureMetrics.lastMinute[feature.name]}
+                                feature={feature}
+                                revive={revive}
+                            />
+                        ))}
+                    </List>
                 ) : (
                     <div className={commonStyles.emptyState}>
                         <Icon name="archive" className="mdl-color-text--grey-300" style={{ fontSize: '56px' }} />

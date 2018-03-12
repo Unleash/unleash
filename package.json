@@ -78,7 +78,7 @@
     "passport-google-auth": "^1.0.2",
     "pg": "^7.4.0",
     "pkginfo": "^0.4.1",
-    "prom-client": "^10.0.4",
+    "prom-client": "^11.0.0",
     "prometheus-gc-stats": "^0.5.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.3.0",

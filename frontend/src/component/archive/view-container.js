@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
-import { fetchArchive } from './../../store/archive-actions';
-
+import { fetchArchive, revive } from './../../store/archive-actions';
 import ViewToggleComponent from './../feature/view-component';
 
 export default connect(
@@ -14,5 +13,6 @@ export default connect(
     }),
     {
         fetchArchive,
+        revive,
     }
 )(ViewToggleComponent);

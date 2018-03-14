@@ -8,6 +8,7 @@ import MetricComponent from './metric-container';
 import EditFeatureToggle from './form/form-update-feature-container';
 import ViewFeatureToggle from './form/form-view-feature-container';
 import { styles as commonStyles } from '../common';
+import {revive} from '../../store/archive-actions';
 
 const TABS = {
     strategies: 0,
@@ -28,6 +29,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         features: PropTypes.array.isRequired,
         toggleFeature: PropTypes.func,
         removeFeatureToggle: PropTypes.func,
+        revive: PropTypes.func,
         fetchArchive: PropTypes.func,
         fetchFeatureToggles: PropTypes.func,
         editFeatureToggle: PropTypes.func,
@@ -69,6 +71,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
             featureToggle,
             features,
             activeTab,
+            revive,
             // setValue,
             featureToggleName,
             toggleFeature,
@@ -105,6 +108,10 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 removeFeatureToggle(featureToggle.name);
                 hashHistory.push('/features');
             }
+        };
+        const reviveToggle = () => {
+            revive(featureToggle.name);
+            hashHistory.push('/features');
         };
         const updateFeatureToggle = () => {
             let feature = { ...featureToggle };
@@ -183,7 +190,9 @@ export default class ViewFeatureToggleComponent extends React.Component {
                             Archive
                         </Button>
                     ) : (
-                        <span />
+                        <Button onClick={reviveToggle} style={{ flexShrink: 0 }}>
+                            Revive
+                        </Button>
                     )}
                 </CardActions>
                 <hr />

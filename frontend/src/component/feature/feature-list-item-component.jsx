@@ -54,7 +54,15 @@ const Feature = ({
                 </span>
             ) : (
                 // display archive, toggleFeature is undefined
-                <span />
+                <span className={styles.listItemToggle}>
+                    <Switch
+                        disabled
+                        title={`Toggle ${name}`}
+                        key="left-actions"
+                        onChange={() => toggleFeature(name)}
+                        checked={enabled}
+                    />
+                </span>
             )}
             <span className={['mdl-list__item-primary-content', styles.listItemLink].join(' ')}>
                 {toggleFeature ? ( // display feature list, toggleFeature is available

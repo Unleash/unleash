@@ -8,7 +8,6 @@ import MetricComponent from './metric-container';
 import EditFeatureToggle from './form/form-update-feature-container';
 import ViewFeatureToggle from './form/form-view-feature-container';
 import { styles as commonStyles } from '../common';
-import {revive} from '../../store/archive-actions';
 
 const TABS = {
     strategies: 0,

@@ -4,10 +4,10 @@ import { updateSettingForGroup } from '../../store/settings/actions';
 
 import FeatureListComponent from './list-component';
 
-const mapStateToProps = state => {
+export const mapStateToPropsConfigurable = isFeature => state => {
     const featureMetrics = state.featureMetrics.toJS();
     const settings = state.settings.toJS().feature || {};
-    let features = state.features.toJS();
+    let features = isFeature ? state.features.toJS() : state.archive.get('list').toArray();
     if (settings.filter) {
         try {
             const regex = new RegExp(settings.filter, 'i');
@@ -69,7 +69,7 @@ const mapStateToProps = state => {
         settings,
     };
 };
-
+const mapStateToProps = mapStateToPropsConfigurable(true);
 const mapDispatchToProps = {
     toggleFeature,
     fetchFeatureToggles,

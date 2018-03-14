@@ -115,6 +115,7 @@ export default class FeatureListComponent extends React.Component {
                                 metricsLastHour={featureMetrics.lastHour[feature.name]}
                                 metricsLastMinute={featureMetrics.lastMinute[feature.name]}
                                 feature={feature}
+                                toggleFeature={toggleFeature}
                                 revive={revive}
                             />
                         ))}

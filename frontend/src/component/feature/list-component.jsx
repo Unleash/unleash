@@ -7,11 +7,13 @@ import { Icon, FABButton, Textfield, Menu, MenuItem, Card, CardActions, List } f
 import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
 import styles from './feature.scss';
 
-export default class FeatureListComponent extends React.PureComponent {
+export default class FeatureListComponent extends React.Component {
     static propTypes = {
         features: PropTypes.array.isRequired,
         featureMetrics: PropTypes.object.isRequired,
-        fetchFeatureToggles: PropTypes.func.isRequired,
+        fetchFeatureToggles: PropTypes.func,
+        fetchArchive: PropTypes.func,
+        revive: PropTypes.func,
         updateSetting: PropTypes.func.isRequired,
         toggleFeature: PropTypes.func,
         settings: PropTypes.object,
@@ -22,7 +24,11 @@ export default class FeatureListComponent extends React.PureComponent {
     };
 
     componentDidMount() {
-        this.props.fetchFeatureToggles();
+        if (this.props.fetchFeatureToggles) {
+            this.props.fetchFeatureToggles();
+        } else {
+            this.props.fetchArchive();
+        }
     }
 
     toggleMetrics() {
@@ -38,8 +44,10 @@ export default class FeatureListComponent extends React.PureComponent {
     }
 
     render() {
-        const { features, toggleFeature, featureMetrics, settings } = this.props;
-
+        const { features, toggleFeature, featureMetrics, settings, revive } = this.props;
+        features.forEach(e => {
+            e.reviveName = e.name;
+        });
         return (
             <div>
                 <div className={styles.toolbar}>
@@ -107,7 +115,7 @@ export default class FeatureListComponent extends React.PureComponent {
                                 metricsLastHour={featureMetrics.lastHour[feature.name]}
                                 metricsLastMinute={featureMetrics.lastMinute[feature.name]}
                                 feature={feature}
-                                toggleFeature={toggleFeature}
+                                revive={revive}
                             />
                         ))}
                     </List>

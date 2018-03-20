@@ -4,20 +4,8 @@ import StrategiesSection from './strategies-section-container';
 import { Button, Icon } from 'react-mdl';
 
 class ViewFeatureComponent extends Component {
-    // static displayName = `UpdateFeatureComponent-{getDisplayName(Component)}`;
-    componentWillMount() {
-        // TODO unwind this stuff
-        if (this.props.initCallRequired === true) {
-            this.props.init(this.props.input);
-        }
-    }
-
     render() {
         const { input, onCancel } = this.props;
-
-        const {
-            name, // eslint-disable-line
-        } = input;
         const configuredStrategies = input.strategies || [];
 
         return (

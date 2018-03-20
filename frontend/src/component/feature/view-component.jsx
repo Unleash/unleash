@@ -164,24 +164,14 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     }}
                 >
                     <span style={{ paddingRight: '24px' }}>
-                        {this.isFeatureView ? (
-                            <Switch
-                                ripple
-                                checked={featureToggle.enabled}
-                                onChange={() => toggleFeature(featureToggle.name)}
-                            >
-                                {featureToggle.enabled ? 'Enabled' : 'Disabled'}
-                            </Switch>
-                        ) : (
-                            <Switch
-                                disabled
-                                ripple
-                                checked={featureToggle.enabled}
-                                onChange={() => toggleFeature(featureToggle.name)}
-                            >
-                                {featureToggle.enabled ? 'Enabled' : 'Disabled'}
-                            </Switch>
-                        )}
+                        <Switch
+                            disabled={this.isFeatureView}
+                            ripple
+                            checked={featureToggle.enabled}
+                            onChange={() => toggleFeature(featureToggle.name)}
+                        >
+                            {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                        </Switch>
                     </span>
 
                     {this.isFeatureView ? (

@@ -8,9 +8,9 @@ import { HeaderTitle } from '../../common';
 class StrategiesSectionComponent extends React.Component {
     static propTypes = {
         strategies: PropTypes.array.isRequired,
-        addStrategy: PropTypes.func.isRequired,
-        removeStrategy: PropTypes.func.isRequired,
-        updateStrategy: PropTypes.func.isRequired,
+        addStrategy: PropTypes.func,
+        removeStrategy: PropTypes.func,
+        updateStrategy: PropTypes.func,
         fetchStrategies: PropTypes.func.isRequired,
     };
 
@@ -25,7 +25,11 @@ class StrategiesSectionComponent extends React.Component {
 
         return (
             <div>
-                <HeaderTitle title="Activation strategies" actions={<AddStrategy {...this.props} />} />
+                {this.props.addStrategy ? (
+                    <HeaderTitle title="Activation strategies" actions={<AddStrategy {...this.props} />} />
+                ) : (
+                    <span />
+                )}
                 <StrategiesList {...this.props} />
             </div>
         );

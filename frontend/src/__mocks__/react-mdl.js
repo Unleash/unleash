@@ -1,5 +1,6 @@
 module.exports = {
     Card: 'react-mdl-Card',
+    CardActions: 'react-mdl-CardActions',
     CardTitle: 'react-mdl-CardTitle',
     CardText: 'react-mdl-CardText',
     CardMenu: 'react-mdl-CardMenu',

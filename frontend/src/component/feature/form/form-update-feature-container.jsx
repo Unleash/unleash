@@ -45,7 +45,7 @@ const prepare = (methods, dispatch) => {
     methods.onCancel = evt => {
         evt.preventDefault();
         methods.clear();
-        window.history.back();
+        hashHistory.push(`/features`);
     };
 
     methods.addStrategy = v => {

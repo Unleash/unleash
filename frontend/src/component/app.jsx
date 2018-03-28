@@ -192,11 +192,11 @@ export default class App extends Component {
                                 <FooterSection type="middle">
                                     <FooterDropDownSection title="Menu">
                                         <FooterLinkList>
-                                            {createListItem('/features', 'Feature Toggles')}
-                                            {createListItem('/strategies', 'Strategies')}
-                                            {createListItem('/history', 'Event History')}
-                                            {createListItem('/archive', 'Archived Toggles')}
-                                            {createListItem('/applications', 'Applications')}
+                                            {createListItem('/features', 'Feature Toggles', '')}
+                                            {createListItem('/strategies', 'Strategies', '')}
+                                            {createListItem('/history', 'Event History', '')}
+                                            {createListItem('/archive', 'Archived Toggles', '')}
+                                            {createListItem('/applications', 'Applications', '')}
                                             <a href="/api/admin/user/logout">Sign out</a>
                                         </FooterLinkList>
                                     </FooterDropDownSection>

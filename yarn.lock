@@ -1511,13 +1511,13 @@ db-migrate-base@^1.5.2:
   dependencies:
     bluebird "^3.1.1"
 
-db-migrate-pg@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/db-migrate-pg/-/db-migrate-pg-0.3.0.tgz#7e5fd18e6f1f4566db7b4064161b0ad79697f6c6"
+db-migrate-pg@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/db-migrate-pg/-/db-migrate-pg-0.4.0.tgz#4ccab08a8bda89e1164f11259005209449c0359b"
   dependencies:
     bluebird "^3.1.1"
     db-migrate-base "^1.5.2"
-    pg "^7.0.0"
+    pg "^7.4.1"
     semver "^5.0.3"
 
 db-migrate-shared@^1.1.2:
@@ -4876,9 +4876,9 @@ pg-types@~1.12.1:
     postgres-date "~1.0.0"
     postgres-interval "^1.1.0"
 
-pg@^7.0.0:
-  version "7.4.1"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-7.4.1.tgz#f3411c8ddf9f692322fe05e7017a1888e47f78f1"
+pg@^7.4.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-7.4.0.tgz#e256061d2c52723c3c858defb97f1159ca660f83"
   dependencies:
     buffer-writer "1.0.1"
     js-string-escape "1.0.1"
@@ -4889,9 +4889,9 @@ pg@^7.0.0:
     pgpass "1.x"
     semver "4.3.2"
 
-pg@^7.4.0:
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-7.4.0.tgz#e256061d2c52723c3c858defb97f1159ca660f83"
+pg@^7.4.1:
+  version "7.4.1"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-7.4.1.tgz#f3411c8ddf9f692322fe05e7017a1888e47f78f1"
   dependencies:
     buffer-writer "1.0.1"
     js-string-escape "1.0.1"

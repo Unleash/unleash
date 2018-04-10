@@ -62,7 +62,7 @@
     "cookie-parser": "^1.4.3",
     "cookie-session": "^2.0.0-beta.3",
     "db-migrate": "^0.10.0",
-    "db-migrate-pg": "^0.3.0",
+    "db-migrate-pg": "^0.4.0",
     "deep-diff": "^0.3.3",
     "errorhandler": "^1.5.0",
     "express": "^4.16.2",

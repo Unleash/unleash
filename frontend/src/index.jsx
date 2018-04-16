@@ -26,6 +26,7 @@ import Archive from './page/archive';
 import ShowArchive from './page/archive/show';
 import Applications from './page/applications';
 import ApplicationView from './page/applications/view';
+import LogoutFeatures from './page/user/logout';
 
 let composeEnhancers;
 
@@ -75,6 +76,9 @@ ReactDOM.render(
                 <Route pageTitle="Applications" link="/applications">
                     <Route pageTitle="Applications" path="/applications" component={Applications} />
                     <Route pageTitle=":name" path="/applications/:name" component={ApplicationView} />
+                </Route>
+                <Route pageTitle="Logout" link="/logout">
+                    <Route pageTitle="Logout" path="/logout" component={LogoutFeatures} />
                 </Route>
             </Route>
         </Router>

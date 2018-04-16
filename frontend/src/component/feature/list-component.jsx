@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Feature from './feature-list-item-component';
-import { Link } from 'react-router';
+import { hashHistory, Link } from 'react-router';
 import { Icon, FABButton, Textfield, Menu, MenuItem, Card, CardActions, List } from 'react-mdl';
-
 import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
 import styles from './feature.scss';
 
@@ -13,6 +12,7 @@ export default class FeatureListComponent extends React.Component {
         featureMetrics: PropTypes.object.isRequired,
         fetchFeatureToggles: PropTypes.func,
         fetchArchive: PropTypes.func,
+        logoutUser: PropTypes.func,
         revive: PropTypes.func,
         updateSetting: PropTypes.func.isRequired,
         toggleFeature: PropTypes.func,
@@ -24,6 +24,10 @@ export default class FeatureListComponent extends React.Component {
     };
 
     componentDidMount() {
+        if (this.props.logout) {
+            this.props.logoutUser();
+            hashHistory.push(`/`);
+        }
         if (this.props.fetchFeatureToggles) {
             this.props.fetchFeatureToggles();
         } else {

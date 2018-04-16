@@ -22,6 +22,7 @@ import AuthenticationContainer from './user/authentication-container';
 import ShowUserContainer from './user/show-user-container';
 import ShowApiDetailsContainer from './api/show-api-details-container';
 import { ScrollContainer } from 'react-router-scroll';
+import { logoutUser } from '../store/user/actions';
 
 function replace(input, params) {
     if (!params) {
@@ -112,7 +113,7 @@ export default class App extends Component {
                 return [0, 0];
             }
         };
-        const createListItem = (path, caption, icon, isDrawerNavigation = false, isAnchor = false) => {
+        const createListItem = (path, caption, icon, isDrawerNavigation = false) => {
             const linkColor =
                 isDrawerNavigation && this.context.router.isActive(path)
                     ? 'mdl-color-text--black'
@@ -127,15 +128,7 @@ export default class App extends Component {
                     className={isDrawerNavigation ? [styles.navigationIcon, iconColor].join(' ') : undefined}
                 />
             );
-            return isAnchor ? (
-                <a
-                    href={path}
-                    className={isDrawerNavigation ? [styles.navigationLink, linkColor].join(' ') : undefined}
-                >
-                    {icon && renderIcon}
-                    {caption}
-                </a>
-            ) : (
+            return (
                 <Link
                     to={path}
                     className={isDrawerNavigation ? [styles.navigationLink, linkColor].join(' ') : undefined}
@@ -167,7 +160,7 @@ export default class App extends Component {
                             {createListItem('/history', 'Event History', 'history', true)}
                             {createListItem('/archive', 'Archived Toggles', 'archive', true)}
                             {createListItem('/applications', 'Applications', 'apps', true)}
-                            {createListItem('/api/admin/user/logout', 'Sign out', 'exit_to_app', true, true)}
+                            {createListItem('logout', 'Sign out', 'exit_to_app', true)}
                         </Navigation>
                         <hr />
                         <Navigation className={styles.navigation}>
@@ -197,7 +190,7 @@ export default class App extends Component {
                                             {createListItem('/history', 'Event History', '')}
                                             {createListItem('/archive', 'Archived Toggles', '')}
                                             {createListItem('/applications', 'Applications', '')}
-                                            <a href="/api/admin/user/logout">Sign out</a>
+                                            {createListItem('/logout', 'Sign out', '')}
                                         </FooterLinkList>
                                     </FooterDropDownSection>
                                     <FooterDropDownSection title="Clients">

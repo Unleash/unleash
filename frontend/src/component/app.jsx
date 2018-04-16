@@ -22,7 +22,6 @@ import AuthenticationContainer from './user/authentication-container';
 import ShowUserContainer from './user/show-user-container';
 import ShowApiDetailsContainer from './api/show-api-details-container';
 import { ScrollContainer } from 'react-router-scroll';
-import { logoutUser } from '../store/user/actions';
 
 function replace(input, params) {
     if (!params) {

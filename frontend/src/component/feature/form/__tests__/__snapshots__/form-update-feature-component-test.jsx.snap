@@ -27,6 +27,7 @@ ShallowWrapper {
               "name": "feature",
               "nameError": Object {},
             },
+            undefined,
           ],
         ],
       }

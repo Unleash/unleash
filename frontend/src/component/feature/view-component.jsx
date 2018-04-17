@@ -46,13 +46,13 @@ export default class ViewFeatureToggleComponent extends React.Component {
     }
 
     getTabContent(activeTab) {
-        const { featureToggle, featureToggleName } = this.props;
+        const { features, featureToggle, featureToggleName } = this.props;
 
         if (TABS[activeTab] === TABS.history) {
             return <HistoryComponent toggleName={featureToggleName} />;
         } else if (TABS[activeTab] === TABS.strategies) {
             if (this.isFeatureView) {
-                return <EditFeatureToggle featureToggle={featureToggle} />;
+                return <EditFeatureToggle featureToggle={featureToggle} features={features} />;
             }
             return <ViewFeatureToggle featureToggle={featureToggle} />;
         } else {
@@ -165,7 +165,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 >
                     <span style={{ paddingRight: '24px' }}>
                         <Switch
-                            disabled={this.isFeatureView}
+                            disabled={!this.isFeatureView}
                             ripple
                             checked={featureToggle.enabled}
                             onChange={() => toggleFeature(featureToggle.name)}

@@ -14,15 +14,23 @@ class UpdateFeatureComponent extends Component {
     }
 
     render() {
-        const { input, addStrategy, removeStrategy, updateStrategy, moveStrategy, onSubmit, onCancel } = this.props;
-
+        const {
+            input,
+            features,
+            addStrategy,
+            removeStrategy,
+            updateStrategy,
+            moveStrategy,
+            onSubmit,
+            onCancel,
+        } = this.props;
         const {
             name, // eslint-disable-line
         } = input;
         const configuredStrategies = input.strategies || [];
 
         return (
-            <form onSubmit={onSubmit(input)}>
+            <form onSubmit={onSubmit(input, features)}>
                 <section style={{ padding: '16px' }}>
                     <StrategiesSection
                         configuredStrategies={configuredStrategies}
@@ -42,6 +50,7 @@ class UpdateFeatureComponent extends Component {
 
 UpdateFeatureComponent.propTypes = {
     input: PropTypes.object,
+    features: PropTypes.array,
     setValue: PropTypes.func.isRequired,
     addStrategy: PropTypes.func.isRequired,
     removeStrategy: PropTypes.func.isRequired,

@@ -42,7 +42,7 @@ const Feature = ({
             </span>
             <span className={styles.listItemToggle}>
                 <Switch
-                    disabled={toggleFeature !== undefined}
+                    disabled={toggleFeature === undefined}
                     title={`Toggle ${name}`}
                     key="left-actions"
                     onChange={() => toggleFeature(name)}

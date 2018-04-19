@@ -26,7 +26,7 @@ const mapStateToProps = createMapper({
 });
 
 const prepare = (methods, dispatch) => {
-    methods.onSubmit = input => e => {
+    methods.onSubmit = (input, features) => e => {
         e.preventDefault();
 
         if (Array.isArray(input.strategies)) {
@@ -35,6 +35,9 @@ const prepare = (methods, dispatch) => {
             });
         }
         delete input.description;
+        // take the status of the feature toggles from the central store in case `toggleFeature` function was called
+        const feat = features.find(f => f.name === input.name);
+        input.enabled = feat.enabled;
 
         // TODO: should add error handling
         requestUpdateFeatureToggle(input)(dispatch)

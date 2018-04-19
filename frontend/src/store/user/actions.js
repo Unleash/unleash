@@ -36,3 +36,7 @@ export function unsecureLogin(path, user) {
             .catch(handleError);
     };
 }
+
+export function logoutUser() {
+    return () => api.logoutUser().catch(handleError);
+}

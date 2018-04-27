@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.0.2
+- fix(package): Update unleash-frontend to version 3.0.1 
+
+## 3.0.1
+- fix(package): Update db-migrate-pg to version 0.4.0
+- fix(package): update prom-client to version 11.0.0
+- refactor: use body-parser bundled with express
+- fix(package): update express-validator to version 5.0.0
+
 ## 3.0.0 (10.02.2018)
 - All changes in all 3.0.0 alpha-releases is included in this version
 - fix(package): Upgrade unleash-frontend to version 3.0.0

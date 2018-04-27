@@ -49,318 +49,27 @@ ShallowWrapper {
     "key": undefined,
     "nodeType": "host",
     "props": Object {
-      "children": <section
-        style={
-          Object {
-            "padding": "16px",
-          }
-        }
-      >
-        <react-mdl-Textfield
-          error={Object {}}
-          floatingLabel={true}
-          label="Name"
-          name="name"
-          onBlur={[Function]}
-          onChange={[Function]}
-          required={true}
-          value="feature"
-        />
-        <react-mdl-Textfield
-          floatingLabel={true}
-          label="Description"
-          onChange={[Function]}
-          required={true}
-          rows={1}
+      "children": Array [
+        <react-mdl-CardTitle
           style={
             Object {
-              "width": "100%",
-            }
-          }
-          value="Description"
-        />
-        <div>
-          <br />
-          <react-mdl-Switch
-            checked={false}
-            onChange={[Function]}
-          >
-            Enabled
-          </react-mdl-Switch>
-          <hr />
-        </div>
-        <StrategiesSection
-          addStrategy={[MockFunction]}
-          configuredStrategies={Array []}
-          moveStrategy={[MockFunction]}
-          removeStrategy={[MockFunction]}
-          updateStrategy={[MockFunction]}
-        />
-        <br />
-        <FormButtons
-          onCancel={[MockFunction]}
-          submitText="Create"
-        />
-      </section>,
-      "onSubmit": undefined,
-    },
-    "ref": null,
-    "rendered": Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {
-        "children": Array [
-          <react-mdl-Textfield
-            error={Object {}}
-            floatingLabel={true}
-            label="Name"
-            name="name"
-            onBlur={[Function]}
-            onChange={[Function]}
-            required={true}
-            value="feature"
-          />,
-          <react-mdl-Textfield
-            floatingLabel={true}
-            label="Description"
-            onChange={[Function]}
-            required={true}
-            rows={1}
-            style={
-              Object {
-                "width": "100%",
-              }
-            }
-            value="Description"
-          />,
-          <div>
-            <br />
-            <react-mdl-Switch
-              checked={false}
-              onChange={[Function]}
-            >
-              Enabled
-            </react-mdl-Switch>
-            <hr />
-          </div>,
-          <StrategiesSection
-            addStrategy={[MockFunction]}
-            configuredStrategies={Array []}
-            moveStrategy={[MockFunction]}
-            removeStrategy={[MockFunction]}
-            updateStrategy={[MockFunction]}
-          />,
-          <br />,
-          <FormButtons
-            onCancel={[MockFunction]}
-            submitText="Create"
-          />,
-        ],
-        "style": Object {
-          "padding": "16px",
-        },
-      },
-      "ref": null,
-      "rendered": Array [
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "error": Object {},
-            "floatingLabel": true,
-            "label": "Name",
-            "name": "name",
-            "onBlur": [Function],
-            "onChange": [Function],
-            "required": true,
-            "value": "feature",
-          },
-          "ref": null,
-          "rendered": null,
-          "type": "react-mdl-Textfield",
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "floatingLabel": true,
-            "label": "Description",
-            "onChange": [Function],
-            "required": true,
-            "rows": 1,
-            "style": Object {
-              "width": "100%",
-            },
-            "value": "Description",
-          },
-          "ref": null,
-          "rendered": null,
-          "type": "react-mdl-Textfield",
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "children": Array [
-              <br />,
-              <react-mdl-Switch
-                checked={false}
-                onChange={[Function]}
-              >
-                Enabled
-              </react-mdl-Switch>,
-              <hr />,
-            ],
-          },
-          "ref": null,
-          "rendered": Array [
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {},
-              "ref": null,
-              "rendered": null,
-              "type": "br",
-            },
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {
-                "checked": false,
-                "children": "Enabled",
-                "onChange": [Function],
-              },
-              "ref": null,
-              "rendered": "Enabled",
-              "type": "react-mdl-Switch",
-            },
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {},
-              "ref": null,
-              "rendered": null,
-              "type": "hr",
-            },
-          ],
-          "type": "div",
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "addStrategy": [MockFunction],
-            "configuredStrategies": Array [],
-            "moveStrategy": [MockFunction],
-            "removeStrategy": [MockFunction],
-            "updateStrategy": [MockFunction],
-          },
-          "ref": null,
-          "rendered": null,
-          "type": "StrategiesSection",
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {},
-          "ref": null,
-          "rendered": null,
-          "type": "br",
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "onCancel": [MockFunction],
-            "submitText": "Create",
-          },
-          "ref": null,
-          "rendered": null,
-          "type": [Function],
-        },
-      ],
-      "type": "section",
-    },
-    "type": "form",
-  },
-  Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {
-        "children": <section
-          style={
-            Object {
-              "padding": "16px",
+              "paddingTop": "24px",
+              "wordBreak": "break-all",
             }
           }
         >
-          <react-mdl-Textfield
-            error={Object {}}
-            floatingLabel={true}
-            label="Name"
-            name="name"
-            onBlur={[Function]}
-            onChange={[Function]}
-            required={true}
-            value="feature"
-          />
-          <react-mdl-Textfield
-            floatingLabel={true}
-            label="Description"
-            onChange={[Function]}
-            required={true}
-            rows={1}
+          Create feature toggle
+        </react-mdl-CardTitle>,
+        <form
+          onSubmit={undefined}
+        >
+          <section
             style={
               Object {
-                "width": "100%",
+                "padding": "16px",
               }
             }
-            value="Description"
-          />
-          <div>
-            <br />
-            <react-mdl-Switch
-              checked={false}
-              onChange={[Function]}
-            >
-              Enabled
-            </react-mdl-Switch>
-            <hr />
-          </div>
-          <StrategiesSection
-            addStrategy={[MockFunction]}
-            configuredStrategies={Array []}
-            moveStrategy={[MockFunction]}
-            removeStrategy={[MockFunction]}
-            updateStrategy={[MockFunction]}
-          />
-          <br />
-          <FormButtons
-            onCancel={[MockFunction]}
-            submitText="Create"
-          />
-        </section>,
-        "onSubmit": undefined,
-      },
-      "ref": null,
-      "rendered": Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "host",
-        "props": Object {
-          "children": Array [
+          >
             <react-mdl-Textfield
               error={Object {}}
               floatingLabel={true}
@@ -370,7 +79,7 @@ ShallowWrapper {
               onChange={[Function]}
               required={true}
               value="feature"
-            />,
+            />
             <react-mdl-Textfield
               floatingLabel={true}
               label="Description"
@@ -383,7 +92,7 @@ ShallowWrapper {
                 }
               }
               value="Description"
-            />,
+            />
             <div>
               <br />
               <react-mdl-Switch
@@ -393,23 +102,110 @@ ShallowWrapper {
                 Enabled
               </react-mdl-Switch>
               <hr />
-            </div>,
+            </div>
             <StrategiesSection
               addStrategy={[MockFunction]}
               configuredStrategies={Array []}
               moveStrategy={[MockFunction]}
               removeStrategy={[MockFunction]}
               updateStrategy={[MockFunction]}
-            />,
-            <br />,
+            />
+            <br />
+          </section>
+          <react-mdl-CardActions>
             <FormButtons
               onCancel={[MockFunction]}
               submitText="Create"
-            />,
-          ],
+            />
+          </react-mdl-CardActions>
+        </form>,
+      ],
+      "className": "fullwidth",
+      "shadow": 0,
+      "style": Object {
+        "overflow": "visible",
+      },
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "Create feature toggle",
           "style": Object {
-            "padding": "16px",
+            "paddingTop": "24px",
+            "wordBreak": "break-all",
           },
+        },
+        "ref": null,
+        "rendered": "Create feature toggle",
+        "type": "react-mdl-CardTitle",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <section
+              style={
+                Object {
+                  "padding": "16px",
+                }
+              }
+            >
+              <react-mdl-Textfield
+                error={Object {}}
+                floatingLabel={true}
+                label="Name"
+                name="name"
+                onBlur={[Function]}
+                onChange={[Function]}
+                required={true}
+                value="feature"
+              />
+              <react-mdl-Textfield
+                floatingLabel={true}
+                label="Description"
+                onChange={[Function]}
+                required={true}
+                rows={1}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+                value="Description"
+              />
+              <div>
+                <br />
+                <react-mdl-Switch
+                  checked={false}
+                  onChange={[Function]}
+                >
+                  Enabled
+                </react-mdl-Switch>
+                <hr />
+              </div>
+              <StrategiesSection
+                addStrategy={[MockFunction]}
+                configuredStrategies={Array []}
+                moveStrategy={[MockFunction]}
+                removeStrategy={[MockFunction]}
+                updateStrategy={[MockFunction]}
+              />
+              <br />
+            </section>,
+            <react-mdl-CardActions>
+              <FormButtons
+                onCancel={[MockFunction]}
+                submitText="Create"
+              />
+            </react-mdl-CardActions>,
+          ],
+          "onSubmit": undefined,
         },
         "ref": null,
         "rendered": Array [
@@ -418,56 +214,159 @@ ShallowWrapper {
             "key": undefined,
             "nodeType": "host",
             "props": Object {
-              "error": Object {},
-              "floatingLabel": true,
-              "label": "Name",
-              "name": "name",
-              "onBlur": [Function],
-              "onChange": [Function],
-              "required": true,
-              "value": "feature",
-            },
-            "ref": null,
-            "rendered": null,
-            "type": "react-mdl-Textfield",
-          },
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "host",
-            "props": Object {
-              "floatingLabel": true,
-              "label": "Description",
-              "onChange": [Function],
-              "required": true,
-              "rows": 1,
-              "style": Object {
-                "width": "100%",
-              },
-              "value": "Description",
-            },
-            "ref": null,
-            "rendered": null,
-            "type": "react-mdl-Textfield",
-          },
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "host",
-            "props": Object {
               "children": Array [
-                <br />,
-                <react-mdl-Switch
-                  checked={false}
+                <react-mdl-Textfield
+                  error={Object {}}
+                  floatingLabel={true}
+                  label="Name"
+                  name="name"
+                  onBlur={[Function]}
                   onChange={[Function]}
-                >
-                  Enabled
-                </react-mdl-Switch>,
-                <hr />,
+                  required={true}
+                  value="feature"
+                />,
+                <react-mdl-Textfield
+                  floatingLabel={true}
+                  label="Description"
+                  onChange={[Function]}
+                  required={true}
+                  rows={1}
+                  style={
+                    Object {
+                      "width": "100%",
+                    }
+                  }
+                  value="Description"
+                />,
+                <div>
+                  <br />
+                  <react-mdl-Switch
+                    checked={false}
+                    onChange={[Function]}
+                  >
+                    Enabled
+                  </react-mdl-Switch>
+                  <hr />
+                </div>,
+                <StrategiesSection
+                  addStrategy={[MockFunction]}
+                  configuredStrategies={Array []}
+                  moveStrategy={[MockFunction]}
+                  removeStrategy={[MockFunction]}
+                  updateStrategy={[MockFunction]}
+                />,
+                <br />,
               ],
+              "style": Object {
+                "padding": "16px",
+              },
             },
             "ref": null,
             "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "error": Object {},
+                  "floatingLabel": true,
+                  "label": "Name",
+                  "name": "name",
+                  "onBlur": [Function],
+                  "onChange": [Function],
+                  "required": true,
+                  "value": "feature",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": "react-mdl-Textfield",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "floatingLabel": true,
+                  "label": "Description",
+                  "onChange": [Function],
+                  "required": true,
+                  "rows": 1,
+                  "style": Object {
+                    "width": "100%",
+                  },
+                  "value": "Description",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": "react-mdl-Textfield",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": Array [
+                    <br />,
+                    <react-mdl-Switch
+                      checked={false}
+                      onChange={[Function]}
+                    >
+                      Enabled
+                    </react-mdl-Switch>,
+                    <hr />,
+                  ],
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {},
+                    "ref": null,
+                    "rendered": null,
+                    "type": "br",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "checked": false,
+                      "children": "Enabled",
+                      "onChange": [Function],
+                    },
+                    "ref": null,
+                    "rendered": "Enabled",
+                    "type": "react-mdl-Switch",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {},
+                    "ref": null,
+                    "rendered": null,
+                    "type": "hr",
+                  },
+                ],
+                "type": "div",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "addStrategy": [MockFunction],
+                  "configuredStrategies": Array [],
+                  "moveStrategy": [MockFunction],
+                  "removeStrategy": [MockFunction],
+                  "updateStrategy": [MockFunction],
+                },
+                "ref": null,
+                "rendered": null,
+                "type": "StrategiesSection",
+              },
               Object {
                 "instance": null,
                 "key": undefined,
@@ -477,71 +376,406 @@ ShallowWrapper {
                 "rendered": null,
                 "type": "br",
               },
-              Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "host",
-                "props": Object {
-                  "checked": false,
-                  "children": "Enabled",
-                  "onChange": [Function],
-                },
-                "ref": null,
-                "rendered": "Enabled",
-                "type": "react-mdl-Switch",
-              },
-              Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "host",
-                "props": Object {},
-                "ref": null,
-                "rendered": null,
-                "type": "hr",
-              },
             ],
-            "type": "div",
+            "type": "section",
           },
           Object {
             "instance": null,
             "key": undefined,
             "nodeType": "host",
             "props": Object {
-              "addStrategy": [MockFunction],
-              "configuredStrategies": Array [],
-              "moveStrategy": [MockFunction],
-              "removeStrategy": [MockFunction],
-              "updateStrategy": [MockFunction],
+              "children": <FormButtons
+                onCancel={[MockFunction]}
+                submitText="Create"
+              />,
             },
             "ref": null,
-            "rendered": null,
-            "type": "StrategiesSection",
-          },
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "host",
-            "props": Object {},
-            "ref": null,
-            "rendered": null,
-            "type": "br",
-          },
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "function",
-            "props": Object {
-              "onCancel": [MockFunction],
-              "submitText": "Create",
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "onCancel": [MockFunction],
+                "submitText": "Create",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
             },
-            "ref": null,
-            "rendered": null,
-            "type": [Function],
+            "type": "react-mdl-CardActions",
           },
         ],
-        "type": "section",
+        "type": "form",
       },
-      "type": "form",
+    ],
+    "type": "react-mdl-Card",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <react-mdl-CardTitle
+            style={
+              Object {
+                "paddingTop": "24px",
+                "wordBreak": "break-all",
+              }
+            }
+          >
+            Create feature toggle
+          </react-mdl-CardTitle>,
+          <form
+            onSubmit={undefined}
+          >
+            <section
+              style={
+                Object {
+                  "padding": "16px",
+                }
+              }
+            >
+              <react-mdl-Textfield
+                error={Object {}}
+                floatingLabel={true}
+                label="Name"
+                name="name"
+                onBlur={[Function]}
+                onChange={[Function]}
+                required={true}
+                value="feature"
+              />
+              <react-mdl-Textfield
+                floatingLabel={true}
+                label="Description"
+                onChange={[Function]}
+                required={true}
+                rows={1}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+                value="Description"
+              />
+              <div>
+                <br />
+                <react-mdl-Switch
+                  checked={false}
+                  onChange={[Function]}
+                >
+                  Enabled
+                </react-mdl-Switch>
+                <hr />
+              </div>
+              <StrategiesSection
+                addStrategy={[MockFunction]}
+                configuredStrategies={Array []}
+                moveStrategy={[MockFunction]}
+                removeStrategy={[MockFunction]}
+                updateStrategy={[MockFunction]}
+              />
+              <br />
+            </section>
+            <react-mdl-CardActions>
+              <FormButtons
+                onCancel={[MockFunction]}
+                submitText="Create"
+              />
+            </react-mdl-CardActions>
+          </form>,
+        ],
+        "className": "fullwidth",
+        "shadow": 0,
+        "style": Object {
+          "overflow": "visible",
+        },
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Create feature toggle",
+            "style": Object {
+              "paddingTop": "24px",
+              "wordBreak": "break-all",
+            },
+          },
+          "ref": null,
+          "rendered": "Create feature toggle",
+          "type": "react-mdl-CardTitle",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <section
+                style={
+                  Object {
+                    "padding": "16px",
+                  }
+                }
+              >
+                <react-mdl-Textfield
+                  error={Object {}}
+                  floatingLabel={true}
+                  label="Name"
+                  name="name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  required={true}
+                  value="feature"
+                />
+                <react-mdl-Textfield
+                  floatingLabel={true}
+                  label="Description"
+                  onChange={[Function]}
+                  required={true}
+                  rows={1}
+                  style={
+                    Object {
+                      "width": "100%",
+                    }
+                  }
+                  value="Description"
+                />
+                <div>
+                  <br />
+                  <react-mdl-Switch
+                    checked={false}
+                    onChange={[Function]}
+                  >
+                    Enabled
+                  </react-mdl-Switch>
+                  <hr />
+                </div>
+                <StrategiesSection
+                  addStrategy={[MockFunction]}
+                  configuredStrategies={Array []}
+                  moveStrategy={[MockFunction]}
+                  removeStrategy={[MockFunction]}
+                  updateStrategy={[MockFunction]}
+                />
+                <br />
+              </section>,
+              <react-mdl-CardActions>
+                <FormButtons
+                  onCancel={[MockFunction]}
+                  submitText="Create"
+                />
+              </react-mdl-CardActions>,
+            ],
+            "onSubmit": undefined,
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <react-mdl-Textfield
+                    error={Object {}}
+                    floatingLabel={true}
+                    label="Name"
+                    name="name"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    required={true}
+                    value="feature"
+                  />,
+                  <react-mdl-Textfield
+                    floatingLabel={true}
+                    label="Description"
+                    onChange={[Function]}
+                    required={true}
+                    rows={1}
+                    style={
+                      Object {
+                        "width": "100%",
+                      }
+                    }
+                    value="Description"
+                  />,
+                  <div>
+                    <br />
+                    <react-mdl-Switch
+                      checked={false}
+                      onChange={[Function]}
+                    >
+                      Enabled
+                    </react-mdl-Switch>
+                    <hr />
+                  </div>,
+                  <StrategiesSection
+                    addStrategy={[MockFunction]}
+                    configuredStrategies={Array []}
+                    moveStrategy={[MockFunction]}
+                    removeStrategy={[MockFunction]}
+                    updateStrategy={[MockFunction]}
+                  />,
+                  <br />,
+                ],
+                "style": Object {
+                  "padding": "16px",
+                },
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "error": Object {},
+                    "floatingLabel": true,
+                    "label": "Name",
+                    "name": "name",
+                    "onBlur": [Function],
+                    "onChange": [Function],
+                    "required": true,
+                    "value": "feature",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": "react-mdl-Textfield",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "floatingLabel": true,
+                    "label": "Description",
+                    "onChange": [Function],
+                    "required": true,
+                    "rows": 1,
+                    "style": Object {
+                      "width": "100%",
+                    },
+                    "value": "Description",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": "react-mdl-Textfield",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      <br />,
+                      <react-mdl-Switch
+                        checked={false}
+                        onChange={[Function]}
+                      >
+                        Enabled
+                      </react-mdl-Switch>,
+                      <hr />,
+                    ],
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {},
+                      "ref": null,
+                      "rendered": null,
+                      "type": "br",
+                    },
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {
+                        "checked": false,
+                        "children": "Enabled",
+                        "onChange": [Function],
+                      },
+                      "ref": null,
+                      "rendered": "Enabled",
+                      "type": "react-mdl-Switch",
+                    },
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {},
+                      "ref": null,
+                      "rendered": null,
+                      "type": "hr",
+                    },
+                  ],
+                  "type": "div",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "addStrategy": [MockFunction],
+                    "configuredStrategies": Array [],
+                    "moveStrategy": [MockFunction],
+                    "removeStrategy": [MockFunction],
+                    "updateStrategy": [MockFunction],
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": "StrategiesSection",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {},
+                  "ref": null,
+                  "rendered": null,
+                  "type": "br",
+                },
+              ],
+              "type": "section",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <FormButtons
+                  onCancel={[MockFunction]}
+                  submitText="Create"
+                />,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "onCancel": [MockFunction],
+                  "submitText": "Create",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              "type": "react-mdl-CardActions",
+            },
+          ],
+          "type": "form",
+        },
+      ],
+      "type": "react-mdl-Card",
     },
   ],
   Symbol(enzyme.__options__): Object {

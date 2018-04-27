@@ -9,7 +9,14 @@ The latest version of this document is always available in
 
 
 ## [Unrelesed]
-- fix(package): Upgrade react to version 16.2.0
+
+## [3.0.1]
+- fix(feature): Create feature form inside a Card to align UI
+- feat(archive): Improve archive view, UI, search, toggle details
+- fix(navigation): signout more visible
+- fix(signout): make signout works with proxy
+- chore(package): Upgrade react to version 16.2.0
+- chore(package): update sass-loader to version 7.0.1 
 
 ## [3.0.0]
 - Nothing new, just locking down the version.

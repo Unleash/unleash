@@ -15,6 +15,12 @@ const argv = require('yargs')
         default: 4242,
         type: 'number',
     })
+    .option('host', {
+        alias: 'l',
+        describe: 'The HTTP address the server will accept connections on.',
+        demand: false,
+        type: 'string',
+    })
     .option('databaseUrl', {
         alias: 'd',
         describe:
@@ -25,9 +31,9 @@ const argv = require('yargs')
 
 serverImpl
     .start(argv)
-    .then(conf =>
+    .then(() =>
         console.log(
-            `Unleash started on http://localhost:${conf.app.get('port')}`
+            `Unleash started on http://${argv.host || '127.0.0.1'}:${argv.port}`
         )
     )
     .catch(console.err);

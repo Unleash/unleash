@@ -32,10 +32,9 @@ const argv = require('yargs')
 serverImpl
     .start(argv)
     .then(instance => {
+        const address = instance.server.address();
         console.log(
-            `Unleash started on http://${instance.server.address().address}:${
-                instance.server.address().port
-            }`
+            `Unleash started on http://${address.address}:${address.port}`
         );
     })
     .catch(console.err);

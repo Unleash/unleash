@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- feat(bind): Added option to bind to specific http address
+
 ## 3.0.2
 - fix(package): Update unleash-frontend to version 3.0.1 
 

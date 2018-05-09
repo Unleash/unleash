@@ -2,6 +2,7 @@
 
 ## Unreleased
 - feat(bind): Added option to bind to specific http address
+- fix(migration): Unleash should not start if migration fails.
 
 ## 3.0.2
 - fix(package): Update unleash-frontend to version 3.0.1 

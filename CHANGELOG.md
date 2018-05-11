@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.0.3
 - feat(bind): Added option to bind to specific http address
 - fix(migration): Unleash should not start if migration fails.
 

@@ -72,7 +72,7 @@
     "joi": "^13.0.3",
     "knex": "^0.14.0",
     "log4js": "^2.6.0",
-    "moment": "^2.19.3",
+    "moment": "^2.22.1",
     "parse-database-url": "^0.3.0",
     "passport": "^0.4.0",
     "passport-google-auth": "^1.0.2",

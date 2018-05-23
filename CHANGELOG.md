@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.0.4
+- feat(metrics): Expose toggle updates to prometheus
+- chore(package.json): Bump serve-favicon to 2.5.0
+- chore(package.json): Bump joi to 13.0.3
+- chore(package.json): bump express
+- chore(package.json): Bump log4js to 2.6.0
+- chore(package.json): Bump moment to 2.22.1
+- chore(package.json): Bump @types/node to 10.0.8
+- chore(package.json): Bump pg to 7.4.3
+- chore(package.json): Bump knex to 0.14.6
+- chore(package.json): Bump commander to 2.15.1
+
 ## 3.0.3
 - feat(bind): Added option to bind to specific http address
 - fix(migration): Unleash should not start if migration fails.

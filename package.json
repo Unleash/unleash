@@ -90,7 +90,7 @@
     "@types/node": "^10.0.8",
     "ava": "^0.25.0",
     "coveralls": "^3.0.1",
-    "eslint": "^4.19.1",
+    "eslint": "^5.0.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.0",
     "husky": "^0.14.1",

@@ -1,6 +1,13 @@
 'use strict';
 
-module.exports = () => ({
-    store: () => Promise.resolve(),
-    getEvents: () => Promise.resolve([]),
-});
+module.exports = () => {
+    const events = [];
+
+    return {
+        store: event => {
+            events.push(event);
+            Promise.resolve();
+        },
+        getEvents: () => Promise.resolve(events),
+    };
+};

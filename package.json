@@ -68,7 +68,7 @@
     "express": "^4.16.3",
     "express-validator": "^5.2.0",
     "gravatar": "^1.6.0",
-    "install": "^0.11.0",
+    "install": "^0.12.0",
     "joi": "^13.0.3",
     "knex": "^0.14.6",
     "log4js": "^2.6.0",

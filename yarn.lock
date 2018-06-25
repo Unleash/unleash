@@ -3206,9 +3206,9 @@ inquirer@^5.2.0:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
-install@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/install/-/install-0.11.0.tgz#e539d3c7db572ab5081d3780de20796dd3cc842e"
+install@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/install/-/install-0.12.0.tgz#684dfe3a81f57fa4c2dcb7d4cbea4081ea66af98"
 
 interpret@^1.1.0:
   version "1.1.0"

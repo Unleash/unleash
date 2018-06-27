@@ -41,7 +41,7 @@ We have offical SDK's for Java, Node.js, Go and Ruby. And we will be happy to ad
 - [unleash/unleash-client-java](https://github.com/unleash/unleash-client-java)
 - [unleash/unleash-client-node](https://github.com/unleash/unleash-client-node)
 - [unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)
-- [unleash/unleash-client-ruby](https://github.com/unleash/unleash-ruby-go)
+- [unleash/unleash-client-ruby](https://github.com/unleash/unleash-client-ruby)
 
 Clients written by awesome enthusiasts: 
 - [stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)

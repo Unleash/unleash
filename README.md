@@ -36,11 +36,12 @@ Common activation strategies includes:
 Read more about activation strategies in [docs/activation-strategies.md](./docs/activation-strategies.md)
 
 ## Client implementations
-We have offical SDK's for Java, Node.js and Go. And we will be happy to add implementations in other langugages written by you! These libraries makes it very easy to use Unleash in you application.
+We have offical SDK's for Java, Node.js, Go and Ruby. And we will be happy to add implementations in other langugages written by you! These libraries makes it very easy to use Unleash in you application.
 
 - [unleash/unleash-client-java](https://github.com/unleash/unleash-client-java)
 - [unleash/unleash-client-node](https://github.com/unleash/unleash-client-node)
 - [unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)
+- [unleash/unleash-client-ruby](https://github.com/unleash/unleash-ruby-go)
 
 Clients written by awesome enthusiasts: 
 - [stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)

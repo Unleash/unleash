@@ -8,7 +8,7 @@
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 Unleash is a feature toggle system, that gives you a great overview over all feature toggles across 
-all your applications and services. It comes with official client implementations for Java, Node.js and Go.
+all your applications and services. It comes with official client implementations for Java, Node.js, Go and Ruby.
 
 The main motivation for doing feature toggling is to decouple the process for deploying code to production 
 and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable

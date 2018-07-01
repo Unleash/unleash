@@ -3952,9 +3952,9 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
 
-knex@^0.14.6:
-  version "0.14.6"
-  resolved "https://registry.yarnpkg.com/knex/-/knex-0.14.6.tgz#ad57c4ef8fa1b51ebc8c37c2c9b483f6fb34e41e"
+knex@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/knex/-/knex-0.15.0.tgz#cc9bca03aab163cbe4a709ecee2fd0215099e55d"
   dependencies:
     babel-runtime "^6.26.0"
     bluebird "^3.5.1"
@@ -3964,12 +3964,10 @@ knex@^0.14.6:
     inherits "~2.0.3"
     interpret "^1.1.0"
     liftoff "2.5.0"
-    lodash "^4.17.5"
+    lodash "^4.17.10"
     minimist "1.2.0"
     mkdirp "^0.5.1"
     pg-connection-string "2.0.0"
-    readable-stream "2.3.6"
-    safe-buffer "^5.1.1"
     tarn "^1.1.4"
     tildify "1.2.0"
     uuid "^3.2.1"
@@ -5679,7 +5677,7 @@ readable-stream@1.1.x, "readable-stream@1.x >=1.1.9":
     isarray "0.0.1"
     string_decoder "~0.10.x"
 
-readable-stream@2, readable-stream@2.3.6, readable-stream@^2.0.5, readable-stream@^2.0.6, readable-stream@^2.1.4, readable-stream@^2.3.0, readable-stream@^2.3.5:
+readable-stream@2, readable-stream@^2.0.5, readable-stream@^2.0.6, readable-stream@^2.1.4, readable-stream@^2.3.0, readable-stream@^2.3.5:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.6.tgz#b11c27d88b8ff1fbe070643cf94b0c79ae1b0aaf"
   dependencies:

@@ -1,5 +1,5 @@
-# Datbase backups
-When upgrading to new major version of Unleash it is advised to do a 
+# Database backups
+When upgrading to a new major version of Unleash it is advised to do a 
 full database backup to ease rollback in case of failures. 
 
 1. Create a database backup:

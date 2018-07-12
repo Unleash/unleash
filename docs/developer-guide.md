@@ -1,7 +1,7 @@
 # Developer Guide
 
 ## PostgreSQL
-To run and develop unleash you need to have PostgreSQL databse (PostgreSQL v.9.5.x or newer) locally.
+To run and develop unleash you need to have PostgreSQL database (PostgreSQL v.9.5.x or newer) locally.
 
 
 ### Create a local unleash databases in postgres
@@ -18,7 +18,7 @@ SQL
 
 Then set env vars:
 
-(Optional as unleash will asume these as default values).
+(Optional as unleash will assume these as default values).
 
 ```
 export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
@@ -64,7 +64,7 @@ Use db-migrate to create new migrations file.
 > npm run db-migrate -- create YOUR-MIGRATION-NAME
 ```
 
-All migrations requires on `up` and one `down` method. 
+All migrations require one `up` and one `down` method. 
 
 Example of a typical migration:
 

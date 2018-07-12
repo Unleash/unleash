@@ -102,7 +102,7 @@ strategies to work as expected the client should also allow the user to define a
 the `isEnabled` call.
 
 ### Extension points
-Client implementation should  also provide a defined interface to make it easier for 
+Client implementation should also provide a defined interface to make it easier for 
 the user to implement their own activation strategies, and register those in the unleash client. 
 
 
@@ -114,14 +114,14 @@ The default poll interval should be **15 seconds**, and it should be configurabl
 
 ## Client registration
 Client implementation should at initialization register with the unleash-server. 
-The should send a registration as specified in the [api documentation](api/metrics-api.md#client-registration).
+The should send a registration as specified in the [api documentation](api/client/register-api.md).
 The registration must include all fields specified.
 
 
 ## Metrics
 Clients are expected to send metrics back to Unleash API at regular intervals. The metrics is a list 
 of used toggles and how many times they evaluated to *yes* or *no* in the current period. 
-Read more about how to send the metrics in the [metrics-api](api/metrics-api.md) documentation.
+Read more about how to send the metrics in the [metrics-api](api/client/metrics-api.md) documentation.
 
 
 ## Backup Feature Toggles

@@ -13,7 +13,7 @@ After upgrading all your clients you should consider turning off legacy routes, 
 
 ### Caveat 1: Not used db-migrate to migrate the unleash database?
 In FINN we used, for internal reasons, liquebase to migrate our database.  
-Because unleash from version 2.0 migrates the datbase internally, with db-migrate, 
+Because unleash from version 2.0 migrates the database internally, with db-migrate, 
 you need to make sure that all previous migrations for version 1 exists, so unleash
 does not try to create tables that already exists. 
 

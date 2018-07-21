@@ -12,10 +12,10 @@ unleash
         enableLegacyRoutes: false,
         preRouterHook: app => {
             app.use('/api/client', (req, res, next) => {
-                if (req.header('authorization') !== sharedSecret) {
-                    res.sendStatus(401);
-                } else {
+                if (req.header('authorization') === sharedSecret) {
                     next();
+                } else {
+                    res.sendStatus(401);
                 }
             });
         },

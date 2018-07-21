@@ -70,7 +70,7 @@
     "gravatar": "^1.6.0",
     "install": "^0.12.0",
     "joi": "^13.0.3",
-    "knex": "^0.14.6",
+    "knex": "^0.15.0",
     "log4js": "^2.6.0",
     "moment": "^2.22.1",
     "parse-database-url": "^0.3.0",

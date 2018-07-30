@@ -71,7 +71,7 @@
     "install": "^0.12.0",
     "joi": "^13.0.3",
     "knex": "^0.15.2",
-    "log4js": "^3.0.2",
+    "log4js": "^3.0.3",
     "moment": "^2.22.1",
     "parse-database-url": "^0.3.0",
     "passport": "^0.4.0",

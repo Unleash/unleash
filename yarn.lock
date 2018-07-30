@@ -1169,9 +1169,9 @@ circular-json@^0.3.1:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.3.tgz#815c99ea84f6809529d2f45791bdf82711352d66"
 
-circular-json@^0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.5.4.tgz#ff1ad2f2e392eeb8a5172d4d985fa846ed8ad656"
+circular-json@^0.5.5:
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.5.5.tgz#64182ef359042d37cd8e767fc9de878b1e9447d3"
 
 clamp@^1.0.1:
   version "1.0.1"
@@ -4006,11 +4006,11 @@ log-update@^1.0.2:
     ansi-escapes "^1.0.0"
     cli-cursor "^1.0.2"
 
-log4js@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/log4js/-/log4js-3.0.2.tgz#7ebb113fcd780dabe1c1b13ae85316044c4d7182"
+log4js@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/log4js/-/log4js-3.0.3.tgz#b4ba4ebde57b51a6a132329a53b74930a2efbca1"
   dependencies:
-    circular-json "^0.5.4"
+    circular-json "^0.5.5"
     date-format "^1.2.0"
     debug "^3.1.0"
     streamroller "0.7.0"

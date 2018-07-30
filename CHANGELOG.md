@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.0.5
+- fix(package): update log4js to version 3.0.2
+- fix(package): update knex to version 0.15.2
+- fix(package): update yargs to version 12.0.1
+- chore(readme): Update documentation
+- fix(package): update install to version 0.12.0
+- fix(revive): Include user information on revive 
+- chore(package): update eslint to version 5.0.0
+- chore(package): update nyc to version 12.0.1
+
 ## 3.0.4
 - feat(metrics): Expose toggle updates to prometheus
 - chore(package.json): Bump serve-favicon to 2.5.0

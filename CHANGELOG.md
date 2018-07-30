@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.6
+- fix(log4js): Upgrade log4js to version 3.0.3 and fix default log configuration
+
 ## 3.0.5
 - fix(package): update log4js to version 3.0.2
 - fix(package): update knex to version 0.15.2

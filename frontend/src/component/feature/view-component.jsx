@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs, Tab, ProgressBar, Button, Card, CardText, CardTitle, CardActions, Textfield, Switch } from 'react-mdl';
-import { hashHistory, Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import HistoryComponent from '../history/history-list-toggle-container';
 import MetricComponent from './metric-container';
@@ -33,6 +33,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         fetchFeatureToggles: PropTypes.func,
         editFeatureToggle: PropTypes.func,
         featureToggle: PropTypes.object,
+        history: PropTypes.object.isRequired,
     };
 
     componentWillMount() {
@@ -62,7 +63,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
 
     goToTab(tabName, featureToggleName) {
         let view = this.props.fetchFeatureToggles ? 'features' : 'archive';
-        hashHistory.push(`/${view}/${tabName}/${featureToggleName}`);
+        this.props.history.push(`/${view}/${tabName}/${featureToggleName}`);
     }
 
     render() {
@@ -105,12 +106,12 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 window.confirm('Are you sure you want to remove this toggle?')
             ) {
                 removeFeatureToggle(featureToggle.name);
-                hashHistory.push('/features');
+                this.props.history.push('/features');
             }
         };
         const reviveToggle = () => {
             revive(featureToggle.name);
-            hashHistory.push('/features');
+            this.props.history.push('/features');
         };
         const updateFeatureToggle = () => {
             let feature = { ...featureToggle };

@@ -32,8 +32,8 @@ exports[`renders correctly with one feature 1`] = `
   >
     <a
       className="listLink truncate"
+      href="/features/strategies/Another"
       onClick={[Function]}
-      style={Object {}}
     >
       Another
       <span

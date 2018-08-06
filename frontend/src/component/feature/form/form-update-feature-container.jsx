@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { hashHistory } from 'react-router';
 
 import { requestUpdateFeatureToggle } from '../../../store/feature-actions';
 import { createMapper, createActions } from '../../input-helpers';
@@ -42,13 +41,13 @@ const prepare = (methods, dispatch) => {
         // TODO: should add error handling
         requestUpdateFeatureToggle(input)(dispatch)
             .then(() => methods.clear())
-            .then(() => hashHistory.push(`/features`));
+            .then(() => this.props.history.push(`/features`));
     };
 
     methods.onCancel = evt => {
         evt.preventDefault();
         methods.clear();
-        hashHistory.push(`/features`);
+        this.props.history.push(`/features`);
     };
 
     methods.addStrategy = v => {

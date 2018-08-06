@@ -1,0 +1,253 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render DrawerMenu 1`] = `
+<react-mdl-Drawer
+  className="mdl-color--white"
+>
+  <span
+    className="drawerTitle mdl-layout-title"
+  >
+    <img
+      className="drawerTitleLogo"
+      height="32"
+      src="public/logo.png"
+      width="32"
+    />
+    <span
+      className="drawerTitleText"
+    >
+      Unleash
+    </span>
+  </span>
+  <hr />
+  <react-mdl-Navigation
+    className="navigation"
+  >
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/features"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="list"
+      />
+       
+      Feature Toggles
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/strategies"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="extension"
+      />
+       
+      Strategies
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/history"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="history"
+      />
+       
+      Event History
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/archive"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="archive"
+      />
+       
+      Archived Toggles
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/applications"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="apps"
+      />
+       
+      Applications
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/logout"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="exit_to_app"
+      />
+       
+      Sign out
+    </a>
+  </react-mdl-Navigation>
+  <hr />
+  <react-mdl-Navigation
+    className="navigation"
+  >
+    <a
+      className="navigationLink mdl-color-text--grey-900"
+      href="https://github.com/Unleash"
+      target="_blank"
+    >
+      <i
+        className="material-icons navigationIcon iconGitHub"
+      />
+      GitHub
+    </a>
+  </react-mdl-Navigation>
+</react-mdl-Drawer>
+`;
+
+exports[`should render DrawerMenu with "features" selected 1`] = `
+<react-mdl-Drawer
+  className="mdl-color--white"
+>
+  <span
+    className="drawerTitle mdl-layout-title"
+  >
+    <img
+      className="drawerTitleLogo"
+      height="32"
+      src="public/logo.png"
+      width="32"
+    />
+    <span
+      className="drawerTitleText"
+    >
+      Unleash
+    </span>
+  </span>
+  <hr />
+  <react-mdl-Navigation
+    className="navigation"
+  >
+    <a
+      aria-current="page"
+      className="navigationLink mdl-color-text--grey-600 navigationLink mdl-color-text--black"
+      href="/features"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="list"
+      />
+       
+      Feature Toggles
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/strategies"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="extension"
+      />
+       
+      Strategies
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/history"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="history"
+      />
+       
+      Event History
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/archive"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="archive"
+      />
+       
+      Archived Toggles
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/applications"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="apps"
+      />
+       
+      Applications
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-600"
+      href="/logout"
+      onClick={[Function]}
+      style={undefined}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="exit_to_app"
+      />
+       
+      Sign out
+    </a>
+  </react-mdl-Navigation>
+  <hr />
+  <react-mdl-Navigation
+    className="navigation"
+  >
+    <a
+      className="navigationLink mdl-color-text--grey-900"
+      href="https://github.com/Unleash"
+      target="_blank"
+    >
+      <i
+        className="material-icons navigationIcon iconGitHub"
+      />
+      GitHub
+    </a>
+  </react-mdl-Navigation>
+</react-mdl-Drawer>
+`;

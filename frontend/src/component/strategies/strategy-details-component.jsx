@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { hashHistory } from 'react-router';
 import { Tabs, Tab, ProgressBar, Grid, Cell } from 'react-mdl';
 import ShowStrategy from './show-strategy-component';
 import EditStrategy from './edit-container';
@@ -21,6 +20,7 @@ export default class StrategyDetails extends Component {
         fetchStrategies: PropTypes.func.isRequired,
         fetchApplications: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
+        history: PropTypes.object.isRequired,
     };
 
     componentDidMount() {
@@ -50,7 +50,7 @@ export default class StrategyDetails extends Component {
     }
 
     goToTab(tabName) {
-        hashHistory.push(`/strategies/${tabName}/${this.props.strategyName}`);
+        this.props.history.push(`/strategies/${tabName}/${this.props.strategyName}`);
     }
 
     render() {

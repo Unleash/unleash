@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`returns all baseRoutes 1`] = `
+Array [
+  Object {
+    "component": [Function],
+    "icon": "list",
+    "path": "/features",
+    "title": "Feature Toggles",
+  },
+  Object {
+    "component": [Function],
+    "icon": "extension",
+    "path": "/strategies",
+    "title": "Strategies",
+  },
+  Object {
+    "component": [Function],
+    "icon": "history",
+    "path": "/history",
+    "title": "Event History",
+  },
+  Object {
+    "component": [Function],
+    "icon": "archive",
+    "path": "/archive",
+    "title": "Archived Toggles",
+  },
+  Object {
+    "component": [Function],
+    "icon": "apps",
+    "path": "/applications",
+    "title": "Applications",
+  },
+  Object {
+    "icon": "exit_to_app",
+    "path": "logout",
+    "title": "Sign out",
+  },
+]
+`;
+
+exports[`returns all defined routes 1`] = `
+Array [
+  Object {
+    "component": [Function],
+    "parent": "/features",
+    "path": "/features/create",
+    "title": "Create",
+  },
+  Object {
+    "component": [Function],
+    "parent": "/features",
+    "path": "/features/:activeTab/:name",
+    "title": ":name",
+  },
+  Object {
+    "component": [Function],
+    "icon": "list",
+    "path": "/features",
+    "title": "Feature Toggles",
+  },
+  Object {
+    "component": [Function],
+    "parent": "/strategies",
+    "path": "/strategies/create",
+    "title": "Create",
+  },
+  Object {
+    "component": [Function],
+    "parent": "/strategies",
+    "path": "/strategies/:activeTab/:strategyName",
+    "title": ":strategyName",
+  },
+  Object {
+    "component": [Function],
+    "icon": "extension",
+    "path": "/strategies",
+    "title": "Strategies",
+  },
+  Object {
+    "component": [Function],
+    "parent": "/history",
+    "path": "/history/:toggleName",
+    "title": ":toggleName",
+  },
+  Object {
+    "component": [Function],
+    "icon": "history",
+    "path": "/history",
+    "title": "Event History",
+  },
+  Object {
+    "component": [Function],
+    "parent": "/archive",
+    "path": "/archive/:activeTab/:name",
+    "title": ":name",
+  },
+  Object {
+    "component": [Function],
+    "icon": "archive",
+    "path": "/archive",
+    "title": "Archived Toggles",
+  },
+  Object {
+    "component": [Function],
+    "parent": "/applications",
+    "path": "/applications/:name",
+    "title": ":name",
+  },
+  Object {
+    "component": [Function],
+    "icon": "apps",
+    "path": "/applications",
+    "title": "Applications",
+  },
+  Object {
+    "icon": "exit_to_app",
+    "path": "logout",
+    "title": "Sign out",
+  },
+]
+`;

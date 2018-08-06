@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { List, ListItem, ListItemContent, Button, Icon, Switch, MenuItem } from 'react-mdl';
 import styles from './common.scss';
 

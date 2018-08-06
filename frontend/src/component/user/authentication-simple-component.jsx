@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { hashHistory } from 'react-router';
 import { CardActions, Button, Textfield } from 'react-mdl';
 
 class SimpleAuthenticationComponent extends React.Component {
@@ -8,6 +7,7 @@ class SimpleAuthenticationComponent extends React.Component {
         authDetails: PropTypes.object.isRequired,
         unsecureLogin: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
+        history: PropTypes.object.isRequired,
     };
 
     handleSubmit = evt => {
@@ -20,7 +20,7 @@ class SimpleAuthenticationComponent extends React.Component {
             .unsecureLogin(path, user)
             .then(this.props.fetchFeatureToggles)
             .then(() => {
-                hashHistory.push('/features');
+                this.props.history.push('/features');
             });
     };
 

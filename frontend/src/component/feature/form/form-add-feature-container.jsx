@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { hashHistory } from 'react-router';
 import { createFeatureToggles, validateName } from './../../../store/feature-actions';
 import { createMapper, createActions } from './../../input-helpers';
 import AddFeatureComponent from './form-add-feature-component';
@@ -31,13 +30,13 @@ const prepare = (methods, dispatch) => {
 
         createFeatureToggles(input)(dispatch)
             .then(() => methods.clear())
-            .then(() => hashHistory.push(`/features/strategies/${input.name}`));
+            .then(() => this.props.history.push(`/features/strategies/${input.name}`));
     };
 
     methods.onCancel = evt => {
         evt.preventDefault();
         methods.clear();
-        hashHistory.push('/features');
+        this.props.history.push('/features');
     };
 
     methods.addStrategy = v => {

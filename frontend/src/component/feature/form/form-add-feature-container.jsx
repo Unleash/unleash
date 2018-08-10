@@ -16,7 +16,7 @@ const mapStateToProps = createMapper({
         return { name };
     },
 });
-const prepare = (methods, dispatch) => {
+const prepare = (methods, dispatch, ownProps) => {
     methods.onSubmit = input => e => {
         e.preventDefault();
 
@@ -30,13 +30,13 @@ const prepare = (methods, dispatch) => {
 
         createFeatureToggles(input)(dispatch)
             .then(() => methods.clear())
-            .then(() => this.props.history.push(`/features/strategies/${input.name}`));
+            .then(() => ownProps.history.push(`/features/strategies/${input.name}`));
     };
 
     methods.onCancel = evt => {
         evt.preventDefault();
         methods.clear();
-        this.props.history.push('/features');
+        ownProps.history.push('/features');
     };
 
     methods.addStrategy = v => {

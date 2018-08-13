@@ -15,5 +15,11 @@
                 "printWidth": 120
             }
         ]
-    }
+    },
+    "overrides": [
+        {
+            "files": ["**/__tests__/*"],
+            "env": { "jest": true }
+        }
+    ]
 }

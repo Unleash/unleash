@@ -7,7 +7,6 @@ class SimpleAuthenticationComponent extends React.Component {
         authDetails: PropTypes.object.isRequired,
         unsecureLogin: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
-        history: PropTypes.object.isRequired,
     };
 
     handleSubmit = evt => {
@@ -16,12 +15,7 @@ class SimpleAuthenticationComponent extends React.Component {
         const user = { email };
         const path = evt.target.action;
 
-        this.props
-            .unsecureLogin(path, user)
-            .then(this.props.fetchFeatureToggles)
-            .then(() => {
-                this.props.history.push('/features');
-            });
+        this.props.unsecureLogin(path, user).then(this.props.fetchFeatureToggles);
     };
 
     render() {

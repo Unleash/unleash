@@ -10,6 +10,7 @@ import ShowArchive from '../../page/archive/show';
 import Archive from '../../page/archive';
 import Applications from '../../page/applications';
 import ApplicationView from '../../page/applications/view';
+import LogoutFeatures from '../../page/user/logout';
 
 export const routes = [
     // Features
@@ -39,7 +40,7 @@ export const routes = [
     { path: '/applications/:name', title: ':name', parent: '/applications', component: ApplicationView },
     { path: '/applications', title: 'Applications', icon: 'apps', component: Applications },
 
-    { path: 'logout', title: 'Sign out', icon: 'exit_to_app' },
+    { path: '/logout', title: 'Sign out', icon: 'exit_to_app', component: LogoutFeatures },
 ];
 
 export const getRoute = path => routes.find(route => route.path === path);

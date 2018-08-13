@@ -33,8 +33,9 @@ Array [
     "title": "Applications",
   },
   Object {
+    "component": [Function],
     "icon": "exit_to_app",
-    "path": "logout",
+    "path": "/logout",
     "title": "Sign out",
   },
 ]
@@ -115,8 +116,9 @@ Array [
     "title": "Applications",
   },
   Object {
+    "component": [Function],
     "icon": "exit_to_app",
-    "path": "logout",
+    "path": "/logout",
     "title": "Sign out",
   },
 ]

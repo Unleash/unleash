@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { createMapper, createActions } from '../../input-helpers';
 import ViewFeatureToggleComponent from './form-view-feature-component';
-import { hashHistory } from 'react-router';
 
 const ID = 'view-feature-toggle';
 function getId(props) {
@@ -27,7 +26,7 @@ const prepare = methods => {
     methods.onCancel = evt => {
         evt.preventDefault();
         methods.clear();
-        hashHistory.push(`/archive`);
+        this.props.history.push(`/archive`);
     };
     return methods;
 };

@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`breadcrumb for /features 1`] = `
+<span
+  className="mdl-layout--large-screen-only"
+>
+  <span
+    className="headerTitleLink mdl-color-text--primary-contrast"
+  >
+    Feature Toggles
+  </span>
+</span>
+`;
+
+exports[`breadcrumb for /features/view/Demo 1`] = `
+<span>
+  <a
+    className="headerTitleLink mdl-color-text--primary-contrast"
+    href="/features"
+    onClick={[Function]}
+  >
+    Feature Toggles
+  </a>
+  <span
+    className="mdl-layout--large-screen-only"
+  >
+    <span>
+       › 
+    </span>
+    <span
+      className="headerTitleLink mdl-color-text--primary-contrast"
+    >
+      Demo
+    </span>
+  </span>
+</span>
+`;
+
+exports[`breadcrumb for /strategies 1`] = `
+<span
+  className="mdl-layout--large-screen-only"
+>
+  <span
+    className="headerTitleLink mdl-color-text--primary-contrast"
+  >
+    Strategies
+  </span>
+</span>
+`;

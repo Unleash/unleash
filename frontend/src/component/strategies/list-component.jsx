@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { List, ListItem, ListItemContent, IconButton, Grid, Cell } from 'react-mdl';
 import { HeaderTitle } from '../common';

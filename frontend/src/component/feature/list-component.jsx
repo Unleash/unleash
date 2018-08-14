@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Feature from './feature-list-item-component';
-import { hashHistory, Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Icon, FABButton, Textfield, Menu, MenuItem, Card, CardActions, List } from 'react-mdl';
 import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
 import styles from './feature.scss';
@@ -18,6 +18,7 @@ export default class FeatureListComponent extends React.Component {
         updateSetting: PropTypes.func.isRequired,
         toggleFeature: PropTypes.func,
         settings: PropTypes.object,
+        history: PropTypes.object.isRequired,
     };
 
     static contextTypes = {
@@ -27,7 +28,7 @@ export default class FeatureListComponent extends React.Component {
     componentDidMount() {
         if (this.props.logout) {
             this.props.logoutUser();
-            hashHistory.push(`/`);
+            this.props.history.push(`/`);
         }
         if (this.props.fetchFeatureToggles) {
             this.props.fetchFeatureToggles();

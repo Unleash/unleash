@@ -2,9 +2,10 @@ import React from 'react';
 import Archive from '../../component/archive/archive-list-container';
 import PropTypes from 'prop-types';
 
-const render = ({ params }) => <Archive name={params.name} />;
+const render = ({ match: { params }, history }) => <Archive name={params.name} history={history} />;
 render.propTypes = {
-    params: PropTypes.object,
+    match: PropTypes.object,
+    history: PropTypes.object,
 };
 
 export default render;

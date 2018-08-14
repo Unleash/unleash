@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render DrawerMenu 1`] = `
+<react-mdl-FooterSection
+  type="middle"
+>
+  <react-mdl-FooterDropDownSection
+    title="Menu"
+  >
+    <react-mdl-FooterLinkList>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/features"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Feature Toggles
+      </a>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/strategies"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Strategies
+      </a>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/history"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Event History
+      </a>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/archive"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Archived Toggles
+      </a>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/applications"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Applications
+      </a>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/logout"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Sign out
+      </a>
+    </react-mdl-FooterLinkList>
+  </react-mdl-FooterDropDownSection>
+  <react-mdl-FooterDropDownSection
+    title="Clients"
+  >
+    <react-mdl-FooterLinkList>
+      <a
+        href="https://github.com/Unleash/unleash-client-node/"
+      >
+        Node.js
+      </a>
+      <a
+        href="https://github.com/Unleash/unleash-client-java/"
+      >
+        Java
+      </a>
+      <a
+        href="https://github.com/Unleash/unleash-client-go/"
+      >
+        Go
+      </a>
+    </react-mdl-FooterLinkList>
+  </react-mdl-FooterDropDownSection>
+</react-mdl-FooterSection>
+`;
+
+exports[`should render DrawerMenu with "features" selected 1`] = `
+<react-mdl-FooterSection
+  type="middle"
+>
+  <react-mdl-FooterDropDownSection
+    title="Menu"
+  >
+    <react-mdl-FooterLinkList>
+      <a
+        aria-current="page"
+        className="active"
+        href="/features"
+        onClick={[Function]}
+        style={Object {}}
+      >
+        Feature Toggles
+      </a>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/strategies"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Strategies
+      </a>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/history"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Event History
+      </a>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/archive"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Archived Toggles
+      </a>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/applications"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Applications
+      </a>
+      <a
+        aria-current={null}
+        className={undefined}
+        href="/logout"
+        onClick={[Function]}
+        style={undefined}
+      >
+        Sign out
+      </a>
+    </react-mdl-FooterLinkList>
+  </react-mdl-FooterDropDownSection>
+  <react-mdl-FooterDropDownSection
+    title="Clients"
+  >
+    <react-mdl-FooterLinkList>
+      <a
+        href="https://github.com/Unleash/unleash-client-node/"
+      >
+        Node.js
+      </a>
+      <a
+        href="https://github.com/Unleash/unleash-client-java/"
+      >
+        Java
+      </a>
+      <a
+        href="https://github.com/Unleash/unleash-client-go/"
+      >
+        Go
+      </a>
+    </react-mdl-FooterLinkList>
+  </react-mdl-FooterDropDownSection>
+</react-mdl-FooterSection>
+`;

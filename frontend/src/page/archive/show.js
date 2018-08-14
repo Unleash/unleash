@@ -4,11 +4,18 @@ import ViewFeatureToggle from './../../component/archive/view-container';
 
 export default class Features extends PureComponent {
     static propTypes = {
-        params: PropTypes.object.isRequired,
+        match: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
     };
 
     render() {
-        const { params } = this.props;
-        return <ViewFeatureToggle featureToggleName={params.name} activeTab={params.activeTab} />;
+        const { match, history } = this.props;
+        return (
+            <ViewFeatureToggle
+                history={history}
+                featureToggleName={match.params.name}
+                activeTab={match.params.activeTab}
+            />
+        );
     }
 }

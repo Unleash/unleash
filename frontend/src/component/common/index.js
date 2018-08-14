@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { List, ListItem, ListItemContent, Button, Icon, Switch, MenuItem } from 'react-mdl';
 import styles from './common.scss';
 
@@ -11,10 +11,10 @@ export const shorten = (str, len = 50) => (str && str.length > len ? `${str.subs
 export const AppsLinkList = ({ apps }) => (
     <List>
         {apps.length > 0 &&
-            apps.map(({ appName, description = '-', icon = 'apps' }) => (
+            apps.map(({ appName, description = '-', icon }) => (
                 <ListItem twoLine key={appName}>
                     <span className="mdl-list__item-primary-content" style={{ minWidth: 0 }}>
-                        <Icon name={icon} className="mdl-list__item-avatar" />
+                        <Icon name={icon || 'apps'} className="mdl-list__item-avatar" />
                         <Link to={`/applications/${appName}`} className={[styles.listLink, styles.truncate].join(' ')}>
                             {appName}
                             <span className={['mdl-list__item-sub-title', styles.truncate].join(' ')}>

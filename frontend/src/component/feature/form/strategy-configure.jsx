@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Textfield, Button, Card, CardTitle, CardText, CardActions, CardMenu, IconButton, Icon } from 'react-mdl';
 import { DragSource, DropTarget } from 'react-dnd';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import StrategyInputPercentage from './strategy-input-percentage';
 import StrategyInputList from './strategy-input-list';
 import styles from './strategy.scss';

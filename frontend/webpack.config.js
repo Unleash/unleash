@@ -3,11 +3,16 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const devMode = process.env.NODE_ENV !== 'production';
+const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 const entry = ['whatwg-fetch', './src/index'];
 const plugins = [
-    new ExtractTextPlugin('bundle.css', { allChunks: true }),
+    new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // both options are optional
+        filename: 'bundle.css',
+    }),
     new webpack.DefinePlugin({
         'process.env': {
             NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
@@ -16,13 +21,14 @@ const plugins = [
     new webpack.optimize.ModuleConcatenationPlugin(),
 ];
 
-if (process.env.NODE_ENV === 'development') {
+if (devMode) {
     entry.push('webpack-dev-server/client?http://localhost:3000');
     entry.push('webpack/hot/only-dev-server');
     plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
 module.exports = {
+    mode,
     entry,
 
     resolve: {
@@ -45,31 +51,29 @@ module.exports = {
             },
             {
                 test: /(\.scss)$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                sourceMap: true,
-                                modules: true,
-                                importLoaders: 1,
-                                localIdentName: '[name]__[local]___[hash:base64:5]',
-                            },
+                use: [
+                    { loader: devMode ? 'style-loader' : MiniCssExtractPlugin.loader },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: true,
+                            modules: true,
+                            importLoaders: 1,
+                            localIdentName: '[name]__[local]___[hash:base64:5]',
                         },
-                        {
-                            loader: 'sass-loader',
-                            options: {
-                                // data: '@import "theme/_config.scss";',
-                                includePaths: [path.resolve(__dirname, './src')],
-                            },
+                    },
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            // data: '@import "theme/_config.scss";',
+                            includePaths: [path.resolve(__dirname, './src')],
                         },
-                    ],
-                }),
+                    },
+                ],
             },
             {
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }),
+                test: /(\.css)$/,
+                use: [{ loader: devMode ? 'style-loader' : MiniCssExtractPlugin.loader }, { loader: 'css-loader' }],
             },
         ],
     },

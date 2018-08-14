@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Cell, Icon, Chip, ChipContact } from 'react-mdl';
 import Progress from './progress';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { AppsLinkList, calc } from '../common';
 import { formatFullDateTimeWithLocale } from '../common/util';
 import styles from './metrics.scss';

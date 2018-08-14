@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { hashHistory } from 'react-router';
 import { CardActions, Button, Textfield } from 'react-mdl';
 
 class SimpleAuthenticationComponent extends React.Component {
@@ -16,12 +15,7 @@ class SimpleAuthenticationComponent extends React.Component {
         const user = { email };
         const path = evt.target.action;
 
-        this.props
-            .unsecureLogin(path, user)
-            .then(this.props.fetchFeatureToggles)
-            .then(() => {
-                hashHistory.push('/features');
-            });
+        this.props.unsecureLogin(path, user).then(this.props.fetchFeatureToggles);
     };
 
     render() {

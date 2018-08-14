@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { hashHistory } from 'react-router';
 import { createFeatureToggles, validateName } from './../../../store/feature-actions';
 import { createMapper, createActions } from './../../input-helpers';
 import AddFeatureComponent from './form-add-feature-component';
@@ -17,7 +16,7 @@ const mapStateToProps = createMapper({
         return { name };
     },
 });
-const prepare = (methods, dispatch) => {
+const prepare = (methods, dispatch, ownProps) => {
     methods.onSubmit = input => e => {
         e.preventDefault();
 
@@ -31,13 +30,13 @@ const prepare = (methods, dispatch) => {
 
         createFeatureToggles(input)(dispatch)
             .then(() => methods.clear())
-            .then(() => hashHistory.push(`/features/strategies/${input.name}`));
+            .then(() => ownProps.history.push(`/features/strategies/${input.name}`));
     };
 
     methods.onCancel = evt => {
         evt.preventDefault();
         methods.clear();
-        hashHistory.push('/features');
+        ownProps.history.push('/features');
     };
 
     methods.addStrategy = v => {

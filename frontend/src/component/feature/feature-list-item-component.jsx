@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Switch, Chip, ListItem, ListItemAction, Icon } from 'react-mdl';
 import Progress from './progress';
 import { calc, styles as commonStyles } from '../common';

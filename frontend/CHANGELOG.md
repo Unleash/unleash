@@ -10,6 +10,9 @@ The latest version of this document is always available in
 
 ## [Unrelesed]
 
+## [3.1.0]
+- fix(react-router): Upgrade to react-router v4.
+
 ## [3.0.1]
 - fix(feature): Create feature form inside a Card to align UI
 - feat(archive): Improve archive view, UI, search, toggle details

@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 import Feature from './../feature-list-item-component';
 import renderer from 'react-test-renderer';
@@ -23,14 +24,16 @@ test('renders correctly with one feature', () => {
     const featureMetrics = { lastHour: {}, lastMinute: {}, seenApps: {} };
     const settings = { sort: 'name' };
     const tree = renderer.create(
-        <Feature
-            key={0}
-            settings={settings}
-            metricsLastHour={featureMetrics.lastHour[feature.name]}
-            metricsLastMinute={featureMetrics.lastMinute[feature.name]}
-            feature={feature}
-            toggleFeature={jest.fn()}
-        />
+        <MemoryRouter>
+            <Feature
+                key={0}
+                settings={settings}
+                metricsLastHour={featureMetrics.lastHour[feature.name]}
+                metricsLastMinute={featureMetrics.lastMinute[feature.name]}
+                feature={feature}
+                toggleFeature={jest.fn()}
+            />
+        </MemoryRouter>
     );
 
     expect(tree).toMatchSnapshot();

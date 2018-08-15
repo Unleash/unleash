@@ -1,6 +1,7 @@
 import api from '../data/feature-api';
 const debug = require('debug')('unleash:feature-actions');
 import { dispatchAndThrow } from './util';
+import { MUTE_ERROR } from './error-actions';
 
 export const ADD_FEATURE_TOGGLE = 'ADD_FEATURE_TOGGLE';
 export const REMOVE_FEATURE_TOGGLE = 'REMOVE_FEATURE_TOGGLE';
@@ -15,6 +16,7 @@ export const ERROR_FETCH_FEATURE_TOGGLES = 'ERROR_FETCH_FEATURE_TOGGLES';
 export const ERROR_CREATING_FEATURE_TOGGLE = 'ERROR_CREATING_FEATURE_TOGGLE';
 export const ERROR_UPDATE_FEATURE_TOGGLE = 'ERROR_UPDATE_FEATURE_TOGGLE';
 export const ERROR_REMOVE_FEATURE_TOGGLE = 'ERROR_REMOVE_FEATURE_TOGGLE';
+export const UPDATE_FEATURE_TOGGLE_STRATEGIES = 'UPDATE_FEATURE_TOGGLE_STRATEGIES';
 
 export function toggleFeature(name) {
     debug('Toggle feature toggle ', name);
@@ -80,6 +82,22 @@ export function requestUpdateFeatureToggle(featureToggle) {
         return api
             .update(featureToggle)
             .then(() => dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle }))
+            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
+    };
+}
+
+export function requestUpdateFeatureToggleStrategies(featureToggle, newStrategies) {
+    return dispatch => {
+        featureToggle.strategies = newStrategies;
+        dispatch({ type: START_UPDATE_FEATURE_TOGGLE });
+
+        return api
+            .update(featureToggle)
+            .then(() => {
+                const info = `${featureToggle.name} successfully updated!`;
+                setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
+                return dispatch({ type: UPDATE_FEATURE_TOGGLE_STRATEGIES, featureToggle, info });
+            })
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }

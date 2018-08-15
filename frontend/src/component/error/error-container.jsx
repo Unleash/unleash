@@ -7,7 +7,10 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = state => ({
-    errors: state.error.get('list').toArray(),
+    errors: state.error
+        .get('list')
+        .toArray()
+        .reverse(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ErrorComponent);

@@ -5,6 +5,7 @@ import {
     ERROR_CREATING_FEATURE_TOGGLE,
     ERROR_REMOVE_FEATURE_TOGGLE,
     ERROR_UPDATE_FEATURE_TOGGLE,
+    UPDATE_FEATURE_TOGGLE_STRATEGIES,
 } from './feature-actions';
 
 import { ERROR_UPDATING_STRATEGY, ERROR_CREATING_STRATEGY, ERROR_RECEIVE_STRATEGIES } from './strategy/actions';
@@ -41,6 +42,8 @@ const strategies = (state = getInitState(), action) => {
             return addErrorIfNotAlreadyInList(state, action.error.message || '403 Forbidden');
         case MUTE_ERROR:
             return state.update('list', list => list.remove(list.indexOf(action.error)));
+        case UPDATE_FEATURE_TOGGLE_STRATEGIES:
+            return addErrorIfNotAlreadyInList(state, action.info);
         default:
             return state;
     }

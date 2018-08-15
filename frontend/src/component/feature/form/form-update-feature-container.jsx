@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { requestUpdateFeatureToggle } from '../../../store/feature-actions';
+import { requestUpdateFeatureToggleStrategies } from '../../../store/feature-actions';
 import { createMapper, createActions } from '../../input-helpers';
 import UpdateFeatureToggleComponent from './form-update-feature-component';
 
@@ -28,20 +28,14 @@ const prepare = (methods, dispatch, ownProps) => {
     methods.onSubmit = (input, features) => e => {
         e.preventDefault();
 
-        if (Array.isArray(input.strategies)) {
-            input.strategies.forEach(s => {
-                delete s.id;
-            });
-        }
-        delete input.description;
-        // take the status of the feature toggles from the central store in case `toggleFeature` function was called
-        const feat = features.find(f => f.name === input.name);
-        input.enabled = feat.enabled;
+        // This view will only update strategies!
+        const featureToggle = features.find(f => f.name === input.name);
 
-        // TODO: should add error handling
-        requestUpdateFeatureToggle(input)(dispatch)
-            .then(() => methods.clear())
-            .then(() => ownProps.history.push(`/features`));
+        const updatedStrategies = JSON.parse(
+            JSON.stringify(input.strategies, (key, value) => (key === 'id' ? undefined : value))
+        );
+
+        requestUpdateFeatureToggleStrategies(featureToggle, updatedStrategies)(dispatch);
     };
 
     methods.onCancel = evt => {

@@ -18,7 +18,11 @@ class StrategiesList extends React.Component {
         const { strategies, configuredStrategies, moveStrategy, removeStrategy, updateStrategy } = this.props;
 
         if (!configuredStrategies || configuredStrategies.length === 0) {
-            return <i style={{ color: 'red' }}>No strategies added</i>;
+            return (
+                <p style={{ padding: '0 16px' }}>
+                    <i>No activation strategies selected.</i>
+                </p>
+            );
         }
 
         const blocks = configuredStrategies.map((strategy, i) => (

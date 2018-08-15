@@ -8,7 +8,7 @@ The latest version of this document is always available in
 [releases][releases-url].
 
 
-## [Unrelesed]
+## [Unreleased]
 
 ## [3.1.0]
 - fix(react-router): Upgrade to react-router v4.

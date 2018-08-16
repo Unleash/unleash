@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## 3.1.0
 - fix(package): update unleash-frontend to version 3.1.1
 
 ## 3.0.6

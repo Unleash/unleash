@@ -1,7 +1,7 @@
 # Changelog
 
 ## [Unreleased]
-- fix(package): update unleash-frontend to version 3.1.0
+- fix(package): update unleash-frontend to version 3.1.1
 
 ## 3.0.6
 - fix(log4js): Upgrade log4js to version 3.0.3 and fix default log configuration

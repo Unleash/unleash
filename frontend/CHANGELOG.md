@@ -12,6 +12,7 @@ The latest version of this document is always available in
 
 ## [3.1.1]
 - fix(strategy-create): Should be able to open the create strategy view.
+- chore(package): Upgrade redux to version 4.0.0
 
 ## [3.1.0]
 - fix(react-router): Upgrade to react-router v4.

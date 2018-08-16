@@ -30,6 +30,12 @@ ShallowWrapper {
             undefined,
           ],
         ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
       }
     }
     removeStrategy={[MockFunction]}

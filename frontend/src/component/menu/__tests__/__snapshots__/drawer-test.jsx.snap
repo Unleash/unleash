@@ -28,7 +28,6 @@ exports[`should render DrawerMenu 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/features"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"
@@ -42,7 +41,6 @@ exports[`should render DrawerMenu 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/strategies"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"
@@ -56,7 +54,6 @@ exports[`should render DrawerMenu 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/history"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"
@@ -70,7 +67,6 @@ exports[`should render DrawerMenu 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/archive"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"
@@ -84,7 +80,6 @@ exports[`should render DrawerMenu 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/applications"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"
@@ -98,7 +93,6 @@ exports[`should render DrawerMenu 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/logout"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"
@@ -168,7 +162,6 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/strategies"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"
@@ -182,7 +175,6 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/history"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"
@@ -196,7 +188,6 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/archive"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"
@@ -210,7 +201,6 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/applications"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"
@@ -224,7 +214,6 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       className="navigationLink mdl-color-text--grey-600"
       href="/logout"
       onClick={[Function]}
-      style={undefined}
     >
       <react-mdl-Icon
         className="navigationIcon"

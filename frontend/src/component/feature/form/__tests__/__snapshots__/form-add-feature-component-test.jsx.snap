@@ -29,6 +29,12 @@ ShallowWrapper {
             },
           ],
         ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
       }
     }
     removeStrategy={[MockFunction]}
@@ -60,9 +66,7 @@ ShallowWrapper {
         >
           Create feature toggle
         </react-mdl-CardTitle>,
-        <form
-          onSubmit={undefined}
-        >
+        <form>
           <section
             style={
               Object {
@@ -427,9 +431,7 @@ ShallowWrapper {
           >
             Create feature toggle
           </react-mdl-CardTitle>,
-          <form
-            onSubmit={undefined}
-          >
+          <form>
             <section
               style={
                 Object {

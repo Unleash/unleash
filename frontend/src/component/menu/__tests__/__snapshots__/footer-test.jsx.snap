@@ -10,55 +10,43 @@ exports[`should render DrawerMenu 1`] = `
     <react-mdl-FooterLinkList>
       <a
         aria-current={null}
-        className={undefined}
         href="/features"
         onClick={[Function]}
-        style={undefined}
       >
         Feature Toggles
       </a>
       <a
         aria-current={null}
-        className={undefined}
         href="/strategies"
         onClick={[Function]}
-        style={undefined}
       >
         Strategies
       </a>
       <a
         aria-current={null}
-        className={undefined}
         href="/history"
         onClick={[Function]}
-        style={undefined}
       >
         Event History
       </a>
       <a
         aria-current={null}
-        className={undefined}
         href="/archive"
         onClick={[Function]}
-        style={undefined}
       >
         Archived Toggles
       </a>
       <a
         aria-current={null}
-        className={undefined}
         href="/applications"
         onClick={[Function]}
-        style={undefined}
       >
         Applications
       </a>
       <a
         aria-current={null}
-        className={undefined}
         href="/logout"
         onClick={[Function]}
-        style={undefined}
       >
         Sign out
       </a>
@@ -107,46 +95,36 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       </a>
       <a
         aria-current={null}
-        className={undefined}
         href="/strategies"
         onClick={[Function]}
-        style={undefined}
       >
         Strategies
       </a>
       <a
         aria-current={null}
-        className={undefined}
         href="/history"
         onClick={[Function]}
-        style={undefined}
       >
         Event History
       </a>
       <a
         aria-current={null}
-        className={undefined}
         href="/archive"
         onClick={[Function]}
-        style={undefined}
       >
         Archived Toggles
       </a>
       <a
         aria-current={null}
-        className={undefined}
         href="/applications"
         onClick={[Function]}
-        style={undefined}
       >
         Applications
       </a>
       <a
         aria-current={null}
-        className={undefined}
         href="/logout"
         onClick={[Function]}
-        style={undefined}
       >
         Sign out
       </a>

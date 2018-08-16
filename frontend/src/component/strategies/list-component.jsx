@@ -10,10 +10,7 @@ class StrategiesListComponent extends Component {
         strategies: PropTypes.array.isRequired,
         fetchStrategies: PropTypes.func.isRequired,
         removeStrategy: PropTypes.func.isRequired,
-    };
-
-    static contextTypes = {
-        router: PropTypes.object,
+        history: PropTypes.object.isRequired,
     };
 
     componentDidMount() {
@@ -32,7 +29,7 @@ class StrategiesListComponent extends Component {
                             <IconButton
                                 raised
                                 name="add"
-                                onClick={() => this.context.router.push('/strategies/create')}
+                                onClick={() => this.props.history.push('/strategies/create')}
                                 title="Add new strategy"
                             />
                         }

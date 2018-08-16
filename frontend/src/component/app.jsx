@@ -20,10 +20,6 @@ export default class App extends Component {
         match: PropTypes.object.isRequired,
     };
 
-    static contextTypes = {
-        router: PropTypes.object,
-    };
-
     componentWillReceiveProps(nextProps) {
         if (this.props.location.pathname !== nextProps.location.pathname) {
             clearTimeout(this.timer);

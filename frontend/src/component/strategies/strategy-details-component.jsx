@@ -37,7 +37,7 @@ export default class StrategyDetails extends Component {
 
     getTabContent(activeTabId) {
         if (activeTabId === TABS.edit) {
-            return <EditStrategy strategy={this.props.strategy} />;
+            return <EditStrategy strategy={this.props.strategy} history={this.props.history} />;
         } else {
             return (
                 <ShowStrategy

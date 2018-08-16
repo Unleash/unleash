@@ -21,7 +21,7 @@ const mapStateToProps = createMapper({
     },
 });
 
-const prepare = (methods, dispatch) => {
+const prepare = (methods, dispatch, ownProps) => {
     methods.onSubmit = input => e => {
         e.preventDefault();
         // clean
@@ -40,14 +40,13 @@ const prepare = (methods, dispatch) => {
             parameters,
         })(dispatch)
             .then(() => methods.clear())
-            .then(() => this.props.history.push(`/strategies/view/${input.name}`));
+            .then(() => ownProps.history.push(`/strategies/view/${input.name}`));
     };
 
     methods.onCancel = e => {
         e.preventDefault();
         methods.clear();
-        // somewhat quickfix / hacky to go back..
-        window.history.back();
+        ownProps.history.push(`/strategies/view/${ownProps.strategy.name}`);
     };
 
     return methods;

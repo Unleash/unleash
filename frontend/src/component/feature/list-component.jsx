@@ -21,10 +21,6 @@ export default class FeatureListComponent extends React.Component {
         history: PropTypes.object.isRequired,
     };
 
-    static contextTypes = {
-        router: PropTypes.object,
-    };
-
     componentDidMount() {
         if (this.props.logout) {
             this.props.logoutUser();

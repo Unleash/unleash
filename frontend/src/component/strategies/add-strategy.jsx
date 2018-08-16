@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Textfield, IconButton, Menu, MenuItem, Checkbox, Grid, Cell } from 'react-mdl';
-import { FormButtons } from '../common';
+import { Textfield, IconButton, Menu, MenuItem, Checkbox, CardTitle, Card, CardActions } from 'react-mdl';
+import { styles as commonStyles, FormButtons } from '../common';
 
 const trim = value => {
     if (value && value.trim) {
@@ -129,10 +129,12 @@ class AddStrategy extends Component {
         const { input, setValue, updateInList, incValue, onCancel, editmode = false, onSubmit } = this.props;
 
         return (
-            <Grid className="mdl-color--white">
-                <Cell col={12}>
-                    <form onSubmit={onSubmit(input)}>
-                        {editmode ? <EditHeader /> : <CreateHeader />}
+            <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible', paddingBottom: '10px' }}>
+                <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>
+                    {editmode ? <EditHeader /> : <CreateHeader />}
+                </CardTitle>
+                <form onSubmit={onSubmit(input)}>
+                    <section style={{ padding: '16px' }}>
                         <Textfield
                             label="Strategy name"
                             floatingLabel
@@ -163,12 +165,12 @@ class AddStrategy extends Component {
                             }}
                         />{' '}
                         &nbsp;Add parameter
-                        <br />
-                        <hr />
+                    </section>
+                    <CardActions>
                         <FormButtons submitText={editmode ? 'Update' : 'Create'} onCancel={onCancel} />
-                    </form>
-                </Cell>
-            </Grid>
+                    </CardActions>
+                </form>
+            </Card>
         );
     }
 }

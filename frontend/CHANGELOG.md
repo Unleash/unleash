@@ -10,6 +10,9 @@ The latest version of this document is always available in
 
 ## [Unreleased]
 
+## [3.1.1]
+- fix(strategy-create): Should be able to open the create strategy view.
+
 ## [3.1.0]
 - fix(react-router): Upgrade to react-router v4.
 - fix(feature-create): Default strategy should be chosen if strategy list is empty. 

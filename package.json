@@ -79,7 +79,7 @@
     "pg": "^7.4.3",
     "pkginfo": "^0.4.1",
     "prom-client": "^11.0.0",
-    "prometheus-gc-stats": "^0.5.0",
+    "prometheus-gc-stats": "^0.6.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
     "unleash-frontend": "^3.1.1",

@@ -48,7 +48,7 @@ module.exports = {
             new UglifyJsPlugin({
                 uglifyOptions: {
                     output: {
-                        comments: false
+                        comments: false,
                     },
                 },
             }),

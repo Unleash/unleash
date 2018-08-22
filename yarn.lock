@@ -6336,9 +6336,9 @@ unique-temp-dir@^1.0.0:
     os-tmpdir "^1.0.1"
     uid2 "0.0.3"
 
-unleash-frontend@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.1.2.tgz#d7ba23bee03f16f909476ce401aceddb82268c4e"
+unleash-frontend@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.1.3.tgz#c981a87603a9e7a49a4a0bfe9d508a1ded497835"
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

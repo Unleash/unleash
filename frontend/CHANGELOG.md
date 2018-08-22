@@ -10,8 +10,11 @@ The latest version of this document is always available in
 
 ## [Unreleased]
 
+## [3.1.3]
+- fix(webpack): Strip all comments in css/js bundles.
+
 ## [3.1.2]
-- chore(package): update webpack to version 4.17.1 ivaosthu 22.08.18 17:04
+- chore(package): update webpack to version 4.17.1
 - chore(package): move all dependencies to devDependencies as they are not used outside this module.  
 
 ## [3.1.1]

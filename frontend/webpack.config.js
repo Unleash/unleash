@@ -4,6 +4,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const devMode = process.env.NODE_ENV !== 'production';
 const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 const entry = ['whatwg-fetch', './src/index'];
@@ -39,6 +41,23 @@ module.exports = {
         path: path.join(__dirname, 'dist/public'),
         filename: 'bundle.js',
         publicPath: '/static/',
+    },
+
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    output: {
+                        comments: false
+                    },
+                },
+            }),
+            new OptimizeCssAssetsPlugin({
+                cssProcessor: require('cssnano'),
+                cssProcessorOptions: { discardComments: { removeAll: true } },
+                canPrint: true,
+            }),
+        ],
     },
 
     module: {

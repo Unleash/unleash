@@ -1,296 +1,49 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders add strategy form with a list of available strategies 1`] = `
-ShallowWrapper {
-  "length": 1,
-  Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <AddStrategy
-    addStrategy={[MockFunction]}
-    fetchStrategies={[MockFunction]}
-    strategies={
-      Array [
-        Object {
-          "description": "Default on/off strategy.",
-          "editable": false,
-          "name": "default",
-          "parameters": Array [
-            "t",
-          ],
-        },
-      ]
-    }
-  />,
-  Symbol(enzyme.__renderer__): Object {
-    "batchedUpdates": [Function],
-    "getNode": [Function],
-    "render": [Function],
-    "simulateEvent": [Function],
-    "unmount": [Function],
-  },
-  Symbol(enzyme.__node__): Object {
-    "instance": null,
-    "key": undefined,
-    "nodeType": "host",
-    "props": Object {
-      "children": Array [
-        <react-mdl-IconButton
-          accent={true}
-          id="strategies-add"
-          name="add"
-          onClick={[Function]}
-          raised={true}
-          title="Add Strategy"
-        />,
-        <react-mdl-Menu
-          align="right"
-          ripple={true}
-          style={
-            Object {
-              "backgroundColor": "rgb(247, 248, 255)",
-              "maxHeight": "300px",
-              "overflowY": "auto",
-            }
-          }
-          target="strategies-add"
-          valign="bottom"
-        >
-          <react-mdl-MenuItem
-            disabled={true}
-          >
-            Add Strategy:
-          </react-mdl-MenuItem>
-          <react-mdl-MenuItem
-            onClick={[Function]}
-            title="Default on/off strategy."
-          >
-            default
-          </react-mdl-MenuItem>
-        </react-mdl-Menu>,
-      ],
-      "style": Object {
-        "display": "inline-block",
-        "height": "25px",
-        "position": "relative",
-        "width": "25px",
-      },
-    },
-    "ref": null,
-    "rendered": Array [
-      Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "host",
-        "props": Object {
-          "accent": true,
-          "id": "strategies-add",
-          "name": "add",
-          "onClick": [Function],
-          "raised": true,
-          "title": "Add Strategy",
-        },
-        "ref": null,
-        "rendered": null,
-        "type": "react-mdl-IconButton",
-      },
-      Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "host",
-        "props": Object {
-          "align": "right",
-          "children": Array [
-            <react-mdl-MenuItem
-              disabled={true}
-            >
-              Add Strategy:
-            </react-mdl-MenuItem>,
-            Array [
-              <react-mdl-MenuItem
-                onClick={[Function]}
-                title="Default on/off strategy."
-              >
-                default
-              </react-mdl-MenuItem>,
-            ],
-          ],
-          "ripple": true,
-          "style": Object {
-            "backgroundColor": "rgb(247, 248, 255)",
-            "maxHeight": "300px",
-            "overflowY": "auto",
-          },
-          "target": "strategies-add",
-          "valign": "bottom",
-        },
-        "ref": null,
-        "rendered": Array [
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "host",
-            "props": Object {
-              "children": "Add Strategy:",
-              "disabled": true,
-            },
-            "ref": null,
-            "rendered": "Add Strategy:",
-            "type": "react-mdl-MenuItem",
-          },
-          Object {
-            "instance": null,
-            "key": "default",
-            "nodeType": "host",
-            "props": Object {
-              "children": "default",
-              "onClick": [Function],
-              "title": "Default on/off strategy.",
-            },
-            "ref": null,
-            "rendered": "default",
-            "type": "react-mdl-MenuItem",
-          },
-        ],
-        "type": "react-mdl-Menu",
-      },
-    ],
-    "type": "div",
-  },
-  Symbol(enzyme.__nodes__): Array [
+<div
+  style={
     Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {
-        "children": Array [
-          <react-mdl-IconButton
-            accent={true}
-            id="strategies-add"
-            name="add"
-            onClick={[Function]}
-            raised={true}
-            title="Add Strategy"
-          />,
-          <react-mdl-Menu
-            align="right"
-            ripple={true}
-            style={
-              Object {
-                "backgroundColor": "rgb(247, 248, 255)",
-                "maxHeight": "300px",
-                "overflowY": "auto",
-              }
-            }
-            target="strategies-add"
-            valign="bottom"
-          >
-            <react-mdl-MenuItem
-              disabled={true}
-            >
-              Add Strategy:
-            </react-mdl-MenuItem>
-            <react-mdl-MenuItem
-              onClick={[Function]}
-              title="Default on/off strategy."
-            >
-              default
-            </react-mdl-MenuItem>
-          </react-mdl-Menu>,
-        ],
-        "style": Object {
-          "display": "inline-block",
-          "height": "25px",
-          "position": "relative",
-          "width": "25px",
-        },
-      },
-      "ref": null,
-      "rendered": Array [
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "accent": true,
-            "id": "strategies-add",
-            "name": "add",
-            "onClick": [Function],
-            "raised": true,
-            "title": "Add Strategy",
-          },
-          "ref": null,
-          "rendered": null,
-          "type": "react-mdl-IconButton",
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "align": "right",
-            "children": Array [
-              <react-mdl-MenuItem
-                disabled={true}
-              >
-                Add Strategy:
-              </react-mdl-MenuItem>,
-              Array [
-                <react-mdl-MenuItem
-                  onClick={[Function]}
-                  title="Default on/off strategy."
-                >
-                  default
-                </react-mdl-MenuItem>,
-              ],
-            ],
-            "ripple": true,
-            "style": Object {
-              "backgroundColor": "rgb(247, 248, 255)",
-              "maxHeight": "300px",
-              "overflowY": "auto",
-            },
-            "target": "strategies-add",
-            "valign": "bottom",
-          },
-          "ref": null,
-          "rendered": Array [
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {
-                "children": "Add Strategy:",
-                "disabled": true,
-              },
-              "ref": null,
-              "rendered": "Add Strategy:",
-              "type": "react-mdl-MenuItem",
-            },
-            Object {
-              "instance": null,
-              "key": "default",
-              "nodeType": "host",
-              "props": Object {
-                "children": "default",
-                "onClick": [Function],
-                "title": "Default on/off strategy.",
-              },
-              "ref": null,
-              "rendered": "default",
-              "type": "react-mdl-MenuItem",
-            },
-          ],
-          "type": "react-mdl-Menu",
-        },
-      ],
-      "type": "div",
-    },
-  ],
-  Symbol(enzyme.__options__): Object {
-    "adapter": ReactSixteenAdapter {
-      "options": Object {
-        "enableComponentDidUpdateOnSetState": true,
-      },
-    },
-  },
-}
+      "display": "inline-block",
+      "height": "25px",
+      "position": "relative",
+      "width": "25px",
+    }
+  }
+>
+  <react-mdl-IconButton
+    accent={true}
+    id="strategies-add"
+    name="add"
+    onClick={[Function]}
+    raised={true}
+    title="Add Strategy"
+  />
+  <react-mdl-Menu
+    align="right"
+    ripple={true}
+    style={
+      Object {
+        "backgroundColor": "rgb(247, 248, 255)",
+        "maxHeight": "300px",
+        "overflowY": "auto",
+      }
+    }
+    target="strategies-add"
+    valign="bottom"
+  >
+    <react-mdl-MenuItem
+      disabled={true}
+    >
+      Add Strategy:
+    </react-mdl-MenuItem>
+    <react-mdl-MenuItem
+      key="default"
+      onClick={[Function]}
+      title="Default on/off strategy."
+    >
+      default
+    </react-mdl-MenuItem>
+  </react-mdl-Menu>
+</div>
 `;

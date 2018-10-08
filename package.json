@@ -96,7 +96,7 @@
     "eslint-config-finn-prettier": "^3.0.2",
     "husky": "^0.14.1",
     "lint-staged": "^7.1.0",
-    "lolex": "^2.5.0",
+    "lolex": "^3.0.0",
     "nyc": "^12.0.1",
     "prettier": "^1.14.3",
     "proxyquire": "^2.0.1",

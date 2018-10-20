@@ -26,9 +26,7 @@ export default class ShowUserComponent extends React.Component {
     }
 
     updateLocale() {
-        const locale = this.props.location
-            ? this.props.location.locale
-            : this.possibleLocales[this.possibleLocales.length - 1];
+        const locale = (this.props.location && this.props.location.locale) || navigator.language;
         let index = this.possibleLocales.findIndex(v => v.value === locale);
         index = (index + 1) % this.possibleLocales.length;
         this.props.updateSettingLocation('locale', this.possibleLocales[index].value);
@@ -36,9 +34,7 @@ export default class ShowUserComponent extends React.Component {
 
     render() {
         const email = this.props.profile ? this.props.profile.email : '';
-        const locale = this.props.location
-            ? this.props.location.locale
-            : this.possibleLocales[this.possibleLocales.length - 1].value;
+        const locale = (this.props.location && this.props.location.locale) || navigator.language;
         let foundLocale = this.possibleLocales.find(l => l.value === locale);
         const imageUrl = email ? this.props.profile.imageUrl : 'public/unknown-user.png';
         const imageLocale = foundLocale ? `public/${foundLocale.image}.png` : `public/unknown-locale.png`;

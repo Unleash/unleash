@@ -11,7 +11,7 @@ export default class ShowUserComponent extends React.Component {
     };
     possibleLocales = [
         { value: 'nb-NO', image: 'nb-NO' },
-        { value: 'us-US', image: 'us-US' },
+        { value: 'en-US', image: 'en-US' },
         { value: 'en-GB', image: 'en-GB' },
     ];
 

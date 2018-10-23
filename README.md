@@ -46,8 +46,8 @@ We have offical SDK's for Java, Node.js, Go and Ruby. And we will be happy to ad
 Clients written by awesome enthusiasts: 
 - [stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)
 - [onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)
-- [aes/unleash-client-python](https://github.com/aes/unleash-client-python) (Python 3)
 - [ivanklee86/unleash-client-python](https://github.com/ivanklee86/unleash-client-python) (Python 3)
+- [rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)
 
 ### The Client API
 

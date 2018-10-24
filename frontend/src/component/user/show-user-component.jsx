@@ -18,15 +18,19 @@ export default class ShowUserComponent extends React.Component {
     componentDidMount() {
         this.props.fetchUser();
         // find default locale and add it in choices if not present
-        let locale = navigator.language;
+        const locale = navigator.language || navigator.userLanguage;
         let found = this.possibleLocales.find(l => l.value === locale);
         if (!found) {
             this.possibleLocales.push({ value: locale, image: 'unknown-locale' });
         }
     }
 
+    getLocale() {
+        return (this.props.location && this.props.location.locale) || navigator.language || navigator.userLanguage;
+    }
+
     updateLocale() {
-        const locale = (this.props.location && this.props.location.locale) || navigator.language;
+        const locale = this.getLocale();
         let index = this.possibleLocales.findIndex(v => v.value === locale);
         index = (index + 1) % this.possibleLocales.length;
         this.props.updateSettingLocation('locale', this.possibleLocales[index].value);
@@ -34,7 +38,7 @@ export default class ShowUserComponent extends React.Component {
 
     render() {
         const email = this.props.profile ? this.props.profile.email : '';
-        const locale = (this.props.location && this.props.location.locale) || navigator.language;
+        const locale = this.getLocale();
         let foundLocale = this.possibleLocales.find(l => l.value === locale);
         const imageUrl = email ? this.props.profile.imageUrl : 'public/unknown-user.png';
         const imageLocale = foundLocale ? `public/${foundLocale.image}.png` : `public/unknown-locale.png`;

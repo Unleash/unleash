@@ -42,11 +42,12 @@ We have offical SDK's for Java, Node.js, Go and Ruby. And we will be happy to ad
 - [unleash/unleash-client-node](https://github.com/unleash/unleash-client-node)
 - [unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)
 - [unleash/unleash-client-ruby](https://github.com/unleash/unleash-client-ruby)
+- [unleash/unleash-client-python](https://github.com/Unleash/unleash-client-python)
+- [unleash/unleash-client-python](https://github.com/Unleash/unleash-client-python)
 
-Clients written by awesome enthusiasts: 
+Clients written by awesome enthusiasts :fire: 
 - [stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)
 - [onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)
-- [ivanklee86/unleash-client-python](https://github.com/ivanklee86/unleash-client-python) (Python 3)
 - [rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)
 
 ### The Client API

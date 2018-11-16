@@ -65,6 +65,9 @@ has the latest response locally.
 }
 ```
 
+You may limit the response by sending a `namePrefix` query-parameter. 
+
+
 `GET: http://unleash.host.com/api/client/features/:featureName`
 
 Used to fetch details about a specific feature toggle. This is mainly provided to make it easy to 

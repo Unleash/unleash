@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- fix(clientApi): Add namePrefix paramter to /api/client/features
+
 ## 3.1.1
 - fix(gzip): Add gzip support
 - fix(package): update unleash-frontend to version 3.1.3

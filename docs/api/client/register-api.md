@@ -24,5 +24,5 @@ Registers a client instance with the unleash server. The client should send all 
 * **instanceId** - Instance id for this application (typically hostname, podId or similar)
 * **sdkVersion** - Optional field that describes the sdk version (name:version)
 * **strategies** - List of strategies implemented by this application
-* **started** - When this client started. Should be reported as [ISO8610](https://en.wikipedia.org/wiki/ISO_8601) time.
+* **started** - When this client started. Should be reported as [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) time.
 * **interval** - At which interval, in milliseconds, will this client be expected to send metrics

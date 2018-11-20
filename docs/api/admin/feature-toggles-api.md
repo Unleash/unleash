@@ -1,3 +1,8 @@
+---
+id: features
+title: /api/admin/features
+---
+
 ### Fetching Feature Toggles
 
 `GET: http://unleash.host.com/api/admin/features`

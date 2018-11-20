@@ -1,4 +1,8 @@
-# Migrations guide
+---
+id: migration_guide
+title: Migration Guide
+---
+
 Generally the intention is that `unleash-server` should always provide support for clients one lower major version. This should make possible to upgrade `unleash` gradually. 
 
 

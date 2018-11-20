@@ -1,4 +1,7 @@
-# API Documentation
+---
+id: index
+title: API Documentation
+---
 
 ## Client API
 This describes the API provided to unleash-clients. 

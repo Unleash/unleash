@@ -1,4 +1,7 @@
-# This document describes the client registration endpoints
+---
+id: register
+title: /api/client/register
+---
 
 ### Client registration
 

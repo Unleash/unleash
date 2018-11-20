@@ -1,3 +1,9 @@
+---
+id: client_specification
+title: Client Specification
+---
+
+
 # Client Specification 1.0
 
 This document attempts to guide developers in implementing a Unleash Client SDK. 

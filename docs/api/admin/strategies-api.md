@@ -1,4 +1,7 @@
-## Strategies API
+---
+id: strategies
+title: /api/admin/strategies
+---
 
 ### Fetch Strategies 
 `GET: http://unleash.host.com/api/admin/strategies`

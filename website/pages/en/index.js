@@ -1,0 +1,225 @@
+/**
+ * Copyright (c) 2017-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+const React = require('react');
+
+const CompLibrary = require('../../core/CompLibrary.js');
+
+const MarkdownBlock = CompLibrary.MarkdownBlock; /* Used to read markdown */
+const Container = CompLibrary.Container;
+const GridBlock = CompLibrary.GridBlock;
+
+const siteConfig = require(`${process.cwd()}/siteConfig.js`);
+
+function imgUrl(img) {
+  return `${siteConfig.baseUrl}img/${img}`;
+}
+
+function docUrl(doc, language) {
+  return `${siteConfig.baseUrl}docs/${language ? `${language}/` : ''}${doc}`;
+}
+
+function pageUrl(page, language) {
+  return siteConfig.baseUrl + (language ? `${language}/` : '') + page;
+}
+
+class Button extends React.Component {
+  render() {
+    return (
+      <div className="pluginWrapper buttonWrapper">
+        <a className="button" href={this.props.href} target={this.props.target}>
+          {this.props.children}
+        </a>
+      </div>
+    );
+  }
+}
+
+Button.defaultProps = {
+  target: '_self',
+};
+
+const SplashContainer = props => (
+  <div className="homeContainer">
+    <div className="homeSplashFade">
+      <div className="wrapper homeWrapper">{props.children}</div>
+    </div>
+  </div>
+);
+
+const Logo = props => (
+  <div className="projectLogo">
+    <img src={props.img_src} alt="Project Logo" />
+  </div>
+);
+
+const ProjectTitle = () => (
+  <h2 className="projectTitle">
+    {siteConfig.title}
+    <small>{siteConfig.tagline}</small>
+  </h2>
+);
+
+const PromoSection = props => (
+  <div className="section promoSection">
+    <div className="promoRow">
+      <div className="pluginRowBlock">{props.children}</div>
+    </div>
+  </div>
+);
+
+class HomeSplash extends React.Component {
+  render() {
+    const language = this.props.language || '';
+    return (
+      <SplashContainer>
+        <div className="inner">
+          <ProjectTitle />
+          <a
+              className="github-button"
+              href={siteConfig.repoUrl}
+              data-icon="octicon-star"
+              data-count-href="/unleash/unleash/stargazers"
+              data-show-count="true"
+              data-count-aria-label="# stargazers on GitHub"
+              aria-label="Star this project on GitHub">
+              Star
+            </a>
+          <PromoSection>
+            <Button href={docUrl('getting_started.html', language)}>Getting Started</Button>
+            <Button href="#try">Try It Out</Button>
+            <Button href={siteConfig.repoUrl}>GitHub</Button>
+          </PromoSection>
+        </div>
+      </SplashContainer>
+    );
+  }
+}
+
+const Block = props => (
+  <Container
+    padding={['bottom', 'top']}
+    id={props.id}
+    background={props.background}>
+    <GridBlock align="left" contents={props.children} layout={props.layout} />
+  </Container>
+);
+
+const FeatureCallout = () => (
+  <div className="productShowcaseSection paddingBottom" style={{textAlign: 'center'}}>
+    <p>
+      Unleash is a feature toggle system, that gives you a great overview over all feature toggles across 
+      all your applications and services. It comes with official client implementations for Java, Node.js, Go, Ruby and Python.
+    </p>
+    <p>
+      The main motivation for doing feature toggling is to decouple the process for deploying code to production 
+      and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
+    </p>
+  </div>
+);
+
+const UnleashClient = () => (
+  <Container padding={['bottom', 'top']} id="unleash-client" background={'light'}>
+
+    <h2>Client implementations</h2>
+    <p>
+      Unleash has offical SDK's for Java, Node.js, Go, Ruby and Python. And we will be happy to add implementations in other langugages written by you! These libraries makes it very easy to use Unleash in you application.
+    </p>
+    
+    <h3>Official client SDKs:</h3>
+    <ul>
+      <li><MarkdownBlock>[unleash/unleash-client-java](https://github.com/unleash/unleash-client-java)</MarkdownBlock></li>
+      <li><MarkdownBlock>[unleash/unleash-client-node](https://github.com/unleash/unleash-client-node)</MarkdownBlock></li>
+      <li><MarkdownBlock>[unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)</MarkdownBlock></li>
+      <li><MarkdownBlock>[unleash/unleash-client-ruby](https://github.com/unleash/unleash-client-ruby)</MarkdownBlock></li>
+      <li><MarkdownBlock>[unleash/unleash-client-python](https://github.com/Unleash/unleash-client-python)</MarkdownBlock></li>
+    </ul>
+    
+    <h3>Clients written by awesome enthusiasts:</h3>
+    <ul>
+      <li><MarkdownBlock>[stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)</MarkdownBlock></li>
+      <li><MarkdownBlock>[onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)</MarkdownBlock></li>
+      <li><MarkdownBlock>[rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)</MarkdownBlock></li>
+    </ul>
+  </Container>
+);
+
+const TryOut = () => (
+  <Block id="try">
+    {[
+      {
+        content: 'We have deployed a demo version of [Unleash on Heroku](https://unleash.herokuapp.com). '+
+            'Here you can play with the Unleash UI, define your toggles. <br /><br />'+
+            'You can even use on of the Unleash client SDKs and test it out Unleash your application. '+
+            'Use the api url located at https://unleash.herokuapp.com/api/.',
+        image: imgUrl('dashboard.png'),
+        imageAlign: 'left',
+        align: 'left',
+        title: 'Try Unleash',
+      },
+    ]}
+  </Block>
+);
+
+const ActivationStrategies = () => (
+  <Block background="dark">
+    {[
+      {
+        content: 'It\'s fine to have a system for turning stuff on and off. But some times we want more granular control, we want to decide who to the toggle should be enabled for. This is where [activation strategies](docs/activation_strategy) comes in to the picture. Activation strategies take arbitrary config and allows us to enable a toggle in various ways.',
+        image: imgUrl('logo-inverted.png'),
+        imageAlign: 'right',
+        title: 'Activation strategies',
+      },
+    ]}
+  </Block>
+);
+
+const Showcase = props => {
+  if ((siteConfig.users || []).length === 0) {
+    return null;
+  }
+
+  const showcase = siteConfig.users.filter(user => user.pinned).map(user => (
+    <a href={user.infoLink} key={user.infoLink}>
+      <img src={user.image} alt={user.caption} title={user.caption} />
+    </a>
+  ));
+
+  return (
+    <div className="productShowcaseSection paddingBottom">
+      <h2>Who is Using This?</h2>
+      <p>This project is used by all these people</p>
+      <div className="logos">{showcase}</div>
+      <div className="more-users">
+        <a className="button" href={pageUrl('users.html', props.language)}>
+          More {siteConfig.title} Users
+        </a>
+      </div>
+    </div>
+  );
+};
+
+class Index extends React.Component {
+  render() {
+    const language = this.props.language || '';
+
+    return (
+      <div>
+        <HomeSplash language={language} config={this.props.config} />
+        <div className="mainContainer">
+          <FeatureCallout />
+          <UnleashClient />
+          <TryOut />
+          <ActivationStrategies />
+          <Showcase language={language} />
+        </div>
+      </div>
+    );
+  }
+}
+
+module.exports = Index;

@@ -1,8 +1,11 @@
-# This document describes the client metrics endpoints
+---
+id: metrics
+title: /api/client/metrics
+---
 
 ### Send metrics
 
-`POST http://unleash.host.com/api/client/metrics`
+`POST: http://unleash.host.com/api/client/metrics`
 
 Register a metrics payload with a timed bucket. 
 

@@ -1,4 +1,8 @@
-# Securing Unleash
+---
+id: securing_unleash
+title: Securing Unleash
+---
+
 The Unleash API is split in two different paths: `/api/client` and `/api/admin`. 
 This makes it easy to have different authentication strategy for the admin interface and the client-api used by the applications integrating with Unleash. 
 

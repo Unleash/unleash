@@ -1,3 +1,8 @@
+---
+id: internal
+title: /internal-backstage/prometheus
+---
+
 # Internal Backstage API
 
 `GET http://unleash.host.com/internal-backstage/prometheus`

@@ -1,4 +1,8 @@
-# Developer Guide
+---
+id: developer_guide
+title: Developer guide
+---
+
 
 ## PostgreSQL
 To run and develop unleash you need to have PostgreSQL database (PostgreSQL v.9.5.x or newer) locally.

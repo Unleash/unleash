@@ -43,3 +43,11 @@ typings
 
 # We use yarn.lock
 package-lock.json
+
+# Website stuff
+/website/build
+/website/backers.json
+/website/node_modules
+/website/yarn.lock
+/website/translated_docs
+/website/i18n/*

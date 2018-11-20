@@ -1,4 +1,8 @@
-# Database backups
+---
+id: database_backup
+title: Database Backup
+---
+
 When upgrading to a new major version of Unleash it is advised to do a 
 full database backup to ease rollback in case of failures. 
 

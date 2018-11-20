@@ -1,3 +1,8 @@
+---
+id: metrics
+title: /api/admin/metrics
+---
+
 # This document describes the metrics endpoint for admin ui
 
 

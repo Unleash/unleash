@@ -1,3 +1,8 @@
+---
+id: events
+title: /api/admin/events
+---
+
 # Events API
 
 `GET: http://unleash.host.com/api/admin/events`

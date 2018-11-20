@@ -1,3 +1,8 @@
+---
+id: features
+title: /api/client/features
+---
+
 ### Fetching Feature Toggles
 
 `GET: http://unleash.host.com/api/client/features`

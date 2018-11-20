@@ -1,4 +1,7 @@
-# Getting stated
+---
+id: getting_started
+title: Getting Started
+---
 
 ## Requirements
 

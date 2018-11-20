@@ -1,2 +1,9 @@
 node_modules
 bundle.js
+website/blog
+website/build
+website/node_modules
+website/i18n/*.js
+website/translated_docs
+website/core
+website/pages

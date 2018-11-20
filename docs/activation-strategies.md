@@ -1,4 +1,8 @@
-# Activation Strategies
+---
+id: activation_strategy
+title: Activation Strategies
+---
+
 
 It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of the users. We achieve this level of control with the help of activation strategies. The most simple strategy is the “default” strategy, which basically means that the feature should be enabled to everyone.
 

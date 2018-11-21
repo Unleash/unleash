@@ -21,13 +21,13 @@ const users = [
         pinned: true,
     },
     {
-      caption: 'NAV.no',
-      // You will need to prepend the image path with your baseUrl
-      // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-      image: '/img/nav.jpg',
-      infoLink: 'https://www.nav.no',
-      pinned: true,
-  },
+        caption: 'NAV.no',
+        // You will need to prepend the image path with your baseUrl
+        // if it is not '/', like: '/test-site/img/docusaurus.svg'.
+        image: '/img/nav.jpg',
+        infoLink: 'https://www.nav.no',
+        pinned: true,
+    },
 ];
 
 const siteConfig = {

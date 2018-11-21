@@ -50,6 +50,13 @@ Available unleash options includes:
   - `unsecure` - (default) Will use simple cookie based authentication. UI will require the user to specify an email in order to use unleash. 
   - `custom` - Use this when you implement your own custom authentication logic.  
 
+### 3. Docker
+You can also use the [hosted docker image](https://hub.docker.com/r/unleashorg/unleash-server/) to start the Unleash server
+
+```sh
+docker run -d -e DATABASE_URL=postgres://user:pass@10.200.221.11:5432/unleash unleashorg/unleash-server
+```
+
 ## How do I configure the log output?
  
 By default, `unleash` uses [log4js](https://github.com/nomiddlename/log4js-node) to log important information. It is possible to swap out the logger provider (only when using Unleash programmatically). This enables filtering of log levels and easy redirection of output streams.

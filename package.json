@@ -97,7 +97,7 @@
     "lint-staged": "^8.0.0",
     "lolex": "^3.0.0",
     "nyc": "^13.1.0",
-    "prettier": "^1.14.3",
+    "prettier": "^1.15.2",
     "proxyquire": "^2.0.1",
     "superagent": "^4.0.0",
     "supertest": "^3.1.0",

@@ -4,11 +4,11 @@ It's hosted on https://unleash.github.io/
 
 # What's In This Document
 
-* [Get Started in 5 Minutes](#get-started-in-5-minutes)
-* [Directory Structure](#directory-structure)
-* [Editing Content](#editing-content)
-* [Adding Content](#adding-content)
-* [Full Documentation](#full-documentation)
+- [Get Started in 5 Minutes](#get-started-in-5-minutes)
+- [Directory Structure](#directory-structure)
+- [Editing Content](#editing-content)
+- [Adding Content](#adding-content)
+- [Full Documentation](#full-documentation)
 
 # Get Started in 5 Minutes
 
@@ -18,6 +18,7 @@ It's hosted on https://unleash.github.io/
 # Install dependencies
 $ npm install
 ```
+
 2. Run your dev server:
 
 ```sh
@@ -103,6 +104,7 @@ For more information about adding new docs, click [here](https://docusaurus.io/d
 1. Add links to docs, custom pages or external links by editing the headerLinks field of `website/siteConfig.js`:
 
 `website/siteConfig.js`
+
 ```javascript
 {
   headerLinks: [
@@ -127,6 +129,7 @@ For more information about the navigation bar, click [here](https://docusaurus.i
 1. If you want your page to show up in your navigation header, you will need to update `website/siteConfig.js` to add to the `headerLinks` element:
 
 `website/siteConfig.js`
+
 ```javascript
 {
   headerLinks: [

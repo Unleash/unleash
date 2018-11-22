@@ -3,53 +3,55 @@ id: strategies
 title: /api/admin/strategies
 ---
 
-### Fetch Strategies 
+### Fetch Strategies
+
 `GET: http://unleash.host.com/api/admin/strategies`
 
-Used to fetch all defined strategies and their defined paramters. 
+Used to fetch all defined strategies and their defined paramters.
 
 **Response**
 
- ```json
+```json
 {
-    "version": 1,
-    "strategies": [
+  "version": 1,
+  "strategies": [
+    {
+      "name": "default",
+      "description": "Default on/off strategy.",
+      "parameters": []
+    },
+    {
+      "name": "userWithId",
+      "description": "Active for userId specified in the comma seperated 'userIds' parameter.",
+      "parameters": [
         {
-            "name": "default",
-            "description": "Default on/off strategy.",
-            "parameters": []
+          "name": "userIds",
+          "type": "list",
+          "description": "List of unique userIds the feature should be active for.",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "gradualRollout",
+      "description": "Gradual rollout to logged in users",
+      "parameters": [
+        {
+          "name": "percentage",
+          "type": "percentage",
+          "description": "How many percent should the new feature be active for.",
+          "required": false
         },
         {
-            "name": "userWithId",
-            "description": "Active for userId specified in the comma seperated 'userIds' parameter.",
-            "parameters": [
-                {
-                    "name": "userIds",
-                    "type": "list",
-                    "description": "List of unique userIds the feature should be active for.",
-                    "required": true
-                }
-            ]
-        },
-        {
-            "name": "gradualRollout",
-            "description": "Gradual rollout to logged in users",
-            "parameters": [
-                {
-                    "name": "percentage",
-                    "type": "percentage",
-                    "description": "How many percent should the new feature be active for.",
-                    "required": false
-                },
-                {
-                    "name": "group",
-                    "type": "string",
-                    "description": "Group key to use when hasing the userId. Makes sure that the same user get different value for different groups",
-                    "required": false
-                }
-            ]
-        },
-    ]}
+          "name": "group",
+          "type": "string",
+          "description": "Group key to use when hasing the userId. Makes sure that the same user get different value for different groups",
+          "required": false
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ### Create strategy
@@ -79,8 +81,7 @@ Used to fetch all defined strategies and their defined paramters.
 },
 ```
 
-Used to create a new Strategy. Name is required and must be unique. It is also required to have a parameters array, but it can be empty. 
-
+Used to create a new Strategy. Name is required and must be unique. It is also required to have a parameters array, but it can be empty.
 
 ### Update strategy
 
@@ -109,5 +110,4 @@ Used to create a new Strategy. Name is required and must be unique. It is also r
 },
 ```
 
-Used to update a Strategy definition. Name can't be changed. 
-**PS! I can be dangerous to change a implemnted strategy as the implementation also might need to be changed** 
+Used to update a Strategy definition. Name can't be changed. **PS! I can be dangerous to change a implemnted strategy as the implementation also might need to be changed**

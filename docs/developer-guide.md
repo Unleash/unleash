@@ -3,10 +3,9 @@ id: developer_guide
 title: Developer guide
 ---
 
-
 ## PostgreSQL
-To run and develop unleash you need to have PostgreSQL database (PostgreSQL v.9.5.x or newer) locally.
 
+To run and develop unleash you need to have PostgreSQL database (PostgreSQL v.9.5.x or newer) locally.
 
 ### Create a local unleash databases in postgres
 
@@ -30,9 +29,8 @@ export TEST_DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash_
 ```
 
 ## PostgreSQL with docker
-If you dont want to install PostgreSQL locally you can spin up an instance with docker. 
-We have created a script to ease this process: `scripts/docker-postgres.sh`
 
+If you dont want to install PostgreSQL locally you can spin up an instance with docker. We have created a script to ease this process: `scripts/docker-postgres.sh`
 
 ## Commands
 
@@ -55,20 +53,21 @@ npm test
 
 ## Database changes
 
-We use database migrations to track database changes. 
+We use database migrations to track database changes.
 
 ### Making a schema change
+
 In order to run migrations you will set the environment variable for DATABASE_URL
 
 `export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash`
 
-Use db-migrate to create new migrations file. 
+Use db-migrate to create new migrations file.
 
 ```bash
 > npm run db-migrate -- create YOUR-MIGRATION-NAME
 ```
 
-All migrations require one `up` and one `down` method. 
+All migrations require one `up` and one `down` method.
 
 Example of a typical migration:
 
@@ -76,17 +75,21 @@ Example of a typical migration:
 /* eslint camelcase: "off" */
 'use strict';
 
-exports.up = function (db, cb) {
-    db.createTable('examples', {
-        id: { type: 'int', primaryKey: true, notNull: true },
-        created_at: { type: 'timestamp', defaultValue: 'now()' },
-    }, cb);
+exports.up = function(db, cb) {
+  db.createTable(
+    'examples',
+    {
+      id: { type: 'int', primaryKey: true, notNull: true },
+      created_at: { type: 'timestamp', defaultValue: 'now()' },
+    },
+    cb,
+  );
 };
 
-exports.down = function (db, cb) {
-    return db.dropTable('examples', cb);
+exports.down = function(db, cb) {
+  return db.dropTable('examples', cb);
 };
-``` 
+```
 
 Test your migrations:
 
@@ -95,11 +98,10 @@ Test your migrations:
 > npm run db-migrate -- down
 ```
 
-
 ## Publishing / Releasing new packages
 
 Please run `npm run nsp` nad `npm run test` checks before publishing.
 
 Run `npm run publish` to start the publishing process.
 
-`npm run publish:dry` 
+`npm run publish:dry`

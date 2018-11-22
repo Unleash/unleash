@@ -5,36 +5,24 @@ title: /api/admin/metrics
 
 # This document describes the metrics endpoint for admin ui
 
-
 ### Seen-toggles
 
 `GET http://unleash.host.com/api/admin/seen-toggles`
 
-This enpoints returns a list of applications and what toogles 
-unleash has seend for each application. It will only guarantee 
-toggles reported by client applications within the last hour, but
-will in most cases remember seen-toggles for applications longer
+This enpoints returns a list of applications and what toogles unleash has seend for each application. It will only guarantee toggles reported by client applications within the last hour, but will in most cases remember seen-toggles for applications longer
 
-**Example response:** 
+**Example response:**
 
 ```json
 [
   {
     "appName": "demo-app",
-    "seenToggles": [
-      "add-feature-2",
-      "toggle-2",
-      "toggle-3"
-    ],
+    "seenToggles": ["add-feature-2", "toggle-2", "toggle-3"],
     "metricsCount": 127
   },
   {
     "appName": "demo-app-2",
-    "seenToggles": [
-      "add-feature-2",
-      "toggle-2",
-      "toggle-3"
-    ],
+    "seenToggles": ["add-feature-2", "toggle-2", "toggle-3"],
     "metricsCount": 21
   }
 ]
@@ -42,22 +30,17 @@ will in most cases remember seen-toggles for applications longer
 
 **Fields:**
 
-* **appName** - Name of the application seen by unleash-server
-* **seenToggles** - array of toggles names seen by unleash-server for this application
-* **metricsCount** - number of metrics counted across all toggles for this application.  
-
+- **appName** - Name of the application seen by unleash-server
+- **seenToggles** - array of toggles names seen by unleash-server for this application
+- **metricsCount** - number of metrics counted across all toggles for this application.
 
 ### Feature-Toggles metrics
 
 `GET http://unleash.host.com/api/admin/metrics/feature-toggles`
 
-This endpoint gives _last minute_ and _last hour_ metrics for all active toggles. This is based on 
-metrics reported by client applications. Yes is the number of times a given feature toggle 
-was evaluated to enabled in a client applcation, and no is the number it avaluated to false. 
+This endpoint gives _last minute_ and _last hour_ metrics for all active toggles. This is based on metrics reported by client applications. Yes is the number of times a given feature toggle was evaluated to enabled in a client applcation, and no is the number it avaluated to false.
 
-
-
-**Example response:** 
+**Example response:**
 
 ```json
 {
@@ -94,28 +77,21 @@ was evaluated to enabled in a client applcation, and no is the number it avaluat
 
 **Fields:**
 
-* **lastHour** - Hour projection collected metrics for all feature toggles. 
-* **lastMinute** - Mintue projection collected metrics for all feature toggles. 
-
+- **lastHour** - Hour projection collected metrics for all feature toggles.
+- **lastMinute** - Mintue projection collected metrics for all feature toggles.
 
 ### Applications
 
-`GET  http://unleash.host.com/api/admin/applications`
+`GET http://unleash.host.com/api/admin/applications`
 
-This endpoint returns a list of known applications (seen the last two days) and 
-a link to follow for more datails.  
-
+This endpoint returns a list of known applications (seen the last two days) and a link to follow for more datails.
 
 ```json
 {
   "applications": [
     {
       "appName": "another",
-      "strategies": [
-        "default",
-        "other",
-        "brother"
-      ],
+      "strategies": ["default", "other", "brother"],
       "createdAt": "2016-12-09T14:56:36.730Z",
       "links": {
         "appDetails": "/api/admin/applications/another"
@@ -123,11 +99,7 @@ a link to follow for more datails.
     },
     {
       "appName": "bow",
-      "strategies": [
-        "default",
-        "other",
-        "brother"
-      ],
+      "strategies": ["default", "other", "brother"],
       "createdAt": "2016-12-09T14:56:36.730Z",
       "links": {
         "appDetails": "/api/admin/applications/bow"
@@ -138,23 +110,16 @@ a link to follow for more datails.
 ```
 
 #### Query Params
-You can also specify the query param: _strategyName_, which will return all applications 
-implementing the given strategy.
 
-`GET  http://unleash.host.com/api/admin/applications?strategyName=someStrategyName`
+You can also specify the query param: _strategyName_, which will return all applications implementing the given strategy.
 
-
-
+`GET http://unleash.host.com/api/admin/applications?strategyName=someStrategyName`
 
 ### Application Details
 
-`GET  http://unleash.host.com/api/admin/applications/:appName`
+`GET http://unleash.host.com/api/admin/applications/:appName`
 
-This endpoint gives insight into details about a client applcation, such as instances, 
-strategies implemented and seen toogles. 
-
-
-
+This endpoint gives insight into details about a client applcation, such as instances, strategies implemented and seen toogles.
 
 ```json
 {
@@ -171,31 +136,23 @@ strategies implemented and seen toogles.
       "clientIp": "::ffff:127.0.0.1",
       "lastSeen": "2016-11-30T16:04:15.991Z",
       "createdAt": "2016-11-30T10:49:11.223Z"
-    },
+    }
   ],
   "strategies": [
     {
       "appName": "demo-app",
-      "strategies": [
-        "default",
-        "extra"
-      ]
+      "strategies": ["default", "extra"]
     }
   ],
-  "seenToggles": [
-    "add-feature-2",
-    "toggle-2",
-    "toggle-3"
-  ]
+  "seenToggles": ["add-feature-2", "toggle-2", "toggle-3"]
 }
 ```
 
 ### Seen applications
 
-`GET  http://unleash.host.com/api/admin/seen-apps`
+`GET http://unleash.host.com/api/admin/seen-apps`
 
 This endpoint gives insight into details about application seen per feature toggle.
-
 
 ```json
 {
@@ -225,9 +182,7 @@ This endpoint gives insight into details about application seen per feature togg
       "createdAt": "2016-12-28T10:39:24.966Z",
       "updatedAt": "2017-01-06T15:32:41.932Z",
       "description": "our other app",
-      "strategies": [
-        "default",
-      ],
+      "strategies": ["default"],
       "url": "http://example.com",
       "color": null,
       "icon": "desktop"

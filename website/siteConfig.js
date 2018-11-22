@@ -111,6 +111,9 @@ const siteConfig = {
     // You may provide arbitrary config keys to be used as needed by your
     // template. For example, if you need your repo's URL...
     repoUrl: 'https://github.com/unleash/unleash',
+
+    gaTrackingId: 'UA-129659197-1',
+    gaGtag: true,
 };
 
 module.exports = siteConfig;

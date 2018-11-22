@@ -1,6 +1,6 @@
 {
   "documentation": {
-    "Getting Started": ["getting_started", "securing_unleash", "unleash_context", "activation_strategy", "client_specification", "migration_guide"],
+    "User documentation": ["getting_started", "client_sdk", "securing_unleash", "unleash_context", "activation_strategy", "client_specification", "migration_guide"],
     "Developer Guide": ["developer_guide", "database_schema", "database_backup"],
     "Guides": ["guides/google_auth"]
   },

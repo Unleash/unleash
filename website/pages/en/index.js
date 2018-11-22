@@ -130,21 +130,31 @@ const UnleashClient = () => (
       Unleash has offical SDK's for Java, Node.js, Go, Ruby and Python. And we will be happy to add implementations in other langugages written by you! These libraries makes it very easy to use Unleash in you application.
     </p>
     
-    <h3>Official client SDKs:</h3>
-    <ul>
-      <li><MarkdownBlock>[unleash/unleash-client-java](https://github.com/unleash/unleash-client-java)</MarkdownBlock></li>
-      <li><MarkdownBlock>[unleash/unleash-client-node](https://github.com/unleash/unleash-client-node)</MarkdownBlock></li>
-      <li><MarkdownBlock>[unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)</MarkdownBlock></li>
-      <li><MarkdownBlock>[unleash/unleash-client-ruby](https://github.com/unleash/unleash-client-ruby)</MarkdownBlock></li>
-      <li><MarkdownBlock>[unleash/unleash-client-python](https://github.com/Unleash/unleash-client-python)</MarkdownBlock></li>
-    </ul>
-    
-    <h3>Clients written by awesome enthusiasts:</h3>
-    <ul>
-      <li><MarkdownBlock>[stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)</MarkdownBlock></li>
-      <li><MarkdownBlock>[onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)</MarkdownBlock></li>
-      <li><MarkdownBlock>[rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)</MarkdownBlock></li>
-    </ul>
+    <div className="gridBlock">
+      <div className="blockElement twoByGridBlock">
+        <div className="blockContent">
+          <h3>Official client SDKs:</h3>
+          <ul>
+            <li><MarkdownBlock>[unleash/unleash-client-java](https://github.com/unleash/unleash-client-java)</MarkdownBlock></li>
+            <li><MarkdownBlock>[unleash/unleash-client-node](https://github.com/unleash/unleash-client-node)</MarkdownBlock></li>
+            <li><MarkdownBlock>[unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)</MarkdownBlock></li>
+            <li><MarkdownBlock>[unleash/unleash-client-ruby](https://github.com/unleash/unleash-client-ruby)</MarkdownBlock></li>
+            <li><MarkdownBlock>[unleash/unleash-client-python](https://github.com/Unleash/unleash-client-python)</MarkdownBlock></li>
+          </ul>    
+        </div>
+      </div>
+      
+      <div className="blockElement twoByGridBlock">
+        <div className="blockContent">
+          <h3>Clients written by awesome enthusiasts:</h3>
+          <ul>
+            <li><MarkdownBlock>[stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)</MarkdownBlock></li>
+            <li><MarkdownBlock>[onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)</MarkdownBlock></li>
+            <li><MarkdownBlock>[rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)</MarkdownBlock></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </Container>
 );
 
@@ -153,9 +163,9 @@ const TryOut = () => (
     {[
       {
         content: 'We have deployed a demo version of [Unleash on Heroku](https://unleash.herokuapp.com). '+
-            'Here you can play with the Unleash UI, define your toggles. <br /><br />'+
-            'You can even use on of the Unleash client SDKs and test it out Unleash your application. '+
-            'Use the api url located at https://unleash.herokuapp.com/api/.',
+            'Here you can play with the Unleash UI, define some feature toggles and get a feel of how to use Unleash. <br /><br />'+
+            'It is even possible to use one of the Unleash client SDKs and test it out Unleash your application. '+
+            'To do this you should connet one of the clients using the hosted API url: https://unleash.herokuapp.com/api/.',
         image: imgUrl('dashboard.png'),
         imageAlign: 'left',
         align: 'left',
@@ -191,8 +201,8 @@ const Showcase = props => {
 
   return (
     <div className="productShowcaseSection paddingBottom">
-      <h2>Who is Using This?</h2>
-      <p>This project is used by all these people</p>
+      <h2>Who is Using Unleash?</h2>
+      <p>Unleash is used by</p>
       <div className="logos">{showcase}</div>
       <div className="more-users">
         <a className="button" href={pageUrl('users.html', props.language)}>

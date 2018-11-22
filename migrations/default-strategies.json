@@ -7,71 +7,85 @@
   {
     "name": "userWithId",
     "description": "Active for users with a userId defined in the userIds-list",
-    "parameters": [{
-      "name": "userIds",
-      "type": "list",
-      "description": "",
-      "required": false
-    }]
+    "parameters": [
+      {
+        "name": "userIds",
+        "type": "list",
+        "description": "",
+        "required": false
+      }
+    ]
   },
   {
     "name": "applicationHostname",
     "description": "Active for client instances with a hostName in the hostNames-list.",
-    "parameters": [{
-      "name": "hostNames",
-      "type": "list",
-      "description": "List of hostnames to enable the feature toggle for.",
-      "required": false
-    }]
+    "parameters": [
+      {
+        "name": "hostNames",
+        "type": "list",
+        "description": "List of hostnames to enable the feature toggle for.",
+        "required": false
+      }
+    ]
   },
   {
     "name": "gradualRolloutRandom",
     "description": "Randomly activate the feature toggle. No stickiness.",
-    "parameters": [{
-      "name": "percentage",
-      "type": "percentage",
-      "description": "",
-      "required": false
-    }]
+    "parameters": [
+      {
+        "name": "percentage",
+        "type": "percentage",
+        "description": "",
+        "required": false
+      }
+    ]
   },
   {
     "name": "gradualRolloutSessionId",
     "description": "Gradually activate feature toggle. Stickiness based on session id.",
-    "parameters": [{
-      "name": "percentage",
-      "type": "percentage",
-      "description": "",
-      "required": false
-    },{
-      "name": "groupId",
-      "type": "string",
-      "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
-      "required": true
-    }]
+    "parameters": [
+      {
+        "name": "percentage",
+        "type": "percentage",
+        "description": "",
+        "required": false
+      },
+      {
+        "name": "groupId",
+        "type": "string",
+        "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+        "required": true
+      }
+    ]
   },
   {
     "name": "gradualRolloutUserId",
     "description": "Gradually activate feature toggle for logged in users. Stickiness based on user id.",
-    "parameters": [{
-      "name": "percentage",
-      "type": "percentage",
-      "description": "",
-      "required": false
-    },{
-      "name": "groupId",
-      "type": "string",
-      "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
-      "required": true
-    }]
+    "parameters": [
+      {
+        "name": "percentage",
+        "type": "percentage",
+        "description": "",
+        "required": false
+      },
+      {
+        "name": "groupId",
+        "type": "string",
+        "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+        "required": true
+      }
+    ]
   },
   {
     "name": "remoteAddress",
     "description": "Active for remote addresses defined in the IPs list.",
-    "parameters": [{
-      "name": "IPs",
-      "type": "list",
-      "description": "List of IPs to enable the feature toggle for.",
-      "required": true
-    }]
+    "parameters": [
+      {
+        "name": "IPs",
+        "type": "list",
+        "description": "List of IPs to enable the feature toggle for.",
+        "required": true
+      }
+    ]
   }
 ]

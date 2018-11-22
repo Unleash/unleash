@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.1.2
 - fix(clientApi): Add namePrefix paramter to /api/client/features
 
 ## 3.1.1

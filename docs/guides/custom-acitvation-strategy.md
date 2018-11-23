@@ -34,28 +34,24 @@ All official client SDK's for Unleash provides abstractions for you to implement
 In Node.js the implementation for the `TimeStampStrategy` would be:
 
 ```javascript
-const moment = require('moment');
-
 class TimeStampStrategy extends Strategy {
   constructor() {
     super('TimeStamp');
   }
 
   isEnabled(parameters, context) {
-    const enableAfterTimeStamp = moment(parameters.enableAfter);
-    return moment().isAfter(enableAfterTimeStamp);
+    Date.parse(parameters.enableAfter) < Date.now();
   }
 }
 ```
 
 In the example implementation we make use of the library called moment to parse the timestamp and verify that current time is after the specified `enabledAfter` parameter.
 
-All parameter injected to the strategy are handled as `string` objects. This means that the strategies needs to parse it to a more suitable format. In this example we make use of the [moment](https://github.com/moment/moment) library. This library makes it also very convenient to check if we have passed the date/time specified via the `enabledAfter` parameter.
+All parameter injected to the strategy are handled as `string` objects. This means that the strategies needs to parse it to a more suitable format. In this example we just parse it directly to a `Date` type and do the comparison directly. You might want to also consider timezone in a real implementation.
 
 We also have to remember to register the custom strategy when initializing the Unleash client. Full working code example:
 
 ```javascript
-const moment = require('moment');
 const { Strategy, initialize, isEnabled } = require('unleash-client');
 
 class TimeStampStrategy extends Strategy {
@@ -64,8 +60,7 @@ class TimeStampStrategy extends Strategy {
   }
 
   isEnabled(parameters, context) {
-    const enableAfterTimeStamp = moment(parameters.enableAfter);
-    return moment().isAfter(enableAfterTimeStamp);
+    return Date.parse(parameters.enableAfter) < Date.now();
   }
 }
 

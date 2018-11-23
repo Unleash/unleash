@@ -18,4 +18,4 @@ In order to use Unleash in your application you will need an Unleash Client SDK.
 - [stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)
 - [onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)
 - [rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)
-- _...your implementation for your favourite language._
+- _...your implementation for your favorite language._

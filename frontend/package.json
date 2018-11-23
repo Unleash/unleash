@@ -101,15 +101,5 @@
       "<rootDir>/jest-setup.js"
     ],
     "snapshotSerializers": ["enzyme-to-json/serializer"]
-  },
-  "greenkeeper": {
-    "ignore": [
-      "react",
-      "react-dom",
-      "react-modal",
-      "react-redux",
-      "react-router",
-      "react-test-renderer"
-    ]
   }
 }

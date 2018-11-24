@@ -165,7 +165,7 @@ const TryOut = () => (
         content: 'We have deployed a demo version of [Unleash on Heroku](https://unleash.herokuapp.com). '+
             'Here you can play with the Unleash UI, define some feature toggles and get a feel of how to use Unleash. <br /><br />'+
             'It is even possible to use one of the Unleash client SDKs and test it out Unleash your application. '+
-            'To do this you should connet one of the clients using the hosted API url: https://unleash.herokuapp.com/api/.',
+            'To do this you should connect one of the clients using the hosted API url: https://unleash.herokuapp.com/api/.',
         image: imgUrl('dashboard.png'),
         imageAlign: 'left',
         align: 'left',

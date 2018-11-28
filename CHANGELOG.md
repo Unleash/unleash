@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.3
+
+- fix(metrics): Add prometheus compatible feature metrics endpoint
+
 ## 3.1.2
 
 - fix(clientApi): Add namePrefix paramter to /api/client/features

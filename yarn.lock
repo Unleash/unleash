@@ -2352,14 +2352,6 @@ expand-tilde@^2.0.0, expand-tilde@^2.0.2:
   dependencies:
     homedir-polyfill "^1.0.1"
 
-express-validator@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-5.2.0.tgz#28f068fc676022acfe182c97fd9e780f9ffb26f6"
-  integrity sha512-FyQ7gAaNwnIYvtfagy+fDrtzjNDFKRVjzplCPDXEu8fxSR/XBdXZHAtLR22446GWlw48LZPSKldqUVmySBWApA==
-  dependencies:
-    lodash "^4.17.10"
-    validator "^10.1.0"
-
 express@^4.16.3:
   version "4.16.3"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.3.tgz#6af8a502350db3246ecc4becf6b5a34d22f7ed53"
@@ -7231,11 +7223,6 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
-
-validator@^10.1.0:
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/validator/-/validator-10.2.0.tgz#61d6b10c3d5c9f368c75c2ce8ca2b792522eaafa"
-  integrity sha512-gz/uknWtNfZTj1BLUzYHDxOoiQ7A4wZ6xPuuE6RpxswR4cNyT4I5kN9jmU0AQr7IBEap9vfYChI2TpssTN6Itg==
 
 vary@~1.1.2:
   version "1.1.2"

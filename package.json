@@ -66,7 +66,6 @@
     "deep-diff": "^1.0.0",
     "errorhandler": "^1.5.0",
     "express": "^4.16.3",
-    "express-validator": "^5.2.0",
     "gravatar": "^1.6.0",
     "install": "^0.12.0",
     "joi": "^14.0.0",

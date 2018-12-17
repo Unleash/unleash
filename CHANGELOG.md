@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- chore(package): Upgrade ava to version 1.0.1
+- chore(modernize): Clean up internal structure
+- chore(modernize): Use joi for all validations
+
 ## 3.1.3
 
 - fix(metrics): Add prometheus compatible feature metrics endpoint

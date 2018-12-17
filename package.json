@@ -86,20 +86,20 @@
     "yargs": "^12.0.1"
   },
   "devDependencies": {
-    "@types/node": "^10.0.8",
+    "@types/node": "^10.12.15",
     "ava": "^1.0.1",
-    "coveralls": "^3.0.1",
-    "eslint": "^5.0.0",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.10.0",
     "eslint-config-finn": "^3.0.1",
     "eslint-config-finn-prettier": "^3.0.2",
-    "husky": "^1.2.0",
-    "lint-staged": "^8.0.0",
+    "husky": "^1.2.1",
+    "lint-staged": "^8.1.0",
     "lolex": "^3.0.0",
     "nyc": "^13.1.0",
-    "prettier": "^1.15.2",
-    "proxyquire": "^2.0.1",
+    "prettier": "^1.15.3",
+    "proxyquire": "^2.1.0",
     "superagent": "^4.0.0",
-    "supertest": "^3.1.0",
+    "supertest": "^3.3.0",
     "supervisor": "^0.12.0"
   },
   "lint-staged": {

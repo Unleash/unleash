@@ -1,6 +1,6 @@
 'use strict';
 
-const { test } = require('ava');
+const test = require('ava');
 const { setupAppWithAuth } = require('./../../helpers/test-helper');
 
 test.serial('creates new feature toggle with createdBy', async t => {

@@ -1,6 +1,6 @@
 'use strict';
 
-const { test } = require('ava');
+const test = require('ava');
 
 const { setupApp } = require('./../../helpers/test-helper');
 const metricsExample = require('../../../examples/client-metrics.json');

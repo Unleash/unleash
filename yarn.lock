@@ -2909,6 +2909,11 @@ hoek@5.x.x:
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-5.0.2.tgz#d2f2c95d36fe7189cf8aa8c237abc1950eca1378"
   integrity sha512-NA10UYP9ufCtY2qYGkZktcQXwVyYK4zK0gkaFSB96xhtlo6V8tKXdQgx8eHolQTRemaW0uLn8BhjhwqrOU+QLQ==
 
+hoek@6.x.x:
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/hoek/-/hoek-6.1.2.tgz#99e6d070561839de74ee427b61aa476bd6bddfd6"
+  integrity sha512-6qhh/wahGYZHFSFw12tBbJw5fsAhhwrrG/y3Cs0YMTv2WzMnL0oLPnQJjv1QJvEfylRSOFuP+xCu+tdx0tD16Q==
+
 homedir-polyfill@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/homedir-polyfill/-/homedir-polyfill-1.0.1.tgz#4c2bbc8a758998feebf5ed68580f76d46768b4bc"
@@ -3507,12 +3512,12 @@ jest-validate@^23.5.0:
     leven "^2.1.0"
     pretty-format "^23.6.0"
 
-joi@^14.0.0:
-  version "14.0.0"
-  resolved "https://registry.yarnpkg.com/joi/-/joi-14.0.0.tgz#05a206b259e702f426eb2b2e523d642fb383e6ad"
-  integrity sha512-jEu+bPFcsgdPr85hVyjb5D5grxLEZniT6AB1vjewrRDbuYxe2r5quyxs3E32dF8fCXcaJnlRSy4jehSpDuNMNg==
+joi@^14.3.0:
+  version "14.3.0"
+  resolved "https://registry.yarnpkg.com/joi/-/joi-14.3.0.tgz#55f7c5caa8256de74ccb12eb22ab1c19eea02db3"
+  integrity sha512-0HKd1z8MWogez4GaU0LkY1FgW30vR2Kwy414GISfCU41OYgUC2GWpNe5amsvBZtDqPtt7DohykfOOMIw1Z5hvQ==
   dependencies:
-    hoek "5.x.x"
+    hoek "6.x.x"
     isemail "3.x.x"
     topo "3.x.x"
 

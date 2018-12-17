@@ -2575,13 +2575,13 @@ gauge@~2.7.3:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
-gc-stats@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/gc-stats/-/gc-stats-1.2.0.tgz#c32845148f3f842064d5aafcc427306e523894f4"
-  integrity sha512-Fv+EbJ1zhI+HWJ1GknC4Tn90KcovQIGQgYbJp85GY7pluRj6n0feIIwdKgeSY3lG5fno2XdyUTZKtIWLdHF22Q==
+gc-stats@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/gc-stats/-/gc-stats-1.2.1.tgz#f3e1bf7e28a385780db22a81681b064932e358da"
+  integrity sha512-CPQfMBQPGkqG4upxCn4zHxYZo20woPClSeqnC/WK8pFqlfAtz6zpxbOfnmxOIDYiC26H/pYlWQfdoPVGoqxFUA==
   dependencies:
     nan "^2.10.0"
-    node-pre-gyp "^0.10.0"
+    node-pre-gyp "^0.11.0"
 
 get-caller-file@^1.0.1:
   version "1.0.2"
@@ -4386,6 +4386,22 @@ node-pre-gyp@^0.10.0:
     semver "^5.3.0"
     tar "^4"
 
+node-pre-gyp@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.11.0.tgz#db1f33215272f692cd38f03238e3e9b47c5dd054"
+  integrity sha512-TwWAOZb0j7e9eGaf9esRx3ZcLaE5tQ2lvYy1pb5IAaG1a2e2Kv5Lms1Y4hpj+ciXJRofIxxlt5haeQ/2ANeE0Q==
+  dependencies:
+    detect-libc "^1.0.2"
+    mkdirp "^0.5.1"
+    needle "^2.2.1"
+    nopt "^4.0.1"
+    npm-packlist "^1.1.6"
+    npmlog "^4.0.2"
+    rc "^1.2.7"
+    rimraf "^2.6.1"
+    semver "^5.3.0"
+    tar "^4"
+
 nopt@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-4.0.1.tgz#d0d4685afd5415193c8c7505602d0d17cd64474d"
@@ -5091,21 +5107,21 @@ progress@^2.0.0:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.0.tgz#8a1be366bf8fc23db2bd23f10c6fe920b4389d1f"
   integrity sha1-ihvjZr+Pwj2yvSPxDG/pILQ4nR8=
 
-prom-client@^11.0.0:
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/prom-client/-/prom-client-11.0.0.tgz#d7e5b58778e04c774de2aa7e4d400552b48713ab"
-  integrity sha512-UM4uYDwmA7x9yTq+AZcL4lU/XF11RkbQWbIouFaVMLxdV4qBB5CEmEosQlR1lGvduBuS1IWonHFh1WBtFSoZ3A==
+prom-client@^11.2.0:
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/prom-client/-/prom-client-11.2.0.tgz#4a52b29a6e9960f8b0b27054b87ad37ad120562e"
+  integrity sha512-4gUAq/GR5C8q5eWxOa7tA60AtmkMpbyBd/2btCayvd3h/7HzS0p/kESKRwggJgbFrfdhTCBpOwPAwKiI01Q0VQ==
   dependencies:
     tdigest "^0.1.1"
 
-prometheus-gc-stats@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/prometheus-gc-stats/-/prometheus-gc-stats-0.6.0.tgz#a974cdb4a036310ddb29fc198557115764fe4f46"
-  integrity sha512-4kC+sGrSYT653/gDrnoeEISuM9wueSy524xvGzKpHA6Xf6xgTL5cpOxgBmrOyRDv8VvJPZ6lLTcRlBfmvOoeUw==
+prometheus-gc-stats@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/prometheus-gc-stats/-/prometheus-gc-stats-0.6.1.tgz#24d244ac1d292caae12c54f8a7e7c547e443397d"
+  integrity sha512-DUo/cDs+1XcVuqoFU6+DjmWjkjIRIVeswtZAIfslIPrYfli2NK0/g/BPoO/kqOgLvzbKRx4m9+MDeNsNIIJGkg==
   dependencies:
     optional "^0.1.3"
   optionalDependencies:
-    gc-stats "^1.2.0"
+    gc-stats "^1.2.1"
 
 prompt@^1.0.0:
   version "1.0.0"

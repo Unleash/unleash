@@ -5,6 +5,12 @@
 - chore(package): Upgrade ava to version 1.0.1
 - chore(modernize): Clean up internal structure
 - chore(modernize): Use joi for all validations
+- chore(package): Upgrade moment to version 2.23.0
+- chore(package): Upgrade deep-diff to version 1.0.2
+- chore(package): Upgrade prom-client to version 11.2.0
+- chore(package): Upgrade joi to version 14.3.0
+- chore(package): Upgrade pg to version 7.7.1
+- chore(package): Upgrade various dev-dependecies
 
 ## 3.1.3
 

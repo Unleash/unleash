@@ -1,6 +1,6 @@
 'use strict';
 
-const { test } = require('ava');
+const test = require('ava');
 const { setupApp } = require('./../../helpers/test-helper');
 
 test.serial('gets all strategies', async t => {

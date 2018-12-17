@@ -1,6 +1,6 @@
 'use strict';
 
-const { test } = require('ava');
+const test = require('ava');
 const { setupAppWithCustomAuth } = require('./../../helpers/test-helper');
 const AuthenticationRequired = require('./../../../../lib/authentication-required');
 const User = require('./../../../../lib/user');

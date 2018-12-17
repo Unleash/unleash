@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.1.4
 
 - chore(package): Upgrade ava to version 1.0.1
 - chore(modernize): Clean up internal structure

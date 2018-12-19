@@ -10,8 +10,8 @@ module.exports = () => {
                 next();
             });
         },
-        withPerms(...prms) {
-            _perms = prms;
+        withPermissions(...perms) {
+            _perms = perms;
         },
     };
 };

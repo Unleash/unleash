@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 import { List, ListItem, ListItemContent, IconButton, Grid, Cell } from 'react-mdl';
 import { HeaderTitle } from '../common';
+import { CREATE_STRATEGY, DELETE_STRATEGY } from '../../permissions';
+import PermissionComponent from '../common/permission-container';
 
 class StrategiesListComponent extends Component {
     static propTypes = {
@@ -26,11 +28,16 @@ class StrategiesListComponent extends Component {
                     <HeaderTitle
                         title="Strategies"
                         actions={
-                            <IconButton
-                                raised
-                                name="add"
-                                onClick={() => this.props.history.push('/strategies/create')}
-                                title="Add new strategy"
+                            <PermissionComponent
+                                permission={CREATE_STRATEGY}
+                                component={
+                                    <IconButton
+                                        raised
+                                        name="add"
+                                        onClick={() => this.props.history.push('/strategies/create')}
+                                        title="Add new strategy"
+                                    />
+                                }
                             />
                         }
                     />
@@ -46,7 +53,12 @@ class StrategiesListComponent extends Component {
                                     {strategy.editable === false ? (
                                         ''
                                     ) : (
-                                        <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
+                                        <PermissionComponent
+                                            permission={DELETE_STRATEGY}
+                                            component={
+                                                <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
+                                            }
+                                        />
                                     )}
                                 </ListItem>
                             ))

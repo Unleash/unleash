@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { Icon, FABButton, Textfield, Menu, MenuItem, Card, CardActions, List } from 'react-mdl';
 import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
 import styles from './feature.scss';
+import { CREATE_FEATURE } from '../../permissions';
+import PermissionComponent from '../common/permission-container';
 
 export default class FeatureListComponent extends React.Component {
     static propTypes = {
@@ -62,11 +64,16 @@ export default class FeatureListComponent extends React.Component {
                         label="Search"
                         style={{ width: '100%' }}
                     />
-                    <Link to="/features/create" className={styles.toolbarButton}>
-                        <FABButton accent title="Create feature toggle">
-                            <Icon name="add" />
-                        </FABButton>
-                    </Link>
+                    <PermissionComponent
+                        permission={CREATE_FEATURE}
+                        component={
+                            <Link to="/features/create" className={styles.toolbarButton}>
+                                <FABButton accent title="Create feature toggle">
+                                    <Icon name="add" />
+                                </FABButton>
+                            </Link>
+                        }
+                    />
                 </div>
                 <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                     <CardActions>

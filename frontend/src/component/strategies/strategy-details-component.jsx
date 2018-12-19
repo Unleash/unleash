@@ -4,6 +4,8 @@ import { Tabs, Tab, ProgressBar, Grid, Cell } from 'react-mdl';
 import ShowStrategy from './show-strategy-component';
 import EditStrategy from './edit-container';
 import { HeaderTitle } from '../common';
+import { UPDATE_STRATEGY } from '../../permissions';
+import PermissionComponent from '../common/permission-container';
 
 const TABS = {
     view: 0,
@@ -69,10 +71,15 @@ export default class StrategyDetails extends Component {
                     {strategy.editable === false ? (
                         ''
                     ) : (
-                        <Tabs activeTab={activeTabId} ripple>
-                            <Tab onClick={() => this.goToTab('view')}>Details</Tab>
-                            <Tab onClick={() => this.goToTab('edit')}>Edit</Tab>
-                        </Tabs>
+                        <PermissionComponent
+                            permission={UPDATE_STRATEGY}
+                            component={
+                                <Tabs activeTab={activeTabId} ripple>
+                                    <Tab onClick={() => this.goToTab('view')}>Details</Tab>
+                                    <Tab onClick={() => this.goToTab('edit')}>Edit</Tab>
+                                </Tabs>
+                            }
+                        />
                     )}
 
                     <section>

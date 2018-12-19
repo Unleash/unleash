@@ -8,6 +8,8 @@ import MetricComponent from './metric-container';
 import EditFeatureToggle from './form/form-update-feature-container';
 import ViewFeatureToggle from './form/form-view-feature-container';
 import { styles as commonStyles } from '../common';
+import { CREATE_FEATURE, DELETE_FEATURE, UPDATE_FEATURE } from '../../permissions';
+import PermissionComponent from '../common/permission-container';
 
 const TABS = {
     strategies: 0,
@@ -54,7 +56,17 @@ export default class ViewFeatureToggleComponent extends React.Component {
         } else if (TABS[activeTab] === TABS.strategies) {
             if (this.isFeatureView) {
                 return (
-                    <EditFeatureToggle featureToggle={featureToggle} features={features} history={this.props.history} />
+                    <PermissionComponent
+                        permission={UPDATE_FEATURE}
+                        component={
+                            <EditFeatureToggle
+                                featureToggle={featureToggle}
+                                features={features}
+                                history={this.props.history}
+                            />
+                        }
+                        otherwise={<ViewFeatureToggle featureToggle={featureToggle} />}
+                    />
                 );
             }
             return <ViewFeatureToggle featureToggle={featureToggle} />;
@@ -87,14 +99,20 @@ export default class ViewFeatureToggleComponent extends React.Component {
             return (
                 <span>
                     Could not find the toggle{' '}
-                    <Link
-                        to={{
-                            pathname: '/features/create',
-                            query: { name: featureToggleName },
-                        }}
-                    >
-                        {featureToggleName}
-                    </Link>
+                    <PermissionComponent
+                        permission={CREATE_FEATURE}
+                        component={
+                            <Link
+                                to={{
+                                    pathname: '/features/create',
+                                    query: { name: featureToggleName },
+                                }}
+                            >
+                                {featureToggleName}
+                            </Link>
+                        }
+                        otherwise={featureToggleName}
+                    />
                 </span>
             );
         }
@@ -115,8 +133,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
             revive(featureToggle.name);
             this.props.history.push('/features');
         };
-        const updateFeatureToggle = () => {
-            let feature = { ...featureToggle };
+        const updateFeatureToggle = e => {
+            let feature = { ...featureToggle, description: e.target.value };
             if (Array.isArray(feature.strategies)) {
                 feature.strategies.forEach(s => {
                     delete s.id;
@@ -135,15 +153,22 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
                 <CardText>
                     {this.isFeatureView ? (
-                        <Textfield
+                        <PermissionComponent
+                            permission={UPDATE_FEATURE}
+                            component={Textfield}
+                            granted={{
+                                onChange: v => setValue('description', v),
+                                onBlur: updateFeatureToggle,
+                            }}
+                            denied={{
+                                disabled: true,
+                            }}
                             floatingLabel
                             style={{ width: '100%' }}
                             rows={1}
                             label="Description"
                             required
                             value={featureToggle.description}
-                            onChange={v => setValue('description', v)}
-                            onBlur={updateFeatureToggle}
                         />
                     ) : (
                         <Textfield
@@ -167,24 +192,41 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     }}
                 >
                     <span style={{ paddingRight: '24px' }}>
-                        <Switch
-                            disabled={!this.isFeatureView}
+                        <PermissionComponent
+                            permission={UPDATE_FEATURE}
+                            component={Switch}
+                            granted={{
+                                disabled: !this.isFeatureView,
+                            }}
+                            denied={{
+                                disabled: true,
+                            }}
                             ripple
                             checked={featureToggle.enabled}
                             onChange={() => toggleFeature(featureToggle.name)}
                         >
                             {featureToggle.enabled ? 'Enabled' : 'Disabled'}
-                        </Switch>
+                        </PermissionComponent>
                     </span>
 
                     {this.isFeatureView ? (
-                        <Button onClick={removeToggle} style={{ flexShrink: 0 }}>
-                            Archive
-                        </Button>
+                        <PermissionComponent
+                            permission={DELETE_FEATURE}
+                            component={
+                                <Button onClick={removeToggle} style={{ flexShrink: 0 }}>
+                                    Archive
+                                </Button>
+                            }
+                        />
                     ) : (
-                        <Button onClick={reviveToggle} style={{ flexShrink: 0 }}>
-                            Revive
-                        </Button>
+                        <PermissionComponent
+                            permission={UPDATE_FEATURE}
+                            component={
+                                <Button onClick={reviveToggle} style={{ flexShrink: 0 }}>
+                                    Revive
+                                </Button>
+                            }
+                        />
                     )}
                 </CardActions>
                 <hr />

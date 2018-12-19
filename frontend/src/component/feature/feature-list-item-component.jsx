@@ -14,6 +14,7 @@ const Feature = ({
     metricsLastHour = { yes: 0, no: 0, isFallback: true },
     metricsLastMinute = { yes: 0, no: 0, isFallback: true },
     revive,
+    updateable,
 }) => {
     const { name, description, enabled, strategies } = feature;
     const { showLastHour = false } = settings;
@@ -42,7 +43,7 @@ const Feature = ({
             </span>
             <span className={styles.listItemToggle}>
                 <Switch
-                    disabled={toggleFeature === undefined}
+                    disabled={!updateable || toggleFeature === undefined}
                     title={`Toggle ${name}`}
                     key="left-actions"
                     onChange={() => toggleFeature(name)}
@@ -59,7 +60,7 @@ const Feature = ({
                 {strategyChips}
                 {summaryChip}
             </span>
-            {revive ? (
+            {updateable && revive ? (
                 <ListItemAction onClick={() => revive(feature.name)}>
                     <Icon name="undo" />
                 </ListItemAction>
@@ -77,6 +78,7 @@ Feature.propTypes = {
     metricsLastHour: PropTypes.object,
     metricsLastMinute: PropTypes.object,
     revive: PropTypes.func,
+    updateable: PropTypes.bool,
 };
 
 export default Feature;

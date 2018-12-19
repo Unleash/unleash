@@ -22,6 +22,8 @@ import {
 } from 'react-mdl';
 import { IconLink, shorten, styles as commonStyles } from '../common';
 import { formatFullDateTimeWithLocale } from '../common/util';
+import { CREATE_FEATURE, CREATE_STRATEGY, UPDATE_APPLICATION } from '../../permissions';
+import PermissionComponent from '../common/permission-container';
 
 class StatefulTextfield extends Component {
     static propTypes = {
@@ -91,11 +93,26 @@ class ClientApplications extends PureComponent {
                             {seenToggles.map(
                                 ({ name, description, enabled, notFound }, i) =>
                                     notFound ? (
-                                        <ListItem twoLine key={i}>
-                                            <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
-                                                <Link to={`/features/create?name=${name}`}>{name}</Link>
-                                            </ListItemContent>
-                                        </ListItem>
+                                        <PermissionComponent
+                                            permission={CREATE_FEATURE}
+                                            component={
+                                                <ListItem twoLine key={i}>
+                                                    <ListItemContent
+                                                        icon={'report'}
+                                                        subtitle={'Missing, want to create?'}
+                                                    >
+                                                        <Link to={`/features/create?name=${name}`}>{name}</Link>
+                                                    </ListItemContent>
+                                                </ListItem>
+                                            }
+                                            otherwise={
+                                                <ListItem twoLine key={i}>
+                                                    <ListItemContent icon={'report'} subtitle={'Missing'}>
+                                                        {name}
+                                                    </ListItemContent>
+                                                </ListItem>
+                                            }
+                                        />
                                     ) : (
                                         <ListItem twoLine key={i}>
                                             <ListItemContent
@@ -120,11 +137,26 @@ class ClientApplications extends PureComponent {
                             {strategies.map(
                                 ({ name, description, notFound }, i) =>
                                     notFound ? (
-                                        <ListItem twoLine key={`${name}-${i}`}>
-                                            <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
-                                                <Link to={`/strategies/create?name=${name}`}>{name}</Link>
-                                            </ListItemContent>
-                                        </ListItem>
+                                        <PermissionComponent
+                                            permission={CREATE_STRATEGY}
+                                            component={
+                                                <ListItem twoLine key={`${name}-${i}`}>
+                                                    <ListItemContent
+                                                        icon={'report'}
+                                                        subtitle={'Missing, want to create?'}
+                                                    >
+                                                        <Link to={`/strategies/create?name=${name}`}>{name}</Link>
+                                                    </ListItemContent>
+                                                </ListItem>
+                                            }
+                                            otherwise={
+                                                <ListItem twoLine key={`${name}-${i}`}>
+                                                    <ListItemContent icon={'report'} subtitle={'Missing'}>
+                                                        {name}
+                                                    </ListItemContent>
+                                                </ListItem>
+                                            }
+                                        />
                                     ) : (
                                         <ListItem twoLine key={`${name}-${i}`}>
                                             <ListItemContent icon={'extension'} subtitle={shorten(description, 60)}>
@@ -203,16 +235,21 @@ class ClientApplications extends PureComponent {
                     </CardMenu>
                 )}
                 <hr />
-                <Tabs
-                    activeTab={this.state.activeTab}
-                    onChange={tabId => this.setState({ activeTab: tabId })}
-                    ripple
-                    tabBarProps={{ style: { width: '100%' } }}
-                    className="mdl-color--grey-100"
-                >
-                    <Tab>Details</Tab>
-                    <Tab>Edit</Tab>
-                </Tabs>
+                <PermissionComponent
+                    permission={UPDATE_APPLICATION}
+                    component={
+                        <Tabs
+                            activeTab={this.state.activeTab}
+                            onChange={tabId => this.setState({ activeTab: tabId })}
+                            ripple
+                            tabBarProps={{ style: { width: '100%' } }}
+                            className="mdl-color--grey-100"
+                        >
+                            <Tab>Details</Tab>
+                            <Tab>Edit</Tab>
+                        </Tabs>
+                    }
+                />
 
                 {content}
             </Card>

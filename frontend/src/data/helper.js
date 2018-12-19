@@ -23,11 +23,24 @@ export class AuthenticationError extends Error {
     }
 }
 
+export class ForbiddenError extends Error {
+    constructor(statusCode, body) {
+        super('You cannot perform this action');
+        this.name = 'ForbiddenError';
+        this.statusCode = statusCode;
+        this.body = body;
+    }
+}
+
 export function throwIfNotSuccess(response) {
     if (!response.ok) {
         if (response.status === 401) {
             return new Promise((resolve, reject) => {
                 response.json().then(body => reject(new AuthenticationError(response.status, body)));
+            });
+        } else if (response.status === 403) {
+            return new Promise((resolve, reject) => {
+                response.json().then(body => reject(new ForbiddenError(response.status, body)));
             });
         } else if (response.status > 399 && response.status < 404) {
             return new Promise((resolve, reject) => {

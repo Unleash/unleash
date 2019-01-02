@@ -151,7 +151,7 @@ test.serial('refuses to create a feature with an existing name', async t => {
         .post('/api/admin/features')
         .send({ name: 'featureX' })
         .set('Content-Type', 'application/json')
-        .expect(403)
+        .expect(400)
         .then(destroy);
 });
 
@@ -162,7 +162,7 @@ test.serial('refuses to validate a feature with an existing name', async t => {
         .post('/api/admin/features/validate')
         .send({ name: 'featureX' })
         .set('Content-Type', 'application/json')
-        .expect(403)
+        .expect(400)
         .then(destroy);
 });
 
@@ -201,6 +201,6 @@ test.serial('should not be possible to create archived toggle', async t => {
             strategies: [{ name: 'default' }],
         })
         .set('Content-Type', 'application/json')
-        .expect(403)
+        .expect(400)
         .then(destroy);
 });

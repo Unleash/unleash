@@ -81,4 +81,3 @@ test('renders correctly with one feature without permission', () => {
 
     expect(tree).toMatchSnapshot();
 });
-

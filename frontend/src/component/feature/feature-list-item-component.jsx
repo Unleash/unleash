@@ -99,7 +99,6 @@ Feature.propTypes = {
     metricsLastHour: PropTypes.object,
     metricsLastMinute: PropTypes.object,
     revive: PropTypes.func,
-    updateable: PropTypes.bool,
 };
 
 export default Feature;

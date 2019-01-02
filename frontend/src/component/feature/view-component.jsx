@@ -155,20 +155,29 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     {this.isFeatureView ? (
                         <PermissionComponent
                             permission={UPDATE_FEATURE}
-                            component={Textfield}
-                            granted={{
-                                onChange: v => setValue('description', v),
-                                onBlur: updateFeatureToggle,
-                            }}
-                            denied={{
-                                disabled: true,
-                            }}
-                            floatingLabel
-                            style={{ width: '100%' }}
-                            rows={1}
-                            label="Description"
-                            required
-                            value={featureToggle.description}
+                            component={
+                                <Textfield
+                                    floatingLabel
+                                    style={{ width: '100%' }}
+                                    rows={1}
+                                    label="Description"
+                                    required
+                                    value={featureToggle.description}
+                                    onChange={v => setValue('description', v)}
+                                    onBlur={updateFeatureToggle}
+                                />
+                            }
+                            otherwise={
+                                <Textfield
+                                    disabled
+                                    floatingLabel
+                                    style={{ width: '100%' }}
+                                    rows={1}
+                                    label="Description"
+                                    required
+                                    value={featureToggle.description}
+                                />
+                            }
                         />
                     ) : (
                         <Textfield
@@ -194,19 +203,27 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     <span style={{ paddingRight: '24px' }}>
                         <PermissionComponent
                             permission={UPDATE_FEATURE}
-                            component={Switch}
-                            granted={{
-                                disabled: !this.isFeatureView,
-                            }}
-                            denied={{
-                                disabled: true,
-                            }}
-                            ripple
-                            checked={featureToggle.enabled}
-                            onChange={() => toggleFeature(featureToggle.name)}
-                        >
-                            {featureToggle.enabled ? 'Enabled' : 'Disabled'}
-                        </PermissionComponent>
+                            component={
+                                <Switch
+                                    disabled={!this.isFeatureView}
+                                    ripple
+                                    checked={featureToggle.enabled}
+                                    onChange={() => toggleFeature(featureToggle.name)}
+                                >
+                                    {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                                </Switch>
+                            }
+                            otherwise={
+                                <Switch
+                                    disabled
+                                    ripple
+                                    checked={featureToggle.enabled}
+                                    onChange={() => toggleFeature(featureToggle.name)}
+                                >
+                                    {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                                </Switch>
+                            }
+                        />
                     </span>
 
                     {this.isFeatureView ? (

@@ -22,7 +22,7 @@ exports[`renders correctly with one feature 1`] = `
   >
     <react-mdl-Switch
       checked={false}
-      disabled={true}
+      disabled={false}
       onChange={[Function]}
       title="Toggle Another"
     />

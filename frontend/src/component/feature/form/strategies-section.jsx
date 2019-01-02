@@ -8,10 +8,10 @@ import { HeaderTitle } from '../../common';
 class StrategiesSectionComponent extends React.Component {
     static propTypes = {
         strategies: PropTypes.array.isRequired,
-        addStrategy: PropTypes.func.isRequired,
-        removeStrategy: PropTypes.func.isRequired,
-        updateStrategy: PropTypes.func.isRequired,
-        fetchStrategies: PropTypes.func.isRequired,
+        addStrategy: PropTypes.func,
+        removeStrategy: PropTypes.func,
+        updateStrategy: PropTypes.func,
+        fetchStrategies: PropTypes.func,
     };
 
     componentWillMount() {

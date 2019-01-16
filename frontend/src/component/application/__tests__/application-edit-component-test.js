@@ -34,7 +34,7 @@ test('renders correctly without permission', () => {
                             {
                                 instanceId: 'instance-1',
                                 clientIp: '123.123.123.123',
-                                lastSeen: 1487861809466,
+                                lastSeen: '2017-02-23T15:56:49',
                                 sdkVersion: '4.0',
                             },
                         ],
@@ -88,7 +88,7 @@ test('renders correctly with permissions', () => {
                             {
                                 instanceId: 'instance-1',
                                 clientIp: '123.123.123.123',
-                                lastSeen: 1487861809466,
+                                lastSeen: '2017-02-23T15:56:49',
                                 sdkVersion: '4.0',
                             },
                         ],

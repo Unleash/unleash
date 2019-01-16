@@ -1,5 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`renders correctly when disabled 1`] = `
+<div>
+  <p>
+    featureName
+  </p>
+  <react-mdl-Chip
+    style={
+      Object {
+        "marginRight": "3px",
+      }
+    }
+  >
+    item1
+  </react-mdl-Chip>
+  <react-mdl-Chip
+    style={
+      Object {
+        "marginRight": "3px",
+      }
+    }
+  >
+    item2
+  </react-mdl-Chip>
+  
+</div>
+`;
+
 exports[`renders strategy with empty list as param 1`] = `
 <div>
   <p>

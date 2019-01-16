@@ -5,3 +5,356 @@ exports[`renders correctly if no application 1`] = `
   indeterminate={true}
 />
 `;
+
+exports[`renders correctly with permissions 1`] = `
+<react-mdl-Card
+  className="fullwidth"
+  shadow={0}
+>
+  <react-mdl-CardTitle
+    style={
+      Object {
+        "paddingRight": "64px",
+        "paddingTop": "24px",
+        "wordBreak": "break-all",
+      }
+    }
+  >
+    <react-mdl-Icon
+      name="apps"
+    />
+     
+    test-app
+  </react-mdl-CardTitle>
+  <react-mdl-CardText>
+    app description
+  </react-mdl-CardText>
+  <react-mdl-CardMenu>
+    <a
+      className="mdl-color-text--grey-600"
+      href="http://example.org"
+      rel="noopener"
+      target="_blank"
+    >
+      <react-mdl-Icon
+        name="link"
+      />
+    </a>
+  </react-mdl-CardMenu>
+  <hr />
+  <react-mdl-Tabs
+    activeTab={0}
+    className="mdl-color--grey-100"
+    onChange={[Function]}
+    ripple={true}
+    tabBarProps={
+      Object {
+        "style": Object {
+          "width": "100%",
+        },
+      }
+    }
+  >
+    <react-mdl-Tab>
+      Details
+    </react-mdl-Tab>
+    <react-mdl-Tab>
+      Edit
+    </react-mdl-Tab>
+  </react-mdl-Tabs>
+  <react-mdl-Grid
+    style={
+      Object {
+        "margin": 0,
+      }
+    }
+  >
+    <react-mdl-Cell
+      col={6}
+      phone={12}
+      tablet={4}
+    >
+      <h6>
+         Toggles
+      </h6>
+      <hr />
+      <react-mdl-List>
+        <react-mdl-ListItem
+          twoLine={true}
+        >
+          <react-mdl-ListItemContent
+            icon={
+              <span>
+                <react-mdl-Switch
+                  checked={true}
+                  disabled={true}
+                />
+              </span>
+            }
+            subtitle="this is A toggle"
+          >
+            <a
+              href="/features/view/ToggleA"
+              onClick={[Function]}
+            >
+              ToggleA
+            </a>
+          </react-mdl-ListItemContent>
+        </react-mdl-ListItem>
+        <react-mdl-ListItem
+          twoLine={true}
+        >
+          <react-mdl-ListItemContent
+            icon="report"
+            subtitle="Missing, want to create?"
+          >
+            <a
+              href="/features/create?name=ToggleB"
+              onClick={[Function]}
+            >
+              ToggleB
+            </a>
+          </react-mdl-ListItemContent>
+        </react-mdl-ListItem>
+      </react-mdl-List>
+    </react-mdl-Cell>
+    <react-mdl-Cell
+      col={6}
+      phone={12}
+      tablet={4}
+    >
+      <h6>
+        Implemented strategies
+      </h6>
+      <hr />
+      <react-mdl-List>
+        <react-mdl-ListItem
+          twoLine={true}
+        >
+          <react-mdl-ListItemContent
+            icon="extension"
+            subtitle="A description"
+          >
+            <a
+              href="/strategies/view/StrategyA"
+              onClick={[Function]}
+            >
+              StrategyA
+            </a>
+          </react-mdl-ListItemContent>
+        </react-mdl-ListItem>
+        <react-mdl-ListItem
+          twoLine={true}
+        >
+          <react-mdl-ListItemContent
+            icon="report"
+            subtitle="Missing, want to create?"
+          >
+            <a
+              href="/strategies/create?name=StrategyB"
+              onClick={[Function]}
+            >
+              StrategyB
+            </a>
+          </react-mdl-ListItemContent>
+        </react-mdl-ListItem>
+      </react-mdl-List>
+    </react-mdl-Cell>
+    <react-mdl-Cell
+      col={12}
+      tablet={12}
+    >
+      <h6>
+        1
+         Instances registered
+      </h6>
+      <hr />
+      <react-mdl-List>
+        <react-mdl-ListItem
+          twoLine={true}
+        >
+          <react-mdl-ListItemContent
+            icon="timeline"
+            subtitle={
+              <span>
+                123.123.123.123
+                 last seen at
+                 
+                <small>
+                  02/23/2017, 3:56:49 PM
+                </small>
+              </span>
+            }
+          >
+            instance-1
+             
+            (4.0)
+          </react-mdl-ListItemContent>
+        </react-mdl-ListItem>
+      </react-mdl-List>
+    </react-mdl-Cell>
+  </react-mdl-Grid>
+</react-mdl-Card>
+`;
+
+exports[`renders correctly without permission 1`] = `
+<react-mdl-Card
+  className="fullwidth"
+  shadow={0}
+>
+  <react-mdl-CardTitle
+    style={
+      Object {
+        "paddingRight": "64px",
+        "paddingTop": "24px",
+        "wordBreak": "break-all",
+      }
+    }
+  >
+    <react-mdl-Icon
+      name="apps"
+    />
+     
+    test-app
+  </react-mdl-CardTitle>
+  <react-mdl-CardText>
+    app description
+  </react-mdl-CardText>
+  <react-mdl-CardMenu>
+    <a
+      className="mdl-color-text--grey-600"
+      href="http://example.org"
+      rel="noopener"
+      target="_blank"
+    >
+      <react-mdl-Icon
+        name="link"
+      />
+    </a>
+  </react-mdl-CardMenu>
+  <hr />
+  
+  <react-mdl-Grid
+    style={
+      Object {
+        "margin": 0,
+      }
+    }
+  >
+    <react-mdl-Cell
+      col={6}
+      phone={12}
+      tablet={4}
+    >
+      <h6>
+         Toggles
+      </h6>
+      <hr />
+      <react-mdl-List>
+        <react-mdl-ListItem
+          twoLine={true}
+        >
+          <react-mdl-ListItemContent
+            icon={
+              <span>
+                <react-mdl-Switch
+                  checked={true}
+                  disabled={true}
+                />
+              </span>
+            }
+            subtitle="this is A toggle"
+          >
+            <a
+              href="/features/view/ToggleA"
+              onClick={[Function]}
+            >
+              ToggleA
+            </a>
+          </react-mdl-ListItemContent>
+        </react-mdl-ListItem>
+        <react-mdl-ListItem
+          twoLine={true}
+        >
+          <react-mdl-ListItemContent
+            icon="report"
+            subtitle="Missing"
+          >
+            ToggleB
+          </react-mdl-ListItemContent>
+        </react-mdl-ListItem>
+      </react-mdl-List>
+    </react-mdl-Cell>
+    <react-mdl-Cell
+      col={6}
+      phone={12}
+      tablet={4}
+    >
+      <h6>
+        Implemented strategies
+      </h6>
+      <hr />
+      <react-mdl-List>
+        <react-mdl-ListItem
+          twoLine={true}
+        >
+          <react-mdl-ListItemContent
+            icon="extension"
+            subtitle="A description"
+          >
+            <a
+              href="/strategies/view/StrategyA"
+              onClick={[Function]}
+            >
+              StrategyA
+            </a>
+          </react-mdl-ListItemContent>
+        </react-mdl-ListItem>
+        <react-mdl-ListItem
+          twoLine={true}
+        >
+          <react-mdl-ListItemContent
+            icon="report"
+            subtitle="Missing"
+          >
+            StrategyB
+          </react-mdl-ListItemContent>
+        </react-mdl-ListItem>
+      </react-mdl-List>
+    </react-mdl-Cell>
+    <react-mdl-Cell
+      col={12}
+      tablet={12}
+    >
+      <h6>
+        1
+         Instances registered
+      </h6>
+      <hr />
+      <react-mdl-List>
+        <react-mdl-ListItem
+          twoLine={true}
+        >
+          <react-mdl-ListItemContent
+            icon="timeline"
+            subtitle={
+              <span>
+                123.123.123.123
+                 last seen at
+                 
+                <small>
+                  02/23/2017, 3:56:49 PM
+                </small>
+              </span>
+            }
+          >
+            instance-1
+             
+            (4.0)
+          </react-mdl-ListItemContent>
+        </react-mdl-ListItem>
+      </react-mdl-List>
+    </react-mdl-Cell>
+  </react-mdl-Grid>
+</react-mdl-Card>
+`;

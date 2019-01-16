@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with one strategy 1`] = `
+<react-mdl-Grid
+  className="mdl-color--white"
+>
+  <react-mdl-Cell
+    col={12}
+  >
+    <div
+      style={
+        Object {
+          "borderBottom": "1px solid #f1f1f1",
+          "display": "flex",
+          "marginBottom": "10px",
+          "padding": "16px 20px ",
+        }
+      }
+    >
+      <div
+        style={
+          Object {
+            "flex": "2",
+          }
+        }
+      >
+        <h6
+          style={
+            Object {
+              "margin": 0,
+            }
+          }
+        >
+          Strategies
+        </h6>
+      </div>
+      <div
+        style={
+          Object {
+            "flex": "1",
+            "textAlign": "right",
+          }
+        }
+      >
+        <react-mdl-IconButton
+          name="add"
+          onClick={[Function]}
+          raised={true}
+          title="Add new strategy"
+        />
+      </div>
+    </div>
+    <react-mdl-List>
+      <react-mdl-ListItem
+        twoLine={true}
+      >
+        <react-mdl-ListItemContent
+          icon="extension"
+          subtitle="another's description"
+        >
+          <a
+            href="/strategies/view/Another"
+            onClick={[Function]}
+          >
+            <strong>
+              Another
+            </strong>
+          </a>
+        </react-mdl-ListItemContent>
+        <react-mdl-IconButton
+          name="delete"
+          onClick={[Function]}
+        />
+      </react-mdl-ListItem>
+    </react-mdl-List>
+  </react-mdl-Cell>
+</react-mdl-Grid>
+`;
+
+exports[`renders correctly with one strategy without permissions 1`] = `
+<react-mdl-Grid
+  className="mdl-color--white"
+>
+  <react-mdl-Cell
+    col={12}
+  >
+    <div
+      style={
+        Object {
+          "borderBottom": "1px solid #f1f1f1",
+          "display": "flex",
+          "marginBottom": "10px",
+          "padding": "16px 20px ",
+        }
+      }
+    >
+      <div
+        style={
+          Object {
+            "flex": "2",
+          }
+        }
+      >
+        <h6
+          style={
+            Object {
+              "margin": 0,
+            }
+          }
+        >
+          Strategies
+        </h6>
+      </div>
+      
+    </div>
+    <react-mdl-List>
+      <react-mdl-ListItem
+        twoLine={true}
+      >
+        <react-mdl-ListItemContent
+          icon="extension"
+          subtitle="another's description"
+        >
+          <a
+            href="/strategies/view/Another"
+            onClick={[Function]}
+          >
+            <strong>
+              Another
+            </strong>
+          </a>
+        </react-mdl-ListItemContent>
+        
+      </react-mdl-ListItem>
+    </react-mdl-List>
+  </react-mdl-Cell>
+</react-mdl-Grid>
+`;

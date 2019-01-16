@@ -79,7 +79,6 @@ exports[`renders correctly with one feature without permission 1`] = `
     <react-mdl-Switch
       checked={false}
       disabled={true}
-      onChange={[Function]}
       title="Toggle Another"
     />
   </span>

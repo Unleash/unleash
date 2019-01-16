@@ -5,7 +5,6 @@ import ShowStrategy from './show-strategy-component';
 import EditStrategy from './edit-container';
 import { HeaderTitle } from '../common';
 import { UPDATE_STRATEGY } from '../../permissions';
-import PermissionComponent from '../common/permission-container';
 
 const TABS = {
     view: 0,
@@ -23,6 +22,7 @@ export default class StrategyDetails extends Component {
         fetchApplications: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
+        hasPermission: PropTypes.func.isRequired,
     };
 
     componentDidMount() {
@@ -68,18 +68,13 @@ export default class StrategyDetails extends Component {
             <Grid className="mdl-color--white">
                 <Cell col={12}>
                     <HeaderTitle title={strategy.name} subtitle={strategy.description} />
-                    {strategy.editable === false ? (
+                    {strategy.editable === false || !this.props.hasPermission(UPDATE_STRATEGY) ? (
                         ''
                     ) : (
-                        <PermissionComponent
-                            permission={UPDATE_STRATEGY}
-                            component={
-                                <Tabs activeTab={activeTabId} ripple>
-                                    <Tab onClick={() => this.goToTab('view')}>Details</Tab>
-                                    <Tab onClick={() => this.goToTab('edit')}>Edit</Tab>
-                                </Tabs>
-                            }
-                        />
+                        <Tabs activeTab={activeTabId} ripple>
+                            <Tab onClick={() => this.goToTab('view')}>Details</Tab>
+                            <Tab onClick={() => this.goToTab('edit')}>Edit</Tab>
+                        </Tabs>
                     )}
 
                     <section>

@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { List, ListItem, ListItemContent, IconButton, Grid, Cell } from 'react-mdl';
 import { HeaderTitle } from '../common';
 import { CREATE_STRATEGY, DELETE_STRATEGY } from '../../permissions';
-import PermissionComponent from '../common/permission-container';
 
 class StrategiesListComponent extends Component {
     static propTypes = {
@@ -13,6 +12,7 @@ class StrategiesListComponent extends Component {
         fetchStrategies: PropTypes.func.isRequired,
         removeStrategy: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
+        hasPermission: PropTypes.func.isRequired,
     };
 
     componentDidMount() {
@@ -20,7 +20,7 @@ class StrategiesListComponent extends Component {
     }
 
     render() {
-        const { strategies, removeStrategy } = this.props;
+        const { strategies, removeStrategy, hasPermission } = this.props;
 
         return (
             <Grid className="mdl-color--white">
@@ -28,17 +28,16 @@ class StrategiesListComponent extends Component {
                     <HeaderTitle
                         title="Strategies"
                         actions={
-                            <PermissionComponent
-                                permission={CREATE_STRATEGY}
-                                component={
-                                    <IconButton
-                                        raised
-                                        name="add"
-                                        onClick={() => this.props.history.push('/strategies/create')}
-                                        title="Add new strategy"
-                                    />
-                                }
-                            />
+                            hasPermission(CREATE_STRATEGY) ? (
+                                <IconButton
+                                    raised
+                                    name="add"
+                                    onClick={() => this.props.history.push('/strategies/create')}
+                                    title="Add new strategy"
+                                />
+                            ) : (
+                                ''
+                            )
                         }
                     />
                     <List>
@@ -50,15 +49,10 @@ class StrategiesListComponent extends Component {
                                             <strong>{strategy.name}</strong>
                                         </Link>
                                     </ListItemContent>
-                                    {strategy.editable === false ? (
+                                    {strategy.editable === false || !hasPermission(DELETE_STRATEGY) ? (
                                         ''
                                     ) : (
-                                        <PermissionComponent
-                                            permission={DELETE_STRATEGY}
-                                            component={
-                                                <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
-                                            }
-                                        />
+                                        <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
                                     )}
                                 </ListItem>
                             ))

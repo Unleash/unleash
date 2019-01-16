@@ -1,12 +1,14 @@
 import { connect } from 'react-redux';
 import StrategiesListComponent from './list-component.jsx';
 import { fetchStrategies, removeStrategy } from './../../store/strategy/actions';
+import { hasPermission } from '../../permissions';
 
 const mapStateToProps = state => {
     const list = state.strategies.get('list').toArray();
 
     return {
         strategies: list,
+        hasPermission: hasPermission.bind(null, state.user.get('profile')),
     };
 };
 

@@ -7,6 +7,7 @@ export default class InputList extends Component {
         name: PropTypes.string.isRequired,
         list: PropTypes.array.isRequired,
         setConfig: PropTypes.func.isRequired,
+        disabled: PropTypes.bool,
     };
 
     onBlur(e) {
@@ -49,35 +50,43 @@ export default class InputList extends Component {
     }
 
     render() {
-        const { name, list } = this.props;
+        const { name, list, disabled } = this.props;
         return (
             <div>
                 <p>{name}</p>
                 {list.map((entryValue, index) => (
-                    <Chip key={index + entryValue} style={{ marginRight: '3px' }} onClose={() => this.onClose(index)}>
+                    <Chip
+                        key={index + entryValue}
+                        style={{ marginRight: '3px' }}
+                        onClose={disabled ? undefined : () => this.onClose(index)}
+                    >
                         {entryValue}
                     </Chip>
                 ))}
 
-                <div style={{ display: 'flex' }}>
-                    <Textfield
-                        name={`${name}_input`}
-                        style={{ width: '100%', flex: 1 }}
-                        floatingLabel
-                        label="Add list entry"
-                        onFocus={this.onFocus.bind(this)}
-                        onBlur={this.onBlur.bind(this)}
-                        ref={input => {
-                            this.textInput = input;
-                        }}
-                    />
-                    <IconButton
-                        name="add"
-                        raised
-                        style={{ flex: 1, flexGrow: 0, margin: '20px 0 0 10px' }}
-                        onClick={this.setValue}
-                    />
-                </div>
+                {disabled ? (
+                    ''
+                ) : (
+                    <div style={{ display: 'flex' }}>
+                        <Textfield
+                            name={`${name}_input`}
+                            style={{ width: '100%', flex: 1 }}
+                            floatingLabel
+                            label="Add list entry"
+                            onFocus={this.onFocus.bind(this)}
+                            onBlur={this.onBlur.bind(this)}
+                            ref={input => {
+                                this.textInput = input;
+                            }}
+                        />
+                        <IconButton
+                            name="add"
+                            raised
+                            style={{ flex: 1, flexGrow: 0, margin: '20px 0 0 10px' }}
+                            onClick={this.setValue}
+                        />
+                    </div>
+                )}
             </div>
         );
     }

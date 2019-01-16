@@ -3,6 +3,7 @@ import ShowStrategy from './strategy-details-component';
 import { fetchStrategies } from './../../store/strategy/actions';
 import { fetchAll } from './../../store/application/actions';
 import { fetchFeatureToggles } from './../../store/feature-actions';
+import { hasPermission } from '../../permissions';
 
 const mapStateToProps = (state, props) => {
     let strategy = state.strategies.get('list').find(n => n.name === props.strategyName);
@@ -17,6 +18,7 @@ const mapStateToProps = (state, props) => {
         applications: applications && applications.toJS(),
         toggles: toggles && toggles.toJS(),
         activeTab: props.activeTab,
+        hasPermission: hasPermission.bind(null, state.user.get('profile')),
     };
 };
 

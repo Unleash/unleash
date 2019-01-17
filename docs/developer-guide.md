@@ -11,7 +11,7 @@ To run and develop unleash you need to have PostgreSQL database (PostgreSQL v.9.
 
 ```bash
 $ psql postgres <<SQL
-CREATE USER unleash_user WITH PASSWORD 'passord';
+CREATE USER unleash_user WITH PASSWORD 'password';
 CREATE DATABASE unleash;
 GRANT ALL PRIVILEGES ON DATABASE unleash to unleash_user;
 CREATE DATABASE unleash_test;
@@ -24,8 +24,8 @@ Then set env vars:
 (Optional as unleash will assume these as default values).
 
 ```
-export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
-export TEST_DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash_test
+export DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash
+export TEST_DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash_test
 ```
 
 ## PostgreSQL with docker
@@ -59,7 +59,7 @@ We use database migrations to track database changes.
 
 In order to run migrations you will set the environment variable for DATABASE_URL
 
-`export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash`
+`export DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash`
 
 Use db-migrate to create new migrations file.
 

@@ -22,6 +22,7 @@ import {
 } from 'react-mdl';
 import { IconLink, shorten, styles as commonStyles } from '../common';
 import { formatFullDateTimeWithLocale } from '../common/util';
+import { CREATE_FEATURE, CREATE_STRATEGY, UPDATE_APPLICATION } from '../../permissions';
 
 class StatefulTextfield extends Component {
     static propTypes = {
@@ -61,6 +62,7 @@ class ClientApplications extends PureComponent {
         application: PropTypes.object,
         location: PropTypes.object,
         storeApplicationMetaData: PropTypes.func.isRequired,
+        hasPermission: PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -78,7 +80,7 @@ class ClientApplications extends PureComponent {
         if (!this.props.application) {
             return <ProgressBar indeterminate />;
         }
-        const { application, storeApplicationMetaData } = this.props;
+        const { application, storeApplicationMetaData, hasPermission } = this.props;
         const { appName, instances, strategies, seenToggles, url, description, icon = 'apps', color } = application;
 
         const content =
@@ -92,9 +94,15 @@ class ClientApplications extends PureComponent {
                                 ({ name, description, enabled, notFound }, i) =>
                                     notFound ? (
                                         <ListItem twoLine key={i}>
-                                            <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
-                                                <Link to={`/features/create?name=${name}`}>{name}</Link>
-                                            </ListItemContent>
+                                            {hasPermission(CREATE_FEATURE) ? (
+                                                <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
+                                                    <Link to={`/features/create?name=${name}`}>{name}</Link>
+                                                </ListItemContent>
+                                            ) : (
+                                                <ListItemContent icon={'report'} subtitle={'Missing'}>
+                                                    {name}
+                                                </ListItemContent>
+                                            )}
                                         </ListItem>
                                     ) : (
                                         <ListItem twoLine key={i}>
@@ -121,9 +129,15 @@ class ClientApplications extends PureComponent {
                                 ({ name, description, notFound }, i) =>
                                     notFound ? (
                                         <ListItem twoLine key={`${name}-${i}`}>
-                                            <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
-                                                <Link to={`/strategies/create?name=${name}`}>{name}</Link>
-                                            </ListItemContent>
+                                            {hasPermission(CREATE_STRATEGY) ? (
+                                                <ListItemContent icon={'report'} subtitle={'Missing, want to create?'}>
+                                                    <Link to={`/strategies/create?name=${name}`}>{name}</Link>
+                                                </ListItemContent>
+                                            ) : (
+                                                <ListItemContent icon={'report'} subtitle={'Missing'}>
+                                                    {name}
+                                                </ListItemContent>
+                                            )}
                                         </ListItem>
                                     ) : (
                                         <ListItem twoLine key={`${name}-${i}`}>
@@ -203,16 +217,20 @@ class ClientApplications extends PureComponent {
                     </CardMenu>
                 )}
                 <hr />
-                <Tabs
-                    activeTab={this.state.activeTab}
-                    onChange={tabId => this.setState({ activeTab: tabId })}
-                    ripple
-                    tabBarProps={{ style: { width: '100%' } }}
-                    className="mdl-color--grey-100"
-                >
-                    <Tab>Details</Tab>
-                    <Tab>Edit</Tab>
-                </Tabs>
+                {hasPermission(UPDATE_APPLICATION) ? (
+                    <Tabs
+                        activeTab={this.state.activeTab}
+                        onChange={tabId => this.setState({ activeTab: tabId })}
+                        ripple
+                        tabBarProps={{ style: { width: '100%' } }}
+                        className="mdl-color--grey-100"
+                    >
+                        <Tab>Details</Tab>
+                        <Tab>Edit</Tab>
+                    </Tabs>
+                ) : (
+                    ''
+                )}
 
                 {content}
             </Card>

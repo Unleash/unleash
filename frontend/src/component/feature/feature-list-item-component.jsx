@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Switch, Chip, ListItem, ListItemAction, Icon } from 'react-mdl';
 import Progress from './progress';
+import { UPDATE_FEATURE } from '../../permissions';
 import { calc, styles as commonStyles } from '../common';
 
 import styles from './feature.scss';
@@ -14,6 +15,7 @@ const Feature = ({
     metricsLastHour = { yes: 0, no: 0, isFallback: true },
     metricsLastMinute = { yes: 0, no: 0, isFallback: true },
     revive,
+    hasPermission,
 }) => {
     const { name, description, enabled, strategies } = feature;
     const { showLastHour = false } = settings;
@@ -41,13 +43,17 @@ const Feature = ({
                 <Progress strokeWidth={15} percentage={percent} isFallback={isStale} />
             </span>
             <span className={styles.listItemToggle}>
-                <Switch
-                    disabled={toggleFeature === undefined}
-                    title={`Toggle ${name}`}
-                    key="left-actions"
-                    onChange={() => toggleFeature(name)}
-                    checked={enabled}
-                />
+                {hasPermission(UPDATE_FEATURE) ? (
+                    <Switch
+                        disabled={toggleFeature === undefined}
+                        title={`Toggle ${name}`}
+                        key="left-actions"
+                        onChange={() => toggleFeature(name)}
+                        checked={enabled}
+                    />
+                ) : (
+                    <Switch disabled title={`Toggle ${name}`} key="left-actions" checked={enabled} />
+                )}
             </span>
             <span className={['mdl-list__item-primary-content', styles.listItemLink].join(' ')}>
                 <Link to={featureUrl} className={[commonStyles.listLink, commonStyles.truncate].join(' ')}>
@@ -59,7 +65,7 @@ const Feature = ({
                 {strategyChips}
                 {summaryChip}
             </span>
-            {revive ? (
+            {revive && hasPermission(UPDATE_FEATURE) ? (
                 <ListItemAction onClick={() => revive(feature.name)}>
                     <Icon name="undo" />
                 </ListItemAction>
@@ -77,6 +83,7 @@ Feature.propTypes = {
     metricsLastHour: PropTypes.object,
     metricsLastMinute: PropTypes.object,
     revive: PropTypes.func,
+    hasPermission: PropTypes.func.isRequired,
 };
 
 export default Feature;

@@ -104,7 +104,12 @@ class StrategyConfigure extends React.Component {
                     }
                     return (
                         <div key={name}>
-                            <StrategyInputList name={name} list={list} setConfig={this.setConfig} />
+                            <StrategyInputList
+                                name={name}
+                                list={list}
+                                disabled={!this.props.updateStrategy}
+                                setConfig={this.setConfig}
+                            />
                             {description && <p className={styles.helpText}>{description}</p>}
                         </div>
                     );

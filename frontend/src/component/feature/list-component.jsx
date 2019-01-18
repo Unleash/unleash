@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Icon, FABButton, Textfield, Menu, MenuItem, Card, CardActions, List } from 'react-mdl';
 import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
 import styles from './feature.scss';
+import { CREATE_FEATURE } from '../../permissions';
 
 export default class FeatureListComponent extends React.Component {
     static propTypes = {
@@ -19,6 +20,7 @@ export default class FeatureListComponent extends React.Component {
         toggleFeature: PropTypes.func,
         settings: PropTypes.object,
         history: PropTypes.object.isRequired,
+        hasPermission: PropTypes.func.isRequired,
     };
 
     componentDidMount() {
@@ -46,7 +48,7 @@ export default class FeatureListComponent extends React.Component {
     }
 
     render() {
-        const { features, toggleFeature, featureMetrics, settings, revive } = this.props;
+        const { features, toggleFeature, featureMetrics, settings, revive, hasPermission } = this.props;
         features.forEach(e => {
             e.reviveName = e.name;
         });
@@ -62,11 +64,15 @@ export default class FeatureListComponent extends React.Component {
                         label="Search"
                         style={{ width: '100%' }}
                     />
-                    <Link to="/features/create" className={styles.toolbarButton}>
-                        <FABButton accent title="Create feature toggle">
-                            <Icon name="add" />
-                        </FABButton>
-                    </Link>
+                    {hasPermission(CREATE_FEATURE) ? (
+                        <Link to="/features/create" className={styles.toolbarButton}>
+                            <FABButton accent title="Create feature toggle">
+                                <Icon name="add" />
+                            </FABButton>
+                        </Link>
+                    ) : (
+                        ''
+                    )}
                 </div>
                 <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                     <CardActions>
@@ -119,6 +125,7 @@ export default class FeatureListComponent extends React.Component {
                                 feature={feature}
                                 toggleFeature={toggleFeature}
                                 revive={revive}
+                                hasPermission={hasPermission}
                             />
                         ))}
                     </List>

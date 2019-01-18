@@ -8,6 +8,7 @@ import MetricComponent from './metric-container';
 import EditFeatureToggle from './form/form-update-feature-container';
 import ViewFeatureToggle from './form/form-view-feature-container';
 import { styles as commonStyles } from '../common';
+import { CREATE_FEATURE, DELETE_FEATURE, UPDATE_FEATURE } from '../../permissions';
 
 const TABS = {
     strategies: 0,
@@ -34,6 +35,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         editFeatureToggle: PropTypes.func,
         featureToggle: PropTypes.object,
         history: PropTypes.object.isRequired,
+        hasPermission: PropTypes.func.isRequired,
     };
 
     componentWillMount() {
@@ -47,12 +49,12 @@ export default class ViewFeatureToggleComponent extends React.Component {
     }
 
     getTabContent(activeTab) {
-        const { features, featureToggle, featureToggleName } = this.props;
+        const { features, featureToggle, featureToggleName, hasPermission } = this.props;
 
         if (TABS[activeTab] === TABS.history) {
             return <HistoryComponent toggleName={featureToggleName} />;
         } else if (TABS[activeTab] === TABS.strategies) {
-            if (this.isFeatureView) {
+            if (this.isFeatureView && hasPermission(UPDATE_FEATURE)) {
                 return (
                     <EditFeatureToggle featureToggle={featureToggle} features={features} history={this.props.history} />
                 );
@@ -78,6 +80,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
             featureToggleName,
             toggleFeature,
             removeFeatureToggle,
+            hasPermission,
         } = this.props;
 
         if (!featureToggle) {
@@ -87,14 +90,18 @@ export default class ViewFeatureToggleComponent extends React.Component {
             return (
                 <span>
                     Could not find the toggle{' '}
-                    <Link
-                        to={{
-                            pathname: '/features/create',
-                            query: { name: featureToggleName },
-                        }}
-                    >
-                        {featureToggleName}
-                    </Link>
+                    {hasPermission(CREATE_FEATURE) ? (
+                        <Link
+                            to={{
+                                pathname: '/features/create',
+                                query: { name: featureToggleName },
+                            }}
+                        >
+                            {featureToggleName}
+                        </Link>
+                    ) : (
+                        featureToggleName
+                    )}
                 </span>
             );
         }
@@ -115,8 +122,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
             revive(featureToggle.name);
             this.props.history.push('/features');
         };
-        const updateFeatureToggle = () => {
-            let feature = { ...featureToggle };
+        const updateFeatureToggle = e => {
+            let feature = { ...featureToggle, description: e.target.value };
             if (Array.isArray(feature.strategies)) {
                 feature.strategies.forEach(s => {
                     delete s.id;
@@ -134,7 +141,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                 <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
                 <CardText>
-                    {this.isFeatureView ? (
+                    {this.isFeatureView && hasPermission(UPDATE_FEATURE) ? (
                         <Textfield
                             floatingLabel
                             style={{ width: '100%' }}
@@ -167,22 +174,36 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     }}
                 >
                     <span style={{ paddingRight: '24px' }}>
-                        <Switch
-                            disabled={!this.isFeatureView}
-                            ripple
-                            checked={featureToggle.enabled}
-                            onChange={() => toggleFeature(featureToggle.name)}
-                        >
-                            {featureToggle.enabled ? 'Enabled' : 'Disabled'}
-                        </Switch>
+                        {hasPermission(UPDATE_FEATURE) ? (
+                            <Switch
+                                disabled={!this.isFeatureView}
+                                ripple
+                                checked={featureToggle.enabled}
+                                onChange={() => toggleFeature(featureToggle.name)}
+                            >
+                                {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                            </Switch>
+                        ) : (
+                            <Switch disabled ripple checked={featureToggle.enabled}>
+                                {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                            </Switch>
+                        )}
                     </span>
 
                     {this.isFeatureView ? (
-                        <Button onClick={removeToggle} style={{ flexShrink: 0 }}>
+                        <Button
+                            disabled={!hasPermission(DELETE_FEATURE)}
+                            onClick={removeToggle}
+                            style={{ flexShrink: 0 }}
+                        >
                             Archive
                         </Button>
                     ) : (
-                        <Button onClick={reviveToggle} style={{ flexShrink: 0 }}>
+                        <Button
+                            disabled={!hasPermission(UPDATE_FEATURE)}
+                            onClick={reviveToggle}
+                            style={{ flexShrink: 0 }}
+                        >
                             Revive
                         </Button>
                     )}

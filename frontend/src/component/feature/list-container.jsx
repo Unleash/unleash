@@ -4,6 +4,7 @@ import { updateSettingForGroup } from '../../store/settings/actions';
 
 import FeatureListComponent from './list-component';
 import { logoutUser } from '../../store/user/actions';
+import { hasPermission } from '../../permissions';
 
 export const mapStateToPropsConfigurable = isFeature => state => {
     const featureMetrics = state.featureMetrics.toJS();
@@ -68,6 +69,7 @@ export const mapStateToPropsConfigurable = isFeature => state => {
         features,
         featureMetrics,
         settings,
+        hasPermission: hasPermission.bind(null, state.user.get('profile')),
     };
 };
 const mapStateToProps = mapStateToPropsConfigurable(true);

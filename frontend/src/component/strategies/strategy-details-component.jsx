@@ -4,6 +4,7 @@ import { Tabs, Tab, ProgressBar, Grid, Cell } from 'react-mdl';
 import ShowStrategy from './show-strategy-component';
 import EditStrategy from './edit-container';
 import { HeaderTitle } from '../common';
+import { UPDATE_STRATEGY } from '../../permissions';
 
 const TABS = {
     view: 0,
@@ -21,6 +22,7 @@ export default class StrategyDetails extends Component {
         fetchApplications: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
+        hasPermission: PropTypes.func.isRequired,
     };
 
     componentDidMount() {
@@ -66,7 +68,7 @@ export default class StrategyDetails extends Component {
             <Grid className="mdl-color--white">
                 <Cell col={12}>
                     <HeaderTitle title={strategy.name} subtitle={strategy.description} />
-                    {strategy.editable === false ? (
+                    {strategy.editable === false || !this.props.hasPermission(UPDATE_STRATEGY) ? (
                         ''
                     ) : (
                         <Tabs activeTab={activeTabId} ripple>

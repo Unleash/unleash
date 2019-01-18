@@ -79,3 +79,11 @@ it('spy onClose', () => {
     wrapper.find('react-mdl-Chip').simulate('close', closeMock);
     expect(onClose).toHaveBeenCalled();
 });
+
+it('renders correctly when disabled', () => {
+    const list = ['item1', 'item2'];
+    const name = 'featureName';
+    const tree = renderer.create(<InputList list={list} name={name} setConfig={jest.fn()} disabled />);
+
+    expect(tree).toMatchSnapshot();
+});

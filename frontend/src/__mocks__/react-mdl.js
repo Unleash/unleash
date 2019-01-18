@@ -9,6 +9,8 @@ module.exports = {
     Cell: 'react-mdl-Cell',
     Chip: 'react-mdl-Chip',
     Grid: 'react-mdl-Grid',
+    Button: 'react-mdl-Button',
+    FABButton: 'react-mdl-FABButton',
     Icon: 'react-mdl-Icon',
     IconButton: 'react-mdl-IconButton',
     List: 'react-mdl-List',

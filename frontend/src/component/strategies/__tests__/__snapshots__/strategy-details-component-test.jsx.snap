@@ -1,0 +1,167 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with one strategy 1`] = `
+<react-mdl-Grid
+  className="mdl-color--white"
+>
+  <react-mdl-Cell
+    col={12}
+  >
+    <div
+      style={
+        Object {
+          "borderBottom": "1px solid #f1f1f1",
+          "display": "flex",
+          "marginBottom": "10px",
+          "padding": "16px 20px ",
+        }
+      }
+    >
+      <div
+        style={
+          Object {
+            "flex": "2",
+          }
+        }
+      >
+        <h6
+          style={
+            Object {
+              "margin": 0,
+            }
+          }
+        >
+          Another
+        </h6>
+        <small>
+          another's description
+        </small>
+      </div>
+    </div>
+    <react-mdl-Tabs
+      ripple={true}
+    >
+      <react-mdl-Tab
+        onClick={[Function]}
+      >
+        Details
+      </react-mdl-Tab>
+      <react-mdl-Tab
+        onClick={[Function]}
+      >
+        Edit
+      </react-mdl-Tab>
+    </react-mdl-Tabs>
+    <section>
+      <div
+        className="content"
+      >
+        <div>
+          <react-mdl-Grid>
+            <react-mdl-Cell
+              col={12}
+            >
+              <h6>
+                Parameters
+              </h6>
+              <hr />
+              <react-mdl-List>
+                <react-mdl-ListItem
+                  title="Required"
+                  twoLine={true}
+                >
+                  <react-mdl-ListItemContent
+                    avatar="add"
+                    subtitle="customList"
+                  >
+                    customParam
+                     
+                    <small>
+                      (
+                      list
+                      )
+                    </small>
+                  </react-mdl-ListItemContent>
+                </react-mdl-ListItem>
+              </react-mdl-List>
+            </react-mdl-Cell>
+            <react-mdl-Cell
+              col={6}
+              tablet={12}
+            >
+              <h6>
+                Applications using this strategy
+              </h6>
+              <hr />
+              <react-mdl-List>
+                <react-mdl-ListItem
+                  twoLine={true}
+                >
+                  <span
+                    className="mdl-list__item-primary-content"
+                    style={
+                      Object {
+                        "minWidth": 0,
+                      }
+                    }
+                  >
+                    <react-mdl-Icon
+                      className="mdl-list__item-avatar"
+                      name="apps"
+                    />
+                    <a
+                      className="listLink truncate"
+                      href="/applications/appA"
+                      onClick={[Function]}
+                    >
+                      appA
+                      <span
+                        className="mdl-list__item-sub-title truncate"
+                      >
+                        app description
+                      </span>
+                    </a>
+                  </span>
+                </react-mdl-ListItem>
+              </react-mdl-List>
+            </react-mdl-Cell>
+            <react-mdl-Cell
+              col={6}
+              tablet={12}
+            >
+              <h6>
+                Toggles using this strategy
+              </h6>
+              <hr />
+              <react-mdl-List
+                className="truncate"
+                style={
+                  Object {
+                    "textAlign": "left",
+                  }
+                }
+              >
+                <react-mdl-ListItem
+                  twoLine={true}
+                >
+                  <react-mdl-ListItemContent
+                    avatar="toggle"
+                    subtitle="toggle description"
+                  >
+                    <a
+                      href="/features/view/toggleA"
+                      onClick={[Function]}
+                    >
+                      toggleA
+                    </a>
+                  </react-mdl-ListItemContent>
+                </react-mdl-ListItem>
+              </react-mdl-List>
+            </react-mdl-Cell>
+          </react-mdl-Grid>
+        </div>
+      </div>
+    </section>
+  </react-mdl-Cell>
+</react-mdl-Grid>
+`;

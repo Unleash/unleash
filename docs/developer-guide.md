@@ -19,6 +19,8 @@ GRANT ALL PRIVILEGES ON DATABASE unleash_test to unleash_user;
 SQL
 ```
 
+> Password is intentionally set to 'passord', which is the Norwegian word for password.
+
 Then set env vars:
 
 (Optional as unleash will assume these as default values).

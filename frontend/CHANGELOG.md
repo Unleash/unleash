@@ -10,6 +10,9 @@ The latest version of this document is always available in
 
 ## [Unreleased]
 
+## [3.1.4]
+- feat: Add UI support for permission. 
+
 ## [3.1.3]
 - fix(webpack): Strip all comments in css/js bundles.
 

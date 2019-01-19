@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- feat(permission): Implement support for permissions.
+
 ## 3.1.4
 
 - chore(package): Upgrade ava to version 1.0.1

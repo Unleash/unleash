@@ -15,6 +15,7 @@ class HistoryList extends Component {
         settings: PropTypes.object,
         location: PropTypes.object,
         updateSetting: PropTypes.func.isRequired,
+        hideName: PropTypes.bool,
     };
 
     toggleShowDiff() {
@@ -25,7 +26,7 @@ class HistoryList extends Component {
     }
     render() {
         const showData = this.props.settings.showData;
-        const { history } = this.props;
+        const { history, hideName } = this.props;
         if (!history || history.length < 0) {
             return null;
         }
@@ -34,6 +35,7 @@ class HistoryList extends Component {
             <span
                 className={commonStyles.truncate}
                 style={{ display: 'inline-block', verticalAlign: 'middle', width: '100%' }}
+                title={v}
             >
                 {v}
             </span>
@@ -51,6 +53,7 @@ class HistoryList extends Component {
                         Object.assign(
                             {
                                 diff: <HistoryItemDiff entry={entry} />,
+                                name: entry.data.name,
                             },
                             entry
                         )
@@ -58,12 +61,19 @@ class HistoryList extends Component {
                     className={commonStyles.fullwidth}
                     style={{ border: 0, tableLayout: 'fixed', minWidth: '840px' }}
                 >
-                    <TableHeader name="type" cellFormatter={truncateTableCell} style={{ width: '136px' }}>
+                    <TableHeader name="type" cellFormatter={truncateTableCell} style={{ width: '115px' }}>
                         Type
                     </TableHeader>
                     <TableHeader name="createdBy" cellFormatter={truncateTableCell} style={{ width: '115px' }}>
                         User
                     </TableHeader>
+                    {hideName ? (
+                        []
+                    ) : (
+                        <TableHeader name="name" cellFormatter={truncateTableCell} style={{ width: '153px' }}>
+                            Feature Toggle
+                        </TableHeader>
+                    )}
                     <TableHeader name="diff">Diff</TableHeader>
                     <TableHeader
                         numeric

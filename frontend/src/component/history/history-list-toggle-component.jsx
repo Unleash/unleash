@@ -18,7 +18,7 @@ class HistoryListToggle extends Component {
             return <span>fetching..</span>;
         }
         const { history } = this.props;
-        return <HistoryList history={history} title="Change log" />;
+        return <HistoryList history={history} hideName title="Change log" />;
     }
 }
 

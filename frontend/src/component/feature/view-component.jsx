@@ -1,11 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, Tab, ProgressBar, Button, Card, CardText, CardTitle, CardActions, Textfield, Switch } from 'react-mdl';
+import {
+    Tabs,
+    Tab,
+    ProgressBar,
+    Button,
+    Card,
+    CardText,
+    CardTitle,
+    CardActions,
+    Textfield,
+    Switch,
+    Badge,
+} from 'react-mdl';
 import { Link } from 'react-router-dom';
 
 import HistoryComponent from '../history/history-list-toggle-container';
 import MetricComponent from './metric-container';
 import EditFeatureToggle from './form/form-update-feature-container';
+import EditVariants from './variant/update-variant-container';
 import ViewFeatureToggle from './form/form-view-feature-container';
 import { styles as commonStyles } from '../common';
 import { CREATE_FEATURE, DELETE_FEATURE, UPDATE_FEATURE } from '../../permissions';
@@ -13,7 +26,8 @@ import { CREATE_FEATURE, DELETE_FEATURE, UPDATE_FEATURE } from '../../permission
 const TABS = {
     strategies: 0,
     view: 1,
-    history: 2,
+    variants: 2,
+    history: 3,
 };
 
 export default class ViewFeatureToggleComponent extends React.Component {
@@ -27,6 +41,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         activeTab: PropTypes.string.isRequired,
         featureToggleName: PropTypes.string.isRequired,
         features: PropTypes.array.isRequired,
+        betaFlags: PropTypes.array.isRequired,
         toggleFeature: PropTypes.func,
         removeFeatureToggle: PropTypes.func,
         revive: PropTypes.func,
@@ -60,6 +75,15 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 );
             }
             return <ViewFeatureToggle featureToggle={featureToggle} />;
+        } else if (TABS[activeTab] === TABS.variants) {
+            return (
+                <EditVariants
+                    featureToggle={featureToggle}
+                    features={features}
+                    history={this.props.history}
+                    hasPermission={this.props.hasPermission}
+                />
+            );
         } else {
             return <MetricComponent featureToggle={featureToggle} />;
         }
@@ -74,6 +98,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         const {
             featureToggle,
             features,
+            betaFlags,
             activeTab,
             revive,
             // setValue,
@@ -82,6 +107,9 @@ export default class ViewFeatureToggleComponent extends React.Component {
             removeFeatureToggle,
             hasPermission,
         } = this.props;
+
+        // TODO: Find better solution for this
+        const showVariants = betaFlags.includes('unleash.beta.variants');
 
         if (!featureToggle) {
             if (features.length === 0) {
@@ -217,6 +245,15 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 >
                     <Tab onClick={() => this.goToTab('strategies', featureToggleName)}>Strategies</Tab>
                     <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
+                    {showVariants ? (
+                        <Tab onClick={() => this.goToTab('variants', featureToggleName)}>
+                            <Badge text="beta" noBackground>
+                                Variants
+                            </Badge>
+                        </Tab>
+                    ) : (
+                        []
+                    )}
                     <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
                 </Tabs>
                 {tabContent}

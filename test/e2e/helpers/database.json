@@ -120,6 +120,14 @@
           }
         }
       ]
+    },
+    {
+      "name": "feature.with.variants",
+      "description": "A feature toggle with watiants",
+      "enabled": true,
+      "archived": false,
+      "strategies": [{ "name": "default" }],
+      "variants": [{ "name": "control" }, { "name": "new" }]
     }
   ]
 }

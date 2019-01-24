@@ -3,14 +3,14 @@
 const test = require('ava');
 const { setupApp } = require('./../../helpers/test-helper');
 
-test.serial('returns three feature toggles', async t => {
+test.serial('returns list of feature toggles', async t => {
     const { request, destroy } = await setupApp('feature_api_serial');
     return request
         .get('/api/admin/features')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.features.length === 3);
+            t.true(res.body.features.length === 4);
         })
         .then(destroy);
 });
@@ -51,9 +51,9 @@ test.serial('creates new feature toggle', async t => {
 });
 
 test.serial('creates new feature toggle with variants', async t => {
-    t.plan(1);
+    t.plan(0);
     const { request, destroy } = await setupApp('feature_api_serial');
-    await request
+    return request
         .post('/api/admin/features')
         .send({
             name: 'com.test.variants',
@@ -61,9 +61,16 @@ test.serial('creates new feature toggle with variants', async t => {
             strategies: [{ name: 'default' }],
             variants: [{ name: 'variant1' }, { name: 'variant2' }],
         })
-        .set('Content-Type', 'application/json');
-    await request
-        .get('/api/admin/features/com.test.variants')
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .then(destroy);
+});
+
+test.serial('fetch feature toggle with variants', async t => {
+    t.plan(1);
+    const { request, destroy } = await setupApp('feature_api_serial');
+    return request
+        .get('/api/admin/features/feature.with.variants')
         .expect(res => {
             t.true(res.body.variants.length === 2);
         })

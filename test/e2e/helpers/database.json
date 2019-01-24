@@ -127,7 +127,10 @@
       "enabled": true,
       "archived": false,
       "strategies": [{ "name": "default" }],
-      "variants": [{ "name": "control" }, { "name": "new" }]
+      "variants": [
+        { "name": "control", "weight": 50 },
+        { "name": "new", "weight": 50 }
+      ]
     }
   ]
 }

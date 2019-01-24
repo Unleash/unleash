@@ -3,14 +3,14 @@
 const test = require('ava');
 const { setupApp } = require('./../../helpers/test-helper');
 
-test.serial('returns three feature toggles', async t => {
+test.serial('returns four feature toggles', async t => {
     const { request, destroy } = await setupApp('feature_api_client');
     return request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.features.length === 3);
+            t.true(res.body.features.length === 4);
         })
         .then(destroy);
 });

@@ -59,7 +59,10 @@ test.serial('creates new feature toggle with variants', async t => {
             name: 'com.test.variants',
             enabled: false,
             strategies: [{ name: 'default' }],
-            variants: [{ name: 'variant1' }, { name: 'variant2' }],
+            variants: [
+                { name: 'variant1', weight: 50 },
+                { name: 'variant2', weight: 50 },
+            ],
         })
         .set('Content-Type', 'application/json')
         .expect(201)

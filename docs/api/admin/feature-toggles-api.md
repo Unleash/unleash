@@ -28,9 +28,11 @@ This endpoint is the one all admin ui should use to fetch all available feature 
       "variants": [
         {
           "name": "variant1",
+          "weight": 50
         },
         {
           "name": "variant2",
+          "weight": 50
         }
       ]
     },

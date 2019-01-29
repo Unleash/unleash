@@ -234,3 +234,31 @@ test.serial('should not be possible to create archived toggle', async t => {
         .expect(400)
         .then(destroy);
 });
+
+test.serial('creates new feature toggle with variant overrides', async t => {
+    t.plan(0);
+    const { request, destroy } = await setupApp('feature_api_serial');
+    return request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.variants',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+            variants: [
+                {
+                    name: 'variant1',
+                    weight: 50,
+                    overrides: [
+                        {
+                            field: 'userId',
+                            values: ['123'],
+                        },
+                    ],
+                },
+                { name: 'variant2', weight: 50 },
+            ],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .then(destroy);
+});

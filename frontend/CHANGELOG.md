@@ -9,6 +9,7 @@ The latest version of this document is always available in
 
 
 ## [Unreleased]
+- feature: Show tooltips and featuretoggle names in event view
 
 ## [3.1.4]
 - feat: Add UI support for permission. 

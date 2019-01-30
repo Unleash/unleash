@@ -5916,6 +5916,7 @@ unique-temp-dir@^1.0.0:
     os-tmpdir "^1.0.1"
     uid2 "0.0.3"
 
+<<<<<<< 0168fb3ff9d0e9b135d043f08e2574d0594d2a38
 <<<<<<< 1a22af881fc368841da3cb33dba9bcf7d94042ad
 universalify@^0.1.0:
   version "0.1.2"
@@ -5932,6 +5933,12 @@ unleash-frontend@3.2.0-beta.2:
   resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.2.0-beta.2.tgz#1ae25992c84be167f56b602ae7523e53be957e3e"
   integrity sha512-4vU3VK+c7fpDNskYS19yMW7Gvfc9BLFK3u7sbh4PaaAlWiPeEfqW7LUCn3yOZnhR6/hDBID3WKakP8AZTYfTXQ==
 >>>>>>> fix: bump frontend for better variant support
+=======
+unleash-frontend@3.2.0-beta.5:
+  version "3.2.0-beta.5"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.2.0-beta.5.tgz#ae4ce060f8b3e5d8a8410859892718ab5e39eb9e"
+  integrity sha512-MbJ73u8aaD1J6NEwCiEYWYIarohi8erWLq8qkGtrCcJQXpkDjuNWmd0A63mf+mpaeEdISPfqftqZWxszDrqN4A==
+>>>>>>> fix: bump unleash-frontend
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

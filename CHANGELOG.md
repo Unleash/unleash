@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 3.1.5
 
-- feat(permission): Implement support for permissions.
+- feat(permission): Implement beta support for permissions.
+- chore(package): Upgrade a lot of dependencies
 
 ## 3.1.4
 

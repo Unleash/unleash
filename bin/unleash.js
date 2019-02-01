@@ -27,6 +27,13 @@ const argv = require('yargs')
             'The full databaseUrl to connect to, including username and password',
         demand: true,
         type: 'string',
+    })
+    .option('databaseSchema', {
+        alias: 's',
+        describe: 'The database schema to use',
+        default: 'public',
+        demand: false,
+        type: 'string',
     }).argv;
 
 serverImpl

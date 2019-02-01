@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.6
+
+- fix: Database migrator does use the databaseSchema option.
+
 ## 3.1.5
 
 - feat(permission): Implement beta support for permissions.

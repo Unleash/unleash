@@ -44,6 +44,7 @@ unleash
 Available unleash options includes:
 
 - **databaseUrl** - the postgress database url to connect to. Should include username/password.
+- **databaseSchema** - the postgress database schema to use. Defaults to 'public'
 - **port** - Which port should the unleash-server bind to?
 - **enableLegacyRoutes** (boolean) - allows you to turn on/off support for legacy routes to support older clients. Enabled by default.
 - **serverMetrics** (boolean) - Use this option to turn off prometheus metrics.

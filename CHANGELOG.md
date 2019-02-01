@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.7
+
+- fix: Critical bugfix 'databaseSchema' not defaulting to 'public'
+
 ## 3.1.6
 
 - fix: Database migrator does use the databaseSchema option.

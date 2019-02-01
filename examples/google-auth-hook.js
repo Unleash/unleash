@@ -20,13 +20,14 @@
 // const  { User, AuthenticationRequired } = require('unleash-server');
 const { User, AuthenticationRequired } = require('../lib/server-impl.js');
 
-const passport = require('passport');
-const GoogleOAuth2Strategy = require('passport-google-auth').Strategy;
+const passport = require('@passport-next/passport');
+const GoogleOAuth2Strategy = require('@passport-next/passport-google-oauth2')
+    .Strategy;
 
 passport.use(
     new GoogleOAuth2Strategy(
         {
-            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: process.env.GOOGLE_CALLBACK_URL,
         },
@@ -49,7 +50,10 @@ function enableGoogleOauth(app) {
 
     passport.serializeUser((user, done) => done(null, user));
     passport.deserializeUser((user, done) => done(null, user));
-    app.get('/api/admin/login', passport.authenticate('google'));
+    app.get(
+        '/api/admin/login',
+        passport.authenticate('google', { scope: ['email'] })
+    );
 
     app.get(
         '/api/auth/callback',

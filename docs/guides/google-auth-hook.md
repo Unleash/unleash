@@ -43,12 +43,13 @@ http://localhost:4242/api/auth/callback
 
 ### Add dependencies
 
-Add two dependencies [`passport`](https://www.npmjs.com/package/passport) and [`passport-google-oauth20`](https://www.npmjs.com/package/passport-google-oauth20) inside `index.js` file
+Add two dependencies [`@passport-next/passport`](https://www.npmjs.com/package/@passport-next/passport) and [`@passport-next/passport-google-oauth2`](https://www.npmjs.com/package/@passport-next/passport-google-oauth2) inside `index.js` file
 
 ```js
 const unleash = require('unleash-server');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const passport = require('@passport-next/passport');
+const GoogleOAuth2Strategy = require('@passport-next/passport-google-oauth2')
+  .Strategy;
 ```
 
 ### Configure the Google strategy for use by Passport.js
@@ -61,7 +62,7 @@ const GOOGLE_CLIENT_SECRET = '...';
 const GOOGLE_CALLBACK_URL = 'http://localhost:4242/api/auth/callback';
 
 passport.use(
-  new GoogleStrategy(
+  new GoogleOAuth2Strategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
@@ -93,8 +94,10 @@ let options = {
   preRouterHook: googleAdminAuth,
 };
 
-unleash.start(options).then(unleash => {
-  console.log(`Unleash started on http://localhost:${unleash.app.get('port')}`);
+unleash.start(options).then(instance => {
+  console.log(
+    `Unleash started on http://localhost:${instance.app.get('port')}`,
+  );
 });
 ```
 
@@ -119,7 +122,7 @@ function googleAdminAuth(app) {
   // ...
   app.get(
     '/api/admin/login',
-    passport.authenticate('google', { scope: ['profile', 'email'] }),
+    passport.authenticate('google', { scope: ['email'] }),
   );
   // ...
 }
@@ -177,22 +180,23 @@ The `index.js` server file.
 ```js
 'use strict';
 
+const fs = require('fs');
 const unleash = require('unleash-server');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const passport = require('@passport-next/passport');
+const GoogleOAuth2Strategy = require('@passport-next/passport-google-oauth2');
 
 const GOOGLE_CLIENT_ID = '...';
 const GOOGLE_CLIENT_SECRET = '...';
 const GOOGLE_CALLBACK_URL = 'http://localhost:4242/api/auth/callback';
 
 passport.use(
-  new GoogleStrategy(
+  new GoogleOAuth2Strategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: GOOGLE_CALLBACK_URL,
     },
-    function(accessToken, refreshToken, profile, cb) {
+    (accessToken, refreshToken, profile, cb) => {
       cb(
         null,
         new unleash.User({
@@ -212,7 +216,7 @@ function googleAdminAuth(app) {
 
   app.get(
     '/api/admin/login',
-    passport.authenticate('google', { scope: ['profile', 'email'] }),
+    passport.authenticate('google', { scope: ['email'] }),
   );
   app.get(
     '/api/auth/callback',
@@ -242,7 +246,7 @@ function googleAdminAuth(app) {
   });
 }
 
-let options = {
+const options = {
   enableLegacyRoutes: false,
   adminAuthentication: 'custom',
   preRouterHook: googleAdminAuth,
@@ -252,7 +256,9 @@ if (process.env.DATABASE_URL_FILE) {
   options.databaseUrl = fs.readFileSync(process.env.DATABASE_URL_FILE);
 }
 
-unleash.start(options).then(unleash => {
-  console.log(`Unleash started on http://localhost:${unleash.app.get('port')}`);
+unleash.start(options).then(instance => {
+  console.log(
+    `Unleash started on http://localhost:${instance.app.get('port')}`,
+  );
 });
 ```

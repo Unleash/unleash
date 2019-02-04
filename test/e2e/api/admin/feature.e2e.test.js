@@ -250,7 +250,7 @@ test.serial('creates new feature toggle with variant overrides', async t => {
                     weight: 50,
                     overrides: [
                         {
-                            field: 'userId',
+                            contextName: 'userId',
                             values: ['123'],
                         },
                     ],

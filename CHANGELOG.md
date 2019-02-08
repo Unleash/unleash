@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.0
+
+- feat: Add beta support for toggle variants
+
 ## 3.1.7
 
 - fix: Critical bugfix 'databaseSchema' not defaulting to 'public'

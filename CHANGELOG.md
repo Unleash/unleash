@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.1
+
+- fix: Variants should be allowed to be 'null'
+
 ## 3.2.0
 
 - feat: Add beta support for toggle variants

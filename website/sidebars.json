@@ -6,7 +6,8 @@
       "unleash_context",
       "activation_strategy",
       "client_specification",
-      "migration_guide"
+      "migration_guide",
+      "beta_features"
     ],
     "Developer Guide": [
       "developer_guide",

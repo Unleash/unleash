@@ -1,0 +1,244 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with with variants 1`] = `
+<section
+  style={
+    Object {
+      "padding": "16px",
+    }
+  }
+>
+  <p>
+    Variants is a new 
+    <i>
+      beta feature
+    </i>
+     and the implementation is subject to change at any time until it is made in to a permanent feature. In order to use variants you will have use a Client SDK which supports variants. You should read more about variants in the 
+    <a
+      href="https://unleash.github.io/docs/beta_features"
+      target="_blank"
+    >
+      user documentation
+    </a>
+    .
+  </p>
+  <p
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 229, 100, 0.3)",
+        "padding": "5px",
+      }
+    }
+  >
+    The sum of variants weights needs to be a constant number to guarantee consistent hashing in the client implementations, this is why we will sometime allocate a few more percentages to the first variant if the sum is not exactly 100. In a final version of this feature it should be possible to the user to manually set the percentages for each variant.
+  </p>
+  <p>
+    <a
+      href="#add-variant"
+      onClick={[Function]}
+      title="Add variant"
+    >
+      Add variant
+    </a>
+  </p>
+  <form>
+    <table
+      className="mdl-data-table mdl-shadow--2dp variantTable"
+    >
+      <thead>
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            Weight
+          </th>
+          <th
+            className="actions"
+          />
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            onClick={[Function]}
+          >
+            blue
+          </td>
+          <td>
+            34
+          </td>
+          <td
+            className="actions"
+          >
+            <react-mdl-IconButton
+              name="expand_more"
+              onClick={[Function]}
+            />
+            <react-mdl-IconButton
+              name="delete"
+              onClick={[Function]}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td
+            onClick={[Function]}
+          >
+            yellow
+          </td>
+          <td>
+            33
+          </td>
+          <td
+            className="actions"
+          >
+            <react-mdl-IconButton
+              name="expand_more"
+              onClick={[Function]}
+            />
+            <react-mdl-IconButton
+              name="delete"
+              onClick={[Function]}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td
+            onClick={[Function]}
+          >
+            orange
+          </td>
+          <td>
+            33
+          </td>
+          <td
+            className="actions"
+          >
+            <react-mdl-IconButton
+              name="expand_more"
+              onClick={[Function]}
+            />
+            <react-mdl-IconButton
+              name="delete"
+              onClick={[Function]}
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <div>
+      <react-mdl-Button
+        icon="add"
+        primary={true}
+        raised={true}
+        ripple={true}
+        type="submit"
+      >
+        <react-mdl-Icon
+          name="add"
+        />
+           
+        Save
+      </react-mdl-Button>
+       
+      <react-mdl-Button
+        onClick={[MockFunction]}
+        raised={true}
+        ripple={true}
+        style={
+          Object {
+            "float": "right",
+          }
+        }
+        type="cancel"
+      >
+        <react-mdl-Icon
+          name="cancel"
+        />
+            Cancel
+      </react-mdl-Button>
+    </div>
+  </form>
+</section>
+`;
+
+exports[`renders correctly with without variants 1`] = `
+<section
+  style={
+    Object {
+      "padding": "16px",
+    }
+  }
+>
+  <p>
+    Variants is a new 
+    <i>
+      beta feature
+    </i>
+     and the implementation is subject to change at any time until it is made in to a permanent feature. In order to use variants you will have use a Client SDK which supports variants. You should read more about variants in the 
+    <a
+      href="https://unleash.github.io/docs/beta_features"
+      target="_blank"
+    >
+      user documentation
+    </a>
+    .
+  </p>
+  <p
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 229, 100, 0.3)",
+        "padding": "5px",
+      }
+    }
+  >
+    The sum of variants weights needs to be a constant number to guarantee consistent hashing in the client implementations, this is why we will sometime allocate a few more percentages to the first variant if the sum is not exactly 100. In a final version of this feature it should be possible to the user to manually set the percentages for each variant.
+  </p>
+  <p>
+    <a
+      href="#add-variant"
+      onClick={[Function]}
+      title="Add variant"
+    >
+      Add variant
+    </a>
+  </p>
+</section>
+`;
+
+exports[`renders correctly with without variants and no permissions 1`] = `
+<section
+  style={
+    Object {
+      "padding": "16px",
+    }
+  }
+>
+  <p>
+    Variants is a new 
+    <i>
+      beta feature
+    </i>
+     and the implementation is subject to change at any time until it is made in to a permanent feature. In order to use variants you will have use a Client SDK which supports variants. You should read more about variants in the 
+    <a
+      href="https://unleash.github.io/docs/beta_features"
+      target="_blank"
+    >
+      user documentation
+    </a>
+    .
+  </p>
+  <p
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 229, 100, 0.3)",
+        "padding": "5px",
+      }
+    }
+  >
+    The sum of variants weights needs to be a constant number to guarantee consistent hashing in the client implementations, this is why we will sometime allocate a few more percentages to the first variant if the sum is not exactly 100. In a final version of this feature it should be possible to the user to manually set the percentages for each variant.
+  </p>
+</section>
+`;

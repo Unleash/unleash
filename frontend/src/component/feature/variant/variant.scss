@@ -1,0 +1,22 @@
+.variantTable {
+    width: 100%;
+
+    th, td {
+        text-align: center;
+        width: 100px;
+    }
+    th:first-of-type, td:first-of-type {
+        text-align: left;
+        width: 100%;
+    }
+}
+
+th.actions {
+    text-align: right;
+}
+
+td.actions {
+    text-align: right;
+    vertical-align: top;
+}
+

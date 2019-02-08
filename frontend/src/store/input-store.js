@@ -18,7 +18,7 @@ function assertId(state, id) {
 }
 
 function assertList(state, id, key) {
-    if (!state.getIn(id).has(key)) {
+    if (!state.getIn(id).has(key) || state.getIn(id).get(key) == null) {
         return state.setIn(id.concat([key]), new List());
     }
     return state;

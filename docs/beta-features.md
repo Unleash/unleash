@@ -9,7 +9,7 @@ In this section we will introduce beta features available in Unleash. These feat
 
 ### Feature Toggle Variants
 
-> This feature was introduces in _Unleash v3.2.0_. To enable this feature you must create a new enabled feature toggle named `unleash.beta.variants`
+> This feature was introduced in _Unleash v3.2.0_. To enable this feature you must create a new feature toggle named `unleash.beta.variants` and make sure to enable it.
 
 Do you want to facilitate more advanced experimentations? Do you want to use Unleash to handle you A/B experiments? Say hello to feature toggle variants!
 

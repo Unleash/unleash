@@ -394,10 +394,10 @@
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.25.tgz#59188b871208092e37767e4b3d80c3b3eaae43bd"
   integrity sha512-yfhIBix+AIFTmYGtkC0Bi+XGjSkOINykqKvO/Wqdz/DuXlAKK7HmhLAXdPIGsV4xzKcL3ev/zYc4yLNo+OvGaw==
 
-"@types/node@^10.12.15":
-  version "10.12.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.23.tgz#308a3acdc5d1c842aeadc50b867d99c46cfae868"
-  integrity sha512-EKhb5NveQ3NlW5EV7B0VRtDKwUfVey8LuJRl9pp5iW0se87/ZqLjG0PMf2MCzPXAJYWZN5Ltg7pHIAf9/Dm1tQ==
+"@types/node@^11.9.0":
+  version "11.9.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.9.0.tgz#35fea17653490dab82e1d5e69731abfdbf13160d"
+  integrity sha512-ry4DOrC+xenhQbzk1iIPzCZGhhPGEFv7ia7Iu6XXSLVluiJIe9FfG7Iu3mObH9mpxEXCWLCMU4JWbCCR9Oy1Zg==
 
 abbrev@1:
   version "1.1.1"

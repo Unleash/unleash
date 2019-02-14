@@ -1429,21 +1429,21 @@ date-time@^2.1.0:
   dependencies:
     time-zone "^1.0.0"
 
-db-migrate-base@^1.5.2:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/db-migrate-base/-/db-migrate-base-1.5.4.tgz#d115822e4f5f43a2de28f561197d837c09bec71b"
-  integrity sha512-4dGd12Z3MjgADiUvlqKe/OJ5l9ga18h1fTNdeoB/bzOM4I/MRQSPhTpgAeO6el2RqFioP6WMSWQjzKjfGXX9Ng==
+db-migrate-base@^1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/db-migrate-base/-/db-migrate-base-1.6.3.tgz#5fa63e2745fd353ffd90be6754a0d79b41167cd8"
+  integrity sha512-O6Kh72Yh0DfvRAKg9QKzu1KkMwI5iI0dFHO6RmDLvbiYvtRW3faFXJNFwJYeioVBx22QA3AkVFbDIcw4j4QxGw==
   dependencies:
     bluebird "^3.1.1"
 
-db-migrate-pg@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/db-migrate-pg/-/db-migrate-pg-0.4.0.tgz#4ccab08a8bda89e1164f11259005209449c0359b"
-  integrity sha512-N49I0qEh7e8fd852R3zD5ed+w2jyqTHsBkIULoTgafgTr3QBvbYLOZcQ4FWNtGa+h0lrxtwh7qvv6LMbv916YQ==
+db-migrate-pg@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/db-migrate-pg/-/db-migrate-pg-0.5.0.tgz#d0536604078e45b9a34e146102ce22cba4982f76"
+  integrity sha512-w2dEET339c+FiRgyWWtYo2s5Va0HOzQjLdtAmccB5hMmHsivuAlZd7etzewQCcE2wZPOe9GvMh70/UBt/yE24A==
   dependencies:
     bluebird "^3.1.1"
-    db-migrate-base "^1.5.2"
-    pg "^7.4.1"
+    db-migrate-base "^1.6.3"
+    pg "^7.8.0"
     semver "^5.0.3"
 
 db-migrate-shared@^1.2.0:
@@ -4502,7 +4502,7 @@ pg-types@~2.0.0:
     postgres-date "~1.0.0"
     postgres-interval "^1.1.0"
 
-pg@^7.4.1, pg@^7.8.0:
+pg@^7.8.0:
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/pg/-/pg-7.8.0.tgz#541c25b3323d85f67ce7d4501a77470976868ce9"
   integrity sha512-yS3C9YD+ft0H7G47uU0eKajgTieggCXdA+Fxhm5G+wionY6kPBa8BEVDwPLMxQvkRkv3/LXiFEqjZm9gfxdW+g==

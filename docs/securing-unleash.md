@@ -3,15 +3,15 @@ id: securing_unleash
 title: Securing Unleash
 ---
 
-The Unleash API is split in two different paths: `/api/client` and `/api/admin`. This makes it easy to have different authentication strategy for the admin interface and the client-api used by the applications integrating with Unleash.
+The Unleash API is split into two different paths: `/api/client` and `/api/admin`. This makes it easy to have different authentication strategy for the admin interface and the client-api used by the applications integrating with Unleash.
 
 ## General settings
 
-Unleash uses an encrypted cookie to maintain a user session. This allows users to be logged in across instances of Unleash. To protect this cookie you should specify the `secret` option when starting unleash.-
+Unleash uses an encrypted cookie to maintain a user session. This allows users to be logged in across multiple instances of Unleash. To protect this cookie, you should specify the `secret` option when starting Unleash.
 
 ## Securing the Admin API
 
-In order to secure the Admin API you have to tell Unleash that you are using a custom admin authentication and implement your authentication logic as a preHook. You should also set the secret option to a protected secret in your system.
+To secure the Admin API, you have to tell Unleash that you are using a custom admin authentication and implement your authentication logic as a preHook. You should also set the secret option to a protected secret in your system.
 
 ```javascript
 const unleash = require('unleash-server');
@@ -40,7 +40,7 @@ Additionally, you can trigger the admin interface to prompt the user to sign in 
 }
 ```
 
-Examples on custom authentication hooks:
+Examples of custom authentication hooks:
 
 - [google-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/google-auth-hook.js)
 - [basic-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/basic-auth-hook.js)
@@ -49,9 +49,9 @@ We also have a version of Unleash deployed on Heroku which uses Google OAuth 2.0
 
 ## Securing the Client API
 
-A common way to support client access is to use pre shared secrets. This can be solved by having clients send a shared key in a http header with every client request to the Unleash API. All official Unleash clients should support this.
+A common way to support client access is to use pre-shared secrets. This can be solved by having clients send a shared key in an HTTP header with every client request to the Unleash API. All official Unleash clients should support this.
 
-In the [Java client](https://github.com/Unleash/unleash-client-java#custom-http-headers) this looks like:
+In the [Java client](https://github.com/Unleash/unleash-client-java#custom-http-headers) this would look like this:
 
 ```java
 UnleashConfig unleashConfig = UnleashConfig.builder()
@@ -62,7 +62,7 @@ UnleashConfig unleashConfig = UnleashConfig.builder()
   .build();
 ```
 
-On the unleash server side you need to implement a preRouter hook which verifies that all calls to `/api/client` includes this pre shared key in the defined header. This could look something like this:
+On the Unleash server side, you need to implement a preRouter hook which verifies that all calls to `/api/client` include this pre-shared key in the defined header. This could look something like this.
 
 ```javascript
 const unleash = require('unleash-server');
@@ -91,4 +91,4 @@ unleash
 
 [client-auth-unleash.js](https://github.com/Unleash/unleash/blob/master/examples/client-auth-unleash.js)
 
-PS! Remember to disable legacy route by setting the `enableLegacyRoutes` option to false. This will require all your clients to be on v3.x.
+PS! Remember to disable legacy routes by setting the `enableLegacyRoutes` option to false. This will require all your clients to be on v3.x.

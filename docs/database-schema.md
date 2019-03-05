@@ -3,7 +3,7 @@ id: database_schema
 title: Database Schema
 ---
 
-This document describes our current database schema used in PostgreSQL. We use db-migrate to migrate (create tables, add columns etc) the database.
+This document describes our current database schema used in PostgreSQL. We use db-migrate to migrate (create tables, add columns, etc.) the database.
 
 ## Table: _migrations_
 

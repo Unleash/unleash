@@ -112,7 +112,7 @@ const Block = props => (
 const FeatureCallout = () => (
   <div className="productShowcaseSection paddingBottom" style={{textAlign: 'center'}}>
     <p>
-      Unleash is a feature toggle system, that gives you a great overview over all feature toggles across 
+      Unleash is a feature toggle system, that gives you a great overview of all feature toggles across 
       all your applications and services. It comes with official client implementations for Java, Node.js, Go, Ruby and Python.
     </p>
     <p>
@@ -127,7 +127,7 @@ const UnleashClient = () => (
 
     <h2>Client implementations</h2>
     <p>
-      Unleash has offical SDK's for Java, Node.js, Go, Ruby and Python. And we will be happy to add implementations in other langugages written by you! These libraries makes it very easy to use Unleash in you application.
+      Unleash has official SDK's for Java, Node.js, Go, Ruby and Python. And we will be happy to add implementations in other languages written by you! These libraries make it very easy to use Unleash in your application.
     </p>
     
     <div className="gridBlock">
@@ -165,7 +165,7 @@ const TryOut = () => (
         content: 'We have deployed a demo version of [Unleash on Heroku](https://unleash.herokuapp.com). '+
             'Here you can play with the Unleash UI, define some feature toggles and get a feel of how to use Unleash. <br /><br />'+
             'It is even possible to use one of the Unleash client SDKs and test it out Unleash your application. '+
-            'To do this you should connect one of the clients using the hosted API url: https://unleash.herokuapp.com/api/.',
+            'To do this, you should connect one of the clients using the hosted API URL: https://unleash.herokuapp.com/api/.',
         image: imgUrl('dashboard.png'),
         imageAlign: 'left',
         align: 'left',
@@ -179,7 +179,7 @@ const ActivationStrategies = () => (
   <Block background="dark">
     {[
       {
-        content: 'It\'s fine to have a system for turning stuff on and off. But some times we want more granular control, we want to decide who to the toggle should be enabled for. This is where [activation strategies](docs/activation_strategy) comes in to the picture. Activation strategies take arbitrary config and allows us to enable a toggle in various ways.',
+        content: 'It\'s great to have a system for turning stuff on and off. Sometimes, however, we want more granular control, and we want to decide who the toggle should be enabled for. This is where activation strategies come into the picture. Activation strategies take arbitrary config and allow us to enable a toggle in various ways.',
         image: imgUrl('logo-inverted.png'),
         imageAlign: 'right',
         title: 'Activation strategies',

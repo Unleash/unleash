@@ -5,9 +5,9 @@ title: Getting Started
 
 ## Requirements
 
-You will need Node.js >= 8.0.0 and a **PostreSQL** 9.5+ database instance to be able to run Unleash.
+You will need Node.js >= 8.0.0 and a **PostgreSQL** 9.5+ database instance to be able to run Unleash.
 
-When starting Unleash you must specify a database uri (can be set as environment variable DATABASE_URL) which includes a username and password, that have rights to migrate the database.
+When starting Unleash you must specify a database URI (can be set as environment variable DATABASE_URL) which includes a username and password, that have rights to migrate the database.
 
 On startup _Unleash_ will perform necessary migrations if needed.
 
@@ -41,20 +41,20 @@ unleash
   });
 ```
 
-Available unleash options includes:
+Available unleash options include:
 
-- **databaseUrl** - the postgress database url to connect to. Should include username/password.
-- **databaseSchema** - the postgress database schema to use. Defaults to 'public'
-- **port** - Which port should the unleash-server bind to?
+- **databaseUrl** - the postgres database url to connect to. Should include username/password.
+- **databaseSchema** - the postgres database schema to use. Defaults to 'public'.
+- **port** - which port the unleash-server should bind to.
 - **enableLegacyRoutes** (boolean) - allows you to turn on/off support for legacy routes to support older clients. Enabled by default.
-- **serverMetrics** (boolean) - Use this option to turn off prometheus metrics.
-- **preHook** (function) - This is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first arguement.
-- **preRouterHook** (function) - Use this to register custom express middlewares before the `unleash` specific routers are added. This is typically how you would register custom middlewares to handle authentication.
-- **secret** (string) - Set this when you want to secure unleash. Used to encrypt the user session.
-- **adminAuthentication** (string) - Use this when implementing custom admin authentication [securing-unleash](./securing-unleash.md). Possible values are:
-  - `none` - Will disable authentication altogether
-  - `unsecure` - (default) Will use simple cookie based authentication. UI will require the user to specify an email in order to use unleash.
-  - `custom` - Use this when you implement your own custom authentication logic.
+- **serverMetrics** (boolean) - use this option to turn on/off prometheus metrics.
+- **preHook** (function) - this is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first argument.
+- **preRouterHook** (function) - use this to register custom express middlewares before the `unleash` specific routers are added. This is typically how you would register custom middlewares to handle authentication.
+- **secret** (string) - set this when you want to secure unleash. Used to encrypt the user session.
+- **adminAuthentication** (string) - use this when implementing custom admin authentication [securing-unleash](./securing-unleash.md). Possible values are:
+  - `none` - will disable authentication altogether
+  - `unsecure` - (default) will use simple cookie based authentication. UI will require the user to specify an email in order to use unleash.
+  - `custom` - use this when you implement your own custom authentication logic.
 
 ### 3. Docker
 
@@ -84,7 +84,7 @@ function consoleLoggerProvider(name) {
 }
 ```
 
-The logger interface with its `debug`, `info`, `warn` and `error` methods expects format string support as seen in `debug` or the JavaScript `console` object. Many commonly used logging implementations cover this API, e.g. bunyan, pino or winston.
+The logger interface with its `debug`, `info`, `warn` and `error` methods expects format string support as seen in `debug` or the JavaScript `console` object. Many commonly used logging implementations cover this API, e.g., bunyan, pino or winston.
 
 ### How do I set a logger provider?
 

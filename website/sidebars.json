@@ -2,6 +2,7 @@
   "documentation": {
     "User Documentation": [
       "getting_started",
+      "client_sdk",
       "securing_unleash",
       "unleash_context",
       "activation_strategy",

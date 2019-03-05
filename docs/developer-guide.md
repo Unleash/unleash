@@ -5,7 +5,7 @@ title: Developer guide
 
 ## PostgreSQL
 
-To run and develop unleash you need to have PostgreSQL database (PostgreSQL v.9.5.x or newer) locally.
+To run and develop unleash, you need to have PostgreSQL database (PostgreSQL v.9.5.x or newer) locally.
 
 ### Create a local unleash databases in postgres
 
@@ -32,7 +32,7 @@ export TEST_DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash_
 
 ## PostgreSQL with docker
 
-If you dont want to install PostgreSQL locally you can spin up an instance with docker. We have created a script to ease this process: `scripts/docker-postgres.sh`
+If you don't want to install PostgreSQL locally, you can spin up an Docker instance. We have created a script to ease this process: `scripts/docker-postgres.sh`
 
 ## Commands
 
@@ -59,7 +59,7 @@ We use database migrations to track database changes.
 
 ### Making a schema change
 
-In order to run migrations you will set the environment variable for DATABASE_URL
+To run migrations, you will set the environment variable for DATABASE_URL
 
 `export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash`
 
@@ -102,7 +102,7 @@ Test your migrations:
 
 ## Publishing / Releasing new packages
 
-Please run `npm run nsp` nad `npm run test` checks before publishing.
+Please run `npm run nsp` and `npm run test` checks before publishing.
 
 Run `npm run publish` to start the publishing process.
 

@@ -71,6 +71,16 @@ exports[`should render DrawerMenu 1`] = `
       >
         Go
       </a>
+      <a
+        href="https://github.com/unleash/unleash-client-ruby"
+      >
+        Ruby
+      </a>
+      <a
+        href="https://github.com/Unleash/unleash-client-python"
+      >
+        Python
+      </a>
     </react-mdl-FooterLinkList>
   </react-mdl-FooterDropDownSection>
 </react-mdl-FooterSection>
@@ -148,6 +158,16 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         href="https://github.com/Unleash/unleash-client-go/"
       >
         Go
+      </a>
+      <a
+        href="https://github.com/unleash/unleash-client-ruby"
+      >
+        Ruby
+      </a>
+      <a
+        href="https://github.com/Unleash/unleash-client-python"
+      >
+        Python
       </a>
     </react-mdl-FooterLinkList>
   </react-mdl-FooterDropDownSection>

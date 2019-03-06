@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.2
+
+- fix: Bump unleash-frontend to version 3.2.1
+
 ## 3.2.1
 
 - fix: Variants should be allowed to be 'null'

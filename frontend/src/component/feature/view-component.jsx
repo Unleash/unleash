@@ -41,7 +41,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         activeTab: PropTypes.string.isRequired,
         featureToggleName: PropTypes.string.isRequired,
         features: PropTypes.array.isRequired,
-        betaFlags: PropTypes.array.isRequired,
+        betaFlags: PropTypes.array,
         toggleFeature: PropTypes.func,
         removeFeatureToggle: PropTypes.func,
         revive: PropTypes.func,
@@ -51,6 +51,10 @@ export default class ViewFeatureToggleComponent extends React.Component {
         featureToggle: PropTypes.object,
         history: PropTypes.object.isRequired,
         hasPermission: PropTypes.func.isRequired,
+    };
+
+    static defaultProps = {
+        betaFlags: [],
     };
 
     componentWillMount() {

@@ -20,6 +20,8 @@ export const FooterMenu = () => (
                 <a href="https://github.com/Unleash/unleash-client-node/">Node.js</a>
                 <a href="https://github.com/Unleash/unleash-client-java/">Java</a>
                 <a href="https://github.com/Unleash/unleash-client-go/">Go</a>
+                <a href="https://github.com/unleash/unleash-client-ruby">Ruby</a>
+                <a href="https://github.com/Unleash/unleash-client-python">Python</a>
             </FooterLinkList>
         </FooterDropDownSection>
     </FooterSection>

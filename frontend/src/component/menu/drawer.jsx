@@ -18,7 +18,9 @@ export const DrawerMenu = () => (
                     key={item.path}
                     to={item.path}
                     className={[styles.navigationLink, 'mdl-color-text--grey-600'].join(' ')}
-                    activeClassName={[styles.navigationLink, 'mdl-color-text--black'].join(' ')}
+                    activeClassName={[styles.navigationLink, 'mdl-color-text--black', 'mdl-color--light-blue-50'].join(
+                        ' '
+                    )}
                 >
                     <Icon name={item.icon} className={styles.navigationIcon} /> {item.title}
                 </NavLink>
@@ -27,9 +29,16 @@ export const DrawerMenu = () => (
         <hr />
         <Navigation className={styles.navigation}>
             <a
+                href="https://unleash.github.io"
+                target="_blank"
+                className={[styles.navigationLink, 'mdl-color-text--grey-600'].join(' ')}
+            >
+                <Icon name="library_books" className={styles.navigationIcon} /> User documentation
+            </a>
+            <a
                 href="https://github.com/Unleash"
                 target="_blank"
-                className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
+                className={[styles.navigationLink, 'mdl-color-text--grey-600'].join(' ')}
             >
                 <i className={['material-icons', styles.navigationIcon, styles.iconGitHub].join(' ')} />GitHub
             </a>

@@ -211,7 +211,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
                                 disabled={!this.isFeatureView}
                                 ripple
                                 checked={featureToggle.enabled}
-                                onChange={() => toggleFeature(featureToggle.name)}
+                                onChange={() => toggleFeature(!featureToggle.enabled, featureToggle.name)}
                             >
                                 {featureToggle.enabled ? 'Enabled' : 'Disabled'}
                             </Switch>

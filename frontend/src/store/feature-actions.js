@@ -18,10 +18,10 @@ export const ERROR_UPDATE_FEATURE_TOGGLE = 'ERROR_UPDATE_FEATURE_TOGGLE';
 export const ERROR_REMOVE_FEATURE_TOGGLE = 'ERROR_REMOVE_FEATURE_TOGGLE';
 export const UPDATE_FEATURE_TOGGLE_STRATEGIES = 'UPDATE_FEATURE_TOGGLE_STRATEGIES';
 
-export function toggleFeature(name) {
+export function toggleFeature(enable, name) {
     debug('Toggle feature toggle ', name);
     return dispatch => {
-        dispatch(requestToggleFeatureToggle(name));
+        dispatch(requestToggleFeatureToggle(enable, name));
     };
 }
 
@@ -64,12 +64,12 @@ export function createFeatureToggles(featureToggle) {
     };
 }
 
-export function requestToggleFeatureToggle(name) {
+export function requestToggleFeatureToggle(enable, name) {
     return dispatch => {
         dispatch({ type: START_UPDATE_FEATURE_TOGGLE });
 
         return api
-            .toggle(name)
+            .toggle(enable, name)
             .then(() => dispatch({ type: TOGGLE_FEATURE_TOGGLE, name }))
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };

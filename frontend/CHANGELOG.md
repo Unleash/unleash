@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [next]
+- fix: Use toggle/on/off endoints to ensure correct state
+
 ## [3.2.1]
 - fix: Fixed bug in history view preventing toggle-view.
 - feat: Add all official client SDKs to footer

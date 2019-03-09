@@ -1,5 +1,10 @@
 # Changelog
 
+## Next
+- fix: Metrics poller should start even if inital fetch fails.
+- fix: SimpleAuthentication should work with custom basePaths
+- fix: Add explicit endpoints for toggle on/off 
+
 ## 3.2.2
 
 - fix: Bump unleash-frontend to version 3.2.1

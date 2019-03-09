@@ -53,8 +53,9 @@ function update(featureToggle) {
         .then(throwIfNotSuccess);
 }
 
-function toggle(name) {
-    return fetch(`${URI}/${name}/toggle`, {
+function toggle(enable, name) {
+    const action = enable ? 'on' : 'off';
+    return fetch(`${URI}/${name}/toggle/${action}`, {
         method: 'POST',
         headers,
         credentials: 'include',

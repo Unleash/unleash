@@ -48,7 +48,7 @@ const Feature = ({
                         disabled={toggleFeature === undefined}
                         title={`Toggle ${name}`}
                         key="left-actions"
-                        onChange={() => toggleFeature(name)}
+                        onChange={() => toggleFeature(!enabled, name)}
                         checked={enabled}
                     />
                 ) : (

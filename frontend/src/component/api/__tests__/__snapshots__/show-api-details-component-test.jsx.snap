@@ -5,23 +5,13 @@ exports[`renders correctly with details 1`] = `
   logo="Unleash 1.1.0"
   type="bottom"
 >
-  <react-mdl-FooterLinkList>
-    <a
-      href="https://github.com/Unleash/unleash/"
-      target="_blank"
-    >
-      GitHub
-    </a>
-    <a
-      href="https://www.finn.no"
-      target="_blank"
-    >
-      <small>
-        A product by
-      </small>
-       FINN.no
-    </a>
-  </react-mdl-FooterLinkList>
+  <small>
+    (test)
+  </small>
+  <br />
+  <small>
+    We are the best!
+  </small>
 </react-mdl-FooterSection>
 `;
 
@@ -30,22 +20,25 @@ exports[`renders correctly with empty api details 1`] = `
   logo="Unleash "
   type="bottom"
 >
-  <react-mdl-FooterLinkList>
-    <a
-      href="https://github.com/Unleash/unleash/"
-      target="_blank"
-    >
-      GitHub
-    </a>
-    <a
-      href="https://www.finn.no"
-      target="_blank"
-    >
-      <small>
-        A product by
-      </small>
-       FINN.no
-    </a>
-  </react-mdl-FooterLinkList>
+  <small>
+    (test)
+  </small>
+  <br />
+  <small>
+    We are the best!
+  </small>
+</react-mdl-FooterSection>
+`;
+
+exports[`renders correctly without uiConfig 1`] = `
+<react-mdl-FooterSection
+  logo="Unleash 1.1.0"
+  type="bottom"
+>
+  <small>
+    
+  </small>
+  <br />
+  <small />
 </react-mdl-FooterSection>
 `;

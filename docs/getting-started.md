@@ -55,6 +55,7 @@ Available unleash options include:
   - `none` - will disable authentication altogether
   - `unsecure` - (default) will use simple cookie based authentication. UI will require the user to specify an email in order to use unleash.
   - `custom` - use this when you implement your own custom authentication logic.
+- **ui** (object) - Set of UI specific overrides. You may set the following keys: `headerBackground`, `environment`, `slogan`.
 
 ### 3. Docker
 

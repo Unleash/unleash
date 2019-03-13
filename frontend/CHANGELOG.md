@@ -13,6 +13,7 @@ The latest version of this document is always available in
 - chore: Update css-loader to version 2.1.1
 - chore: Update debug to version 4.1.1
 - chore: Update enzyme to latest versions
+- chore: Update redux* to latest versions
 
 ## [3.2.1]
 - fix: Fixed bug in history view preventing toggle-view.

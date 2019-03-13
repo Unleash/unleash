@@ -1,9 +1,11 @@
 # Changelog
 
 ## Next
+
 - fix: Metrics poller should start even if inital fetch fails.
 - fix: SimpleAuthentication should work with custom basePaths
-- fix: Add explicit endpoints for toggle on/off 
+- fix: Add explicit endpoints for toggle on/off
+- fix: Application list should be alphabetically sorted
 
 ## 3.2.2
 

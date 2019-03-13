@@ -6,7 +6,7 @@ module.exports = () => {
     return {
         store: event => {
             events.push(event);
-            Promise.resolve();
+            return Promise.resolve();
         },
         getEvents: () => Promise.resolve(events),
     };

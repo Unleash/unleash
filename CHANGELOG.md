@@ -1,8 +1,11 @@
 # Changelog
 
-## 3.2.3
+## 3.2.4
 
 - feat: Customizable ui via ui-config
+
+## 3.2.3
+
 - fix: Metrics poller should start even if inital fetch fails.
 - fix: SimpleAuthentication should work with custom basePaths
 - fix: Add explicit endpoints for toggle on/off

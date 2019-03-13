@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
-## [next]
+## [3.2.2]
 - fix: Use toggle/on/off endoints to ensure correct state
 - feat: Customisable UI via config
 - chore: Update css-loader to version 2.1.1

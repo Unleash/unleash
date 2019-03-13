@@ -1,4 +1,3 @@
-import { AssertionError } from 'assert';
 import reducer from '../index';
 import { receiveConfig } from '../actions';
 
@@ -19,7 +18,6 @@ test('should be merged state all', () => {
 });
 
 test('should only update headerBackground', () => {
-    localStorage.clear();
     const uiConfig = {
         headerBackground: 'black',
     };

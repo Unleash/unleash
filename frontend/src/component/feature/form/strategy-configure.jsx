@@ -162,7 +162,9 @@ class StrategyConfigure extends React.Component {
             item = (
                 <Card shadow={0} className={styles.card} style={{ opacity: isDragging ? '0.1' : '1' }}>
                     <CardTitle className={styles.cardTitle}>
-                        <Icon name="extension" />&nbsp;{name}
+                        <Icon name="extension" />
+                        &nbsp;
+                        {name}
                     </CardTitle>
                     <CardText>{this.props.strategyDefinition.description}</CardText>
                     {inputFields && (

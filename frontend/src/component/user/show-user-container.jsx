@@ -13,7 +13,4 @@ const mapStateToProps = state => ({
     location: state.settings ? state.settings.toJS().location : {},
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ShowUserComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(ShowUserComponent);

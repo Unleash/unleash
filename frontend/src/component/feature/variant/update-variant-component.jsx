@@ -106,7 +106,8 @@ class UpdateVariantComponent extends Component {
                     supports variants. You should read more about variants in the&nbsp;
                     <a target="_blank" href="https://unleash.github.io/docs/beta_features">
                         user documentation
-                    </a>.
+                    </a>
+                    .
                 </p>
                 <p style={{ backgroundColor: 'rgba(255, 229, 100, 0.3)', padding: '5px' }}>
                     The sum of variants weights needs to be a constant number to guarantee consistent hashing in the

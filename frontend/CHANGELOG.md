@@ -9,6 +9,7 @@ The latest version of this document is always available in
 
 ## [next]
 - fix: Use toggle/on/off endoints to ensure correct state
+- feat: Customisable UI via config
 
 ## [3.2.1]
 - fix: Fixed bug in history view preventing toggle-view.

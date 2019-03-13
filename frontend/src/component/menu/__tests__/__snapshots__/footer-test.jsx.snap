@@ -50,6 +50,12 @@ exports[`should render DrawerMenu 1`] = `
       >
         Sign out
       </a>
+      <a
+        href="https://github.com/Unleash/unleash/"
+        target="_blank"
+      >
+        GitHub
+      </a>
     </react-mdl-FooterLinkList>
   </react-mdl-FooterDropDownSection>
   <react-mdl-FooterDropDownSection
@@ -137,6 +143,12 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         onClick={[Function]}
       >
         Sign out
+      </a>
+      <a
+        href="https://github.com/Unleash/unleash/"
+        target="_blank"
+      >
+        GitHub
       </a>
     </react-mdl-FooterLinkList>
   </react-mdl-FooterDropDownSection>

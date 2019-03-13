@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should be default state 1`] = `
+Object {
+  "environment": undefined,
+  "headerBackground": undefined,
+  "slogan": "A product originally created by FINN.no.",
+}
+`;
+
+exports[`should be merged state all 1`] = `
+Object {
+  "environment": "dev",
+  "headerBackground": "red",
+  "slogan": "hello",
+}
+`;
+
+exports[`should only update headerBackground 1`] = `
+Object {
+  "environment": undefined,
+  "headerBackground": "black",
+  "slogan": "A product originally created by FINN.no.",
+}
+`;

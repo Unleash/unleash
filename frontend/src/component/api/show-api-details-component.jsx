@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FooterSection, FooterLinkList } from 'react-mdl';
+import { FooterSection } from 'react-mdl';
 
 class ShowApiDetailsComponent extends Component {
     static propTypes = {
         apiDetails: PropTypes.object.isRequired,
+        uiConfig: PropTypes.object.isRequired,
         fetchAll: PropTypes.func.isRequired,
     };
 
@@ -14,16 +15,13 @@ class ShowApiDetailsComponent extends Component {
 
     render() {
         const version = this.props.apiDetails.version || '';
+        const { slogan, environment } = this.props.uiConfig;
+
         return (
             <FooterSection type="bottom" logo={`Unleash ${version}`}>
-                <FooterLinkList>
-                    <a href="https://github.com/Unleash/unleash/" target="_blank">
-                        GitHub
-                    </a>
-                    <a href="https://www.finn.no" target="_blank">
-                        <small>A product by</small> FINN.no
-                    </a>
-                </FooterLinkList>
+                <small>{environment ? `(${environment})` : ''}</small>
+                <br />
+                <small>{slogan}</small>
             </FooterSection>
         );
     }

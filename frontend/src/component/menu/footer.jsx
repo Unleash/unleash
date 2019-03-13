@@ -13,6 +13,9 @@ export const FooterMenu = () => (
                         {item.title}
                     </NavLink>
                 ))}
+                <a href="https://github.com/Unleash/unleash/" target="_blank">
+                    GitHub
+                </a>
             </FooterLinkList>
         </FooterDropDownSection>
         <FooterDropDownSection title="Clients">

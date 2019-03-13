@@ -1,6 +1,7 @@
 import 'whatwg-fetch';
-import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
+
+import 'react-mdl/extra/css/material.blue_grey-pink.min.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';

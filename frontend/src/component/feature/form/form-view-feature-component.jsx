@@ -13,7 +13,8 @@ class ViewFeatureComponent extends Component {
                 <StrategiesSection configuredStrategies={configuredStrategies} />
                 <br />
                 <Button type="cancel" ripple raised onClick={onCancel} style={{ float: 'right' }}>
-                    <Icon name="cancel" />&nbsp;&nbsp;&nbsp; Cancel
+                    <Icon name="cancel" />
+                    &nbsp;&nbsp;&nbsp; Cancel
                 </Button>
             </section>
         );

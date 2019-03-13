@@ -11,6 +11,7 @@ import settings from './settings';
 import user from './user';
 import api from './api';
 import applications from './application';
+import uiConfig from './ui-config';
 
 const unleashStore = combineReducers({
     features,
@@ -24,6 +25,7 @@ const unleashStore = combineReducers({
     settings,
     user,
     applications,
+    uiConfig,
     api,
 });
 

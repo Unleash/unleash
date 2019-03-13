@@ -25,7 +25,7 @@ exports[`should render DrawerMenu 1`] = `
   >
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/features"
       onClick={[Function]}
     >
@@ -38,7 +38,7 @@ exports[`should render DrawerMenu 1`] = `
     </a>
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/strategies"
       onClick={[Function]}
     >
@@ -51,7 +51,7 @@ exports[`should render DrawerMenu 1`] = `
     </a>
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/history"
       onClick={[Function]}
     >
@@ -64,7 +64,7 @@ exports[`should render DrawerMenu 1`] = `
     </a>
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/archive"
       onClick={[Function]}
     >
@@ -77,7 +77,7 @@ exports[`should render DrawerMenu 1`] = `
     </a>
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/applications"
       onClick={[Function]}
     >
@@ -90,7 +90,7 @@ exports[`should render DrawerMenu 1`] = `
     </a>
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/logout"
       onClick={[Function]}
     >
@@ -107,7 +107,7 @@ exports[`should render DrawerMenu 1`] = `
     className="navigation"
   >
     <a
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="https://unleash.github.io"
       target="_blank"
     >
@@ -118,14 +118,14 @@ exports[`should render DrawerMenu 1`] = `
        User documentation
     </a>
     <a
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="https://github.com/Unleash"
       target="_blank"
     >
       <i
         className="material-icons navigationIcon iconGitHub"
       />
-      GitHub
+       GitHub
     </a>
   </react-mdl-Navigation>
 </react-mdl-Drawer>
@@ -156,7 +156,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
   >
     <a
       aria-current="page"
-      className="navigationLink mdl-color-text--grey-600 navigationLink mdl-color-text--black mdl-color--light-blue-50"
+      className="navigationLink mdl-color-text--grey-900 navigationLink mdl-color-text--black mdl-color--blue-grey-100"
       href="/features"
       onClick={[Function]}
       style={Object {}}
@@ -170,7 +170,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
     </a>
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/strategies"
       onClick={[Function]}
     >
@@ -183,7 +183,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
     </a>
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/history"
       onClick={[Function]}
     >
@@ -196,7 +196,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
     </a>
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/archive"
       onClick={[Function]}
     >
@@ -209,7 +209,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
     </a>
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/applications"
       onClick={[Function]}
     >
@@ -222,7 +222,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
     </a>
     <a
       aria-current={null}
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="/logout"
       onClick={[Function]}
     >
@@ -239,7 +239,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
     className="navigation"
   >
     <a
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="https://unleash.github.io"
       target="_blank"
     >
@@ -250,14 +250,14 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
        User documentation
     </a>
     <a
-      className="navigationLink mdl-color-text--grey-600"
+      className="navigationLink mdl-color-text--grey-900"
       href="https://github.com/Unleash"
       target="_blank"
     >
       <i
         className="material-icons navigationIcon iconGitHub"
       />
-      GitHub
+       GitHub
     </a>
   </react-mdl-Navigation>
 </react-mdl-Drawer>

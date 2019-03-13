@@ -12,6 +12,7 @@ The latest version of this document is always available in
 - feat: Customisable UI via config
 - chore: Update css-loader to version 2.1.1
 - chore: Update debug to version 4.1.1
+- chore: Update enzyme to latest versions
 
 ## [3.2.1]
 - fix: Fixed bug in history view preventing toggle-view.

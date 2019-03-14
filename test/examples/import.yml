@@ -1,0 +1,42 @@
+strategies:
+- name: usersWithEmail
+  description: Active for users defined in the comma-separated emails-parameter.
+  parameters:
+  - name: emails
+    type: string
+- name: country
+  description: Active for country.
+  parameters:
+  - name: countries
+    type: list
+features:
+- name: featureX
+  description: 'the #1 feature'
+  enabled: true
+  strategies:
+  - name: default
+    parameters: {}
+- name: featureA
+  description: 'soon to be the #1 feature'
+  enabled: false
+  strategies:
+  - name: baz
+    parameters:
+      foo: bar
+- name: featureArchivedX
+  description: 'the #1 feature'
+  enabled: true
+  strategies:
+  - name: default
+    parameters: {}
+- name: feature.with.variants
+  description: A feature toggle with watiants
+  enabled: true
+  archived: false
+  strategies:
+  - name: default
+  variants:
+  - name: control
+    weight: 50
+  - name: new
+    weight: 50

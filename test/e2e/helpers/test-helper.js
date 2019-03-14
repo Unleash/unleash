@@ -6,6 +6,7 @@ const supertest = require('supertest');
 
 const getApp = require('../../../lib/app');
 const dbInit = require('./database-init');
+const StateService = require('../../../lib/state-service');
 
 const { EventEmitter } = require('events');
 const eventBus = new EventEmitter();
@@ -18,6 +19,7 @@ function createApp(stores, adminAuthentication = 'none', preHook) {
         adminAuthentication,
         secret: 'super-secret',
         sessionAge: 4000,
+        stateService: new StateService({ stores }),
     });
 }
 

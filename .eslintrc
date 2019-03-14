@@ -8,6 +8,8 @@
         "ecmaVersion": "2017"
     },
     "rules": {
+        "no-param-reassign": "error",
+        "no-return-await": "error",
         "max-nested-callbacks": "off",
         "new-cap": [
             "error",

@@ -7,6 +7,8 @@ module.exports = () => {
 
     return {
         getStrategies: () => Promise.resolve(_strategies),
+        getEditableStrategies: () =>
+            Promise.resolve(_strategies.filter(s => s.editable)),
         getStrategy: name => {
             const strategy = _strategies.find(s => s.name === name);
             if (strategy) {

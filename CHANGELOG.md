@@ -1,5 +1,8 @@
 # Changelog
 
+## Next
+- feat: Added import & export through stateService (#395)
+
 ## 3.2.4
 
 - feat: Customizable ui via ui-config

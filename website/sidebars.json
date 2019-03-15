@@ -13,7 +13,8 @@
     "Developer Guide": [
       "developer_guide",
       "database_schema",
-      "database_backup"
+      "database_backup",
+      "import_export"
     ],
     "Guides": ["guides/google_auth", "guides/custom_activation_strategy"]
   },
@@ -27,7 +28,8 @@
       "api/admin/features",
       "api/admin/strategies",
       "api/admin/metrics",
-      "api/admin/events"
+      "api/admin/events",
+      "api/admin/state"
     ],
     "Internal": ["api/internal"]
   }

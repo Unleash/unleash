@@ -5721,10 +5721,10 @@ supertap@^1.0.0:
     serialize-error "^2.1.0"
     strip-ansi "^4.0.0"
 
-supertest@^3.4.2:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/supertest/-/supertest-3.4.2.tgz#bad7de2e43d60d27c8caeb8ab34a67c8a5f71aad"
-  integrity sha512-WZWbwceHUo2P36RoEIdXvmqfs47idNNZjCuJOqDz6rvtkk8ym56aU5oglORCpPeXGxT7l9rkJ41+O1lffQXYSA==
+supertest@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/supertest/-/supertest-4.0.1.tgz#3d8a245559a9fcd60e5ec91092e42adec4d9ccc1"
+  integrity sha512-IHZIfJeRuSDKsB2Rz/alsaP4leAO+ZJJGS7/PLE8EXDo6voU9vzosF4vzlD+orEXscHJ4xCyRNNzoRjap2BvGA==
   dependencies:
     methods "^1.1.2"
     superagent "^3.8.3"

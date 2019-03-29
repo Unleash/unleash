@@ -103,5 +103,11 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]
+  },
+  "greenkeeper": {
+    "ignore": [
+      "react-dnd",
+      "react-dnd-html5-backend"
+    ]
   }
 }

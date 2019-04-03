@@ -1,6 +1,7 @@
 import api from '../../data/user-api';
 import { dispatchAndThrow } from '../util';
 export const UPDATE_USER = 'UPDATE_USER';
+export const USER_LOGOUT = 'USER_LOGOUT';
 export const START_FETCH_USER = 'START_FETCH_USER';
 export const ERROR_FETCH_USER = 'ERROR_FETCH_USER';
 const debug = require('debug')('unleash:user-actions');
@@ -38,5 +39,9 @@ export function unsecureLogin(path, user) {
 }
 
 export function logoutUser() {
-    return () => api.logoutUser().catch(handleError);
+    return dispatch => {
+        dispatch({ type: USER_LOGOUT });
+
+        return api.logoutUser().catch(handleError);
+    };
 }

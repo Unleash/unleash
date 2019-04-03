@@ -17,12 +17,13 @@ export default class App extends PureComponent {
     static propTypes = {
         location: PropTypes.object.isRequired,
         match: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
     };
 
     render() {
         return (
             <div className={styles.container}>
-                <AuthenticationContainer />
+                <AuthenticationContainer history={this.props.history} />
                 <Layout fixedHeader>
                     <Header location={this.props.location} />
                     <Content className="mdl-color--grey-50">

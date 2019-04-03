@@ -3,7 +3,6 @@ import { toggleFeature, fetchFeatureToggles } from '../../store/feature-actions'
 import { updateSettingForGroup } from '../../store/settings/actions';
 
 import FeatureListComponent from './list-component';
-import { logoutUser } from '../../store/user/actions';
 import { hasPermission } from '../../permissions';
 
 export const mapStateToPropsConfigurable = isFeature => state => {
@@ -74,7 +73,6 @@ export const mapStateToPropsConfigurable = isFeature => state => {
 };
 const mapStateToProps = mapStateToPropsConfigurable(true);
 const mapDispatchToProps = {
-    logoutUser,
     toggleFeature,
     fetchFeatureToggles,
     updateSetting: updateSettingForGroup('feature'),

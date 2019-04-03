@@ -3820,6 +3820,11 @@ mime@^2.4.0:
   resolved "https://registry.yarnpkg.com/mime/-/mime-2.4.0.tgz#e051fd881358585f3279df333fe694da0bcffdd6"
   integrity sha512-ikBcWwyqXQSHKtciCcctu9YfPbFYZ4+gbHEmE0Q8jzcTYQg5dHCr3g2wwAZjPoJfQVXZq6KXAjpXOTf5/cjT7w==
 
+mime@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-2.4.1.tgz#19eb7357bebbda37df585b14038347721558c715"
+  integrity sha512-VRUfmQO0rCd3hKwBymAn3kxYzBHr3I/wdVMywgG3HhXOwrCQgN84ZagpdTm2tZ4TNtwsSmyJWYO88mb5XvzGqQ==
+
 mimic-fn@^1.0.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-1.2.0.tgz#820c86a39334640e99516928bd03fca88057d022"

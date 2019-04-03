@@ -9,6 +9,7 @@ The latest version of this document is always available in
 
 ## [3.2.3]
 - fix: Cleanup logut flow
+- chore: remove unleash.beta.variants flag
 
 ## [3.2.2]
 - fix: Use toggle/on/off endoints to ensure correct state

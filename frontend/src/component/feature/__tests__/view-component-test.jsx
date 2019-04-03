@@ -32,7 +32,6 @@ test('renders correctly with one feature', () => {
                 activeTab={'strategies'}
                 featureToggleName="another"
                 features={[feature]}
-                betaFlags={[]}
                 featureToggle={feature}
                 fetchFeatureToggles={jest.fn()}
                 history={{}}

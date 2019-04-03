@@ -1,18 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    Tabs,
-    Tab,
-    ProgressBar,
-    Button,
-    Card,
-    CardText,
-    CardTitle,
-    CardActions,
-    Textfield,
-    Switch,
-    Badge,
-} from 'react-mdl';
+import { Tabs, Tab, ProgressBar, Button, Card, CardText, CardTitle, CardActions, Textfield, Switch } from 'react-mdl';
 import { Link } from 'react-router-dom';
 
 import HistoryComponent from '../history/history-list-toggle-container';
@@ -41,7 +29,6 @@ export default class ViewFeatureToggleComponent extends React.Component {
         activeTab: PropTypes.string.isRequired,
         featureToggleName: PropTypes.string.isRequired,
         features: PropTypes.array.isRequired,
-        betaFlags: PropTypes.array,
         toggleFeature: PropTypes.func,
         removeFeatureToggle: PropTypes.func,
         revive: PropTypes.func,
@@ -51,10 +38,6 @@ export default class ViewFeatureToggleComponent extends React.Component {
         featureToggle: PropTypes.object,
         history: PropTypes.object.isRequired,
         hasPermission: PropTypes.func.isRequired,
-    };
-
-    static defaultProps = {
-        betaFlags: [],
     };
 
     componentWillMount() {
@@ -102,7 +85,6 @@ export default class ViewFeatureToggleComponent extends React.Component {
         const {
             featureToggle,
             features,
-            betaFlags,
             activeTab,
             revive,
             // setValue,
@@ -111,9 +93,6 @@ export default class ViewFeatureToggleComponent extends React.Component {
             removeFeatureToggle,
             hasPermission,
         } = this.props;
-
-        // TODO: Find better solution for this
-        const showVariants = betaFlags.includes('unleash.beta.variants');
 
         if (!featureToggle) {
             if (features.length === 0) {
@@ -249,15 +228,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 >
                     <Tab onClick={() => this.goToTab('strategies', featureToggleName)}>Strategies</Tab>
                     <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
-                    {showVariants ? (
-                        <Tab onClick={() => this.goToTab('variants', featureToggleName)}>
-                            <Badge text="beta" noBackground>
-                                Variants
-                            </Badge>
-                        </Tab>
-                    ) : (
-                        []
-                    )}
+                    <Tab onClick={() => this.goToTab('variants', featureToggleName)}>Variants</Tab>
                     <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
                 </Tabs>
                 {tabContent}

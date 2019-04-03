@@ -100,6 +100,11 @@ exports[`renders correctly with one feature 1`] = `
     <react-mdl-Tab
       onClick={[Function]}
     >
+      Variants
+    </react-mdl-Tab>
+    <react-mdl-Tab
+      onClick={[Function]}
+    >
       History
     </react-mdl-Tab>
   </react-mdl-Tabs>

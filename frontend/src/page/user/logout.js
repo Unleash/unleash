@@ -1,11 +1,6 @@
 import React from 'react';
-import FeatureListContainer from './../../component/feature/list-container';
-import PropTypes from 'prop-types';
+import LogoutContainer from './../../component/user/logout-container';
 
-const render = ({ history }) => <FeatureListContainer logout history={history} />;
-
-render.propTypes = {
-    history: PropTypes.object.isRequired,
-};
+const render = () => <LogoutContainer />;
 
 export default render;

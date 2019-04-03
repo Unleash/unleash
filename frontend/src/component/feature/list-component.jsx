@@ -13,8 +13,6 @@ export default class FeatureListComponent extends React.Component {
         featureMetrics: PropTypes.object.isRequired,
         fetchFeatureToggles: PropTypes.func,
         fetchArchive: PropTypes.func,
-        logoutUser: PropTypes.func,
-        logout: PropTypes.bool,
         revive: PropTypes.func,
         updateSetting: PropTypes.func.isRequired,
         toggleFeature: PropTypes.func,
@@ -24,10 +22,6 @@ export default class FeatureListComponent extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.logout) {
-            this.props.logoutUser();
-            this.props.history.push(`/`);
-        }
         if (this.props.fetchFeatureToggles) {
             this.props.fetchFeatureToggles();
         } else {

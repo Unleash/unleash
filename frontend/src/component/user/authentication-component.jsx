@@ -35,6 +35,7 @@ class AuthComponent extends React.Component {
         user: PropTypes.object.isRequired,
         unsecureLogin: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
+        history: PropTypes.object.isRequired,
     };
 
     render() {
@@ -48,6 +49,7 @@ class AuthComponent extends React.Component {
                     unsecureLogin={this.props.unsecureLogin}
                     authDetails={authDetails}
                     fetchFeatureToggles={this.props.fetchFeatureToggles}
+                    history={this.props.history}
                 />
             );
         } else {

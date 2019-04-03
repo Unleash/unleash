@@ -1,6 +1,9 @@
 # Changelog
 
-## Next
+## 3.2.5
+
+- fix: Bump unleash-frontend to version 3.2.3
+- fix: Minor logout cleanup
 - feat: Added import & export through stateService (#395)
 
 ## 3.2.4

@@ -28,6 +28,12 @@ const users = [
         infoLink: 'https://www.nav.no',
         pinned: true,
     },
+    {
+        caption: 'Unleash Hosted',
+        image: '/img/unleash-hosted.svg',
+        infoLink: 'https://unleash-hosted.com',
+        pinned: true,
+    },
 ];
 
 const siteConfig = {

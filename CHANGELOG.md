@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.2.6
+
+- Fix: Add support for IPC connections.
+- fix(package): update mime to version 2.4.1
+- chore(package): update nyc to version 14.0.0
+- chore(package): update lockfile yarn.lock
+- chore(package): update lolex to version 4.0.1
+- chore(package): update lockfile yarn.lock
+- chore(package): update husky to version 2.0.0
+- chore(package): update lockfile yarn.lock
+- chore(package): update superagent to version 5.0.2
+
 ## 3.2.5
 
 - fix: Bump unleash-frontend to version 3.2.3

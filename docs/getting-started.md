@@ -45,7 +45,9 @@ Available unleash options include:
 
 - **databaseUrl** - the postgres database url to connect to. Should include username/password.
 - **databaseSchema** - the postgres database schema to use. Defaults to 'public'.
-- **port** - which port the unleash-server should bind to.
+- **port** - which port the unleash-server should bind to. If port is omitted or is 0, the operating system will assign an arbitrary unused port. Will be ignored if pipe is specified.
+- **host** - which host the unleash-server should bind to. If host is omitted, the server will accept connections on the unspecified IPv6 address (::) when IPv6 is available, or the unspecified IPv4 address (0.0.0.0) otherwise.
+- **pipe** - parameter to identify IPC endpoints. See https://nodejs.org/api/net.html#net_identifying_paths_for_ipc_connections for more details
 - **enableLegacyRoutes** (boolean) - allows you to turn on/off support for legacy routes to support older clients. Enabled by default.
 - **serverMetrics** (boolean) - use this option to turn on/off prometheus metrics.
 - **preHook** (function) - this is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first argument.

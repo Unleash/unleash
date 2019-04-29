@@ -31,7 +31,7 @@ const users = [
     {
         caption: 'Unleash Hosted',
         image: '/img/unleash-hosted.svg',
-        infoLink: 'https://unleash-hosted.com',
+        infoLink: 'https://www.unleash-hosted.com',
         pinned: true,
     },
 ];

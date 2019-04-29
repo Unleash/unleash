@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.2.7
+- fix: Session cookie should set path to baseUriPath
+
 ## 3.2.6
 
 - Fix: Add support for IPC connections.

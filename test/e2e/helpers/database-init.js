@@ -49,12 +49,13 @@ function createFeatures(store) {
     return dbState.features.map(f => store._createFeature(f));
 }
 
-module.exports = async function init(databaseSchema = 'test') {
+module.exports = async function init(databaseSchema = 'test', getLogger) {
     const options = {
         databaseUrl: require('./database-config').getDatabaseUrl(),
         databaseSchema,
         minPool: 0,
         maxPool: 0,
+        getLogger,
     };
 
     const db = createDb(options);

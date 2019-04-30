@@ -6,6 +6,7 @@ const supertest = require('supertest');
 
 const getApp = require('../../../lib/app');
 const dbInit = require('./database-init');
+const getLogger = require('../../fixtures/no-logger');
 const StateService = require('../../../lib/state-service');
 
 const { EventEmitter } = require('events');
@@ -19,13 +20,14 @@ function createApp(stores, adminAuthentication = 'none', preHook) {
         adminAuthentication,
         secret: 'super-secret',
         sessionAge: 4000,
-        stateService: new StateService({ stores }),
+        stateService: new StateService({ stores, getLogger }),
+        getLogger,
     });
 }
 
 module.exports = {
     async setupApp(name) {
-        const stores = await dbInit(name);
+        const stores = await dbInit(name, getLogger);
         const app = createApp(stores);
 
         return {
@@ -34,7 +36,7 @@ module.exports = {
         };
     },
     async setupAppWithAuth(name) {
-        const stores = await dbInit(name);
+        const stores = await dbInit(name, getLogger);
         const app = createApp(stores, 'unsecure');
 
         return {
@@ -44,7 +46,7 @@ module.exports = {
     },
 
     async setupAppWithCustomAuth(name, preHook) {
-        const stores = await dbInit(name);
+        const stores = await dbInit(name, getLogger);
         const app = createApp(stores, 'custom', preHook);
 
         return {

@@ -58,6 +58,7 @@ Available unleash options include:
   - `unsecure` - (default) will use simple cookie based authentication. UI will require the user to specify an email in order to use unleash.
   - `custom` - use this when you implement your own custom authentication logic.
 - **ui** (object) - Set of UI specific overrides. You may set the following keys: `headerBackground`, `environment`, `slogan`.
+- **getLogger** (function) - Used to register a [custom log provider](#How do I configure the log output).
 
 ### 3. Docker
 
@@ -69,14 +70,10 @@ docker run -d -e DATABASE_URL=postgres://user:pass@10.200.221.11:5432/unleash un
 
 ## How do I configure the log output?
 
-By default, `unleash` uses [log4js](https://github.com/nomiddlename/log4js-node) to log important information. It is possible to swap out the logger provider (only when using Unleash programmatically). This enables filtering of log levels and easy redirection of output streams.
-
-### What is a logger provider?
-
-A logger provider is a function which takes the name of a logger and returns a logger implementation. For instance, the following code snippet shows how a logger provider for the global `console` object could be written:
+By default, `unleash` uses [log4js](https://github.com/nomiddlename/log4js-node) to log important information. It is possible to swap out the logger provider (only when using Unleash programmatically). You do this by providing an implementation of the **getLogger** function as This enables filtering of log levels and easy redirection of output streams.
 
 ```javascript
-function consoleLoggerProvider(name) {
+function getLogger(name) {
   // do something with the name
   return {
     debug: console.log,
@@ -88,16 +85,3 @@ function consoleLoggerProvider(name) {
 ```
 
 The logger interface with its `debug`, `info`, `warn` and `error` methods expects format string support as seen in `debug` or the JavaScript `console` object. Many commonly used logging implementations cover this API, e.g., bunyan, pino or winston.
-
-### How do I set a logger provider?
-
-Custom logger providers need to be set _before requiring the `unleash-server` module_. The following example shows how this can be done:
-
-```javascript
-// first configure the logger provider
-const unleashLogger = require('unleash-server/lib/logger');
-unleashLogger.setLoggerProvider(consoleLoggerProvider);
-
-// then require unleash-server and continue as normal
-const unleash = require('unleash-server');
-```

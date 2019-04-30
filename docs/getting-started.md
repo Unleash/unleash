@@ -95,7 +95,7 @@ Custom logger providers need to be set _before requiring the `unleash-server` mo
 
 ```javascript
 // first configure the logger provider
-const unleashLogger = require('unleash-server/logger');
+const unleashLogger = require('unleash-server/lib/logger');
 unleashLogger.setLoggerProvider(consoleLoggerProvider);
 
 // then require unleash-server and continue as normal

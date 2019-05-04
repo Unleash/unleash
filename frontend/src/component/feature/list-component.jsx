@@ -110,18 +110,22 @@ export default class FeatureListComponent extends React.Component {
                     </CardActions>
                     <hr />
                     <List>
-                        {features.map((feature, i) => (
-                            <Feature
-                                key={i}
-                                settings={settings}
-                                metricsLastHour={featureMetrics.lastHour[feature.name]}
-                                metricsLastMinute={featureMetrics.lastMinute[feature.name]}
-                                feature={feature}
-                                toggleFeature={toggleFeature}
-                                revive={revive}
-                                hasPermission={hasPermission}
-                            />
-                        ))}
+                        {features.length > 0 ? (
+                            features.map((feature, i) => (
+                                <Feature
+                                    key={i}
+                                    settings={settings}
+                                    metricsLastHour={featureMetrics.lastHour[feature.name]}
+                                    metricsLastMinute={featureMetrics.lastMinute[feature.name]}
+                                    feature={feature}
+                                    toggleFeature={toggleFeature}
+                                    revive={revive}
+                                    hasPermission={hasPermission}
+                                />
+                            ))
+                        ) : (
+                            <p style={{ textAlign: 'center', marginTop: '50px', color: 'gray' }}>Empty list of feature toggles</p>
+                        )}
                     </List>
                 </Card>
             </div>

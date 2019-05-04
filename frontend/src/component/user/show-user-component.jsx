@@ -13,6 +13,8 @@ export default class ShowUserComponent extends React.Component {
         { value: 'nb-NO', image: 'nb-NO' },
         { value: 'en-US', image: 'en-US' },
         { value: 'en-GB', image: 'en-GB' },
+        { value: 'en-IN', image: 'en-IN' },
+        { value: 'da-DK', image: 'da-DK' },
     ];
 
     componentDidMount() {

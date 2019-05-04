@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ProgressBar, Card, CardTitle, CardText, Icon, Grid, Cell } from 'react-mdl';
+import { ProgressBar, Card, CardText, Icon } from 'react-mdl';
 import { AppsLinkList, styles as commonStyles } from '../common';
 
 const Empty = () => (

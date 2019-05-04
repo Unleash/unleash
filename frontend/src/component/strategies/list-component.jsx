@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { List, ListItem, ListItemContent, IconButton, Grid, Cell, Card } from 'react-mdl';
+import { List, ListItem, ListItemContent, IconButton, Card } from 'react-mdl';
 import { HeaderTitle, styles as commonStyles } from '../common';
 import { CREATE_STRATEGY, DELETE_STRATEGY } from '../../permissions';
 

@@ -124,7 +124,9 @@ export default class FeatureListComponent extends React.Component {
                                 />
                             ))
                         ) : (
-                            <p style={{ textAlign: 'center', marginTop: '50px', color: 'gray' }}>Empty list of feature toggles</p>
+                            <p style={{ textAlign: 'center', marginTop: '50px', color: 'gray' }}>
+                                Empty list of feature toggles
+                            </p>
                         )}
                     </List>
                 </Card>

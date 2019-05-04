@@ -1,6 +1,13 @@
 # Changelog
 
+## 3.2.8
+
+- fix: Bump unleash-frontend to 3.2.4
+- chore(package): update @types/node to version 12.0.0
+- fix: LogProvider as option injected to unleash.
+
 ## 3.2.7
+
 - fix: Session cookie should set path to baseUriPath
 
 ## 3.2.6

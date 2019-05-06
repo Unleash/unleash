@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.9
+
+- fix: should be more allow about empty metrics
+
 ## 3.2.8
 
 - fix: Bump unleash-frontend to 3.2.4

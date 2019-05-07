@@ -47,6 +47,7 @@ const Parameter = ({ set, input = {}, index }) => (
                 <MenuItem onClick={() => set({ type: 'percentage' })}>percentage</MenuItem>
                 <MenuItem onClick={() => set({ type: 'list' })}>list</MenuItem>
                 <MenuItem onClick={() => set({ type: 'number' })}>number</MenuItem>
+                <MenuItem onClick={() => set({ type: 'boolean' })}>boolean</MenuItem>
             </Menu>
         </div>
         <Textfield

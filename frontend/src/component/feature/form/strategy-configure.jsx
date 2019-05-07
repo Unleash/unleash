@@ -1,6 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Textfield, Button, Card, CardTitle, CardText, CardActions, CardMenu, IconButton, Icon } from 'react-mdl';
+import {
+    Textfield,
+    Button,
+    Card,
+    CardTitle,
+    CardText,
+    CardActions,
+    CardMenu,
+    IconButton,
+    Icon,
+    Switch,
+    Tooltip,
+} from 'react-mdl';
 import { DragSource, DropTarget } from 'react-dnd';
 import { Link } from 'react-router-dom';
 import StrategyInputPercentage from './strategy-input-percentage';
@@ -58,6 +70,11 @@ class StrategyConfigure extends React.Component {
 
     handleConfigChange = (key, e) => {
         this.setConfig(key, e.target.value);
+    };
+
+    handleSwitchChange = (key, currentValue) => {
+        const value = currentValue === 'false' ? 'true' : 'false';
+        this.setConfig(key, value);
     };
 
     setConfig = (key, value) => {
@@ -128,6 +145,25 @@ class StrategyConfigure extends React.Component {
                                 value={value}
                             />
                             {description && <p className={styles.helpText}>{description}</p>}
+                        </div>
+                    );
+                } else if (type === 'boolean') {
+                    if (!value) {
+                        this.handleSwitchChange(name, value);
+                    }
+                    return (
+                        <div key={name}>
+                            <Switch
+                                onChange={this.handleSwitchChange.bind(this, name, value)}
+                                checked={value === 'true'}
+                            >
+                                {name}{' '}
+                                {description && (
+                                    <Tooltip label={description}>
+                                        <Icon name="info" style={{ color: 'rgba(0, 0, 0, 0.7)', fontSize: '1em' }} />
+                                    </Tooltip>
+                                )}
+                            </Switch>
                         </div>
                     );
                 } else {

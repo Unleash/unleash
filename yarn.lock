@@ -6128,10 +6128,10 @@ universalify@^0.1.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unleash-frontend@3.2.4:
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.2.4.tgz#741be5f50cd14cbe60e17f06486511dbde28a419"
-  integrity sha512-Jaes2RfVHqbpVnwTF9NbykJ3vq6FihvsI38wd4O/mjr47FrfJRHEQYpHrDiWhVXYtdcFBLYYfoxmMSdvUe2MCw==
+unleash-frontend@3.2.5:
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.2.5.tgz#9b15012698d6be079abfb4271fd4c57f92be4bcc"
+  integrity sha512-mFE6+BA7+11vshF9rjUUreK6hlvBZyResXhp6tG+Awgk2y9DRzV/0/3F6la5XDk2fzalkZzpB09XOaaktvxMRg==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

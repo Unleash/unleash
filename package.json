@@ -82,7 +82,7 @@
     "prometheus-gc-stats": "^0.6.1",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
-    "unleash-frontend": "3.2.4",
+    "unleash-frontend": "3.2.5",
     "yallist": "^3.0.3",
     "yargs": "^13.2.1"
   },

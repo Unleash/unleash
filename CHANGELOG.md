@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.10
+
+- feat: boolean strategy paramters
+
 ## 3.2.9
 
 - fix: should be more allow about empty metrics

@@ -2,6 +2,7 @@
 
 ## 3.2.10
 
+- fix: Strategies should not be required for updateding application details
 - feat: boolean strategy paramters
 
 ## 3.2.9

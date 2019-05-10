@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.5]
+- feat: boolean strategy paramters
+
 ## [3.2.4]
 - fix: Clean up the UI with empty states
 - feat: Support a few more locales

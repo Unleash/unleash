@@ -1,19 +1,14 @@
 'use strict';
 
-exports.up = function(db, callback) {
-    db.runSql(
-        `
-INSERT INTO strategies(name, description) 
-VALUES ('default', 'Default on/off strategy.');
-       `,
-        callback
-    );
+exports.up = function(knex) {
+    return knex('strategies').insert({
+        name: 'default',
+        description: 'Default on/off strategy.',
+    });
 };
 
-exports.down = function(db, callback) {
-    db.runSql(
-        `
-DELETE FROM strategies where name='default';`,
-        callback
-    );
+exports.down = function(knex) {
+    return knex('strategies')
+        .where('name', 'default')
+        .delete();
 };

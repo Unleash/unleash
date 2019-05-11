@@ -1,15 +1,13 @@
 'use strict';
 
-exports.up = function(db, callback) {
-    db.runSql(
-        'ALTER TABLE client_instances ADD "sdk_version" varchar(255);',
-        callback
+exports.up = function(knex) {
+    return knex.schema.table('client_instances', table =>
+        table.string('sdk_version', 255)
     );
 };
 
-exports.down = function(db, callback) {
-    db.runSql(
-        'ALTER TABLE client_instances DROP COLUMN "sdk_version";',
-        callback
+exports.down = function(knex) {
+    return knex.schema.table('client_instances', table =>
+        table.dropColumn('sdk_version')
     );
 };

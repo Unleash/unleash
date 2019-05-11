@@ -1,9 +1,13 @@
 'use strict';
 
-exports.up = function(db, callback) {
-    db.runSql('ALTER TABLE features ADD "description" text;', callback);
+exports.up = function(db) {
+    return db.schema.table('features', table => {
+        table.text('description');
+    });
 };
 
-exports.down = function(db, callback) {
-    db.runSql('ALTER TABLE features DROP COLUMN "description";', callback);
+exports.down = function(db) {
+    return db.schema.table('features', table => {
+        table.dropColumn('description');
+    });
 };

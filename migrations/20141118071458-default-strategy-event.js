@@ -1,19 +1,18 @@
 'use strict';
 
-exports.up = function(db, callback) {
-    db.runSql(
-        `
-INSERT INTO events(type, created_by, data) 
-VALUES ('strategy-created', 'migration', '{"name":"default","description":"Default on or off Strategy."}');
-       `,
-        callback
-    );
+const dataToInsert = {
+    type: 'strategy-created',
+    // eslint-disable-next-line camelcase
+    created_by: 'migration',
+    data: '{"name":"default","description":"Default on or off Strategy."}',
 };
 
-exports.down = function(db, callback) {
-    db.runSql(
-        `
-delete from events where type='strategy-created' and data->>'name' = 'default';`,
-        callback
-    );
+exports.up = function(db) {
+    return db('events').insert(dataToInsert);
+};
+
+exports.down = function(db) {
+    return db('events')
+        .where(dataToInsert)
+        .delete();
 };

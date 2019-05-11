@@ -1,15 +1,13 @@
 'use strict';
 
-exports.up = function(db, callback) {
-    db.runSql(
-        'ALTER TABLE strategies ADD "parameters_template" json;',
-        callback
-    );
+exports.up = function(db) {
+    return db.schema.table('strategies', table => {
+        table.json('parameters_template');
+    });
 };
 
-exports.down = function(db, callback) {
-    db.runSql(
-        'ALTER TABLE strategies DROP COLUMN "parameters_template";',
-        callback
-    );
+exports.down = function(db) {
+    return db.schema.table('strategies', table => {
+        table.dropColumn('parameters_template');
+    });
 };

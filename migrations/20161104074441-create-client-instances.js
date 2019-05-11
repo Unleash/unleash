@@ -1,19 +1,21 @@
 'use strict';
 
-exports.up = function(db, callback) {
-    db.runSql(
-        `
-        CREATE TABLE client_instances (
-            app_name varchar(255),
-            instance_id varchar(255),
-            client_ip varchar(255),
-            last_seen timestamp default now(),
-            created_at timestamp default now()
-        );`,
-        callback
-    );
+exports.up = function(knex) {
+    return knex.schema.createTable('client_instances', table => {
+        table.string('app_name', 255);
+        table.string('instance_id', 255);
+        table.string('client_ip', 255);
+        table
+            .timestamp('last_seen')
+            .notNullable()
+            .defaultTo(knex.fn.now());
+        table
+            .timestamp('created_at')
+            .notNullable()
+            .defaultTo(knex.fn.now());
+    });
 };
 
-exports.down = function(db, callback) {
-    db.runSql('DROP TABLE client_instances;', callback);
+exports.down = function(knex) {
+    return knex.schema.dropTable('client_instances');
 };

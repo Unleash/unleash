@@ -1,9 +1,16 @@
 'use strict';
 
-exports.up = function(db, callback) {
-    db.runSql('ALTER TABLE features ADD archived integer DEFAULT 0;', callback);
+exports.up = function(db) {
+    return db.schema.table('features', table => {
+        table
+            .integer('archived')
+            .notNullable()
+            .defaultTo(0);
+    });
 };
 
-exports.down = function(db, callback) {
-    db.runSql('ALTER TABLE features DROP COLUMN "archived";', callback);
+exports.down = function(db) {
+    return db.schema.table('features', table => {
+        table.dropColumn('archived');
+    });
 };

@@ -1,42 +1,58 @@
 'use strict';
 
-exports.up = function(db, callback) {
-    db.runSql(
-        `
---create new strategies-column
-ALTER TABLE features ADD "strategies" json;
-
---populate the strategies column
-UPDATE features
-SET strategies = ('[{"name":"'||f.strategy_name||'","parameters":'||f.parameters||'}]')::json
-FROM features as f
-WHERE f.name = features.name;
-
---delete old strategy-columns
-ALTER TABLE features DROP COLUMN "strategy_name";
-ALTER TABLE features DROP COLUMN "parameters";
-       `,
-        callback
-    );
+exports.up = function(knex) {
+    return knex.schema
+        .table('features', table => table.json('strategies'))
+        .then(() =>
+            knex('features').select('name', 'parameters', 'strategy_name')
+        )
+        .then(result =>
+            result.map(row =>
+                knex('features')
+                    .where('name', row.name)
+                    .update({
+                        strategies: `[{"name":"${
+                            row.strategy_name
+                        }","parameters":${row.parameters}]`,
+                    })
+            )
+        )
+        .then(() =>
+            knex.schema.table('features', table =>
+                table.dropColumn('strategy_name')
+            )
+        )
+        .then(() =>
+            knex.schema.table('features', table =>
+                table.dropColumn('parameters')
+            )
+        );
 };
 
-exports.down = function(db, callback) {
-    db.runSql(
-        `
---create old columns
-ALTER TABLE features ADD "parameters" json;
-ALTER TABLE features ADD "strategy_name" varchar(255);
-
---populate old columns
-UPDATE features
-SET strategy_name = f.strategies->0->>'name',
-   parameters = f.strategies->0->'parameters'
-FROM features as f
-WHERE f.name = features.name;
-
---drop new column
-ALTER TABLE features DROP COLUMN "strategies";
-    `,
-        callback
-    );
+exports.down = function(knex) {
+    return knex.schema
+        .table('features', table => table.json('parameters'))
+        .then(() =>
+            knex.schema.table('features', table =>
+                table.string('strategy_name', 255)
+            )
+        )
+        .then(() => knex('features').select('name', 'strategies'))
+        .then(result =>
+            result.map(row => {
+                const firstStrategy = JSON.parse(row.strategies)[0];
+                return knex('features')
+                    .where('name', row.name)
+                    .update({
+                        // eslint-disable-next-line camelcase
+                        strategy_name: firstStrategy.name,
+                        parameters: firstStrategy.parameters,
+                    });
+            })
+        )
+        .then(() =>
+            knex.schema.table('features', table =>
+                table.dropColumn('strategies')
+            )
+        );
 };

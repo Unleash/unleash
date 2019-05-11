@@ -1,17 +1,16 @@
 'use strict';
 
-exports.up = function(db, callback) {
-    db.runSql(
-        `
-CREATE TABLE client_metrics (
-  id serial primary key,
-  created_at timestamp default now(),
-  metrics json
-);`,
-        callback
-    );
+exports.up = function(knex) {
+    return knex.schema.createTable('client_metrics', table => {
+        table.increments('id').primary();
+        table
+            .timestamp('created_at')
+            .notNullable()
+            .defaultTo(knex.fn.now());
+        table.json('metrics');
+    });
 };
 
-exports.down = function(db, callback) {
-    db.runSql('DROP TABLE client_metrics;', callback);
+exports.down = function(knex) {
+    return knex.schema.dropTable('client_metrics');
 };

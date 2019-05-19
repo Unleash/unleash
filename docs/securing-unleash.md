@@ -44,6 +44,7 @@ Examples of custom authentication hooks:
 
 - [google-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/google-auth-hook.js)
 - [basic-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/basic-auth-hook.js)
+- [keycloak-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/keycloak-auth-hook.js)
 
 We also have a version of Unleash deployed on Heroku which uses Google OAuth 2.0: https://secure-unleash.herokuapp.com
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.11
+
+- feat: Separate DATABASE*URL to multiple DATABASE*\* variable (#437)
+
 ## 3.2.10
 
 - fix: Strategies should not be required for updateding application details

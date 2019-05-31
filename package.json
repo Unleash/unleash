@@ -56,7 +56,7 @@
     ]
   },
   "dependencies": {
-    "async": "^2.6.2",
+    "async": "^3.0.1",
     "commander": "^2.19.0",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.4",

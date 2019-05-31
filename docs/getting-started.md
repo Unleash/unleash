@@ -68,6 +68,10 @@ You can also use the [hosted docker image](https://hub.docker.com/r/unleashorg/u
 docker run -d -e DATABASE_URL=postgres://user:pass@10.200.221.11:5432/unleash unleashorg/unleash-server
 ```
 
+## Securing Unleash
+
+Unleash also have extension points where you can integrate Unleash with your authentication provider (OAuth 2.0). Read more about [securing unleash](./securing-unleash.md).
+
 ## How do I configure the log output?
 
 By default, `unleash` uses [log4js](https://github.com/nomiddlename/log4js-node) to log important information. It is possible to swap out the logger provider (only when using Unleash programmatically). You do this by providing an implementation of the **getLogger** function as This enables filtering of log levels and easy redirection of output streams.

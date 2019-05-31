@@ -166,7 +166,7 @@ const TryOut = () => (
             'Here you can play with the Unleash UI, define some feature toggles and get a feel of how to use Unleash. <br /><br />'+
             'It is even possible to use one of the Unleash client SDKs and test it out Unleash your application. '+
             'To do this, you should connect one of the clients using the hosted API URL: https://unleash.herokuapp.com/api/.',
-        image: imgUrl('dashboard.png'),
+        image: imgUrl('dashboard_new.png'),
         imageAlign: 'left',
         align: 'left',
         title: 'Try Unleash',

@@ -10,7 +10,7 @@ The main motivation for doing feature toggling is to decouple the process for de
 
 This repo contains the unleash-server, which contains the admin UI and a place to ask for the status of features. In order to make use of unleash you will also need a client implementation.
 
-<img src="https://github.com/Unleash/unleash/raw/master/docs/assets/dashboard.png" alt="Unleash UI" width="600" />
+<img src="https://github.com/Unleash/unleash/raw/master/docs/assets/dashboard_new.png" alt="Unleash UI" width="600" />
 
 [Online demo version available on heroku](https://unleash.herokuapp.com/#/features).
 
@@ -29,7 +29,7 @@ Read more about activation strategies in [docs/activation-strategies.md](./docs/
 
 ## Client implementations
 
-We have offical SDK's for Java, Node.js, Go, Ruby and Python. And we will be happy to add implementations in other langugages written by you! These libraries makes it very easy to use Unleash in you application.
+We have offical SDK's for Java, Node.js, Go, Ruby and Python. And we will be happy to add implementations in other languages written by you! These libraries makes it very easy to use Unleash in you application.
 
 Official client SDKs:
 
@@ -57,43 +57,31 @@ if (unleash.isEnabled("AwesomeFeature")) {
 }
 ```
 
-# Running Unleash
+# Running Unleash Service
 
-## Requirements
+## Run it yourself
 
-You will need a **PostgreSQL** 9.3+ database instance to be able to run Unleash.
+Unleash is open source and you are free to host your own instance. Please refer to the [getting-started-guide](https://unleash.github.io/docs/getting_started) to learn how to run the Unleash Service.
 
-When starting Unleash you must specify a database URI (can be set as environment variable DATABASE_URL) which includes a username and password, which has the rights to migrate the database.
+We have made a separate project which runs unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker) for details
 
-_Unleash_ will, at startup, check whether database migration is needed, and perform necessary migrations.
+## Unleash as a Service (SaaS)
 
-## Using Unleash
-
-**The simplest way to get started:** (database-url can also be set as a environment variable: DATABASE_URL)
-
-```bash
-$ npm install unleash-server -g
-$ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
-
-Unleash started on http://localhost:4242
-```
-
-You can also require Unleash as a lib (recommended) and expand it with more options. Read more about this feature in the [getting started guide](./docs/getting-started.md).
-
-### Securing Unleash
-
-Unleash also have extension points where you can integrate Unleash with your authentication provider (OAuth 2.0). Read more about [securing unleash](./docs/securing-unleash.md).
-
-## Run with docker
-
-We have made a separate project which runs unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker)
+After numerous request we have created a separate company, Unleash-hosted, which offer Unleash as a Service. Unleash-hosted allows you to focus on you core business and have someone else taking care of hosting and maintaining Unleash. Header over to [unleash-hosted.com](https://www.unleash-hosted.com) to learn more about this offering. This service also includes official support.
 
 # Developer Guide
 
 If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. Please read the [unleash developer guide](./docs/developer-guide.md) to learn more on how you can contribute.
 
-# I want to learn more
+# I Need help
 
+- [Join Unleash on Slack](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTM5Yzk2YWE2ZTk1OTZhOTJiNTEzMzA5YmEwMDE3MDJiNDQ3ZWExZGZjMmUyY2UyMWQ0NTI3NGRjNDhlMjExZjM) want ask open questions about Unleash, feature toggling or discuss these topics in general.
+- [Create a issue request](https://github.com/Unleash/unleash/issues/new) if you have found a bug or have ideas on how to improve Unleash.
+
+## Other resources
+
+- [Unleash-hosted - Unleash as a Service](https://www.unleash-hosted.com)
+- [Medium blog](https://medium.com/unleash-hosted)
 - [Blog: Unleash your features gradually!](http://bytes.schibsted.com/unleash-features-gradually/)
 - [Presentation: Unleash your features gradually!](http://ivarconr.github.io/feature-toggles-presentation/sch-dev-lunch-2017/#1)
 - http://martinfowler.com/bliki/FeatureToggle.html

@@ -61,13 +61,15 @@ if (unleash.isEnabled("AwesomeFeature")) {
 
 ## Run it yourself
 
-Unleash is open source and you are free to host your own instance. Please refer to the [getting-started-guide](https://unleash.github.io/docs/getting_started) to learn how to run the Unleash Service.
+Unleash is open source and you are free to run your own instance. Please refer to the [getting-started-guide](https://unleash.github.io/docs/getting_started) to learn how to run the Unleash Service.
 
-We have made a separate project which runs unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker) for details
+We have made a separate project which runs Unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker) for details
 
 ## Unleash as a Service (SaaS)
 
-After numerous request we have created a separate company, Unleash-hosted, which offer Unleash as a Service. Unleash-hosted allows you to focus on you core business and have someone else taking care of hosting and maintaining Unleash. Header over to [unleash-hosted.com](https://www.unleash-hosted.com) to learn more about this offering. This service also includes official support.
+After numerous request we have created a separate company, Unleash-hosted, which offer Unleash as a Service. Unleash-hosted allows you to focus on you core business and have someone else taking care of hosting and maintaining Unleash.
+
+Go to [unleash-hosted.com](https://www.unleash-hosted.com) to learn more about this offering. This service also includes official support.
 
 # Developer Guide
 
@@ -75,7 +77,7 @@ If you want to contribute to this project you are encouraged to send issue reque
 
 # I Need help
 
-- [Join Unleash on Slack](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTM5Yzk2YWE2ZTk1OTZhOTJiNTEzMzA5YmEwMDE3MDJiNDQ3ZWExZGZjMmUyY2UyMWQ0NTI3NGRjNDhlMjExZjM) want ask open questions about Unleash, feature toggling or discuss these topics in general.
+- [Join Unleash on Slack](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTM5Yzk2YWE2ZTk1OTZhOTJiNTEzMzA5YmEwMDE3MDJiNDQ3ZWExZGZjMmUyY2UyMWQ0NTI3NGRjNDhlMjExZjM) if you want ask open questions about Unleash, feature toggling or discuss these topics in general.
 - [Create a issue request](https://github.com/Unleash/unleash/issues/new) if you have found a bug or have ideas on how to improve Unleash.
 
 ## Other resources

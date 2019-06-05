@@ -10,7 +10,10 @@ module.exports = {
         migrations: {
             tableName: 'knex_migrations',
         },
-        useNullAsDefault: true,
+        // This causes a warning, but doesn't break everything.
+        // sqlite3 can't do default fields, so we have to fill it in.
+        // frontend is not hardened against null values that it expects.
+        useNullAsDefault: false,
     },
 
     staging: {

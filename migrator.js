@@ -13,6 +13,7 @@ function migrateDb({ databaseUrl, databaseSchema = 'public' }) {
         config: { custom },
         env: 'custom',
     });
+    console.log(custom, dbmigrate);
     return dbmigrate.up();
 }
 

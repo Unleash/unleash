@@ -37,7 +37,7 @@
     "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website server.js",
     "start:dev:pg": "pg_virtualenv npm run start:dev:pg-chain",
     "start:dev:pg-chain": "export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; db-migrate up && npm run start:dev",
-    "db-migrate": "db-migrate",
+    "db-migrate": "knex migrate:latest",
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "NODE_ENV=test PORT=4243 ava",
@@ -109,7 +109,6 @@
     "passport-google-auth": "^1.0.2",
     "prettier": "^1.15.3",
     "proxyquire": "^2.1.0",
-    "sqlite3": "^4.0.0",
     "superagent": "^5.0.2",
     "supertest": "^4.0.1",
     "supervisor": "^0.12.0"

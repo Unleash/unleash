@@ -1,19 +1,26 @@
 'use strict';
 
 module.exports = {
-    development: {
+    test: {
         client: 'sqlite3',
         connection: {
-            filename: './dev.sqlite3',
-            schema: 'unleash',
+            filename: './test.sqlite3',
         },
         migrations: {
             tableName: 'knex_migrations',
         },
-        // This causes a warning, but doesn't break everything.
-        // sqlite3 can't do default fields, so we have to fill it in.
-        // frontend is not hardened against null values that it expects.
-        useNullAsDefault: false,
+        useNullAsDefault: true,
+    },
+
+    development: {
+        client: 'sqlite3',
+        connection: {
+            filename: './dev.sqlite3',
+        },
+        migrations: {
+            tableName: 'knex_migrations',
+        },
+        useNullAsDefault: true,
     },
 
     staging: {

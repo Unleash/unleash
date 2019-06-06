@@ -13,8 +13,7 @@
     "docs",
     "bin",
     "migrations",
-    "server.js",
-    "migrator.js"
+    "server.js"
   ],
   "repository": {
     "type": "git",
@@ -40,7 +39,8 @@
     "db-migrate": "knex migrate:latest",
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "NODE_ENV=test PORT=4243 ava",
+    "test": "NODE_ENV=test PORT=4243 ava lib/*.test.js lib/**/*.test.js lib/**/**/*.test.js lib/**/**/**/*.test.js test -c 1",
+    "test:e2e": "NODE_ENV=test PORT=4243 ava test -c 1",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "npm run test -- --watch",
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",

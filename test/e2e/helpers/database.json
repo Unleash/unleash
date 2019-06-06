@@ -3,7 +3,8 @@
     {
       "name": "default",
       "description": "Default on or off Strategy.",
-      "parameters": []
+      "parameters": [],
+      "created_at": "2019-06-05 20:03:27"
     },
     {
       "name": "usersWithEmail",
@@ -13,18 +14,21 @@
           "name": "emails",
           "type": "string"
         }
-      ]
+      ],
+      "created_at": "2019-06-05 20:03:28"
     }
   ],
   "applications": [
     {
       "appName": "demo-app-1",
-      "strategies": ["default"]
+      "strategies": ["default"],
+      "created_at": "2019-06-05 20:03:29"
     },
     {
       "appName": "demo-app-2",
       "strategies": ["default", "extra"],
-      "description": "hello"
+      "description": "hello",
+      "created_at": "2019-06-05 20:03:30"
     }
   ],
   "clientInstances": [
@@ -33,19 +37,22 @@
       "instanceId": "test-1",
       "strategies": ["default"],
       "started": 1516026938494,
-      "interval": 10
+      "interval": 10,
+      "created_at": "2019-06-05 20:03:31"
     },
     {
       "appName": "demo-seed-2",
       "instanceId": "test-2",
       "strategies": ["default"],
       "started": 1516026938494,
-      "interval": 10
+      "interval": 10,
+      "created_at": "2019-06-05 20:03:32"
     }
   ],
   "features": [
     {
       "name": "featureX",
+      "created_at": "2019-06-05 20:03:33",
       "description": "the #1 feature",
       "enabled": true,
       "strategies": [
@@ -57,6 +64,7 @@
     },
     {
       "name": "featureY",
+      "created_at": "2019-06-05 20:03:34",
       "description": "soon to be the #1 feature",
       "enabled": false,
       "strategies": [
@@ -70,6 +78,7 @@
     },
     {
       "name": "featureZ",
+      "created_at": "2019-06-05 20:03:35",
       "description": "terrible feature",
       "enabled": true,
       "strategies": [
@@ -83,6 +92,7 @@
     },
     {
       "name": "featureArchivedX",
+      "created_at": "2019-06-05 20:03:36",
       "description": "the #1 feature",
       "enabled": true,
       "archived": true,
@@ -95,6 +105,7 @@
     },
     {
       "name": "featureArchivedY",
+      "created_at": "2019-06-05 20:03:37",
       "description": "soon to be the #1 feature",
       "enabled": false,
       "archived": true,
@@ -109,6 +120,7 @@
     },
     {
       "name": "featureArchivedZ",
+      "created_at": "2019-06-05 20:03:38",
       "description": "terrible feature",
       "enabled": true,
       "archived": true,
@@ -123,6 +135,7 @@
     },
     {
       "name": "feature.with.variants",
+      "created_at": "2019-06-05 20:03:39",
       "description": "A feature toggle with watiants",
       "enabled": true,
       "archived": false,

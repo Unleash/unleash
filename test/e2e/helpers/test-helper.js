@@ -26,8 +26,8 @@ function createApp(stores, adminAuthentication = 'none', preHook) {
 }
 
 module.exports = {
-    async setupApp(name) {
-        const stores = await dbInit(name, getLogger);
+    async setupApp() {
+        const stores = await dbInit(getLogger);
         const app = createApp(stores);
 
         return {
@@ -35,8 +35,8 @@ module.exports = {
             destroy: () => stores.db.destroy(),
         };
     },
-    async setupAppWithAuth(name) {
-        const stores = await dbInit(name, getLogger);
+    async setupAppWithAuth() {
+        const stores = await dbInit(getLogger);
         const app = createApp(stores, 'unsecure');
 
         return {
@@ -45,8 +45,8 @@ module.exports = {
         };
     },
 
-    async setupAppWithCustomAuth(name, preHook) {
-        const stores = await dbInit(name, getLogger);
+    async setupAppWithCustomAuth(_, preHook) {
+        const stores = await dbInit(getLogger);
         const app = createApp(stores, 'custom', preHook);
 
         return {

@@ -1,15 +1,11 @@
 'use strict';
 
-const migrator = require('../../../migrator');
 const { createStores } = require('../../../lib/db');
 const { createDb } = require('../../../lib/db/db-pool');
 
 const dbState = require('./database.json');
 
-require('db-migrate-shared').log.silence(true);
-
-// because of migrator bug
-delete process.env.DATABASE_URL;
+// require('db-migrate-shared').log.silence(true);
 
 // because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
 process.setMaxListeners(0);
@@ -49,20 +45,15 @@ function createFeatures(store) {
     return dbState.features.map(f => store._createFeature(f));
 }
 
-module.exports = async function init(databaseSchema = 'test', getLogger) {
+module.exports = async function init(getLogger) {
     const options = {
-        databaseUrl: require('./database-config').getDatabaseUrl(),
-        databaseSchema,
-        minPool: 0,
-        maxPool: 0,
         getLogger,
     };
 
-    const db = createDb(options);
+    const db = await createDb();
 
-    await db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`);
-    await migrator(options);
-    await db.destroy();
+    await db.migrate.latest();
+
     const stores = await createStores(options);
     await resetDatabase(stores);
     await setupDatabase(stores);

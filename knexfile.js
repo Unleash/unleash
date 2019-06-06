@@ -18,6 +18,38 @@ module.exports = {
         useNullAsDefault: true,
     },
 
+    // test: {
+    //     // docker run -d -p"3306:3306" -e "MYSQL_ROOT_PASSWORD=foobar" \
+    //     //   -e "MYSQL_DATABASE=unleash" -e "MYSQL_USER=unleash" -e \
+    //     //   "MYSQL_PASSWORD=passord" mysql:5.7
+    //     client: 'mysql',
+    //     connection: {
+    //         database: 'unleash',
+    //         user: 'unleash',
+    //         password: 'passord',
+    //         // debug: 'true',
+    //     },
+    //     pool: {
+    //         min: 2,
+    //         max: 10,
+    //     },
+    //     migrations: {
+    //         tableName: 'knex_migrations',
+    //     },
+    //     useNullAsDefault: true,
+    // },
+
+    // test: {
+    //     client: 'sqlite3',
+    //     connection: {
+    //         filename: './test.sqlite3',
+    //     },
+    //     migrations: {
+    //         tableName: 'knex_migrations',
+    //     },
+    //     useNullAsDefault: true,
+    // },
+
     development: {
         client: 'sqlite3',
         connection: {

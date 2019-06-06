@@ -2,9 +2,15 @@
 
 module.exports = {
     test: {
-        client: 'sqlite3',
+        client: 'postgresql',
         connection: {
-            filename: './test.sqlite3',
+            database: 'unleash_test',
+            user: 'postgres',
+            password: '',
+        },
+        pool: {
+            min: 2,
+            max: 10,
         },
         migrations: {
             tableName: 'knex_migrations',

@@ -14,7 +14,7 @@ exports.up = function(knex) {
             .timestamp('updated_at')
             .notNullable()
             .defaultTo(knex.fn.now());
-        table.timestamp('seen_at');
+        table.timestamp('seen_at').nullable();
         table.json('strategies');
         table.string('description', 255);
         table.string('icon', 255);

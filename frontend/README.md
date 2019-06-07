@@ -12,12 +12,16 @@ before you can start working on unleash-frontend.
 
 Start webpack-dev-server with hot-reload:
 ```bash
+cd ~/unleash-frontend
+npm install
 npm run start 
 ```
 
 ### Run with heroku hosted unleash-api:
 
 ```bash
+cd ~/unleash-frontend
+npm install
 npm run start:heroku
 ```
 

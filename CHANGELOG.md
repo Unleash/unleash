@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.2.12
+
+- fix: none authentication should have a mock user (#449)
+- fix: Update commander to version 2.20.0
+- chore: Update docusaurus to version 1.11.0
+- chore: Update ava to version 2.0.0
+- chore: Update async to the latest version
+
 ## 3.2.11
 
 - feat: Separate DATABASE*URL to multiple DATABASE*\* variable (#437)

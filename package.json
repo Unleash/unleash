@@ -104,7 +104,7 @@
     "husky": "^2.0.0",
     "lint-staged": "^8.1.5",
     "lolex": "^4.0.1",
-    "nyc": "^14.0.0",
+    "nyc": "^14.1.1",
     "passport": "^0.4.0",
     "passport-google-auth": "^1.0.2",
     "prettier": "^1.15.3",

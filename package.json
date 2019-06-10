@@ -40,6 +40,7 @@
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "NODE_ENV=test PORT=4243 ava lib/*.test.js lib/**/*.test.js lib/**/**/*.test.js lib/**/**/**/*.test.js test -c 1",
+    "test:unit": "NODE_ENV=test PORT=4243 ava lib/*.test.js lib/**/*.test.js lib/**/**/*.test.js lib/**/**/**/*.test.js",
     "test:e2e": "NODE_ENV=test PORT=4243 ava test -c 1",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "npm run test -- --watch",

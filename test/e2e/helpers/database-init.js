@@ -2,13 +2,9 @@
 
 const { createStores } = require('../../../lib/db');
 const { createDb } = require('../../../lib/db/db-pool');
+const { createOptions } = require('../../../lib/options');
 
 const dbState = require('./database.json');
-
-// require('db-migrate-shared').log.silence(true);
-
-// because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
-process.setMaxListeners(0);
 
 async function resetDatabase(stores) {
     return Promise.all([
@@ -46,11 +42,11 @@ function createFeatures(store) {
 }
 
 module.exports = async function init(getLogger) {
-    const options = {
+    const options = createOptions({
         getLogger,
-    };
+    });
 
-    const db = await createDb();
+    const db = await createDb(options);
 
     await db.migrate.latest();
 

@@ -8,6 +8,7 @@ This part of the tutorial shows how to create a sign-in flow for users and integ
 This is a simple `index.js` server file.
 
 ```javascript
+const fs = require('fs');
 const unleash = require('unleash-server');
 
 if (process.env.DATABASE_URL_FILE) {

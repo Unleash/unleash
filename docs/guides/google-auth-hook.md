@@ -12,7 +12,7 @@ const fs = require('fs');
 const unleash = require('unleash-server');
 
 if (process.env.DATABASE_URL_FILE) {
-  options.databaseUrl = fs.readFileSync(process.env.DATABASE_URL_FILE);
+  options.databaseUrl = fs.readFileSync(process.env.DATABASE_URL_FILE, 'utf8');
 }
 
 unleash.start(options).then(unleash => {
@@ -254,7 +254,7 @@ const options = {
 };
 
 if (process.env.DATABASE_URL_FILE) {
-  options.databaseUrl = fs.readFileSync(process.env.DATABASE_URL_FILE);
+  options.databaseUrl = fs.readFileSync(process.env.DATABASE_URL_FILE, 'utf8');
 }
 
 unleash.start(options).then(instance => {

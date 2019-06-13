@@ -8,12 +8,7 @@ This part of the tutorial shows how to create a sign-in flow for users and integ
 This is a simple `index.js` server file.
 
 ```javascript
-const fs = require('fs');
 const unleash = require('unleash-server');
-
-if (process.env.DATABASE_URL_FILE) {
-  options.databaseUrl = fs.readFileSync(process.env.DATABASE_URL_FILE, 'utf8');
-}
 
 unleash.start(options).then(unleash => {
   console.log(`Unleash started on http://localhost:${unleash.app.get('port')}`);
@@ -181,7 +176,6 @@ The `index.js` server file.
 ```js
 'use strict';
 
-const fs = require('fs');
 const unleash = require('unleash-server');
 const passport = require('@passport-next/passport');
 const GoogleOAuth2Strategy = require('@passport-next/passport-google-oauth2');
@@ -252,10 +246,6 @@ const options = {
   adminAuthentication: 'custom',
   preRouterHook: googleAdminAuth,
 };
-
-if (process.env.DATABASE_URL_FILE) {
-  options.databaseUrl = fs.readFileSync(process.env.DATABASE_URL_FILE, 'utf8');
-}
 
 unleash.start(options).then(instance => {
   console.log(

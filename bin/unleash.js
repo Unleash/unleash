@@ -4,6 +4,7 @@
 process.env.NODE_ENV = 'production';
 
 const serverImpl = require('../lib/server-impl.js');
+const fs = require('fs');
 
 const argv = require('yargs')
     .usage('$0 [options]')
@@ -45,8 +46,7 @@ const argv = require('yargs')
     }).argv;
 
 if (argv.databaseUrlFile) {
-    // Where options are processed, the DATABASE_URL_FILE env variable takes precedence over databaseUrl.
-    process.env.DATABASE_URL_FILE = argv.databaseUrlFile;
+    argv.databaseUrl = fs.readFileSync(process.env.DATABASE_URL_FILE, 'utf8');
     delete argv.databaseUrlFile;
 }
 

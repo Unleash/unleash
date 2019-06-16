@@ -34,6 +34,12 @@ const users = [
         infoLink: 'https://www.unleash-hosted.com',
         pinned: true,
     },
+    {
+        caption: 'Budgets',
+        image: '/img/budgets.png',
+        infoLink: 'https://budgets.money',
+        pinned: true,
+    },
 ];
 
 const siteConfig = {

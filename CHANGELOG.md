@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.2.13
+
+- feat: add option and functionality that allows a user to hook into feature mutations (#457)
+- chore: add budgets as a company using unleash (#456)
+- fix: Add DATABASE_URL_FILE for loading a db url from a file (#455)
+- fix: Upgrade knex to version 0.17.5
+- chore: Update db-migrate-pg to version 1.0.0
+
 ## 3.2.12
 
 - fix: none authentication should have a mock user (#449)

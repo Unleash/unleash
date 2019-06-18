@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.14
+
+- fix: Unleash bin should allow databaseUrl to be defined in env.
+
 ## 3.2.13
 
 - feat: add option and functionality that allows a user to hook into feature mutations (#457)

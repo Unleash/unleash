@@ -2,7 +2,7 @@
 
 ## Create a custom Slack WebHook url:
 
-1. Go to [https://[workspace].slack.com/apps/manage/custom-integrations](https://[domain].slack.com/apps/manage/custom-integrations)
+1. Go to [https://slack.com/apps/manage/custom-integrations](https://slack.com/apps/manage/custom-integrations)
 1. Click Incoming WebHooks
 1. Click “Add Configuration”
 1. This is Slack's help page on how to do this: https://api.slack.com/custom-integrations/incoming-webhooks

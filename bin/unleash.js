@@ -36,7 +36,7 @@ const argv = require('yargs')
         demand: false,
         type: 'string',
     })
-    .check(args => args.databaseUrl || args.databaseUrlFile)
+    .check(args => !!(args.databaseUrl || args.databaseUrlFile))
     .option('databaseSchema', {
         alias: 's',
         describe: 'The database schema to use',
@@ -46,7 +46,7 @@ const argv = require('yargs')
     }).argv;
 
 if (argv.databaseUrlFile) {
-    argv.databaseUrl = fs.readFileSync(process.env.DATABASE_URL_FILE, 'utf8');
+    argv.databaseUrl = fs.readFileSync(argv.databaseUrlFile, 'utf8');
     delete argv.databaseUrlFile;
 }
 

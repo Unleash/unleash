@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "3.2.11",
+  "version": "3.2.14",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -39,9 +39,7 @@
     "db-migrate": "knex migrate:latest",
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "NODE_ENV=test PORT=4243 ava lib/*.test.js lib/**/*.test.js lib/**/**/*.test.js lib/**/**/**/*.test.js test -c 1",
-    "test:unit": "NODE_ENV=test PORT=4243 ava lib/*.test.js lib/**/*.test.js lib/**/**/*.test.js lib/**/**/**/*.test.js",
-    "test:e2e": "NODE_ENV=test PORT=4243 ava test -c 1",
+    "test": "NODE_ENV=test PORT=4243 ava",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "npm run test -- --watch",
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",
@@ -56,9 +54,15 @@
       "lib/**/*.js"
     ]
   },
+  "ava": {
+    "helpers": [
+      "**/helpers/**/*",
+      "**/fixtures/**/*"
+    ]
+  },
   "dependencies": {
     "async": "^3.0.1",
-    "commander": "^2.19.0",
+    "commander": "^2.20.0",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.4",
     "cookie-session": "^2.0.0-beta.3",
@@ -69,13 +73,13 @@
     "install": "^0.12.2",
     "joi": "^14.3.1",
     "js-yaml": "^3.12.2",
-    "knex": "^0.17.3",
+    "knex": "^0.17.5",
     "log4js": "^4.0.0",
     "mime": "^2.4.2",
     "moment": "^2.24.0",
     "multer": "^1.4.1",
     "parse-database-url": "^0.3.0",
-    "pg": "^7.8.1",
+    "pg": "^7.11.0",
     "sqlite3": "^4.0.0",
     "mysql": "^2.17.1",
     "pkginfo": "^0.4.1",
@@ -91,7 +95,7 @@
     "@passport-next/passport": "^2.1.0",
     "@passport-next/passport-google-oauth2": "^1.0.0",
     "@types/node": "^12.0.0",
-    "ava": "^1.2.0",
+    "ava": "^2.0.0",
     "coveralls": "^3.0.3",
     "eslint": "^5.15.0",
     "eslint-config-finn": "^3.0.1",
@@ -99,7 +103,7 @@
     "husky": "^2.0.0",
     "lint-staged": "^8.1.5",
     "lolex": "^4.0.1",
-    "nyc": "^14.0.0",
+    "nyc": "^14.1.1",
     "passport": "^0.4.0",
     "passport-google-auth": "^1.0.2",
     "prettier": "^1.15.3",

@@ -91,7 +91,7 @@ test.serial('creates new feature toggle with createdBy unknown', async t => {
     await request
         .get('/api/admin/events')
         .expect(res => {
-            t.true(res.body.events[0].createdBy === 'unknown');
+            t.true(res.body.events[0].createdBy === 'none@unknown.com');
         })
         .then(destroy);
 });

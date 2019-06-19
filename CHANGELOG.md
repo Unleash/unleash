@@ -1,5 +1,25 @@
 # Changelog
 
+## 3.2.14
+
+- fix: Unleash bin should allow databaseUrl to be defined in env.
+
+## 3.2.13
+
+- feat: add option and functionality that allows a user to hook into feature mutations (#457)
+- chore: add budgets as a company using unleash (#456)
+- fix: Add DATABASE_URL_FILE for loading a db url from a file (#455)
+- fix: Upgrade knex to version 0.17.5
+- chore: Update db-migrate-pg to version 1.0.0
+
+## 3.2.12
+
+- fix: none authentication should have a mock user (#449)
+- fix: Update commander to version 2.20.0
+- chore: Update docusaurus to version 1.11.0
+- chore: Update ava to version 2.0.0
+- chore: Update async to the latest version
+
 ## 3.2.11
 
 - feat: Separate DATABASE*URL to multiple DATABASE*\* variable (#437)

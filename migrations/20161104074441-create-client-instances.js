@@ -13,6 +13,8 @@ exports.up = function(knex) {
             .timestamp('created_at')
             .notNullable()
             .defaultTo(knex.fn.now());
+        table.primary(['app_name', 'instance_id']);
+        table.charset('utf8');
     });
 };
 

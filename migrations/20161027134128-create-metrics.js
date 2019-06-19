@@ -8,6 +8,7 @@ exports.up = function(knex) {
             .notNullable()
             .defaultTo(knex.fn.now());
         table.json('metrics');
+        table.charset('utf8');
     });
 };
 

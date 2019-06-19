@@ -9,6 +9,7 @@ exports.up = function(knex) {
                 .defaultTo(knex.fn.now());
             table.string('name', 255).primary();
             table.text('description');
+            table.charset('utf8');
         })
         .createTable('features', table => {
             table
@@ -22,6 +23,7 @@ exports.up = function(knex) {
                 .defaultTo(0);
             table.string('strategy_name', 255);
             table.json('parameters');
+            table.charset('utf8');
         })
         .createTable('events', table => {
             table.increments('id').primary();
@@ -32,6 +34,7 @@ exports.up = function(knex) {
             table.string('type', 255);
             table.string('created_by', 255);
             table.json('data');
+            table.charset('utf8');
         });
 };
 

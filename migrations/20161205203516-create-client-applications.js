@@ -20,6 +20,7 @@ exports.up = function(knex) {
         table.string('icon', 255);
         table.string('url', 255);
         table.string('color', 255);
+        table.charset('utf8');
     });
 };
 

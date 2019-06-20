@@ -16,7 +16,11 @@
       "database_backup",
       "import_export"
     ],
-    "Guides": ["guides/google_auth", "guides/custom_activation_strategy"]
+    "Guides": [
+      "guides/google_auth",
+      "guides/custom_activation_strategy",
+      "guides/feature_updates_to_slack"
+    ]
   },
   "api": {
     "Client": [

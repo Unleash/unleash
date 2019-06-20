@@ -1,4 +1,7 @@
-# Add Slack hook to Unleash
+---
+id: feature_updates_to_slack
+title: Feature Updates To slack
+---
 
 ## Create a custom Slack WebHook url:
 

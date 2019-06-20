@@ -13,8 +13,8 @@
 Using the `eventHook` option, create a function that will send the data you'd like into Slack when mutation events happen.
 
 ```javascript
-import unleash from 'unleash-server';
-import axios from 'axios';
+const unleash = require('unleash-server');
+const axios = require('axios');
 
 function onEventHook(event, eventData) {
   const { createdBy: user, data } = eventData;

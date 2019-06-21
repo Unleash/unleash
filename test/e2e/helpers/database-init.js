@@ -2,8 +2,8 @@
 
 const { EventEmitter } = require('events');
 const migrator = require('../../../migrator');
-const { createStores } = require('../../../lib/db');
-const { createDb } = require('../../../lib/db/db-pool');
+const { createStores } = require('../../../lib/storage');
+const { createDb } = require('../../../lib/storage/db/db-pool');
 
 const dbState = require('./database.json');
 

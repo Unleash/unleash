@@ -69,7 +69,7 @@ We have made a separate project which runs Unleash inside docker. Please see [un
 
 After numerous request we have created a separate company, Unleash-hosted, which offer Unleash as a Service. Unleash-hosted allows you to focus on you core business and have someone else taking care of hosting and maintaining Unleash.
 
-Go to [unleash-hosted.com](https://www.unleash-hosted.com) to learn more about this offering. This service also includes official support.
+Go to [unleash-hosted.com](https://www.unleash-hosted.com/open-source) to learn more about this offering. This service also includes official support.
 
 # Developer Guide
 

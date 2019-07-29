@@ -15,6 +15,8 @@ export default class ShowUserComponent extends React.Component {
         { value: 'en-GB', image: 'en-GB' },
         { value: 'en-IN', image: 'en-IN' },
         { value: 'da-DK', image: 'da-DK' },
+        { value: 'de', image: 'de_DE' },
+        { value: 'cs', image: 'cs_CZ' },
     ];
 
     componentDidMount() {

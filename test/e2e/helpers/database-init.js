@@ -1,5 +1,6 @@
 'use strict';
 
+const { EventEmitter } = require('events');
 const migrator = require('../../../migrator');
 const { createStores } = require('../../../lib/db');
 const { createDb } = require('../../../lib/db/db-pool');
@@ -59,11 +60,12 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
     };
 
     const db = createDb(options);
+    const eventBus = new EventEmitter();
 
     await db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`);
     await migrator(options);
     await db.destroy();
-    const stores = await createStores(options);
+    const stores = await createStores(options, eventBus);
     await resetDatabase(stores);
     await setupDatabase(stores);
 

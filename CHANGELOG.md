@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.2.15
+
+- feat: add db query latency metrics
+- fix: fix: update knex to version 0.19.1
+- fix: remove unused dependency install
+- fix: Upgrade lint-staged to version 9.2.1
+- fix: Upgrade husky to version 3.0.1
+- fix: upgrade eslint to version 6.1.0
+- fix: Update unleash-frontend to version 3.2.6
+- fix: upgrade ava to 2.2.0
+- fix: Update @passport-next/passport to the latest version rocket (#469)
+- chore: Add guide for how to use eventHook to send updates to Slack
+
 ## 3.2.14
 
 - fix: Unleash bin should allow databaseUrl to be defined in env.

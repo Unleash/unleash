@@ -20,9 +20,9 @@ const { User, AuthenticationRequired } = require('../lib/server-impl.js');
 const KeycloakStrategy = require('@exlinc/keycloak-passport');
 const passport = require('passport');
 
-const host = `http://${process.env.AUTH_HOST}`;
+const host = process.env.AUTH_HOST;
 const realm = process.env.AUTH_REALM;
-const clientId = process.env.AUTH_CLIENT_ID;
+const clientID = process.env.AUTH_CLIENT_ID;
 const contextPath = process.env.CONTEXT_PATH;
 
 passport.use(
@@ -31,12 +31,12 @@ passport.use(
         {
             host,
             realm,
-            clientId,
+            clientID,
             clientSecret: "We don't need that, but is required",
             callbackURL: `${contextPath}/api/auth/callback`,
-            authorizationURL: `${host}/auth/realms/hamis/protocol/openid-connect/auth`,
-            tokenURL: `${host}/auth/realms/hamis/protocol/openid-connect/token`,
-            userInfoURL: `${host}/auth/realms/hamis/protocol/openid-connect/userinfo`,
+            authorizationURL: `${host}/auth/realms/${realm}/protocol/openid-connect/auth`,
+            tokenURL: `${host}/auth/realms/${realm}/protocol/openid-connect/token`,
+            userInfoURL: `${host}/auth/realms/${realm}/protocol/openid-connect/userinfo`,
         },
 
         (accessToken, refreshToken, profile, done) => {

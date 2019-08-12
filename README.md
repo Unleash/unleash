@@ -44,6 +44,7 @@ Clients written by awesome enthusiasts: :fire:
 - [stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)
 - [onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)
 - [rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)
+- [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 
 ### The Client API
 

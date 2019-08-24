@@ -29,9 +29,9 @@ Read more about activation strategies in [docs/activation-strategies.md](./docs/
 
 ## Client implementations
 
-We have offical SDK's for Java, Node.js, Go, Ruby and Python. And we will be happy to add implementations in other languages written by you! These libraries makes it very easy to use Unleash in you application.
+We have official SDK's for Java, Node.js, Go, Ruby and Python. And we will be happy to add implementations in other languages written by you! These libraries makes it very easy to use Unleash in you application.
 
-Official client SDKs:
+Official client SDK's:
 
 - [unleash/unleash-client-java](https://github.com/unleash/unleash-client-java)
 - [unleash/unleash-client-node](https://github.com/unleash/unleash-client-node)
@@ -70,7 +70,7 @@ We have made a separate project which runs Unleash inside docker. Please see [un
 
 After numerous request we have created a separate company, Unleash-hosted, which offer Unleash as a Service. Unleash-hosted allows you to focus on you core business and have someone else taking care of hosting and maintaining Unleash.
 
-Go to [unleash-hosted.com](https://www.unleash-hosted.com/open-source) to learn more about this offering. This service also includes official support.
+Go to [unleash-hosted.com](https://www.unleash-hosted.com/open-source) to learn more about this offering and start using Unleash today. This service also includes official support.
 
 # Developer Guide
 

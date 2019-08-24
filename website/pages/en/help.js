@@ -24,18 +24,18 @@ class Help extends React.Component {
     const supportLinks = [
       {
         content: `Learn more using the [documentation on this site.](${docUrl(
-          'doc1.html',
+          'getting_started',
           language,
         )})`,
         title: 'Browse Docs',
       },
       {
-        content: 'Ask questions about the documentation and project',
+        content: 'Ask questions about the documentation and project in our [Slack community](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTM5Yzk2YWE2ZTk1OTZhOTJiNTEzMzA5YmEwMDE3MDJiNDQ3ZWExZGZjMmUyY2UyMWQ0NTI3NGRjNDhlMjExZjM)',
         title: 'Join the community',
       },
       {
-        content: "Find out what's new with this project",
-        title: 'Stay up to date',
+        content: "Don't have time or resources to host Unleash yourself? Don't worry [Unleash-hosted.com](https://www.unleash-hosted.com) allows you to start using Unleash today!",
+        title: 'Unleash as a Service',
       },
     ];
 

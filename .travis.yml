@@ -2,7 +2,6 @@ sudo: false
 language: node_js
 node_js:
     - '10'
-    - '12'
 env:
     matrix:
         - DATABASE_URL=postgres://postgres@localhost:5432/unleash_test TEST_DATABASE_URL=postgres://postgres@localhost:5432/unleash_test
@@ -20,7 +19,7 @@ notifications:
     slack:
         secure: MroremSKwtQkwPbrXjgs9hIqKTCDKk7bAIXXzjcS6wXC9uRaFgwFaW8oO3vBxtWa4BL44EQBLE/rboWgqFER62+XgXNgEqGZqrcJHJvby4r+dUNMPI64OZvWdIiydIYxLo8C1C4x5PqBup0xuLq8h/SBnNvA2NLgkjuvzOi+v/Q=
 addons:
-    postgresql: '9.4'
+    postgresql: '9.6'
 cache:
     yarn: true
 deploy:

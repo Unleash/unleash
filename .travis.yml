@@ -1,8 +1,8 @@
 sudo: false
 language: node_js
 node_js:
-    - '8'
     - '10'
+    - '12'
 env:
     matrix:
         - DATABASE_URL=postgres://postgres@localhost:5432/unleash_test TEST_DATABASE_URL=postgres://postgres@localhost:5432/unleash_test

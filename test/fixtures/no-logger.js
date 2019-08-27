@@ -6,6 +6,6 @@ module.exports = function noLoggerProvider() {
         debug: () => {},
         info: () => {},
         warn: () => {},
-        error: () => {},
+        error: console.error,
     };
 };

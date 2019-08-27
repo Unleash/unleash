@@ -13,7 +13,7 @@ In this example we want to define an activation strategy offers a scheduled rele
 
 First we need to "define" our new strategy. To add a new "Strategy", open the Strategies tab from the sidebar.
 
-![timestamp_create_strategy](assets/timestamp_create_strategy.png)
+![timestamp_create_strategy](../assets/timestamp_create_strategy.png)
 
 We name our strategy `TimeStamp` and add one required parameter of type string, which we call `enableAfter`.
 
@@ -21,7 +21,7 @@ We name our strategy `TimeStamp` and add one required parameter of type string, 
 
 After we have created the strategy definition, we can now decide to use that activation strategy for our feature toggle.
 
-![timestamp_use_strategy](assets/timestamp_use_strategy.png)
+![timestamp_use_strategy](../assets/timestamp_use_strategy.png)
 
 In the example we want to use our custom strategy for the feature toggle named `demo.TimeStampRollout`.
 

@@ -59,7 +59,6 @@ test.serial('does not not accept gibberish', async t => {
         .then(destroy);
 });
 
-/* debugging travis
 test.serial('imports strategies and features from json file', async t => {
     t.plan(0);
     const { request, destroy } = await setupApp('state_api_serial');
@@ -79,4 +78,3 @@ test.serial('imports strategies and features from yaml file', async t => {
         .expect(202)
         .then(destroy);
 });
-*/

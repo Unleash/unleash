@@ -88,7 +88,7 @@
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
     "unleash-frontend": "3.2.6",
-    "yallist": "^3.0.3",
+    "yallist": "^4.0.0",
     "yargs": "^13.2.1"
   },
   "devDependencies": {

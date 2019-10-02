@@ -32,7 +32,13 @@ module.exports = {
 
         return {
             request: supertest.agent(app),
-            destroy: () => stores.db.destroy(),
+            destroy: async () => {
+                try {
+                    await stores.db.destroy();
+                } catch (error) {
+                    console.error('Failed to destroy db', error);
+                }
+            },
         };
     },
     async setupAppWithAuth(name) {
@@ -41,7 +47,13 @@ module.exports = {
 
         return {
             request: supertest.agent(app),
-            destroy: () => stores.db.destroy(),
+            destroy: async () => {
+                try {
+                    await stores.db.destroy();
+                } catch (error) {
+                    console.error('Failed to destroy db', error);
+                }
+            },
         };
     },
 
@@ -51,7 +63,13 @@ module.exports = {
 
         return {
             request: supertest.agent(app),
-            destroy: () => stores.db.destroy(),
+            destroy: async () => {
+                try {
+                    await stores.db.destroy();
+                } catch (error) {
+                    console.error('Failed to destroy db', error);
+                }
+            },
         };
     },
 };

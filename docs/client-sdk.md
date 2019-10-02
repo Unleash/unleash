@@ -3,7 +3,7 @@ id: client_sdk
 title: Client SDK
 ---
 
-To use Unleash in your application, you will need an Unleash Client SDK. Unleash has official client SDKs for Java, Node.js, Go, Ruby, and Python. We will be happy to add implementations in other languages written by you! These libraries make it very easy to use Unleash in your application.
+To use Unleash in your application, you will need an Unleash Client SDK. Unleash has official client SDKs for Java, Node.js, Go, Ruby, Python and .Net. We will be happy to add implementations in other languages written by you! These libraries make it very easy to use Unleash in your application.
 
 ### Official client SDKs:
 

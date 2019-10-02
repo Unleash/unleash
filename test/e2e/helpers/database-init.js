@@ -54,8 +54,8 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
     const options = {
         databaseUrl: require('./database-config').getDatabaseUrl(),
         databaseSchema,
-        minPool: 1,
-        maxPool: 2,
+        minPool: 0,
+        maxPool: 1,
         getLogger,
     };
 

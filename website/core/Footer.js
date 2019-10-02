@@ -50,7 +50,7 @@ class Footer extends React.Component {
               User Showcase
             </a>
             <a
-              href="https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTM5Yzk2YWE2ZTk1OTZhOTJiNTEzMzA5YmEwMDE3MDJiNDQ3ZWExZGZjMmUyY2UyMWQ0NTI3NGRjNDhlMjExZjM"
+              href="https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTJjYmViYjkwYmE0ODVlNmY1YjcwZGRmZWU5MTU1YTQ1Nzg5ZWQ2YzBlY2U1MjlmZDg5ZDRmZTMzNmQ5YmEyOGE"
               target="_blank"
               rel="noreferrer noopener">
               Slack community

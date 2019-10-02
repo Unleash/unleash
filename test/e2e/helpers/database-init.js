@@ -54,7 +54,7 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
     const options = {
         databaseUrl: require('./database-config').getDatabaseUrl(),
         databaseSchema,
-        minPool: 0,
+        minPool: 1,
         maxPool: 1,
         getLogger,
     };
@@ -64,6 +64,7 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
 
     await db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`);
     await migrator(options);
+    await db.destroy();
     const stores = await createStores(options, eventBus);
     await resetDatabase(stores);
     await setupDatabase(stores);

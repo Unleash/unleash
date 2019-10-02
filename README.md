@@ -78,7 +78,7 @@ If you want to contribute to this project you are encouraged to send issue reque
 
 # I Need help
 
-- [Join Unleash on Slack](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTM5Yzk2YWE2ZTk1OTZhOTJiNTEzMzA5YmEwMDE3MDJiNDQ3ZWExZGZjMmUyY2UyMWQ0NTI3NGRjNDhlMjExZjM) if you want ask open questions about Unleash, feature toggling or discuss these topics in general.
+- [Join Unleash on Slack](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTJjYmViYjkwYmE0ODVlNmY1YjcwZGRmZWU5MTU1YTQ1Nzg5ZWQ2YzBlY2U1MjlmZDg5ZDRmZTMzNmQ5YmEyOGE) if you want ask open questions about Unleash, feature toggling or discuss these topics in general.
 - [Create a issue request](https://github.com/Unleash/unleash/issues/new) if you have found a bug or have ideas on how to improve Unleash.
 
 ## Other resources

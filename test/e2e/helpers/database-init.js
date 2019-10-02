@@ -7,8 +7,13 @@ const { createDb } = require('../../../lib/db/db-pool');
 
 const dbState = require('./database.json');
 
+// require('db-migrate-shared').log.silence(false);
+
 // because of migrator bug
 delete process.env.DATABASE_URL;
+
+// because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
+process.setMaxListeners(0);
 
 async function resetDatabase(stores) {
     return Promise.all([
@@ -59,7 +64,6 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
 
     await db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`);
     await migrator(options);
-    await db.destroy();
     const stores = await createStores(options, eventBus);
     await resetDatabase(stores);
     await setupDatabase(stores);

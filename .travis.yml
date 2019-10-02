@@ -19,7 +19,11 @@ notifications:
     slack:
         secure: MroremSKwtQkwPbrXjgs9hIqKTCDKk7bAIXXzjcS6wXC9uRaFgwFaW8oO3vBxtWa4BL44EQBLE/rboWgqFER62+XgXNgEqGZqrcJHJvby4r+dUNMPI64OZvWdIiydIYxLo8C1C4x5PqBup0xuLq8h/SBnNvA2NLgkjuvzOi+v/Q=
 addons:
-    postgresql: '10'
+  postgresql: '10'
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
 cache:
     yarn: true
 deploy:

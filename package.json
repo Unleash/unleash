@@ -108,7 +108,7 @@
     "prettier": "^1.15.3",
     "proxyquire": "^2.1.0",
     "superagent": "^5.0.2",
-    "supertest": "^4.0.1",
+    "supertest": "^4.0.2",
     "supervisor": "^0.12.0"
   },
   "lint-staged": {

@@ -113,7 +113,7 @@ const FeatureCallout = () => (
   <div className="productShowcaseSection paddingBottom" style={{textAlign: 'center'}}>
     <p>
       Unleash is a feature toggle system, that gives you a great overview of all feature toggles across 
-      all your applications and services. It comes with official client implementations for Java, Node.js, Go, Ruby and Python.
+      all your applications and services. It comes with official client implementations for Java, Node.js, Go, Ruby, Python and .Net.
     </p>
     <p>
       The main motivation for doing feature toggling is to decouple the process for deploying code to production 
@@ -127,7 +127,7 @@ const UnleashClient = () => (
 
     <h2>Client implementations</h2>
     <p>
-      Unleash has official SDK's for Java, Node.js, Go, Ruby and Python. And we will be happy to add implementations in other languages written by you! These libraries make it very easy to use Unleash in your application.
+      Unleash has official SDK's for Java, Node.js, Go, Ruby, Python and .Net. And we will be happy to add implementations in other languages written by you! These libraries make it very easy to use Unleash in your application.
     </p>
     
     <div className="gridBlock">
@@ -140,6 +140,7 @@ const UnleashClient = () => (
             <li><MarkdownBlock>[unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)</MarkdownBlock></li>
             <li><MarkdownBlock>[unleash/unleash-client-ruby](https://github.com/unleash/unleash-client-ruby)</MarkdownBlock></li>
             <li><MarkdownBlock>[unleash/unleash-client-python](https://github.com/Unleash/unleash-client-python)</MarkdownBlock></li>
+            <li><MarkdownBlock>[unleash/unleash-client-core](https://github.com/Unleash/unleash-client-core) (.Net Core)</MarkdownBlock></li>
           </ul>    
         </div>
       </div>
@@ -148,9 +149,8 @@ const UnleashClient = () => (
         <div className="blockContent">
           <h3>Clients written by awesome enthusiasts:</h3>
           <ul>
-            <li><MarkdownBlock>[stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)</MarkdownBlock></li>
-            <li><MarkdownBlock>[onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)</MarkdownBlock></li>
             <li><MarkdownBlock>[rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)</MarkdownBlock></li>
+            <li><MarkdownBlock>[afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)</MarkdownBlock></li>
           </ul>
         </div>
       </div>

@@ -90,7 +90,7 @@
     "yargs": "^14.0.0"
   },
   "devDependencies": {
-    "@passport-next/passport": "^3.0.0",
+    "@passport-next/passport": "^3.0.1",
     "@passport-next/passport-google-oauth2": "^1.0.0",
     "@types/node": "^12.7.9",
     "ava": "^2.4.0",

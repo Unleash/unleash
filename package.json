@@ -95,7 +95,7 @@
     "@types/node": "^12.7.9",
     "ava": "^2.4.0",
     "coveralls": "^3.0.3",
-    "eslint": "^6.2.2",
+    "eslint": "^6.5.1",
     "eslint-config-finn": "^3.0.1",
     "eslint-config-finn-prettier": "^3.0.2",
     "husky": "^3.0.8",

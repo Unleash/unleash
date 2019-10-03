@@ -8,7 +8,8 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 
 test.before(async () => {
-    stores = await dbInit('archive_serial', getLogger);
+    const db = await dbInit('archive_serial', getLogger);
+    stores = db.stores;
 });
 
 test.after(async () => {

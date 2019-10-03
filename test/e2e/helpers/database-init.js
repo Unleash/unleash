@@ -69,5 +69,11 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
     await resetDatabase(stores);
     await setupDatabase(stores);
 
-    return stores;
+    return {
+        stores,
+        reset: async () => {
+            await resetDatabase(stores);
+            await setupDatabase(stores);
+        },
+    };
 };

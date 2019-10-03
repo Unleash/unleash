@@ -8,7 +8,8 @@ const getLogger = require('../fixtures/no-logger');
 let stores;
 
 test.before(async () => {
-    stores = await dbInit('health_api', getLogger);
+    const db = await dbInit('health_api', getLogger);
+    stores = db.stores;
 });
 
 test.after(async () => {

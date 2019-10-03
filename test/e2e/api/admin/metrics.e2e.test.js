@@ -6,13 +6,20 @@ const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
 let stores;
+let reset = () => {};
 
 test.before(async () => {
-    stores = await dbInit('metrics_serial', getLogger);
+    const db = await dbInit('metrics_serial', getLogger);
+    stores = db.stores;
+    reset = db.reset;
 });
 
 test.after(async () => {
     await stores.db.destroy();
+});
+
+test.afterEach(async () => {
+    await reset();
 });
 
 test.serial('should register client', async t => {
@@ -83,8 +90,6 @@ test.serial('should get application details', async t => {
         });
 });
 
-// TODO: need to reset databse data before this test
-// (now it depends on 2 prev. test cases to get 4 instances)
 test.serial('should get list of applications', async t => {
     t.plan(2);
     const request = await setupApp(stores);
@@ -93,6 +98,6 @@ test.serial('should get list of applications', async t => {
         .expect('Content-Type', /json/)
         .expect(res => {
             t.true(res.status === 200);
-            t.is(res.body.applications.length, 4);
+            t.is(res.body.applications.length, 2);
         });
 });

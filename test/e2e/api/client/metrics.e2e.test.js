@@ -10,7 +10,8 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 
 test.before(async () => {
-    stores = await dbInit('metrics_api_client', getLogger);
+    const db = await dbInit('metrics_api_client', getLogger);
+    stores = db.stores;
 });
 
 test.after(async () => {

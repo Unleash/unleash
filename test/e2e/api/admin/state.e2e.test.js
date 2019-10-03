@@ -1,12 +1,24 @@
 'use strict';
 
 const test = require('ava');
-const { setupApp } = require('./../../helpers/test-helper');
 const importData = require('../../../examples/import.json');
+const dbInit = require('../../helpers/database-init');
+const { setupApp } = require('../../helpers/test-helper');
+const getLogger = require('../../../fixtures/no-logger');
+
+let stores;
+
+test.before(async () => {
+    stores = await dbInit('state_api_serial', getLogger);
+});
+
+test.after(async () => {
+    await stores.db.destroy();
+});
 
 test.serial('exports strategies and features as json by default', async t => {
     t.plan(2);
-    const { request, destroy } = await setupApp('state_api_serial');
+    const request = await setupApp(stores);
     return request
         .get('/api/admin/state/export')
         .expect('Content-Type', /json/)
@@ -14,67 +26,60 @@ test.serial('exports strategies and features as json by default', async t => {
         .expect(res => {
             t.true('features' in res.body);
             t.true('strategies' in res.body);
-        })
-        .then(destroy);
+        });
 });
 
 test.serial('exports strategies and features as yaml', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('state_api_serial');
+    const request = await setupApp(stores);
     return request
         .get('/api/admin/state/export?format=yaml')
         .expect('Content-Type', /yaml/)
-        .expect(200)
-        .then(destroy);
+        .expect(200);
 });
 
 test.serial('exports strategies and features as attachment', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('state_api_serial');
+    const request = await setupApp(stores);
     return request
         .get('/api/admin/state/export?download=1')
         .expect('Content-Type', /json/)
         .expect('Content-Disposition', /attachment/)
-        .expect(200)
-        .then(destroy);
+        .expect(200);
 });
 
 test.serial('imports strategies and features', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('state_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/state/import')
         .send(importData)
-        .expect(202)
-        .then(destroy);
+        .expect(202);
 });
 
 test.serial('does not not accept gibberish', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('state_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/state/import')
         .send({ features: 'nonsense' })
-        .expect(400)
-        .then(destroy);
+        .expect(400);
 });
 
 test.serial('imports strategies and features from json file', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('state_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/state/import')
         .attach('file', 'test/examples/import.json')
-        .expect(202)
-        .then(destroy);
+        .expect(202);
 });
 
 test.serial('imports strategies and features from yaml file', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('state_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/state/import')
         .attach('file', 'test/examples/import.yml')
-        .expect(202)
-        .then(destroy);
+        .expect(202);
 });

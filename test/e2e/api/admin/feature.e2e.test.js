@@ -1,43 +1,52 @@
 'use strict';
 
 const test = require('ava');
-const { setupApp } = require('./../../helpers/test-helper');
+const dbInit = require('../../helpers/database-init');
+const { setupApp } = require('../../helpers/test-helper');
+const getLogger = require('../../../fixtures/no-logger');
+
+let stores;
+
+test.before(async () => {
+    stores = await dbInit('feature_api_serial', getLogger);
+});
+
+test.after(async () => {
+    await stores.db.destroy();
+});
 
 test.serial('returns list of feature toggles', async t => {
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .get('/api/admin/features')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
             t.true(res.body.features.length === 4);
-        })
-        .then(destroy);
+        });
 });
 
 test.serial('gets a feature by name', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .get('/api/admin/features/featureX')
         .expect('Content-Type', /json/)
-        .expect(200)
-        .then(destroy);
+        .expect(200);
 });
 
 test.serial('cant get feature that dose not exist', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .get('/api/admin/features/myfeature')
         .expect('Content-Type', /json/)
-        .expect(404)
-        .then(destroy);
+        .expect(404);
 });
 
 test.serial('creates new feature toggle', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
         .send({
@@ -46,13 +55,12 @@ test.serial('creates new feature toggle', async t => {
             strategies: [{ name: 'default' }],
         })
         .set('Content-Type', 'application/json')
-        .expect(201)
-        .then(destroy);
+        .expect(201);
 });
 
 test.serial('creates new feature toggle with variants', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
         .send({
@@ -65,65 +73,58 @@ test.serial('creates new feature toggle with variants', async t => {
             ],
         })
         .set('Content-Type', 'application/json')
-        .expect(201)
-        .then(destroy);
+        .expect(201);
 });
 
 test.serial('fetch feature toggle with variants', async t => {
     t.plan(1);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .get('/api/admin/features/feature.with.variants')
         .expect(res => {
             t.true(res.body.variants.length === 2);
-        })
-        .then(destroy);
+        });
 });
 
 test.serial('creates new feature toggle with createdBy unknown', async t => {
     t.plan(1);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     await request.post('/api/admin/features').send({
         name: 'com.test.Username',
         enabled: false,
         strategies: [{ name: 'default' }],
     });
-    await request
-        .get('/api/admin/events')
-        .expect(res => {
-            t.true(res.body.events[0].createdBy === 'none@unknown.com');
-        })
-        .then(destroy);
+    await request.get('/api/admin/events').expect(res => {
+        t.true(res.body.events[0].createdBy === 'none@unknown.com');
+    });
 });
 
 test.serial('require new feature toggle to have a name', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
         .send({ name: '' })
         .set('Content-Type', 'application/json')
-        .expect(400)
-        .then(destroy);
+        .expect(400);
 });
 
 test.serial(
     'can not change status of feature toggle that does not exist',
     async t => {
         t.plan(0);
-        const { request, destroy } = await setupApp('feature_api_serial');
+        const request = await setupApp(stores);
         return request
             .put('/api/admin/features/should-not-exist')
             .send({ name: 'should-not-exist', enabled: false })
             .set('Content-Type', 'application/json')
-            .expect(404)
-            .then(destroy);
+            .expect(404);
     }
 );
 
 test.serial('can change status of feature toggle that does exist', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .put('/api/admin/features/featureY')
         .send({
@@ -132,75 +133,64 @@ test.serial('can change status of feature toggle that does exist', async t => {
             strategies: [{ name: 'default' }],
         })
         .set('Content-Type', 'application/json')
-        .expect(200)
-        .then(destroy);
+        .expect(200);
 });
 
 test.serial('can not toggle of feature that does not exist', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/features/should-not-exist/toggle')
         .set('Content-Type', 'application/json')
-        .expect(404)
-        .then(destroy);
+        .expect(404);
 });
 
 test.serial('can toggle a feature that does exist', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/features/featureY/toggle')
         .set('Content-Type', 'application/json')
-        .expect(200)
-        .then(destroy);
+        .expect(200);
 });
 
 test.serial('archives a feature by name', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
-    return request
-        .delete('/api/admin/features/featureX')
-        .expect(200)
-        .then(destroy);
+    const request = await setupApp(stores);
+    return request.delete('/api/admin/features/featureX').expect(200);
 });
 
 test.serial('can not archive unknown feature', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
-    return request
-        .delete('/api/admin/features/featureUnknown')
-        .expect(404)
-        .then(destroy);
+    const request = await setupApp(stores);
+    return request.delete('/api/admin/features/featureUnknown').expect(404);
 });
 
 test.serial('refuses to create a feature with an existing name', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
         .send({ name: 'featureX' })
         .set('Content-Type', 'application/json')
-        .expect(400)
-        .then(destroy);
+        .expect(400);
 });
 
 test.serial('refuses to validate a feature with an existing name', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/features/validate')
         .send({ name: 'featureX' })
         .set('Content-Type', 'application/json')
-        .expect(400)
-        .then(destroy);
+        .expect(400);
 });
 
 test.serial(
     'new strategies api can add two strategies to a feature toggle',
     async t => {
         t.plan(0);
-        const { request, destroy } = await setupApp('feature_api_serial');
+        const request = await setupApp(stores);
         return request
             .put('/api/admin/features/featureY')
             .send({
@@ -215,14 +205,13 @@ test.serial(
                 ],
             })
             .set('Content-Type', 'application/json')
-            .expect(200)
-            .then(destroy);
+            .expect(200);
     }
 );
 
 test.serial('should not be possible to create archived toggle', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
         .send({
@@ -231,17 +220,16 @@ test.serial('should not be possible to create archived toggle', async t => {
             strategies: [{ name: 'default' }],
         })
         .set('Content-Type', 'application/json')
-        .expect(400)
-        .then(destroy);
+        .expect(400);
 });
 
 test.serial('creates new feature toggle with variant overrides', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('feature_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
         .send({
-            name: 'com.test.variants',
+            name: 'com.test.variants.overrieds',
             enabled: false,
             strategies: [{ name: 'default' }],
             variants: [
@@ -259,6 +247,5 @@ test.serial('creates new feature toggle with variant overrides', async t => {
             ],
         })
         .set('Content-Type', 'application/json')
-        .expect(201)
-        .then(destroy);
+        .expect(201);
 });

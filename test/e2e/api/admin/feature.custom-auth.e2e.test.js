@@ -5,6 +5,20 @@ const { setupAppWithCustomAuth } = require('./../../helpers/test-helper');
 const AuthenticationRequired = require('./../../../../lib/authentication-required');
 const User = require('./../../../../lib/user');
 
+const dbInit = require('../../helpers/database-init');
+const getLogger = require('../../../fixtures/no-logger');
+
+let stores;
+
+test.before(async () => {
+    const db = await dbInit('feature_api_custom_auth', getLogger);
+    stores = db.stores;
+});
+
+test.after(async () => {
+    await stores.db.destroy();
+});
+
 test.serial('should require authenticated user', async t => {
     t.plan(0);
     const preHook = app => {
@@ -21,14 +35,8 @@ test.serial('should require authenticated user', async t => {
                 .end()
         );
     };
-    const { request, destroy } = await setupAppWithCustomAuth(
-        'feature_api_custom_auth',
-        preHook
-    );
-    return request
-        .get('/api/admin/features')
-        .expect(401)
-        .then(destroy);
+    const request = await setupAppWithCustomAuth(stores, preHook);
+    return request.get('/api/admin/features').expect(401);
 });
 
 test.serial('creates new feature toggle with createdBy', async t => {
@@ -41,10 +49,7 @@ test.serial('creates new feature toggle with createdBy', async t => {
             next();
         });
     };
-    const { request, destroy } = await setupAppWithCustomAuth(
-        'feature_api_custom_auth',
-        preHook
-    );
+    const request = await setupAppWithCustomAuth(stores, preHook);
 
     // create toggle
     await request.post('/api/admin/features').send({
@@ -53,10 +58,7 @@ test.serial('creates new feature toggle with createdBy', async t => {
         strategies: [{ name: 'default' }],
     });
 
-    await request
-        .get('/api/admin/events')
-        .expect(res => {
-            t.true(res.body.events[0].createdBy === user.email);
-        })
-        .then(destroy);
+    await request.get('/api/admin/events').expect(res => {
+        t.true(res.body.events[0].createdBy === user.email);
+    });
 });

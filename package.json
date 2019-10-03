@@ -63,7 +63,6 @@
   },
   "dependencies": {
     "async": "^3.1.0",
-    "commander": "^3.0.0",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.4",
     "cookie-session": "^2.0.0-beta.3",

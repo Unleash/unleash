@@ -38,13 +38,12 @@ Official client SDK's:
 - [unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)
 - [unleash/unleash-client-ruby](https://github.com/unleash/unleash-client-ruby)
 - [unleash/unleash-client-python](https://github.com/Unleash/unleash-client-python)
+- [unleash/unleash-client-core](https://github.com/Unleash/unleash-client-core) (.Net Core)
 
 Clients written by awesome enthusiasts: :fire:
 
-- [stiano/unleash-client-dotnet](https://github.com/stiano/unleash-client-dotnet) (.Net Core)
-- [onybo/unleash-client-core](https://github.com/onybo/unleash-client-core) (.Net Core)
-- [rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
+- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Larvel - PHP)
 
 ### The Client API
 

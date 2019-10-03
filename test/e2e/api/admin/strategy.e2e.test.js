@@ -1,11 +1,25 @@
 'use strict';
 
 const test = require('ava');
-const { setupApp } = require('./../../helpers/test-helper');
+
+const dbInit = require('../../helpers/database-init');
+const { setupApp } = require('../../helpers/test-helper');
+const getLogger = require('../../../fixtures/no-logger');
+
+let stores;
+
+test.before(async () => {
+    const db = await dbInit('strategy_api_serial', getLogger);
+    stores = db.stores;
+});
+
+test.after(async () => {
+    await stores.db.destroy();
+});
 
 test.serial('gets all strategies', async t => {
     t.plan(1);
-    const { request, destroy } = await setupApp('strategy_api_serial');
+    const request = await setupApp(stores);
     return request
         .get('/api/admin/strategies')
         .expect('Content-Type', /json/)
@@ -15,33 +29,30 @@ test.serial('gets all strategies', async t => {
                 res.body.strategies.length === 2,
                 'expected to have two strategies'
             );
-        })
-        .then(destroy);
+        });
 });
 
 test.serial('gets a strategy by name', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('strategy_api_serial');
+    const request = await setupApp(stores);
     return request
         .get('/api/admin/strategies/default')
         .expect('Content-Type', /json/)
-        .expect(200)
-        .then(destroy);
+        .expect(200);
 });
 
 test.serial('cant get a strategy by name that dose not exist', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('strategy_api_serial');
+    const request = await setupApp(stores);
     return request
         .get('/api/admin/strategies/mystrategy')
         .expect('Content-Type', /json/)
-        .expect(404)
-        .then(destroy);
+        .expect(404);
 });
 
 test.serial('creates a new strategy', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('strategy_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/strategies')
         .send({
@@ -50,53 +61,44 @@ test.serial('creates a new strategy', async t => {
             parameters: [],
         })
         .set('Content-Type', 'application/json')
-        .expect(201)
-        .then(destroy);
+        .expect(201);
 });
 
 test.serial('requires new strategies to have a name', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('strategy_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/strategies')
         .send({ name: '' })
         .set('Content-Type', 'application/json')
-        .expect(400)
-        .then(destroy);
+        .expect(400);
 });
 
 test.serial('refuses to create a strategy with an existing name', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('strategy_api_serial');
+    const request = await setupApp(stores);
     return request
         .post('/api/admin/strategies')
         .send({ name: 'default', parameters: [] })
         .set('Content-Type', 'application/json')
-        .expect(400)
-        .then(destroy);
+        .expect(400);
 });
 
 test.serial('deletes a new strategy', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('strategy_api_serial');
-    return request
-        .delete('/api/admin/strategies/usersWithEmail')
-        .expect(200)
-        .then(destroy);
+    const request = await setupApp(stores);
+    return request.delete('/api/admin/strategies/usersWithEmail').expect(200);
 });
 
 test.serial("can't delete a strategy that dose not exist", async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('strategy_api_serial', false);
-    return request
-        .delete('/api/admin/strategies/unknown')
-        .expect(404)
-        .then(destroy);
+    const request = await setupApp(stores);
+    return request.delete('/api/admin/strategies/unknown').expect(404);
 });
 
 test.serial('updates a exiting strategy', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('strategy_api_serial');
+    const request = await setupApp(stores);
     return request
         .put('/api/admin/strategies/default')
         .send({
@@ -105,17 +107,15 @@ test.serial('updates a exiting strategy', async t => {
             parameters: [],
         })
         .set('Content-Type', 'application/json')
-        .expect(200)
-        .then(destroy);
+        .expect(200);
 });
 
 test.serial('cant update a unknown strategy', async t => {
     t.plan(0);
-    const { request, destroy } = await setupApp('strategy_api_serial');
+    const request = await setupApp(stores);
     return request
         .put('/api/admin/strategies/unknown')
         .send({ name: 'unkown', parameters: [] })
         .set('Content-Type', 'application/json')
-        .expect(404)
-        .then(destroy);
+        .expect(404);
 });

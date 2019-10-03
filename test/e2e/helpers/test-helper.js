@@ -5,7 +5,6 @@ process.env.NODE_ENV = 'test';
 const supertest = require('supertest');
 
 const getApp = require('../../../lib/app');
-const dbInit = require('./database-init');
 const getLogger = require('../../fixtures/no-logger');
 const StateService = require('../../../lib/state-service');
 
@@ -26,50 +25,18 @@ function createApp(stores, adminAuthentication = 'none', preHook) {
 }
 
 module.exports = {
-    async setupApp(name) {
-        const stores = await dbInit(name, getLogger);
+    async setupApp(stores) {
         const app = createApp(stores);
-
-        return {
-            request: supertest.agent(app),
-            destroy: async () => {
-                try {
-                    await stores.db.destroy();
-                } catch (error) {
-                    console.error('Failed to destroy db', error);
-                }
-            },
-        };
+        return supertest.agent(app);
     },
-    async setupAppWithAuth(name) {
-        const stores = await dbInit(name, getLogger);
+
+    async setupAppWithAuth(stores) {
         const app = createApp(stores, 'unsecure');
-
-        return {
-            request: supertest.agent(app),
-            destroy: async () => {
-                try {
-                    await stores.db.destroy();
-                } catch (error) {
-                    console.error('Failed to destroy db', error);
-                }
-            },
-        };
+        return supertest.agent(app);
     },
 
-    async setupAppWithCustomAuth(name, preHook) {
-        const stores = await dbInit(name, getLogger);
+    async setupAppWithCustomAuth(stores, preHook) {
         const app = createApp(stores, 'custom', preHook);
-
-        return {
-            request: supertest.agent(app),
-            destroy: async () => {
-                try {
-                    await stores.db.destroy();
-                } catch (error) {
-                    console.error('Failed to destroy db', error);
-                }
-            },
-        };
+        return supertest.agent(app);
     },
 };

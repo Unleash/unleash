@@ -87,6 +87,11 @@ exports[`should render DrawerMenu 1`] = `
       >
         Python
       </a>
+      <a
+        href="https://github.com/Unleash/unleash-client-core"
+      >
+        .Net Core
+      </a>
     </react-mdl-FooterLinkList>
   </react-mdl-FooterDropDownSection>
 </react-mdl-FooterSection>
@@ -180,6 +185,11 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         href="https://github.com/Unleash/unleash-client-python"
       >
         Python
+      </a>
+      <a
+        href="https://github.com/Unleash/unleash-client-core"
+      >
+        .Net Core
       </a>
     </react-mdl-FooterLinkList>
   </react-mdl-FooterDropDownSection>

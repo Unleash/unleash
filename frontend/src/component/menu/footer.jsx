@@ -25,6 +25,7 @@ export const FooterMenu = () => (
                 <a href="https://github.com/Unleash/unleash-client-go/">Go</a>
                 <a href="https://github.com/unleash/unleash-client-ruby">Ruby</a>
                 <a href="https://github.com/Unleash/unleash-client-python">Python</a>
+                <a href="https://github.com/Unleash/unleash-client-core">.Net Core</a>
             </FooterLinkList>
         </FooterDropDownSection>
     </FooterSection>

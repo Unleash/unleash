@@ -104,7 +104,7 @@
     "nyc": "^14.1.1",
     "passport": "^0.4.0",
     "passport-google-auth": "^1.0.2",
-    "prettier": "^1.15.3",
+    "prettier": "^1.18.2",
     "proxyquire": "^2.1.0",
     "superagent": "^5.0.2",
     "supertest": "^4.0.2",

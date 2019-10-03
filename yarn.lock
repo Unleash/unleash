@@ -399,9 +399,10 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@passport-next/passport-strategy/-/passport-strategy-1.1.0.tgz#4c0df069e2ec9262791b9ef1e23320c1d73bdb74"
 
-"@passport-next/passport@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@passport-next/passport/-/passport-3.0.0.tgz#01cc5c55573513384c728cef165cf2730a058578"
+"@passport-next/passport@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@passport-next/passport/-/passport-3.0.1.tgz#972404197b8a0230f524fb6a8ae79309b2d4f919"
+  integrity sha512-SnlWTv9Xgxlzq4S11W1T0gq9fvgDxoOov9Ad69r5M3zYvqw1r7J8e0epLg9w1gOhA3gN85H+aDD1/wwBzTVNkg==
   dependencies:
     "@passport-next/passport-strategy" "1.x.x"
 

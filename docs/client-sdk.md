@@ -16,6 +16,6 @@ To use Unleash in your application, you will need an Unleash Client SDK. Unleash
 
 ### Clients written by awesome enthusiasts:
 
-- [rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
+- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Larvel - PHP)
 - _...your implementation for your favorite language._

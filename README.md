@@ -42,8 +42,8 @@ Official client SDK's:
 
 Clients written by awesome enthusiasts: :fire:
 
-- [rarruda/unleash-client-python](https://github.com/rarruda/unleash-client-python) (Python 3)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
+- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Larvel - PHP)
 
 ### The Client API
 

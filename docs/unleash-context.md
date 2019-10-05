@@ -11,6 +11,8 @@ The unleash context is defined by these fields:
 - sessionId: String,
 - remoteAddress: String,
 - properties: Map<String, String>
+- appName: String
+- environment: String
 
 All fields are optional, but if they are not set you will not be able to use certain activation strategies.
 

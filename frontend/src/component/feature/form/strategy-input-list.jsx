@@ -54,15 +54,18 @@ export default class InputList extends Component {
         return (
             <div>
                 <p>{name}</p>
-                {list.map((entryValue, index) => (
-                    <Chip
-                        key={index + entryValue}
-                        style={{ marginRight: '3px' }}
-                        onClose={disabled ? undefined : () => this.onClose(index)}
-                    >
-                        {entryValue}
-                    </Chip>
-                ))}
+
+                <div style={{ display: 'flex' }}>
+                    {list.map((entryValue, index) => (
+                        <Chip
+                            key={index + entryValue}
+                            style={{ marginRight: '3px' }}
+                            onClose={disabled ? undefined : () => this.onClose(index)}
+                        >
+                            {entryValue}
+                        </Chip>
+                    ))}
+                </div>
 
                 {disabled ? (
                     ''

@@ -5,24 +5,32 @@ exports[`renders correctly when disabled 1`] = `
   <p>
     featureName
   </p>
-  <react-mdl-Chip
+  <div
     style={
       Object {
-        "marginRight": "3px",
+        "display": "flex",
       }
     }
   >
-    item1
-  </react-mdl-Chip>
-  <react-mdl-Chip
-    style={
-      Object {
-        "marginRight": "3px",
+    <react-mdl-Chip
+      style={
+        Object {
+          "marginRight": "3px",
+        }
       }
-    }
-  >
-    item2
-  </react-mdl-Chip>
+    >
+      item1
+    </react-mdl-Chip>
+    <react-mdl-Chip
+      style={
+        Object {
+          "marginRight": "3px",
+        }
+      }
+    >
+      item2
+    </react-mdl-Chip>
+  </div>
   
 </div>
 `;
@@ -32,6 +40,13 @@ exports[`renders strategy with empty list as param 1`] = `
   <p>
     featureName
   </p>
+  <div
+    style={
+      Object {
+        "display": "flex",
+      }
+    }
+  />
   <div
     style={
       Object {
@@ -73,26 +88,34 @@ exports[`renders strategy with list as param 1`] = `
   <p>
     featureName
   </p>
-  <react-mdl-Chip
-    onClose={[Function]}
+  <div
     style={
       Object {
-        "marginRight": "3px",
+        "display": "flex",
       }
     }
   >
-    item1
-  </react-mdl-Chip>
-  <react-mdl-Chip
-    onClose={[Function]}
-    style={
-      Object {
-        "marginRight": "3px",
+    <react-mdl-Chip
+      onClose={[Function]}
+      style={
+        Object {
+          "marginRight": "3px",
+        }
       }
-    }
-  >
-    item2
-  </react-mdl-Chip>
+    >
+      item1
+    </react-mdl-Chip>
+    <react-mdl-Chip
+      onClose={[Function]}
+      style={
+        Object {
+          "marginRight": "3px",
+        }
+      }
+    >
+      item2
+    </react-mdl-Chip>
+  </div>
   <div
     style={
       Object {

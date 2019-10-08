@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "scripts": {
-    "build": "rm -rf dist && mkdir -p dist/public && npm run build:assets && npm run build:html && npm run build:img && npm run build:ico",
+    "build": "npm run build:assets && npm run build:html && npm run build:img && npm run build:ico",
     "build:assets": "NODE_ENV=production webpack -p --display-optimization-bailout",
     "build:html": "cp public/*.html dist/.",
     "build:ico": "cp public/*.ico dist/.",
@@ -49,6 +49,7 @@
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-stage-0": "^6.5.0",
     "babel-preset-stage-2": "^6.13.0",
+    "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^2.1.1",
     "debug": "^4.1.1",
     "enzyme": "^3.9.0",

@@ -20,7 +20,7 @@
     "url": "https://github.com/finn-no/unleash/issues"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "license": "Apache-2.0",
   "scripts": {

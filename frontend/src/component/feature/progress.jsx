@@ -93,7 +93,7 @@ class Progress extends Component {
         const diameter = Math.PI * 2 * radius;
         const progressStyle = {
             strokeDasharray: `${diameter}px ${diameter}px`,
-            strokeDashoffset: `${(100 - this.state.percentage) / 100 * diameter}px`,
+            strokeDashoffset: `${((100 - this.state.percentage) / 100) * diameter}px`,
         };
 
         return isFallback ? (

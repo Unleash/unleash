@@ -1,6 +1,10 @@
 import reducer from '../index';
 import { receiveConfig } from '../actions';
 
+beforeEach(() => {
+    localStorage.clear();
+});
+
 test('should be default state', () => {
     const state = reducer(undefined, {});
     expect(state.toJS()).toMatchSnapshot();

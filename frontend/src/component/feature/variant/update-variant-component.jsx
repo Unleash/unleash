@@ -38,7 +38,7 @@ class UpdateVariantComponent extends Component {
     addVariant = (e, variants) => {
         e.preventDefault();
         const size = variants.length + 1;
-        const percentage = parseInt(1 / size * 100);
+        const percentage = parseInt((1 / size) * 100);
         const variant = {
             name: '',
             weight: percentage,
@@ -53,7 +53,7 @@ class UpdateVariantComponent extends Component {
         e.preventDefault();
         const variants = this.props.input.variants;
         const size = variants.length - 1;
-        const percentage = parseInt(1 / size * 100);
+        const percentage = parseInt((1 / size) * 100);
         this.updateWeight(percentage, size);
         this.props.removeVariant(index);
     };

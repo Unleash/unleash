@@ -28,9 +28,8 @@ export const mapStateToPropsConfigurable = isFeature => state => {
     }
 
     if (settings.sort === 'enabled') {
-        features = features.sort(
-            (a, b) =>
-                // eslint-disable-next-line
+        features = features.sort((a, b) =>
+            // eslint-disable-next-line
             a.enabled === b.enabled ? 0 : a.enabled ? -1 : 1
         );
     } else if (settings.sort === 'created') {
@@ -78,6 +77,9 @@ const mapDispatchToProps = {
     updateSetting: updateSettingForGroup('feature'),
 };
 
-const FeatureListContainer = connect(mapStateToProps, mapDispatchToProps)(FeatureListComponent);
+const FeatureListContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(FeatureListComponent);
 
 export default FeatureListContainer;

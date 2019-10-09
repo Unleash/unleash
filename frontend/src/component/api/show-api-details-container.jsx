@@ -11,4 +11,7 @@ const mapStateToProps = state => ({
     uiConfig: state.uiConfig.toJS(),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShowApiDetailsComponent);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ShowApiDetailsComponent);

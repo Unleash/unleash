@@ -11,6 +11,9 @@ const mapDispatchToProps = {
     updateSetting: updateSettingForGroup('feature'),
 };
 
-const ArchiveListContainer = connect(mapStateToProps, mapDispatchToProps)(FeatureListComponent);
+const ArchiveListContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(FeatureListComponent);
 
 export default ArchiveListContainer;

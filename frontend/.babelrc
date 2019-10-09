@@ -1,12 +1,12 @@
 {
-  "presets": ["react", ["es2015", {"modules": false}], "stage-2"],
-  "plugins": ["transform-decorators-legacy"],
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": [
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    "@babel/plugin-proposal-class-properties"
+  ],
   "env": {
-    "development": {
-      "presets": ["react-hmre"]
-    },
     "test": {
-      "plugins": ["transform-es2015-modules-commonjs"]
+      "plugins": ["@babel/plugin-transform-modules-commonjs"]
     }
   }
 }

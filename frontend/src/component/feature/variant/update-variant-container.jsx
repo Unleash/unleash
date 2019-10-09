@@ -64,4 +64,7 @@ const actions = createActions({
     prepare,
 });
 
-export default connect(mapStateToProps, actions)(UpdateFeatureToggleComponent);
+export default connect(
+    mapStateToProps,
+    actions
+)(UpdateFeatureToggleComponent);

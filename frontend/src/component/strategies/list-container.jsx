@@ -22,6 +22,9 @@ const mapDispatchToProps = dispatch => ({
     fetchStrategies: () => fetchStrategies()(dispatch),
 });
 
-const StrategiesListContainer = connect(mapStateToProps, mapDispatchToProps)(StrategiesListComponent);
+const StrategiesListContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(StrategiesListComponent);
 
 export default StrategiesListContainer;

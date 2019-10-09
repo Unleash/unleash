@@ -70,6 +70,9 @@ const prepare = (methods, dispatch, ownProps) => {
 };
 const actions = createActions({ id: ID, prepare });
 
-const FormAddContainer = connect(mapStateToProps, actions)(AddFeatureComponent);
+const FormAddContainer = connect(
+    mapStateToProps,
+    actions
+)(AddFeatureComponent);
 
 export default FormAddContainer;

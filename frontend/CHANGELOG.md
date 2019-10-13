@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.7]
+- fix: upgrade react to 16.10.2
+- fix: upgrade eslint to version 6.5.1
+- fix: upgrade style-loader to version 1.0.0
+- fix: Build with node-10
+- chore: update yarn.lock
+- fix: babel-preset-env (#190)
+- fix: Added plugin to remove dist folder automatically (#191)
+- fix: Prevent text highlighting overlap between chips (#188)
+- chore: Added official sdk in the footer (#189)
+
 ## [3.2.6]
 - fix: Add new locales: cz, de
 

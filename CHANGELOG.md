@@ -2,6 +2,7 @@
 
 ## 3.2.16
 
+- fix: Update unleash-frontend to version 3.2.7
 - fix: lint error
 - fix: Add admin api for context-field definitions
 - fix: Update lolex to the latest version 🚀 (#508)

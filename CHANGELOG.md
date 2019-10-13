@@ -1,5 +1,50 @@
 # Changelog
 
+## 3.2.16
+
+- fix: lint error
+- fix: Add admin api for context-field definitions
+- fix: Update lolex to the latest version 🚀 (#508)
+- fix: Only use set-value 2.0.1
+- chore: Added static context props in docs (#507)
+- fix: Update dev-dependencies
+- fix: upgrade prettier to version 1.18.2
+- fix: Upgrade express to version 4.17.1
+- fix: update eslint to version 6.5.1
+- fix: update @passport-next/passport to version 3.0.1
+- fix: remove unused dependency: commander
+- chore: Add details about Larvel (php) SDK
+- chore: Added unleash-client-core as official sdk (#505)
+- fix: e2e tests should only set up one database per test file (#504)
+- chore: Added reference to official client implementation in .Net (#503)
+- fix(deps): bump mixin-deep from 1.3.1 to 1.3.2 (#487)
+- fix: do not destroy db on startup
+- fix: remove old test-setup hacks
+- fix: upgrade knex to version 0.19.4
+- fix: upgrade @types/node to version 12.7.9
+- fix: upgrade lint-staged to version 9.4.1
+- fix: add more logging if test-db destroy fails
+- fix: upgrade async to version 3.1.0
+- fix: upgrade supertest to version 4.0.2
+- chore: upgrade ava to version 2.4.0
+- fix: remove unused depenency yallist
+- fix: Bump yargs to version 14.0.0
+- fix: bump husky to version 3.0.8
+- chore: Updated slack invite token (#501)
+- fix: Upgrade log4js to version 5.1.0
+- chore: increase test-logging
+- chore: see if travis is hapy with serial tests
+- Revert "fix: build on node 10 and 12"
+- fix: build on node 10 and 12
+- fix: bump pg to 7.12.1
+- fix: only build with node v10 for now
+- fix: build on node 10 and 12
+- Fix asset paths (#486)
+- chore: fix broken links
+- chore: Add Elixir Unleash Library to README (#480)
+- fix: update keycloak example (#478)
+- fix(package): update commander to version 3.0.0
+
 ## 3.2.15
 
 - feat: add db query latency metrics

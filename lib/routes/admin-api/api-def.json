@@ -18,6 +18,9 @@
     },
     "state": {
       "uri": "/api/admin/state"
+    },
+    "context": {
+      "uri": "/api/admin/context"
     }
   }
 }

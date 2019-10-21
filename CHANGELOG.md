@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.2.17
+- fix: bump knex from 0.19.4 to 0.19.5 (secutiry-fix)
+
 ## 3.2.16
 
 - fix: Update unleash-frontend to version 3.2.7

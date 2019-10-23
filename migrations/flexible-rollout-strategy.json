@@ -1,0 +1,24 @@
+{
+  "name": "flexibleRollout",
+  "description": "Gradually activate feature toggle based on sane stickiness",
+  "parameters": [
+    {
+      "name": "rollout",
+      "type": "percentage",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "stickiness",
+      "type": "string",
+      "description": "Used define stickiness. Possible values: default, userId, sessionId, random",
+      "required": true
+    },
+    {
+      "name": "groupId",
+      "type": "string",
+      "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+      "required": true
+    }
+  ]
+}

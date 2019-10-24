@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.8]
+- fix: auto-fill groupId paramters
+- feat: Add support for flexible rollout strategy. (#193)
+
+
 ## [3.2.7]
 - fix: upgrade react to 16.10.2
 - fix: upgrade eslint to version 6.5.1

@@ -134,6 +134,60 @@ Returns 200-respose if the feature toggle was updated successfully.
 
 Used to archive a feature toggle. A feature toggle can never be totally be deleted, but can be archived. This is a design decision to make sure that a old feature toggle suddenly reappears becuase someone else re-using the same name.
 
+### Enable a Feature Toggle
+
+`POST: http://unleash.host.com/api/admin/features/:featureName/toggle/on`
+
+Used to enable a feature toggle. The :featureName must match an existing Feature Toggle. Returns 200-response if the feature toggle was enabled successfully.
+
+**Body**
+
+None
+
+**Example response:**
+
+```json
+{
+  "name": "Feature.A",
+  "description": "lorem ipsum..",
+  "enabled": true,
+  "strategies": [
+    {
+      "name": "default",
+      "parameters": {}
+    }
+  ],
+  "variants": []
+}
+```
+
+### Disable a Feature Toggle
+
+`POST: http://unleash.host.com/api/admin/features/:featureName/toggle/off`
+
+Used to disable a feature toggle. The :featureName must match an existing Feature Toggle. Returns 200-response if the feature toggle was disabled successfully.
+
+**Body**
+
+None
+
+**Example response:**
+
+```json
+{
+  "name": "Feature.A",
+  "description": "lorem ipsum..",
+  "enabled": false,
+  "strategies": [
+    {
+      "name": "default",
+      "parameters": {}
+    }
+  ],
+  "variants": []
+}
+```
+
 ## Archive
 
 ### Fetch archived toggles

@@ -12,6 +12,7 @@ exports[`render the create feature page 1`] = `
     <StrategiesSection
       addStrategy={[MockFunction]}
       configuredStrategies={Array []}
+      featureToggleName="feature"
       moveStrategy={[MockFunction]}
       removeStrategy={[MockFunction]}
       updateStrategy={[MockFunction]}

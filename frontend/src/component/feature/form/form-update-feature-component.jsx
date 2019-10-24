@@ -34,6 +34,7 @@ class UpdateFeatureComponent extends Component {
                 <section style={{ padding: '16px' }}>
                     <StrategiesSection
                         configuredStrategies={configuredStrategies}
+                        featureToggleName={input.name}
                         addStrategy={addStrategy}
                         updateStrategy={updateStrategy}
                         moveStrategy={moveStrategy}

@@ -16,6 +16,7 @@ import {
 import { DragSource, DropTarget } from 'react-dnd';
 import { Link } from 'react-router-dom';
 import StrategyInputPercentage from './strategy-input-percentage';
+import FlexibleRolloutStrategyInput from './flexible-rollout-strategy-input';
 import StrategyInputList from './strategy-input-list';
 import styles from './strategy.scss';
 
@@ -58,6 +59,7 @@ class StrategyConfigure extends React.Component {
     /* eslint-enable */
     static propTypes = {
         strategy: PropTypes.object.isRequired,
+        featureToggleName: PropTypes.string.isRequired,
         strategyDefinition: PropTypes.object,
         updateStrategy: PropTypes.func,
         removeStrategy: PropTypes.func,
@@ -92,6 +94,21 @@ class StrategyConfigure extends React.Component {
         evt.preventDefault();
         this.props.removeStrategy();
     };
+
+    renderStrategContent(strategyDefinition) {
+        if (strategyDefinition.name === 'flexibleRollout') {
+            return (
+                <FlexibleRolloutStrategyInput
+                    strategy={this.props.strategy}
+                    featureToggleName={this.props.featureToggleName}
+                    updateStrategy={this.props.updateStrategy}
+                    handleConfigChange={this.handleConfigChange.bind(this)}
+                />
+            );
+        } else {
+            return this.renderInputFields(strategyDefinition);
+        }
+    }
 
     renderInputFields({ parameters }) {
         if (parameters && parameters.length > 0) {
@@ -193,7 +210,7 @@ class StrategyConfigure extends React.Component {
 
         let item;
         if (this.props.strategyDefinition) {
-            const inputFields = this.renderInputFields(this.props.strategyDefinition);
+            const strategyContent = this.renderStrategContent(this.props.strategyDefinition);
             const { name } = this.props.strategy;
             item = (
                 <Card shadow={0} className={styles.card} style={{ opacity: isDragging ? '0.1' : '1' }}>
@@ -203,11 +220,7 @@ class StrategyConfigure extends React.Component {
                         {name}
                     </CardTitle>
                     <CardText>{this.props.strategyDefinition.description}</CardText>
-                    {inputFields && (
-                        <CardActions border style={{ padding: '20px' }}>
-                            {inputFields}
-                        </CardActions>
-                    )}
+                    {strategyContent && <CardActions border>{strategyContent}</CardActions>}
 
                     <CardMenu className="mdl-color-text--white">
                         <Link title="View strategy" to={`/strategies/view/${name}`} className={styles.editLink}>

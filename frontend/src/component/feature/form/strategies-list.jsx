@@ -9,13 +9,21 @@ class StrategiesList extends React.Component {
     static propTypes = {
         strategies: PropTypes.array.isRequired,
         configuredStrategies: PropTypes.array.isRequired,
+        featureToggleName: PropTypes.string.isRequired,
         updateStrategy: PropTypes.func,
         removeStrategy: PropTypes.func,
         moveStrategy: PropTypes.func,
     };
 
     render() {
-        const { strategies, configuredStrategies, moveStrategy, removeStrategy, updateStrategy } = this.props;
+        const {
+            strategies,
+            configuredStrategies,
+            moveStrategy,
+            removeStrategy,
+            updateStrategy,
+            featureToggleName,
+        } = this.props;
 
         if (!configuredStrategies || configuredStrategies.length === 0) {
             return (
@@ -29,6 +37,7 @@ class StrategiesList extends React.Component {
             <ConfigureStrategy
                 index={i}
                 key={`${strategy.id}-${i}`}
+                featureToggleName={featureToggleName}
                 strategy={strategy}
                 moveStrategy={moveStrategy}
                 removeStrategy={removeStrategy ? removeStrategy.bind(null, i) : null}

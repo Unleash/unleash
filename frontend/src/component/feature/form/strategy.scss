@@ -1,8 +1,8 @@
 .item {
     flex: 1;
-    min-width: 300px;
+    min-width: 400px;
     max-width: 100%;
-    margin: 5px 0px 15px 35px;
+    margin: 5px 0 5px 5px;
     position: relative;
     z-index: 1;
 };
@@ -17,6 +17,7 @@
     margin-left: 0;
 }
 
+/*
 .item:not(:first-child):after {
     content: " OR ";
     position: absolute;
@@ -30,6 +31,7 @@
     height: 100%;
     z-index: 2;
 }
+*/
 
 .cardTitle {
     color: #fff;

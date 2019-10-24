@@ -7,16 +7,19 @@ import { DrawerMenu } from './drawer';
 import Breadcrum from './breadcrumb';
 import ShowUserContainer from '../user/show-user-container';
 import { fetchUIConfig } from './../../store/ui-config/actions';
+import { fetchContext } from './../../store/context/actions';
 
 class HeaderComponent extends PureComponent {
     static propTypes = {
         uiConfig: PropTypes.object.isRequired,
         fetchUIConfig: PropTypes.func.isRequired,
+        fetchContext: PropTypes.func.isRequired,
         location: PropTypes.object.isRequired,
     };
 
     componentDidMount() {
         this.props.fetchUIConfig();
+        this.props.fetchContext();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -51,5 +54,5 @@ class HeaderComponent extends PureComponent {
 
 export default connect(
     state => ({ uiConfig: state.uiConfig.toJS() }),
-    { fetchUIConfig }
+    { fetchUIConfig, fetchContext }
 )(HeaderComponent);

@@ -106,7 +106,12 @@ class StrategyConfigure extends React.Component {
                 />
             );
         } else {
-            return this.renderInputFields(strategyDefinition);
+            return (
+                <div>
+                    <br />
+                    {this.renderInputFields(strategyDefinition)}
+                </div>
+            );
         }
     }
 
@@ -124,6 +129,8 @@ class StrategyConfigure extends React.Component {
                                 name={name}
                                 onChange={this.handleConfigChange.bind(this, name)}
                                 value={1 * value}
+                                minLabel="off"
+                                maxLabel="on"
                             />
                             {description && <p className={styles.helpText}>{description}</p>}
                         </div>
@@ -184,6 +191,9 @@ class StrategyConfigure extends React.Component {
                         </div>
                     );
                 } else {
+                    if (name === 'groupId' && !value) {
+                        value = this.props.featureToggleName;
+                    }
                     return (
                         <div key={name}>
                             <Textfield

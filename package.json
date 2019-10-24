@@ -86,7 +86,7 @@
     "prometheus-gc-stats": "^0.6.1",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
-    "unleash-frontend": "3.2.7",
+    "unleash-frontend": "3.2.8",
     "yargs": "^14.0.0"
   },
   "devDependencies": {

@@ -1,6 +1,11 @@
 # Changelog
 
+## 3.2.18
+
+- feat: Add new Flexible Rollout Strategy (#517)
+
 ## 3.2.17
+
 - fix: bump knex from 0.19.4 to 0.19.5 (secutiry-fix)
 
 ## 3.2.16

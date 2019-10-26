@@ -11,8 +11,22 @@ const UI_CONFIG = `${basePath}:ui_config`;
 
 const DEFAULT = new $Map({
     headerBackground: undefined,
-    environment: undefined,
-    slogan: 'A product originally created by FINN.no.',
+    environment: 'Open-Soruce',
+    slogan: 'The enterprise ready feature toggle service.',
+    links: [
+        {
+            value: 'User documentation',
+            icon: 'library_books',
+            href: 'https://unleash.github.io',
+            title: 'User documentation',
+        },
+        {
+            value: 'GitHub',
+            icon: 'c_github',
+            href: 'https://github.com/Unleash',
+            title: 'Source code on GitHub',
+        },
+    ],
 });
 
 function getInitState() {

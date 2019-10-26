@@ -1,11 +1,20 @@
 import React from 'react';
 import { Drawer, Icon, Navigation } from 'react-mdl';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styles from '../styles.scss';
 
 import { baseRoutes as routes } from './routes';
 
-export const DrawerMenu = () => (
+function getIcon(name) {
+    if (name === 'c_github') {
+        return <i className={['material-icons', styles.navigationIcon, styles.iconGitHub].join(' ')} />;
+    } else {
+        return <Icon name={name} className={styles.navigationIcon} />;
+    }
+}
+
+export const DrawerMenu = ({ links = [] }) => (
     <Drawer className="mdl-color--white">
         <span className={[styles.drawerTitle, 'mdl-layout-title'].join(' ')}>
             <img src="public/logo.png" width="32" height="32" className={styles.drawerTitleLogo} />
@@ -28,20 +37,20 @@ export const DrawerMenu = () => (
         </Navigation>
         <hr />
         <Navigation className={styles.navigation}>
-            <a
-                href="https://unleash.github.io"
-                target="_blank"
-                className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
-            >
-                <Icon name="library_books" className={styles.navigationIcon} /> User documentation
-            </a>
-            <a
-                href="https://github.com/Unleash"
-                target="_blank"
-                className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
-            >
-                <i className={['material-icons', styles.navigationIcon, styles.iconGitHub].join(' ')} /> GitHub
-            </a>
+            {links.map(link => (
+                <a
+                    href={link.href}
+                    target="_blank"
+                    className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
+                    title={link.title}
+                >
+                    {getIcon(link.icon)} {link.value}
+                </a>
+            ))}
         </Navigation>
     </Drawer>
 );
+
+DrawerMenu.propTypes = {
+    links: PropTypes.array,
+};

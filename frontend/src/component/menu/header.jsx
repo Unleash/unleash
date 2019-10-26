@@ -37,7 +37,7 @@ class HeaderComponent extends PureComponent {
     }
 
     render() {
-        const { headerBackground } = this.props.uiConfig;
+        const { headerBackground, links } = this.props.uiConfig;
         const style = headerBackground ? { background: headerBackground } : {};
         return (
             <React.Fragment>
@@ -46,7 +46,7 @@ class HeaderComponent extends PureComponent {
                         <ShowUserContainer />
                     </Navigation>
                 </Header>
-                <DrawerMenu />
+                <DrawerMenu links={links} />
             </React.Fragment>
         );
     }

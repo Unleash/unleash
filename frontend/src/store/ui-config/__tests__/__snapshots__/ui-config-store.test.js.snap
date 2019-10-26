@@ -2,9 +2,23 @@
 
 exports[`should be default state 1`] = `
 Object {
-  "environment": undefined,
+  "environment": "Open-Soruce",
   "headerBackground": undefined,
-  "slogan": "A product originally created by FINN.no.",
+  "links": Array [
+    Object {
+      "href": "https://unleash.github.io",
+      "icon": "library_books",
+      "title": "User documentation",
+      "value": "User documentation",
+    },
+    Object {
+      "href": "https://github.com/Unleash",
+      "icon": "c_github",
+      "title": "Source code on GitHub",
+      "value": "GitHub",
+    },
+  ],
+  "slogan": "The enterprise ready feature toggle service.",
 }
 `;
 
@@ -12,14 +26,42 @@ exports[`should be merged state all 1`] = `
 Object {
   "environment": "dev",
   "headerBackground": "red",
+  "links": Array [
+    Object {
+      "href": "https://unleash.github.io",
+      "icon": "library_books",
+      "title": "User documentation",
+      "value": "User documentation",
+    },
+    Object {
+      "href": "https://github.com/Unleash",
+      "icon": "c_github",
+      "title": "Source code on GitHub",
+      "value": "GitHub",
+    },
+  ],
   "slogan": "hello",
 }
 `;
 
 exports[`should only update headerBackground 1`] = `
 Object {
-  "environment": undefined,
+  "environment": "Open-Soruce",
   "headerBackground": "black",
-  "slogan": "A product originally created by FINN.no.",
+  "links": Array [
+    Object {
+      "href": "https://unleash.github.io",
+      "icon": "library_books",
+      "title": "User documentation",
+      "value": "User documentation",
+    },
+    Object {
+      "href": "https://github.com/Unleash",
+      "icon": "c_github",
+      "title": "Source code on GitHub",
+      "value": "GitHub",
+    },
+  ],
+  "slogan": "The enterprise ready feature toggle service.",
 }
 `;

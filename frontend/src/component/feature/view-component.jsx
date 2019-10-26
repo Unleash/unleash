@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, Tab, ProgressBar, Button, Card, CardText, CardTitle, CardActions, Textfield, Switch } from 'react-mdl';
+import { Tabs, Tab, ProgressBar, Button, Card, CardTitle, CardActions, Switch } from 'react-mdl';
 import { Link } from 'react-router-dom';
 
 import HistoryComponent from '../history/history-list-toggle-container';
@@ -8,6 +8,7 @@ import MetricComponent from './metric-container';
 import EditFeatureToggle from './form/form-update-feature-container';
 import EditVariants from './variant/update-variant-container';
 import ViewFeatureToggle from './form/form-view-feature-container';
+import UpdateDescriptionComponent from './form/update-description-component';
 import { styles as commonStyles } from '../common';
 import { CREATE_FEATURE, DELETE_FEATURE, UPDATE_FEATURE } from '../../permissions';
 
@@ -133,8 +134,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
             revive(featureToggle.name);
             this.props.history.push('/features');
         };
-        const updateFeatureToggle = e => {
-            let feature = { ...featureToggle, description: e.target.value };
+        const updateDescription = description => {
+            let feature = { ...featureToggle, description };
             if (Array.isArray(feature.strategies)) {
                 feature.strategies.forEach(s => {
                     delete s.id;
@@ -143,38 +144,16 @@ export default class ViewFeatureToggleComponent extends React.Component {
 
             this.props.editFeatureToggle(feature);
         };
-        const setValue = (v, event) => {
-            featureToggle[v] = event.target.value;
-            this.forceUpdate();
-        };
 
         return (
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
-                <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
-                <CardText>
-                    {this.isFeatureView && hasPermission(UPDATE_FEATURE) ? (
-                        <Textfield
-                            floatingLabel
-                            style={{ width: '100%' }}
-                            rows={1}
-                            label="Description"
-                            required
-                            value={featureToggle.description}
-                            onChange={v => setValue('description', v)}
-                            onBlur={updateFeatureToggle}
-                        />
-                    ) : (
-                        <Textfield
-                            disabled
-                            floatingLabel
-                            style={{ width: '100%' }}
-                            rows={1}
-                            label="Description"
-                            required
-                            value={featureToggle.description}
-                        />
-                    )}
-                </CardText>
+                <CardTitle style={{ wordBreak: 'break-all' }}>{featureToggle.name}</CardTitle>
+                <UpdateDescriptionComponent
+                    isFeatureView={this.isFeatureView}
+                    description={featureToggle.description}
+                    update={updateDescription}
+                    hasPermission={hasPermission}
+                />
 
                 <CardActions
                     border

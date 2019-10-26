@@ -13,7 +13,6 @@ exports[`renders correctly with one feature 1`] = `
   <react-mdl-CardTitle
     style={
       Object {
-        "paddingTop": "24px",
         "wordBreak": "break-all",
       }
     }
@@ -21,20 +20,14 @@ exports[`renders correctly with one feature 1`] = `
     Another
   </react-mdl-CardTitle>
   <react-mdl-CardText>
-    <react-mdl-Textfield
-      floatingLabel={true}
-      label="Description"
-      onBlur={[Function]}
-      onChange={[Function]}
-      required={true}
-      rows={1}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      value="another's description"
-    />
+    another's description
+     
+    <a
+      href="#edit"
+      onClick={[Function]}
+    >
+      edit
+    </a>
   </react-mdl-CardText>
   <react-mdl-CardActions
     border={true}

@@ -55,7 +55,7 @@ export default class InputList extends Component {
             <div>
                 <p>{name}</p>
 
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                     {list.map((entryValue, index) => (
                         <Chip
                             key={index + entryValue}

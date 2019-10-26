@@ -9,6 +9,7 @@ exports[`renders correctly when disabled 1`] = `
     style={
       Object {
         "display": "flex",
+        "flexWrap": "wrap",
       }
     }
   >
@@ -44,6 +45,7 @@ exports[`renders strategy with empty list as param 1`] = `
     style={
       Object {
         "display": "flex",
+        "flexWrap": "wrap",
       }
     }
   />
@@ -92,6 +94,7 @@ exports[`renders strategy with list as param 1`] = `
     style={
       Object {
         "display": "flex",
+        "flexWrap": "wrap",
       }
     }
   >

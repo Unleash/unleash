@@ -5906,10 +5906,10 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
 
-unleash-frontend@3.2.8:
-  version "3.2.8"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.2.8.tgz#b8dedc23d3c44cac313c6da617940b5ea5162b83"
-  integrity sha512-QeXWOE+nxtumZYOyt9KZsIVpnaQPgEibAsvGhsS0t8ZidSnUybPbY/NE82IDOVneKO34kwfRCTnIkiQQLc4EEw==
+unleash-frontend@3.2.9:
+  version "3.2.9"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.2.9.tgz#2f5210c2444b23318be96c2d073cba621fb28a61"
+  integrity sha512-RH8Ad3C4DF1Lbgu0E9NDNrxeQHXZ5HG90DNyxc3rbkR0wmmrsL/1rl7fDniC+yl6h+lWjdwjK5A3dgSa/WQWkg==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

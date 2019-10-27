@@ -96,6 +96,9 @@ class StrategyConfigure extends React.Component {
     };
 
     renderStrategContent(strategyDefinition) {
+        if (strategyDefinition.name === 'default') {
+            return <h6>{strategyDefinition.description}</h6>;
+        }
         if (strategyDefinition.name === 'flexibleRollout') {
             return (
                 <FlexibleRolloutStrategyInput
@@ -106,12 +109,7 @@ class StrategyConfigure extends React.Component {
                 />
             );
         } else {
-            return (
-                <div>
-                    <br />
-                    {this.renderInputFields(strategyDefinition)}
-                </div>
-            );
+            return <div>{this.renderInputFields(strategyDefinition)}</div>;
         }
     }
 
@@ -217,6 +215,7 @@ class StrategyConfigure extends React.Component {
 
     render() {
         const { isDragging, connectDragPreview, connectDragSource, connectDropTarget } = this.props;
+        const description = this.props.strategyDefinition.description;
 
         let item;
         if (this.props.strategyDefinition) {
@@ -224,17 +223,22 @@ class StrategyConfigure extends React.Component {
             const { name } = this.props.strategy;
             item = (
                 <Card shadow={0} className={styles.card} style={{ opacity: isDragging ? '0.1' : '1' }}>
-                    <CardTitle className={styles.cardTitle}>
+                    <CardTitle className={styles.cardTitle} title={description}>
                         <Icon name="extension" />
                         &nbsp;
                         {name}
                     </CardTitle>
-                    <CardText>{this.props.strategyDefinition.description}</CardText>
+
                     {strategyContent && <CardActions border>{strategyContent}</CardActions>}
 
                     <CardMenu className="mdl-color-text--white">
-                        <Link title="View strategy" to={`/strategies/view/${name}`} className={styles.editLink}>
-                            <Icon name="link" />
+                        <Link
+                            title="View strategy"
+                            to={`/strategies/view/${name}`}
+                            className={styles.editLink}
+                            title={description}
+                        >
+                            <Icon name="info" />
                         </Link>
                         {this.props.removeStrategy ? (
                             <IconButton title="Remove strategy from toggle" name="delete" onClick={this.handleRemove} />

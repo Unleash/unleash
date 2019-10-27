@@ -13,6 +13,7 @@ exports[`renders correctly with one feature 1`] = `
   <react-mdl-CardTitle
     style={
       Object {
+        "paddingBottom": 0,
         "wordBreak": "break-all",
       }
     }

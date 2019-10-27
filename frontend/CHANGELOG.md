@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.9]
+- fix: Update feature toggle description. (#198)
+- fix: Update feature toggle description. (#196)
+- feat: Filter on all values in toogle data
+- feat: Add option for custom ui links (#195)
+- fix: Ensure chips are wrapped (#194)
+
+
 ## [3.2.8]
 - fix: auto-fill groupId paramters
 - feat: Add support for flexible rollout strategy. (#193)

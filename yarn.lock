@@ -835,7 +835,7 @@ bintrees@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/bintrees/-/bintrees-1.0.1.tgz#0e655c9b9c2435eaab68bf4027226d2b55a34524"
 
-bluebird@^3.1.1, bluebird@^3.5.5, bluebird@^3.7.0:
+bluebird@^3.1.1, bluebird@^3.5.5, bluebird@^3.7.1:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.1.tgz#df70e302b471d7473489acf26a93d63b53f874de"
   integrity sha512-DdmyoGCleJnkbp3nkbxTLJ18rjDsE4yCggEwKNXkeV123sPNfOCYeDoeuOY+F2FrSjO1YXcTU+dsy96KMy+gcg==
@@ -3352,12 +3352,12 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
 
-knex@^0.19.4:
-  version "0.19.5"
-  resolved "https://registry.yarnpkg.com/knex/-/knex-0.19.5.tgz#3597ebecf88a5942f18c3e6d91af53bda59eeb5d"
-  integrity sha512-Hy258avCVircQq+oj3WBqPzl8jDIte438Qlq+8pt1i/TyLYVA4zPh2uKc7Bx0t+qOpa6D42HJ2jjtl2vagzilw==
+knex@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/knex/-/knex-0.20.0.tgz#f1c83718ab60da2fc81ff00de1dd4616400564dd"
+  integrity sha512-2IQUDItwSAuhTxtH/T4VibEuFMngI9LUkpgM0qD/JH1xWARRtWIJ9mU8hNNnFgrKh9RZdPYZToBgsV/UEaje4g==
   dependencies:
-    bluebird "^3.7.0"
+    bluebird "^3.7.1"
     colorette "1.1.0"
     commander "^3.0.2"
     debug "4.1.1"

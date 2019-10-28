@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.2.19
+
+- fix: update knex to version 0.20.0
+- fix: Update unleash-frontend to 3.2.9
+
 ## 3.2.18
 
 - feat: Add new Flexible Rollout Strategy (#517)

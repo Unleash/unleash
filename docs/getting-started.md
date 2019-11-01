@@ -17,7 +17,7 @@ On startup _Unleash_ will perform necessary migrations if needed.
 
 ```bash
 $ npm install unleash-server -g
-$ unleash -d postgres://unleash_user:passord@localhost:5432/unleash -p 4242
+$ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 
 Unleash started on http://localhost:4242
 ```
@@ -31,7 +31,7 @@ const unleash = require('unleash-server');
 
 unleash
   .start({
-    databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash',
+    databaseUrl: 'postgres://unleash_user:password@localhost:5432/unleash',
     port: 4242,
   })
   .then(unleash => {

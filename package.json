@@ -66,6 +66,7 @@
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.4",
     "cookie-session": "^2.0.0-beta.3",
+    "cors": "^2.8.5",
     "db-migrate": "^0.11.6",
     "db-migrate-pg": "^1.0.0",
     "deep-diff": "^1.0.2",

@@ -2,7 +2,7 @@
 
 exports[`should be default state 1`] = `
 Object {
-  "environment": "Open-Soruce",
+  "environment": "",
   "headerBackground": undefined,
   "links": Array [
     Object {
@@ -46,7 +46,7 @@ Object {
 
 exports[`should only update headerBackground 1`] = `
 Object {
-  "environment": "Open-Soruce",
+  "environment": "",
   "headerBackground": "black",
   "links": Array [
     Object {

@@ -11,7 +11,7 @@ const UI_CONFIG = `${basePath}:ui_config`;
 
 const DEFAULT = new $Map({
     headerBackground: undefined,
-    environment: 'Open-Soruce',
+    environment: '',
     slogan: 'The enterprise ready feature toggle service.',
     links: [
         {

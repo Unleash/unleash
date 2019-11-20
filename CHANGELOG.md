@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.2.20
+
+- fix: update @types/node to latest
+- fix: constraints should be part of toggle schema
+- fix: Update yargs to to version 15.0.1
+- fix: Update log4js to the latest version 🚀 (#524)
+- fix: Add option to disable database migrations #526 (#52
+
 ## 3.2.19
 
 - fix: update knex to version 0.20.0

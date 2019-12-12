@@ -44,6 +44,10 @@ Clients written by awesome enthusiasts: :fire:
 
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 - [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Larvel - PHP)
+- packagist.org search: https://packagist.org/?query=unleash
+  - https://packagist.org/packages/prisjakt/unleash-client-php
+  - https://packagist.org/packages/jbtcd/unleash-php
+  - https://packagist.org/packages/daltcore/php-unleash-client
 
 ### The Client API
 

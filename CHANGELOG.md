@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.21
+
+- fix: missing strategy makes the toggle-configure crash
+
 ## 3.2.20
 
 - fix: update @types/node to latest

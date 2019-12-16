@@ -215,10 +215,10 @@ class StrategyConfigure extends React.Component {
 
     render() {
         const { isDragging, connectDragPreview, connectDragSource, connectDropTarget } = this.props;
-        const description = this.props.strategyDefinition.description;
 
         let item;
         if (this.props.strategyDefinition) {
+            const description = this.props.strategyDefinition.description;
             const strategyContent = this.renderStrategContent(this.props.strategyDefinition);
             const { name } = this.props.strategy;
             item = (

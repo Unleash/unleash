@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.22
+
+- fix: add appName as label in usage metrics
+
 ## 3.2.21
 
 - fix: missing strategy makes the toggle-configure crash

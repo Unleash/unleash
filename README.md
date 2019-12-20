@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Unleash/unleash.svg?branch=master)](https://travis-ci.org/Unleash/unleash) [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master) [![Dependency Status](https://david-dm.org/Unleash/unleash.svg)](https://david-dm.org/Unleash/unleash) [![devDependency Status](https://david-dm.org/Unleash/unleash/dev-status.svg)](https://david-dm.org/Unleash/unleash?type=dev) [![Greenkeeper badge](https://badges.greenkeeper.io/Unleash/unleash.svg)](https://greenkeeper.io/) [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-Unleash is a feature toggle system, that gives you a great overview over all feature toggles across all your applications and services. It comes with official client implementations for Java, Node.js, Go, Ruby and Python.
+Unleash is a feature toggle system, that gives you a great overview over all feature toggles across all your applications and services. It comes with official client implementations for Java, Node.js, Go, Ruby, Python and .NET Core.
 
 The main motivation for doing feature toggling is to decouple the process for deploying code to production and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
 
@@ -38,7 +38,7 @@ Official client SDK's:
 - [unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)
 - [unleash/unleash-client-ruby](https://github.com/unleash/unleash-client-ruby)
 - [unleash/unleash-client-python](https://github.com/Unleash/unleash-client-python)
-- [unleash/unleash-client-core](https://github.com/Unleash/unleash-client-core) (.Net Core)
+- [unleash/unleash-client-core](https://github.com/Unleash/unleash-client-core) (.NET Core)
 
 Clients written by awesome enthusiasts: :fire:
 

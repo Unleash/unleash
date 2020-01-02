@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.23
+
+- fix: upgrade to @hapi/joi to version 16.1.8
+
 ## 3.2.22
 
 - fix: add appName as label in usage metrics

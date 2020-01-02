@@ -21,12 +21,14 @@ async function resetDatabase(stores) {
         stores.db('features').del(),
         stores.db('client_applications').del(),
         stores.db('client_instances').del(),
+        stores.db('context_fields').del(),
     ]);
 }
 
 async function setupDatabase(stores) {
     const updates = [];
     updates.push(...createStrategies(stores.strategyStore));
+    updates.push(...createContextFields(stores.contextFieldStore));
     updates.push(...createFeatures(stores.featureToggleStore));
     updates.push(...createClientInstance(stores.clientInstanceStore));
     updates.push(...createApplications(stores.clientApplicationsStore));
@@ -36,6 +38,10 @@ async function setupDatabase(stores) {
 
 function createStrategies(store) {
     return dbState.strategies.map(s => store._createStrategy(s));
+}
+
+function createContextFields(store) {
+    return dbState.contextFields.map(c => store._createContextField(c));
 }
 
 function createApplications(store) {

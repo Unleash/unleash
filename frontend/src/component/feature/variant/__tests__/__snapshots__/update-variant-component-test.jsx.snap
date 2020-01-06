@@ -205,6 +205,59 @@ exports[`renders correctly with without variants 1`] = `
       Add variant
     </a>
   </p>
+  <form>
+    <table
+      className="mdl-data-table mdl-shadow--2dp variantTable"
+    >
+      <thead>
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            Weight
+          </th>
+          <th
+            className="actions"
+          />
+        </tr>
+      </thead>
+      <tbody />
+    </table>
+    <br />
+    <div>
+      <react-mdl-Button
+        icon="add"
+        primary={true}
+        raised={true}
+        ripple={true}
+        type="submit"
+      >
+        <react-mdl-Icon
+          name="add"
+        />
+           
+        Save
+      </react-mdl-Button>
+       
+      <react-mdl-Button
+        onClick={[MockFunction]}
+        raised={true}
+        ripple={true}
+        style={
+          Object {
+            "float": "right",
+          }
+        }
+        type="cancel"
+      >
+        <react-mdl-Icon
+          name="cancel"
+        />
+            Cancel
+      </react-mdl-Button>
+    </div>
+  </form>
 </section>
 `;
 
@@ -240,5 +293,26 @@ exports[`renders correctly with without variants and no permissions 1`] = `
   >
     The sum of variants weights needs to be a constant number to guarantee consistent hashing in the client implementations, this is why we will sometime allocate a few more percentages to the first variant if the sum is not exactly 100. In a final version of this feature it should be possible to the user to manually set the percentages for each variant.
   </p>
+  <form>
+    <table
+      className="mdl-data-table mdl-shadow--2dp variantTable"
+    >
+      <thead>
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            Weight
+          </th>
+          <th
+            className="actions"
+          />
+        </tr>
+      </thead>
+      <tbody />
+    </table>
+    <br />
+  </form>
 </section>
 `;

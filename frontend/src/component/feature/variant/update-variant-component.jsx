@@ -122,7 +122,6 @@ class UpdateVariantComponent extends Component {
                             Add variant
                         </a>
                     </p>
-                    
                 ) : null}
 
                 <form onSubmit={onSubmit(input, features)}>

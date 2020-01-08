@@ -60,7 +60,7 @@
     "eslint-config-finn-prettier": "^3.0.2",
     "eslint-config-finn-react": "^2.0.2",
     "eslint-plugin-react": "^7.11.1",
-    "fetch-mock": "^7.0.2",
+    "fetch-mock": "^8.0.0",
     "identity-obj-proxy": "^3.0.0",
     "immutable": "^3.8.1",
     "jest": "^24.9.0",

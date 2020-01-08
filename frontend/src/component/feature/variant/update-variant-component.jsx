@@ -95,21 +95,37 @@ class UpdateVariantComponent extends Component {
             />
         );
 
+    renderVariants = variants => {
+        if (variants.length > 0) {
+            return (
+                <table className={['mdl-data-table mdl-shadow--2dp', styles.variantTable].join(' ')}>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Weight</th>
+                            <th className={styles.actions} />
+                        </tr>
+                    </thead>
+                    <tbody>{variants.map(this.renderVariant)}</tbody>
+                </table>
+            );
+        } else {
+            return <p />;
+        }
+    };
+
     render() {
         const { onSubmit, onCancel, input, features } = this.props;
         const variants = input.variants || [];
+
         return (
             <section style={{ padding: '16px' }}>
                 <p>
-                    Variants is a new <i>beta feature</i> and the implementation is subject to change at any time until
-                    it is made in to a permanent feature. In order to use variants you will have use a Client SDK which
-                    supports variants. You should read more about variants in the&nbsp;
-                    <a target="_blank" href="https://unleash.github.io/docs/beta_features">
-                        user documentation
-                    </a>
-                    .
+                    Variants allows you to return a variant object if the feature toggle is considered enabled for the
+                    current request. When using variants you should use the{' '}
+                    <code style={{ color: 'navy' }}>getVariant()</code> method in the client SDK.
                 </p>
-                <p style={{ backgroundColor: 'rgba(255, 229, 100, 0.3)', padding: '5px' }}>
+                <p style={{ backgroundColor: 'rgba(255, 229, 255, 0.4)', padding: '5px' }}>
                     The sum of variants weights needs to be a constant number to guarantee consistent hashing in the
                     client implementations, this is why we will sometime allocate a few more percentages to the first
                     variant if the sum is not exactly 100. In a final version of this feature it should be possible to
@@ -125,16 +141,7 @@ class UpdateVariantComponent extends Component {
                 ) : null}
 
                 <form onSubmit={onSubmit(input, features)}>
-                    <table className={['mdl-data-table mdl-shadow--2dp', styles.variantTable].join(' ')}>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Weight</th>
-                                <th className={styles.actions} />
-                            </tr>
-                        </thead>
-                        <tbody>{variants.map(this.renderVariant)}</tbody>
-                    </table>
+                    {this.renderVariants(variants)}
                     <br />
                     {this.props.hasPermission(UPDATE_FEATURE) ? (
                         <FormButtons submitText={'Save'} onCancel={onCancel} />

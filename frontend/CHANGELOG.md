@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.11]
+- fix: clean up variants view
+- fix: Cannot remove all variants in Admin UI
+- fix: update fetch-mock to version 8.0.0 (#199)
+- fix: update mini-css-extract-plugin to version 0.9.0
+
+
 ## [3.2.10]
 - fix: missing strategy makes the toggle-configure crash
 

@@ -9,6 +9,9 @@
         text-align: left;
         width: 100%;
     }
+    tbody tr:hover {
+        background-color: rgba(173, 216, 230, 0.2);
+    }
 }
 
 th.actions {
@@ -19,4 +22,3 @@ td.actions {
     text-align: right;
     vertical-align: top;
 }
-

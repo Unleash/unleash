@@ -9,23 +9,23 @@ exports[`renders correctly with with variants 1`] = `
   }
 >
   <p>
-    Variants is a new 
-    <i>
-      beta feature
-    </i>
-     and the implementation is subject to change at any time until it is made in to a permanent feature. In order to use variants you will have use a Client SDK which supports variants. You should read more about variants in the 
-    <a
-      href="https://unleash.github.io/docs/beta_features"
-      target="_blank"
+    Variants allows you to return a variant object if the feature toggle is considered enabled for the current request. When using variants you should use the
+     
+    <code
+      style={
+        Object {
+          "color": "navy",
+        }
+      }
     >
-      user documentation
-    </a>
-    .
+      getVariant()
+    </code>
+     method in the client SDK.
   </p>
   <p
     style={
       Object {
-        "backgroundColor": "rgba(255, 229, 100, 0.3)",
+        "backgroundColor": "rgba(255, 229, 255, 0.4)",
         "padding": "5px",
       }
     }
@@ -173,23 +173,23 @@ exports[`renders correctly with without variants 1`] = `
   }
 >
   <p>
-    Variants is a new 
-    <i>
-      beta feature
-    </i>
-     and the implementation is subject to change at any time until it is made in to a permanent feature. In order to use variants you will have use a Client SDK which supports variants. You should read more about variants in the 
-    <a
-      href="https://unleash.github.io/docs/beta_features"
-      target="_blank"
+    Variants allows you to return a variant object if the feature toggle is considered enabled for the current request. When using variants you should use the
+     
+    <code
+      style={
+        Object {
+          "color": "navy",
+        }
+      }
     >
-      user documentation
-    </a>
-    .
+      getVariant()
+    </code>
+     method in the client SDK.
   </p>
   <p
     style={
       Object {
-        "backgroundColor": "rgba(255, 229, 100, 0.3)",
+        "backgroundColor": "rgba(255, 229, 255, 0.4)",
         "padding": "5px",
       }
     }
@@ -206,24 +206,7 @@ exports[`renders correctly with without variants 1`] = `
     </a>
   </p>
   <form>
-    <table
-      className="mdl-data-table mdl-shadow--2dp variantTable"
-    >
-      <thead>
-        <tr>
-          <th>
-            Name
-          </th>
-          <th>
-            Weight
-          </th>
-          <th
-            className="actions"
-          />
-        </tr>
-      </thead>
-      <tbody />
-    </table>
+    <p />
     <br />
     <div>
       <react-mdl-Button
@@ -270,23 +253,23 @@ exports[`renders correctly with without variants and no permissions 1`] = `
   }
 >
   <p>
-    Variants is a new 
-    <i>
-      beta feature
-    </i>
-     and the implementation is subject to change at any time until it is made in to a permanent feature. In order to use variants you will have use a Client SDK which supports variants. You should read more about variants in the 
-    <a
-      href="https://unleash.github.io/docs/beta_features"
-      target="_blank"
+    Variants allows you to return a variant object if the feature toggle is considered enabled for the current request. When using variants you should use the
+     
+    <code
+      style={
+        Object {
+          "color": "navy",
+        }
+      }
     >
-      user documentation
-    </a>
-    .
+      getVariant()
+    </code>
+     method in the client SDK.
   </p>
   <p
     style={
       Object {
-        "backgroundColor": "rgba(255, 229, 100, 0.3)",
+        "backgroundColor": "rgba(255, 229, 255, 0.4)",
         "padding": "5px",
       }
     }
@@ -294,24 +277,7 @@ exports[`renders correctly with without variants and no permissions 1`] = `
     The sum of variants weights needs to be a constant number to guarantee consistent hashing in the client implementations, this is why we will sometime allocate a few more percentages to the first variant if the sum is not exactly 100. In a final version of this feature it should be possible to the user to manually set the percentages for each variant.
   </p>
   <form>
-    <table
-      className="mdl-data-table mdl-shadow--2dp variantTable"
-    >
-      <thead>
-        <tr>
-          <th>
-            Name
-          </th>
-          <th>
-            Weight
-          </th>
-          <th
-            className="actions"
-          />
-        </tr>
-      </thead>
-      <tbody />
-    </table>
+    <p />
     <br />
   </form>
 </section>

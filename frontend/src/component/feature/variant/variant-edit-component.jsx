@@ -63,7 +63,7 @@ class VariantEditComponent extends Component {
         const userIdOverrides = this.getUserIdOverrides(variant);
 
         return (
-            <tr style={{ backgroundColor: '#EFEFEF' }}>
+            <tr>
                 <td>
                     <Grid noSpacing>
                         <Cell col={6}>

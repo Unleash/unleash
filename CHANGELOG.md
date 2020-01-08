@@ -3,6 +3,8 @@
 ## 3.2.23
 
 - fix: upgrade to @hapi/joi to version 16.1.8
+- fix: Upgrade unleash-frontend to version 3.2.11
+- fix: update yargs to version 15.1.0
 
 ## 3.2.22
 

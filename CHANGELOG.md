@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.24
+
+- fix: upgrade unleash-frontend to version 3.2.12
+
 ## 3.2.23
 
 - fix: upgrade to @hapi/joi to version 16.1.8

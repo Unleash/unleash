@@ -98,7 +98,7 @@
     "eslint": "^6.5.1",
     "eslint-config-finn": "^3.0.1",
     "eslint-config-finn-prettier": "^3.0.2",
-    "husky": "^3.0.8",
+    "husky": "^4.0.2",
     "lint-staged": "^9.4.1",
     "lolex": "^5.0.0",
     "nyc": "^15.0.0",

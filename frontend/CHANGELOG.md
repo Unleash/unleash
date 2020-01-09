@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.12]
+- feat: clone feature toggle configuration (#201)
+
 ## [3.2.11]
 - fix: clean up variants view
 - fix: Cannot remove all variants in Admin UI

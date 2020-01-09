@@ -18,9 +18,11 @@ exports[`render the create feature page 1`] = `
       }
     }
   >
-    Create feature toggle
+    Create new feature toggle
   </react-mdl-CardTitle>
-  <form>
+  <form
+    onSubmit={[MockFunction]}
+  >
     <section
       style={
         Object {
@@ -29,20 +31,17 @@ exports[`render the create feature page 1`] = `
       }
     >
       <react-mdl-Textfield
-        error={Object {}}
         floatingLabel={true}
         label="Name"
         name="name"
         onBlur={[Function]}
         onChange={[Function]}
-        required={true}
         value="feature"
       />
       <react-mdl-Textfield
         floatingLabel={true}
         label="Description"
         onChange={[Function]}
-        required={true}
         rows={1}
         style={
           Object {
@@ -59,11 +58,13 @@ exports[`render the create feature page 1`] = `
         >
           Enabled
         </react-mdl-Switch>
-        <hr />
+        <br />
+        <br />
       </div>
       <StrategiesSection
         addStrategy={[MockFunction]}
         configuredStrategies={Array []}
+        featureToggleName="feature"
         moveStrategy={[MockFunction]}
         removeStrategy={[MockFunction]}
         updateStrategy={[MockFunction]}

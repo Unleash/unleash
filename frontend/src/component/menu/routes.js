@@ -1,4 +1,5 @@
 import CreateFeatureToggle from '../../page/features/create';
+import CopyFeatureToggle from '../../page/features/copy';
 import ViewFeatureToggle from '../../page/features/show';
 import Features from '../../page/features';
 import CreateStrategies from '../../page/strategies/create';
@@ -15,6 +16,7 @@ import LogoutFeatures from '../../page/user/logout';
 export const routes = [
     // Features
     { path: '/features/create', parent: '/features', title: 'Create', component: CreateFeatureToggle },
+    { path: '/features/copy/:copyToggle', parent: '/features', title: 'Copy', component: CopyFeatureToggle },
     { path: '/features/:activeTab/:name', parent: '/features', title: ':name', component: ViewFeatureToggle },
     { path: '/features', title: 'Feature Toggles', icon: 'list', component: Features },
 

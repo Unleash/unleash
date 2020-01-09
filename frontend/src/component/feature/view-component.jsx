@@ -147,7 +147,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
 
         return (
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
-                <CardTitle style={{ wordBreak: 'break-all', paddingBottom: 0 }}>{featureToggle.name}</CardTitle>
+                <CardTitle style={{ wordBreak: 'break-all', paddingBottom: 0 }}>{featureToggle.name} </CardTitle>
                 <UpdateDescriptionComponent
                     isFeatureView={this.isFeatureView}
                     description={featureToggle.description}
@@ -181,13 +181,23 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     </span>
 
                     {this.isFeatureView ? (
-                        <Button
-                            disabled={!hasPermission(DELETE_FEATURE)}
-                            onClick={removeToggle}
-                            style={{ flexShrink: 0 }}
-                        >
-                            Archive
-                        </Button>
+                        <div>
+                            <Link
+                                to={`/features/copy/${featureToggle.name}`}
+                                title="Create new feature toggle by cloning configuration"
+                            >
+                                <Button style={{ flexShrink: 0 }}>Clone</Button>
+                            </Link>
+                            <Button
+                                disabled={!hasPermission(DELETE_FEATURE)}
+                                onClick={removeToggle}
+                                title="Archive feature toggle"
+                                accent
+                                style={{ flexShrink: 0 }}
+                            >
+                                Archive
+                            </Button>
+                        </div>
                     ) : (
                         <Button
                             disabled={!hasPermission(UPDATE_FEATURE)}

@@ -4,6 +4,7 @@ import { dispatchAndThrow } from './util';
 import { MUTE_ERROR } from './error-actions';
 
 export const ADD_FEATURE_TOGGLE = 'ADD_FEATURE_TOGGLE';
+export const COPY_FEATURE_TOGGLE = 'COPY_FEATURE_TOGGLE';
 export const REMOVE_FEATURE_TOGGLE = 'REMOVE_FEATURE_TOGGLE';
 export const UPDATE_FEATURE_TOGGLE = 'UPDATE_FEATURE_TOGGLE';
 export const TOGGLE_FEATURE_TOGGLE = 'TOGGLE_FEATURE_TOGGLE';

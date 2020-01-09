@@ -5,27 +5,18 @@ import StrategiesSection from './strategies-section-container';
 
 import { FormButtons } from './../../common';
 import { styles as commonStyles } from '../../common';
-
-const trim = value => {
-    if (value && value.trim) {
-        return value.trim();
-    } else {
-        return value;
-    }
-};
+import { trim } from './util';
 
 class AddFeatureComponent extends Component {
     // static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
-    componentWillMount() {
-        // TODO unwind this stuff
-        if (this.props.initCallRequired === true) {
-            this.props.init(this.props.input);
-        }
+    componentDidMount() {
+        window.onbeforeunload = () => 'Data will be lost if you leave the page, are you sure?';
     }
 
     render() {
         const {
             input,
+            errors,
             setValue,
             validateName,
             addStrategy,
@@ -36,26 +27,19 @@ class AddFeatureComponent extends Component {
             onCancel,
         } = this.props;
 
-        const {
-            name, // eslint-disable-line
-            nameError,
-            description,
-            enabled,
-        } = input;
         const configuredStrategies = input.strategies || [];
 
         return (
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
-                <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>Create feature toggle</CardTitle>
-                <form onSubmit={onSubmit(input)}>
+                <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>Create new feature toggle</CardTitle>
+                <form onSubmit={onSubmit}>
                     <section style={{ padding: '16px' }}>
                         <Textfield
                             floatingLabel
                             label="Name"
                             name="name"
-                            required
-                            value={name}
-                            error={nameError}
+                            value={input.name}
+                            error={errors.name}
                             onBlur={v => validateName(v.target.value)}
                             onChange={v => setValue('name', trim(v.target.value))}
                         />
@@ -64,30 +48,34 @@ class AddFeatureComponent extends Component {
                             style={{ width: '100%' }}
                             rows={1}
                             label="Description"
-                            required
-                            value={description}
+                            error={errors.description}
+                            value={input.description}
                             onChange={v => setValue('description', v.target.value)}
                         />
                         <div>
                             <br />
                             <Switch
-                                checked={enabled}
+                                checked={input.enabled}
                                 onChange={() => {
-                                    setValue('enabled', !enabled);
+                                    setValue('enabled', !input.enabled);
                                 }}
                             >
                                 Enabled
                             </Switch>
-                            <hr />
+                            <br />
+                            <br />
                         </div>
 
-                        <StrategiesSection
-                            configuredStrategies={configuredStrategies}
-                            addStrategy={addStrategy}
-                            updateStrategy={updateStrategy}
-                            moveStrategy={moveStrategy}
-                            removeStrategy={removeStrategy}
-                        />
+                        {input.name ? (
+                            <StrategiesSection
+                                configuredStrategies={configuredStrategies}
+                                featureToggleName={input.name}
+                                addStrategy={addStrategy}
+                                updateStrategy={updateStrategy}
+                                moveStrategy={moveStrategy}
+                                removeStrategy={removeStrategy}
+                            />
+                        ) : null}
 
                         <br />
                     </section>
@@ -102,6 +90,7 @@ class AddFeatureComponent extends Component {
 
 AddFeatureComponent.propTypes = {
     input: PropTypes.object,
+    errors: PropTypes.object,
     setValue: PropTypes.func.isRequired,
     addStrategy: PropTypes.func.isRequired,
     removeStrategy: PropTypes.func.isRequired,

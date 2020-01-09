@@ -8,13 +8,14 @@ jest.mock('../strategies-section-container', () => 'StrategiesSection');
 it('render the create feature page', () => {
     let input = {
         name: 'feature',
-        nameError: {},
         description: 'Description',
         enabled: false,
     };
+    let errors = {};
     const tree = shallow(
         <AddFeatureComponent
             input={input}
+            errors={errors}
             onSubmit={jest.fn()}
             setValue={jest.fn()}
             addStrategy={jest.fn()}
@@ -32,10 +33,10 @@ it('render the create feature page', () => {
 
 let input = {
     name: 'feature',
-    nameError: {},
     description: 'Description',
     enabled: false,
 };
+let errors = {};
 
 let validateName = jest.fn();
 let setValue = jest.fn();
@@ -56,6 +57,7 @@ let eventMock = {
 const buildComponent = (setValue, validateName) => (
     <AddFeatureComponent
         input={input}
+        errors={errors}
         onSubmit={onSubmit}
         setValue={setValue}
         addStrategy={addStrategy}

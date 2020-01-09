@@ -52,6 +52,12 @@ Array [
   Object {
     "component": [Function],
     "parent": "/features",
+    "path": "/features/copy/:copyToggle",
+    "title": "Copy",
+  },
+  Object {
+    "component": [Function],
+    "parent": "/features",
     "path": "/features/:activeTab/:name",
     "title": ":name",
   },

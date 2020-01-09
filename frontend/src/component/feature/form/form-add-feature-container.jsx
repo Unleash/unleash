@@ -1,78 +1,122 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import arrayMove from 'array-move';
 import { createFeatureToggles, validateName } from './../../../store/feature-actions';
-import { createMapper, createActions } from './../../input-helpers';
 import AddFeatureComponent from './form-add-feature-component';
 
 const defaultStrategy = { name: 'default' };
 
-const ID = 'add-feature-toggle';
-const mapStateToProps = createMapper({
-    id: ID,
-    getDefault() {
-        let name;
+class WrapperComponent extends Component {
+    constructor() {
+        super();
+        this.state = {
+            featureToggle: { strategies: [], enabled: true },
+            errors: {},
+            dirty: false,
+        };
+    }
+
+    setValue = (field, value) => {
+        const { featureToggle } = this.state;
+        featureToggle[field] = value;
+        this.setState({ featureToggle, dirty: true });
+    };
+
+    validateName = async featureToggleName => {
+        const { errors } = this.state;
         try {
-            [, name] = document.location.hash.match(/name=([a-z0-9-_.]+)/i);
-        } catch (e) {
-            // hide error
+            await validateName(featureToggleName);
+            errors.name = undefined;
+        } catch (err) {
+            errors.name = err.message;
         }
-        return { name };
-    },
-});
-const prepare = (methods, dispatch, ownProps) => {
-    methods.onSubmit = input => e => {
-        e.preventDefault();
 
-        input.createdAt = new Date();
+        this.setState({ errors });
+    };
 
-        if (Array.isArray(input.strategies)) {
-            input.strategies.forEach(s => {
+    addStrategy = strat => {
+        strat.id = Math.round(Math.random() * 10000000);
+        const { featureToggle } = this.state;
+        const strategies = featureToggle.strategies.concat(strat);
+        featureToggle.strategies = strategies;
+        this.setState({ featureToggle, dirty: true });
+    };
+
+    moveStrategy = (index, toIndex) => {
+        const { featureToggle } = this.state;
+        const strategies = arrayMove(featureToggle.strategies, index, toIndex);
+        featureToggle.strategies = strategies;
+        this.setState({ featureToggle, dirty: true });
+    };
+
+    removeStrategy = index => {
+        const { featureToggle } = this.state;
+        const strategies = featureToggle.strategies.filter((_, i) => i !== index);
+        featureToggle.strategies = strategies;
+        this.setState({ featureToggle, dirty: true });
+    };
+
+    updateStrategy = (index, strat) => {
+        const { featureToggle } = this.state;
+        const strategies = featureToggle.strategies.concat();
+        strategies[index] = strat;
+        featureToggle.strategies = strategies;
+        this.setState({ featureToggle, dirty: true });
+    };
+
+    onSubmit = evt => {
+        evt.preventDefault();
+        const { createFeatureToggles, history } = this.props;
+        const { featureToggle } = this.state;
+        featureToggle.createdAt = new Date();
+
+        if (Array.isArray(featureToggle.strategies)) {
+            featureToggle.strategies.forEach(s => {
                 delete s.id;
             });
         } else {
-            input.strategies = [defaultStrategy];
+            featureToggle.strategies = [defaultStrategy];
         }
 
-        createFeatureToggles(input)(dispatch)
-            .then(() => methods.clear())
-            .then(() => ownProps.history.push(`/features/strategies/${input.name}`));
+        createFeatureToggles(featureToggle).then(() => history.push(`/features/strategies/${featureToggle.name}`));
     };
 
-    methods.onCancel = evt => {
+    onCancel = evt => {
         evt.preventDefault();
-        methods.clear();
-        ownProps.history.push('/features');
+        this.props.history.push('/features');
     };
 
-    methods.addStrategy = v => {
-        v.id = Math.round(Math.random() * 10000000);
-        methods.pushToList('strategies', v);
-    };
-
-    methods.updateStrategy = (index, n) => {
-        methods.updateInList('strategies', index, n);
-    };
-
-    methods.moveStrategy = (index, toIndex) => {
-        methods.moveItem('strategies', index, toIndex);
-    };
-
-    methods.removeStrategy = index => {
-        methods.removeFromList('strategies', index);
-    };
-
-    methods.validateName = featureToggleName => {
-        validateName(featureToggleName)
-            .then(() => methods.setValue('nameError', undefined))
-            .catch(err => methods.setValue('nameError', err.message));
-    };
-
-    return methods;
+    render() {
+        return (
+            <AddFeatureComponent
+                onSubmit={this.onSubmit}
+                onCancel={this.onCancel}
+                addStrategy={this.addStrategy}
+                updateStrategy={this.updateStrategy}
+                removeStrategy={this.removeStrategy}
+                moveStrategy={this.moveStrategy}
+                validateName={this.validateName}
+                setValue={this.setValue}
+                input={this.state.featureToggle}
+                errors={this.state.errors}
+            />
+        );
+    }
+}
+WrapperComponent.propTypes = {
+    history: PropTypes.object.isRequired,
+    createFeatureToggles: PropTypes.func.isRequired,
 };
-const actions = createActions({ id: ID, prepare });
+
+const mapDispatchToProps = dispatch => ({
+    validateName: name => validateName(name)(dispatch),
+    createFeatureToggles: featureToggle => createFeatureToggles(featureToggle)(dispatch),
+});
 
 const FormAddContainer = connect(
-    mapStateToProps,
-    actions
-)(AddFeatureComponent);
+    () => {},
+    mapDispatchToProps
+)(WrapperComponent);
 
 export default FormAddContainer;

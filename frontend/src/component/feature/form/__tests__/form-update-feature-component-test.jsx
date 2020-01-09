@@ -8,7 +8,7 @@ jest.mock('../strategies-section-container', () => 'StrategiesSection');
 it('render the create feature page', () => {
     let input = {
         name: 'feature',
-        nameError: {},
+        errors: {},
         description: 'Description',
         enabled: false,
     };

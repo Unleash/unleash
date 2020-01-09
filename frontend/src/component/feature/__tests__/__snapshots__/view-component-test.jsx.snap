@@ -19,6 +19,7 @@ exports[`renders correctly with one feature 1`] = `
     }
   >
     Another
+     
   </react-mdl-CardTitle>
   <react-mdl-CardText>
     another's description
@@ -56,17 +57,36 @@ exports[`renders correctly with one feature 1`] = `
         Disabled
       </react-mdl-Switch>
     </span>
-    <react-mdl-Button
-      disabled={false}
-      onClick={[Function]}
-      style={
-        Object {
-          "flexShrink": 0,
+    <div>
+      <a
+        href="/features/copy/Another"
+        onClick={[Function]}
+        title="Create new feature toggle by cloning configuration"
+      >
+        <react-mdl-Button
+          style={
+            Object {
+              "flexShrink": 0,
+            }
+          }
+        >
+          Clone
+        </react-mdl-Button>
+      </a>
+      <react-mdl-Button
+        accent={true}
+        disabled={false}
+        onClick={[Function]}
+        style={
+          Object {
+            "flexShrink": 0,
+          }
         }
-      }
-    >
-      Archive
-    </react-mdl-Button>
+        title="Archive feature toggle"
+      >
+        Archive
+      </react-mdl-Button>
+    </div>
   </react-mdl-CardActions>
   <hr />
   <react-mdl-Tabs

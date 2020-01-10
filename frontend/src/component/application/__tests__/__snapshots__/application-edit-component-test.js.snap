@@ -181,7 +181,7 @@ exports[`renders correctly with permissions 1`] = `
                  last seen at
                  
                 <small>
-                  02/23/2017, 3:56:49 PM
+                  02/23/2017, 03:56:49 PM
                 </small>
               </span>
             }
@@ -343,7 +343,7 @@ exports[`renders correctly without permission 1`] = `
                  last seen at
                  
                 <small>
-                  02/23/2017, 3:56:49 PM
+                  02/23/2017, 03:56:49 PM
                 </small>
               </span>
             }

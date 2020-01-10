@@ -13,6 +13,10 @@ class AddFeatureComponent extends Component {
         window.onbeforeunload = () => 'Data will be lost if you leave the page, are you sure?';
     }
 
+    componentWillUnmount() {
+        window.onbeforeunload = false;
+    }
+
     render() {
         const {
             input,

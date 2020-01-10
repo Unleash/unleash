@@ -40,6 +40,7 @@ export const DrawerMenu = ({ links = [] }) => (
             {links.map(link => (
                 <a
                     href={link.href}
+                    key={link.href}
                     target="_blank"
                     className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
                     title={link.title}

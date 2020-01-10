@@ -11,7 +11,7 @@ class WrapperComponent extends Component {
     constructor() {
         super();
         this.state = {
-            featureToggle: { strategies: [], enabled: true },
+            featureToggle: { name: '', description: '', strategies: [], enabled: true },
             errors: {},
             dirty: false,
         };
@@ -71,7 +71,7 @@ class WrapperComponent extends Component {
         const { featureToggle } = this.state;
         featureToggle.createdAt = new Date();
 
-        if (Array.isArray(featureToggle.strategies)) {
+        if (Array.isArray(featureToggle.strategies && featureToggle.strategies.length > 0)) {
             featureToggle.strategies.forEach(s => {
                 delete s.id;
             });
@@ -115,7 +115,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const FormAddContainer = connect(
-    () => {},
+    () => ({}),
     mapDispatchToProps
 )(WrapperComponent);
 

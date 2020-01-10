@@ -26,7 +26,7 @@ const InputPercentage = ({ name, minLabel, maxLabel, value, onChange }) => (
                 <span style={infoLabelStyle}>{maxLabel}</span>&nbsp;
             </Cell>
         </Grid>
-        <Slider min={0} max={100} defaultValue={value} value={value} onChange={onChange} label={name} />
+        <Slider min={0} max={100} value={value} onChange={onChange} label={name} />
     </div>
 );
 

@@ -66,7 +66,7 @@ class CopyFeatureComponent extends Component {
 
         if (replaceGroupId) {
             copyToggle.strategies.forEach(s => {
-                if (s.parameters.groupId) {
+                if (s.parameters && s.parameters.groupId) {
                     s.parameters.groupId = newToggleName;
                 }
             });

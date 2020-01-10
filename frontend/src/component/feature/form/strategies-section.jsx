@@ -8,7 +8,7 @@ import { HeaderTitle } from '../../common';
 class StrategiesSectionComponent extends React.Component {
     static propTypes = {
         strategies: PropTypes.array.isRequired,
-        featureToggleName: PropTypes.string.isRequired,
+        featureToggleName: PropTypes.string,
         addStrategy: PropTypes.func,
         removeStrategy: PropTypes.func,
         updateStrategy: PropTypes.func,

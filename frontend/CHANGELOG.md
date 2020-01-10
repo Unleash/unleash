@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.13]
+- fix: Should be possible to clone even if strategy does not have groupId
+
 ## [3.2.12]
 - feat: clone feature toggle configuration (#201)
 

@@ -150,7 +150,7 @@ const UnleashClient = () => (
           <h3>Clients written by awesome enthusiasts:</h3>
           <ul>
             <li><MarkdownBlock>[afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)</MarkdownBlock></li>
-            <li><MarkdownBlock>[mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Larvel - PHP)</MarkdownBlock></li>
+            <li><MarkdownBlock>[mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)</MarkdownBlock></li>
           </ul>
         </div>
       </div>

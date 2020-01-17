@@ -2,7 +2,12 @@
 
 [![Build Status](https://travis-ci.org/Unleash/unleash.svg?branch=master)](https://travis-ci.org/Unleash/unleash) [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master) [![Dependency Status](https://david-dm.org/Unleash/unleash.svg)](https://david-dm.org/Unleash/unleash) [![devDependency Status](https://david-dm.org/Unleash/unleash/dev-status.svg)](https://david-dm.org/Unleash/unleash?type=dev) [![Greenkeeper badge](https://badges.greenkeeper.io/Unleash/unleash.svg)](https://greenkeeper.io/) [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-Unleash is a feature toggle system, that gives you a great overview over all feature toggles across all your applications and services. It comes with official client implementations for Java, Node.js, Go, Ruby, Python and .NET Core.
+Unleash is a open source feature flag & toggle system, that gives you a great overview over all feature toggles across all your applications and services. It comes with official client implementations for Java, Node.js, Go, Ruby, Python and .NET Core.
+
+## Unleash-enterprise  [:link:](https://www.unleash-hosted.com/open-source)
+Unleash is also available in an enterprise edition, which builds on top of the open-source version, with additional features. Go to [unleash-hosted.com](https://www.unleash-hosted.com/open-source) to learn more about the enterprise offering.
+
+## What is a feature toggle?
 
 The main motivation for doing feature toggling is to decouple the process for deploying code to production and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
 
@@ -26,6 +31,10 @@ Common activation strategies includes:
 - Active only for application instances running on host x.
 
 Read more about activation strategies in [docs/activation-strategies.md](./docs/activation-strategies.md)
+
+## Variants
+
+Sometimes you need more control than just a boolean flag. Variants provides this and can be used in combination of feature toggles and allow you to return multiple variants from a feature toggle, if it is enabled. 
 
 ## Client implementations
 

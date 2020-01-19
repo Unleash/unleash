@@ -93,7 +93,7 @@
     "@passport-next/passport": "^3.0.1",
     "@passport-next/passport-google-oauth2": "^1.0.0",
     "@types/node": "^12.12.11",
-    "ava": "^2.4.0",
+    "ava": "^3.0.0",
     "coveralls": "^3.0.6",
     "eslint": "^6.5.1",
     "eslint-config-finn": "^3.0.1",

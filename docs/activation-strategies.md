@@ -30,7 +30,7 @@ A flexible rollout strategy which combines all gradual rollout strategies in to 
 - **stickiness** is used to define how we guarantee consistency for gradual rollout. The same userId and the same rollout percentage should give predictable results. Configuration that should be supported:
   - **DEFAULT** - Unleash chooses the first value present on the context in defined order userId, sessionId, random.
   - **USERID** - guaranteed to be sticky on userId. If userId not present the behaviour would be false
-  - **SESSIONID - **guaranteed to be sticky on sessionId. If sessionId not present the behaviour would be false.
+  - **SESSIONID** - guaranteed to be sticky on sessionId. If sessionId not present the behaviour would be false.
   - **RANDOM** - no stickiness guaranteed. For every isEnabled call it will yield a random true/false based on the selected rollout percentage.
 - **groupId** is used to ensure that different toggles will **hash differently** for the same user. The groupId defaults to _feature toggle name_, but is overridable by the user to _correlate rollout_ of multiple feature toggles.
 - **rollout** The percentage (0-100) you want to enable the feature toggle for.

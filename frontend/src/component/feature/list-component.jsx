@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Feature from './feature-list-item-component';
+import { debounce } from "debounce";
 import { Link } from 'react-router-dom';
 import { Icon, FABButton, Textfield, Menu, MenuItem, Card, CardActions, List } from 'react-mdl';
+import Feature from './feature-list-item-component';
 import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
 import styles from './feature.scss';
 import { CREATE_FEATURE } from '../../permissions';
@@ -21,6 +22,14 @@ export default class FeatureListComponent extends React.Component {
         hasPermission: PropTypes.func.isRequired,
     };
 
+    constructor(props) {
+        super();
+        this.state = {
+            filter: props.settings.filter,
+            updateFilter: debounce(props.updateSetting.bind(this, 'filter'), 200)
+        }
+    }
+
     componentDidMount() {
         if (this.props.fetchFeatureToggles) {
             this.props.fetchFeatureToggles();
@@ -34,7 +43,9 @@ export default class FeatureListComponent extends React.Component {
     }
 
     setFilter(v) {
-        this.props.updateSetting('filter', typeof v === 'string' ? v : '');
+        const value = typeof v === 'string' ? v : '';
+        this.setState({filter: value});
+        this.state.updateFilter(value)
     }
 
     setSort(v) {
@@ -51,7 +62,7 @@ export default class FeatureListComponent extends React.Component {
                 <div className={styles.toolbar}>
                     <Textfield
                         floatingLabel
-                        value={settings.filter}
+                        value={this.state.filter}
                         onChange={e => {
                             this.setFilter(e.target.value);
                         }}

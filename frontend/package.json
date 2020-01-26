@@ -53,6 +53,7 @@
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^2.1.1",
+    "debounce": "^1.2.0",
     "debug": "^4.1.1",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.0",

@@ -76,7 +76,7 @@
     "react-dnd": "^5.0.0",
     "react-dnd-html5-backend": "^5.0.1",
     "react-dom": "^16.10.2",
-    "react-mdl": "^1.11.0",
+    "react-mdl": "^2.1.0",
     "react-modal": "^3.1.13",
     "react-redux": "^6.0.1",
     "react-router-dom": "^4.3.1",

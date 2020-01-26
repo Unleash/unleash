@@ -2116,7 +2116,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.3:
+classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
   integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
@@ -7096,7 +7096,7 @@ prop-types-exact@^1.2.0:
     object.assign "^4.1.0"
     reflect.ownkeys "^0.2.0"
 
-prop-types@^15.5.0, prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -7320,15 +7320,15 @@ react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.2:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-mdl@^1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/react-mdl/-/react-mdl-1.11.0.tgz#7e07ee1009dd9b358b616dc400ff2ae1845a2e67"
-  integrity sha512-r3N82ussp+NnqouBEWRu8H6+F9JGtensPiaST690rjqKzoF0Vd6gQX8+r31EBRYNspDhGSa5izQJ9BdPKdOvRA==
+react-mdl@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-mdl/-/react-mdl-2.1.0.tgz#c4dc1ed1bafe241e42fd7012658a6ef6f0e13d25"
+  integrity sha512-PcMURT06RuPYDZp+S/Wa4b9Lwc/07B9+d625QfgaUh5NvuS5RC8ljQ5gSbon21yhtKT+e6nDTnFhM2yyuFQSDw==
   dependencies:
     clamp "^1.0.1"
-    classnames "^2.2.3"
+    classnames "^2.2.6"
     lodash.isequal "^4.4.0"
-    prop-types "^15.5.0"
+    prop-types "^15.7.2"
 
 react-modal@^3.1.13:
   version "3.10.1"

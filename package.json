@@ -100,7 +100,7 @@
     "eslint-config-finn-prettier": "^3.0.2",
     "husky": "^3.0.8",
     "lint-staged": "^9.4.1",
-    "lolex": "^5.0.0",
+    "lolex": "^6.0.0",
     "nyc": "^15.0.0",
     "passport": "^0.4.0",
     "passport-google-auth": "^1.0.2",

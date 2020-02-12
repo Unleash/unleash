@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.14]
+- fix: upgrade react-mdl to version 2.1.0
+
 ## [3.2.13]
 - fix: Should be possible to clone even if strategy does not have groupId
 

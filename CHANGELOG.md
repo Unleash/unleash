@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.25
+
+- fix: upgrade unleash-frontend to version 3.2.14
+
 ## 3.2.24
 
 - fix: upgrade unleash-frontend to version 3.2.13

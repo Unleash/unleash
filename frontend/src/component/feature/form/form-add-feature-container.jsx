@@ -4,14 +4,16 @@ import { connect } from 'react-redux';
 import arrayMove from 'array-move';
 import { createFeatureToggles, validateName } from './../../../store/feature-actions';
 import AddFeatureComponent from './form-add-feature-component';
+import { loadNameFromHash } from './util';
 
 const defaultStrategy = { name: 'default' };
 
 class WrapperComponent extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        const name = loadNameFromHash();
         this.state = {
-            featureToggle: { name: '', description: '', strategies: [], enabled: true },
+            featureToggle: { name, description: '', strategies: [], enabled: true },
             errors: {},
             dirty: false,
         };

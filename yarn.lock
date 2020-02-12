@@ -6040,10 +6040,10 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
 
-unleash-frontend@3.2.14:
-  version "3.2.14"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.2.14.tgz#47121d348bd4159cab35ad4202cc1d237609cf94"
-  integrity sha512-/Jz8m6Ud5WYBGGxUtIGclPhbub7EYvZm/HkKpKlykw1wKbgglg6AMI6f12pGmZNx6ulrSuQCiJNNkh3pCxkI+g==
+unleash-frontend@3.2.15:
+  version "3.2.15"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.2.15.tgz#5976bca200c0066b112ed49c043271eed170092f"
+  integrity sha512-asfBkzojx+gxvQL7qZZr3n6KmxckrjhSjCRn+SE//F/tdd86kuUIrKSWw8wnX2XrPwzP90HenMZwew1KIuTUFg==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

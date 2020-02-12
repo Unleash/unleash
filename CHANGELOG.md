@@ -2,7 +2,7 @@
 
 ## 3.2.25
 
-- fix: upgrade unleash-frontend to version 3.2.14
+- fix: upgrade unleash-frontend to version 3.2.15
 
 ## 3.2.24
 

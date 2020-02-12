@@ -71,7 +71,7 @@ class WrapperComponent extends Component {
         const { featureToggle } = this.state;
         featureToggle.createdAt = new Date();
 
-        if (Array.isArray(featureToggle.strategies && featureToggle.strategies.length > 0)) {
+        if (Array.isArray(featureToggle.strategies) && featureToggle.strategies.length > 0) {
             featureToggle.strategies.forEach(s => {
                 delete s.id;
             });

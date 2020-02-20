@@ -528,10 +528,10 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@passport-next/passport-strategy/-/passport-strategy-1.1.0.tgz#4c0df069e2ec9262791b9ef1e23320c1d73bdb74"
 
-"@passport-next/passport@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@passport-next/passport/-/passport-3.0.1.tgz#972404197b8a0230f524fb6a8ae79309b2d4f919"
-  integrity sha512-SnlWTv9Xgxlzq4S11W1T0gq9fvgDxoOov9Ad69r5M3zYvqw1r7J8e0epLg9w1gOhA3gN85H+aDD1/wwBzTVNkg==
+"@passport-next/passport@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@passport-next/passport/-/passport-3.1.0.tgz#13ddb9cb3d388634f8c0b87ea38bf169125f44a3"
+  integrity sha512-CRqxmh9A9StmDhHLm9pc9Z6wP672iyGElIYX66wlUzzDffzH8xLkaVwyqXvIr6j/19CHaRCeG1hNfiVq/4KG1A==
   dependencies:
     "@passport-next/passport-strategy" "1.x.x"
 
@@ -544,6 +544,13 @@
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
+
+"@sinonjs/commons@^1.7.0":
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.7.1.tgz#da5fd19a5f71177a53778073978873964f49acf1"
+  integrity sha512-Debi3Baff1Qu1Unc3mjJ96MgpbwTn43S1+9yJ0llWygPwDNu2aaWBD6yc9y/Z8XDRNhx7U+u2UDg2OGQXkclUQ==
+  dependencies:
+    type-detect "4.0.8"
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
@@ -576,10 +583,10 @@
   version "12.0.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.4.tgz#46832183115c904410c275e34cf9403992999c32"
 
-"@types/node@^12.12.11":
-  version "12.12.11"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.11.tgz#bec2961975888d964196bf0016a2f984d793d3ce"
-  integrity sha512-O+x6uIpa6oMNTkPuHDa9MhMMehlxLAd5QcOvKRjAFsBVpeFWTOPnXbDvILvFgFFZfQ1xh1EZi1FbXxUix+zpsQ==
+"@types/node@^13.7.4":
+  version "13.7.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.4.tgz#76c3cb3a12909510f52e5dc04a6298cdf9504ffd"
+  integrity sha512-oVeL12C6gQS/GAExndigSaLxTrKpQPxewx9bOcwfvJiJge4rr7wNaph4J+ns5hrmIV2as5qxqN8YKthn9qh0jw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -3745,10 +3752,12 @@ log4js@^6.0.0:
     rfdc "^1.1.4"
     streamroller "^2.2.3"
 
-lolex@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/lolex/-/lolex-5.0.0.tgz#30096cae7d1e598ff57f5f5d429a41e6276e1eef"
-  integrity sha512-79Le9AHAH4tg76f/Zti7S9TzUZmuKFYOWLAXUj+K5g8ZIK7d0xw2i6aB9FNIkJbCGTQ9CKxm3IQjqu7YR6+oMA==
+lolex@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/lolex/-/lolex-6.0.0.tgz#790de1911da46e67e4b60c94859d19e2db0bb7e9"
+  integrity sha512-ad9IBHbfVJ3bPAotDxnCgJgKcNK5/mrRAfbJzXhY5+PEmuBWP7wyHQlA6L8TfSfPlqlDjY4K7IG6mbzsrIBx1A==
+  dependencies:
+    "@sinonjs/commons" "^1.7.0"
 
 loud-rejection@^1.0.0:
   version "1.6.0"
@@ -4546,9 +4555,10 @@ passport-strategy@1.x, passport-strategy@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
 
-passport@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/passport/-/passport-0.4.0.tgz#c5095691347bd5ad3b5e180238c3914d16f05811"
+passport@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/passport/-/passport-0.4.1.tgz#941446a21cb92fc688d97a0861c38ce9f738f270"
+  integrity sha512-IxXgZZs8d7uFSt3eqNjM9NQ3g3uQCW5avD8mRNoXV99Yig50vjuaez6dQK2qC0kVWPRTujxY0dWgGfT09adjYg==
   dependencies:
     passport-strategy "1.x.x"
     pause "0.0.1"
@@ -5948,6 +5958,11 @@ type-check@~0.3.2:
   resolved "https://registry.yarnpkg.com/type-check/-/type-check-0.3.2.tgz#5884cab512cf1d355e3fb784f30804b2b520db72"
   dependencies:
     prelude-ls "~1.1.2"
+
+type-detect@4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
+  integrity sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==
 
 type-fest@^0.3.0:
   version "0.3.1"

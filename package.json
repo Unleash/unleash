@@ -90,9 +90,9 @@
     "yargs": "^15.1.0"
   },
   "devDependencies": {
-    "@passport-next/passport": "^3.0.1",
+    "@passport-next/passport": "^3.1.0",
     "@passport-next/passport-google-oauth2": "^1.0.0",
-    "@types/node": "^12.12.11",
+    "@types/node": "^13.7.4",
     "ava": "^2.4.0",
     "coveralls": "^3.0.6",
     "eslint": "^6.5.1",
@@ -100,9 +100,9 @@
     "eslint-config-finn-prettier": "^3.0.2",
     "husky": "^3.0.8",
     "lint-staged": "^9.4.1",
-    "lolex": "^5.0.0",
+    "lolex": "^6.0.0",
     "nyc": "^15.0.0",
-    "passport": "^0.4.0",
+    "passport": "^0.4.1",
     "passport-google-auth": "^1.0.2",
     "prettier": "^1.18.2",
     "proxyquire": "^2.1.3",

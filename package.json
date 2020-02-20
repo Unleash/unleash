@@ -82,7 +82,7 @@
     "parse-database-url": "^0.3.0",
     "pg": "^7.12.1",
     "pkginfo": "^0.4.1",
-    "prom-client": "^11.2.1",
+    "prom-client": "^12.0.0",
     "prometheus-gc-stats": "^0.6.1",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",

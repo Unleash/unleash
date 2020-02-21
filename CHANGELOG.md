@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.26
+
+- fix: Update prom-client to the latest version 🚀 (#562)
+- chore: update lolex to latest version
+- fix: variant weights can be up to 1000
+
 ## 3.2.25
 
 - fix: upgrade unleash-frontend to version 3.2.15

@@ -62,6 +62,7 @@
     ]
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.0",
     "async": "^3.1.0",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.4",
@@ -71,8 +72,7 @@
     "deep-diff": "^1.0.2",
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
-    "gravatar": "^1.8.0",
-    "@hapi/joi": "^17.1.0",
+    "gravatar-url": "^3.1.0",
     "js-yaml": "^3.12.2",
     "knex": "^0.20.0",
     "log4js": "^6.0.0",

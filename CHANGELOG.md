@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.27
+
+- fix: remove prometheus-gc-stats dependency
+
 ## 3.2.26
 
 - fix: Update prom-client to the latest version 🚀 (#562)

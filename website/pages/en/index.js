@@ -94,6 +94,8 @@ class HomeSplash extends React.Component {
             <Button href="#try">Try It Out</Button>
             <Button href={siteConfig.repoUrl}>GitHub</Button>
           </PromoSection>
+          <br />  
+          <SASSOffering />
         </div>
       </SplashContainer>
     );
@@ -118,6 +120,15 @@ const FeatureCallout = () => (
     <p>
       The main motivation for doing feature toggling is to decouple the process for deploying code to production 
       and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
+    </p>
+  </div>
+);
+
+const SASSOffering = () => (
+  <div className="productShowcaseSection">
+    <p className="sassOffering">
+      Unleash also comes in a entperise edition with additional features and a hosted option (SaaS). Check out&nbsp;
+      <a href="https://www.unleash-hosted.com/open-source">unleash-hosted.com</a>
     </p>
   </div>
 );
@@ -220,6 +231,7 @@ class Index extends React.Component {
     return (
       <div>
         <HomeSplash language={language} config={this.props.config} />
+        
         <div className="mainContainer">
           <FeatureCallout />
           <UnleashClient />

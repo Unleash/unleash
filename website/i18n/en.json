@@ -3,7 +3,7 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "The enterprise ready feature toggle service",
+    "tagline": "The enterprise ready feature flag & toggle service",
     "docs": {
       "activation_strategy": {
         "title": "Activation Strategies"

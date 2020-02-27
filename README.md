@@ -47,7 +47,7 @@ Official client SDK's:
 - [unleash/unleash-client-go](https://github.com/unleash/unleash-client-go)
 - [unleash/unleash-client-ruby](https://github.com/unleash/unleash-client-ruby)
 - [unleash/unleash-client-python](https://github.com/Unleash/unleash-client-python)
-- [unleash/unleash-client-core](https://github.com/Unleash/unleash-client-core) (.NET Core)
+- [unleash/unleash-client-dotnet](https://github.com/Unleash/unleash-client-dotnet)
 
 Clients written by awesome enthusiasts: :fire:
 

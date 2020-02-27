@@ -3,16 +3,50 @@ import { dispatchAndThrow } from '../util';
 
 export const RECEIVE_CONTEXT = 'RECEIVE_CONTEXT';
 export const ERROR_RECEIVE_CONTEXT = 'ERROR_RECEIVE_CONTEXT';
+export const REMOVE_CONTEXT = 'REMOVE_CONTEXT';
+export const ERROR_REMOVING_CONTEXT = 'ERROR_REMOVING_CONTEXT';
+export const ADD_CONTEXT_FIELD = 'ADD_CONTEXT_FIELD';
+export const ERROR_ADD_CONTEXT_FIELD = 'ERROR_ADD_CONTEXT_FIELD';
+export const UPDATE_CONTEXT_FIELD = 'UPDATE_CONTEXT_FIELD';
+export const ERROR_UPDATE_CONTEXT_FIELD = 'ERROR_UPDATE_CONTEXT_FIELD';
 
-export const receiveContext = json => ({
-    type: RECEIVE_CONTEXT,
-    value: json,
-});
+const receiveContext = value => ({ type: RECEIVE_CONTEXT, value });
+const addContextField = context => ({ type: ADD_CONTEXT_FIELD, context });
+const upContextField = context => ({ type: UPDATE_CONTEXT_FIELD, context });
+const createRemoveContext = context => ({ type: REMOVE_CONTEXT, context });
 
 export function fetchContext() {
     return dispatch =>
         api
-            .fetchContext()
+            .fetchAll()
             .then(json => dispatch(receiveContext(json)))
             .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_CONTEXT));
+}
+
+export function removeContextField(context) {
+    return dispatch =>
+        api
+            .remove(context)
+            .then(() => dispatch(createRemoveContext(context)))
+            .catch(dispatchAndThrow(dispatch, ERROR_REMOVING_CONTEXT));
+}
+
+export function createContextField(context) {
+    return dispatch =>
+        api
+            .create(context)
+            .then(() => dispatch(addContextField(context)))
+            .catch(dispatchAndThrow(dispatch, ERROR_ADD_CONTEXT_FIELD));
+}
+
+export function updateContextField(context) {
+    return dispatch =>
+        api
+            .update(context)
+            .then(() => dispatch(upContextField(context)))
+            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_CONTEXT_FIELD));
+}
+
+export function validateName(name) {
+    return api.validate({ name });
 }

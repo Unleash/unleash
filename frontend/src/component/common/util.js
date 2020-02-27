@@ -12,3 +12,11 @@ export const formatFullDateTimeWithLocale = (v, locale, tz) => {
     }
     return new Date(v).toLocaleString(locale, dateTimeOptions);
 };
+
+export const trim = value => {
+    if (value && value.trim) {
+        return value.trim();
+    } else {
+        return value;
+    }
+};

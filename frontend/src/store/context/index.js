@@ -1,15 +1,24 @@
-import { RECEIVE_CONTEXT } from './actions';
+import { List } from 'immutable';
+import { RECEIVE_CONTEXT, REMOVE_CONTEXT, ADD_CONTEXT_FIELD, UPDATE_CONTEXT_FIELD } from './actions';
 
 const DEFAULT_CONTEXT_FIELDS = [{ name: 'environment' }, { name: 'userId' }, { name: 'appName' }];
 
 function getInitState() {
-    return DEFAULT_CONTEXT_FIELDS;
+    return new List(DEFAULT_CONTEXT_FIELDS);
 }
 
 const strategies = (state = getInitState(), action) => {
     switch (action.type) {
         case RECEIVE_CONTEXT:
-            return action.value;
+            return new List(action.value);
+        case REMOVE_CONTEXT:
+            return state.remove(state.indexOf(action.context));
+        case ADD_CONTEXT_FIELD:
+            return state.push(action.context);
+        case UPDATE_CONTEXT_FIELD: {
+            const index = state.findIndex(item => item.name === action.context.name);
+            return state.set(index, action.context);
+        }
         default:
             return state;
     }

@@ -10,6 +10,8 @@ import {
 
 import { ERROR_UPDATING_STRATEGY, ERROR_CREATING_STRATEGY, ERROR_RECEIVE_STRATEGIES } from './strategy/actions';
 
+import { ERROR_ADD_CONTEXT_FIELD, ERROR_UPDATE_CONTEXT_FIELD } from './context/actions';
+
 import { FORBIDDEN } from './util';
 
 const debug = require('debug')('unleash:error-store');
@@ -37,6 +39,8 @@ const strategies = (state = getInitState(), action) => {
         case ERROR_UPDATING_STRATEGY:
         case ERROR_CREATING_STRATEGY:
         case ERROR_RECEIVE_STRATEGIES:
+        case ERROR_ADD_CONTEXT_FIELD:
+        case ERROR_UPDATE_CONTEXT_FIELD:
             return addErrorIfNotAlreadyInList(state, action.error.message);
         case FORBIDDEN:
             return addErrorIfNotAlreadyInList(state, action.error.message || '403 Forbidden');

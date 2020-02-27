@@ -123,6 +123,25 @@ Array [
   },
   Object {
     "component": [Function],
+    "parent": "/context",
+    "path": "/context/create",
+    "title": "Create",
+  },
+  Object {
+    "component": [Function],
+    "parent": "/context",
+    "path": "/context/edit/:name",
+    "title": ":name",
+  },
+  Object {
+    "component": [Function],
+    "hidden": true,
+    "icon": "apps",
+    "path": "/context",
+    "title": "Context Fields",
+  },
+  Object {
+    "component": [Function],
     "icon": "exit_to_app",
     "path": "/logout",
     "title": "Sign out",

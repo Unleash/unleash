@@ -1,7 +1,7 @@
 import { routes, baseRoutes, getRoute } from '../routes';
 
 test('returns all defined routes', () => {
-    expect(routes.length).toEqual(14);
+    expect(routes.length).toEqual(17);
     expect(routes).toMatchSnapshot();
 });
 

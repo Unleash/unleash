@@ -145,19 +145,9 @@ exports[`renders correctly with with variants 1`] = `
        
       <react-mdl-Button
         onClick={[MockFunction]}
-        raised={true}
-        ripple={true}
-        style={
-          Object {
-            "float": "right",
-          }
-        }
         type="cancel"
       >
-        <react-mdl-Icon
-          name="cancel"
-        />
-            Cancel
+        Cancel
       </react-mdl-Button>
     </div>
   </form>
@@ -225,19 +215,9 @@ exports[`renders correctly with without variants 1`] = `
        
       <react-mdl-Button
         onClick={[MockFunction]}
-        raised={true}
-        ripple={true}
-        style={
-          Object {
-            "float": "right",
-          }
-        }
         type="cancel"
       >
-        <react-mdl-Icon
-          name="cancel"
-        />
-            Cancel
+        Cancel
       </react-mdl-Button>
     </div>
   </form>

@@ -74,9 +74,8 @@ export const FormButtons = ({ submitText = 'Create', onCancel }) => (
             {submitText}
         </Button>
         &nbsp;
-        <Button type="cancel" ripple raised onClick={onCancel} style={{ float: 'right' }}>
-            <Icon name="cancel" />
-            &nbsp;&nbsp;&nbsp; Cancel
+        <Button type="cancel" onClick={onCancel}>
+            Cancel
         </Button>
     </div>
 );

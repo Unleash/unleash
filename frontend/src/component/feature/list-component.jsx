@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { debounce } from "debounce";
+import { debounce } from 'debounce';
 import { Link } from 'react-router-dom';
 import { Icon, FABButton, Textfield, Menu, MenuItem, Card, CardActions, List } from 'react-mdl';
 import Feature from './feature-list-item-component';
@@ -26,8 +26,8 @@ export default class FeatureListComponent extends React.Component {
         super();
         this.state = {
             filter: props.settings.filter,
-            updateFilter: debounce(props.updateSetting.bind(this, 'filter'), 200)
-        }
+            updateFilter: debounce(props.updateSetting.bind(this, 'filter'), 250),
+        };
     }
 
     componentDidMount() {
@@ -44,8 +44,8 @@ export default class FeatureListComponent extends React.Component {
 
     setFilter(v) {
         const value = typeof v === 'string' ? v : '';
-        this.setState({filter: value});
-        this.state.updateFilter(value)
+        this.setState({ filter: value });
+        this.state.updateFilter(value);
     }
 
     setSort(v) {

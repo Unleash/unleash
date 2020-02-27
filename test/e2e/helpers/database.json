@@ -16,6 +16,11 @@
       ]
     }
   ],
+  "contextFields": [
+    { "name": "environment" },
+    { "name": "userId" },
+    { "name": "appNam" }
+  ],
   "applications": [
     {
       "appName": "demo-app-1",

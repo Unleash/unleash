@@ -26,8 +26,8 @@ export default class App extends PureComponent {
                 <AuthenticationContainer history={this.props.history} />
                 <Layout fixedHeader>
                     <Header location={this.props.location} />
-                    <Content className="mdl-color--grey-50">
-                        <Grid noSpacing className={styles.content}>
+                    <Content className="mdl-color--grey-50" style={{display: 'flex', flexDirection: 'column'}}>
+                        <Grid noSpacing className={styles.content} style={{flex: 1}}>
                             <Cell col={12}>
                                 <Switch>
                                     <Route

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.17]
+- fix: feature search should use debounce
+- fix: footer should be on bottom
+
 ## [3.2.16]
 - fix: minor improvement on context UI
 

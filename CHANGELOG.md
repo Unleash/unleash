@@ -2,7 +2,15 @@
 
 ## 3.2.28
 
+- fix: more metrics
 - fix: upgrade unleash-frontend to version 3.2.18
+- fix: add settings column to postgres
+- feat: api supports context fields (#564)
+- fix: failing user.test on gravatar url
+- fix: use gravatar-url instead of gravatar dep
+- fix: upgrade lint-staged to latest
+- fix: upgrade @hapi/joi to version 17.1.0
+- fix: upgrade husky to version 4.2.3
 
 ## 3.2.27
 

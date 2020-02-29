@@ -33,22 +33,25 @@
 
 
     dl {
-        padding: 0.5em;
+        padding: 0em;
     }
 
     dt {
         float: left;
         clear: left;
-        width: 100px;
         font-weight: bold;
     }
 
     dd {
-        margin: 0 0 0 110px;
+        margin: 0 0 0 83px;
         padding: 0 0 0.5em 0;
     }
 }
 
 .history-item:nth-child(odd) {
     background-color: #efefef;
+}
+
+.history-item {
+    padding: 5px;
 }

@@ -8,6 +8,27 @@ import { formatFullDateTimeWithLocale } from '../common/util';
 
 import styles from './history.scss';
 
+const HistoryMeta = ({ entry, timeFormatted }) => (
+    <div>
+        <dl>
+            <dt>Changed at:</dt>
+            <dd>{timeFormatted}</dd>
+            <dt>Changed by: </dt>
+            <dd title={entry.createdBy}>{entry.createdBy}</dd>
+            <dt>Type: </dt>
+            <dd>{entry.type}</dd>
+            <dt>Name: </dt>
+            <dd>{entry.data.name}</dd>
+        </dl>
+        <strong>Change</strong>
+        <HistoryItemDiff entry={entry} />
+    </div>
+);
+HistoryMeta.propTypes = {
+    entry: PropTypes.object.isRequired,
+    timeFormatted: PropTypes.string.isRequired,
+};
+
 class HistoryList extends Component {
     static propTypes = {
         title: PropTypes.string,
@@ -26,7 +47,7 @@ class HistoryList extends Component {
     }
     render() {
         const showData = this.props.settings.showData;
-        const { history, hideName } = this.props;
+        const { history } = this.props;
         if (!history || history.length < 0) {
             return null;
         }
@@ -35,7 +56,6 @@ class HistoryList extends Component {
             <span
                 className={commonStyles.truncate}
                 style={{ display: 'inline-block', verticalAlign: 'middle', width: '100%' }}
-                title={v}
             >
                 {v}
             </span>
@@ -48,40 +68,24 @@ class HistoryList extends Component {
         } else {
             entries = (
                 <Table
-                    sortable
                     rows={history.map(entry =>
                         Object.assign(
                             {
-                                diff: <HistoryItemDiff entry={entry} />,
-                                name: entry.data.name,
+                                meta: (
+                                    <HistoryMeta
+                                        entry={entry}
+                                        timeFormatted={this.formatFulldateTime(entry.createdAt)}
+                                    />
+                                ),
                             },
                             entry
                         )
                     )}
                     className={commonStyles.fullwidth}
-                    style={{ border: 0, tableLayout: 'fixed', minWidth: '840px' }}
+                    style={{ border: 0, tableLayout: 'fixed' }}
                 >
-                    <TableHeader name="type" cellFormatter={truncateTableCell} style={{ width: '115px' }}>
-                        Type
-                    </TableHeader>
-                    <TableHeader name="createdBy" cellFormatter={truncateTableCell} style={{ width: '115px' }}>
-                        User
-                    </TableHeader>
-                    {hideName ? (
-                        []
-                    ) : (
-                        <TableHeader name="name" cellFormatter={truncateTableCell} style={{ width: '153px' }}>
-                            Feature Toggle
-                        </TableHeader>
-                    )}
-                    <TableHeader name="diff">Diff</TableHeader>
-                    <TableHeader
-                        numeric
-                        name="createdAt"
-                        cellFormatter={this.formatFulldateTime.bind(this)}
-                        style={{ width: '165px' }}
-                    >
-                        Time
+                    <TableHeader name="meta" cellFormatter={truncateTableCell}>
+                        Change
                     </TableHeader>
                 </Table>
             );

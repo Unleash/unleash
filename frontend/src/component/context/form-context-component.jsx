@@ -19,6 +19,8 @@ class AddContextComponent extends Component {
     static getDerivedStateFromProps(props, state) {
         if (!state.contextField.name && props.contextField.name) {
             return { contextField: props.contextField };
+        } else {
+            return null;
         }
     }
 
@@ -162,7 +164,6 @@ class AddContextComponent extends Component {
 AddContextComponent.propTypes = {
     contextField: PropTypes.object.isRequired,
     validateName: PropTypes.func.isRequired,
-    fetchContext: PropTypes.func.isRequired,
     submit: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     editMode: PropTypes.bool.isRequired,

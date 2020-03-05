@@ -1,9 +1,13 @@
 # Changelog
 
+## 3.2.29
+
+- fix: upgrade unleash-frontend to version 3.2.18
+
 ## 3.2.28
 
 - fix: more metrics
-- fix: upgrade unleash-frontend to version 3.2.18
+- fix: upgrade unleash-frontend to version 3.2.17
 - fix: add settings column to postgres
 - feat: api supports context fields (#564)
 - fix: failing user.test on gravatar url

@@ -2,6 +2,7 @@
 
 ## 3.2.29
 
+- fix: lock knex to version 0.20.10
 - fix: upgrade unleash-frontend to version 3.2.18
 
 ## 3.2.28

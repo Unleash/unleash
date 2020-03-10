@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.30
+
+- fix: upgrade unleash-frontend to version 3.2.19
+
 ## 3.2.29
 
 - fix: lock knex to version 0.20.10

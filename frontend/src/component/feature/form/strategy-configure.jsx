@@ -190,7 +190,7 @@ class StrategyConfigure extends React.Component {
                     );
                 } else {
                     if (name === 'groupId' && !value) {
-                        value = this.props.featureToggleName;
+                        this.setConfig('groupId', this.props.featureToggleName);
                     }
                     return (
                         <div key={name}>

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.19]
+- fix: default groupId never set for strategies (only in ui)
+
 ## [3.2.18]
 - fix: clean up history view a bit
 

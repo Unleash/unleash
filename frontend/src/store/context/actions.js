@@ -19,7 +19,10 @@ export function fetchContext() {
     return dispatch =>
         api
             .fetchAll()
-            .then(json => dispatch(receiveContext(json)))
+            .then(json => { 
+                json.sort((a, b) => a.sortOrder - b.sortOrder);
+                dispatch(receiveContext(json))
+            })
             .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_CONTEXT));
 }
 

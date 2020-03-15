@@ -1,16 +1,16 @@
 'use strict';
 
 /**
- * Google OAath 2.0
+ * Google OAuth 2.0
  *
  * You should read Using OAuth 2.0 to Access Google APIs:
  * https://developers.google.com/identity/protocols/OAuth2
  *
  * This example assumes that all users authenticating via
- * google should have access. You would proably limit access
+ * google should have access. You would probably limit access
  * to users you trust.
  *
- * The implementation assumes the following environement variables:
+ * The implementation assumes the following environment variables:
  *
  *  - GOOGLE_CLIENT_ID
  *  - GOOGLE_CLIENT_SECRET

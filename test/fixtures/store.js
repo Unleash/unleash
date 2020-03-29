@@ -7,6 +7,7 @@ const featureToggleStore = require('./fake-feature-toggle-store');
 const eventStore = require('./fake-event-store');
 const strategyStore = require('./fake-strategies-store');
 const contextFieldStore = require('./fake-context-store');
+const settingStore = require('./fake-setting-store');
 
 module.exports = {
     createStores: () => {
@@ -25,6 +26,7 @@ module.exports = {
             eventStore: eventStore(),
             strategyStore: strategyStore(),
             contextFieldStore: contextFieldStore(),
+            settingStore: settingStore(),
         };
     },
 };

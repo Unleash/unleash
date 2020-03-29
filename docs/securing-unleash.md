@@ -20,7 +20,6 @@ const myCustomAdminAuth = require('./auth-hook');
 unleash
   .start({
     databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash',
-    secret: 'super-duper-secret',
     adminAuthentication: 'custom',
     preRouterHook: myCustomAdminAuth,
   })

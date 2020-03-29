@@ -52,7 +52,7 @@ Available unleash options include:
 - **serverMetrics** (boolean) - use this option to turn on/off prometheus metrics.
 - **preHook** (function) - this is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first argument.
 - **preRouterHook** (function) - use this to register custom express middlewares before the `unleash` specific routers are added. This is typically how you would register custom middlewares to handle authentication.
-- **secret** (string) - set this when you want to secure unleash. Used to encrypt the user session.
+- **secret** (string) - _depreacted_ - set this when you want to secure unleash. Used to encrypt the user session.
 - **adminAuthentication** (string) - use this when implementing custom admin authentication [securing-unleash](./securing-unleash.md). Possible values are:
   - `none` - will disable authentication altogether
   - `unsecure` - (default) will use simple cookie based authentication. UI will require the user to specify an email in order to use unleash.

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.20]
+- fix: logout should be real request and not just XHR
+
 ## [3.2.19]
 - fix: default groupId never set for strategies (only in ui)
 

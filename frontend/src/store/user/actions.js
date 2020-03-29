@@ -41,7 +41,6 @@ export function unsecureLogin(path, user) {
 export function logoutUser() {
     return dispatch => {
         dispatch({ type: USER_LOGOUT });
-
-        return api.logoutUser().catch(handleError);
+        window.location = 'logout';
     };
 }

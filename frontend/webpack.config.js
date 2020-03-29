@@ -110,6 +110,11 @@ module.exports = {
                 changeOrigin: true,
                 secure: false,
             },
+            '/logout': {
+                target: process.env.UNLEASH_API || 'http://localhost:4242',
+                changeOrigin: true,
+                secure: false,
+            },
         },
         port: process.env.PORT || 3000,
     },

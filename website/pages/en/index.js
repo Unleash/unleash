@@ -127,7 +127,7 @@ const FeatureCallout = () => (
 const SASSOffering = () => (
   <div className="productShowcaseSection">
     <p className="sassOffering">
-      Unleash also comes in a entperise edition with additional features and a hosted option (SaaS). Check out&nbsp;
+      Unleash also comes in a enterprise edition with additional features and a hosted option (SaaS). Check out&nbsp;
       <a href="https://www.unleash-hosted.com/open-source">unleash-hosted.com</a>
     </p>
   </div>

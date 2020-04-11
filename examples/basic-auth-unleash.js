@@ -8,7 +8,6 @@ const basicAuth = require('./basic-auth-hook');
 unleash
     .start({
         databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash',
-        secret: 'super-duper-secret',
         adminAuthentication: 'custom',
         preRouterHook: basicAuth,
     })

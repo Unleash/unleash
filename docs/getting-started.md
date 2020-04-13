@@ -5,7 +5,7 @@ title: Getting Started
 
 ## Requirements
 
-You will need Node.js >= 8.0.0 and a **PostgreSQL** 9.5+ database instance to be able to run Unleash.
+You will need **Node.js** >= 12 and a **PostgreSQL** >= 10 database instance to be able to run Unleash.
 
 When starting Unleash you must specify a database URI (can be set as environment variable DATABASE_URL) which includes a username and password, that have rights to migrate the database.
 

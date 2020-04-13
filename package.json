@@ -56,9 +56,9 @@
     ]
   },
   "ava": {
-    "helpers": [
-      "**/helpers/**/*",
-      "**/fixtures/**/*"
+    "files": [
+      "!**/helpers/**/*",
+      "!**/fixtures/**/*"
     ]
   },
   "dependencies": {
@@ -93,7 +93,7 @@
     "@passport-next/passport": "^3.1.0",
     "@passport-next/passport-google-oauth2": "^1.0.0",
     "@types/node": "^13.7.4",
-    "ava": "^2.4.0",
+    "ava": "^3.7.0",
     "coveralls": "^3.0.6",
     "eslint": "^6.5.1",
     "eslint-config-finn": "^3.0.1",

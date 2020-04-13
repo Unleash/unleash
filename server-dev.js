@@ -2,7 +2,6 @@
 
 const unleash = require('./lib/server-impl');
 
-// DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash?ssl=true
 unleash.start({
     db: {
         user: 'unleash_user',

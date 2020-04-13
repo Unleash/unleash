@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.3.0
+
+- feat: Update "enableLegacyRoutes" to false (#580)
+- feat: require node >= 12
+- feat: move secrets to settings (#577)
+- fix: Update unleash-frontend to version 3.2.20 (#582)
+- fix: Logout should not be xhr call (#576)
+- fix: Update pg to the latest version 🚀 (#578)
+- fix: upgrade eslint to verson 6.8.0
+- fix: upgrade ava to version 3.7.0
+- chore: update getting-started guide
+- Fix: typo webpage (#579)
+- fix(readme): improve heroku 1 click deploy behavior (#575)
+- chore: Fix typo in gogole-auth-hook example (#572)
+- fix: bump acorn from 7.0.0 to 7.1.1 (#571)
+
 ## 3.2.30
 
 - fix: upgrade unleash-frontend to version 3.2.19

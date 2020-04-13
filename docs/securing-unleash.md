@@ -7,11 +7,11 @@ The Unleash API is split into two different paths: `/api/client` and `/api/admin
 
 ## General settings
 
-Unleash uses an encrypted cookie to maintain a user session. This allows users to be logged in across multiple instances of Unleash. To protect this cookie, you should specify the `secret` option when starting Unleash.
+Unleash uses an encrypted cookie to maintain a user session. This allows users to be logged in across multiple instances of Unleash. To protect this cookie, Unleash will automatically generate a secure token the first time you start Unleash.
 
 ## Securing the Admin API
 
-To secure the Admin API, you have to tell Unleash that you are using a custom admin authentication and implement your authentication logic as a preHook. You should also set the secret option to a protected secret in your system.
+To secure the Admin API, you have to tell Unleash that you are using a custom admin authentication and implement your authentication logic as a preHook.
 
 ```javascript
 const unleash = require('unleash-server');
@@ -20,7 +20,6 @@ const myCustomAdminAuth = require('./auth-hook');
 unleash
   .start({
     databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash',
-    secret: 'super-duper-secret',
     adminAuthentication: 'custom',
     preRouterHook: myCustomAdminAuth,
   })

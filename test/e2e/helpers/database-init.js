@@ -58,7 +58,7 @@ function createFeatures(store) {
 
 module.exports = async function init(databaseSchema = 'test', getLogger) {
     const options = {
-        databaseUrl: require('./database-config').getDatabaseUrl(),
+        db: require('./database-config').getDb(),
         databaseSchema,
         minPool: 1,
         maxPool: 1,

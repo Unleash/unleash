@@ -34,7 +34,7 @@
   "scripts": {
     "start": "node server.js",
     "start:google": "node examples/google-auth-unleash.js",
-    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website server.js",
+    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website server-dev.js",
     "start:dev:pg": "pg_virtualenv npm run start:dev:pg-chain",
     "start:dev:pg-chain": "export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; db-migrate up && npm run start:dev",
     "db-migrate": "db-migrate",
@@ -70,6 +70,7 @@
     "db-migrate": "^0.11.6",
     "db-migrate-pg": "^1.0.0",
     "deep-diff": "^1.0.2",
+    "deepmerge": "^4.2.2",
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "gravatar-url": "^3.1.0",

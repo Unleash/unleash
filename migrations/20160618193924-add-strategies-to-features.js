@@ -16,7 +16,7 @@ WHERE f.name = features.name;
 ALTER TABLE features DROP COLUMN "strategy_name";
 ALTER TABLE features DROP COLUMN "parameters";
        `,
-        callback
+        callback,
     );
 };
 
@@ -37,6 +37,6 @@ WHERE f.name = features.name;
 --drop new column
 ALTER TABLE features DROP COLUMN "strategies";
     `,
-        callback
+        callback,
     );
 };

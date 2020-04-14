@@ -1,4 +1,5 @@
 /* eslint camelcase: "off" */
+
 'use strict';
 
 const async = require('async');
@@ -25,12 +26,12 @@ exports.up = function(db, callback) {
                         strategy => `
                 UPDATE strategies 
                 SET parameters='${JSON.stringify(strategy.parameters)}'
-                WHERE name='${strategy.name}';`
+                WHERE name='${strategy.name}';`,
                     )
                     .join('\n');
 
                 db.runSql(updateSQL, cb);
-            }
+            },
         );
     };
 
@@ -40,7 +41,7 @@ exports.up = function(db, callback) {
             populateNewData.bind(db),
             db.removeColumn.bind(db, 'strategies', 'parameters_template'),
         ],
-        callback
+        callback,
     );
 };
 
@@ -60,9 +61,9 @@ exports.down = function(db, callback) {
                     strategy => `
                 UPDATE strategies 
                 SET parameters_template='${JSON.stringify(
-                    strategy.parameters_template
+                    strategy.parameters_template,
                 )}'
-                WHERE name='${strategy.name}';`
+                WHERE name='${strategy.name}';`,
                 )
                 .join('\n');
 
@@ -78,6 +79,6 @@ exports.down = function(db, callback) {
             populateOldData.bind(db),
             db.removeColumn.bind(db, 'strategies', 'parameters'),
         ],
-        callback
+        callback,
     );
 };

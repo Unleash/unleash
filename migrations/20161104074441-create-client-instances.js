@@ -10,7 +10,7 @@ exports.up = function(db, callback) {
             last_seen timestamp default now(),
             created_at timestamp default now()
         );`,
-        callback
+        callback,
     );
 };
 

@@ -13,7 +13,7 @@ ALTER TABLE client_instances ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZO
 ALTER TABLE client_instances ALTER COLUMN last_seen TYPE TIMESTAMP WITH TIME ZONE;
 ALTER TABLE client_metrics ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE;
        `,
-        callback
+        callback,
     );
 };
 

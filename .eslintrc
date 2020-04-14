@@ -1,13 +1,20 @@
 {
-    "extends": [
-        "finn",
-        "finn/node",
-        "finn-prettier"
-    ],
-    "parserOptions": {
-        "ecmaVersion": "2017"
+    "env": {
+        "node": true
     },
+    "extends": ["airbnb-base", "prettier"],
+    "parserOptions": {
+        "ecmaVersion": "2018"
+    },
+    "plugins": ["prettier"],
+    "root": true,
     "rules": {
+        "class-methods-use-this": [0],
+        "prettier/prettier": ["error"],
+        "func-names": "off",
+        "strict": [0, "global"],
+        "no-underscore-dangle": "off",
+        "no-plusplus": "off",
         "no-param-reassign": "error",
         "no-return-await": "error",
         "max-nested-callbacks": "off",

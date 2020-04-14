@@ -6,7 +6,7 @@ exports.up = function(db, callback) {
         ALTER TABLE features ADD "variants" json;
         ALTER TABLE features ALTER COLUMN "variants" SET DEFAULT '[]';
     `,
-        callback
+        callback,
     );
 };
 

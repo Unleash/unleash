@@ -1,4 +1,5 @@
 /* eslint camelcase: "off" */
+
 'use strict';
 
 exports.up = function(db, cb) {
@@ -20,7 +21,7 @@ exports.up = function(db, cb) {
             url: { type: 'string', length: 255 },
             color: { type: 'string', length: 255 },
         },
-        cb
+        cb,
     );
 };
 

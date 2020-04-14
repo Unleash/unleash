@@ -56,7 +56,7 @@ test.serial('should allow client to register multiple times', async t => {
             request
                 .post('/api/client/register')
                 .send(clientRegistration)
-                .expect(202)
+                .expect(202),
         );
 });
 

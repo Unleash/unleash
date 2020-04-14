@@ -6,7 +6,7 @@ exports.up = function(db, callback) {
 INSERT INTO strategies(name, description) 
 VALUES ('default', 'Default on/off strategy.');
        `,
-        callback
+        callback,
     );
 };
 
@@ -14,6 +14,6 @@ exports.down = function(db, callback) {
     db.runSql(
         `
 DELETE FROM strategies where name='default';`,
-        callback
+        callback,
     );
 };

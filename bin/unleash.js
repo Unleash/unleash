@@ -1,12 +1,12 @@
 #!/usr/bin/env node
+
 'use strict';
 
 process.env.NODE_ENV = 'production';
 
-const serverImpl = require('../lib/server-impl.js');
 const fs = require('fs');
 
-const argv = require('yargs')
+const { argv } = require('yargs')
     .usage('$0 [options]')
     .env(true)
     .option('port', {
@@ -43,7 +43,9 @@ const argv = require('yargs')
         default: 'public',
         demand: false,
         type: 'string',
-    }).argv;
+    });
+
+const serverImpl = require('../lib/server-impl.js');
 
 if (argv.databaseUrlFile) {
     argv.databaseUrl = fs.readFileSync(argv.databaseUrlFile, 'utf8');
@@ -54,8 +56,10 @@ serverImpl
     .start(argv)
     .then(instance => {
         const address = instance.server.address();
+        // eslint-disable-next-line no-console
         console.log(
-            `Unleash started on http://${address.address}:${address.port}`
+            `Unleash started on http://${address.address}:${address.port}`,
         );
     })
+    // eslint-disable-next-line no-console
     .catch(console.err);

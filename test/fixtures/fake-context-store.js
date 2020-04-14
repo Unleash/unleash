@@ -15,9 +15,8 @@ module.exports = () => {
             const field = _contextFields.find(c => c.name === name);
             if (field) {
                 return Promise.resolve(field);
-            } else {
-                return Promise.reject(NotFoundError);
             }
+            return Promise.reject(NotFoundError);
         },
         create: contextField => _contextFields.push(contextField),
     };

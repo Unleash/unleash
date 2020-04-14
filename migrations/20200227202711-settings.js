@@ -1,4 +1,5 @@
 /* eslint camelcase: "off" */
+
 'use strict';
 
 exports.up = function(db, cb) {
@@ -13,7 +14,7 @@ exports.up = function(db, cb) {
             },
             content: { type: 'json' },
         },
-        cb
+        cb,
     );
 };
 

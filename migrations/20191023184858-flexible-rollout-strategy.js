@@ -1,13 +1,13 @@
 'use strict';
 
-const flexibleRollout = require('./flexible-rollout-strategy.json');
 const async = require('async');
+const flexibleRollout = require('./flexible-rollout-strategy.json');
 
 function insertStrategySQL(strategy) {
     return `
         INSERT INTO strategies (name, description, parameters, built_in)
         SELECT '${strategy.name}', '${strategy.description}', '${JSON.stringify(
-        strategy.parameters
+        strategy.parameters,
     )}', 1
         WHERE
             NOT EXISTS (
@@ -49,7 +49,7 @@ exports.up = function(db, callback) {
             db.runSql.bind(db, insertEventsSQL(flexibleRollout)),
             db.runSql.bind(db, insertStrategySQL(flexibleRollout)),
         ],
-        callback
+        callback,
     );
 };
 
@@ -59,6 +59,6 @@ exports.down = function(db, callback) {
             db.runSql.bind(db, removeEventsSQL(flexibleRollout)),
             db.runSql.bind(db, removeStrategySQL(flexibleRollout)),
         ],
-        callback
+        callback,
     );
 };

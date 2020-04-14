@@ -4,6 +4,7 @@ const { EventEmitter } = require('events');
 const migrator = require('../../../migrator');
 const { createStores } = require('../../../lib/db');
 const { createDb } = require('../../../lib/db/db-pool');
+const dbConfig = require('./database-config');
 
 const dbState = require('./database.json');
 
@@ -23,17 +24,6 @@ async function resetDatabase(stores) {
         stores.db('client_instances').del(),
         stores.db('context_fields').del(),
     ]);
-}
-
-async function setupDatabase(stores) {
-    const updates = [];
-    updates.push(...createStrategies(stores.strategyStore));
-    updates.push(...createContextFields(stores.contextFieldStore));
-    updates.push(...createFeatures(stores.featureToggleStore));
-    updates.push(...createClientInstance(stores.clientInstanceStore));
-    updates.push(...createApplications(stores.clientApplicationsStore));
-
-    await Promise.all(updates);
 }
 
 function createStrategies(store) {
@@ -56,9 +46,20 @@ function createFeatures(store) {
     return dbState.features.map(f => store._createFeature(f));
 }
 
+async function setupDatabase(stores) {
+    const updates = [];
+    updates.push(...createStrategies(stores.strategyStore));
+    updates.push(...createContextFields(stores.contextFieldStore));
+    updates.push(...createFeatures(stores.featureToggleStore));
+    updates.push(...createClientInstance(stores.clientInstanceStore));
+    updates.push(...createApplications(stores.clientApplicationsStore));
+
+    await Promise.all(updates);
+}
+
 module.exports = async function init(databaseSchema = 'test', getLogger) {
     const options = {
-        db: require('./database-config').getDb(),
+        db: dbConfig.getDb(),
         databaseSchema,
         minPool: 1,
         maxPool: 1,

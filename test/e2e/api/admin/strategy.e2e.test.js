@@ -27,7 +27,7 @@ test.serial('gets all strategies', async t => {
         .expect(res => {
             t.true(
                 res.body.strategies.length === 2,
-                'expected to have two strategies'
+                'expected to have two strategies',
             );
         });
 });

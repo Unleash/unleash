@@ -12,7 +12,8 @@ unleash
         preRouterHook: enableGoogleOauth,
     })
     .then(server => {
+        // eslint-disable-next-line no-console
         console.log(
-            `Unleash started on http://localhost:${server.app.get('port')}`
+            `Unleash started on http://localhost:${server.app.get('port')}`,
         );
     });

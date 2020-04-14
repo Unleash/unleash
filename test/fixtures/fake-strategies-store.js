@@ -13,9 +13,8 @@ module.exports = () => {
             const strategy = _strategies.find(s => s.name === name);
             if (strategy) {
                 return Promise.resolve(strategy);
-            } else {
-                return Promise.reject(new NotFoundError('Not found!'));
             }
+            return Promise.reject(new NotFoundError('Not found!'));
         },
         addStrategy: strat => _strategies.push(strat),
     };

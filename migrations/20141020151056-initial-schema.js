@@ -25,7 +25,7 @@ CREATE TABLE events (
   data json
 );
        `,
-        callback
+        callback,
     );
 };
 
@@ -36,6 +36,6 @@ DROP TABLE events;
 DROP TABLE features;
 DROP TABLE strategies;
         `,
-        callback
+        callback,
     );
 };

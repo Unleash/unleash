@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 'use strict';
 
 module.exports = function noLoggerProvider() {

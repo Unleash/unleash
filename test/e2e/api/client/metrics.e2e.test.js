@@ -2,7 +2,7 @@
 
 const test = require('ava');
 
-const { setupApp } = require('./../../helpers/test-helper');
+const { setupApp } = require('../../helpers/test-helper');
 const metricsExample = require('../../../examples/client-metrics.json');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');

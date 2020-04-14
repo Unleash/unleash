@@ -8,7 +8,7 @@ CREATE TABLE client_metrics (
   created_at timestamp default now(),
   metrics json
 );`,
-        callback
+        callback,
     );
 };
 

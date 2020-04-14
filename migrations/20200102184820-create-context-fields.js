@@ -1,4 +1,5 @@
 /* eslint camelcase: "off" */
+
 'use strict';
 
 const async = require('async');
@@ -25,10 +26,10 @@ exports.up = function(db, cb) {
         INSERT INTO context_fields(name, description, sort_order) VALUES('environment', 'Allows you to constrain on application environment', 0);
         INSERT INTO context_fields(name, description, sort_order) VALUES('userId', 'Allows you to constrain on userId', 1);
         INSERT INTO context_fields(name, description, sort_order) VALUES('appName', 'Allows you to constrain on application name', 2);
-        `
+        `,
             ),
         ],
-        cb
+        cb,
     );
 };
 

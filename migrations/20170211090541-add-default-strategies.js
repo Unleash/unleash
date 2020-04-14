@@ -1,13 +1,13 @@
 'use strict';
 
-const strategies = require('./default-strategies.json');
 const async = require('async');
+const strategies = require('./default-strategies.json');
 
 function insertStrategySQL(strategy) {
     return `
         INSERT INTO strategies (name, description, parameters, built_in)
         SELECT '${strategy.name}', '${strategy.description}', '${JSON.stringify(
-        strategy.parameters
+        strategy.parameters,
     )}', 1
         WHERE
             NOT EXISTS (
@@ -50,7 +50,7 @@ exports.up = function(db, callback) {
                 db.runSql.bind(db, insertEventsSQL(s)),
                 db.runSql.bind(db, insertStrategySQL(s)),
             ],
-            cb
+            cb,
         );
     });
     async.series(insertStrategies, callback);
@@ -65,7 +65,7 @@ exports.down = function(db, callback) {
                     db.runSql.bind(db, removeEventsSQL(s)),
                     db.runSql.bind(db, removeStrategySQL(s)),
                 ],
-                cb
+                cb,
             );
         });
 

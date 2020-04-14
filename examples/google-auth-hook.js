@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
 'use strict';
 
 /**
@@ -17,12 +19,12 @@
  *  - GOOGLE_CALLBACK_URL
  */
 
-// const  { User, AuthenticationRequired } = require('unleash-server');
-const { User, AuthenticationRequired } = require('../lib/server-impl.js');
-
 const passport = require('@passport-next/passport');
 const GoogleOAuth2Strategy = require('@passport-next/passport-google-oauth2')
     .Strategy;
+
+// const  { User, AuthenticationRequired } = require('unleash-server');
+const { User, AuthenticationRequired } = require('../lib/server-impl.js');
 
 passport.use(
     new GoogleOAuth2Strategy(
@@ -38,10 +40,10 @@ passport.use(
                 new User({
                     name: profile.displayName,
                     email: profile.emails[0].value,
-                })
+                }),
             );
-        }
-    )
+        },
+    ),
 );
 
 function enableGoogleOauth(app) {
@@ -52,7 +54,7 @@ function enableGoogleOauth(app) {
     passport.deserializeUser((user, done) => done(null, user));
     app.get(
         '/api/admin/login',
-        passport.authenticate('google', { scope: ['email'] })
+        passport.authenticate('google', { scope: ['email'] }),
     );
 
     app.get(
@@ -63,26 +65,25 @@ function enableGoogleOauth(app) {
         (req, res) => {
             // Successful authentication, redirect to your app.
             res.redirect('/');
-        }
+        },
     );
 
     app.use('/api/admin/', (req, res, next) => {
         if (req.user) {
-            next();
-        } else {
-            // Instruct unleash-frontend to pop-up auth dialog
-            return res
-                .status('401')
-                .json(
-                    new AuthenticationRequired({
-                        path: '/api/admin/login',
-                        type: 'custom',
-                        message: `You have to identify yourself in order to use Unleash. 
-                        Click the button and follow the instructions.`,
-                    })
-                )
-                .end();
+            return next();
         }
+        // Instruct unleash-frontend to pop-up auth dialog
+        return res
+            .status('401')
+            .json(
+                new AuthenticationRequired({
+                    path: '/api/admin/login',
+                    type: 'custom',
+                    message: `You have to identify yourself in order to use Unleash. 
+                        Click the button and follow the instructions.`,
+                }),
+            )
+            .end();
     });
 }
 

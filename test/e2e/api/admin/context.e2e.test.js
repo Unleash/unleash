@@ -104,7 +104,7 @@ test.serial(
             .send({ name: 'userId' })
             .set('Content-Type', 'application/json')
             .expect(400);
-    }
+    },
 );
 
 test.serial('should delete context field', async t => {

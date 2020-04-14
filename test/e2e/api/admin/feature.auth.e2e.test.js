@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const { setupAppWithAuth } = require('./../../helpers/test-helper');
+const { setupAppWithAuth } = require('../../helpers/test-helper');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const { setupApp } = require('./../../helpers/test-helper');
+const { setupApp } = require('../../helpers/test-helper');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
 
@@ -47,7 +47,7 @@ test.serial(
             .get('/api/admin/features/featureArchivedZ')
             .set('Content-Type', 'application/json')
             .expect(404);
-    }
+    },
 );
 
 test.serial('must set name when reviving toggle', async t => {

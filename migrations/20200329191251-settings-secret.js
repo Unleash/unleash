@@ -1,4 +1,5 @@
 /* eslint camelcase: "off" */
+
 'use strict';
 
 const crypto = require('crypto');
@@ -12,7 +13,7 @@ exports.up = function(db, cb) {
         `
     INSERT INTO settings(name, content) 
     VALUES('${settingsName}', '${JSON.stringify(secret)}')`,
-        cb
+        cb,
     );
 };
 

@@ -8,20 +8,19 @@ module.exports = () => {
             const toggle = _features.find(f => f.name === name);
             if (toggle) {
                 return Promise.resolve(toggle);
-            } else {
-                return Promise.reject();
             }
+            return Promise.reject();
         },
         hasFeature: name => {
             const toggle = _features.find(f => f.name === name);
             const archived = _archive.find(f => f.name === name);
             if (toggle) {
                 return Promise.resolve({ name, archived: false });
-            } else if (archived) {
-                return Promise.resolve({ name, archived: true });
-            } else {
-                return Promise.reject();
             }
+            if (archived) {
+                return Promise.resolve({ name, archived: true });
+            }
+            return Promise.reject();
         },
         getFeatures: () => Promise.resolve(_features),
         addFeature: feature => _features.push(feature),

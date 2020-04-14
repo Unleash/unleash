@@ -120,7 +120,7 @@ test.serial(
             .send({ name: 'should-not-exist', enabled: false })
             .set('Content-Type', 'application/json')
             .expect(404);
-    }
+    },
 );
 
 test.serial('can change status of feature toggle that does exist', async t => {
@@ -207,7 +207,7 @@ test.serial(
             })
             .set('Content-Type', 'application/json')
             .expect(200);
-    }
+    },
 );
 
 test.serial('should not be possible to create archived toggle', async t => {

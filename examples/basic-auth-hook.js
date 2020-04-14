@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+
 'use strict';
 
 const auth = require('basic-auth');
@@ -11,13 +13,13 @@ function basicAuthentication(app) {
             // you will need to do some verification of credentials here.
             const user = new User({ email: `${credentials.name}@domain.com` });
             req.user = user;
-            next();
-        } else {
-            return res
-                .status('401')
-                .set({ 'WWW-Authenticate': 'Basic realm="example"' })
-                .end('access denied');
+            return next();
         }
+
+        return res
+            .status('401')
+            .set({ 'WWW-Authenticate': 'Basic realm="example"' })
+            .end('access denied');
     });
 
     app.use((req, res, next) => {

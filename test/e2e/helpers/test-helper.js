@@ -4,11 +4,11 @@ process.env.NODE_ENV = 'test';
 
 const supertest = require('supertest');
 
+const { EventEmitter } = require('events');
 const getApp = require('../../../lib/app');
 const getLogger = require('../../fixtures/no-logger');
 const StateService = require('../../../lib/state-service');
 
-const { EventEmitter } = require('events');
 const eventBus = new EventEmitter();
 
 function createApp(stores, adminAuthentication = 'none', preHook) {

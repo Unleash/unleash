@@ -11,10 +11,10 @@ exports.up = function(db, cb) {
             }),
             db.runSql.bind(
                 db,
-                "UPDATE strategies SET built_in=1 where name='default'"
+                "UPDATE strategies SET built_in=1 where name='default'",
             ),
         ],
-        cb
+        cb,
     );
 };
 

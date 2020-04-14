@@ -9,7 +9,7 @@ unleash.start({
         host: 'localhost',
         port: 5432,
         database: 'unleash',
-        ssl: true,
+        ssl: false,
     },
     enableRequestLogger: true,
 });

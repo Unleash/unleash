@@ -67,15 +67,17 @@
     "identity-obj-proxy": "^3.0.0",
     "immutable": "^3.8.1",
     "jest": "^24.9.0",
+    "lodash": "^4.17.15",
     "mini-css-extract-plugin": "^0.9.0",
+    "node-fetch": "^2.6.0",
     "node-sass": "^4.5.3",
     "normalize.css": "^8.0.0",
     "optimize-css-assets-webpack-plugin": "^5.0.0",
     "prettier": "^1.18.2",
     "prop-types": "^15.6.2",
     "react": "^16.10.2",
-    "react-dnd": "^5.0.0",
-    "react-dnd-html5-backend": "^5.0.1",
+    "react-dnd": "^10.0.2",
+    "react-dnd-html5-backend": "^10.0.2",
     "react-dom": "^16.10.2",
     "react-mdl": "^2.1.0",
     "react-modal": "^3.1.13",
@@ -108,12 +110,6 @@
     ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
-    ]
-  },
-  "greenkeeper": {
-    "ignore": [
-      "react-dnd",
-      "react-dnd-html5-backend"
     ]
   }
 }

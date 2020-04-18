@@ -15,6 +15,7 @@ import {
 } from 'react-mdl';
 import { DragSource, DropTarget } from 'react-dnd';
 import { Link } from 'react-router-dom';
+import flow from 'lodash/flow';
 import StrategyInputPercentage from './strategy-input-percentage';
 import FlexibleRolloutStrategyInput from './flexible-rollout-strategy-input';
 import StrategyInputList from './strategy-input-list';
@@ -46,15 +47,25 @@ const dragTarget = {
     },
 };
 
-/* eslint-disable new-cap */
-@DropTarget('strategy', dragTarget, connect => ({
-    connectDropTarget: connect.dropTarget(),
-}))
-@DragSource('strategy', dragSource, (connect, monitor) => ({
-    connectDragSource: connect.dragSource(),
-    connectDragPreview: connect.dragPreview(),
-    isDragging: monitor.isDragging(),
-}))
+/**
+ * Specifies which props to inject into your component.
+ */
+function collect(connect, monitor) {
+    return {
+        connectDragSource: connect.dragSource(),
+        connectDragPreview: connect.dragPreview(),
+        isDragging: monitor.isDragging(),
+    };
+}
+
+function collectTarget(connect, monitor) {
+    return {
+        highlighted: monitor.canDrop(),
+        hovered: monitor.isOver(),
+        connectDropTarget: connect.dropTarget(),
+    };
+}
+
 class StrategyConfigure extends React.Component {
     /* eslint-enable */
     static propTypes = {
@@ -271,8 +282,13 @@ class StrategyConfigure extends React.Component {
             );
         }
 
-        return connectDropTarget(connectDragPreview(<div className={styles.item}>{item}</div>));
+        return connectDragPreview(connectDropTarget(<div className={styles.item}>{item}</div>));
     }
 }
-
-export default StrategyConfigure;
+const type = 'strategy';
+export default flow(
+    // eslint-disable-next-line new-cap
+    DragSource(type, dragSource, collect),
+    // eslint-disable-next-line new-cap
+    DropTarget(type, dragTarget, collectTarget)
+)(StrategyConfigure);

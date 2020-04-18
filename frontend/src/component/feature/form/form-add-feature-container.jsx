@@ -116,9 +116,6 @@ const mapDispatchToProps = dispatch => ({
     createFeatureToggles: featureToggle => createFeatureToggles(featureToggle)(dispatch),
 });
 
-const FormAddContainer = connect(
-    () => ({}),
-    mapDispatchToProps
-)(WrapperComponent);
+const FormAddContainer = connect(() => ({}), mapDispatchToProps)(WrapperComponent);
 
 export default FormAddContainer;

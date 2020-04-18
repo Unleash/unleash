@@ -18,11 +18,8 @@ const mapStateToProps = (state, props) => ({
     history: getHistoryFromToggle(state, props.toggleName),
 });
 
-const HistoryListToggleContainer = connect(
-    mapStateToProps,
-    {
-        fetchHistoryForToggle,
-    }
-)(HistoryListToggleComponent);
+const HistoryListToggleContainer = connect(mapStateToProps, {
+    fetchHistoryForToggle,
+})(HistoryListToggleComponent);
 
 export default HistoryListToggleContainer;

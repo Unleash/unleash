@@ -13,9 +13,6 @@ const mapDispatchToProps = dispatch => ({
     fetchFeatureToggles: () => fetchFeatureToggles()(dispatch),
 });
 
-const FormAddContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(CopyFeatureComponent);
+const FormAddContainer = connect(mapStateToProps, mapDispatchToProps)(CopyFeatureComponent);
 
 export default FormAddContainer;

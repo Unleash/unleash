@@ -22,9 +22,6 @@ const mapDispatchToProps = dispatch => ({
     fetchContext: () => fetchContext()(dispatch),
 });
 
-const ContextFieldListContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ContextFieldListComponent);
+const ContextFieldListContainer = connect(mapStateToProps, mapDispatchToProps)(ContextFieldListComponent);
 
 export default ContextFieldListContainer;

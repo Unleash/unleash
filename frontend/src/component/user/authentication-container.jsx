@@ -12,7 +12,4 @@ const mapStateToProps = state => ({
     user: state.user.toJS(),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(AuthenticationComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(AuthenticationComponent);

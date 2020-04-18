@@ -13,7 +13,4 @@ const mapStateToProps = state => ({
         .reverse(),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ErrorComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(ErrorComponent);

@@ -36,7 +36,4 @@ const actions = createActions({
     prepare,
 });
 
-export default connect(
-    mapStateToProps,
-    actions
-)(ViewFeatureToggleComponent);
+export default connect(mapStateToProps, actions)(ViewFeatureToggleComponent);

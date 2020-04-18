@@ -8,7 +8,4 @@ const mapDispatchToProps = {
 
 const mapStateToProps = () => ({});
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(LogoutComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(LogoutComponent);

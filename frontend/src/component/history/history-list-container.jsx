@@ -11,11 +11,8 @@ const mapStateToProps = state => {
     };
 };
 
-const HistoryListContainer = connect(
-    mapStateToProps,
-    {
-        updateSetting: updateSettingForGroup('history'),
-    }
-)(HistoryListToggleComponent);
+const HistoryListContainer = connect(mapStateToProps, {
+    updateSetting: updateSettingForGroup('history'),
+})(HistoryListToggleComponent);
 
 export default HistoryListContainer;

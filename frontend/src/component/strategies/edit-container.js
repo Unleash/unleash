@@ -57,7 +57,4 @@ const actions = createActions({
     prepare,
 });
 
-export default connect(
-    mapStateToProps,
-    actions
-)(AddStrategy);
+export default connect(mapStateToProps, actions)(AddStrategy);

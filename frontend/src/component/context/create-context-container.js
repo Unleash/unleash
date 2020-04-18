@@ -17,9 +17,6 @@ const mapDispatchToProps = dispatch => ({
     submit: contextField => createContextField(contextField)(dispatch),
 });
 
-const FormAddContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ContextComponent);
+const FormAddContainer = connect(mapStateToProps, mapDispatchToProps)(ContextComponent);
 
 export default FormAddContainer;

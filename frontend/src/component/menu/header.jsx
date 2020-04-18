@@ -53,7 +53,6 @@ class HeaderComponent extends PureComponent {
     }
 }
 
-export default connect(
-    state => ({ uiConfig: state.uiConfig.toJS() }),
-    { fetchUIConfig, fetchContext }
-)(HeaderComponent);
+export default connect(state => ({ uiConfig: state.uiConfig.toJS() }), { fetchUIConfig, fetchContext })(
+    HeaderComponent
+);

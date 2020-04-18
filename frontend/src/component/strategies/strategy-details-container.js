@@ -22,13 +22,10 @@ const mapStateToProps = (state, props) => {
     };
 };
 
-const Constainer = connect(
-    mapStateToProps,
-    {
-        fetchStrategies,
-        fetchApplications: fetchAll,
-        fetchFeatureToggles,
-    }
-)(ShowStrategy);
+const Constainer = connect(mapStateToProps, {
+    fetchStrategies,
+    fetchApplications: fetchAll,
+    fetchFeatureToggles,
+})(ShowStrategy);
 
 export default Constainer;

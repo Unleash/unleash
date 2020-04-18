@@ -78,9 +78,6 @@ const mapDispatchToProps = {
     updateSetting: updateSettingForGroup('feature'),
 };
 
-const FeatureListContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(FeatureListComponent);
+const FeatureListContainer = connect(mapStateToProps, mapDispatchToProps)(FeatureListComponent);
 
 export default FeatureListContainer;

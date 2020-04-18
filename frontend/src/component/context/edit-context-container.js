@@ -18,9 +18,6 @@ const mapDispatchToProps = dispatch => ({
     editMode: true,
 });
 
-const FormAddContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ContextComponent);
+const FormAddContainer = connect(mapStateToProps, mapDispatchToProps)(ContextComponent);
 
 export default FormAddContainer;

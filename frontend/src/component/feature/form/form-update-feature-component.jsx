@@ -6,7 +6,8 @@ import { FormButtons } from './../../common';
 
 class UpdateFeatureComponent extends Component {
     // static displayName = `UpdateFeatureComponent-{getDisplayName(Component)}`;
-    componentWillMount() {
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillMount() {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {
             this.props.init(this.props.input);

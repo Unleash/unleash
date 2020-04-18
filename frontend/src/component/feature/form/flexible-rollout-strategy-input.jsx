@@ -20,7 +20,8 @@ export default class FlexibleRolloutStrategy extends Component {
         handleConfigChange: PropTypes.func.isRequired,
     };
 
-    componentWillMount() {
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillMount() {
         const { strategy, featureToggleName } = this.props;
         if (!strategy.parameters.rollout) {
             this.setConfig('rollout', 100);

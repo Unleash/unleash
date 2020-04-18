@@ -12,7 +12,8 @@ class UpdateVariantComponent extends Component {
         super(props);
     }
 
-    componentWillMount() {
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillMount() {
         // TODO unwind this stuff
         if (this.props.initCallRequired === true) {
             this.props.init(this.props.input);

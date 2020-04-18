@@ -15,7 +15,8 @@ class StrategiesSectionComponent extends React.Component {
         fetchStrategies: PropTypes.func,
     };
 
-    componentWillMount() {
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillMount() {
         this.props.fetchStrategies();
     }
 

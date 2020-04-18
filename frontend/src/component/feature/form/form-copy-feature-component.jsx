@@ -17,7 +17,8 @@ class CopyFeatureComponent extends Component {
         this.state = { newToggleName: '', replaceGroupId: true };
     }
 
-    componentWillMount() {
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillMount() {
         // TODO unwind this stuff
         if (this.props.copyToggle) {
             this.setState({ featureToggle: this.props.copyToggle });

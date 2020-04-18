@@ -24,7 +24,8 @@ class Progress extends Component {
         }
     }
 
-    componentWillReceiveProps({ percentage }) {
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillReceiveProps({ percentage }) {
         if (this.state.percentage !== percentage) {
             const nextState = { percentage };
             if (this.props.animatePercentageText) {

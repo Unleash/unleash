@@ -22,7 +22,8 @@ class HeaderComponent extends PureComponent {
         this.props.fetchContext();
     }
 
-    componentWillReceiveProps(nextProps) {
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props.location.pathname !== nextProps.location.pathname) {
             clearTimeout(this.timer);
             this.timer = setTimeout(() => {

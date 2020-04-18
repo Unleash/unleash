@@ -43,7 +43,8 @@ export default class MetricComponent extends React.Component {
         location: PropTypes.object,
     };
 
-    componentWillMount() {
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillMount() {
         this.props.fetchSeenApps();
         this.props.fetchFeatureMetrics();
     }

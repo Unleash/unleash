@@ -41,7 +41,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
         hasPermission: PropTypes.func.isRequired,
     };
 
-    componentWillMount() {
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillMount() {
         if (this.props.features.length === 0) {
             if (this.isFeatureView) {
                 this.props.fetchFeatureToggles();

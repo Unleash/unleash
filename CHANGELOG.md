@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.3.1
+
+- fix: Support proper SSL settings using `DATABASE_SSL` (#585)
+- fix: upgrade unleash-frontend to version 3.2.21
+- fix: add users-table to store user details (#586)
+- fix: disable ssl for local postgres in dev
+- fix: use airbnb lint rules directly (#583)
+- chore: reduce log-level for metrics
+
 ## 3.3.0
 
 - feat: Update "enableLegacyRoutes" to false (#580)

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.2.21]
+- fix: upgrade fetch-mock to version 9.4.0
+- fix: upgrade redux to version 4.0.5
+- fix: upgrade babel dependencies
+- fix: upgrade react-router to version 5.1.2
+- fix: upgrade react to version 16.13.1
+- fix: rename use of legacy react lifecyle methods
+- fix: upgrade react-dnd to version 10.0.2"
+
 ## [3.2.20]
 - fix: logout should be real request and not just XHR
 

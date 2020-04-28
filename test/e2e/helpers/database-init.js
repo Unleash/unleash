@@ -23,6 +23,7 @@ async function resetDatabase(stores) {
         stores.db('client_applications').del(),
         stores.db('client_instances').del(),
         stores.db('context_fields').del(),
+        stores.db('users').del(),
     ]);
 }
 

@@ -63,10 +63,10 @@ class AuthComponent extends React.Component {
                             expand
                             style={{
                                 color: '#fff',
-                                background: '#000',
+                                background: 'rgb(96, 125, 139)',
                             }}
                         >
-                            Action required
+                            Action required!
                         </CardTitle>
                         <CardText>{content}</CardText>
                     </Card>

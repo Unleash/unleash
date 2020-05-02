@@ -1311,7 +1311,7 @@ db-migrate-pg@^1.2.1:
   dependencies:
     bluebird "^3.1.1"
     db-migrate-base "^2.3.0"
-    pg "^7.8.0"
+    pg "^8.0.3"
     semver "^5.0.3"
 
 db-migrate-shared@^1.2.0:

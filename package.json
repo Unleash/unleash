@@ -24,7 +24,7 @@
     "url": "https://github.com/unleash/unleash/issues"
   },
   "engines": {
-    "node": ">=12 <14"
+    "node": ">=12"
   },
   "license": "Apache-2.0",
   "main": "./lib/server-impl.js",
@@ -67,8 +67,8 @@
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.4",
     "cookie-session": "^2.0.0-beta.3",
-    "db-migrate": "^0.11.6",
-    "db-migrate-pg": "^1.0.0",
+    "db-migrate": "^0.11.10",
+    "db-migrate-pg": "^1.2.1",
     "db-migrate-shared": "^1.2.0",
     "deep-diff": "^1.0.2",
     "deepmerge": "^4.2.2",
@@ -82,7 +82,7 @@
     "moment": "^2.24.0",
     "multer": "^1.4.1",
     "parse-database-url": "^0.3.0",
-    "pg": "^8.0.0",
+    "pg": "^8.0.3",
     "pkginfo": "^0.4.1",
     "prom-client": "^12.0.0",
     "response-time": "^2.3.2",

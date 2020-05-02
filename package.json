@@ -24,7 +24,7 @@
     "url": "https://github.com/unleash/unleash/issues"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=12 <14"
   },
   "license": "Apache-2.0",
   "main": "./lib/server-impl.js",

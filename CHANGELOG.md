@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.2
+
+- fix: stop measure responsetime for unknown paths (#591)
+- fix: expose evaluated config and permissions object
+- fix: user should not crash if email is missing
+
 ## 3.3.1
 
 - fix: Support proper SSL settings using `DATABASE_SSL` (#585)

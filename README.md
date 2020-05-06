@@ -50,7 +50,7 @@ Official client SDK's:
 - [unleash/unleash-client-dotnet](https://github.com/Unleash/unleash-client-dotnet)
 
 Clients written by awesome enthusiasts: :fire:
-
+- [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 - [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Larvel - PHP)
 

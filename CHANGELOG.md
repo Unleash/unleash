@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.3.3
+
+- chore: add a few more community client SDKs
+- fix: add user-store (#590)
+- fix: upgrade unleash-frontend to 3.3.1
+- fix: license year and company
+- chore: add dart sdk details
+- fix: pg dependency for db-migrate as well
+- fix: support node 14 by upgrading pg to 8.0.3
+- fix: we are not ready for node 14
+- fix: remove Procfile for Heroku
+
 ## 3.3.2
 
 - fix: stop measure responsetime for unknown paths (#591)

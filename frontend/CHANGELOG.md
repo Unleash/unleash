@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.3.1]
+- feat: add support for username/password login
+- feat: locale select should be dropdown menu
+- feat: support internal routes
+- fix: adjust colors of dialog
+
 ## [3.2.21]
 - fix: upgrade fetch-mock to version 9.4.0
 - fix: upgrade redux to version 4.0.5

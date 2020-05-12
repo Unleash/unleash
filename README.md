@@ -50,7 +50,10 @@ Official client SDK's:
 - [unleash/unleash-client-dotnet](https://github.com/Unleash/unleash-client-dotnet)
 
 Clients written by awesome enthusiasts: :fire:
+- [cognitedata/unleash-client-rust](https://github.com/cognitedata/unleash-client-rust) (Rust)
+- [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
 - [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
+- [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 - [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Larvel - PHP)
 

@@ -14,6 +14,33 @@ function getIcon(name) {
     }
 }
 
+function renderLink(link) {
+    if (link.path) {
+        return (
+            <NavLink
+                key={link.path}
+                to={link.path}
+                className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
+                activeClassName={[styles.navigationLink, 'mdl-color-text--black', 'mdl-color--blue-grey-100'].join(' ')}
+            >
+                {getIcon(link.icon)} {link.value}
+            </NavLink>
+        );
+    } else {
+        return (
+            <a
+                href={link.href}
+                key={link.href}
+                target="_blank"
+                className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
+                title={link.title}
+            >
+                {getIcon(link.icon)} {link.value}
+            </a>
+        );
+    }
+}
+
 export const DrawerMenu = ({ links = [] }) => (
     <Drawer className="mdl-color--white">
         <span className={[styles.drawerTitle, 'mdl-layout-title'].join(' ')}>
@@ -36,19 +63,7 @@ export const DrawerMenu = ({ links = [] }) => (
             ))}
         </Navigation>
         <hr />
-        <Navigation className={styles.navigation}>
-            {links.map(link => (
-                <a
-                    href={link.href}
-                    key={link.href}
-                    target="_blank"
-                    className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
-                    title={link.title}
-                >
-                    {getIcon(link.icon)} {link.value}
-                </a>
-            ))}
-        </Navigation>
+        <Navigation className={styles.navigation}>{links.map(renderLink)}</Navigation>
     </Drawer>
 );
 

@@ -1311,7 +1311,7 @@ db-migrate-pg@^1.2.1:
   dependencies:
     bluebird "^3.1.1"
     db-migrate-base "^2.3.0"
-    pg "^8.0.3"
+    pg "^7.8.0"
     semver "^5.0.3"
 
 db-migrate-shared@^1.2.0:
@@ -5513,10 +5513,10 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
 
-unleash-frontend@3.2.21:
-  version "3.2.21"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.2.21.tgz#8be288068427bf1ec53be36a9f035eccf6477822"
-  integrity sha512-oqMIgxqvQYFnNXonnYABSLckJAUvYWWEU5ONlMlzNTGFI2HRMtlJEHoPLdjrM5k3K492AJuRmg9V5ngfPS+gYw==
+unleash-frontend@3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-3.3.1.tgz#b78a5b17c6f95cdf8c9d91e9d7068244d474d848"
+  integrity sha512-SD1RGzJHcejW8qQhFXG8mOKBcgNCCvStmWYHtR0ROCfk1XQliGOmsMs1zCbbBJJ42y3+7BjEWjr22OS34b8Tyw==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

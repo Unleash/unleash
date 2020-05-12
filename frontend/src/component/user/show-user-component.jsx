@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './user.scss';
+import { Menu, MenuItem } from 'react-mdl';
 
 export default class ShowUserComponent extends React.Component {
     static propTypes = {
@@ -10,13 +11,16 @@ export default class ShowUserComponent extends React.Component {
         updateSettingLocation: PropTypes.func.isRequired,
     };
     possibleLocales = [
-        { value: 'nb-NO', image: 'nb-NO' },
         { value: 'en-US', image: 'en-US' },
         { value: 'en-GB', image: 'en-GB' },
-        { value: 'en-IN', image: 'en-IN' },
+        { value: 'nb-NO', image: 'nb-NO' },
+        { value: 'sv-SE', image: 'sv-SE' },
         { value: 'da-DK', image: 'da-DK' },
+        { value: 'en-IN', image: 'en-IN' },
         { value: 'de', image: 'de_DE' },
         { value: 'cs', image: 'cs_CZ' },
+        { value: 'pt-BR', image: 'pt_BR' },
+        { value: 'fr-FR', image: 'fr-FR' },
     ];
 
     componentDidMount() {
@@ -33,11 +37,8 @@ export default class ShowUserComponent extends React.Component {
         return (this.props.location && this.props.location.locale) || navigator.language || navigator.userLanguage;
     }
 
-    updateLocale() {
-        const locale = this.getLocale();
-        let index = this.possibleLocales.findIndex(v => v.value === locale);
-        index = (index + 1) % this.possibleLocales.length;
-        this.props.updateSettingLocation('locale', this.possibleLocales[index].value);
+    setLocale(locale) {
+        this.props.updateSettingLocation('locale', locale.value);
     }
 
     render() {
@@ -48,9 +49,18 @@ export default class ShowUserComponent extends React.Component {
         const imageLocale = foundLocale ? `public/${foundLocale.image}.png` : `public/unknown-locale.png`;
         return (
             <div className={styles.showUserSettings}>
-                <div className={styles.showLocale}>
-                    <img src={imageLocale} title={locale} alt={locale} onClick={this.updateLocale.bind(this)} />
+                <div className={styles.showLocale} id="select-locale" style={{ cursor: 'pointer' }}>
+                    <img src={imageLocale} title={`Current locale is ${locale}`} alt={locale} />
                 </div>
+                <Menu target="select-locale" valign="bottom" align="right" ripple>
+                    {this.possibleLocales.map(i => (
+                        <MenuItem key={i.value} style={{ textAlign: 'center' }} onClick={() => this.setLocale(i)}>
+                            <div className={styles.showLocale}>
+                                <img src={`public/${i.image}.png`} title={i.value} alt={i.value} />
+                            </div>
+                        </MenuItem>
+                    ))}
+                </Menu>
                 &nbsp;
                 <div className={styles.showUser}>
                     <img src={imageUrl} title={email} alt={email} />

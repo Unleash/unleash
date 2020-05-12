@@ -4,8 +4,10 @@ import { Card, CardTitle, CardText } from 'react-mdl';
 import Modal from 'react-modal';
 import AuthenticationSimpleComponent from './authentication-simple-component';
 import AuthenticationCustomComponent from './authentication-custom-component';
+import AuthenticationPasswordComponent from './authentication-password-component';
 
 const SIMPLE_TYPE = 'unsecure';
+const PASSWORD_TYPE = 'password';
 
 const customStyles = {
     overlay: {
@@ -34,7 +36,9 @@ class AuthComponent extends React.Component {
     static propTypes = {
         user: PropTypes.object.isRequired,
         unsecureLogin: PropTypes.func.isRequired,
+        passwordLogin: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
+        fetchUIConfig: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
     };
 
@@ -43,7 +47,17 @@ class AuthComponent extends React.Component {
         if (!authDetails) return null;
 
         let content;
-        if (authDetails.type === SIMPLE_TYPE) {
+        if (authDetails.type === PASSWORD_TYPE) {
+            content = (
+                <AuthenticationPasswordComponent
+                    passwordLogin={this.props.passwordLogin}
+                    authDetails={authDetails}
+                    fetchFeatureToggles={this.props.fetchFeatureToggles}
+                    fetchUIConfig={this.props.fetchUIConfig}
+                    history={this.props.history}
+                />
+            );
+        } else if (authDetails.type === SIMPLE_TYPE) {
             content = (
                 <AuthenticationSimpleComponent
                     unsecureLogin={this.props.unsecureLogin}
@@ -66,7 +80,7 @@ class AuthComponent extends React.Component {
                                 background: 'rgb(96, 125, 139)',
                             }}
                         >
-                            Action required!
+                            Action Required
                         </CardTitle>
                         <CardText>{content}</CardText>
                     </Card>

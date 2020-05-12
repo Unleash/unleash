@@ -38,6 +38,14 @@ export function unsecureLogin(path, user) {
     };
 }
 
+export function passwordLogin(path, user) {
+    return dispatch => {
+        dispatch({ type: START_FETCH_USER });
+
+        return api.passwordLogin(path, user).then(json => dispatch(updateUser(json)));
+    };
+}
+
 export function logoutUser() {
     return dispatch => {
         dispatch({ type: USER_LOGOUT });

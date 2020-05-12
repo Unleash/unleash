@@ -1,11 +1,14 @@
 import { connect } from 'react-redux';
 import AuthenticationComponent from './authentication-component';
-import { unsecureLogin } from '../../store/user/actions';
+import { unsecureLogin, passwordLogin } from '../../store/user/actions';
 import { fetchFeatureToggles } from '../../store/feature-actions';
+import { fetchUIConfig } from '../../store/ui-config/actions';
 
 const mapDispatchToProps = {
     unsecureLogin,
+    passwordLogin,
     fetchFeatureToggles,
+    fetchUIConfig,
 };
 
 const mapStateToProps = state => ({

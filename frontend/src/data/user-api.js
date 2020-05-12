@@ -20,8 +20,18 @@ function unsecureLogin(path, user) {
         .then(response => response.json());
 }
 
+function passwordLogin(path, data) {
+    return fetch(path, {
+        method: 'POST',
+        credentials: 'include',
+        headers,
+        body: JSON.stringify(data),
+    }).then(throwIfNotSuccess);
+}
+
 export default {
     fetchUser,
     unsecureLogin,
     logoutUser,
+    passwordLogin,
 };

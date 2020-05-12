@@ -8,9 +8,10 @@ function extractLegacyMsg(body) {
 }
 
 class ServiceError extends Error {
-    constructor() {
+    constructor(statusCode = 500) {
         super(defaultErrorMessage);
         this.name = 'ServiceError';
+        this.statusCode = statusCode;
     }
 }
 
@@ -52,7 +53,7 @@ export function throwIfNotSuccess(response) {
                 });
             });
         } else {
-            return Promise.reject(new ServiceError());
+            return Promise.reject(new ServiceError(response.status));
         }
     }
     return Promise.resolve(response);

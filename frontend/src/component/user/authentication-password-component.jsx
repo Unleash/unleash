@@ -16,6 +16,11 @@ class EnterpriseAuthenticationComponent extends React.Component {
         this.state = {};
     }
 
+    onShowOptions = e => {
+        e.preventDefault();
+        this.setState({ showFields: true });
+    };
+
     handleSubmit = async evt => {
         evt.preventDefault();
         const { username, password } = this.state;
@@ -47,7 +52,7 @@ class EnterpriseAuthenticationComponent extends React.Component {
         }
     };
 
-    render() {
+    renderLoginForm() {
         const authDetails = this.props.authDetails;
         const { username, usernameError, password, passwordError, error } = this.state;
         return (
@@ -81,6 +86,35 @@ class EnterpriseAuthenticationComponent extends React.Component {
                 </CardActions>
             </form>
         );
+    }
+
+    renderWithOptions(options) {
+        return (
+            <div style={{ textAlign: 'center' }}>
+                {options.map(o => (
+                    <CardActions key={o.type}>
+                        <Button raised accent href={o.path}>
+                            {o.value}
+                        </Button>
+                    </CardActions>
+                ))}
+                {this.state.showFields ? (
+                    this.renderLoginForm()
+                ) : (
+                    <a href="" onClick={this.onShowOptions}>
+                        Show more options
+                    </a>
+                )}
+            </div>
+        );
+    }
+
+    render() {
+        const { options = [] } = this.props.authDetails;
+        if (options.length > 0) {
+            return this.renderWithOptions(options);
+        }
+        return this.renderLoginForm();
     }
 }
 

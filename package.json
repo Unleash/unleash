@@ -68,7 +68,7 @@
     "cookie-parser": "^1.4.4",
     "cookie-session": "^2.0.0-beta.3",
     "db-migrate": "^0.11.10",
-    "db-migrate-pg": "^1.2.1",
+    "db-migrate-pg": "^1.2.2",
     "db-migrate-shared": "^1.2.0",
     "deep-diff": "^1.0.2",
     "deepmerge": "^4.2.2",

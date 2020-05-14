@@ -8,9 +8,9 @@ The latest version of this document is always available in
 [releases][releases-url].
 
 ## [3.3.2]
-fix: reset stores on login/logout (#212)
-fix: password login should prefer login options
-fix: Transform username/password login response to json (#211)
+- fix: reset stores on login/logout (#212)
+- fix: password login should prefer login options
+- fix: Transform username/password login response to json (#211)
 
 ## [3.3.1]
 - feat: add support for username/password login

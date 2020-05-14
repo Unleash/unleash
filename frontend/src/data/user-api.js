@@ -26,7 +26,9 @@ function passwordLogin(path, data) {
         credentials: 'include',
         headers,
         body: JSON.stringify(data),
-    }).then(throwIfNotSuccess);
+    })
+        .then(throwIfNotSuccess)
+        .then(response => response.json());
 }
 
 export default {

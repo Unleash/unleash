@@ -1,5 +1,6 @@
 import { List } from 'immutable';
 import { RECEIVE_CONTEXT, REMOVE_CONTEXT, ADD_CONTEXT_FIELD, UPDATE_CONTEXT_FIELD } from './actions';
+import { USER_LOGOUT, UPDATE_USER } from '../user/actions';
 
 const DEFAULT_CONTEXT_FIELDS = [{ name: 'environment' }, { name: 'userId' }, { name: 'appName' }];
 
@@ -19,6 +20,9 @@ const strategies = (state = getInitState(), action) => {
             const index = state.findIndex(item => item.name === action.context.name);
             return state.set(index, action.context);
         }
+        case USER_LOGOUT:
+        case UPDATE_USER:
+            return getInitState();
         default:
             return state;
     }

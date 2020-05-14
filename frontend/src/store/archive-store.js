@@ -1,5 +1,6 @@
 import { List, Map as $Map } from 'immutable';
 import { RECEIVE_ARCHIVE, REVIVE_TOGGLE } from './archive-actions';
+import { USER_LOGOUT, UPDATE_USER } from './user/actions';
 
 function getInitState() {
     return new $Map({ list: new List() });
@@ -11,6 +12,9 @@ const archiveStore = (state = getInitState(), action) => {
             return state.update('list', list => list.filter(item => item.name !== action.value));
         case RECEIVE_ARCHIVE:
             return state.set('list', new List(action.value));
+        case USER_LOGOUT:
+        case UPDATE_USER:
+            return getInitState();
         default:
             return state;
     }

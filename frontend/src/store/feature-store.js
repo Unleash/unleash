@@ -10,7 +10,7 @@ import {
     TOGGLE_FEATURE_TOGGLE,
 } from './feature-actions';
 
-import { USER_LOGOUT } from './user/actions';
+import { USER_LOGOUT, UPDATE_USER } from './user/actions';
 
 const features = (state = new List([]), action) => {
     switch (action.type) {
@@ -50,6 +50,7 @@ const features = (state = new List([]), action) => {
         case RECEIVE_FEATURE_TOGGLES:
             debug(RECEIVE_FEATURE_TOGGLES, action);
             return new List(action.featureToggles.map($Map));
+        case UPDATE_USER:
         case USER_LOGOUT:
             debug(USER_LOGOUT, action);
             return new List([]);

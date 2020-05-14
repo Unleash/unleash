@@ -1,5 +1,6 @@
 import { Map as $Map, List, fromJS } from 'immutable';
 import actions from './input-actions';
+import { USER_LOGOUT, UPDATE_USER } from './user/actions';
 
 function getInitState() {
     return new $Map();
@@ -101,6 +102,9 @@ const inputState = (state = getInitState(), action) => {
             return updateInList(state, action);
         case actions.CLEAR:
             return clear(state, action);
+        case USER_LOGOUT:
+        case UPDATE_USER:
+            return getInitState();
         default:
             // console.log('TYPE', action.type, action);
             return state;

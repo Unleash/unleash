@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.4
+
+- fix: we now support node 14 :hurray
+- fix: upgrade db-migrate-pg to version 1.2.2
+- fix: upgrade unleash-frontend to version 3.3.2
+
 ## 3.3.3
 
 - chore: add a few more community client SDKs

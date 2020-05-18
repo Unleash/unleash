@@ -1,6 +1,6 @@
 import { fromJS, Map as $Map } from 'immutable';
 import { UPDATE_SETTING } from './actions';
-import { USER_LOGOUT, UPDATE_USER } from '../user/actions';
+import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
 // TODO: provde a mock if localstorage does not exists?
 const localStorage = window.localStorage || {};
@@ -27,7 +27,7 @@ const settingStore = (state = getInitState(), action) => {
         case UPDATE_SETTING:
             return updateSetting(state, action);
         case USER_LOGOUT:
-        case UPDATE_USER:
+        case USER_LOGIN:
             return getInitState();
         default:
             return state;

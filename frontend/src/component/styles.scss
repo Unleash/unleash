@@ -16,27 +16,23 @@
     margin-top: 16px;
     margin-bottom: 16px;
 }
-@media (max-width: 1800px) {
-    .content {
-        width: 66.66%;
-    }
-}
+
 @media (max-width: 1260px) {
     .content {
-        width: 840px;
+        width: 1024px;
     }
 }
-@media (max-width: 920px) {
+@media (max-width: 1024px) {
     .content {
-        width: auto;
-        margin-left: 40px;
-        margin-right: 40px;
+        width: 100%;
     }
 }
 @media (max-width: 600px) {
     .content {
+        width: 100%;
         margin-left: 0;
         margin-right: 0;
+        min-width: 100%;
     }
 }
 
@@ -70,7 +66,7 @@
 }
 
 .navigationLink {
-    padding: 12px 24px !important;
+    padding: 12px 20px !important;
 }
 @media screen and (max-width: 1024px) {
     .navigationLink {
@@ -79,7 +75,7 @@
 }
 
 .navigationIcon {
-    margin-right: 24px;
+    margin-right: 16px;
 }
 
 .iconGitHub {

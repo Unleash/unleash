@@ -17,6 +17,12 @@
     margin-left: 0;
 }
 
+@media (max-width: 1024px) {
+    .item {
+        margin: 2px 0;
+    }
+}
+
 /*
 .item:not(:first-child):after {
     content: " OR ";

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+## [3.3.3]
+fix: improve on variant ui
+fix: should not clear all stores on update user profile
+fix: convert variant-view-component to function
+fix: tune css a little
+
 ## [3.3.2]
 - fix: reset stores on login/logout (#212)
 - fix: password login should prefer login options

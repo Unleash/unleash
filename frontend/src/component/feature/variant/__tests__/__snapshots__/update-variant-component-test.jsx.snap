@@ -4,6 +4,7 @@ exports[`renders correctly with with variants 1`] = `
 <section
   style={
     Object {
+      "maxWidth": "700px",
       "padding": "16px",
     }
   }
@@ -20,18 +21,127 @@ exports[`renders correctly with with variants 1`] = `
     >
       getVariant()
     </code>
-     method in the client SDK.
+     method in the Client SDK.
   </p>
-  <p
-    style={
-      Object {
-        "backgroundColor": "rgba(255, 229, 255, 0.4)",
-        "padding": "5px",
-      }
-    }
+  <table
+    className="mdl-data-table mdl-shadow--2dp variantTable"
   >
-    The sum of variants weights needs to be a constant number to guarantee consistent hashing in the client implementations, this is why we will sometime allocate a few more percentages to the first variant if the sum is not exactly 100. In a final version of this feature it should be possible to the user to manually set the percentages for each variant.
-  </p>
+    <thead>
+      <tr>
+        <th>
+          Variant name
+        </th>
+        <th
+          className="labels"
+        />
+        <th>
+          Weight
+        </th>
+        <th
+          className="actions"
+        />
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          onClick={[Function]}
+        >
+          blue
+        </td>
+        <td
+          className="labels"
+        >
+           
+          <react-mdl-Chip
+            style={
+              Object {
+                "backgroundColor": "rgba(173, 216, 230, 0.2)",
+              }
+            }
+          >
+            Overrides
+          </react-mdl-Chip>
+        </td>
+        <td>
+          3.4
+           %
+        </td>
+        <td
+          className="actions"
+        >
+          <react-mdl-IconButton
+            name="edit"
+            onClick={[Function]}
+          />
+          <react-mdl-IconButton
+            name="delete"
+            onClick={[Function]}
+          />
+        </td>
+      </tr>
+      <tr>
+        <td
+          onClick={[Function]}
+        >
+          yellow
+        </td>
+        <td
+          className="labels"
+        >
+           
+        </td>
+        <td>
+          3.3
+           %
+        </td>
+        <td
+          className="actions"
+        >
+          <react-mdl-IconButton
+            name="edit"
+            onClick={[Function]}
+          />
+          <react-mdl-IconButton
+            name="delete"
+            onClick={[Function]}
+          />
+        </td>
+      </tr>
+      <tr>
+        <td
+          onClick={[Function]}
+        >
+          orange
+        </td>
+        <td
+          className="labels"
+        >
+          <react-mdl-Chip>
+            Payload
+          </react-mdl-Chip>
+           
+        </td>
+        <td>
+          3.3
+           %
+        </td>
+        <td
+          className="actions"
+        >
+          <react-mdl-IconButton
+            name="edit"
+            onClick={[Function]}
+          />
+          <react-mdl-IconButton
+            name="delete"
+            onClick={[Function]}
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <br />
   <p>
     <a
       href="#add-variant"
@@ -41,115 +151,167 @@ exports[`renders correctly with with variants 1`] = `
       Add variant
     </a>
   </p>
-  <form>
-    <table
-      className="mdl-data-table mdl-shadow--2dp variantTable"
+  <form
+    onSubmit={[Function]}
+  >
+    <react-mdl-Dialog
+      className="modal"
+      open={false}
     >
-      <thead>
-        <tr>
-          <th>
-            Name
-          </th>
-          <th>
-            Weight
-          </th>
-          <th
-            className="actions"
-          />
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td
-            onClick={[Function]}
-          >
-            blue
-          </td>
-          <td>
-            34
-          </td>
-          <td
-            className="actions"
-          >
-            <react-mdl-IconButton
-              name="expand_more"
-              onClick={[Function]}
-            />
-            <react-mdl-IconButton
-              name="delete"
-              onClick={[Function]}
-            />
-          </td>
-        </tr>
-        <tr>
-          <td
-            onClick={[Function]}
-          >
-            yellow
-          </td>
-          <td>
-            33
-          </td>
-          <td
-            className="actions"
-          >
-            <react-mdl-IconButton
-              name="expand_more"
-              onClick={[Function]}
-            />
-            <react-mdl-IconButton
-              name="delete"
-              onClick={[Function]}
-            />
-          </td>
-        </tr>
-        <tr>
-          <td
-            onClick={[Function]}
-          >
-            orange
-          </td>
-          <td>
-            33
-          </td>
-          <td
-            className="actions"
-          >
-            <react-mdl-IconButton
-              name="expand_more"
-              onClick={[Function]}
-            />
-            <react-mdl-IconButton
-              name="delete"
-              onClick={[Function]}
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <br />
-    <div>
-      <react-mdl-Button
-        icon="add"
-        primary={true}
-        raised={true}
-        ripple={true}
-        type="submit"
+      <react-mdl-DialogTitle
+        style={
+          Object {
+            "padding": "10px",
+          }
+        }
+      />
+      <react-mdl-DialogContent
+        style={
+          Object {
+            "minHeight": "350px",
+            "padding": "10px",
+          }
+        }
       >
-        <react-mdl-Icon
-          name="add"
+        <p
+          style={
+            Object {
+              "color": "red",
+            }
+          }
         />
-           
-        Save
-      </react-mdl-Button>
-       
-      <react-mdl-Button
-        onClick={[MockFunction]}
-        type="cancel"
-      >
-        Cancel
-      </react-mdl-Button>
-    </div>
+        <react-mdl-Textfield
+          floatingLabel={true}
+          label="Variant name"
+          name="name"
+          onChange={[Function]}
+          placeholder=""
+          style={
+            Object {
+              "width": "100%",
+            }
+          }
+          type="name"
+        />
+        <br />
+        <br />
+        <react-mdl-Tooltip
+          className="tooltip"
+          label={
+            <span>
+              Passed to the variant object. 
+              <br />
+              Can be anything (json, value, csv)
+            </span>
+          }
+        >
+          <p
+            style={
+              Object {
+                "marginBottom": "0",
+              }
+            }
+          >
+            <strong>
+              Payload 
+            </strong>
+            <react-mdl-Icon
+              name="info"
+            />
+          </p>
+        </react-mdl-Tooltip>
+        <react-mdl-Grid
+          noSpacing={true}
+        >
+          <react-mdl-Cell
+            col={3}
+          >
+            <div
+              className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty is-upgraded"
+              style={
+                Object {
+                  "width": "100%",
+                }
+              }
+            >
+              <select
+                className="mdl-textfield__input"
+                name="type"
+                onChange={[Function]}
+                style={
+                  Object {
+                    "width": "auto",
+                  }
+                }
+                value="string"
+              >
+                <option
+                  value="string"
+                >
+                  string
+                </option>
+                <option
+                  value="json"
+                >
+                  json
+                </option>
+                <option
+                  value="csv"
+                >
+                  csv
+                </option>
+              </select>
+              <label
+                className="mdl-textfield__label"
+                htmlFor="textfield-conextName"
+              >
+                Type
+              </label>
+            </div>
+          </react-mdl-Cell>
+          <react-mdl-Cell
+            col={9}
+          >
+            <react-mdl-Textfield
+              floatingLabel={true}
+              label="Value"
+              name="value"
+              onChange={[Function]}
+              rows={1}
+              style={
+                Object {
+                  "width": "100%",
+                }
+              }
+              value=""
+            />
+          </react-mdl-Cell>
+        </react-mdl-Grid>
+        <a
+          href="#add-override"
+          onClick={[Function]}
+        >
+          <small>
+            Add override
+          </small>
+        </a>
+      </react-mdl-DialogContent>
+      <react-mdl-DialogActions>
+        <react-mdl-Button
+          colored={true}
+          raised={true}
+          type="submit"
+        >
+          Save
+        </react-mdl-Button>
+        <react-mdl-Button
+          onClick={[Function]}
+          type="button"
+        >
+          Cancel
+        </react-mdl-Button>
+      </react-mdl-DialogActions>
+    </react-mdl-Dialog>
   </form>
 </section>
 `;
@@ -158,6 +320,7 @@ exports[`renders correctly with without variants 1`] = `
 <section
   style={
     Object {
+      "maxWidth": "700px",
       "padding": "16px",
     }
   }
@@ -174,18 +337,30 @@ exports[`renders correctly with without variants 1`] = `
     >
       getVariant()
     </code>
-     method in the client SDK.
+     method in the Client SDK.
   </p>
-  <p
-    style={
-      Object {
-        "backgroundColor": "rgba(255, 229, 255, 0.4)",
-        "padding": "5px",
-      }
-    }
+  <table
+    className="mdl-data-table mdl-shadow--2dp variantTable"
   >
-    The sum of variants weights needs to be a constant number to guarantee consistent hashing in the client implementations, this is why we will sometime allocate a few more percentages to the first variant if the sum is not exactly 100. In a final version of this feature it should be possible to the user to manually set the percentages for each variant.
-  </p>
+    <thead>
+      <tr>
+        <th>
+          Variant name
+        </th>
+        <th
+          className="labels"
+        />
+        <th>
+          Weight
+        </th>
+        <th
+          className="actions"
+        />
+      </tr>
+    </thead>
+    <tbody />
+  </table>
+  <br />
   <p>
     <a
       href="#add-variant"
@@ -195,31 +370,167 @@ exports[`renders correctly with without variants 1`] = `
       Add variant
     </a>
   </p>
-  <form>
-    <p />
-    <br />
-    <div>
-      <react-mdl-Button
-        icon="add"
-        primary={true}
-        raised={true}
-        ripple={true}
-        type="submit"
+  <form
+    onSubmit={[Function]}
+  >
+    <react-mdl-Dialog
+      className="modal"
+      open={false}
+    >
+      <react-mdl-DialogTitle
+        style={
+          Object {
+            "padding": "10px",
+          }
+        }
+      />
+      <react-mdl-DialogContent
+        style={
+          Object {
+            "minHeight": "350px",
+            "padding": "10px",
+          }
+        }
       >
-        <react-mdl-Icon
-          name="add"
+        <p
+          style={
+            Object {
+              "color": "red",
+            }
+          }
         />
-           
-        Save
-      </react-mdl-Button>
-       
-      <react-mdl-Button
-        onClick={[MockFunction]}
-        type="cancel"
-      >
-        Cancel
-      </react-mdl-Button>
-    </div>
+        <react-mdl-Textfield
+          floatingLabel={true}
+          label="Variant name"
+          name="name"
+          onChange={[Function]}
+          placeholder=""
+          style={
+            Object {
+              "width": "100%",
+            }
+          }
+          type="name"
+        />
+        <br />
+        <br />
+        <react-mdl-Tooltip
+          className="tooltip"
+          label={
+            <span>
+              Passed to the variant object. 
+              <br />
+              Can be anything (json, value, csv)
+            </span>
+          }
+        >
+          <p
+            style={
+              Object {
+                "marginBottom": "0",
+              }
+            }
+          >
+            <strong>
+              Payload 
+            </strong>
+            <react-mdl-Icon
+              name="info"
+            />
+          </p>
+        </react-mdl-Tooltip>
+        <react-mdl-Grid
+          noSpacing={true}
+        >
+          <react-mdl-Cell
+            col={3}
+          >
+            <div
+              className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty is-upgraded"
+              style={
+                Object {
+                  "width": "100%",
+                }
+              }
+            >
+              <select
+                className="mdl-textfield__input"
+                name="type"
+                onChange={[Function]}
+                style={
+                  Object {
+                    "width": "auto",
+                  }
+                }
+                value="string"
+              >
+                <option
+                  value="string"
+                >
+                  string
+                </option>
+                <option
+                  value="json"
+                >
+                  json
+                </option>
+                <option
+                  value="csv"
+                >
+                  csv
+                </option>
+              </select>
+              <label
+                className="mdl-textfield__label"
+                htmlFor="textfield-conextName"
+              >
+                Type
+              </label>
+            </div>
+          </react-mdl-Cell>
+          <react-mdl-Cell
+            col={9}
+          >
+            <react-mdl-Textfield
+              floatingLabel={true}
+              label="Value"
+              name="value"
+              onChange={[Function]}
+              rows={1}
+              style={
+                Object {
+                  "width": "100%",
+                }
+              }
+              value=""
+            />
+          </react-mdl-Cell>
+        </react-mdl-Grid>
+        <a
+          href="#add-override"
+          onClick={[Function]}
+        >
+          <small>
+            Add override
+          </small>
+        </a>
+      </react-mdl-DialogContent>
+      <react-mdl-DialogActions>
+        <react-mdl-Button
+          colored={true}
+          raised={true}
+          type="submit"
+        >
+          Save
+        </react-mdl-Button>
+        <react-mdl-Button
+          onClick={[Function]}
+          type="button"
+        >
+          Cancel
+        </react-mdl-Button>
+      </react-mdl-DialogActions>
+    </react-mdl-Dialog>
   </form>
 </section>
 `;
@@ -228,6 +539,7 @@ exports[`renders correctly with without variants and no permissions 1`] = `
 <section
   style={
     Object {
+      "maxWidth": "700px",
       "padding": "16px",
     }
   }
@@ -244,21 +556,191 @@ exports[`renders correctly with without variants and no permissions 1`] = `
     >
       getVariant()
     </code>
-     method in the client SDK.
+     method in the Client SDK.
   </p>
-  <p
-    style={
-      Object {
-        "backgroundColor": "rgba(255, 229, 255, 0.4)",
-        "padding": "5px",
-      }
-    }
+  <table
+    className="mdl-data-table mdl-shadow--2dp variantTable"
   >
-    The sum of variants weights needs to be a constant number to guarantee consistent hashing in the client implementations, this is why we will sometime allocate a few more percentages to the first variant if the sum is not exactly 100. In a final version of this feature it should be possible to the user to manually set the percentages for each variant.
-  </p>
-  <form>
-    <p />
-    <br />
+    <thead>
+      <tr>
+        <th>
+          Variant name
+        </th>
+        <th
+          className="labels"
+        />
+        <th>
+          Weight
+        </th>
+        <th
+          className="actions"
+        />
+      </tr>
+    </thead>
+    <tbody />
+  </table>
+  <br />
+  <form
+    onSubmit={[Function]}
+  >
+    <react-mdl-Dialog
+      className="modal"
+      open={false}
+    >
+      <react-mdl-DialogTitle
+        style={
+          Object {
+            "padding": "10px",
+          }
+        }
+      />
+      <react-mdl-DialogContent
+        style={
+          Object {
+            "minHeight": "350px",
+            "padding": "10px",
+          }
+        }
+      >
+        <p
+          style={
+            Object {
+              "color": "red",
+            }
+          }
+        />
+        <react-mdl-Textfield
+          floatingLabel={true}
+          label="Variant name"
+          name="name"
+          onChange={[Function]}
+          placeholder=""
+          style={
+            Object {
+              "width": "100%",
+            }
+          }
+          type="name"
+        />
+        <br />
+        <br />
+        <react-mdl-Tooltip
+          className="tooltip"
+          label={
+            <span>
+              Passed to the variant object. 
+              <br />
+              Can be anything (json, value, csv)
+            </span>
+          }
+        >
+          <p
+            style={
+              Object {
+                "marginBottom": "0",
+              }
+            }
+          >
+            <strong>
+              Payload 
+            </strong>
+            <react-mdl-Icon
+              name="info"
+            />
+          </p>
+        </react-mdl-Tooltip>
+        <react-mdl-Grid
+          noSpacing={true}
+        >
+          <react-mdl-Cell
+            col={3}
+          >
+            <div
+              className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty is-upgraded"
+              style={
+                Object {
+                  "width": "100%",
+                }
+              }
+            >
+              <select
+                className="mdl-textfield__input"
+                name="type"
+                onChange={[Function]}
+                style={
+                  Object {
+                    "width": "auto",
+                  }
+                }
+                value="string"
+              >
+                <option
+                  value="string"
+                >
+                  string
+                </option>
+                <option
+                  value="json"
+                >
+                  json
+                </option>
+                <option
+                  value="csv"
+                >
+                  csv
+                </option>
+              </select>
+              <label
+                className="mdl-textfield__label"
+                htmlFor="textfield-conextName"
+              >
+                Type
+              </label>
+            </div>
+          </react-mdl-Cell>
+          <react-mdl-Cell
+            col={9}
+          >
+            <react-mdl-Textfield
+              floatingLabel={true}
+              label="Value"
+              name="value"
+              onChange={[Function]}
+              rows={1}
+              style={
+                Object {
+                  "width": "100%",
+                }
+              }
+              value=""
+            />
+          </react-mdl-Cell>
+        </react-mdl-Grid>
+        <a
+          href="#add-override"
+          onClick={[Function]}
+        >
+          <small>
+            Add override
+          </small>
+        </a>
+      </react-mdl-DialogContent>
+      <react-mdl-DialogActions>
+        <react-mdl-Button
+          colored={true}
+          raised={true}
+          type="submit"
+        >
+          Save
+        </react-mdl-Button>
+        <react-mdl-Button
+          onClick={[Function]}
+          type="button"
+        >
+          Cancel
+        </react-mdl-Button>
+      </react-mdl-DialogActions>
+    </react-mdl-Dialog>
   </form>
 </section>
 `;

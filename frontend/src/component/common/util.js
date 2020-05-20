@@ -20,3 +20,13 @@ export const trim = value => {
         return value;
     }
 };
+
+export function updateWeight(variants, totalWeight) {
+    const size = variants.length;
+    const percentage = parseInt((1 / size) * totalWeight);
+
+    variants.forEach(v => {
+        v.weight = percentage;
+    });
+    return variants;
+}

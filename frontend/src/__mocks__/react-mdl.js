@@ -29,4 +29,9 @@ module.exports = {
     FooterDropDownSection: 'react-mdl-FooterDropDownSection',
     FooterSection: 'react-mdl-FooterSection',
     FooterLinkList: 'react-mdl-FooterLinkList',
+    Tooltip: 'react-mdl-Tooltip',
+    Dialog: 'react-mdl-Dialog',
+    DialogTitle: 'react-mdl-DialogTitle',
+    DialogContent: 'react-mdl-DialogContent',
+    DialogActions: 'react-mdl-DialogActions',
 };

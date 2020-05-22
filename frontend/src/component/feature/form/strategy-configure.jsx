@@ -233,7 +233,11 @@ class StrategyConfigure extends React.Component {
             const strategyContent = this.renderStrategContent(this.props.strategyDefinition);
             const { name } = this.props.strategy;
             item = (
-                <Card shadow={0} className={styles.card} style={{ opacity: isDragging ? '0.1' : '1' }}>
+                <Card
+                    shadow={0}
+                    className={styles.card}
+                    style={{ opacity: isDragging ? '0.1' : '1', overflow: 'visible' }}
+                >
                     <CardTitle className={styles.cardTitle} title={description}>
                         <Icon name="extension" />
                         &nbsp;

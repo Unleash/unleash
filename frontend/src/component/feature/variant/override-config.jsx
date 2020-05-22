@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Textfield, Grid, Cell, IconButton } from 'react-mdl';
-import MySelect from '../form/select';
+import { Grid, Cell, IconButton } from 'react-mdl';
+import MySelect from '../../common/select';
+import InputListField from '../../common/input-list-field';
 
 const overrideOptions = [
     { key: 'userId', label: 'userId' },
     { key: 'appName', label: 'appName' },
 ];
 
-function OverrideConfig({ overrides, updateOverrideOption, removeOverrideOption }) {
+function OverrideConfig({ overrides, updateOverrideType, updateOverrideValues, removeOverride }) {
+    const updateValues = i => values => {
+        updateOverrideValues(i, values);
+    };
+
     return overrides.map((o, i) => (
         <Grid noSpacing key={`override=${i}`}>
             <Cell col={3}>
@@ -17,22 +22,21 @@ function OverrideConfig({ overrides, updateOverrideOption, removeOverrideOption 
                     label="Context Field"
                     value={o.contextName}
                     options={overrideOptions}
-                    onChange={updateOverrideOption(i)}
+                    onChange={updateOverrideType(i)}
                 />
             </Cell>
             <Cell col={8}>
-                <Textfield
-                    floatingLabel
-                    label="Values"
+                <InputListField
+                    label="Values (v1, v2, ...)"
                     name="values"
-                    placeholder="val1, val2, ..."
+                    placeholder=""
                     style={{ width: '100%' }}
-                    value={o.values}
-                    onChange={updateOverrideOption(i)}
+                    values={o.values}
+                    updateValues={updateValues(i)}
                 />
             </Cell>
             <Cell col={1} style={{ textAlign: 'right' }}>
-                <IconButton name="delete" onClick={removeOverrideOption(i)} />
+                <IconButton name="delete" onClick={removeOverride(i)} />
             </Cell>
         </Grid>
     ));
@@ -40,8 +44,9 @@ function OverrideConfig({ overrides, updateOverrideOption, removeOverrideOption 
 
 OverrideConfig.propTypes = {
     overrides: PropTypes.array.isRequired,
-    updateOverrideOption: PropTypes.func.isRequired,
-    removeOverrideOption: PropTypes.func.isRequired,
+    updateOverrideType: PropTypes.func.isRequired,
+    updateOverrideValues: PropTypes.func.isRequired,
+    removeOverride: PropTypes.func.isRequired,
 };
 
 export default OverrideConfig;

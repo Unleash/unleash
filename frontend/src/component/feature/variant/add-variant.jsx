@@ -12,7 +12,7 @@ import {
     Tooltip,
     Icon,
 } from 'react-mdl';
-import MySelect from '../form/select';
+import MySelect from '../../common/select';
 import { trim } from '../form/util';
 import styles from './variant.scss';
 import OverrideConfig from './override-config';
@@ -38,9 +38,7 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
                 setPayload(editVariant.payload);
             }
             if (editVariant.overrides) {
-                setOverrides(
-                    editVariant.overrides.map(o => ({ contextName: o.contextName, values: o.values.join(', ') }))
-                );
+                setOverrides(editVariant.overrides);
             } else {
                 setOverrides([]);
             }
@@ -80,10 +78,7 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
                 overrides: overrides
                     .map(o => ({
                         contextName: o.contextName,
-                        values: o.values
-                            .split(',')
-                            .map(v => v.trim())
-                            .filter(v => v),
+                        values: o.values,
                     }))
                     .filter(o => o.values && o.values.length > 0),
             };
@@ -110,7 +105,7 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
         closeDialog();
     };
 
-    const updateOverrideOption = index => e => {
+    const updateOverrideType = index => e => {
         e.preventDefault();
         setOverrides(
             overrides.map((o, i) => {
@@ -122,14 +117,25 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
         );
     };
 
-    const removeOverrideOption = index => e => {
+    const updateOverrideValues = (index, values) => {
+        setOverrides(
+            overrides.map((o, i) => {
+                if (i === index) {
+                    o.values = values;
+                }
+                return o;
+            })
+        );
+    };
+
+    const removeOverride = index => e => {
         e.preventDefault();
         setOverrides(overrides.filter((o, i) => i !== index));
     };
 
     const onAddOverride = e => {
         e.preventDefault();
-        setOverrides([...overrides, ...[{ contextName: 'userId', values: '' }]]);
+        setOverrides([...overrides, ...[{ contextName: 'userId', values: [] }]]);
     };
 
     return (
@@ -210,8 +216,10 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
 
                     <OverrideConfig
                         overrides={overrides}
-                        removeOverrideOption={removeOverrideOption}
-                        updateOverrideOption={updateOverrideOption}
+                        removeOverride={removeOverride}
+                        updateOverrideType={updateOverrideType}
+                        updateOverrideValues={updateOverrideValues}
+                        updateValues={updateOverrideValues}
                     />
                     <a href="#add-override" onClick={onAddOverride}>
                         <small>Add override</small>

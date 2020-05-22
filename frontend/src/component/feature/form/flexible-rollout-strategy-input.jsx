@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Textfield } from 'react-mdl';
-import Select from './select';
+import Select from '../../common/select';
 
 import StrategyInputPercentage from './strategy-input-percentage';
 

@@ -40,6 +40,12 @@ const users = [
         infoLink: 'https://budgets.money',
         pinned: true,
     },
+    {
+        caption: 'Otovo',
+        image: '/img/otovo.png',
+        infoLink: 'https://www.otovo.com',
+        pinned: true,
+    },
 ];
 
 const siteConfig = {

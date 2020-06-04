@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-    Button,
-    Textfield,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Grid,
-    Cell,
-    Tooltip,
-    Icon,
-} from 'react-mdl';
+import Modal from 'react-modal';
+import { Button, Textfield, DialogActions, Grid, Cell, Icon } from 'react-mdl';
 import MySelect from '../../common/select';
 import { trim } from '../form/util';
-import styles from './variant.scss';
 import OverrideConfig from './override-config';
+
+Modal.setAppElement('#app');
+
+const customStyles = {
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.25)',
+        zIndex: 5,
+    },
+    content: {
+        width: '500px',
+        maxWidth: '90%',
+        margin: '0',
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        transform: 'translate(-50%, -50%)',
+    },
+};
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -55,6 +68,7 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
     }, [editVariant]);
 
     const setName = e => {
+        e.preventDefault();
         setData({
             ...data,
             [e.target.name]: trim(e.target.value),
@@ -139,92 +153,70 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
     };
 
     return (
-        <form onSubmit={submit}>
-            <Dialog open={showDialog} className={styles.modal}>
-                <DialogTitle style={{ padding: '10px' }}>{title}</DialogTitle>
+        <Modal isOpen={showDialog} contentLabel="Example Modal" style={customStyles} onRequestClose={onCancel}>
+            <h3>{title}</h3>
 
-                <DialogContent style={{ minHeight: '350px', padding: '10px' }}>
-                    <p style={{ color: 'red' }}>{error.general}</p>
-                    <Textfield
-                        floatingLabel
-                        label="Variant name"
-                        name="name"
-                        placeholder=""
-                        style={{ width: '100%' }}
-                        value={data.name}
-                        error={error.name}
-                        type="name"
-                        onChange={setName}
-                    />
-                    <br />
-                    <br />
-                    <Tooltip
-                        className={styles.tooltip}
-                        label={
-                            <span>
-                                Passed to the variant object. <br />
-                                Can be anything (json, value, csv)
-                            </span>
-                        }
-                    >
-                        <p style={{ marginBottom: '0' }}>
-                            <strong>Payload </strong>
-                            <Icon name="info" />
-                        </p>
-                    </Tooltip>
-                    <Grid noSpacing>
-                        <Cell col={3}>
-                            <MySelect
-                                name="type"
-                                label="Type"
-                                style={{ width: '100%' }}
-                                value={payload.type}
-                                options={payloadOptions}
-                                onChange={onPayload}
-                            />
-                        </Cell>
-                        <Cell col={9}>
-                            <Textfield
-                                floatingLabel
-                                rows={1}
-                                label="Value"
-                                name="value"
-                                style={{ width: '100%' }}
-                                value={payload.value}
-                                onChange={onPayload}
-                            />
-                        </Cell>
-                    </Grid>
-                    {overrides.length > 0 ? (
-                        <Tooltip
-                            className={styles.tooltip}
-                            label={
-                                <div>
-                                    Here you can specify which users that <br />
-                                    should get this variant.
-                                </div>
-                            }
-                        >
-                            <p style={{ marginBottom: '0' }}>
-                                <strong>Overrides </strong>
-                                <Icon name="info" />
-                            </p>
-                        </Tooltip>
-                    ) : (
-                        undefined
-                    )}
+            <form onSubmit={submit}>
+                <p style={{ color: 'red' }}>{error.general}</p>
+                <Textfield
+                    floatingLabel
+                    label="Variant name"
+                    name="name"
+                    placeholder=""
+                    style={{ width: '100%' }}
+                    value={data.name}
+                    error={error.name}
+                    type="name"
+                    onChange={setName}
+                />
+                <br />
+                <br />
+                <p style={{ marginBottom: '0' }}>
+                    <strong>Payload </strong>
+                    <Icon name="info" title="Passed to the variant object. Can be anything (json, value, csv)" />
+                </p>
+                <Grid noSpacing>
+                    <Cell col={3}>
+                        <MySelect
+                            name="type"
+                            label="Type"
+                            style={{ width: '100%' }}
+                            value={payload.type}
+                            options={payloadOptions}
+                            onChange={onPayload}
+                        />
+                    </Cell>
+                    <Cell col={9}>
+                        <Textfield
+                            floatingLabel
+                            rows={1}
+                            label="Value"
+                            name="value"
+                            style={{ width: '100%' }}
+                            value={payload.value}
+                            onChange={onPayload}
+                        />
+                    </Cell>
+                </Grid>
+                {overrides.length > 0 ? (
+                    <p style={{ marginBottom: '0' }}>
+                        <strong>Overrides </strong>
+                        <Icon name="info" title="Here you can specify which users that should get this variant." />
+                    </p>
+                ) : (
+                    undefined
+                )}
 
-                    <OverrideConfig
-                        overrides={overrides}
-                        removeOverride={removeOverride}
-                        updateOverrideType={updateOverrideType}
-                        updateOverrideValues={updateOverrideValues}
-                        updateValues={updateOverrideValues}
-                    />
-                    <a href="#add-override" onClick={onAddOverride}>
-                        <small>Add override</small>
-                    </a>
-                </DialogContent>
+                <OverrideConfig
+                    overrides={overrides}
+                    removeOverride={removeOverride}
+                    updateOverrideType={updateOverrideType}
+                    updateOverrideValues={updateOverrideValues}
+                    updateValues={updateOverrideValues}
+                />
+                <a href="#add-override" onClick={onAddOverride}>
+                    <small>Add override</small>
+                </a>
                 <DialogActions>
                     <Button type="button" raised colored type="submit">
                         Save
@@ -233,8 +225,8 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
                         Cancel
                     </Button>
                 </DialogActions>
-            </Dialog>
-        </form>
+            </form>
+        </Modal>
     );
 }
 

@@ -35,8 +35,8 @@ function OverrideConfig({ overrides, updateOverrideType, updateOverrideValues, r
                     updateValues={updateValues(i)}
                 />
             </Cell>
-            <Cell col={1} style={{ textAlign: 'right' }}>
-                <IconButton name="delete" onClick={removeOverride(i)} />
+            <Cell col={1}>
+                <IconButton name="delete" onClick={removeOverride(i)} type="button" />
             </Cell>
         </Grid>
     ));

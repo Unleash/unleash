@@ -177,27 +177,9 @@ exports[`renders correctly with without variants 1`] = `
     </code>
      method in the Client SDK.
   </p>
-  <table
-    className="mdl-data-table mdl-shadow--2dp variantTable"
-  >
-    <thead>
-      <tr>
-        <th>
-          Variant name
-        </th>
-        <th
-          className="labels"
-        />
-        <th>
-          Weight
-        </th>
-        <th
-          className="actions"
-        />
-      </tr>
-    </thead>
-    <tbody />
-  </table>
+  <p>
+    No variants defined.
+  </p>
   <br />
   <p>
     <a
@@ -234,27 +216,9 @@ exports[`renders correctly with without variants and no permissions 1`] = `
     </code>
      method in the Client SDK.
   </p>
-  <table
-    className="mdl-data-table mdl-shadow--2dp variantTable"
-  >
-    <thead>
-      <tr>
-        <th>
-          Variant name
-        </th>
-        <th
-          className="labels"
-        />
-        <th>
-          Weight
-        </th>
-        <th
-          className="actions"
-        />
-      </tr>
-    </thead>
-    <tbody />
-  </table>
+  <p>
+    No variants defined.
+  </p>
   <br />
 </section>
 `;

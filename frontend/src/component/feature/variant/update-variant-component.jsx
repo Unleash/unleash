@@ -88,7 +88,7 @@ class UpdateVariantComponent extends Component {
                     <code style={{ color: 'navy' }}>getVariant()</code> method in the Client SDK.
                 </p>
 
-                {this.renderVariants(variants)}
+                {variants.length > 0 ? this.renderVariants(variants) : <p>No variants defined.</p>}
                 <br />
                 {this.props.hasPermission(UPDATE_FEATURE) ? (
                     <p>

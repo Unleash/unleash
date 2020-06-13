@@ -61,6 +61,25 @@ Available unleash options include:
 - **eventHook** (`function(event, data)`) - If provided, this function will be invoked whenever a feature is mutated. The possible values for `event` are `'feature-created'`, `'feature-updated'`, `'feature-archived'`, `'feature-revived'`. The `data` argument contains information about the mutation. Its fields are `type` (string) - the event type (same as `event`); `createdBy` (string) - the user who performed the mutation; `data` - the contents of the change. The contents in `data` differs based on the event type; For `'feature-archived'` and `'feature-revived'`, the only field will be `name` - the name of the feature. For `'feature-created'` and `'feature-updated'` the data follows a schema defined in the code [here](https://github.com/Unleash/unleash/blob/master/lib/routes/admin-api/feature-schema.js#L38-L59). See an example [here](./guides/feautre-updates-to-slack.md).
 - **baseUriPath** (string) - use to register a base path for all routes on the application. For example `/my/unleash/base` (note the starting /). Defaults to `/`. Can also be configured through the environment variable `BASE_URI_PATH`.
 
+#### Disabling Auto-Start
+
+If you're using unleash as part of a larger express app, you can disable the automatic server start by calling `server.create`. It takes the same options as `sevrer.start`, but will not begin listening for connections.
+
+```js
+const unleash = require('unleash-server');
+// ... const app = express();
+
+unleash
+  .create({
+    databaseUrl: 'postgres://unleash_user:password@localhost:5432/unleash',
+    port: 4242,
+  })
+  .then(result => {
+    app.use(result.app);
+    console.log(`Unleash app generated and attached to parent application`);
+  });
+```
+
 ### 3. Docker
 
 You can also use the [hosted docker image](https://hub.docker.com/r/unleashorg/unleash-server/) to start the Unleash server

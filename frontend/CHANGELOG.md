@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# [3.3.5]
+- fix: should handle zero variants
+- fix: modal for variants
+
+## [3.3.4]
+- fix: allow overflow for strategy card
+- fix: add common component input-list-field
+
 ## [3.3.3]
-fix: improve on variant ui
-fix: should not clear all stores on update user profile
-fix: convert variant-view-component to function
-fix: tune css a little
+- fix: improve on variant ui
+- fix: should not clear all stores on update user profile
+- fix: convert variant-view-component to function
+- fix: tune css a little
 
 ## [3.3.2]
 - fix: reset stores on login/logout (#212)

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.6
+
+- fix: upgrade unleash-frontend to verson 3.3.5
+
 ## 3.3.5
 
 - fix: upgrade unleash-frontend to verson 3.3.3

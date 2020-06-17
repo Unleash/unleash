@@ -55,7 +55,7 @@ Clients written by awesome enthusiasts: :fire:
 - [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
 - [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
-- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Larvel - PHP)
+- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
 
 ### The Client API
 

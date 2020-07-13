@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.4.1
+
+- fix: add keepAliveTimeout option
+
 ## 3.4.0
 
 - feat: Adds server.create() (#606)

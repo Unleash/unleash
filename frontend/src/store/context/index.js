@@ -2,7 +2,11 @@ import { List } from 'immutable';
 import { RECEIVE_CONTEXT, REMOVE_CONTEXT, ADD_CONTEXT_FIELD, UPDATE_CONTEXT_FIELD } from './actions';
 import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
-const DEFAULT_CONTEXT_FIELDS = [{ name: 'environment' }, { name: 'userId' }, { name: 'appName' }];
+const DEFAULT_CONTEXT_FIELDS = [
+    { name: 'environment', inital: true },
+    { name: 'userId', inital: true },
+    { name: 'appName', inital: true },
+];
 
 function getInitState() {
     return new List(DEFAULT_CONTEXT_FIELDS);

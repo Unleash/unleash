@@ -39,6 +39,15 @@ test.serial('exports strategies and features as yaml', async t => {
         .expect(200);
 });
 
+test.serial('exports only features as yaml', async t => {
+    t.plan(0);
+    const request = await setupApp(stores);
+    return request
+        .get('/api/admin/state/export?format=yaml&featureToggles=1')
+        .expect('Content-Type', /yaml/)
+        .expect(200);
+});
+
 test.serial('exports strategies and features as attachment', async t => {
     t.plan(0);
     const request = await setupApp(stores);

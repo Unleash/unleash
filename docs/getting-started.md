@@ -42,8 +42,14 @@ unleash
 ```
 
 Available unleash options include:
-
-- **databaseUrl** - the postgres database url to connect to. Should include username/password. This value may also be set via the `DATABASE_URL` environment variable. Alternatively, if you would like to read the database url from a file, you may set the `DATABASE_URL_FILE` environment variable with the full file path. The contents of the file must be the database url exactly.
+- **db** - The database configuration object taking the following properties:
+  - *user* - the database username (`DATABASE_USERNAME`)
+  - *password* - the database password (`DATABASE_PASSWORD`)
+  - *host* - the database hostname (`DATABASE_HOST`)
+  - *port* - the datbase port defaults to 5432 (`DATABASE_PORT`)
+  - *database* - the database name to be used (`DATABASE_NAME`) 
+  - *ssl* - an object describin ssl options, see https://node-postgres.com/features/ssl (`DATABASE_SSL`, as a stringified json object)
+- **databaseUrl** - the postgres database url to connect to. Only used if _db_ object is not specified. Should include username/password. This value may also be set via the `DATABASE_URL` environment variable. Alternatively, if you would like to read the database url from a file, you may set the `DATABASE_URL_FILE` environment variable with the full file path. The contents of the file must be the database url exactly.
 - **databaseSchema** - the postgres database schema to use. Defaults to 'public'.
 - **port** - which port the unleash-server should bind to. If port is omitted or is 0, the operating system will assign an arbitrary unused port. Will be ignored if pipe is specified. This value may also be set via the `HTTP_PORT` environment variable
 - **host** - which host the unleash-server should bind to. If host is omitted, the server will accept connections on the unspecified IPv6 address (::) when IPv6 is available, or the unspecified IPv4 address (0.0.0.0) otherwise. This value may also be set via the `HTTP_HOST` environment variable

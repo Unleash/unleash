@@ -93,7 +93,7 @@
   "devDependencies": {
     "@passport-next/passport": "^3.1.0",
     "@passport-next/passport-google-oauth2": "^1.0.0",
-    "@types/node": "^13.7.4",
+    "@types/node": "^14.0.0",
     "ava": "^3.7.0",
     "coveralls": "^3.1.0",
     "eslint": "^6.8.0",

@@ -4,21 +4,14 @@ import { FooterSection } from 'react-mdl';
 
 class ShowApiDetailsComponent extends Component {
     static propTypes = {
-        apiDetails: PropTypes.object.isRequired,
         uiConfig: PropTypes.object.isRequired,
-        fetchAll: PropTypes.func.isRequired,
     };
 
-    componentDidMount() {
-        this.props.fetchAll();
-    }
-
     render() {
-        const version = this.props.apiDetails.version || '';
-        const { slogan, environment } = this.props.uiConfig;
+        const { slogan, environment, version, name } = this.props.uiConfig;
 
         return (
-            <FooterSection type="bottom" logo={`Unleash ${version}`}>
+            <FooterSection type="bottom" logo={`${name} ${version}`}>
                 <small>{environment ? `(${environment})` : ''}</small>
                 <br />
                 <small>{slogan}</small>

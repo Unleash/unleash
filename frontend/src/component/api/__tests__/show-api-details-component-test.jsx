@@ -5,28 +5,36 @@ import renderer from 'react-test-renderer';
 
 jest.mock('react-mdl');
 
-const uiConfig = {
-    slogan: 'We are the best!',
-    environment: 'test',
-};
+test('renders correctly with empty version', () => {
+    const uiConfig = {
+        name: 'Unleash',
+        slogan: 'We are the best!',
+        environment: 'test',
+        version: '',
+    };
 
-test('renders correctly with empty api details', () => {
-    const tree = renderer
-        .create(<ShowApiDetailsComponent fetchAll={jest.fn()} apiDetails={{}} uiConfig={uiConfig} />)
-        .toJSON();
+    const tree = renderer.create(<ShowApiDetailsComponent uiConfig={uiConfig} />).toJSON();
     expect(tree).toMatchSnapshot();
 });
 
-test('renders correctly with details', () => {
-    const tree = renderer
-        .create(<ShowApiDetailsComponent fetchAll={jest.fn()} apiDetails={{ version: '1.1.0' }} uiConfig={uiConfig} />)
-        .toJSON();
+test('renders correctly with ui-config', () => {
+    const uiConfig = {
+        name: 'Unleash',
+        slogan: 'We are the best!',
+        environment: 'test',
+        version: '1.1.0',
+    };
+
+    const tree = renderer.create(<ShowApiDetailsComponent uiConfig={uiConfig} />).toJSON();
     expect(tree).toMatchSnapshot();
 });
 
 test('renders correctly without uiConfig', () => {
-    const tree = renderer
-        .create(<ShowApiDetailsComponent fetchAll={jest.fn()} apiDetails={{ version: '1.1.0' }} uiConfig={{}} />)
-        .toJSON();
+    const uiConfig = {
+        name: 'Unleash',
+        version: '1.1.0',
+    };
+
+    const tree = renderer.create(<ShowApiDetailsComponent uiConfig={uiConfig} />).toJSON();
     expect(tree).toMatchSnapshot();
 });

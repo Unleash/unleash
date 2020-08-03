@@ -9,7 +9,6 @@ import error from './error-store';
 import clientInstances from './client-instance-store';
 import settings from './settings';
 import user from './user';
-import api from './api';
 import applications from './application';
 import uiConfig from './ui-config';
 import context from './context';
@@ -27,7 +26,6 @@ const unleashStore = combineReducers({
     user,
     applications,
     uiConfig,
-    api,
     context,
 });
 

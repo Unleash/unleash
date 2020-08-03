@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly with details 1`] = `
+exports[`renders correctly with empty version 1`] = `
 <react-mdl-FooterSection
-  logo="Unleash 1.1.0"
+  logo="Unleash "
   type="bottom"
 >
   <small>
@@ -15,9 +15,9 @@ exports[`renders correctly with details 1`] = `
 </react-mdl-FooterSection>
 `;
 
-exports[`renders correctly with empty api details 1`] = `
+exports[`renders correctly with ui-config 1`] = `
 <react-mdl-FooterSection
-  logo="Unleash "
+  logo="Unleash 1.1.0"
   type="bottom"
 >
   <small>

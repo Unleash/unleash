@@ -63,6 +63,7 @@ class AuthComponent extends React.Component {
                     unsecureLogin={this.props.unsecureLogin}
                     authDetails={authDetails}
                     fetchFeatureToggles={this.props.fetchFeatureToggles}
+                    fetchUIConfig={this.props.fetchUIConfig}
                     history={this.props.history}
                 />
             );

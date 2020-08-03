@@ -18,7 +18,9 @@ Object {
       "value": "GitHub",
     },
   ],
+  "name": "Unleash",
   "slogan": "The enterprise ready feature toggle service.",
+  "version": "3.x",
 }
 `;
 
@@ -40,7 +42,9 @@ Object {
       "value": "GitHub",
     },
   ],
+  "name": "Unleash",
   "slogan": "hello",
+  "version": "3.x",
 }
 `;
 
@@ -62,6 +66,8 @@ Object {
       "value": "GitHub",
     },
   ],
+  "name": "Unleash",
   "slogan": "The enterprise ready feature toggle service.",
+  "version": "3.x",
 }
 `;

@@ -11,6 +11,8 @@ const UI_CONFIG = `${basePath}:ui_config`;
 
 const DEFAULT = new $Map({
     headerBackground: undefined,
+    name: 'Unleash',
+    version: '3.x',
     environment: '',
     slogan: 'The enterprise ready feature toggle service.',
     links: [

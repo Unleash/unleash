@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# [3.4.0]
+- Feat: (VariantCustomization) Allow user to customize variant weights (#216)
+- bump elliptic from 6.5.2 to 6.5.3 (#218)
+- chore(deps): bump websocket-extensions from 0.1.3 to 0.1.4 (#217)
+- chore(deps-dev): bump lodash from 4.17.15 to 4.17.19 (#214)
+- fix: upgrade react-dnd to version 11.1.3
+- fix: Update react-dnd to the latest version 🚀 (#213)
+- fix: read unleash version from ui-config (#219)
+- fix: flag inital context fields
+
+
 # [3.3.5]
 - fix: should handle zero variants
 - fix: modal for variants

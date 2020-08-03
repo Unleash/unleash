@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "links": {
     "feature-toggles": {
       "uri": "/api/client/features"

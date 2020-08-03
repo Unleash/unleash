@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.4.2
+
+- fix: upgrade unleash-frontend to version 3.4.0
+- fix: version should be part of ui-config (#616)
+- feat: add weightType as legal property on variant schema (#614)
+- Update getting-started.md (#617)
+- Update @types/node to the latest version 🚀 (#596)
+- fix: upgrade js-yaml to latest
+- chore(deps): bump lodash from 4.17.15 to 4.17.19 in /website (#611)
+- fix: replace @hapi/joi with joi
+- Update getting-started.md
+- fix: exporting only feature toggles as yaml should not crash
+
 ## 3.4.1
 
 - fix: add keepAliveTimeout option

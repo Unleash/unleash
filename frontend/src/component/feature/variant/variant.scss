@@ -2,11 +2,13 @@
     width: 100%;
     max-width: 700px;
 
-    th, td {
+    th,
+    td {
         text-align: center;
         width: 100px;
     }
-    th:first-of-type, td:first-of-type {
+    th:first-of-type,
+    td:first-of-type {
         text-align: left;
         width: 100%;
     }
@@ -16,10 +18,10 @@
 }
 
 @media (max-width: 600px) {
-    th.labels  {
+    th.labels {
         display: none;
     }
-    td.labels  {
+    td.labels {
         display: none;
     }
 }
@@ -58,4 +60,23 @@ td.actions {
     i {
         font-size: 18px;
     }
+}
+
+.inputWeight {
+    text-align: right;
+}
+
+.flexCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.marginL10 {
+    margin-left: 10px;
 }

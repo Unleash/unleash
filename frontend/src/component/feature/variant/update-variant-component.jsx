@@ -6,7 +6,11 @@ import styles from './variant.scss';
 import { UPDATE_FEATURE } from '../../../permissions';
 import AddVariant from './add-variant';
 
-const initalState = { showDialog: false, editVariant: undefined, editIndex: -1 };
+const initalState = {
+    showDialog: false,
+    editVariant: undefined,
+    editIndex: -1,
+};
 
 class UpdateVariantComponent extends Component {
     constructor(props) {
@@ -68,6 +72,7 @@ class UpdateVariantComponent extends Component {
                     <th>Variant name</th>
                     <th className={styles.labels} />
                     <th>Weight</th>
+                    <th>Weight Type</th>
                     <th className={styles.actions} />
                 </tr>
             </thead>

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { IconButton, Chip } from 'react-mdl';
 import styles from './variant.scss';
 import { UPDATE_FEATURE } from '../../../permissions';
+import { weightTypes } from './enums';
 
 function VariantViewComponent({ variant, editVariant, removeVariant, hasPermission }) {
+    const { FIX } = weightTypes;
     return (
         <tr>
             <td onClick={editVariant}>{variant.name}</td>
@@ -18,6 +19,7 @@ function VariantViewComponent({ variant, editVariant, removeVariant, hasPermissi
                 )}
             </td>
             <td>{variant.weight / 10.0} %</td>
+            <td>{variant.weightType === FIX ? 'Fix' : 'Variable'}</td>
             {hasPermission(UPDATE_FEATURE) ? (
                 <td className={styles.actions}>
                     <IconButton name="edit" onClick={editVariant} />

@@ -1,3 +1,5 @@
+import { weightTypes } from '../feature/variant/enums';
+
 const dateTimeOptions = {
     day: '2-digit',
     month: '2-digit',
@@ -22,11 +24,37 @@ export const trim = value => {
 };
 
 export function updateWeight(variants, totalWeight) {
-    const size = variants.length;
-    const percentage = parseInt((1 / size) * totalWeight);
+    const variantMetadata = variants.reduce(
+        ({ remainingPercentage, variableVariantCount }, variant) => {
+            if (variant.weight && variant.weightType === weightTypes.FIX) {
+                remainingPercentage -= Number(variant.weight);
+            } else {
+                variableVariantCount += 1;
+            }
+            return {
+                remainingPercentage,
+                variableVariantCount,
+            };
+        },
+        { remainingPercentage: totalWeight, variableVariantCount: 0 }
+    );
 
-    variants.forEach(v => {
-        v.weight = percentage;
+    const { remainingPercentage, variableVariantCount } = variantMetadata;
+
+    if (remainingPercentage < 0) {
+        throw new Error('The traffic distribution total must equal 100%');
+    }
+
+    if (!variableVariantCount) {
+        throw new Error('There must be atleast one variable variant');
+    }
+
+    const percentage = parseInt(remainingPercentage / variableVariantCount);
+
+    return variants.map(variant => {
+        if (variant.weightType !== weightTypes.FIX) {
+            variant.weight = percentage;
+        }
+        return variant;
     });
-    return variants;
 }

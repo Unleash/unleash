@@ -9,7 +9,7 @@ module.exports = () => {
             if (toggle) {
                 return Promise.resolve(toggle);
             }
-            return Promise.reject();
+            return Promise.reject(new Error('could not find toggle'));
         },
         hasFeature: name => {
             const toggle = _features.find(f => f.name === name);

@@ -82,7 +82,11 @@ export function requestUpdateFeatureToggle(featureToggle) {
 
         return api
             .update(featureToggle)
-            .then(() => dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle }))
+            .then(() => {
+                const info = `${featureToggle.name} successfully updated!`;
+                setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
+                dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle, info });
+            })
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }

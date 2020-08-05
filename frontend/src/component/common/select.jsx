@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Select = ({ name, value, label, options, style, onChange }) => {
+const Select = ({ name, value, label, options, style, onChange, filled }) => {
     const wrapper = Object.assign({ width: 'auto' }, style);
     return (
         <div
@@ -13,10 +13,10 @@ const Select = ({ name, value, label, options, style, onChange }) => {
                 name={name}
                 onChange={onChange}
                 value={value}
-                style={{ width: 'auto' }}
+                style={{ width: 'auto', background: filled ? '#f5f5f5' : 'none' }}
             >
                 {options.map(o => (
-                    <option key={o.key} value={o.key}>
+                    <option key={o.key} value={o.key} title={o.title}>
                         {o.label}
                     </option>
                 ))}

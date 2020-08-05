@@ -125,6 +125,12 @@ exports[`renders correctly with one feature 1`] = `
           Name
         </react-mdl-MenuItem>
         <react-mdl-MenuItem
+          data-target="type"
+          disabled={false}
+        >
+          Type
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
           data-target="enabled"
           disabled={false}
         >
@@ -282,6 +288,12 @@ exports[`renders correctly with one feature without permissions 1`] = `
           disabled={true}
         >
           Name
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="type"
+          disabled={false}
+        >
+          Type
         </react-mdl-MenuItem>
         <react-mdl-MenuItem
           data-target="enabled"

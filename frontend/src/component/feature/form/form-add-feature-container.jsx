@@ -13,7 +13,7 @@ class WrapperComponent extends Component {
         super(props);
         const name = loadNameFromHash();
         this.state = {
-            featureToggle: { name, description: '', strategies: [], enabled: true },
+            featureToggle: { name, description: '', type: 'release', strategies: [], enabled: true },
             errors: {},
             dirty: false,
         };

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, CardText, Textfield } from 'react-mdl';
+import { Button, Textfield } from 'react-mdl';
 
 import { UPDATE_FEATURE } from '../../../permissions';
 
@@ -40,21 +40,21 @@ export default class UpdateDescriptionComponent extends React.Component {
 
     renderRead({ description, isFeatureView, hasPermission }) {
         return (
-            <CardText>
+            <div>
                 {description}&nbsp;
                 {isFeatureView && hasPermission(UPDATE_FEATURE) ? (
                     <a href="#edit" onClick={this.onEditMode.bind(this, description)}>
                         edit
                     </a>
                 ) : null}
-            </CardText>
+            </div>
         );
     }
 
     renderEdit() {
         const { description } = this.state;
         return (
-            <CardText>
+            <div>
                 <Textfield
                     floatingLabel
                     style={{ width: '100%' }}
@@ -72,7 +72,7 @@ export default class UpdateDescriptionComponent extends React.Component {
                         Cancel
                     </Button>
                 </div>
-            </CardText>
+            </div>
         );
     }
 

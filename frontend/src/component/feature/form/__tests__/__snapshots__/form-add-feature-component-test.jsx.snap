@@ -23,21 +23,54 @@ exports[`render the create feature page 1`] = `
   <form
     onSubmit={[MockFunction]}
   >
+    <react-mdl-Grid>
+      <react-mdl-Cell
+        col={4}
+      >
+        <react-mdl-Textfield
+          floatingLabel={true}
+          label="Name"
+          name="name"
+          onBlur={[Function]}
+          onChange={[Function]}
+          style={
+            Object {
+              "width": "100%",
+            }
+          }
+          value="feature"
+        />
+      </react-mdl-Cell>
+      <react-mdl-Cell
+        col={2}
+      >
+        <Connect(FeatureTypeSelectComponent)
+          onChange={[Function]}
+        />
+      </react-mdl-Cell>
+      <react-mdl-Cell
+        col={2}
+        style={
+          Object {
+            "paddingTop": "14px",
+          }
+        }
+      >
+        <react-mdl-Switch
+          checked={false}
+          onChange={[Function]}
+        >
+          Disabled
+        </react-mdl-Switch>
+      </react-mdl-Cell>
+    </react-mdl-Grid>
     <section
       style={
         Object {
-          "padding": "16px",
+          "padding": "0 16px",
         }
       }
     >
-      <react-mdl-Textfield
-        floatingLabel={true}
-        label="Name"
-        name="name"
-        onBlur={[Function]}
-        onChange={[Function]}
-        value="feature"
-      />
       <react-mdl-Textfield
         floatingLabel={true}
         label="Description"
@@ -50,17 +83,6 @@ exports[`render the create feature page 1`] = `
         }
         value="Description"
       />
-      <div>
-        <br />
-        <react-mdl-Switch
-          checked={false}
-          onChange={[Function]}
-        >
-          Enabled
-        </react-mdl-Switch>
-        <br />
-        <br />
-      </div>
       <StrategiesSection
         addStrategy={[MockFunction]}
         configuredStrategies={Array []}

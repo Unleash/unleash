@@ -29,6 +29,7 @@ This endpoint should never return anything besides a valid _20X or 304-response_
       "description": "lorem ipsum",
       "type": "release",
       "enabled": false,
+      "stale": false,
       "strategies": [
         {
           "name": "default",
@@ -43,6 +44,7 @@ This endpoint should never return anything besides a valid _20X or 304-response_
       "type": "killswitch",
       "description": "lorem ipsum",
       "enabled": true,
+      "stale": false,
       "strategies": [
         {
           "name": "ActiveForUserWithId",
@@ -80,6 +82,7 @@ Used to fetch details about a specific feature toggle. This is mainly provided t
   "description": "lorem ipsum..",
   "type": "release",
   "enabled": false,
+  "stale": false,
   "strategies": [
     {
       "name": "default",

@@ -10,12 +10,14 @@ jest.mock('../form/form-update-feature-container', () => ({
     __esModule: true,
     default: 'UpdateFeatureToggleComponent',
 }));
+jest.mock('../form/feature-type-select-container', () => 'FeatureTypeSelect');
 
 test('renders correctly with one feature', () => {
     const feature = {
         name: 'Another',
         description: "another's description",
         enabled: false,
+        type: 'release',
         strategies: [
             {
                 name: 'gradualRolloutRandom',

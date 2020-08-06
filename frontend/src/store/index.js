@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import features from './feature-store';
+import featureTypes from './feature-type';
 import featureMetrics from './feature-metrics-store';
 import strategies from './strategy';
 import input from './input-store';
@@ -15,6 +16,7 @@ import context from './context';
 
 const unleashStore = combineReducers({
     features,
+    featureTypes,
     featureMetrics,
     strategies,
     input,

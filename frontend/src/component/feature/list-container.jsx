@@ -47,6 +47,16 @@ export const mapStateToPropsConfigurable = isFeature => state => {
         });
     } else if (settings.sort === 'strategies') {
         features = features.sort((a, b) => (a.strategies.length > b.strategies.length ? -1 : 1));
+    } else if (settings.sort === 'type') {
+        features = features.sort((a, b) => {
+            if (a.type < b.type) {
+                return -1;
+            }
+            if (a.type > b.type) {
+                return 1;
+            }
+            return 0;
+        });
     } else if (settings.sort === 'metrics') {
         const target = settings.showLastHour ? featureMetrics.lastHour : featureMetrics.lastMinute;
 

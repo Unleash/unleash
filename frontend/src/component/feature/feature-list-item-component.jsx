@@ -17,7 +17,7 @@ const Feature = ({
     revive,
     hasPermission,
 }) => {
-    const { name, description, enabled, strategies } = feature;
+    const { name, description, enabled, type } = feature;
     const { showLastHour = false } = settings;
     const isStale = showLastHour ? metricsLastHour.isFallback : metricsLastMinute.isFallback;
     const percent =
@@ -25,17 +25,7 @@ const Feature = ({
         (showLastHour
             ? calc(metricsLastHour.yes, metricsLastHour.yes + metricsLastHour.no, 0)
             : calc(metricsLastMinute.yes, metricsLastMinute.yes + metricsLastMinute.no, 0));
-
-    const strategiesToShow = Math.min(strategies.length, 3);
-    const remainingStrategies = strategies.length - strategiesToShow;
-    const strategyChips =
-        strategies &&
-        strategies.slice(0, strategiesToShow).map((s, i) => (
-            <Chip className={styles.strategyChip} key={i}>
-                {s.name}
-            </Chip>
-        ));
-    const summaryChip = remainingStrategies > 0 && <Chip className={styles.strategyChip}>+{remainingStrategies}</Chip>;
+    const typeChip = <Chip className="mdl-color--blue-grey-100">{type}</Chip>;
     const featureUrl = toggleFeature === undefined ? `/archive/strategies/${name}` : `/features/strategies/${name}`;
     return (
         <ListItem twoLine>
@@ -61,10 +51,7 @@ const Feature = ({
                     <span className={['mdl-list__item-sub-title', commonStyles.truncate].join(' ')}>{description}</span>
                 </Link>
             </span>
-            <span className={[styles.listItemStrategies, commonStyles.hideLt920].join(' ')}>
-                {strategyChips}
-                {summaryChip}
-            </span>
+            <span className={[styles.listItemStrategies, commonStyles.hideLt920].join(' ')}>{typeChip}</span>
             {revive && hasPermission(UPDATE_FEATURE) ? (
                 <ListItemAction onClick={() => revive(feature.name)}>
                     <Icon name="undo" />

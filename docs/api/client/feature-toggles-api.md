@@ -27,6 +27,7 @@ This endpoint should never return anything besides a valid _20X or 304-response_
     {
       "name": "Feature.A",
       "description": "lorem ipsum",
+      "type": "release",
       "enabled": false,
       "strategies": [
         {
@@ -39,6 +40,7 @@ This endpoint should never return anything besides a valid _20X or 304-response_
     },
     {
       "name": "Feature.B",
+      "type": "killswitch",
       "description": "lorem ipsum",
       "enabled": true,
       "strategies": [
@@ -76,6 +78,7 @@ Used to fetch details about a specific feature toggle. This is mainly provided t
 {
   "name": "Feature.A",
   "description": "lorem ipsum..",
+  "type": "release",
   "enabled": false,
   "strategies": [
     {

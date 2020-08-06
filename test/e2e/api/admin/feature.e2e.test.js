@@ -250,3 +250,30 @@ test.serial('creates new feature toggle with variant overrides', async t => {
         .set('Content-Type', 'application/json')
         .expect(201);
 });
+
+test.serial('creates new feature toggle without type', async t => {
+    t.plan(1);
+    const request = await setupApp(stores);
+    await request.post('/api/admin/features').send({
+        name: 'com.test.noType',
+        enabled: false,
+        strategies: [{ name: 'default' }],
+    });
+    await request.get('/api/admin/features/com.test.noType').expect(res => {
+        t.is(res.body.type, 'release');
+    });
+});
+
+test.serial('creates new feature toggle with type', async t => {
+    t.plan(1);
+    const request = await setupApp(stores);
+    await request.post('/api/admin/features').send({
+        name: 'com.test.withType',
+        type: 'killswitch',
+        enabled: false,
+        strategies: [{ name: 'default' }],
+    });
+    await request.get('/api/admin/features/com.test.withType').expect(res => {
+        t.is(res.body.type, 'killswitch');
+    });
+});

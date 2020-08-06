@@ -18,6 +18,7 @@ This endpoint is the one all admin ui should use to fetch all available feature 
     {
       "name": "Feature.A",
       "description": "lorem ipsum",
+      "type": "release",
       "enabled": false,
       "strategies": [
         {
@@ -68,6 +69,7 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
 {
   "name": "Feature.A",
   "description": "lorem ipsum..",
+  "type": "release",
   "enabled": false,
   "strategies": [
     {
@@ -89,6 +91,7 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
 {
   "name": "Feature.A",
   "description": "lorem ipsum..",
+  "type": "release",
   "enabled": false,
   "strategies": [
     {
@@ -99,7 +102,12 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
 }
 ```
 
-Used by the admin-dashboard to create a new feature toggles. The name **must be unique**, otherwise you will get a _403-response_.
+Used by the admin-dashboard to create a new feature toggles.
+
+**Notes:**
+
+- _name_ **must be globally unique**, otherwise you will get a _403-response_.
+- _type_ is optional. If not defined it defaults to `release`
 
 Returns 200-respose if the feature toggle was created successfully.
 
@@ -113,6 +121,7 @@ Returns 200-respose if the feature toggle was created successfully.
 {
   "name": "Feature.A",
   "description": "lorem ipsum..",
+  "type": "release",
   "enabled": false,
   "strategies": [
     {
@@ -150,6 +159,7 @@ None
 {
   "name": "Feature.A",
   "description": "lorem ipsum..",
+  "type": "release",
   "enabled": true,
   "strategies": [
     {
@@ -177,6 +187,7 @@ None
 {
   "name": "Feature.A",
   "description": "lorem ipsum..",
+  "type": "release",
   "enabled": false,
   "strategies": [
     {
@@ -205,6 +216,7 @@ Used to fetch list of archived feature toggles
     {
       "name": "Feature.A",
       "description": "lorem ipsum",
+      "type": "release",
       "enabled": false,
       "strategies": [
         {

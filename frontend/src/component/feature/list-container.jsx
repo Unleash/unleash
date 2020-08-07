@@ -33,6 +33,11 @@ export const mapStateToPropsConfigurable = isFeature => state => {
             // eslint-disable-next-line
             a.enabled === b.enabled ? 0 : a.enabled ? -1 : 1
         );
+    } else if (settings.sort === 'stale') {
+        features = features.sort((a, b) =>
+            // eslint-disable-next-line
+            a.stale === b.stale ? 0 : a.stale ? -1 : 1
+        );
     } else if (settings.sort === 'created') {
         features = features.sort((a, b) => (new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1));
     } else if (settings.sort === 'name') {

@@ -10,6 +10,19 @@ exports[`renders correctly with one feature 1`] = `
     }
   }
 >
+  <react-mdl-Chip
+    className="mdl-color--light-green-500 mdl-color-text--white mdl-shadow--2dp"
+    style={
+      Object {
+        "position": "absolute",
+        "right": "4px",
+        "top": "4px",
+      }
+    }
+    title="Feature toggle is active."
+  >
+    Active
+  </react-mdl-Chip>
   <react-mdl-CardTitle
     style={
       Object {
@@ -73,6 +86,39 @@ exports[`renders correctly with one feature 1`] = `
       </react-mdl-Switch>
     </span>
     <div>
+      <span>
+        <react-mdl-Button
+          className="mdl-button"
+          id="update_status"
+        >
+          Status
+          <react-mdl-Icon
+            className="mdl-color-text--grey-600"
+            name="arrow_drop_down"
+          />
+        </react-mdl-Button>
+        <react-mdl-Menu
+          onClick={[Function]}
+          style={
+            Object {
+              "width": "168px",
+            }
+          }
+          target="update_status"
+        >
+          <react-mdl-MenuItem
+            data-target="active"
+            disabled={true}
+          >
+            Set toggle Active
+          </react-mdl-MenuItem>
+          <react-mdl-MenuItem
+            data-target="stale"
+          >
+            Mark toggle as Stale
+          </react-mdl-MenuItem>
+        </react-mdl-Menu>
+      </span>
       <a
         href="/features/copy/Another"
         onClick={[Function]}

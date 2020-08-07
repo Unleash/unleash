@@ -5,6 +5,7 @@ import { Switch, Chip, ListItem, ListItemAction, Icon } from 'react-mdl';
 import Progress from './progress';
 import { UPDATE_FEATURE } from '../../permissions';
 import { calc, styles as commonStyles } from '../common';
+import StatusComponent from './status-component';
 
 import styles from './feature.scss';
 
@@ -17,7 +18,7 @@ const Feature = ({
     revive,
     hasPermission,
 }) => {
-    const { name, description, enabled, type } = feature;
+    const { name, description, enabled, type, stale } = feature;
     const { showLastHour = false } = settings;
     const isStale = showLastHour ? metricsLastHour.isFallback : metricsLastMinute.isFallback;
     const percent =
@@ -25,7 +26,6 @@ const Feature = ({
         (showLastHour
             ? calc(metricsLastHour.yes, metricsLastHour.yes + metricsLastHour.no, 0)
             : calc(metricsLastMinute.yes, metricsLastMinute.yes + metricsLastMinute.no, 0));
-    const typeChip = <Chip className="mdl-color--blue-grey-100">{type}</Chip>;
     const featureUrl = toggleFeature === undefined ? `/archive/strategies/${name}` : `/features/strategies/${name}`;
     return (
         <ListItem twoLine>
@@ -51,7 +51,10 @@ const Feature = ({
                     <span className={['mdl-list__item-sub-title', commonStyles.truncate].join(' ')}>{description}</span>
                 </Link>
             </span>
-            <span className={[styles.listItemStrategies, commonStyles.hideLt920].join(' ')}>{typeChip}</span>
+            <span className={[styles.listItemStrategies, commonStyles.hideLt920].join(' ')}>
+                <StatusComponent stale={stale} showActive={false} />
+                <Chip className={styles.typeChip}>{type}</Chip>
+            </span>
             {revive && hasPermission(UPDATE_FEATURE) ? (
                 <ListItemAction onClick={() => revive(feature.name)}>
                     <Icon name="undo" />

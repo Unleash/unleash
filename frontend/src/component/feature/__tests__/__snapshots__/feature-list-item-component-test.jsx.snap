@@ -47,7 +47,7 @@ exports[`renders correctly with one feature 1`] = `
     className="listItemStrategies hideLt920"
   >
     <react-mdl-Chip
-      className="mdl-color--blue-grey-100"
+      className="typeChip"
     />
   </span>
   <span />
@@ -100,7 +100,7 @@ exports[`renders correctly with one feature without permission 1`] = `
     className="listItemStrategies hideLt920"
   >
     <react-mdl-Chip
-      className="mdl-color--blue-grey-100"
+      className="typeChip"
     />
   </span>
   <span />

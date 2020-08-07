@@ -26,6 +26,13 @@ export function toggleFeature(enable, name) {
     };
 }
 
+export function setStale(stale, name) {
+    debug('Set stale property on feature toggle ', name);
+    return dispatch => {
+        dispatch(requestSetStaleFeatureToggle(stale, name));
+    };
+}
+
 export function editFeatureToggle(featureToggle) {
     debug('Update feature toggle ', featureToggle);
     return dispatch => {
@@ -72,6 +79,21 @@ export function requestToggleFeatureToggle(enable, name) {
         return api
             .toggle(enable, name)
             .then(() => dispatch({ type: TOGGLE_FEATURE_TOGGLE, name }))
+            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
+    };
+}
+
+export function requestSetStaleFeatureToggle(stale, name) {
+    return dispatch => {
+        dispatch({ type: START_UPDATE_FEATURE_TOGGLE });
+
+        return api
+            .setStale(stale, name)
+            .then(featureToggle => {
+                const info = `${name} marked as ${stale ? 'Stale' : 'Active'}.`;
+                setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
+                dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle, info });
+            })
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }

@@ -62,6 +62,17 @@ function toggle(enable, name) {
     }).then(throwIfNotSuccess);
 }
 
+function setStale(isStale, name) {
+    const action = isStale ? 'on' : 'off';
+    return fetch(`${URI}/${name}/stale/${action}`, {
+        method: 'POST',
+        headers,
+        credentials: 'include',
+    })
+        .then(throwIfNotSuccess)
+        .then(response => response.json());
+}
+
 function remove(featureToggleName) {
     return fetch(`${URI}/${featureToggleName}`, {
         method: 'DELETE',
@@ -75,5 +86,6 @@ export default {
     validate,
     update,
     toggle,
+    setStale,
     remove,
 };

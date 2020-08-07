@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
     fetchFeatureToggles,
     toggleFeature,
+    setStale,
     removeFeatureToggle,
     editFeatureToggle,
 } from './../../store/feature-actions';
@@ -20,6 +21,7 @@ export default connect(
     {
         fetchFeatureToggles,
         toggleFeature,
+        setStale,
         removeFeatureToggle,
         editFeatureToggle,
     }

@@ -35,7 +35,22 @@ exports[`renders correctly with one feature 1`] = `
       href="/features/strategies/Another"
       onClick={[Function]}
     >
-      Another
+      <span
+        className="toggleName"
+      >
+        Another
+         
+      </span>
+      <small
+        className="mdl-color-text--blue-grey-300"
+      >
+        <time
+          dateTime="2018-02-04T20:27:52.127Z"
+          title="2018-02-04T20:27:52.127Z"
+        >
+          3 years ago
+        </time>
+      </small>
       <span
         className="mdl-list__item-sub-title truncate"
       >
@@ -47,7 +62,7 @@ exports[`renders correctly with one feature 1`] = `
     className="listItemStrategies hideLt920"
   >
     <react-mdl-Chip
-      className="mdl-color--blue-grey-100"
+      className="typeChip"
     />
   </span>
   <span />
@@ -88,7 +103,22 @@ exports[`renders correctly with one feature without permission 1`] = `
       href="/features/strategies/Another"
       onClick={[Function]}
     >
-      Another
+      <span
+        className="toggleName"
+      >
+        Another
+         
+      </span>
+      <small
+        className="mdl-color-text--blue-grey-300"
+      >
+        <time
+          dateTime="2018-02-04T20:27:52.127Z"
+          title="2018-02-04T20:27:52.127Z"
+        >
+          3 years ago
+        </time>
+      </small>
       <span
         className="mdl-list__item-sub-title truncate"
       >
@@ -100,7 +130,7 @@ exports[`renders correctly with one feature without permission 1`] = `
     className="listItemStrategies hideLt920"
   >
     <react-mdl-Chip
-      className="mdl-color--blue-grey-100"
+      className="typeChip"
     />
   </span>
   <span />

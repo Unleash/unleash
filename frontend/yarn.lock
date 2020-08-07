@@ -7965,6 +7965,11 @@ react-test-renderer@^16.0.0-0, react-test-renderer@^16.13.1:
     react-is "^16.8.6"
     scheduler "^0.19.1"
 
+react-timeago@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/react-timeago/-/react-timeago-4.4.0.tgz#4520dd9ba63551afc4d709819f52b14b9343ba2b"
+  integrity sha512-Zj8RchTqZEH27LAANemzMR2RpotbP2aMd+UIajfYMZ9KW4dMcViUVKzC7YmqfiqlFfz8B0bjDw2xUBjmcxDngA==
+
 react-transition-group@^4.3.0:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.1.tgz#63868f9325a38ea5ee9535d828327f85773345c9"

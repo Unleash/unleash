@@ -111,6 +111,9 @@ export default class FeatureListComponent extends React.Component {
                             <MenuItem disabled={settings.sort === 'enabled'} data-target="enabled">
                                 Enabled
                             </MenuItem>
+                            <MenuItem disabled={settings.sort === 'stale'} data-target="stale">
+                                Stale
+                            </MenuItem>
                             <MenuItem disabled={settings.sort === 'created'} data-target="created">
                                 Created
                             </MenuItem>

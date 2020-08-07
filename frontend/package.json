@@ -38,7 +38,8 @@
     "prepublish": "npm run build"
   },
   "main": "./index.js",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
@@ -84,6 +85,7 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-select": "^3.1.0",
+    "react-timeago": "^4.4.0",
     "react-test-renderer": "^16.13.1",
     "redux": "^4.0.5",
     "redux-devtools": "^3.5.0",

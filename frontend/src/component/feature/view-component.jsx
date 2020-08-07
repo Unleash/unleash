@@ -12,6 +12,8 @@ import FeatureTypeSelect from './form/feature-type-select-container';
 import UpdateDescriptionComponent from './form/update-description-component';
 import { styles as commonStyles } from '../common';
 import { CREATE_FEATURE, DELETE_FEATURE, UPDATE_FEATURE } from '../../permissions';
+import StatusComponent from './status-component';
+import StatusUpdateComponent from './status-update-component';
 
 const TABS = {
     strategies: 0,
@@ -32,6 +34,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
         featureToggleName: PropTypes.string.isRequired,
         features: PropTypes.array.isRequired,
         toggleFeature: PropTypes.func,
+        setStale: PropTypes.func,
         removeFeatureToggle: PropTypes.func,
         revive: PropTypes.func,
         fetchArchive: PropTypes.func,
@@ -159,8 +162,20 @@ export default class ViewFeatureToggleComponent extends React.Component {
             this.props.editFeatureToggle(feature);
         };
 
+        const updateStale = stale => {
+            this.props.setStale(stale, featureToggleName);
+        };
+
         return (
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
+                <StatusComponent
+                    stale={featureToggle.stale}
+                    style={{
+                        position: 'absolute',
+                        right: '4px',
+                        top: '4px',
+                    }}
+                />
                 <CardTitle style={{ wordBreak: 'break-all', paddingBottom: 0 }}>{featureToggle.name} </CardTitle>
                 <CardText>
                     <UpdateDescriptionComponent
@@ -201,6 +216,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
 
                     {this.isFeatureView ? (
                         <div>
+                            <StatusUpdateComponent stale={featureToggle.stale} updateStale={updateStale} />
                             <Link
                                 to={`/features/copy/${featureToggle.name}`}
                                 title="Create new feature toggle by cloning configuration"

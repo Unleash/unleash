@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# [3.5.0]
+- feat: added time-ago to toggle-list
+- feat: Add stale marking of feature toggles
+- feat: add support for toggle type (#220)
+- feat: stort by stale
+- fix: imporve type-chip color
+
 # [3.4.0]
 - Feat: (VariantCustomization) Allow user to customize variant weights (#216)
 - bump elliptic from 6.5.2 to 6.5.3 (#218)

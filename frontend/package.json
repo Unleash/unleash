@@ -38,7 +38,9 @@
     "prepublish": "npm run build"
   },
   "main": "./index.js",
-  "dependencies": {},
+  "dependencies": {
+    "react-timeago": "^4.4.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",

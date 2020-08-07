@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Switch, Chip, ListItem, ListItemAction, Icon } from 'react-mdl';
+import TimeAgo from 'react-timeago';
 import Progress from './progress';
 import { UPDATE_FEATURE } from '../../permissions';
 import { calc, styles as commonStyles } from '../common';
@@ -18,7 +19,7 @@ const Feature = ({
     revive,
     hasPermission,
 }) => {
-    const { name, description, enabled, type, stale } = feature;
+    const { name, description, enabled, type, stale, createdAt } = feature;
     const { showLastHour = false } = settings;
     const isStale = showLastHour ? metricsLastHour.isFallback : metricsLastMinute.isFallback;
     const percent =
@@ -47,7 +48,10 @@ const Feature = ({
             </span>
             <span className={['mdl-list__item-primary-content', styles.listItemLink].join(' ')}>
                 <Link to={featureUrl} className={[commonStyles.listLink, commonStyles.truncate].join(' ')}>
-                    {name}
+                    <span className={commonStyles.toggleName}>{name}&nbsp;</span>
+                    <small className="mdl-color-text--blue-grey-300">
+                        <TimeAgo date={createdAt} />
+                    </small>
                     <span className={['mdl-list__item-sub-title', commonStyles.truncate].join(' ')}>{description}</span>
                 </Link>
             </span>

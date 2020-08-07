@@ -39,7 +39,6 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "react-timeago": "^4.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -86,6 +85,7 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-select": "^3.1.0",
+    "react-timeago": "^4.4.0",
     "react-test-renderer": "^16.13.1",
     "redux": "^4.0.5",
     "redux-devtools": "^3.5.0",

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Select = ({ name, value, label, options, style, onChange, filled }) => {
+const Select = ({ name, value, label, options, style, onChange, disabled = false, filled }) => {
     const wrapper = Object.assign({ width: 'auto' }, style);
     return (
         <div
@@ -11,6 +11,7 @@ const Select = ({ name, value, label, options, style, onChange, filled }) => {
             <select
                 className="mdl-textfield__input"
                 name={name}
+                disabled={disabled}
                 onChange={onChange}
                 value={value}
                 style={{ width: 'auto', background: filled ? '#f5f5f5' : 'none' }}
@@ -35,6 +36,8 @@ Select.propTypes = {
     options: PropTypes.array,
     style: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    disabled: PropTypes.bool,
+    filled: PropTypes.bool,
 };
 
 export default Select;

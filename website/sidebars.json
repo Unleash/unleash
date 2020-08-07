@@ -3,6 +3,7 @@
     "User Documentation": [
       "getting_started",
       "client_sdk",
+      "feature_toggle_types",
       "securing_unleash",
       "unleash_context",
       "activation_strategy",

@@ -9,7 +9,7 @@
         "title": "Activation Strategies"
       },
       "api/admin/events": {
-        "title": "/api/admin/events"
+        "title": "/api/admin/feature-types"
       },
       "api/admin/features": {
         "title": "/api/admin/features"
@@ -58,6 +58,9 @@
       },
       "developer_guide": {
         "title": "Developer guide"
+      },
+      "feature_toggle_types": {
+        "title": "Feature Toggle Types"
       },
       "getting_started": {
         "title": "Getting Started"

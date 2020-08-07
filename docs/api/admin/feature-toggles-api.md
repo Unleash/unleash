@@ -20,6 +20,7 @@ This endpoint is the one all admin ui should use to fetch all available feature 
       "description": "lorem ipsum",
       "type": "release",
       "enabled": false,
+      "stale": false,
       "strategies": [
         {
           "name": "default",
@@ -41,6 +42,7 @@ This endpoint is the one all admin ui should use to fetch all available feature 
       "name": "Feature.B",
       "description": "lorem ipsum",
       "enabled": true,
+      "stale": false,
       "strategies": [
         {
           "name": "ActiveForUserWithId",
@@ -71,6 +73,7 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
   "description": "lorem ipsum..",
   "type": "release",
   "enabled": false,
+  "stale": false,
   "strategies": [
     {
       "name": "default",
@@ -93,6 +96,7 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
   "description": "lorem ipsum..",
   "type": "release",
   "enabled": false,
+  "stale": false,
   "strategies": [
     {
       "name": "default",
@@ -123,6 +127,7 @@ Returns 200-respose if the feature toggle was created successfully.
   "description": "lorem ipsum..",
   "type": "release",
   "enabled": false,
+  "stale": false,
   "strategies": [
     {
       "name": "default",
@@ -189,6 +194,65 @@ None
   "description": "lorem ipsum..",
   "type": "release",
   "enabled": false,
+  "stale": false,
+  "strategies": [
+    {
+      "name": "default",
+      "parameters": {}
+    }
+  ],
+  "variants": []
+}
+```
+
+### Mark a Feature Toggle as "stale"
+
+`POST: http://unleash.host.com/api/admin/features/:featureName/stale/on`
+
+Used to mark a feature toggle as stale (deprecated). The :featureName must match an existing Feature Toggle. Returns 200-response if the feature toggle was enabled successfully.
+
+**Body**
+
+None
+
+**Example response:**
+
+```json
+{
+  "name": "Feature.A",
+  "description": "lorem ipsum..",
+  "type": "release",
+  "enabled": true,
+  "stale": true,
+  "strategies": [
+    {
+      "name": "default",
+      "parameters": {}
+    }
+  ],
+  "variants": []
+}
+```
+
+### Mark a Feature Toggle as "active"
+
+`POST: http://unleash.host.com/api/admin/features/:featureName/stale/off`
+
+Used to mark a feature toggle active (remove stale marking). The :featureName must match an existing Feature Toggle. Returns 200-response if the feature toggle was disabled successfully.
+
+**Body**
+
+None
+
+**Example response:**
+
+```json
+{
+  "name": "Feature.A",
+  "description": "lorem ipsum..",
+  "type": "release",
+  "enabled": false,
+  "stale": false,
   "strategies": [
     {
       "name": "default",
@@ -218,6 +282,7 @@ Used to fetch list of archived feature toggles
       "description": "lorem ipsum",
       "type": "release",
       "enabled": false,
+      "stale": false,
       "strategies": [
         {
           "name": "default",

@@ -12,6 +12,7 @@ test('renders correctly with one feature', () => {
         name: 'Another',
         description: "another's description",
         enabled: false,
+        stale: false,
         strategies: [
             {
                 name: 'gradualRolloutRandom',
@@ -46,6 +47,7 @@ test('renders correctly with one feature without permission', () => {
         name: 'Another',
         description: "another's description",
         enabled: false,
+        stale: false,
         strategies: [
             {
                 name: 'gradualRolloutRandom',

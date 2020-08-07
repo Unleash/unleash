@@ -114,6 +114,7 @@ exports[`renders correctly with one feature 1`] = `
           </react-mdl-MenuItem>
           <react-mdl-MenuItem
             data-target="stale"
+            disabled={false}
           >
             Mark toggle as Stale
           </react-mdl-MenuItem>
@@ -190,6 +191,7 @@ exports[`renders correctly with one feature 1`] = `
         "description": "another's description",
         "enabled": false,
         "name": "Another",
+        "stale": false,
         "strategies": Array [
           Object {
             "name": "gradualRolloutRandom",
@@ -208,6 +210,7 @@ exports[`renders correctly with one feature 1`] = `
           "description": "another's description",
           "enabled": false,
           "name": "Another",
+          "stale": false,
           "strategies": Array [
             Object {
               "name": "gradualRolloutRandom",

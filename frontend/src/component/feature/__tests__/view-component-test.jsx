@@ -17,6 +17,7 @@ test('renders correctly with one feature', () => {
         name: 'Another',
         description: "another's description",
         enabled: false,
+        stale: false,
         type: 'release',
         strategies: [
             {

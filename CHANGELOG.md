@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.5.0
+
+- feat: add stale property on toggle (#619)
+- fix: upgrade joi to version 17.2.0
+- feat: Add support for toggle types (#618)
+- feat: added time-ago to toggle-list
+
 ## 3.4.2
 
 - fix: upgrade unleash-frontend to version 3.4.0

@@ -6,8 +6,7 @@ class SimpleAuthenticationComponent extends React.Component {
     static propTypes = {
         authDetails: PropTypes.object.isRequired,
         unsecureLogin: PropTypes.func.isRequired,
-        fetchFeatureToggles: PropTypes.func.isRequired,
-        fetchUIConfig: PropTypes.func.isRequired,
+        loadInitalData: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
     };
 
@@ -19,8 +18,7 @@ class SimpleAuthenticationComponent extends React.Component {
 
         this.props
             .unsecureLogin(path, user)
-            .then(this.props.fetchFeatureToggles)
-            .then(this.props.fetchUIConfig)
+            .then(this.props.loadInitalData)
             .then(() => this.props.history.push(`/`));
     };
 

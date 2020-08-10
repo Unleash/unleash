@@ -172,6 +172,7 @@ exports[`renders correctly with one feature 1`] = `
           }
         }
         hasPermission={[Function]}
+        setFilter={[Function]}
         settings={
           Object {
             "sort": "name",
@@ -343,6 +344,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
           }
         }
         hasPermission={[Function]}
+        setFilter={[Function]}
         settings={
           Object {
             "sort": "name",

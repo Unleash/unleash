@@ -17,7 +17,7 @@ export const mapStateToPropsConfigurable = isFeature => state => {
                     regex.test(feature.name) ||
                     regex.test(feature.description) ||
                     feature.strategies.some(s => s && s.name && regex.test(s.name)) ||
-                    regex.test(JSON.stringify(feature))
+                    (settings.filter.length > 1 && regex.test(JSON.stringify(feature)))
             );
         } catch (e) {
             // Invalid filter regex

@@ -60,11 +60,7 @@ exports[`renders correctly with one feature 1`] = `
   </span>
   <span
     className="listItemStrategies hideLt920"
-  >
-    <react-mdl-Chip
-      className="typeChip"
-    />
-  </span>
+  />
   <span />
 </react-mdl-ListItem>
 `;
@@ -128,11 +124,7 @@ exports[`renders correctly with one feature without permission 1`] = `
   </span>
   <span
     className="listItemStrategies hideLt920"
-  >
-    <react-mdl-Chip
-      className="typeChip"
-    />
-  </span>
+  />
   <span />
 </react-mdl-ListItem>
 `;

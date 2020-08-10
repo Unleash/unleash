@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Switch, Chip, ListItem, ListItemAction, Icon } from 'react-mdl';
+import { Switch, ListItem, ListItemAction, Icon } from 'react-mdl';
 import TimeAgo from 'react-timeago';
 import Progress from './progress';
 import { UPDATE_FEATURE } from '../../permissions';
 import { calc, styles as commonStyles } from '../common';
-import StatusComponent from './status-component';
+import Status from './status-component';
+import FeatureType from './feature-type-container';
 
 import styles from './feature.scss';
 
@@ -56,8 +57,8 @@ const Feature = ({
                 </Link>
             </span>
             <span className={[styles.listItemStrategies, commonStyles.hideLt920].join(' ')}>
-                <StatusComponent stale={stale} showActive={false} />
-                <Chip className={styles.typeChip}>{type}</Chip>
+                <Status stale={stale} showActive={false} />
+                <FeatureType type={type} />
             </span>
             {revive && hasPermission(UPDATE_FEATURE) ? (
                 <ListItemAction onClick={() => revive(feature.name)}>

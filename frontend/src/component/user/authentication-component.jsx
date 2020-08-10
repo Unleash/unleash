@@ -37,8 +37,7 @@ class AuthComponent extends React.Component {
         user: PropTypes.object.isRequired,
         unsecureLogin: PropTypes.func.isRequired,
         passwordLogin: PropTypes.func.isRequired,
-        fetchFeatureToggles: PropTypes.func.isRequired,
-        fetchUIConfig: PropTypes.func.isRequired,
+        loadInitalData: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
     };
 
@@ -52,8 +51,7 @@ class AuthComponent extends React.Component {
                 <AuthenticationPasswordComponent
                     passwordLogin={this.props.passwordLogin}
                     authDetails={authDetails}
-                    fetchFeatureToggles={this.props.fetchFeatureToggles}
-                    fetchUIConfig={this.props.fetchUIConfig}
+                    loadInitalData={this.props.loadInitalData}
                     history={this.props.history}
                 />
             );
@@ -62,8 +60,7 @@ class AuthComponent extends React.Component {
                 <AuthenticationSimpleComponent
                     unsecureLogin={this.props.unsecureLogin}
                     authDetails={authDetails}
-                    fetchFeatureToggles={this.props.fetchFeatureToggles}
-                    fetchUIConfig={this.props.fetchUIConfig}
+                    loadInitalData={this.props.loadInitalData}
                     history={this.props.history}
                 />
             );

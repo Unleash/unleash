@@ -26,7 +26,7 @@ export default class FeatureListComponent extends React.Component {
         super();
         this.state = {
             filter: props.settings.filter,
-            updateFilter: debounce(props.updateSetting.bind(this, 'filter'), 250),
+            updateFilter: debounce(props.updateSetting.bind(this, 'filter'), 150),
         };
     }
 
@@ -42,11 +42,11 @@ export default class FeatureListComponent extends React.Component {
         this.props.updateSetting('showLastHour', !this.props.settings.showLastHour);
     }
 
-    setFilter(v) {
+    setFilter = v => {
         const value = typeof v === 'string' ? v : '';
         this.setState({ filter: value });
         this.state.updateFilter(value);
-    }
+    };
 
     setSort(v) {
         this.props.updateSetting('sort', typeof v === 'string' ? v.trim() : '');
@@ -138,6 +138,7 @@ export default class FeatureListComponent extends React.Component {
                                     toggleFeature={toggleFeature}
                                     revive={revive}
                                     hasPermission={hasPermission}
+                                    setFilter={this.setFilter}
                                 />
                             ))
                         ) : (

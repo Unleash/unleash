@@ -3,8 +3,6 @@ id: toggle_variants
 title: Feature Toggle Variants
 ---
 
-### Feature Toggle Variants
-
 > This feature was introduced in _Unleash v3.2.0_.
 
 Do you want to facilitate more advanced experimentations? Do you want to use Unleash to handle your A/B experiments? Say hello to feature toggle variants!

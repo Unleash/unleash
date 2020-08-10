@@ -13,6 +13,7 @@ The latest version of this document is always available in
 - feat: add support for toggle type (#220)
 - feat: stort by stale
 - fix: imporve type-chip color
+- fix: some ux cleanup for toggle types
 
 # [3.4.0]
 - Feat: (VariantCustomization) Allow user to customize variant weights (#216)

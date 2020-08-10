@@ -1,7 +1,7 @@
 {
   "name": "unleash-frontend",
   "description": "unleash your features",
-  "version": "3.5.0-0",
+  "version": "3.5.0",
   "keywords": [
     "unleash",
     "feature toggle",

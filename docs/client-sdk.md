@@ -16,6 +16,10 @@ To use Unleash in your application, you will need an Unleash Client SDK. Unleash
 
 ### Clients written by awesome enthusiasts:
 
+- [cognitedata/unleash-client-rust](https://github.com/cognitedata/unleash-client-rust) (Rust)
+- [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
+- [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
+- [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
-- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Larvel - PHP)
+- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
 - _...your implementation for your favorite language._

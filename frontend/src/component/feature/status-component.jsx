@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Chip } from 'react-mdl';
 import PropTypes from 'prop-types';
 
-export default function StatusComponent({ stale, style, showActive = true }) {
+function StatusComponent({ stale, style, showActive = true }) {
     if (!stale && !showActive) {
         return null;
     }
@@ -20,6 +20,8 @@ export default function StatusComponent({ stale, style, showActive = true }) {
         </Chip>
     );
 }
+
+export default memo(StatusComponent);
 
 StatusComponent.propTypes = {
     stale: PropTypes.bool.isRequired,

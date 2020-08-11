@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Chip } from 'react-mdl';
 import PropTypes from 'prop-types';
 import styles from './feature.scss';
 
-export default function StatusComponent({ type, types, onClick }) {
+function StatusComponent({ type, types, onClick }) {
     const typeObject = types.find(o => o.id === type) || { id: type, name: type };
 
     return (
@@ -12,6 +12,8 @@ export default function StatusComponent({ type, types, onClick }) {
         </Chip>
     );
 }
+
+export default memo(StatusComponent);
 
 StatusComponent.propTypes = {
     type: PropTypes.string.isRequired,

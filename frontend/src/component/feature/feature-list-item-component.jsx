@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Switch, ListItem, ListItemAction, Icon } from 'react-mdl';
@@ -51,7 +51,7 @@ const Feature = ({
                 <Link to={featureUrl} className={[commonStyles.listLink, commonStyles.truncate].join(' ')}>
                     <span className={commonStyles.toggleName}>{name}&nbsp;</span>
                     <small className="mdl-color-text--blue-grey-300">
-                        <TimeAgo date={createdAt} />
+                        <TimeAgo date={createdAt} live={false} />
                     </small>
                     <span className={['mdl-list__item-sub-title', commonStyles.truncate].join(' ')}>{description}</span>
                 </Link>
@@ -81,4 +81,4 @@ Feature.propTypes = {
     hasPermission: PropTypes.func.isRequired,
 };
 
-export default Feature;
+export default memo(Feature);

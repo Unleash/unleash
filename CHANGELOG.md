@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.1
+
+- fix: upgrade to [unleash-frontend v3.5.1](https://github.com/Unleash/unleash-frontend/blob/master/CHANGELOG.md#351)
+
 ## 3.5.0
 
 - feat: add stale property on toggle (#619)

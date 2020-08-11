@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.5.1
+- fix: add link to all client SDKs
+- fix: use Rect.memo to increase performance
+
 # [3.5.0]
 - feat: added time-ago to toggle-list
 - feat: Add stale marking of feature toggles

@@ -59,7 +59,7 @@ exports[`should render DrawerMenu 1`] = `
     </react-mdl-FooterLinkList>
   </react-mdl-FooterDropDownSection>
   <react-mdl-FooterDropDownSection
-    title="Clients"
+    title="Client SDKs"
   >
     <react-mdl-FooterLinkList>
       <a
@@ -91,6 +91,11 @@ exports[`should render DrawerMenu 1`] = `
         href="https://github.com/Unleash/unleash-client-core"
       >
         .Net Core
+      </a>
+      <a
+        href="https://unleash.github.io/docs/client_sdk"
+      >
+        All client SDKs
       </a>
     </react-mdl-FooterLinkList>
   </react-mdl-FooterDropDownSection>
@@ -158,7 +163,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
     </react-mdl-FooterLinkList>
   </react-mdl-FooterDropDownSection>
   <react-mdl-FooterDropDownSection
-    title="Clients"
+    title="Client SDKs"
   >
     <react-mdl-FooterLinkList>
       <a
@@ -190,6 +195,11 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         href="https://github.com/Unleash/unleash-client-core"
       >
         .Net Core
+      </a>
+      <a
+        href="https://unleash.github.io/docs/client_sdk"
+      >
+        All client SDKs
       </a>
     </react-mdl-FooterLinkList>
   </react-mdl-FooterDropDownSection>

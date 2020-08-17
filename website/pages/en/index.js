@@ -162,8 +162,8 @@ const UnleashClient = () => (
           <ul>
             <li><MarkdownBlock>[cognitedata/unleash-client-rust](https://github.com/cognitedata/unleash-client-rust) (Rust)</MarkdownBlock></li>
             <li><MarkdownBlock>[uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)</MarkdownBlock></li>
-            <li><MarkdownBlock>[silvercar/unleash-client-kotlin](https://gitlab.com/minds/unleash-client-php) (PHP)</MarkdownBlock></li>
-            <li><MarkdownBlock>[minds/unleash-client-php](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)</MarkdownBlock></li>
+            <li><MarkdownBlock>[silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)</MarkdownBlock></li>
+            <li><MarkdownBlock>[minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)</MarkdownBlock></li>
             <li><MarkdownBlock>[afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)</MarkdownBlock></li>
             <li><MarkdownBlock>[mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)</MarkdownBlock></li>
           </ul>

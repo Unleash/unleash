@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.0
+
+- feat: upgrade knex to latest
+
 ## 3.5.1
 
 - fix: upgrade to [unleash-frontend v3.5.1](https://github.com/Unleash/unleash-frontend/blob/master/CHANGELOG.md#351)

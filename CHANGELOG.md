@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.5.2
+
+- fix: add optional helmet security headers
+- fix: The links for Kotlin and PHP clients got mixed up (#623)
+
 ## 3.5.1
 
 - fix: upgrade to [unleash-frontend v3.5.1](https://github.com/Unleash/unleash-frontend/blob/master/CHANGELOG.md#351)

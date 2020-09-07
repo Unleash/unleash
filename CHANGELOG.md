@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.4
+
+- fix: helmet wap csp in quotes
+
 ## 3.5.3
 
 - fix: lax helmet csp config for styles.

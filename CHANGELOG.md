@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.3
+
+- fix: lax helmet csp config for styles.
+
 ## 3.5.2
 
 - fix: add optional helmet security headers

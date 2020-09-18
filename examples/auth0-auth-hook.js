@@ -1,6 +1,9 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
+'use strict';
+
 const passport = require('@passport-next/passport');
-const Auth0Strategy = require('passport-auth0')
-    .Strategy;
+const Auth0Strategy = require('passport-auth0').Strategy;
 
 // const  { User, AuthenticationRequired } = require('unleash-server');
 const { User, AuthenticationRequired } = require('../lib/server-impl.js');
@@ -12,13 +15,15 @@ passport.use(
             clientID: process.env.AUTH0_CLIENT_ID,
             clientSecret: process.env.AUTH0_CLIENT_SECRET,
             callbackURL:
-              process.env.AUTH0_CALLBACK_URL || 'http://localhost:4242/api/auth/callback'
+                process.env.AUTH0_CALLBACK_URL ||
+                'http://localhost:4242/api/auth/callback',
         },
 
         (accessToken, refreshToken, extraParams, profile, done) => {
-            done( null, 
+            done(
+                null,
                 new User({
-                    name: profile.givenName + " " + profile.familyName,
+                    name: `${profile.givenName} ${profile.familyName}`,
                     email: profile.emails[0].value,
                 }),
             );

@@ -1,6 +1,7 @@
 'use strict';
 
-const unleash = require('unleash-server');
+// const unleash = require('unleash-server');
+const unleash = require('../lib/server-impl.js');
 const enableAuth0auth = require('./auth0-auth-hook');
 
 unleash

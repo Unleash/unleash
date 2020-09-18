@@ -71,7 +71,7 @@ The remote address strategy activates a feature toggle for remote addresses defi
 
 **Parameters**
 
-- IPS - _List of IPs to enable the feature for._
+- IPs - _List of IPs to enable the feature for._
 
 ## applicationHostname
 

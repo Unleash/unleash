@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.0
+
+- feat: upgrade knex to latest
+
 ## 3.5.4
 
 - fix: helmet wap csp in quotes

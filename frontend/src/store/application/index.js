@@ -1,5 +1,5 @@
 import { fromJS, List, Map } from 'immutable';
-import { RECEIVE_ALL_APPLICATIONS, RECEIVE_APPLICATION } from './actions';
+import { RECEIVE_ALL_APPLICATIONS, RECEIVE_APPLICATION, UPDATE_APPLICATION_FIELD } from './actions';
 import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
 function getInitState() {
@@ -12,6 +12,8 @@ const store = (state = getInitState(), action) => {
             return state.setIn(['apps', action.value.appName], new Map(action.value));
         case RECEIVE_ALL_APPLICATIONS:
             return state.set('list', new List(action.value.applications));
+        case UPDATE_APPLICATION_FIELD:
+            return state.setIn(['apps', action.appName, action.key], action.value);
         case USER_LOGOUT:
         case USER_LOGIN:
             return getInitState();

@@ -6,6 +6,7 @@ export const ERROR_RECEIVE_ALL_APPLICATIONS = 'ERROR_RECEIVE_ALL_APPLICATIONS';
 export const ERROR_UPDATING_APPLICATION_DATA = 'ERROR_UPDATING_APPLICATION_DATA';
 
 export const RECEIVE_APPLICATION = 'RECEIVE_APPLICATION';
+export const UPDATE_APPLICATION_FIELD = 'UPDATE_APPLICATION_FIELD';
 
 const recieveAllApplications = json => ({
     type: RECEIVE_ALL_APPLICATIONS,
@@ -29,6 +30,7 @@ export function storeApplicationMetaData(appName, key, value) {
     return dispatch =>
         api
             .storeApplicationMetaData(appName, key, value)
+            .then(() => dispatch({ type: UPDATE_APPLICATION_FIELD, appName, key, value }))
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATING_APPLICATION_DATA));
 }
 

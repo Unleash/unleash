@@ -23,6 +23,8 @@ import {
 import { IconLink, shorten, styles as commonStyles } from '../common';
 import { formatFullDateTimeWithLocale } from '../common/util';
 import { CREATE_FEATURE, CREATE_STRATEGY, UPDATE_APPLICATION } from '../../permissions';
+import icons from './icon-names';
+import MySelect from '../common/select';
 
 class StatefulTextfield extends Component {
     static propTypes = {
@@ -178,6 +180,7 @@ class ClientApplications extends PureComponent {
                         <StatefulTextfield
                             value={url}
                             label="URL"
+                            type="url"
                             onBlur={e => storeApplicationMetaData(appName, 'url', e.target.value)}
                         />
                         <br />
@@ -189,14 +192,16 @@ class ClientApplications extends PureComponent {
                         />
                     </Cell>
                     <Cell col={6} tablet={12}>
-                        <StatefulTextfield
+                        <MySelect
+                            label="Icon"
+                            options={icons.map(v => ({ name: v, label: v }))}
                             value={icon}
-                            label="Select icon"
-                            onBlur={e => storeApplicationMetaData(appName, 'icon', e.target.value)}
+                            onChange={e => storeApplicationMetaData(appName, 'icon', e.target.value)}
+                            filled
                         />
                         <StatefulTextfield
                             value={color}
-                            label="Select color"
+                            label="Color"
                             onBlur={e => storeApplicationMetaData(appName, 'color', e.target.value)}
                         />
                     </Cell>
@@ -206,7 +211,8 @@ class ClientApplications extends PureComponent {
         return (
             <Card shadow={0} className={commonStyles.fullwidth}>
                 <CardTitle style={{ paddingTop: '24px', paddingRight: '64px', wordBreak: 'break-all' }}>
-                    <Icon name={icon} /> {appName}
+                    <Icon name={icon} />
+                    &nbsp;{appName}
                 </CardTitle>
                 {description && <CardText>{description}</CardText>}
                 {url && (

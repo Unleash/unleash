@@ -23,7 +23,7 @@ exports[`renders correctly with permissions 1`] = `
     <react-mdl-Icon
       name="apps"
     />
-     
+     
     test-app
   </react-mdl-CardTitle>
   <react-mdl-CardText>
@@ -41,27 +41,48 @@ exports[`renders correctly with permissions 1`] = `
       />
     </a>
   </react-mdl-CardMenu>
-  <hr />
-  <react-mdl-Tabs
-    activeTab={0}
-    className="mdl-color--grey-100"
-    onChange={[Function]}
-    ripple={true}
-    tabBarProps={
-      Object {
-        "style": Object {
-          "width": "100%",
-        },
+  <div>
+    <react-mdl-CardActions
+      border={true}
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "justifyContent": "space-between",
+        }
       }
-    }
-  >
-    <react-mdl-Tab>
-      Details
-    </react-mdl-Tab>
-    <react-mdl-Tab>
-      Edit
-    </react-mdl-Tab>
-  </react-mdl-Tabs>
+    >
+      <span />
+      <react-mdl-Button
+        accent={true}
+        onClick={[Function]}
+        title="Delete application"
+      >
+        Delete
+      </react-mdl-Button>
+    </react-mdl-CardActions>
+    <hr />
+    <react-mdl-Tabs
+      activeTab={0}
+      className="mdl-color--grey-100"
+      onChange={[Function]}
+      ripple={true}
+      tabBarProps={
+        Object {
+          "style": Object {
+            "width": "100%",
+          },
+        }
+      }
+    >
+      <react-mdl-Tab>
+        Details
+      </react-mdl-Tab>
+      <react-mdl-Tab>
+        Edit
+      </react-mdl-Tab>
+    </react-mdl-Tabs>
+  </div>
   <react-mdl-Grid
     style={
       Object {
@@ -214,7 +235,7 @@ exports[`renders correctly without permission 1`] = `
     <react-mdl-Icon
       name="apps"
     />
-     
+     
     test-app
   </react-mdl-CardTitle>
   <react-mdl-CardText>
@@ -232,7 +253,6 @@ exports[`renders correctly without permission 1`] = `
       />
     </a>
   </react-mdl-CardMenu>
-  <hr />
   
   <react-mdl-Grid
     style={

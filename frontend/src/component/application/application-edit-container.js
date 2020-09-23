@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import ApplicationEdit from './application-edit-component';
-import { fetchApplication, storeApplicationMetaData } from './../../store/application/actions';
+import { fetchApplication, storeApplicationMetaData, deleteApplication } from './../../store/application/actions';
 import { hasPermission } from '../../permissions';
 
 const mapStateToProps = (state, props) => {
@@ -19,6 +19,7 @@ const mapStateToProps = (state, props) => {
 const Constainer = connect(mapStateToProps, {
     fetchApplication,
     storeApplicationMetaData,
+    deleteApplication,
 })(ApplicationEdit);
 
 export default Constainer;

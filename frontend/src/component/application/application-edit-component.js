@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 import {
+    Button,
     Grid,
     Cell,
     Card,
+    CardActions,
     CardTitle,
     CardText,
     CardMenu,
@@ -64,7 +66,9 @@ class ClientApplications extends PureComponent {
         application: PropTypes.object,
         location: PropTypes.object,
         storeApplicationMetaData: PropTypes.func.isRequired,
+        deleteApplication: PropTypes.func.isRequired,
         hasPermission: PropTypes.func.isRequired,
+        history: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -78,6 +82,14 @@ class ClientApplications extends PureComponent {
     formatFullDateTime(v) {
         return formatFullDateTimeWithLocale(v, this.props.location.locale);
     }
+
+    deleteApplication = async evt => {
+        evt.preventDefault();
+        const { deleteApplication, appName } = this.props;
+        await deleteApplication(appName);
+        this.props.history.push('/applications');
+    };
+
     render() {
         if (!this.props.application) {
             return <ProgressBar indeterminate />;
@@ -173,9 +185,6 @@ class ClientApplications extends PureComponent {
                 </Grid>
             ) : (
                 <Grid>
-                    <Cell col={12}>
-                        <h5>Edit app meta data</h5>
-                    </Cell>
                     <Cell col={6} tablet={12}>
                         <StatefulTextfield
                             value={url}
@@ -194,7 +203,7 @@ class ClientApplications extends PureComponent {
                     <Cell col={6} tablet={12}>
                         <MySelect
                             label="Icon"
-                            options={icons.map(v => ({ name: v, label: v }))}
+                            options={icons.map(v => ({ key: v, label: v }))}
                             value={icon}
                             onChange={e => storeApplicationMetaData(appName, 'icon', e.target.value)}
                             filled
@@ -211,7 +220,7 @@ class ClientApplications extends PureComponent {
         return (
             <Card shadow={0} className={commonStyles.fullwidth}>
                 <CardTitle style={{ paddingTop: '24px', paddingRight: '64px', wordBreak: 'break-all' }}>
-                    <Icon name={icon} />
+                    <Icon name={icon || 'apps'} />
                     &nbsp;{appName}
                 </CardTitle>
                 {description && <CardText>{description}</CardText>}
@@ -220,18 +229,33 @@ class ClientApplications extends PureComponent {
                         <IconLink url={url} icon="link" />
                     </CardMenu>
                 )}
-                <hr />
                 {hasPermission(UPDATE_APPLICATION) ? (
-                    <Tabs
-                        activeTab={this.state.activeTab}
-                        onChange={tabId => this.setState({ activeTab: tabId })}
-                        ripple
-                        tabBarProps={{ style: { width: '100%' } }}
-                        className="mdl-color--grey-100"
-                    >
-                        <Tab>Details</Tab>
-                        <Tab>Edit</Tab>
-                    </Tabs>
+                    <div>
+                        <CardActions
+                            border
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <span />
+                            <Button accent title="Delete application" onClick={this.deleteApplication}>
+                                Delete
+                            </Button>
+                        </CardActions>
+                        <hr />
+                        <Tabs
+                            activeTab={this.state.activeTab}
+                            onChange={tabId => this.setState({ activeTab: tabId })}
+                            ripple
+                            tabBarProps={{ style: { width: '100%' } }}
+                            className="mdl-color--grey-100"
+                        >
+                            <Tab>Details</Tab>
+                            <Tab>Edit</Tab>
+                        </Tabs>
+                    </div>
                 ) : (
                     ''
                 )}

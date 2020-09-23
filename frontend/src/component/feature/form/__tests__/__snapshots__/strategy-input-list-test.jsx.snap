@@ -3,7 +3,13 @@
 exports[`renders correctly when disabled 1`] = `
 <div>
   <p>
-    featureName
+    <i>
+      Please specify the list of 
+      <code>
+        featureName
+      </code>
+      :
+    </i>
   </p>
   <div
     style={
@@ -39,7 +45,13 @@ exports[`renders correctly when disabled 1`] = `
 exports[`renders strategy with empty list as param 1`] = `
 <div>
   <p>
-    featureName
+    <i>
+      Please specify the list of 
+      <code>
+        featureName
+      </code>
+      :
+    </i>
   </p>
   <div
     style={
@@ -58,7 +70,7 @@ exports[`renders strategy with empty list as param 1`] = `
   >
     <react-mdl-Textfield
       floatingLabel={true}
-      label="Add list entry"
+      label="Enter value (val1, val2)"
       name="featureName_input"
       onBlur={[Function]}
       onFocus={[Function]}
@@ -88,7 +100,13 @@ exports[`renders strategy with empty list as param 1`] = `
 exports[`renders strategy with list as param 1`] = `
 <div>
   <p>
-    featureName
+    <i>
+      Please specify the list of 
+      <code>
+        featureName
+      </code>
+      :
+    </i>
   </p>
   <div
     style={
@@ -128,7 +146,7 @@ exports[`renders strategy with list as param 1`] = `
   >
     <react-mdl-Textfield
       floatingLabel={true}
-      label="Add list entry"
+      label="Enter value (val1, val2)"
       name="featureName_input"
       onBlur={[Function]}
       onFocus={[Function]}

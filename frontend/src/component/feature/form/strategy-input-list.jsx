@@ -37,9 +37,10 @@ export default class InputList extends Component {
 
         const { name, list, setConfig } = this.props;
         if (this.textInput && this.textInput.inputRef && this.textInput.inputRef.value) {
-            list.push(this.textInput.inputRef.value);
+            const newValues = this.textInput.inputRef.value.split(/,\s*/);
+            const newList = list.concat(newValues).filter(a => a);
             this.textInput.inputRef.value = '';
-            setConfig(name, list.join(','));
+            setConfig(name, newList.join(','));
         }
     };
 
@@ -53,7 +54,11 @@ export default class InputList extends Component {
         const { name, list, disabled } = this.props;
         return (
             <div>
-                <p>{name}</p>
+                <p>
+                    <i>
+                        Please specify the list of <code>{name}</code>:
+                    </i>
+                </p>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                     {list.map((entryValue, index) => (
@@ -75,7 +80,7 @@ export default class InputList extends Component {
                             name={`${name}_input`}
                             style={{ width: '100%', flex: 1 }}
                             floatingLabel
-                            label="Add list entry"
+                            label="Enter value (val1, val2)"
                             onFocus={this.onFocus.bind(this)}
                             onBlur={this.onBlur.bind(this)}
                             ref={input => {

@@ -11,14 +11,14 @@ export const shorten = (str, len = 50) => (str && str.length > len ? `${str.subs
 export const AppsLinkList = ({ apps }) => (
     <List>
         {apps.length > 0 &&
-            apps.map(({ appName, description = '-', icon }) => (
+            apps.map(({ appName, description, icon }) => (
                 <ListItem twoLine key={appName}>
                     <span className="mdl-list__item-primary-content" style={{ minWidth: 0 }}>
                         <Icon name={icon || 'apps'} className="mdl-list__item-avatar" />
                         <Link to={`/applications/${appName}`} className={[styles.listLink, styles.truncate].join(' ')}>
                             {appName}
                             <span className={['mdl-list__item-sub-title', styles.truncate].join(' ')}>
-                                {description}
+                                {description || 'No descriptionn'}
                             </span>
                         </Link>
                     </span>

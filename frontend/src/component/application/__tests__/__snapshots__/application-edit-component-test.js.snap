@@ -92,6 +92,7 @@ exports[`renders correctly with permissions 1`] = `
   >
     <react-mdl-Cell
       col={6}
+      hidePhone={true}
       phone={12}
       tablet={4}
     >
@@ -199,8 +200,7 @@ exports[`renders correctly with permissions 1`] = `
             subtitle={
               <span>
                 123.123.123.123
-                 last seen at
-                 
+                 last seen at 
                 <small>
                   02/23/2017, 03:56:49 PM
                 </small>
@@ -263,6 +263,7 @@ exports[`renders correctly without permission 1`] = `
   >
     <react-mdl-Cell
       col={6}
+      hidePhone={true}
       phone={12}
       tablet={4}
     >
@@ -360,8 +361,7 @@ exports[`renders correctly without permission 1`] = `
             subtitle={
               <span>
                 123.123.123.123
-                 last seen at
-                 
+                 last seen at 
                 <small>
                   02/23/2017, 03:56:49 PM
                 </small>

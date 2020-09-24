@@ -6,7 +6,6 @@ import { Icon, FABButton, Menu, MenuItem, Card, CardActions, List } from 'react-
 import Feature from './feature-list-item-component';
 import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
 import SearchField from '../common/search-field';
-import styles from './feature.scss';
 import { CREATE_FEATURE } from '../../permissions';
 
 export default class FeatureListComponent extends React.Component {

@@ -2,7 +2,16 @@
 
 ## 3.6.0
 
-- feat: upgrade knex to latest
+- feat: Remove applications (#635)
+- feat: upgrade unleash-frontend to version 3.6.0. Notable changes:
+  - feat: add search for applications
+  - feat: Should be possible to remove applications
+  - fix: make sure application is updated on edit
+  - fix: list parameters should be trimmed
+- feat: upgrade knex to version 0.21.5
+- fix: improve import/export documentation
+- fix: update helmet config
+- fix: Heroku Postgres add-on version change (#631)
 
 ## 3.5.4
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ProgressBar, Card, CardText, Icon } from 'react-mdl';
 import { AppsLinkList, styles as commonStyles } from '../common';
+import SearchField from '../common/search-field';
 
 const Empty = () => (
     <React.Fragment>
@@ -22,6 +23,8 @@ class ClientStrategies extends Component {
     static propTypes = {
         applications: PropTypes.array,
         fetchAll: PropTypes.func.isRequired,
+        settings: PropTypes.object.isRequired,
+        updateSetting: PropTypes.func.isRequired,
     };
 
     componentDidMount() {
@@ -35,9 +38,17 @@ class ClientStrategies extends Component {
             return <ProgressBar indeterminate />;
         }
         return (
-            <Card shadow={0} className={commonStyles.fullwidth}>
-                {applications.length > 0 ? <AppsLinkList apps={applications} /> : <Empty />}
-            </Card>
+            <div>
+                <div className={commonStyles.toolbar}>
+                    <SearchField
+                        value={this.props.settings.filter}
+                        updateValue={this.props.updateSetting.bind(this, 'filter')}
+                    />
+                </div>
+                <Card shadow={0} className={commonStyles.fullwidth}>
+                    {applications.length > 0 ? <AppsLinkList apps={applications} /> : <Empty />}
+                </Card>
+            </div>
         );
     }
 }

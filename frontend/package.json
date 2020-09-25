@@ -30,7 +30,7 @@
     "build:ico": "cp public/*.ico dist/.",
     "build:img": "cp public/*.png dist/public/.",
     "start": "NODE_ENV=development webpack-dev-server --progress --colors",
-    "start:heroku": "UNLEASH_API=http://unleash.herokuapp.com npm run start",
+    "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com npm run start",
     "lint": "eslint . --ext js,jsx",
     "lint:fix": "eslint . --ext js,jsx --fix",
     "test": "jest",

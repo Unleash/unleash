@@ -86,3 +86,16 @@
     color: #37474f !important;
     font-weight: 500;
 }
+
+.toolbar {
+    position: relative;
+    padding: 0 24px 16px 24px;
+    text-align: center;
+}
+
+.toolbarButton {
+    position: absolute;
+    top: 56px;
+    right: 24px;
+    z-index: 2;
+}

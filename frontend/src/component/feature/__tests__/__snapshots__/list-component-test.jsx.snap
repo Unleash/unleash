@@ -5,16 +5,29 @@ exports[`renders correctly with one feature 1`] = `
   <div
     className="toolbar"
   >
-    <react-mdl-Textfield
-      floatingLabel={true}
-      label="Search"
-      onChange={[Function]}
-      style={
-        Object {
-          "width": "100%",
+    <div>
+      <react-mdl-Textfield
+        floatingLabel={true}
+        label="Search"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyPress={[Function]}
+        style={
+          Object {
+            "maxWidth": "80%",
+            "width": "500px",
+          }
         }
-      }
-    />
+      />
+      <react-mdl-FABButton
+        className="mdl-cell--hide-phone"
+        mini={true}
+      >
+        <react-mdl-Icon
+          name="search"
+        />
+      </react-mdl-FABButton>
+    </div>
     <a
       className="toolbarButton"
       href="/features/create"
@@ -190,16 +203,29 @@ exports[`renders correctly with one feature without permissions 1`] = `
   <div
     className="toolbar"
   >
-    <react-mdl-Textfield
-      floatingLabel={true}
-      label="Search"
-      onChange={[Function]}
-      style={
-        Object {
-          "width": "100%",
+    <div>
+      <react-mdl-Textfield
+        floatingLabel={true}
+        label="Search"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyPress={[Function]}
+        style={
+          Object {
+            "maxWidth": "80%",
+            "width": "500px",
+          }
         }
-      }
-    />
+      />
+      <react-mdl-FABButton
+        className="mdl-cell--hide-phone"
+        mini={true}
+      >
+        <react-mdl-Icon
+          name="search"
+        />
+      </react-mdl-FABButton>
+    </div>
     
   </div>
   <react-mdl-Card

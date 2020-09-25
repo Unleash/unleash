@@ -34,9 +34,18 @@ function storeApplicationMetaData(appName, key, value) {
     }).then(throwIfNotSuccess);
 }
 
+function deleteApplication(appName) {
+    return fetch(`${URI}/${appName}`, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+    }).then(throwIfNotSuccess);
+}
+
 export default {
     fetchApplication,
     fetchAll,
     fetchApplicationsWithStrategyName,
     storeApplicationMetaData,
+    deleteApplication,
 };

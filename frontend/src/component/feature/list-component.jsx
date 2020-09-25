@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'debounce';
 import { Link } from 'react-router-dom';
-import { Icon, FABButton, Textfield, Menu, MenuItem, Card, CardActions, List } from 'react-mdl';
+import { Icon, FABButton, Menu, MenuItem, Card, CardActions, List } from 'react-mdl';
 import Feature from './feature-list-item-component';
 import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
-import styles from './feature.scss';
+import SearchField from '../common/search-field';
 import { CREATE_FEATURE } from '../../permissions';
 
 export default class FeatureListComponent extends React.Component {
@@ -59,18 +59,13 @@ export default class FeatureListComponent extends React.Component {
         });
         return (
             <div>
-                <div className={styles.toolbar}>
-                    <Textfield
-                        floatingLabel
-                        value={this.state.filter}
-                        onChange={e => {
-                            this.setFilter(e.target.value);
-                        }}
-                        label="Search"
-                        style={{ width: '100%' }}
+                <div className={commonStyles.toolbar}>
+                    <SearchField
+                        value={this.props.settings.filter}
+                        updateValue={this.props.updateSetting.bind(this, 'filter')}
                     />
                     {hasPermission(CREATE_FEATURE) ? (
-                        <Link to="/features/create" className={styles.toolbarButton}>
+                        <Link to="/features/create" className={commonStyles.toolbarButton}>
                             <FABButton accent title="Create feature toggle">
                                 <Icon name="add" />
                             </FABButton>

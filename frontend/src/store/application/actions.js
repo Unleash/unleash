@@ -7,6 +7,8 @@ export const ERROR_UPDATING_APPLICATION_DATA = 'ERROR_UPDATING_APPLICATION_DATA'
 
 export const RECEIVE_APPLICATION = 'RECEIVE_APPLICATION';
 export const UPDATE_APPLICATION_FIELD = 'UPDATE_APPLICATION_FIELD';
+export const DELETE_APPLICATION = 'DELETE_APPLICATION';
+export const ERROR_DELETE_APPLICATION = 'ERROR_DELETE_APPLICATION';
 
 const recieveAllApplications = json => ({
     type: RECEIVE_ALL_APPLICATIONS,
@@ -40,4 +42,12 @@ export function fetchApplication(appName) {
             .fetchApplication(appName)
             .then(json => dispatch(recieveApplication(json)))
             .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_ALL_APPLICATIONS));
+}
+
+export function deleteApplication(appName) {
+    return dispatch =>
+        api
+            .deleteApplication(appName)
+            .then(() => dispatch({ type: DELETE_APPLICATION, appName }))
+            .catch(dispatchAndThrow(dispatch, ERROR_DELETE_APPLICATION));
 }

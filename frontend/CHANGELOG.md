@@ -8,8 +8,8 @@ The latest version of this document is always available in
 [releases][releases-url].
 
 # 3.6.1
-fix: minor css tweaks for mobile
-fix: should support 409 responses as well
+- fix: minor css tweaks for mobile
+- fix: should support 409 responses as well
 
 # 3.6.0
 - feat: add search for applications

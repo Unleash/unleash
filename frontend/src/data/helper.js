@@ -43,7 +43,7 @@ export function throwIfNotSuccess(response) {
             return new Promise((resolve, reject) => {
                 response.json().then(body => reject(new ForbiddenError(response.status, body)));
             });
-        } else if (response.status > 399 && response.status < 404) {
+        } else if (response.status > 399 && response.status < 499) {
             return new Promise((resolve, reject) => {
                 response.json().then(body => {
                     const errorMsg = body && body.isJoi ? extractJoiMsg(body) : extractLegacyMsg(body);

@@ -12,6 +12,7 @@
 - fix: improve import/export documentation
 - fix: update helmet config
 - fix: Heroku Postgres add-on version change (#631)
+- fix: Add option via env for ADMIN_AUTHENTICATION
 
 ## 3.5.4
 

@@ -205,7 +205,9 @@ export default class ViewFeatureToggleComponent extends React.Component {
                                 checked={featureToggle.enabled}
                                 onChange={() => toggleFeature(!featureToggle.enabled, featureToggle.name)}
                             >
-                                {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                                <span className="mdl-cell--hide-phone">
+                                    {featureToggle.enabled ? 'Enabled' : 'Disabled'}
+                                </span>
                             </Switch>
                         ) : (
                             <Switch disabled ripple checked={featureToggle.enabled}>
@@ -250,10 +252,14 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     tabBarProps={{ style: { width: '100%' } }}
                     className="mdl-color--grey-100"
                 >
-                    <Tab onClick={() => this.goToTab('strategies', featureToggleName)}>Strategies</Tab>
+                    <Tab onClick={() => this.goToTab('strategies', featureToggleName)}>Activation</Tab>
                     <Tab onClick={() => this.goToTab('view', featureToggleName)}>Metrics</Tab>
-                    <Tab onClick={() => this.goToTab('variants', featureToggleName)}>Variants</Tab>
-                    <Tab onClick={() => this.goToTab('history', featureToggleName)}>History</Tab>
+                    <Tab onClick={() => this.goToTab('variants', featureToggleName)}>
+                        V<span className="mdl-cell--hide-phone">ariants</span>
+                    </Tab>
+                    <Tab onClick={() => this.goToTab('history', featureToggleName)}>
+                        L<span className="mdl-cell--hide-phone">og</span>
+                    </Tab>
                 </Tabs>
                 {tabContent}
             </Card>

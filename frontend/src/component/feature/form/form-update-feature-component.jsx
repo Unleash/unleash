@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import StrategiesSection from './strategies-section-container';
 
+import styles from './strategy.scss';
+
 import { FormButtons } from './../../common';
 
 class UpdateFeatureComponent extends Component {
@@ -32,7 +34,7 @@ class UpdateFeatureComponent extends Component {
 
         return (
             <form onSubmit={onSubmit(input, features)}>
-                <section style={{ padding: '16px' }}>
+                <section className={styles.paddingDesktop}>
                     <StrategiesSection
                         configuredStrategies={configuredStrategies}
                         featureToggleName={input.name}

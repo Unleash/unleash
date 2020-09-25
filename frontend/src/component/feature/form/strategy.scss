@@ -64,3 +64,15 @@
     display: inline-block;
     vertical-align: bottom;
 }
+
+
+.paddingDesktop {
+    padding: 16px;
+}
+
+@media (max-width: 500px) {
+    .paddingDesktop {
+        padding: 0;
+    }
+}
+

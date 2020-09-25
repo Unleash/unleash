@@ -82,7 +82,11 @@ exports[`renders correctly with one feature 1`] = `
         onChange={[Function]}
         ripple={true}
       >
-        Disabled
+        <span
+          className="mdl-cell--hide-phone"
+        >
+          Disabled
+        </span>
       </react-mdl-Switch>
     </span>
     <div>
@@ -166,7 +170,7 @@ exports[`renders correctly with one feature 1`] = `
     <react-mdl-Tab
       onClick={[Function]}
     >
-      Strategies
+      Activation
     </react-mdl-Tab>
     <react-mdl-Tab
       onClick={[Function]}
@@ -176,12 +180,22 @@ exports[`renders correctly with one feature 1`] = `
     <react-mdl-Tab
       onClick={[Function]}
     >
-      Variants
+      V
+      <span
+        className="mdl-cell--hide-phone"
+      >
+        ariants
+      </span>
     </react-mdl-Tab>
     <react-mdl-Tab
       onClick={[Function]}
     >
-      History
+      L
+      <span
+        className="mdl-cell--hide-phone"
+      >
+        og
+      </span>
     </react-mdl-Tab>
   </react-mdl-Tabs>
   <UpdateFeatureToggleComponent

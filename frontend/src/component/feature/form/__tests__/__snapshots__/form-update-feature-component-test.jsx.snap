@@ -3,11 +3,7 @@
 exports[`render the create feature page 1`] = `
 <form>
   <section
-    style={
-      Object {
-        "padding": "16px",
-      }
-    }
+    className="paddingDesktop"
   >
     <StrategiesSection
       addStrategy={[MockFunction]}

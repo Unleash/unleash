@@ -30,6 +30,11 @@
       "appName": "demo-app-2",
       "strategies": ["default", "extra"],
       "description": "hello"
+    },
+    {
+      "appName": "deletable-app",
+      "strategies": ["default"],
+      "description": "Some desc"
     }
   ],
   "clientInstances": [
@@ -43,6 +48,13 @@
     {
       "appName": "demo-seed-2",
       "instanceId": "test-2",
+      "strategies": ["default"],
+      "started": 1516026938494,
+      "interval": 10
+    },
+    {
+      "appName": "deletable-app",
+      "instanceId": "inst-1",
       "strategies": ["default"],
       "started": 1516026938494,
       "interval": 10

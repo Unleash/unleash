@@ -81,7 +81,7 @@ test.serial('refuses to create a strategy with an existing name', async t => {
         .post('/api/admin/strategies')
         .send({ name: 'default', parameters: [] })
         .set('Content-Type', 'application/json')
-        .expect(400);
+        .expect(409);
 });
 
 test.serial('deletes a new strategy', async t => {

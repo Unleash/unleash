@@ -103,7 +103,7 @@ test.serial(
             .post('/api/admin/context')
             .send({ name: 'userId' })
             .set('Content-Type', 'application/json')
-            .expect(400);
+            .expect(409);
     },
 );
 
@@ -140,7 +140,7 @@ test.serial('should validate name to not ok', async t => {
         .post('/api/admin/context/validate')
         .send({ name: 'environment' })
         .set('Content-Type', 'application/json')
-        .expect(400);
+        .expect(409);
 });
 
 test.serial('should validate name to not ok for non url-friendly', async t => {

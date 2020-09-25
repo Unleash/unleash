@@ -89,7 +89,7 @@
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
     "unleash-frontend": "3.6.1",
-    "yargs": "^15.1.0"
+    "yargs": "^16.0.3"
   },
   "devDependencies": {
     "@passport-next/passport": "^3.1.0",

@@ -18,6 +18,7 @@ exports[`renders correctly with one feature 1`] = `
             "width": "500px",
           }
         }
+        value=""
       />
       <react-mdl-FABButton
         className="mdl-cell--hide-phone"
@@ -216,6 +217,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
             "width": "500px",
           }
         }
+        value=""
       />
       <react-mdl-FABButton
         className="mdl-cell--hide-phone"

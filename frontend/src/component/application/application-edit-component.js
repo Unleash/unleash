@@ -21,13 +21,13 @@ class ClientApplications extends PureComponent {
         history: PropTypes.object.isRequired,
     };
 
-    constructor() {
+    constructor(props) {
         super();
-        this.state = { activeTab: 0 };
+        this.state = { activeTab: 0, loading: !props.application };
     }
 
     componentDidMount() {
-        this.props.fetchApplication(this.props.appName);
+        this.props.fetchApplication(this.props.appName).finally(() => this.setState({ loading: false }));
     }
     formatFullDateTime = v => formatFullDateTimeWithLocale(v, this.props.location.locale);
 
@@ -39,8 +39,15 @@ class ClientApplications extends PureComponent {
     };
 
     render() {
-        if (!this.props.application) {
-            return <ProgressBar indeterminate />;
+        if (this.state.loading) {
+            return (
+                <div>
+                    <p>Loading...</p>
+                    <ProgressBar indeterminate />
+                </div>
+            );
+        } else if (!this.props.application) {
+            return <p>Application ({this.props.appName}) not found</p>;
         }
         const { application, storeApplicationMetaData, hasPermission } = this.props;
         const { appName, instances, strategies, seenToggles, url, description, icon = 'apps' } = application;

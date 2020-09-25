@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { debounce } from 'debounce';
 import { FABButton, Icon, Textfield } from 'react-mdl';
 
-function SearchField({ value, updateValue }) {
+function SearchField({ value = '', updateValue }) {
     const [localValue, setLocalValue] = useState(value);
     const debounceUpdateValue = debounce(updateValue, 500);
 
@@ -43,7 +43,7 @@ function SearchField({ value, updateValue }) {
 }
 
 SearchField.propTypes = {
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     updateValue: PropTypes.func.isRequired,
 };
 

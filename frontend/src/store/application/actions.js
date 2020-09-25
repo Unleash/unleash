@@ -1,5 +1,6 @@
 import api from '../../data/applications-api';
 import { dispatchAndThrow } from '../util';
+import { MUTE_ERROR } from '../error-actions';
 
 export const RECEIVE_ALL_APPLICATIONS = 'RECEIVE_ALL_APPLICATIONS';
 export const ERROR_RECEIVE_ALL_APPLICATIONS = 'ERROR_RECEIVE_ALL_APPLICATIONS';
@@ -32,7 +33,11 @@ export function storeApplicationMetaData(appName, key, value) {
     return dispatch =>
         api
             .storeApplicationMetaData(appName, key, value)
-            .then(() => dispatch({ type: UPDATE_APPLICATION_FIELD, appName, key, value }))
+            .then(() => {
+                const info = `${appName} successfully updated!`;
+                setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
+                dispatch({ type: UPDATE_APPLICATION_FIELD, appName, key, value, info });
+            })
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATING_APPLICATION_DATA));
 }
 

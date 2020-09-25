@@ -13,6 +13,8 @@ import { ERROR_UPDATING_STRATEGY, ERROR_CREATING_STRATEGY, ERROR_RECEIVE_STRATEG
 
 import { ERROR_ADD_CONTEXT_FIELD, ERROR_UPDATE_CONTEXT_FIELD } from './context/actions';
 
+import { UPDATE_APPLICATION_FIELD } from './application/actions';
+
 import { FORBIDDEN } from './util';
 
 const debug = require('debug')('unleash:error-store');
@@ -49,6 +51,7 @@ const strategies = (state = getInitState(), action) => {
             return state.update('list', list => list.remove(list.indexOf(action.error)));
         case UPDATE_FEATURE_TOGGLE:
         case UPDATE_FEATURE_TOGGLE_STRATEGIES:
+        case UPDATE_APPLICATION_FIELD:
             return addErrorIfNotAlreadyInList(state, action.info);
         default:
             return state;

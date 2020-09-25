@@ -11,9 +11,11 @@ test('renders correctly if no application', () => {
     const tree = renderer
         .create(
             <ClientApplications
-                fetchApplication={jest.fn()}
+                fetchApplication={() => Promise.resolve({})}
                 storeApplicationMetaData={jest.fn()}
+                deleteApplication={jest.fn()}
                 hasPermission={() => true}
+                history={{}}
             />
         )
         .toJSON();
@@ -26,8 +28,10 @@ test('renders correctly without permission', () => {
         .create(
             <MemoryRouter>
                 <ClientApplications
-                    fetchApplication={jest.fn()}
+                    fetchApplication={() => Promise.resolve({})}
                     storeApplicationMetaData={jest.fn()}
+                    deleteApplication={jest.fn()}
+                    history={{}}
                     application={{
                         appName: 'test-app',
                         instances: [
@@ -80,8 +84,10 @@ test('renders correctly with permissions', () => {
         .create(
             <MemoryRouter>
                 <ClientApplications
-                    fetchApplication={jest.fn()}
+                    fetchApplication={() => Promise.resolve({})}
                     storeApplicationMetaData={jest.fn()}
+                    history={{}}
+                    deleteApplication={jest.fn()}
                     application={{
                         appName: 'test-app',
                         instances: [

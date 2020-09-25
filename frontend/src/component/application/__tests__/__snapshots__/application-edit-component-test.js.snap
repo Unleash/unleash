@@ -1,9 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly if no application 1`] = `
-<react-mdl-ProgressBar
-  indeterminate={true}
-/>
+<div>
+  <p>
+    Loading...
+  </p>
+  <react-mdl-ProgressBar
+    indeterminate={true}
+  />
+</div>
 `;
 
 exports[`renders correctly with permissions 1`] = `

@@ -47,18 +47,28 @@ test.serial('should get list of applications', async t => {
         });
 });
 
-test.serial('should delee application', async t => {
+test.serial('should delete application', async t => {
     t.plan(2);
     const request = await setupApp(stores);
     await request
         .delete('/api/admin/metrics/applications/deletable-app')
         .expect(res => {
-            t.true(res.status === 200);
+            t.is(res.status, 200);
         });
     return request
         .get('/api/admin/metrics/applications')
         .expect('Content-Type', /json/)
         .expect(res => {
             t.is(res.body.applications.length, 2);
+        });
+});
+
+test.serial('should get 409 when deleting unknwn application', async t => {
+    t.plan(1);
+    const request = await setupApp(stores);
+    return request
+        .delete('/api/admin/metrics/applications/unkown')
+        .expect(res => {
+            t.is(res.status, 409);
         });
 });

@@ -9,7 +9,7 @@ Unleash supports import and export of feature-toggles and strategies at startup 
 
 All import mechanisms support a `drop` parameter which will clean the database before import (all strategies and features will be removed).
 
-> You should never use this in production environments.
+> You should be careful when using `drop` parmeter in production environments, as it will clean current state.
 
 ## Runtime import & export
 
@@ -37,12 +37,12 @@ If you want the database to be cleaned before import (all strategies and feature
 The api endpoint `/api/admin/state/export` will export feature-toggles and strategies as json by default.\
 You can customize the export with queryparameters:
 
-| Parameter      | Default | Description                                         |
-| -------------- | ------- | --------------------------------------------------- |
-| format         | `json`  | Export format, either `json` or `yaml`              |
-| download       | `false` | If the exported data should be downloaded as a file |
-| featureToggles | `true`  | Include feature-toggles in the exported data        |
-| strategies     | `true`  | Include strategies in the exported data             |
+| Parameter | Default | Description |
+| --- | --- | --- |
+| format | `json` | Export format, either `json` or `yaml` |
+| download | `false` | If the exported data should be downloaded as a file |
+| featureToggles | `true` | Include feature-toggles in the exported data |
+| strategies | `true` | Include strategies in the exported data |
 
 For example if you want to download all feature-toggles as yaml:
 

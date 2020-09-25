@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.6.0
+- feat: add search for applications
+- feat: Should be possible to remove applications
+- fix: make sure application is updated on edit
+- fix: list parameters should be trimmed
+- fix: cleanup edit application a bit
+- fix: use https url for local->heroku proxy
+- fix: upgrade whatwg-fetch to version 3.4.1
+
 # 3.5.1
 - fix: add link to all client SDKs
 - fix: use Rect.memo to increase performance

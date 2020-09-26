@@ -9,6 +9,7 @@ The latest version of this document is always available in
 
 # 3.6.2
 - fix: show notification when app updates
+- fix: add created date for applications
 
 # 3.6.1
 - fix: minor css tweaks for mobile

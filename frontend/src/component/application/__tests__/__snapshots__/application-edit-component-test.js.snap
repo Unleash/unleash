@@ -31,8 +31,22 @@ exports[`renders correctly with permissions 1`] = `
      
     test-app
   </react-mdl-CardTitle>
-  <react-mdl-CardText>
-    app description
+  <react-mdl-CardText
+    style={
+      Object {
+        "paddingTop": "0",
+      }
+    }
+  >
+    <p>
+      app description
+    </p>
+    <p>
+      Created: 
+      <strong>
+        Invalid Date
+      </strong>
+    </p>
   </react-mdl-CardText>
   <react-mdl-CardMenu>
     <a
@@ -243,8 +257,22 @@ exports[`renders correctly without permission 1`] = `
      
     test-app
   </react-mdl-CardTitle>
-  <react-mdl-CardText>
-    app description
+  <react-mdl-CardText
+    style={
+      Object {
+        "paddingTop": "0",
+      }
+    }
+  >
+    <p>
+      app description
+    </p>
+    <p>
+      Created: 
+      <strong>
+        Invalid Date
+      </strong>
+    </p>
   </react-mdl-CardText>
   <react-mdl-CardMenu>
     <a

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Button, Card, CardActions, CardTitle, CardText, CardMenu, Icon, ProgressBar, Tabs, Tab } from 'react-mdl';
 import { IconLink, styles as commonStyles } from '../common';
-import { formatFullDateTimeWithLocale } from '../common/util';
+import { formatFullDateTimeWithLocale, formatDateWithLocale } from '../common/util';
 import { UPDATE_APPLICATION } from '../../permissions';
 import ApplicationView from './application-view';
 import ApplicationUpdate from './application-update';
@@ -30,6 +30,7 @@ class ClientApplications extends PureComponent {
         this.props.fetchApplication(this.props.appName).finally(() => this.setState({ loading: false }));
     }
     formatFullDateTime = v => formatFullDateTimeWithLocale(v, this.props.location.locale);
+    formatDate = v => formatDateWithLocale(v, this.props.location.locale);
 
     deleteApplication = async evt => {
         evt.preventDefault();
@@ -50,7 +51,7 @@ class ClientApplications extends PureComponent {
             return <p>Application ({this.props.appName}) not found</p>;
         }
         const { application, storeApplicationMetaData, hasPermission } = this.props;
-        const { appName, instances, strategies, seenToggles, url, description, icon = 'apps' } = application;
+        const { appName, instances, strategies, seenToggles, url, description, icon = 'apps', createdAt } = application;
 
         const content =
             this.state.activeTab === 0 ? (
@@ -71,7 +72,12 @@ class ClientApplications extends PureComponent {
                     <Icon name={icon || 'apps'} />
                     &nbsp;{appName}
                 </CardTitle>
-                {description && <CardText>{description}</CardText>}
+                <CardText style={{ paddingTop: '0' }}>
+                    <p>{description || ''}</p>
+                    <p>
+                        Created: <strong>{this.formatDate(createdAt)}</strong>
+                    </p>
+                </CardText>
                 {url && (
                     <CardMenu>
                         <IconLink url={url} icon="link" />

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.6.2
+- fix: show notification when app updates
+
 # 3.6.1
 - fix: minor css tweaks for mobile
 - fix: should support 409 responses as well

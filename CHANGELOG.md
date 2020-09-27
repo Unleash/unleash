@@ -3,16 +3,20 @@
 ## 3.6.0
 
 - feat: Remove applications (#635)
-- feat: upgrade unleash-frontend to version 3.6.0. Notable changes:
+- feat: upgrade unleash-frontend to version 3.6.2. Notable changes:
   - feat: add search for applications
   - feat: Should be possible to remove applications
   - fix: make sure application is updated on edit
   - fix: list parameters should be trimmed
+  - fix: show notification when app updates
+  - fix: show notification when app updates
 - feat: upgrade knex to version 0.21.5
+- fix: Name conflict should return 409
 - fix: improve import/export documentation
 - fix: update helmet config
 - fix: Heroku Postgres add-on version change (#631)
 - fix: Add option via env for ADMIN_AUTHENTICATION
+- fix: upgrade yargs to version 16.0.3
 
 ## 3.5.4
 

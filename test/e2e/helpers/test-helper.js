@@ -19,7 +19,7 @@ function createApp(stores, adminAuthentication = 'none', preHook) {
         adminAuthentication,
         secret: 'super-secret',
         sessionAge: 4000,
-        stateService: new StateService({ stores, getLogger }),
+        stateService: new StateService(stores, { getLogger }),
         getLogger,
     });
 }

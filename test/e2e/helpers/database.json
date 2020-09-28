@@ -149,5 +149,11 @@
         { "name": "new", "weight": 50 }
       ]
     }
+  ],
+  "projects": [
+    {
+      "id": "default",
+      "name": "Default"
+    }
   ]
 }

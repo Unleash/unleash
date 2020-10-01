@@ -42,13 +42,14 @@ unleash
 ```
 
 Available unleash options include:
+
 - **db** - The database configuration object taking the following properties:
-  - *user* - the database username (`DATABASE_USERNAME`)
-  - *password* - the database password (`DATABASE_PASSWORD`)
-  - *host* - the database hostname (`DATABASE_HOST`)
-  - *port* - the datbase port defaults to 5432 (`DATABASE_PORT`)
-  - *database* - the database name to be used (`DATABASE_NAME`) 
-  - *ssl* - an object describing ssl options, see https://node-postgres.com/features/ssl (`DATABASE_SSL`, as a stringified json object)
+  - _user_ - the database username (`DATABASE_USERNAME`)
+  - _password_ - the database password (`DATABASE_PASSWORD`)
+  - _host_ - the database hostname (`DATABASE_HOST`)
+  - _port_ - the datbase port defaults to 5432 (`DATABASE_PORT`)
+  - _database_ - the database name to be used (`DATABASE_NAME`)
+  - _ssl_ - an object describing ssl options, see https://node-postgres.com/features/ssl (`DATABASE_SSL`, as a stringified json object)
 - **databaseUrl** - the postgres database url to connect to. Only used if _db_ object is not specified. Should include username/password. This value may also be set via the `DATABASE_URL` environment variable. Alternatively, if you would like to read the database url from a file, you may set the `DATABASE_URL_FILE` environment variable with the full file path. The contents of the file must be the database url exactly.
 - **databaseSchema** - the postgres database schema to use. Defaults to 'public'.
 - **port** - which port the unleash-server should bind to. If port is omitted or is 0, the operating system will assign an arbitrary unused port. Will be ignored if pipe is specified. This value may also be set via the `HTTP_PORT` environment variable
@@ -66,6 +67,7 @@ Available unleash options include:
 - **getLogger** (function) - Used to register a [custom log provider](#How do I configure the log output).
 - **eventHook** (`function(event, data)`) - If provided, this function will be invoked whenever a feature is mutated. The possible values for `event` are `'feature-created'`, `'feature-updated'`, `'feature-archived'`, `'feature-revived'`. The `data` argument contains information about the mutation. Its fields are `type` (string) - the event type (same as `event`); `createdBy` (string) - the user who performed the mutation; `data` - the contents of the change. The contents in `data` differs based on the event type; For `'feature-archived'` and `'feature-revived'`, the only field will be `name` - the name of the feature. For `'feature-created'` and `'feature-updated'` the data follows a schema defined in the code [here](https://github.com/Unleash/unleash/blob/master/lib/routes/admin-api/feature-schema.js#L38-L59). See an example [here](./guides/feautre-updates-to-slack.md).
 - **baseUriPath** (string) - use to register a base path for all routes on the application. For example `/my/unleash/base` (note the starting /). Defaults to `/`. Can also be configured through the environment variable `BASE_URI_PATH`.
+- **secureHeaders** (boolean) - use this to enable security headers (HSTS, CSP, etc) when serving Unleash from HTTPS. Can also be configured through the environment variable `SECURE_HEADERS`.
 
 #### Disabling Auto-Start
 

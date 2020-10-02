@@ -65,7 +65,7 @@
     "async": "^3.1.0",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.4",
-    "cookie-session": "^2.0.0-beta.3",
+    "cookie-session": "^2.0.0-rc.1",
     "db-migrate": "0.11.11",
     "db-migrate-pg": "^1.2.2",
     "db-migrate-shared": "^1.2.0",

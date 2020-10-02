@@ -1184,7 +1184,7 @@ cookie-parser@^1.4.4:
     cookie "0.4.0"
     cookie-signature "1.0.6"
 
-cookie-session@^2.0.0-beta.3:
+cookie-session@^2.0.0-rc.1:
   version "2.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/cookie-session/-/cookie-session-2.0.0-rc.1.tgz#66fa03f26e5873d681d70f14bff5e48a94c53d37"
   integrity sha512-zg80EsLe7S1J4y0XxV7SZ8Fbi90ZZoampuX2bfYDOvJfc//98sSlZC41YDzTTjtVbeU1VlVdBbldXOOyi5xzEw==

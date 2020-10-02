@@ -21,12 +21,6 @@ function basicAuthentication(app) {
             .set({ 'WWW-Authenticate': 'Basic realm="example"' })
             .end('access denied');
     });
-
-    app.use((req, res, next) => {
-        // Updates active sessions every hour
-        req.session.nowInHours = Math.floor(Date.now() / 3600e3);
-        next();
-    });
 }
 
 module.exports = basicAuthentication;

@@ -18,7 +18,7 @@ export const AppsLinkList = ({ apps }) => (
                         <Link to={`/applications/${appName}`} className={[styles.listLink, styles.truncate].join(' ')}>
                             {appName}
                             <span className={['mdl-list__item-sub-title', styles.truncate].join(' ')}>
-                                {description || 'No descriptionn'}
+                                {description || 'No description'}
                             </span>
                         </Link>
                     </span>

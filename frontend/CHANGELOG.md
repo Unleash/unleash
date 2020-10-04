@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.6.3
+- fix: hide content if showing authentication modal
+- fix: add security wanring to the console
+- fix: typo description => descriptionn
+
 # 3.6.2
 - fix: show notification when app updates
 - fix: add created date for applications

@@ -14,6 +14,7 @@ import store from './store';
 import MetricsPoller from './metrics-poller';
 import App from './component/app';
 import ScrollToTop from './component/scroll-to-top';
+import { writeWarning } from './security-logger';
 
 let composeEnhancers;
 
@@ -21,6 +22,7 @@ if (process.env.NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION_C
     composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 } else {
     composeEnhancers = compose;
+    writeWarning();
 }
 
 const unleashStore = createStore(store, composeEnhancers(applyMiddleware(thunkMiddleware)));

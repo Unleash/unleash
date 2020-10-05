@@ -2,7 +2,12 @@
 
 exports[`should render DrawerMenu 1`] = `
 <react-mdl-Drawer
-  className="mdl-color--white"
+  style={
+    Object {
+      "border": 0,
+      "boxShadow": "none",
+    }
+  }
 >
   <span
     className="drawerTitle mdl-layout-title"
@@ -111,7 +116,12 @@ exports[`should render DrawerMenu 1`] = `
 
 exports[`should render DrawerMenu with "features" selected 1`] = `
 <react-mdl-Drawer
-  className="mdl-color--white"
+  style={
+    Object {
+      "border": 0,
+      "boxShadow": "none",
+    }
+  }
 >
   <span
     className="drawerTitle mdl-layout-title"
@@ -134,7 +144,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
   >
     <a
       aria-current="page"
-      className="navigationLink mdl-color-text--grey-900 navigationLink mdl-color-text--black mdl-color--blue-grey-100"
+      className="navigationLink mdl-color-text--grey-900 navigationLink mdl-color-text--black mdl-color--blue-grey-50"
       href="/features"
       onClick={[Function]}
       style={Object {}}

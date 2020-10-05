@@ -134,6 +134,7 @@ class StrategyConfigure extends React.Component {
                     }
                     return (
                         <div key={name}>
+                            <br />
                             <StrategyInputPercentage
                                 name={name}
                                 onChange={this.handleConfigChange.bind(this, name)}

@@ -41,11 +41,11 @@ function renderLink(link) {
     }
 }
 
-export const DrawerMenu = ({ links = [] }) => (
-    <Drawer className="mdl-color--white">
+export const DrawerMenu = ({ links = [], title = 'Unleash' }) => (
+    <Drawer style={{ boxShadow: 'none', border: 0 }}>
         <span className={[styles.drawerTitle, 'mdl-layout-title'].join(' ')}>
             <img src="public/logo.png" width="32" height="32" className={styles.drawerTitleLogo} />
-            <span className={styles.drawerTitleText}>Unleash</span>
+            <span className={styles.drawerTitleText}>{title}</span>
         </span>
         <hr />
         <Navigation className={styles.navigation}>
@@ -54,7 +54,7 @@ export const DrawerMenu = ({ links = [] }) => (
                     key={item.path}
                     to={item.path}
                     className={[styles.navigationLink, 'mdl-color-text--grey-900'].join(' ')}
-                    activeClassName={[styles.navigationLink, 'mdl-color-text--black', 'mdl-color--blue-grey-100'].join(
+                    activeClassName={[styles.navigationLink, 'mdl-color-text--black', 'mdl-color--blue-grey-50'].join(
                         ' '
                     )}
                 >
@@ -69,4 +69,5 @@ export const DrawerMenu = ({ links = [] }) => (
 
 DrawerMenu.propTypes = {
     links: PropTypes.array,
+    title: PropTypes.string,
 };

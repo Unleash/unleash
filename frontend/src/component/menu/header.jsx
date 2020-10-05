@@ -35,16 +35,16 @@ class HeaderComponent extends PureComponent {
     }
 
     render() {
-        const { headerBackground, links } = this.props.uiConfig;
+        const { headerBackground, links, name } = this.props.uiConfig;
         const style = headerBackground ? { background: headerBackground } : {};
         return (
             <React.Fragment>
-                <Header title={<Route path="/:path" component={Breadcrum} />} style={style}>
+                <Header scroll seamed title={<Route path="/:path" component={Breadcrum} />} style={style}>
                     <Navigation>
                         <ShowUserContainer />
                     </Navigation>
                 </Header>
-                <DrawerMenu links={links} />
+                <DrawerMenu links={links} title={name} />
             </React.Fragment>
         );
     }

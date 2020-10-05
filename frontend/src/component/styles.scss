@@ -10,7 +10,7 @@
 }
 
 .content {
-    width: 1200px;
+    width: 1100px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 16px;
@@ -25,6 +25,8 @@
 @media (max-width: 1024px) {
     .content {
         width: 100%;
+        margin-left: 0;
+        margin-right: 0;
     }
 }
 @media (max-width: 600px) {
@@ -46,6 +48,7 @@
     padding-bottom: 16px;
     padding-left: 24px !important;
 }
+
 @media screen and (max-width: 1024px) {
     .drawerTitle {
         padding-top: 12px;
@@ -59,14 +62,16 @@
 .drawerTitleText {
     display: inline-block;
     vertical-align: middle;
+    font-size: 0.8em;
 }
 
 .navigation {
-    padding: 8px 0 !important;
+    padding: 8px 5px 8px 0 !important;
 }
 
 .navigationLink {
     padding: 12px 20px !important;
+    border-radius: 0 50px 50px 0;
 }
 @media screen and (max-width: 1024px) {
     .navigationLink {

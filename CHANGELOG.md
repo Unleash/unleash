@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.6.1
+
+- fix: update unleash-frontend to version 3.6.4
+- fix: upgradde unleash-frontend to version 3.6.3
+- fix: context legalValues should be at max 100 chars
+- fix: enable trust-proxy
+- fix: upgrade cookie-session library
+- fix: default maxAge for session set to two days
+- fix: add TTL to sessions
+- fix: use validated and stripped data when updating
+- fix: should use stripped update data for featureToggle
+- fix: set clear-site-data on logout
+- fix: use secure proxy to session cookie
+- fix: add secureHeaders option for HSTS
+- fix: stickness parmeters for stickiness is camelCase (doc)
+
 ## 3.6.0
 
 - feat: Remove applications (#635)

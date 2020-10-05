@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.6.4
+- fix: minur ux tweaks
+
 # 3.6.3
 - fix: hide content if showing authentication modal
 - fix: add security wanring to the console

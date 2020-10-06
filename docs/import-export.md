@@ -9,7 +9,7 @@ Unleash supports import and export of feature-toggles and strategies at startup 
 
 All import mechanisms support a `drop` parameter which will clean the database before import (all strategies and features will be removed).
 
-> You should be careful when using `drop` parmeter in production environments, as it will clean current state.
+> You should be careful when using `drop` parameter in production environments, as it will clean current state.
 
 ## Runtime import & export
 

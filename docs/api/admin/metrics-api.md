@@ -9,7 +9,7 @@ title: /api/admin/metrics
 
 `GET http://unleash.host.com/api/admin/seen-toggles`
 
-This enpoints returns a list of applications and what toogles unleash has seend for each application. It will only guarantee toggles reported by client applications within the last hour, but will in most cases remember seen-toggles for applications longer
+This enpoints returns a list of applications and what toogles unleash has seen for each application. It will only guarantee toggles reported by client applications within the last hour, but will in most cases remember seen toggles for applications longer.
 
 **Example response:**
 

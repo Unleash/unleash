@@ -30,7 +30,7 @@ class Help extends React.Component {
         title: 'Browse Docs',
       },
       {
-        content: 'Ask questions about the documentation and project in our [Slack community](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTM5Yzk2YWE2ZTk1OTZhOTJiNTEzMzA5YmEwMDE3MDJiNDQ3ZWExZGZjMmUyY2UyMWQ0NTI3NGRjNDhlMjExZjM)',
+        content: 'Ask questions about the documentation and project in our [Slack community](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTJjYmViYjkwYmE0ODVlNmY1YjcwZGRmZWU5MTU1YTQ1Nzg5ZWQ2YzBlY2U1MjlmZDg5ZDRmZTMzNmQ5YmEyOGE)',
         title: 'Join the community',
       },
       {

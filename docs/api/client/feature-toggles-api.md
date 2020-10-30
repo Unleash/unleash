@@ -93,3 +93,50 @@ Used to fetch details about a specific feature toggle. This is mainly provided t
   "parameters": {}
 }
 ```
+
+### Strategy Constraints
+
+> This is a unleash-enterprise feature
+
+Strategy definitions may also contain a `constraints` property. Strategy constraints is a feature in Unleash which work on context fields, which is defined as part of the [Unleash Context](../../unleash-context). The purpose is to define a set of rules where all needs to be satisfied in order for the activation strategy to . A [high level description](https://www.unleash-hosted.com/articles/strategy-constraints) of it is available online.
+
+**Example response:**
+
+The example shows strategy constraints in action. Constraints is a new field on the strategy-object. It is a list of constraints that need to be satisfied.
+
+In the example `environment` needs to be `production` AND `userId` must be either `123` OR `44` in order for the Unleash Client to evaluate the strategy, which in this scenario is “default” and will always evaluate to true.
+
+```json
+{
+  "createdAt": "2019-08-02T19:25:13.976Z",
+  "description": "Play with strategy constraints",
+  "type": "release",
+  "enabled": true,
+  "stale": false,
+  "name": "Demo",
+  "strategies": [
+    {
+      "constraints": [
+        {
+          "contextName": "environment",
+          "operator": "IN",
+          "values": ["production"]
+        },
+        {
+          "contextName": "userId",
+          "operator": "IN",
+          "values": ["123", "44"]
+        }
+      ],
+      "name": "default",
+      "parameters": {}
+    }
+  ]
+}
+```
+
+- **contextName** - is the name of the field to look up on the unleash context.
+- **values** - is a list of values (string).
+- **operator** - is the logical action to take on the values Supported operator are:
+  - **IN** - constraint is satisfied if one of the values in the list matches the value for this context field in the context.
+  - **NOT_IN** - constrint is satisfied if NONE of the values is the list matches the value for this field in the context.

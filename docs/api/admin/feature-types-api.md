@@ -1,5 +1,5 @@
 ---
-id: events
+id: feature-types
 title: /api/admin/feature-types
 ---
 

@@ -10,12 +10,12 @@ title: /api/admin/state
 The api endpoint `/api/admin/state/export` will export feature-toggles and strategies as json by default.\
 You can customize the export with queryparameters:
 
-| Parameter      | Default | Description                                         |
-| -------------- | ------- | --------------------------------------------------- |
-| format         | `json`  | Export format, either `json` or `yaml`              |
-| download       | `false` | If the exported data should be downloaded as a file |
-| featureToggles | `true`  | Include feature-toggles in the exported data        |
-| strategies     | `true`  | Include strategies in the exported data             |
+| Parameter | Default | Description |
+| --- | --- | --- |
+| format | `json` | Export format, either `json` or `yaml` |
+| download | `false` | If the exported data should be downloaded as a file |
+| featureToggles | `true` | Include feature-toggles in the exported data |
+| strategies | `true` | Include strategies in the exported data |
 
 **Example response:**
 
@@ -63,9 +63,12 @@ strategies:
 You can import feature-toggles and strategies by POSTing to the `/api/admin/state/import` endpoint.\
 You can either send the data as JSON in the POST-body or send a `file` parameter with `multipart/form-data` (YAML files are also accepted here).
 
-Specify the `drop` query parameter, if you want the database to be cleaned before import (all strategies and features will be removed).
+**Query Paramters**
 
-> You should never use this in production environments.
+- **drop** - Use this paramter if you want the database to be cleaned before import (all strategies and features will be removed).
+- **keep** - Use this query parameter if you want keep all exiting feature toggle (and strategy) configurations as is (no override), and only insert missing feature toggles from the data provided.
+
+> You should be careful useing the `drop` parameter in production environments.
 
 Success: `202 Accepted`\
 Error: `400 Bad Request`

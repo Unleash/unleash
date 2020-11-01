@@ -140,3 +140,54 @@ In the example `environment` needs to be `production` AND `userId` must be eithe
 - **operator** - is the logical action to take on the values Supported operator are:
   - **IN** - constraint is satisfied if one of the values in the list matches the value for this context field in the context.
   - **NOT_IN** - constrint is satisfied if NONE of the values is the list matches the value for this field in the context.
+
+### Variants
+
+All feature toggles can also thke an array of variants. You can read more about [feature toggle variants](../../feature-toggle-variants).
+
+```json
+{
+  "version": 1,
+  "features": [
+    {
+      "name": "Demo",
+      "description": "Show off fedfdfature toggles!",
+      "type": "operational",
+      "enabled": true,
+      "stale": false,
+      "strategies": [
+        {
+          "name": "default"
+        }
+      ],
+      "variants": [
+        {
+          "name": "red",
+          "weight": 500,
+          "weightType": "variable",
+          "payload": {
+            "type": "string",
+            "value": "something"
+          },
+          "overrides": [
+            {
+              "contextName": "userId",
+              "values": ["123"]
+            }
+          ]
+        },
+        {
+          "name": "blue",
+          "weight": 500,
+          "overrides": [],
+          "weightType": "variable"
+        }
+      ],
+      "createdAt": "2020-09-01T07:14:39.438Z"
+    }
+  ]
+}
+```
+
+- **payload** - an optional object representing a payload to the variant. Takes two properties if present `type` and `value`.
+- **overrides** - an optional array of overrides. If any context field matches any of the the defined overrides it means that the variant should be selected.

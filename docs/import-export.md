@@ -30,7 +30,7 @@ unleash.start({...})
 
 If you want the database to be cleaned before import (all strategies and features will be removed), set the `dropBeforeImport` parameter.
 
-> You should never use this in production environments.
+It also possible to not override exiting feature toggles (and strategies) by using the `keepExisting` parameter.
 
 ### API Export
 

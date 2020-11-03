@@ -7,7 +7,7 @@ const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const getApp = require('../../../lib/app');
 const getLogger = require('../../fixtures/no-logger');
-const StateService = require('../../../lib/state-service');
+const StateService = require('../../../lib/services/state-service');
 
 const eventBus = new EventEmitter();
 

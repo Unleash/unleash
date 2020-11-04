@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.6.5
+- fix: should be possible to remove all variants. 
+
 # 3.6.4
 - fix: minur ux tweaks
 

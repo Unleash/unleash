@@ -1,101 +1,75 @@
-# IMPLEMENT
-# Check code for toggle type strings
-# REVIEW
-# Is putting 'Required' in the description adding any value? If so, colour-code it (not italics, not code block)
-# Make sure all operation IDs are unique and in JS-style
-# Are features, toggles and feature toggles all the same thing?
-# Rationalise component parameters. No point in having several iterations of the same schema
-# Enable and Update a Feature toggle have same bodies as much of the response 200 (can we use $ref to simplify the OAS?)
-# Can feature names have spaces. mit a full-stop be used instead? Feature C vs Feature.C
-# TEST
-# Is colon before a query parameter in the documentation a literal colon or is it used to denote the type of parameter?
-# EXTEND
-# 
-# DOCUMENTATION STYLE NOTES
-# Use 'and' instead of &
-# Use newspaper-style headings 'This is a heading' instead of movie-style 'This is a Heading'
-# Proper nouns for Unleash: Unleash, Feature, Toggle
-# TERMINOLOGY QUERIES
-# What does 'globally unique' mean - what is 'global'?
-#
-# #################
-# OpenAPI object
-# #################
-openapi: "3.0.0"
+openapi: 3.0.0
+tags:
+  - name: "Admin - Feature Toggles"
+    description: Funny nosed pig-head racoon.
+  - name: "Admin - archive"
+    description: Angry short-legged omnivores.
 servers:
-- description: "Local host."
-  url: https://localhost:4242/api
-- description: "Online demo. Add your own server details to the Open API specification, too (in the *servers* section)."
-  url: https://unleash.herokuapp.com/api
-- description: Secure online demo.
-  url: https://secure-unleash.herokuapp.com/api
-  # Added by API Auto Mocking Plugin
-- description: SwaggerHub API mocking
-  url: https://unleash.github.io/docs/getting_started
+  - description: Local host.
+    url: 'http://localhost:4242/api'
 info:
-  title: "Unleash API"
-  description: "Unleash is a open source feature flag and toggle system. It gives you a great overview over all feature toggles across all your applications and services."
-  version: "3.5.6"
-security:
-  - auth:
-      - read
-      - write
+  title: Unleash API
+  description: Unleash is a open source feature flag and toggle system. It gives you a great overview over all feature toggles across all your applications and services.
+  version: 3.5.6
+  contact:
+    name: "The Unleash team"
+    url: "https://unleash.github.io/"
+    email: "some_email@gmail.com"
 externalDocs:
   description: Documentation
-  url: https://openweathermap.org/api
+  url: 'https://openweathermap.org/api'
 paths:
   /admin/features:
     get:
-      summary: "Fetches all available feature toggles from the *Unleash server*."
+      summary: Fetches all feature toggles from the *Unleash server*.
       description: |
-         The response returns all active feature toggles and their current strategy configuration.
-         - A feature toggle will have *at least* one configured strategy.
-         - A strategy will have a `name` and `parameters` map.
+        The response returns all active feature toggles and their current strategy configuration.
+        - A feature toggle will have *at least* one configured strategy.
+        - A strategy will have a `name` and `parameters` map.
       operationId: getFeatures
       tags:
-        - Admin - Feature Toggles
+        - "Admin - Feature Toggles"
       parameters:
-        - $ref: "#/components/parameters/featureNameOptional"
+        - $ref: '#/components/parameters/featureNameOptional'
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"
-        "401":
+                $ref: '#/components/schemas/200'
+        '401':
           description: Not authorised
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/401"
-
+                $ref: '#/components/schemas/401'
     post:
       description: Create a new Feature Toggle
       tags:
-       - Admin - Feature Toggles
+        - Admin - Feature Toggles
       operationId: createFeatureToggle
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/newFeatureToggle"
+              $ref: '#/components/schemas/newFeatureToggle'
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"
-        "403":
-          description: "*name* is not globally unique"
+                $ref: '#/components/schemas/200'
+        '403':
+          description: '*name* is not globally unique'
           content:
             text/plain:
               schema:
-                title: "*name* is not globally unique"
-              
+                title: '*name* is not globally unique'
                 type: string
+      summary: Create a Feature Toggle
     put:
       summary: Update a Feature Toggle
       description: Used by the admin dashboard to update a Feature Toggle.
@@ -103,120 +77,113 @@ paths:
       tags:
         - Admin - Feature Toggles
       parameters:
-        - $ref: "#/components/parameters/toggleNameRequired"
+        - $ref: '#/components/parameters/toggleNameRequired'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/updateFeatureToggle"
+              $ref: '#/components/schemas/updateFeatureToggle'
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"
-
+                $ref: '#/components/schemas/200'
     delete:
       summary: Archive a Feature Toggle.
-      description: "Feature toggles can only be archived - they cannot be deleted.<br><br>If an old Feature Toggle 're-appears', this is because someone else has created a Feature Toggle with the same name."
+      description: 'Feature toggles can only be archived - they cannot be deleted.<br><br>If an old Feature Toggle ''re-appears'', this is because someone else has created a Feature Toggle with the same name.'
       operationId: archiveFeatureToggle
       tags:
         - Admin - Feature Toggles
       parameters:
-      - $ref: "#/components/parameters/toggleNameRequired"
+        - $ref: '#/components/parameters/toggleNameRequired'
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"
-
-  /admin/features/{featureNameRequired}/toggle/on:
+                $ref: '#/components/schemas/200'
+  '/admin/features/{featureNameRequired}/toggle/on':
     post:
       summary: Enable a Feature Toggle.
-      description: "*featureName* must match an existing Feature Toggle."
+      description: '*featureName* must match an existing Feature Toggle.'
       operationId: enableFeatureToggle
       tags:
         - Admin - Feature Toggles
       parameters:
-        - $ref: "#/components/parameters/featureNameRequired"
+        - $ref: '#/components/parameters/featureNameRequired'
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"
-
-  /admin/features/{featureNameRequired}/toggle/off:
+                $ref: '#/components/schemas/200'
+  '/admin/features/{featureNameRequired}/toggle/off':
     post:
       summary: Disable a Feature Toggle.
-      description: "*featureName* must match an existing Feature Toggle."
+      description: '*featureName* must match an existing Feature Toggle.'
       operationId: disableFeatureToggle
       tags:
         - Admin - Feature Toggles
       parameters:
-        - $ref: "#/components/parameters/featureNameRequired"
+        - $ref: '#/components/parameters/featureNameRequired'
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"    
-
-  /admin/features/{featureNameRequired}/stale/on:
+                $ref: '#/components/schemas/200'
+  '/admin/features/{featureNameRequired}/stale/on':
     post:
       summary: Mark a Feature Toggle as 'stale' (deprecated).
-      description: "*featureName* must match an existing Feature Toggle."
+      description: '*featureName* must match an existing Feature Toggle.'
       operationId: markFeatureToggleStale
       tags:
         - Admin - Feature Toggles
       parameters:
-        - $ref: "#/components/parameters/featureNameRequired"
+        - $ref: '#/components/parameters/featureNameRequired'
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"    
-
-  /admin/features/{featureNameRequired}/stale/off:
+                $ref: '#/components/schemas/200'
+  '/admin/features/{featureNameRequired}/stale/off':
     post:
       summary: Mark a Feature Toggle as active.
-      description: "*featureName* must match an existing Feature Toggle."
+      description: '*featureName* must match an existing Feature Toggle.'
       operationId: markFeatureToggleActive
       tags:
         - Admin - Feature Toggles
       parameters:
-        - $ref: "#/components/parameters/featureNameRequired"
+        - $ref: '#/components/parameters/featureNameRequired'
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"
-
+                $ref: '#/components/schemas/200'
   /admin/archive/features:
     get:
       summary: List all the archived Feature Toggles on the Unleash server'
-      description: "Archived Features are those that have been previously deleted"
+      description: Archived Features are those that have been previously deleted
       operationId: fetchArchivedToggles
       tags:
-        - Admin - archive
+        - "Admin - archive"
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"
-
+                $ref: '#/components/schemas/200'
     post:
       summary: Un-archive a Feature Toggle
       description: The Feature Toggle had been previously deleted
@@ -228,222 +195,211 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/reviveFeature"
+              $ref: '#/components/schemas/reviveFeature'
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"
+                $ref: '#/components/schemas/200'
 components:
   parameters:
     featureNameOptional:
       name: featureName
       in: query
-      description: "Used to fetch details about a specific Feature Toggle. This is mostly provided to make it easy to debug the API and should not be used by the client implementations."
+      description: Used to fetch details about a specific Feature Toggle. This is mostly provided to make it easy to debug the API and should not be used by the client implementations.
       schema:
         type: string
     featureNameRequired:
       name: featureNameRequired
       required: true
       in: path
-      description: "Must match an existing Feature Toggle."
+      description: Must match an existing Feature Toggle.
       schema:
-        type: string     
+        type: string
     toggleNameRequired:
       name: toggleName
       required: true
       in: query
       schema:
         type: string
-# Schemas
   schemas:
-      reviveFeature:
-        type: object
-        properties:
-          name:
-            type: string
-            minLength: 1
-            example: Feature.C
-        required:
-          - name
-
-      newFeatureToggle:
-        type: object
-        properties:
-          name:
-            type: string
-            minLength: 1
-            description: "*name* must be **globally unique**; otherwise, you will get a *403-response*."
-            example: Feature A
-          description:
-            type: string
-            minLength: 1
-            example: Toggles Feature A on and off
-          type:
-            type: string
-            enum: [release,experiment,ops,killswitch,permission]
-            minLength: 1
-            description: "*type* is optional. If not defined, it defaults to `release`"
-            example: release
-          enabled:
-            type: boolean
-            example: false
-          stale:
-            type: boolean
-            example: false
-          strategies:
-            type: array
-            uniqueItems: true
-            minItems: 1
-            items:
-              required:
-                - name
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                  example: default
-                parameters:
-                  type: object
-                  properties: {}
-        required:
-          - name
-          - description
-          - enabled
-          - stale
-          - strategies
-
-      updateFeatureToggle:
-        type: object
-        properties:
-          name:
-            type: string
-            minLength: 1
-            description: "*name* must match an existing Feature Toggle."
-            example: Feature B
-          description:
-            type: string
-            minLength: 1
-            example: Toggles Feature B on and off
-          type:
-            type: string
-            minLength: 1
-            description: "*type* is optional. If not defined, it defaults to `release`"
-            example: release
-          enabled:
-            type: boolean
-            example: false
-          stale:
-            type: boolean
-            example: false
-          strategies:
-            type: array
-            uniqueItems: true
-            minItems: 1
-            items:
-              required:
-                - name
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                  example: default
-                parameters:
-                  type: object
-                  properties: {}
-          variants:
-            type: array
-            items:
-              properties: {}
-        required:
-          - name
-          - description
-          - enabled
-          - stale
-          - strategies
-          - variants
-
-# http responses
-      "401":
-        description: "Not authorised"
-        type: object
-        properties:
-          type:
-            type: string
-            minLength: 1
-          path:
-            type: string
-            minLength: 1
-          message:
-            type: string
-            minLength: 1
-        required:
-          - type
-          - path
-          - message
-      "200":
-        title: Successful response
-        type: object
-        properties:
-          version:
-            type: number
-          features:
-            type: array
-            uniqueItems: true
-            minItems: 1
-            items:
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                description:
-                  type: string
-                  minLength: 1
-                type:
-                  type: string
-                  minLength: 1
-                enabled:
-                  type: boolean
-                stale:
-                  type: boolean
-                strategies:
-                  type: array
-                  uniqueItems: true
-                  minItems: 1
-                  items:
-                    required:
-                      - name
-                    properties:
-                      name:
-                        type: string
-                        minLength: 1
-                      parameters:
-                        type: object
-                        properties: {}
-                variants:
-                  type: array
-                  uniqueItems: true
-                  minItems: 1
-                  items:
-                    required:
-                      - name
-                      - weight
-                    properties:
-                      name:
-                        type: string
-                        minLength: 1
-                      weight:
-                        type: number
-  securitySchemes:
-    auth:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: https://accounts.google.com/o/oauth2/auth
-          tokenUrl: https://oauth2.googleapis.com/token
-          refreshUrl: http://localhost:4242/api/auth/callback
-          scopes:
-            write: allows modifying resources
-            read: allows reading resources
+    '200':
+      title: Successful response
+      type: object
+      properties:
+        version:
+          type: number
+        features:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            properties:
+              name:
+                type: string
+                minLength: 1
+              description:
+                type: string
+                minLength: 1
+              type:
+                type: string
+                minLength: 1
+              enabled:
+                type: boolean
+              stale:
+                type: boolean
+              strategies:
+                type: array
+                uniqueItems: true
+                minItems: 1
+                items:
+                  required:
+                    - name
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                    parameters:
+                      type: object
+                      properties: {}
+              variants:
+                type: array
+                uniqueItems: true
+                minItems: 1
+                items:
+                  required:
+                    - name
+                    - weight
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                    weight:
+                      type: number
+    '401':
+      description: Not authorised
+      type: object
+      properties:
+        type:
+          type: string
+          minLength: 1
+        path:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+      required:
+        - type
+        - path
+        - message
+    reviveFeature:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          example: Feature.C
+      required:
+        - name
+    newFeatureToggle:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: '*name* must be **globally unique**; otherwise, you will get a *403-response*.'
+          example: Feature A
+        description:
+          type: string
+          minLength: 1
+          example: Toggles Feature A on and off
+        type:
+          type: string
+          enum:
+            - release
+            - experiment
+            - ops
+            - killswitch
+            - permission
+          minLength: 1
+          description: '*type* is optional. If not defined, it defaults to `release`'
+          example: release
+        enabled:
+          type: boolean
+          example: false
+        stale:
+          type: boolean
+          example: false
+        strategies:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - name
+            properties:
+              name:
+                type: string
+                minLength: 1
+                example: default
+              parameters:
+                type: object
+                properties: {}
+      required:
+        - name
+        - description
+        - enabled
+        - stale
+        - strategies
+    updateFeatureToggle:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: '*name* must match an existing Feature Toggle.'
+          example: Feature B
+        description:
+          type: string
+          minLength: 1
+          example: Toggles Feature B on and off
+        type:
+          type: string
+          minLength: 1
+          description: '*type* is optional. If not defined, it defaults to `release`'
+          example: release
+        enabled:
+          type: boolean
+          example: false
+        stale:
+          type: boolean
+          example: false
+        strategies:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - name
+            properties:
+              name:
+                type: string
+                minLength: 1
+                example: default
+              parameters:
+                type: object
+                properties: {}
+        variants:
+          type: array
+          items:
+            properties: {}
+      required:
+        - name
+        - description
+        - enabled
+        - stale
+        - strategies
+        - variants

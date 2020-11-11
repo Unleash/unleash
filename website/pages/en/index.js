@@ -166,6 +166,7 @@ const UnleashClient = () => (
             <li><MarkdownBlock>[minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)</MarkdownBlock></li>
             <li><MarkdownBlock>[afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)</MarkdownBlock></li>
             <li><MarkdownBlock>[mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)</MarkdownBlock></li>
+            <li><MarkdownBlock>[AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)</MarkdownBlock></li>
           </ul>
         </div>
       </div>

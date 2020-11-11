@@ -22,5 +22,5 @@ To use Unleash in your application, you will need an Unleash Client SDK. Unleash
 - [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 - [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
-- [AppsFlyer/clojure-unleash](https://https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
+- [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
 - _...your implementation for your favorite language._

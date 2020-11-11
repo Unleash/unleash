@@ -58,6 +58,7 @@ Clients written by awesome enthusiasts: :fire:
 - [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 - [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
+- [AppsFlyer/clojure-unleash](https://https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
 
 ### The Client API
 

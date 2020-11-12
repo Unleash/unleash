@@ -5,19 +5,16 @@
 # Enable and Update a Feature toggle have same bodies as much of the response 200 (can we use $ref to simplify the OAS?)
 # TEST
 # Is colon before a query parameter in the documentation a literal colon or is it used to denote the type of parameter?
-# Are features, toggles and feature toggles all the same thing?
-# EXTEND
-# 
 # DOCUMENTATION STYLE NOTES
 # Use 'and' instead of &
 # Headings: use newspaper-style headings 'This is a heading' or movie-style 'This is a Heading'?
 # American English or British English?
-# Proper nouns for Unleash: Unleash, Feature, Toggle (not that plurals are lower-case: toggles and features)
+# Proper nouns for Unleash: Unleash, Feature Toggle (note that the plural is lower-case: feature toggles)
 # Parameter names: use JS-style (aParameter) or Open API style (aparameter)?
-# TERMINOLOGY QUERIES
-# What does 'globally unique' mean - what is 'global'?
+# QUESTIONS
+# In http://unleash.host.com/api/admin/features/:toggleName` isn't the toggleName superfluous since toggleName nust be part of the body query anyway?
 # NOTE SOMEWHERE (client API docs?)
-# Feature (toggle?) names cannot have spaces. List of legal characters?
+# Feature Toggle names cannot have spaces. List of legal characters?
 # 
 openapi: 3.0.0
 servers:
@@ -48,7 +45,7 @@ paths:
         - A feature toggle will have *at least* one configured strategy.
         - A strategy will have a `name` and `parameters` map.
 
-        **Note:** To only return one feature, add the feature name as a suffix to the request. For example: `GET [Your host]/api/admin/features/featureX`. It is not possible to add this parameter as a *Try it out* option due to restrictions in the [Open API Sepcification](https://swagger.io/docs/specification/describing-parameters/), (that is, *optional* path variables cannot be created).
+        **Note:** To only return one Feature Toggle, add the Feature Toggle name as a suffix to the request. For example: `GET [Your host]/api/admin/features/featureX`. It is not possible to add this parameter as a *Try it out* option due to restrictions in the [Open API Sepcification](https://swagger.io/docs/specification/describing-parameters/), (that is, *optional* path variables cannot be created).
       externalDocs:
         description: Activation strategies
         url: https://unleash.github.io/docs/activation_strategy
@@ -87,21 +84,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/200'
         '409':
-          description: '*name* is not unique'
+          description: 'Feature Toggle name is not unique'
           content:
-            text/plain:
+            application/json:
               schema:
-                title: '*name* is not unique'
-                type: string
+                $ref: '#/components/schemas/409'
       summary: Create a Feature Toggle
+  '/admin/features/{featureName}':
     put:
       summary: Update a Feature Toggle
-      description: Used by the admin dashboard to update a Feature Toggle.
-      operationId: updateFeatureToggle
+      description: Update a Feature Toggle.
+      operationId: featureName
       tags:
         - Admin - Feature toggles
       parameters:
-        - $ref: '#/components/parameters/toggleNameRequired'
+        - $ref: '#/components/parameters/featureNamePath'
       requestBody:
         required: true
         content:
@@ -120,12 +117,12 @@ paths:
       description: |
         Feature toggles can only be archived - they cannot be deleted.
 
-        If an old Feature Toggle *re-appears*, this is because someone else has created a Feature Toggle with the same name.
+        If an old Feature Toggle *re-appears*, this is because someone else has created a new one with the same name.
       operationId: archiveFeatureToggle
       tags:
         - Admin - Feature toggles
       parameters:
-        - $ref: '#/components/parameters/toggleNameRequired'
+        - $ref: '#/components/parameters/featureNamePath'
       responses:
         '200':
           description: Successful response
@@ -141,7 +138,7 @@ paths:
       tags:
         - Admin - Feature toggles
       parameters:
-        - $ref: '#/components/parameters/featureNameRequired'
+        - $ref: '#/components/parameters/featureNamePath'
       responses:
         '200':
           description: Successful response
@@ -157,7 +154,7 @@ paths:
       tags:
         - Admin - Feature toggles
       parameters:
-        - $ref: '#/components/parameters/featureNameRequired'
+        - $ref: '#/components/parameters/featureNamePath'
       responses:
         '200':
           description: Successful response
@@ -176,7 +173,7 @@ paths:
       tags:
         - Admin - Feature toggles
       parameters:
-        - $ref: '#/components/parameters/featureNameRequired'
+        - $ref: '#/components/parameters/featureNamePath'
       responses:
         '200':
           description: Successful response
@@ -195,7 +192,7 @@ paths:
       tags:
         - Admin - Feature toggles
       parameters:
-        - $ref: '#/components/parameters/featureNameRequired'
+        - $ref: '#/components/parameters/featureNamePath'
       responses:
         '200':
           description: Successful response
@@ -211,8 +208,8 @@ paths:
                 $ref: '#/components/schemas/409'
   /admin/archive/features:
     get:
-      summary: List all the archived Feature Toggles on the Unleash server'
-      description: Archived Features are those that have been previously deleted
+      summary: List all the archived feature toggles on the Unleash server'
+      description: Archived feature toggles are those that have been previously deleted
       operationId: fetchArchivedToggles
       tags:
         - Admin - archive
@@ -244,17 +241,11 @@ paths:
                 $ref: '#/components/schemas/200'
 components:
   parameters:
-    featureNameRequired:
+    featureNamePath:
       name: featureName
       required: true
       in: path
       description: Must match an existing Feature Toggle.
-      schema:
-        type: string
-    toggleNameRequired:
-      name: toggleName
-      required: true
-      in: query
       schema:
         type: string
   schemas:
@@ -343,7 +334,7 @@ components:
         name:
           type: string
           minLength: 1
-          description: '*name* must be **unique**; otherwise, you will get a *403-response*.'
+          description: 'Feature Toggle name must be unique.'
           example: FeatureA
         description:
           type: string

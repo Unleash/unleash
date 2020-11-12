@@ -202,19 +202,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
-  /admin/archive/revive:
+  /admin/archive/revive/{featureName}:
     post:
       summary: Un-archive a Feature Toggle
       description: The Feature Toggle had been previously deleted
       operationId: reviveFeatureToggle
       tags:
         - Admin - archive
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/reviveFeature'
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
       responses:
         '200':
           description: Successful response
@@ -325,15 +321,6 @@ components:
         - isJoi
         - name
         - details
-    reviveFeature:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          example: Feature.C
-      required:
-        - name
     newFeatureToggle:
       type: object
       properties:
@@ -443,4 +430,3 @@ components:
         - stale
         - strategies
         - variants
-

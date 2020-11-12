@@ -1,21 +1,3 @@
-# IMPLEMENT
-# Check code for toggle type strings
-# REVIEW
-# Rationalise component parameters. No point in having several iterations of the same schema. UpdateFeatureToggle vs NewFeatureToggle
-# Enable and Update a Feature toggle have same bodies as much of the response 200 (can we use $ref to simplify the OAS?)
-# TEST
-# Is colon before a query parameter in the documentation a literal colon or is it used to denote the type of parameter?
-# DOCUMENTATION STYLE NOTES
-# Use 'and' instead of &
-# Headings: use newspaper-style headings 'This is a heading' or movie-style 'This is a Heading'?
-# American English or British English?
-# Proper nouns for Unleash: Unleash, Feature Toggle (note that the plural is lower-case: feature toggles)
-# Parameter names: use JS-style (aParameter) or Open API style (aparameter)?
-# QUESTIONS
-# In http://unleash.host.com/api/admin/features/:toggleName` isn't the toggleName superfluous since toggleName nust be part of the body query anyway?
-# NOTE SOMEWHERE (client API docs?)
-# Feature Toggle names cannot have spaces. List of legal characters?
-# 
 openapi: 3.0.0
 servers:
   - description: Local host.
@@ -37,7 +19,7 @@ externalDocs:
   description: Unleash documentation
   url: 'https://unleash.github.io/docs/getting_started'
 paths:
-  '/admin/features':
+  /admin/features:
     get:
       summary: Fetches all feature toggles from the Unleash server.
       description: |
@@ -48,7 +30,7 @@ paths:
         **Note:** To only return one Feature Toggle, add the Feature Toggle name as a suffix to the request. For example: `GET [Your host]/api/admin/features/featureX`. It is not possible to add this parameter as a *Try it out* option due to restrictions in the [Open API Sepcification](https://swagger.io/docs/specification/describing-parameters/), (that is, *optional* path variables cannot be created).
       externalDocs:
         description: Activation strategies
-        url: https://unleash.github.io/docs/activation_strategy
+        url: 'https://unleash.github.io/docs/activation_strategy'
       operationId: getFeatures
       tags:
         - Admin - Feature toggles
@@ -84,7 +66,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200'
         '409':
-          description: 'Feature Toggle name is not unique'
+          description: Feature Toggle name is not unique
           content:
             application/json:
               schema:
@@ -168,7 +150,7 @@ paths:
       description: '*featureName* must match an existing Feature Toggle.'
       externalDocs:
         description: Feature Toggle types
-        url: https://unleash.github.io/docs/feature_toggle_types
+        url: 'https://unleash.github.io/docs/feature_toggle_types'
       operationId: markFeatureToggleStale
       tags:
         - Admin - Feature toggles
@@ -187,7 +169,7 @@ paths:
       description: '*featureName* must match an existing Feature Toggle.'
       externalDocs:
         description: Feature Toggle types
-        url: https://unleash.github.io/docs/feature_toggle_types
+        url: 'https://unleash.github.io/docs/feature_toggle_types'
       operationId: markFeatureToggleActive
       tags:
         - Admin - Feature toggles
@@ -208,7 +190,7 @@ paths:
                 $ref: '#/components/schemas/409'
   /admin/archive/features:
     get:
-      summary: List all the archived feature toggles on the Unleash server'
+      summary: List all the archived feature toggles on the Unleash server
       description: Archived feature toggles are those that have been previously deleted
       operationId: fetchArchivedToggles
       tags:
@@ -220,6 +202,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
+  /admin/archive/revive:
     post:
       summary: Un-archive a Feature Toggle
       description: The Feature Toggle had been previously deleted
@@ -319,6 +302,29 @@ components:
         - type
         - path
         - message
+    '409':
+      type: object
+      properties:
+        isJoi:
+          type: boolean
+        name:
+          type: string
+          minLength: 1
+        details:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                minLength: 1
+      required:
+        - isJoi
+        - name
+        - details
     reviveFeature:
       type: object
       properties:
@@ -334,7 +340,7 @@ components:
         name:
           type: string
           minLength: 1
-          description: 'Feature Toggle name must be unique.'
+          description: Feature Toggle name must be unique.
           example: FeatureA
         description:
           type: string
@@ -352,7 +358,7 @@ components:
           description: '*type* is optional. If not defined, it defaults to `release`'
           externalDocs:
             description: Feature Toggle types
-            url: https://unleash.github.io/docs/feature_toggle_types
+            url: 'https://unleash.github.io/docs/feature_toggle_types'
           example: release
         enabled:
           type: boolean
@@ -381,37 +387,9 @@ components:
         - enabled
         - stale
         - strategies
-    '409':
-      type: object
-      properties:
-        isJoi:
-          type: boolean
-        name:
-          type: string
-          minLength: 1
-        details:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            required:
-              - message
-            properties:
-              message:
-                type: string
-                minLength: 1
-      required:
-        - isJoi
-        - name
-        - details
     updateFeatureToggle:
       type: object
       properties:
-        name:
-          type: string
-          minLength: 1
-          description: '*name* must match an existing Feature Toggle.'
-          example: FeatureB
         description:
           type: string
           minLength: 1

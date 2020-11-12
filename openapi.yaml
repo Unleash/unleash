@@ -1,36 +1,60 @@
+# IMPLEMENT
+# Check code for toggle type strings
+# REVIEW
+# Rationalise component parameters. No point in having several iterations of the same schema. UpdateFeatureToggle vs NewFeatureToggle
+# Enable and Update a Feature toggle have same bodies as much of the response 200 (can we use $ref to simplify the OAS?)
+# TEST
+# Is colon before a query parameter in the documentation a literal colon or is it used to denote the type of parameter?
+# Are features, toggles and feature toggles all the same thing?
+# EXTEND
+# 
+# DOCUMENTATION STYLE NOTES
+# Use 'and' instead of &
+# Headings: use newspaper-style headings 'This is a heading' or movie-style 'This is a Heading'?
+# American English or British English?
+# Proper nouns for Unleash: Unleash, Feature, Toggle (not that plurals are lower-case: toggles and features)
+# Parameter names: use JS-style (aParameter) or Open API style (aparameter)?
+# TERMINOLOGY QUERIES
+# What does 'globally unique' mean - what is 'global'?
+# NOTE SOMEWHERE (client API docs?)
+# Feature (toggle?) names cannot have spaces. List of legal characters?
+# 
 openapi: 3.0.0
-tags:
-  - name: "Admin - Feature Toggles"
-    description: Funny nosed pig-head racoon.
-  - name: "Admin - archive"
-    description: Angry short-legged omnivores.
 servers:
   - description: Local host.
     url: 'http://localhost:4242/api'
+tags:
+  - name: Admin - Feature toggles
+    description: Accessing feature toggles on the Unleash admin server
+  - name: Admin - archive
+    description: Handling Feature Toggle archiving and un-archiving on the Unleash admin server
 info:
   title: Unleash API
-  description: Unleash is a open source feature flag and toggle system. It gives you a great overview over all feature toggles across all your applications and services.
+  description: Unleash is a open source feature flag and toggle system for all your applications and services.
   version: 3.5.6
   contact:
-    name: "The Unleash team"
-    url: "https://unleash.github.io/"
-    email: "some_email@gmail.com"
+    name: The Unleash team
+    url: 'https://unleash.github.io/'
+    email: some_email@gmail.com
 externalDocs:
-  description: Documentation
-  url: 'https://openweathermap.org/api'
+  description: Unleash documentation
+  url: 'https://unleash.github.io/docs/getting_started'
 paths:
-  /admin/features:
+  '/admin/features':
     get:
-      summary: Fetches all feature toggles from the *Unleash server*.
+      summary: Fetches all feature toggles from the Unleash server.
       description: |
-        The response returns all active feature toggles and their current strategy configuration.
+        The response returns all active feature toggles and their current strategy configuration:
         - A feature toggle will have *at least* one configured strategy.
         - A strategy will have a `name` and `parameters` map.
+
+        **Note:** To only return one feature, add the feature name as a suffix to the request. For example: `GET [Your host]/api/admin/features/featureX`. It is not possible to add this parameter as a *Try it out* option due to restrictions in the [Open API Sepcification](https://swagger.io/docs/specification/describing-parameters/), (that is, *optional* path variables cannot be created).
+      externalDocs:
+        description: Activation strategies
+        url: https://unleash.github.io/docs/activation_strategy
       operationId: getFeatures
       tags:
-        - "Admin - Feature Toggles"
-      parameters:
-        - $ref: '#/components/parameters/featureNameOptional'
+        - Admin - Feature toggles
       responses:
         '200':
           description: Successful response
@@ -47,7 +71,7 @@ paths:
     post:
       description: Create a new Feature Toggle
       tags:
-        - Admin - Feature Toggles
+        - Admin - Feature toggles
       operationId: createFeatureToggle
       requestBody:
         required: true
@@ -62,12 +86,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
-        '403':
-          description: '*name* is not globally unique'
+        '409':
+          description: '*name* is not unique'
           content:
             text/plain:
               schema:
-                title: '*name* is not globally unique'
+                title: '*name* is not unique'
                 type: string
       summary: Create a Feature Toggle
     put:
@@ -75,7 +99,7 @@ paths:
       description: Used by the admin dashboard to update a Feature Toggle.
       operationId: updateFeatureToggle
       tags:
-        - Admin - Feature Toggles
+        - Admin - Feature toggles
       parameters:
         - $ref: '#/components/parameters/toggleNameRequired'
       requestBody:
@@ -93,10 +117,13 @@ paths:
                 $ref: '#/components/schemas/200'
     delete:
       summary: Archive a Feature Toggle.
-      description: 'Feature toggles can only be archived - they cannot be deleted.<br><br>If an old Feature Toggle ''re-appears'', this is because someone else has created a Feature Toggle with the same name.'
+      description: |
+        Feature toggles can only be archived - they cannot be deleted.
+
+        If an old Feature Toggle *re-appears*, this is because someone else has created a Feature Toggle with the same name.
       operationId: archiveFeatureToggle
       tags:
-        - Admin - Feature Toggles
+        - Admin - Feature toggles
       parameters:
         - $ref: '#/components/parameters/toggleNameRequired'
       responses:
@@ -106,13 +133,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
-  '/admin/features/{featureNameRequired}/toggle/on':
+  '/admin/features/{featureName}/toggle/on':
     post:
       summary: Enable a Feature Toggle.
       description: '*featureName* must match an existing Feature Toggle.'
       operationId: enableFeatureToggle
       tags:
-        - Admin - Feature Toggles
+        - Admin - Feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNameRequired'
       responses:
@@ -122,13 +149,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
-  '/admin/features/{featureNameRequired}/toggle/off':
+  '/admin/features/{featureName}/toggle/off':
     post:
       summary: Disable a Feature Toggle.
       description: '*featureName* must match an existing Feature Toggle.'
       operationId: disableFeatureToggle
       tags:
-        - Admin - Feature Toggles
+        - Admin - Feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNameRequired'
       responses:
@@ -138,13 +165,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
-  '/admin/features/{featureNameRequired}/stale/on':
+  '/admin/features/{featureName}/stale/on':
     post:
       summary: Mark a Feature Toggle as 'stale' (deprecated).
       description: '*featureName* must match an existing Feature Toggle.'
+      externalDocs:
+        description: Feature Toggle types
+        url: https://unleash.github.io/docs/feature_toggle_types
       operationId: markFeatureToggleStale
       tags:
-        - Admin - Feature Toggles
+        - Admin - Feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNameRequired'
       responses:
@@ -154,13 +184,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
-  '/admin/features/{featureNameRequired}/stale/off':
+  '/admin/features/{featureName}/stale/off':
     post:
       summary: Mark a Feature Toggle as active.
       description: '*featureName* must match an existing Feature Toggle.'
+      externalDocs:
+        description: Feature Toggle types
+        url: https://unleash.github.io/docs/feature_toggle_types
       operationId: markFeatureToggleActive
       tags:
-        - Admin - Feature Toggles
+        - Admin - Feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNameRequired'
       responses:
@@ -170,13 +203,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
+        '409':
+          description: Feature Toggle name is not unique.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/409'
   /admin/archive/features:
     get:
       summary: List all the archived Feature Toggles on the Unleash server'
       description: Archived Features are those that have been previously deleted
       operationId: fetchArchivedToggles
       tags:
-        - "Admin - archive"
+        - Admin - archive
       responses:
         '200':
           description: Successful response
@@ -205,14 +244,8 @@ paths:
                 $ref: '#/components/schemas/200'
 components:
   parameters:
-    featureNameOptional:
-      name: featureName
-      in: query
-      description: Used to fetch details about a specific Feature Toggle. This is mostly provided to make it easy to debug the API and should not be used by the client implementations.
-      schema:
-        type: string
     featureNameRequired:
-      name: featureNameRequired
+      name: featureName
       required: true
       in: path
       description: Must match an existing Feature Toggle.
@@ -310,12 +343,12 @@ components:
         name:
           type: string
           minLength: 1
-          description: '*name* must be **globally unique**; otherwise, you will get a *403-response*.'
-          example: Feature A
+          description: '*name* must be **unique**; otherwise, you will get a *403-response*.'
+          example: FeatureA
         description:
           type: string
           minLength: 1
-          example: Toggles Feature A on and off
+          example: Toggles FeatureA on and off
         type:
           type: string
           enum:
@@ -326,6 +359,9 @@ components:
             - permission
           minLength: 1
           description: '*type* is optional. If not defined, it defaults to `release`'
+          externalDocs:
+            description: Feature Toggle types
+            url: https://unleash.github.io/docs/feature_toggle_types
           example: release
         enabled:
           type: boolean
@@ -354,6 +390,29 @@ components:
         - enabled
         - stale
         - strategies
+    '409':
+      type: object
+      properties:
+        isJoi:
+          type: boolean
+        name:
+          type: string
+          minLength: 1
+        details:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                minLength: 1
+      required:
+        - isJoi
+        - name
+        - details
     updateFeatureToggle:
       type: object
       properties:
@@ -361,11 +420,11 @@ components:
           type: string
           minLength: 1
           description: '*name* must match an existing Feature Toggle.'
-          example: Feature B
+          example: FeatureB
         description:
           type: string
           minLength: 1
-          example: Toggles Feature B on and off
+          example: Toggles FeatureB on and off
         type:
           type: string
           minLength: 1
@@ -391,11 +450,23 @@ components:
                 example: default
               parameters:
                 type: object
-                properties: {}
-        variants:
-          type: array
-          items:
-            properties: {}
+                properties:
+                  rollout:
+                    type: number
+                  stickiness:
+                    type: string
+                    minLength: 1
+                  groupId:
+                    type: string
+                    minLength: 1
+                required:
+                  - rollout
+                  - stickiness
+                  - groupId
+        variants: {}
+        createdAt:
+          type: string
+          minLength: 1
       required:
         - name
         - description
@@ -403,3 +474,4 @@ components:
         - stale
         - strategies
         - variants
+

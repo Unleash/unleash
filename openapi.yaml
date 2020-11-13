@@ -306,7 +306,8 @@ paths:
                 $ref: '#/components/schemas/200feature'
   /admin/metrics/applications:
     get:
-      summary: A list of known applications ('seen' by unleash in the last two days) and a link for more details.
+      summary: A list of known applications ('seen' by unleash in the last two days)
+      description: Also has a link for more details.
       operationId: getApplications
       tags:
         - Admin - metrics
@@ -321,7 +322,8 @@ paths:
                 $ref: '#/components/schemas/200application'
   '/admin/metrics/applications/{appName}':
     get:
-      summary: 'Details about a client application, such as instances, strategies implemented and seen feature toggles.'
+      summary: 'Details about a client application.'
+      description: 'Details include things such as instances, strategies implemented and seen feature toggles.'
       operationId: getApplicationDetails
       tags:
         - Admin - metrics

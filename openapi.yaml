@@ -1,4 +1,3 @@
-
 openapi: 3.0.0
 servers:
   - description: Local host.
@@ -11,7 +10,7 @@ tags:
   - name: Admin - strategies
     description: Accessing and updating strategies
   - name: Admin - metrics
-    description: Determining usage of feature toggles and applications   
+    description: Determining usage of feature toggles and applications
 info:
   title: Unleash API
   description: Unleash is a open source feature flag and toggle system for all your applications and services.
@@ -207,7 +206,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
-  /admin/archive/revive/{featureName}:
+  '/admin/archive/revive/{featureName}':
     post:
       summary: Un-archive a Feature Toggle
       description: The Feature Toggle had been previously deleted
@@ -252,7 +251,7 @@ paths:
       responses:
         '201':
           description: Strategy successfully added
-  /admin/strategies/{strategyName}:
+  '/admin/strategies/{strategyName}':
     put:
       summary: Update Strategy
       description: |
@@ -275,16 +274,36 @@ paths:
       responses:
         '200':
           description: Strategy successfully updated.
-  /admin/seen-toggles:
+  /admin/metrics/seen-toggles:
     get:
       summary: Returns a list of applications and the feature toggles that unleash has 'seen' for each application.
-      description:  It is only guaranteed that feature toggles reported by client applications within the last hour will be returned. However, in most cases, earlier reported feature toggles will also be returned.
+      description: 'It is only guaranteed that feature toggles reported by client applications within the last hour will be returned. However, in most cases, earlier reported feature toggles will also be returned.'
       operationId: seenToggles
       tags:
         - Admin - metrics
       responses:
         '200':
-          description: Gotcha!
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200seen'
+  /admin/metrics/feature-toggles:
+    get:
+      summary: Gives *last minute* and *last hour* metrics for all active toggles (based on what was reported by the client applications).
+      description: |
+        - **Yes** is the number of times a given feature toggle was enabled in a client applcation
+        - **No** is the number of times it was disabled.
+      operationId: featureToggles
+      tags:
+        - Admin - metrics
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200feature'
 components:
   parameters:
     featureNamePath:
@@ -355,8 +374,48 @@ components:
                       minLength: 1
                     weight:
                       type: number
-    '200strategy':
-      description: 'Successful.'
+    '401':
+      description: Not authorised
+      type: object
+      properties:
+        type:
+          type: string
+          minLength: 1
+        path:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+      required:
+        - type
+        - path
+        - message
+    '409':
+      type: object
+      properties:
+        isJoi:
+          type: boolean
+        name:
+          type: string
+          minLength: 1
+        details:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                minLength: 1
+      required:
+        - isJoi
+        - name
+        - details
+    200strategy:
+      description: Successful.
       type: object
       properties:
         version:
@@ -405,46 +464,6 @@ components:
       required:
         - version
         - strategies
-    '401':
-      description: Not authorised
-      type: object
-      properties:
-        type:
-          type: string
-          minLength: 1
-        path:
-          type: string
-          minLength: 1
-        message:
-          type: string
-          minLength: 1
-      required:
-        - type
-        - path
-        - message
-    '409':
-      type: object
-      properties:
-        isJoi:
-          type: boolean
-        name:
-          type: string
-          minLength: 1
-        details:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            required:
-              - message
-            properties:
-              message:
-                type: string
-                minLength: 1
-      required:
-        - isJoi
-        - name
-        - details
     newFeatureToggle:
       type: object
       properties:
@@ -594,3 +613,106 @@ components:
         - name
         - description
         - parameters
+    200seen:
+      type: array
+      description: ''
+      minItems: 1
+      uniqueItems: true
+      items:
+        type: object
+        required:
+          - appName
+          - seenToggles
+          - metricsCount
+        properties:
+          appName:
+            type: string
+            minLength: 1
+          seenToggles:
+            type: array
+            items:
+              required: []
+              properties: {}
+          metricsCount:
+            type: number
+    200feature:
+      description: ''
+      type: object
+      properties:
+        lastHour:
+          type: object
+          properties:
+            add-feature-2:
+              type: object
+              properties:
+                'yes':
+                  type: number
+                'no':
+                  type: number
+              required:
+                - 'yes'
+                - 'no'
+            toggle-2:
+              type: object
+              properties:
+                'yes':
+                  type: number
+                'no':
+                  type: number
+              required:
+                - 'yes'
+                - 'no'
+            toggle-3:
+              type: object
+              properties:
+                'yes':
+                  type: number
+                'no':
+                  type: number
+              required:
+                - 'yes'
+                - 'no'
+          required:
+            - add-feature-2
+            - toggle-2
+            - toggle-3
+        lastMinute:
+          type: object
+          properties:
+            add-feature-2:
+              type: object
+              properties:
+                'yes':
+                  type: number
+                'no':
+                  type: number
+              required:
+                - 'yes'
+                - 'no'
+            toggle-2:
+              type: object
+              properties:
+                'yes':
+                  type: number
+                'no':
+                  type: number
+              required:
+                - 'yes'
+                - 'no'
+            toggle-3:
+              type: object
+              properties:
+                'yes':
+                  type: number
+                'no':
+                  type: number
+              required:
+                - 'yes'
+                - 'no'
+          required:
+            - add-feature-2
+            - toggle-2
+            - toggle-3
+      required:
+        - lastHour
+        - lastMinute

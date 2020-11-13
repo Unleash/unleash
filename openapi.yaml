@@ -322,7 +322,7 @@ paths:
                 $ref: '#/components/schemas/200application'
   '/admin/metrics/applications/{appName}':
     get:
-      summary: 'Details about a client application.'
+      summary: Details about a client application.
       description: 'Details include things such as instances, strategies implemented and seen feature toggles.'
       operationId: getApplicationDetails
       tags:
@@ -336,6 +336,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200appdetails'
+  /admin/metrics/seen-apps:
+    get:
+      summary: Details about application seen per Feature Toggle.
+      description: Details about application seen per Feature Toggle.
+      operationId: seenApps
+      tags:
+        - Admin - metrics
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200seenapps'
 components:
   parameters:
     strategyQuery:
@@ -853,3 +867,46 @@ components:
         - instances
         - strategies
         - seenToggles
+    200seenapps:
+      description: ''
+      type: object
+      properties:
+        my-toggle:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - appName
+              - createdAt
+              - updatedAt
+              - description
+              - url
+              - icon
+            properties:
+              appName:
+                type: string
+                minLength: 1
+              createdAt:
+                type: string
+                minLength: 1
+              updatedAt:
+                type: string
+                minLength: 1
+              description:
+                type: string
+                minLength: 1
+              strategies:
+                type: array
+                items:
+                  required: []
+                  properties: {}
+              url:
+                type: string
+                minLength: 1
+              color: {}
+              icon:
+                type: string
+                minLength: 1
+      required:
+        - my-toggle

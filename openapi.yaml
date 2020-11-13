@@ -306,10 +306,7 @@ paths:
                 $ref: '#/components/schemas/200feature'
   /admin/metrics/applications:
     get:
-      summary: A list of known applications ('seen' by unleash ib the last two days) and a link for more details.
-      description: |
-        - **Yes** is the number of times a given feature toggle was enabled in a client application
-        - **No** is the number of times it was disabled.
+      summary: A list of known applications ('seen' by unleash in the last two days) and a link for more details.
       operationId: getApplications
       tags:
         - Admin - metrics
@@ -322,6 +319,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200application'
+  '/admin/metrics/applications/{appName}':
+    get:
+      summary: 'Details about a client application, such as instances, strategies implemented and seen feature toggles.'
+      operationId: getApplicationDetails
+      tags:
+        - Admin - metrics
+      parameters:
+        - $ref: '#/components/parameters/appNamePath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200appdetails'
 components:
   parameters:
     strategyQuery:
@@ -342,6 +354,13 @@ components:
       required: true
       in: path
       description: Must match an existing Strategy name.
+      schema:
+        type: string
+    appNamePath:
+      name: appName
+      required: true
+      in: path
+      description: Must match an existing application name.
       schema:
         type: string
   schemas:
@@ -776,3 +795,59 @@ components:
                   - appDetails
       required:
         - applications
+    200appdetails:
+      description: ''
+      type: object
+      properties:
+        appName:
+          type: string
+          minLength: 1
+        instances:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - instanceId
+              - clientIp
+              - lastSeen
+              - createdAt
+            properties:
+              instanceId:
+                type: string
+                minLength: 1
+              clientIp:
+                type: string
+                minLength: 1
+              lastSeen:
+                type: string
+                minLength: 1
+              createdAt:
+                type: string
+                minLength: 1
+        strategies:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - appName
+            properties:
+              appName:
+                type: string
+                minLength: 1
+              strategies:
+                type: array
+                items:
+                  required: []
+                  properties: {}
+        seenToggles:
+          type: array
+          items:
+            required: []
+            properties: {}
+      required:
+        - appName
+        - instances
+        - strategies
+        - seenToggles

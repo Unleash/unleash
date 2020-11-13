@@ -1,11 +1,14 @@
+
 openapi: 3.0.0
 servers:
   - description: Local host.
     url: 'http://localhost:4242/api'
 tags:
-  - name: Admin - Feature toggles
+  - name: Admin - feature toggles
     description: Accessing feature toggles on the Unleash admin server
   - name: Admin - archive
+    description: Handling Feature Toggle archiving and un-archiving on the Unleash admin server
+  - name: Admin - strategies
     description: Handling Feature Toggle archiving and un-archiving on the Unleash admin server
 info:
   title: Unleash API
@@ -33,7 +36,7 @@ paths:
         url: 'https://unleash.github.io/docs/activation_strategy'
       operationId: getFeatures
       tags:
-        - Admin - Feature toggles
+        - Admin - feature toggles
       responses:
         '200':
           description: Successful response
@@ -50,7 +53,7 @@ paths:
     post:
       description: Create a new Feature Toggle
       tags:
-        - Admin - Feature toggles
+        - Admin - feature toggles
       operationId: createFeatureToggle
       requestBody:
         required: true
@@ -78,7 +81,7 @@ paths:
       description: Update a Feature Toggle.
       operationId: featureName
       tags:
-        - Admin - Feature toggles
+        - Admin - feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       requestBody:
@@ -102,7 +105,7 @@ paths:
         If an old Feature Toggle *re-appears*, this is because someone else has created a new one with the same name.
       operationId: archiveFeatureToggle
       tags:
-        - Admin - Feature toggles
+        - Admin - feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -118,7 +121,7 @@ paths:
       description: '*featureName* must match an existing Feature Toggle.'
       operationId: enableFeatureToggle
       tags:
-        - Admin - Feature toggles
+        - Admin - feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -134,7 +137,7 @@ paths:
       description: '*featureName* must match an existing Feature Toggle.'
       operationId: disableFeatureToggle
       tags:
-        - Admin - Feature toggles
+        - Admin - feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -153,7 +156,7 @@ paths:
         url: 'https://unleash.github.io/docs/feature_toggle_types'
       operationId: markFeatureToggleStale
       tags:
-        - Admin - Feature toggles
+        - Admin - feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -172,7 +175,7 @@ paths:
         url: 'https://unleash.github.io/docs/feature_toggle_types'
       operationId: markFeatureToggleActive
       tags:
-        - Admin - Feature toggles
+        - Admin - feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -211,6 +214,39 @@ paths:
         - Admin - archive
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200'
+  /admin/strategies:
+    get:
+      summary: Fetch all strategies and their parameters.
+      description: Fetch all strategies and their parameters.
+      operationId: getStrategies
+      tags:
+        - Admin - strategies
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200strategy'
+    post:
+      summary: Create Strategy
+      description: Create Strategy
+      operationId: createStrategy
+      tags:
+        - Admin - strategies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createStrategy'
       responses:
         '200':
           description: Successful response
@@ -281,6 +317,56 @@ components:
                       minLength: 1
                     weight:
                       type: number
+    '200strategy':
+      description: 'Successful.'
+      type: object
+      properties:
+        version:
+          type: number
+          example: 1
+        strategies:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - name
+              - editable
+              - description
+            properties:
+              name:
+                type: string
+                minLength: 1
+              editable:
+                type: boolean
+              description:
+                type: string
+                minLength: 1
+              parameters:
+                type: array
+                uniqueItems: true
+                minItems: 1
+                items:
+                  required:
+                    - name
+                    - type
+                    - description
+                    - required
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                    type:
+                      type: string
+                      minLength: 1
+                    description:
+                      type: string
+                      minLength: 1
+                    required:
+                      type: boolean
+      required:
+        - version
+        - strategies
     '401':
       description: Not authorised
       type: object
@@ -430,3 +516,43 @@ components:
         - stale
         - strategies
         - variants
+    createStrategy:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          example: gradualRollout
+        description:
+          type: string
+          minLength: 1
+          example: Gradual rollout to logged in users
+        parameters:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - name
+              - type
+              - description
+              - required
+            properties:
+              name:
+                type: string
+                minLength: 1
+                example: percentage
+              type:
+                type: string
+                minLength: 1
+                example: percentage
+              description:
+                type: string
+                minLength: 1
+                example: How many percent of users should the new Feature Toggle be active for.
+              required:
+                type: boolean
+      required:
+        - name
+        - description
+        - parameters

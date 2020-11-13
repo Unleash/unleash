@@ -5,11 +5,13 @@ servers:
     url: 'http://localhost:4242/api'
 tags:
   - name: Admin - feature toggles
-    description: Accessing feature toggles on the Unleash admin server
+    description: Accessing feature toggles
   - name: Admin - archive
-    description: Handling Feature Toggle archiving and un-archiving on the Unleash admin server
+    description: Handling Feature Toggle archiving and un-archiving
   - name: Admin - strategies
-    description: Handling Feature Toggle archiving and un-archiving on the Unleash admin server
+    description: Accessing and updating strategies
+  - name: Admin - metrics
+    description: Determining usage of feature toggles and applications   
 info:
   title: Unleash API
   description: Unleash is a open source feature flag and toggle system for all your applications and services.
@@ -248,12 +250,41 @@ paths:
             schema:
               $ref: '#/components/schemas/createStrategy'
       responses:
+        '201':
+          description: Strategy successfully added
+  /admin/strategies/{strategyName}:
+    put:
+      summary: Update Strategy
+      description: |
+        Use to update a Strategy definition.
+
+        *name* and *strategyName* must match and must also match an existing Strategy name.
+
+        **Caution:** It can be dangerous to change a Strategy (as the implementation also might need to be changed).
+      operationId: updateStrategy
+      tags:
+        - Admin - strategies
+      parameters:
+        - $ref: '#/components/parameters/strategyNamePath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createStrategy'
+      responses:
         '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/200'
+          description: Strategy successfully updated.
+  /admin/seen-toggles:
+    get:
+      summary: Returns a list of applications and the feature toggles that unleash has 'seen' for each application.
+      description:  It is only guaranteed that feature toggles reported by client applications within the last hour will be returned. However, in most cases, earlier reported feature toggles will also be returned.
+      operationId: seenToggles
+      tags:
+        - Admin - metrics
+      responses:
+        '200':
+          description: Gotcha!
 components:
   parameters:
     featureNamePath:
@@ -261,6 +292,13 @@ components:
       required: true
       in: path
       description: Must match an existing Feature Toggle.
+      schema:
+        type: string
+    strategyNamePath:
+      name: strategyName
+      required: true
+      in: path
+      description: Must match an existing Strategy name.
       schema:
         type: string
   schemas:

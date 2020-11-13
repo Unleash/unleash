@@ -304,8 +304,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200feature'
+  /admin/metrics/applications:
+    get:
+      summary: A list of known applications ('seen' by unleash ib the last two days) and a link for more details.
+      description: |
+        - **Yes** is the number of times a given feature toggle was enabled in a client application
+        - **No** is the number of times it was disabled.
+      operationId: getApplications
+      tags:
+        - Admin - metrics
+      parameters:
+        - $ref: '#/components/parameters/strategyQuery'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200application'
 components:
   parameters:
+    strategyQuery:
+      name: strategyName
+      in: query
+      description: Return all applications implementing the specified Strategy. Must match an existing Strategy name.
+      schema:
+        type: string
     featureNamePath:
       name: featureName
       required: true
@@ -636,7 +660,9 @@ components:
           metricsCount:
             type: number
     200feature:
-      description: ''
+      description: |
+        - **lastHour** - 'hour projection collected' metrics for all feature toggles.
+        - **lastMinute** - 'minute projection collected' metrics for all feature toggles.
       type: object
       properties:
         lastHour:
@@ -716,3 +742,37 @@ components:
       required:
         - lastHour
         - lastMinute
+    200application:
+      description: ''
+      type: object
+      properties:
+        applications:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - appName
+              - createdAt
+            properties:
+              appName:
+                type: string
+                minLength: 1
+              strategies:
+                type: array
+                items:
+                  required: []
+                  properties: {}
+              createdAt:
+                type: string
+                minLength: 1
+              links:
+                type: object
+                properties:
+                  appDetails:
+                    type: string
+                    minLength: 1
+                required:
+                  - appDetails
+      required:
+        - applications

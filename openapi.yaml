@@ -1,16 +1,24 @@
+# Continue from events
+# Add examples to everything (inclusing response schemas)
+# Verify response schemas match object structure
+# Check question marks with unleash team
+# $ref any duplicate aspects
+# British English or American English?
+# {} in a definition means 'I don't know' - fix
+# Need a variants schema
 openapi: 3.0.0
 servers:
   - description: Local host.
     url: 'http://localhost:4242/api'
 tags:
-  - name: Admin - feature toggles
-    description: Accessing feature toggles
-  - name: Admin - archive
+  - name: Archive
     description: Handling Feature Toggle archiving and un-archiving
-  - name: Admin - strategies
-    description: Accessing and updating strategies
-  - name: Admin - metrics
+  - name: Feature toggles
+    description: Accessing feature toggles
+  - name: Metrics
     description: Determining usage of feature toggles and applications
+  - name: Strategies
+    description: Accessing and updating strategies
 info:
   title: Unleash API
   description: Unleash is a open source feature flag and toggle system for all your applications and services.
@@ -31,13 +39,13 @@ paths:
         - A feature toggle will have *at least* one configured strategy.
         - A strategy will have a `name` and `parameters` map.
 
-        **Note:** To only return one Feature Toggle, add the Feature Toggle name as a suffix to the request. For example: `GET [Your host]/api/admin/features/featureX`. It is not possible to add this parameter as a *Try it out* option due to restrictions in the [Open API Sepcification](https://swagger.io/docs/specification/describing-parameters/), (that is, *optional* path variables cannot be created).
+        **Note:** To only return one Feature Toggle, add the Feature Toggle name as a suffix to the request. For example: `GET [Your host]/api/admin/features/featureX`. It is not possible to add this parameter as a *Try it out* option due to restrictions in the [Open API Specification](https://swagger.io/docs/specification/describing-parameters/), (that is, *optional* path variables cannot be created).
       externalDocs:
         description: Activation strategies
         url: 'https://unleash.github.io/docs/activation_strategy'
       operationId: getFeatures
       tags:
-        - Admin - feature toggles
+        - Feature toggles
       responses:
         '200':
           description: Successful response
@@ -54,7 +62,7 @@ paths:
     post:
       description: Create a new Feature Toggle
       tags:
-        - Admin - feature toggles
+        - Feature toggles
       operationId: createFeatureToggle
       requestBody:
         required: true
@@ -82,7 +90,7 @@ paths:
       description: Update a Feature Toggle.
       operationId: featureName
       tags:
-        - Admin - feature toggles
+        - Feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       requestBody:
@@ -106,7 +114,7 @@ paths:
         If an old Feature Toggle *re-appears*, this is because someone else has created a new one with the same name.
       operationId: archiveFeatureToggle
       tags:
-        - Admin - feature toggles
+        - Feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -122,7 +130,7 @@ paths:
       description: '*featureName* must match an existing Feature Toggle.'
       operationId: enableFeatureToggle
       tags:
-        - Admin - feature toggles
+        - Feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -138,7 +146,7 @@ paths:
       description: '*featureName* must match an existing Feature Toggle.'
       operationId: disableFeatureToggle
       tags:
-        - Admin - feature toggles
+        - Feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -157,7 +165,7 @@ paths:
         url: 'https://unleash.github.io/docs/feature_toggle_types'
       operationId: markFeatureToggleStale
       tags:
-        - Admin - feature toggles
+        - Feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -176,7 +184,7 @@ paths:
         url: 'https://unleash.github.io/docs/feature_toggle_types'
       operationId: markFeatureToggleActive
       tags:
-        - Admin - feature toggles
+        - Feature toggles
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -198,7 +206,7 @@ paths:
       description: Archived feature toggles are those that have been previously deleted
       operationId: fetchArchivedToggles
       tags:
-        - Admin - archive
+        - Archive
       responses:
         '200':
           description: Successful response
@@ -212,7 +220,7 @@ paths:
       description: The Feature Toggle had been previously deleted
       operationId: reviveFeatureToggle
       tags:
-        - Admin - archive
+        - Archive
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -228,7 +236,7 @@ paths:
       description: Fetch all strategies and their parameters.
       operationId: getStrategies
       tags:
-        - Admin - strategies
+        - Strategies
       responses:
         '200':
           description: Successful response
@@ -241,7 +249,7 @@ paths:
       description: Create Strategy
       operationId: createStrategy
       tags:
-        - Admin - strategies
+        - Strategies
       requestBody:
         required: true
         content:
@@ -262,7 +270,7 @@ paths:
         **Caution:** It can be dangerous to change a Strategy (as the implementation also might need to be changed).
       operationId: updateStrategy
       tags:
-        - Admin - strategies
+        - Strategies
       parameters:
         - $ref: '#/components/parameters/strategyNamePath'
       requestBody:
@@ -276,11 +284,11 @@ paths:
           description: Strategy successfully updated.
   /admin/metrics/seen-toggles:
     get:
-      summary: Returns a list of applications and the feature toggles that unleash has 'seen' for each application.
+      summary: Returns a list of applications and the feature toggles that Unleash has 'seen' for each application.
       description: 'It is only guaranteed that feature toggles reported by client applications within the last hour will be returned. However, in most cases, earlier reported feature toggles will also be returned.'
       operationId: seenToggles
       tags:
-        - Admin - metrics
+        - Metrics
       responses:
         '200':
           description: Successful response
@@ -290,13 +298,13 @@ paths:
                 $ref: '#/components/schemas/200seen'
   /admin/metrics/feature-toggles:
     get:
-      summary: Gives *last minute* and *last hour* metrics for all active toggles (based on what was reported by the client applications).
+      summary: 'Gives ''last minute'' and ''last hour'' metrics for all active toggles (based on what was reported by the client applications).'
       description: |
         - **Yes** is the number of times a given feature toggle was enabled in a client applcation
         - **No** is the number of times it was disabled.
       operationId: featureToggles
       tags:
-        - Admin - metrics
+        - Metrics
       responses:
         '200':
           description: Successful response
@@ -306,11 +314,11 @@ paths:
                 $ref: '#/components/schemas/200feature'
   /admin/metrics/applications:
     get:
-      summary: A list of known applications ('seen' by unleash in the last two days)
+      summary: A list of known applications ('seen' by Unleash in the last two days)
       description: Also has a link for more details.
       operationId: getApplications
       tags:
-        - Admin - metrics
+        - Metrics
       parameters:
         - $ref: '#/components/parameters/strategyQuery'
       responses:
@@ -326,7 +334,7 @@ paths:
       description: 'Details include things such as instances, strategies implemented and seen feature toggles.'
       operationId: getApplicationDetails
       tags:
-        - Admin - metrics
+        - Metrics
       parameters:
         - $ref: '#/components/parameters/appNamePath'
       responses:
@@ -342,7 +350,7 @@ paths:
       description: Details about application seen per Feature Toggle.
       operationId: seenApps
       tags:
-        - Admin - metrics
+        - Metrics
       responses:
         '200':
           description: Successful response
@@ -355,7 +363,7 @@ components:
     strategyQuery:
       name: strategyName
       in: query
-      description: Return all applications implementing the specified Strategy. Must match an existing Strategy name.
+      description: '(Optional). Return all applications implementing the specified Strategy. Must match an existing Strategy name.'
       schema:
         type: string
     featureNamePath:
@@ -406,19 +414,7 @@ components:
               stale:
                 type: boolean
               strategies:
-                type: array
-                uniqueItems: true
-                minItems: 1
-                items:
-                  required:
-                    - name
-                  properties:
-                    name:
-                      type: string
-                      minLength: 1
-                    parameters:
-                      type: object
-                      properties: {}
+                $ref: '#/components/schemas/strategySchema'
               variants:
                 type: array
                 uniqueItems: true
@@ -476,55 +472,24 @@ components:
     200strategy:
       description: Successful.
       type: object
+      required:
+        - version
+        - strategies
       properties:
         version:
           type: number
           example: 1
         strategies:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            required:
-              - name
-              - editable
-              - description
-            properties:
-              name:
-                type: string
-                minLength: 1
-              editable:
-                type: boolean
-              description:
-                type: string
-                minLength: 1
-              parameters:
-                type: array
-                uniqueItems: true
-                minItems: 1
-                items:
-                  required:
-                    - name
-                    - type
-                    - description
-                    - required
-                  properties:
-                    name:
-                      type: string
-                      minLength: 1
-                    type:
-                      type: string
-                      minLength: 1
-                    description:
-                      type: string
-                      minLength: 1
-                    required:
-                      type: boolean
-      required:
-        - version
-        - strategies
+          $ref: '#/components/schemas/strategySchema'
+
     newFeatureToggle:
       type: object
+      required:
+        - name
+        - description
+        - enabled
+        - stale
+        - strategies
       properties:
         name:
           type: string
@@ -553,29 +518,12 @@ components:
           type: boolean
           example: false
         stale:
+          description: Is the Feature Toggle deprecated (stale)?
           type: boolean
           example: false
         strategies:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            required:
-              - name
-            properties:
-              name:
-                type: string
-                minLength: 1
-                example: default
-              parameters:
-                type: object
-                properties: {}
-      required:
-        - name
-        - description
-        - enabled
-        - stale
-        - strategies
+          $ref: '#/components/schemas/strategySchema'
+
     updateFeatureToggle:
       type: object
       properties:
@@ -595,32 +543,7 @@ components:
           type: boolean
           example: false
         strategies:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            required:
-              - name
-            properties:
-              name:
-                type: string
-                minLength: 1
-                example: default
-              parameters:
-                type: object
-                properties:
-                  rollout:
-                    type: number
-                  stickiness:
-                    type: string
-                    minLength: 1
-                  groupId:
-                    type: string
-                    minLength: 1
-                required:
-                  - rollout
-                  - stickiness
-                  - groupId
+          $ref: '#/components/schemas/strategySchema'
         variants: {}
         createdAt:
           type: string
@@ -632,6 +555,7 @@ components:
         - stale
         - strategies
         - variants
+
     createStrategy:
       type: object
       properties:
@@ -690,95 +614,39 @@ components:
           seenToggles:
             type: array
             items:
-              required: []
               properties: {}
           metricsCount:
             type: number
     200feature:
       description: |
-        - **lastHour** - 'hour projection collected' metrics for all feature toggles.
-        - **lastMinute** - 'minute projection collected' metrics for all feature toggles.
-      type: object
-      properties:
-        lastHour:
-          type: object
-          properties:
-            add-feature-2:
-              type: object
-              properties:
-                'yes':
-                  type: number
-                'no':
-                  type: number
-              required:
-                - 'yes'
-                - 'no'
-            toggle-2:
-              type: object
-              properties:
-                'yes':
-                  type: number
-                'no':
-                  type: number
-              required:
-                - 'yes'
-                - 'no'
-            toggle-3:
-              type: object
-              properties:
-                'yes':
-                  type: number
-                'no':
-                  type: number
-              required:
-                - 'yes'
-                - 'no'
-          required:
-            - add-feature-2
-            - toggle-2
-            - toggle-3
-        lastMinute:
-          type: object
-          properties:
-            add-feature-2:
-              type: object
-              properties:
-                'yes':
-                  type: number
-                'no':
-                  type: number
-              required:
-                - 'yes'
-                - 'no'
-            toggle-2:
-              type: object
-              properties:
-                'yes':
-                  type: number
-                'no':
-                  type: number
-              required:
-                - 'yes'
-                - 'no'
-            toggle-3:
-              type: object
-              properties:
-                'yes':
-                  type: number
-                'no':
-                  type: number
-              required:
-                - 'yes'
-                - 'no'
-          required:
-            - add-feature-2
-            - toggle-2
-            - toggle-3
-      required:
-        - lastHour
-        - lastMinute
+        - **lastHour** - how many times a Feature Toggle was accessed in the last hour.
+        - **lastMinute** - how many times a Feature Toggle was accessed in the last minute.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        type: object
+        required:
+          - appName
+          - seenToggles
+        properties:
+          appName:
+            type: string
+            enum: [lastHour, lastMinute]
+            minLength: 1
+            example: lastHour
+          seenToggles:
+            type: object
+            required:
+            - yesno
+            - metricsCount
+            properties:
+              yesno:
+                type: string
+                enum: [yes, no]
+              metricsCount:
+                type: number
     200application:
-      description: ''
       type: object
       properties:
         applications:
@@ -789,86 +657,171 @@ components:
             required:
               - appName
               - createdAt
+              - updatedAt
             properties:
               appName:
+                description: Application name
                 type: string
                 minLength: 1
-              strategies:
-                type: array
-                items:
-                  required: []
-                  properties: {}
+                example: my-application
               createdAt:
+                description: Date and time when the application was initially created
                 type: string
                 minLength: 1
-              links:
-                type: object
-                properties:
-                  appDetails:
-                    type: string
-                    minLength: 1
-                required:
-                  - appDetails
+                example: '2016-12-09T14:56:36.730Z'
+              updatedAt:
+                description: Date and time when the application was last updated
+                type: string
+                minLength: 1
+                example: '2020-11-14T09:55:23.653Z'
+              description:
+                description: A description of what the application does
+                type: string
+              strategies:
+                description: The Strategy's name
+                type: array
+                minLength: 1
+              url:
+                description: Link to more information about the application? Relative only?
+                type: string
+                example: https://medium.com/keptn
+              color:
+                description: The colour (American English?) of something. Hex code?
+                type: string
+              icon:
+                description: The icon to use for something. Link?
+                type: string
       required:
         - applications
+
     200appdetails:
-      description: ''
       type: object
-      properties:
-        appName:
-          type: string
-          minLength: 1
-        instances:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            required:
-              - instanceId
-              - clientIp
-              - lastSeen
-              - createdAt
-            properties:
-              instanceId:
-                type: string
-                minLength: 1
-              clientIp:
-                type: string
-                minLength: 1
-              lastSeen:
-                type: string
-                minLength: 1
-              createdAt:
-                type: string
-                minLength: 1
-        strategies:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            required:
-              - appName
-            properties:
-              appName:
-                type: string
-                minLength: 1
-              strategies:
-                type: array
-                items:
-                  required: []
-                  properties: {}
-        seenToggles:
-          type: array
-          items:
-            required: []
-            properties: {}
       required:
         - appName
         - instances
         - strategies
         - seenToggles
-    200seenapps:
-      description: ''
+      properties:
+        appName:
+          description: Application name
+          type: string
+          minLength: 1
+          example: my-application
+        createdAt:
+          description: Date and time when the application was initially created
+          type: string
+          minLength: 1
+          example: '2016-12-09T14:56:36.730Z'
+        description:
+          description: A description of what the application does
+          type: string
+        url:
+          description: Link to more information about the application? Relative only?
+          type: string
+          example: https://medium.com/keptn
+        color:
+          description: The colour (American English?) of something. Hex code?
+          type: string
+        icon:
+          description: The icon to use for something. Link?
+          type: string
+        strategies:
+          $ref: '#/components/schemas/strategySchema'
+        instances:
+          type: object
+          required:
+            - appName
+            - instanceId
+            - sdkVersion
+            - clientIp
+            - lastSeen
+            - createdAt
+          properties:
+            appName:
+              description: Application name
+              type: string
+              minLength: 1
+              example: my-application
+            instanceId:
+              description: The name of the system running the application
+              type: string
+              minLength: 1
+              example: generated-732038-17080
+            sdkVersion:
+              description: The version of the Unleash client SDK running the application
+              type: string
+              minLength: 1
+              example: unleash-client-node:3.4.0
+            clientIp:
+              description: The IP address of the system running this instance of the application. What is the prefix on the string?
+              type: string
+              minLength: 1
+              example: ::ffff:127.0.0.1
+            lastSeen:
+              description: The last time the application accessed Unleash?
+              type: string
+              minLength: 1
+              example: '2020-11-14T11:17:24.482Z'
+            createdAt:
+              description: When the application was created?
+              type: string
+              minLength: 1
+              example: '2020-11-13T16:56:29.279Z'
+        seenToggles:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - name
+              - type
+              - enabled
+              - stale
+              - createdAt
+            properties:
+              name:
+                description: Name of the Feature Toggle
+                type: string
+                minLength: 1
+                example: FeatureX
+              description:
+                description: What the Feture Toggle does
+                type: string
+              type:
+                description: One of the five types of Feature Toggle
+                type: string
+                externalDocs:
+                  description: Feature Toggle types
+                  url: 'https://unleash.github.io/docs/feature_toggle_types'
+                minLength: 1
+                example: release
+              enabled:
+                description: Is the Feature Toggle enabled?
+                type: boolean
+              stale:
+                description: Is the Feature Toggle 
+                type: boolean
+              strategies:
+                $ref: '#/components/schemas/strategySchema'
+              variants:
+                description: What is this?
+                type: string
+              createdAt:
+                description: Date and time when the application was initially created
+                type: string
+                minLength: 1
+                example: '2020-11-09T15:25:59.517Z'
+        links:
+          type: object
+          properties:
+            self:
+              description: What is this?
+              type: string
+              minLength: 1
+          required:
+            - self
+
+    '200seenapps':
       type: object
       properties:
         my-toggle:
@@ -897,10 +850,7 @@ components:
                 type: string
                 minLength: 1
               strategies:
-                type: array
-                items:
-                  required: []
-                  properties: {}
+                $ref: '#/components/schemas/strategySchema'
               url:
                 type: string
                 minLength: 1
@@ -908,5 +858,45 @@ components:
               icon:
                 type: string
                 minLength: 1
-      required:
-        - my-toggle
+
+    strategySchema:
+      type: array
+      properties:
+        name:
+          description: Name of the Strategy
+          type: string
+          minLength: 1
+          example: default
+        editable:
+          type: boolean
+        description:
+          description: What the Strategy is
+          type: string
+          example: Default on/off strategy.
+        parameters:
+          type: array
+          items:
+            required:
+              - parameter
+            properties:
+              parameter:
+                type: object
+                required:
+                  - name
+                  - type
+                properties:
+                  name:
+                    description: The name of the parameter
+                    type: string
+                    example: groupId
+                  type:
+                    description: The type of the parameter
+                    type: string
+                    example: string
+                  description:
+                    description: What the parameter does
+                    type: string
+                    example: Define activation groups to allow you to correlate across feature toggles.
+                  required:
+                    description: Is this a required parameter?
+                    type: boolean

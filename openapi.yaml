@@ -1,3 +1,5 @@
+# simpleStrategySchema works (and may be correct for some responses)
+# strategySchema can't render in Swagger UI. use simple for now
 openapi: 3.0.0
 servers:
   - description: Local host.
@@ -9,6 +11,8 @@ tags:
     description: Idientifying events on the Unleash server
   - name: Feature toggles
     description: Accessing feature toggles
+  - name: Import and export
+    description: Importing and exporting feature toggles and strategies
   - name: Metrics
     description: Determining usage of feature toggles and applications
   - name: Strategies
@@ -352,7 +356,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200seenapps'
-
   /admin/events:
     get:
       summary: Fetch all changes in the Unleash system
@@ -367,8 +370,7 @@ paths:
                 $ref: '#/components/schemas/200-events'
       operationId: get-admin-events
       description: |-
-        |
-          It returns one of the five event types:
+          Returns one of the five event types:
           - feature-created
           - feature-updated
           - feature-archived
@@ -376,6 +378,42 @@ paths:
           - strategy-created
           - strategy-deleted
 
+  /admin/state/export:
+    get:
+      summary: Export feature toggles and strategies
+      tags:
+        - Import and export
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200export'
+      operationId: get-admin-state-export
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: format
+          description: |
+            Choose export format, either json or yaml. json is the default
+        - schema:
+            type: boolean
+          in: query
+          name: download
+          description: Export the data as a file? Default is false
+        - schema:
+            type: boolean
+          in: query
+          name: featureToggles
+          description: Include feature toggles in the export? Default is true
+        - schema:
+            type: boolean
+          in: query
+          name: strategies
+          description: Include strategies in the export? Default is true
+      description: Exports a list of feature toggles and/or strategies in either JSON or YAML format.
 components:
   parameters:
     strategyQuery:
@@ -509,7 +547,6 @@ components:
           example: 1
         strategies:
           $ref: '#/components/schemas/simpleStrategySchema'
-
     newFeatureToggle:
       type: object
       required:
@@ -893,7 +930,6 @@ components:
                 description: The icon to use for something. Link?
                 type: string
                 minLength: 1
-
     strategySchema:
       type: array
       properties:
@@ -935,7 +971,6 @@ components:
                   required:
                     description: Is this a required parameter?
                     type: boolean
-
     simpleStrategySchema:
       type: object
       required:
@@ -957,7 +992,7 @@ components:
                 description: Name of Strategy's parameter
                 type: string
                 example: extra
-    
+                
     200-events:
       type: object
       properties:
@@ -968,10 +1003,10 @@ components:
         events:
           type: array
           required:
-          - id
-          - type
-          - createdBy
-          - createdAt
+            - id
+            - type
+            - createdBy
+            - createdAt
           uniqueItems: true
           minItems: 1
           items:
@@ -1003,16 +1038,16 @@ components:
               data:
                 type: object
                 required:
-                - name
-                - description
-                - type
-                - enabled
-                - stale
-                - strategies
-                - createdAt
+                  - name
+                  - description
+                  - type
+                  - enabled
+                  - stale
+                  - strategies
+                  - createdAt
                 properties:
                   name:
-                    description: Feature Toggle name must be unique.
+                    description: Feature Toggle name .
                     type: string
                     minLength: 1
                     example: FeatureA
@@ -1043,7 +1078,7 @@ components:
                     type: boolean
                     example: false
                   strategies:
-                    $ref: '#/components/schemas/strategySchema'
+                    $ref: '#/components/schemas/simpleStrategySchema'
                   variants: {}
                   createdAt:
                     description: Date and time when the Feature Toggle was created?
@@ -1078,3 +1113,67 @@ components:
                     rhs:
                       description: Left-hand side of something?
                       type: boolean
+    200export:
+      type: object
+      required:
+        - version
+        - features
+        - strategies
+      properties:
+        version:
+          description: Version number of what?
+          type: number
+          example: 1
+        features:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - name
+              - description
+              - type
+              - enabled
+              - stale
+              - createdAt
+            properties:
+              name:
+                description: Feature Toggle name .
+                type: string
+                minLength: 1
+                example: FeatureA
+              description:
+                description: What the Feature Toggle does
+                type: string
+                minLength: 1
+                example: Toggles FeatureA on and off
+              type:
+                type: string
+                description: '*type* is optional. If not defined, it defaults to `release`'
+                externalDocs:
+                  description: Feature Toggle types
+                  url: 'https://unleash.github.io/docs/feature_toggle_types'
+                enum:
+                  - release
+                  - experiment
+                  - ops
+                  - killswitch
+                  - permission
+                minLength: 1
+                example: release
+              enabled:
+                type: boolean
+                example: false
+              stale:
+                description: Is the Feature Toggle deprecated (stale)?
+                type: boolean
+                example: false
+              strategies:
+                $ref: '#/components/schemas/simpleStrategySchema'
+              variants: {}
+              createdAt:
+                type: string
+                minLength: 1
+        strategies:
+          $ref: '#/components/schemas/simpleStrategySchema' # Strategies twice? How does this vary to the other strategies schema in the response?
+

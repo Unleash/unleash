@@ -1,4 +1,4 @@
-# Continue from components/schemas/200seenapps and 200appdetails (schemas needs work and aren't displaying in Swagger UI). 200appdetails schema appears simpler from the markdown
+# Continue from components/schemas/200appdetails (schema needs work and isn't displaying in Swagger UI)
 # Run tests against prevous items (I've done a global strategies $ref replacement)
 # Add examples to everything (inclusing response schemas)
 # Verify response schemas match object structure
@@ -231,7 +231,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
-  /admin/strategies:
+  '/admin/strategies':
     get:
       summary: Fetch all strategies and their parameters.
       description: Fetch all strategies and their parameters.
@@ -329,6 +329,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200application'
+
   '/admin/metrics/applications/{appName}':
     get:
       summary: Details about a client application.
@@ -345,6 +346,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200appdetails'
+
   '/admin/metrics/seen-apps':
     get:
       summary: Details about application seen per Feature Toggle.
@@ -390,46 +392,56 @@ components:
         type: string
   schemas:
     '200':
-      title: Successful response
-      type: object
-      properties:
-        version:
-          type: number
-        features:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            properties:
-              name:
-                type: string
-                minLength: 1
-              description:
-                type: string
-                minLength: 1
-              type:
-                type: string
-                minLength: 1
-              enabled:
-                type: boolean
-              stale:
-                type: boolean
-              strategies:
-                $ref: '#/components/schemas/strategySchema'
-              variants:
-                type: array
-                uniqueItems: true
-                minItems: 1
-                items:
-                  required:
-                    - name
-                    - weight
-                  properties:
-                    name:
-                      type: string
-                      minLength: 1
-                    weight:
-                      type: number
+        title: Successful response
+        type: object
+        properties:
+          version:
+            type: number
+          features:
+            type: array
+            uniqueItems: true
+            minItems: 1
+            items:
+              properties:
+                name:
+                  description: Feature Toggle name
+                  type: string
+                  minLength: 1
+                  example: featureX
+                description:
+                  description: What the Feature Toggle does
+                  type: string
+                  minLength: 1
+                type:
+                  description: One of the five types of Feature Toggle
+                  externalDocs:
+                    description: Feature Toggle types
+                    url: 'https://unleash.github.io/docs/feature_toggle_types'
+                  type: string
+                  minLength: 1
+                  example: release
+                enabled:
+                  description: Is the Feature Toggle enabled?
+                  type: boolean
+                stale:
+                  description: Is the Feature Toggle 'stale' (deprecated)?
+                  type: boolean
+                strategies:
+                  $ref: '#/components/schemas/simpleStrategySchema'
+                variants:
+                  type: array
+                  uniqueItems: true
+                  minItems: 1
+                  items:
+                    required:
+                      - name
+                      - weight
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                      weight:
+                        type: number
     '401':
       description: Not authorised
       type: object
@@ -470,6 +482,7 @@ components:
         - isJoi
         - name
         - details
+
     200strategy:
       description: Successful.
       type: object
@@ -481,7 +494,7 @@ components:
           type: number
           example: 1
         strategies:
-          $ref: '#/components/schemas/strategySchema'
+          $ref: '#/components/schemas/simpleStrategySchema'
 
     newFeatureToggle:
       type: object
@@ -523,7 +536,7 @@ components:
           type: boolean
           example: false
         strategies:
-          $ref: '#/components/schemas/strategySchema'
+          $ref: '#/components/schemas/simpleStrategySchema'
 
     updateFeatureToggle:
       type: object
@@ -544,7 +557,7 @@ components:
           type: boolean
           example: false
         strategies:
-          $ref: '#/components/schemas/strategySchema'
+          $ref: '#/components/schemas/simpleStrategySchema'
         variants: {}
         createdAt:
           type: string
@@ -590,13 +603,15 @@ components:
               description:
                 type: string
                 minLength: 1
-                example: How many percent of users should the new Feature Toggle be active for.
+                example: What percent of users should the new Feature Toggle be active for?
               required:
                 type: boolean
       required:
         - name
         - description
         - parameters
+
+  
     200seen:
       type: array
       description: ''
@@ -647,8 +662,11 @@ components:
                 enum: [yes, no]
               metricsCount:
                 type: number
-    200application:
+
+    '200application':
       type: object
+      required:
+        - applications
       properties:
         applications:
           type: array
@@ -659,29 +677,27 @@ components:
               - appName
               - createdAt
               - updatedAt
+              - strategies
             properties:
               appName:
                 description: Application name
                 type: string
-                minLength: 1
                 example: my-application
               createdAt:
                 description: Date and time when the application was initially created
                 type: string
-                minLength: 1
                 example: '2016-12-09T14:56:36.730Z'
               updatedAt:
                 description: Date and time when the application was last updated
                 type: string
-                minLength: 1
                 example: '2020-11-14T09:55:23.653Z'
               description:
                 description: A description of what the application does
                 type: string
               strategies:
-                description: The Strategy's name
-                type: array
-                minLength: 1
+                description: A description of what the application does
+                type: string
+ #               $ref: '#/components/schemas/simpleStrategySchema'
               url:
                 description: Link to more information about the application? Relative only?
                 type: string
@@ -692,8 +708,6 @@ components:
               icon:
                 description: The icon to use for something. Link?
                 type: string
-      required:
-        - applications
 
     '200appdetails':
       type: object
@@ -711,7 +725,6 @@ components:
         createdAt:
           description: Date and time when the application was initially created
           type: string
-          minLength: 1
           example: '2016-12-09T14:56:36.730Z'
         description:
           description: A description of what the application does
@@ -727,7 +740,7 @@ components:
           description: The icon to use for something. Link?
           type: string
         strategies:
-          $ref: '#/components/schemas/appStrategySchema'
+          $ref: '#/components/schemas/strategySchema'
         instances:
           type: object
           required:
@@ -856,7 +869,7 @@ components:
                 type: string
                 minLength: 1
               strategies:
-                $ref: '#/components/schemas/strategySchema'
+                $ref: '#/components/schemas/simpleStrategySchema'
               url:
                 description: Link to more information about the application? Relative only?
                 type: string
@@ -870,8 +883,7 @@ components:
                 type: string
                 minLength: 1
 
-
-    strategySchema:
+    'strategySchema':
       type: array
       properties:
         name:
@@ -912,12 +924,12 @@ components:
                   required:
                     description: Is this a required parameter?
                     type: boolean
-    appStrategySchema:
-      title: appStrategySchema
+
+    'simpleStrategySchema':
       type: object
       required:
         - appName
-        - strategies
+        - parameterName
       properties:
         appName:
           description: Application name
@@ -930,7 +942,7 @@ components:
             required:
               - strategyName
             properties:
-              strategyName:
-                description: Name of Strategy
+              parameterName:
+                description: Name of Strategy's parameter
                 type: string
                 example: extra

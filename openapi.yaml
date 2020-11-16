@@ -29,7 +29,7 @@ info:
   contact:
     name: The Unleash team
     url: 'https://unleash.github.io/'
-    email: some_email@gmail.com
+#    email: some_email@gmail.com
 externalDocs:
   description: Unleash documentation
   url: 'https://unleash.github.io/docs/getting_started'
@@ -427,7 +427,7 @@ paths:
       responses:
         '200':
           description: Successful import.
-      description: You can either send the data as JSON in the POST body or send a *file* parameter with *multipart/form-data* (YAML files are also accepted here). What format/schema must the file adopt? Same as the export 200 response?
+      description: Upload the data, in JSON or YAML format, in the POST body. What schema must the import file adopt? Same as the export 200 response?
       parameters:
         - schema:
             type: boolean
@@ -453,6 +453,13 @@ paths:
   /admin/feature-types:
     get:
       summary: Fetch the list of Unleash feature types
+      description: |-
+        - release
+        - experiment
+        - ops
+        - killswitch
+        - permission
+      operationId: get-admin-feature-types
       tags:
         - Feature types
       responses:
@@ -462,13 +469,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200featuretype'
-      operationId: get-admin-feature-types
-      description: |-
-        - release
-        - experiment
-        - ops
-        - killswitch
-        - permission
+
 components:
   parameters:
     strategyQuery:

@@ -338,7 +338,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200appdetails'
-
   /admin/metrics/seen-apps:
     get:
       summary: Details about application seen per Feature Toggle.
@@ -353,29 +352,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200seenapps'
-
   /admin/events:
     get:
       summary: Fetch all changes in the Unleash system
-      description: |
-        It returns one of the five event types:
-        - feature-created
-        - feature-updated
-        - feature-archived
-        - feature-revived
-        - strategy-created
-        - strategy-deleted
-      operationId: getEvents
-      tags:
-        - Events
+      tags: []
       responses:
-      '200':
-        description: Successful response
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/200seenapps'
-
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200-events'
+      operationId: get-admin-events
+      description: |-
+        |
+          It returns one of the five event types:
+          - feature-created
+          - feature-updated
+          - feature-archived
+          - feature-revived
+          - strategy-created
+          - strategy-deleted
 components:
   parameters:
     strategyQuery:
@@ -997,7 +994,7 @@ components:
                   parameters:
                     type: object
                     properties: {}
-                    required: []
+
                 required:
                   - name
                   - description
@@ -1020,7 +1017,6 @@ components:
                     path:
                       type: array
                       items:
-                        required: []
                         properties: {}
                     lhs:
                       type: boolean

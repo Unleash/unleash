@@ -1,3 +1,8 @@
+# simpleStrategySchema works (and may be correct for some responses)
+# strategySchema can't render in Swagger UI. use simple for now
+# Add questions list
+# Check for $ref substitutions - see the 'required' items
+# Need to define variants schema
 openapi: 3.0.0
 servers:
   - description: Local host.
@@ -9,6 +14,8 @@ tags:
     description: Idientifying events on the Unleash server
   - name: Feature toggles
     description: Accessing feature toggles
+  - name: Feature types
+    description: Details of the five Unleash Feature Toggle types
   - name: Import and export
     description: Importing and exporting feature toggles and strategies
   - name: Metrics
@@ -446,7 +453,8 @@ paths:
   /admin/feature-types:
     get:
       summary: Fetch the list of Unleash feature types
-      tags: []
+      tags:
+        - Feature types
       responses:
         '200':
           description: OK
@@ -805,6 +813,7 @@ components:
               icon:
                 description: The icon to use for something. Link?
                 type: string
+
     200appdetails:
       type: object
       required:
@@ -836,7 +845,7 @@ components:
           description: The icon to use for something. Link?
           type: string
         strategies:
-          $ref: '#/components/schemas/strategySchema'
+          $ref: '#/components/schemas/simpleStrategySchema'
         instances:
           type: object
           required:
@@ -1223,11 +1232,12 @@ components:
         strategies:
           $ref: '#/components/schemas/simpleStrategySchema'
     200featuretype:
-      description: ''
       type: object
       properties:
         version:
+          description: A version number of something?
           type: number
+          example: 1
         types:
           type: array
           uniqueItems: true
@@ -1240,16 +1250,39 @@ components:
               - lifetimeDays
             properties:
               id:
+                description: The *id* string for the Feature Toggle type
+                externalDocs:
+                  description: Feature Toggle types
+                  url: 'https://unleash.github.io/docs/feature_toggle_types'
                 type: string
                 minLength: 1
+                example: release
               name:
+                description: The title of the Feature Toggle type
                 type: string
+                enum:
+                  - Release
+                  - Experiment
+                  - Operational
+                  - Kill switch
+                  - Permission
                 minLength: 1
+                example: Release
               description:
+                description: A description of what this Feature Toggle type could be used for
                 type: string
+                enum:
+                  - Enables trunk-based development for teams practicing continuous delivery
+                  - Performs multivariate or A/B testing
+                  - Controls operational aspects of the system behaviour # US English?
+                  - Gracefully degrades system functionality
+                  - Changez the features or product experiences that certain users receive
                 minLength: 1
               lifetimeDays:
+                description: What's this?
                 type: number
+                example: 40
       required:
         - version
         - types
+

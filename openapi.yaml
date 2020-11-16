@@ -370,14 +370,13 @@ paths:
                 $ref: '#/components/schemas/200-events'
       operationId: get-admin-events
       description: |-
-          Returns one of the five event types:
-          - feature-created
-          - feature-updated
-          - feature-archived
-          - feature-revived
-          - strategy-created
-          - strategy-deleted
-
+        Returns one of the five event types:
+        - feature-created
+        - feature-updated
+        - feature-archived
+        - feature-revived
+        - strategy-created
+        - strategy-deleted
   /admin/state/export:
     get:
       summary: Export feature toggles and strategies
@@ -414,6 +413,38 @@ paths:
           name: strategies
           description: Include strategies in the export? Default is true
       description: Exports a list of feature toggles and/or strategies in either JSON or YAML format.
+  /admin/state/import:
+    post:
+      summary: Import feature toggles and strategies
+      operationId: post-admin-state-import
+      tags:
+        - Import and export
+      responses:
+        '200':
+          description: Successful import.
+      description: You can either send the data as JSON in the POST body or send a *file* parameter with *multipart/form-data* (YAML files are also accepted here). What format/schema must the file adopt? Same as the export 200 response?
+      parameters:
+        - schema:
+            type: boolean
+            default: 'false'
+          in: query
+          name: drop
+          description: Be careful using this in production environments. Set to true if you want the to remove all strategies and feature toggles from the datebase before import. Default is false.
+        - schema:
+            type: boolean
+          in: query
+          name: keep
+          description: Set to true if you want keep all existing feature toggles and strategies as is; only the missing feature toggles and strategies will be inserted from the import data. Deafult is true.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  format: binary
+
 components:
   parameters:
     strategyQuery:
@@ -992,7 +1023,6 @@ components:
                 description: Name of Strategy's parameter
                 type: string
                 example: extra
-                
     200-events:
       type: object
       properties:
@@ -1175,5 +1205,4 @@ components:
                 type: string
                 minLength: 1
         strategies:
-          $ref: '#/components/schemas/simpleStrategySchema' # Strategies twice? How does this vary to the other strategies schema in the response?
-
+          $ref: '#/components/schemas/simpleStrategySchema'

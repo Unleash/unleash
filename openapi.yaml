@@ -1,12 +1,12 @@
-# Continue from components/schemas/200seenapps (schema needs work and isn't displaying in Swagger UI).
+# Continue from components/schemas/200seenapps and 200appdetails (schemas needs work and aren't displaying in Swagger UI). 200appdetails schema appears simpler from the markdown
 # Run tests against prevous items (I've done a global strategies $ref replacement)
 # Add examples to everything (inclusing response schemas)
 # Verify response schemas match object structure
 # Check question marks with unleash team
-# $ref any duplicate aspects
+# $ref any duplicate aspects - check the require elements for things you can replace
 # British English or American English?
 # {} in a definition means 'I don't know' - fix
-# Need a variants schema
+# Need a variants schema?
 openapi: 3.0.0
 servers:
   - description: Local host.
@@ -338,7 +338,6 @@ paths:
         - Metrics
       parameters:
         - $ref: '#/components/parameters/appNamePath'
-
       responses:
         '200':
           description: Successful response
@@ -696,7 +695,7 @@ components:
       required:
         - applications
 
-    200appdetails:
+    '200appdetails':
       type: object
       required:
         - appName
@@ -728,8 +727,7 @@ components:
           description: The icon to use for something. Link?
           type: string
         strategies:
-          $ref: '#/components/schemas/strategySchema'
-
+          $ref: '#/components/schemas/appStrategySchema'
         instances:
           type: object
           required:
@@ -864,8 +862,11 @@ components:
                 type: string
                 minLength: 1
                 example: https://medium.com/keptn
-              color: {}
+              color:
+                description: The colour (American English?) of something. Hex code?
+                type: string
               icon:
+                description: The icon to use for something. Link?
                 type: string
                 minLength: 1
 
@@ -911,3 +912,25 @@ components:
                   required:
                     description: Is this a required parameter?
                     type: boolean
+    appStrategySchema:
+      title: appStrategySchema
+      type: object
+      required:
+        - appName
+        - strategies
+      properties:
+        appName:
+          description: Application name
+          type: string
+          minLength: 1
+          example: demo-app
+        strategies:
+          type: array
+          items:
+            required:
+              - strategyName
+            properties:
+              strategyName:
+                description: Name of Strategy
+                type: string
+                example: extra

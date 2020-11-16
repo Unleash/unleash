@@ -352,10 +352,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200seenapps'
+
   /admin/events:
     get:
       summary: Fetch all changes in the Unleash system
-      tags: []
+      tags:
+        - Events
       responses:
         '200':
           description: OK
@@ -373,6 +375,7 @@ paths:
           - feature-revived
           - strategy-created
           - strategy-deleted
+
 components:
   parameters:
     strategyQuery:
@@ -506,6 +509,7 @@ components:
           example: 1
         strategies:
           $ref: '#/components/schemas/simpleStrategySchema'
+
     newFeatureToggle:
       type: object
       required:
@@ -516,16 +520,21 @@ components:
         - strategies
       properties:
         name:
+          description: Feature Toggle name must be unique.
           type: string
           minLength: 1
-          description: Feature Toggle name must be unique.
           example: FeatureA
         description:
+          description: What the Feature Toggle does
           type: string
           minLength: 1
           example: Toggles FeatureA on and off
         type:
           type: string
+          description: '*type* is optional. If not defined, it defaults to `release`'
+          externalDocs:
+            description: Feature Toggle types
+            url: 'https://unleash.github.io/docs/feature_toggle_types'
           enum:
             - release
             - experiment
@@ -533,10 +542,6 @@ components:
             - killswitch
             - permission
           minLength: 1
-          description: '*type* is optional. If not defined, it defaults to `release`'
-          externalDocs:
-            description: Feature Toggle types
-            url: 'https://unleash.github.io/docs/feature_toggle_types'
           example: release
         enabled:
           type: boolean
@@ -888,6 +893,7 @@ components:
                 description: The icon to use for something. Link?
                 type: string
                 minLength: 1
+
     strategySchema:
       type: array
       properties:
@@ -929,6 +935,7 @@ components:
                   required:
                     description: Is this a required parameter?
                     type: boolean
+
     simpleStrategySchema:
       type: object
       required:
@@ -950,61 +957,102 @@ components:
                 description: Name of Strategy's parameter
                 type: string
                 example: extra
+    
     200-events:
-      description: ''
       type: object
       properties:
         version:
+          description: Version number of what?
           type: number
+          example: 1
         events:
           type: array
+          required:
+          - id
+          - type
+          - createdBy
+          - createdAt
           uniqueItems: true
           minItems: 1
           items:
-            required:
-              - id
-              - type
-              - createdBy
-              - createdAt
             properties:
               id:
+                description: The event number. Starts at 1? On first run of application version?
                 type: number
+                example: 55
               type:
+                description: One of the five event types
                 type: string
+                enum:
+                  - feature-created
+                  - feature-updated
+                  - feature-archived
+                  - feature-revived
+                  - strategy-created
+                  - strategy-deleted
                 minLength: 1
+                example: feature-updated
               createdBy:
+                description: Creator of the application? Where is this taken from?
                 type: string
                 minLength: 1
               createdAt:
+                description: Date and time when the application was initially created
                 type: string
-                minLength: 1
+                example: '2016-12-09T14:56:36.730Z'
               data:
                 type: object
+                required:
+                - name
+                - description
+                - type
+                - enabled
+                - stale
+                - strategies
+                - createdAt
                 properties:
                   name:
+                    description: Feature Toggle name must be unique.
                     type: string
                     minLength: 1
+                    example: FeatureA
                   description:
-                    type: string
-                  strategy:
+                    description: What the Feature Toggle does
                     type: string
                     minLength: 1
+                    example: Toggles FeatureA on and off
+                  type:
+                    type: string
+                    description: '*type* is optional. If not defined, it defaults to `release`'
+                    externalDocs:
+                      description: Feature Toggle types
+                      url: 'https://unleash.github.io/docs/feature_toggle_types'
+                    enum:
+                      - release
+                      - experiment
+                      - ops
+                      - killswitch
+                      - permission
+                    minLength: 1
+                    example: release
                   enabled:
                     type: boolean
-                  parameters:
-                    type: object
-                    properties: {}
-
-                required:
-                  - name
-                  - description
-                  - strategy
-                  - enabled
-                  - parameters
+                    example: false
+                  stale:
+                    description: Is the Feature Toggle deprecated (stale)?
+                    type: boolean
+                    example: false
+                  strategies:
+                    $ref: '#/components/schemas/strategySchema'
+                  variants: {}
+                  createdAt:
+                    description: Date and time when the Feature Toggle was created?
+                    type: string
+                    minLength: 1
+                    example: '2020-11-09T13:51:08.949Z'
               diffs:
+                description: What are diffs? I don't think this part of the schema is correct
                 type: array
-                uniqueItems: true
-                minItems: 1
                 items:
                   required:
                     - kind
@@ -1013,15 +1061,20 @@ components:
                   properties:
                     kind:
                       type: string
-                      minLength: 1
+                      example: E
                     path:
                       type: array
                       items:
-                        properties: {}
+                        required:
+                          - pathItem
+                      properties:
+                        pathItem:
+                          description: What's this?
+                          type: string
+                          example: enabled
                     lhs:
+                      description: Left-hand side of something?
                       type: boolean
                     rhs:
+                      description: Left-hand side of something?
                       type: boolean
-      required:
-        - version
-        - events

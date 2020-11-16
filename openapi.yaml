@@ -1,4 +1,5 @@
-# Continue from events
+# Continue from components/schemas/200seenapps (schema needs work and isn't displaying in Swagger UI).
+# Run tests against prevous items (I've done a global strategies $ref replacement)
 # Add examples to everything (inclusing response schemas)
 # Verify response schemas match object structure
 # Check question marks with unleash team
@@ -337,6 +338,7 @@ paths:
         - Metrics
       parameters:
         - $ref: '#/components/parameters/appNamePath'
+
       responses:
         '200':
           description: Successful response
@@ -344,7 +346,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200appdetails'
-  /admin/metrics/seen-apps:
+  '/admin/metrics/seen-apps':
     get:
       summary: Details about application seen per Feature Toggle.
       description: Details about application seen per Feature Toggle.
@@ -727,6 +729,7 @@ components:
           type: string
         strategies:
           $ref: '#/components/schemas/strategySchema'
+
         instances:
           type: object
           required:
@@ -785,7 +788,7 @@ components:
                 minLength: 1
                 example: FeatureX
               description:
-                description: What the Feture Toggle does
+                description: What the Feature Toggle does
                 type: string
               type:
                 description: One of the five types of Feature Toggle
@@ -826,8 +829,6 @@ components:
       properties:
         my-toggle:
           type: array
-          uniqueItems: true
-          minItems: 1
           items:
             required:
               - appName
@@ -838,26 +839,36 @@ components:
               - icon
             properties:
               appName:
+                description: Appplication name
                 type: string
                 minLength: 1
+                example: my-application
               createdAt:
+                description: Date and time when the application was initially created
                 type: string
                 minLength: 1
+                example: '2016-12-09T14:56:36.730Z'
               updatedAt:
+                description: Date and time when the application was last updated
                 type: string
                 minLength: 1
+                example: '2020-11-14T09:55:23.653Z'
               description:
+                description: A description of what the application does
                 type: string
                 minLength: 1
               strategies:
                 $ref: '#/components/schemas/strategySchema'
               url:
+                description: Link to more information about the application? Relative only?
                 type: string
                 minLength: 1
+                example: https://medium.com/keptn
               color: {}
               icon:
                 type: string
                 minLength: 1
+
 
     strategySchema:
       type: array

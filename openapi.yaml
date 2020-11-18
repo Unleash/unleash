@@ -1,10 +1,10 @@
 # Add questions list
 # Add style guide MD. UK/US, Newspaper/Movie, JS/OAS. Nouns: UBleash, Feature Toggle. Strategy. Plurals. &. Glossary
+# Only use backticks for code samples and API paths. Use bold for schema items and italic for schema item settings
 # Move responses to root responses section in components (from schema section)
-# Issues with rendering as externaldocs from Swagger UI
-# Only use backticks for code samples (there is just one). Use bold for schema items and italic for schema item settings
-# Add descriptions and examples to everything in components. (Almost) every description needs an example
-# Up to updateFeatureToggle. Fix Feature Toggle $ref first
+# Issues with rendering as nested externaldocs from Swagger UI. See GET /admin​/feature-types
+# Make sure everthing from the Unleash admin documentation is incorporated or referenced
+# List questions
 openapi: 3.0.0
 servers:
   - description: Local host.
@@ -26,7 +26,7 @@ tags:
     description: Accessing and updating strategies
 info:
   title: Unleash API
-  description: Unleash is a open source feature flag and toggle system for all your applications and services.
+  description: Unleash is an open source feature flag and toggle system for all your applications and services.
   version: 3.5.6
   contact:
     name: The Unleash team
@@ -428,7 +428,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/200application'
+                $ref: '#/components/schemas/applicationArray'
         '401':
           description: Not authorised
           content:
@@ -476,7 +476,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/200seenapps'
+                $ref: '#/components/schemas/applicationArray'
         '401':
           description: Not authorised
           content:
@@ -535,18 +535,18 @@ paths:
           in: query
           name: download
           example: false
-          description: Export the data as a file? Default is false
+          description: Do you want to export the data as a file? Default is false
         - schema:
             type: boolean
           in: query
           name: featureToggles
-          description: Include feature toggles in the export? Default is true
+          description: Do you want to include feature toggles in the export? Default is true
           example: true
         - schema:
             type: boolean
           in: query
           name: strategies
-          description: Include strategies in the export? Default is true
+          description: Do you want to include strategies in the export? Default is true
           example: true
       responses:
         '200':
@@ -679,9 +679,8 @@ components:
       type: object
       properties:
         version:
-          type: number
+          $ref: '#/components/schemas/versionSchema'
         features:
-          type: array
           $ref: '#/components/schemas/featureToggleSchema'
 
     '401':
@@ -709,9 +708,7 @@ components:
         - strategies
       properties:
         version:
-          type: number
-          description: What is this?
-          example: 1
+          $ref: '#/components/schemas/versionSchema'
         strategies:
           $ref: '#/components/schemas/strategySchema'
 
@@ -811,8 +808,13 @@ components:
                   - 'no'
               metricsCount:
                 type: number
+                
+    applicationArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/application'
 
-    200application:
+    application:
       type: object
       required:
         - applications
@@ -847,46 +849,26 @@ components:
                 description: A description of what the application does
                 type: string
               url:
-                description: Link to more information about the application? Relative only?
+                description: Link to more information about the application? Relative only? # Question?
                 type: string
                 example: 'https://medium.com/keptn'
               color:
-                description: The colour (American English?) of something. Hex code?
+                description: The colour (American English?) of something. Hex code? # Question?
                 type: string
               icon:
-                description: The icon to use for something. Link?
+                description: The icon to use for something. Link? # Question?
                 type: string
 
     200appdetails:
       type: object
       required:
-        - appName
+        - application
         - instances
         - strategies
         - seenToggles
       properties:
-        appName:
-          description: Application name
-          type: string
-          minLength: 1
-          example: my-application
-        createdAt:
-          description: Date and time when the application was initially created
-          type: string
-          example: '2016-12-09T14:56:36.730Z'
-        description:
-          description: A description of what the application does
-          type: string
-        url:
-          description: Link to more information about the application? Relative only?
-          type: string
-          example: 'https://medium.com/keptn'
-        color:
-          description: The colour (American English?) of something. Hex code?
-          type: string
-        icon:
-          description: The icon to use for something. Link?
-          type: string
+        application:
+          $ref: '#/components/schemas/application'
         strategies:
           $ref: '#/components/schemas/strategySchema'
         instances:
@@ -915,122 +897,31 @@ components:
               minLength: 1
               example: 'unleash-client-node:3.4.0'
             clientIp:
-              description: The IP address of the system running this instance of the application. What is the prefix on the string?
+              description: The IP address of the system running this instance of the application. What is the prefix on the string? # Question?
               type: string
               minLength: 1
               example: '::ffff:127.0.0.1'
             lastSeen:
-              description: The last time the application accessed Unleash?
+              description: The last time the application accessed Unleash? # Question?
               type: string
               minLength: 1
               example: '2020-11-14T11:17:24.482Z'
             createdAt:
-              description: When the application was created?
+              description: When the application was created? # Question?
               type: string
               minLength: 1
               example: '2020-11-13T16:56:29.279Z'
         seenToggles:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            required:
-              - name
-              - type
-              - enabled
-              - stale
-              - createdAt
-            properties:
-              name:
-                description: Name of the Feature Toggle
-                type: string
-                minLength: 1
-                example: FeatureX
-              description:
-                description: What the Feature Toggle does
-                type: string
-              type:
-                description: One of the five types of Feature Toggle
-                type: string
-                externalDocs:
-                  description: Feature Toggle types
-                  url: 'https://unleash.github.io/docs/feature_toggle_types'
-                minLength: 1
-                example: release
-              enabled:
-                description: Is the Feature Toggle enabled?
-                type: boolean
-                example: true
-              stale:
-                description: Is the Feature Toggle deprecated (stale)?
-                type: boolean
-                example: false
-              strategies:
-                $ref: '#/components/schemas/strategySchema'
-              variants:
-                $ref: '#/components/schemas/variantsSchema'
-              createdAt:
-                description: Date and time when the application was initially created
-                type: string
-                minLength: 1
-                example: '2020-11-09T15:25:59.517Z'
+          $ref: '#/components/schemas/featureToggleSchema'
         links:
           type: object
           properties:
             self:
-              description: What is this?
+              description: What is this? # Question?
               type: string
               minLength: 1
           required:
             - self
-
-    200seenapps:
-      type: object
-      properties:
-        my-toggle:
-          type: array
-          items:
-            required:
-              - appName
-              - createdAt
-              - updatedAt
-              - description
-              - url
-              - icon
-            properties:
-              appName:
-                description: Appplication name
-                type: string
-                minLength: 1
-                example: my-application
-              createdAt:
-                description: Date and time when the application was initially created
-                type: string
-                minLength: 1
-                example: '2016-12-09T14:56:36.730Z'
-              updatedAt:
-                description: Date and time when the application was last updated
-                type: string
-                minLength: 1
-                example: '2020-11-14T09:55:23.653Z'
-              description:
-                description: A description of what the application does
-                type: string
-                minLength: 1
-              strategies:
-                $ref: '#/components/schemas/simpleStrategySchema'
-              url:
-                description: Link to more information about the application? Relative only?
-                type: string
-                minLength: 1
-                example: 'https://medium.com/keptn'
-              color:
-                description: The colour (American English?) of something. Hex code?
-                type: string
-              icon:
-                description: The icon to use for something. Link?
-                type: string
-                minLength: 1
 
     featureToggleTypeSchema:
       type: string
@@ -1040,50 +931,60 @@ components:
         - ops
         - killswitch
         - permission
-      description: '**type** is optional. If not defined, it defaults to *release*'
+      description: |-
+        'One of the five Unleash Feature Toggle types.
+        
+        **type** is optional. If not defined, it defaults to *release*'
       default: 'release'
       externalDocs:
         description: Feature Toggle types
         url: 'https://unleash.github.io/docs/feature_toggle_types'
       minLength: 1
       example: release
+    
+    versionSchema:
+      type: number
+      description: What is this? # Question?
+      example: 1
 
     featureToggleSchema:
-      type: object
-      required:
-      - name
-      - description
-      - type
-      - enabled
-      - stale
-      - strategies
-      properties:
-        name:
-          description: Feature Toggle name must be unique.
-          type: string
-          minLength: 1
-          example: featureX
-        description:
-          type: string
-          minLength: 1
-          example: Toggles featureX on and off
-        type:
-          $ref: '#/components/schemas/featureToggleTypeSchema'
-        enabled:
-          description: Is the Feature Toggle enabled?
-          type: boolean
-          example: true
-        stale:
-          description: Is the Feature Toggle 'stale' (deprecated)?
-          type: boolean
-          example: false
-        strategies:
-          $ref: '#/components/schemas/strategySchema'
-        variants:
-          $ref: '#/components/schemas/variantsSchema'
-        createdAt:
-          type: string
-          minLength: 1
+      type: array
+      items:
+        type: object
+        required:
+        - name
+        - description
+        - type
+        - enabled
+        - stale
+        - strategies
+        properties:
+          name:
+            description: Feature Toggle name must be unique.
+            type: string
+            minLength: 1
+            example: featureX
+          description:
+            type: string
+            minLength: 1
+            example: Toggles featureX on and off
+          type:
+            $ref: '#/components/schemas/featureToggleTypeSchema'
+          enabled:
+            description: Is the Feature Toggle enabled?
+            type: boolean
+            example: true
+          stale:
+            description: Is the Feature Toggle 'stale' (deprecated)?
+            type: boolean
+            example: false
+          strategies:
+            $ref: '#/components/schemas/strategySchema'
+          variants:
+            $ref: '#/components/schemas/variantsSchema'
+          createdAt:
+            type: string
+            minLength: 1
 
     strategySchema:
       type: array
@@ -1129,6 +1030,9 @@ components:
                     example: false
 
     variantsSchema:
+      externalDocs:
+        description: How to use Feature Toggle variants
+        url: https://unleash.github.io/docs/toggle_variants
       type: array
       items:
         required:
@@ -1136,40 +1040,20 @@ components:
           - weight
         properties:
           name:
+            description: The name of the Feature Toggle variant
             type: string
             minLength: 1
+            example: yellow
           weight:
+            description: The 'weighting' for the variant. How does Unleash use weighting to determine which variant to use? What is the range? # Question?
             type: number
-
-    simpleStrategySchema:
-      type: object
-      required:
-        - appName
-        - parameterName
-      properties:
-        appName:
-          description: Application name
-          type: string
-          minLength: 1
-          example: demo-app
-        strategies:
-          type: array
-          items:
-            required:
-              - strategyName
-            properties:
-              parameterName:
-                description: Name of Strategy's parameter
-                type: string
-                example: extra
+            example: 20
 
     200-events:
       type: object
       properties:
         version:
-          description: Version number of what?
-          type: number
-          example: 1
+          $ref: '#/components/schemas/versionSchema'
         events:
           type: array
           required:
@@ -1182,11 +1066,11 @@ components:
           items:
             properties:
               id:
-                description: The event number. Starts at 1? On first run of application version?
+                description: The event number. Starts at 1? On first run of application version? # Question?
                 type: number
                 example: 55
               type:
-                description: One of the five event types
+                description: One of the six event types
                 type: string
                 enum:
                   - feature-created
@@ -1198,7 +1082,7 @@ components:
                 minLength: 1
                 example: feature-updated
               createdBy:
-                description: Creator of the application? Where is this taken from?
+                description: Creator of the application? Where is this taken from? # Question?
                 type: string
                 minLength: 1
               createdAt:
@@ -1208,7 +1092,7 @@ components:
               data:
                 $ref: '#/components/schemas/featureToggleSchema'
               diffs:
-                description: What are diffs? I don't think this part of the schema is correct
+                description: What are diffs?  # Question?
                 type: array
                 items:
                   required:
@@ -1217,6 +1101,7 @@ components:
                     - rhs
                   properties:
                     kind:
+                      description: What do these letters signify? What's the full list? # Question? 
                       type: string
                       example: E
                     path:
@@ -1226,15 +1111,15 @@ components:
                           - pathItem
                       properties:
                         pathItem:
-                          description: What's this?
+                          description: What's this? # Question?
                           type: string
                           example: enabled
                     lhs:
-                      description: Left-hand side of something?
+                      description: Left-hand side of something? Sometimes boolean, sometimes an object, sometimes null. What is it? # Question?
                       type: boolean
                       example: true
                     rhs:
-                      description: Left-hand side of something?
+                      description: Left-hand side of something? Sometimes boolean, sometimes an object, sometimes null. What is it? # Question?
                       type: boolean
                       example: false
 
@@ -1246,71 +1131,20 @@ components:
         - strategies
       properties:
         version:
-          description: Version number of what?
-          type: number
-          example: 1
+          $ref: '#/components/schemas/versionSchema'
         features:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            required:
-              - name
-              - description
-              - type
-              - enabled
-              - stale
-              - createdAt
-            properties:
-              name:
-                description: Feature Toggle name.
-                type: string
-                minLength: 1
-                example: FeatureA
-              description:
-                description: What the Feature Toggle does
-                type: string
-                minLength: 1
-                example: Toggles FeatureA on and off
-              type:
-                type: string
-                description: '*type* is optional. If not defined, it defaults to `release`'
-                externalDocs:
-                  description: Feature Toggle types
-                  url: 'https://unleash.github.io/docs/feature_toggle_types'
-                enum:
-                  - release
-                  - experiment
-                  - ops
-                  - killswitch
-                  - permission
-                minLength: 1
-                example: release
-                default: 'release'
-              enabled:
-                type: boolean
-                example: false
-              stale:
-                description: Is the Feature Toggle deprecated (stale)?
-                type: boolean
-                example: false
-              strategies:
-                $ref: '#/components/schemas/strategySchema'
-              variants:
-                $ref: '#/components/schemas/variantsSchema'
-              createdAt:
-                type: string
-                minLength: 1
+          $ref: '#/components/schemas/featureToggleSchema'
         strategies:
-          $ref: '#/components/schemas/strategySchema'
+          $ref: '#/components/schemas/strategySchema' # Difference between this and the strategies in the Feature Toggle schema?
 
     200featuretype:
       type: object
+      required:
+        - version
+        - types
       properties:
         version:
-          description: A version number of something?
-          type: number
-          example: 1
+          $ref: '#/components/schemas/versionSchema'
         types:
           type: array
           uniqueItems: true
@@ -1343,13 +1177,11 @@ components:
                   - Performs multivariate or A/B testing
                   - Controls operational aspects of the system behaviour # US English?
                   - Gracefully degrades system functionality
-                  - Changez the features or product experiences that certain users receive
+                  - Changes the features or product experiences that certain users receive
                 minLength: 1
               lifetimeDays:
-                description: What's this?
+                description: What's this? # Question?
                 type: number
                 example: 40
-      required:
-        - version
-        - types
+
 

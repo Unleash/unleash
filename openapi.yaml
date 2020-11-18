@@ -1,8 +1,10 @@
-# simpleStrategySchema works (and may be correct for some responses)
-# strategySchema can't render in Swagger UI. use simple for now
 # Add questions list
-# Check for $ref substitutions - see the 'required' items
-# Need to define variants schema
+# Add style guide MD. UK/US, Newspaper/Movie, JS/OAS. Nouns: UBleash, Feature Toggle. Strategy. Plurals. &. Glossary
+# Move responses to root responses section in components (from schema section)
+# Issues with rendering as externaldocs from Swagger UI
+# Only use backticks for code samples (there is just one). Use bold for schema items and italic for schema item settings
+# Add descriptions and examples to everything in components. (Almost) every description needs an example
+# Up to updateFeatureToggle. Fix Feature Toggle $ref first
 openapi: 3.0.0
 servers:
   - description: Local host.
@@ -11,7 +13,7 @@ tags:
   - name: Archive
     description: Handling Feature Toggle archiving and un-archiving
   - name: Events
-    description: Idientifying events on the Unleash server
+    description: Identifying events on the Unleash server
   - name: Feature toggles
     description: Accessing feature toggles
   - name: Feature types
@@ -62,7 +64,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
+
     post:
+      summary: Create a Feature Toggle
       description: Create a new Feature Toggle
       tags:
         - Feature toggles
@@ -72,21 +76,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/newFeatureToggle'
+              $ref: '#/components/schemas/featureToggleSchema'
       responses:
-        '200':
-          description: Successful response
+        '201':
+          description: Feature Toggle successfully created
+        '400':
+          description: Bad body request (for example, Feature Toggle name is not unique)
+        '401':
+          description: Not authorised
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/200'
-        '409':
-          description: Feature Toggle name is not unique
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/409'
-      summary: Create a Feature Toggle
+                $ref: '#/components/schemas/401'
+
   '/admin/features/{featureName}':
     put:
       summary: Update a Feature Toggle
@@ -101,14 +103,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/updateFeatureToggle'
+              $ref: '#/components/schemas/featureToggleSchema'
       responses:
         '200':
-          description: Successful response
+          description: Feature Toggle successfully updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
+        '400':
+          description: Bad body request (for example 'strategies' is not an array)
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        '404':
+          description: Feature Toggle not found
+
     delete:
       summary: Archive a Feature Toggle.
       description: |
@@ -118,6 +131,7 @@ paths:
       operationId: archiveFeatureToggle
       tags:
         - Feature toggles
+        - Archive
       parameters:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
@@ -127,10 +141,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        '404':
+          description: Feature Toggle not found
+
   '/admin/features/{featureName}/toggle/on':
     post:
       summary: Enable a Feature Toggle.
-      description: '*featureName* must match an existing Feature Toggle.'
+      description: '**featureName** must match an existing Feature Toggle.'
       operationId: enableFeatureToggle
       tags:
         - Feature toggles
@@ -143,10 +166,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        '404':
+          description: Feature Toggle not found
+
   '/admin/features/{featureName}/toggle/off':
     post:
       summary: Disable a Feature Toggle.
-      description: '*featureName* must match an existing Feature Toggle.'
+      description: '**featureName** must match an existing Feature Toggle.'
       operationId: disableFeatureToggle
       tags:
         - Feature toggles
@@ -159,10 +191,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        '404':
+          description: Feature Toggle not found
+
   '/admin/features/{featureName}/stale/on':
     post:
       summary: Mark a Feature Toggle as 'stale' (deprecated).
-      description: '*featureName* must match an existing Feature Toggle.'
+      description: '**featureName** must match an existing Feature Toggle.'
       externalDocs:
         description: Feature Toggle types
         url: 'https://unleash.github.io/docs/feature_toggle_types'
@@ -178,10 +219,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        '404':
+          description: Feature Toggle not found
+
   '/admin/features/{featureName}/stale/off':
     post:
       summary: Mark a Feature Toggle as active.
-      description: '*featureName* must match an existing Feature Toggle.'
+      description: '**featureName** must match an existing Feature Toggle.'
       externalDocs:
         description: Feature Toggle types
         url: 'https://unleash.github.io/docs/feature_toggle_types'
@@ -197,13 +247,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
-        '409':
-          description: Feature Toggle name is not unique.
+        '401':
+          description: Not authorised
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/409'
-  /admin/archive/features:
+                $ref: '#/components/schemas/401'
+        '404':
+          description: Feature Toggle not found
+
+  '/admin/archive/features':
     get:
       summary: List all the archived feature toggles on the Unleash server
       description: Archived feature toggles are those that have been previously deleted
@@ -217,6 +270,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        '404':
+          description: Feature Toggle not found
+
   '/admin/archive/revive/{featureName}':
     post:
       summary: Un-archive a Feature Toggle
@@ -233,7 +295,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200'
-  /admin/strategies:
+        '404':
+          description: Feature Toggle not found
+
+  '/admin/strategies':
     get:
       summary: Fetch all strategies and their parameters.
       description: Fetch all strategies and their parameters.
@@ -247,6 +312,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200strategy'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+
     post:
       summary: Create Strategy
       description: Create Strategy
@@ -262,15 +334,24 @@ paths:
       responses:
         '201':
           description: Strategy successfully added
+        '400':
+          description: Bad body request (for example 'strategies' is not an array)
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+
   '/admin/strategies/{strategyName}':
     put:
       summary: Update Strategy
       description: |
         Use to update a Strategy definition.
 
-        *name* and *strategyName* must match and must also match an existing Strategy name.
+        **name** and **strategyName** must match and must also match an existing Strategy name.
 
-        **Caution:** It can be dangerous to change a Strategy (as the implementation also might need to be changed).
+        **Caution: It can be dangerous to change a Strategy (as the implementation also might need to be changed).**
       operationId: updateStrategy
       tags:
         - Strategies
@@ -285,6 +366,15 @@ paths:
       responses:
         '200':
           description: Strategy successfully updated.
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        '404':
+          description: Strategy not updated due to errors in query and/or request body (such as **name** and **strategyName** not matching).
+
   /admin/metrics/seen-toggles:
     get:
       summary: Returns a list of applications and the feature toggles that Unleash has 'seen' for each application.
@@ -299,11 +389,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200seen'
+
   /admin/metrics/feature-toggles:
     get:
       summary: Gives 'last minute' and 'last hour' metrics for all active toggles (based on what was reported by the client applications).
-      description: |
-        - **Yes** is the number of times a given feature toggle was enabled in a client applcation
+      description: |-
+        - **Yes** is the number of times a given feature toggle was enabled in a client applucation
         - **No** is the number of times it was disabled.
       operationId: featureToggles
       tags:
@@ -315,6 +406,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200feature'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+
   /admin/metrics/applications:
     get:
       summary: A list of known applications ('seen' by Unleash in the last two days)
@@ -331,6 +429,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200application'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        '500':
+          description: Strategy name not found
+
   '/admin/metrics/applications/{appName}':
     get:
       summary: Details about a client application.
@@ -347,10 +454,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200appdetails'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        '500':
+          description: Application name not found
+
   /admin/metrics/seen-apps:
     get:
-      summary: Details about application seen per Feature Toggle.
-      description: Details about application seen per Feature Toggle.
+      summary: Details about applications seen
+      description: (per Feature Toggle)
       operationId: seenApps
       tags:
         - Metrics
@@ -361,9 +477,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200seenapps'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+
   /admin/events:
     get:
+      operationId: get-admin-events
       summary: Fetch all changes in the Unleash system
+      description: |-
+        Returns one of the five event types:
+        - feature-created
+        - feature-updated
+        - feature-archived
+        - feature-revived
+        - strategy-created
+        - strategy-deleted
       tags:
         - Events
       responses:
@@ -373,20 +505,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200-events'
-      operationId: get-admin-events
-      description: |-
-        Returns one of the five event types:
-        - feature-created
-        - feature-updated
-        - feature-archived
-        - feature-revived
-        - strategy-created
-        - strategy-deleted
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+
   /admin/state/export:
     get:
+      operationId: get-admin-state-export
       summary: Export feature toggles and strategies
+      description: Exports a list of feature toggles and/or strategies in either JSON or YAML format.
       tags:
         - Import and export
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - json
+              - yaml
+          in: query
+          name: format
+          description: |
+            Choose export format, either json or yaml. json is the default
+          example: json
+        - schema:
+            type: boolean
+          in: query
+          name: download
+          example: false
+          description: Export the data as a file? Default is false
+        - schema:
+            type: boolean
+          in: query
+          name: featureToggles
+          description: Include feature toggles in the export? Default is true
+          example: true
+        - schema:
+            type: boolean
+          in: query
+          name: strategies
+          description: Include strategies in the export? Default is true
+          example: true
       responses:
         '200':
           description: OK
@@ -394,53 +555,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200export'
-      operationId: get-admin-state-export
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: format
-          description: |
-            Choose export format, either json or yaml. json is the default
-        - schema:
-            type: boolean
-          in: query
-          name: download
-          description: Export the data as a file? Default is false
-        - schema:
-            type: boolean
-          in: query
-          name: featureToggles
-          description: Include feature toggles in the export? Default is true
-        - schema:
-            type: boolean
-          in: query
-          name: strategies
-          description: Include strategies in the export? Default is true
-      description: Exports a list of feature toggles and/or strategies in either JSON or YAML format.
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+
   /admin/state/import:
     post:
       summary: Import feature toggles and strategies
       operationId: post-admin-state-import
       tags:
         - Import and export
-      responses:
-        '200':
-          description: Successful import.
-      description: Upload the data, in JSON or YAML format, in the POST body. What schema must the import file adopt? Same as the export 200 response?
+      description: |-
+        Upload the data, in JSON or YAML format.
+        You can add in the POST body or upload a file
+        - **POST body** (JSON format only) - next to **Request body**, choose the *application/json* dropdown option.
+        - **File upload** (JOSN or YAML format) - next to **Request body**, choose the *multipart/form-data* dropdown option. This adopts the same schema as `GET /admin/state/export`
       parameters:
         - schema:
             type: boolean
             default: 'false'
+            example: false
           in: query
           name: drop
           description: Be careful using this in production environments. Set to true if you want the to remove all strategies and feature toggles from the datebase before import. Default is false.
         - schema:
             type: boolean
-            default: 'true'
+            default: 'false'
+            example: false
           in: query
           name: keep
-          description: Set to true if you want keep all existing feature toggles and strategies as is; only the missing feature toggles and strategies will be inserted from the import data. Default is true.
+          description: Set to *true* if you want keep all existing feature toggles and strategies as is; only the missing feature toggles and strategies will be inserted from the import data. Default is true.
+          example: true
       requestBody:
         content:
           multipart/form-data:
@@ -450,6 +598,21 @@ paths:
                 fileName:
                   type: string
                   format: binary
+          application/json:
+            schema:
+              $ref: '#/components/schemas/200export'
+      responses:
+        '200':
+          description: Successful import.
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        '404':
+          description: No import data provided.
+  
   /admin/feature-types:
     get:
       summary: Fetch the list of Unleash feature types
@@ -469,20 +632,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200featuretype'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
 
 components:
   parameters:
     strategyQuery:
       name: strategyName
-      in: query
       description: (Optional). Return all applications implementing the specified Strategy. Must match an existing Strategy name.
+      example: remoteAddress
+      in: query
       schema:
         type: string
     featureNamePath:
       name: featureName
+      description: Must match an existing Feature Toggle name.
+      example: featureX
       required: true
       in: path
-      description: Must match an existing Feature Toggle.
       schema:
         type: string
     strategyNamePath:
@@ -490,6 +661,7 @@ components:
       required: true
       in: path
       description: Must match an existing Strategy name.
+      example: flexibleRollout
       schema:
         type: string
     appNamePath:
@@ -497,8 +669,10 @@ components:
       required: true
       in: path
       description: Must match an existing application name.
+      example: my-application
       schema:
         type: string
+
   schemas:
     '200':
       title: Successful response
@@ -508,49 +682,8 @@ components:
           type: number
         features:
           type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            properties:
-              name:
-                description: Feature Toggle name
-                type: string
-                minLength: 1
-                example: featureX
-              description:
-                description: What the Feature Toggle does
-                type: string
-                minLength: 1
-              type:
-                description: One of the five types of Feature Toggle
-                externalDocs:
-                  description: Feature Toggle types
-                  url: 'https://unleash.github.io/docs/feature_toggle_types'
-                type: string
-                minLength: 1
-                example: release
-              enabled:
-                description: Is the Feature Toggle enabled?
-                type: boolean
-              stale:
-                description: Is the Feature Toggle 'stale' (deprecated)?
-                type: boolean
-              strategies:
-                $ref: '#/components/schemas/simpleStrategySchema'
-              variants:
-                type: array
-                uniqueItems: true
-                minItems: 1
-                items:
-                  required:
-                    - name
-                    - weight
-                  properties:
-                    name:
-                      type: string
-                      minLength: 1
-                    weight:
-                      type: number
+          $ref: '#/components/schemas/featureToggleSchema'
+
     '401':
       description: Not authorised
       type: object
@@ -568,31 +701,8 @@ components:
         - type
         - path
         - message
-    '409':
-      type: object
-      properties:
-        isJoi:
-          type: boolean
-        name:
-          type: string
-          minLength: 1
-        details:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            required:
-              - message
-            properties:
-              message:
-                type: string
-                minLength: 1
-      required:
-        - isJoi
-        - name
-        - details
+
     200strategy:
-      description: Successful.
       type: object
       required:
         - version
@@ -600,82 +710,11 @@ components:
       properties:
         version:
           type: number
+          description: What is this?
           example: 1
         strategies:
-          $ref: '#/components/schemas/simpleStrategySchema'
-    newFeatureToggle:
-      type: object
-      required:
-        - name
-        - description
-        - enabled
-        - stale
-        - strategies
-      properties:
-        name:
-          description: Feature Toggle name must be unique.
-          type: string
-          minLength: 1
-          example: FeatureA
-        description:
-          description: What the Feature Toggle does
-          type: string
-          minLength: 1
-          example: Toggles FeatureA on and off
-        type:
-          type: string
-          description: '*type* is optional. If not defined, it defaults to `release`'
-          externalDocs:
-            description: Feature Toggle types
-            url: 'https://unleash.github.io/docs/feature_toggle_types'
-          enum:
-            - release
-            - experiment
-            - ops
-            - killswitch
-            - permission
-          minLength: 1
-          example: release
-        enabled:
-          type: boolean
-          example: false
-        stale:
-          description: Is the Feature Toggle deprecated (stale)?
-          type: boolean
-          example: false
-        strategies:
-          $ref: '#/components/schemas/simpleStrategySchema'
-    updateFeatureToggle:
-      type: object
-      properties:
-        description:
-          type: string
-          minLength: 1
-          example: Toggles FeatureB on and off
-        type:
-          type: string
-          minLength: 1
-          description: '*type* is optional. If not defined, it defaults to `release`'
-          example: release
-        enabled:
-          type: boolean
-          example: false
-        stale:
-          type: boolean
-          example: false
-        strategies:
-          $ref: '#/components/schemas/simpleStrategySchema'
-        variants: {}
-        createdAt:
-          type: string
-          minLength: 1
-      required:
-        - name
-        - description
-        - enabled
-        - stale
-        - strategies
-        - variants
+          $ref: '#/components/schemas/strategySchema'
+
     createStrategy:
       type: object
       properties:
@@ -712,13 +751,14 @@ components:
                 example: What percent of users should the new Feature Toggle be active for?
               required:
                 type: boolean
+                example: true
       required:
         - name
         - description
         - parameters
+
     200seen:
       type: array
-      description: ''
       minItems: 1
       uniqueItems: true
       items:
@@ -737,8 +777,9 @@ components:
               properties: {}
           metricsCount:
             type: number
+
     200feature:
-      description: |
+      description: |-
         - **lastHour** - how many times a Feature Toggle was accessed in the last hour.
         - **lastMinute** - how many times a Feature Toggle was accessed in the last minute.
       type: array
@@ -770,6 +811,7 @@ components:
                   - 'no'
               metricsCount:
                 type: number
+
     200application:
       type: object
       required:
@@ -846,7 +888,7 @@ components:
           description: The icon to use for something. Link?
           type: string
         strategies:
-          $ref: '#/components/schemas/simpleStrategySchema'
+          $ref: '#/components/schemas/strategySchema'
         instances:
           type: object
           required:
@@ -918,14 +960,15 @@ components:
               enabled:
                 description: Is the Feature Toggle enabled?
                 type: boolean
+                example: true
               stale:
-                description: Is the Feature Toggle
+                description: Is the Feature Toggle deprecated (stale)?
                 type: boolean
+                example: false
               strategies:
                 $ref: '#/components/schemas/strategySchema'
               variants:
-                description: What is this?
-                type: string
+                $ref: '#/components/schemas/variantsSchema'
               createdAt:
                 description: Date and time when the application was initially created
                 type: string
@@ -940,6 +983,7 @@ components:
               minLength: 1
           required:
             - self
+
     200seenapps:
       type: object
       properties:
@@ -987,25 +1031,79 @@ components:
                 description: The icon to use for something. Link?
                 type: string
                 minLength: 1
-    strategySchema:
-      type: array
+
+    featureToggleTypeSchema:
+      type: string
+      enum:
+        - release
+        - experiment
+        - ops
+        - killswitch
+        - permission
+      description: '**type** is optional. If not defined, it defaults to *release*'
+      default: 'release'
+      externalDocs:
+        description: Feature Toggle types
+        url: 'https://unleash.github.io/docs/feature_toggle_types'
+      minLength: 1
+      example: release
+
+    featureToggleSchema:
+      type: object
+      required:
+      - name
+      - description
+      - type
+      - enabled
+      - stale
+      - strategies
       properties:
         name:
-          description: Name of the Strategy
+          description: Feature Toggle name must be unique.
           type: string
           minLength: 1
-          example: default
-        editable:
-          type: boolean
+          example: featureX
         description:
-          description: What the Strategy is
           type: string
-          example: Default on/off strategy.
-        parameters:
-          type: array
-          items:
-            required:
-              - parameter
+          minLength: 1
+          example: Toggles featureX on and off
+        type:
+          $ref: '#/components/schemas/featureToggleTypeSchema'
+        enabled:
+          description: Is the Feature Toggle enabled?
+          type: boolean
+          example: true
+        stale:
+          description: Is the Feature Toggle 'stale' (deprecated)?
+          type: boolean
+          example: false
+        strategies:
+          $ref: '#/components/schemas/strategySchema'
+        variants:
+          $ref: '#/components/schemas/variantsSchema'
+        createdAt:
+          type: string
+          minLength: 1
+
+    strategySchema:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            description: Name of the Strategy
+            type: string
+            minLength: 1
+            example: default
+          editable:
+            type: boolean
+            example: true
+          description:
+            description: What the Strategy is
+            type: string
+            example: Default on/off strategy.
+          parameters:
+            type: object
             properties:
               parameter:
                 type: object
@@ -1028,6 +1126,21 @@ components:
                   required:
                     description: Is this a required parameter?
                     type: boolean
+                    example: false
+
+    variantsSchema:
+      type: array
+      items:
+        required:
+          - name
+          - weight
+        properties:
+          name:
+            type: string
+            minLength: 1
+          weight:
+            type: number
+
     simpleStrategySchema:
       type: object
       required:
@@ -1049,6 +1162,7 @@ components:
                 description: Name of Strategy's parameter
                 type: string
                 example: extra
+
     200-events:
       type: object
       properties:
@@ -1092,55 +1206,7 @@ components:
                 type: string
                 example: '2016-12-09T14:56:36.730Z'
               data:
-                type: object
-                required:
-                  - name
-                  - description
-                  - type
-                  - enabled
-                  - stale
-                  - strategies
-                  - createdAt
-                properties:
-                  name:
-                    description: Feature Toggle name .
-                    type: string
-                    minLength: 1
-                    example: FeatureA
-                  description:
-                    description: What the Feature Toggle does
-                    type: string
-                    minLength: 1
-                    example: Toggles FeatureA on and off
-                  type:
-                    type: string
-                    description: '*type* is optional. If not defined, it defaults to `release`'
-                    externalDocs:
-                      description: Feature Toggle types
-                      url: 'https://unleash.github.io/docs/feature_toggle_types'
-                    enum:
-                      - release
-                      - experiment
-                      - ops
-                      - killswitch
-                      - permission
-                    minLength: 1
-                    example: release
-                  enabled:
-                    type: boolean
-                    example: false
-                  stale:
-                    description: Is the Feature Toggle deprecated (stale)?
-                    type: boolean
-                    example: false
-                  strategies:
-                    $ref: '#/components/schemas/simpleStrategySchema'
-                  variants: {}
-                  createdAt:
-                    description: Date and time when the Feature Toggle was created?
-                    type: string
-                    minLength: 1
-                    example: '2020-11-09T13:51:08.949Z'
+                $ref: '#/components/schemas/featureToggleSchema'
               diffs:
                 description: What are diffs? I don't think this part of the schema is correct
                 type: array
@@ -1166,9 +1232,12 @@ components:
                     lhs:
                       description: Left-hand side of something?
                       type: boolean
+                      example: true
                     rhs:
                       description: Left-hand side of something?
                       type: boolean
+                      example: false
+
     200export:
       type: object
       required:
@@ -1194,7 +1263,7 @@ components:
               - createdAt
             properties:
               name:
-                description: Feature Toggle name .
+                description: Feature Toggle name.
                 type: string
                 minLength: 1
                 example: FeatureA
@@ -1217,6 +1286,7 @@ components:
                   - permission
                 minLength: 1
                 example: release
+                default: 'release'
               enabled:
                 type: boolean
                 example: false
@@ -1225,13 +1295,15 @@ components:
                 type: boolean
                 example: false
               strategies:
-                $ref: '#/components/schemas/simpleStrategySchema'
-              variants: {}
+                $ref: '#/components/schemas/strategySchema'
+              variants:
+                $ref: '#/components/schemas/variantsSchema'
               createdAt:
                 type: string
                 minLength: 1
         strategies:
-          $ref: '#/components/schemas/simpleStrategySchema'
+          $ref: '#/components/schemas/strategySchema'
+
     200featuretype:
       type: object
       properties:
@@ -1251,13 +1323,7 @@ components:
               - lifetimeDays
             properties:
               id:
-                description: The *id* string for the Feature Toggle type
-                externalDocs:
-                  description: Feature Toggle types
-                  url: 'https://unleash.github.io/docs/feature_toggle_types'
-                type: string
-                minLength: 1
-                example: release
+                $ref: '#/components/schemas/featureToggleTypeSchema'
               name:
                 description: The title of the Feature Toggle type
                 type: string

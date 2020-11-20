@@ -9,6 +9,7 @@ import EditFeatureToggle from './form/form-update-feature-container';
 import EditVariants from './variant/update-variant-container';
 import ViewFeatureToggle from './form/form-view-feature-container';
 import FeatureTypeSelect from './form/feature-type-select-container';
+import ProjectSelect from './form/project-select-container';
 import UpdateDescriptionComponent from './form/update-description-component';
 import { styles as commonStyles } from '../common';
 import { CREATE_FEATURE, DELETE_FEATURE, UPDATE_FEATURE } from '../../permissions';
@@ -162,6 +163,19 @@ export default class ViewFeatureToggleComponent extends React.Component {
             this.props.editFeatureToggle(feature);
         };
 
+        const updateProject = evt => {
+            evt.preventDefault();
+            const project = evt.target.value;
+            let feature = { ...featureToggle, project };
+            if (Array.isArray(feature.strategies)) {
+                feature.strategies.forEach(s => {
+                    delete s.id;
+                });
+            }
+
+            this.props.editFeatureToggle(feature);
+        };
+
         const updateStale = stale => {
             this.props.setStale(stale, featureToggleName);
         };
@@ -187,6 +201,8 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 </CardText>
                 <CardText style={{ paddingTop: 0 }}>
                     <FeatureTypeSelect value={featureToggle.type} onChange={updateType} filled />
+                    &nbsp;
+                    <ProjectSelect value={featureToggle.project} onChange={updateProject} filled />
                 </CardText>
 
                 <CardActions

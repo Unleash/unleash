@@ -51,11 +51,15 @@ exports[`renders correctly with one feature 1`] = `
           3 years ago
         </time>
       </small>
-      <span
-        className="mdl-list__item-sub-title truncate"
+      <div
+        className="mdl-list__item-sub-title"
       >
-        another's description
-      </span>
+        <span
+          className="truncate"
+        >
+          another's description
+        </span>
+      </div>
     </a>
   </span>
   <span
@@ -115,11 +119,15 @@ exports[`renders correctly with one feature without permission 1`] = `
           3 years ago
         </time>
       </small>
-      <span
-        className="mdl-list__item-sub-title truncate"
+      <div
+        className="mdl-list__item-sub-title"
       >
-        another's description
-      </span>
+        <span
+          className="truncate"
+        >
+          another's description
+        </span>
+      </div>
     </a>
   </span>
   <span

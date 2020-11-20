@@ -53,7 +53,9 @@ const Feature = ({
                     <small className="mdl-color-text--blue-grey-300">
                         <TimeAgo date={createdAt} live={false} />
                     </small>
-                    <span className={['mdl-list__item-sub-title', commonStyles.truncate].join(' ')}>{description}</span>
+                    <div className="mdl-list__item-sub-title">
+                        <span className={commonStyles.truncate}>{description}</span>
+                    </div>
                 </Link>
             </span>
             <span className={[styles.listItemStrategies, commonStyles.hideLt920].join(' ')}>

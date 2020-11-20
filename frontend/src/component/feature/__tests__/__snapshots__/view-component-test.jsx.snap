@@ -58,6 +58,11 @@ exports[`renders correctly with one feature 1`] = `
       onChange={[Function]}
       value="release"
     />
+     
+    <ProjectSelect
+      filled={true}
+      onChange={[Function]}
+    />
   </react-mdl-CardText>
   <react-mdl-CardActions
     border={true}
@@ -92,7 +97,7 @@ exports[`renders correctly with one feature 1`] = `
     <div>
       <span>
         <react-mdl-Button
-          className="mdl-button"
+          className="mdl-button dropdownButton"
           id="update_status"
         >
           Status

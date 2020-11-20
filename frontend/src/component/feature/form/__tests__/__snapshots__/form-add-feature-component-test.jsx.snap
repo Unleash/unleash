@@ -33,6 +33,7 @@ exports[`render the create feature page 1`] = `
           name="name"
           onBlur={[Function]}
           onChange={[Function]}
+          placeholder="Unique-name"
           style={
             Object {
               "width": "100%",
@@ -71,10 +72,22 @@ exports[`render the create feature page 1`] = `
         }
       }
     >
+      <Connect(ProjectSelectComponent)
+        onChange={[Function]}
+      />
+    </section>
+    <section
+      style={
+        Object {
+          "padding": "0 16px",
+        }
+      }
+    >
       <react-mdl-Textfield
         floatingLabel={true}
         label="Description"
         onChange={[Function]}
+        placeholder="A short description of the feature toggle"
         rows={1}
         style={
           Object {

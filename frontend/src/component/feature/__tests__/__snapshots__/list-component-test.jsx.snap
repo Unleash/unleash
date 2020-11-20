@@ -55,8 +55,9 @@ exports[`renders correctly with one feature 1`] = `
   >
     <react-mdl-CardActions>
       <react-mdl-Button
-        className="dropdownButton"
+        className=" dropdownButton"
         id="metric"
+        title="Metric interval"
       >
         Last minute
         <react-mdl-Icon
@@ -114,8 +115,9 @@ exports[`renders correctly with one feature 1`] = `
         </react-mdl-MenuItem>
       </react-mdl-Menu>
       <react-mdl-Button
-        className="dropdownButton"
+        className=" dropdownButton"
         id="sorting"
+        title="Sort by"
       >
         By name
         <react-mdl-Icon
@@ -175,6 +177,14 @@ exports[`renders correctly with one feature 1`] = `
           Metrics
         </react-mdl-MenuItem>
       </react-mdl-Menu>
+      <Project
+        settings={
+          Object {
+            "sort": "name",
+          }
+        }
+        updateSetting={[MockFunction]}
+      />
     </react-mdl-CardActions>
     <hr />
     <react-mdl-List>
@@ -241,8 +251,9 @@ exports[`renders correctly with one feature without permissions 1`] = `
   >
     <react-mdl-CardActions>
       <react-mdl-Button
-        className="dropdownButton"
+        className=" dropdownButton"
         id="metric"
+        title="Metric interval"
       >
         Last minute
         <react-mdl-Icon
@@ -300,8 +311,9 @@ exports[`renders correctly with one feature without permissions 1`] = `
         </react-mdl-MenuItem>
       </react-mdl-Menu>
       <react-mdl-Button
-        className="dropdownButton"
+        className=" dropdownButton"
         id="sorting"
+        title="Sort by"
       >
         By name
         <react-mdl-Icon
@@ -361,6 +373,14 @@ exports[`renders correctly with one feature without permissions 1`] = `
           Metrics
         </react-mdl-MenuItem>
       </react-mdl-Menu>
+      <Project
+        settings={
+          Object {
+            "sort": "name",
+          }
+        }
+        updateSetting={[MockFunction]}
+      />
     </react-mdl-CardActions>
     <hr />
     <react-mdl-List>

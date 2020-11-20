@@ -13,7 +13,14 @@ class WrapperComponent extends Component {
         super(props);
         const name = loadNameFromHash();
         this.state = {
-            featureToggle: { name, description: '', type: 'release', strategies: [], enabled: true },
+            featureToggle: {
+                name,
+                description: '',
+                type: 'release',
+                strategies: [],
+                enabled: true,
+                project: props.currentProjectId,
+            },
             errors: {},
             dirty: false,
         };
@@ -109,6 +116,7 @@ class WrapperComponent extends Component {
 WrapperComponent.propTypes = {
     history: PropTypes.object.isRequired,
     createFeatureToggles: PropTypes.func.isRequired,
+    currentProjectId: PropTypes.string.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -116,6 +124,13 @@ const mapDispatchToProps = dispatch => ({
     createFeatureToggles: featureToggle => createFeatureToggles(featureToggle)(dispatch),
 });
 
-const FormAddContainer = connect(() => ({}), mapDispatchToProps)(WrapperComponent);
+const mapStateToProps = state => {
+    const settings = state.settings.toJS().feature || {};
+    const currentProjectId = settings.currentProjectId || 'default';
+
+    return { currentProjectId };
+};
+
+const FormAddContainer = connect(mapStateToProps, mapDispatchToProps)(WrapperComponent);
 
 export default FormAddContainer;

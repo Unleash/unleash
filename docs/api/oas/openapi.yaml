@@ -1,10 +1,20 @@
-# Add questions list
-# Add style guide MD. UK/US, Newspaper/Movie, JS/OAS. Nouns: UBleash, Feature Toggle. Strategy. Plurals. &. Glossary
-# Only use backticks for code samples and API paths. Use bold for schema items and italic for schema item settings
+# OTHER API DOCS
+# Could do withe an overview. What is it? What does it do? Who is it for? Why would I use this? For a good example, see https://ionicframework.com/docs
+# Getting started - I have made some tweaks to this but it would be handy to also provide some JS code to make an example API call. PUT /admin​/features​/{featureName} is a good choice (since it has both a Request body and a query parameter)
+# Status and error codes - It would be useful to generate a simple table listing all status codes. See how Clearbit does it: https://clearbit.com/docs?python#errors
+# Rate limiting and thresholds - Need to inform people of this even if it's not a 'thing', they will ask. See https://unleash-community.slack.com/archives/CGP2MCHPF/p1603106990003200 See how Twitter API describes their limits: https://developer.twitter.com/en/docs/twitter-api/rate-limits
+# Glossary - Need definitions for, as a start, the project specific stuff: Unleash server, Unleash client, Feature Toggle, Strategy, Variant, Diff. Doesn't need to be massive. For instance, see the Lyft glossary - https://developer.lyft.com/docs/glossary
+# Reference - Is the guidance on the documentation site complete? 
+# TESTING
+# QA team test cases. Test code exists but were these based on a list of steps required to produce a result?
+# Are there any real-world users of Unleash who are happy to read and test the Open API specification and make suggestions for improvement? Would they be happy to screen-record what they are doing (how they use the API will give invaluable insights)?
+# OAS REVIEW
 # Move responses to root responses section in components (from schema section)
-# Issues with rendering as nested externaldocs from Swagger UI. See GET /admin​/feature-types
-# Make sure everthing from the Unleash admin documentation is incorporated or referenced
-# List questions
+# Issues with rendering as nested externaldocs from Swagger UI. See GET /admin​/feature-types. Not an issue in other tools (see redoc.html)
+# STYLE
+# Add style guide MD. UK/US, Newspaper/Movie, Plurals. &
+# OAS styler - Only use backticks for code samples and API paths. Use bold for schema items and italic for schema item settings
+
 openapi: 3.0.0
 servers:
   - description: Local host.
@@ -26,15 +36,32 @@ tags:
     description: Accessing and updating strategies
 info:
   title: Unleash API
-  description: Unleash is an open source feature flag and toggle system for all your applications and services.
+  description: |-
+    Unleash is an open source feature flag and toggle system for all your applications and services.
+
+    Once you have [set your Unleash server up](https://unleash.github.io/docs/getting_started), you can test the API from inside your browser. The following assumes the server is running on localhost:4242.
+
+    The following 'endpoints' (such as `GET /admin/metrics/applications`) provide reference documentation for the Unleash REST API. To try out API calls:
+    1. Expand an endpoint
+    2. Click **Try it out**
+    3. Customise the **Request body** and/or **Parameters**.
+    4. Click **Execute**.
+    
+    You will see the cURL request submitted to the API server and the corresponding response.
+
+    Alternatively, you can test the API in [Postman](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
+
+    [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
+
   version: 3.5.6
   contact:
     name: The Unleash team
     url: 'https://unleash.github.io/'
-#    email: some_email@gmail.com
+
 externalDocs:
   description: Unleash documentation
   url: 'https://unleash.github.io/docs/getting_started'
+
 paths:
   /admin/features:
     get:
@@ -43,8 +70,6 @@ paths:
         The response returns all active feature toggles and their current strategy configuration:
         - A feature toggle will have *at least* one configured strategy.
         - A strategy will have a `name` and `parameters` map.
-
-        **Note:** To only return one Feature Toggle, add the Feature Toggle name as a suffix to the request. For example: `GET [Your host]/api/admin/features/featureX`. It is not possible to add this parameter as a *Try it out* option due to restrictions in the [Open API Specification](https://swagger.io/docs/specification/describing-parameters/), (that is, *optional* path variables cannot be created).
       externalDocs:
         description: Activation strategies
         url: 'https://unleash.github.io/docs/activation_strategy'
@@ -90,6 +115,34 @@ paths:
                 $ref: '#/components/schemas/401'
 
   '/admin/features/{featureName}':
+    get:
+      summary: Fetches a specific Feature Toggle from the Unleash server.
+      description: |
+        The response returns the Feature Toggle's current strategy configuration:
+        - It will have *at least* one configured strategy.
+        - A strategy will have a *name* and *parameters* map.
+      externalDocs:
+        description: Activation strategies
+        url: 'https://unleash.github.io/docs/activation_strategy'
+      operationId: getFeature
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      tags:
+        - Feature toggles
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+
     put:
       summary: Update a Feature Toggle
       description: Update a Feature Toggle.
@@ -136,11 +189,7 @@ paths:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
         '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/200'
+          description: Feature Toggle successfully archived
         '401':
           description: Not authorised
           content:
@@ -290,11 +339,7 @@ paths:
         - $ref: '#/components/parameters/featureNamePath'
       responses:
         '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/200'
+          description: Feature Toggle successfully revived
         '404':
           description: Feature Toggle not found
 
@@ -342,6 +387,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
+        '409':
+          description: Strategy already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/409'
 
   '/admin/strategies/{strategyName}':
     put:
@@ -392,7 +443,7 @@ paths:
 
   /admin/metrics/feature-toggles:
     get:
-      summary: Gives 'last minute' and 'last hour' metrics for all active toggles (based on what was reported by the client applications).
+      summary: Gives 'last minute' and 'last hour' metrics for all active feature toggles (based on what was reported by the client applications).
       description: |-
         - **Yes** is the number of times a given feature toggle was enabled in a client applucation
         - **No** is the number of times it was disabled.
@@ -414,14 +465,13 @@ paths:
                 $ref: '#/components/schemas/401'
 
   /admin/metrics/applications:
+    # Documentation says 'You can also specify the query param: strategyName, which will return all applications implementing the given strategy.' However, specifiying this results in a 500 error
     get:
       summary: A list of known applications ('seen' by Unleash in the last two days)
       description: Also has a link for more details.
       operationId: getApplications
       tags:
         - Metrics
-      parameters:
-        - $ref: '#/components/parameters/strategyQuery'
       responses:
         '200':
           description: Successful response
@@ -465,7 +515,7 @@ paths:
 
   /admin/metrics/seen-apps:
     get:
-      summary: Details about applications seen
+      summary: Details about seen applications
       description: (per Feature Toggle)
       operationId: seenApps
       tags:
@@ -517,6 +567,9 @@ paths:
       operationId: get-admin-state-export
       summary: Export feature toggles and strategies
       description: Exports a list of feature toggles and/or strategies in either JSON or YAML format.
+      externalDocs:
+        description: Import and export
+        url: 'https://unleash.github.io/docs/import_export'
       tags:
         - Import and export
       parameters:
@@ -573,6 +626,9 @@ paths:
         You can add in the POST body or upload a file
         - **POST body** (JSON format only) - next to **Request body**, choose the *application/json* dropdown option.
         - **File upload** (JOSN or YAML format) - next to **Request body**, choose the *multipart/form-data* dropdown option. This adopts the same schema as `GET /admin/state/export`
+      externalDocs:
+        description: Import and export
+        url: 'https://unleash.github.io/docs/import_export'
       parameters:
         - schema:
             type: boolean
@@ -641,13 +697,6 @@ paths:
 
 components:
   parameters:
-    strategyQuery:
-      name: strategyName
-      description: (Optional). Return all applications implementing the specified Strategy. Must match an existing Strategy name.
-      example: remoteAddress
-      in: query
-      schema:
-        type: string
     featureNamePath:
       name: featureName
       description: Must match an existing Feature Toggle name.
@@ -700,6 +749,33 @@ components:
         - type
         - path
         - message
+
+    '409':
+      type: object
+      required:
+        - isJoi
+        - name
+        - details
+      properties:
+        isJoi:
+          description: What is the significance of this flag?
+          type: boolean
+        name:
+          description: Title of error
+          type: string
+          minLength: 1
+        details:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - message
+            properties:
+              message:
+                description: Error message
+                type: string
+                minLength: 1
 
     200strategy:
       type: object

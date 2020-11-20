@@ -5,43 +5,69 @@ title: Getting Started
 
 ## Requirements
 
-You will need **Node.js** >= 12 and a **PostgreSQL** >= 10 database instance to be able to run Unleash.
+You will need:
 
-When starting Unleash you must specify a database URI (can be set as environment variable DATABASE_URL) which includes a username and password, that have rights to migrate the database.
-
-On startup _Unleash_ will perform necessary migrations if needed.
+- [**Node.js**](https://nodejs.org/en/download/) (version 12 or later)
+- [**PostgreSQL**](https://www.postgresql.org/download/) (version 10 or later)
+- [Create an unleash user and database](./developer-guide.md).
 
 ## Start Unleash
 
-### 1. The simplest way to get started:
+Whichever option you choose to start Unleash, you must specify a database URI (it can be set in the environment variable DATABASE_URL).
 
-```bash
-$ npm install unleash-server -g
-$ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
-
+Once the server has started, you will see the message:
+```
 Unleash started on http://localhost:4242
 ```
 
-### 2. Or programmatically:
+### Option one - from a terminal/bash shell
 
-You can also depend on unleash
-
-```js
-const unleash = require('unleash-server');
-
-unleash
-  .start({
-    databaseUrl: 'postgres://unleash_user:password@localhost:5432/unleash',
-    port: 4242,
-  })
-  .then(unleash => {
-    console.log(
-      `Unleash started on http://localhost:${unleash.app.get('port')}`,
-    );
-  });
+```npm install unleash-server -g
+unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 ```
 
-Available unleash options include:
+### Option two - from Node.js
+
+1. Create a new folder/directory on your development computer.
+2. From a terminal/bash shell, install the dependencies:
+
+    ```
+    npm init
+    npm install unleash-server --save
+    ```
+
+3. Create a file called *server.js*, paste the following into it and save.
+    ```js
+    const unleash = require('unleash-server');
+
+    unleash
+      .start({
+        databaseUrl: 'postgres://unleash_user:password@localhost:5432/unleash',
+        port: 4242,
+      })
+      .then(unleash => {
+        console.log(
+          `Unleash started on http://localhost:${unleash.app.get('port')}`,
+        );
+      });
+    ```
+
+4. Run *server.js*:
+    ```
+    node server.js
+    ```
+
+### Option three - use Docker
+
+Launch the [Unleash server Docker image](https://hub.docker.com/r/unleashorg/unleash-server/).
+
+```sh
+docker run -d -e DATABASE_URL=postgres://user:pass@10.200.221.11:5432/unleash unleashorg/unleash-server
+```
+<!-- The following doesn't seem to fit the 'remit' of Getting started'. it would be a better fit in the developer section of hte documentatio -->
+## Unleash server options
+
+Available Unleash options include:
 
 - **db** - The database configuration object taking the following properties:
   - _user_ - the database username (`DATABASE_USERNAME`)
@@ -69,9 +95,9 @@ Available unleash options include:
 - **baseUriPath** (string) - use to register a base path for all routes on the application. For example `/my/unleash/base` (note the starting /). Defaults to `/`. Can also be configured through the environment variable `BASE_URI_PATH`.
 - **secureHeaders** (boolean) - use this to enable security headers (HSTS, CSP, etc) when serving Unleash from HTTPS. Can also be configured through the environment variable `SECURE_HEADERS`.
 
-#### Disabling Auto-Start
+### Disabling Auto-Start
 
-If you're using unleash as part of a larger express app, you can disable the automatic server start by calling `server.create`. It takes the same options as `sevrer.start`, but will not begin listening for connections.
+If you're using Unleash as part of a larger express app, you can disable the automatic server start by calling `server.create`. It takes the same options as `sevrer.start`, but will not begin listening for connections.
 
 ```js
 const unleash = require('unleash-server');
@@ -88,17 +114,9 @@ unleash
   });
 ```
 
-### 3. Docker
-
-You can also use the [hosted docker image](https://hub.docker.com/r/unleashorg/unleash-server/) to start the Unleash server
-
-```sh
-docker run -d -e DATABASE_URL=postgres://user:pass@10.200.221.11:5432/unleash unleashorg/unleash-server
-```
-
 ## Securing Unleash
 
-Unleash also have extension points where you can integrate Unleash with your authentication provider (OAuth 2.0). Read more about [securing unleash](./securing-unleash.md).
+You can integrate Unleash with your authentication provider (OAuth 2.0). Read more about [securing unleash](./securing-unleash.md).
 
 ## How do I configure the log output?
 

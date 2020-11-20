@@ -47,9 +47,10 @@ Available unleash options include:
   - _user_ - the database username (`DATABASE_USERNAME`)
   - _password_ - the database password (`DATABASE_PASSWORD`)
   - _host_ - the database hostname (`DATABASE_HOST`)
-  - _port_ - the datbase port defaults to 5432 (`DATABASE_PORT`)
+  - _port_ - the database port defaults to 5432 (`DATABASE_PORT`)
   - _database_ - the database name to be used (`DATABASE_NAME`)
   - _ssl_ - an object describing ssl options, see https://node-postgres.com/features/ssl (`DATABASE_SSL`, as a stringified json object)
+  - _version_ - the postgres database version. Used to connect a non-standard database. Defaults to `undefined`, which let the underlying adapter to detect the version automatically. (`DATABASE_VERSION`)
 - **databaseUrl** - the postgres database url to connect to. Only used if _db_ object is not specified. Should include username/password. This value may also be set via the `DATABASE_URL` environment variable. Alternatively, if you would like to read the database url from a file, you may set the `DATABASE_URL_FILE` environment variable with the full file path. The contents of the file must be the database url exactly.
 - **databaseSchema** - the postgres database schema to use. Defaults to 'public'.
 - **port** - which port the unleash-server should bind to. If port is omitted or is 0, the operating system will assign an arbitrary unused port. Will be ignored if pipe is specified. This value may also be set via the `HTTP_PORT` environment variable

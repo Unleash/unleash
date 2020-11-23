@@ -20,12 +20,14 @@ Unleash returns a StateService when started, you can use this to import and expo
 ```javascript
 const unleash = require('unleash-server');
 
-unleash.start({...})
-  .then(async ({ stateService }) => {
-    const exportedData = await stateService.export({includeStrategies: false, includeFeatureToggles: true});
-    await stateService.import({data: exportedData, userName: 'import', dropBeforeImport: false});
-    await stateService.importFile({file: 'exported-data.yml', userName: 'import', dropBeforeImport: true})
-  });
+const { services } = await unleash.start({...});
+const { stateService } = services;
+
+const exportedData = await stateService.export({includeStrategies: false, includeFeatureToggles: true});
+
+await stateService.import({data: exportedData, userName: 'import', dropBeforeImport: false});
+
+await stateService.importFile({file: 'exported-data.yml', userName: 'import', dropBeforeImport: true})
 ```
 
 If you want the database to be cleaned before import (all strategies and features will be removed), set the `dropBeforeImport` parameter.

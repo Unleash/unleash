@@ -1,5 +1,32 @@
 # Changelog
 
+## 3.7.0
+
+- feat: Add support for explicitly set database version. (#654)
+- feat: stateServices only exposed via services object
+- feat: upgrade unleash-frontend to 3.7.0
+- feat: Add technical support for projects
+- chore(docs): Fix url typo in docs
+- chore(docs): Fix url typo
+- chore(docs): Add clojure client to doc (#649)
+- chore(docs): Add clojure client to doc (#648)
+- chore(docs): Add clojure client library reference (#647)
+- fix: upgrade to unleash-frontend 3.5.6
+- fix: Allow spaces/special chars in application names
+- chore(docs): update sidebar
+- feat: Allow migration style import (#645)
+- fix: Variants missing from client API docs
+- fix: constriants must have at least one value defined
+- fix(docs): wrong id for feature-types
+- fix: do not allow empty ('') constrain values.
+- chore(deps): bump dot-prop from 4.2.0 to 4.2.1 in /website (#644)
+- fix: clarify PostgreSQL version support
+- fix: update list of SDKs supporting variants
+- fix: add docs for disabled variant
+- fix: Add api documentation for strategy constraints.
+- fix: join link to slack in help section
+- chore: fix typo in docs
+
 ## 3.6.1
 
 - fix: update unleash-frontend to version 3.6.4

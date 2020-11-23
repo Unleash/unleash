@@ -3,7 +3,7 @@ import { Menu, MenuItem } from 'react-mdl';
 import { DropdownButton } from '../common';
 import PropTypes from 'prop-types';
 
-const ALL_PROJECTS = { id: undefined, name: '> All projects' };
+const ALL_PROJECTS = { id: '*', name: '> All projects' };
 
 function projectItem(selectedId, item) {
     return (

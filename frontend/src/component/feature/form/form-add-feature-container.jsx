@@ -8,6 +8,16 @@ import { loadNameFromHash } from './util';
 
 const defaultStrategy = { name: 'default' };
 
+function resolveCurrentProjectId(settings) {
+    if (!settings.currentProjectId) {
+        return 'default';
+    } else if (settings.currentProjectId === '*') {
+        return 'default';
+    } else {
+        return settings.currentProjectId;
+    }
+}
+
 class WrapperComponent extends Component {
     constructor(props) {
         super(props);
@@ -126,7 +136,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => {
     const settings = state.settings.toJS().feature || {};
-    const currentProjectId = settings.currentProjectId || 'default';
+    const currentProjectId = resolveCurrentProjectId(settings);
 
     return { currentProjectId };
 };

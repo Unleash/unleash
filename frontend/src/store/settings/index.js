@@ -6,9 +6,7 @@ import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 const localStorage = window.localStorage || {};
 const SETTINGS = 'settings';
 
-const DEFAULT = fromJS({
-    feature: { currentProjectId: 'default' },
-});
+const DEFAULT = fromJS({});
 
 function getInitState() {
     try {

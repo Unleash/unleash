@@ -1,7 +1,4 @@
 [![Build Status](https://travis-ci.org/Unleash/unleash-frontend.svg?branch=master)](https://travis-ci.org/Unleash/unleash-frontend)
-[![dependencies Status](https://david-dm.org/Unleash/unleash-frontend/status.svg)](https://david-dm.org/Unleash/unleash-frontend)
-[![devDependencies Status](https://david-dm.org/Unleash/unleash-frontend/dev-status.svg)](https://david-dm.org/Unleash/unleash-frontend?type=dev)
-[![Greenkeeper badge](https://badges.greenkeeper.io/Unleash/unleash-frontend.svg)](https://greenkeeper.io/)
 
 # Developing
 

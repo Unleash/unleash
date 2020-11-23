@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.7.0
+- fix: remove deprecated badges
+- fix: filter for projects
+- chore(deps-dev): bump node-fetch from 2.6.0 to 2.6.1
+- feat: add technical support for projects in UI
+
 # 3.6.5
 - fix: should be possible to remove all variants. 
 

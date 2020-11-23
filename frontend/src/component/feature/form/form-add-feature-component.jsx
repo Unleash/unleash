@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Textfield, Switch, Card, CardTitle, CardActions, Grid, Cell } from 'react-mdl';
 import StrategiesSection from './strategies-section-container';
 import FeatureTypeSelect from './feature-type-select-container';
+import ProjectSelect from './project-select-container';
 
 import { FormButtons } from './../../common';
 import { styles as commonStyles } from '../../common';
@@ -44,6 +45,7 @@ class AddFeatureComponent extends Component {
                                 floatingLabel
                                 style={{ width: '100%' }}
                                 label="Name"
+                                placeholder="Unique-name"
                                 name="name"
                                 value={input.name}
                                 error={errors.name}
@@ -66,11 +68,15 @@ class AddFeatureComponent extends Component {
                         </Cell>
                     </Grid>
                     <section style={{ padding: '0 16px' }}>
+                        <ProjectSelect value={input.project} onChange={v => setValue('project', v.target.value)} />
+                    </section>
+                    <section style={{ padding: '0 16px' }}>
                         <Textfield
                             floatingLabel
                             style={{ width: '100%' }}
                             rows={1}
                             label="Description"
+                            placeholder="A short description of the feature toggle"
                             error={errors.description}
                             value={input.description}
                             onChange={v => setValue('description', v.target.value)}

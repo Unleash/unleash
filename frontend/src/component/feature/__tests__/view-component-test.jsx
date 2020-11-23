@@ -11,6 +11,7 @@ jest.mock('../form/form-update-feature-container', () => ({
     default: 'UpdateFeatureToggleComponent',
 }));
 jest.mock('../form/feature-type-select-container', () => 'FeatureTypeSelect');
+jest.mock('../form/project-select-container', () => 'ProjectSelect');
 
 test('renders correctly with one feature', () => {
     const feature = {

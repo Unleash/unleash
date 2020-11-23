@@ -11,6 +11,8 @@ jest.mock('../feature-list-item-component', () => ({
     default: 'Feature',
 }));
 
+jest.mock('../project-container', () => 'Project');
+
 test('renders correctly with one feature', () => {
     const features = [
         {

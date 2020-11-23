@@ -1,4 +1,4 @@
-import { fromJS, Map as $Map } from 'immutable';
+import { fromJS } from 'immutable';
 import { UPDATE_SETTING } from './actions';
 import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
@@ -6,12 +6,16 @@ import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 const localStorage = window.localStorage || {};
 const SETTINGS = 'settings';
 
+const DEFAULT = fromJS({
+    feature: { currentProjectId: 'default' },
+});
+
 function getInitState() {
     try {
         const state = JSON.parse(localStorage.getItem(SETTINGS));
-        return state ? fromJS(state) : new $Map();
+        return state ? DEFAULT.merge(state) : DEFAULT;
     } catch (e) {
-        return new $Map();
+        return DEFAULT;
     }
 }
 

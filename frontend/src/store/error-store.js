@@ -13,6 +13,8 @@ import { ERROR_UPDATING_STRATEGY, ERROR_CREATING_STRATEGY, ERROR_RECEIVE_STRATEG
 
 import { ERROR_ADD_CONTEXT_FIELD, ERROR_UPDATE_CONTEXT_FIELD } from './context/actions';
 
+import { ERROR_REMOVING_PROJECT, ERROR_ADD_PROJECT, ERROR_UPDATE_PROJECT } from './project/actions';
+
 import { UPDATE_APPLICATION_FIELD } from './application/actions';
 
 import { FORBIDDEN } from './util';
@@ -44,6 +46,9 @@ const strategies = (state = getInitState(), action) => {
         case ERROR_RECEIVE_STRATEGIES:
         case ERROR_ADD_CONTEXT_FIELD:
         case ERROR_UPDATE_CONTEXT_FIELD:
+        case ERROR_REMOVING_PROJECT:
+        case ERROR_UPDATE_PROJECT:
+        case ERROR_ADD_PROJECT:
             return addErrorIfNotAlreadyInList(state, action.error.message);
         case FORBIDDEN:
             return addErrorIfNotAlreadyInList(state, action.error.message || '403 Forbidden');

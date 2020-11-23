@@ -33,6 +33,14 @@ export class ForbiddenError extends Error {
     }
 }
 
+export class NotFoundError extends Error {
+    constructor(statusCode) {
+        super('The requested resource could not be found but may be available in the future');
+        this.name = 'NotFoundError';
+        this.statusCode = statusCode;
+    }
+}
+
 export function throwIfNotSuccess(response) {
     if (!response.ok) {
         if (response.status === 401) {
@@ -42,6 +50,10 @@ export function throwIfNotSuccess(response) {
         } else if (response.status === 403) {
             return new Promise((resolve, reject) => {
                 response.json().then(body => reject(new ForbiddenError(response.status, body)));
+            });
+        } else if (response.status === 404) {
+            return new Promise((resolve, reject) => {
+                reject(new NotFoundError(response.status));
             });
         } else if (response.status > 399 && response.status < 499) {
             return new Promise((resolve, reject) => {

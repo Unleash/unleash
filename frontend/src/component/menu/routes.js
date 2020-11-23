@@ -15,6 +15,9 @@ import ContextFields from '../../page/context';
 import CreateContextField from '../../page/context/create';
 import EditContextField from '../../page/context/edit';
 import LogoutFeatures from '../../page/user/logout';
+import ListProjects from '../../page/project';
+import CreateProject from '../../page/project/create';
+import EditProject from '../../page/project/edit';
 
 export const routes = [
     // Features
@@ -49,6 +52,11 @@ export const routes = [
     { path: '/context/create', parent: '/context', title: 'Create', component: CreateContextField },
     { path: '/context/edit/:name', parent: '/context', title: ':name', component: EditContextField },
     { path: '/context', title: 'Context Fields', icon: 'apps', component: ContextFields, hidden: true },
+
+    // Project
+    { path: '/projects/create', parent: '/projects', title: 'Create', component: CreateProject },
+    { path: '/projects/edit/:id', parent: '/projects', title: ':id', component: EditProject },
+    { path: '/projects', title: 'Projects', icon: 'folder_open', component: ListProjects, hidden: true },
 
     { path: '/logout', title: 'Sign out', icon: 'exit_to_app', component: LogoutFeatures },
 ];

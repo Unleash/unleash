@@ -7,6 +7,7 @@ import Feature from './feature-list-item-component';
 import { MenuItemWithIcon, DropdownButton, styles as commonStyles } from '../common';
 import SearchField from '../common/search-field';
 import { CREATE_FEATURE } from '../../permissions';
+import ProjectMenu from './project-container';
 
 export default class FeatureListComponent extends React.Component {
     static propTypes = {
@@ -76,7 +77,11 @@ export default class FeatureListComponent extends React.Component {
                 </div>
                 <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
                     <CardActions>
-                        <DropdownButton id="metric" label={`Last ${settings.showLastHour ? 'hour' : 'minute'}`} />
+                        <DropdownButton
+                            id="metric"
+                            label={`Last ${settings.showLastHour ? 'hour' : 'minute'}`}
+                            title="Metric interval"
+                        />
                         <Menu target="metric" onClick={() => this.toggleMetrics()} style={{ width: '168px' }}>
                             <MenuItemWithIcon
                                 icon="hourglass_empty"
@@ -91,7 +96,7 @@ export default class FeatureListComponent extends React.Component {
                                 label="Last hour"
                             />
                         </Menu>
-                        <DropdownButton id="sorting" label={`By ${settings.sort}`} />
+                        <DropdownButton id="sorting" label={`By ${settings.sort}`} title="Sort by" />
                         <Menu
                             target="sorting"
                             onClick={e => this.setSort(e.target.getAttribute('data-target'))}
@@ -119,6 +124,7 @@ export default class FeatureListComponent extends React.Component {
                                 Metrics
                             </MenuItem>
                         </Menu>
+                        <ProjectMenu settings={this.props.settings} updateSetting={this.props.updateSetting} />
                     </CardActions>
                     <hr />
                     <List>

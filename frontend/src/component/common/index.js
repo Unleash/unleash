@@ -140,8 +140,8 @@ IconLink.propTypes = {
     icon: PropTypes.string,
 };
 
-export const DropdownButton = ({ label, id, className }) => (
-    <Button id={id} className={className || styles.dropdownButton}>
+export const DropdownButton = ({ label, id, className, title }) => (
+    <Button id={id} className={[className, styles.dropdownButton].join(' ')} title={title}>
         {label}
         <Icon name="arrow_drop_down" className="mdl-color-text--grey-600" />
     </Button>
@@ -149,6 +149,7 @@ export const DropdownButton = ({ label, id, className }) => (
 DropdownButton.propTypes = {
     label: PropTypes.string,
     id: PropTypes.string,
+    title: PropTypes.string,
 };
 
 export const MenuItemWithIcon = ({ icon, label, disabled, ...menuItemProps }) => (

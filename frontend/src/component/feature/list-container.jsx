@@ -9,6 +9,11 @@ export const mapStateToPropsConfigurable = isFeature => state => {
     const featureMetrics = state.featureMetrics.toJS();
     const settings = state.settings.toJS().feature || {};
     let features = isFeature ? state.features.toJS() : state.archive.get('list').toArray();
+
+    if (settings.currentProjectId) {
+        features = features.filter(f => f.project === settings.currentProjectId);
+    }
+
     if (settings.filter) {
         try {
             const regex = new RegExp(settings.filter, 'i');

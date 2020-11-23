@@ -11,7 +11,7 @@ You will need:
 - [**PostgreSQL**](https://www.postgresql.org/download/) (version 10 or later)
 - [Create an unleash user and database](./developer-guide.md).
 
-## Start Unleash
+## Start Unleash server
 
 Whichever option you choose to start Unleash, you must specify a database URI (it can be set in the environment variable DATABASE_URL).
 
@@ -22,7 +22,8 @@ Unleash started on http://localhost:4242
 
 ### Option one - from a terminal/bash shell
 
-```npm install unleash-server -g
+```
+npm install unleash-server -g
 unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 ```
 
@@ -61,10 +62,30 @@ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 
 Launch the [Unleash server Docker image](https://hub.docker.com/r/unleashorg/unleash-server/).
 
-```sh
+```
 docker run -d -e DATABASE_URL=postgres://user:pass@10.200.221.11:5432/unleash unleashorg/unleash-server
 ```
-<!-- The following doesn't seem to fit the 'remit' of Getting started'. it would be a better fit in the developer section of hte documentatio -->
+
+## Test your server and create a sample API call
+
+Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see a list of example feature toggles, try modifying one of them with [curl](https://curl.se/) from a terminal/bash shell:
+
+~~~
+curl --location --request PUT 'http://localhost:4242/api/admin/features/Feature.A' --header 'Content-Type: application/json' --data-raw '{\
+  "name": "Feature.A",\
+  "description": "Dolor sit amet.",\
+  "type": "release",\
+  "enabled": false,\
+  "stale": false,\
+  "strategies": [\
+    {\
+      "name": "default",\
+      "parameters": {}\
+    }\
+  ]\
+}'\
+~~~
+<!-- The following doesn't seem to fit the 'remit' of Getting started'. it would be a better fit in the developer section of the documentation -->
 ## Unleash server options
 
 Available Unleash options include:

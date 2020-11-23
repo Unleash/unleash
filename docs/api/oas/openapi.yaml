@@ -1,6 +1,6 @@
 # OTHER API DOCS
-# Could do withe an overview. What is it? What does it do? Who is it for? Why would I use this? For a good example, see https://ionicframework.com/docs
-# Getting started - I have made some tweaks to this but it would be handy to also provide some JS code to make an example API call. PUT /admin​/features​/{featureName} is a good choice (since it has both a Request body and a query parameter)
+# Could do withe an overview. What is it? What does it do? Who is it for? Why would I use this? For a good example, see https://ionicframework.com/docs or https://cloud.ibm.com/docs/assistant?topic=assistant-index#index
+# Getting started - I have made some tweaks to this but it would be handy to also provide some JS code to make an example API call. PUT /admin​/features​/{featureName} is a good choice (since it has both a Request body and a query parameter). Twilio is brilliant example of this kind of stuff. https://www.twilio.com/docs/quickstart
 # Status and error codes - It would be useful to generate a simple table listing all status codes. See how Clearbit does it: https://clearbit.com/docs?python#errors
 # Rate limiting and thresholds - Need to inform people of this even if it's not a 'thing', they will ask. See https://unleash-community.slack.com/archives/CGP2MCHPF/p1603106990003200 See how Twitter API describes their limits: https://developer.twitter.com/en/docs/twitter-api/rate-limits
 # Glossary - Need definitions for, as a start, the project specific stuff: Unleash server, Unleash client, Feature Toggle, Strategy, Variant, Diff. Doesn't need to be massive. For instance, see the Lyft glossary - https://developer.lyft.com/docs/glossary
@@ -8,11 +8,16 @@
 # TESTING
 # QA team test cases. Test code exists but were these based on a list of steps required to produce a result?
 # Are there any real-world users of Unleash who are happy to read and test the Open API specification and make suggestions for improvement? Would they be happy to screen-record what they are doing (how they use the API will give invaluable insights)?
+# Ideally, you'd want developers using Java, Node.js, Go, Ruby, Python and .Net to test
+# Could there be a simple sample app that implemented all API calls (using realistic scenarios)? Might just be a consolidated version of the tests/e2e code with some triggers (buttons) and some UI to display outcomes.
 # OAS REVIEW
 # Move responses to root responses section in components (from schema section)
 # Issues with rendering as nested externaldocs from Swagger UI. See GET /admin​/feature-types. Not an issue in other tools (see redoc.html)
+# Create output in other non-Swagger styles (as well as Redoc) - such as Readme
+# REDOC
+# 'Try it out' instructions do not apply since the free version of Redoc has no such feature. 
 # STYLE
-# Add style guide MD. UK/US, Newspaper/Movie, Plurals. &
+# Add style guide MD. UK/US = US, Newspaper/Movie, Plurals. &
 # OAS styler - Only use backticks for code samples and API paths. Use bold for schema items and italic for schema item settings
 
 openapi: 3.0.0
@@ -44,7 +49,7 @@ info:
     The following 'endpoints' (such as `GET /admin/metrics/applications`) provide reference documentation for the Unleash REST API. To try out API calls:
     1. Expand an endpoint
     2. Click **Try it out**
-    3. Customise the **Request body** and/or **Parameters**.
+    3. Customize the **Request body** and/or **Parameters**.
     4. Click **Execute**.
     
     You will see the cURL request submitted to the API server and the corresponding response.
@@ -84,7 +89,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -108,7 +113,7 @@ paths:
         '400':
           description: Bad body request (for example, Feature Toggle name is not unique)
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -137,7 +142,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -167,7 +172,7 @@ paths:
         '400':
           description: Bad body request (for example 'strategies' is not an array)
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -191,7 +196,7 @@ paths:
         '200':
           description: Feature Toggle successfully archived
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -216,7 +221,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -241,7 +246,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -269,7 +274,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -297,7 +302,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -320,7 +325,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -358,7 +363,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200strategy'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -382,7 +387,7 @@ paths:
         '400':
           description: Bad body request (for example 'strategies' is not an array)
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -418,7 +423,7 @@ paths:
         '200':
           description: Strategy successfully updated.
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -458,14 +463,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/200feature'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
 
   /admin/metrics/applications:
-    # Documentation says 'You can also specify the query param: strategyName, which will return all applications implementing the given strategy.' However, specifiying this results in a 500 error
+    # Documentation MD says 'You can also specify the query param: strategyName, which will return all applications implementing the given strategy.' However, specifiying this results in a 500 error
     get:
       summary: A list of known applications ('seen' by Unleash in the last two days)
       description: Also has a link for more details.
@@ -480,13 +485,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/applicationArray'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/401'
-        '500':
-          description: Strategy name not found
+                $ref: '#/components/schemas/401'   
 
   '/admin/metrics/applications/{appName}':
     get:
@@ -505,7 +508,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200appdetails'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -528,7 +531,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/applicationArray'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -539,7 +542,7 @@ paths:
       operationId: get-admin-events
       summary: Fetch all changes in the Unleash system
       description: |-
-        Returns one of the five event types:
+        Returns one of the six event types:
         - feature-created
         - feature-updated
         - feature-archived
@@ -556,7 +559,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200-events'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -609,7 +612,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200export'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -661,7 +664,7 @@ paths:
         '200':
           description: Successful import.
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -689,7 +692,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/200featuretype'
         '401':
-          description: Not authorised
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -733,7 +736,7 @@ components:
           $ref: '#/components/schemas/featureToggleSchema'
 
     '401':
-      description: Not authorised
+      description: Not authorized
       type: object
       properties:
         type:
@@ -758,7 +761,7 @@ components:
         - details
       properties:
         isJoi:
-          description: What is the significance of this flag?
+          description: For internal use by the Unleash developers
           type: boolean
         name:
           description: Title of error
@@ -925,15 +928,16 @@ components:
                 description: A description of what the application does
                 type: string
               url:
-                description: Link to more information about the application? Relative only? # Question?
+                description: Absolute URL to the actual application
                 type: string
-                example: 'https://medium.com/keptn'
+                example: 'http://someapp.internal.url'
               color:
-                description: The colour (American English?) of something. Hex code? # Question?
+                description: Deprecated. Do not use
                 type: string
               icon:
-                description: The icon to use for something. Link? # Question?
+                description: The appkication's icon. Must be one of the [Material Design icon names](https://material.io/resources/icons/?style=baseline)
                 type: string
+                example: comment_bank
 
     200appdetails:
       type: object
@@ -973,17 +977,17 @@ components:
               minLength: 1
               example: 'unleash-client-node:3.4.0'
             clientIp:
-              description: The IP address of the system running this instance of the application. What is the prefix on the string? # Question?
+              description: The IP address of the system running this instance of the application
               type: string
               minLength: 1
               example: '::ffff:127.0.0.1'
             lastSeen:
-              description: The last time the application accessed Unleash? # Question?
+              description: The last time the application 'talked' to Unleash (sent metrics, registered, fetched feature toggles)
               type: string
               minLength: 1
               example: '2020-11-14T11:17:24.482Z'
             createdAt:
-              description: When the application was created? # Question?
+              description: The first time the application registered with Unleash
               type: string
               minLength: 1
               example: '2020-11-13T16:56:29.279Z'
@@ -993,11 +997,9 @@ components:
           type: object
           properties:
             self:
-              description: What is this? # Question?
+              description: Deprecated. Do not use
               type: string
               minLength: 1
-          required:
-            - self
 
     featureToggleTypeSchema:
       type: string
@@ -1020,7 +1022,7 @@ components:
     
     versionSchema:
       type: number
-      description: What is this? # Question?
+      description: For internal use by the Unleash developers
       example: 1
 
     featureToggleSchema:
@@ -1121,7 +1123,9 @@ components:
             minLength: 1
             example: yellow
           weight:
-            description: The 'weighting' for the variant. How does Unleash use weighting to determine which variant to use? What is the range? # Question?
+            description: |-
+              A number between 0 and 1,000.
+              The client SDK will summarize all variant weights, hash the number and divide the users among them. The distribution will be according to the weight as a fraction of the sum of weight.
             type: number
             example: 20
 
@@ -1142,7 +1146,7 @@ components:
           items:
             properties:
               id:
-                description: The event number. Starts at 1? On first run of application version? # Question?
+                description: The event number. All events have a unique id.
                 type: number
                 example: 55
               type:
@@ -1158,7 +1162,7 @@ components:
                 minLength: 1
                 example: feature-updated
               createdBy:
-                description: Creator of the application? Where is this taken from? # Question?
+                description: The current user's *email* or *username* (taken from the *User* object on the current session)
                 type: string
                 minLength: 1
               createdAt:
@@ -1168,7 +1172,12 @@ components:
               data:
                 $ref: '#/components/schemas/featureToggleSchema'
               diffs:
-                description: What are diffs?  # Question?
+                description: |-
+                  The JSON differences between the current and last version of the Feature Toggle.
+                  (Uses the [deep-diff Node.js module](https://www.npmjs.com/package/deep-diff))
+                externalDocs:
+                  description: Activation strategies
+                  url: 'https://www.npmjs.com/package/deep-diff#differences'
                 type: array
                 items:
                   required:
@@ -1177,8 +1186,18 @@ components:
                     - rhs
                   properties:
                     kind:
-                      description: What do these letters signify? What's the full list? # Question? 
+                      description: |-
+                        The kind of change:
+                        - **N** - a newly-added property or element
+                        - **D** - a property or element was deleted
+                        - **E** - a property or element was edited
+                        - **A** - a change occurred within an array
                       type: string
+                      enum:
+                        - N
+                        - D
+                        - E
+                        - A
                       example: E
                     path:
                       type: array
@@ -1187,15 +1206,15 @@ components:
                           - pathItem
                       properties:
                         pathItem:
-                          description: What's this? # Question?
+                          description: The property path (from the left-hand-side root)
                           type: string
                           example: enabled
                     lhs:
-                      description: Left-hand side of something? Sometimes boolean, sometimes an object, sometimes null. What is it? # Question?
+                      description: The value on the left-hand-side of the comparison (*undefined* if **kind** is *N*)
                       type: boolean
                       example: true
                     rhs:
-                      description: Left-hand side of something? Sometimes boolean, sometimes an object, sometimes null. What is it? # Question?
+                      description: The value on the right-hand-side of the comparison (*undefined* if **kind** is *D*)
                       type: boolean
                       example: false
 
@@ -1251,12 +1270,15 @@ components:
                 enum:
                   - Enables trunk-based development for teams practicing continuous delivery
                   - Performs multivariate or A/B testing
-                  - Controls operational aspects of the system behaviour # US English?
+                  - Controls operational aspects of the system behavior
                   - Gracefully degrades system functionality
                   - Changes the features or product experiences that certain users receive
                 minLength: 1
               lifetimeDays:
-                description: What's this? # Question?
+                description: The number of days this Feature Toggle is intended to be used. This information is used to issue deprecation notices
+                externalDocs:
+                  description: Feature Toggle types
+                  url: 'https://unleash.github.io/docs/feature_toggle_types'
                 type: number
                 example: 40
 

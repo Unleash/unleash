@@ -12,4 +12,5 @@ unleash.start({
         ssl: false,
     },
     enableRequestLogger: true,
+    enableOAS: true,
 });

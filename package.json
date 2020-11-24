@@ -121,7 +121,9 @@
     "knex/liftoff/object.map/**/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/nanomatch/kind-of": "^6.0.3",
-    "knex/liftoff/findup-sync/micromatch/define-property/**/kind-of": "^6.0.3"
+    "knex/liftoff/findup-sync/micromatch/define-property/**/kind-of": "^6.0.3",
+    "googleapis": "^39.1.0",
+    "node-forge": "^0.10.0"
   },
   "lint-staged": {
     "*.js": [

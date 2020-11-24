@@ -3,6 +3,8 @@ id: state
 title: /api/admin/state
 ---
 
+> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authententication method, you may use [basic authenticaion](https://en.wikipedia.org/wiki/Basic_access_authentication) to ientify yourself.
+
 ### Export Feature Toggles & Strategies
 
 `GET: http://unleash.host.com/api/admin/state/export`

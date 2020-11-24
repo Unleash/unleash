@@ -3,6 +3,8 @@ id: feature-types
 title: /api/admin/feature-types
 ---
 
+> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authententication method, you may use [basic authenticaion](https://en.wikipedia.org/wiki/Basic_access_authentication) to ientify yourself.
+
 # Feature Types API
 
 `GET: http://unleash.host.com/api/admin/feature-types`

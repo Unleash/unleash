@@ -1,0 +1,25 @@
+name: Generate documentation
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: setup git config
+      run: |
+        git config --global user.name "${GH_NAME}"
+        git config --global user.email "${GH_EMAIL}"
+        echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
+        # Stage the file, commit and push
+        cd website && npm install && GIT_USER="ivarconr" npm run publish-gh-pages
+      env:
+        GH_NAME: 'ivarconr'
+        GH_EMAIL: 'ivarconr@gmail.com'
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}

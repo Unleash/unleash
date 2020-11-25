@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "3.6.1",
+  "version": "3.7.0",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -45,7 +45,7 @@
     "test:watch": "npm run test -- --watch",
     "test:pg-virtualenv": "pg_virtualenv npm run test:pg-virtualenv-chai",
     "test:pg-virtualenv-chain": "export TEST_DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@localhost:$PGPORT/postgres ; npm run db-migrate-testdb && npm test",
-    "test:coverage": "nyc npm run test",
+    "test:coverage": "nyc --reporter=lcov npm run test",
     "test:coverage-report": "nyc report --reporter=text-lcov | coveralls"
   },
   "nyc": {
@@ -75,7 +75,7 @@
     "express": "^4.17.1",
     "gravatar-url": "^3.1.0",
     "helmet": "^4.1.0",
-    "joi": "^17.2.0",
+    "joi": "^17.3.0",
     "js-yaml": "^3.14.0",
     "knex": "0.21.5",
     "log4js": "^6.0.0",
@@ -88,7 +88,7 @@
     "prom-client": "^12.0.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
-    "unleash-frontend": "3.6.5",
+    "unleash-frontend": "3.7.0",
     "yargs": "^16.0.3"
   },
   "devDependencies": {
@@ -121,7 +121,9 @@
     "knex/liftoff/object.map/**/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/nanomatch/kind-of": "^6.0.3",
-    "knex/liftoff/findup-sync/micromatch/define-property/**/kind-of": "^6.0.3"
+    "knex/liftoff/findup-sync/micromatch/define-property/**/kind-of": "^6.0.3",
+    "googleapis": "^39.1.0",
+    "node-forge": "^0.10.0"
   },
   "lint-staged": {
     "*.js": [

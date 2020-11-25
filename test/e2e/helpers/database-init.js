@@ -24,6 +24,7 @@ async function resetDatabase(stores) {
         stores.db('client_instances').del(),
         stores.db('context_fields').del(),
         stores.db('users').del(),
+        stores.db('projects').del(),
     ]);
 }
 
@@ -43,6 +44,10 @@ function createClientInstance(store) {
     return dbState.clientInstances.map(i => store.insert(i));
 }
 
+function createProjects(store) {
+    return dbState.projects.map(i => store.create(i));
+}
+
 function createFeatures(store) {
     return dbState.features.map(f => store._createFeature(f));
 }
@@ -54,6 +59,7 @@ async function setupDatabase(stores) {
     updates.push(...createFeatures(stores.featureToggleStore));
     updates.push(...createClientInstance(stores.clientInstanceStore));
     updates.push(...createApplications(stores.clientApplicationsStore));
+    updates.push(...createProjects(stores.projectStore));
 
     await Promise.all(updates);
 }

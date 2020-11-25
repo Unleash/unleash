@@ -4,7 +4,7 @@
 # Status and error codes - It would be useful to generate a simple table listing all status codes. See how Clearbit does it: https://clearbit.com/docs?python#errors
 # Rate limiting and thresholds - Need to inform people of this even if it's not a 'thing', they will ask. See https://unleash-community.slack.com/archives/CGP2MCHPF/p1603106990003200 See how Twitter API describes their limits: https://developer.twitter.com/en/docs/twitter-api/rate-limits
 # Glossary - Need definitions for, as a start, the project specific stuff: Unleash server, Unleash client, Feature Toggle, Strategy, Variant, Diff. Doesn't need to be massive. For instance, see the Lyft glossary - https://developer.lyft.com/docs/glossary
-# Reference - Is the guidance on the documentation site complete? 
+# Reference - Is the guidance on the documentation site complete? Add 'workflows': tasks that bundle several API calls to achieve common goals. Check Unleash Slack channel for potential examples
 # TESTING
 # QA team test cases. Test code exists but were these based on a list of steps required to produce a result?
 # Are there any real-world users of Unleash who are happy to read and test the Open API specification and make suggestions for improvement? Would they be happy to screen-record what they are doing (how they use the API will give invaluable insights)?
@@ -14,10 +14,11 @@
 # Move responses to root responses section in components (from schema section)
 # Issues with rendering as nested externaldocs from Swagger UI. See GET /admin​/feature-types. Not an issue in other tools (see redoc.html)
 # Create output in other non-Swagger styles (as well as Redoc) - such as Readme
+# Other candidates for $ref: createdAt, lastSeen/updatedAt
 # REDOC
 # 'Try it out' instructions do not apply since the free version of Redoc has no such feature. 
 # STYLE
-# Add style guide MD. UK/US = US, Newspaper/Movie, Plurals. &
+# Add style guide MD. UK/US = US, Newspaper/Movie, Plurals. &. What 's the closest match for Unleash? http://apistylebook.com/design/guidelines/
 # OAS styler - Only use backticks for code samples and API paths. Use bold for schema items and italic for schema item settings
 
 openapi: 3.0.0
@@ -914,11 +915,11 @@ components:
                 type: string
                 example: my-application
               createdAt:
-                description: Date and time when the application was initially created
+                description: The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))
                 type: string
                 example: '2016-12-09T14:56:36.730Z'
               updatedAt:
-                description: Date and time when the application was last updated
+                description: The last time the application 'talked' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)
                 type: string
                 example: '2020-11-14T09:55:23.653Z'
               description:
@@ -935,7 +936,7 @@ components:
                 description: Deprecated. Do not use
                 type: string
               icon:
-                description: The appkication's icon. Must be one of the [Material Design icon names](https://material.io/resources/icons/?style=baseline)
+                description: The application's icon. Must be one of the [Material Design icon names](https://material.io/resources/icons/?style=baseline)
                 type: string
                 example: comment_bank
 
@@ -982,12 +983,12 @@ components:
               minLength: 1
               example: '::ffff:127.0.0.1'
             lastSeen:
-              description: The last time the application 'talked' to Unleash (sent metrics, registered, fetched feature toggles)
+              description: The last time the application 'talked' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)
               type: string
               minLength: 1
               example: '2020-11-14T11:17:24.482Z'
             createdAt:
-              description: The first time the application registered with Unleash
+              description: The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))
               type: string
               minLength: 1
               example: '2020-11-13T16:56:29.279Z'
@@ -1166,7 +1167,7 @@ components:
                 type: string
                 minLength: 1
               createdAt:
-                description: Date and time when the application was initially created
+                description: The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))
                 type: string
                 example: '2016-12-09T14:56:36.730Z'
               data:

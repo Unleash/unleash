@@ -4,6 +4,7 @@ const debug = require('debug')('unleash:feature-store');
 import {
     ADD_FEATURE_TOGGLE,
     RECEIVE_FEATURE_TOGGLES,
+    RECEIVE_FEATURE_TOGGLE,
     UPDATE_FEATURE_TOGGLE,
     UPDATE_FEATURE_TOGGLE_STRATEGIES,
     REMOVE_FEATURE_TOGGLE,
@@ -40,6 +41,15 @@ const features = (state = new List([]), action) => {
             });
         case UPDATE_FEATURE_TOGGLE:
             debug(UPDATE_FEATURE_TOGGLE, action);
+            return state.map(toggle => {
+                if (toggle.get('name') === action.featureToggle.name) {
+                    return new $Map(action.featureToggle);
+                } else {
+                    return toggle;
+                }
+            });
+        case RECEIVE_FEATURE_TOGGLE:
+            debug(RECEIVE_FEATURE_TOGGLE, action);
             return state.map(toggle => {
                 if (toggle.get('name') === action.featureToggle.name) {
                     return new $Map(action.featureToggle);

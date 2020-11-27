@@ -1,5 +1,5 @@
 import React from 'react';
-import FeatureListContainer from './../../component/feature/list-container';
+import FeatureListContainer from './../../component/feature/list/list-container';
 import PropTypes from 'prop-types';
 
 const render = ({ history }) => <FeatureListContainer history={history} />;

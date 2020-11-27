@@ -1,0 +1,406 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with one feature 1`] = `
+<div>
+  <div
+    className="toolbar"
+  >
+    <div>
+      <react-mdl-Textfield
+        floatingLabel={true}
+        label="Search"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyPress={[Function]}
+        style={
+          Object {
+            "maxWidth": "80%",
+            "width": "500px",
+          }
+        }
+        value=""
+      />
+      <react-mdl-FABButton
+        className="mdl-cell--hide-phone"
+        mini={true}
+      >
+        <react-mdl-Icon
+          name="search"
+        />
+      </react-mdl-FABButton>
+    </div>
+    <a
+      className="toolbarButton"
+      href="/features/create"
+      onClick={[Function]}
+    >
+      <react-mdl-FABButton
+        accent={true}
+        title="Create feature toggle"
+      >
+        <react-mdl-Icon
+          name="add"
+        />
+      </react-mdl-FABButton>
+    </a>
+  </div>
+  <react-mdl-Card
+    className="fullwidth"
+    shadow={0}
+    style={
+      Object {
+        "overflow": "visible",
+      }
+    }
+  >
+    <react-mdl-CardActions>
+      <react-mdl-Button
+        className=" dropdownButton"
+        id="metric"
+        title="Metric interval"
+      >
+        Last minute
+        <react-mdl-Icon
+          className="mdl-color-text--grey-600"
+          name="arrow_drop_down"
+        />
+      </react-mdl-Button>
+      <react-mdl-Menu
+        onClick={[Function]}
+        style={
+          Object {
+            "width": "168px",
+          }
+        }
+        target="metric"
+      >
+        <react-mdl-MenuItem
+          data-target="minute"
+          disabled={true}
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <react-mdl-Icon
+            name="hourglass_empty"
+            style={
+              Object {
+                "paddingRight": "16px",
+              }
+            }
+          />
+          Last minute
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="hour"
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <react-mdl-Icon
+            name="hourglass_full"
+            style={
+              Object {
+                "paddingRight": "16px",
+              }
+            }
+          />
+          Last hour
+        </react-mdl-MenuItem>
+      </react-mdl-Menu>
+      <react-mdl-Button
+        className=" dropdownButton"
+        id="sorting"
+        title="Sort by"
+      >
+        By name
+        <react-mdl-Icon
+          className="mdl-color-text--grey-600"
+          name="arrow_drop_down"
+        />
+      </react-mdl-Button>
+      <react-mdl-Menu
+        onClick={[Function]}
+        style={
+          Object {
+            "width": "168px",
+          }
+        }
+        target="sorting"
+      >
+        <react-mdl-MenuItem
+          data-target="name"
+          disabled={true}
+        >
+          Name
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="type"
+          disabled={false}
+        >
+          Type
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="enabled"
+          disabled={false}
+        >
+          Enabled
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="stale"
+          disabled={false}
+        >
+          Stale
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="created"
+          disabled={false}
+        >
+          Created
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="strategies"
+          disabled={false}
+        >
+          Strategies
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="metrics"
+          disabled={false}
+        >
+          Metrics
+        </react-mdl-MenuItem>
+      </react-mdl-Menu>
+      <Project
+        settings={
+          Object {
+            "sort": "name",
+          }
+        }
+        updateSetting={[MockFunction]}
+      />
+    </react-mdl-CardActions>
+    <hr />
+    <react-mdl-List>
+      <ListItem
+        feature={
+          Object {
+            "name": "Another",
+            "reviveName": "Another",
+          }
+        }
+        hasPermission={[Function]}
+        setFilter={[Function]}
+        settings={
+          Object {
+            "sort": "name",
+          }
+        }
+        toggleFeature={[MockFunction]}
+      />
+    </react-mdl-List>
+  </react-mdl-Card>
+</div>
+`;
+
+exports[`renders correctly with one feature without permissions 1`] = `
+<div>
+  <div
+    className="toolbar"
+  >
+    <div>
+      <react-mdl-Textfield
+        floatingLabel={true}
+        label="Search"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyPress={[Function]}
+        style={
+          Object {
+            "maxWidth": "80%",
+            "width": "500px",
+          }
+        }
+        value=""
+      />
+      <react-mdl-FABButton
+        className="mdl-cell--hide-phone"
+        mini={true}
+      >
+        <react-mdl-Icon
+          name="search"
+        />
+      </react-mdl-FABButton>
+    </div>
+    
+  </div>
+  <react-mdl-Card
+    className="fullwidth"
+    shadow={0}
+    style={
+      Object {
+        "overflow": "visible",
+      }
+    }
+  >
+    <react-mdl-CardActions>
+      <react-mdl-Button
+        className=" dropdownButton"
+        id="metric"
+        title="Metric interval"
+      >
+        Last minute
+        <react-mdl-Icon
+          className="mdl-color-text--grey-600"
+          name="arrow_drop_down"
+        />
+      </react-mdl-Button>
+      <react-mdl-Menu
+        onClick={[Function]}
+        style={
+          Object {
+            "width": "168px",
+          }
+        }
+        target="metric"
+      >
+        <react-mdl-MenuItem
+          data-target="minute"
+          disabled={true}
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <react-mdl-Icon
+            name="hourglass_empty"
+            style={
+              Object {
+                "paddingRight": "16px",
+              }
+            }
+          />
+          Last minute
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="hour"
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <react-mdl-Icon
+            name="hourglass_full"
+            style={
+              Object {
+                "paddingRight": "16px",
+              }
+            }
+          />
+          Last hour
+        </react-mdl-MenuItem>
+      </react-mdl-Menu>
+      <react-mdl-Button
+        className=" dropdownButton"
+        id="sorting"
+        title="Sort by"
+      >
+        By name
+        <react-mdl-Icon
+          className="mdl-color-text--grey-600"
+          name="arrow_drop_down"
+        />
+      </react-mdl-Button>
+      <react-mdl-Menu
+        onClick={[Function]}
+        style={
+          Object {
+            "width": "168px",
+          }
+        }
+        target="sorting"
+      >
+        <react-mdl-MenuItem
+          data-target="name"
+          disabled={true}
+        >
+          Name
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="type"
+          disabled={false}
+        >
+          Type
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="enabled"
+          disabled={false}
+        >
+          Enabled
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="stale"
+          disabled={false}
+        >
+          Stale
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="created"
+          disabled={false}
+        >
+          Created
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="strategies"
+          disabled={false}
+        >
+          Strategies
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="metrics"
+          disabled={false}
+        >
+          Metrics
+        </react-mdl-MenuItem>
+      </react-mdl-Menu>
+      <Project
+        settings={
+          Object {
+            "sort": "name",
+          }
+        }
+        updateSetting={[MockFunction]}
+      />
+    </react-mdl-CardActions>
+    <hr />
+    <react-mdl-List>
+      <ListItem
+        feature={
+          Object {
+            "name": "Another",
+            "reviveName": "Another",
+          }
+        }
+        hasPermission={[Function]}
+        setFilter={[Function]}
+        settings={
+          Object {
+            "sort": "name",
+          }
+        }
+        toggleFeature={[MockFunction]}
+      />
+    </react-mdl-List>
+  </react-mdl-Card>
+</div>
+`;

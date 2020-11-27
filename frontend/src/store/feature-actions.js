@@ -19,6 +19,10 @@ export const ERROR_UPDATE_FEATURE_TOGGLE = 'ERROR_UPDATE_FEATURE_TOGGLE';
 export const ERROR_REMOVE_FEATURE_TOGGLE = 'ERROR_REMOVE_FEATURE_TOGGLE';
 export const UPDATE_FEATURE_TOGGLE_STRATEGIES = 'UPDATE_FEATURE_TOGGLE_STRATEGIES';
 
+export const RECEIVE_FEATURE_TOGGLE = 'RECEIVE_FEATURE_TOGGLE';
+export const START_FETCH_FEATURE_TOGGLE = 'START_FETCH_FEATURE_TOGGLE';
+export const ERROR_FETCH_FEATURE_TOGGLE = 'START_FETCH_FEATURE_TOGGLE';
+
 export function toggleFeature(enable, name) {
     debug('Toggle feature toggle ', name);
     return dispatch => {
@@ -49,6 +53,15 @@ function receiveFeatureToggles(json) {
     };
 }
 
+function receiveFeatureToggle(featureToggle) {
+    debug('reviced feature toggle', featureToggle);
+    return {
+        type: RECEIVE_FEATURE_TOGGLE,
+        featureToggle,
+        receivedAt: Date.now(),
+    };
+}
+
 export function fetchFeatureToggles() {
     debug('Start fetching feature toggles');
     return dispatch => {
@@ -58,6 +71,18 @@ export function fetchFeatureToggles() {
             .fetchAll()
             .then(json => dispatch(receiveFeatureToggles(json)))
             .catch(dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_TOGGLES));
+    };
+}
+
+export function fetchFeatureToggle(name) {
+    debug('Start fetching feature toggles');
+    return dispatch => {
+        dispatch({ type: START_FETCH_FEATURE_TOGGLE });
+
+        return api
+            .fetchFeatureToggle(name)
+            .then(json => dispatch(receiveFeatureToggle(json)))
+            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_TOGGLE));
     };
 }
 

@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import { Button, Textfield, DialogActions, Grid, Cell, Icon, Switch } from 'react-mdl';
 import styles from './variant.scss';
 import MySelect from '../../common/select';
-import { trim } from '../form/util';
+import { trim } from '../../common/util';
 import { weightTypes } from './enums';
 import OverrideConfig from './override-config';
 

@@ -18,6 +18,12 @@ function fetchAll() {
         .then(response => response.json());
 }
 
+function fetchFeatureToggle(name) {
+    return fetch(`${URI}/${name}`, { credentials: 'include' })
+        .then(throwIfNotSuccess)
+        .then(response => response.json());
+}
+
 function create(featureToggle) {
     return validateToggle(featureToggle)
         .then(() =>
@@ -82,6 +88,7 @@ function remove(featureToggleName) {
 
 export default {
     fetchAll,
+    fetchFeatureToggle,
     create,
     validate,
     update,

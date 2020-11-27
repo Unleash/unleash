@@ -1,0 +1,88 @@
+.item {
+    flex: 1;
+    min-width: 400px;
+    max-width: 100%;
+    margin: 5px 0 5px 5px;
+    position: relative;
+    z-index: 1;
+};
+
+.card {
+    width: 100%;
+    display: block;
+    background-color: #f2f9fc;
+    overflow: 'visible';
+}
+
+.isDragging {
+    opacity: 0.4;
+    border: 2px dotted black;
+}
+
+.isDroptarget {
+    border: 2px solid rgba(96, 125, 139, 1) !important;
+}
+
+.item:nth-child(odd) {
+    margin-left: 0;
+}
+
+@media (max-width: 1024px) {
+    .item {
+        margin: 2px 0;
+    }
+}
+
+/*
+.item:not(:first-child):after {
+    content: " OR ";
+    position: absolute;
+    left: -30px;
+    top: 45%;
+    color: #ccc;
+    width: 25px;
+    line-height: 32px;
+    font-size: 14px;
+    text-align: center;
+    height: 100%;
+    z-index: 2;
+}
+*/
+
+.cardTitle {
+    color: #fff;
+    height: 65px;
+    background-color: rgba(96, 125, 139, .85) !important;
+}
+
+.helpText {
+    color: rgba(0,0,0, 0.54);
+    font-size: 12px;
+    line-height: 14px;
+};
+
+
+.editLink {
+    color: #fff;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-right: 5px;
+}
+
+.reorderIcon {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+
+.paddingDesktop {
+    padding: 16px;
+}
+
+@media (max-width: 500px) {
+    .paddingDesktop {
+        padding: 0;
+    }
+}
+

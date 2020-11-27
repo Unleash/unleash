@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Progress from './../progress';
+import Progress from '../progress-component';
 import renderer from 'react-test-renderer';
 
 jest.mock('react-mdl');

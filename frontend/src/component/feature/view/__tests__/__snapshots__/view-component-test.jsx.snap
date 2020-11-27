@@ -1,0 +1,248 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with one feature 1`] = `
+<react-mdl-Card
+  className="fullwidth"
+  shadow={0}
+  style={
+    Object {
+      "overflow": "visible",
+    }
+  }
+>
+  <react-mdl-Chip
+    className="mdl-color--light-green-500 mdl-color-text--white mdl-shadow--2dp"
+    style={
+      Object {
+        "position": "absolute",
+        "right": "4px",
+        "top": "4px",
+      }
+    }
+    title="Feature toggle is active."
+  >
+    Active
+  </react-mdl-Chip>
+  <react-mdl-CardTitle
+    style={
+      Object {
+        "paddingBottom": 0,
+        "wordBreak": "break-all",
+      }
+    }
+  >
+    Another
+     
+  </react-mdl-CardTitle>
+  <react-mdl-CardText>
+    <div>
+      another's description
+       
+      <a
+        href="#edit"
+        onClick={[Function]}
+      >
+        edit
+      </a>
+    </div>
+  </react-mdl-CardText>
+  <react-mdl-CardText
+    style={
+      Object {
+        "paddingTop": 0,
+      }
+    }
+  >
+    <FeatureTypeSelect
+      filled={true}
+      onChange={[Function]}
+      value="release"
+    />
+     
+    <ProjectSelect
+      filled={true}
+      onChange={[Function]}
+    />
+  </react-mdl-CardText>
+  <react-mdl-CardActions
+    border={true}
+    style={
+      Object {
+        "alignItems": "center",
+        "display": "flex",
+        "justifyContent": "space-between",
+      }
+    }
+  >
+    <span
+      style={
+        Object {
+          "paddingRight": "24px",
+        }
+      }
+    >
+      <react-mdl-Switch
+        checked={false}
+        disabled={false}
+        onChange={[Function]}
+        ripple={true}
+      >
+        <span
+          className="mdl-cell--hide-phone"
+        >
+          Disabled
+        </span>
+      </react-mdl-Switch>
+    </span>
+    <div>
+      <span>
+        <react-mdl-Button
+          className="mdl-button dropdownButton"
+          id="update_status"
+        >
+          Status
+          <react-mdl-Icon
+            className="mdl-color-text--grey-600"
+            name="arrow_drop_down"
+          />
+        </react-mdl-Button>
+        <react-mdl-Menu
+          onClick={[Function]}
+          style={
+            Object {
+              "width": "168px",
+            }
+          }
+          target="update_status"
+        >
+          <react-mdl-MenuItem
+            data-target="active"
+            disabled={true}
+          >
+            Set toggle Active
+          </react-mdl-MenuItem>
+          <react-mdl-MenuItem
+            data-target="stale"
+            disabled={false}
+          >
+            Mark toggle as Stale
+          </react-mdl-MenuItem>
+        </react-mdl-Menu>
+      </span>
+      <a
+        href="/features/copy/Another"
+        onClick={[Function]}
+        title="Create new feature toggle by cloning configuration"
+      >
+        <react-mdl-Button
+          style={
+            Object {
+              "flexShrink": 0,
+            }
+          }
+        >
+          Clone
+        </react-mdl-Button>
+      </a>
+      <react-mdl-Button
+        accent={true}
+        disabled={false}
+        onClick={[Function]}
+        style={
+          Object {
+            "flexShrink": 0,
+          }
+        }
+        title="Archive feature toggle"
+      >
+        Archive
+      </react-mdl-Button>
+    </div>
+  </react-mdl-CardActions>
+  <hr />
+  <react-mdl-Tabs
+    activeTab={0}
+    className="mdl-color--grey-100"
+    ripple={true}
+    tabBarProps={
+      Object {
+        "style": Object {
+          "width": "100%",
+        },
+      }
+    }
+  >
+    <react-mdl-Tab
+      onClick={[Function]}
+    >
+      Activation
+    </react-mdl-Tab>
+    <react-mdl-Tab
+      onClick={[Function]}
+    >
+      Metrics
+    </react-mdl-Tab>
+    <react-mdl-Tab
+      onClick={[Function]}
+    >
+      V
+      <span
+        className="mdl-cell--hide-phone"
+      >
+        ariants
+      </span>
+    </react-mdl-Tab>
+    <react-mdl-Tab
+      onClick={[Function]}
+    >
+      L
+      <span
+        className="mdl-cell--hide-phone"
+      >
+        og
+      </span>
+    </react-mdl-Tab>
+  </react-mdl-Tabs>
+  <UpdateStrategiesComponent
+    featureToggle={
+      Object {
+        "createdAt": "2018-02-04T20:27:52.127Z",
+        "description": "another's description",
+        "enabled": false,
+        "name": "Another",
+        "stale": false,
+        "strategies": Array [
+          Object {
+            "name": "gradualRolloutRandom",
+            "parameters": Object {
+              "percentage": 50,
+            },
+          },
+        ],
+        "type": "release",
+      }
+    }
+    features={
+      Array [
+        Object {
+          "createdAt": "2018-02-04T20:27:52.127Z",
+          "description": "another's description",
+          "enabled": false,
+          "name": "Another",
+          "stale": false,
+          "strategies": Array [
+            Object {
+              "name": "gradualRolloutRandom",
+              "parameters": Object {
+                "percentage": 50,
+              },
+            },
+          ],
+          "type": "release",
+        },
+      ]
+    }
+    history={Object {}}
+  />
+</react-mdl-Card>
+`;

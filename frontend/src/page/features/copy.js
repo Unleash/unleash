@@ -1,5 +1,5 @@
 import React from 'react';
-import CopyFeatureToggleForm from '../../component/feature/form/form-copy-feature-container';
+import CopyFeatureToggleForm from '../../component/feature/create/copy-feature-container';
 import PropTypes from 'prop-types';
 
 const render = ({ history, match: { params } }) => (

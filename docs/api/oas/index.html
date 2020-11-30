@@ -3,8 +3,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Swagger UI</title>
-    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
+    <title>Unleash Open API</title>
+    <link rel="stylesheet" href="theme-material.css">
+<!-- Material design styles from  ostranme.github.io/swagger-ui-themes
+    Original follows
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >  -->
     <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
     <style>
@@ -26,6 +29,18 @@
       {
         margin:0;
         background: #fafafa;
+      }
+
+      .topbar-wrapper img {
+          content: url(https://unleash.github.io/img/logo-inverted.png);
+      }
+
+      .swagger-ui .topbar .download-url-wrapper .download-url-button {
+          background-color: #3f51b5 !important;
+      }
+
+      .swagger-ui .topbar .download-url-wrapper input[type=text] {
+          border-color: #3f51b5 !important;
       }
     </style>
   </head>

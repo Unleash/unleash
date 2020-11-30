@@ -52,22 +52,19 @@ info:
     2. Click **Try it out**
     3. Customize the **Request body** and/or **Parameters**.
     4. Click **Execute**.
-    
+
     You will see the cURL request submitted to the API server and the corresponding response.
 
     Alternatively, you can test the API in [Postman](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
 
     [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
-
   version: 3.5.6
   contact:
     name: The Unleash team
     url: 'https://unleash.github.io/'
-
 externalDocs:
   description: Unleash documentation
   url: 'https://unleash.github.io/docs/getting_started'
-
 paths:
   /admin/features:
     get:
@@ -95,7 +92,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
-
     post:
       summary: Create a Feature Toggle
       description: Create a new Feature Toggle
@@ -112,14 +108,13 @@ paths:
         '201':
           description: Feature Toggle successfully created
         '400':
-          description: Bad body request (for example, Feature Toggle name is not unique)
+          description: 'Bad body request (for example, Feature Toggle name is not unique)'
         '401':
           description: Not authorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
-
   '/admin/features/{featureName}':
     get:
       summary: Fetches a specific Feature Toggle from the Unleash server.
@@ -148,7 +143,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
-
     put:
       summary: Update a Feature Toggle
       description: Update a Feature Toggle.
@@ -180,7 +174,66 @@ paths:
                 $ref: '#/components/schemas/401'
         '404':
           description: Feature Toggle not found
-
+      x-code-samples:
+        - lang: 'Go'
+          source: |
+            package main
+            import (
+              "fmt"
+              "strings"
+              "net/http"
+              "io/ioutil"
+            )
+            func main() {
+              url := "http://localhost:4242/api/admin/features/featureName"
+              payload := strings.NewReader("[{\"name\":\"featureX\",\"description\":\"Toggles featureX on and off\",\"type\":\"release\",\"enabled\":true,\"stale\":false,\"strategies\":[{\"name\":\"default\",\"editable\":true,\"description\":\"Default on/off strategy.\",\"parameters\":{\"parameter\":{\"name\":\"groupId\",\"type\":\"string\",\"description\":\"Define activation groups to allow you to correlate across feature toggles.\",\"required\":false}}}],\"variants\":[{\"name\":\"yellow\",\"weight\":20}],\"createdAt\":\"string\"}]")
+              req, _ := http.NewRequest("PUT", url, payload)
+              res, _ := http.DefaultClient.Do(req)
+              defer res.Body.Close()
+              body, _ := ioutil.ReadAll(res.Body)
+              fmt.Println(res)
+              fmt.Println(string(body))
+            }
+        - lang: 'Java'
+          source: |
+            AsyncHttpClient client = new DefaultAsyncHttpClient();
+            client.prepare("PUT", "http://localhost:4242/api/admin/features/featureName")
+              .setBody("[{\"name\":\"featureX\",\"description\":\"Toggles featureX on and off\",\"type\":\"release\",\"enabled\":true,\"stale\":false,\"strategies\":[{\"name\":\"default\",\"editable\":true,\"description\":\"Default on/off strategy.\",\"parameters\":{\"parameter\":{\"name\":\"groupId\",\"type\":\"string\",\"description\":\"Define activation groups to allow you to correlate across feature toggles.\",\"required\":false}}}],\"variants\":[{\"name\":\"yellow\",\"weight\":20}],\"createdAt\":\"string\"}]")
+              .execute()
+              .toCompletableFuture()
+              .thenAccept(System.out::println)
+              .join();
+            client.close();
+        - lang: 'Python'
+          source: |
+            import requests
+            url = "http://localhost:4242/api/admin/features/featureName"
+            payload = "[{\"name\":\"featureX\",\"description\":\"Toggles featureX on and off\",\"type\":\"release\",\"enabled\":true,\"stale\":false,\"strategies\":[{\"name\":\"default\",\"editable\":true,\"description\":\"Default on/off strategy.\",\"parameters\":{\"parameter\":{\"name\":\"groupId\",\"type\":\"string\",\"description\":\"Define activation groups to allow you to correlate across feature toggles.\",\"required\":false}}}],\"variants\":[{\"name\":\"yellow\",\"weight\":20}],\"createdAt\":\"string\"}]"
+            response = requests.request("PUT", url, data=payload)
+            print(response.text)
+        - lang: 'Ruby'
+          source: |
+            require 'uri'
+            require 'net/http'
+            url = URI("http://localhost:4242/api/admin/features/featureName")
+            http = Net::HTTP.new(url.host, url.port)
+            request = Net::HTTP::Put.new(url)
+            request.body = "[{\"name\":\"featureX\",\"description\":\"Toggles featureX on and off\",\"type\":\"release\",\"enabled\":true,\"stale\":false,\"strategies\":[{\"name\":\"default\",\"editable\":true,\"description\":\"Default on/off strategy.\",\"parameters\":{\"parameter\":{\"name\":\"groupId\",\"type\":\"string\",\"description\":\"Define activation groups to allow you to correlate across feature toggles.\",\"required\":false}}}],\"variants\":[{\"name\":\"yellow\",\"weight\":20}],\"createdAt\":\"string\"}]"
+            response = http.request(request)
+            puts response.read_body
+        - lang: 'JavaScript'
+          source: |
+            fetch("http://localhost:4242/api/admin/features/featureName", {
+              "method": "PUT",
+              "headers": {},
+              "body": "[{\"name\":\"featureX\",\"description\":\"Toggles featureX on and off\",\"type\":\"release\",\"enabled\":true,\"stale\":false,\"strategies\":[{\"name\":\"default\",\"editable\":true,\"description\":\"Default on/off strategy.\",\"parameters\":{\"parameter\":{\"name\":\"groupId\",\"type\":\"string\",\"description\":\"Define activation groups to allow you to correlate across feature toggles.\",\"required\":false}}}],\"variants\":[{\"name\":\"yellow\",\"weight\":20}],\"createdAt\":\"string\"}]"
+            })
+            .then(response => {
+              console.log(response);
+            })
+            .catch(err => {
+              console.error(err);
+            });
     delete:
       summary: Archive a Feature Toggle.
       description: |
@@ -204,7 +257,6 @@ paths:
                 $ref: '#/components/schemas/401'
         '404':
           description: Feature Toggle not found
-
   '/admin/features/{featureName}/toggle/on':
     post:
       summary: Enable a Feature Toggle.
@@ -229,7 +281,6 @@ paths:
                 $ref: '#/components/schemas/401'
         '404':
           description: Feature Toggle not found
-
   '/admin/features/{featureName}/toggle/off':
     post:
       summary: Disable a Feature Toggle.
@@ -254,7 +305,6 @@ paths:
                 $ref: '#/components/schemas/401'
         '404':
           description: Feature Toggle not found
-
   '/admin/features/{featureName}/stale/on':
     post:
       summary: Mark a Feature Toggle as 'stale' (deprecated).
@@ -282,7 +332,6 @@ paths:
                 $ref: '#/components/schemas/401'
         '404':
           description: Feature Toggle not found
-
   '/admin/features/{featureName}/stale/off':
     post:
       summary: Mark a Feature Toggle as active.
@@ -310,8 +359,7 @@ paths:
                 $ref: '#/components/schemas/401'
         '404':
           description: Feature Toggle not found
-
-  '/admin/archive/features':
+  /admin/archive/features:
     get:
       summary: List all the archived feature toggles on the Unleash server
       description: Archived feature toggles are those that have been previously deleted
@@ -333,7 +381,6 @@ paths:
                 $ref: '#/components/schemas/401'
         '404':
           description: Feature Toggle not found
-
   '/admin/archive/revive/{featureName}':
     post:
       summary: Un-archive a Feature Toggle
@@ -348,8 +395,7 @@ paths:
           description: Feature Toggle successfully revived
         '404':
           description: Feature Toggle not found
-
-  '/admin/strategies':
+  /admin/strategies:
     get:
       summary: Fetch all strategies and their parameters.
       description: Fetch all strategies and their parameters.
@@ -369,7 +415,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
-
     post:
       summary: Create Strategy
       description: Create Strategy
@@ -399,7 +444,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/409'
-
   '/admin/strategies/{strategyName}':
     put:
       summary: Update Strategy
@@ -431,7 +475,6 @@ paths:
                 $ref: '#/components/schemas/401'
         '404':
           description: Strategy not updated due to errors in query and/or request body (such as **name** and **strategyName** not matching).
-
   /admin/metrics/seen-toggles:
     get:
       summary: Returns a list of applications and the feature toggles that Unleash has 'seen' for each application.
@@ -446,7 +489,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/200seen'
-
   /admin/metrics/feature-toggles:
     get:
       summary: Gives 'last minute' and 'last hour' metrics for all active feature toggles (based on what was reported by the client applications).
@@ -469,9 +511,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
-
   /admin/metrics/applications:
-    # Documentation MD says 'You can also specify the query param: strategyName, which will return all applications implementing the given strategy.' However, specifiying this results in a 500 error
     get:
       summary: A list of known applications ('seen' by Unleash in the last two days)
       description: Also has a link for more details.
@@ -490,8 +530,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/401'   
-
+                $ref: '#/components/schemas/401'
   '/admin/metrics/applications/{appName}':
     get:
       summary: Details about a client application.
@@ -516,7 +555,6 @@ paths:
                 $ref: '#/components/schemas/401'
         '500':
           description: Application name not found
-
   /admin/metrics/seen-apps:
     get:
       summary: Details about seen applications
@@ -537,7 +575,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
-
   /admin/events:
     get:
       operationId: get-admin-events
@@ -565,7 +602,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
-
   /admin/state/export:
     get:
       operationId: get-admin-state-export
@@ -618,7 +654,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
-
   /admin/state/import:
     post:
       summary: Import feature toggles and strategies
@@ -672,7 +707,6 @@ paths:
                 $ref: '#/components/schemas/401'
         '404':
           description: No import data provided.
-  
   /admin/feature-types:
     get:
       summary: Fetch the list of Unleash feature types
@@ -698,7 +732,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/401'
-
 components:
   parameters:
     featureNamePath:
@@ -725,7 +758,6 @@ components:
       example: my-application
       schema:
         type: string
-
   schemas:
     '200':
       title: Successful response
@@ -735,7 +767,8 @@ components:
           $ref: '#/components/schemas/versionSchema'
         features:
           $ref: '#/components/schemas/featureToggleSchema'
-
+      x-tags:
+        - Responses
     '401':
       description: Not authorized
       type: object
@@ -753,7 +786,8 @@ components:
         - type
         - path
         - message
-
+      x-tags:
+        - Responses
     '409':
       type: object
       required:
@@ -780,7 +814,8 @@ components:
                 description: Error message
                 type: string
                 minLength: 1
-
+      x-tags:
+        - Responses
     200strategy:
       type: object
       required:
@@ -791,7 +826,8 @@ components:
           $ref: '#/components/schemas/versionSchema'
         strategies:
           $ref: '#/components/schemas/strategySchema'
-
+      x-tags:
+        - Responses
     createStrategy:
       type: object
       properties:
@@ -833,7 +869,8 @@ components:
         - name
         - description
         - parameters
-
+      x-tags:
+        - Schemas
     200seen:
       type: array
       minItems: 1
@@ -854,7 +891,8 @@ components:
               properties: {}
           metricsCount:
             type: number
-
+      x-tags:
+        - Responses
     200feature:
       description: |-
         - **lastHour** - how many times a Feature Toggle was accessed in the last hour.
@@ -888,12 +926,14 @@ components:
                   - 'no'
               metricsCount:
                 type: number
-                
+      x-tags:
+        - Responses
     applicationArray:
       type: array
       items:
         $ref: '#/components/schemas/application'
-
+      x-tags:
+        - Schemas
     application:
       type: object
       required:
@@ -915,11 +955,11 @@ components:
                 type: string
                 example: my-application
               createdAt:
-                description: The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))
+                description: 'The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
                 type: string
                 example: '2016-12-09T14:56:36.730Z'
               updatedAt:
-                description: The last time the application 'talked' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)
+                description: 'The last time the application ''talked'' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)'
                 type: string
                 example: '2020-11-14T09:55:23.653Z'
               description:
@@ -936,10 +976,11 @@ components:
                 description: Deprecated. Do not use
                 type: string
               icon:
-                description: The application's icon. Must be one of the [Material Design icon names](https://material.io/resources/icons/?style=baseline)
+                description: 'The application''s icon. Must be one of the [Material Design icon names](https://material.io/resources/icons/?style=baseline)'
                 type: string
                 example: comment_bank
-
+      x-tags:
+        - Schemas
     200appdetails:
       type: object
       required:
@@ -983,12 +1024,12 @@ components:
               minLength: 1
               example: '::ffff:127.0.0.1'
             lastSeen:
-              description: The last time the application 'talked' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)
+              description: 'The last time the application ''talked'' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)'
               type: string
               minLength: 1
               example: '2020-11-14T11:17:24.482Z'
             createdAt:
-              description: The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))
+              description: 'The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
               type: string
               minLength: 1
               example: '2020-11-13T16:56:29.279Z'
@@ -1001,7 +1042,8 @@ components:
               description: Deprecated. Do not use
               type: string
               minLength: 1
-
+      x-tags:
+        - Responses
     featureToggleTypeSchema:
       type: string
       enum:
@@ -1012,31 +1054,33 @@ components:
         - permission
       description: |-
         'One of the five Unleash Feature Toggle types.
-        
+
         **type** is optional. If not defined, it defaults to *release*'
-      default: 'release'
+      default: release
       externalDocs:
         description: Feature Toggle types
         url: 'https://unleash.github.io/docs/feature_toggle_types'
       minLength: 1
       example: release
-    
+      x-tags:
+        - Schemas
     versionSchema:
       type: number
       description: For internal use by the Unleash developers
       example: 1
-
+      x-tags:
+        - Schemas
     featureToggleSchema:
       type: array
       items:
         type: object
         required:
-        - name
-        - description
-        - type
-        - enabled
-        - stale
-        - strategies
+          - name
+          - description
+          - type
+          - enabled
+          - stale
+          - strategies
         properties:
           name:
             description: Feature Toggle name must be unique.
@@ -1064,7 +1108,8 @@ components:
           createdAt:
             type: string
             minLength: 1
-
+      x-tags:
+        - Schemas
     strategySchema:
       type: array
       items:
@@ -1107,11 +1152,12 @@ components:
                     description: Is this a required parameter?
                     type: boolean
                     example: false
-
+      x-tags:
+        - Schemas
     variantsSchema:
       externalDocs:
         description: How to use Feature Toggle variants
-        url: https://unleash.github.io/docs/toggle_variants
+        url: 'https://unleash.github.io/docs/toggle_variants'
       type: array
       items:
         required:
@@ -1129,7 +1175,8 @@ components:
               The client SDK will summarize all variant weights, hash the number and divide the users among them. The distribution will be according to the weight as a fraction of the sum of weight.
             type: number
             example: 20
-
+      x-tags:
+        - Schemas
     200-events:
       type: object
       properties:
@@ -1167,7 +1214,7 @@ components:
                 type: string
                 minLength: 1
               createdAt:
-                description: The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))
+                description: 'The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
                 type: string
                 example: '2016-12-09T14:56:36.730Z'
               data:
@@ -1195,7 +1242,7 @@ components:
                         - **A** - a change occurred within an array
                       type: string
                       enum:
-                        - N
+                        - 'N'
                         - D
                         - E
                         - A
@@ -1218,7 +1265,8 @@ components:
                       description: The value on the right-hand-side of the comparison (*undefined* if **kind** is *D*)
                       type: boolean
                       example: false
-
+      x-tags:
+        - Responses
     200export:
       type: object
       required:
@@ -1231,8 +1279,9 @@ components:
         features:
           $ref: '#/components/schemas/featureToggleSchema'
         strategies:
-          $ref: '#/components/schemas/strategySchema' # Difference between this and the strategies in the Feature Toggle schema?
-
+          $ref: '#/components/schemas/strategySchema'
+      x-tags:
+        - Responses
     200featuretype:
       type: object
       required:
@@ -1282,5 +1331,5 @@ components:
                   url: 'https://unleash.github.io/docs/feature_toggle_types'
                 type: number
                 example: 40
-
-
+      x-tags:
+        - Responses

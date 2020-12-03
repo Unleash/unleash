@@ -25,6 +25,8 @@ openapi: 3.0.0
 servers:
   - description: Local host.
     url: 'http://localhost:4242/api'
+  - description: Unleash Open-Soruce Demo.
+    url: 'https://unleash.herokuapp.com/api'
 tags:
   - name: Archive
     description: Handling Feature Toggle archiving and un-archiving

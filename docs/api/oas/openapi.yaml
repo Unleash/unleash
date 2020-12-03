@@ -60,7 +60,7 @@ info:
     Alternatively, you can test the API in [Postman](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
 
     [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
-  version: 3.5.6
+  version: 3.7.0
   contact:
     name: The Unleash team
     url: 'https://unleash.github.io/'

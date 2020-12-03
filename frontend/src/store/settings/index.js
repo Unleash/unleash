@@ -2,9 +2,12 @@ import { fromJS } from 'immutable';
 import { UPDATE_SETTING } from './actions';
 import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
-// TODO: provde a mock if localstorage does not exists?
-const localStorage = window.localStorage || {};
-const SETTINGS = 'settings';
+const localStorage = window.localStorage || {
+    setItem: () => {},
+    getItem: () => {},
+};
+const basePath = location ? location.pathname : '/';
+const SETTINGS = `${basePath}:settings`;
 
 const DEFAULT = fromJS({});
 

@@ -3,6 +3,8 @@ id: features
 title: /api/admin/features
 ---
 
+> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authententication method, you may use [basic authenticaion](https://en.wikipedia.org/wiki/Basic_access_authentication) to ientify yourself.
+
 ### Fetching Feature Toggles
 
 `GET: http://unleash.host.com/api/admin/features`

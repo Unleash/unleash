@@ -3,6 +3,8 @@ id: metrics
 title: /api/admin/metrics
 ---
 
+> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authententication method, you may use [basic authenticaion](https://en.wikipedia.org/wiki/Basic_access_authentication) to ientify yourself.
+
 # This document describes the metrics endpoint for admin ui
 
 ### Seen-toggles

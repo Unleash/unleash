@@ -27,5 +27,6 @@
                 ]
             }
         ]
-    }
+    },
+    "ignorePatterns": ["**/docs/api/oas/"]
 }

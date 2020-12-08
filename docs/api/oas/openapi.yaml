@@ -1,10 +1,7 @@
-# OTHER API DOCS
-# Could do withe an overview. What is it? What does it do? Who is it for? Why would I use this? For a good example, see https://ionicframework.com/docs or https://cloud.ibm.com/docs/assistant?topic=assistant-index#index
-# Getting started - I have made some tweaks to this but it would be handy to also provide some JS code to make an example API call. PUT /admin​/features​/{featureName} is a good choice (since it has both a Request body and a query parameter). Twilio is brilliant example of this kind of stuff. https://www.twilio.com/docs/quickstart
-# Status and error codes - It would be useful to generate a simple table listing all status codes. See how Clearbit does it: https://clearbit.com/docs?python#errors
-# Rate limiting and thresholds - Need to inform people of this even if it's not a 'thing', they will ask. See https://unleash-community.slack.com/archives/CGP2MCHPF/p1603106990003200 See how Twitter API describes their limits: https://developer.twitter.com/en/docs/twitter-api/rate-limits
-# Glossary - Need definitions for, as a start, the project specific stuff: Unleash server, Unleash client, Feature Toggle, Strategy, Variant, Diff. Doesn't need to be massive. For instance, see the Lyft glossary - https://developer.lyft.com/docs/glossary
-# Reference - Is the guidance on the documentation site complete? Add 'workflows': tasks that bundle several API calls to achieve common goals. Check Unleash Slack channel for potential examples
+# COMMUNITY QUESTIONS
+# About /client/metrics
+# Client variants schema. What are the various weight types and what do they do? Is there a finite list of types for the payload (or is that entirely client-dependent)?
+# Is the client variant schema different to the admin schema? The markdown docs indicate that's the case
 # TESTING
 # QA team test cases. Test code exists but were these based on a list of steps required to produce a result?
 # Are there any real-world users of Unleash who are happy to read and test the Open API specification and make suggestions for improvement? Would they be happy to screen-record what they are doing (how they use the API will give invaluable insights)?
@@ -12,24 +9,29 @@
 # Could there be a simple sample app that implemented all API calls (using realistic scenarios)? Might just be a consolidated version of the tests/e2e code with some triggers (buttons) and some UI to display outcomes.
 # OAS REVIEW
 # Move responses to root responses section in components (from schema section)
-# Issues with rendering as nested externaldocs from Swagger UI. See GET /admin​/feature-types. Not an issue in other tools (see redoc.html)
-# Create output in other non-Swagger styles (as well as Redoc) - such as Readme
-# Other candidates for $ref: createdAt, lastSeen/updatedAt
+# Issues with rendering as nested externaldocs from Swagger UI. See GET /admin/feature-types. Not an issue in other tools (see redoc.html)
+# Other candidates for $ref: createdAt, lastSeen/updatedAt, instanceId, appName/appNamePath, sdkVersion, feature toggle type titles, enabled, stale, weight
+# SWAGGER UI
+# Does not expand all schemas. A SwaggerUIBundle setting?
 # REDOC
-# 'Try it out' instructions do not apply since the free version of Redoc has no such feature. 
+# 'Try it out' instructions do not apply since the free version of Redoc has no such feature. The Postman button helps here...
 # STYLE
 # Add style guide MD. UK/US = US, Newspaper/Movie, Plurals. &. What 's the closest match for Unleash? http://apistylebook.com/design/guidelines/
 # OAS styler - Only use backticks for code samples and API paths. Use bold for schema items and italic for schema item settings
 
-openapi: 3.0.0
+openapi: 3.0.3
 servers:
-  - description: Local host.
+  - description: Local host
     url: 'http://localhost:4242/api'
-  - description: Unleash Open-Source Demo.
+  - description: Unleash open source demo
     url: 'http://unleash.herokuapp.com/api'
+#  - description: Windows server
+#    url: 'http://192.168.178.108:4242/api'
 tags:
   - name: Archive
     description: Handling Feature Toggle archiving and un-archiving
+  - name: Client
+    description: Client application aspects of the Unleash API
   - name: Events
     description: Identifying events on the Unleash server
   - name: Feature toggles
@@ -47,6 +49,8 @@ info:
   description: |-
     Unleash is an open source feature flag and toggle system for all your applications and services.
 
+    ## Try it out
+
     Once you have [set your Unleash server up](https://unleash.github.io/docs/getting_started), you can test the API from inside your browser. The following assumes the server is running on localhost:4242.
 
     The following 'endpoints' (such as `GET /admin/metrics/applications`) provide reference documentation for the Unleash REST API. To try out API calls:
@@ -56,6 +60,12 @@ info:
     4. Click **Execute**.
 
     You will see the cURL request submitted to the API server and the corresponding response.
+
+    ## Try it in Redoc
+
+    Unlike [the default version](index.html) of the API, the [Redoc version](redoc.html) doesn't have a 'try it out' facility but gives a clearer display of the schemas (which you might prefer)
+
+    ## Try it in Postman
 
     Alternatively, you can test the API in [Postman](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
 
@@ -68,6 +78,116 @@ externalDocs:
   description: Unleash documentation
   url: 'https://unleash.github.io/docs/getting_started'
 paths:
+  /client/register:
+    post:
+      summary: Registers a client instance with the Unleash server.
+      description: You can retrieve this data with a `GET /admin/metrics/applications/{appName}` API call.
+      operationId: clientRegister
+      externalDocs:
+        description: Client specification
+        url: 'https://unleash.github.io/docs/client_specification'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/clientRegistrationSchema'
+      tags:
+        - Client
+      responses:
+        '202':
+          description: Successful response - client has been registered
+        '400':
+          description: 'Bad body request (for example, appName is not correct)'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401' 
+  /client/metrics:
+    post:
+      summary: Register a metrics payload with a timed bucket.
+      description: ???
+      operationId: sendMetrics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/metricsPayloadSchema'
+      tags:
+        - Client
+        - Metrics
+      responses:
+        '202':
+          description: Successful response - payload has been accepted
+        '400':
+          description: 'Bad body request (for example, appName is not correct)'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+  /client/features:
+    # Would normally $ref here but it tangles with an OAS bug - which affects both Redoc and Swagger UI - https://github.com/swagger-api/swagger-ui/issues/6249 (closed issue but still broken in latest release)
+    get:
+      summary: Fetches all feature toggles from the Unleash server.
+      description: |-
+          The response returns all active feature toggles and their current strategy configuration:
+          - Feature toggles will have *at least* one strategy
+          - Strategies have a `name` and `parameters` map.
+      operationId: getClientFeatures
+      externalDocs:
+        description: Activation strategies
+        url: 'https://unleash.github.io/docs/activation_strategy'
+      tags:
+        - Client
+        - Feature toggles
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200client'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+  '/client/features/{featureName}':
+    get:
+      summary: Fetches a specific Feature Toggle from the Unleash server.
+      description: |
+        The response returns the Feature Toggle's current strategy configuration:
+        - It will have *at least* one configured strategy.
+        - A strategy will have a *name* and *parameters* map.
+        **This is mainly provided to help debug the API. Do not use for client implementations.**
+      externalDocs:
+        description: Activation strategies
+        url: 'https://unleash.github.io/docs/activation_strategy'
+      operationId: getClientFeature
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      tags:
+        - Client
+        - Feature toggles
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
   /admin/features:
     get:
       summary: Fetches all feature toggles from the Unleash server.
@@ -887,12 +1007,10 @@ components:
           appName:
             type: string
             minLength: 1
+            description: 'Application name'
+            example: 'my-application'
           seenToggles:
-            type: array
-            items:
-              properties: {}
-          metricsCount:
-            type: number
+            $ref: '#/components/schemas/toggleSchema'
       x-tags:
         - Responses
     200feature:
@@ -916,20 +1034,111 @@ components:
             minLength: 1
             example: lastHour
           seenToggles:
-            type: object
-            required:
-              - yesno
-              - metricsCount
-            properties:
-              yesno:
-                type: string
-                enum:
-                  - 'yes'
-                  - 'no'
-              metricsCount:
-                type: number
+            $ref: '#/components/schemas/toggleSchema'
       x-tags:
         - Responses
+    metricsPayloadSchema:
+      type: object
+      required:
+        - appName
+        - instanceId
+        - bucket
+      properties:
+        appName:
+          type: string
+          description: 'The name of your application'
+          example: 'my-application'
+        instanceId:
+          description: The name of the system running the application
+          type: string
+          minLength: 1
+          example: generated-732038-17080
+        bucket:
+          type: object
+          required:
+            - start
+            - stop
+            - toggles
+          properties:
+            start:
+              type: string
+              description: 'The start time of something (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+              example: '2020-12-08T13:50:00.000Z'
+            stop:
+              type: string
+              description: 'The end time of that same thing (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+              example: '2020-12-08T13:55:00.000Z'
+            toggles:
+              $ref: '#/components/schemas/toggleSchema'
+      x-tags:
+        - Schemas
+    toggleSchema:
+      type: object
+      required:
+        - yesno
+        - metricsCount
+      properties:
+        yesno:
+          type: object
+          properties:
+            yesorno:
+              type: string
+              enum:
+                - 'yes'
+                - 'no'
+              example: 'yes'
+        metricsCount:
+          type: object
+          properties:
+            count:
+              type: number
+              example: 1
+      x-tags:
+        - Schemas
+    clientRegistrationSchema:
+      type: object
+      required:
+        - appName
+        - instanceId
+        - strategies
+        - started
+        - interval
+      properties:
+        appName:
+          type: string
+          description: 'The name of your application'
+          example: 'my-application'
+        instanceId:
+          type: string
+          description: The name of the system running the application
+          minLength: 1
+          example: generated-732038-17080
+        sdkVersion:
+          description: The version of the Unleash client SDK running the application
+          type: string
+          example: 'unleash-client-node:3.4.0'
+        strategies:
+          type: array
+          description: List of strategy names implemented by this application
+          items:
+            required:
+              - strategy
+            properties:
+              strategy:
+                type: string
+                description: Strategy name
+                minLength: 1
+                example: 'default'
+        started:
+          type: string
+          description: 'When the client started (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+          example: '2016-11-03T07:16:43.572Z'
+        interval:
+          type: number
+          description: 'How often to send metrics to the Unleash API (in milliseconds)'
+          example: 10000
+      x-tags:
+        - Schemas
     applicationArray:
       type: array
       items:
@@ -1179,6 +1388,117 @@ components:
             example: 20
       x-tags:
         - Schemas
+
+    200client:
+      type: object
+      properties:
+        version:
+          $ref: '#/components/schemas/versionSchema'
+        features:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - name
+              - description
+              - type
+              - enabled
+              - stale
+              - strategies
+              - createdAt
+            properties:
+              name:
+                type: string
+                description: 'Feature Toggle name'
+                minLength: 1
+                example: 'Demo'
+              description:
+                type: string
+                description: 'A description of the Feature Toggle'
+                minLength: 1
+                example: 'Show off fedfdfature toggles'
+              type:
+                type: string
+                enum:
+                  - Release
+                  - Experiment
+                  - Operational
+                  - Kill switch
+                  - Permission
+                description: 'The title of one of the five Feature Toggle types'
+                minLength: 1
+                example: 'Operational'
+              enabled:
+                description: Is the Feature Toggle enabled?
+                type: boolean
+                example: true
+              stale:
+                description: Is the Feature Toggle 'stale' (deprecated)?
+                type: boolean
+                example: false
+              strategies:
+                $ref: '#/components/schemas/strategySchema'
+              variants:
+                type: array
+                uniqueItems: true
+                items:
+                  properties:
+                    name:
+                      type: string
+                      description: 'Variant name'
+                      minLength: 1
+                      example: 'Red'
+                    weight:
+                      description: |-
+                        A number between 0 and 1,000.
+                        The client SDK will summarize all variant weights, hash the number and divide the users among them. The distribution will be according to the weight as a fraction of the sum of weight.
+                      type: number
+                      example: 20
+                    weightType:
+                      type: string
+                      minLength: 1
+                      example: 'variable'
+                    payload:
+                      type: object
+                      description: 'Optional data associated with the variant, consisting of a *type/value* pair'
+                      properties:
+                        type:
+                          type: string
+                          example: 'string'
+                        value:
+                          type: string
+                          example: 'Something'
+                    overrides:
+                      type: array
+                      description: An optional array of overrides. If any [context](https://unleash.github.io/docs/unleash_context) field matches any of these overrides, *this* variant will be selected.
+                      items:
+                        type: object
+                        properties:
+                          contextName:
+                            type: string
+                            description: 'One of the six context fields'
+                            enum:
+                              - userID
+                              - sessionId
+                              - remoteAddress
+                              - properties
+                              - appName
+                              - environment
+                            example: 'userId'
+                          values:
+                            type: array
+                            description: 'The value(s) for the context field'
+                            items:
+                              properties:
+                                value:
+                                  type: string
+                                  example: '123'
+              createdAt:
+                type: string
+                minLength: 1
+      x-tags:
+        - Responses
     200-events:
       type: object
       properties:

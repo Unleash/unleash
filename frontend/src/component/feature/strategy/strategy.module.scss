@@ -14,8 +14,13 @@
     overflow: 'visible';
 }
 
+.cardText {
+    width: unset;
+    padding: 0 10px 10px;
+}
+
 .isDragging {
-    opacity: 0.4;
+    opacity: 0.2;
     border: 2px dotted black;
 }
 
@@ -29,7 +34,14 @@
 
 @media (max-width: 1024px) {
     .item {
-        margin: 2px 0;
+        margin: 2px;
+    }
+}
+
+@media (max-width: 500px) {
+    .item {
+        min-width: unset;
+        margin: 2px;
     }
 }
 
@@ -77,7 +89,7 @@
 
 
 .paddingDesktop {
-    padding: 16px;
+    padding: 10px;
 }
 
 @media (max-width: 500px) {

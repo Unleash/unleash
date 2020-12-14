@@ -89,7 +89,7 @@
     "prom-client": "^12.0.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
-    "unleash-frontend": "3.8.0",
+    "unleash-frontend": "3.8.1",
     "yargs": "^16.0.3"
   },
   "devDependencies": {

@@ -31,6 +31,7 @@ export default class StrategyConfigureComponent extends React.Component {
     constructor(props) {
         super();
         this.state = {
+            constraints: props.strategy.constraints ? [...props.strategy.constraints] : [],
             parameters: { ...props.strategy.parameters },
             edit: false,
             dirty: false,
@@ -39,10 +40,16 @@ export default class StrategyConfigureComponent extends React.Component {
     }
 
     updateParameters = parameters => {
+        const { constraints } = this.state;
         const updatedStrategy = Object.assign({}, this.props.strategy, {
             parameters,
+            constraints,
         });
         this.props.updateStrategy(updatedStrategy);
+    };
+
+    updateConstraints = constraints => {
+        this.setState({ constraints, dirty: true });
     };
 
     updateParameter = async (field, value, forceUp = false) => {
@@ -106,7 +113,7 @@ export default class StrategyConfigureComponent extends React.Component {
 
         const cardClasses = [styles.card];
         if (dirty) {
-            cardClasses.push('mdl-color--pink-50');
+            cardClasses.push('mdl-color--purple-50');
         }
         if (isDragging) {
             cardClasses.push(styles.isDragging);
@@ -123,6 +130,7 @@ export default class StrategyConfigureComponent extends React.Component {
                             <Icon name="extension" />
                             &nbsp;
                             {name}
+                            {dirty ? <small>&nbsp;(Unsaved)</small> : ''}
                         </CardTitle>
 
                         <CardText>

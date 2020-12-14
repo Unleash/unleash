@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.8.1
+- fix: minor CSS improvement for strategy configs
+- fix: minor strategy configure update
+
 # 3.8.0
 - feat: Should update activation strategies immediately (#229)
 

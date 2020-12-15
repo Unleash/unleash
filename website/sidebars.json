@@ -38,6 +38,7 @@
       "api/admin/state",
       "api/admin/feature-types"
     ],
-    "Internal": ["api/internal"]
+    "Internal": ["api/internal"],
+    "Specification": ["api/open_api"]
   }
 }

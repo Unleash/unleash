@@ -41,6 +41,9 @@
       "api/internal": {
         "title": "/internal-backstage/prometheus"
       },
+      "api/open_api": {
+        "title": "Open API Specification"
+      },
       "client_sdk": {
         "title": "Client SDK"
       },
@@ -107,7 +110,8 @@
       "Guides": "Guides",
       "Client": "Client",
       "Admin": "Admin",
-      "Internal": "Internal"
+      "Internal": "Internal",
+      "Specification": "Specification"
     }
   },
   "pages-strings": {

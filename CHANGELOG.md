@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.8.0
+
+- feat: First draft of admin Open API specification (OAS) (#652)
+- feat: upgrade unleash-frontend to version 3.8.2
+- fix: OpenApi - Added Client API calls (#667)
+- fix: run build also for external PRs
+- fix: eslint ignorePatterns for OAS
+- fix: typo in OAS servers
+- fix: add support for basic auth with simple-auth (#659)
+- fix: remove unused github action
+- fix: add heroku server to openapi servers
+- fix: add import options as part of environment variables
+- fix: bump dev-deps for security
+- fix: Replace travis with GitHub Actions
+- fix: disable david-dm
+
 ## 3.7.0
 
 - feat: Add support for explicitly set database version. (#654)

@@ -133,7 +133,7 @@ export default class StrategyConfigureComponent extends React.Component {
                             {dirty ? <small>&nbsp;(Unsaved)</small> : ''}
                         </CardTitle>
 
-                        <CardText>
+                        <CardText style={{ width: 'unset' }}>
                             <InputType
                                 parameters={parameters}
                                 strategy={strategy}

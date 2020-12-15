@@ -14,6 +14,8 @@
   },
   "resolutions": {
     "minimist": "^1.2.5",
-    "kind-of": "6.0.3"
-  }
+    "kind-of": "6.0.3",
+    "highlight.js": "^10.4.1"
+  },
+  "license": "Apache-2.0"
 }

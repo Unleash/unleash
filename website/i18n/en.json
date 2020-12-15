@@ -9,10 +9,13 @@
         "title": "Activation Strategies"
       },
       "api/admin/events": {
-        "title": "/api/admin/feature-types"
+        "title": "/api/admin/events"
       },
       "api/admin/features": {
         "title": "/api/admin/features"
+      },
+      "api/admin/feature-types": {
+        "title": "/api/admin/feature-types"
       },
       "api/admin/metrics": {
         "title": "/api/admin/metrics"
@@ -38,14 +41,14 @@
       "api/internal": {
         "title": "/internal-backstage/prometheus"
       },
-      "beta_features": {
-        "title": "Beta Features"
-      },
       "client_sdk": {
         "title": "Client SDK"
       },
       "client_specification": {
         "title": "Client Specification"
+      },
+      "configuring_unleash": {
+        "title": "Configuring Unleash"
       },
       "database_backup": {
         "title": "Database Backup"
@@ -61,6 +64,9 @@
       },
       "feature_toggle_types": {
         "title": "Feature Toggle Types"
+      },
+      "toggle_variants": {
+        "title": "Feature Toggle Variants"
       },
       "getting_started": {
         "title": "Getting Started"

@@ -2,6 +2,7 @@
   "documentation": {
     "User Documentation": [
       "getting_started",
+      "configuring_unleash",
       "client_sdk",
       "feature_toggle_types",
       "toggle_variants",

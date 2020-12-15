@@ -6,12 +6,8 @@ import AddFeatureComponent from './add-feature-component';
 import { loadNameFromHash } from '../../common/util';
 
 const defaultStrategy = {
-    name: 'flexibleRollout',
-    parameters: {
-        rollout: '100',
-        stickiness: 'default',
-        groupId: 'a-new.toggle',
-    },
+    name: 'default',
+    parameters: {},
 };
 
 function resolveCurrentProjectId(settings) {

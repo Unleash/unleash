@@ -1479,7 +1479,7 @@ components:
                             type: string
                             description: 'One of the six context fields'
                             enum:
-                              - userID
+                              - userId
                               - sessionId
                               - remoteAddress
                               - properties

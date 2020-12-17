@@ -12,16 +12,21 @@ const StateService = require('../../../lib/services/state-service');
 const eventBus = new EventEmitter();
 
 function createApp(stores, adminAuthentication = 'none', preHook) {
-    return getApp({
-        stores,
-        eventBus,
-        preHook,
-        adminAuthentication,
-        secret: 'super-secret',
-        sessionAge: 4000,
+    const services = {
         stateService: new StateService(stores, { getLogger }),
-        getLogger,
-    });
+    };
+    return getApp(
+        {
+            stores,
+            eventBus,
+            preHook,
+            adminAuthentication,
+            secret: 'super-secret',
+            sessionAge: 4000,
+            getLogger,
+        },
+        services,
+    );
 }
 
 module.exports = {

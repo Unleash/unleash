@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.9.0
+
+- fix: stateService undefined
+- fix: this.timer merge conflict
+- feat: add stop() method to gracefully terminate unleash (#665)
+
 ## 3.8.0
 
 - feat: First draft of admin Open API specification (OAS) (#652)

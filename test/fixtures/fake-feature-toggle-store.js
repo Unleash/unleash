@@ -26,5 +26,6 @@ module.exports = () => {
         addFeature: feature => _features.push(feature),
         getArchivedFeatures: () => Promise.resolve(_archive),
         addArchivedFeature: feature => _archive.push(feature),
+        lastSeenToggles: () => {},
     };
 };

@@ -7,26 +7,23 @@ const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const getApp = require('../../../lib/app');
 const getLogger = require('../../fixtures/no-logger');
-const StateService = require('../../../lib/services/state-service');
+const { createServices } = require('../../../lib/services');
 
 const eventBus = new EventEmitter();
 
 function createApp(stores, adminAuthentication = 'none', preHook) {
-    const services = {
-        stateService: new StateService(stores, { getLogger }),
+    const config = {
+        stores,
+        eventBus,
+        preHook,
+        adminAuthentication,
+        secret: 'super-secret',
+        sessionAge: 4000,
+        getLogger,
     };
-    return getApp(
-        {
-            stores,
-            eventBus,
-            preHook,
-            adminAuthentication,
-            secret: 'super-secret',
-            sessionAge: 4000,
-            getLogger,
-        },
-        services,
-    );
+    const services = createServices(stores, config);
+    // TODO: use create from server-impl instead?
+    return getApp(config, services);
 }
 
 module.exports = {

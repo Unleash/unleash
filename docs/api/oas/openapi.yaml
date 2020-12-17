@@ -1497,6 +1497,9 @@ components:
               createdAt:
                 type: string
                 minLength: 1
+              lastSeenAt:
+                type: string
+                minLength: 1
       x-tags:
         - Responses
     200-events:

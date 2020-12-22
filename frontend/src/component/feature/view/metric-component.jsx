@@ -51,9 +51,7 @@ export default class MetricComponent extends React.Component {
     formatFullDateTime(v) {
         return formatFullDateTimeWithLocale(v, this.props.location.locale);
     }
-    renderLastSeen = lastSeenAt => {
-        return lastSeenAt ? this.formatFullDateTime(lastSeenAt) : 'Never reported';
-    };
+    renderLastSeen = lastSeenAt => (lastSeenAt ? this.formatFullDateTime(lastSeenAt) : 'Never reported');
 
     render() {
         const { metrics = {}, featureToggle } = this.props;

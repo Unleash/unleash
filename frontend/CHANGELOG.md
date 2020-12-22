@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.8.3
+- feat: Add last seen at timestamp
+- fix: add last seen as sort option
+
 # 3.8.2
 - fix: new feature toggle gets default strategy
 

@@ -165,6 +165,12 @@ exports[`renders correctly with one feature 1`] = `
           Created
         </react-mdl-MenuItem>
         <react-mdl-MenuItem
+          data-target="Last seen"
+          disabled={false}
+        >
+          Last seen
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
           data-target="strategies"
           disabled={false}
         >
@@ -359,6 +365,12 @@ exports[`renders correctly with one feature without permissions 1`] = `
           disabled={false}
         >
           Created
+        </react-mdl-MenuItem>
+        <react-mdl-MenuItem
+          data-target="Last seen"
+          disabled={false}
+        >
+          Last seen
         </react-mdl-MenuItem>
         <react-mdl-MenuItem
           data-target="strategies"

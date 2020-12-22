@@ -26,6 +26,13 @@ module.exports = () => {
         addFeature: feature => _features.push(feature),
         getArchivedFeatures: () => Promise.resolve(_archive),
         addArchivedFeature: feature => _archive.push(feature),
-        lastSeenToggles: () => {},
+        lastSeenToggles: (names = []) => {
+            names.forEach(name => {
+                const toggle = _features.find(f => f.name === name);
+                if (toggle) {
+                    toggle.lastSeenAt = new Date();
+                }
+            });
+        },
     };
 };

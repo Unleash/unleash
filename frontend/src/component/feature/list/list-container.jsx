@@ -45,6 +45,8 @@ export const mapStateToPropsConfigurable = isFeature => state => {
         );
     } else if (settings.sort === 'created') {
         features = features.sort((a, b) => (new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1));
+    } else if (settings.sort === 'Last seen') {
+        features = features.sort((a, b) => (new Date(a.lastSeenAt) > new Date(b.lastSeenAt) ? -1 : 1));
     } else if (settings.sort === 'name') {
         features = features.sort((a, b) => {
             if (a.name < b.name) {

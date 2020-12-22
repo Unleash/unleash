@@ -51,6 +51,10 @@ export default class MetricComponent extends React.Component {
     formatFullDateTime(v) {
         return formatFullDateTimeWithLocale(v, this.props.location.locale);
     }
+    renderLastSeen = lastSeenAt => {
+        return lastSeenAt ? this.formatFullDateTime(lastSeenAt) : 'Never reported';
+    };
+
     render() {
         const { metrics = {}, featureToggle } = this.props;
         const {
@@ -113,7 +117,13 @@ export default class MetricComponent extends React.Component {
                             </div>
                         )}
                         <AppsLinkList apps={seenApps} />
-                        <span>Created {this.formatFullDateTime(featureToggle.createdAt)}</span>
+                        <div>
+                            <strong>Created: </strong>
+                            <span>{this.formatFullDateTime(featureToggle.createdAt)}</span>
+                            <br />
+                            <strong>Last seen: </strong>
+                            <span>{this.renderLastSeen(featureToggle.lastSeenAt)}</span>
+                        </div>
                     </Cell>
                 </Grid>
                 <hr />

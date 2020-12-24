@@ -167,6 +167,7 @@ const UnleashClient = () => (
             <li><MarkdownBlock>[afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)</MarkdownBlock></li>
             <li><MarkdownBlock>[mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)</MarkdownBlock></li>
             <li><MarkdownBlock>[AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)</MarkdownBlock></li>
+            <li><MarkdownBlock>[pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)</MarkdownBlock></li>
           </ul>
         </div>
       </div>

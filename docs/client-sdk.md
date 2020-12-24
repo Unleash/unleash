@@ -23,4 +23,5 @@ To use Unleash in your application, you will need an Unleash Client SDK. Unleash
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 - [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
 - [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
+- [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
 - _...your implementation for your favorite language._

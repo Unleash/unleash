@@ -155,5 +155,12 @@
       "id": "default",
       "name": "Default"
     }
+  ],
+  "tag_types": [
+    {
+      "name": "simple",
+      "description": "Arbitrary tags. Used to simplify filtering of features",
+      "icon": "#"
+    }
   ]
 }

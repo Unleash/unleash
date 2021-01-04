@@ -38,6 +38,13 @@ This endpoint is the one all admin ui should use to fetch all available feature 
           "name": "variant2",
           "weight": 50
         }
+      ],
+      "tags": [
+        {
+          "id": 1,
+          "type": "simple",
+          "value": "TeamRed"
+        }
       ]
     },
     {
@@ -59,7 +66,8 @@ This endpoint is the one all admin ui should use to fetch all available feature 
           }
         }
       ],
-      "variants": []
+      "variants": [],
+      "tags": []
     }
   ]
 }
@@ -82,7 +90,8 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
       "parameters": {}
     }
   ],
-  "variants": []
+  "variants": [],
+  "tags": []
 }
 ```
 
@@ -144,6 +153,47 @@ Used by the admin dashboard to update a feature toggles. The name has to match a
 
 Returns 200-respose if the feature toggle was updated successfully.
 
+### Tag a Feature Toggle
+
+`POST https://unleash.host.com/api/admin/features/:featureName/tags`
+
+Used to tag a feature
+
+If the tuple (type, value) does not already exist, it will be added to the list of tags. Then Unleash will add a relation between the feature name and the tag.
+
+**Body:**
+
+```json
+{
+  "type": "simple",
+  "value": "Team-Green"
+}
+```
+
+## Success
+
+    - Returns _201-CREATED_ if the feature was tagged successfully
+    - Creates the tag if needed, then connects the tag to the existing feature
+
+## Failures
+
+    - Returns _404-NOT-FOUND_ if the `type` was not found
+
+### Remove a tag from a Feature Toggle
+
+`DELETE https://unleash.host.com/api/admin/features/:featureName/tags/:type/:value`
+
+Removes the specified tag from the `(type, value)` tuple from the Feature Toggle's list of tags.
+
+## Success
+
+    - Returns _200-OK_
+
+## Failures
+
+    - Returns 404 if the tag does not exist
+    - Returns 500 if the database could not be reached
+
 ### Archive a Feature Toggle
 
 `DELETE: http://unleash.host.com/api/admin/features/:toggleName`
@@ -174,7 +224,8 @@ None
       "parameters": {}
     }
   ],
-  "variants": []
+  "variants": [],
+  "tags": []
 }
 ```
 
@@ -203,7 +254,8 @@ None
       "parameters": {}
     }
   ],
-  "variants": []
+  "variants": [],
+  "tags": []
 }
 ```
 
@@ -232,7 +284,8 @@ None
       "parameters": {}
     }
   ],
-  "variants": []
+  "variants": [],
+  "tags": []
 }
 ```
 
@@ -261,7 +314,8 @@ None
       "parameters": {}
     }
   ],
-  "variants": []
+  "variants": [],
+  "tags": []
 }
 ```
 
@@ -292,6 +346,7 @@ Used to fetch list of archived feature toggles
         }
       ],
       "variants": [],
+      "tags": [],
       "strategy": "default",
       "parameters": {}
     }

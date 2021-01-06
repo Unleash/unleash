@@ -3,6 +3,11 @@
 const { EventEmitter } = require('events');
 
 class FakeMetricsStore extends EventEmitter {
+    constructor() {
+        super();
+        this.setMaxListeners(0);
+    }
+
     getMetricsLastHour() {
         return Promise.resolve([]);
     }

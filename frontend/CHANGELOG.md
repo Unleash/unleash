@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.8.4
+- fix: update canisue-lite
+- fix: move all api calls to store folders
+- fix: move feature-metrics store to its own folder
+- fix: move history to folder
+- fix: move feature-toggle store into folder
+- fix: move error store into folder
+- fix: remove unused client-instance concept
+- fix: archive store in folder
+- fix: remove use of input stores
+
 # 3.8.3
 - feat: Add last seen at timestamp
 - fix: add last seen as sort option

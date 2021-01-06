@@ -1,7 +1,3 @@
-# COMMUNITY QUESTIONS
-# About /client/metrics
-# Client variants schema. What are the various weight types and what do they do? Is there a finite list of types for the payload (or is that entirely client-dependent)?
-# Is the client variant schema different to the admin schema? The markdown docs indicate that's the case
 # TESTING
 # QA team test cases. Test code exists but were these based on a list of steps required to produce a result?
 # Are there any real-world users of Unleash who are happy to read and test the Open API specification and make suggestions for improvement? Would they be happy to screen-record what they are doing (how they use the API will give invaluable insights)?
@@ -11,10 +7,6 @@
 # Move responses to root responses section in components (from schema section)
 # Issues with rendering as nested externaldocs from Swagger UI. See GET /admin/feature-types. Not an issue in other tools (see redoc.html)
 # Other candidates for $ref: createdAt, lastSeen/updatedAt, instanceId, appName/appNamePath, sdkVersion, feature toggle type titles, enabled, stale, weight
-# SWAGGER UI
-# Does not expand all schemas. A SwaggerUIBundle setting?
-# REDOC
-# 'Try it out' instructions do not apply since the free version of Redoc has no such feature. The Postman button helps here...
 # STYLE
 # Add style guide MD. UK/US = US, Newspaper/Movie, Plurals. &. What 's the closest match for Unleash? http://apistylebook.com/design/guidelines/
 # OAS styler - Only use backticks for code samples and API paths. Use bold for schema items and italic for schema item settings
@@ -49,21 +41,19 @@ info:
   description: |-
     Unleash is an open source feature flag and toggle system for all your applications and services.
 
-    ## Try it out
+    # Try it out
+
+    ## Try it in your browser
 
     Once you have [set your Unleash server up](https://unleash.github.io/docs/getting_started), you can test the API from inside your browser. The following assumes the server is running on localhost:4242.
 
     The following 'endpoints' (such as `GET /admin/metrics/applications`) provide reference documentation for the Unleash REST API. To try out API calls:
-    1. Expand an endpoint
-    2. Click **Try it out**
+    1. Navigate to an endpoint
+    2. Click **Try it out** - in the right-hand (black) panel
     3. Customize the **Request body** and/or **Parameters**.
     4. Click **Execute**.
 
     You will see the cURL request submitted to the API server and the corresponding response.
-
-    ## Try it in Redoc
-
-    Unlike [the default version](index.html) of the API, the [Redoc version](redoc.html) doesn't have a 'try it out' facility but gives a clearer display of the schemas (which you might prefer)
 
     ## Try it in Postman
 
@@ -107,8 +97,8 @@ paths:
                 $ref: '#/components/schemas/401' 
   /client/metrics:
     post:
-      summary: Register a metrics payload with a timed bucket.
-      description: ???
+      summary: Register a metrics *bucket*.
+      description: A *bucket* is a set of metrics data that tells you how often a Feature Toggle was enabled or disabled during a specified period of time
       operationId: sendMetrics
       requestBody:
         required: true
@@ -506,7 +496,7 @@ paths:
   '/admin/archive/revive/{featureName}':
     post:
       summary: Un-archive a Feature Toggle
-      description: The Feature Toggle had been previously deleted
+      description: Restore a Feature Toggle that has been previously deleted
       operationId: reviveFeatureToggle
       tags:
         - Archive
@@ -1038,6 +1028,7 @@ components:
       x-tags:
         - Responses
     metricsPayloadSchema:
+      description: A *bucket* of metrics data that tells you how often a Feature Toggle was enabled or disabled during a specified period of time
       type: object
       required:
         - appName
@@ -1062,11 +1053,11 @@ components:
           properties:
             start:
               type: string
-              description: 'The start time of something (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+              description: 'The start time for your metrics (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
               example: '2020-12-08T13:50:00.000Z'
             stop:
               type: string
-              description: 'The end time of that same thing (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+              description: 'The end time for your metrics (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
               example: '2020-12-08T13:55:00.000Z'
             toggles:
               $ref: '#/components/schemas/toggleSchema'
@@ -1079,6 +1070,7 @@ components:
         - metricsCount
       properties:
         yesno:
+          description: Was a Feature Toggle enabled (yes) or disabled (no)?
           type: object
           properties:
             yesorno:
@@ -1088,6 +1080,7 @@ components:
                 - 'no'
               example: 'yes'
         metricsCount:
+          description: The number of times a Feature Toggle was enabled or disabled during the specified start and end time
           type: object
           properties:
             count:
@@ -1452,7 +1445,10 @@ components:
                     weight:
                       description: |-
                         A number between 0 and 1,000.
-                        The client SDK will summarize all variant weights, hash the number and divide the users among them. The distribution will be according to the weight as a fraction of the sum of weight.
+                        The client SDK will allocate traffic to each variant based on this weighting (as a fraction of the sum of all variant weights).
+                        **Examples**
+                        - You have four variants, each with a weight of 1000. The SDK will distribute traffic evenly: 25% each
+                        - You have two variants, one with a weight of 100 and one with a weight of 900. The SDK will send 90% of traffic to the variant with a weight of 900
                       type: number
                       example: 20
                     weightType:
@@ -1461,7 +1457,7 @@ components:
                       example: 'variable'
                     payload:
                       type: object
-                      description: 'Optional data associated with the variant, consisting of a *type/value* pair'
+                      description: 'Optional data associated with the variant, consisting of a *type/value* pair (as defined in the SDK)'
                       properties:
                         type:
                           type: string
@@ -1495,9 +1491,6 @@ components:
                                   type: string
                                   example: '123'
               createdAt:
-                type: string
-                minLength: 1
-              lastSeenAt:
                 type: string
                 minLength: 1
       x-tags:

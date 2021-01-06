@@ -1,77 +1,43 @@
-<!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8">
-    <title>Unleash Open API</title>
-    <link rel="stylesheet" href="theme-material.css">
-<!-- Material design styles from  ostranme.github.io/swagger-ui-themes
-    Original follows
-    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >  -->
-    <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+    <title>ReDoc</title>
+    <!-- needed for adaptive design -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+
+    <!--
+    ReDoc doesn't change outer page styles
+    -->
     <style>
-      html
-      {
-        box-sizing: border-box;
-        overflow: -moz-scrollbars-vertical;
-        overflow-y: scroll;
-      }
-
-      *,
-      *:before,
-      *:after
-      {
-        box-sizing: inherit;
-      }
-
-      body
-      {
-        margin:0;
-        background: #fafafa;
-      }
-
-      .topbar-wrapper img {
-          content: url(https://unleash.github.io/img/logo-inverted.png);
-      }
-
-      .swagger-ui .topbar .download-url-wrapper .download-url-button {
-          background-color: #3f51b5 !important;
-      }
-
-      .swagger-ui .topbar .download-url-wrapper input[type=text] {
-          border-color: #3f51b5 !important;
+      body {
+        margin: 0;
+        padding: 0;
       }
     </style>
   </head>
-
   <body>
-    <div id="swagger-ui"></div>
 
-    <script src="./swagger-ui-bundle.js" charset="UTF-8"> </script>
-    <script src="./swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
-    <script>
-    window.onload = function() {
-      // Begin Swagger UI call region
-      const ui = SwaggerUIBundle({
-        url: "openapi.yaml",
-        dom_id: '#swagger-ui',
-        defaultModelsExpandDepth: -1,
-        operationsSorter: "alpha",
-        deepLinking: true,
-        presets: [
-          SwaggerUIBundle.presets.apis,
-          SwaggerUIStandalonePreset
-        ],
-        plugins: [
-          SwaggerUIBundle.plugins.DownloadUrl
-        ],
-        layout: "StandaloneLayout"
-      })
-      // End Swagger UI call region
+<!-- ### DEFAULT REDOC - NO 'TRY' FEATURE -->
+<!--   <redoc spec-url='openapi.yaml'></redoc> -->
+<!--  <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script> -->
+<!-- ### REDOC WITH SWAGGER UI'S 'TRY' FEATURE WITHIN REDOC -->
+<!-- From https://github.com/wll8/redoc-try -->
+<div id="redoc-container"></div>
+<script src="//cdn.jsdelivr.net/npm/redoc@2.0.0-rc.28/bundles/redoc.standalone.min.js"> </script>
+<script src="//cdn.jsdelivr.net/gh/wll8/redoc-try/dist/try.js"></script>
+<script>
+  var unleashRedoc = {
+    openApi: `openapi.yaml`,
+    onlySwagger: false, // Set to true to switch to Swagger UI output
+    tryText: `Try it out`, // Try button text
+    trySwaggerInApi: false, // Do not display Swagger debugging window under API
+    redocOptions: {hideDownloadButton: true, noAutoAuth: true, sortPropsAlphabetically: true, theme: {spacing: {sectionVertical: '5px',}},}, 
+    swaggerOptions: {dom_id: `#swagger-ui`},
+  }
+  initTry(unleashRedoc);
+</script>
 
-      window.ui = ui
-    }
-  </script>
   </body>
 </html>

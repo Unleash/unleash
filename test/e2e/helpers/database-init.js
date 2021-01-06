@@ -81,6 +81,7 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
     await migrator(options);
     await db.destroy();
     const stores = await createStores(options, eventBus);
+    stores.clientMetricsStore.setMaxListeners(0);
     await resetDatabase(stores);
     await setupDatabase(stores);
 

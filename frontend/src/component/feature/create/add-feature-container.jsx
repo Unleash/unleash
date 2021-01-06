@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createFeatureToggles, validateName } from '../../../store/feature-actions';
+import { createFeatureToggles, validateName } from '../../../store/feature-toggle/actions';
 import AddFeatureComponent from './add-feature-component';
 import { loadNameFromHash } from '../../common/util';
 

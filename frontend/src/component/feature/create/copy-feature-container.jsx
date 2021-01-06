@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import CopyFeatureComponent from './copy-feature-component';
-import { createFeatureToggles, validateName, fetchFeatureToggles } from '../../../store/feature-actions';
+import { createFeatureToggles, validateName, fetchFeatureToggles } from '../../../store/feature-toggle/actions';
 
 const mapStateToProps = (state, props) => ({
     history: props.history,

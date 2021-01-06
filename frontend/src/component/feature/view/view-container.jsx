@@ -7,7 +7,7 @@ import {
     setStale,
     removeFeatureToggle,
     editFeatureToggle,
-} from './../../../store/feature-actions';
+} from './../../../store/feature-toggle/actions';
 
 import ViewToggleComponent from './view-component';
 import { hasPermission } from '../../../permissions';

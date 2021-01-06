@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import arrayMove from 'array-move';
 
-import { requestUpdateFeatureToggleStrategies } from '../../../store/feature-actions';
+import { requestUpdateFeatureToggleStrategies } from '../../../store/feature-toggle/actions';
 import UpdateStrategiesComponent from './update-strategies-component';
 
 const mapStateToProps = (state, ownProps) => ({

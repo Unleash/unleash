@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import ShowStrategy from './strategy-details-component';
 import { fetchStrategies } from './../../store/strategy/actions';
 import { fetchAll } from './../../store/application/actions';
-import { fetchFeatureToggles } from './../../store/feature-actions';
+import { fetchFeatureToggles } from './../../store/feature-toggle/actions';
 import { hasPermission } from '../../permissions';
 
 const mapStateToProps = (state, props) => {

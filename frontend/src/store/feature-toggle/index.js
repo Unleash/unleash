@@ -9,9 +9,9 @@ import {
     UPDATE_FEATURE_TOGGLE_STRATEGIES,
     REMOVE_FEATURE_TOGGLE,
     TOGGLE_FEATURE_TOGGLE,
-} from './feature-actions';
+} from './actions';
 
-import { USER_LOGOUT, USER_LOGIN } from './user/actions';
+import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
 const features = (state = new List([]), action) => {
     switch (action.type) {

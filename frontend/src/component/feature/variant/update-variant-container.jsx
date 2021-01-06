@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { requestUpdateFeatureToggleVariants } from '../../../store/feature-actions';
+import { requestUpdateFeatureToggleVariants } from '../../../store/feature-toggle/actions';
 import UpdateFeatureToggleComponent from './update-variant-component';
 import { updateWeight } from '../../common/util';
 

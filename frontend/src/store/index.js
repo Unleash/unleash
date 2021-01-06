@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import features from './feature-store';
+import features from './feature-toggle';
 import featureTypes from './feature-type';
 import featureMetrics from './feature-metrics-store';
 import strategies from './strategy';

@@ -7,7 +7,7 @@ import {
     ERROR_UPDATE_FEATURE_TOGGLE,
     UPDATE_FEATURE_TOGGLE_STRATEGIES,
     UPDATE_FEATURE_TOGGLE,
-} from '../feature-actions';
+} from '../feature-toggle/actions';
 
 import { ERROR_UPDATING_STRATEGY, ERROR_CREATING_STRATEGY, ERROR_RECEIVE_STRATEGIES } from '../strategy/actions';
 

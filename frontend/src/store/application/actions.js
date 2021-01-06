@@ -1,6 +1,6 @@
 import api from '../../data/applications-api';
 import { dispatchAndThrow } from '../util';
-import { MUTE_ERROR } from '../error-actions';
+import { MUTE_ERROR } from '../error/actions';
 
 export const RECEIVE_ALL_APPLICATIONS = 'RECEIVE_ALL_APPLICATIONS';
 export const ERROR_RECEIVE_ALL_APPLICATIONS = 'ERROR_RECEIVE_ALL_APPLICATIONS';

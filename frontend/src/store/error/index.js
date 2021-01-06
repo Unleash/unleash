@@ -1,5 +1,5 @@
 import { List, Map as $Map } from 'immutable';
-import { MUTE_ERROR } from './error-actions';
+import { MUTE_ERROR } from './actions';
 import {
     ERROR_FETCH_FEATURE_TOGGLES,
     ERROR_CREATING_FEATURE_TOGGLE,
@@ -7,17 +7,17 @@ import {
     ERROR_UPDATE_FEATURE_TOGGLE,
     UPDATE_FEATURE_TOGGLE_STRATEGIES,
     UPDATE_FEATURE_TOGGLE,
-} from './feature-actions';
+} from '../feature-actions';
 
-import { ERROR_UPDATING_STRATEGY, ERROR_CREATING_STRATEGY, ERROR_RECEIVE_STRATEGIES } from './strategy/actions';
+import { ERROR_UPDATING_STRATEGY, ERROR_CREATING_STRATEGY, ERROR_RECEIVE_STRATEGIES } from '../strategy/actions';
 
-import { ERROR_ADD_CONTEXT_FIELD, ERROR_UPDATE_CONTEXT_FIELD } from './context/actions';
+import { ERROR_ADD_CONTEXT_FIELD, ERROR_UPDATE_CONTEXT_FIELD } from '../context/actions';
 
-import { ERROR_REMOVING_PROJECT, ERROR_ADD_PROJECT, ERROR_UPDATE_PROJECT } from './project/actions';
+import { ERROR_REMOVING_PROJECT, ERROR_ADD_PROJECT, ERROR_UPDATE_PROJECT } from '../project/actions';
 
-import { UPDATE_APPLICATION_FIELD } from './application/actions';
+import { UPDATE_APPLICATION_FIELD } from '../application/actions';
 
-import { FORBIDDEN } from './util';
+import { FORBIDDEN } from '../util';
 
 const debug = require('debug')('unleash:error-store');
 

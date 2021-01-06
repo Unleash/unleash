@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import ErrorComponent from './error-component';
-import { muteError } from '../../store/error-actions';
+import { muteError } from '../../store/error/actions';
 
 const mapDispatchToProps = {
     muteError,

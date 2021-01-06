@@ -5,7 +5,7 @@ import featureMetrics from './feature-metrics-store';
 import strategies from './strategy';
 import history from './history-store'; // eslint-disable-line
 import archive from './archive';
-import error from './error-store';
+import error from './error';
 import settings from './settings';
 import user from './user';
 import applications from './application';

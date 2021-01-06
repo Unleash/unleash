@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { fetchFeatureMetrics, fetchSeenApps } from '../../../store/feature-metrics-actions';
+import { fetchFeatureMetrics, fetchSeenApps } from '../../../store/feature-metrics/actions';
 
 import MatricComponent from './metric-component';
 

@@ -1,4 +1,4 @@
-import api from '../data/feature-metrics-api';
+import api from '../../data/feature-metrics-api';
 
 export const START_FETCH_FEATURE_METRICS = 'START_FETCH_FEATURE_METRICS';
 export const RECEIVE_FEATURE_METRICS = 'RECEIVE_FEATURE_METRICS';

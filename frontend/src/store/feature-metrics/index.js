@@ -1,6 +1,6 @@
 import { Map as $Map, fromJS } from 'immutable';
 
-import { RECEIVE_FEATURE_METRICS, RECEIVE_SEEN_APPS } from './feature-metrics-actions';
+import { RECEIVE_FEATURE_METRICS, RECEIVE_SEEN_APPS } from './actions';
 
 const metrics = (state = fromJS({ lastHour: {}, lastMinute: {}, seenApps: {} }), action) => {
     switch (action.type) {

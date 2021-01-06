@@ -1,4 +1,4 @@
-import { fetchFeatureMetrics } from './store/feature-metrics-actions';
+import { fetchFeatureMetrics } from './store/feature-metrics/actions';
 
 class MetricsPoller {
     constructor(store) {

@@ -6,7 +6,6 @@ import strategies from './strategy';
 import history from './history-store'; // eslint-disable-line
 import archive from './archive';
 import error from './error-store';
-import clientInstances from './client-instance-store';
 import settings from './settings';
 import user from './user';
 import applications from './application';
@@ -22,7 +21,6 @@ const unleashStore = combineReducers({
     history,
     archive,
     error,
-    clientInstances,
     settings,
     user,
     applications,

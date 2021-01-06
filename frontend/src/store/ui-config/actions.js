@@ -1,4 +1,4 @@
-import api from '../../data/config-api';
+import api from './api';
 import { dispatchAndThrow } from '../util';
 
 export const RECEIVE_CONFIG = 'RECEIVE_CONFIG';

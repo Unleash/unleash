@@ -1,4 +1,4 @@
-import api from '../../data/context-api';
+import api from './api';
 import { dispatchAndThrow } from '../util';
 
 export const RECEIVE_CONTEXT = 'RECEIVE_CONTEXT';

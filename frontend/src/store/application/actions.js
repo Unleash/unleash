@@ -1,4 +1,4 @@
-import api from '../../data/applications-api';
+import api from './api';
 import { dispatchAndThrow } from '../util';
 import { MUTE_ERROR } from '../error/actions';
 

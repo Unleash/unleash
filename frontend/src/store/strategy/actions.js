@@ -1,5 +1,5 @@
-import api from '../../data/strategy-api';
-import applicationApi from '../../data/applications-api';
+import api from './api';
+import applicationApi from '../application/api';
 import { dispatchAndThrow } from '../util';
 
 export const ADD_STRATEGY = 'ADD_STRATEGY';

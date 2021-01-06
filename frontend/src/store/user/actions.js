@@ -1,4 +1,4 @@
-import api from '../../data/user-api';
+import api from './api';
 import { dispatchAndThrow } from '../util';
 export const UPDATE_USER = 'UPDATE_USER';
 export const USER_LOGOUT = 'USER_LOGOUT';

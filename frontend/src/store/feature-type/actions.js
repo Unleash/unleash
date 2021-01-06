@@ -1,4 +1,4 @@
-import api from '../../data/feature-type-api';
+import api from './api';
 import { dispatchAndThrow } from '../util';
 
 export const RECEIVE_FEATURE_TYPES = 'RECEIVE_FEATURE_TYPES';

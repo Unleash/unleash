@@ -1,4 +1,4 @@
-import api from '../../data/archive-api';
+import api from './api';
 import { dispatchAndThrow } from '../util';
 
 export const REVIVE_TOGGLE = 'REVIVE_TOGGLE';

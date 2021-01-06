@@ -1,4 +1,4 @@
-import api from '../../data/feature-api';
+import api from './api';
 const debug = require('debug')('unleash:feature-actions');
 import { dispatchAndThrow } from '../util';
 import { MUTE_ERROR } from '../error/actions';

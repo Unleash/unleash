@@ -1,4 +1,4 @@
-import { throwIfNotSuccess } from './helper';
+import { throwIfNotSuccess } from '../api-helper';
 
 const URI = 'api/admin/metrics/feature-toggles';
 

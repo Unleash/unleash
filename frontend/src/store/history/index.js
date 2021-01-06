@@ -1,6 +1,6 @@
 import { List, Map as $Map } from 'immutable';
-import { RECEIVE_HISTORY, RECEIVE_HISTORY_FOR_TOGGLE } from './history-actions';
-import { USER_LOGOUT, USER_LOGIN } from './user/actions';
+import { RECEIVE_HISTORY, RECEIVE_HISTORY_FOR_TOGGLE } from './actions';
+import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
 function getInitState() {
     return new $Map({ list: new List(), toggles: new $Map() });

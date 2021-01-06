@@ -3,7 +3,7 @@ import features from './feature-toggle';
 import featureTypes from './feature-type';
 import featureMetrics from './feature-metrics-store';
 import strategies from './strategy';
-import history from './history-store'; // eslint-disable-line
+import history from './history'; // eslint-disable-line
 import archive from './archive';
 import error from './error';
 import settings from './settings';

@@ -1,5 +1,5 @@
-import api from '../data/history-api';
-import { dispatchAndThrow } from './util';
+import api from '../../data/history-api';
+import { dispatchAndThrow } from '../util';
 
 export const RECEIVE_HISTORY = 'RECEIVE_HISTORY';
 export const ERROR_RECEIVE_HISTORY = 'ERROR_RECEIVE_HISTORY';

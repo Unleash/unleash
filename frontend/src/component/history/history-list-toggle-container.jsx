@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import HistoryListToggleComponent from './history-list-toggle-component';
-import { fetchHistoryForToggle } from '../../store/history-actions';
+import { fetchHistoryForToggle } from '../..//store/history/actions';
 
 function getHistoryFromToggle(state, toggleName) {
     if (!toggleName) {

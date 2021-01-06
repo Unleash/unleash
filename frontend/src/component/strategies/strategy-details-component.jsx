@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Tabs, Tab, ProgressBar, Grid, Cell } from 'react-mdl';
 import ShowStrategy from './show-strategy-component';
-import EditStrategy from './edit-container';
+import EditStrategy from './form-container';
 import { HeaderTitle } from '../common';
 import { UPDATE_STRATEGY } from '../../permissions';
 
@@ -39,7 +39,7 @@ export default class StrategyDetails extends Component {
 
     getTabContent(activeTabId) {
         if (activeTabId === TABS.edit) {
-            return <EditStrategy strategy={this.props.strategy} history={this.props.history} />;
+            return <EditStrategy strategy={this.props.strategy} history={this.props.history} editMode />;
         } else {
             return (
                 <ShowStrategy

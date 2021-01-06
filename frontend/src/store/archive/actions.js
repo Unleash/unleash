@@ -1,5 +1,5 @@
-import api from '../data/archive-api';
-import { dispatchAndThrow } from './util';
+import api from '../../data/archive-api';
+import { dispatchAndThrow } from '../util';
 
 export const REVIVE_TOGGLE = 'REVIVE_TOGGLE';
 export const RECEIVE_ARCHIVE = 'RECEIVE_ARCHIVE';

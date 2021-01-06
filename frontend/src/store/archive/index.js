@@ -1,6 +1,6 @@
 import { List, Map as $Map } from 'immutable';
-import { RECEIVE_ARCHIVE, REVIVE_TOGGLE } from './archive-actions';
-import { USER_LOGOUT, USER_LOGIN } from './user/actions';
+import { RECEIVE_ARCHIVE, REVIVE_TOGGLE } from './actions';
+import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
 function getInitState() {
     return new $Map({ list: new List() });

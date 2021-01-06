@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { fetchArchive, revive } from './../../store/archive-actions';
+import { fetchArchive, revive } from './../../store/archive/actions';
 import ViewToggleComponent from './../feature/view/view-component';
 import { hasPermission } from '../../permissions';
 

@@ -76,6 +76,7 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
     const db = createDb(options);
     const eventBus = new EventEmitter();
 
+    await db.raw(`DROP SCHEMA IF EXISTS ${options.databaseSchema} CASCADE`);
     await db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`);
     await migrator(options);
     await db.destroy();

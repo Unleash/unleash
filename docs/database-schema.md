@@ -45,6 +45,7 @@ Used by db-migrate module to keep track of migrations.
 | archived | int4 | 10 | 1 | 0 |  |
 | strategies | json | 2147483647 | 1 | (null) |  |
 | type | varchar | 2147483647 | 1 | release |  |
+| last_seen_at | timestamp | 29 | 1 | (null) |  |
 
 ## Table: _client_strategies_
 

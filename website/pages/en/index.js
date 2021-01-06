@@ -82,7 +82,7 @@ class HomeSplash extends React.Component {
           <a
               className="github-button"
               href={siteConfig.repoUrl}
-              data-icon="octicon-star"
+              data-size="large"
               data-count-href="/unleash/unleash/stargazers"
               data-show-count="true"
               data-count-aria-label="# stargazers on GitHub"
@@ -167,6 +167,7 @@ const UnleashClient = () => (
             <li><MarkdownBlock>[afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)</MarkdownBlock></li>
             <li><MarkdownBlock>[mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)</MarkdownBlock></li>
             <li><MarkdownBlock>[AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)</MarkdownBlock></li>
+            <li><MarkdownBlock>[pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)</MarkdownBlock></li>
           </ul>
         </div>
       </div>
@@ -237,7 +238,7 @@ class Index extends React.Component {
       <div>
         <HomeSplash language={language} config={this.props.config} />
         
-        <div className="mainContainer">
+        <div className="mainContainer" style={{ paddingTop: 0 }}>
           <FeatureCallout />
           <UnleashClient />
           <TryOut />

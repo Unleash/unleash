@@ -59,6 +59,7 @@ Clients written by awesome enthusiasts: :fire:
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 - [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
 - [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
+- [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
 
 ### The Client API
 

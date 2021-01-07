@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import style from './history.scss';
+import style from './history.module.scss';
 
 class HistoryItem extends PureComponent {
     static propTypes = {

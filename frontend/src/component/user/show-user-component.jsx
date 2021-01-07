@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './user.scss';
+import styles from './user.module.scss';
 import { Menu, MenuItem } from 'react-mdl';
 
 export default class ShowUserComponent extends React.Component {

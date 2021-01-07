@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import { Button, Textfield, DialogActions, Grid, Cell, Icon, Switch } from 'react-mdl';
-import styles from './variant.scss';
+import styles from './variant.module.scss';
 import MySelect from '../../common/select';
 import { trim } from '../../common/util';
 import { weightTypes } from './enums';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import VariantViewComponent from './variant-view-component';
-import styles from './variant.scss';
+import styles from './variant.module.scss';
 import { UPDATE_FEATURE } from '../../../permissions';
 import AddVariant from './add-variant';
 

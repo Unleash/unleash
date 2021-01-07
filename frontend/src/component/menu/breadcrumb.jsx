@@ -3,7 +3,7 @@ import { Link, Route, Switch } from 'react-router-dom';
 
 import { routes, getRoute } from './routes';
 
-import styles from '../styles.scss';
+import styles from '../styles.module.scss';
 
 const renderDoubleBread = (currentTitle, parentRoute) => {
     document.title = `${currentTitle} -  ${parentRoute.title} - Unleash`;

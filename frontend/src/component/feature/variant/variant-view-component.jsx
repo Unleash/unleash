@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, Chip } from 'react-mdl';
-import styles from './variant.scss';
+import styles from './variant.module.scss';
 import { UPDATE_FEATURE } from '../../../permissions';
 import { weightTypes } from './enums';
 

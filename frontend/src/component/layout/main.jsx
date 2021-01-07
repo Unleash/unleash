@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Layout, Content, Footer, Grid, Cell } from 'react-mdl';
 
-import styles from '../styles.scss';
+import styles from '../styles.module.scss';
 import ErrorContainer from '../error/error-container';
 import Header from '../menu/header';
 import ShowApiDetailsContainer from '../api/show-api-details-container';

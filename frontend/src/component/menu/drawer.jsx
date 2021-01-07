@@ -2,7 +2,7 @@ import React from 'react';
 import { Drawer, Icon, Navigation } from 'react-mdl';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import styles from '../styles.scss';
+import styles from '../styles.module.scss';
 
 import { baseRoutes as routes } from './routes';
 

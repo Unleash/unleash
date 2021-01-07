@@ -87,7 +87,7 @@
     "react-test-renderer": "^16.14.0",
     "react-timeago": "^4.4.0",
     "redux": "^4.0.5",
-    "redux-devtools": "^3.5.0",
+    "redux-devtools": "^3.7.0",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.3.0",
     "sass-loader": "^7.0.1",

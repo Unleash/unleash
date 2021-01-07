@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a list with elements correctly 1`] = `
+<react-mdl-Card
+  className="fullwidth"
+  shadow={0}
+  style={
+    Object {
+      "overflow": "visible",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "borderBottom": "1px solid #f1f1f1",
+        "display": "flex",
+        "marginBottom": "10px",
+        "padding": "16px 20px ",
+      }
+    }
+  >
+    <div
+      style={
+        Object {
+          "flex": "2",
+        }
+      }
+    >
+      <h6
+        style={
+          Object {
+            "margin": 0,
+          }
+        }
+      >
+        Tag Types
+      </h6>
+    </div>
+    <div
+      style={
+        Object {
+          "flex": "1",
+          "textAlign": "right",
+        }
+      }
+    >
+      <react-mdl-IconButton
+        name="add"
+        onClick={[Function]}
+        raised={true}
+        title="Add new tag type"
+      />
+    </div>
+  </div>
+  <react-mdl-List>
+    <react-mdl-ListItem
+      twoLine={true}
+    >
+      <react-mdl-ListItemContent
+        icon="label"
+        subtitle="Some simple description"
+      >
+        <a
+          href="/tag-types/edit/simple"
+          onClick={[Function]}
+        >
+          <strong>
+            simple
+          </strong>
+        </a>
+      </react-mdl-ListItemContent>
+      <react-mdl-IconButton
+        name="delete"
+        onClick={[Function]}
+      />
+    </react-mdl-ListItem>
+  </react-mdl-List>
+</react-mdl-Card>
+`;
+
+exports[`renders an empty list correctly 1`] = `
+<react-mdl-Card
+  className="fullwidth"
+  shadow={0}
+  style={
+    Object {
+      "overflow": "visible",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "borderBottom": "1px solid #f1f1f1",
+        "display": "flex",
+        "marginBottom": "10px",
+        "padding": "16px 20px ",
+      }
+    }
+  >
+    <div
+      style={
+        Object {
+          "flex": "2",
+        }
+      }
+    >
+      <h6
+        style={
+          Object {
+            "margin": 0,
+          }
+        }
+      >
+        Tag Types
+      </h6>
+    </div>
+    <div
+      style={
+        Object {
+          "flex": "1",
+          "textAlign": "right",
+        }
+      }
+    >
+      <react-mdl-IconButton
+        name="add"
+        onClick={[Function]}
+        raised={true}
+        title="Add new tag type"
+      />
+    </div>
+  </div>
+  <react-mdl-List>
+    <react-mdl-ListItem>
+      No entries
+    </react-mdl-ListItem>
+  </react-mdl-List>
+</react-mdl-Card>
+`;

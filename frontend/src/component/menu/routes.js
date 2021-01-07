@@ -18,6 +18,11 @@ import LogoutFeatures from '../../page/user/logout';
 import ListProjects from '../../page/project';
 import CreateProject from '../../page/project/create';
 import EditProject from '../../page/project/edit';
+import ListTagTypes from '../../page/tag-types';
+import CreateTagType from '../../page/tag-types/create';
+import EditTagType from '../../page/tag-types/edit';
+import ListTags from '../../page/tags';
+import CreateTag from '../../page/tags/create';
 
 export const routes = [
     // Features
@@ -57,6 +62,13 @@ export const routes = [
     { path: '/projects/create', parent: '/projects', title: 'Create', component: CreateProject },
     { path: '/projects/edit/:id', parent: '/projects', title: ':id', component: EditProject },
     { path: '/projects', title: 'Projects', icon: 'folder_open', component: ListProjects, hidden: true },
+
+    { path: '/tag-types/create', parent: '/tag-types', title: 'Create', component: CreateTagType },
+    { path: '/tag-types/edit/:name', parent: '/tag-types', title: ':name', component: EditTagType },
+    { path: '/tag-types', title: 'Tag types', icon: 'label', component: ListTagTypes },
+
+    { path: '/tags/create', parent: '/tags', title: 'Create', component: CreateTag },
+    { path: '/tags', title: 'Tags', icon: 'label', component: ListTags, hidden: true },
 
     { path: '/logout', title: 'Sign out', icon: 'exit_to_app', component: LogoutFeatures },
 ];

@@ -13,7 +13,9 @@ import UpdateDescriptionComponent from './update-description-component';
 import { styles as commonStyles } from '../../common';
 import { CREATE_FEATURE, DELETE_FEATURE, UPDATE_FEATURE } from '../../../permissions';
 import StatusComponent from '../status-component';
+import FeatureTagComponent from '../feature-tag-component';
 import StatusUpdateComponent from './status-update-component';
+import AddTagDialog from '../add-tag-dialog-container';
 
 const TABS = {
     strategies: 0,
@@ -44,6 +46,10 @@ export default class ViewFeatureToggleComponent extends React.Component {
         featureToggle: PropTypes.object,
         history: PropTypes.object.isRequired,
         hasPermission: PropTypes.func.isRequired,
+        fetchTags: PropTypes.func,
+        untagFeature: PropTypes.func,
+        featureTags: PropTypes.array,
+        tagTypes: PropTypes.array,
     };
 
     // eslint-disable-next-line camelcase
@@ -55,6 +61,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
                 this.props.fetchArchive();
             }
         }
+        this.props.fetchTags(this.props.featureToggleName);
     }
 
     getTabContent(activeTab) {
@@ -105,11 +112,13 @@ export default class ViewFeatureToggleComponent extends React.Component {
             features,
             activeTab,
             revive,
-            // setValue,
             featureToggleName,
             toggleFeature,
             removeFeatureToggle,
             hasPermission,
+            featureTags,
+            tagTypes,
+            untagFeature,
         } = this.props;
 
         if (!featureToggle) {
@@ -214,6 +223,12 @@ export default class ViewFeatureToggleComponent extends React.Component {
                     <FeatureTypeSelect value={featureToggle.type} onChange={updateType} filled />
                     &nbsp;
                     <ProjectSelect value={featureToggle.project} onChange={updateProject} filled />
+                    <FeatureTagComponent
+                        featureToggleName={featureToggle.name}
+                        tags={featureTags}
+                        tagTypes={tagTypes}
+                        untagFeature={untagFeature}
+                    />
                 </CardText>
 
                 <CardActions
@@ -245,6 +260,7 @@ export default class ViewFeatureToggleComponent extends React.Component {
 
                     {this.isFeatureView ? (
                         <div>
+                            <AddTagDialog featureToggleName={featureToggle.name} />
                             <StatusUpdateComponent stale={featureToggle.stale} updateStale={updateStale} />
                             <Link
                                 to={`/features/copy/${featureToggle.name}`}

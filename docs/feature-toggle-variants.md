@@ -48,5 +48,6 @@ To make use of toggle variants, you need to use a compatible client. Client SDK 
 - [unleash-client-ruby](https://github.com/Unleash/unleash-client-ruby) (from v0.1.6)
 - [unleash-client-python](https://github.com/Unleash/unleash-client-python) (from v3.3.0)
 - [unleash-client-dotnet](https://github.com/Unleash/unleash-client-dotnet) (from v1.3.6)
+- [unleash-client-go](https://github.com/Unleash/unleash-client-dotnet) (from v3 branch)
 
 If you would like to give feedback on this feature, experience issues or have questions, please feel free to open an issue on [GitHub](https://github.com/Unleash/unleash/).

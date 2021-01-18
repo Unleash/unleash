@@ -91,6 +91,12 @@ paths:
           description: 'Bad body request (for example, appName is not correct)'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/client/register \
+              --data '{"appName":"my-application","instanceId":"generated-732038-17080","sdkVersion":"unleash-client-node:3.4.0","strategies":[{"strategy":"default"}],"started":"2016-11-03T07:16:43.572Z","interval":10000}'
   /client/metrics:
     post:
       summary: Register a metrics *bucket*.
@@ -112,6 +118,12 @@ paths:
           description: 'Bad body request (for example, appName is not correct)'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/client/metrics \
+              --data '{"appName":"my-application","instanceId":"generated-732038-17080","bucket":{"start":"2020-12-08T13:50:00.000Z","stop":"2020-12-08T13:55:00.000Z","toggles":{"yesno":{"yesorno":"yes"},"metricsCount":{"count":1}}}}'
   /client/features:
     # Would normally $ref here but it tangles with an OAS bug - which affects both Redoc and Swagger UI - https://github.com/swagger-api/swagger-ui/issues/6249 (closed issue but still broken in latest release)
     get:
@@ -132,6 +144,11 @@ paths:
           $ref: '#/components/responses/clientResponse'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/client/features
   '/client/features/{featureName}':
     get:
       summary: Fetches a specific Feature Toggle from the Unleash server.
@@ -154,6 +171,11 @@ paths:
           $ref: '#/components/responses/successResponse'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/client/features/featureName
   /admin/features:
     get:
       summary: Fetches all feature toggles from the Unleash server.
@@ -172,6 +194,11 @@ paths:
           $ref: '#/components/responses/successResponse'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/features
     post:
       summary: Create a Feature Toggle
       description: Create a new Feature Toggle
@@ -191,6 +218,12 @@ paths:
           description: 'Bad body request (for example, Feature Toggle name is not unique)'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/admin/features \
+              --data '[{"name":"featureX","description":"Toggles featureX on and off","type":"release","enabled":true,"stale":false,"strategies":[{"name":"default","editable":true,"description":"Default on/off strategy.","parameters":{"parameter":{"name":"groupId","type":"string","description":"Define activation groups to allow you to correlate across feature toggles.","required":false}}}],"variants":[{"name":"yellow","weight":20}],"createdAt":"string"}]'
   '/admin/features/{featureName}':
     get:
       summary: Fetches a specific Feature Toggle from the Unleash server.
@@ -211,6 +244,11 @@ paths:
           $ref: '#/components/responses/successResponse'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/features/featureName
     put:
       summary: Update a Feature Toggle
       description: Update a Feature Toggle.
@@ -235,6 +273,11 @@ paths:
         '404':
           description: Feature Toggle not found
       x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request PUT \
+              --url http://localhost:4242/api/admin/features/featureName \
+              --data '[{"name":"featureX","description":"Toggles featureX on and off","type":"release","enabled":true,"stale":false,"strategies":[{"name":"default","editable":true,"description":"Default on/off strategy.","parameters":{"parameter":{"name":"groupId","type":"string","description":"Define activation groups to allow you to correlate across feature toggles.","required":false}}}],"variants":[{"name":"yellow","weight":20}],"createdAt":"string"}]'
         - lang: 'Go'
           source: |
             package main
@@ -310,13 +353,14 @@ paths:
         '200':
           description: Feature Toggle successfully archived
         '401':
-          description: Not authorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/401'
+          $ref: '#/components/responses/notAuthorizedResponse'
         '404':
           description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request DELETE \
+              --url http://localhost:4242/api/admin/features/featureName
   '/admin/features/{featureName}/toggle/on':
     post:
       summary: Enable a Feature Toggle.
@@ -333,6 +377,11 @@ paths:
           $ref: '#/components/responses/notAuthorizedResponse'
         '404':
           description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/admin/features/featureName/toggle/on
   '/admin/features/{featureName}/toggle/off':
     post:
       summary: Disable a Feature Toggle.
@@ -349,6 +398,11 @@ paths:
           $ref: '#/components/responses/notAuthorizedResponse'
         '404':
           description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+            --url http://localhost:4242/api/admin/features/featureName/toggle/off
   '/admin/features/{featureName}/stale/on':
     post:
       summary: Mark a Feature Toggle as 'stale' (deprecated).
@@ -368,6 +422,11 @@ paths:
           $ref: '#/components/responses/notAuthorizedResponse'
         '404':
           description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+            --url http://localhost:4242/api/admin/features/featureName/stale/on
   '/admin/features/{featureName}/stale/off':
     post:
       summary: Mark a Feature Toggle as active.
@@ -387,6 +446,11 @@ paths:
           $ref: '#/components/responses/notAuthorizedResponse'
         '404':
           description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/admin/features/featureName/stale/off
   /admin/archive/features:
     get:
       summary: List all the archived feature toggles on the Unleash server
@@ -401,6 +465,11 @@ paths:
           $ref: '#/components/responses/notAuthorizedResponse'
         '404':
           description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+             --url http://localhost:4242/api/admin/archive/features
   '/admin/archive/revive/{featureName}':
     post:
       summary: Un-archive a Feature Toggle
@@ -415,6 +484,11 @@ paths:
           description: Feature Toggle successfully revived
         '404':
           description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/admin/archive/revive/featureName
   /admin/strategies:
     get:
       summary: Fetch all strategies and their parameters.
@@ -427,6 +501,11 @@ paths:
           $ref: '#/components/responses/strategyExistsResponse'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/strategies
     post:
       summary: Create Strategy
       description: Create Strategy
@@ -448,6 +527,12 @@ paths:
           $ref: '#/components/responses/notAuthorizedResponse'
         '409':
           $ref: '#/components/responses/strategyExistsResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/admin/strategies \
+              --data '{"name":"gradualRollout","description":"Gradual rollout to logged in users","parameters":[{"name":"percentage","type":"percentage","description":"What percent of users should the new Feature Toggle be active for?","required":true}]}'
   '/admin/strategies/{strategyName}':
     put:
       summary: Update Strategy
@@ -475,6 +560,12 @@ paths:
           $ref: '#/components/responses/notAuthorizedResponse'
         '404':
           description: Strategy not updated due to errors in query and/or request body (such as **name** and **strategyName** not matching).
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request PUT \
+              --url http://localhost:4242/api/admin/strategies/strategyName \
+              --data '{"name":"gradualRollout","description":"Gradual rollout to logged in users","parameters":[{"name":"percentage","type":"percentage","description":"What percent of users should the new Feature Toggle be active for?","required":true}]}'
   /admin/metrics/seen-toggles:
     get:
       summary: Returns a list of applications and the feature toggles that Unleash has 'seen' for each application.
@@ -485,6 +576,11 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/seenTogglesResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/metrics/seen-toggles
   /admin/metrics/feature-toggles:
     get:
       summary: Gives 'last minute' and 'last hour' metrics for all active feature toggles (based on what was reported by the client applications).
@@ -499,6 +595,11 @@ paths:
           $ref: '#/components/responses/featureAccessResponse'
         '401':
          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/metrics/feature-toggles
   /admin/metrics/applications:
     get:
       summary: A list of known applications ('seen' by Unleash in the last two days)
@@ -511,6 +612,11 @@ paths:
           $ref: '#/components/responses/applicationsResponse'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/metrics/applications
   '/admin/metrics/applications/{appName}':
     get:
       summary: Details about a client application.
@@ -527,6 +633,11 @@ paths:
           $ref: '#/components/responses/notAuthorizedResponse'
         '500':
           description: Application name not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/metrics/applications/appName
   /admin/metrics/seen-apps:
     get:
       summary: Details about seen applications
@@ -539,6 +650,11 @@ paths:
           $ref: '#/components/responses/applicationsResponse'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/metrics/seen-apps
   /admin/events:
     get:
       operationId: get-admin-events
@@ -558,6 +674,11 @@ paths:
           $ref: '#/components/responses/eventsResponse'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/events
   /admin/state/export:
     get:
       operationId: get-admin-state-export
@@ -602,6 +723,11 @@ paths:
           $ref: '#/components/responses/exportResponse'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/state/export
   /admin/state/import:
     post:
       summary: Import feature toggles and strategies
@@ -651,6 +777,12 @@ paths:
           $ref: '#/components/responses/notAuthorizedResponse'
         '404':
           description: No import data provided.
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url 'http://localhost:4242/api/admin/state/import?drop=false&keep=false' \
+              --data '{"fileName":"string"}'
   /admin/feature-types:
     get:
       summary: Fetch the list of Unleash feature types
@@ -668,6 +800,11 @@ paths:
           $ref: '#/components/responses/featureTypeResponse'
         '401':
           $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/feature-types
 components:
   parameters:
     featureNamePath:

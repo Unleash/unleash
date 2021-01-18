@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.10.0
+
+- feat: add tags
+- feat: add tag-types
+- fix: upgrade knex to 0.21.15
+
 ## 3.9.0
 
 - fix: stateService undefined

@@ -259,7 +259,8 @@ test.serial('creates new feature toggle without type', async t => {
         enabled: false,
         strategies: [{ name: 'default' }],
     });
-    await request.get('/api/admin/features/com.test.noType').expect(res => {
+    await new Promise(r => setTimeout(r, 200));
+    return request.get('/api/admin/features/com.test.noType').expect(res => {
         t.is(res.body.type, 'release');
     });
 });
@@ -273,7 +274,90 @@ test.serial('creates new feature toggle with type', async t => {
         enabled: false,
         strategies: [{ name: 'default' }],
     });
-    await request.get('/api/admin/features/com.test.withType').expect(res => {
+    await new Promise(r => setTimeout(r, 200));
+    return request.get('/api/admin/features/com.test.withType').expect(res => {
         t.is(res.body.type, 'killswitch');
     });
+});
+
+test.serial('tags feature with new tag', async t => {
+    t.plan(1);
+    const request = await setupApp(stores);
+    await request.post('/api/admin/features').send({
+        name: 'test.feature',
+        type: 'killswitch',
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
+    await request
+        .post('/api/admin/features/test.feature/tags')
+        .send({
+            value: 'TeamGreen',
+            type: 'simple',
+        })
+        .set('Content-Type', 'application/json');
+    await new Promise(r => setTimeout(r, 200));
+    return request.get('/api/admin/features/test.feature/tags').expect(res => {
+        t.is(res.body.tags[0].value, 'TeamGreen');
+    });
+});
+
+test.serial(
+    'tagging a feature with an already existing tag should be a noop',
+    async t => {
+        t.plan(1);
+        const request = await setupApp(stores);
+        await request.post('/api/admin/features').send({
+            name: 'test.feature',
+            type: 'killswitch',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        });
+        await request.post('/api/admin/features/test.feature/tags').send({
+            value: 'TeamGreen',
+            type: 'simple',
+        });
+        await request.post('/api/admin/features/test.feature/tags').send({
+            value: 'TeamGreen',
+            type: 'simple',
+        });
+        await new Promise(r => setTimeout(r, 200));
+        return request
+            .get('/api/admin/features/test.feature/tags')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect(res => {
+                t.is(res.body.tags.length, 1);
+            });
+    },
+);
+
+test.serial('can untag feature', async t => {
+    t.plan(1);
+    const request = await setupApp(stores);
+    await request.post('/api/admin/features').send({
+        name: 'test.feature',
+        type: 'killswitch',
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
+    const tag = { value: 'TeamGreen', type: 'simple' };
+    await request
+        .post('/api/admin/features/test.feature/tags')
+        .send(tag)
+        .expect(201);
+    await new Promise(r => setTimeout(r, 50));
+    await request
+        .delete(
+            `/api/admin/features/test.feature/tags/${tag.type}/${tag.value}`,
+        )
+        .expect(200);
+    await new Promise(r => setTimeout(r, 50));
+    return request
+        .get('/api/admin/features/test.feature/tags')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => {
+            t.is(res.body.tags.length, 0);
+        });
 });

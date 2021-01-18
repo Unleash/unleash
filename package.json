@@ -29,7 +29,7 @@
   "license": "Apache-2.0",
   "main": "./lib/server-impl.js",
   "bin": {
-    "unleash": "./bin/unleash.js"
+    "unleash": "bin/unleash.js"
   },
   "scripts": {
     "start": "node server.js",
@@ -78,7 +78,7 @@
     "helmet": "^4.1.0",
     "joi": "^17.3.0",
     "js-yaml": "^3.14.0",
-    "knex": "0.21.5",
+    "knex": "0.21.15",
     "log4js": "^6.0.0",
     "mime": "^2.4.2",
     "moment": "^2.24.0",
@@ -89,7 +89,7 @@
     "prom-client": "^12.0.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
-    "unleash-frontend": "3.8.4",
+    "unleash-frontend": "3.9.0",
     "yargs": "^16.0.3"
   },
   "devDependencies": {

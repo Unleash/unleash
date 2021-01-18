@@ -4,6 +4,7 @@ const ClientMetricsStore = require('./fake-metrics-store');
 const clientInstanceStore = require('./fake-client-instance-store');
 const clientApplicationsStore = require('./fake-client-applications-store');
 const featureToggleStore = require('./fake-feature-toggle-store');
+const featureTagStore = require('./fake-feature-tag-store');
 const eventStore = require('./fake-event-store');
 const strategyStore = require('./fake-strategies-store');
 const contextFieldStore = require('./fake-context-store');
@@ -23,6 +24,7 @@ module.exports = {
             clientMetricsStore: new ClientMetricsStore(),
             clientInstanceStore: clientInstanceStore(),
             featureToggleStore: featureToggleStore(),
+            featureTagStore: featureTagStore(),
             eventStore: eventStore(),
             strategyStore: strategyStore(),
             contextFieldStore: contextFieldStore(),

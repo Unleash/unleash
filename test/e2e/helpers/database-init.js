@@ -25,6 +25,8 @@ async function resetDatabase(stores) {
         stores.db('context_fields').del(),
         stores.db('users').del(),
         stores.db('projects').del(),
+        stores.db('tags').del(),
+        stores.db('tag_types').del(),
     ]);
 }
 
@@ -52,16 +54,29 @@ function createFeatures(store) {
     return dbState.features.map(f => store._createFeature(f));
 }
 
-async function setupDatabase(stores) {
-    const updates = [];
-    updates.push(...createStrategies(stores.strategyStore));
-    updates.push(...createContextFields(stores.contextFieldStore));
-    updates.push(...createFeatures(stores.featureToggleStore));
-    updates.push(...createClientInstance(stores.clientInstanceStore));
-    updates.push(...createApplications(stores.clientApplicationsStore));
-    updates.push(...createProjects(stores.projectStore));
+function tagFeatures(store) {
+    return dbState.features.map(f =>
+        store.tagFeature({
+            featureName: f.name,
+            value: 'Tester',
+            type: 'simple',
+        }),
+    );
+}
 
-    await Promise.all(updates);
+function createTagTypes(store) {
+    return dbState.tag_types.map(t => store._createTagType(t));
+}
+
+async function setupDatabase(stores) {
+    await Promise.all(createStrategies(stores.strategyStore));
+    await Promise.all(createContextFields(stores.contextFieldStore));
+    await Promise.all(createFeatures(stores.featureToggleStore));
+    await Promise.all(createClientInstance(stores.clientInstanceStore));
+    await Promise.all(createApplications(stores.clientApplicationsStore));
+    await Promise.all(createProjects(stores.projectStore));
+    await Promise.all(createTagTypes(stores.tagTypeStore));
+    await Promise.all(tagFeatures(stores.featureTagStore));
 }
 
 module.exports = async function init(databaseSchema = 'test', getLogger) {

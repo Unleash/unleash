@@ -21,6 +21,12 @@
     },
     "context": {
       "uri": "/api/admin/context"
+    },
+    "tags": {
+      "uri": "/api/admin/tags"
+    },
+    "tag-types": {
+      "uri": "/api/admin/tag-types"
     }
   }
 }

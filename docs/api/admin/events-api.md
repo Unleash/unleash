@@ -19,6 +19,11 @@ Defined event types:
 - feature-revived
 - strategy-created
 - strategy-deleted
+- tag-created
+- tag-deleted
+- tag-type-created
+- tag-type-updated
+- tag-type-deleted
 
 **Response**
 

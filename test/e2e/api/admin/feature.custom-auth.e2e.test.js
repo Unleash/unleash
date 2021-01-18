@@ -52,13 +52,16 @@ test.serial('creates new feature toggle with createdBy', async t => {
     const request = await setupAppWithCustomAuth(stores, preHook);
 
     // create toggle
-    await request.post('/api/admin/features').send({
-        name: 'com.test.Username',
-        enabled: false,
-        strategies: [{ name: 'default' }],
-    });
+    await request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.Username',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        })
+        .expect(201);
 
     await request.get('/api/admin/events').expect(res => {
-        t.true(res.body.events[0].createdBy === user.email);
+        t.is(res.body.events[0].createdBy, user.email);
     });
 });

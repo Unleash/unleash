@@ -72,7 +72,7 @@ test.serial('should not be able to delete project with toggles', async t => {
         description: 'Blah',
     };
     await projectService.createProject(project, 'some-user');
-    await stores.featureToggleStore._createFeature({
+    await stores.featureToggleStore.createFeature({
         name: 'test-project-delete',
         project: project.id,
         enabled: false,

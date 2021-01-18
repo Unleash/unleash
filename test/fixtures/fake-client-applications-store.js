@@ -1,5 +1,7 @@
 'use strict';
 
+const NotFoundError = require('../../lib/error/notfound-error');
+
 module.exports = () => {
     let apps = [];
 
@@ -8,11 +10,15 @@ module.exports = () => {
             apps.push(app);
             return Promise.resolve();
         },
+        insertNewRow: value => {
+            apps.push(value);
+            return Promise.resolve();
+        },
         getApplications: () => Promise.resolve(apps),
         getApplication: appName => {
             const app = apps.filter(a => a.appName === appName)[0];
             if (!app) {
-                throw new Error(`Could not find app=${appName}`);
+                throw new NotFoundError(`Could not find app=${appName}`);
             }
             return app;
         },

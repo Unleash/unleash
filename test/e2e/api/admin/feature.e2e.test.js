@@ -90,11 +90,14 @@ test.serial('fetch feature toggle with variants', async t => {
 test.serial('creates new feature toggle with createdBy unknown', async t => {
     t.plan(1);
     const request = await setupApp(stores);
-    await request.post('/api/admin/features').send({
-        name: 'com.test.Username',
-        enabled: false,
-        strategies: [{ name: 'default' }],
-    });
+    await request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.Username',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        })
+        .expect(201);
     await request.get('/api/admin/events').expect(res => {
         t.is(res.body.events[0].createdBy, 'unknown');
     });
@@ -346,13 +349,11 @@ test.serial('can untag feature', async t => {
         .post('/api/admin/features/test.feature/tags')
         .send(tag)
         .expect(201);
-    await new Promise(r => setTimeout(r, 50));
     await request
         .delete(
             `/api/admin/features/test.feature/tags/${tag.type}/${tag.value}`,
         )
         .expect(200);
-    await new Promise(r => setTimeout(r, 50));
     return request
         .get('/api/admin/features/test.feature/tags')
         .expect('Content-Type', /json/)

@@ -55,7 +55,6 @@ test.serial('Can create a new tag type', async t => {
         icon:
             'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png',
     });
-    await new Promise(r => setTimeout(r, 200));
     return request
         .get('/api/admin/tag-types/slack')
         .expect('Content-Type', /json/)
@@ -94,7 +93,6 @@ test.serial('Can update a tag types description and icon', async t => {
             icon: '$',
         })
         .expect(200);
-    await new Promise(r => setTimeout(r, 200));
     return request
         .get('/api/admin/tag-types/simple')
         .expect('Content-Type', /json/)
@@ -160,7 +158,6 @@ test.serial('Can delete tag type', async t => {
         .delete('/api/admin/tag-types/simple')
         .set('Content-Type', 'application/json')
         .expect(200);
-    await new Promise(r => setTimeout(r, 50));
     return request.get('/api/admin/tag-types/simple').expect(404);
 });
 
@@ -175,7 +172,6 @@ test.serial('Non unique tag-types gets rejected', async t => {
         })
         .set('Content-Type', 'application/json')
         .expect(201);
-    await new Promise(r => setTimeout(r, 50));
     return request
         .post('/api/admin/tag-types')
         .send({

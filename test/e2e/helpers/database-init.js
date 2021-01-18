@@ -31,7 +31,7 @@ async function resetDatabase(stores) {
 }
 
 function createStrategies(store) {
-    return dbState.strategies.map(s => store._createStrategy(s));
+    return dbState.strategies.map(s => store.createStrategy(s));
 }
 
 function createContextFields(store) {
@@ -51,13 +51,13 @@ function createProjects(store) {
 }
 
 function createFeatures(store) {
-    return dbState.features.map(f => store._createFeature(f));
+    return dbState.features.map(f => store.createFeature(f));
 }
 
-function tagFeatures(store) {
+async function tagFeatures(tagStore, store) {
+    await tagStore.createTag({ value: 'Tester', type: 'simple' });
     return dbState.features.map(f =>
-        store.tagFeature({
-            featureName: f.name,
+        store.tagFeature(f.name, {
             value: 'Tester',
             type: 'simple',
         }),
@@ -65,7 +65,7 @@ function tagFeatures(store) {
 }
 
 function createTagTypes(store) {
-    return dbState.tag_types.map(t => store._createTagType(t));
+    return dbState.tag_types.map(t => store.createTagType(t));
 }
 
 async function setupDatabase(stores) {
@@ -76,7 +76,7 @@ async function setupDatabase(stores) {
     await Promise.all(createApplications(stores.clientApplicationsStore));
     await Promise.all(createProjects(stores.projectStore));
     await Promise.all(createTagTypes(stores.tagTypeStore));
-    await Promise.all(tagFeatures(stores.featureTagStore));
+    await tagFeatures(stores.tagStore, stores.featureTagStore);
 }
 
 module.exports = async function init(databaseSchema = 'test', getLogger) {

@@ -16,6 +16,20 @@ module.exports = () => {
             }
             return Promise.reject(new NotFoundError('Not found!'));
         },
-        addStrategy: strat => _strategies.push(strat),
+        createStrategy: strat => _strategies.push(strat),
+        updateStrategy: strat => {
+            _strategies.splice(
+                _strategies.indexOf(({ name }) => name === strat.name),
+                1,
+            );
+            _strategies.push(strat);
+        },
+        importStrategy: strat => Promise.resolve(_strategies.push(strat)),
+        dropStrategies: () => _strategies.splice(0, _strategies.length),
+        deleteStrategy: strat =>
+            _strategies.splice(
+                _strategies.indexOf(({ name }) => name === strat.name),
+                1,
+            ),
     };
 };

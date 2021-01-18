@@ -2,6 +2,9 @@ import { combineReducers } from 'redux';
 import features from './feature-toggle';
 import featureTypes from './feature-type';
 import featureMetrics from './feature-metrics';
+import featureTags from './feature-tags';
+import tagTypes from './tag-type';
+import tags from './tag';
 import strategies from './strategy';
 import history from './history'; // eslint-disable-line
 import archive from './archive';
@@ -18,6 +21,9 @@ const unleashStore = combineReducers({
     featureTypes,
     featureMetrics,
     strategies,
+    tagTypes,
+    tags,
+    featureTags,
     history,
     archive,
     error,

@@ -12,7 +12,9 @@ jest.mock('../update-strategies-container', () => ({
 }));
 jest.mock('../../feature-type-select-container', () => 'FeatureTypeSelect');
 jest.mock('../../project-select-container', () => 'ProjectSelect');
-
+jest.mock('../../tag-type-select-container', () => 'TagTypeSelect');
+jest.mock('../../feature-tag-component', () => 'FeatureTagComponent');
+jest.mock('../../add-tag-dialog-container', () => 'AddTagDialog');
 test('renders correctly with one feature', () => {
     const feature = {
         name: 'Another',
@@ -39,7 +41,10 @@ test('renders correctly with one feature', () => {
                 featureToggle={feature}
                 fetchFeatureToggles={jest.fn()}
                 history={{}}
+                featureTags={[]}
                 hasPermission={permission => [DELETE_FEATURE, UPDATE_FEATURE].indexOf(permission) !== -1}
+                fetchTags={jest.fn()}
+                untagFeature={jest.fn()}
             />
         </MemoryRouter>
     );

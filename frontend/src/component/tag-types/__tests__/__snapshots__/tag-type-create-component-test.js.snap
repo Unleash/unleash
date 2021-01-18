@@ -1,0 +1,191 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`it supports editMode 1`] = `
+<react-mdl-Card
+  className="fullWidth"
+  shadow={0}
+  style={
+    Object {
+      "overflow": "visible",
+    }
+  }
+>
+  <react-mdl-CardTitle
+    style={
+      Object {
+        "paddingBottom": "0",
+        "paddingTop": "24px",
+        "wordBreak": "break-all",
+      }
+    }
+  >
+    Update
+     Tag type
+  </react-mdl-CardTitle>
+  <react-mdl-CardText>
+    Tag types allows you to group tags together in the management UI
+  </react-mdl-CardText>
+  <form
+    onSubmit={[Function]}
+  >
+    <section
+      style={
+        Object {
+          "padding": "16px",
+        }
+      }
+    >
+      <p
+        style={
+          Object {
+            "color": "red",
+          }
+        }
+      />
+      <react-mdl-Textfield
+        disabled={true}
+        floatingLabel={true}
+        label="Name"
+        name="name"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder="url-friendly-unique-name"
+        value=""
+      />
+      <react-mdl-Textfield
+        floatingLabel={true}
+        label="Description"
+        name="description"
+        onChange={[Function]}
+        placeholder="Some short helpful descriptive text"
+        rows={1}
+        style={
+          Object {
+            "width": "100%",
+          }
+        }
+        value=""
+      />
+    </section>
+    <react-mdl-CardActions>
+      <div>
+        <react-mdl-Button
+          icon="add"
+          primary={true}
+          raised={true}
+          ripple={true}
+          type="submit"
+        >
+          <react-mdl-Icon
+            name="add"
+          />
+             
+          Update
+        </react-mdl-Button>
+         
+        <react-mdl-Button
+          onClick={[Function]}
+          type="cancel"
+        >
+          Cancel
+        </react-mdl-Button>
+      </div>
+    </react-mdl-CardActions>
+  </form>
+</react-mdl-Card>
+`;
+
+exports[`renders correctly for creating 1`] = `
+<react-mdl-Card
+  className="fullWidth"
+  shadow={0}
+  style={
+    Object {
+      "overflow": "visible",
+    }
+  }
+>
+  <react-mdl-CardTitle
+    style={
+      Object {
+        "paddingBottom": "0",
+        "paddingTop": "24px",
+        "wordBreak": "break-all",
+      }
+    }
+  >
+    Create
+     Tag type
+  </react-mdl-CardTitle>
+  <react-mdl-CardText>
+    Tag types allows you to group tags together in the management UI
+  </react-mdl-CardText>
+  <form
+    onSubmit={[Function]}
+  >
+    <section
+      style={
+        Object {
+          "padding": "16px",
+        }
+      }
+    >
+      <p
+        style={
+          Object {
+            "color": "red",
+          }
+        }
+      />
+      <react-mdl-Textfield
+        disabled={false}
+        floatingLabel={true}
+        label="Name"
+        name="name"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder="url-friendly-unique-name"
+        value=""
+      />
+      <react-mdl-Textfield
+        floatingLabel={true}
+        label="Description"
+        name="description"
+        onChange={[Function]}
+        placeholder="Some short helpful descriptive text"
+        rows={1}
+        style={
+          Object {
+            "width": "100%",
+          }
+        }
+        value=""
+      />
+    </section>
+    <react-mdl-CardActions>
+      <div>
+        <react-mdl-Button
+          icon="add"
+          primary={true}
+          raised={true}
+          ripple={true}
+          type="submit"
+        >
+          <react-mdl-Icon
+            name="add"
+          />
+             
+          Create
+        </react-mdl-Button>
+         
+        <react-mdl-Button
+          onClick={[Function]}
+          type="cancel"
+        >
+          Cancel
+        </react-mdl-Button>
+      </div>
+    </react-mdl-CardActions>
+  </form>
+</react-mdl-Card>
+`;

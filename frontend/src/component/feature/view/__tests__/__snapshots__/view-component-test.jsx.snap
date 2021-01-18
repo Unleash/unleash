@@ -63,6 +63,11 @@ exports[`renders correctly with one feature 1`] = `
       filled={true}
       onChange={[Function]}
     />
+    <FeatureTagComponent
+      featureToggleName="Another"
+      tags={Array []}
+      untagFeature={[MockFunction]}
+    />
   </react-mdl-CardText>
   <react-mdl-CardActions
     border={true}
@@ -95,6 +100,9 @@ exports[`renders correctly with one feature 1`] = `
       </react-mdl-Switch>
     </span>
     <div>
+      <AddTagDialog
+        featureToggleName="Another"
+      />
       <span>
         <react-mdl-Button
           className="mdl-button dropdownButton"

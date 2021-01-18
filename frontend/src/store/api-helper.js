@@ -1,4 +1,4 @@
-const defaultErrorMessage = 'Unexptected exception when talking to unleash-api';
+const defaultErrorMessage = 'Unexpected exception when talking to unleash-api';
 
 function extractJoiMsg(body) {
     return body.details.length > 0 ? body.details[0].message : defaultErrorMessage;

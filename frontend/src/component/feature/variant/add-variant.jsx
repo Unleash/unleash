@@ -4,33 +4,11 @@ import Modal from 'react-modal';
 import { Button, Textfield, DialogActions, Grid, Cell, Icon, Switch } from 'react-mdl';
 import styles from './variant.module.scss';
 import MySelect from '../../common/select';
-import { trim } from '../../common/util';
+import { trim, modalStyles } from '../../common/util';
 import { weightTypes } from './enums';
 import OverrideConfig from './override-config';
 
 Modal.setAppElement('#app');
-
-const customStyles = {
-    overlay: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.25)',
-        zIndex: 5,
-    },
-    content: {
-        width: '500px',
-        maxWidth: '90%',
-        margin: '0',
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        transform: 'translate(-50%, -50%)',
-    },
-};
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -172,7 +150,7 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
     const isFixWeight = data.weightType === weightTypes.FIX;
 
     return (
-        <Modal isOpen={showDialog} contentLabel="Example Modal" style={customStyles} onRequestClose={onCancel}>
+        <Modal isOpen={showDialog} contentLabel="Example Modal" style={modalStyles} onRequestClose={onCancel}>
             <h3>{title}</h3>
 
             <form onSubmit={submit}>

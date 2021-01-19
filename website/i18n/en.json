@@ -8,6 +8,15 @@
       "activation_strategy": {
         "title": "Activation Strategies"
       },
+      "addons": {
+        "title": "Unleash Addons"
+      },
+      "addons/webhook": {
+        "title": "Unleash Webhook addon"
+      },
+      "api/admin/addons": {
+        "title": "/api/admin/addons"
+      },
       "api/admin/events": {
         "title": "/api/admin/events"
       },

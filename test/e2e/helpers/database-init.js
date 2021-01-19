@@ -27,6 +27,7 @@ async function resetDatabase(stores) {
         stores.db('projects').del(),
         stores.db('tags').del(),
         stores.db('tag_types').del(),
+        stores.db('addons').del(),
     ]);
 }
 
@@ -97,6 +98,7 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
     await db.destroy();
     const stores = await createStores(options, eventBus);
     stores.clientMetricsStore.setMaxListeners(0);
+    stores.eventStore.setMaxListeners(0);
     await resetDatabase(stores);
     await setupDatabase(stores);
 

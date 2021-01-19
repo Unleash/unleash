@@ -3,7 +3,7 @@ export POSTGRES_PASSWORD="uleash"
 
 echo "starting postgres in docker "
 
-HASH=`docker run -P --name unleash-postgres -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -d postgres:9.3`
+HASH=`docker run -P --name unleash-postgres -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -d postgres:10`
 export PGPORT=`docker ps| grep unleash-post| awk '{print $(NF-1)}'| awk -F "->" '{print $1}'| awk -F \: '{print $2}'`
 echo "PGPORT: $PGPORT"
 echo ""
@@ -25,7 +25,7 @@ done
 export TEST_DATABASE_URL=postgres://postgres:$POSTGRES_PASSWORD@$database_host:$PGPORT/postgres
 
 yarn
-DATABASE_URL=$TEST_DATABASE_URL ./node_modules/.bin/db-migrate up
+DATABASE_URL=$TEST_DATABASE_URL npm run db-migrate -- up
 yarn test
 docker stop $HASH
 docker rm $HASH

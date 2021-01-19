@@ -30,5 +30,5 @@ exports.up = function(db, cb) {
 };
 
 exports.down = function(db, cb) {
-    return db.dropTable('feature_types', cb);
+    return db.dropTable('projects', cb);
 };

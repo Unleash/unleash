@@ -113,3 +113,23 @@ Used to create a new Strategy. Name is required and must be unique. It is also r
 ```
 
 Used to update a Strategy definition. Name can't be changed. **PS! I can be dangerous to change a implemnted strategy as the implementation also might need to be changed**
+
+### Deprecate strategy
+
+`POST: https://unleash.host.com/api/admin/strategies/:name/deprecate`
+
+Used to deprecate a strategy definition. This will set the deprecated flag to true. If the strategy is already deprecated, this will be a noop.
+
+#### Errors
+
+_404 NOT FOUND_ - if `:name` does not exist
+
+### Reactivate strategy
+
+`POST: https://unleash.host.com/api/admin/strategies/:name/reactivate`
+
+Used to reactivate a deprecated strategy defintion. This will set the deprecated flag back to false. If the strategy is not deprecated this is a noop and will still return 200.
+
+#### Errors
+
+_404 NOT FOUND_ - if if `:name` does not exist

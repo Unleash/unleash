@@ -5,6 +5,7 @@
 - feat: add tags (#655)
 - feat: add tag-types (#655)
 - feat: Added servicelayer (#685)
+- feat: Allow deprecation of strategies (#682)
 - fix: upgrade knex to 0.21.15
 - fix: Updated docs about event-types (#684)
 - fix: Add application-created event (#595)

@@ -119,3 +119,50 @@ test.serial('cant update a unknown strategy', async t => {
         .set('Content-Type', 'application/json')
         .expect(404);
 });
+
+test.serial('deprecating a strategy works', async t => {
+    const request = await setupApp(stores);
+    const name = 'deprecate';
+    await request
+        .post('/api/admin/strategies')
+        .send({ name, description: 'Should deprecate this', parameters: [] })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await request
+        .post(`/api/admin/strategies/${name}/deprecate`)
+        .send()
+        .expect(200);
+    await request
+        .get(`/api/admin/strategies/${name}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => t.is(res.body.deprecated, true));
+});
+
+test.serial('can reactivate a deprecated strategy', async t => {
+    const request = await setupApp(stores);
+    const name = 'reactivate';
+    await request
+        .post('/api/admin/strategies')
+        .send({ name, description: 'Should deprecate this', parameters: [] })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await request
+        .post(`/api/admin/strategies/${name}/deprecate`)
+        .send()
+        .expect(200);
+    await request
+        .get(`/api/admin/strategies/${name}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => t.is(res.body.deprecated, true));
+    await request
+        .post(`/api/admin/strategies/${name}/reactivate`)
+        .send()
+        .expect(200);
+    await request
+        .get(`/api/admin/strategies/${name}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => t.is(res.body.deprecated, false));
+});

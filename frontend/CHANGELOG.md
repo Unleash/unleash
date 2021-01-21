@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 The latest version of this document is always available in
 [releases][releases-url].
+# 3.9.1
+- fix: Tags viewable on archived features (#233)
 
 # 3.9.0
 - feat: Tags for feature toggles (#232)

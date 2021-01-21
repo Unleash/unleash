@@ -34,9 +34,27 @@ function remove(strategy) {
     }).then(throwIfNotSuccess);
 }
 
+function deprecate(strategy) {
+    return fetch(`${URI}/${strategy.name}/deprecate`, {
+        method: 'POST',
+        headers,
+        credentials: 'include',
+    }).then(throwIfNotSuccess);
+}
+
+function reactivate(strategy) {
+    return fetch(`${URI}/${strategy.name}/reactivate`, {
+        method: 'POST',
+        headers,
+        credentials: 'include',
+    }).then(throwIfNotSuccess);
+}
+
 export default {
     fetchAll,
     create,
     update,
     remove,
+    deprecate,
+    reactivate,
 };

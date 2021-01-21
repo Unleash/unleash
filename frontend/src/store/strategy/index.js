@@ -1,5 +1,12 @@
 import { List, Map as $Map } from 'immutable';
-import { RECEIVE_STRATEGIES, REMOVE_STRATEGY, ADD_STRATEGY, UPDATE_STRATEGY } from './actions';
+import {
+    RECEIVE_STRATEGIES,
+    REMOVE_STRATEGY,
+    ADD_STRATEGY,
+    UPDATE_STRATEGY,
+    DEPRECATE_STRATEGY,
+    REACTIVATE_STRATEGY,
+} from './actions';
 
 function getInitState() {
     return new $Map({ list: new List() });
@@ -25,6 +32,19 @@ function updateStrategy(state, action) {
     );
 }
 
+function setDeprecationStatus(state, action, status) {
+    return state.update('list', list =>
+        list.map(strategy => {
+            if (strategy.name === action.strategy.name) {
+                action.strategy.deprecated = status;
+                return action.strategy;
+            } else {
+                return strategy;
+            }
+        })
+    );
+}
+
 const strategies = (state = getInitState(), action) => {
     switch (action.type) {
         case RECEIVE_STRATEGIES:
@@ -35,6 +55,10 @@ const strategies = (state = getInitState(), action) => {
             return state.update('list', list => list.push(action.strategy));
         case UPDATE_STRATEGY:
             return updateStrategy(state, action);
+        case DEPRECATE_STRATEGY:
+            return setDeprecationStatus(state, action, true);
+        case REACTIVATE_STRATEGY:
+            return setDeprecationStatus(state, action, false);
         default:
             return state;
     }

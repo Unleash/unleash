@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import StrategiesListComponent from './list-component.jsx';
-import { fetchStrategies, removeStrategy } from './../../store/strategy/actions';
+import { fetchStrategies, removeStrategy, deprecateStrategy, reactivateStrategy } from './../../store/strategy/actions';
 import { hasPermission } from '../../permissions';
 
 const mapStateToProps = state => {
@@ -17,6 +17,18 @@ const mapDispatchToProps = dispatch => ({
         // eslint-disable-next-line no-alert
         if (window.confirm('Are you sure you want to remove this strategy?')) {
             removeStrategy(strategy)(dispatch);
+        }
+    },
+    deprecateStrategy: strategy => {
+        // eslint-disable-next-line no-alert
+        if (window.confirm('Are you sure you want to deprecate this strategy?')) {
+            deprecateStrategy(strategy)(dispatch);
+        }
+    },
+    reactivateStrategy: strategy => {
+        // eslint-disable-next-line no-alert
+        if (window.confirm('Are you sure you want to reactivate this strategy?')) {
+            reactivateStrategy(strategy)(dispatch);
         }
     },
     fetchStrategies: () => fetchStrategies()(dispatch),

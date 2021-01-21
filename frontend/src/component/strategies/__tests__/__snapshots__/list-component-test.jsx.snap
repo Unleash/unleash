@@ -67,9 +67,17 @@ exports[`renders correctly with one strategy 1`] = `
         >
           <strong>
             Another
+             
+            
           </strong>
         </a>
       </react-mdl-ListItemContent>
+      <react-mdl-Button
+        name="remove"
+        onClick={[Function]}
+      >
+        Deprecate
+      </react-mdl-Button>
       <react-mdl-IconButton
         name="delete"
         onClick={[Function]}
@@ -132,9 +140,17 @@ exports[`renders correctly with one strategy without permissions 1`] = `
         >
           <strong>
             Another
+             
+            
           </strong>
         </a>
       </react-mdl-ListItemContent>
+      <react-mdl-Button
+        name="remove"
+        onClick={[Function]}
+      >
+        Deprecate
+      </react-mdl-Button>
       
     </react-mdl-ListItem>
   </react-mdl-List>

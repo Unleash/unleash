@@ -61,11 +61,13 @@ class AddStrategy extends React.Component {
                 />
                 <Menu target="strategies-add" valign="bottom" align="right" ripple style={menuStyle}>
                     <MenuItem disabled>Add Strategy:</MenuItem>
-                    {this.props.strategies.map(s => (
-                        <MenuItem key={s.name} title={s.description} onClick={() => this.addStrategy(s.name)}>
-                            {s.name}
-                        </MenuItem>
-                    ))}
+                    {this.props.strategies
+                        .filter(s => !s.deprecated)
+                        .map(s => (
+                            <MenuItem key={s.name} title={s.description} onClick={() => this.addStrategy(s.name)}>
+                                {s.name}
+                            </MenuItem>
+                        ))}
                 </Menu>
             </div>
         );

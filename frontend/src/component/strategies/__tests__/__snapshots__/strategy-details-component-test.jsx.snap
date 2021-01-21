@@ -58,6 +58,7 @@ exports[`renders correctly with one strategy 1`] = `
       >
         <div>
           <react-mdl-Grid>
+            
             <react-mdl-Cell
               col={12}
             >

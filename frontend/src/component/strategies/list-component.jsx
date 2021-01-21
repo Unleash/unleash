@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { List, ListItem, ListItemContent, IconButton, Card } from 'react-mdl';
+import { List, ListItem, ListItemContent, IconButton, Card, Button } from 'react-mdl';
 import { HeaderTitle, styles as commonStyles } from '../common';
 import { CREATE_STRATEGY, DELETE_STRATEGY } from '../../permissions';
 
@@ -11,6 +11,8 @@ class StrategiesListComponent extends Component {
         strategies: PropTypes.array.isRequired,
         fetchStrategies: PropTypes.func.isRequired,
         removeStrategy: PropTypes.func.isRequired,
+        deprecateStrategy: PropTypes.func.isRequired,
+        reactivateStrategy: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
         hasPermission: PropTypes.func.isRequired,
     };
@@ -20,7 +22,7 @@ class StrategiesListComponent extends Component {
     }
 
     render() {
-        const { strategies, removeStrategy, hasPermission } = this.props;
+        const { strategies, removeStrategy, hasPermission, reactivateStrategy, deprecateStrategy } = this.props;
 
         return (
             <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
@@ -45,9 +47,20 @@ class StrategiesListComponent extends Component {
                             <ListItem key={i} twoLine>
                                 <ListItemContent icon="extension" subtitle={strategy.description}>
                                     <Link to={`/strategies/view/${strategy.name}`}>
-                                        <strong>{strategy.name}</strong>
+                                        <strong>
+                                            {strategy.name} {strategy.deprecated ? <span>- Deprecated</span> : ''}
+                                        </strong>
                                     </Link>
                                 </ListItemContent>
+                                {strategy.deprecated ? (
+                                    <Button name="add" onClick={() => reactivateStrategy(strategy)}>
+                                        Reactivate
+                                    </Button>
+                                ) : (
+                                    <Button name="remove" onClick={() => deprecateStrategy(strategy)}>
+                                        Deprecate
+                                    </Button>
+                                )}
                                 {strategy.editable === false || !hasPermission(DELETE_STRATEGY) ? (
                                     ''
                                 ) : (

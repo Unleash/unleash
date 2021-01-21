@@ -19,6 +19,7 @@ The internal API used by the Admin UI (unleash-frontend):
 - [Strategies API](admin/strategies-api.md)
 - [Events API](admin/events-api.md)
 - [Metrics API](admin/metrics-api.md)
+- [Tags API](admin/tags-api.md)
 
 ## System API's
 

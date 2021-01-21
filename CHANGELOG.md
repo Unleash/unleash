@@ -5,6 +5,9 @@
 - feat: add tags
 - feat: add tag-types
 - fix: upgrade knex to 0.21.15
+- feat: Added servicelayer (#685)
+- fix: Updated docs about event-types (#684)
+- fix: Add application-created event (#595)
 
 ## 3.9.0
 

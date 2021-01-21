@@ -25,14 +25,17 @@ test.serial('creates new feature toggle with createdBy', async t => {
     });
 
     // create toggle
-    await request.post('/api/admin/features').send({
-        name: 'com.test.Username',
-        enabled: false,
-        strategies: [{ name: 'default' }],
-    });
+    await request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.Username',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        })
+        .expect(201);
 
     await request.get('/api/admin/events').expect(res => {
-        t.true(res.body.events[0].createdBy === 'user@mail.com');
+        t.is(res.body.events[0].createdBy, 'user@mail.com');
     });
 });
 

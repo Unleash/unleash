@@ -63,12 +63,15 @@ test.serial('should delete application', async t => {
         });
 });
 
-test.serial('should get 409 when deleting unknwn application', async t => {
-    t.plan(1);
-    const request = await setupApp(stores);
-    return request
-        .delete('/api/admin/metrics/applications/unkown')
-        .expect(res => {
-            t.is(res.status, 409);
-        });
-});
+test.serial(
+    'deleting an application should be idempotent, so expect 200',
+    async t => {
+        t.plan(1);
+        const request = await setupApp(stores);
+        return request
+            .delete('/api/admin/metrics/applications/unknown')
+            .expect(res => {
+                t.is(res.status, 200);
+            });
+    },
+);

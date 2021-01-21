@@ -24,6 +24,7 @@ Defined event types:
 - tag-type-created
 - tag-type-updated
 - tag-type-deleted
+- application-created
 
 **Response**
 

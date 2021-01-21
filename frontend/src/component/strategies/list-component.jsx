@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { List, ListItem, ListItemContent, IconButton, Card, Button } from 'react-mdl';
+import { List, ListItem, ListItemContent, IconButton, Card } from 'react-mdl';
 import { HeaderTitle, styles as commonStyles } from '../common';
 import { CREATE_STRATEGY, DELETE_STRATEGY } from '../../permissions';
+
+import styles from './strategies.module.scss';
 
 class StrategiesListComponent extends Component {
     static propTypes = {
@@ -44,28 +46,47 @@ class StrategiesListComponent extends Component {
                 <List>
                     {strategies.length > 0 ? (
                         strategies.map((strategy, i) => (
-                            <ListItem key={i} twoLine>
+                            <ListItem key={i} twoLine className={strategy.deprecated ? styles.deprecated : ''}>
                                 <ListItemContent icon="extension" subtitle={strategy.description}>
-                                    <Link to={`/strategies/view/${strategy.name}`}>
-                                        <strong>
-                                            {strategy.name} {strategy.deprecated ? <span>- Deprecated</span> : ''}
-                                        </strong>
+                                    <Link
+                                        to={`/strategies/view/${strategy.name}`}
+                                        title={strategy.deprecated ? 'Deprecated' : ''}
+                                    >
+                                        <strong>{strategy.name}</strong>
+                                        {strategy.deprecated ? <small> (Deprecated)</small> : null}
                                     </Link>
                                 </ListItemContent>
-                                {strategy.deprecated ? (
-                                    <Button name="add" onClick={() => reactivateStrategy(strategy)}>
-                                        Reactivate
-                                    </Button>
-                                ) : (
-                                    <Button name="remove" onClick={() => deprecateStrategy(strategy)}>
-                                        Deprecate
-                                    </Button>
-                                )}
-                                {strategy.editable === false || !hasPermission(DELETE_STRATEGY) ? (
-                                    ''
-                                ) : (
-                                    <IconButton name="delete" onClick={() => removeStrategy(strategy)} />
-                                )}
+                                <span>
+                                    {strategy.deprecated ? (
+                                        <IconButton
+                                            name="visibility"
+                                            title="Reactivate acitvation strategy"
+                                            onClick={() => reactivateStrategy(strategy)}
+                                        />
+                                    ) : (
+                                        <IconButton
+                                            name="visibility_off"
+                                            title="Deprecate acitvation strategy"
+                                            disabled={strategy.name === 'default'}
+                                            color="#"
+                                            onClick={() => deprecateStrategy(strategy)}
+                                        />
+                                    )}
+                                    {strategy.editable === false || !hasPermission(DELETE_STRATEGY) ? (
+                                        <IconButton
+                                            name="delete"
+                                            title="You can not delete a built-in strategy"
+                                            disabled
+                                            onClick={() => {}}
+                                        />
+                                    ) : (
+                                        <IconButton
+                                            name="delete"
+                                            title="Delete acitvation strategy"
+                                            onClick={() => removeStrategy(strategy)}
+                                        />
+                                    )}
+                                </span>
                             </ListItem>
                         ))
                     ) : (

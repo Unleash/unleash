@@ -166,3 +166,9 @@ test.serial('can reactivate a deprecated strategy', async t => {
         .expect(200)
         .expect(res => t.is(res.body.deprecated, false));
 });
+
+test.serial('cannot deprecate default strategy', async t => {
+    t.plan(0);
+    const request = await setupApp(stores);
+    await request.post('/api/admin/strategies/default/deprecate').expect(403);
+});

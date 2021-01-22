@@ -6,9 +6,11 @@
 - feat: add tag-types (#655)
 - feat: Added servicelayer (#685)
 - feat: Allow deprecation of strategies (#682)
+- feat: add lastSeenAt for feature toggles
 - fix: upgrade knex to 0.21.15
 - fix: Updated docs about event-types (#684)
 - fix: Add application-created event (#595)
+
 
 ## 3.9.0
 

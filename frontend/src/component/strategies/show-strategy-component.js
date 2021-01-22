@@ -32,6 +32,13 @@ class ShowStrategyComponent extends PureComponent {
         return (
             <div>
                 <Grid>
+                    {strategy.deprecated ? (
+                        <Cell>
+                            <h5 style={{ color: '#ff0000' }}>Deprecated</h5>
+                        </Cell>
+                    ) : (
+                        ''
+                    )}
                     <Cell col={12}>
                         <h6>Parameters</h6>
                         <hr />

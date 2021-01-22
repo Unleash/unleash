@@ -55,6 +55,7 @@ exports[`renders correctly with one strategy 1`] = `
   </div>
   <react-mdl-List>
     <react-mdl-ListItem
+      className=""
       twoLine={true}
     >
       <react-mdl-ListItemContent
@@ -64,16 +65,27 @@ exports[`renders correctly with one strategy 1`] = `
         <a
           href="/strategies/view/Another"
           onClick={[Function]}
+          title=""
         >
           <strong>
             Another
           </strong>
         </a>
       </react-mdl-ListItemContent>
-      <react-mdl-IconButton
-        name="delete"
-        onClick={[Function]}
-      />
+      <span>
+        <react-mdl-IconButton
+          color="#"
+          disabled={false}
+          name="visibility_off"
+          onClick={[Function]}
+          title="Deprecate acitvation strategy"
+        />
+        <react-mdl-IconButton
+          name="delete"
+          onClick={[Function]}
+          title="Delete acitvation strategy"
+        />
+      </span>
     </react-mdl-ListItem>
   </react-mdl-List>
 </react-mdl-Card>
@@ -120,6 +132,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
   </div>
   <react-mdl-List>
     <react-mdl-ListItem
+      className=""
       twoLine={true}
     >
       <react-mdl-ListItemContent
@@ -129,13 +142,28 @@ exports[`renders correctly with one strategy without permissions 1`] = `
         <a
           href="/strategies/view/Another"
           onClick={[Function]}
+          title=""
         >
           <strong>
             Another
           </strong>
         </a>
       </react-mdl-ListItemContent>
-      
+      <span>
+        <react-mdl-IconButton
+          color="#"
+          disabled={false}
+          name="visibility_off"
+          onClick={[Function]}
+          title="Deprecate acitvation strategy"
+        />
+        <react-mdl-IconButton
+          disabled={true}
+          name="delete"
+          onClick={[Function]}
+          title="You can not delete a built-in strategy"
+        />
+      </span>
     </react-mdl-ListItem>
   </react-mdl-List>
 </react-mdl-Card>

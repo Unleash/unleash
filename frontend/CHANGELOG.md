@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 The latest version of this document is always available in
 [releases][releases-url].
+# 3.10.0
+- feat: Can now deprecate and reactivate strategies (#235)
 # 3.9.1
 - fix: Tags viewable on archived features (#233)
 

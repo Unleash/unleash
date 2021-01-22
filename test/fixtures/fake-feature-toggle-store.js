@@ -30,6 +30,7 @@ module.exports = () => {
             _features.push(updatedFeature);
         },
         getFeatures: () => Promise.resolve(_features),
+        getFeaturesClient: () => Promise.resolve(_features),
         createFeature: feature => _features.push(feature),
         getArchivedFeatures: () => Promise.resolve(_archive),
         addArchivedFeature: feature => _archive.push(feature),

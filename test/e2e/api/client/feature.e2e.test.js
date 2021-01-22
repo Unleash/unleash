@@ -23,7 +23,18 @@ test.serial('returns four feature toggles', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.features.length === 4);
+            t.is(res.body.features.length, 4);
+        });
+});
+
+test.serial('returns four feature toggles without createdAt', async t => {
+    const request = await setupApp(stores);
+    return request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => {
+            t.falsy(res.body.features[0].createdAt);
         });
 });
 

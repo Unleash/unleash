@@ -3,7 +3,9 @@
 const NotFoundError = require('../../lib/error/notfound-error');
 
 module.exports = () => {
-    const _strategies = [{ name: 'default', editable: false, parameters: {} }];
+    const _strategies = [
+        { name: 'default', editable: false, parameters: {}, deprecated: false },
+    ];
 
     return {
         getStrategies: () => Promise.resolve(_strategies),
@@ -31,5 +33,23 @@ module.exports = () => {
                 _strategies.indexOf(({ name }) => name === strat.name),
                 1,
             ),
+        deprecateStrategy: ({ name }) => {
+            const deprecatedStrat = _strategies.find(s => s.name === name);
+            deprecatedStrat.deprecated = true;
+            _strategies.splice(
+                _strategies.indexOf(s => name === s.name),
+                1,
+            );
+            _strategies.push(deprecatedStrat);
+        },
+        reactivateStrategy: ({ name }) => {
+            const reactivatedStrat = _strategies.find(s => s.name === name);
+            reactivatedStrat.deprecated = false;
+            _strategies.splice(
+                _strategies.indexOf(s => name === s.name),
+                1,
+            );
+            _strategies.push(reactivatedStrat);
+        },
     };
 };

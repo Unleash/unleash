@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10.1
+
+- fix: remove fields from /api/client/features respnse (#692)
+
 ## 3.10.0
 
 - feat: add tags (#655)
@@ -10,7 +14,6 @@
 - fix: upgrade knex to 0.21.15
 - fix: Updated docs about event-types (#684)
 - fix: Add application-created event (#595)
-
 
 ## 3.9.0
 

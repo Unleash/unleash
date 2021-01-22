@@ -3,6 +3,8 @@
 module.exports = () => {
     const _features = [];
     const _archive = [];
+    const _featureTags = {};
+
     return {
         getFeature: name => {
             const toggle = _features.find(f => f.name === name);
@@ -29,8 +31,6 @@ module.exports = () => {
             );
             _features.push(updatedFeature);
         },
-        getFeatures: () => Promise.resolve(_features),
-        getFeaturesClient: () => Promise.resolve(_features),
         createFeature: feature => _features.push(feature),
         getArchivedFeatures: () => Promise.resolve(_archive),
         addArchivedFeature: feature => _archive.push(feature),
@@ -55,5 +55,51 @@ module.exports = () => {
             _archive.splice(0, _archive.length);
         },
         importFeature: feat => Promise.resolve(_features.push(feat)),
+        getFeatures: query => {
+            if (query) {
+                const activeQueryKeys = Object.keys(query).filter(
+                    t => query[t],
+                );
+                const filtered = _features.filter(feature => {
+                    return activeQueryKeys.every(key => {
+                        if (key === 'namePrefix') {
+                            return feature.name.indexOf(query[key]) > -1;
+                        }
+                        if (key === 'tag') {
+                            return query[key].some(tag => {
+                                return (
+                                    _featureTags[feature.name] &&
+                                    _featureTags[feature.name].some(t => {
+                                        return (
+                                            t.type === tag[0] &&
+                                            t.value === tag[1]
+                                        );
+                                    })
+                                );
+                            });
+                        }
+                        return query[key].some(v => v === feature[key]);
+                    });
+                });
+                return Promise.resolve(filtered);
+            }
+            return Promise.resolve(_features);
+        },
+        tagFeature: (featureName, tag) => {
+            _featureTags[featureName] = _featureTags[featureName] || [];
+            _featureTags[featureName].push(tag);
+        },
+        untagFeature: event => {
+            const tags = _featureTags[event.featureName];
+            _featureTags[event.featureName] = tags.splice(
+                tags.indexOf(
+                    t => t.type === event.type && t.value === event.value,
+                ),
+                1,
+            );
+        },
+        getAllTagsForFeature: featureName => {
+            return _featureTags[featureName] || [];
+        },
     };
 };

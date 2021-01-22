@@ -68,7 +68,27 @@ This endpoint should never return anything besides a valid _20X or 304-response_
 }
 ```
 
-You may limit the response by sending a `namePrefix` query-parameter.
+#### Filter feature toggles
+
+Supports three params for now
+
+- `tag` - filters for features tagged with tag
+- `project` - filters for features belonging to project
+- `namePrefix` - filters for features beginning with prefix
+
+For `tag` and `project` performs OR filtering if multiple arguments
+
+To filter for any feature tagged with a `simple` tag with value `taga` or a `simple` tag with value `tagb` use
+
+`GET https://unleash.host.com/api/client/features?tag[]=simple:taga&tag[]simple:tagb`
+
+To filter for any feature belonging to project `myproject` use
+
+`GET https://unleash.host.com/api/client/features?project=myproject`
+
+Response format is the same as `api/client/features`
+
+### Get specific feature toggle
 
 `GET: http://unleash.host.com/api/client/features/:featureName`
 

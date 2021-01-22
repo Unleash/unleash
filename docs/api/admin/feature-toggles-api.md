@@ -73,6 +73,28 @@ This endpoint is the one all admin ui should use to fetch all available feature 
 }
 ```
 
+#### Filter feature toggles
+
+Supports three params for now
+
+- `tag` - filters for features tagged with tag
+- `project` - filters for features belonging to project
+- `namePrefix` - filters for features beginning with prefix
+
+For `tag` and `project` performs OR filtering if multiple arguments
+
+To filter for any feature tagged with a `simple` tag with value `taga` or a `simple` tag with value `tagb` use
+
+`GET https://unleash.host.com/api/admin/features?tag[]=simple:taga&tag[]simple:tagb`
+
+To filter for any feature belonging to project `myproject` use
+
+`GET https://unleash.host.com/api/admin/features?project=myproject`
+
+Response format is the same as `api/admin/features`
+
+### Fetch specific feature toggle
+
 `GET: http://unleash.host.com/api/admin/features/:featureName`
 
 Used to fetch details about a specific featureToggle. This is mostly provded to make it easy to debug the API and should not be used by the client implementations.

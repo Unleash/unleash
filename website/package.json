@@ -13,6 +13,7 @@
     "docusaurus": "^1.14.6"
   },
   "resolutions": {
+    "immer": "^8.0.1",
     "minimist": "^1.2.5",
     "kind-of": "6.0.3",
     "highlight.js": "^10.4.1"

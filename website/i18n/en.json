@@ -26,6 +26,9 @@
       "api/admin/strategies": {
         "title": "/api/admin/strategies"
       },
+      "api/admin/tags": {
+        "title": "/api/admin/tags"
+      },
       "api/client/features": {
         "title": "/api/client/features"
       },
@@ -94,6 +97,9 @@
       },
       "securing_unleash": {
         "title": "Securing Unleash"
+      },
+      "tags": {
+        "title": "Tagging Features"
       },
       "unleash_context": {
         "title": "Unleash Context"

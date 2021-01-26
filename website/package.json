@@ -18,5 +18,8 @@
     "kind-of": "6.0.3",
     "highlight.js": "^10.4.1"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "highlight.js": "^10.4.1"
+  }
 }

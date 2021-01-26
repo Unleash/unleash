@@ -27,17 +27,13 @@ function pageUrl(page, language) {
   return siteConfig.baseUrl + (language ? `${language}/` : '') + page;
 }
 
-class Button extends React.Component {
-  render() {
-    return (
-      <div className="pluginWrapper buttonWrapper">
-        <a className="button" href={this.props.href} target={this.props.target}>
-          {this.props.children}
-        </a>
-      </div>
-    );
-  }
-}
+const Button = ({className = '', href, target, children}) => (
+  <div className="pluginWrapper buttonWrapper">
+    <a className={["button", className].join(' ')} href={href} target={target}>
+      {children}
+    </a>
+  </div>
+);
 
 Button.defaultProps = {
   target: '_self',
@@ -78,6 +74,7 @@ class HomeSplash extends React.Component {
     return (
       <SplashContainer>
         <div className="inner">
+          <Survey />
           <ProjectTitle />
           <a
               className="github-button"
@@ -89,8 +86,9 @@ class HomeSplash extends React.Component {
               aria-label="Star this project on GitHub">
               Star
             </a>
+          <FeatureCallout />
           <PromoSection>
-            <Button href={docUrl('getting_started.html', language)}>Getting Started</Button>
+            <Button className="primary" href={docUrl('getting_started.html', language)}>Getting Started</Button>
             <Button href="#try">Try It Out</Button>
             <Button href={siteConfig.repoUrl}>GitHub</Button>
           </PromoSection>
@@ -112,7 +110,7 @@ const Block = props => (
 );
 
 const FeatureCallout = () => (
-  <div className="productShowcaseSection paddingBottom" style={{textAlign: 'center'}}>
+  <div className="productShowcaseSection" style={{textAlign: 'center'}}>
     <p>
       Unleash is a feature toggle system, that gives you a great overview of all feature toggles across 
       all your applications and services. It comes with official client implementations for Java, Node.js, Go, Ruby, Python and .Net.
@@ -124,10 +122,23 @@ const FeatureCallout = () => (
   </div>
 );
 
+const Survey = () => (
+  <div className="productShowcaseSection">
+    <p className="alert alert-warning">
+      Support us in making Unleash even better by participating in this&nbsp;
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeCM5RUG-r8x4iynYNAlge_RCI77NDg61t28rixV3BBgVra0w/viewform" target="_blank">
+        Unleash Open-Source survey.
+      </a>&nbsp;
+      By participating you will also have the chance to win a $25 Amazon gift card.
+    </p>
+  </div>
+);
+
 const SASSOffering = () => (
   <div className="productShowcaseSection">
-    <p className="sassOffering">
-      Unleash also comes in a enterprise edition with additional features and a hosted option (SaaS). Check out&nbsp;
+    <p className="alert alert-primary">
+      Unleash also comes in a enterprise edition with additional features and a hosted option. <br />
+      Check out&nbsp;
       <a href="https://www.unleash-hosted.com/open-source">unleash-hosted.com</a>
     </p>
   </div>
@@ -239,7 +250,6 @@ class Index extends React.Component {
         <HomeSplash language={language} config={this.props.config} />
         
         <div className="mainContainer" style={{ paddingTop: 0 }}>
-          <FeatureCallout />
           <UnleashClient />
           <TryOut />
           <ActivationStrategies />

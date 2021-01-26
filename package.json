@@ -37,11 +37,11 @@
     "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website server-dev.js",
     "db-migrate": "db-migrate",
     "lint": "eslint .",
-    "pretest": "npm run lint",
+    "pretest": "yarn run lint",
     "test": "NODE_ENV=test PORT=4243 ava",
     "test:docker": "./scripts/docker-postgres.sh",
-    "test:watch": "npm run test -- --watch",
-    "test:coverage": "nyc --reporter=lcov npm run test",
+    "test:watch": "yarn test --watch",
+    "test:coverage": "nyc --reporter=lcov yarn test",
     "test:coverage-report": "nyc report --reporter=text-lcov | coveralls"
   },
   "nyc": {

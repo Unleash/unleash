@@ -76,7 +76,7 @@ async function setupDatabase(stores) {
     await Promise.all(createApplications(stores.clientApplicationsStore));
     await Promise.all(createProjects(stores.projectStore));
     await Promise.all(createTagTypes(stores.tagTypeStore));
-    await tagFeatures(stores.tagStore, stores.featureTagStore);
+    await tagFeatures(stores.tagStore, stores.featureToggleStore);
 }
 
 module.exports = async function init(databaseSchema = 'test', getLogger) {

@@ -62,10 +62,23 @@ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 
 ### Option three - use Docker
 
-Launch the [Unleash server Docker image](https://hub.docker.com/r/unleashorg/unleash-server/).
+[View the image on dockerhub](https://hub.docker.com/r/unleashorg/unleash-server/)
+
+#### Docker-compose
+
+1. Clone the [unleash-docker](https://github.com/Unleash/unleash-docker) repository.
+2. Run `docker-compose build` in repository root folder.
+3. Run `docker-compose up` in repository root folder.
+
+#### Manually
+
+1. Create a network by running `docker create network unleash`
+2. Run
 
 ```sh
-docker run -d -e DATABASE_URL=postgres://user:pass@10.200.221.11:5432/unleash unleashorg/unleash-server
+docker run -e POSTGRES_PASSWORD={INSERT_PASSWORD} -e POSTGRES_USER={INSERT_USER} -e POSTGRES_DB=unleash --network unleash postgres
+
+docker run -p 4242:4242 --network unleash -e DATABASE_URL=postgres://{INSERT_USER}:{INSERT_PASSWORD}@postgres:5432/unleash unleashorg/unleash-server
 ```
 
 ## Test your server and create a sample API call

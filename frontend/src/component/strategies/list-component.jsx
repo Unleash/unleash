@@ -60,13 +60,13 @@ class StrategiesListComponent extends Component {
                                     {strategy.deprecated ? (
                                         <IconButton
                                             name="visibility"
-                                            title="Reactivate acitvation strategy"
+                                            title="Reactivate activation strategy"
                                             onClick={() => reactivateStrategy(strategy)}
                                         />
                                     ) : (
                                         <IconButton
                                             name="visibility_off"
-                                            title="Deprecate acitvation strategy"
+                                            title="Deprecate activation strategy"
                                             disabled={strategy.name === 'default'}
                                             color="#"
                                             onClick={() => deprecateStrategy(strategy)}
@@ -82,7 +82,7 @@ class StrategiesListComponent extends Component {
                                     ) : (
                                         <IconButton
                                             name="delete"
-                                            title="Delete acitvation strategy"
+                                            title="Delete activation strategy"
                                             onClick={() => removeStrategy(strategy)}
                                         />
                                     )}

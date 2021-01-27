@@ -31,6 +31,13 @@ module.exports = () => {
             );
             _features.push(updatedFeature);
         },
+        archiveFeature: feature => {
+            _features.slice(
+                _features.indexOf(({ name }) => name === feature.name),
+                1,
+            );
+            _archive.push(feature);
+        },
         createFeature: feature => _features.push(feature),
         getArchivedFeatures: () => Promise.resolve(_archive),
         addArchivedFeature: feature => _archive.push(feature),

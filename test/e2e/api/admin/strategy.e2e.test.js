@@ -172,3 +172,30 @@ test.serial('cannot deprecate default strategy', async t => {
     const request = await setupApp(stores);
     await request.post('/api/admin/strategies/default/deprecate').expect(403);
 });
+
+test.serial('can update a exiting strategy with deprecated', async t => {
+    t.plan(0);
+    const request = await setupApp(stores);
+
+    await request
+        .post('/api/admin/strategies')
+        .send({
+            name: 'myCustomStrategyDepreacted',
+            description: 'Best strategy ever.',
+            parameters: [],
+            deprecated: true,
+        })
+        .set('Content-Type', 'application/json');
+
+    const { body: strategy } = await request.get(
+        '/api/admin/strategies/myCustomStrategyDepreacted',
+    );
+
+    strategy.description = 'A new desc';
+
+    return request
+        .put('/api/admin/strategies/default')
+        .send(strategy)
+        .set('Content-Type', 'application/json')
+        .expect(200);
+});

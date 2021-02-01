@@ -78,12 +78,12 @@ exports[`renders correctly with one strategy 1`] = `
           disabled={false}
           name="visibility_off"
           onClick={[Function]}
-          title="Deprecate acitvation strategy"
+          title="Deprecate activation strategy"
         />
         <react-mdl-IconButton
           name="delete"
           onClick={[Function]}
-          title="Delete acitvation strategy"
+          title="Delete activation strategy"
         />
       </span>
     </react-mdl-ListItem>
@@ -155,7 +155,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
           disabled={false}
           name="visibility_off"
           onClick={[Function]}
-          title="Deprecate acitvation strategy"
+          title="Deprecate activation strategy"
         />
         <react-mdl-IconButton
           disabled={true}

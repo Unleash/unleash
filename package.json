@@ -37,7 +37,6 @@
     "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website server-dev.js",
     "db-migrate": "db-migrate",
     "lint": "eslint .",
-    "pretest": "yarn run lint",
     "test": "NODE_ENV=test PORT=4243 ava",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "yarn test --watch",

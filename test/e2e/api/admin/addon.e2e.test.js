@@ -6,6 +6,8 @@ const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
+const MASKED_VALUE = '*****';
+
 let stores;
 
 test.before(async () => {
@@ -84,7 +86,7 @@ test.serial('should delete addon configuration', async t => {
 });
 
 test.serial('should update addon configuration', async t => {
-    t.plan(1);
+    t.plan(2);
     const request = await setupApp(stores);
 
     const config = {
@@ -122,7 +124,11 @@ test.serial('should update addon configuration', async t => {
         .send(config)
         .expect(200)
         .expect(r => {
-            t.is(r.body.parameters.url, updatedConfig.parameters.url);
+            t.is(r.body.parameters.url, MASKED_VALUE);
+            t.is(
+                r.body.parameters.bodyTemplate,
+                updatedConfig.parameters.bodyTemplate,
+            );
         });
 });
 
@@ -145,7 +151,7 @@ test.serial('should not update with invalid addon configuration', async t => {
         .expect(400);
 });
 
-test.serial('should not update unknwn addon configuration', async t => {
+test.serial('should not update unknown addon configuration', async t => {
     t.plan(0);
     const request = await setupApp(stores);
 
@@ -166,7 +172,7 @@ test.serial('should not update unknwn addon configuration', async t => {
 });
 
 test.serial('should get addon configuration', async t => {
-    t.plan(1);
+    t.plan(3);
     const request = await setupApp(stores);
 
     const config = {
@@ -191,10 +197,15 @@ test.serial('should get addon configuration', async t => {
         .expect(200)
         .expect(r => {
             t.is(r.body.provider, config.provider);
+            t.is(
+                r.body.parameters.bodyTemplate,
+                config.parameters.bodyTemplate,
+            );
+            t.is(r.body.parameters.url, MASKED_VALUE);
         });
 });
 
-test.serial('should not get unkown addon configuration', async t => {
+test.serial('should not get unknown addon configuration', async t => {
     t.plan(0);
     const request = await setupApp(stores);
 

@@ -18,7 +18,7 @@ module.exports = () => {
             Promise.resolve();
         },
         get: async id => {
-            return _addons.find(id);
+            return _addons[id];
         },
         getAll: () => Promise.resolve(_addons),
     };

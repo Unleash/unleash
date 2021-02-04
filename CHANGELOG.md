@@ -21,6 +21,9 @@
 - docs: update getting started guide with docker options (#697)
 - fix typo in /api/client/features docs (#694)
 - fix: website: require immer 8.0.1 or higher
+- fix: Add support for configuring database pool size (#705)
+- feat: Set default min dbpool size to 0
+- feat: Set default max dbpool size to 4
 
 ## 3.10.1
 

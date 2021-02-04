@@ -16,6 +16,11 @@ const unleashOptions = {
     port: 5432,
     database: 'unleash',
     ssl: false,
+    pool: {
+      min: 0,
+      max: 4,
+      idleTimeoutMillis: 30000,
+    },
   },
   enableRequestLogger: true,
 };
@@ -33,6 +38,10 @@ unleash.start(unleashOptions);
   - _database_ - the database name to be used (`DATABASE_NAME`)
   - _ssl_ - an object describing ssl options, see https://node-postgres.com/features/ssl (`DATABASE_SSL`, as a stringified json object)
   - _version_ - the postgres database version. Used to connect a non-standard database. Defaults to `undefined`, which let the underlying adapter to detect the version automatically. (`DATABASE_VERSION`)
+  - _pool_ - an object describing pool options, see https://knexjs.org/#Installation-pooling. We support the following three fields:
+    - _min_ - minimum connections in connections pool (defaults to 0) (`DATABASE_POOL_MIN`)
+    - _max_ - maximum connections in connections pool (defaults to 4) (`DATABASE_POOL_MAX`)
+    - _idleTimeoutMillis_ - time in milliseconds a connection must be idle before being marked as a candidate for eviction (defaults to 30000) (`DATABASE_POOL_IDLE_TIMEOUT_MS`)
 - **databaseUrl** - (_deprecated_) the postgres database url to connect to. Only used if _db_ object is not specified. Should include username/password. This value may also be set via the `DATABASE_URL` environment variable. Alternatively, if you would like to read the database url from a file, you may set the `DATABASE_URL_FILE` environment variable with the full file path. The contents of the file must be the database url exactly.
 - **databaseSchema** - the postgres database schema to use. Defaults to 'public'. (`DATABASE_SCHEMA`)
 - **port** - which port the unleash-server should bind to. If port is omitted or is 0, the operating system will assign an arbitrary unused port. Will be ignored if pipe is specified. This value may also be set via the `HTTP_PORT` environment variable
@@ -93,3 +102,8 @@ function getLogger(name) {
 ```
 
 The logger interface with its `debug`, `info`, `warn` and `error` methods expects format string support as seen in `debug` or the JavaScript `console` object. Many commonly used logging implementations cover this API, e.g., bunyan, pino or winston.
+
+## Database pooling connection timeouts
+
+- Please be aware of the default values of connection pool about idle session handling.
+- If you have a network component which closes idle sessions on tcp layer, please ensure, that the connection pool idleTimeoutMillis setting is lower than the timespan as the network component will close the idle connection.

@@ -82,10 +82,8 @@ async function setupDatabase(stores) {
 
 module.exports = async function init(databaseSchema = 'test', getLogger) {
     const options = {
-        db: dbConfig.getDb(),
+        db: { ...dbConfig.getDb(), pool: { min: 2, max: 8 } },
         databaseSchema,
-        minPool: 1,
-        maxPool: 1,
         getLogger,
     };
 

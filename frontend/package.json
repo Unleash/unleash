@@ -28,7 +28,7 @@
     "build:assets": "NODE_ENV=production webpack -p --display-optimization-bailout",
     "build:html": "cp public/*.html dist/.",
     "build:ico": "cp public/*.ico dist/.",
-    "build:img": "cp public/*.png dist/public/.",
+    "build:img": "cp public/*.png dist/public/. && cp public/*.svg dist/public/.",
     "start": "NODE_ENV=development webpack-dev-server --progress --colors",
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com npm run start",
     "lint": "eslint . --ext js,jsx",

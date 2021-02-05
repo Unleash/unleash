@@ -3,7 +3,7 @@ id: configuring_unleash
 title: Configuring Unleash
 ---
 
-In order to custimize "anything" in Unleash you need to use [Unleash from Node.js](./getting_started#option-two---from-nodejs):
+In order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting_started#option-two---from-nodejs):
 
 ```js
 const unleash = require('unleash-server');
@@ -50,11 +50,12 @@ unleash.start(unleashOptions);
 - **getLogger** (function) - Used to register a [custom log provider](#how-do-i-configure-the-log-output).
 - **eventHook** (`function(event, data)`) - If provided, this function will be invoked whenever a feature is mutated. The possible values for `event` are `'feature-created'`, `'feature-updated'`, `'feature-archived'`, `'feature-revived'`. The `data` argument contains information about the mutation. Its fields are `type` (string) - the event type (same as `event`); `createdBy` (string) - the user who performed the mutation; `data` - the contents of the change. The contents in `data` differs based on the event type; For `'feature-archived'` and `'feature-revived'`, the only field will be `name` - the name of the feature. For `'feature-created'` and `'feature-updated'` the data follows a schema defined in the code [here](https://github.com/Unleash/unleash/blob/master/lib/routes/admin-api/feature-schema.js#L38-L59). See an example [here](./guides/feature-updates-to-slack.md).
 - **baseUriPath** (string) - use to register a base path for all routes on the application. For example `/my/unleash/base` (note the starting /). Defaults to `/`. Can also be configured through the environment variable `BASE_URI_PATH`.
+- **unleashUrl** (string) - Used to specify the official URL this instance of Unleash can be accessed at for an end user. Can also be configured through the environment variable `UNLEASH_URL`.
 - **secureHeaders** (boolean) - use this to enable security headers (HSTS, CSP, etc) when serving Unleash from HTTPS. Can also be configured through the environment variable `SECURE_HEADERS`.
 
 ### Disabling Auto-Start
 
-If you're using Unleash as part of a larger express app, you can disable the automatic server start by calling `server.create`. It takes the same options as `sevrer.start`, but will not begin listening for connections.
+If you're using Unleash as part of a larger express app, you can disable the automatic server start by calling `server.create`. It takes the same options as `server.start`, but will not begin listening for connections.
 
 ```js
 const unleash = require('unleash-server');

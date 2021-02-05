@@ -6,8 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 The latest version of this document is always available in
 [releases][releases-url].
+
+# 3.11.0
+- feat: Addon support from UI (#236)
+- fix: Use type and value from action to remove tag (#238)
+- fix: add missing space (#239)
+- fix: error in snapshot
+
 # 3.10.0
 - feat: Can now deprecate and reactivate strategies (#235)
+
 # 3.9.1
 - fix: Tags viewable on archived features (#233)
 

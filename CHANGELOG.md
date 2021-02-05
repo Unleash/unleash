@@ -1,8 +1,26 @@
 # Changelog
 
-## 3.11
+## 3.11.x (unreleased)
 
 - feat: Add support for filtering toggles on tags, projects or namePrefix (#690)
+- feat: Introduce addon framework
+- feat: Added tags to events table and emitted events
+- fix: upgrade prom-client from 12.0.0 to 13.1.0
+- fix: hide jira addon for now
+- fix: upgrade unleash-frontend to version 3.11.1
+- fix: Add a test for validation of empty params
+- fix: add docs for addons
+- fix: Add validation of required parameters
+- fix: add unleashUrl option
+- fix: Addons should support sensitive params
+- fix: should wait for seen apps
+- fix: typo in message in simple-authentication.js (#707)
+- fix: even-store should not block on emit
+- fix: Added the ability to specify db-schema via ENV (#702)
+- fix: Strategy schema should allow deprecated field (#700)
+- docs: update getting started guide with docker options (#697)
+- fix typo in /api/client/features docs (#694)
+- fix: website: require immer 8.0.1 or higher
 
 ## 3.10.1
 

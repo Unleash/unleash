@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.11.1
+- fix: make sure we also bundle SVG in public
+
 # 3.11.0
 - feat: Addon support from UI (#236)
 - fix: Use type and value from action to remove tag (#238)

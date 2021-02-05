@@ -29,15 +29,15 @@ A flexible rollout strategy which combines all gradual rollout strategies in to 
 
 - **stickiness** is used to define how we guarantee consistency for gradual rollout. The same userId and the same rollout percentage should give predictable results. Configuration that should be supported:
   - **default** - Unleash chooses the first value present on the context in defined order userId, sessionId, random.
-  - **userId** - guaranteed to be sticky on userId. If userId not present the behaviour would be false
-  - **sessionId** - guaranteed to be sticky on sessionId. If sessionId not present the behaviour would be false.
+  - **userId** - guaranteed to be sticky on userId. If userId not present the behavior would be false
+  - **sessionId** - guaranteed to be sticky on sessionId. If sessionId not present the behavior would be false.
   - **random** - no stickiness guaranteed. For every isEnabled call it will yield a random true/false based on the selected rollout percentage.
-- **groupId** is used to ensure that different toggles will **hash differently** for the same user. The groupId defaults to _feature toggle name_, but is overridable by the user to _correlate rollout_ of multiple feature toggles.
+- **groupId** is used to ensure that different toggles will **hash differently** for the same user. The groupId defaults to _feature toggle name_, but the use can override it to _correlate rollout_ of multiple feature toggles.
 - **rollout** The percentage (0-100) you want to enable the feature toggle for.
 
 ## gradualRolloutUserId
 
-The `gradualRolloutUserId` strategy gradually activates a feature toggle for logged in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalise the hash value to a number between 1 and 100 with a simple modulo operator.
+The `gradualRolloutUserId` strategy gradually activates a feature toggle for logged in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.
 
 ![hash_and_normalise](assets/hash_and_normalise.png)
 

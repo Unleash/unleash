@@ -8,11 +8,17 @@
       "activation_strategy": {
         "title": "Activation Strategies"
       },
-      "addons": {
-        "title": "Unleash Addons"
+      "addons/index": {
+        "title": "Addons Introduction"
+      },
+      "addons/jira-commenter": {
+        "title": "Jira commenter"
+      },
+      "addons/slack": {
+        "title": "Slack"
       },
       "addons/webhook": {
-        "title": "Unleash Webhook addon"
+        "title": "Webhook"
       },
       "api/admin/addons": {
         "title": "/api/admin/addons"
@@ -121,6 +127,7 @@
     },
     "categories": {
       "User Documentation": "User Documentation",
+      "Addons": "Addons",
       "Developer Guide": "Developer Guide",
       "Guides": "Guides",
       "Client": "Client",

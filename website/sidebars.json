@@ -9,9 +9,14 @@
       "securing_unleash",
       "unleash_context",
       "activation_strategy",
-      "addons",
       "client_specification",
       "migration_guide"
+    ],
+    "Addons": [
+      "addons/index",
+      "addons/webhook",
+      "addons/slack",
+      "addons/jira-commenter"
     ],
     "Developer Guide": [
       "developer_guide",

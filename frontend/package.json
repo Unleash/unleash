@@ -1,7 +1,7 @@
 {
   "name": "unleash-frontend",
   "description": "unleash your features",
-  "version": "3.10.0",
+  "version": "3.11.0",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -113,6 +113,8 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ],
-    "testPathIgnorePatterns": ["/src/store/addons/__tests__/data.js"]
+    "testPathIgnorePatterns": [
+      "/src/store/addons/__tests__/data.js"
+    ]
   }
 }

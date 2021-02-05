@@ -17,3 +17,5 @@ export function dispatchAndThrow(dispatch, type) {
         throw error;
     };
 }
+
+export const success = (dispatch, type, val) => value => dispatch({ type, value: val ? val : value });

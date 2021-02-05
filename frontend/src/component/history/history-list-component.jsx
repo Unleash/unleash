@@ -8,6 +8,19 @@ import { formatFullDateTimeWithLocale } from '../common/util';
 
 import styles from './history.module.scss';
 
+const getName = name => {
+    if (name) {
+        return (
+            <React.Fragment>
+                <dt>Name: </dt>
+                <dd>{name}</dd>
+            </React.Fragment>
+        );
+    } else {
+        return null;
+    }
+};
+
 const HistoryMeta = ({ entry, timeFormatted }) => (
     <div>
         <dl>
@@ -17,8 +30,7 @@ const HistoryMeta = ({ entry, timeFormatted }) => (
             <dd title={entry.createdBy}>{entry.createdBy}</dd>
             <dt>Type: </dt>
             <dd>{entry.type}</dd>
-            <dt>Name: </dt>
-            <dd>{entry.data.name}</dd>
+            {getName(entry.data.name)}
         </dl>
         <strong>Change</strong>
         <HistoryItemDiff entry={entry} />

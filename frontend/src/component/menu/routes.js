@@ -23,7 +23,9 @@ import CreateTagType from '../../page/tag-types/create';
 import EditTagType from '../../page/tag-types/edit';
 import ListTags from '../../page/tags';
 import CreateTag from '../../page/tags/create';
-
+import Addons from '../../page/addons';
+import AddonsCreate from '../../page/addons/create';
+import AddonsEdit from '../../page/addons/edit';
 export const routes = [
     // Features
     { path: '/features/create', parent: '/features', title: 'Create', component: CreateFeatureToggle },
@@ -69,6 +71,11 @@ export const routes = [
 
     { path: '/tags/create', parent: '/tags', title: 'Create', component: CreateTag },
     { path: '/tags', title: 'Tags', icon: 'label', component: ListTags, hidden: true },
+
+    // Addons
+    { path: '/addons/create/:provider', parent: '/addons', title: 'Create', component: AddonsCreate },
+    { path: '/addons/edit/:id', parent: '/addons', title: 'Edit', component: AddonsEdit },
+    { path: '/addons', title: 'Addons', icon: 'device_hub', component: Addons, hidden: false },
 
     { path: '/logout', title: 'Sign out', icon: 'exit_to_app', component: LogoutFeatures },
 ];

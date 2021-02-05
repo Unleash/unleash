@@ -109,6 +109,19 @@ exports[`should render DrawerMenu 1`] = `
     <a
       aria-current={null}
       className="navigationLink mdl-color-text--grey-900"
+      href="/addons"
+      onClick={[Function]}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="device_hub"
+      />
+       
+      Addons
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-900"
       href="/logout"
       onClick={[Function]}
     >
@@ -233,6 +246,19 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       />
        
       Tag types
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-900"
+      href="/addons"
+      onClick={[Function]}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="device_hub"
+      />
+       
+      Addons
     </a>
     <a
       aria-current={null}

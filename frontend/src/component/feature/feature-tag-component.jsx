@@ -11,8 +11,19 @@ function FeatureTagComponent({ tags, tagTypes, featureToggleName, untagFeature }
 
     const tagIcon = typeName => {
         let tagType = tagTypes.find(type => type.name === typeName);
+        const style = { width: '20px', height: '20px', margin: '0' };
+
         if (tagType && tagType.icon) {
-            return <Icon name={tagType.icon} />;
+            switch (tagType.name) {
+                case 'slack':
+                    return <img style={style} src="public/slack.svg" />;
+                case 'jira':
+                    return <img style={style} src="public/jira.svg" />;
+                case 'webhook':
+                    return <img style={style} src="public/webhooks.svg" />;
+                default:
+                    return <Icon name={tagType.icon} />;
+            }
         } else {
             return <span>{typeName[0].toUpperCase()}</span>;
         }
@@ -21,12 +32,12 @@ function FeatureTagComponent({ tags, tagTypes, featureToggleName, untagFeature }
     const renderTag = t => (
         <Chip
             onClose={() => onUntagFeature(t)}
-            title={t.value}
+            title={`Type: ${t.type} \nValue: ${t.value}`}
             key={`${t.type}:${t.value}`}
             style={{ marginRight: '3px', fontSize: '0.8em' }}
         >
-            <ChipContact className="mdl-color--grey-500">{tagIcon(t.type)}</ChipContact>
-            {t.value}
+            <ChipContact>{tagIcon(t.type)}</ChipContact>
+            <span style={{ paddingRight: '3px' }}>{t.value}</span>
         </Chip>
     );
 

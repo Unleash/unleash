@@ -1,0 +1,189 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should add addon-config 1`] = `
+Object {
+  "addons": Array [
+    Object {
+      "description": null,
+      "enabled": true,
+      "events": Array [
+        "feature-updated",
+        "feature-created",
+      ],
+      "id": 1,
+      "parameters": Object {
+        "bodyTemplate": "{'name': '{{event.data.name}}' }",
+        "url": "http://localhost:4242/webhook",
+      },
+      "provider": "webhook",
+    },
+  ],
+  "providers": Array [
+    Object {
+      "displayName": "Webhook",
+      "events": Array [
+        "feature-created",
+        "feature-updated",
+        "feature-archived",
+        "feature-revived",
+      ],
+      "name": "webhook",
+      "parameters": Array [
+        Object {
+          "displayName": "Webhook URL",
+          "name": "url",
+          "type": "string",
+        },
+        Object {
+          "displayName": "Unleash Admin UI url",
+          "name": "unleashUrl",
+          "type": "text",
+        },
+        Object {
+          "description": "You may format the body using a mustache template.",
+          "displayName": "Body template",
+          "name": "bodyTemplate",
+          "type": "text",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`should be default state 1`] = `
+Object {
+  "addons": Array [],
+  "providers": Array [],
+}
+`;
+
+exports[`should be merged state all 1`] = `
+Object {
+  "addons": Array [],
+  "providers": Array [
+    Object {
+      "displayName": "Webhook",
+      "events": Array [
+        "feature-created",
+        "feature-updated",
+        "feature-archived",
+        "feature-revived",
+      ],
+      "name": "webhook",
+      "parameters": Array [
+        Object {
+          "displayName": "Webhook URL",
+          "name": "url",
+          "type": "string",
+        },
+        Object {
+          "displayName": "Unleash Admin UI url",
+          "name": "unleashUrl",
+          "type": "text",
+        },
+        Object {
+          "description": "You may format the body using a mustache template.",
+          "displayName": "Body template",
+          "name": "bodyTemplate",
+          "type": "text",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`should clear addon-config on logout 1`] = `
+Object {
+  "addons": Array [],
+  "providers": Array [],
+}
+`;
+
+exports[`should remove addon-config 1`] = `
+Object {
+  "addons": Array [],
+  "providers": Array [
+    Object {
+      "displayName": "Webhook",
+      "events": Array [
+        "feature-created",
+        "feature-updated",
+        "feature-archived",
+        "feature-revived",
+      ],
+      "name": "webhook",
+      "parameters": Array [
+        Object {
+          "displayName": "Webhook URL",
+          "name": "url",
+          "type": "string",
+        },
+        Object {
+          "displayName": "Unleash Admin UI url",
+          "name": "unleashUrl",
+          "type": "text",
+        },
+        Object {
+          "description": "You may format the body using a mustache template.",
+          "displayName": "Body template",
+          "name": "bodyTemplate",
+          "type": "text",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`should update addon-config 1`] = `
+Object {
+  "addons": Array [
+    Object {
+      "description": "new desc",
+      "enabled": false,
+      "events": Array [
+        "feature-updated",
+        "feature-created",
+      ],
+      "id": 1,
+      "parameters": Object {
+        "bodyTemplate": "{'name': '{{event.data.name}}' }",
+        "url": "http://localhost:4242/webhook",
+      },
+      "provider": "webhook",
+    },
+  ],
+  "providers": Array [
+    Object {
+      "displayName": "Webhook",
+      "events": Array [
+        "feature-created",
+        "feature-updated",
+        "feature-archived",
+        "feature-revived",
+      ],
+      "name": "webhook",
+      "parameters": Array [
+        Object {
+          "displayName": "Webhook URL",
+          "name": "url",
+          "type": "string",
+        },
+        Object {
+          "displayName": "Unleash Admin UI url",
+          "name": "unleashUrl",
+          "type": "text",
+        },
+        Object {
+          "description": "You may format the body using a mustache template.",
+          "displayName": "Body template",
+          "name": "bodyTemplate",
+          "type": "text",
+        },
+      ],
+    },
+  ],
+}
+`;

@@ -52,6 +52,13 @@ exports[`should render DrawerMenu 1`] = `
       </a>
       <a
         aria-current={null}
+        href="/addons"
+        onClick={[Function]}
+      >
+        Addons
+      </a>
+      <a
+        aria-current={null}
         href="/logout"
         onClick={[Function]}
       >
@@ -160,6 +167,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         onClick={[Function]}
       >
         Tag types
+      </a>
+      <a
+        aria-current={null}
+        href="/addons"
+        onClick={[Function]}
+      >
+        Addons
       </a>
       <a
         aria-current={null}

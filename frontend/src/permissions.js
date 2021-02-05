@@ -17,6 +17,9 @@ export const DELETE_TAG_TYPE = 'DELETE_TAG_TYPE';
 export const UPDATE_TAG_TYPE = 'UPDATE_TAG_TYPE';
 export const CREATE_TAG = 'CREATE_TAG';
 export const DELETE_TAG = 'DELETE_TAG';
+export const CREATE_ADDON = 'CREATE_ADDON';
+export const UPDATE_ADDON = 'UPDATE_ADDON';
+export const DELETE_ADDON = 'DELETE_ADDON';
 
 export function hasPermission(user, permission) {
     return (

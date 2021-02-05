@@ -15,6 +15,7 @@ import applications from './application';
 import uiConfig from './ui-config';
 import context from './context';
 import projects from './project';
+import addons from './addons';
 
 const unleashStore = combineReducers({
     features,
@@ -33,6 +34,7 @@ const unleashStore = combineReducers({
     uiConfig,
     context,
     projects,
+    addons,
 });
 
 export default unleashStore;

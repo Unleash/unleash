@@ -40,6 +40,13 @@ Array [
   },
   Object {
     "component": [Function],
+    "hidden": false,
+    "icon": "device_hub",
+    "path": "/addons",
+    "title": "Addons",
+  },
+  Object {
+    "component": [Function],
     "icon": "exit_to_app",
     "path": "/logout",
     "title": "Sign out",
@@ -195,6 +202,25 @@ Array [
     "icon": "label",
     "path": "/tags",
     "title": "Tags",
+  },
+  Object {
+    "component": [Function],
+    "parent": "/addons",
+    "path": "/addons/create/:provider",
+    "title": "Create",
+  },
+  Object {
+    "component": [Function],
+    "parent": "/addons",
+    "path": "/addons/edit/:id",
+    "title": "Edit",
+  },
+  Object {
+    "component": [Function],
+    "hidden": false,
+    "icon": "device_hub",
+    "path": "/addons",
+    "title": "Addons",
   },
   Object {
     "component": [Function],

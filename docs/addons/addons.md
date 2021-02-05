@@ -14,3 +14,7 @@ Currently Unleash support the following Addons out of the box:
 - [Jira Commenter](./jira-commenter) - Allows Unleash to post comments to jira issues (beta).
 
 In future releases we plan to support community built addons.
+
+### Notes
+
+When updating or creating a new addon configuration it can take up to one minute before Unleash picks up the new config on all instances due to caching.

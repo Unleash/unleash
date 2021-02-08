@@ -1,6 +1,7 @@
 'use strict';
 
 const test = require('ava');
+const faker = require('faker');
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
@@ -338,24 +339,25 @@ test.serial(
 test.serial('can untag feature', async t => {
     t.plan(1);
     const request = await setupApp(stores);
+    const feature1Name = faker.helpers.slugify(faker.lorem.words(3));
     await request.post('/api/admin/features').send({
-        name: 'test.feature',
+        name: feature1Name,
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    const tag = { value: 'TeamGreen', type: 'simple' };
+    const tag = { value: faker.lorem.word(), type: 'simple' };
     await request
-        .post('/api/admin/features/test.feature/tags')
+        .post(`/api/admin/features/${feature1Name}/tags`)
         .send(tag)
         .expect(201);
     await request
         .delete(
-            `/api/admin/features/test.feature/tags/${tag.type}/${tag.value}`,
+            `/api/admin/features/${feature1Name}/tags/${tag.type}/${tag.value}`,
         )
         .expect(200);
     return request
-        .get('/api/admin/features/test.feature/tags')
+        .get(`/api/admin/features/${feature1Name}/tags`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
@@ -366,76 +368,85 @@ test.serial('can untag feature', async t => {
 test.serial('Can get features tagged by tag', async t => {
     t.plan(2);
     const request = await setupApp(stores);
+    const feature1Name = faker.helpers.slugify(faker.lorem.words(3));
+    const feature2Name = faker.helpers.slugify(faker.lorem.words(3));
     await request.post('/api/admin/features').send({
-        name: 'test.feature',
+        name: feature1Name,
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
     await request.post('/api/admin/features').send({
-        name: 'test.feature2',
+        name: feature2Name,
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    const tag = { value: 'Crazy', type: 'simple' };
+    const tag = { value: faker.lorem.word(), type: 'simple' };
     await request
-        .post('/api/admin/features/test.feature/tags')
+        .post(`/api/admin/features/${feature1Name}/tags`)
         .send(tag)
         .expect(201);
     return request
-        .get('/api/admin/features?tag=simple:Crazy')
+        .get(`/api/admin/features?tag=${tag.type}:${tag.value}`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
             t.is(res.body.features.length, 1);
-            t.is(res.body.features[0].name, 'test.feature');
+            t.is(res.body.features[0].name, feature1Name);
         });
 });
 test.serial('Can query for multiple tags using OR', async t => {
     t.plan(2);
     const request = await setupApp(stores);
+    const feature1Name = faker.helpers.slugify(faker.lorem.words(3));
+    const feature2Name = faker.helpers.slugify(faker.lorem.words(3));
     await request.post('/api/admin/features').send({
-        name: 'test.feature',
+        name: feature1Name,
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
     await request.post('/api/admin/features').send({
-        name: 'test.feature2',
+        name: feature2Name,
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    const tag = { value: 'Crazy', type: 'simple' };
-    const tag2 = { value: 'tagb', type: 'simple' };
+    const tag = { value: faker.name.firstName(), type: 'simple' };
+    const tag2 = { value: faker.name.firstName(), type: 'simple' };
     await request
-        .post('/api/admin/features/test.feature/tags')
+        .post(`/api/admin/features/${feature1Name}/tags`)
         .send(tag)
         .expect(201);
     await request
-        .post('/api/admin/features/test.feature2/tags')
+        .post(`/api/admin/features/${feature2Name}/tags`)
         .send(tag2)
         .expect(201);
     return request
-        .get('/api/admin/features?tag[]=simple:Crazy&tag[]=simple:tagb')
+        .get(
+            `/api/admin/features?tag[]=${tag.type}:${tag.value}&tag[]=${tag2.type}:${tag2.value}`,
+        )
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
             t.is(res.body.features.length, 2);
-            t.is(res.body.features[0].name, 'test.feature');
+            t.is(res.body.features[0].name, feature1Name);
         });
 });
 test.serial('Querying with multiple filters ANDs the filters', async t => {
     const request = await setupApp(stores);
+    const feature1Name = `test.${faker.helpers.slugify(faker.hacker.phrase())}`;
+    const feature2Name = faker.helpers.slugify(faker.lorem.words());
+
     await request.post('/api/admin/features').send({
-        name: 'test.feature',
+        name: feature1Name,
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
     await request.post('/api/admin/features').send({
-        name: 'test.feature2',
+        name: feature2Name,
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
@@ -446,14 +457,14 @@ test.serial('Querying with multiple filters ANDs the filters', async t => {
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    const tag = { value: 'Crazy', type: 'simple' };
-    const tag2 = { value: 'tagb', type: 'simple' };
+    const tag = { value: faker.lorem.word(), type: 'simple' };
+    const tag2 = { value: faker.name.firstName(), type: 'simple' };
     await request
-        .post('/api/admin/features/test.feature/tags')
+        .post(`/api/admin/features/${feature1Name}/tags`)
         .send(tag)
         .expect(201);
     await request
-        .post('/api/admin/features/test.feature2/tags')
+        .post(`/api/admin/features/${feature2Name}/tags`)
         .send(tag2)
         .expect(201);
     await request
@@ -461,16 +472,48 @@ test.serial('Querying with multiple filters ANDs the filters', async t => {
         .send(tag)
         .expect(201);
     await request
-        .get('/api/admin/features?tag=simple:Crazy')
+        .get(`/api/admin/features?tag=${tag.type}:${tag.value}`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => t.is(res.body.features.length, 2));
     await request
-        .get('/api/admin/features?namePrefix=test&tag=simple:Crazy')
+        .get(`/api/admin/features?namePrefix=test&tag=${tag.type}:${tag.value}`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
             t.is(res.body.features.length, 1);
-            t.is(res.body.features[0].name, 'test.feature');
+            t.is(res.body.features[0].name, feature1Name);
         });
 });
+
+test.serial(
+    'Tagging a feature with a tag it already has should return 409',
+    async t => {
+        const request = await setupApp(stores);
+        const feature1Name = `test.${faker.helpers.slugify(
+            faker.lorem.words(3),
+        )}`;
+        await request.post('/api/admin/features').send({
+            name: feature1Name,
+            type: 'killswitch',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        });
+
+        const tag = { value: faker.lorem.word(), type: 'simple' };
+        await request
+            .post(`/api/admin/features/${feature1Name}/tags`)
+            .send(tag)
+            .expect(201);
+        return request
+            .post(`/api/admin/features/${feature1Name}/tags`)
+            .send(tag)
+            .expect(409)
+            .expect(res => {
+                t.is(
+                    res.body.details[0].message,
+                    `${feature1Name} already had the tag: [${tag.type}:${tag.value}]`,
+                );
+            });
+    },
+);

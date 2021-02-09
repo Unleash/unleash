@@ -4,7 +4,7 @@ import fetchMock from 'fetch-mock';
 
 import {
     RECEIVE_ADDON_CONFIG,
-    ERRPR_RECEIVE_ADDON_CONFIG,
+    ERROR_RECEIVE_ADDON_CONFIG,
     REMOVE_ADDON_CONFIG,
     UPDATE_ADDON_CONFIG,
     ADD_ADDON_CONFIG,
@@ -47,7 +47,7 @@ test('creates RECEIVE_ADDON_CONFIG_ when fetching addons has been done', () => {
 
     return store.dispatch(fetchAddons()).catch(e => {
         // return of async actions
-        expect(store.getActions()[0].error.type).toEqual(ERRPR_RECEIVE_ADDON_CONFIG);
+        expect(store.getActions()[0].type).toEqual(ERROR_RECEIVE_ADDON_CONFIG);
         expect(e.message).toEqual('Unexpected exception when talking to unleash-api');
     });
 });

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.11.3
+- fix: use findIndex when using predicate.
+
 # 3.11.2
 - fix: Add UI for showing 'create tag' errors
 - fix: UX should not eagerly store strategy updates! (#240)

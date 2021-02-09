@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.11.x (unreleased)
+## 3.11.0
 
 - feat: Add support for filtering toggles on tags, projects or namePrefix (#690)
 - feat: Introduce addon framework

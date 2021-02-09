@@ -29,6 +29,7 @@ class WrapperComponent extends Component {
                 name,
                 description: '',
                 type: 'release',
+                stale: false,
                 strategies: [],
                 variants: [],
                 enabled: true,

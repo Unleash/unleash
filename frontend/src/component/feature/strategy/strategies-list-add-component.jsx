@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import arrayMove from 'array-move';
 
 import ConfigureStrategy from './strategy-configure-container';
 import AddStrategy from './strategies-add';
 import { HeaderTitle } from '../../common';
+import DragAndDrop from '../../common/drag-and-drop';
 import { updateIndexInArray } from '../../common/util';
 import styles from './strategy.module.scss';
 
@@ -57,7 +55,7 @@ const StrategiesList = props => {
         />
     ));
     return (
-        <DndProvider backend={HTML5Backend}>
+        <DragAndDrop>
             <div className={styles.strategyListAdd}>
                 <HeaderTitle
                     title="Activation strategies"
@@ -82,7 +80,7 @@ const StrategiesList = props => {
                     )}
                 </div>
             </div>
-        </DndProvider>
+        </DragAndDrop>
     );
 };
 

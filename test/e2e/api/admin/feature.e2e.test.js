@@ -397,7 +397,7 @@ test.serial('Can get features tagged by tag', async t => {
         });
 });
 test.serial('Can query for multiple tags using OR', async t => {
-    t.plan(2);
+    t.plan(3);
     const request = await setupApp(stores);
     const feature1Name = faker.helpers.slugify(faker.lorem.words(3));
     const feature2Name = faker.helpers.slugify(faker.lorem.words(3));
@@ -431,7 +431,8 @@ test.serial('Can query for multiple tags using OR', async t => {
         .expect(200)
         .expect(res => {
             t.is(res.body.features.length, 2);
-            t.is(res.body.features[0].name, feature1Name);
+            t.true(res.body.features.some(f => f.name === feature1Name));
+            t.true(res.body.features.some(f => f.name === feature2Name));
         });
 });
 test.serial('Querying with multiple filters ANDs the filters', async t => {

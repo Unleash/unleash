@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.11.4
+- fix: should not register duplicate HTML5 backends
+
 # 3.11.3
 - fix: use findIndex when using predicate.
 

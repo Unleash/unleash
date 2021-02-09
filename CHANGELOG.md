@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.11.1
+
+- fix: upgrade unleash-frontend to version 3.11.3
+
 ## 3.11.0
 
 - feat: Add support for filtering toggles on tags, projects or namePrefix (#690)

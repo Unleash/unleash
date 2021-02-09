@@ -87,7 +87,7 @@
     "prom-client": "^13.1.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
-    "unleash-frontend": "3.11.2",
+    "unleash-frontend": "3.11.3",
     "yargs": "^16.0.3"
   },
   "devDependencies": {

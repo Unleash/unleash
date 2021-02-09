@@ -16,7 +16,7 @@ const featureTags = (state = getInitState(), action) => {
         case TAG_FEATURE_TOGGLE:
             return state.push(new $MAP(action.tag));
         case UNTAG_FEATURE_TOGGLE:
-            return state.remove(state.indexOf(t => t.value === action.tag.value && t.type === action.tag.type));
+            return state.remove(state.findIndex(t => t.value === action.tag.value && t.type === action.tag.type));
         default:
             return state;
     }

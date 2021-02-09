@@ -7,7 +7,7 @@
 - feat: Added tags to events table and emitted events
 - fix: upgrade prom-client from 12.0.0 to 13.1.0
 - fix: hide jira addon for now
-- fix: upgrade unleash-frontend to version 3.11.1
+- fix: upgrade unleash-frontend to version 3.11.2
 - fix: Add a test for validation of empty params
 - fix: add docs for addons
 - fix: Add validation of required parameters

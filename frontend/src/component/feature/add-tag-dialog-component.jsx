@@ -45,8 +45,12 @@ class AddTagDialogComponent extends Component {
         if (!tag.type) {
             tag.type = 'simple';
         }
-        await this.props.submit(this.props.featureToggleName, tag);
-        this.setState({ openDialog: false, tag: { type: 'simple', value: '' } });
+        try {
+            await this.props.submit(this.props.featureToggleName, tag);
+            this.setState({ openDialog: false, tag: { type: 'simple', value: '' } });
+        } catch (e) {
+            this.setState({ errors: { general: e.message } });
+        }
     };
     render() {
         const { tag, errors, openDialog } = this.state;
@@ -82,6 +86,7 @@ class AddTagDialogComponent extends Component {
                                 onChange={v => this.setValue('value', v.target.value)}
                             />
                         </section>
+                        {errors.general && <p style={{ color: 'red' }}>{errors.general}</p>}
                         <DialogActions>
                             <FormButtons submitText={submitText} onCancel={this.onCancel} />
                         </DialogActions>

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.11.2
+- fix: Add UI for showing 'create tag' errors
+- fix: UX should not eagerly store strategy updates! (#240)
+- fix: upgraded jest to version 26.6.3
+
 # 3.11.1
 - fix: make sure we also bundle SVG in public
 

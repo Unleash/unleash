@@ -13,8 +13,7 @@
     "docs",
     "bin",
     "migrations",
-    "server.js",
-    "migrator.js"
+    "server.js"
   ],
   "repository": {
     "type": "git",
@@ -56,6 +55,13 @@
     "files": [
       "!**/helpers/**/*",
       "!**/fixtures/**/*"
+    ],
+    "extensions": [
+      "ts",
+      "js"
+    ],
+    "require": [
+      "ts-node/register"
     ]
   },
   "dependencies": {

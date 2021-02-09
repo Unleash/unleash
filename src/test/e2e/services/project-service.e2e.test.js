@@ -1,7 +1,7 @@
 const test = require('ava');
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
-const ProjectService = require('../../../lib/services/project-service');
+const ProjectService = require('../../../services/project-service');
 
 let stores;
 // let projectStore;

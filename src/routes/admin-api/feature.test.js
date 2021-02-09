@@ -3,10 +3,10 @@
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
-const store = require('../../../test/fixtures/store');
+const store = require('../../test/fixtures/store');
 const { createServices } = require('../../services');
-const permissions = require('../../../test/fixtures/permissions');
-const getLogger = require('../../../test/fixtures/no-logger');
+const permissions = require('../../test/fixtures/permissions');
+const getLogger = require('../../test/fixtures/no-logger');
 const getApp = require('../../app');
 const {
     UPDATE_FEATURE,

@@ -3,9 +3,9 @@
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
-const store = require('../../../test/fixtures/store');
-const permissions = require('../../../test/fixtures/permissions');
-const getLogger = require('../../../test/fixtures/no-logger');
+const store = require('../../test/fixtures/store');
+const permissions = require('../../test/fixtures/permissions');
+const getLogger = require('../../test/fixtures/no-logger');
 const getApp = require('../../app');
 const { UPDATE_APPLICATION } = require('../../permissions');
 const { createServices } = require('../../services');

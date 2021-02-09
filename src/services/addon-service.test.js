@@ -5,8 +5,8 @@ const proxyquire = require('proxyquire').noCallThru();
 const { ValidationError } = require('joi');
 const Addon = require('../addons/addon');
 
-const store = require('../../test/fixtures/store');
-const getLogger = require('../../test/fixtures/no-logger');
+const store = require('../test/fixtures/store');
+const getLogger = require('../test/fixtures/no-logger');
 const TagTypeService = require('./tag-type-service');
 const {
     FEATURE_CREATED,

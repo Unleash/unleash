@@ -2,7 +2,7 @@ const test = require('ava');
 const proxyquire = require('proxyquire');
 const fetchMock = require('fetch-mock').sandbox();
 const lolex = require('lolex');
-const noLogger = require('../../test/fixtures/no-logger');
+const noLogger = require('../test/fixtures/no-logger');
 
 const addonMocked = proxyquire('./addon', { 'node-fetch': fetchMock });
 const JiraAddon = proxyquire('./jira-comment', { './addon': addonMocked });

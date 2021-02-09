@@ -2,7 +2,7 @@
 
 const { EventEmitter } = require('events');
 
-const migrator = require('../migrator');
+const migrator = require('./migrator');
 const getApp = require('./app');
 
 const { createMetricsMonitor } = require('./metrics');
@@ -20,7 +20,7 @@ async function closeServer(opts) {
 
     metricsMonitor.stopMonitoring();
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         server.close(err => (err ? reject(err) : resolve()));
     });
 }
@@ -28,7 +28,7 @@ async function closeServer(opts) {
 async function destroyDatabase(stores) {
     const { db, clientInstanceStore, clientMetricsStore } = stores;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         clientInstanceStore.destroy();
         clientMetricsStore.destroy();
 

@@ -4,7 +4,7 @@ const test = require('ava');
 const proxyquire = require('proxyquire');
 const { EventEmitter } = require('events');
 const express = require('express');
-const getLogger = require('../test/fixtures/no-logger');
+const getLogger = require('./test/fixtures/no-logger');
 
 const getApp = proxyquire('./app', {
     './routes': class Index {

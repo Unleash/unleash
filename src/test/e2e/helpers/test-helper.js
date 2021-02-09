@@ -2,12 +2,13 @@
 
 process.env.NODE_ENV = 'test';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 const supertest = require('supertest');
 
 const { EventEmitter } = require('events');
-const getApp = require('../../../lib/app');
+const getApp = require('../../../app');
 const getLogger = require('../../fixtures/no-logger');
-const { createServices } = require('../../../lib/services');
+const { createServices } = require('../../../services');
 
 const eventBus = new EventEmitter();
 

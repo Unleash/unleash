@@ -1,4 +1,4 @@
-const NotFoundError = require('../../lib/error/notfound-error');
+const NotFoundError = require('../../error/notfound-error');
 
 module.exports = () => {
     const _tags = [];

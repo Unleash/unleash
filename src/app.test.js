@@ -3,7 +3,7 @@
 const test = require('ava');
 const express = require('express');
 const proxyquire = require('proxyquire');
-const getLogger = require('test/fixtures/no-logger');
+const getLogger = require('./test/fixtures/no-logger');
 
 const getApp = proxyquire('./app', {
     './routes': class Index {

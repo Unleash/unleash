@@ -4,7 +4,7 @@ const test = require('ava');
 const { EventEmitter } = require('events');
 const lolex = require('lolex');
 const ClientMetricStore = require('./client-metrics-store');
-const getLogger = require('../../test/fixtures/no-logger');
+const getLogger = require('../test/fixtures/no-logger');
 
 function getMockDb() {
     const list = [

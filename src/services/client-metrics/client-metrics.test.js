@@ -10,7 +10,7 @@ const UnleashClientMetrics = require('./index');
 const appName = 'appName';
 const instanceId = 'instanceId';
 
-const getLogger = require('../../../test/fixtures/no-logger');
+const getLogger = require('../../test/fixtures/no-logger');
 
 test('should work without state', t => {
     const clientMetricsStore = new EventEmitter();

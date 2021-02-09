@@ -16,7 +16,7 @@ const WebhookAddon = proxyquire.load('./webhook', {
     },
 });
 
-const noLogger = require('../../test/fixtures/no-logger');
+const noLogger = require('../test/fixtures/no-logger');
 
 test('Should handle event without "bodyTemplate"', t => {
     const addon = new WebhookAddon({ getLogger: noLogger });

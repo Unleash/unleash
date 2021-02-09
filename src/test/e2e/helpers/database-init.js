@@ -2,8 +2,8 @@
 
 const { EventEmitter } = require('events');
 const migrator = require('../../../migrator');
-const { createStores } = require('../../../lib/db');
-const { createDb } = require('../../../lib/db/db-pool');
+const { createStores } = require('../../../db');
+const { createDb } = require('../../../db/db-pool');
 const dbConfig = require('./database-config');
 
 const dbState = require('./database.json');
@@ -83,6 +83,7 @@ async function setupDatabase(stores) {
 module.exports = async function init(databaseSchema = 'test', getLogger) {
     const options = {
         db: { ...dbConfig.getDb(), pool: { min: 2, max: 8 } },
+        cwd: `../${__dirname}`,
         databaseSchema,
         getLogger,
     };

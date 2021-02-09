@@ -1,13 +1,13 @@
 'use strict';
 
 const test = require('ava');
-const User = require('../../../lib/user');
+const User = require('../../../user');
 const {
     CREATE_FEATURE,
     DELETE_FEATURE,
     UPDATE_FEATURE,
-} = require('../../../lib/permissions');
-const NotFoundError = require('../../../lib/error/notfound-error');
+} = require('../../../permissions');
+const NotFoundError = require('../../../error/notfound-error');
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 

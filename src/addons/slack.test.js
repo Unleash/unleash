@@ -16,7 +16,7 @@ const SlackAddon = proxyquire.load('./slack', {
     },
 });
 
-const noLogger = require('../../test/fixtures/no-logger');
+const noLogger = require('../test/fixtures/no-logger');
 
 test('Should call slack webhook', async t => {
     const addon = new SlackAddon({

@@ -28,73 +28,70 @@ exports[`render the create feature page 1`] = `
         col={4}
       >
         <react-mdl-Textfield
+          className="fullwidth"
           floatingLabel={true}
           label="Name"
           name="name"
           onBlur={[Function]}
           onChange={[Function]}
           placeholder="Unique-name"
-          style={
-            Object {
-              "width": "100%",
-            }
-          }
           value="feature"
         />
       </react-mdl-Cell>
       <react-mdl-Cell
-        col={2}
+        col={3}
       >
         <Connect(FeatureTypeSelectComponent)
           onChange={[Function]}
         />
       </react-mdl-Cell>
-      <react-mdl-Cell
-        col={2}
-        style={
-          Object {
-            "paddingTop": "14px",
-          }
-        }
-      >
-        <react-mdl-Switch
-          checked={false}
-          onChange={[Function]}
-        >
-          Disabled
-        </react-mdl-Switch>
-      </react-mdl-Cell>
     </react-mdl-Grid>
     <section
-      style={
-        Object {
-          "padding": "0 16px",
-        }
-      }
+      className="sectionPadding"
     >
       <Connect(ProjectSelectComponent)
         onChange={[Function]}
       />
     </section>
     <section
-      style={
-        Object {
-          "padding": "0 16px",
-        }
-      }
+      className="sectionPadding"
     >
       <react-mdl-Textfield
+        className="fullwidth"
         floatingLabel={true}
         label="Description"
         onChange={[Function]}
         placeholder="A short description of the feature toggle"
         rows={1}
-        style={
-          Object {
-            "width": "100%",
-          }
-        }
         value="Description"
+      />
+    </section>
+    <section
+      style={
+        Object {
+          "padding": "10px 16px",
+        }
+      }
+    >
+      <react-mdl-Switch
+        checked={false}
+        onChange={[Function]}
+      >
+        Disabled
+         feature toggle
+      </react-mdl-Switch>
+    </section>
+    <section
+      style={
+        Object {
+          "margin": "40px 0",
+        }
+      }
+    >
+      <Connect(StrategiesList)
+        editable={true}
+        featureToggleName="feature"
+        saveStrategies={[Function]}
       />
     </section>
     <react-mdl-CardActions>

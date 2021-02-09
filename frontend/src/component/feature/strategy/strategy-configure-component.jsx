@@ -8,6 +8,7 @@ import DefaultStrategy from './default-strategy';
 import GeneralStrategy from './general-strategy';
 import UserWithIdStrategy from './user-with-id-strategy';
 import UnknownStrategy from './unknown-strategy';
+import LoadingStrategy from './loading-strategy';
 
 import styles from './strategy.module.scss';
 
@@ -18,61 +19,35 @@ export default class StrategyConfigureComponent extends React.Component {
         index: PropTypes.number.isRequired,
         strategyDefinition: PropTypes.object,
         updateStrategy: PropTypes.func,
+        saveStrategy: PropTypes.func,
         removeStrategy: PropTypes.func,
         moveStrategy: PropTypes.func,
         isDragging: PropTypes.bool.isRequired,
         hovered: PropTypes.bool,
+        movable: PropTypes.bool,
         connectDragPreview: PropTypes.func.isRequired,
         connectDragSource: PropTypes.func.isRequired,
         connectDropTarget: PropTypes.func.isRequired,
         editable: PropTypes.bool,
     };
 
-    constructor(props) {
-        super();
-        this.state = {
-            constraints: props.strategy.constraints ? [...props.strategy.constraints] : [],
-            parameters: { ...props.strategy.parameters },
-            edit: false,
-            dirty: false,
-            index: props.index,
-        };
-    }
-
     updateParameters = parameters => {
-        const { constraints } = this.state;
-        const updatedStrategy = Object.assign({}, this.props.strategy, {
-            parameters,
-            constraints,
-        });
+        const { strategy } = this.props;
+        const updatedStrategy = { ...strategy, parameters };
         this.props.updateStrategy(updatedStrategy);
     };
 
     updateConstraints = constraints => {
-        this.setState({ constraints, dirty: true });
+        const { strategy } = this.props;
+        const updatedStrategy = { ...strategy, constraints };
+        this.props.updateStrategy(updatedStrategy);
     };
 
-    updateParameter = async (field, value, forceUp = false) => {
-        const { parameters } = this.state;
+    updateParameter = async (field, value) => {
+        const { strategy } = this.props;
+        const parameters = { ...strategy.parameters };
         parameters[field] = value;
-        if (forceUp) {
-            await this.updateParameters(parameters);
-            this.setState({ parameters, dirty: false });
-        } else {
-            this.setState({ parameters, dirty: true });
-        }
-    };
-
-    onSave = evt => {
-        evt.preventDefault();
-        const { parameters } = this.state;
         this.updateParameters(parameters);
-        this.setState({ edit: false, dirty: false });
-    };
-
-    handleRemove = evt => {
-        evt.preventDefault();
-        this.props.removeStrategy();
     };
 
     resolveInputType() {
@@ -81,6 +56,8 @@ export default class StrategyConfigureComponent extends React.Component {
             return UnknownStrategy;
         }
         switch (strategyDefinition.name) {
+            case 'Loading':
+                return LoadingStrategy;
             case 'default':
                 return DefaultStrategy;
             case 'flexibleRollout':
@@ -93,7 +70,6 @@ export default class StrategyConfigureComponent extends React.Component {
     }
 
     render() {
-        const { dirty, parameters } = this.state;
         const {
             isDragging,
             hovered,
@@ -104,11 +80,14 @@ export default class StrategyConfigureComponent extends React.Component {
             strategyDefinition,
             strategy,
             index,
+            removeStrategy,
+            saveStrategy,
+            movable,
         } = this.props;
 
-        const { name } = strategy;
+        const { name, dirty, parameters } = strategy;
 
-        const description = strategyDefinition ? strategyDefinition.description : 'Uknown';
+        const description = strategyDefinition ? strategyDefinition.description : 'Unknown';
         const InputType = this.resolveInputType(name);
 
         const cardClasses = [styles.card];
@@ -143,7 +122,7 @@ export default class StrategyConfigureComponent extends React.Component {
                                 editable={editable}
                             />
                             <Button
-                                onClick={this.onSave}
+                                onClick={saveStrategy}
                                 accent
                                 raised
                                 ripple
@@ -164,17 +143,23 @@ export default class StrategyConfigureComponent extends React.Component {
                             </Link>
                             {editable && (
                                 <IconButton
-                                    title="Remove strategy from toggle"
+                                    title="Remove this activation strategy"
                                     name="delete"
-                                    onClick={this.handleRemove}
+                                    onClick={removeStrategy}
                                 />
                             )}
                             {editable &&
+                                movable &&
                                 connectDragSource(
                                     <span className={styles.reorderIcon}>
                                         <Icon name="reorder" />
                                     </span>
                                 )}
+                            {editable && !movable && (
+                                <span className={[styles.reorderIcon, styles.disabled].join(' ')}>
+                                    <Icon name="reorder" title="You can not reorder while editing." />
+                                </span>
+                            )}
                         </CardMenu>
                     </Card>
                 </div>

@@ -31,7 +31,7 @@ export default class InputList extends Component {
             const newValues = value.split(/,\s*/).filter(a => !list.includes(a));
             if (newValues.length > 0) {
                 const newList = list.concat(newValues).filter(a => a);
-                setConfig(name, newList.join(','), true);
+                setConfig(name, newList.join(','));
             }
             this.textInput.inputRef.value = '';
         }
@@ -40,7 +40,7 @@ export default class InputList extends Component {
     onClose(index) {
         const { name, list, setConfig } = this.props;
         list[index] = null;
-        setConfig(name, list.length === 1 ? '' : list.filter(Boolean).join(','), true);
+        setConfig(name, list.length === 1 ? '' : list.filter(Boolean).join(','));
     }
 
     render() {

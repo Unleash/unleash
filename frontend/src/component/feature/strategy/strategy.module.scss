@@ -1,7 +1,7 @@
 .item {
     flex: 1;
     min-width: 400px;
-    max-width: 100%;
+    max-width: 537px;
     margin: 5px 0 5px 5px;
     position: relative;
     z-index: 1;
@@ -85,15 +85,25 @@
     cursor: pointer;
     display: inline-block;
     vertical-align: bottom;
+
+    &.disabled {
+        cursor: default;
+        color: silver;
+    }
 }
 
-
-.paddingDesktop {
+.strategyList {
+    display: flex;
+    flex-wrap: wrap;
     padding: 10px;
 }
 
+.strategyListAdd {
+    background-color: #f9f9f9;
+}
+
 @media (max-width: 500px) {
-    .paddingDesktop {
+    .strategyList {
         padding: 0;
     }
 }

@@ -104,3 +104,5 @@ export const modalStyles = {
         transform: 'translate(-50%, -50%)',
     },
 };
+
+export const updateIndexInArray = (array, index, newValue) => array.map((v, i) => (i === index ? newValue : v));

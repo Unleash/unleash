@@ -34,9 +34,9 @@ export const HeaderTitle = ({ title, actions, subtitle }) => (
     <div
         style={{
             display: 'flex',
-            borderBottom: '1px solid #f1f1f1',
+            borderBottom: '1px solid #f9f9f9',
             marginBottom: '10px',
-            padding: '16px 20px ',
+            padding: '16px',
         }}
     >
         <div style={{ flex: '2' }}>

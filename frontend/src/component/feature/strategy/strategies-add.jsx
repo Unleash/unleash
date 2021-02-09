@@ -21,6 +21,7 @@ class AddStrategy extends React.Component {
         strategies: PropTypes.array.isRequired,
         addStrategy: PropTypes.func,
         featureToggleName: PropTypes.string.isRequired,
+        disabled: PropTypes.bool,
     };
 
     addStrategy(strategyName) {
@@ -45,10 +46,11 @@ class AddStrategy extends React.Component {
 
     render() {
         const menuStyle = {
-            maxHeight: '300px',
+            maxHeight: '400px',
             overflowY: 'auto',
             backgroundColor: 'rgb(247, 248, 255)',
         };
+        const { disabled = false } = this.props;
         return (
             <div style={{ position: 'relative', width: '25px', height: '25px', display: 'inline-block' }}>
                 <IconButton
@@ -56,6 +58,7 @@ class AddStrategy extends React.Component {
                     id="strategies-add"
                     raised
                     accent
+                    disabled={disabled}
                     title="Add Strategy"
                     onClick={this.stopPropagation}
                 />

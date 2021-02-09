@@ -1,9 +1,9 @@
 import React from 'react';
-import strategyInputProps from './strategy-input-props';
+import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 
-export default function UknownStrategy({ strategy }) {
+export default function UnknownStrategy({ strategy }) {
     const { name } = strategy;
     return (
         <div>
@@ -13,4 +13,8 @@ export default function UknownStrategy({ strategy }) {
     );
 }
 
-UknownStrategy.propTypes = strategyInputProps;
+UnknownStrategy.propTypes = {
+    strategy: PropTypes.shape({
+        name: PropTypes.string,
+    }).isRequired,
+};

@@ -61,7 +61,10 @@ class WrapperComponent extends Component {
         evt.preventDefault();
         const { createFeatureToggles, history } = this.props;
         const { featureToggle } = this.state;
-        featureToggle.strategies = [defaultStrategy];
+
+        if (featureToggle.strategies < 1) {
+            featureToggle.strategies = [defaultStrategy];
+        }
 
         createFeatureToggles(featureToggle).then(() => history.push(`/features/strategies/${featureToggle.name}`));
     };
@@ -78,6 +81,7 @@ class WrapperComponent extends Component {
                 onCancel={this.onCancel}
                 validateName={this.validateName}
                 setValue={this.setValue}
+                setStrategies={this.setStrategies}
                 input={this.state.featureToggle}
                 errors={this.state.errors}
             />

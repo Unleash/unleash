@@ -1,3 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`render the create feature page 1`] = `""`;
+exports[`render the create feature page 1`] = `
+<section>
+  <Connect(StrategiesList)
+    addStrategy={[MockFunction]}
+    configuredStrategies={
+      Array [
+        Object {
+          "name": "default",
+        },
+      ]
+    }
+    editable={true}
+    featureToggleName="some-toggle"
+    initCallRequired={false}
+    moveStrategy={[MockFunction]}
+    onCancel={[MockFunction]}
+    onSubmit={[MockFunction]}
+    removeStrategy={[MockFunction]}
+    setValue={[MockFunction]}
+    title="title"
+    updateStrategy={[MockFunction]}
+    validateName={[MockFunction]}
+  />
+</section>
+`;

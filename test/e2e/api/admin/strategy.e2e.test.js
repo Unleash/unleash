@@ -130,6 +130,7 @@ test.serial('deprecating a strategy works', async t => {
         .expect(201);
     await request
         .post(`/api/admin/strategies/${name}/deprecate`)
+        .set('Content-Type', 'application/json')
         .send()
         .expect(200);
     await request
@@ -149,6 +150,7 @@ test.serial('can reactivate a deprecated strategy', async t => {
         .expect(201);
     await request
         .post(`/api/admin/strategies/${name}/deprecate`)
+        .set('Content-Type', 'application/json')
         .send()
         .expect(200);
     await request
@@ -158,6 +160,7 @@ test.serial('can reactivate a deprecated strategy', async t => {
         .expect(res => t.is(res.body.deprecated, true));
     await request
         .post(`/api/admin/strategies/${name}/reactivate`)
+        .set('Content-Type', 'application/json')
         .send()
         .expect(200);
     await request
@@ -170,7 +173,10 @@ test.serial('can reactivate a deprecated strategy', async t => {
 test.serial('cannot deprecate default strategy', async t => {
     t.plan(0);
     const request = await setupApp(stores);
-    await request.post('/api/admin/strategies/default/deprecate').expect(403);
+    await request
+        .post('/api/admin/strategies/default/deprecate')
+        .set('Content-Type', 'application/json')
+        .expect(403);
 });
 
 test.serial('can update a exiting strategy with deprecated', async t => {

@@ -9,12 +9,8 @@
     "toggle"
   ],
   "files": [
-    "lib",
-    "docs",
-    "bin",
-    "migrations",
-    "server.js",
-    "migrator.js"
+    "dist",
+    "docs"
   ],
   "repository": {
     "type": "git",
@@ -27,14 +23,14 @@
     "node": ">=12"
   },
   "license": "Apache-2.0",
-  "main": "./lib/server-impl.js",
+  "main": "./dist/lib/server-impl.js",
   "bin": {
     "unleash": "bin/unleash.js"
   },
   "scripts": {
     "start": "node server.js",
     "start:google": "node examples/google-auth-unleash.js",
-    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website server-dev.js",
+    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website ./dist/server-dev.js",
     "db-migrate": "db-migrate",
     "lint": "eslint .",
     "build:ts": "tsc",

@@ -74,7 +74,7 @@
     "website",
     "test",
     "test/fixtures",
-    "server-dev.js",
+    "src/binver-dev.js",
     "server.js",
     "dist"
   ]

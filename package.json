@@ -35,7 +35,7 @@
     "lint": "eslint .",
     "build:watch": "tsc -w",
     "build:ts": "tsc",
-    "test": "NODE_ENV=test PORT=4243 ava",
+    "test": "yarn build:ts && NODE_ENV=test PORT=4243 ava",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "yarn test --watch",
     "test:coverage": "nyc --reporter=lcov yarn test",
@@ -50,7 +50,7 @@
   },
   "ava": {
     "files": [
-      "./dist/test/**/*.test.js",
+      "./dist/**/*.test.js",
       "!src/**/*",
       "!**/helpers/**/*",
       "!**/fixtures/**/*"

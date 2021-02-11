@@ -45,7 +45,12 @@
     "all": true,
     "include": [
       "dist/**/*.js"
-    ]
+    ],
+    "exclude": [
+      "dist/bin",
+      "dist/migrations"
+    ],
+    "exclude-after-remap": false
   },
   "ava": {
     "files": [

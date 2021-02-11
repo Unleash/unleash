@@ -44,8 +44,7 @@
   "nyc": {
     "all": true,
     "include": [
-      "bin/**/*.js",
-      "lib/**/*.js"
+      "dist/**/*.js"
     ]
   },
   "ava": {
@@ -55,7 +54,7 @@
       "!**/helpers/**/*",
       "!**/fixtures/**/*"
     ],
-    "snapshotDir": "./src/test/snapshots"
+    "snapshotDir": "snapshots"
   },
   "dependencies": {
     "async": "^3.1.0",

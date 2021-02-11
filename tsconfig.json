@@ -76,6 +76,8 @@
     "test/fixtures",
     "src/binver-dev.js",
     "server.js",
-    "dist"
+    "dist",
+    "snapshots",
+    "coverage"
   ]
 }

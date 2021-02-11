@@ -2,6 +2,7 @@ node_modules
 lerna-debug
 npm-debug
 .DS_Store
+dist
 
 # Logs
 logs

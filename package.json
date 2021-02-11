@@ -28,7 +28,7 @@
     "unleash": "./dist/bin/unleash.js"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node ./dist/server.js",
     "start:google": "node examples/google-auth-unleash.js",
     "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website ./dist/server-dev.js",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",

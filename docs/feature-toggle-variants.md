@@ -19,7 +19,7 @@ If the toggle is considered **enabled**, the Unleash client will select the corr
 
 If the toggle is considered **disabled** you will get the built-in `disabled` variant.
 
-A json represntation of the empty variant will be the following:
+A json representation of the empty variant will be the following:
 
 ```json
 {
@@ -28,7 +28,7 @@ A json represntation of the empty variant will be the following:
 }
 ```
 
-The actual representation of the built-in the client SDK will vary slighty, to honor best pratices in various languages.
+The actual representation of the built-in the client SDK will vary slightly, to honor best practices in various languages.
 
 > If you change the number of variants, it will affect variant allocations. This means that some of the users will be moved to the next variant.
 

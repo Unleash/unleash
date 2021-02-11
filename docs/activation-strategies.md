@@ -35,6 +35,12 @@ A flexible rollout strategy which combines all gradual rollout strategies in to 
 - **groupId** is used to ensure that different toggles will **hash differently** for the same user. The groupId defaults to _feature toggle name_, but the use can override it to _correlate rollout_ of multiple feature toggles.
 - **rollout** The percentage (0-100) you want to enable the feature toggle for.
 
+### Customize stickiness (beta)
+
+By enabling the stickiness option on a custom context field you can use it together with the flexible rollout strategy. This will guarantee a consistent behavior for specific values of this context field. PS! support for this feature currently being supported by the following SDKs:
+
+- [unleash-client-node](https://github.com/Unleash/unleash-client-node) (from v3.6.0)
+
 ## gradualRolloutUserId
 
 The `gradualRolloutUserId` strategy gradually activates a feature toggle for logged in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.

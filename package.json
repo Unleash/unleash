@@ -54,7 +54,8 @@
       "!src/**/*",
       "!**/helpers/**/*",
       "!**/fixtures/**/*"
-    ]
+    ],
+    "snapshotDir": "./src/test/snapshots"
   },
   "dependencies": {
     "async": "^3.1.0",

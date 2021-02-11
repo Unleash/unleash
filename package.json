@@ -25,7 +25,7 @@
   "license": "Apache-2.0",
   "main": "./dist/lib/server-impl.js",
   "bin": {
-    "unleash": "bin/unleash.js"
+    "unleash": "./dist/bin/unleash.js"
   },
   "scripts": {
     "start": "node server.js",

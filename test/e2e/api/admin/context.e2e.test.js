@@ -82,6 +82,25 @@ test.serial('should update context field with legalValues', async t => {
         .expect(200);
 });
 
+test.serial('should create context field with stickiness', async t => {
+    t.plan(1);
+    const request = await setupApp(stores);
+    const name = 'with-sticky';
+    await request
+        .post('/api/admin/context')
+        .send({
+            name,
+            description: 'A context field supporting stickiness',
+            stickiness: true,
+        })
+        .set('Content-Type', 'application/json');
+
+    const res = await request.get(`/api/admin/context/${name}`);
+    const contextField = res.body;
+
+    t.is(contextField.stickiness, true);
+});
+
 test.serial('should not create context field when name is missing', async t => {
     t.plan(0);
     const request = await setupApp(stores);

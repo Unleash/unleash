@@ -50,6 +50,8 @@
   },
   "ava": {
     "files": [
+      "./dist/test/**/*.test.js",
+      "!src/**/*",
       "!**/helpers/**/*",
       "!**/fixtures/**/*"
     ]

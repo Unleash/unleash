@@ -10,6 +10,12 @@
     "root": true,
     "rules": {
         "class-methods-use-this": [0],
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": true
+            }
+        ],
         "prettier/prettier": ["error"],
         "func-names": "off",
         "strict": [0, "global"],

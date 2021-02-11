@@ -1,7 +1,7 @@
 'use strict';
 
 process.env.NODE_ENV = 'test';
-
+/* eslint-disable-next-line */
 const supertest = require('supertest');
 
 const { EventEmitter } = require('events');

@@ -32,7 +32,7 @@
     "start:google": "node examples/google-auth-unleash.js",
     "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website ./dist/server-dev.js",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
-    "lint": "eslint .",
+    "lint": "eslint ./src",
     "build:watch": "tsc -w",
     "build:ts": "tsc",
     "test": "yarn build:ts && NODE_ENV=test PORT=4243 ava",

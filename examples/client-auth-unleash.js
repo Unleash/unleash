@@ -1,7 +1,7 @@
 'use strict';
 
 // const unleash = require('unleash-server');
-const unleash = require('../lib/server-impl.js');
+const unleash = require('../dist/lib/server-impl.js');
 
 // You typically will not hard-code this value in your code!
 const sharedSecret = '12312Random';

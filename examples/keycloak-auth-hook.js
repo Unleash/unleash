@@ -21,7 +21,7 @@ const KeycloakStrategy = require('@exlinc/keycloak-passport');
 const passport = require('passport');
 
 // const  { User, AuthenticationRequired } = require('unleash-server');
-const { User, AuthenticationRequired } = require('../lib/server-impl.js');
+const { User, AuthenticationRequired } = require('../dist/lib/server-impl.js');
 
 const host = process.env.AUTH_HOST;
 const realm = process.env.AUTH_REALM;

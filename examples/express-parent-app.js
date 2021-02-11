@@ -3,7 +3,7 @@
 'use strict';
 
 const express = require('express');
-const unleash = require('../lib/server-impl.js');
+const unleash = require('../dist/lib/server-impl.js');
 
 const app = express();
 unleash

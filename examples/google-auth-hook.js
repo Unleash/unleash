@@ -24,7 +24,7 @@ const GoogleOAuth2Strategy = require('@passport-next/passport-google-oauth2')
     .Strategy;
 
 // const  { User, AuthenticationRequired } = require('unleash-server');
-const { User, AuthenticationRequired } = require('../lib/server-impl.js');
+const { User, AuthenticationRequired } = require('../dist/lib/server-impl.js');
 
 passport.use(
     new GoogleOAuth2Strategy(

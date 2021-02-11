@@ -3,7 +3,7 @@
 'use strict';
 
 const auth = require('basic-auth');
-const { User } = require('../lib/server-impl.js');
+const { User } = require('../dist/lib/server-impl.js');
 
 function basicAuthentication(app) {
     app.use('/api/admin/', (req, res, next) => {

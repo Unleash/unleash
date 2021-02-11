@@ -33,6 +33,7 @@
     "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website ./dist/server-dev.js",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
     "lint": "eslint .",
+    "build:watch": "tsc -w",
     "build:ts": "tsc",
     "test": "NODE_ENV=test PORT=4243 ava",
     "test:docker": "./scripts/docker-postgres.sh",

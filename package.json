@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "3.11.2",
+  "version": "3.11.3-next.1",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -9,12 +9,8 @@
     "toggle"
   ],
   "files": [
-    "lib",
-    "docs",
-    "bin",
-    "migrations",
-    "server.js",
-    "migrator.js"
+    "dist",
+    "docs"
   ],
   "repository": {
     "type": "git",
@@ -27,17 +23,20 @@
     "node": ">=12"
   },
   "license": "Apache-2.0",
-  "main": "./lib/server-impl.js",
+  "main": "./dist/lib/server-impl.js",
   "bin": {
-    "unleash": "bin/unleash.js"
+    "unleash": "./dist/bin/unleash.js"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node ./dist/server.js",
     "start:google": "node examples/google-auth-unleash.js",
-    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website server-dev.js",
-    "db-migrate": "db-migrate",
-    "lint": "eslint .",
-    "test": "NODE_ENV=test PORT=4243 ava",
+    "start:dev": "NODE_ENV=development supervisor --ignore ./node_modules/,website ./dist/server-dev.js",
+    "db-migrate": "db-migrate --migrations-dir ./src/migrations",
+    "lint": "eslint ./src",
+    "build:watch": "tsc -w",
+    "build": "tsc",
+    "prepare": "yarn run build",
+    "test": "yarn build && NODE_ENV=test PORT=4243 ava",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "yarn test --watch",
     "test:coverage": "nyc --reporter=lcov yarn test",
@@ -46,15 +45,22 @@
   "nyc": {
     "all": true,
     "include": [
-      "bin/**/*.js",
-      "lib/**/*.js"
-    ]
+      "dist/**/*.js"
+    ],
+    "exclude": [
+      "dist/bin",
+      "dist/migrations"
+    ],
+    "exclude-after-remap": false
   },
   "ava": {
     "files": [
+      "./dist/**/*.test.js",
+      "!src/**/*",
       "!**/helpers/**/*",
       "!**/fixtures/**/*"
-    ]
+    ],
+    "snapshotDir": "snapshots"
   },
   "dependencies": {
     "async": "^3.1.0",
@@ -87,6 +93,7 @@
     "prom-client": "^13.1.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
+    "typescript": "^4.1.5",
     "unleash-frontend": "3.11.4",
     "yargs": "^16.0.3"
   },

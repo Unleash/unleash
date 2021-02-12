@@ -1,6 +1,6 @@
 'use strict';
 
-const unleash = require('./lib/server-impl');
+import unleash from './lib/server-impl';
 
 unleash.start({
     db: {

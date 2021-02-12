@@ -1,7 +1,7 @@
 'use strict';
 
 // const unleash = require('unleash-server');
-const unleash = require('../lib/server-impl.js');
+const unleash = require('../dist/lib/server-impl.js');
 
 const enableGoogleOauth = require('./google-auth-hook');
 

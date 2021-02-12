@@ -81,7 +81,7 @@ test.serial('imports strategies and features from json file', async t => {
     const request = await setupApp(stores);
     return request
         .post('/api/admin/state/import')
-        .attach('file', 'test/examples/import.json')
+        .attach('file', 'src/test/examples/import.json')
         .expect(202);
 });
 
@@ -90,6 +90,6 @@ test.serial('imports strategies and features from yaml file', async t => {
     const request = await setupApp(stores);
     return request
         .post('/api/admin/state/import')
-        .attach('file', 'test/examples/import.yml')
+        .attach('file', 'src/test/examples/import.yml')
         .expect(202);
 });

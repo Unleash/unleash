@@ -1,4 +1,4 @@
-# Snapshot report for `lib/addons/slack.test.js`
+# Snapshot report for `dist/lib/addons/slack.test.js`
 
 The actual snapshot is saved in `slack.test.js.snap`.
 

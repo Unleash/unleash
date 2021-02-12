@@ -20,6 +20,4 @@ class EventStore extends EventEmitter {
     }
 }
 
-module.exports = () => {
-    return new EventStore();
-};
+module.exports = EventStore;

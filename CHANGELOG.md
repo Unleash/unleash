@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.12.0
+
+- feat: setup typescript
+- fix: refactor context to use service pattern
+- feat: allow stickiness on context-fields
+- fix: add middleware verifying content type
+- chore: Remove git add from husky
+
 ## 3.11.2
 
 - fix: update unleash-frontend to version 3.11.4

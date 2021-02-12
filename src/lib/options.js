@@ -81,6 +81,7 @@ function defaultOptions() {
         version,
         secureHeaders: process.env.SECURE_HEADERS || false,
         enableOAS: process.env.ENABLE_OAS || false,
+        dbSession: process.env.DB_SESSION || true,
     };
 }
 

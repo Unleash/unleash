@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.x.x
+
+- feat: Use express-session backed by postgres
+
 ## 3.12.0
 
 - feat: setup typescript

@@ -70,12 +70,8 @@
     "examples",
     "migrations",
     "node_modules",
-    "lib",
     "website",
-    "test",
-    "test/fixtures",
     "src/binver-dev.js",
-    "server.js",
     "dist",
     "snapshots",
     "coverage"

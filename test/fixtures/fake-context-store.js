@@ -3,7 +3,7 @@
 const NotFoundError = require('../../lib/error/notfound-error');
 
 module.exports = () => {
-    const _contextFields = [
+    let _contextFields = [
         { name: 'environment' },
         { name: 'userId' },
         { name: 'appName' },
@@ -19,5 +19,13 @@ module.exports = () => {
             return Promise.reject(NotFoundError);
         },
         create: contextField => _contextFields.push(contextField),
+        update: field => {
+            _contextFields = _contextFields.map(c =>
+                c.name === field.name ? field : c,
+            );
+        },
+        delete: name => {
+            _contextFields = _contextFields.filter(c => c.name !== name);
+        },
     };
 };

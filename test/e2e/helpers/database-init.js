@@ -36,7 +36,7 @@ function createStrategies(store) {
 }
 
 function createContextFields(store) {
-    return dbState.contextFields.map(c => store._createContextField(c));
+    return dbState.contextFields.map(c => store.create(c));
 }
 
 function createApplications(store) {

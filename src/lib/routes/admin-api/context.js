@@ -34,10 +34,14 @@ class ContextController extends Controller {
     }
 
     async getContextFields(req, res) {
-        const fields = await this.contextService.getAll();
-        res.status(200)
-            .json(fields)
-            .end();
+        try {
+            const fields = await this.contextService.getAll();
+            res.status(200)
+                .json(fields)
+                .end();
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async getContextField(req, res) {

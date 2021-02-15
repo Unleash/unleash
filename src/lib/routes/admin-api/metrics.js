@@ -28,29 +28,45 @@ class MetricsController extends Controller {
     }
 
     async getSeenToggles(req, res) {
-        const seenAppToggles = await this.metrics.getAppsWithToggles();
-        res.json(seenAppToggles);
+        try {
+            const seenAppToggles = await this.metrics.getAppsWithToggles();
+            res.json(seenAppToggles);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async getSeenApps(req, res) {
-        const seenApps = await this.metrics.getSeenApps();
-        res.json(seenApps);
+        try {
+            const seenApps = await this.metrics.getSeenApps();
+            res.json(seenApps);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async getFeatureToggles(req, res) {
-        const toggles = await this.metrics.getTogglesMetrics();
-        res.json(toggles);
+        try {
+            const toggles = await this.metrics.getTogglesMetrics();
+            res.json(toggles);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async getFeatureToggle(req, res) {
-        const { name } = req.params;
-        const data = await this.metrics.getTogglesMetrics();
-        const lastHour = data.lastHour[name] || {};
-        const lastMinute = data.lastMinute[name] || {};
-        res.json({
-            lastHour,
-            lastMinute,
-        });
+        try {
+            const { name } = req.params;
+            const data = await this.metrics.getTogglesMetrics();
+            const lastHour = data.lastHour[name] || {};
+            const lastMinute = data.lastMinute[name] || {};
+            res.json({
+                lastHour,
+                lastMinute,
+            });
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async deleteApplication(req, res) {

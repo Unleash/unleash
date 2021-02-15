@@ -36,8 +36,12 @@ class StrategyController extends Controller {
     }
 
     async getAllStratgies(req, res) {
-        const strategies = await this.strategyService.getStrategies();
-        res.json({ version, strategies });
+        try {
+            const strategies = await this.strategyService.getStrategies();
+            res.json({ version, strategies });
+        } catch (err) {
+            handleErrors(res, this.logger, err);
+        }
     }
 
     async getStrategy(req, res) {

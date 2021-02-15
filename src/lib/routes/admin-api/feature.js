@@ -49,11 +49,15 @@ class FeatureController extends Controller {
     }
 
     async getAllToggles(req, res) {
-        const features = await this.featureService.getFeatures(
-            req.query,
-            fields,
-        );
-        res.json({ version, features });
+        try {
+            const features = await this.featureService.getFeatures(
+                req.query,
+                fields,
+            );
+            res.json({ version, features });
+        } catch (err) {
+            handleErrors(res, this.logger, err);
+        }
     }
 
     async getToggle(req, res) {
@@ -67,8 +71,14 @@ class FeatureController extends Controller {
     }
 
     async listTags(req, res) {
-        const tags = await this.featureService.listTags(req.params.featureName);
-        res.json({ version, tags });
+        try {
+            const tags = await this.featureService.listTags(
+                req.params.featureName,
+            );
+            res.json({ version, tags });
+        } catch (err) {
+            handleErrors(res, this.logger, err);
+        }
     }
 
     async addTag(req, res) {
@@ -89,12 +99,16 @@ class FeatureController extends Controller {
     async removeTag(req, res) {
         const { featureName, type, value } = req.params;
         const userName = extractUser(req);
-        await this.featureService.removeTag(
-            featureName,
-            { type, value },
-            userName,
-        );
-        res.status(200).end();
+        try {
+            await this.featureService.removeTag(
+                featureName,
+                { type, value },
+                userName,
+            );
+            res.status(200).end();
+        } catch (err) {
+            handleErrors(res, this.logger, err);
+        }
     }
 
     async validate(req, res) {

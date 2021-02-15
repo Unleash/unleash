@@ -57,7 +57,13 @@ class MetricsMonitor {
 
         async function collectFeatureToggleMetrics() {
             featureTogglesTotal.reset();
-            const togglesCount = await featureToggleStore.count();
+            let togglesCount;
+            try {
+                togglesCount = await featureToggleStore.count();
+                // eslint-disable-next-line no-empty
+            } catch (e) {}
+
+            togglesCount = togglesCount || 0;
             featureTogglesTotal.labels(version).set(togglesCount);
         }
 
@@ -105,14 +111,14 @@ class MetricsMonitor {
             }
         });
 
-        this.configureDbMetrics(stores, eventStore);
+        this.configureDbMetrics(stores, eventBus);
     }
 
     stopMonitoring() {
         clearInterval(this.timer);
     }
 
-    configureDbMetrics(stores, eventStore) {
+    configureDbMetrics(stores, eventBus) {
         if (stores.db && stores.db.client) {
             const dbPoolMin = new client.Gauge({
                 name: 'db_pool_min',
@@ -143,29 +149,31 @@ class MetricsMonitor {
                     'how many acquires are waiting for a resource to be released in DB pool',
             });
 
-            eventStore.on(DB_POOL_UPDATE, data => {
+            eventBus.on(DB_POOL_UPDATE, data => {
                 dbPoolFree.set(data.free);
                 dbPoolUsed.set(data.used);
                 dbPoolPendingCreates.set(data.pendingCreates);
                 dbPoolPendingAcquires.set(data.pendingAcquires);
             });
 
-            this.registerPoolMetrics(stores.db.client.pool, eventStore);
+            this.registerPoolMetrics(stores.db.client.pool, eventBus);
             setInterval(
-                () =>
-                    this.registerPoolMetrics(stores.db.client.pool, eventStore),
+                () => this.registerPoolMetrics(stores.db.client.pool, eventBus),
                 ONE_MINUTE,
             );
         }
     }
 
-    registerPoolMetrics(pool, eventStore) {
-        eventStore.emit(DB_POOL_UPDATE, {
-            used: pool.numUsed(),
-            free: pool.numFree(),
-            pendingCreates: pool.numPendingCreates(),
-            pendingAcquires: pool.numPendingAcquires(),
-        });
+    registerPoolMetrics(pool, eventBus) {
+        try {
+            eventBus.emit(DB_POOL_UPDATE, {
+                used: pool.numUsed(),
+                free: pool.numFree(),
+                pendingCreates: pool.numPendingCreates(),
+                pendingAcquires: pool.numPendingAcquires(),
+            });
+            // eslint-disable-next-line no-empty
+        } catch (e) {}
     }
 }
 

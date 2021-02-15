@@ -22,8 +22,12 @@ class TagTypeController extends Controller {
     }
 
     async getTagTypes(req, res) {
-        const tagTypes = await this.tagTypeService.getAll();
-        res.json({ version, tagTypes });
+        try {
+            const tagTypes = await this.tagTypeService.getAll();
+            res.json({ version, tagTypes });
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async validate(req, res) {

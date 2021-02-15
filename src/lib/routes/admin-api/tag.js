@@ -22,13 +22,21 @@ class TagController extends Controller {
     }
 
     async getTags(req, res) {
-        const tags = await this.tagService.getTags();
-        res.json({ version, tags });
+        try {
+            const tags = await this.tagService.getTags();
+            res.json({ version, tags });
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async getTagsByType(req, res) {
-        const tags = await this.tagService.getTagsByType(req.params.type);
-        res.json({ version, tags });
+        try {
+            const tags = await this.tagService.getTagsByType(req.params.type);
+            res.json({ version, tags });
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async getTag(req, res) {

@@ -1,5 +1,7 @@
 'use strict';
 
+import { handleErrors } from './util';
+
 const Controller = require('../controller');
 
 const version = 1;
@@ -14,8 +16,12 @@ class FeatureTypeController extends Controller {
     }
 
     async getAllFeatureTypes(req, res) {
-        const types = await this.featureTypeStore.getAll();
-        res.json({ version, types });
+        try {
+            const types = await this.featureTypeStore.getAll();
+            res.json({ version, types });
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 }
 

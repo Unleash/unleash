@@ -1,5 +1,5 @@
 class FeatureHasTagError extends Error {
-    constructor(message: string) {
+    constructor(message) {
         super();
         Error.captureStackTrace(this, this.constructor);
 
@@ -7,7 +7,7 @@ class FeatureHasTagError extends Error {
         this.message = message;
     }
 
-    toJSON(): any {
+    toJSON() {
         const obj = {
             isJoi: true,
             name: this.constructor.name,
@@ -20,5 +20,4 @@ class FeatureHasTagError extends Error {
         return obj;
     }
 }
-
-export default { FeatureHasTagError };
+module.exports = FeatureHasTagError;

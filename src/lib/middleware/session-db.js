@@ -14,7 +14,7 @@ module.exports = function(config) {
     }
     const sessionMiddleware = session({
         name: 'unleash-session',
-        rolling: true,
+        rolling: false,
         resave: false,
         saveUninitialized: false,
         store,

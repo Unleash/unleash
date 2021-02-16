@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Textfield } from 'react-mdl';
+import PropTypes from 'prop-types';
 import strategyInputProps from './strategy-input-props';
 import Select from '../../common/select';
 
 import StrategyInputPercentage from './input-percentage';
 
-const stickinessOptions = [
+const builtInStickinessOptions = [
     { key: 'default', label: 'default' },
     { key: 'userId', label: 'userId' },
     { key: 'sessionId', label: 'sessionId' },
@@ -13,16 +14,24 @@ const stickinessOptions = [
 ];
 
 export default class FlexibleRolloutStrategy extends Component {
-    static propTypes = strategyInputProps;
+    static propTypes = { ...strategyInputProps, context: PropTypes.array };
 
-    onConfiguUpdate = (field, evt) => {
+    onUpdate = (field, evt) => {
         evt.preventDefault();
         const value = evt.target.value;
         this.props.updateParameter(field, value);
     };
 
+    resolveStickiness = () => {
+        const { context } = this.props;
+        return builtInStickinessOptions.concat(
+            context.filter(c => c.stickiness).map(c => ({ key: c.name, label: c.name }))
+        );
+    };
+
     render() {
         const { editable, parameters, index } = this.props;
+        const stickinessOptions = this.resolveStickiness();
 
         const rollout = parameters.rollout;
         const stickiness = parameters.stickiness;
@@ -38,7 +47,7 @@ export default class FlexibleRolloutStrategy extends Component {
                     minLabel="off"
                     maxLabel="on"
                     disabled={!editable}
-                    onChange={evt => this.onConfiguUpdate('rollout', evt)}
+                    onChange={evt => this.onUpdate('rollout', evt)}
                     id={`${index}-groupId`}
                 />
                 <div>
@@ -48,7 +57,7 @@ export default class FlexibleRolloutStrategy extends Component {
                         options={stickinessOptions}
                         value={stickiness}
                         disabled={!editable}
-                        onChange={evt => this.onConfiguUpdate('stickiness', evt)}
+                        onChange={evt => this.onUpdate('stickiness', evt)}
                     />
                     &nbsp;
                     <Textfield
@@ -56,7 +65,7 @@ export default class FlexibleRolloutStrategy extends Component {
                         label="groupId"
                         value={groupId}
                         disabled={!editable}
-                        onChange={evt => this.onConfiguUpdate('groupId', evt)}
+                        onChange={evt => this.onUpdate('groupId', evt)}
                         id={`${index}-groupId`}
                     />{' '}
                 </div>

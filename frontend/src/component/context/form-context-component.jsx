@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Chip, Textfield, Card, CardTitle, CardText, CardActions } from 'react-mdl';
+import { Button, Chip, Textfield, Card, CardTitle, CardText, CardActions, Checkbox } from 'react-mdl';
 
 import { FormButtons, styles as commonStyles } from '../common';
 import { trim } from '../common/util';
@@ -150,6 +150,27 @@ class AddContextComponent extends Component {
                             />
                             <Button onClick={this.addLegalValue}>Add</Button>
                             <div>{contextField.legalValues.map(this.renderLegalValue)}</div>
+                        </section>
+                        <br />
+                        <section style={{ padding: '16px' }}>
+                            <h6 style={{ marginTop: '0' }}>Custom stickiness (beta)</h6>
+                            <p style={{ color: 'rgba(0,0,0,.54)' }}>
+                                By enabling stickiness on this context field you can use it together with the
+                                flexible-rollout strategy. This will guarantee a consistent behavior for specific values
+                                of this context field. PS! Not all client SDK's support this feature yet!{' '}
+                                <a
+                                    href="https://unleash.github.io/docs/activation_strategy#flexiblerollout"
+                                    target="_blank"
+                                >
+                                    Read more
+                                </a>
+                            </p>
+                            <Checkbox
+                                label="Allow stickiness"
+                                ripple
+                                checked={contextField.stickiness}
+                                onChange={() => this.setValue('stickiness', !contextField.stickiness)}
+                            />
                         </section>
                     </section>
                     <CardActions>

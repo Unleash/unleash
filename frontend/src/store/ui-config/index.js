@@ -19,7 +19,7 @@ const DEFAULT = new $Map({
         {
             value: 'User documentation',
             icon: 'library_books',
-            href: 'https://unleash.github.io',
+            href: 'https://unleash.github.io?source=oss',
             title: 'User documentation',
         },
         {

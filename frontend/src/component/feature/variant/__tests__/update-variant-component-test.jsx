@@ -17,6 +17,7 @@ test('renders correctly with without variants', () => {
                 addVariant={jest.fn()}
                 removeVariant={jest.fn()}
                 updateVariant={jest.fn()}
+                stickinessOptions={['default']}
                 hasPermission={permission => permission === UPDATE_FEATURE}
             />
         </MemoryRouter>
@@ -34,6 +35,7 @@ test('renders correctly with without variants and no permissions', () => {
                 addVariant={jest.fn()}
                 removeVariant={jest.fn()}
                 updateVariant={jest.fn()}
+                stickinessOptions={['default']}
                 hasPermission={() => false}
             />
         </MemoryRouter>
@@ -90,6 +92,7 @@ test('renders correctly with with variants', () => {
                 addVariant={jest.fn()}
                 removeVariant={jest.fn()}
                 updateVariant={jest.fn()}
+                stickinessOptions={['default']}
                 hasPermission={permission => permission === UPDATE_FEATURE}
             />
         </MemoryRouter>

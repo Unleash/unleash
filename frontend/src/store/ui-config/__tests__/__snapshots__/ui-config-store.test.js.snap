@@ -6,7 +6,7 @@ Object {
   "headerBackground": undefined,
   "links": Array [
     Object {
-      "href": "https://unleash.github.io",
+      "href": "https://unleash.github.io?source=oss",
       "icon": "library_books",
       "title": "User documentation",
       "value": "User documentation",
@@ -30,7 +30,7 @@ Object {
   "headerBackground": "red",
   "links": Array [
     Object {
-      "href": "https://unleash.github.io",
+      "href": "https://unleash.github.io?source=oss",
       "icon": "library_books",
       "title": "User documentation",
       "value": "User documentation",
@@ -54,7 +54,7 @@ Object {
   "headerBackground": "black",
   "links": Array [
     Object {
-      "href": "https://unleash.github.io",
+      "href": "https://unleash.github.io?source=oss",
       "icon": "library_books",
       "title": "User documentation",
       "value": "User documentation",

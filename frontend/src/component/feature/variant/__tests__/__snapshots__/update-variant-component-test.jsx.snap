@@ -4,7 +4,6 @@ exports[`renders correctly with with variants 1`] = `
 <section
   style={
     Object {
-      "maxWidth": "700px",
       "padding": "16px",
     }
   }
@@ -154,7 +153,7 @@ exports[`renders correctly with with variants 1`] = `
     </tbody>
   </table>
   <br />
-  <p>
+  <div>
     <a
       href="#add-variant"
       onClick={[Function]}
@@ -162,7 +161,59 @@ exports[`renders correctly with with variants 1`] = `
     >
       Add variant
     </a>
-  </p>
+    <section
+      style={
+        Object {
+          "paddingTop": "16px",
+        }
+      }
+    >
+      <div
+        className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty is-upgraded"
+        style={
+          Object {
+            "width": "auto",
+          }
+        }
+      >
+        <select
+          className="mdl-textfield__input"
+          disabled={false}
+          onChange={[Function]}
+          style={
+            Object {
+              "background": "none",
+              "width": "auto",
+            }
+          }
+          value="default"
+        >
+          <option
+            value="default"
+          >
+            default
+          </option>
+        </select>
+        <label
+          className="mdl-textfield__label"
+          htmlFor="textfield-contextName"
+        >
+          Stickiness
+        </label>
+      </div>
+        
+      <small>
+        By overriding the stickiness you can control which parameter you want to be used in order to ensure consistent traffic allocation across variants.
+         
+        <a
+          href="https://unleash.github.io/docs/toggle_variants"
+          target="_blank"
+        >
+          Read more
+        </a>
+      </small>
+    </section>
+  </div>
 </section>
 `;
 
@@ -170,7 +221,6 @@ exports[`renders correctly with without variants 1`] = `
 <section
   style={
     Object {
-      "maxWidth": "700px",
       "padding": "16px",
     }
   }
@@ -193,7 +243,7 @@ exports[`renders correctly with without variants 1`] = `
     No variants defined.
   </p>
   <br />
-  <p>
+  <div>
     <a
       href="#add-variant"
       onClick={[Function]}
@@ -201,7 +251,7 @@ exports[`renders correctly with without variants 1`] = `
     >
       Add variant
     </a>
-  </p>
+  </div>
 </section>
 `;
 
@@ -209,7 +259,6 @@ exports[`renders correctly with without variants and no permissions 1`] = `
 <section
   style={
     Object {
-      "maxWidth": "700px",
       "padding": "16px",
     }
   }

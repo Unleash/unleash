@@ -185,7 +185,7 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
                         />
                         <span>%</span>
                     </Cell>
-                    <Cell col={9} className={[styles.flexCenter, styles.marginL10]}>
+                    <Cell col={9} className={[styles.flexCenter, styles.marginL10].join(' ')}>
                         <Switch name="weightType" checked={isFixWeight} onChange={setVariantWeightType}>
                             Custom percentage
                         </Switch>

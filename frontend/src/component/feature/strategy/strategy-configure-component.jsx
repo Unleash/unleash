@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Card, CardTitle, CardText, CardMenu, IconButton, Icon } from 'react-mdl';
 import { Link } from 'react-router-dom';
 
-import FlexibleRolloutStrategy from './flexible-rollout-strategy';
+import FlexibleRolloutStrategy from './flexible-rollout-strategy-container';
 import DefaultStrategy from './default-strategy';
 import GeneralStrategy from './general-strategy';
 import UserWithIdStrategy from './user-with-id-strategy';

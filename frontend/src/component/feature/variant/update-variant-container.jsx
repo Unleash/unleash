@@ -6,6 +6,7 @@ import { updateWeight } from '../../common/util';
 
 const mapStateToProps = (state, ownProps) => ({
     variants: ownProps.featureToggle.variants || [],
+    stickinessOptions: ['default', ...state.context.filter(c => c.stickiness).map(c => c.name)],
     hasPermission: ownProps.hasPermission,
 });
 
@@ -31,6 +32,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         const currentVariants = featureToggle.variants || [];
         const variants = currentVariants.map((v, i) => (i === index ? variant : v));
         updateWeight(variants, 1000);
+        requestUpdateFeatureToggleVariants(featureToggle, variants)(dispatch);
+    },
+    updateStickiness: stickiness => {
+        const { featureToggle } = ownProps;
+        const currentVariants = featureToggle.variants || [];
+        const variants = currentVariants.map(v => ({ ...v, stickiness }));
         requestUpdateFeatureToggleVariants(featureToggle, variants)(dispatch);
     },
 });

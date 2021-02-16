@@ -25,7 +25,10 @@ export default class FlexibleRolloutStrategy extends Component {
     resolveStickiness = () => {
         const { context } = this.props;
         return builtInStickinessOptions.concat(
-            context.filter(c => c.stickiness).map(c => ({ key: c.name, label: c.name }))
+            context
+                .filter(c => c.stickiness)
+                .filter(c => !builtInStickinessOptions.find(s => s.key === c.name))
+                .map(c => ({ key: c.name, label: c.name }))
         );
     };
 

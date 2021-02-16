@@ -10,7 +10,7 @@ class HealthCheckController extends Controller {
 
     logout(req, res) {
         if (req.session) {
-            req.session = null;
+            req.session.destroy();
         }
         if (req.logout) {
             req.logout();

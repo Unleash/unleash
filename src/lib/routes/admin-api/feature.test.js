@@ -620,3 +620,42 @@ test('Trying to get features while database is down should yield 500', t => {
     const { request, base } = getSetup(false);
     return request.get(`${base}/api/admin/features`).expect(500);
 });
+
+test('should mark toggle as stale', t => {
+    t.plan(1);
+    const toggleName = 'toggle-stale';
+    const { request, featureToggleStore, base, perms } = getSetup();
+    perms.withPermissions(UPDATE_FEATURE, DELETE_FEATURE);
+    featureToggleStore.createFeature({
+        name: toggleName,
+        strategies: [{ name: 'default' }],
+    });
+
+    return request
+        .post(`${base}/api/admin/features/${toggleName}/stale/on`)
+        .set('Content-Type', 'application/json')
+        .expect(200)
+        .expect(res => {
+            t.true(res.body.stale);
+        });
+});
+
+test('should mark toggle as NOT stale', t => {
+    t.plan(1);
+    const toggleName = 'toggle-stale';
+    const { request, featureToggleStore, base, perms } = getSetup();
+    perms.withPermissions(UPDATE_FEATURE, DELETE_FEATURE);
+    featureToggleStore.createFeature({
+        name: toggleName,
+        strategies: [{ name: 'default' }],
+        stale: true,
+    });
+
+    return request
+        .post(`${base}/api/admin/features/${toggleName}/stale/off`)
+        .set('Content-Type', 'application/json')
+        .expect(200)
+        .expect(res => {
+            t.false(res.body.stale);
+        });
+});

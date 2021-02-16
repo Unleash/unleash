@@ -9,6 +9,8 @@ module.exports = {
     FEATURE_IMPORT: 'feature-import',
     FEATURE_TAGGED: 'feature-tagged',
     FEATURE_UNTAGGED: 'feature-untagged',
+    FEATURE_STALE_ON: 'feature-stale-on',
+    FEATURE_STALE_OFF: 'feature-stale-off',
     DROP_FEATURES: 'drop-features',
     STRATEGY_CREATED: 'strategy-created',
     STRATEGY_DELETED: 'strategy-deleted',

@@ -5,6 +5,8 @@ const {
     FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
+    FEATURE_STALE_ON,
+    FEATURE_STALE_OFF,
 } = require('../event-type');
 
 module.exports = {
@@ -52,6 +54,8 @@ module.exports = {
         FEATURE_UPDATED,
         FEATURE_ARCHIVED,
         FEATURE_REVIVED,
+        FEATURE_STALE_ON,
+        FEATURE_STALE_OFF,
     ],
     tagTypes: [
         {

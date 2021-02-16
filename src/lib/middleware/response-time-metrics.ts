@@ -1,10 +1,10 @@
-'use strict';
+import  * as responseTime from 'response-time';
+import { REQUEST_TIME } from '../events';
 
-const responseTime = require('response-time');
-const { REQUEST_TIME } = require('../events');
+var _responseTime = responseTime.default
 
-module.exports = function(config) {
-    return responseTime((req, res, time) => {
+export function responseTimeMetrics(config) {
+    return _responseTime((req, res, time) => {
         const { statusCode } = res;
 
         const pathname = req.route ? req.baseUrl + req.route.path : '(hidden)';

@@ -6,7 +6,7 @@ const FeatureController = require('./client-api/feature.js');
 
 const Controller = require('./controller');
 const HealthCheckController = require('./health-check');
-const BackstageCTR = require('./backstage.js');
+import { BackstageController } from './backstage';
 const LogoutController = require('./logout');
 const api = require('./api-def');
 
@@ -14,7 +14,7 @@ class IndexRouter extends Controller {
     constructor(config, services) {
         super();
         this.use('/health', new HealthCheckController(config).router);
-        this.use('/internal-backstage', new BackstageCTR(config).router);
+        this.use('/internal-backstage', new BackstageController(config).router);
         this.use('/logout', new LogoutController(config).router);
         this.get(api.uri, this.index);
         this.use(api.links.admin.uri, new AdminApi(config, services).router);

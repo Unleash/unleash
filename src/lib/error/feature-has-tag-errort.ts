@@ -1,5 +1,3 @@
-'use strict';
-
 class FeatureHasTagError extends Error {
     constructor(message) {
         super();
@@ -23,4 +21,4 @@ class FeatureHasTagError extends Error {
     }
 }
 
-module.exports = FeatureHasTagError;
+export {FeatureHasTagError};

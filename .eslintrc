@@ -2,13 +2,20 @@
     "env": {
         "node": true
     },
-    "extends": ["airbnb-base", "prettier"],
+    "extends": [
+        "airbnb-base",
+        "prettier"
+
+    ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2019
     },
-    "plugins": ["prettier"],
+    "plugins": ["prettier","@typescript-eslint"],
     "root": true,
     "rules": {
+        "@typescript-eslint/no-var-requires": 0,
+        "import/no-unresolved": 0,
         "class-methods-use-this": [0],
         "prettier/prettier": ["error"],
         "func-names": "off",
@@ -28,5 +35,14 @@
             }
         ]
     },
+    "overrides": [
+        {
+            // enable the rule specifically for TypeScript files
+            "files": ["*.ts", "*.tsx"],
+            "rules": {
+                "@typescript-eslint/explicit-module-boundary-types": ["error"]
+            }
+        }
+    ],
     "ignorePatterns": ["**/docs/api/oas/"]
 }

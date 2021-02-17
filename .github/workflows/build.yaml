@@ -3,9 +3,6 @@ name: Build & Tests
 on:
   pull_request:
   push:
-    branches:
-    - master
-
 jobs:
   build:
 

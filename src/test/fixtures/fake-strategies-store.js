@@ -2,13 +2,18 @@
 
 const NotFoundError = require('../../lib/error/notfound-error');
 
-module.exports = () => {
+module.exports = (databaseIsUp = true) => {
     const _strategies = [
         { name: 'default', editable: false, parameters: {}, deprecated: false },
     ];
 
     return {
-        getStrategies: () => Promise.resolve(_strategies),
+        getStrategies: () => {
+            if (databaseIsUp) {
+                return Promise.resolve(_strategies);
+            }
+            return Promise.reject(new Error('No database connection'));
+        },
         getEditableStrategies: () =>
             Promise.resolve(_strategies.filter(s => s.editable)),
         getStrategy: name => {

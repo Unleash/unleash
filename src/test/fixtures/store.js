@@ -13,7 +13,7 @@ const settingStore = require('./fake-setting-store');
 const addonStore = require('./fake-addon-store');
 
 module.exports = {
-    createStores: () => {
+    createStores: (databaseIsUp = true) => {
         const db = {
             select: () => ({
                 from: () => Promise.resolve(),
@@ -22,17 +22,17 @@ module.exports = {
 
         return {
             db,
-            clientApplicationsStore: clientApplicationsStore(),
-            clientMetricsStore: new ClientMetricsStore(),
-            clientInstanceStore: clientInstanceStore(),
-            featureToggleStore: featureToggleStore(),
-            tagStore: tagStore(),
-            tagTypeStore: tagTypeStore(),
-            eventStore: new EventStore(),
-            strategyStore: strategyStore(),
-            contextFieldStore: contextFieldStore(),
-            settingStore: settingStore(),
-            addonStore: addonStore(),
+            clientApplicationsStore: clientApplicationsStore(databaseIsUp),
+            clientMetricsStore: new ClientMetricsStore(databaseIsUp),
+            clientInstanceStore: clientInstanceStore(databaseIsUp),
+            featureToggleStore: featureToggleStore(databaseIsUp),
+            tagStore: tagStore(databaseIsUp),
+            tagTypeStore: tagTypeStore(databaseIsUp),
+            eventStore: new EventStore(databaseIsUp),
+            strategyStore: strategyStore(databaseIsUp),
+            contextFieldStore: contextFieldStore(databaseIsUp),
+            settingStore: settingStore(databaseIsUp),
+            addonStore: addonStore(databaseIsUp),
         };
     },
 };

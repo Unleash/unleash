@@ -12,9 +12,9 @@ const { UPDATE_FEATURE } = require('../../permissions');
 
 const eventBus = new EventEmitter();
 
-function getSetup() {
+function getSetup(databaseIsUp = true) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
-    const stores = store.createStores();
+    const stores = store.createStores(databaseIsUp);
     const perms = permissions();
     const config = {
         baseUriPath: base,
@@ -117,4 +117,10 @@ test('should be able to filter by type', t => {
             t.is(res.body.tags.length, 1);
             t.is(res.body.tags[0].value, 'TeamRed');
         });
+});
+
+test('Getting tags while database is down should be a 500', t => {
+    t.plan(0);
+    const { request, base } = getSetup(false);
+    return request.get(`${base}/api/admin/tags`).expect(500);
 });

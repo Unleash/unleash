@@ -1,5 +1,7 @@
 'use strict';
 
+import { handleErrors } from '../admin-api/util';
+
 const Controller = require('../controller');
 
 const version = 1;
@@ -23,11 +25,15 @@ class FeatureController extends Controller {
     }
 
     async getAll(req, res) {
-        const features = await this.toggleService.getFeatures(
-            req.query,
-            FEATURE_COLUMNS_CLIENT,
-        );
-        res.json({ version, features });
+        try {
+            const features = await this.toggleService.getFeatures(
+                req.query,
+                FEATURE_COLUMNS_CLIENT,
+            );
+            res.json({ version, features });
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async getFeatureToggle(req, res) {

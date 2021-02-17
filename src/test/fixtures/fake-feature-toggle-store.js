@@ -1,12 +1,15 @@
 'use strict';
 
-module.exports = () => {
+module.exports = (databaseIsUp = true) => {
     const _features = [];
     const _archive = [];
     const _featureTags = {};
 
     return {
         getFeature: name => {
+            if (!databaseIsUp) {
+                return Promise.reject(new Error('No database connection'));
+            }
             const toggle = _features.find(f => f.name === name);
             if (toggle) {
                 return Promise.resolve(toggle);
@@ -63,6 +66,9 @@ module.exports = () => {
         },
         importFeature: feat => Promise.resolve(_features.push(feat)),
         getFeatures: query => {
+            if (!databaseIsUp) {
+                return Promise.reject(new Error('No database connection'));
+            }
             if (query) {
                 const activeQueryKeys = Object.keys(query).filter(
                     t => query[t],

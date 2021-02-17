@@ -15,7 +15,7 @@ const monitor = createMetricsMonitor();
 
 test.before(() => {
     const featureToggleStore = {
-        count: () => 123,
+        count: async () => 123,
     };
     const config = {
         serverMetrics: true,

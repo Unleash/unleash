@@ -1,5 +1,7 @@
 'use strict';
 
+import { handleErrors } from './util';
+
 const Controller = require('../controller');
 
 const extractUser = require('../../extract-user');
@@ -16,8 +18,12 @@ class ArchiveController extends Controller {
     }
 
     async getArchivedFeatures(req, res) {
-        const features = await this.featureService.getArchivedFeatures();
-        res.json({ features });
+        try {
+            const features = await this.featureService.getArchivedFeatures();
+            res.json({ features });
+        } catch (err) {
+            handleErrors(res, this.logger, err);
+        }
     }
 
     async reviveFeatureToggle(req, res) {

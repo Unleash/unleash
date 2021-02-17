@@ -13,48 +13,60 @@ const EVENT_COLUMNS = [
 ];
 
 class EventStore extends EventEmitter {
-    constructor(db) {
+    constructor(db, getLogger) {
         super();
         this.db = db;
+        this.logger = getLogger('lib/db/event-store.js');
     }
 
     async store(event) {
-        await this.db('events').insert({
-            type: event.type,
-            created_by: event.createdBy, // eslint-disable-line
-            data: event.data,
-            tags: event.tags ? JSON.stringify(event.tags) : [],
-        });
-        process.nextTick(() => this.emit(event.type, event));
+        try {
+            await this.db('events').insert({
+                type: event.type,
+                created_by: event.createdBy, // eslint-disable-line
+                data: event.data,
+                tags: event.tags ? JSON.stringify(event.tags) : [],
+            });
+            process.nextTick(() => this.emit(event.type, event));
+        } catch (e) {
+            this.logger.warn(`Failed to store event ${e}`);
+        }
     }
 
     async getEvents() {
-        const rows = await this.db
-            .select(EVENT_COLUMNS)
-            .from('events')
-            .limit(100)
-            .orderBy('created_at', 'desc');
+        try {
+            const rows = await this.db
+                .select(EVENT_COLUMNS)
+                .from('events')
+                .limit(100)
+                .orderBy('created_at', 'desc');
 
-        return rows.map(this.rowToEvent);
+            return rows.map(this.rowToEvent);
+        } catch (err) {
+            return [];
+        }
     }
 
     async getEventsFilterByName(name) {
-        const rows = await this.db
-            .select(EVENT_COLUMNS)
-            .from('events')
-            .limit(100)
-            .whereRaw("data ->> 'name' = ?", [name])
-            .andWhere(
-                'id',
-                '>=',
-                this.db
-                    .select(this.db.raw('coalesce(max(id),0) as id'))
-                    .from('events')
-                    .where({ type: DROP_FEATURES }),
-            )
-            .orderBy('created_at', 'desc');
-
-        return rows.map(this.rowToEvent);
+        try {
+            const rows = await this.db
+                .select(EVENT_COLUMNS)
+                .from('events')
+                .limit(100)
+                .whereRaw("data ->> 'name' = ?", [name])
+                .andWhere(
+                    'id',
+                    '>=',
+                    this.db
+                        .select(this.db.raw('coalesce(max(id),0) as id'))
+                        .from('events')
+                        .where({ type: DROP_FEATURES }),
+                )
+                .orderBy('created_at', 'desc');
+            return rows.map(this.rowToEvent);
+        } catch (err) {
+            return [];
+        }
     }
 
     rowToEvent(row) {

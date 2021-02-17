@@ -10,6 +10,7 @@ module.exports.createDb = function({ db, databaseSchema, getLogger }) {
         connection: db,
         pool: db.pool,
         searchPath: databaseSchema,
+        asyncStackTraces: true,
         log: {
             debug: msg => logger.debug(msg),
             info: msg => logger.info(msg),

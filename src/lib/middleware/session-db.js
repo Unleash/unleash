@@ -1,9 +1,16 @@
 const session = require('express-session');
 const KnexSessionStore = require('connect-session-knex')(session);
 
+const TWO_DAYS = 48 * 60 * 60 * 1000;
 module.exports = function(config) {
     let store;
-    if (config.dbSession === true) {
+    let db;
+    let age;
+    if (config.session) {
+        age = config.session.age || TWO_DAYS;
+        db = config.session.db || false;
+    }
+    if (db) {
         store = new KnexSessionStore({
             knex: config.stores.db,
             tablename: 'unleash_session',
@@ -22,7 +29,7 @@ module.exports = function(config) {
         cookie: {
             path: config.baseUriPath === '' ? '/' : config.baseUriPath,
             secure: !!config.secureHeaders,
-            maxAge: config.sessionAge,
+            maxAge: age,
         },
     });
     return (req, res, next) => sessionMiddleware(req, res, next);

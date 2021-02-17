@@ -56,6 +56,10 @@ function defaultOptions() {
                 ),
             },
         },
+        session: {
+            db: process.env.DB_SESSION || true,
+            age: TWO_DAYS,
+        },
         port: process.env.HTTP_PORT || process.env.PORT || 4242,
         host: process.env.HTTP_HOST,
         pipe: undefined,
@@ -66,7 +70,6 @@ function defaultOptions() {
         extendedPermissions: false,
         publicFolder,
         enableRequestLogger: false,
-        sessionAge: TWO_DAYS,
         adminAuthentication: process.env.ADMIN_AUTHENTICATION || 'unsecure',
         ui: {},
         importFile: process.env.IMPORT_FILE,
@@ -81,7 +84,6 @@ function defaultOptions() {
         version,
         secureHeaders: process.env.SECURE_HEADERS || false,
         enableOAS: process.env.ENABLE_OAS || false,
-        dbSession: process.env.DB_SESSION || true,
     };
 }
 

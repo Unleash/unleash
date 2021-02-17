@@ -13,5 +13,7 @@ unleash.start({
     },
     enableRequestLogger: true,
     enableOAS: true,
-    dbSession: true,
+    session: {
+        db: true
+    },
 });

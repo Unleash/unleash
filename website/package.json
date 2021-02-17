@@ -3,7 +3,7 @@
     "examples": "docusaurus-examples",
     "start": "docusaurus-start",
     "build": "docusaurus-build",
-    "postbuild": "cp README.md build/unleash.github.io/README.md",
+    "postbuild": "cp README.md build/unleash.github.io/README.md && cp CNAME build/unleash.github.io/CNAME",
     "publish-gh-pages": "docusaurus-publish",
     "write-translations": "docusaurus-write-translations",
     "version": "docusaurus-version",

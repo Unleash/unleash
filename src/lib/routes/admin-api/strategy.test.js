@@ -16,10 +16,10 @@ const {
 
 const eventBus = new EventEmitter();
 
-function getSetup() {
+function getSetup(databaseIsUp = true) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const perms = permissions();
-    const stores = store.createStores();
+    const stores = store.createStores(databaseIsUp);
     const config = {
         baseUriPath: base,
         stores,
@@ -260,4 +260,10 @@ test(`deprecating 'default' strategy will yield 403`, t => {
         .post(`${base}/api/admin/strategies/default/deprecate`)
         .set('Content-Type', 'application/json')
         .expect(403);
+});
+
+test('Getting strategies while database is down should yield 500', t => {
+    t.plan(0);
+    const { request, base } = getSetup(false);
+    return request.get(`${base}/api/admin/strategies`).expect(500);
 });

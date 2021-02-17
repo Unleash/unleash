@@ -1,9 +1,12 @@
 const NotFoundError = require('../../lib/error/notfound-error');
 
-module.exports = () => {
+module.exports = (databaseIsUp = true) => {
     const _tags = [];
     return {
         getTagsByType: type => {
+            if (!databaseIsUp) {
+                return Promise.reject(new Error('No database connection'));
+            }
             const tags = _tags.filter(t => t.type === type);
             return Promise.resolve(tags);
         },
@@ -18,7 +21,12 @@ module.exports = () => {
                 1,
             );
         },
-        getAll: () => Promise.resolve(_tags),
+        getAll: () => {
+            if (!databaseIsUp) {
+                return Promise.reject(new Error('No database connection'));
+            }
+            return Promise.resolve(_tags);
+        },
         getTag: (type, value) => {
             const tag = _tags.find(t => t.type === type && t.value === value);
             if (tag) {

@@ -16,9 +16,9 @@ const {
 
 const eventBus = new EventEmitter();
 
-function getSetup() {
+function getSetup(databaseIsUp = true) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
-    const stores = store.createStores();
+    const stores = store.createStores(databaseIsUp);
     const perms = permissions();
     const config = {
         baseUriPath: base,
@@ -613,4 +613,10 @@ test('Tags should be included in updated events', async t => {
     t.is(events[0].type, 'feature-updated');
     t.is(events[0].tags[0].type, 'simple');
     t.is(events[0].tags[0].value, 'tag');
+});
+
+test('Trying to get features while database is down should yield 500', t => {
+    t.plan(0);
+    const { request, base } = getSetup(false);
+    return request.get(`${base}/api/admin/features`).expect(500);
 });

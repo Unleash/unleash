@@ -100,3 +100,11 @@ curl --location --request PUT 'http://localhost:4242/api/admin/features/Feature.
   ]\
 }'\
 ```
+
+## Version check
+
+- Unleash checks that it uses the latest version by making a call to https://version.unleash.run.
+  - This is a cloud function storing instance id to our database for statistics.
+- This request includes a unique instance id for your server.
+- If you do not wish to check for upgrades define the environment variable `CHECK_VERSION` to anything else other than `true` before starting, and Unleash won't make any calls
+  - `export CHECK_VERSION=false`

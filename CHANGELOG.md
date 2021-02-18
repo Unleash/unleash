@@ -2,6 +2,8 @@
 
 ## 3.x.x
 
+- feat: check latest version
+- feat: expose current and latest version to ui-config
 - feat: Use express-session backed by postgres
 
 ## 3.12.0

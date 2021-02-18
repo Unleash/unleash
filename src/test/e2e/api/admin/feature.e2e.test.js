@@ -518,3 +518,15 @@ test.serial(
             });
     },
 );
+
+test.serial('marks feature toggle as stale', async t => {
+    t.plan(1);
+    const request = await setupApp(stores);
+    await request
+        .post('/api/admin/features/featureZ/stale/on')
+        .set('Content-Type', 'application/json');
+
+    return request.get('/api/admin/features/featureZ').expect(res => {
+        t.true(res.body.stale);
+    });
+});

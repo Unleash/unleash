@@ -8,6 +8,8 @@ const {
     FEATURE_CREATED,
     FEATURE_REVIVED,
     FEATURE_UPDATED,
+    FEATURE_STALE_ON,
+    FEATURE_STALE_OFF,
     TAG_CREATED,
 } = require('../event-type');
 
@@ -119,7 +121,7 @@ class FeatureToggleService {
         return this.updateField(feature.name, 'enabled', toggle, userName);
     }
 
-    /** Tag releated  */
+    /** Tag related  */
     async listTags(featureName) {
         return this.featureToggleStore.getAllTagsForFeature(featureName);
     }
@@ -199,6 +201,23 @@ class FeatureToggleService {
 
         await this.eventStore.store({
             type: FEATURE_UPDATED,
+            createdBy: userName,
+            data: feature,
+            tags,
+        });
+        return feature;
+    }
+
+    async updateStale(featureName, isStale, userName) {
+        const feature = await this.featureToggleStore.getFeature(featureName);
+        feature.stale = isStale;
+        await this.featureToggleStore.updateFeature(feature);
+        const tags =
+            (await this.featureToggleStore.getAllTagsForFeature(featureName)) ||
+            [];
+
+        await this.eventStore.store({
+            type: isStale ? FEATURE_STALE_ON : FEATURE_STALE_OFF,
             createdBy: userName,
             data: feature,
             tags,

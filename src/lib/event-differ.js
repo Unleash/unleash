@@ -30,6 +30,8 @@ const {
     TAG_TYPE_CREATED,
     TAG_TYPE_DELETED,
     APPLICATION_CREATED,
+    FEATURE_STALE_ON,
+    FEATURE_STALE_OFF,
 } = require('./event-type');
 
 const strategyTypes = [
@@ -51,6 +53,8 @@ const featureTypes = [
     FEATURE_TAGGED,
     FEATURE_UNTAGGED,
     DROP_FEATURES,
+    FEATURE_STALE_ON,
+    FEATURE_STALE_OFF,
 ];
 
 const contextTypes = [

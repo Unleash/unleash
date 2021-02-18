@@ -8,6 +8,8 @@ const {
     FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
+    FEATURE_STALE_ON,
+    FEATURE_STALE_OFF,
 } = require('../event-type');
 
 const definition = require('./slack-definition');
@@ -32,7 +34,15 @@ class SlackAddon extends Addon {
             slackChannels.push(defaultChannel);
         }
 
-        const text = this.generateText(event);
+        let text;
+
+        if (event.type === FEATURE_STALE_ON) {
+            text = this.generateStaleText(event, true);
+        } else if (event.type === FEATURE_STALE_OFF) {
+            text = this.generateStaleText(event, false);
+        } else {
+            text = this.generateText(event);
+        }
 
         const requests = slackChannels.map(channel => {
             const body = {
@@ -72,6 +82,16 @@ class SlackAddon extends Addon {
 
     findSlackChannels({ tags = [] }) {
         return tags.filter(tag => tag.type === 'slack').map(t => t.value);
+    }
+
+    generateStaleText({ createdBy, data }, isStale) {
+        const feature = `<${this.unleashUrl}/#/features/strategies/${data.name}|${data.name}>`;
+
+        if (isStale) {
+            return `The feature toggle *${feature}* is now *ready to be removed* from the code. :technologist:
+This was changed by ${createdBy}.`;
+        }
+        return `The feature toggle *${feature}* was is *unmarked as stale*. This was changed by ${createdBy}.`;
     }
 
     generateText({ createdBy, data, type }) {

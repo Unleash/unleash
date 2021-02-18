@@ -169,11 +169,33 @@ class FeatureController extends Controller {
     }
 
     async staleOn(req, res) {
-        await this._updateField('stale', true, req, res);
+        try {
+            const { featureName } = req.params;
+            const userName = extractUser(req);
+            const feature = await this.featureService.updateStale(
+                featureName,
+                true,
+                userName,
+            );
+            res.json(feature).end();
+        } catch (error) {
+            handleErrors(res, this.logger, error);
+        }
     }
 
     async staleOff(req, res) {
-        await this._updateField('stale', false, req, res);
+        try {
+            const { featureName } = req.params;
+            const userName = extractUser(req);
+            const feature = await this.featureService.updateStale(
+                featureName,
+                false,
+                userName,
+            );
+            res.json(feature).end();
+        } catch (error) {
+            handleErrors(res, this.logger, error);
+        }
     }
 
     async _updateField(field, value, req, res) {

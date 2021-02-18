@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const errorHandler = require('errorhandler');
 const IndexRouter = require('./routes');
-const unleashSession = require('./middleware/session');
+const unleashDbSession = require('./middleware/session-db');
 const responseTime = require('./middleware/response-time');
 const requestLogger = require('./middleware/request-logger');
 const simpleAuthentication = require('./middleware/simple-authentication');
@@ -32,7 +32,7 @@ module.exports = function(config, services = {}) {
     app.use(compression());
     app.use(cookieParser());
     app.use(express.json({ strict: false }));
-    app.use(unleashSession(config));
+    app.use(unleashDbSession(config));
     app.use(responseTime(config));
     app.use(requestLogger(config));
     app.use(secureHeaders(config));

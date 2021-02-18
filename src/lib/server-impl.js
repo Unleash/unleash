@@ -49,7 +49,6 @@ async function createApp(options) {
         eventBus,
         secret,
         logFactory: options.getLogger, // TODO: remove in v4.x
-
         ...options,
     };
 

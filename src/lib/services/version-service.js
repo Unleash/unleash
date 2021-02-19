@@ -54,7 +54,7 @@ class VersionService {
         return {
             current: this.current,
             latest: this.latest || {},
-            isLatest: this.isLatest || false,
+            isLatest: this.isLatest,
         };
     }
 }

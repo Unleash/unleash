@@ -16,4 +16,7 @@ unleash.start({
     session: {
         db: true
     },
+    versionCheck: {
+        enable: false,
+    }
 });

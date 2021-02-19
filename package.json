@@ -95,7 +95,6 @@
     "prom-client": "^13.1.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
-    "typescript": "^4.1.5",
     "unleash-frontend": "3.11.4",
     "yargs": "^16.0.3"
   },
@@ -123,7 +122,8 @@
     "proxyquire": "^2.1.3",
     "superagent": "^6.1.0",
     "supertest": "^5.0.0",
-    "tsc-watch": "^4.2.9"
+    "tsc-watch": "^4.2.9",
+    "typescript": "^4.1.5"
   },
   "resolutions": {
     "set-value": "^2.0.1",

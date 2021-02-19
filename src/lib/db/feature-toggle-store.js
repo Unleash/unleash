@@ -98,6 +98,14 @@ class FeatureToggleStore {
             .then(this.rowToFeature);
     }
 
+    async getProjectId(name) {
+        return this.db
+            .first(['project'])
+            .from(TABLE)
+            .where({ name })
+            .then(r => (r ? r.project : undefined));
+    }
+
     async hasFeature(name) {
         return this.db
             .first('name', 'archived')

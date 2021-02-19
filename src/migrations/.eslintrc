@@ -1,0 +1,16 @@
+{
+    "env": {},
+    "extends": [],
+    "parser": "",
+    "plugins": [],
+    "rules": {},
+    "overrides": [
+      {
+        "files": "*.js",
+        "rules": {
+          "@typescript-eslint/indent": "off"
+        }
+      }
+    ],
+    "settings": {}
+}

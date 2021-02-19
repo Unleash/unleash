@@ -8,10 +8,16 @@ const StrategyService = require('./strategy-service');
 const AddonService = require('./addon-service');
 const ContextService = require('./context-service');
 const VersionService = require('./version-service');
+const { AccessService } = require('./access-service');
 
 module.exports.createServices = (stores, config) => {
-    const featureToggleService = new FeatureToggleService(stores, config);
-    const projectService = new ProjectService(stores, config);
+    const accessService = new AccessService(stores, config);
+    const featureToggleService = new FeatureToggleService(
+        stores,
+        config,
+        accessService,
+    );
+    const projectService = new ProjectService(stores, config, accessService);
     const stateService = new StateService(stores, config);
     const strategyService = new StrategyService(stores, config);
     const tagTypeService = new TagTypeService(stores, config);
@@ -22,6 +28,7 @@ module.exports.createServices = (stores, config) => {
     const versionService = new VersionService(stores, config);
 
     return {
+        accessService,
         addonService,
         featureToggleService,
         projectService,

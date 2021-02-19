@@ -16,9 +16,10 @@
     "root": true,
     "rules": {
         "@typescript-eslint/no-var-requires": 0,
-        "@typescript-eslint/indent": 0,
+        "@typescript-eslint/indent": ["error", 4],
         "@typescript-eslint/naming-convention": 0,
         "@typescript-eslint/space-before-function-paren": 0,
+        "import/prefer-default-export": 0,
         "import/no-unresolved": 0,
         "class-methods-use-this": [0],
         "prettier/prettier": ["error"],

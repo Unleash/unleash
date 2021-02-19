@@ -2,11 +2,13 @@
 
 const test = require('ava');
 const supertest = require('supertest');
+const sinon = require('sinon');
 const { EventEmitter } = require('events');
 const store = require('../../test/fixtures/store');
 const checkPermission = require('./permission-checker');
 const getApp = require('../app');
 const getLogger = require('../../test/fixtures/no-logger');
+const { CREATE_PROJECT } = require('../permissions');
 
 const eventBus = new EventEmitter();
 
@@ -76,4 +78,58 @@ test('should allow access with admin permissions', t => {
         .expect(res => {
             t.is(res.body.message, 'OK');
         });
+});
+
+test('should call checkPermission if defined', async t => {
+    const config = {
+        experimental: {
+            rbac: true,
+        },
+    };
+
+    const func = checkPermission(config, CREATE_PROJECT);
+
+    const cb = sinon.fake();
+    const req = {
+        checkRbac: sinon.fake.returns(Promise.resolve(true)),
+    };
+
+    func(req, undefined, cb);
+
+    t.true(req.checkRbac.calledOnce);
+    t.is(req.checkRbac.firstArg, CREATE_PROJECT);
+});
+
+test('should call checkPermission if defined and give 403 response', async t => {
+    const config = {
+        experimental: {
+            rbac: true,
+        },
+    };
+
+    const func = checkPermission(config, CREATE_PROJECT);
+
+    const cb = sinon.fake();
+    const req = {
+        checkRbac: sinon.fake.returns(Promise.resolve(false)),
+    };
+
+    const fakeJson = sinon.fake.returns({
+        end: sinon.fake(),
+    });
+
+    const fakeStatus = sinon.fake.returns({
+        json: fakeJson,
+    });
+
+    const res = {
+        status: fakeStatus,
+    };
+
+    await func(req, res, cb);
+
+    t.true(req.checkRbac.calledOnce);
+    t.is(req.checkRbac.firstArg, CREATE_PROJECT);
+    t.false(cb.called);
+    t.is(fakeStatus.firstArg, 403);
 });

@@ -1,5 +1,8 @@
 'use strict';
 
+// eslint-disable-next-line
+import { AccessStore } from './access-store';
+
 const { createDb } = require('./db-pool');
 const EventStore = require('./event-store');
 const FeatureToggleStore = require('./feature-toggle-store');
@@ -51,5 +54,6 @@ module.exports.createStores = (config, eventBus) => {
         tagStore: new TagStore(db, eventBus, getLogger),
         tagTypeStore: new TagTypeStore(db, eventBus, getLogger),
         addonStore: new AddonStore(db, eventBus, getLogger),
+        accessStore: new AccessStore(db, eventBus, getLogger),
     };
 };

@@ -2,7 +2,7 @@ const auth = require('basic-auth');
 const User = require('../user');
 const AuthenticationRequired = require('../authentication-required');
 
-function unsecureAuthentication(basePath = '', app) {
+function insecureAuthentication(basePath = '', app) {
     app.post(`${basePath}/api/admin/login`, (req, res) => {
         const user = req.body;
         req.session.user = new User({ email: user.email });
@@ -41,4 +41,4 @@ function unsecureAuthentication(basePath = '', app) {
     });
 }
 
-module.exports = unsecureAuthentication;
+module.exports = insecureAuthentication;

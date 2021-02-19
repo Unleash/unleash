@@ -18,6 +18,8 @@ const DELETE_PROJECT = 'DELETE_PROJECT';
 const CREATE_ADDON = 'CREATE_ADDON';
 const UPDATE_ADDON = 'UPDATE_ADDON';
 const DELETE_ADDON = 'DELETE_ADDON';
+const READ_ROLE = 'READ_ROLE';
+const UPDATE_ROLE = 'UPDATE_ROLE';
 
 module.exports = {
     ADMIN,
@@ -38,4 +40,6 @@ module.exports = {
     CREATE_ADDON,
     DELETE_ADDON,
     UPDATE_ADDON,
+    READ_ROLE,
+    UPDATE_ROLE,
 };

@@ -1,4 +1,4 @@
-'use strict';
+import { BackstageController } from './backstage';
 
 const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
@@ -6,13 +6,12 @@ const FeatureController = require('./client-api/feature.js');
 
 const Controller = require('./controller');
 const HealthCheckController = require('./health-check');
-import { BackstageController } from './backstage';
 const LogoutController = require('./logout');
 const api = require('./api-def');
 
 class IndexRouter extends Controller {
     constructor(config, services) {
-        super();
+        super(config);
         this.use('/health', new HealthCheckController(config).router);
         this.use('/internal-backstage', new BackstageController(config).router);
         this.use('/logout', new LogoutController(config).router);

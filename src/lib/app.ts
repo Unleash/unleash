@@ -1,3 +1,6 @@
+import { responseTimeMetrics } from './middleware/response-time-metrics';
+import rbacMiddleware from './middleware/rbac-middleware';
+
 const express = require('express');
 
 const compression = require('compression');
@@ -7,7 +10,7 @@ const path = require('path');
 const errorHandler = require('errorhandler');
 const IndexRouter = require('./routes');
 const unleashDbSession = require('./middleware/session-db');
-import { responseTimeMetrics } from './middleware/response-time-metrics';
+
 const requestLogger = require('./middleware/request-logger');
 const simpleAuthentication = require('./middleware/simple-authentication');
 const noAuthentication = require('./middleware/no-authentication');
@@ -56,6 +59,8 @@ module.exports = function(config, services = {}) {
     if (typeof config.preRouterHook === 'function') {
         config.preRouterHook(app);
     }
+
+    app.use(baseUriPath, rbacMiddleware(config, services));
 
     // Setup API routes
     app.use(`${baseUriPath}/`, new IndexRouter(config, services).router);

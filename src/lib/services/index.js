@@ -7,6 +7,7 @@ const TagService = require('./tag-service');
 const StrategyService = require('./strategy-service');
 const AddonService = require('./addon-service');
 const ContextService = require('./context-service');
+const VersionService = require('./version-service');
 
 module.exports.createServices = (stores, config) => {
     const featureToggleService = new FeatureToggleService(stores, config);
@@ -18,6 +19,7 @@ module.exports.createServices = (stores, config) => {
     const clientMetricsService = new ClientMetricsService(stores, config);
     const addonService = new AddonService(stores, config, tagTypeService);
     const contextService = new ContextService(stores, config);
+    const versionService = new VersionService(stores, config);
 
     return {
         addonService,
@@ -29,5 +31,6 @@ module.exports.createServices = (stores, config) => {
         tagService,
         clientMetricsService,
         contextService,
+        versionService,
     };
 };

@@ -3,16 +3,24 @@
 const Controller = require('../controller');
 
 class ConfigController extends Controller {
-    constructor(config) {
+    constructor(config, { versionService }) {
         super(config);
-        this.uiConfig = { ...config.ui, version: config.version };
-
+        this.versionService = versionService;
+        this.uiConfig = {
+            ...config.ui,
+            version: config.version,
+        };
         this.get('/', this.getUIConfig);
     }
 
     async getUIConfig(req, res) {
         const config = this.uiConfig;
-        res.json(config);
+        if (this.versionService) {
+            const versionInfo = this.versionService.getVersionInfo();
+            res.json({ ...config, versionInfo });
+        } else {
+            res.json(config);
+        }
     }
 }
 

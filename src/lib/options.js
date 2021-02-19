@@ -69,6 +69,12 @@ function defaultOptions() {
         enableLegacyRoutes: false,
         extendedPermissions: false,
         publicFolder,
+        versionCheck: {
+            url:
+                process.env.UNLEASH_VERSION_URL ||
+                'https://version.unleash.run',
+            enable: process.env.CHECK_VERSION || 'true',
+        },
         enableRequestLogger: false,
         adminAuthentication: process.env.ADMIN_AUTHENTICATION || 'unsecure',
         ui: {},

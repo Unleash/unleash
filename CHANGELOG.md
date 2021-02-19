@@ -1,10 +1,18 @@
 # Changelog
 
-## 3.x.x
+## 3.13.0
 
 - feat: check latest version
 - feat: expose current and latest version to ui-config
 - feat: Use express-session backed by postgres
+- feat: update unleash-frontend to version 3.12.0
+- feat: Handle database connection errors with 500 (#725)
+- feat: Introduce specific "feature stale" events (#727)
+- fix: generate uuid in js migration instead of from db
+- fix: Don't check version when starting up in dev mode
+- fix: TypeScript should be a dev dependency (#730)
+- fix: make sure static site includes CNAME
+- fix: gh-720 Use express path templates for prometheus metrics (#724)
 
 ## 3.12.0
 

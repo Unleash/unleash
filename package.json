@@ -96,6 +96,7 @@
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
     "unleash-frontend": "3.11.4",
+    "uuid": "^8.3.2",
     "yargs": "^16.0.3"
   },
   "devDependencies": {

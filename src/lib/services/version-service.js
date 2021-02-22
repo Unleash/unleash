@@ -30,6 +30,7 @@ class VersionService {
     async checkLatestVersion() {
         if (this.enabled) {
             const { id } = await this.settingStore.get('instanceInfo');
+            this.instanceId = id;
             try {
                 const data = await fetch(this.versionCheckUrl, {
                     method: 'POST',
@@ -55,6 +56,7 @@ class VersionService {
             current: this.current,
             latest: this.latest || {},
             isLatest: this.isLatest,
+            instanceId: this.instanceId,
         };
     }
 }

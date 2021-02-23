@@ -110,6 +110,9 @@
       "index": {
         "title": "index"
       },
+      "integrations/integrations": {
+        "title": "Integrations and plugins"
+      },
       "sdks/dot_net_sdk": {
         "title": ".net SDK"
       },
@@ -198,6 +201,7 @@
       "Internal": "Internal",
       "Specification": "Specification",
       "Deploy & configure": "Deploy & configure",
+      "Integrations": "Integrations",
       "Contribute to Unleash": "Contribute to Unleash"
     }
   },

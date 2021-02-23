@@ -68,8 +68,8 @@
     ]
   },
   "Integrations": {
-    "Client": [
-      "tags"
+    "Integrations": [
+      "integrations/integrations"
     ]
   },
   "Contribute": {

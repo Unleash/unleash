@@ -69,7 +69,7 @@ const siteConfig = {
         { doc: 'user_guide/connect_sdk', label: 'Documentation' },
         { doc: 'api/client/features', label: 'API' },
         { doc: 'deploy/getting_started', label: 'Deploy and manage' },
-        { doc: 'tags', label: 'Integrations' },
+        { doc: 'integrations/integrations', label: 'Integrations' },
         { doc: 'developer_guide', label: 'Contribute' },
         { page: 'help', label: 'Help' },
         // {blog: true, label: 'Blog'},

@@ -10,7 +10,15 @@ exports[`renders correctly with empty version 1`] = `
   </small>
   <br />
   <small>
+    
+  </small>
+  <br />
+  <small>
     We are the best!
+  </small>
+  <br />
+  <small>
+    
   </small>
 </react-mdl-FooterSection>
 `;
@@ -25,7 +33,15 @@ exports[`renders correctly with ui-config 1`] = `
   </small>
   <br />
   <small>
+    
+  </small>
+  <br />
+  <small>
     We are the best!
+  </small>
+  <br />
+  <small>
+    
   </small>
 </react-mdl-FooterSection>
 `;
@@ -39,6 +55,14 @@ exports[`renders correctly without uiConfig 1`] = `
     
   </small>
   <br />
+  <small>
+    
+  </small>
+  <br />
   <small />
+  <br />
+  <small>
+    
+  </small>
 </react-mdl-FooterSection>
 `;

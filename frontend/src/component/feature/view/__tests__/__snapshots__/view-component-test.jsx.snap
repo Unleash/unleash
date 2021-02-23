@@ -105,7 +105,7 @@ exports[`renders correctly with one feature 1`] = `
       />
       <span>
         <react-mdl-Button
-          className="mdl-button dropdownButton"
+          className="mdl-button"
           id="update_status"
         >
           Status

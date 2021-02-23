@@ -55,7 +55,7 @@ exports[`renders correctly with one feature 1`] = `
   >
     <react-mdl-CardActions>
       <react-mdl-Button
-        className=" dropdownButton"
+        className="dropdownButton"
         id="metric"
         title="Metric interval"
       >
@@ -115,7 +115,7 @@ exports[`renders correctly with one feature 1`] = `
         </react-mdl-MenuItem>
       </react-mdl-Menu>
       <react-mdl-Button
-        className=" dropdownButton"
+        className="dropdownButton"
         id="sorting"
         title="Sort by"
       >
@@ -257,7 +257,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
   >
     <react-mdl-CardActions>
       <react-mdl-Button
-        className=" dropdownButton"
+        className="dropdownButton"
         id="metric"
         title="Metric interval"
       >
@@ -317,7 +317,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
         </react-mdl-MenuItem>
       </react-mdl-Menu>
       <react-mdl-Button
-        className=" dropdownButton"
+        className="dropdownButton"
         id="sorting"
         title="Sort by"
       >

@@ -339,14 +339,17 @@ test.serial(
 test.serial('can untag feature', async t => {
     t.plan(1);
     const request = await setupApp(stores);
-    const feature1Name = faker.helpers.slugify(faker.lorem.words(3));
+    const feature1Name = faker.lorem.slug(3);
     await request.post('/api/admin/features').send({
         name: feature1Name,
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    const tag = { value: faker.lorem.word(), type: 'simple' };
+    const tag = {
+        value: faker.lorem.slug(1),
+        type: 'simple',
+    };
     await request
         .post(`/api/admin/features/${feature1Name}/tags`)
         .send(tag)

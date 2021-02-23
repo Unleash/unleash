@@ -2,6 +2,11 @@
 
 ## 3.14.0
 
+- feat: upgrade unleash-frontend to version 3.13.0
+- feat: make client features endpoint memoizable (#734)
+- feat: Add instance id to ui-config endpoint
+- fix: make sure test-data is urlsafe
+
 ## 3.13.0
 
 - feat: check latest version

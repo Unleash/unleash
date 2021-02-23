@@ -68,14 +68,32 @@
       "client_specification": {
         "title": "Client Specification"
       },
-      "configuring_unleash": {
-        "title": "Configuring Unleash"
-      },
-      "database_backup": {
-        "title": "Database Backup"
-      },
       "database_schema": {
         "title": "Database Schema"
+      },
+      "deploy/audit_log": {
+        "title": "The audit log"
+      },
+      "deploy/configuring_unleash": {
+        "title": "Configuring Unleash"
+      },
+      "deploy/database_backup": {
+        "title": "Database Backup"
+      },
+      "deploy/getting_started": {
+        "title": "Getting Started"
+      },
+      "deploy/google_auth": {
+        "title": "Google Auth Hook"
+      },
+      "deploy/import_export": {
+        "title": "Import & Export"
+      },
+      "deploy/migration_guide": {
+        "title": "Migration Guide"
+      },
+      "deploy/securing_unleash": {
+        "title": "Securing Unleash"
       },
       "dev/version-4": {
         "title": "dev/version-4"
@@ -83,57 +101,104 @@
       "developer_guide": {
         "title": "Developer guide"
       },
-      "feature_toggle_types": {
-        "title": "Feature Toggle Types"
-      },
-      "toggle_variants": {
-        "title": "Feature Toggle Variants"
-      },
       "getting_started": {
         "title": "Getting Started"
-      },
-      "guides/custom_activation_strategy": {
-        "title": "Custom Activation Strategy"
       },
       "guides/feature_updates_to_slack": {
         "title": "Feature Updates To slack"
       },
-      "guides/google_auth": {
-        "title": "Google Auth Hook"
-      },
-      "import_export": {
-        "title": "Import & Export"
-      },
       "index": {
         "title": "index"
       },
-      "migration_guide": {
-        "title": "Migration Guide"
+      "sdks/dot_net_sdk": {
+        "title": ".net SDK"
       },
-      "securing_unleash": {
-        "title": "Securing Unleash"
+      "sdks/go_sdk": {
+        "title": "GO SDK"
+      },
+      "sdks/java_sdk": {
+        "title": "Java SDK"
+      },
+      "sdks/node_sdk": {
+        "title": "Node SDK"
+      },
+      "sdks/python_sdk": {
+        "title": "Python SDK"
+      },
+      "sdks/ruby_sdk": {
+        "title": "Ruby SDK"
       },
       "tags": {
         "title": "Tagging Features"
       },
       "unleash_context": {
         "title": "Unleash Context"
+      },
+      "user_guide/activation_strategy": {
+        "title": "Activation Strategies"
+      },
+      "user_guide/api_access": {
+        "title": "API Access"
+      },
+      "user_guide/archived_toggles": {
+        "title": "Archived toggles"
+      },
+      "user_guide/connect_sdk": {
+        "title": "Connect your SDK"
+      },
+      "user_guide/control_rollout": {
+        "title": "Control rollout"
+      },
+      "user_guide/create_feature_toggle": {
+        "title": "Create a feature toggle"
+      },
+      "user_guide/custom_activation_strategy": {
+        "title": "Custom Activation Strategy"
+      },
+      "user_guide/discover-unknown-toggles": {
+        "title": "user_guide/discover-unknown-toggles"
+      },
+      "user_guide/feature_toggle_types": {
+        "title": "Feature Toggle Types"
+      },
+      "user_guide/toggle_variants": {
+        "title": "Feature Toggle Variants"
+      },
+      "user_guide/native_apps": {
+        "title": "Working with native apps"
+      },
+      "user_guide/projects": {
+        "title": "Projects"
+      },
+      "user_guide/single_page_apps": {
+        "title": "Working with single page apps"
+      },
+      "user_guide/strategy_constraints": {
+        "title": "Strategy Constraints"
+      },
+      "user_guide/unleash_context": {
+        "title": "Unleash Context"
       }
     },
     "links": {
       "Documentation": "Documentation",
       "API": "API",
+      "Deploy and manage": "Deploy and manage",
+      "Integrations": "Integrations",
+      "Contribute": "Contribute",
       "Help": "Help"
     },
     "categories": {
-      "User Documentation": "User Documentation",
-      "Addons": "Addons",
-      "Developer Guide": "Developer Guide",
-      "Guides": "Guides",
+      "Getting started": "Getting started",
+      "Working with your SDK": "Working with your SDK",
+      "Addons framework": "Addons framework",
+      "Advanced": "Advanced",
       "Client": "Client",
       "Admin": "Admin",
       "Internal": "Internal",
-      "Specification": "Specification"
+      "Specification": "Specification",
+      "Deploy & configure": "Deploy & configure",
+      "Contribute to Unleash": "Contribute to Unleash"
     }
   },
   "pages-strings": {

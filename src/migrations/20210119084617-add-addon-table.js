@@ -16,5 +16,5 @@ exports.up = function(db, cb) {
 };
 
 exports.down = function(db, cb) {
-    db.runSql(`DROP TABLE addons;`, cb);
+    db.runSql('DROP TABLE addons;', cb);
 };

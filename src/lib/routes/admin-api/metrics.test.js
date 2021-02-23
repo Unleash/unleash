@@ -124,7 +124,7 @@ test('should return applications', t => {
     stores.clientApplicationsStore.upsert({ appName });
 
     return request
-        .get(`/api/admin/metrics/applications/`)
+        .get('/api/admin/metrics/applications/')
         .expect(200)
         .expect(res => {
             const metrics = res.body;

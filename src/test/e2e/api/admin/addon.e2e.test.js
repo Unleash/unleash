@@ -146,7 +146,7 @@ test.serial('should not update with invalid addon configuration', async t => {
     };
 
     await request
-        .put(`/api/admin/addons/1`)
+        .put('/api/admin/addons/1')
         .send(config)
         .expect(400);
 });
@@ -166,7 +166,7 @@ test.serial('should not update unknown addon configuration', async t => {
     };
 
     await request
-        .put(`/api/admin/addons/123123`)
+        .put('/api/admin/addons/123123')
         .send(config)
         .expect(404);
 });
@@ -209,7 +209,7 @@ test.serial('should not get unknown addon configuration', async t => {
     t.plan(0);
     const request = await setupApp(stores);
 
-    await request.get(`/api/admin/addons/445`).expect(404);
+    await request.get('/api/admin/addons/445').expect(404);
 });
 
 test.serial('should not delete unknown addon configuration', async t => {

@@ -10,7 +10,7 @@ exports.up = function(db, cb) {
 };
 
 exports.down = function(db, cb) {
-    db.runSql(`ALTER TABLE strategies DROP COLUMN deprecated`, cb);
+    db.runSql('ALTER TABLE strategies DROP COLUMN deprecated', cb);
 };
 
 exports._meta = {

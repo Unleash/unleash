@@ -113,7 +113,7 @@ module.exports = {
 
         if (!options.db.host) {
             throw new Error(
-                `Unleash requires database details to start. See https://unleash.github.io/docs/getting_started`,
+                'Unleash requires database details to start. See https://unleash.github.io/docs/getting_started',
             );
         }
 

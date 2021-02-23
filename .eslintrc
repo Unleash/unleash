@@ -9,12 +9,16 @@
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 2019
+        "ecmaVersion": 2019,
+        "project": "./tsconfig.json"
     },
     "plugins": ["prettier","@typescript-eslint"],
     "root": true,
     "rules": {
         "@typescript-eslint/no-var-requires": 0,
+        "@typescript-eslint/indent": 0,
+        "@typescript-eslint/naming-convention": 0,
+        "@typescript-eslint/space-before-function-paren": 0,
         "import/no-unresolved": 0,
         "class-methods-use-this": [0],
         "prettier/prettier": ["error"],
@@ -40,7 +44,10 @@
             // enable the rule specifically for TypeScript files
             "files": ["*.ts", "*.tsx"],
             "rules": {
-                "@typescript-eslint/explicit-module-boundary-types": ["error"]
+                "@typescript-eslint/explicit-module-boundary-types": ["error"],
+                "@typescript-eslint/indent": ["error"],
+                "@typescript-eslint/naming-convention": ["error"],
+                "@typescript-eslint/space-before-function-paren": ["error"]
             }
         }
     ],

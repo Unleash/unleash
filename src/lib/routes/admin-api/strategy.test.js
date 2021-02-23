@@ -252,7 +252,7 @@ test('reactivating a non-existent strategy yields 404', t => {
         .set('Content-Type', 'application/json')
         .expect(404);
 });
-test(`deprecating 'default' strategy will yield 403`, t => {
+test("deprecating 'default' strategy will yield 403", t => {
     t.plan(0);
     const { request, base, perms } = getSetup();
     perms.withPermissions(UPDATE_STRATEGY);

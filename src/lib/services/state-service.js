@@ -63,7 +63,7 @@ class StateService {
             : await this.toggleStore.getFeatures();
 
         if (dropBeforeImport) {
-            this.logger.info(`Dropping existing feature toggles`);
+            this.logger.info('Dropping existing feature toggles');
             await this.toggleStore.dropFeatures();
             await this.eventStore.store({
                 type: DROP_FEATURES,
@@ -100,7 +100,7 @@ class StateService {
             : await this.strategyStore.getStrategies();
 
         if (dropBeforeImport) {
-            this.logger.info(`Dropping existing strategies`);
+            this.logger.info('Dropping existing strategies');
             await this.strategyStore.dropStrategies();
             await this.eventStore.store({
                 type: DROP_STRATEGIES,

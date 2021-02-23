@@ -3,10 +3,12 @@
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
+const sinon = require('sinon');
 const store = require('../../../test/fixtures/store');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
 const { createServices } = require('../../services');
+const FeatureController = require('./feature');
 
 const eventBus = new EventEmitter();
 
@@ -38,6 +40,52 @@ test('should get empty getFeatures via client', t => {
         .expect(res => {
             t.true(res.body.features.length === 0);
         });
+});
+
+test('if caching is enabled should memoize', t => {
+    const getFeatures = sinon.fake.returns([]);
+
+    const featureToggleService = {
+        getFeatures,
+    };
+    const controller = new FeatureController(
+        { featureToggleService },
+        {
+            getLogger,
+            experimental: {
+                clientFeatureMemoize: {
+                    enabled: true,
+                    maxAge: 10000,
+                },
+            },
+        },
+    );
+    controller.getAll({ query: {} }, { json: () => {} });
+    controller.getAll({ query: {} }, { json: () => {} });
+    t.is(getFeatures.callCount, 1);
+});
+
+test('if caching is not enabled all calls goes to service', t => {
+    const getFeatures = sinon.fake.returns([]);
+
+    const featureToggleService = {
+        getFeatures,
+    };
+    const controller = new FeatureController(
+        { featureToggleService },
+        {
+            getLogger,
+            experimental: {
+                clientFeatureMemoize: {
+                    enabled: false,
+                    maxAge: 10000,
+                },
+            },
+        },
+    );
+    controller.getAll({ query: {} }, { json: () => {} });
+    controller.getAll({ query: {} }, { json: () => {} });
+    t.is(getFeatures.callCount, 2);
 });
 
 test('fetch single feature', t => {

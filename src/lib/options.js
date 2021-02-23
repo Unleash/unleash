@@ -90,6 +90,12 @@ function defaultOptions() {
         version,
         secureHeaders: process.env.SECURE_HEADERS || false,
         enableOAS: process.env.ENABLE_OAS || false,
+        experimental: {
+            clientFeatureMemoize: {
+                enabled: process.env.CLIENT_FEATURE_MEMOIZE || false,
+                maxAge: process.env.CLIENT_FEATURE_MAXAGE || 1000,
+            },
+        },
     };
 }
 

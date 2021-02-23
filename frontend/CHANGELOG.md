@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.13.0
+- fix: minor visual for  dropdowns
+- feat: add oss/enterprise version to footer (#245)
+
 # 3.12.0
 - feat: allow custom context fields to define stickiness. (#241)
 - fix: filter duplicates
-
 
 # 3.11.4
 - fix: should not register duplicate HTML5 backends

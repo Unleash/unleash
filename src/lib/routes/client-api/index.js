@@ -13,10 +13,7 @@ class ClientApi extends Controller {
         const { getLogger } = config;
 
         this.get('/', this.index);
-        this.use(
-            '/features',
-            new FeatureController(services, getLogger).router,
-        );
+        this.use('/features', new FeatureController(services, config).router);
         this.use('/metrics', new MetricsController(services, getLogger).router);
         this.use(
             '/register',

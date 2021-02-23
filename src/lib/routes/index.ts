@@ -22,10 +22,7 @@ class IndexRouter extends Controller {
 
         // legacy support (remove in 4.x)
         if (config.enableLegacyRoutes) {
-            const featureController = new FeatureController(
-                services,
-                config.getLogger,
-            );
+            const featureController = new FeatureController(services, config);
             this.use('/api/features', featureController.router);
         }
     }

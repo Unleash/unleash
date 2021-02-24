@@ -3,7 +3,7 @@ id: dot_net_sdk
 title: .net SDK
 ---
 
-In this guide we explain how to use feature toggles in a Java application using Unleash-hosted. We will be using the open source Unleash [.net Client SDK](https://github.com/Unleash/unleash-client-dotnet).
+In this guide we explain how to use feature toggles in a .NET application using Unleash-hosted. We will be using the open source Unleash [.net Client SDK](https://github.com/Unleash/unleash-client-dotnet).
 
 > **Important details**
 >

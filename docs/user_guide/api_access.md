@@ -26,7 +26,7 @@ Now that you have an access token with admin privileges we can use that to perfo
 In the example below we will use the [Unleash Admin API](../api/admin/features) to enable the “Demo” feature toggle sing curl. 
 
 ```sh
-curl -X POST -H "Authorization: admintokenher"
+curl -X POST -H "Authorization: admintoken"
 https://app.unleash-hosted.com/demo/api/admin/features/Demo/toggle/on
 ```
 

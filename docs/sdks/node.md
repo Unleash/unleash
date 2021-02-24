@@ -27,7 +27,7 @@ npm install unleash-client --save
 
 Next we must use initialize the client SDK in the application:
 
-```sh
+```js
 const unleash = require('unleash-client');
     
 unleash.initialize({

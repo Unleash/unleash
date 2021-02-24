@@ -4,7 +4,7 @@ title: GO SDK
 ---
 
 
-```sh
+```golang
 import (
   "github.com/Unleash/unleash-client-go/v3"
 )

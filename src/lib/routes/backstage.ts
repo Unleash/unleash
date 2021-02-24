@@ -1,9 +1,9 @@
-'use strict';
-
-const { register: prometheusRegister } = require('prom-client');
-const Controller = require('./controller');
+import { register as prometheusRegister } from 'prom-client';
+import Controller from './controller';
 
 class BackstageController extends Controller {
+    logger: any;
+
     constructor(config) {
         super();
 
@@ -18,4 +18,4 @@ class BackstageController extends Controller {
     }
 }
 
-module.exports = BackstageController;
+export { BackstageController };

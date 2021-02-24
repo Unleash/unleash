@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 
 const compression = require('compression');
@@ -9,7 +7,7 @@ const path = require('path');
 const errorHandler = require('errorhandler');
 const IndexRouter = require('./routes');
 const unleashDbSession = require('./middleware/session-db');
-const responseTime = require('./middleware/response-time');
+import { responseTimeMetrics } from './middleware/response-time-metrics';
 const requestLogger = require('./middleware/request-logger');
 const simpleAuthentication = require('./middleware/simple-authentication');
 const noAuthentication = require('./middleware/no-authentication');
@@ -33,7 +31,7 @@ module.exports = function(config, services = {}) {
     app.use(cookieParser());
     app.use(express.json({ strict: false }));
     app.use(unleashDbSession(config));
-    app.use(responseTime(config));
+    app.use(responseTimeMetrics(config));
     app.use(requestLogger(config));
     app.use(secureHeaders(config));
     app.use(express.urlencoded({ extended: true }));

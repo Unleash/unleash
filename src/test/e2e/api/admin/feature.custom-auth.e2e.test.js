@@ -29,7 +29,7 @@ test.serial('should require authenticated user', async t => {
                     new AuthenticationRequired({
                         path: '/api/admin/login',
                         type: 'custom',
-                        message: `You have to identify yourself.`,
+                        message: 'You have to identify yourself.',
                     }),
                 )
                 .end(),

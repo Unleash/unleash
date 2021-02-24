@@ -11,5 +11,5 @@ exports.up = function(db, callback) {
 };
 
 exports.down = function(db, callback) {
-    db.runSql(`ALTER TABLE features DROP COLUMN "variants";`, callback);
+    db.runSql('ALTER TABLE features DROP COLUMN "variants";', callback);
 };

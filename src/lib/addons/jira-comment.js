@@ -86,7 +86,7 @@ class JiraAddon extends Addon {
                         content: [
                             {
                                 type: 'text',
-                                text: `To see what happened visit Unleash`,
+                                text: 'To see what happened visit Unleash',
                                 marks: [
                                     {
                                         type: 'link',

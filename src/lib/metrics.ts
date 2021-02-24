@@ -1,19 +1,19 @@
-'use strict';
-
-const client = require('prom-client');
-const events = require('./events');
-const {
+import client from 'prom-client';
+import * as events from './events';
+import {
     FEATURE_CREATED,
     FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
     DB_POOL_UPDATE,
-} = require('./event-type');
+} from'./event-type';
 
 const THREE_HOURS = 3 * 60 * 60 * 1000;
 const ONE_MINUTE = 60 * 1000;
 
 class MetricsMonitor {
+    timer: any;
+
     constructor() {
         this.timer = null;
     }
@@ -98,16 +98,15 @@ class MetricsMonitor {
         });
 
         clientMetricsStore.on('metrics', m => {
-            // eslint-disable-next-line no-restricted-syntax
-            for (const [feature, { yes, no }] of Object.entries(
+            for (const entry of Object.entries(
                 m.bucket.toggles,
             )) {
                 featureToggleUsageTotal
-                    .labels(feature, true, m.appName)
-                    .inc(yes);
+                    .labels(entry[0], 'true', m.appName)
+                    .inc(entry[1]['yes']);
                 featureToggleUsageTotal
-                    .labels(feature, false, m.appName)
-                    .inc(no);
+                    .labels(entry[0], 'false', m.appName)
+                    .inc(entry[1]['no']);
             }
         });
 

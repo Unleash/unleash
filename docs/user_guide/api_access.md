@@ -13,7 +13,7 @@ It is possible to integrate directly with the Admin API. In this guide we will e
 
 You will need access tokens with admin privileges to be allowed to connect to the Admin Unleash-API. You can create these tokens in the “Instance Admin” as part of the “API secrets” section. 
 
-Please note that it take up to 60 seconds for the new key to propagate to all Unleash-hosted instances. 
+Please note that it may take up to 60 seconds for the new key to propagate to all Unleash-hosted instances. 
 
 > If you need API token to use in a client SDK you should create a "client token" as these have less privileges.
 

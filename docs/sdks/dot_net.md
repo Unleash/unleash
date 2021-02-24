@@ -25,7 +25,7 @@ dotnet add package unleash.client
 
 ## Step 2: Create a new Unleash Instance
 
-Next must must initialize a new instance of the Unleash Client.
+Next we must initialize a new instance of the Unleash Client.
 
 ```java
 var settings = new UnleashSettings()

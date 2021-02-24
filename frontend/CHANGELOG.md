@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.13.1
+- fix: fix update-variant-test
+- fix: unsecure => insecure
+- fix: upgrade uglifyjs-webpack-plugin to version 2.2.0
+- fix: one and only one front (#244)
+
 # 3.13.0
 - fix: minor visual for  dropdowns
 - feat: add oss/enterprise version to footer (#245)

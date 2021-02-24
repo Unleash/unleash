@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Menu, MenuItem } from 'react-mdl';
 import { DropdownButton } from '../../common';
 import PropTypes from 'prop-types';
@@ -13,13 +13,7 @@ function projectItem(selectedId, item) {
     );
 }
 
-function ProjectComponent({ fetchProjects, projects, currentProjectId, updateCurrentProject }) {
-    useEffect(() => {
-        if (projects[0].inital) {
-            fetchProjects();
-        }
-    });
-
+function ProjectComponent({ projects, currentProjectId, updateCurrentProject }) {
     function setProject(v) {
         const id = typeof v === 'string' ? v.trim() : '';
         updateCurrentProject(id);
@@ -38,6 +32,7 @@ function ProjectComponent({ fetchProjects, projects, currentProjectId, updateCur
         <React.Fragment>
             <DropdownButton
                 className="mdl-color--amber-50"
+                style={{ textTransform: 'none', fontWeight: 'normal' }}
                 id="project"
                 label={`${curentProject.name}`}
                 title="Select project"

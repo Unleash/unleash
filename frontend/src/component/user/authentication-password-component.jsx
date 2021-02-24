@@ -6,7 +6,7 @@ class EnterpriseAuthenticationComponent extends React.Component {
     static propTypes = {
         authDetails: PropTypes.object.isRequired,
         passwordLogin: PropTypes.func.isRequired,
-        loadInitalData: PropTypes.func.isRequired,
+        loadInitialData: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
     };
 
@@ -37,7 +37,7 @@ class EnterpriseAuthenticationComponent extends React.Component {
 
         try {
             await this.props.passwordLogin(path, user);
-            await this.props.loadInitalData();
+            await this.props.loadInitialData();
             this.props.history.push(`/`);
         } catch (error) {
             if (error.statusCode === 404) {

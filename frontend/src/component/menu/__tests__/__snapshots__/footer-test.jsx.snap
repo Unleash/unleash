@@ -45,6 +45,20 @@ exports[`should render DrawerMenu 1`] = `
       </a>
       <a
         aria-current={null}
+        href="/context"
+        onClick={[Function]}
+      >
+        Context Fields
+      </a>
+      <a
+        aria-current={null}
+        href="/projects"
+        onClick={[Function]}
+      >
+        Projects
+      </a>
+      <a
+        aria-current={null}
         href="/tag-types"
         onClick={[Function]}
       >
@@ -160,6 +174,20 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         onClick={[Function]}
       >
         Applications
+      </a>
+      <a
+        aria-current={null}
+        href="/context"
+        onClick={[Function]}
+      >
+        Context Fields
+      </a>
+      <a
+        aria-current={null}
+        href="/projects"
+        onClick={[Function]}
+      >
+        Projects
       </a>
       <a
         aria-current={null}

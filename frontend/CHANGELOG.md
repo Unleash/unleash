@@ -112,8 +112,8 @@ The latest version of this document is always available in
 - feat: added time-ago to toggle-list
 - feat: Add stale marking of feature toggles
 - feat: add support for toggle type (#220)
-- feat: stort by stale
-- fix: imporve type-chip color
+- feat: sort by stale
+- fix: improve type-chip color
 - fix: some ux cleanup for toggle types
 
 # [3.4.0]
@@ -124,7 +124,7 @@ The latest version of this document is always available in
 - fix: upgrade react-dnd to version 11.1.3
 - fix: Update react-dnd to the latest version 🚀 (#213)
 - fix: read unleash version from ui-config (#219)
-- fix: flag inital context fields
+- fix: flag initial context fields
 
 
 # [3.3.5]

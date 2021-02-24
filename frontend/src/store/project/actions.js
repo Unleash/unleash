@@ -15,8 +15,6 @@ const upProject = project => ({ type: UPDATE_PROJECT, project });
 const delProject = project => ({ type: REMOVE_PROJECT, project });
 
 export function fetchProjects() {
-    return () => {};
-    /*
     const receiveProjects = value => ({ type: RECEIVE_PROJECT, value });
     return dispatch =>
         api
@@ -25,7 +23,6 @@ export function fetchProjects() {
                 dispatch(receiveProjects(json.projects));
             })
             .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_PROJECT));
-    */
 }
 
 export function removeProject(project) {

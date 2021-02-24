@@ -16,6 +16,9 @@ import uiConfig from './ui-config';
 import context from './context';
 import projects from './project';
 import addons from './addons';
+import userAdmin from './e-user-admin';
+import apiAdmin from './e-api-admin';
+import authAdmin from './e-admin-auth';
 
 const unleashStore = combineReducers({
     features,
@@ -35,6 +38,9 @@ const unleashStore = combineReducers({
     context,
     projects,
     addons,
+    userAdmin,
+    apiAdmin,
+    authAdmin,
 });
 
 export default unleashStore;

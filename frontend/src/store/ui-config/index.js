@@ -15,6 +15,7 @@ const DEFAULT = new $Map({
     version: '3.x',
     environment: '',
     slogan: 'The enterprise ready feature toggle service.',
+    flags: {},
     links: [
         {
             value: 'User documentation',

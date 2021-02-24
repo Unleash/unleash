@@ -7,6 +7,7 @@ import { UPDATE_FEATURE } from '../../../../permissions';
 import { weightTypes } from '../enums';
 
 jest.mock('react-mdl');
+jest.mock('../e-override-config', () => 'OverrideConfig');
 
 test('renders correctly with without variants', () => {
     const tree = renderer.create(

@@ -14,7 +14,7 @@ function fetchUser() {
         .then(response => response.json());
 }
 
-function unsecureLogin(path, user) {
+function insecureLogin(path, user) {
     return fetch(path, { method: 'POST', credentials: 'include', headers, body: JSON.stringify(user) })
         .then(throwIfNotSuccess)
         .then(response => response.json());
@@ -33,7 +33,7 @@ function passwordLogin(path, data) {
 
 export default {
     fetchUser,
-    unsecureLogin,
+    insecureLogin,
     logoutUser,
     passwordLogin,
 };

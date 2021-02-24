@@ -26,6 +26,12 @@ import CreateTag from '../../page/tags/create';
 import Addons from '../../page/addons';
 import AddonsCreate from '../../page/addons/create';
 import AddonsEdit from '../../page/addons/edit';
+import Admin from '../../page/admin';
+import AdminApi from '../../page/admin/api';
+import AdminUsers from '../../page/admin/users';
+import AdminAuth from '../../page/admin/auth';
+import { P, C } from '../common/flags';
+
 export const routes = [
     // Features
     { path: '/features/create', parent: '/features', title: 'Create', component: CreateFeatureToggle },
@@ -58,12 +64,18 @@ export const routes = [
     // Context
     { path: '/context/create', parent: '/context', title: 'Create', component: CreateContextField },
     { path: '/context/edit/:name', parent: '/context', title: ':name', component: EditContextField },
-    { path: '/context', title: 'Context Fields', icon: 'apps', component: ContextFields, hidden: true },
+    { path: '/context', title: 'Context Fields', icon: 'album', component: ContextFields, flag: C },
 
     // Project
     { path: '/projects/create', parent: '/projects', title: 'Create', component: CreateProject },
     { path: '/projects/edit/:id', parent: '/projects', title: ':id', component: EditProject },
-    { path: '/projects', title: 'Projects', icon: 'folder_open', component: ListProjects, hidden: true },
+    { path: '/projects', title: 'Projects', icon: 'folder_open', component: ListProjects, flag: P },
+
+    // Admin
+    { path: '/admin/api', parent: '/admin', title: 'API access', component: AdminApi },
+    { path: '/admin/users', parent: '/admin', title: 'Users', component: AdminUsers },
+    { path: '/admin/auth', parent: '/admin', title: 'Authentication', component: AdminAuth },
+    { path: '/admin', title: 'Admin', icon: 'album', component: Admin, hidden: true },
 
     { path: '/tag-types/create', parent: '/tag-types', title: 'Create', component: CreateTagType },
     { path: '/tag-types/edit/:name', parent: '/tag-types', title: ':name', component: EditTagType },

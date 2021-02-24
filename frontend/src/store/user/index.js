@@ -1,10 +1,10 @@
 import { Map as $Map } from 'immutable';
-import { UPDATE_USER, USER_LOGOUT } from './actions';
+import { USER_CHANGE_CURRENT, USER_LOGOUT } from './actions';
 import { AUTH_REQUIRED } from '../util';
 
 const userStore = (state = new $Map(), action) => {
     switch (action.type) {
-        case UPDATE_USER:
+        case USER_CHANGE_CURRENT:
             state = state
                 .set('profile', action.value)
                 .set('showDialog', false)

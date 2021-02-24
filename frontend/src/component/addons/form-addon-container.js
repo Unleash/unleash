@@ -3,7 +3,7 @@ import FormComponent from './form-addon-component';
 import { updateAddon, createAddon, fetchAddons } from '../../store/addons/actions';
 import { cloneDeep } from 'lodash';
 
-// Required for to fill the inital form.
+// Required for to fill the initial form.
 const DEFAULT_DATA = {
     provider: '',
     description: '',

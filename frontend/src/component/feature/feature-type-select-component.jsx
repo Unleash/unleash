@@ -5,7 +5,7 @@ import MySelect from '../common/select';
 class FeatureTypeSelectComponent extends Component {
     componentDidMount() {
         const { fetchFeatureTypes, types } = this.props;
-        if (types[0].inital && fetchFeatureTypes) {
+        if (types[0].initial && fetchFeatureTypes) {
             this.props.fetchFeatureTypes();
         }
     }

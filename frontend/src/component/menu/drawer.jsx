@@ -6,6 +6,13 @@ import styles from '../styles.module.scss';
 
 import { baseRoutes as routes } from './routes';
 
+const filterByFlags = flags => r => {
+    if (r.flag && !flags[r.flag]) {
+        return false;
+    }
+    return true;
+};
+
 function getIcon(name) {
     if (name === 'c_github') {
         return <i className={['material-icons', styles.navigationIcon, styles.iconGitHub].join(' ')} />;
@@ -41,7 +48,7 @@ function renderLink(link) {
     }
 }
 
-export const DrawerMenu = ({ links = [], title = 'Unleash' }) => (
+export const DrawerMenu = ({ links = [], title = 'Unleash', flags = {} }) => (
     <Drawer style={{ boxShadow: 'none', border: 0 }}>
         <span className={[styles.drawerTitle, 'mdl-layout-title'].join(' ')}>
             <img src="public/logo.png" width="32" height="32" className={styles.drawerTitleLogo} />
@@ -49,7 +56,7 @@ export const DrawerMenu = ({ links = [], title = 'Unleash' }) => (
         </span>
         <hr />
         <Navigation className={styles.navigation}>
-            {routes.map(item => (
+            {routes.filter(filterByFlags(flags)).map(item => (
                 <NavLink
                     key={item.path}
                     to={item.path}
@@ -70,4 +77,5 @@ export const DrawerMenu = ({ links = [], title = 'Unleash' }) => (
 DrawerMenu.propTypes = {
     links: PropTypes.array,
     title: PropTypes.string,
+    flags: PropTypes.object,
 };

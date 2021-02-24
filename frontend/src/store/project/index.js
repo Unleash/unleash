@@ -2,7 +2,7 @@ import { List } from 'immutable';
 import { RECEIVE_PROJECT, REMOVE_PROJECT, ADD_PROJECT, UPDATE_PROJECT } from './actions';
 import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
-const DEFAULT_PROJECTS = [{ id: 'default', name: 'Default', inital: true }];
+const DEFAULT_PROJECTS = [{ id: 'default', name: 'Default', initial: true }];
 
 function getInitState() {
     return new List(DEFAULT_PROJECTS);

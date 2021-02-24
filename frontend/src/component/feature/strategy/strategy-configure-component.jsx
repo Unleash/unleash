@@ -12,6 +12,8 @@ import LoadingStrategy from './loading-strategy';
 
 import styles from './strategy.module.scss';
 
+import StrategyConstraints from './constraint/strategy-constraint-input-container';
+
 export default class StrategyConfigureComponent extends React.Component {
     /* eslint-enable */
     static propTypes = {
@@ -113,6 +115,10 @@ export default class StrategyConfigureComponent extends React.Component {
                         </CardTitle>
 
                         <CardText style={{ width: 'unset' }}>
+                            <StrategyConstraints
+                                updateConstraints={this.updateConstraints}
+                                constraints={strategy.constraints || []}
+                            />
                             <InputType
                                 parameters={parameters}
                                 strategy={strategy}

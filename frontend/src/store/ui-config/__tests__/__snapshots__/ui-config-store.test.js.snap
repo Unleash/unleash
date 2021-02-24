@@ -3,6 +3,7 @@
 exports[`should be default state 1`] = `
 Object {
   "environment": "",
+  "flags": Object {},
   "headerBackground": undefined,
   "links": Array [
     Object {
@@ -27,6 +28,7 @@ Object {
 exports[`should be merged state all 1`] = `
 Object {
   "environment": "dev",
+  "flags": Object {},
   "headerBackground": "red",
   "links": Array [
     Object {
@@ -51,6 +53,7 @@ Object {
 exports[`should only update headerBackground 1`] = `
 Object {
   "environment": "",
+  "flags": Object {},
   "headerBackground": "black",
   "links": Array [
     Object {

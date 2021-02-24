@@ -4,16 +4,16 @@ import MySelect from '../common/select';
 
 class ProjectSelectComponent extends Component {
     componentDidMount() {
-        const { fetchProjects, projects } = this.props;
-        if (projects[0].inital && fetchProjects) {
-            this.props.fetchProjects();
+        const { fetchProjects, projects, enabled } = this.props;
+        if (projects[0].initial && enabled) {
+            fetchProjects();
         }
     }
 
     render() {
-        const { value, projects, onChange, filled } = this.props;
+        const { value, projects, onChange, filled, enabled } = this.props;
 
-        if (!projects || projects.length === 1) {
+        if (!enabled) {
             return null;
         }
 
@@ -30,6 +30,7 @@ class ProjectSelectComponent extends Component {
 ProjectSelectComponent.propTypes = {
     value: PropTypes.string,
     filled: PropTypes.bool,
+    enabled: PropTypes.bool,
     projects: PropTypes.array.isRequired,
     fetchProjects: PropTypes.func,
     onChange: PropTypes.func.isRequired,

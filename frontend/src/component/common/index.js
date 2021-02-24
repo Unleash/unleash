@@ -140,14 +140,15 @@ IconLink.propTypes = {
     icon: PropTypes.string,
 };
 
-export const DropdownButton = ({ label, id, className = styles.dropdownButton, title }) => (
-    <Button id={id} className={className} title={title}>
+export const DropdownButton = ({ label, id, className = styles.dropdownButton, title, style }) => (
+    <Button id={id} className={className} title={title} style={style}>
         {label}
         <Icon name="arrow_drop_down" className="mdl-color-text--grey-600" />
     </Button>
 );
 DropdownButton.propTypes = {
     label: PropTypes.string,
+    style: PropTypes.object,
     id: PropTypes.string,
     title: PropTypes.string,
 };
@@ -185,3 +186,15 @@ export function calc(value, total, decimal) {
 export function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
+
+export const selectStyles = {
+    control: provided => ({
+        ...provided,
+        border: '1px solid #607d8b',
+        boxShadow: '0',
+        ':hover': {
+            borderColor: '#607d8b',
+            boxShadow: '0 0 0 1px #607d8b',
+        },
+    }),
+};

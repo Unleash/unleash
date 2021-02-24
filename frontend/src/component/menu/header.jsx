@@ -6,17 +6,18 @@ import { Route } from 'react-router-dom';
 import { DrawerMenu } from './drawer';
 import Breadcrum from './breadcrumb';
 import ShowUserContainer from '../user/show-user-container';
-import { loadInitalData } from './../../store/loader';
+import { loadInitialData } from './../../store/loader';
 
 class HeaderComponent extends PureComponent {
     static propTypes = {
         uiConfig: PropTypes.object.isRequired,
-        loadInitalData: PropTypes.func.isRequired,
+        init: PropTypes.func.isRequired,
         location: PropTypes.object.isRequired,
     };
 
     componentDidMount() {
-        this.props.loadInitalData();
+        const { init, uiConfig } = this.props;
+        init(uiConfig.flags);
     }
 
     // eslint-disable-next-line camelcase
@@ -35,7 +36,7 @@ class HeaderComponent extends PureComponent {
     }
 
     render() {
-        const { headerBackground, links, name } = this.props.uiConfig;
+        const { headerBackground, links, name, flags } = this.props.uiConfig;
         const style = headerBackground ? { background: headerBackground } : {};
         return (
             <React.Fragment>
@@ -44,10 +45,10 @@ class HeaderComponent extends PureComponent {
                         <ShowUserContainer />
                     </Navigation>
                 </Header>
-                <DrawerMenu links={links} title={name} />
+                <DrawerMenu links={links} title={name} flags={flags} />
             </React.Fragment>
         );
     }
 }
 
-export default connect(state => ({ uiConfig: state.uiConfig.toJS() }), { loadInitalData })(HeaderComponent);
+export default connect(state => ({ uiConfig: state.uiConfig.toJS() }), { init: loadInitialData })(HeaderComponent);

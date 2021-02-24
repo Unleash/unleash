@@ -13,8 +13,8 @@ const Empty = () => (
             you will require a Client SDK.
             <br />
             <br />
-            You can read more about the available Client SDKs in the{' '}
-            <a href="https://unleash.github.io/docs/client_sdk">documentation.</a>
+            You can read more about how to use Unleash in your application in the{' '}
+            <a href="https://www.unleash-hosted.com/docs/use-feature-toggle">documentation.</a>
         </CardText>
     </React.Fragment>
 );

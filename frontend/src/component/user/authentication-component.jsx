@@ -37,7 +37,7 @@ class AuthComponent extends React.Component {
         user: PropTypes.object.isRequired,
         unsecureLogin: PropTypes.func.isRequired,
         passwordLogin: PropTypes.func.isRequired,
-        loadInitalData: PropTypes.func.isRequired,
+        loadInitialData: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
     };
 
@@ -51,7 +51,7 @@ class AuthComponent extends React.Component {
                 <AuthenticationPasswordComponent
                     passwordLogin={this.props.passwordLogin}
                     authDetails={authDetails}
-                    loadInitalData={this.props.loadInitalData}
+                    loadInitialData={this.props.loadInitialData}
                     history={this.props.history}
                 />
             );
@@ -60,7 +60,7 @@ class AuthComponent extends React.Component {
                 <AuthenticationSimpleComponent
                     unsecureLogin={this.props.unsecureLogin}
                     authDetails={authDetails}
-                    loadInitalData={this.props.loadInitalData}
+                    loadInitialData={this.props.loadInitialData}
                     history={this.props.history}
                 />
             );

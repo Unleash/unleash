@@ -6,6 +6,9 @@ const mapStateToProps = (state, props) => {
     const contextFieldBase = { name: '', description: '', legalValues: [] };
     const field = state.context.toJS().find(n => n.name === props.contextFieldName);
     const contextField = Object.assign(contextFieldBase, field);
+    if (!field) {
+        contextField.initial = true;
+    }
 
     return {
         contextField,

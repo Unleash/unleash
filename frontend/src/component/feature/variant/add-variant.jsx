@@ -6,7 +6,7 @@ import styles from './variant.module.scss';
 import MySelect from '../../common/select';
 import { trim, modalStyles } from '../../common/util';
 import { weightTypes } from './enums';
-import OverrideConfig from './override-config';
+import OverrideConfig from './e-override-config';
 
 Modal.setAppElement('#app');
 

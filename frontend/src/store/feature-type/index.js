@@ -1,7 +1,7 @@
 import { List } from 'immutable';
 import { RECEIVE_FEATURE_TYPES } from './actions';
 
-const DEFAULT_FEATURE_TYPES = [{ id: 'release', name: 'Release', inital: true }];
+const DEFAULT_FEATURE_TYPES = [{ id: 'release', name: 'Release', initial: true }];
 
 function getInitState() {
     return new List(DEFAULT_FEATURE_TYPES);

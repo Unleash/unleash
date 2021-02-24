@@ -3,9 +3,9 @@ import { RECEIVE_CONTEXT, REMOVE_CONTEXT, ADD_CONTEXT_FIELD, UPDATE_CONTEXT_FIEL
 import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
 const DEFAULT_CONTEXT_FIELDS = [
-    { name: 'environment', inital: true },
-    { name: 'userId', inital: true },
-    { name: 'appName', inital: true },
+    { name: 'environment', initial: true },
+    { name: 'userId', initial: true },
+    { name: 'appName', initial: true },
 ];
 
 function getInitState() {

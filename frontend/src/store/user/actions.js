@@ -1,6 +1,6 @@
 import api from './api';
 import { dispatchAndThrow } from '../util';
-export const UPDATE_USER = 'UPDATE_USER';
+export const USER_CHANGE_CURRENT = 'USER_CHANGE_CURRENT';
 export const USER_LOGOUT = 'USER_LOGOUT';
 export const USER_LOGIN = 'USER_LOGIN';
 export const START_FETCH_USER = 'START_FETCH_USER';
@@ -8,7 +8,7 @@ export const ERROR_FETCH_USER = 'ERROR_FETCH_USER';
 const debug = require('debug')('unleash:user-actions');
 
 const updateUser = value => ({
-    type: UPDATE_USER,
+    type: USER_CHANGE_CURRENT,
     value,
 });
 
@@ -28,12 +28,12 @@ export function fetchUser() {
     };
 }
 
-export function unsecureLogin(path, user) {
+export function insecureLogin(path, user) {
     return dispatch => {
         dispatch({ type: START_FETCH_USER });
 
         return api
-            .unsecureLogin(path, user)
+            .insecureLogin(path, user)
             .then(json => dispatch(updateUser(json)))
             .catch(handleError);
     };

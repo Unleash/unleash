@@ -5,6 +5,14 @@ import { Button, Chip, Textfield, Card, CardTitle, CardText, CardActions, Checkb
 import { FormButtons, styles as commonStyles } from '../common';
 import { trim } from '../common/util';
 
+const sortIgnoreCase = (a, b) => {
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+    if (a === b) return 0;
+    if (a > b) return 1;
+    return -1;
+};
+
 class AddContextComponent extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +25,7 @@ class AddContextComponent extends Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (!state.contextField.name && props.contextField.name) {
+        if (state.contextField.initial && !props.contextField.initial) {
             return { contextField: props.contextField };
         } else {
             return null;
@@ -62,6 +70,10 @@ class AddContextComponent extends Component {
         evt.preventDefault();
         const { contextField, currentLegalValue, errors } = this.state;
 
+        if (!currentLegalValue) {
+            return;
+        }
+
         if (contextField.legalValues.indexOf(currentLegalValue) !== -1) {
             errors.currentLegalValue = 'Duplicate legal value';
             this.setState({ errors });
@@ -69,7 +81,7 @@ class AddContextComponent extends Component {
         }
 
         const legalValues = contextField.legalValues.concat(trim(currentLegalValue));
-        contextField.legalValues = legalValues;
+        contextField.legalValues = legalValues.sort(sortIgnoreCase);
         this.setState({
             contextField,
             currentLegalValue: '',
@@ -148,7 +160,9 @@ class AddContextComponent extends Component {
                                 error={errors.currentLegalValue}
                                 onChange={this.updateCurrentLegalValue}
                             />
-                            <Button onClick={this.addLegalValue}>Add</Button>
+                            <Button onClick={this.addLegalValue} colored accent raised>
+                                Add
+                            </Button>
                             <div>{contextField.legalValues.map(this.renderLegalValue)}</div>
                         </section>
                         <br />

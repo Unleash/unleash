@@ -5,6 +5,13 @@ import { updateSettingForGroup } from '../../../store/settings/actions';
 import FeatureListComponent from './list-component';
 import { hasPermission } from '../../../permissions';
 
+function checkConstraints(strategy, regex) {
+    if (!strategy.constraints) {
+        return;
+    }
+    return strategy.constraints.some(c => c.values.some(v => regex.test(v)));
+}
+
 export const mapStateToPropsConfigurable = isFeature => state => {
     const featureMetrics = state.featureMetrics.toJS();
     const settings = state.settings.toJS().feature || {};
@@ -19,6 +26,7 @@ export const mapStateToPropsConfigurable = isFeature => state => {
             const regex = new RegExp(settings.filter, 'i');
             features = features.filter(
                 feature =>
+                    feature.strategies.some(s => checkConstraints(s, regex)) ||
                     regex.test(feature.name) ||
                     regex.test(feature.description) ||
                     feature.strategies.some(s => s && s.name && regex.test(s.name)) ||

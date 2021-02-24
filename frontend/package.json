@@ -96,7 +96,7 @@
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.11.0",
+    "webpack-dev-server": "^3.11.2",
     "whatwg-fetch": "^3.4.1"
   },
   "jest": {

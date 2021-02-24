@@ -35,7 +35,7 @@ const customStyles = {
 class AuthComponent extends React.Component {
     static propTypes = {
         user: PropTypes.object.isRequired,
-        unsecureLogin: PropTypes.func.isRequired,
+        insecureLogin: PropTypes.func.isRequired,
         passwordLogin: PropTypes.func.isRequired,
         loadInitialData: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
@@ -58,7 +58,7 @@ class AuthComponent extends React.Component {
         } else if (authDetails.type === SIMPLE_TYPE) {
             content = (
                 <AuthenticationSimpleComponent
-                    unsecureLogin={this.props.unsecureLogin}
+                    insecureLogin={this.props.insecureLogin}
                     authDetails={authDetails}
                     loadInitialData={this.props.loadInitialData}
                     history={this.props.history}

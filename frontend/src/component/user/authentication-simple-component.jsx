@@ -5,7 +5,7 @@ import { CardActions, Button, Textfield } from 'react-mdl';
 class SimpleAuthenticationComponent extends React.Component {
     static propTypes = {
         authDetails: PropTypes.object.isRequired,
-        unsecureLogin: PropTypes.func.isRequired,
+        insecureLogin: PropTypes.func.isRequired,
         loadInitialData: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
     };
@@ -17,7 +17,7 @@ class SimpleAuthenticationComponent extends React.Component {
         const path = evt.target.action;
 
         this.props
-            .unsecureLogin(path, user)
+            .insecureLogin(path, user)
             .then(this.props.loadInitialData)
             .then(() => this.props.history.push(`/`));
     };

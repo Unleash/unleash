@@ -3,7 +3,7 @@ id: node_sdk
 title: Node SDK
 ---
 
-In this guide we explain how to use feature toggles in a Java application using Unleash-hosted. We will be using the open source Unleash [Node.js Client SDK](https://github.com/Unleash/unleash-client-node).
+In this guide we explain how to use feature toggles in a Node application using Unleash-hosted. We will be using the open source Unleash [Node.js Client SDK](https://github.com/Unleash/unleash-client-node).
 
 > **Important details**
 >

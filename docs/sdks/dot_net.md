@@ -50,7 +50,7 @@ You should change the URL and the Authorization header (API secret) with the cor
 
 Now that we have initialized the client SDK we can start using feature toggles defined in Unleash in our application. To achieve this we have the “isEnabled” method available, which will allow us to check the value of a feature toggle. This method will return true or false based on whether the feature should be enabled or disabled for the current request. 
 
-```java
+```csharp
 if (unleash.IsEnabled("Demo")) 
 {
   //do some magic

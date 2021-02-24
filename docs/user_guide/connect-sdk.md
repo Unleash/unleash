@@ -81,7 +81,7 @@ func init() {
 Read more at [github.com/Unleash/unleash-client-go](https://github.com/Unleash/unleash-client-go)
 
 ## Ruby SDK
-```java
+```ruby
 
 
     require 'unleash'

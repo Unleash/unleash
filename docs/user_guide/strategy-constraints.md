@@ -11,7 +11,7 @@ Strategy constraints allow you to set pre-conditions on activation strategies th
 
 ## Constrain on a specific environment
 
-The most common use case for strategy constraints is that you want an activation strategy to only take effect in a specific environment.  For example you could enable the feature for everyone in development, while you only expose the new feature to a few percentage of the users in production. 
+The most common use case for strategy constraints is that you want an activation strategy to only take effect in a specific environment. For example you could enable the feature for everyone in development, while you only expose the new feature to a few percentage of users in production. 
 
 ![Strategy constraints](../assets/strategy-constraints.png)
 
@@ -50,4 +50,3 @@ Next you can define your new context field. The minimum requirement is to give i
 Legal values defines all possible values for the context field. this will be used in Unleash Admin UI to guide users when working with context fields to make sure they only use legal values.
 
 ![New context fields](../assets/constraints_legal_values.png)
-

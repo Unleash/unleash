@@ -7,7 +7,7 @@ In this guide we explain how to use feature toggles in a Java application using 
 
 > **Important details**
 >
->Make sure your have the following details available:
+>Make sure you have the following details available:
 >
 >- **API URL** – Where you should connect your client SDK
 >- **API Secret** – Your API secret required to connect to your instance. 

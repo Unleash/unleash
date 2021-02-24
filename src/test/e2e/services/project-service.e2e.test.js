@@ -101,6 +101,20 @@ test.serial('should validate name, legal', async t => {
     t.true(result);
 });
 
+test.serial('should not be able to create exiting project', async t => {
+    const project = {
+        id: 'test-delete',
+        name: 'New project',
+        description: 'Blah',
+    };
+    try {
+        await projectService.createProject(project, 'some-user');
+        await projectService.createProject(project, 'some-user');
+    } catch (err) {
+        t.is(err.message, 'A project with this id already exists.');
+    }
+});
+
 test.serial('should require URL friendly ID', async t => {
     try {
         await projectService.validateId('new name øæå');
@@ -139,7 +153,7 @@ test.serial('should update project', async t => {
     t.is(updatedProject.description, readProject.description);
 });
 
-test.serial('should give error when getting unkown project', async t => {
+test.serial('should give error when getting unknown project', async t => {
     try {
         await projectService.getProject('unknown');
     } catch (err) {

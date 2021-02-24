@@ -25,7 +25,7 @@ class ProjectService {
 
     async createProject(newProject, username) {
         const data = await schema.validateAsync(newProject);
-        await this.validateUniqueId(data);
+        await this.validateUniqueId(data.id);
         await this.eventStore.store({
             type: eventType.PROJECT_CREATED,
             createdBy: username,

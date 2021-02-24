@@ -25,7 +25,7 @@ It is also possible to constrain a activation strategy configuration on custom c
 
 > Starting with Unleash-enterprise version 3.2.28 customers can define their custom context fields via the user interface.
 
-You can also define your own custom context fields that you can use together with strategy constraints. We have seen customer use multiple variants of custom context fields to control their feature roll-out:
+You can also define your own custom context fields that you can use together with strategy constraints. We have seen customers use multiple variants of custom context fields to control their feature roll-out:
 
 - region
 - country
@@ -50,5 +50,4 @@ Next you can define your new context field. The minimum requirement is to give i
 Legal values defines all possible values for the context field. this will be used in Unleash Admin UI to guide users when working with context fields to make sure they only use legal values.
 
 ![New context fields](../assets/constraints_legal_values.png)
-
 

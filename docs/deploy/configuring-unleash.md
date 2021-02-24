@@ -3,7 +3,7 @@ id: configuring_unleash
 title: Configuring Unleash
 ---
 
-In (this is deploy) order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting_started#option-two---from-nodejs):
+In order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting_started#option-two---from-nodejs):
 
 ```js
 const unleash = require('unleash-server');

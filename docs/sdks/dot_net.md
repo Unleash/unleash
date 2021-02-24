@@ -27,7 +27,7 @@ dotnet add package unleash.client
 
 Next we must initialize a new instance of the Unleash Client.
 
-```java
+```csharp
 var settings = new UnleashSettings()
 {
   AppName = "dot-net-client",

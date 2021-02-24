@@ -38,7 +38,7 @@ unleash.initialize({
 });
 ```
 
-The example code above will initialize the client SDK, and it will connect to the Unleash-hosted demo instance. It also uses the API token for the demo instance. You should change the URL and the Authorization header (API token) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
+The example code above will initialize the client SDK, and connect to the Unleash-hosted demo instance. It also uses the API token for the demo instance. You should change the URL and the Authorization header (API token) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
 
 Please also pay attention to the “environment” option. Setting this will allow you to use [strategy constraints](../user_guide/strategy-constraints) which enables different roll-out strategies per environment. 
 

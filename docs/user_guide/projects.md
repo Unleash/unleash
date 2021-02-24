@@ -51,7 +51,7 @@ To keep your feature toggle clean, removing deprecated projects is important. Fr
 ## Filter feature toggles on projects
 When browsing the feature toggles in Unleash, you might want to filter the view by looking only at the ones included in the project of interest. This is possible from the Feature toggle overview.
 
-From the top-line meny – choose the hamburger icon
+From the top-line menu – choose the hamburger icon
 
 ![Project concept](../assets/project_filter.png)
 

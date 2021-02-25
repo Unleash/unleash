@@ -19,6 +19,8 @@ You can choose to trigger updates for the following events (we might add more ev
 - feature-updated
 - feature-archived
 - feature-revived
+- feature-stale-on
+- feature-stale-off
 
 #### Parameters
 

@@ -1,6 +1,6 @@
 The Unleash website was created with [Docusaurus](https://docusaurus.io/). The source code lives as part of the main [Unleash repo on GitHub](https://github.com/Unleash/unleash) and is built and deployed on all merges to master. This makes it easy to keep the documentation in sync with the latest version of Unleash.
 
-It's hosted on https://unleash.github.io/
+It's hosted on https://docs.getunleash.io
 
 # What's In This Document
 

@@ -51,7 +51,7 @@ const users = [
 const siteConfig = {
     title: 'Unleash', // Title for your website.
     tagline: 'The enterprise ready feature toggle service',
-    url: 'https://unleash.github.io', // Your website URL
+    url: 'https://docs.getunleash.io', // Your website URL
     baseUrl: '/', // Base URL for your project */
     // For github.io type URLs, you would set the url and baseUrl like:
     //   url: 'https://facebook.github.io',

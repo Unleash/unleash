@@ -52,6 +52,6 @@ exports.setLoggerProvider = function setLoggerProvider(provider) {
 
     loggerProvider = provider;
     const logger = provider('unleash:logger');
-    logger.info(`Your way of configuring a logProvider is depreacted. 
-        See https://unleash.github.io/docs/getting_started for details`);
+    logger.info(`Your way of configuring a logProvider is deprecated. 
+        See https://docs.getunleash.io/docs/deploy/configuring_unleash for details`);
 };

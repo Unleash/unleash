@@ -13,7 +13,7 @@ module.exports = {
     name: 'slack',
     displayName: 'Slack',
     description: 'Allows Unleash to post updates to Slack.',
-    documentationUrl: 'https://unleash.github.io/docs/addons/slack',
+    documentationUrl: 'https://docs.getunleash.io/docs/addons/slack',
     parameters: [
         {
             name: 'url',

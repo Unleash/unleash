@@ -12,7 +12,7 @@ module.exports = {
     displayName: 'Webhook',
     description:
         'A Webhook is a generic way to post messages from Unleash to third party services.',
-    documentationUrl: 'https://unleash.github.io/docs/addons/webhook',
+    documentationUrl: 'https://docs.getunleash.io/docs/addons/webhook',
     parameters: [
         {
             name: 'url',
@@ -42,7 +42,7 @@ module.exports = {
   "timestamp": "{{event.data.createdAt}}"
 }`,
             description:
-                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://unleash.github.io/docs/api/admin/events)",
+                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/docs/api/admin/events)",
             type: 'textfield',
             required: false,
         },

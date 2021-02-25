@@ -133,7 +133,7 @@ const siteConfig = {
     // template. For example, if you need your repo's URL...
     repoUrl: 'https://github.com/unleash/unleash',
 
-    gaTrackingId: 'UA-129659197-1',
+    gaTrackingId: 'UA-134882379-1',
     gaGtag: true,
 };
 

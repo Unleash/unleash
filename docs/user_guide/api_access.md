@@ -15,7 +15,7 @@ You will need access tokens with admin privileges to be allowed to connect to th
 
 Please note that it may take up to 60 seconds for the new key to propagate to all Unleash-hosted instances. 
 
-> If you need API token to use in a client SDK you should create a "client token" as these have less privileges.
+> If you need an API token to use in a client SDK you should create a "client token" as these have less access.
 
 ![Create token](../assets/create_token.png)
 

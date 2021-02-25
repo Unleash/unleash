@@ -79,7 +79,7 @@ All available projects are available from the drop-down menu.
 ![Project concept](../assets/project_filter6.png)
 
 ## Change project for an existing feature toggle
-It might be a need to change the project a feature toggle belongs to. This is easily available from the feature toggle itself. The project is available on the feature toggle configuration.
+There might be a need to change the project a feature toggle belongs to. Changing the project is possible from the feature toggle configuration page.
 
 ![Project concept](../assets/project_define2.png)
 

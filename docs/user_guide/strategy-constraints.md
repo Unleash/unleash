@@ -17,7 +17,7 @@ The most common use case for strategy constraints is that you want an activation
 
 ## Constrain on custom context fields
 
-It is also possible to constrain a activation strategy configuration on custom context fields. A common use case is a multi-tenant service where you want to control roll-out on a tenant identifier. This enable you to decide which customer should get access to your new feature. 
+It is also possible to constrain a activation strategy configuration on custom context fields. A common use case is a multi-tenant service where you want to control roll-out on a tenant identifier. This allows you to decide which customer should get access to your new feature. 
 
 ![Custom constraints](../assets/custom-constraints.png)
 

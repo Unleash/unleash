@@ -7,7 +7,7 @@ title: Working with native apps
 >
 > Working with native apps, require the unleash proxy. The Unleash Proxy is only available with the Unleash-hosted offering and is not part of Unleash Open-Source.
 
-For an highlevel introduction to the Unleash-proxy, please read this short article [The Unleash-Proxy](https://www.unleash-hosted.com/articles/the-unleash-proxy)
+For a highlevel introduction to the Unleash-proxy, please read this short article [The Unleash-Proxy](https://www.unleash-hosted.com/articles/the-unleash-proxy)
 
 The Unleash-proxy consist of the proxy that exposes a simple API for the client.
 

@@ -9,12 +9,12 @@ On this page you find examples for connecting your application to the demo insta
 
 We have examples for all official client SDKs:
 
-- Java SDK
-- Node.js SDK
-- .NET SDK
-- Go SDK
-- Ruby SDK
-- Python SDK
+- [Java SDK](https://github.com/Unleash/unleash-client-java)
+- [Node.js SDK](https://github.com/Unleash/unleash-client-node)
+- [.NET SDK](https://github.com/Unleash/unleash-client-dotnet)
+- [Go SDK](https://github.com/Unleash/unleash-client-go)
+- [Ruby SDK](https://github.com/Unleash/unleash-client-ruby)
+- [Python SDK](https://github.com/Unleash/unleash-client-python)
 
 When you get access to your instance – we will provide you with your Client secret and your API url for your instance.
 

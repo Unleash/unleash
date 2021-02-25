@@ -52,7 +52,7 @@ Read more at [github.com/Unleash/unleash-client-java](https://github.com/Unleash
 
 ## Node.js SDK
 
-```java
+```js
 const unleash = require('unleash-client');
     
 unleash.initialize({

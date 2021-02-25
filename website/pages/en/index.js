@@ -134,7 +134,7 @@ class HomeSplash extends React.Component {
             </a>
           <FeatureCallout />
           <PromoSection>
-            <Button className="primary" href={docUrl('getting_started.html', language)}>Getting Started</Button>
+            <Button className="primary" href={docUrl('deploy/getting_started', language)}>Getting Started</Button>
             <Button href="#try">Try It Out</Button>
             <Button href={siteConfig.repoUrl}>GitHub</Button>
           </PromoSection>

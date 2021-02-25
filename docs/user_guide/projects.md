@@ -44,7 +44,7 @@ The configuration of a new Project is now available. the following input is avai
 | Description   | A short description of the project       |
 
 ## Deleting an existing project
-To keep your feature toggle clean, removing deprecated projects is important. From the overview of Projects – choose the Delete button for the project you want to delete.
+To keep your feature toggles clean, removing deprecated projects is important. From the overview of Projects – choose the Delete button for the project you want to delete.
 
 ![Project concept](../assets/project_delete.png)
 

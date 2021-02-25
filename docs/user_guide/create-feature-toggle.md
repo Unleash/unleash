@@ -26,7 +26,7 @@ In the example below we have chosen to configure the default activation strategy
 
 ## Step 3: Congratulations, you have now created your first feature toggle!
 
-The toggle is now created and ready to be used. The toggle does not have any metrics because  it is not used by any applications, yet!
+The toggle is now created and ready to be used. The toggle does not have any metrics because it is not used by any applications, yet!
 
 ![Create a feature toggle](../assets/create_toggle_3.png)
 

@@ -95,7 +95,7 @@ Read more at [github.com/Unleash/unleash-client-go](https://github.com/Unleash/u
 Read more at [github.com/Unleash/unleash-client-ruby](https://github.com/Unleash/unleash-client-ruby)
 
 ## Python SDK
-```java
+```python
 
     from UnleashClient import UnleashClient
   

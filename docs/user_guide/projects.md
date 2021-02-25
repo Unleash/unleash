@@ -18,7 +18,7 @@ A common pattern is to organize the feature toggles according to key areas of th
 ![Project concept](../assets/project_concept.png)
 
 ## Creating a new project
-When you log into Unleash for the first time, there is a Default project already created. All feature toggles are included in the Default project, unless decided otherwise.
+When you log into Unleash for the first time, there is a Default project already created. All feature toggles are included in the Default project, unless explicitly set to a different one.
 
 From the top-line menu – click on the hamburger icon.
 

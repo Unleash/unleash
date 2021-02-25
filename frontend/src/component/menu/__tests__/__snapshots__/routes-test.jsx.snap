@@ -61,6 +61,12 @@ Array [
   },
   Object {
     "component": [Function],
+    "icon": "report",
+    "path": "/reporting",
+    "title": "Reporting",
+  },
+  Object {
+    "component": [Function],
     "icon": "exit_to_app",
     "path": "/logout",
     "title": "Sign out",
@@ -260,6 +266,12 @@ Array [
     "icon": "device_hub",
     "path": "/addons",
     "title": "Addons",
+  },
+  Object {
+    "component": [Function],
+    "icon": "report",
+    "path": "/reporting",
+    "title": "Reporting",
   },
   Object {
     "component": [Function],

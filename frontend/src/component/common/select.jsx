@@ -1,11 +1,15 @@
 import React from 'react';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-const Select = ({ name, value, label, options, style, onChange, disabled = false, filled }) => {
+const Select = ({ name, value, label, options, style, onChange, disabled = false, filled, className }) => {
     const wrapper = Object.assign({ width: 'auto' }, style);
     return (
         <div
-            className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty is-upgraded"
+            className={classnames(
+                'mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty is-upgraded',
+                className
+            )}
             style={wrapper}
         >
             <select
@@ -14,7 +18,10 @@ const Select = ({ name, value, label, options, style, onChange, disabled = false
                 disabled={disabled}
                 onChange={onChange}
                 value={value}
-                style={{ width: 'auto', background: filled ? '#f5f5f5' : 'none' }}
+                style={{
+                    width: 'auto',
+                    background: filled ? '#f5f5f5' : 'none',
+                }}
             >
                 {options.map(o => (
                     <option key={o.key} value={o.key} title={o.title}>

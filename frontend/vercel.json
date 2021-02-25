@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    { "source": "/api/admin/user", "destination": "https://unleash.herokuapp.com/api/admin/user" },
+    { "source": "/api/admin/uiconfig", "destination": "https://unleash.herokuapp.com/api/admin/uiconfig" },
+    { "source": "/api/admin/context", "destination": "https://unleash.herokuapp.com/api/admin/context" },
+    { "source": "/api/admin/feature-types", "destination": "https://unleash.herokuapp.com/api/admin/feature-types" },
+    { "source": "/api/admin/strategies", "destination": "https://unleash.herokuapp.com/api/admin/strategies" },
+    { "source": "/api/admin/tag-types", "destination": "https://unleash.herokuapp.com/api/admin/tag-types" },
+    { "source": "/api/admin/features", "destination": "https://unleash.herokuapp.com/api/admin/features" },
+    { "source": "/api/admin/login", "destination": "https://unleash.herokuapp.com/api/admin/login" },
+    { "source": "/api/admin/metrics/feature-toggles", "destination": "https://unleash.herokuapp.com/api/admin/metrics/feature-toggles" },
+    { "source": "/logout", "destination": "https://unleash.herokuapp.com/logout" },
+    { "source": "/auth", "destination": "https://unleash.herokuapp.com/auth" }
+  ]
+}

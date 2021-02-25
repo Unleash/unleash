@@ -1,0 +1,26 @@
+:root {
+    /* FONT SIZE */
+    --h1-size: 1.25rem;
+    --p-size: 1.1rem;
+
+    /* PADDING */
+    --card-padding: 2rem;
+    --card-padding-x: 2rem;
+    --card-padding-y: 2rem;
+
+    /* MARGIN */
+    --card-margin-y: 1rem;
+    --card-margin-x: 1rem;
+
+    /* COLORS*/
+    --success: #3bd86e;
+    --danger: #d95e5e;
+    --warning: #d67c3d;
+}
+
+h1,
+h2 {
+    padding: 0;
+    margin: 0;
+    line-height: 24px;
+}

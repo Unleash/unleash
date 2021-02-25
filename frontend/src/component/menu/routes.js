@@ -30,66 +30,232 @@ import Admin from '../../page/admin';
 import AdminApi from '../../page/admin/api';
 import AdminUsers from '../../page/admin/users';
 import AdminAuth from '../../page/admin/auth';
+import Reporting from '../../page/reporting';
 import { P, C } from '../common/flags';
 
 export const routes = [
     // Features
-    { path: '/features/create', parent: '/features', title: 'Create', component: CreateFeatureToggle },
-    { path: '/features/copy/:copyToggle', parent: '/features', title: 'Copy', component: CopyFeatureToggle },
-    { path: '/features/:activeTab/:name', parent: '/features', title: ':name', component: ViewFeatureToggle },
-    { path: '/features', title: 'Feature Toggles', icon: 'list', component: Features },
+    {
+        path: '/features/create',
+        parent: '/features',
+        title: 'Create',
+        component: CreateFeatureToggle,
+    },
+    {
+        path: '/features/copy/:copyToggle',
+        parent: '/features',
+        title: 'Copy',
+        component: CopyFeatureToggle,
+    },
+    {
+        path: '/features/:activeTab/:name',
+        parent: '/features',
+        title: ':name',
+        component: ViewFeatureToggle,
+    },
+    {
+        path: '/features',
+        title: 'Feature Toggles',
+        icon: 'list',
+        component: Features,
+    },
 
     // Strategies
-    { path: '/strategies/create', title: 'Create', parent: '/strategies', component: CreateStrategies },
+    {
+        path: '/strategies/create',
+        title: 'Create',
+        parent: '/strategies',
+        component: CreateStrategies,
+    },
     {
         path: '/strategies/:activeTab/:strategyName',
         title: ':strategyName',
         parent: '/strategies',
         component: StrategyView,
     },
-    { path: '/strategies', title: 'Strategies', icon: 'extension', component: Strategies },
+    {
+        path: '/strategies',
+        title: 'Strategies',
+        icon: 'extension',
+        component: Strategies,
+    },
 
     // History
-    { path: '/history/:toggleName', title: ':toggleName', parent: '/history', component: HistoryTogglePage },
-    { path: '/history', title: 'Event History', icon: 'history', component: HistoryPage },
+    {
+        path: '/history/:toggleName',
+        title: ':toggleName',
+        parent: '/history',
+        component: HistoryTogglePage,
+    },
+    {
+        path: '/history',
+        title: 'Event History',
+        icon: 'history',
+        component: HistoryPage,
+    },
 
     // Archive
-    { path: '/archive/:activeTab/:name', title: ':name', parent: '/archive', component: ShowArchive },
-    { path: '/archive', title: 'Archived Toggles', icon: 'archive', component: Archive },
+    {
+        path: '/archive/:activeTab/:name',
+        title: ':name',
+        parent: '/archive',
+        component: ShowArchive,
+    },
+    {
+        path: '/archive',
+        title: 'Archived Toggles',
+        icon: 'archive',
+        component: Archive,
+    },
 
     // Applications
-    { path: '/applications/:name', title: ':name', parent: '/applications', component: ApplicationView },
-    { path: '/applications', title: 'Applications', icon: 'apps', component: Applications },
+    {
+        path: '/applications/:name',
+        title: ':name',
+        parent: '/applications',
+        component: ApplicationView,
+    },
+    {
+        path: '/applications',
+        title: 'Applications',
+        icon: 'apps',
+        component: Applications,
+    },
 
     // Context
-    { path: '/context/create', parent: '/context', title: 'Create', component: CreateContextField },
-    { path: '/context/edit/:name', parent: '/context', title: ':name', component: EditContextField },
-    { path: '/context', title: 'Context Fields', icon: 'album', component: ContextFields, flag: C },
+    {
+        path: '/context/create',
+        parent: '/context',
+        title: 'Create',
+        component: CreateContextField,
+    },
+    {
+        path: '/context/edit/:name',
+        parent: '/context',
+        title: ':name',
+        component: EditContextField,
+    },
+    {
+        path: '/context',
+        title: 'Context Fields',
+        icon: 'album',
+        component: ContextFields,
+        flag: C,
+    },
 
     // Project
-    { path: '/projects/create', parent: '/projects', title: 'Create', component: CreateProject },
-    { path: '/projects/edit/:id', parent: '/projects', title: ':id', component: EditProject },
-    { path: '/projects', title: 'Projects', icon: 'folder_open', component: ListProjects, flag: P },
+    {
+        path: '/projects/create',
+        parent: '/projects',
+        title: 'Create',
+        component: CreateProject,
+    },
+    {
+        path: '/projects/edit/:id',
+        parent: '/projects',
+        title: ':id',
+        component: EditProject,
+    },
+    {
+        path: '/projects',
+        title: 'Projects',
+        icon: 'folder_open',
+        component: ListProjects,
+        flag: P,
+    },
 
     // Admin
-    { path: '/admin/api', parent: '/admin', title: 'API access', component: AdminApi },
-    { path: '/admin/users', parent: '/admin', title: 'Users', component: AdminUsers },
-    { path: '/admin/auth', parent: '/admin', title: 'Authentication', component: AdminAuth },
-    { path: '/admin', title: 'Admin', icon: 'album', component: Admin, hidden: true },
+    {
+        path: '/admin/api',
+        parent: '/admin',
+        title: 'API access',
+        component: AdminApi,
+    },
+    {
+        path: '/admin/users',
+        parent: '/admin',
+        title: 'Users',
+        component: AdminUsers,
+    },
+    {
+        path: '/admin/auth',
+        parent: '/admin',
+        title: 'Authentication',
+        component: AdminAuth,
+    },
+    {
+        path: '/admin',
+        title: 'Admin',
+        icon: 'album',
+        component: Admin,
+        hidden: true,
+    },
 
-    { path: '/tag-types/create', parent: '/tag-types', title: 'Create', component: CreateTagType },
-    { path: '/tag-types/edit/:name', parent: '/tag-types', title: ':name', component: EditTagType },
-    { path: '/tag-types', title: 'Tag types', icon: 'label', component: ListTagTypes },
+    {
+        path: '/tag-types/create',
+        parent: '/tag-types',
+        title: 'Create',
+        component: CreateTagType,
+    },
+    {
+        path: '/tag-types/edit/:name',
+        parent: '/tag-types',
+        title: ':name',
+        component: EditTagType,
+    },
+    {
+        path: '/tag-types',
+        title: 'Tag types',
+        icon: 'label',
+        component: ListTagTypes,
+    },
 
-    { path: '/tags/create', parent: '/tags', title: 'Create', component: CreateTag },
-    { path: '/tags', title: 'Tags', icon: 'label', component: ListTags, hidden: true },
+    {
+        path: '/tags/create',
+        parent: '/tags',
+        title: 'Create',
+        component: CreateTag,
+    },
+    {
+        path: '/tags',
+        title: 'Tags',
+        icon: 'label',
+        component: ListTags,
+        hidden: true,
+    },
 
     // Addons
-    { path: '/addons/create/:provider', parent: '/addons', title: 'Create', component: AddonsCreate },
-    { path: '/addons/edit/:id', parent: '/addons', title: 'Edit', component: AddonsEdit },
-    { path: '/addons', title: 'Addons', icon: 'device_hub', component: Addons, hidden: false },
-
-    { path: '/logout', title: 'Sign out', icon: 'exit_to_app', component: LogoutFeatures },
+    {
+        path: '/addons/create/:provider',
+        parent: '/addons',
+        title: 'Create',
+        component: AddonsCreate,
+    },
+    {
+        path: '/addons/edit/:id',
+        parent: '/addons',
+        title: 'Edit',
+        component: AddonsEdit,
+    },
+    {
+        path: '/addons',
+        title: 'Addons',
+        icon: 'device_hub',
+        component: Addons,
+        hidden: false,
+    },
+    {
+        path: '/reporting',
+        title: 'Reporting',
+        icon: 'report',
+        component: Reporting,
+    },
+    {
+        path: '/logout',
+        title: 'Sign out',
+        icon: 'exit_to_app',
+        component: LogoutFeatures,
+    },
 ];
 
 export const getRoute = path => routes.find(route => route.path === path);

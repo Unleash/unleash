@@ -51,4 +51,6 @@ class HeaderComponent extends PureComponent {
     }
 }
 
-export default connect(state => ({ uiConfig: state.uiConfig.toJS() }), { init: loadInitialData })(HeaderComponent);
+export default connect(state => ({ uiConfig: state.uiConfig.toJS() }), {
+    init: loadInitialData,
+})(HeaderComponent);

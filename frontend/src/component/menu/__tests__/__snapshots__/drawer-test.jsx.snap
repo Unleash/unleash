@@ -122,6 +122,19 @@ exports[`should render DrawerMenu 1`] = `
     <a
       aria-current={null}
       className="navigationLink mdl-color-text--grey-900"
+      href="/reporting"
+      onClick={[Function]}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="report"
+      />
+       
+      Reporting
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-900"
       href="/logout"
       onClick={[Function]}
     >
@@ -259,6 +272,19 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       />
        
       Addons
+    </a>
+    <a
+      aria-current={null}
+      className="navigationLink mdl-color-text--grey-900"
+      href="/reporting"
+      onClick={[Function]}
+    >
+      <react-mdl-Icon
+        className="navigationIcon"
+        name="report"
+      />
+       
+      Reporting
     </a>
     <a
       aria-current={null}

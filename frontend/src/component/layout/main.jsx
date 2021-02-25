@@ -17,7 +17,7 @@ export default class App extends PureComponent {
         return (
             <Layout fixedHeader>
                 <Header location={this.props.location} />
-                <Content className="mdl-color--grey-50" style={{ display: 'flex', flexDirection: 'column' }}>
+                <Content className="mdl-color--grey-50">
                     <Grid noSpacing className={styles.content} style={{ flex: 1 }}>
                         <Cell col={12}>
                             {this.props.children}

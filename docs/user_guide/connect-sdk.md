@@ -112,7 +112,7 @@ Read more at [github.com/Unleash/unleash-client-ruby](https://github.com/Unleash
 Read more at [github.com/Unleash/unleash-client-python](https://github.com/Unleash/unleash-client-python)
 
 ## .NET SDK
-```java
+```csharp
     var settings = new UnleashSettings()
     {
         AppName = "dotnet-test",

@@ -37,7 +37,8 @@ A flexible rollout strategy which combines all gradual rollout strategies in to 
 
 ### Customize stickiness (beta)
 
-By enabling the stickiness option on a custom context field you can use it together with the flexible rollout strategy. This will guarantee a consistent behavior for specific values of this context field. PS! support for this feature currently being supported by the following SDKs:
+By enabling the stickiness option on a custom context field you can use it together with the flexible rollout strategy. This will guarantee a consistent behavior for specific values of this context field.
+NB! this feature is currently only supported by the following SDKs:
 
 - [unleash-client-node](https://github.com/Unleash/unleash-client-node) (from v3.6.0)
 

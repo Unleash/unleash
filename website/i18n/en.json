@@ -80,7 +80,10 @@
       "api/index": {
         "title": "API Documentation"
       },
-      "api/internal": {
+      "api/internal/health": {
+        "title": "/health"
+      },
+      "api/internal/internal": {
         "title": "/internal-backstage/prometheus"
       },
       "api/open_api": {
@@ -196,7 +199,7 @@
     },
     "categories": {
       "Getting started": "Getting started",
-      "Working with your SDK": "Working with your SDK",
+      "Working with the SDK": "Working with the SDK",
       "Addons framework": "Addons framework",
       "Advanced": "Advanced",
       "Client": "Client",

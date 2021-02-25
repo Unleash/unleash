@@ -51,7 +51,7 @@
       "api/admin/feature-types",
       "api/admin/addons"
     ],
-    "Internal": ["api/internal"],
+    "Internal": ["api/internal/internal", "api/internal/health"],
     "Specification": ["api/open_api"]
   },
   "Deploy and manage": {

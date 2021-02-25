@@ -27,14 +27,13 @@
     ],
     "Advanced": [
       "user_guide/strategy_constraints",
-      "user_guide/custom_activation_strategy",
-      "user_guide/feature_toggle_types",
-      "user_guide/toggle_variants",
-      "user_guide/archived_toggles",
-      "user_guide/discover_unkonwn_toggles",
-      "deploy/audit_log",
-      "user_guide/api_access",
-      "tags"
+      "advanced/custom_activation_strategy",
+      "advanced/feature_toggle_types",
+      "advanced/toggle_variants",
+      "advanced/archived_toggles",
+      "advanced/audit_log",
+      "advanced/api_access",
+      "advanced/tags"
     ]
   },
   "api": {
@@ -61,7 +60,6 @@
       "deploy/configuring_unleash",
       "deploy/securing_unleash",
       "deploy/google_auth",
-      "deploy/audit_log",
       "deploy/database_backup",
       "deploy/migration_guide",
       "deploy/import_export"

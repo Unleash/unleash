@@ -11,9 +11,8 @@ In this guide we explain how to use feature toggles in a Java application using 
 >
 >- **API URL** – Where you should connect your client SDK
 >- **API Secret** – Your API secret required to connect to your instance. 
->You can find this information in your “Instance admin”. 
+>You can find this information in your “Instance admin” available in your Unleash management UI. 
 
-![Instance Admin](../assets/instance_admin_sdk.png)
 
 ## Step 1: Install client SDK
 

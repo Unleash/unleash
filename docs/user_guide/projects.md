@@ -22,20 +22,20 @@ When you log into Unleash for the first time, there is a Default project already
 
 From the top-line menu – click on the hamburger icon.
 
-![Project concept](../assets/create_project1.png)
+![Project concept](../assets/project_main_menu.png)
 
 From the menu – choose “Projects”
 
-![Project concept](../assets/create_project2.png)
+![Project concept](../assets/project_menu_item.png)
 
 The available projects will now be listed.
 To create a new Project – choose the “+”
 
-![Project concept](../assets/create_project3.png)
+![Project concept](../assets/project_add.png)
 
 The configuration of a new Project is now available. the following input is available to create the new Project.
 
-![Project concept](../assets/create_project4.png)
+![Project concept](../assets/project_configure.png)
 
 | Item     | Description |
 | ----------- | ----------- |
@@ -53,34 +53,34 @@ When browsing the feature toggles in Unleash, you might want to filter the view 
 
 From the top-line menu – choose the hamburger icon
 
-![Project concept](../assets/project_filter.png)
+![Project concept](../assets/feature_toggles_menu.png)
 
 From the menu – choose “Feature toggles”
 
-![Project concept](../assets/project_filter2.png)
+![Project concept](../assets/feature_toggles_menu.png)
 
 The list of features toggles can be filtered on the project of your choice. By default, all feature toggles are listed in the view.
 
-![Project concept](../assets/project_filter3.png)
+![Project concept](../assets/ft_project_filter.png)
 
 From the drop-down, chose the project to filter on.
 
-![Project concept](../assets/project_filter4.png)
+![Project concept](../assets/ft_filter_on_project.png)
 
 The view will now be updated with the filtered feature toggles.
 
 ## Assigning project to a new feature toggle
 When creating a new feature toggle, the project where the feature toggle will be created may be chosen. The default project is “Default”
 
-![Project concept](../assets/project_filter5.png)
+![Project concept](../assets/ft_create_chose_project.png)
 
 All available projects are available from the drop-down menu. 
 
-![Project concept](../assets/project_filter6.png)
+![Project concept](../assets/ft_create_assign_project.png)
 
 ## Change project for an existing feature toggle
 There might be a need to change the project a feature toggle belongs to. Changing the project is possible from the feature toggle configuration page.
 
-![Project concept](../assets/project_define2.png)
+![Project concept](../assets/ft_create_assign_project.png)
 
 To change the project, simply change the project from the drop-down menu.

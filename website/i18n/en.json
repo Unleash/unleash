@@ -20,6 +20,30 @@
       "addons/webhook": {
         "title": "Webhook"
       },
+      "advanced/api_access": {
+        "title": "API Access"
+      },
+      "advanced/archived_toggles": {
+        "title": "Archived toggles"
+      },
+      "advanced/audit_log": {
+        "title": "The audit log"
+      },
+      "advanced/custom_activation_strategy": {
+        "title": "Custom Activation Strategy"
+      },
+      "advanced/feature_toggle_types": {
+        "title": "Feature Toggle Types"
+      },
+      "advanced/toggle_variants": {
+        "title": "Feature Toggle Variants"
+      },
+      "advanced/strategy_constraints": {
+        "title": "Strategy Constraints"
+      },
+      "advanced/tags": {
+        "title": "Tagging Features"
+      },
       "api/admin/addons": {
         "title": "/api/admin/addons"
       },
@@ -62,17 +86,11 @@
       "api/open_api": {
         "title": "Open API Specification"
       },
-      "client_sdk": {
-        "title": "Client SDK"
-      },
       "client_specification": {
         "title": "Client Specification"
       },
       "database_schema": {
         "title": "Database Schema"
-      },
-      "deploy/audit_log": {
-        "title": "The audit log"
       },
       "deploy/configuring_unleash": {
         "title": "Configuring Unleash"
@@ -131,20 +149,14 @@
       "sdks/ruby_sdk": {
         "title": "Ruby SDK"
       },
-      "tags": {
-        "title": "Tagging Features"
-      },
       "unleash_context": {
         "title": "Unleash Context"
       },
       "user_guide/activation_strategy": {
         "title": "Activation Strategies"
       },
-      "user_guide/api_access": {
-        "title": "API Access"
-      },
-      "user_guide/archived_toggles": {
-        "title": "Archived toggles"
+      "user_guide/client_sdk": {
+        "title": "Client SDK"
       },
       "user_guide/connect_sdk": {
         "title": "Connect your SDK"
@@ -155,17 +167,8 @@
       "user_guide/create_feature_toggle": {
         "title": "Create a feature toggle"
       },
-      "user_guide/custom_activation_strategy": {
-        "title": "Custom Activation Strategy"
-      },
       "user_guide/discover-unknown-toggles": {
         "title": "user_guide/discover-unknown-toggles"
-      },
-      "user_guide/feature_toggle_types": {
-        "title": "Feature Toggle Types"
-      },
-      "user_guide/toggle_variants": {
-        "title": "Feature Toggle Variants"
       },
       "user_guide/native_apps": {
         "title": "Working with native apps"
@@ -175,9 +178,6 @@
       },
       "user_guide/single_page_apps": {
         "title": "Working with single page apps"
-      },
-      "user_guide/strategy_constraints": {
-        "title": "Strategy Constraints"
       },
       "user_guide/unleash_context": {
         "title": "Unleash Context"

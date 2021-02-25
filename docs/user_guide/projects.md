@@ -11,7 +11,7 @@ title: Projects
 This topic explains how projects are supported in Unleash, how to create and maintain them.
 
 ## Understanding purpose of projects
-Projects are a way to organize your feature toggles within Unleash. Within a large organization, having multiple feature toggles, staying on top of the feature toggles might become a challenge. Every feature toggle will be part of a project. Examples of projects can be linked to a development team or to functional modules within the software. 
+Projects are a way to organize your feature toggles within Unleash. Within a large organization, having multiple feature toggles, staying on top of the feature toggles might become a challenge. Every feature toggle will be part of a project. Projects can be linked to a development team or to functional modules within the software. 
 
 A common pattern is to organize the feature toggles according to key areas of the application, e.g. “Basic user process” and “Advanced user process”. This is illustrated below.
 

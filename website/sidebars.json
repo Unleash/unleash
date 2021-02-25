@@ -1,33 +1,39 @@
 {
   "documentation": {
-    "User Documentation": [
-      "getting_started",
-      "configuring_unleash",
-      "client_sdk",
-      "feature_toggle_types",
-      "toggle_variants",
-      "securing_unleash",
-      "unleash_context",
-      "activation_strategy",
-      "client_specification",
-      "migration_guide"
+    "Getting started": [
+      "user_guide/connect_sdk",
+      "user_guide/client_sdk",
+      "user_guide/create_feature_toggle",
+      "user_guide/activation_strategy",
+      "user_guide/control_rollout",
+      "user_guide/projects",
+      "user_guide/unleash_context",
+      "user_guide/native_apps",
+      "user_guide/single_page_apps"
     ],
-    "Addons": [
+    "Working with your SDK": [
+      "sdks/java_sdk",
+      "sdks/node_sdk",
+      "sdks/dot_net_sdk",
+      "sdks/go_sdk",
+      "sdks/python_sdk",
+      "sdks/ruby_sdk"
+    ],
+    "Addons framework": [
       "addons/index",
       "addons/webhook",
       "addons/slack",
       "addons/jira-commenter"
     ],
-    "Developer Guide": [
-      "developer_guide",
-      "database_schema",
-      "database_backup",
-      "import_export"
-    ],
-    "Guides": [
-      "guides/google_auth",
-      "guides/custom_activation_strategy",
-      "guides/feature_updates_to_slack"
+    "Advanced": [
+      "user_guide/strategy_constraints",
+      "advanced/custom_activation_strategy",
+      "advanced/feature_toggle_types",
+      "advanced/toggle_variants",
+      "advanced/archived_toggles",
+      "advanced/audit_log",
+      "advanced/api_access",
+      "advanced/tags"
     ]
   },
   "api": {
@@ -47,5 +53,29 @@
     ],
     "Internal": ["api/internal"],
     "Specification": ["api/open_api"]
+  },
+  "Deploy and manage": {
+    "Deploy & configure": [
+      "deploy/getting_started",
+      "deploy/configuring_unleash",
+      "deploy/securing_unleash",
+      "deploy/google_auth",
+      "deploy/database_backup",
+      "deploy/migration_guide",
+      "deploy/import_export"
+    ]
+  },
+  "Integrations": {
+    "Integrations": [
+      "integrations/integrations"
+    ]
+  },
+  "Contribute": {
+    "Contribute to Unleash": [
+      "developer_guide",
+      "client_specification",
+      "database_schema"
+    ]
   }
 }
+

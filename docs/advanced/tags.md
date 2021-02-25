@@ -3,7 +3,7 @@ id: tags
 title: Tagging Features
 ---
 
-> This feature was introduced in Unleash vx.y.z
+> This feature was introduced in Unleash 3.11.0
 
 Do you want to filter your features to avoid having to see all features belonging to other teams than your own? Do you want to write a plugin that only gets notified about changes to features that your plugin knows how to handle?
 

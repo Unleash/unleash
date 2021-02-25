@@ -3,7 +3,7 @@ id: create_feature_toggle
 title: Create a feature toggle
 ---
 
-In this guide you will learn how to create your first feature toggle using Unleash. Login to your instance.
+In this guide you will learn how to create your first feature toggle using Unleash.
 
 ## Step 1: Click the “create feature toggle” button
 

@@ -30,7 +30,7 @@ curl -X POST -H "Authorization: admintoken"
 https://app.unleash-hosted.com/demo/api/admin/features/Demo/toggle/on
 ```
 
-**Great success!** We have now enabled the feature toggle. We can also verify that it was actually change by the API user by navigating to the history (audit log) for this feature toggle.
+**Great success!** We have now enabled the feature toggle. We can also verify that it was actually changed by the API user by navigating to the history (audit log) for this feature toggle.
   
 ![Create token](../assets/api_access_history.png)
 

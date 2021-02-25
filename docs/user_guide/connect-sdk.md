@@ -65,7 +65,7 @@ unleash.initialize({
 Read more at [github.com/Unleash/unleash-client-node](https://github.com/Unleash/unleash-client-node)
  
 ## Go SDK
-```java
+```golang
 import (
   "github.com/Unleash/unleash-client-go/v3"
 )

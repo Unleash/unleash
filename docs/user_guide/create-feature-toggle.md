@@ -18,7 +18,7 @@ After clicking the “create feature toggle button you will be presented with a 
 - **Name** – Must be unique across all your feature toggle. The name must also follow a URL friendly format. Can not be changed. 
 - **Description** – A good description makes it easier for other members on your team to understand why this feature toggle exists. 
 - **Enabled** – Whether the feature toggle should be enabled or disabled. If the feature toggle is disabled, activation strategy configurations will not be evaluated. 
-- **Activation** strategies –  A list of on or more activation strategies. An activation strategy is used to enable the feature toggle to a subset, or all, of your users. 
+- **Activation** strategies –  A list of one or more activation strategies. An activation strategy is used to enable the feature toggle to a subset, or all, of your users. 
 
 In the example below we have chosen to configure the default activation strategy, which means that the feature will be enabled for everyone.
 

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.13.2
+- feat: stale dashboard
 # 3.13.1
 - fix: fix update-variant-test
 - fix: unsecure => insecure

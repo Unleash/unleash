@@ -36,4 +36,4 @@ https://app.unleash-hosted.com/demo/api/admin/features/Demo/toggle/on
 
 ## API overview
 
-You find the full documentation on everything the Unleash API support on the [Unleash API documentation](../api/admin/features).
+You can find the full documentation on everything the Unleash API supports in the [Unleash API documentation](../api/admin/features).

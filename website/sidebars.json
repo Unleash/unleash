@@ -11,7 +11,7 @@
       "user_guide/native_apps",
       "user_guide/single_page_apps"
     ],
-    "Working with your SDK": [
+    "Working with the SDK": [
       "sdks/java_sdk",
       "sdks/node_sdk",
       "sdks/dot_net_sdk",
@@ -66,9 +66,7 @@
     ]
   },
   "Integrations": {
-    "Integrations": [
-      "integrations/integrations"
-    ]
+    "Integrations": ["integrations/integrations"]
   },
   "Contribute": {
     "Contribute to Unleash": [
@@ -78,4 +76,3 @@
     ]
   }
 }
-

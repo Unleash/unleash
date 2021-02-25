@@ -66,6 +66,7 @@ const siteConfig = {
 
     // For no header links in the top nav bar -> headerLinks: [],
     headerLinks: [
+        { href: 'https://www.unleash-hosted.com/open-source', label: 'Enterprise' },
         { doc: 'user_guide/connect_sdk', label: 'Documentation' },
         { doc: 'api/client/features', label: 'API' },
         { doc: 'deploy/getting_started', label: 'Deploy and manage' },

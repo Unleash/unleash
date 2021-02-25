@@ -3,6 +3,8 @@ id: getting_started
 title: Getting Started
 ---
 
+> This section only applies if you plan to self-host Unleash. If you are looking for our hosted solution you should head over to [Unleash-hosted.com](https://www.unleash-hosted.com)
+
 ## Requirements
 
 You will need:

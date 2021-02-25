@@ -190,6 +190,7 @@
       }
     },
     "links": {
+      "Enterprise": "Enterprise",
       "Documentation": "Documentation",
       "API": "API",
       "Deploy and manage": "Deploy and manage",

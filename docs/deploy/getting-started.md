@@ -7,9 +7,9 @@ title: Getting Started
 
 You will need:
 
-- [**Node.js**](https://nodejs.org/en/download/) (version 12 or later)
-- [**PostgreSQL**](https://www.postgresql.org/download/) (version 10 or later)
-- [Create an unleash user and database](./developer-guide.md).
+- [Node.js](https://nodejs.org/en/download/) (version 12 or later)
+- [PostgreSQL](https://www.postgresql.org/download/) (version 10 or later)
+- [Create an unleash user and database](/docs/developer_guide).
 
 ## Start Unleash server
 

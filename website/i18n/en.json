@@ -86,6 +86,9 @@
       "api/open_api": {
         "title": "Open API Specification"
       },
+      "client_sdk": {
+        "title": "client_sdk"
+      },
       "client_specification": {
         "title": "Client Specification"
       },
@@ -112,9 +115,6 @@
       },
       "deploy/securing_unleash": {
         "title": "Securing Unleash"
-      },
-      "dev/version-4": {
-        "title": "dev/version-4"
       },
       "developer_guide": {
         "title": "Developer guide"
@@ -148,6 +148,9 @@
       },
       "sdks/ruby_sdk": {
         "title": "Ruby SDK"
+      },
+      "toggle_variants": {
+        "title": "toggle_variants"
       },
       "unleash_context": {
         "title": "Unleash Context"

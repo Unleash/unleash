@@ -53,9 +53,55 @@ const Logo = props => (
   </div>
 );
 
+const LogoSvg = ({style}) => (
+  <svg style={style} viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(280.822 -299.303)">
+      <text
+        style={{
+          lineHeight: "0%",
+          InkscapeFontSpecification: "'Ubuntu, Medium'",
+          textAlign: "start",
+        }}
+        fontFamily="Ubuntu"
+        x="-227.697"
+        y="343.108"
+      >
+        <tspan
+          style={{
+            lineHeight: "100%",
+            InkscapeFontSpecification: "'Ubuntu, Medium'",
+            textAlign: "start",
+          }}
+          fontSize="37.5"
+          x="-227.697"
+          y="343.108"
+        >
+          Unleash
+        </tspan>
+      </text>
+      <rect
+        height="22.483"
+        width="40.186"
+        fill="#0b1700"
+        rx="9.74"
+        x="-272.312"
+        y="318.151"
+      />
+      <rect
+        height="12.604"
+        width="14.489"
+        fill="#fff"
+        rx="4.135"
+        x="-251.511"
+        y="323.352"
+      />
+    </g>
+  </svg>
+);
+
 const ProjectTitle = () => (
   <h2 className="projectTitle">
-    {siteConfig.title}
+    <LogoSvg style={{width: '300px'}} />
     <small>{siteConfig.tagline}</small>
   </h2>
 );

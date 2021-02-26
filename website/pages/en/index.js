@@ -193,9 +193,9 @@ const SASSOffering = () => (
 const UnleashClient = () => (
   <Container padding={['bottom', 'top']} id="unleash-client" background={'light'}>
 
-    <h2>Client implementations</h2>
+    <h2>Client SDK</h2>
     <p>
-      Unleash has official SDK's for Java, Node.js, Go, Ruby, Python and .Net. And we will be happy to add implementations in other languages written by you! These libraries make it very easy to use Unleash in your application.
+      Unleash has official SDK for Java, Node.js, Go, Ruby, Python and .Net. And we will be happy to add implementations in other languages written by you! These libraries make it very easy to use Unleash in your application.
     </p>
     
     <div className="gridBlock">

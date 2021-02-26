@@ -3,9 +3,8 @@ id: api_access
 title: API Access
 ---
 
-> **Enterprise feature**
->
-> Programmatic access to the Unleash API s only available with the Unleash Enterprise offering and is not part of Unleash Open-Source.
+> **Enterprise**
+> This guide is only relevant if your are using Unleash-hosted. 
 
 It is possible to integrate directly with the Admin API. In this guide we will explain all the steps to set it up.
 

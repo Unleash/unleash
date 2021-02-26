@@ -190,13 +190,13 @@
       }
     },
     "links": {
-      "Enterprise": "Enterprise",
       "Documentation": "Documentation",
-      "API": "API",
       "Deploy and manage": "Deploy and manage",
       "Integrations": "Integrations",
       "Contribute": "Contribute",
-      "Help": "Help"
+      "API": "API",
+      "Help": "Help",
+      "Enterprise": "Enterprise"
     },
     "categories": {
       "Getting started": "Getting started",

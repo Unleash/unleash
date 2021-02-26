@@ -3,6 +3,8 @@ id: securing_unleash
 title: Securing Unleash
 ---
 
+> This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with a secure setup and multiple SSO options. 
+
 The Unleash API is split into two different paths: `/api/client` and `/api/admin`. This makes it easy to have different authentication strategy for the admin interface and the client-api used by the applications integrating with Unleash.
 
 ## General settings

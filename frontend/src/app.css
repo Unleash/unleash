@@ -1,3 +1,8 @@
+
+
+html { height: 100%; overflow:auto; }
+body { height: 100%; }
+
 :root {
     /* FONT SIZE */
     --h1-size: 1.25rem;

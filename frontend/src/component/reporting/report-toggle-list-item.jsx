@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 import { Checkbox } from 'react-mdl';
 import CheckIcon from '@material-ui/icons/Check';
@@ -14,6 +15,7 @@ import styles from './reporting.module.scss';
 
 const ReportToggleListItem = ({ name, stale, lastSeenAt, createdAt, type, checked, bulkActionsOn, setFeatures }) => {
     const nameMatches = feature => feature.name === name;
+    const history = useHistory();
 
     const handleChange = () => {
         setFeatures(prevState => {
@@ -91,12 +93,16 @@ const ReportToggleListItem = ({ name, stale, lastSeenAt, createdAt, type, checke
         return renderStatus(<CheckIcon className={styles.reportIcon} />, 'Active');
     };
 
+    const navigateToFeature = () => {
+        history.push(`/features/strategies/${name}`);
+    };
+
     const statusClasses = classnames(styles.active, {
         [styles.stale]: stale,
     });
 
     return (
-        <tr>
+        <tr role="button" tabIndex={0} onClick={navigateToFeature} className={styles.tableRow}>
             <ConditionallyRender
                 condition={bulkActionsOn}
                 show={

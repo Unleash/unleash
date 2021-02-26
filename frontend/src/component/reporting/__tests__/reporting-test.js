@@ -1,5 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { HashRouter } from 'react-router-dom';
+
 import { createStore } from 'redux';
 import { mount } from 'enzyme/build';
 
@@ -22,9 +24,11 @@ jest.mock('react-mdl', () => ({
 
 test('changing projects renders only toggles from that project', () => {
     const wrapper = mount(
-        <Provider store={createStore(mockReducer, mockStore)}>
-            <Reporting projects={testProjects} features={testFeatures} fetchFeatureToggles={() => {}} />
-        </Provider>
+        <HashRouter>
+            <Provider store={createStore(mockReducer, mockStore)}>
+                <Reporting projects={testProjects} features={testFeatures} fetchFeatureToggles={() => {}} />
+            </Provider>
+        </HashRouter>
     );
 
     const select = wrapper.find('.mdl-textfield__input').first();

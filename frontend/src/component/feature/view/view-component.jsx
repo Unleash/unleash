@@ -17,6 +17,8 @@ import FeatureTagComponent from '../feature-tag-component';
 import StatusUpdateComponent from './status-update-component';
 import AddTagDialog from '../add-tag-dialog-container';
 
+import { scrollToTop } from '../../common/util';
+
 const TABS = {
     strategies: 0,
     view: 1,
@@ -29,6 +31,10 @@ export default class ViewFeatureToggleComponent extends React.Component {
     constructor(props) {
         super(props);
         this.isFeatureView = !!props.fetchFeatureToggles;
+    }
+
+    componentDidMount() {
+        scrollToTop();
     }
 
     static propTypes = {

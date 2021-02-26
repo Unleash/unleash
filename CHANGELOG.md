@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.15.0
+
+Began work on a technical debt dashboard on the frontend. The first iteration of this dashboard is included in this release.
+
+- fix: not crash if addon http post throws (#738)
+- fix: update unleash-frontend dependency (#736)
+- fix: project id should be validated correctly on create
+- fix: upgrade unleash-frontend to version 3.13.1
+
 ## 3.14.0
 
 - feat: upgrade unleash-frontend to version 3.13.0

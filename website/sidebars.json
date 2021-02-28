@@ -26,7 +26,7 @@
       "addons/jira-commenter"
     ],
     "Advanced": [
-      "user_guide/strategy_constraints",
+      "advanced/strategy_constraints",
       "advanced/custom_activation_strategy",
       "advanced/feature_toggle_types",
       "advanced/toggle_variants",

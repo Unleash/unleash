@@ -28,36 +28,21 @@ class Addon {
 
     async fetchRetry(url, options = {}, retries = 1, backoff = 300) {
         const retryCodes = [408, 500, 502, 503, 504, 522, 524];
+        let res;
         try {
-            const res = await fetch(url, options);
-            if (res.ok) {
-                return res;
-            }
-            if (retries > 0 && retryCodes.includes(res.status)) {
-                setTimeout(() => {
-                    return this.fetchRetry(
-                        url,
-                        options,
-                        retries - 1,
-                        backoff * 2,
-                    );
-                }, backoff);
-            }
-            return res;
+            res = await fetch(url, options);
         } catch (error) {
-            this.logger.warn(error);
-            if (retries > 0) {
-                setTimeout(() => {
-                    return this.fetchRetry(
-                        url,
-                        options,
-                        retries - 1,
-                        backoff * 2,
-                    );
-                }, backoff);
-            }
-            return { status: 500 };
+            res = { status: 500, ok: false };
         }
+        if (res.ok) {
+            return res;
+        }
+        if (retries > 0 && retryCodes.includes(res.status)) {
+            setTimeout(() => {
+                return this.fetchRetry(url, options, retries - 1, backoff * 2);
+            }, backoff);
+        }
+        return res;
     }
 }
 

@@ -176,6 +176,9 @@
       "user_guide/discover-unknown-toggles": {
         "title": "user_guide/discover-unknown-toggles"
       },
+      "user_guide/index": {
+        "title": "Introduction"
+      },
       "user_guide/native_apps": {
         "title": "Working with native apps"
       },
@@ -195,8 +198,8 @@
       "Integrations": "Integrations",
       "Contribute": "Contribute",
       "API": "API",
-      "Help": "Help",
-      "Enterprise": "Enterprise"
+      "Enterprise": "Enterprise",
+      "Help": "Help"
     },
     "categories": {
       "Getting started": "Getting started",

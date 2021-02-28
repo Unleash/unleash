@@ -1,6 +1,7 @@
 {
   "documentation": {
     "Getting started": [
+      "user_guide/index",
       "user_guide/connect_sdk",
       "user_guide/client_sdk",
       "user_guide/create_feature_toggle",

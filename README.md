@@ -96,8 +96,10 @@ If you want to contribute to this project you are encouraged to send issue reque
 - [Join Unleash on Slack](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTJjYmViYjkwYmE0ODVlNmY1YjcwZGRmZWU5MTU1YTQ1Nzg5ZWQ2YzBlY2U1MjlmZDg5ZDRmZTMzNmQ5YmEyOGE) if you want ask open questions about Unleash, feature toggling or discuss these topics in general.
 - [Create a issue request](https://github.com/Unleash/unleash/issues/new) if you have found a bug or have ideas on how to improve Unleash.
 
-## Other resources
+## In the media
 
+- Unleash was featured in [Console 42 - The open-source newsletter](https://console.substack.com/p/console-42) 
+- [This Week in Rust 340](https://this-week-in-rust.org/blog/2020/05/27/this-week-in-rust-340/)
 - [Unleash-hosted - Unleash as a Service](https://www.unleash-hosted.com)
 - [Medium blog](https://medium.com/unleash-hosted)
 - [Blog: Unleash your features gradually!](http://bytes.schibsted.com/unleash-features-gradually/)

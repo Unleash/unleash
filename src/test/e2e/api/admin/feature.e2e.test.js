@@ -47,7 +47,7 @@ test.serial('cant get feature that dose not exist', async t => {
 });
 
 test.serial('creates new feature toggle', async t => {
-    t.plan(0);
+    t.plan(3);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
@@ -57,7 +57,12 @@ test.serial('creates new feature toggle', async t => {
             strategies: [{ name: 'default' }],
         })
         .set('Content-Type', 'application/json')
-        .expect(201);
+        .expect(201)
+        .expect(res => {
+            t.is(res.body.name, 'com.test.feature');
+            t.is(res.body.enabled, false);
+            t.truthy(res.body.createdAt);
+        });
 });
 
 test.serial('creates new feature toggle with variants', async t => {

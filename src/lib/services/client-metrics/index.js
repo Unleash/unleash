@@ -60,7 +60,13 @@ module.exports = class ClientMetricsService {
                 );
             });
         });
+        this.seenClients = {};
+        this.registerBulkAddInterval();
         clientMetricsStore.on('metrics', m => this.addPayload(m));
+    }
+
+    registerBulkAddInterval() {
+        setInterval(() => this.bulkAdd(this), 5000);
     }
 
     async registerClientMetrics(data, clientIp) {
@@ -94,11 +100,25 @@ module.exports = class ClientMetricsService {
     async registerClient(data, clientIp) {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
-        await this.upsertApp(value, clientIp);
-        await this.clientInstanceStore.insert(value);
-        this.logger.info(
-            `New client registration: appName=${value.appName}, instanceId=${value.instanceId}`,
-        );
+        this.seenClients[this.clientKey(value)] = value;
+    }
+
+    clientKey(client) {
+        return `${client.appName}_${client.instanceId}`;
+    }
+
+    async bulkAdd() {
+        if (
+            this &&
+            this.seenClients &&
+            this.clientAppStore &&
+            this.clientInstanceStore
+        ) {
+            const uniqueRegistrations = Object.values(this.seenClients);
+            this.seenClients = {};
+            await this.clientAppStore.updateRows(uniqueRegistrations);
+            await this.clientInstanceStore.bulkInsert(uniqueRegistrations);
+        }
     }
 
     getAppsWithToggles() {

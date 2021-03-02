@@ -26,6 +26,14 @@ const mapRow = row => ({
     createdAt: row.created_at,
 });
 
+const mapToDb = client => ({
+    app_name: client.appName,
+    instance_id: client.instanceId,
+    sdk_version: client.sdkVersion,
+    client_ip: client.clientIp,
+    last_seen: client.lastSeen || 'now()',
+});
+
 class ClientInstanceStore {
     constructor(db, eventBus, getLogger) {
         this.db = db;
@@ -62,31 +70,32 @@ class ClientInstanceStore {
             });
     }
 
-    async insertNewRow(details) {
-        return this.db(TABLE).insert({
-            app_name: details.appName,
-            instance_id: details.instanceId,
-            sdk_version: details.sdkVersion,
-            client_ip: details.clientIp,
-        });
+    async bulkInsert(instances) {
+        const stopTimer = this.metricTimer('bulkInsert');
+        const rows = instances.map(mapToDb);
+        await this.db(TABLE)
+            .insert(rows)
+            .onConflict(['app_name', 'instance_id'])
+            .merge();
+        stopTimer();
+    }
+
+    async exists({ appName, instanceId }) {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE app_name = ? AND instance_id = ?) AS present`,
+            [appName, instanceId],
+        );
+        const { present } = result.rows[0];
+        return present === 1;
     }
 
     async insert(details) {
         const stopTimer = this.metricTimer('insert');
 
-        const result = await this.db(TABLE)
-            .count('*')
-            .where('app_name', details.appName)
-            .where('instance_id', details.instanceId)
-            .first();
-
-        let item;
-
-        if (Number(result.count) > 0) {
-            item = await this.updateRow(details);
-        } else {
-            item = await this.insertNewRow(details);
-        }
+        const item = await this.db(TABLE)
+            .insert(mapToDb(details))
+            .onConflict(['app_name', 'instance_id'])
+            .merge();
 
         stopTimer();
 

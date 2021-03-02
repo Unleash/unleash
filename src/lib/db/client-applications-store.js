@@ -27,7 +27,7 @@ const mapRow = row => ({
 
 const remapRow = (input, old = {}) => ({
     app_name: input.appName,
-    updated_at: input.updatedAt,
+    updated_at: input.updatedAt || 'now()',
     description: input.description || old.description,
     url: input.url || old.url,
     color: input.color || old.color,
@@ -41,12 +41,20 @@ class ClientApplicationsDb {
         this.eventBus = eventBus;
     }
 
-    async updateRow(details, prev) {
+    async updateRow(details) {
         // eslint-disable-next-line no-param-reassign
-        details.updatedAt = 'now()';
         return this.db(TABLE)
-            .where('app_name', details.appName)
-            .update(remapRow(details, prev));
+            .insert(remapRow(details))
+            .onConflict(['app_name'])
+            .merge();
+    }
+
+    async updateRows(apps) {
+        const rows = apps.map(remapRow);
+        await this.db(TABLE)
+            .insert(rows)
+            .onConflict(['app_name'])
+            .merge();
     }
 
     async insertNewRow(details) {

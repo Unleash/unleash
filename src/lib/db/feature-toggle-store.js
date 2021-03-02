@@ -177,7 +177,7 @@ class FeatureToggleStore {
         } catch (err) {
             this.logger.error('Could not insert feature, error: ', err);
         }
-        return null;
+        return undefined;
     }
 
     async updateFeature(data) {

@@ -45,7 +45,7 @@
   "nyc": {
     "all": true,
     "include": [
-      "dist/**/*.js"
+      "dist/lib/**/*.js"
     ],
     "exclude": [
       "dist/bin",

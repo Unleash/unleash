@@ -10,6 +10,8 @@ const { clientMetricsSchema } = require('./client-metrics-schema');
 const { clientRegisterSchema } = require('./register-schema');
 const { APPLICATION_CREATED } = require('../../event-type');
 
+const FIVE_SECONDS = 5 * 1000;
+
 module.exports = class ClientMetricsService {
     constructor(
         {
@@ -20,7 +22,7 @@ module.exports = class ClientMetricsService {
             clientInstanceStore,
             eventStore,
         },
-        { getLogger },
+        { getLogger, bulkInterval = FIVE_SECONDS },
     ) {
         this.globalCount = 0;
         this.apps = {};
@@ -61,12 +63,8 @@ module.exports = class ClientMetricsService {
             });
         });
         this.seenClients = {};
-        this.registerBulkAddInterval();
+        setInterval(() => this.bulkAdd(), bulkInterval);
         clientMetricsStore.on('metrics', m => this.addPayload(m));
-    }
-
-    registerBulkAddInterval() {
-        setInterval(() => this.bulkAdd(this), 5000);
     }
 
     async registerClientMetrics(data, clientIp) {
@@ -100,6 +98,7 @@ module.exports = class ClientMetricsService {
     async registerClient(data, clientIp) {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
+        this.logger.info(`${JSON.stringify(data)}`);
         this.seenClients[this.clientKey(value)] = value;
     }
 
@@ -116,8 +115,18 @@ module.exports = class ClientMetricsService {
         ) {
             const uniqueRegistrations = Object.values(this.seenClients);
             this.seenClients = {};
-            await this.clientAppStore.updateRows(uniqueRegistrations);
-            await this.clientInstanceStore.bulkInsert(uniqueRegistrations);
+            try {
+                if (uniqueRegistrations.length > 0) {
+                    await this.clientAppStore.updateRows(uniqueRegistrations);
+                    await this.clientInstanceStore.bulkInsert(
+                        uniqueRegistrations,
+                    );
+                } else {
+                    this.logger.debug('No registrations in last time period');
+                }
+            } catch (err) {
+                this.logger.warn('Failed to register clients', err);
+            }
         }
     }
 

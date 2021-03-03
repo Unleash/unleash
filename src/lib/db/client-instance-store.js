@@ -29,7 +29,7 @@ const mapRow = row => ({
 const mapToDb = client => ({
     app_name: client.appName,
     instance_id: client.instanceId,
-    sdk_version: client.sdkVersion,
+    sdk_version: client.sdkVersion || '',
     client_ip: client.clientIp,
     last_seen: client.lastSeen || 'now()',
 });
@@ -70,14 +70,12 @@ class ClientInstanceStore {
             });
     }
 
-    async bulkInsert(instances) {
-        const stopTimer = this.metricTimer('bulkInsert');
+    async bulkUpsert(instances) {
         const rows = instances.map(mapToDb);
-        await this.db(TABLE)
+        return this.db(TABLE)
             .insert(rows)
             .onConflict(['app_name', 'instance_id'])
             .merge();
-        stopTimer();
     }
 
     async exists({ appName, instanceId }) {
@@ -86,7 +84,12 @@ class ClientInstanceStore {
             [appName, instanceId],
         );
         const { present } = result.rows[0];
-        return present === 1;
+        return present;
+    }
+
+    async countRows() {
+        const count = await this.db(TABLE).count('app_name');
+        return count[0].count;
     }
 
     async insert(details) {

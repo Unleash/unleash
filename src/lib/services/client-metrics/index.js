@@ -114,11 +114,17 @@ module.exports = class ClientMetricsService {
             this.clientInstanceStore
         ) {
             const uniqueRegistrations = Object.values(this.seenClients);
+            const uniqueApps = Object.values(
+                uniqueRegistrations.reduce((soFar, reg) => {
+                    soFar[reg.appName] = reg;
+                    return soFar;
+                }, {}),
+            );
             this.seenClients = {};
             try {
                 if (uniqueRegistrations.length > 0) {
-                    await this.clientAppStore.updateRows(uniqueRegistrations);
-                    await this.clientInstanceStore.bulkInsert(
+                    await this.clientAppStore.bulkUpsert(uniqueApps);
+                    await this.clientInstanceStore.bulkUpsert(
                         uniqueRegistrations,
                     );
                 } else {

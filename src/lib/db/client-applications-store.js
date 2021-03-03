@@ -27,7 +27,7 @@ const mapRow = row => ({
 
 const remapRow = (input, old = {}) => ({
     app_name: input.appName,
-    updated_at: input.updatedAt || 'now()',
+    updated_at: input.updatedAt,
     description: input.description || old.description,
     url: input.url || old.url,
     color: input.color || old.color,
@@ -45,16 +45,25 @@ class ClientApplicationsDb {
         // eslint-disable-next-line no-param-reassign
         return this.db(TABLE)
             .insert(remapRow(details))
-            .onConflict(['app_name'])
+            .onConflict('app_name')
             .merge();
     }
 
-    async updateRows(apps) {
+    async bulkUpsert(apps) {
         const rows = apps.map(remapRow);
-        await this.db(TABLE)
+        return this.db(TABLE)
             .insert(rows)
-            .onConflict(['app_name'])
+            .onConflict('app_name')
             .merge();
+    }
+
+    async exists({ appName }) {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE app_name = ?) AS present`,
+            [appName],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 
     async insertNewRow(details) {

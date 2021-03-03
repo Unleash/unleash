@@ -410,10 +410,10 @@ test('Multiple registrations of same appname and instanceid within same time per
     const appStoreSpy = sinon.spy();
     const bulkSpy = sinon.spy();
     const clientApplicationsStore = {
-        updateRows: appStoreSpy,
+        bulkUpsert: appStoreSpy,
     };
     const clientInstanceStore = {
-        bulkInsert: bulkSpy,
+        bulkUpsert: bulkSpy,
     };
     const clientMetrics = new UnleashClientMetrics(
         { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
@@ -448,10 +448,10 @@ test('Multiple unique clients causes multiple registrations', async t => {
     const appStoreSpy = sinon.spy();
     const bulkSpy = sinon.spy();
     const clientApplicationsStore = {
-        updateRows: appStoreSpy,
+        bulkUpsert: appStoreSpy,
     };
     const clientInstanceStore = {
-        bulkInsert: bulkSpy,
+        bulkUpsert: bulkSpy,
     };
     const clientMetrics = new UnleashClientMetrics(
         { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
@@ -465,7 +465,7 @@ test('Multiple unique clients causes multiple registrations', async t => {
         interval: 10,
     };
     const client2 = {
-        appName: 'test_app',
+        appName: 'test_app_2',
         instanceId: 'client2',
         strategies: [{ name: 'defaullt' }],
         started: new Date(),
@@ -490,10 +490,10 @@ test('Same client registered outside of dedup interval will be registered twice'
     const appStoreSpy = sinon.spy();
     const bulkSpy = sinon.spy();
     const clientApplicationsStore = {
-        updateRows: appStoreSpy,
+        bulkUpsert: appStoreSpy,
     };
     const clientInstanceStore = {
-        bulkInsert: bulkSpy,
+        bulkUpsert: bulkSpy,
     };
     const bulkInterval = 2000;
     const clientMetrics = new UnleashClientMetrics(
@@ -530,10 +530,10 @@ test('No registrations during a time period will not call stores', async t => {
     const appStoreSpy = sinon.spy();
     const bulkSpy = sinon.spy();
     const clientApplicationsStore = {
-        updateRows: appStoreSpy,
+        bulkUpsert: appStoreSpy,
     };
     const clientInstanceStore = {
-        bulkInsert: bulkSpy,
+        bulkUpsert: bulkSpy,
     };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const metrics = new UnleashClientMetrics(

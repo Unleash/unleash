@@ -10,6 +10,7 @@ const { clientRegisterSchema } = require('./register-schema');
 const { APPLICATION_CREATED } = require('../../event-type');
 
 const FIVE_SECONDS = 5 * 1000;
+const FIVE_MINUTES = 5 * 60 * 1000;
 
 module.exports = class ClientMetricsService {
     constructor(
@@ -21,7 +22,11 @@ module.exports = class ClientMetricsService {
             clientInstanceStore,
             eventStore,
         },
-        { getLogger, bulkInterval = FIVE_SECONDS },
+        {
+            getLogger,
+            bulkInterval = FIVE_SECONDS,
+            announcementInterval: appAnnouncementInterval = FIVE_MINUTES,
+        },
     ) {
         this.globalCount = 0;
         this.apps = {};
@@ -63,6 +68,7 @@ module.exports = class ClientMetricsService {
         });
         this.seenClients = {};
         setInterval(() => this.bulkAdd(), bulkInterval);
+        setInterval(() => this.announceUnannounced(), appAnnouncementInterval);
         clientMetricsStore.on('metrics', m => this.addPayload(m));
     }
 
@@ -78,10 +84,26 @@ module.exports = class ClientMetricsService {
         });
     }
 
+    async announceUnannounced() {
+        if (this.clientAppStore) {
+            const appsToAnnounce = await this.clientAppStore.setUnannouncedToAnnounced();
+            if (appsToAnnounce.length > 0) {
+                const events = appsToAnnounce.map(app => {
+                    return {
+                        type: APPLICATION_CREATED,
+                        createdBy: app.createdBy,
+                        data: app,
+                    };
+                });
+                await this.eventStore.batchStore(events);
+            }
+        }
+    }
+
     async registerClient(data, clientIp) {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
-        this.logger.info(`${JSON.stringify(data)}`);
+        value.createdBy = clientIp;
         this.seenClients[this.clientKey(value)] = value;
     }
 

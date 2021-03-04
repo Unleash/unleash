@@ -5,6 +5,7 @@ const NotFoundError = require('../error/notfound-error');
 const COLUMNS = [
     'app_name',
     'created_at',
+    'created_by',
     'updated_at',
     'description',
     'strategies',
@@ -20,6 +21,7 @@ const mapRow = row => ({
     updatedAt: row.updated_at,
     description: row.description,
     strategies: row.strategies,
+    createdBy: row.created_by,
     url: row.url,
     color: row.color,
     icon: row.icon,
@@ -29,6 +31,8 @@ const remapRow = (input, old = {}) => ({
     app_name: input.appName,
     updated_at: input.updatedAt,
     description: input.description || old.description,
+    created_by: input.createdBy || old.createdBy,
+    announced: input.announced || old.announced || false,
     url: input.url || old.url,
     color: input.color || old.color,
     icon: input.icon || old.icon,
@@ -117,6 +121,26 @@ class ClientApplicationsDb {
         return filter && filter.strategyName
             ? this.getAppsForStrategy(filter.strategyName)
             : this.getAll();
+    }
+
+    async getUnannounced() {
+        const rows = await this.db(TABLE)
+            .select(COLUMNS)
+            .where('announced', false);
+        return rows.map(mapRow);
+    }
+
+    /** *
+     * Updates all rows that have announced = false to announced =true and returns the rows altered
+     * @return {[app]} - Apps that hadn't been announced
+     */
+    async setUnannouncedToAnnounced() {
+        const rows = await this.db(TABLE)
+            .update({ announced: true })
+            .where('announced', false)
+            .whereNotNull('announced')
+            .returning(COLUMNS);
+        return rows.map(mapRow);
     }
 }
 

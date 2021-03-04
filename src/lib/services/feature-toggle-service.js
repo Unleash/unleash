@@ -64,13 +64,16 @@ class FeatureToggleService {
 
     async createFeatureToggle(value, userName) {
         await this.validateName(value);
-        const feature = await featureSchema.validateAsync(value);
-        await this.featureToggleStore.createFeature(feature);
+        const featureData = await featureSchema.validateAsync(value);
+        const feature = await this.featureToggleStore.createFeature(
+            featureData,
+        );
         await this.eventStore.store({
             type: FEATURE_CREATED,
             createdBy: userName,
-            data: feature,
+            data: featureData,
         });
+        return feature;
     }
 
     async updateToggle(updatedFeature, userName) {

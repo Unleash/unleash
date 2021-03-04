@@ -169,10 +169,15 @@ class FeatureToggleStore {
 
     async createFeature(data) {
         try {
-            await this.db(TABLE).insert(this.eventDataToRow(data));
+            const row = await this.db(TABLE)
+                .insert(this.eventDataToRow(data))
+                .returning(FEATURE_COLUMNS);
+
+            return this.rowToFeature(row[0]);
         } catch (err) {
             this.logger.error('Could not insert feature, error: ', err);
         }
+        return undefined;
     }
 
     async updateFeature(data) {

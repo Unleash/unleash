@@ -126,8 +126,11 @@ class FeatureController extends Controller {
         const userName = extractUser(req);
 
         try {
-            await this.featureService.createFeatureToggle(req.body, userName);
-            res.status(201).end();
+            const createdFeature = await this.featureService.createFeatureToggle(
+                req.body,
+                userName,
+            );
+            res.status(201).json(createdFeature);
         } catch (error) {
             handleErrors(res, this.logger, error);
         }

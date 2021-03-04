@@ -41,8 +41,7 @@ class ClientApplicationsDb {
         this.eventBus = eventBus;
     }
 
-    async updateRow(details) {
-        // eslint-disable-next-line no-param-reassign
+    async upsert(details) {
         return this.db(TABLE)
             .insert(remapRow(details))
             .onConflict('app_name')
@@ -64,25 +63,6 @@ class ClientApplicationsDb {
         );
         const { present } = result.rows[0];
         return present;
-    }
-
-    async insertNewRow(details) {
-        return this.db(TABLE).insert(remapRow(details));
-    }
-
-    async upsert(data) {
-        if (!data) {
-            throw new Error('Missing data to add / update');
-        }
-        return this.db(TABLE)
-            .select(COLUMNS)
-            .where('app_name', data.appName)
-            .then(result => {
-                if (result && result[0]) {
-                    return this.updateRow(data, result[0]);
-                }
-                return this.insertNewRow(data);
-            });
     }
 
     async getAll() {

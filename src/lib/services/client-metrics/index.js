@@ -5,7 +5,6 @@
 const Projection = require('./projection.js');
 const TTLList = require('./ttl-list.js');
 const appSchema = require('./metrics-schema');
-const NotFoundError = require('../../error/notfound-error');
 const { clientMetricsSchema } = require('./client-metrics-schema');
 const { clientRegisterSchema } = require('./register-schema');
 const { APPLICATION_CREATED } = require('../../event-type');
@@ -79,22 +78,6 @@ module.exports = class ClientMetricsService {
         });
     }
 
-    async upsertApp(value, clientIp) {
-        try {
-            const app = await this.clientAppStore.getApplication(value.appName);
-            await this.updateRow(value, app);
-        } catch (error) {
-            if (error instanceof NotFoundError) {
-                await this.clientAppStore.insertNewRow(value);
-                await this.eventStore.store({
-                    type: APPLICATION_CREATED,
-                    createdBy: clientIp,
-                    data: value,
-                });
-            }
-        }
-    }
-
     async registerClient(data, clientIp) {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
@@ -127,6 +110,9 @@ module.exports = class ClientMetricsService {
                     await this.clientInstanceStore.bulkUpsert(
                         uniqueRegistrations,
                     );
+                    await this.eventStore.batchStore(
+                        uniqueApps.map(this.appToEvent),
+                    );
                 } else {
                     this.logger.debug('No registrations in last time period');
                 }
@@ -134,6 +120,14 @@ module.exports = class ClientMetricsService {
                 this.logger.warn('Failed to register clients', err);
             }
         }
+    }
+
+    appToEvent(app) {
+        return {
+            type: APPLICATION_CREATED,
+            createdBy: app.clientIp,
+            data: app,
+        };
     }
 
     getAppsWithToggles() {

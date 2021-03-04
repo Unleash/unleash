@@ -59,17 +59,6 @@ class ClientInstanceStore {
         }
     }
 
-    async updateRow(details) {
-        return this.db(TABLE)
-            .where('app_name', details.appName)
-            .where('instance_id', details.instanceId)
-            .update({
-                last_seen: 'now()',
-                client_ip: details.clientIp,
-                sdk_version: details.sdkVersion,
-            });
-    }
-
     async bulkUpsert(instances) {
         const rows = instances.map(mapToDb);
         return this.db(TABLE)
@@ -85,11 +74,6 @@ class ClientInstanceStore {
         );
         const { present } = result.rows[0];
         return present;
-    }
-
-    async countRows() {
-        const count = await this.db(TABLE).count('app_name');
-        return count[0].count;
     }
 
     async insert(details) {

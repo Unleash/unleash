@@ -33,6 +33,24 @@ class EventStore extends EventEmitter {
         }
     }
 
+    async batchStore(events) {
+        try {
+            await this.db('events').insert(events.map(this.eventToDbRow));
+            process.nextTick(() => events.forEach(e => this.emit(e.type, e)));
+        } catch (e) {
+            this.logger.warn('Failed to store events');
+        }
+    }
+
+    eventToDbRow(e) {
+        return {
+            type: e.type,
+            created_by: e.createdBy,
+            data: e.data,
+            tags: e.tags ? JSON.stringify(e.tags) : [],
+        };
+    }
+
     async getEvents() {
         try {
             const rows = await this.db

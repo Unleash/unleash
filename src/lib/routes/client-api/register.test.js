@@ -3,8 +3,6 @@
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
-const sinon = require('sinon');
-const ClientMetricsService = require('../../services/client-metrics');
 const store = require('../../../test/fixtures/store');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
@@ -119,51 +117,4 @@ test('should fail if store fails', t => {
             interval: 10,
         })
         .expect(500);
-});
-
-test('should store event as well as app and instance', async t => {
-    const clock = sinon.useFakeTimers();
-    const stores = store.createStores();
-    stores.clientApplicationsStore = {
-        bulkUpsert: sinon.fake(),
-    };
-    stores.clientInstanceStore = {
-        bulkUpsert: sinon.fake(),
-    };
-    const eventSpy = sinon.spy();
-    stores.eventStore = {
-        batchStore: eventSpy,
-    };
-    const clientMetricsService = new ClientMetricsService(stores, {
-        getLogger,
-        bulkInterval: 1000,
-    });
-    const app = getApp(
-        {
-            baseUriPath: '',
-            stores,
-            eventBus,
-            getLogger,
-        },
-        { clientMetricsService },
-    );
-
-    const request = supertest(app);
-    const client = {
-        appName: 'event_store_testing',
-        instanceId: 'test',
-        strategies: ['default'],
-        started: Date.now(),
-        interval: 10,
-    };
-    await request
-        .post('/api/client/register')
-        .send(client)
-        .expect(202);
-    await clock.tickAsync(1500);
-    t.is(eventSpy.callCount, 1);
-    t.is(eventSpy.firstCall.args.length, 1);
-    t.is(eventSpy.firstCall.args[0][0].data.appName, client.appName);
-
-    clock.restore();
 });

@@ -45,7 +45,7 @@
   "nyc": {
     "all": true,
     "include": [
-      "dist/**/*.js"
+      "dist/lib/**/*.js"
     ],
     "exclude": [
       "dist/bin",
@@ -164,7 +164,7 @@
     "trailingComma": "all",
     "overrides": [
       {
-        "files": "*.{json,yaml,yml,md}",
+        "files": "*.{json,yaml,yml,md,ts}",
         "options": {
           "tabWidth": 2
         }

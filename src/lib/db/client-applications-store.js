@@ -41,31 +41,28 @@ class ClientApplicationsDb {
         this.eventBus = eventBus;
     }
 
-    async updateRow(details, prev) {
-        // eslint-disable-next-line no-param-reassign
-        details.updatedAt = 'now()';
+    async upsert(details) {
         return this.db(TABLE)
-            .where('app_name', details.appName)
-            .update(remapRow(details, prev));
+            .insert(remapRow(details))
+            .onConflict('app_name')
+            .merge();
     }
 
-    async insertNewRow(details) {
-        return this.db(TABLE).insert(remapRow(details));
+    async bulkUpsert(apps) {
+        const rows = apps.map(remapRow);
+        return this.db(TABLE)
+            .insert(rows)
+            .onConflict('app_name')
+            .merge();
     }
 
-    async upsert(data) {
-        if (!data) {
-            throw new Error('Missing data to add / update');
-        }
-        return this.db(TABLE)
-            .select(COLUMNS)
-            .where('app_name', data.appName)
-            .then(result => {
-                if (result && result[0]) {
-                    return this.updateRow(data, result[0]);
-                }
-                return this.insertNewRow(data);
-            });
+    async exists({ appName }) {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE app_name = ?) AS present`,
+            [appName],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 
     async getAll() {

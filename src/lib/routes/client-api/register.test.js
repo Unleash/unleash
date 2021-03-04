@@ -47,7 +47,7 @@ test('should register client', t => {
         .expect(202);
 });
 
-test('should register client without sdkVersin', t => {
+test('should register client without sdkVersion', t => {
     t.plan(0);
     const { request } = getSetup();
     return request
@@ -97,7 +97,6 @@ test('should fail if store fails', t => {
             throw new Error('opps');
         },
     };
-
     const app = getApp({
         baseUriPath: '',
         stores,

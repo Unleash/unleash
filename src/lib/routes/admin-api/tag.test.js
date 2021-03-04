@@ -121,6 +121,7 @@ test('should be able to filter by type', t => {
 
 test('Getting tags while database is down should be a 500', t => {
     t.plan(0);
+    getLogger.setMuteError(true);
     const { request, base } = getSetup(false);
     return request.get(`${base}/api/admin/tags`).expect(500);
 });

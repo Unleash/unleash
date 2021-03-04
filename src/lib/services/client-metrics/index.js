@@ -5,10 +5,11 @@
 const Projection = require('./projection.js');
 const TTLList = require('./ttl-list.js');
 const appSchema = require('./metrics-schema');
-const NotFoundError = require('../../error/notfound-error');
 const { clientMetricsSchema } = require('./client-metrics-schema');
 const { clientRegisterSchema } = require('./register-schema');
 const { APPLICATION_CREATED } = require('../../event-type');
+
+const FIVE_SECONDS = 5 * 1000;
 
 module.exports = class ClientMetricsService {
     constructor(
@@ -20,7 +21,7 @@ module.exports = class ClientMetricsService {
             clientInstanceStore,
             eventStore,
         },
-        { getLogger },
+        { getLogger, bulkInterval = FIVE_SECONDS },
     ) {
         this.globalCount = 0;
         this.apps = {};
@@ -60,6 +61,8 @@ module.exports = class ClientMetricsService {
                 );
             });
         });
+        this.seenClients = {};
+        setInterval(() => this.bulkAdd(), bulkInterval);
         clientMetricsStore.on('metrics', m => this.addPayload(m));
     }
 
@@ -75,30 +78,53 @@ module.exports = class ClientMetricsService {
         });
     }
 
-    async upsertApp(value, clientIp) {
-        try {
-            const app = await this.clientAppStore.getApplication(value.appName);
-            await this.updateRow(value, app);
-        } catch (error) {
-            if (error instanceof NotFoundError) {
-                await this.clientAppStore.insertNewRow(value);
-                await this.eventStore.store({
-                    type: APPLICATION_CREATED,
-                    createdBy: clientIp,
-                    data: value,
-                });
+    async registerClient(data, clientIp) {
+        const value = await clientRegisterSchema.validateAsync(data);
+        value.clientIp = clientIp;
+        this.logger.info(`${JSON.stringify(data)}`);
+        this.seenClients[this.clientKey(value)] = value;
+    }
+
+    clientKey(client) {
+        return `${client.appName}_${client.instanceId}`;
+    }
+
+    async bulkAdd() {
+        if (
+            this &&
+            this.seenClients &&
+            this.clientAppStore &&
+            this.clientInstanceStore
+        ) {
+            const uniqueRegistrations = Object.values(this.seenClients);
+            const uniqueApps = Object.values(
+                uniqueRegistrations.reduce((soFar, reg) => {
+                    soFar[reg.appName] = reg;
+                    return soFar;
+                }, {}),
+            );
+            this.seenClients = {};
+            try {
+                if (uniqueRegistrations.length > 0) {
+                    await this.clientAppStore.bulkUpsert(uniqueApps);
+                    await this.clientInstanceStore.bulkUpsert(
+                        uniqueRegistrations,
+                    );
+                } else {
+                    this.logger.debug('No registrations in last time period');
+                }
+            } catch (err) {
+                this.logger.warn('Failed to register clients', err);
             }
         }
     }
 
-    async registerClient(data, clientIp) {
-        const value = await clientRegisterSchema.validateAsync(data);
-        value.clientIp = clientIp;
-        await this.upsertApp(value, clientIp);
-        await this.clientInstanceStore.insert(value);
-        this.logger.info(
-            `New client registration: appName=${value.appName}, instanceId=${value.instanceId}`,
-        );
+    appToEvent(app) {
+        return {
+            type: APPLICATION_CREATED,
+            createdBy: app.clientIp,
+            data: app,
+        };
     }
 
     getAppsWithToggles() {

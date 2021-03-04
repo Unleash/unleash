@@ -2,7 +2,7 @@
 
 const test = require('ava');
 const moment = require('moment');
-const lolex = require('lolex');
+const sinon = require('sinon');
 
 const { EventEmitter } = require('events');
 const UnleashClientMetrics = require('./index');
@@ -26,7 +26,7 @@ test('should work without state', t => {
 });
 
 test.cb('data should expire', t => {
-    const clock = lolex.install();
+    const clock = sinon.useFakeTimers();
 
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(
@@ -67,7 +67,7 @@ test.cb('data should expire', t => {
     t.true(lastMinExpires === 1);
     t.true(lastHourExpires === 1);
 
-    clock.uninstall();
+    clock.restore();
     t.end();
 });
 
@@ -132,7 +132,7 @@ test('should listen to metrics from store', t => {
     metrics.destroy();
 });
 
-test('should build up list of seend toggles when new metrics arrives', t => {
+test('should build up list of seen toggles when new metrics arrives', t => {
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(
         { clientMetricsStore },
@@ -200,7 +200,7 @@ test('should handle a lot of toggles', t => {
 });
 
 test('should have correct values for lastMinute', t => {
-    const clock = lolex.install();
+    const clock = sinon.useFakeTimers();
 
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(
@@ -271,11 +271,11 @@ test('should have correct values for lastMinute', t => {
     t.deepEqual(c.lastMinute.toggle, { yes: 0, no: 0 });
 
     metrics.destroy();
-    clock.uninstall();
+    clock.restore();
 });
 
 test('should have correct values for lastHour', t => {
-    const clock = lolex.install();
+    const clock = sinon.useFakeTimers();
 
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(
@@ -356,7 +356,7 @@ test('should have correct values for lastHour', t => {
     t.deepEqual(c.lastHour.toggle, { yes: 0, no: 0 });
 
     metrics.destroy();
-    clock.uninstall();
+    clock.restore();
 });
 
 test('should not fail when toggle metrics is missing yes/no field', t => {
@@ -402,4 +402,146 @@ test('should not fail when toggle metrics is missing yes/no field', t => {
     });
 
     metrics.destroy();
+});
+
+test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async t => {
+    const clock = sinon.useFakeTimers(); // sinon has superseded lolex
+    const clientMetricsStore = new EventEmitter();
+    const appStoreSpy = sinon.spy();
+    const bulkSpy = sinon.spy();
+    const clientApplicationsStore = {
+        bulkUpsert: appStoreSpy,
+    };
+    const clientInstanceStore = {
+        bulkUpsert: bulkSpy,
+    };
+    const clientMetrics = new UnleashClientMetrics(
+        { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
+        { getLogger },
+    );
+    const client1 = {
+        appName: 'test_app',
+        instanceId: 'ava',
+        strategies: [{ name: 'defaullt' }],
+        started: new Date(),
+        interval: 10,
+    };
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clock.tickAsync(7 * 1000);
+    t.is(appStoreSpy.callCount, 1);
+    t.is(bulkSpy.callCount, 1);
+    const registrations = appStoreSpy.firstCall.args[0];
+    t.is(registrations.length, 1);
+    t.is(registrations[0].appName, client1.appName);
+    t.is(registrations[0].instanceId, client1.instanceId);
+    t.is(registrations[0].started, client1.started);
+    t.is(registrations[0].interval, client1.interval);
+    clock.restore();
+});
+
+test('Multiple unique clients causes multiple registrations', async t => {
+    const clock = sinon.useFakeTimers();
+    const clientMetricsStore = new EventEmitter();
+    const appStoreSpy = sinon.spy();
+    const bulkSpy = sinon.spy();
+    const clientApplicationsStore = {
+        bulkUpsert: appStoreSpy,
+    };
+    const clientInstanceStore = {
+        bulkUpsert: bulkSpy,
+    };
+    const clientMetrics = new UnleashClientMetrics(
+        { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
+        { getLogger },
+    );
+    const client1 = {
+        appName: 'test_app',
+        instanceId: 'client1',
+        strategies: [{ name: 'defaullt' }],
+        started: new Date(),
+        interval: 10,
+    };
+    const client2 = {
+        appName: 'test_app_2',
+        instanceId: 'client2',
+        strategies: [{ name: 'defaullt' }],
+        started: new Date(),
+        interval: 10,
+    };
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerClient(client2, '127.0.0.1');
+    await clientMetrics.registerClient(client2, '127.0.0.1');
+    await clientMetrics.registerClient(client2, '127.0.0.1');
+    await clock.tickAsync(7 * 1000);
+    t.is(appStoreSpy.callCount, 1);
+    t.is(bulkSpy.callCount, 1);
+    const registrations = appStoreSpy.firstCall.args[0];
+    t.is(registrations.length, 2);
+    clock.restore();
+});
+test('Same client registered outside of dedup interval will be registered twice', async t => {
+    const clock = sinon.useFakeTimers(); // sinon has superseded lolex
+    const clientMetricsStore = new EventEmitter();
+    const appStoreSpy = sinon.spy();
+    const bulkSpy = sinon.spy();
+    const clientApplicationsStore = {
+        bulkUpsert: appStoreSpy,
+    };
+    const clientInstanceStore = {
+        bulkUpsert: bulkSpy,
+    };
+    const bulkInterval = 2000;
+    const clientMetrics = new UnleashClientMetrics(
+        { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
+        { getLogger, bulkInterval },
+    );
+    const client1 = {
+        appName: 'test_app',
+        instanceId: 'client1',
+        strategies: [{ name: 'defaullt' }],
+        started: new Date(),
+        interval: 10,
+    };
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clock.tickAsync(3 * 1000);
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clock.tickAsync(3 * 1000);
+    t.is(appStoreSpy.callCount, 2);
+    t.is(bulkSpy.callCount, 2);
+    const firstRegistrations = appStoreSpy.firstCall.args[0];
+    const secondRegistrations = appStoreSpy.secondCall.args[0];
+    t.is(firstRegistrations[0].appName, secondRegistrations[0].appName);
+    t.is(firstRegistrations[0].instanceId, secondRegistrations[0].instanceId);
+    clock.restore();
+});
+
+test('No registrations during a time period will not call stores', async t => {
+    const clock = sinon.useFakeTimers(); // sinon has superseded lolex
+    const clientMetricsStore = new EventEmitter();
+    const appStoreSpy = sinon.spy();
+    const bulkSpy = sinon.spy();
+    const clientApplicationsStore = {
+        bulkUpsert: appStoreSpy,
+    };
+    const clientInstanceStore = {
+        bulkUpsert: bulkSpy,
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const metrics = new UnleashClientMetrics(
+        { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
+        { getLogger },
+    );
+    await clock.tickAsync(6 * 1000);
+    t.is(appStoreSpy.callCount, 0);
+    t.is(bulkSpy.callCount, 0);
+    clock.restore();
 });

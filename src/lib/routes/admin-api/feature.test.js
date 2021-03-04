@@ -617,6 +617,7 @@ test('Tags should be included in updated events', async t => {
 
 test('Trying to get features while database is down should yield 500', t => {
     t.plan(0);
+    getLogger.setMuteError(true);
     const { request, base } = getSetup(false);
     return request.get(`${base}/api/admin/features`).expect(500);
 });

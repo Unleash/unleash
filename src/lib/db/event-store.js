@@ -12,6 +12,8 @@ const EVENT_COLUMNS = [
     'tags',
 ];
 
+const TABLE = 'events';
+
 class EventStore extends EventEmitter {
     constructor(db, getLogger) {
         super();
@@ -21,13 +23,16 @@ class EventStore extends EventEmitter {
 
     async store(event) {
         try {
-            await this.db('events').insert({
-                type: event.type,
+            const rows = await this.db(TABLE)
+                .insert({
+                    type: event.type,
                 created_by: event.createdBy, // eslint-disable-line
-                data: event.data,
-                tags: event.tags ? JSON.stringify(event.tags) : [],
-            });
-            process.nextTick(() => this.emit(event.type, event));
+                    data: event.data,
+                    tags: event.tags ? JSON.stringify(event.tags) : [],
+                })
+                .returning(EVENT_COLUMNS);
+            const savedEvent = this.rowToEvent(rows[0]);
+            process.nextTick(() => this.emit(event.type, savedEvent));
         } catch (e) {
             this.logger.warn(`Failed to store event ${e}`);
         }
@@ -35,27 +40,23 @@ class EventStore extends EventEmitter {
 
     async batchStore(events) {
         try {
-            await this.db('events').insert(events.map(this.eventToDbRow));
-            process.nextTick(() => events.forEach(e => this.emit(e.type, e)));
+            const savedRows = await this.db(TABLE)
+                .insert(events.map(this.eventToDbRow))
+                .returning(EVENT_COLUMNS);
+            const savedEvents = savedRows.map(this.rowToEvent);
+            process.nextTick(() =>
+                savedEvents.forEach(e => this.emit(e.type, e)),
+            );
         } catch (e) {
             this.logger.warn('Failed to store events');
         }
-    }
-
-    eventToDbRow(e) {
-        return {
-            type: e.type,
-            created_by: e.createdBy,
-            data: e.data,
-            tags: e.tags ? JSON.stringify(e.tags) : [],
-        };
     }
 
     async getEvents() {
         try {
             const rows = await this.db
                 .select(EVENT_COLUMNS)
-                .from('events')
+                .from(TABLE)
                 .limit(100)
                 .orderBy('created_at', 'desc');
 
@@ -69,7 +70,7 @@ class EventStore extends EventEmitter {
         try {
             const rows = await this.db
                 .select(EVENT_COLUMNS)
-                .from('events')
+                .from(TABLE)
                 .limit(100)
                 .whereRaw("data ->> 'name' = ?", [name])
                 .andWhere(
@@ -77,7 +78,7 @@ class EventStore extends EventEmitter {
                     '>=',
                     this.db
                         .select(this.db.raw('coalesce(max(id),0) as id'))
-                        .from('events')
+                        .from(TABLE)
                         .where({ type: DROP_FEATURES }),
                 )
                 .orderBy('created_at', 'desc');
@@ -95,6 +96,15 @@ class EventStore extends EventEmitter {
             createdAt: row.created_at,
             data: row.data,
             tags: row.tags,
+        };
+    }
+
+    eventToDbRow(e) {
+        return {
+            type: e.type,
+            created_by: e.createdBy,
+            data: e.data,
+            tags: e.tags ? JSON.stringify(e.tags) : [],
         };
     }
 }

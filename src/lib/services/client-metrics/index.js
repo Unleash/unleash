@@ -110,9 +110,6 @@ module.exports = class ClientMetricsService {
                     await this.clientInstanceStore.bulkUpsert(
                         uniqueRegistrations,
                     );
-                    await this.eventStore.batchStore(
-                        uniqueApps.map(this.appToEvent),
-                    );
                 } else {
                     this.logger.debug('No registrations in last time period');
                 }

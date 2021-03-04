@@ -110,8 +110,6 @@ module.exports = class ClientMetricsService {
                     await this.clientInstanceStore.bulkUpsert(
                         uniqueRegistrations,
                     );
-                } else {
-                    this.logger.debug('No registrations in last time period');
                 }
             } catch (err) {
                 this.logger.warn('Failed to register clients', err);

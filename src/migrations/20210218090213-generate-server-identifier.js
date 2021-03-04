@@ -15,7 +15,7 @@ exports.up = function(db, cb) {
 exports.down = function(db, cb) {
     db.runSql(
         `
-        DROP FROM settings WHERE name = 'instanceInfo'
+        DELETE FROM settings WHERE name = 'instanceInfo'
         `,
         cb,
     );

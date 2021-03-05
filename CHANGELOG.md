@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.16.0
+
+- fix: projectId must follow nameType in query
+- fix: publish events about unannounced applications
+- fix: messages to slack for archied toggles (#750)
+- fix: makes eventstore emit id and createdAt (#746)
+- fix: don't use hardcoded timestamps as default values (#745)
+- feat/return feature on create (#742)
+- fix: incorrect sql syntax in migration.
+- feat: add support for bulk operations on client apps/instance registr<E2><80><A6> (#744)
+- fix: add unit test for addon-retry
+- fix: add strategy constraints
+
 ## 3.15.0
 
 Began work on a technical debt dashboard on the frontend. The first iteration of this dashboard is included in this release.

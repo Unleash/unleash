@@ -36,10 +36,10 @@ class SlackAddon extends Addon {
 
         let text;
 
-        if (event.type === FEATURE_STALE_ON) {
-            text = this.generateStaleText(event, true);
-        } else if (event.type === FEATURE_STALE_OFF) {
-            text = this.generateStaleText(event, false);
+        if ([FEATURE_ARCHIVED, FEATURE_REVIVED].includes(event.type)) {
+            text = this.generateArchivedText(event);
+        } else if ([FEATURE_STALE_ON, FEATURE_STALE_OFF].includes(event.type)) {
+            text = this.generateStaleText(event);
         } else {
             text = this.generateText(event);
         }
@@ -59,7 +59,7 @@ class SlackAddon extends Addon {
                                 type: 'button',
                                 value: 'featureToggle',
                                 style: 'primary',
-                                url: `${this.unleashUrl}/#/features/strategies/${event.data.name}`,
+                                url: this.featureLink(event),
                             },
                         ],
                     },
@@ -80,23 +80,38 @@ class SlackAddon extends Addon {
         this.logger.info(`Handled event ${event.type}. Status codes=${codes}`);
     }
 
+    featureLink(event) {
+        const path = event.type === FEATURE_ARCHIVED ? 'archive' : 'features';
+        return `${this.unleashUrl}/#/${path}/strategies/${event.data.name}`;
+    }
+
     findSlackChannels({ tags = [] }) {
         return tags.filter(tag => tag.type === 'slack').map(t => t.value);
     }
 
-    generateStaleText({ createdBy, data }, isStale) {
-        const feature = `<${this.unleashUrl}/#/features/strategies/${data.name}|${data.name}>`;
+    generateStaleText(event) {
+        const { createdBy, data, type } = event;
+        const isStale = type === FEATURE_STALE_ON;
+        const feature = `<${this.featureLink(event)}|${data.name}>`;
 
         if (isStale) {
             return `The feature toggle *${feature}* is now *ready to be removed* from the code. :technologist:
 This was changed by ${createdBy}.`;
         }
-        return `The feature toggle *${feature}* was is *unmarked as stale*. This was changed by ${createdBy}.`;
+        return `The feature toggle *${feature}* was *unmarked as stale* by ${createdBy}.`;
     }
 
-    generateText({ createdBy, data, type }) {
-        const eventName = this.eventName(type);
-        const feature = `<${this.unleashUrl}/#/features/strategies/${data.name}|${data.name}>`;
+    generateArchivedText(event) {
+        const { createdBy, data, type } = event;
+        const action = type === FEATURE_ARCHIVED ? 'archived' : 'revived';
+        const feature = `<${this.featureLink(event)}|${data.name}>`;
+        return `The feature toggle *${feature}* was *${action}* by ${createdBy}.`;
+    }
+
+    generateText(event) {
+        const { createdBy, data, type } = event;
+        const action = this.getAction(type);
+        const feature = `<${this.featureLink(event)}|${data.name}>`;
         const enabled = `*Enabled*: ${data.enabled ? 'yes' : 'no'}`;
         const stale = data.stale ? '("stale")' : '';
         const typeStr = `*Type*: ${data.type}`;
@@ -105,21 +120,17 @@ This was changed by ${createdBy}.`;
             data.strategies,
             { skipInvalid: true },
         )}\`\`\``;
-        return `${createdBy} ${eventName} ${feature}
+        return `${createdBy} ${action} feature toggle ${feature}
 ${enabled}${stale} | ${typeStr} | ${project}
 ${strategies}`;
     }
 
-    eventName(type) {
+    getAction(type) {
         switch (type) {
             case FEATURE_CREATED:
-                return 'created feature toggle';
+                return 'created';
             case FEATURE_UPDATED:
-                return 'updated feature toggle';
-            case FEATURE_ARCHIVED:
-                return 'archived feature toggle';
-            case FEATURE_REVIVED:
-                return 'revive feature toggle';
+                return 'updated';
             default:
                 return type;
         }

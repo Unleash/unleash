@@ -104,7 +104,7 @@ This was changed by ${createdBy}.`;
     generateArchivedText(event) {
         const { createdBy, data, type } = event;
         const action = type === FEATURE_ARCHIVED ? 'archived' : 'revived';
-        const feature = `<${this.unleashUrl}/#/archive/strategies/${data.name}|${data.name}>`;
+        const feature = `<${this.featureLink(event)}|${data.name}>`;
         return `The feature toggle *${feature}* was is *${action}* by ${createdBy}.`;
     }
 

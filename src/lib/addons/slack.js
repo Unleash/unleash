@@ -37,7 +37,7 @@ class SlackAddon extends Addon {
         let text;
 
         if ([FEATURE_ARCHIVED, FEATURE_REVIVED].includes(event.type)) {
-            text = this.generateArchivedText(event, true);
+            text = this.generateArchivedText(event);
         } else if ([FEATURE_STALE_ON, FEATURE_STALE_OFF].includes(event.type)) {
             text = this.generateStaleText(event);
         } else {

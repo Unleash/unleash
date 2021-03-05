@@ -98,7 +98,7 @@ class SlackAddon extends Addon {
             return `The feature toggle *${feature}* is now *ready to be removed* from the code. :technologist:
 This was changed by ${createdBy}.`;
         }
-        return `The feature toggle *${feature}* was is *unmarked as stale* by ${createdBy}.`;
+        return `The feature toggle *${feature}* was *unmarked as stale* by ${createdBy}.`;
     }
 
     generateArchivedText(event) {

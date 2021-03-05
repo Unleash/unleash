@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { AppsLinkList, calc } from '../../common';
 import { formatFullDateTimeWithLocale } from '../../common/util';
 import styles from './metric.module.scss';
+import ConditionallyRender from '../../common/conditionally-render';
 
 const StrategyChipItem = ({ strategy }) => (
     <Chip className={styles.chip}>
@@ -116,8 +117,16 @@ export default class MetricComponent extends React.Component {
                         )}
                         <AppsLinkList apps={seenApps} />
                         <div>
-                            <strong>Created: </strong>
-                            <span>{this.formatFullDateTime(featureToggle.createdAt)}</span>
+                            <ConditionallyRender
+                                condition={featureToggle.createdAt}
+                                show={
+                                    <>
+                                        <strong>Created: </strong>
+                                        <span>{this.formatFullDateTime(featureToggle.createdAt)}</span>
+                                    </>
+                                }
+                            />
+
                             <br />
                             <strong>Last seen: </strong>
                             <span>{this.renderLastSeen(featureToggle.lastSeenAt)}</span>

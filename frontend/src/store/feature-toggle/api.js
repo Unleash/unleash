@@ -24,17 +24,15 @@ function fetchFeatureToggle(name) {
         .then(response => response.json());
 }
 
-function create(featureToggle) {
-    return validateToggle(featureToggle)
-        .then(() =>
-            fetch(URI, {
-                method: 'POST',
-                headers,
-                credentials: 'include',
-                body: JSON.stringify(featureToggle),
-            })
-        )
-        .then(throwIfNotSuccess);
+async function create(featureToggle) {
+    await validateToggle(featureToggle);
+
+    return fetch(URI, {
+        method: 'POST',
+        headers,
+        credentials: 'include',
+        body: JSON.stringify(featureToggle),
+    }).then(throwIfNotSuccess);
 }
 
 function validate(featureToggle) {

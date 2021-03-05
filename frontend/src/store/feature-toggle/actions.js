@@ -76,6 +76,7 @@ export function fetchFeatureToggles() {
 
 export function fetchFeatureToggle(name) {
     debug('Start fetching feature toggles');
+
     return dispatch => {
         dispatch({ type: START_FETCH_FEATURE_TOGGLE });
 
@@ -92,7 +93,13 @@ export function createFeatureToggles(featureToggle) {
 
         return api
             .create(featureToggle)
-            .then(() => dispatch({ type: ADD_FEATURE_TOGGLE, featureToggle }))
+            .then(res => res.json())
+            .then(createdFeature => {
+                dispatch({
+                    type: ADD_FEATURE_TOGGLE,
+                    featureToggle: createdFeature,
+                });
+            })
             .catch(dispatchAndThrow(dispatch, ERROR_CREATING_FEATURE_TOGGLE));
     };
 }
@@ -148,7 +155,11 @@ export function requestUpdateFeatureToggleStrategies(featureToggle, newStrategie
             .then(() => {
                 const info = `${featureToggle.name} successfully updated!`;
                 setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
-                return dispatch({ type: UPDATE_FEATURE_TOGGLE_STRATEGIES, featureToggle, info });
+                return dispatch({
+                    type: UPDATE_FEATURE_TOGGLE_STRATEGIES,
+                    featureToggle,
+                    info,
+                });
             })
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
@@ -164,7 +175,11 @@ export function requestUpdateFeatureToggleVariants(featureToggle, newVariants) {
             .then(() => {
                 const info = `${featureToggle.name} successfully updated!`;
                 setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
-                return dispatch({ type: UPDATE_FEATURE_TOGGLE_STRATEGIES, featureToggle, info });
+                return dispatch({
+                    type: UPDATE_FEATURE_TOGGLE_STRATEGIES,
+                    featureToggle,
+                    info,
+                });
             })
             .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };

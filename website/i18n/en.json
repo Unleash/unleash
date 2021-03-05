@@ -125,6 +125,9 @@
       "deploy/securing_unleash": {
         "title": "Securing Unleash"
       },
+      "deploy/technical_debt": {
+        "title": "Technical Debt"
+      },
       "developer_guide": {
         "title": "Developer guide"
       },

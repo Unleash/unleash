@@ -100,7 +100,7 @@ const querySchema = joi
         project: joi
             .array()
             .allow(null)
-            .items(joi.string().alphanum())
+            .items(nameType)
             .optional(),
         namePrefix: joi
             .string()

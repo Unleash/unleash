@@ -262,8 +262,5 @@ test('Filter queries should reject project names that are not alphanum', t => {
         project: ['project name with space'],
     };
     const { error } = querySchema.validate(query);
-    t.deepEqual(
-        error.details[0].message,
-        '"project[0]" must only contain alpha-numeric characters',
-    );
+    t.deepEqual(error.details[0].message, '"project[0]" must be URL friendly');
 });

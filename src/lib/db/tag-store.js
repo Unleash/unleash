@@ -63,6 +63,20 @@ class TagStore {
         stopTimer();
     }
 
+    async dropTags() {
+        const stopTimer = this.timer('dropTags');
+        await this.db(TABLE).del();
+        stopTimer();
+    }
+
+    async bulkImport(tags) {
+        return this.db(TABLE)
+            .insert(tags)
+            .returning(COLUMNS)
+            .onConflict(['type', 'value'])
+            .ignore();
+    }
+
     rowToTag(row) {
         return {
             type: row.type,

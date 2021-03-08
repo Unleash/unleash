@@ -11,6 +11,7 @@ const strategyStore = require('./fake-strategies-store');
 const contextFieldStore = require('./fake-context-store');
 const settingStore = require('./fake-setting-store');
 const addonStore = require('./fake-addon-store');
+const projectStore = require('./fake-project-store');
 
 module.exports = {
     createStores: (databaseIsUp = true) => {
@@ -33,6 +34,7 @@ module.exports = {
             contextFieldStore: contextFieldStore(databaseIsUp),
             settingStore: settingStore(databaseIsUp),
             addonStore: addonStore(databaseIsUp),
+            projectStore: projectStore(databaseIsUp),
         };
     },
 };

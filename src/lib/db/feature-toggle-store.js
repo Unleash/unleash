@@ -268,6 +268,37 @@ class FeatureToggleStore {
         return tag;
     }
 
+    async getAllFeatureTags() {
+        const rows = await this.db(FEATURE_TAG_TABLE).select(
+            FEATURE_TAG_COLUMNS,
+        );
+        return rows.map(row => {
+            return {
+                featureName: row.feature_name,
+                tagType: row.tag_type,
+                tagValue: row.tag_value,
+            };
+        });
+    }
+
+    async dropFeatureTags() {
+        const stopTimer = this.timer('dropFeatureTags');
+        await this.db(FEATURE_TAG_TABLE).del();
+        stopTimer();
+    }
+
+    async importFeatureTags(featureTags) {
+        const rows = await this.db(FEATURE_TAG_TABLE)
+            .insert(featureTags.map(this.importToRow))
+            .returning(FEATURE_TAG_COLUMNS)
+            .onConflict(FEATURE_TAG_COLUMNS)
+            .ignore();
+        if (rows) {
+            return rows.map(this.rowToFeatureAndTag);
+        }
+        return [];
+    }
+
     async untagFeature(featureName, tag) {
         const stopTimer = this.timer('untagFeature');
         try {
@@ -298,6 +329,24 @@ class FeatureToggleStore {
             };
         }
         return null;
+    }
+
+    rowToFeatureAndTag(row) {
+        return {
+            featureName: row.feature_name,
+            tag: {
+                type: row.tag_type,
+                value: row.tag_value,
+            },
+        };
+    }
+
+    importToRow({ featureName, tagType, tagValue }) {
+        return {
+            feature_name: featureName,
+            tag_type: tagType,
+            tag_value: tagValue,
+        };
     }
 
     featureAndTagToRow(featureName, { type, value }) {

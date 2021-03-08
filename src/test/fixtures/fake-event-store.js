@@ -15,6 +15,14 @@ class EventStore extends EventEmitter {
         return Promise.resolve();
     }
 
+    batchStore(events) {
+        events.forEach(event => {
+            this.events.push(event);
+            this.emit(event.type, event);
+        });
+        return Promise.resolve();
+    }
+
     getEvents() {
         return Promise.resolve(this.events);
     }

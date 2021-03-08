@@ -14,19 +14,19 @@ const parseFile = (file, data) => {
         : JSON.parse(data);
 };
 
-const filterExisitng = (keepExisting, exitingArray) => {
+const filterExisting = (keepExisting, existingArray = []) => {
     return item => {
         if (keepExisting) {
-            const found = exitingArray.find(t => t.name === item.name);
+            const found = existingArray.find(t => t.name === item.name);
             return !found;
         }
         return true;
     };
 };
 
-const filterEqual = exitingArray => {
+const filterEqual = (existingArray = []) => {
     return item => {
-        const toggle = exitingArray.find(t => t.name === item.name);
+        const toggle = existingArray.find(t => t.name === item.name);
         if (toggle) {
             return JSON.stringify(toggle) !== JSON.stringify(item);
         }
@@ -37,6 +37,6 @@ const filterEqual = exitingArray => {
 module.exports = {
     readFile,
     parseFile,
-    filterExisitng,
+    filterExisting,
     filterEqual,
 };

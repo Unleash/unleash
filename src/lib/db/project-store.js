@@ -67,6 +67,22 @@ class ProjectStore {
         }
     }
 
+    async importProjects(projects) {
+        const rows = await this.db(TABLE)
+            .insert(projects.map(this.fieldToRow))
+            .returning(COLUMNS)
+            .onConflict('id')
+            .ignore();
+        if (rows.length > 0) {
+            return rows.map(this.mapRow);
+        }
+        return [];
+    }
+
+    async dropProjects() {
+        await this.db(TABLE).del();
+    }
+
     async delete(id) {
         try {
             await this.db(TABLE)

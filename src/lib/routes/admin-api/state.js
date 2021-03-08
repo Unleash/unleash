@@ -10,7 +10,12 @@ const extractUser = require('../../extract-user');
 const { handleErrors } = require('./util');
 
 const upload = multer({ limits: { fileSize: 5242880 } });
-
+const paramToBool = param => {
+    if (typeof param === 'string') {
+        return param === 'true';
+    }
+    return Number.parseInt(param, 10) > 0;
+};
 class StateController extends Controller {
     constructor(config, services) {
         super(config);
@@ -39,8 +44,8 @@ class StateController extends Controller {
             await this.stateService.import({
                 data,
                 userName,
-                dropBeforeImport: drop,
-                keepExisting: keep,
+                dropBeforeImport: paramToBool(drop),
+                keepExisting: paramToBool(keep),
             });
             res.sendStatus(202);
         } catch (err) {
@@ -52,19 +57,23 @@ class StateController extends Controller {
         const { format } = req.query;
 
         const downloadFile = Boolean(req.query.download);
-        let includeStrategies = Boolean(req.query.strategies);
-        let includeFeatureToggles = Boolean(req.query.featureToggles);
-
-        // if neither is passed as query argument, export both
-        if (!includeStrategies && !includeFeatureToggles) {
-            includeStrategies = true;
-            includeFeatureToggles = true;
-        }
+        const includeStrategies = req.query.strategies
+            ? Boolean.valueOf(req.query.strategies)
+            : true;
+        const includeFeatureToggles = req.query.featureToggles
+            ? paramToBool(req.query.featureToggles)
+            : true;
+        const includeProjects = req.query.projects
+            ? paramToBool(req.query.projects)
+            : true;
+        const includeTags = req.query.tags ? paramToBool(req.query.tags) : true;
 
         try {
             const data = await this.stateService.export({
                 includeStrategies,
                 includeFeatureToggles,
+                includeProjects,
+                includeTags,
             });
             const timestamp = moment().format('YYYY-MM-DD_HH-mm-ss');
             if (format === 'yaml') {

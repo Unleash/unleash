@@ -3,7 +3,7 @@
 module.exports = (databaseIsUp = true) => {
     const _features = [];
     const _archive = [];
-    const _featureTags = {};
+    const _featureTags = [];
 
     return {
         getFeature: name => {
@@ -79,16 +79,14 @@ module.exports = (databaseIsUp = true) => {
                             return feature.name.indexOf(query[key]) > -1;
                         }
                         if (key === 'tag') {
-                            return query[key].some(tag => {
-                                return (
-                                    _featureTags[feature.name] &&
-                                    _featureTags[feature.name].some(t => {
-                                        return (
-                                            t.type === tag[0] &&
-                                            t.value === tag[1]
-                                        );
-                                    })
-                                );
+                            return query[key].some(tagQuery => {
+                                return _featureTags
+                                    .filter(t => t.featureName === feature.name)
+                                    .some(
+                                        tag =>
+                                            tag.tagType === tagQuery[0] &&
+                                            tag.tagValue === tagQuery[1],
+                                    );
                             });
                         }
                         return query[key].some(v => v === feature[key]);
@@ -99,20 +97,43 @@ module.exports = (databaseIsUp = true) => {
             return Promise.resolve(_features);
         },
         tagFeature: (featureName, tag) => {
-            _featureTags[featureName] = _featureTags[featureName] || [];
-            _featureTags[featureName].push(tag);
+            _featureTags.push({
+                featureName,
+                tagType: tag.type,
+                tagValue: tag.value,
+            });
         },
         untagFeature: event => {
-            const tags = _featureTags[event.featureName];
-            _featureTags[event.featureName] = tags.splice(
-                tags.indexOf(
-                    t => t.type === event.type && t.value === event.value,
-                ),
-                1,
+            const index = _featureTags.findIndex(
+                f =>
+                    f.featureName === event.featureName &&
+                    f.tagType === event.type &&
+                    f.tagValue === event.value,
             );
+            _featureTags.splice(index, 1);
         },
         getAllTagsForFeature: featureName => {
-            return _featureTags[featureName] || [];
+            return Promise.resolve(
+                _featureTags
+                    .filter(f => f.featureName === featureName)
+                    .map(t => {
+                        return {
+                            type: t.tagType,
+                            value: t.tagValue,
+                        };
+                    }),
+            );
+        },
+        getAllFeatureTags: () => Promise.resolve(_featureTags),
+        importFeatureTags: tags => {
+            tags.forEach(tag => {
+                _featureTags.push(tag);
+            });
+            return Promise.resolve(_featureTags);
+        },
+        dropFeatureTags: () => {
+            _featureTags.splice(0, _featureTags.length);
+            return Promise.resolve();
         },
     };
 };

@@ -7,7 +7,11 @@ import { hasPermission } from '../../permissions';
 
 const mapStateToProps = (state, props) => {
     let strategy = state.strategies.get('list').find(n => n.name === props.strategyName);
-    const applications = state.applications.get('list').filter(app => app.strategies.includes(props.strategyName));
+
+    const applications = state.applications
+        .get('list')
+        .filter(app => app.strategies && app.strategies.includes(props.strategyName));
+
     const toggles = state.features.filter(
         toggle => toggle.get('strategies').findIndex(s => s.name === props.strategyName) > -1
     );

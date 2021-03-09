@@ -10,11 +10,15 @@ const extractUser = require('../../extract-user');
 const { handleErrors } = require('./util');
 
 const upload = multer({ limits: { fileSize: 5242880 } });
-const paramToBool = param => {
-    if (typeof param === 'string') {
-        return param === 'true';
+const paramToBool = (param, def) => {
+    if (param === null || param === undefined) {
+        return def;
     }
-    return Number.parseInt(param, 10) > 0;
+    const nu = Number.parseInt(param, 10);
+    if (Number.isNaN(nu)) {
+        return param.toLowerCase() === 'true';
+    }
+    return Boolean(nu);
 };
 class StateController extends Controller {
     constructor(config, services) {
@@ -56,17 +60,14 @@ class StateController extends Controller {
     async export(req, res) {
         const { format } = req.query;
 
-        const downloadFile = Boolean(req.query.download);
-        const includeStrategies = req.query.strategies
-            ? Boolean.valueOf(req.query.strategies)
-            : true;
-        const includeFeatureToggles = req.query.featureToggles
-            ? paramToBool(req.query.featureToggles)
-            : true;
-        const includeProjects = req.query.projects
-            ? paramToBool(req.query.projects)
-            : true;
-        const includeTags = req.query.tags ? paramToBool(req.query.tags) : true;
+        const downloadFile = paramToBool(req.query.download, false);
+        const includeStrategies = paramToBool(req.query.strategies, true);
+        const includeFeatureToggles = paramToBool(
+            req.query.featureToggles,
+            true,
+        );
+        const includeProjects = paramToBool(req.query.projects, true);
+        const includeTags = paramToBool(req.query.tags, true);
 
         try {
             const data = await this.stateService.export({

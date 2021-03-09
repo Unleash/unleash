@@ -252,6 +252,11 @@ class StateService {
         );
     }
 
+    compareFeatureTags = (old, tag) =>
+        old.featureName === tag.featureName &&
+        old.tagValue === tag.tagValue &&
+        old.tagType === tag.tagType;
+
     async importFeatureTags(
         featureTags,
         keepExisting,
@@ -260,12 +265,7 @@ class StateService {
     ) {
         const featureTagsToInsert = featureTags.filter(tag =>
             keepExisting
-                ? !oldFeatureTags.some(
-                      old =>
-                          old.featureName === tag.featureName &&
-                          old.tagValue === tag.tagValue &&
-                          old.tagType === tag.tagType,
-                  )
+                ? !oldFeatureTags.some(old => this.compareFeatureTags(old, tag))
                 : true,
         );
         if (featureTagsToInsert.length > 0) {
@@ -283,12 +283,13 @@ class StateService {
         }
     }
 
+    compareTags = (old, tag) =>
+        old.type === tag.type && old.value === tag.value;
+
     async importTags(tags, keepExisting, oldTags, userName) {
         const tagsToInsert = tags.filter(tag =>
             keepExisting
-                ? !oldTags.some(
-                      t => t.type === tag.type && t.value === tag.value,
-                  )
+                ? !oldTags.some(old => this.compareTags(old, tag))
                 : true,
         );
         if (tagsToInsert.length > 0) {

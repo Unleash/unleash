@@ -11,7 +11,7 @@ In this guide you will learn how to control the roll-out (expose it to real user
 
 Unleash comes with a few common activation strategies. Some of them require the client to provide the unleash-context, which gives the necessary context for Unleash.
 
-The built in activation strategies:
+The built-in activation strategies:
 
 - default
 - userWithId
@@ -27,7 +27,7 @@ When you create a new feature toggle you will get the default activation strateg
 
 ## The userWithId strategy
 
-When we have deployed some new code to production it would be nice to enable the new feature for ourselves before we enable it to everyone else. To achieve this in Unleash you can use the **userWithId** activation strategy. This strategy allows you to specify a list of user IDs that you want to expose the new feature for. 
+When we have deployed some new code to production it would be nice to enable the new feature for ourselves before we enable it to everyone else. To achieve this with Unleash, you can use the **userWithId** activation strategy. This strategy allows you to specify a list of user IDs that you want to expose the new feature for.
 
 A userId is how you identify users in your system (email, UUID, etc) and is provided as part of the Unleash Context to the client SDK.
 
@@ -39,7 +39,7 @@ In order to increase the exposure of the feature which is protected with the fea
 
 ![Multiple activation strategy](../assets/multiple_activation_strategies.png)
 
-In the example above we have configure two activation strategies, **userWithId** and **flexibleRollout**. If one of them evaluates to true the feature toggle is considered enabled. In the example we have enabled the feature toggle for usersWithId (*me@mail.com and another@mail.com*) in addition to 10% of the traffic.
+In the example above we have to configure two activation strategies, **userWithId** and **flexibleRollout**. If one of them evaluates to true the feature toggle is considered enabled. In the example we have enabled the feature toggle for usersWithId (*me@mail.com and another@mail.com*) in addition to 10% of the traffic.
 
 ## Summary
 

@@ -3,7 +3,7 @@ id: features
 title: /api/admin/features
 ---
 
-> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authententication method, you may use [basic authenticaion](https://en.wikipedia.org/wiki/Basic_access_authentication) to ientify yourself.
+> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authentication method, you may use [basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) to identify yourself.
 
 ### Fetching Feature Toggles
 
@@ -146,7 +146,7 @@ Used by the admin-dashboard to create a new feature toggles.
 - _name_ **must be globally unique**, otherwise you will get a _403-response_.
 - _type_ is optional. If not defined it defaults to `release`
 
-Returns 200-respose if the feature toggle was created successfully.
+Returns 200-response if the feature toggle was created successfully.
 
 ### Update a Feature Toggle
 
@@ -173,7 +173,7 @@ Returns 200-respose if the feature toggle was created successfully.
 
 Used by the admin dashboard to update a feature toggles. The name has to match an existing features toggle.
 
-Returns 200-respose if the feature toggle was updated successfully.
+Returns 200-response if the feature toggle was updated successfully.
 
 ### Tag a Feature Toggle
 

@@ -3,7 +3,7 @@ id: metrics
 title: /api/admin/metrics
 ---
 
-> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authententication method, you may use [basic authenticaion](https://en.wikipedia.org/wiki/Basic_access_authentication) to ientify yourself.
+> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authentication method, you may use [basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) to identify yourself.
 
 # This document describes the metrics endpoint for admin ui
 
@@ -40,7 +40,7 @@ This enpoints returns a list of applications and what toogles unleash has seen f
 
 `GET http://unleash.host.com/api/admin/metrics/feature-toggles`
 
-This endpoint gives _last minute_ and _last hour_ metrics for all active toggles. This is based on metrics reported by client applications. Yes is the number of times a given feature toggle was evaluated to enabled in a client applcation, and no is the number it avaluated to false.
+This endpoint gives _last minute_ and _last hour_ metrics for all active toggles. This is based on metrics reported by client applications. Yes is the number of times a given feature toggle was evaluated to enabled in a client application, and no is the number it was evaluated to false.
 
 **Example response:**
 
@@ -80,13 +80,13 @@ This endpoint gives _last minute_ and _last hour_ metrics for all active toggles
 **Fields:**
 
 - **lastHour** - Hour projection collected metrics for all feature toggles.
-- **lastMinute** - Mintue projection collected metrics for all feature toggles.
+- **lastMinute** - Minute projection collected metrics for all feature toggles.
 
 ### Applications
 
 `GET http://unleash.host.com/api/admin/applications`
 
-This endpoint returns a list of known applications (seen the last two days) and a link to follow for more datails.
+This endpoint returns a list of known applications (seen the last two days) and a link to follow for more details.
 
 ```json
 {
@@ -121,7 +121,7 @@ You can also specify the query param: _strategyName_, which will return all appl
 
 `GET http://unleash.host.com/api/admin/applications/:appName`
 
-This endpoint gives insight into details about a client applcation, such as instances, strategies implemented and seen toogles.
+This endpoint gives insight into details about a client application, such as instances, strategies implemented and seen toggles.
 
 ```json
 {

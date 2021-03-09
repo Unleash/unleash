@@ -111,7 +111,7 @@ function googleAdminAuth(app) {
 }
 ```
 
-Implement a preRouter hook for `/api/admin/login`. It's neccesary for login with Google.
+Implement a preRouter hook for `/api/admin/login`. It's necessary for login with Google.
 
 ```js
 function googleAdminAuth(app) {

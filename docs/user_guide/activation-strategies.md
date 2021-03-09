@@ -15,7 +15,7 @@ It is the simplest activation strategy and basically means "active for everyone"
 
 ## userWithId
 
-Active for users with a `userId` defined in the `userIds` list. Typically I want to enable a new feature only for myself in production before I enable it for everyone else. To achieve this, we can use the “UserWithIdStrategy”. This strategy allows you to specify a list of user IDs that you want to expose the new feature for. (A user id may, of course, be an email if that is more appropriate in your system.)
+Active for users with a `userId` defined in the `userIds` list. Typically, I want to enable a new feature only for myself in production before I enable it for everyone else. To achieve this, we can use the “UserWithIdStrategy”. This strategy allows you to specify a list of user IDs that you want to expose the new feature for. (A user id may, of course, be an email if that is more appropriate in your system.)
 
 **Parameters**
 
@@ -23,11 +23,11 @@ Active for users with a `userId` defined in the `userIds` list. Typically I want
 
 ## flexibleRollout
 
-A flexible rollout strategy which combines all gradual rollout strategies in to a single strategy (and will in time replace them). This strategy have different options for how you want to handle the stickiness, and have sane default mode.
+A flexible rollout strategy which combines all gradual rollout strategies in to a single strategy (and will in time replace them). This strategy has different options for how you want to handle the stickiness, and have sane default mode.
 
 **Parameters**
 
-- **stickiness** is used to define how we guarantee consistency for gradual rollout. The same userId and the same rollout percentage should give predictable results. Configuration that should be supported:
+- **stickiness** is used to define how we guarantee consistency for a gradual rollout. The same userId and the same rollout percentage should give predictable results. Configuration that should be supported:
   - **default** - Unleash chooses the first value present on the context in defined order userId, sessionId, random.
   - **userId** - guaranteed to be sticky on userId. If userId not present the behavior would be false
   - **sessionId** - guaranteed to be sticky on sessionId. If sessionId not present the behavior would be false.
@@ -44,7 +44,7 @@ NB! this feature is currently only supported by the following SDKs:
 
 ## gradualRolloutUserId
 
-The `gradualRolloutUserId` strategy gradually activates a feature toggle for logged in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.
+The `gradualRolloutUserId` strategy gradually activates a feature toggle for logged-in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.
 
 ![hash_and_normalise](assets/hash_and_normalise.png)
 
@@ -57,7 +57,7 @@ Starting from v3.x all clients should use the 32-bit [MurmurHash3](https://en.wi
 
 ## gradualRolloutSessionId
 
-Similar to `gradualRolloutUserId` strategy, this strategy gradually activates a feature toggle, with the exception being that the stickiness is based on the session IDs. This makes it possible to target all users (not just logged in users), guaranteeing that a user will get the same experience within a session.
+Similar to `gradualRolloutUserId` strategy, this strategy gradually activates a feature toggle, with the exception being that the stickiness is based on the session IDs. This makes it possible to target all users (not just logged-in users), guaranteeing that a user will get the same experience within a session.
 
 **Parameters**
 

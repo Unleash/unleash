@@ -84,4 +84,4 @@ unleash.IsEnabled("someToggle", context);
 
 b) Via a UnleashContextProvider
 
-This is a bit more advanced approach, where you configure a unleash-context provider. By doing this you do not have rebuild or pass the unleash-context object to every place you are calling unleash.IsEnabled. You can read more, and get [examples about this option on GitHub](https://github.com/Unleash/unleash-client-dotnet#unleashcontextprovider). 
+This is a bit more advanced approach, where you configure an unleash-context provider. By doing this, you do not have to rebuild or to pass the unleash-context object to every place you are calling `unleash.IsEnabled`. You can read more, and get [examples about this option on GitHub](https://github.com/Unleash/unleash-client-dotnet#unleashcontextprovider).

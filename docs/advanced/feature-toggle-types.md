@@ -14,7 +14,7 @@ Feature toggle types currently supported by Unleash:
 - **Release** - Used to enable trunk-based development for teams practicing Continuous Delivery. _Expected lifetime 40 days_
 - **Experiment** - Used to perform multivariate or A/B testing. _Expected lifetime 40 days_
 - **Operational** - Used to control operational aspects of the system's behavior. _Expected lifetime 7 days_
-- **Kill switch** - Used to to gracefully degrade system functionality. _(permanent)_
+- **Kill switch** - Used to gracefully degrade system functionality. _(permanent)_
 - **Permission** - Used to change the features or product experience that certain users receive. _(permanent)_
 
 ### Deprecate a feature toggle

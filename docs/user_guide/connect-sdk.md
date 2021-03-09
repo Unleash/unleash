@@ -3,7 +3,7 @@ id: connect_sdk
 title: Connect your SDK
 ---
 
-In order to connect your application to Unleash you need to use a client SDK (software developer kit) for your programming language. The SDK will handle connecting to the unleash server instance and retrieve feature toggles based upon your configuration. Both open source and the unleash enterprise offering utilize the same set of client SDKs. 
+In order to connect your application to Unleash you need to use a client SDK (software developer kit) for your programming language. The SDK will handle connecting to the Unleash server instance and retrieve feature toggles based upon your configuration. Both open-source and the Unleash enterprise offering utilize the same set of client SDKs.
 
 If you are an Unleash customer, our hosted instances will always be a protected instance, you will therefore have to specify a client secret as the authorization header when you are connecting your client SDK, which you will receive from us when you sign up for one of our packages. In the open source version you must generate your own secret.
 

@@ -5,7 +5,7 @@ title: Addons Introduction
 
 > This feature was introduced in _Unleash v3.11.0_.
 
-Unleash Addons allows you to extend Unleash with new functionality. Currently addons allow you to listen to changes in Unleash and trigger updates in other systems, typical via a WebHook.
+Unleash Addons allows you to extend Unleash with new functionality. Currently, addons allow you to listen to changes in Unleash and trigger updates in other systems, typical via a WebHook.
 
 Currently Unleash support the following Addons out of the box:
 

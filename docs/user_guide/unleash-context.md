@@ -18,4 +18,4 @@ All fields are optional, but if they are not set you will not be able to use cer
 
 E.g., the `userWithId` strategy obviously depends on the `userId` field.
 
-The `properties` field is more generic and can be used to provide more abritary data to strategies. Typical usage is to add more metadata. For instance, the `betaUser` strategy may read a field from `properties` to check whether the current user is a beta user.
+The `properties` field is more generic and can be used to provide more arbitrary data to strategies. Typical usage is to add more metadata. For instance, the `betaUser` strategy may read a field from `properties` to check whether the current user is a beta user.

@@ -14,7 +14,7 @@ In this guide we explain how to use feature toggles in a Java application using 
 >You can find this information in your “Instance admin” available in your Unleash management UI. 
 
 
-## Step 1: Install client SDK
+## Step 1: Install the client SDK
 
 First we must add Unleash Client SDK as a dependency to your project. Below is an example of how you would add it to your pom.xml in Java:
 
@@ -28,7 +28,7 @@ First we must add Unleash Client SDK as a dependency to your project. Below is a
 
 ## Step 2: Create a new Unleash Instance
 
-Next must must initialize a new instance of the Unleash Client.
+Next we must initialize a new instance of the Unleash Client.
 
 ```java
 UnleashConfig unleashConfig = UnleashConfig.builder()
@@ -83,7 +83,7 @@ unleash.isEnabled("someToggle", context);
 
 **b) Via a UnleashContextProvider**
 
-This is a bit more advanced approach, where you configure a unleash-context provider. By doing this you do not have rebuild or pass the unleash-context object to every place you are calling unleash.isEnabled.
+This is a bit more advanced approach, where you configure a unleash-context provider. By doing this you do not have to rebuild or to pass the unleash-context object to every place you are calling `unleash.isEnabled`.
 
 The provider typically binds the context to the same thread as the request. If you are using Spring the UnleashContextProvider will typically be a ‘request scoped’ bean.
 

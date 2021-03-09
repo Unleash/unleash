@@ -32,12 +32,12 @@ await stateService.importFile({file: 'exported-data.yml', userName: 'import', dr
 
 If you want the database to be cleaned before import (all strategies and features will be removed), set the `dropBeforeImport` parameter.
 
-It also possible to not override exiting feature toggles (and strategies) by using the `keepExisting` parameter.
+It is also possible to not override exiting feature toggles (and strategies) by using the `keepExisting` parameter.
 
 ### API Export
 
 The api endpoint `/api/admin/state/export` will export feature-toggles and strategies as json by default.\
-You can customize the export with queryparameters:
+You can customize the export with query parameters:
 
 | Parameter | Default | Description |
 | --- | --- | --- |

@@ -4,15 +4,15 @@ title: API Access
 ---
 
 > **Enterprise**
-> This guide is only relevant if your are using Unleash-hosted. 
+> This guide is only relevant if you are using Unleash-hosted.
 
 It is possible to integrate directly with the Admin API. In this guide we will explain all the steps to set it up.
 
 ## Step 1: Create API token
 
-You will need access tokens with admin privileges to be allowed to connect to the Admin Unleash-API. You can create these tokens in the “Instance Admin” as part of the “API secrets” section. 
+You will need access tokens with admin privileges to be allowed to connect to the Admin Unleash-API. You can create these tokens in the “Instance Admin” as part of the “API secrets” section.
 
-Please note that it may take up to 60 seconds for the new key to propagate to all Unleash-hosted instances. 
+Please note that it may take up to 60 seconds for the new key to propagate to all Unleash-hosted instances.
 
 > If you need an API token to use in a client SDK you should create a "client token" as these have less access.
 

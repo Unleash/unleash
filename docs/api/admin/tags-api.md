@@ -121,7 +121,7 @@ Used to fetch all types the server knows about. This endpoint is the one all adm
 
 `GET: https://unleash.host.com/api/admin/tag-types/simple`
 
-Used to fetch details about a specific tag-type. This is mostly provded to make it easy to debug the API and should not be used by the client implementations.
+Used to fetch details about a specific tag-type. This is mostly provided to make it easy to debug the API and should not be used by the client implementations.
 
 **Example response:**
 

@@ -9,7 +9,7 @@ This document attempts to guide developers in implementing an Unleash Client SDK
 
 ## System Overview
 
-Unleash is comprised of three parts:
+Unleash is composed of three parts:
 
 - **Unleash API** - The service holding all feature toggles and their configurations. Configurations declare which activation strategies to use and which parameters they should get.
 - **Unleash UI** - The dashboard used to manage feature toggles, define new strategies, look at metrics, etc.
@@ -98,7 +98,7 @@ Unleash also ships with a few built-in strategies, and expects client SDK's to i
 
 ### Extension points
 
-Client implementation should also provide a defined interface to make it easier for the user to implement their own activation strategies, and register those in the unleash client.
+Client implementation should also provide a defined interface to make it easier for the user to implement their own activation strategies, and register those in the Unleash client.
 
 ## Fetching feature toggles (polling)
 

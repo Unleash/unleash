@@ -21,4 +21,4 @@ You can use this query in grafana to achieve this:
 delta(feature_toggle_update_total{toggle="Demo"}[1m]) != bool 0?
 ```
 
-Another useful counter is the `feature_toggle_usage_total` which will give you the numbers for how many time a feature toggle has been evaluated to `active` or not.
+Another useful counter is the `feature_toggle_usage_total` which will give you the numbers for how many times a feature toggle has been evaluated to `active` or not.

@@ -13,7 +13,7 @@ In this guide we explain how to use feature toggles in a Node application using 
 >- **API Secret** – Your API secret required to connect to your instance. 
 >You can find this information in your “Instance admin” available in your Unleash management UI.
 
-## Step 1: Install client SDK
+## Step 1: Install the client SDK
 
 First we must install Node.js dependency:
 
@@ -21,7 +21,7 @@ First we must install Node.js dependency:
 npm install unleash-client --save
 ```
 
-## Step 2: Initialize client SDK
+## Step 2: Initialize the client SDK
 
 Next we must initialize the client SDK in the application:
 

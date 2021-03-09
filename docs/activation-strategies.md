@@ -43,7 +43,7 @@ By enabling the stickiness option on a custom context field you can use it toget
 
 ## gradualRolloutUserId
 
-The `gradualRolloutUserId` strategy gradually activates a feature toggle for logged in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.
+The `gradualRolloutUserId` strategy gradually activates a feature toggle for logged-in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.
 
 ![hash_and_normalise](assets/hash_and_normalise.png)
 
@@ -56,7 +56,7 @@ Starting from v3.x all clients should use the 32-bit [MurmurHash3](https://en.wi
 
 ## gradualRolloutSessionId
 
-Similar to `gradualRolloutUserId` strategy, this strategy gradually activates a feature toggle, with the exception being that the stickiness is based on the session IDs. This makes it possible to target all users (not just logged in users), guaranteeing that a user will get the same experience within a session.
+Similar to `gradualRolloutUserId` strategy, this strategy gradually activates a feature toggle, with the exception being that the stickiness is based on the session IDs. This makes it possible to target all users (not just logged-in users), guaranteeing that a user will get the same experience within a session.
 
 **Parameters**
 

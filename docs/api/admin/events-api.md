@@ -3,7 +3,7 @@ id: events
 title: /api/admin/events
 ---
 
-> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authententication method, you may use [basic authenticaion](https://en.wikipedia.org/wiki/Basic_access_authentication) to ientify yourself.
+> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authentication method, you may use [basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) to identify yourself.
 
 # Events API
 

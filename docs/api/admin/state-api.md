@@ -3,14 +3,14 @@ id: state
 title: /api/admin/state
 ---
 
-> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authententication method, you may use [basic authenticaion](https://en.wikipedia.org/wiki/Basic_access_authentication) to ientify yourself.
+> In order to access the admin api endpoints you need to identify yourself. If you are using the `unsecure` authentication method, you may use [basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) to identify yourself.
 
 ### Export Feature Toggles & Strategies
 
 `GET: http://unleash.host.com/api/admin/state/export`
 
 The api endpoint `/api/admin/state/export` will export feature-toggles and strategies as json by default.\
-You can customize the export with queryparameters:
+You can customize the export with query parameters:
 
 | Parameter | Default | Description |
 | --- | --- | --- |
@@ -67,10 +67,10 @@ You can either send the data as JSON in the POST-body or send a `file` parameter
 
 **Query Paramters**
 
-- **drop** - Use this paramter if you want the database to be cleaned before import (all strategies and features will be removed).
-- **keep** - Use this query parameter if you want keep all exiting feature toggle (and strategy) configurations as is (no override), and only insert missing feature toggles from the data provided.
+- **drop** - Use this parameter if you want the database to be cleaned before import (all strategies and features will be removed).
+- **keep** - Use this query parameter if you want to keep all exiting feature toggle (and strategy) configurations as is (no override), and only insert missing feature toggles from the data provided.
 
-> You should be careful useing the `drop` parameter in production environments.
+> You should be careful using the `drop` parameter in production environments.
 
 Success: `202 Accepted`\
 Error: `400 Bad Request`

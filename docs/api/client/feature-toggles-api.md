@@ -159,7 +159,7 @@ In the example `environment` needs to be `production` AND `userId` must be eithe
 - **values** - is a list of values (string).
 - **operator** - is the logical action to take on the values Supported operator are:
   - **IN** - constraint is satisfied if one of the values in the list matches the value for this context field in the context.
-  - **NOT_IN** - constrint is satisfied if NONE of the values is the list matches the value for this field in the context.
+  - **NOT_IN** - constraint is satisfied if NONE of the values is the list matches the value for this field in the context.
 
 ### Variants
 

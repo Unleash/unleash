@@ -30,7 +30,7 @@ Unleash Webhook addon takes the following parameters.
 
 **Webhook URL** This is the only required property. If you are using a Slack Application you must also make sure your application is allowed to post the channel you want to post to.
 
-**Content-Type** Used to set the content-type header used when unleash performs a HTTP POST to the defined endpoint.
+**Content-Type** Used to set the content-type header used when unleash performs an HTTP POST to the defined endpoint.
 
 **Body template** Used to override the body template used by Unleash when performing the HTTP POST. You may format you message using a [Mustache template](https://mustache.github.io). You will have the [Unleash event format](/docs/api/admin/events) available in the rendering context.
 

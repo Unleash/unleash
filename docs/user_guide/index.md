@@ -21,7 +21,7 @@ Before you can connect your application to Unleash you need a Unleash server. Yo
 
 ## System Overview
 
-Unleash is comprised of three parts:
+Unleash is composed of three parts:
 
 - **Unleash API** - The service holding all feature toggles and their configurations. Configurations declare which activation strategies to use and which parameters they should get.
 - **Unleash UI** - The dashboard used to manage feature toggles, define new strategies, look at metrics, etc.

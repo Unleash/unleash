@@ -21,6 +21,6 @@ When adding a new tag, a dropdown will show you which type of tag you're about t
 
 Types can be anything, and their purpose is to add some semantics to the tag itself.
 
-Some tag types will be defined by plugins (e.g. the slack plugin can define the slack-type, to make it easy to specify which slack channels to post updates for a specific feature toggle to).
+Some tag types will be defined by plugins (e.g. the slack plugin can define the Slack-type, to make it easy to specify which Slack channels to post updates for a specific feature toggle to).
 
 Other tags can be defined by the user to give semantic logic to the management of the UI. It could be that you want to use tag functionality to specify which products a feature toggle belongs to, or to which teams.

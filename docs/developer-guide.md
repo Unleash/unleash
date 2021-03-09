@@ -7,7 +7,7 @@ title: Developer guide
 
 To run and develop unleash, you need to have PostgreSQL database (PostgreSQL v10.x or newer) locally.
 
-> Unleash currently also work with PostgreSQL v9.5+, but this might change in a future feature relase, and we have stopped runnig automatic integration tests below PostgreSQL v10.
+> Unleash currently also work with PostgreSQL v9.5+, but this might change in a future feature release, and we have stopped running automatic integration tests below PostgreSQL v10.
 
 ### Create a local unleash databases in postgres
 

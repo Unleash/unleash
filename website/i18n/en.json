@@ -62,6 +62,9 @@
       "api/admin/metrics": {
         "title": "/api/admin/metrics"
       },
+      "api/admin/projects": {
+        "title": "/api/admin/projects"
+      },
       "api/admin/state": {
         "title": "/api/admin/state"
       },

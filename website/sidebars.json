@@ -50,7 +50,8 @@
       "api/admin/events",
       "api/admin/state",
       "api/admin/feature-types",
-      "api/admin/addons"
+      "api/admin/addons",
+      "api/admin/context"
     ],
     "Internal": ["api/internal/internal", "api/internal/health"],
     "Specification": ["api/open_api"]

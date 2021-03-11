@@ -47,6 +47,9 @@
       "api/admin/addons": {
         "title": "/api/admin/addons"
       },
+      "api/admin/context": {
+        "title": "/api/admin/context"
+      },
       "api/admin/events": {
         "title": "/api/admin/events"
       },
@@ -173,8 +176,8 @@
       "user_guide/create_feature_toggle": {
         "title": "Create a feature toggle"
       },
-      "user_guide/discover-unknown-toggles": {
-        "title": "user_guide/discover-unknown-toggles"
+      "user_guide/discover_unkonwn_toggles": {
+        "title": "Discover unknown toggles"
       },
       "user_guide/index": {
         "title": "Introduction"

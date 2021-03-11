@@ -46,6 +46,12 @@ const users = [
         infoLink: 'https://www.otovo.com',
         pinned: true,
     },
+    {
+        caption: 'Amedia',
+        image: '/img/amedia.png',
+        infoLink: 'https://www.amedia.no/',
+        pinned: true,
+    },
 ];
 
 const siteConfig = {

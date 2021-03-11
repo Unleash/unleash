@@ -1,7 +1,7 @@
 {
   "rewrites": [
     { "source": "/api/admin/user", "destination": "https://unleash.herokuapp.com/api/admin/user" },
-    { "source": "/api/admin/uiconfig", "destination": "https://unleash.herokuapp.com/api/admin/uiconfig" },
+    { "source": "/api/admin/ui-config", "destination": "https://unleash.herokuapp.com/api/admin/ui-config" },
     { "source": "/api/admin/context", "destination": "https://unleash.herokuapp.com/api/admin/context" },
     { "source": "/api/admin/feature-types", "destination": "https://unleash.herokuapp.com/api/admin/feature-types" },
     { "source": "/api/admin/strategies", "destination": "https://unleash.herokuapp.com/api/admin/strategies" },

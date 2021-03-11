@@ -55,7 +55,7 @@ export function throwIfNotSuccess(response) {
             return new Promise((resolve, reject) => {
                 reject(new NotFoundError(response.status));
             });
-        } else if (response.status > 399 && response.status < 499) {
+        } else if (response.status > 399 && response.status < 501) {
             return new Promise((resolve, reject) => {
                 response.json().then(body => {
                     const errorMsg = body && body.isJoi ? extractJoiMsg(body) : extractLegacyMsg(body);

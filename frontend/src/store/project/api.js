@@ -8,6 +8,28 @@ function fetchAll() {
         .then(response => response.json());
 }
 
+function fetchAccess(projectId) {
+    return fetch(`${URI}/${projectId}/users`, { credentials: 'include' })
+        .then(throwIfNotSuccess)
+        .then(response => response.json());
+}
+
+function addUserToRole(projectId, roleId, userId) {
+    return fetch(`${URI}/${projectId}/users/${userId}/roles/${roleId}`, {
+        method: 'POST',
+        headers,
+        credentials: 'include',
+    }).then(throwIfNotSuccess);
+}
+
+function removeUserFromRole(projectId, roleId, userId) {
+    return fetch(`${URI}/${projectId}/users/${userId}/roles/${roleId}`, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+    }).then(throwIfNotSuccess);
+}
+
 function create(project) {
     return fetch(URI, {
         method: 'POST',
@@ -49,4 +71,7 @@ export default {
     update,
     remove,
     validate,
+    fetchAccess,
+    addUserToRole,
+    removeUserFromRole,
 };

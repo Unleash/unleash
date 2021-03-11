@@ -2,12 +2,15 @@ import { connect } from 'react-redux';
 import Component from './list-component.jsx';
 import { fetchProjects, removeProject } from './../../store/project/actions';
 import { hasPermission } from '../../permissions';
+import { RBAC } from '../common/flags';
 
 const mapStateToProps = state => {
     const projects = state.projects.toJS();
+    const rbacEnabled = !!state.uiConfig.toJS().flags[RBAC];
 
     return {
         projects,
+        rbacEnabled,
         hasPermission: hasPermission.bind(null, state.user.get('profile')),
     };
 };

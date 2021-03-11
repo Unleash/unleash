@@ -42,6 +42,7 @@
   "devDependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "4.0.0-alpha.57",
     "classnames": "^2.2.6",
     "date-fns": "^2.17.0",
     "@babel/core": "^7.9.0",

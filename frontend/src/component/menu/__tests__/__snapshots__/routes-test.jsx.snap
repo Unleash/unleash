@@ -187,6 +187,12 @@ Array [
   },
   Object {
     "component": [Function],
+    "parent": "/projects",
+    "path": "/projects/:id/access",
+    "title": ":id",
+  },
+  Object {
+    "component": [Function],
     "flag": "P",
     "icon": "folder_open",
     "path": "/projects",

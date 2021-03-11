@@ -4,6 +4,11 @@ import User from '../user';
 
 export const ALL_PROJECTS = '*';
 
+const PROJECT_DESCRIPTION = {
+    ADMIN: 'Users with the project admin role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
+    REGULAR: 'Users with the regular role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
+};
+
 const { ADMIN } = p;
 
 const PROJECT_ADMIN = [
@@ -59,7 +64,6 @@ export enum RoleType {
     PROJECT = 'project',
 }
 
-// TODO: Split this in two concerns. 1: Controlling access, 2: managing roles (rbac).
 export class AccessService {
     public RoleName = RoleName;
     private store: AccessStore;
@@ -107,10 +111,10 @@ export class AccessService {
 
     async setUserRootRole(userId: number, roleName: RoleName ) {
         const userRoles = await this.store.getRolesForUserId(userId);
-        const currentRootRoles = userRoles.filter(r => r.type === 'root');
+        const currentRootRoles = userRoles.filter(r => r.type === RoleType.ROOT);
 
         const roles = await this.getRoles();
-        const role = roles.find(r => r.type === 'root' && r.name === roleName);
+        const role = roles.find(r => r.type === RoleType.ROOT && r.name === roleName);
         if(role) {
             try {
                 await Promise.all(currentRootRoles.map(r => this.store.removeUserFromRole(userId, r.id)));
@@ -185,7 +189,7 @@ export class AccessService {
             RoleName.ADMIN,
             RoleType.PROJECT,
             projectId,
-            `Admin role for project "${projectId}"`,
+            PROJECT_DESCRIPTION.ADMIN,
         );
         await this.store.addPermissionsToRole(
             adminRole.id,
@@ -203,7 +207,7 @@ export class AccessService {
             RoleName.REGULAR,
             RoleType.PROJECT,
             projectId,
-            `Contributor role for project "${projectId}"`,
+            PROJECT_DESCRIPTION.REGULAR,
         );
         await this.store.addPermissionsToRole(
             regularRole.id,

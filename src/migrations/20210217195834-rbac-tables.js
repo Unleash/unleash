@@ -26,7 +26,7 @@ exports.up = function(db, cb) {
     
       WITH admin AS (
         INSERT INTO roles(name, description, type)
-        VALUES ('Admin', 'Can read and write all resources in Unleash. This includes add and remove users and roles.', 'root')
+        VALUES ('Admin', 'Users with the global admin role have superuser access to Unleash and can perform any operation within the unleash platform.', 'root')
         RETURNING id role_id
       )
 
@@ -35,7 +35,7 @@ exports.up = function(db, cb) {
 
       WITH regular AS (
         INSERT INTO roles(name, description, type)
-        VALUES ('Regular', 'Can read and write all root resources in Unleash, except users and roles. Users with this role can also create new projects.', 'root')
+        VALUES ('Regular', 'Users with the global regular role have access most features in Unleash, but can not manage users and roles in the global scope. If a user with a global regular role creates a project, they will become a project admin and receive superuser rights within the context of that project.', 'root')
         RETURNING id role_id
       )
       INSERT INTO role_permission(role_id, project, permission)

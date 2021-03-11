@@ -116,7 +116,7 @@ async function start(opts) {
         if (options.disableDBMigration) {
             logger.info('DB migrations disabled');
         } else {
-            await migrator(options);
+            await migrator.up(options);
         }
     } catch (err) {
         logger.error('Failed to migrate db', err);

@@ -4,14 +4,24 @@ require('db-migrate-shared').log.setLogLevel('error');
 
 const { getInstance } = require('db-migrate');
 
-function migrateDb({ db, databaseSchema = 'public' }) {
+function getDbInstance({ db, databaseSchema = 'public' }) {
     const custom = { ...db, schema: databaseSchema };
-    const dbmigrate = getInstance(true, {
+    return getInstance(true, {
         cwd: __dirname,
         config: { custom },
         env: 'custom',
     });
-    return dbmigrate.up();
 }
 
-module.exports = migrateDb;
+async function up(options) {
+    return getDbInstance(options).up();
+}
+
+async function reset(options) {
+    return getDbInstance(options).reset();
+}
+
+module.exports = {
+    up,
+    reset,
+};

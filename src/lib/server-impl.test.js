@@ -50,7 +50,7 @@ const serverImpl = proxyquire('./server-impl', {
         },
     },
     '../migrator': function() {
-        return Promise.resolve();
+        return { up: Promise.resolve() };
     },
 });
 

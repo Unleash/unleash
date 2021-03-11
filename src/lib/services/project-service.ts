@@ -17,6 +17,8 @@ interface IProject {
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
+const DEFAULT_PROJECT = 'default';
+
 class ProjectService {
     private projectStore: any;
 
@@ -84,7 +86,7 @@ class ProjectService {
     }
 
     async deleteProject(id: string, user: User): Promise<void> {
-        if (id === 'default') {
+        if (id === DEFAULT_PROJECT) {
             throw new InvalidOperationError(
                 'You can not delete the default project!',
             );

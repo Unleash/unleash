@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Menu, MenuItem } from 'react-mdl';
 import { DropdownButton } from '../../common';
 import PropTypes from 'prop-types';
-import { enable } from 'debug';
 
 const ALL_PROJECTS = { id: '*', name: '> All projects' };
 

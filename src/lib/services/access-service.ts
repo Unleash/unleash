@@ -1,4 +1,4 @@
-import { AccessStore, Role, Permission } from '../db/access-store';
+import { AccessStore, IRole, IUserPermission } from '../db/access-store';
 import p from '../permissions';
 import User from '../user';
 
@@ -18,12 +18,12 @@ const PROJECT_REGULAR = [p.CREATE_FEATURE, p.UPDATE_FEATURE, p.DELETE_FEATURE];
 
 const isProjectPermission = permission => PROJECT_ADMIN.includes(permission);
 
-interface Stores {
+interface IStores {
     accessStore: AccessStore;
     userStore: any;
 }
 
-export interface UserWithRole {
+export interface IUserWithRole {
     id: number;
     roleId: number;
     name?: string
@@ -32,10 +32,10 @@ export interface UserWithRole {
     imageUrl?: string;
 }
 
-interface RoleData {
-    role: Role;
+interface IRoleData {
+    role: IRole;
     users: User[];
-    permissions: Permission[];
+    permissions: IUserPermission[];
 }
 
 interface IPermission {
@@ -70,7 +70,7 @@ export class AccessService {
 
     private permissions: IPermission[];
 
-    constructor({ accessStore, userStore }: Stores, { getLogger } : { getLogger: Function}) {
+    constructor({ accessStore, userStore }: IStores, { getLogger } : { getLogger: Function}) {
         this.store = accessStore;
         this.userStore = userStore;
         this.logger = getLogger('/services/access-service.ts');
@@ -139,11 +139,11 @@ export class AccessService {
         return this.store.removePermissionFromRole(roleId, permission, projectId);
     }
 
-    async getRoles(): Promise<Role[]> {
+    async getRoles(): Promise<IRole[]> {
         return this.store.getRoles();
     }
 
-    async getRole(roleId: number): Promise<RoleData> {
+    async getRole(roleId: number): Promise<IRoleData> {
         const [role, permissions, users] = await Promise.all([
             this.store.getRoleWithId(roleId),
             this.store.getPermissionsForRole(roleId),
@@ -152,11 +152,11 @@ export class AccessService {
         return { role, permissions, users };
     }
 
-    async getRolesForProject(projectId: string): Promise<Role[]> {
+    async getRolesForProject(projectId: string): Promise<IRole[]> {
         return this.store.getRolesForProject(projectId);
     }
 
-    async getRolesForUser(userId: number): Promise<Role[]> {
+    async getRolesForUser(userId: number): Promise<IRole[]> {
         return this.store.getRolesForUserId(userId);
     }
 
@@ -166,7 +166,7 @@ export class AccessService {
     }
 
     // Move to project-service?
-    async getProjectRoleUsers(projectId: string): Promise<[Role[], UserWithRole[]]> {
+    async getProjectRoleUsers(projectId: string): Promise<[IRole[], IUserWithRole[]]> {
         const roles = await this.store.getRolesForProject(projectId);
 
         const users = await Promise.all(roles.map(async role => {

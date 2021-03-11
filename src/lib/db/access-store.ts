@@ -9,12 +9,12 @@ const T = {
     ROLE_PERMISSION: 'role_permission',
 };
 
-export interface Permission {
+export interface IUserPermission {
     project?: string;
     permission: string;
 }
 
-export interface Role {
+export interface IRole {
     id: number;
     name: string;
     description?: string;
@@ -39,45 +39,45 @@ export class AccessStore {
             });
     }
 
-    async getPermissionsForUser(userId: Number): Promise<Permission[]> {
+    async getPermissionsForUser(userId: Number): Promise<IUserPermission[]> {
         const stopTimer = this.timer('getPermissionsForUser');
         const rows = await this.db
             .select('project', 'permission')
-            .from<Permission>(`${T.ROLE_PERMISSION} AS rp`)
+            .from<IUserPermission>(`${T.ROLE_PERMISSION} AS rp`)
             .leftJoin(`${T.ROLE_USER} AS ur`, 'ur.role_id', 'rp.role_id')
             .where('user_id', '=', userId);
         stopTimer();
         return rows;
     }
 
-    async getPermissionsForRole(roleId: number): Promise<Permission[]> {
+    async getPermissionsForRole(roleId: number): Promise<IUserPermission[]> {
         const stopTimer = this.timer('getPermissionsForRole');
         const rows = await this.db
             .select('project', 'permission')
-            .from<Permission>(`${T.ROLE_PERMISSION}`)
+            .from<IUserPermission>(`${T.ROLE_PERMISSION}`)
             .where('role_id', '=', roleId);
         stopTimer();
         return rows;
     }
 
-    async getRoles(): Promise<Role[]> {
+    async getRoles(): Promise<IRole[]> {
         return this.db
             .select(['id', 'name', 'type', 'description'])
-            .from<Role>(T.ROLES);
+            .from<IRole>(T.ROLES);
     }
 
-    async getRoleWithId(id: number): Promise<Role> {
+    async getRoleWithId(id: number): Promise<IRole> {
         return this.db
             .select(['id', 'name', 'type', 'description'])
             .where('id', id)
             .first()
-            .from<Role>(T.ROLES);
+            .from<IRole>(T.ROLES);
     }
 
-    async getRolesForProject(projectId: string): Promise<Role[]> {
+    async getRolesForProject(projectId: string): Promise<IRole[]> {
         return this.db
             .select(['id', 'name', 'type', 'project', 'description'])
-            .from<Role>(T.ROLES)
+            .from<IRole>(T.ROLES)
             .where('project', projectId)
             .andWhere('type', 'project');
     }
@@ -90,18 +90,18 @@ export class AccessStore {
             .delete();
     }
 
-    async getRolesForUserId(userId: number): Promise<Role[]> {
+    async getRolesForUserId(userId: number): Promise<IRole[]> {
         return this.db
             .select(['id', 'name', 'type', 'project', 'description'])
-            .from<Role[]>(T.ROLES)
+            .from<IRole[]>(T.ROLES)
             .innerJoin(`${T.ROLE_USER} as ru`, 'ru.role_id', 'id')
             .where('ru.user_id', '=', userId);
     }
 
-    async getUserIdsForRole(roleId: number): Promise<Role[]> {
+    async getUserIdsForRole(roleId: number): Promise<IRole[]> {
         const rows = await this.db
             .select(['user_id'])
-            .from<Role>(T.ROLE_USER)
+            .from<IRole>(T.ROLE_USER)
             .where('role_id', roleId);
         return rows.map(r => r.user_id);
     }
@@ -127,7 +127,7 @@ export class AccessStore {
         type: string,
         project?: string,
         description?: string,
-    ): Promise<Role> {
+    ): Promise<IRole> {
         const [id] = await this.db(T.ROLES)
             .insert({ name, description, type, project })
             .returning('id');

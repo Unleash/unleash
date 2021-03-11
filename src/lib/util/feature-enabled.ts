@@ -1,12 +1,12 @@
-interface ExperimentalFlags {
+interface IExperimentalFlags {
     [key: string]: boolean;
 }
 
-interface Config {
-    experimental: ExperimentalFlags;
+interface IConfig {
+    experimental: IExperimentalFlags;
 }
 
-export const isRbacEnabled = (config: Config): boolean => {
+export const isRbacEnabled = (config: IConfig): boolean => {
     return config && config.experimental && config.experimental.rbac;
 };
 

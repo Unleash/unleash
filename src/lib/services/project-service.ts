@@ -9,7 +9,7 @@ const { nameType } = require('../routes/admin-api/util');
 const schema = require('./project-schema');
 const NotFoundError = require('../error/notfound-error');
 
-interface Project {
+interface IProject {
     id: string;
     name: string;
     description?: string;
@@ -51,7 +51,7 @@ class ProjectService {
         return this.projectStore.get(id);
     }
 
-    async createProject(newProject: Project, user: User): Promise<Project> {
+    async createProject(newProject: IProject, user: User): Promise<IProject> {
         const data = await schema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
 
@@ -70,7 +70,7 @@ class ProjectService {
         return data;
     }
 
-    async updateProject(updatedProject: Project, user: User): Promise<void> {
+    async updateProject(updatedProject: IProject, user: User): Promise<void> {
         await this.projectStore.get(updatedProject.id);
         const project = await schema.validateAsync(updatedProject);
 

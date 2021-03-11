@@ -95,6 +95,7 @@ function defaultOptions() {
                 enabled: process.env.CLIENT_FEATURE_MEMOIZE || false,
                 maxAge: process.env.CLIENT_FEATURE_MAXAGE || 1000,
             },
+            rbac: false,
         },
     };
 }

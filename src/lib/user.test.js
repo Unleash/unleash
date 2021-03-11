@@ -38,7 +38,7 @@ test('should require email or username', t => {
         { instanceOf: Error },
     );
 
-    t.is(error.message, 'Username or Email us reuqired');
+    t.is(error.message, 'Username or Email is required');
 });
 
 test('Should create user with only email defined', t => {

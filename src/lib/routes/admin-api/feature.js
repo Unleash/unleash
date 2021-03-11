@@ -39,7 +39,7 @@ class FeatureController extends Controller {
         this.post('/:featureName/toggle/off', this.toggleOff, UPDATE_FEATURE);
         this.post('/:featureName/stale/on', this.staleOn, UPDATE_FEATURE);
         this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
-        this.get('/:featureName/tags', this.listTags, UPDATE_FEATURE);
+        this.get('/:featureName/tags', this.listTags);
         this.post('/:featureName/tags', this.addTag, UPDATE_FEATURE);
         this.delete(
             '/:featureName/tags/:type/:value',

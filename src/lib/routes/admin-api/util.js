@@ -29,6 +29,11 @@ const handleErrors = (res, logger, error) => {
     // eslint-disable-next-line no-param-reassign
     error.isJoi = true;
     switch (error.name) {
+        case 'NoAccessError':
+            return res
+                .status(403)
+                .json(error)
+                .end();
         case 'NotFoundError':
             return res.status(404).end();
         case 'InvalidOperationError':

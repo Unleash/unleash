@@ -28,6 +28,7 @@ async function resetDatabase(stores) {
         stores.db('tags').del(),
         stores.db('tag_types').del(),
         stores.db('addons').del(),
+        stores.db('users').del(),
     ]);
 }
 

@@ -51,11 +51,10 @@ class ProjectStore {
     }
 
     async create(project) {
-        await this.db(TABLE)
+        const [id] = await this.db(TABLE)
             .insert(this.fieldToRow(project))
-            .catch(err =>
-                this.logger.error('Could not insert project, error: ', err),
-            );
+            .returning('id');
+        return { ...project, id };
     }
 
     async update(data) {

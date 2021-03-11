@@ -1,10 +1,25 @@
 'use strict';
 
-const MissingPermission = require('../missing-permission');
+const NoAccessError = require('../error/no-access-error');
 const { ADMIN } = require('../permissions');
+const { isRbacEnabled } = require('../util/feature-enabled');
 
 module.exports = function(config, permission) {
-    if (!permission || !config.extendedPermissions) {
+    if (!permission) {
+        return (req, res, next) => next();
+    }
+    if (isRbacEnabled(config)) {
+        return async (req, res, next) => {
+            if (await req.checkRbac(permission)) {
+                return next();
+            }
+            return res
+                .status(403)
+                .json(new NoAccessError(permission))
+                .end();
+        };
+    }
+    if (!config.extendedPermissions) {
         return (req, res, next) => next();
     }
     return (req, res, next) => {
@@ -18,12 +33,7 @@ module.exports = function(config, permission) {
         }
         return res
             .status(403)
-            .json(
-                new MissingPermission({
-                    permission,
-                    message: `You require ${permission} to perform this action`,
-                }),
-            )
+            .json(new NoAccessError(permission))
             .end();
     };
 };

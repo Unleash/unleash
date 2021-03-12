@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.17.0 [unreleased]
+
+- feat: upgrade unleash-frontend to version 3.14.0
+
 ## 3.16.0
 
 - fix: projectId must follow nameType in query

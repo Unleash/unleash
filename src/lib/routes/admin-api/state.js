@@ -10,7 +10,16 @@ const extractUser = require('../../extract-user');
 const { handleErrors } = require('./util');
 
 const upload = multer({ limits: { fileSize: 5242880 } });
-
+const paramToBool = (param, def) => {
+    if (param === null || param === undefined) {
+        return def;
+    }
+    const nu = Number.parseInt(param, 10);
+    if (Number.isNaN(nu)) {
+        return param.toLowerCase() === 'true';
+    }
+    return Boolean(nu);
+};
 class StateController extends Controller {
     constructor(config, services) {
         super(config);
@@ -39,8 +48,8 @@ class StateController extends Controller {
             await this.stateService.import({
                 data,
                 userName,
-                dropBeforeImport: drop,
-                keepExisting: keep,
+                dropBeforeImport: paramToBool(drop),
+                keepExisting: paramToBool(keep),
             });
             res.sendStatus(202);
         } catch (err) {
@@ -51,20 +60,21 @@ class StateController extends Controller {
     async export(req, res) {
         const { format } = req.query;
 
-        const downloadFile = Boolean(req.query.download);
-        let includeStrategies = Boolean(req.query.strategies);
-        let includeFeatureToggles = Boolean(req.query.featureToggles);
-
-        // if neither is passed as query argument, export both
-        if (!includeStrategies && !includeFeatureToggles) {
-            includeStrategies = true;
-            includeFeatureToggles = true;
-        }
+        const downloadFile = paramToBool(req.query.download, false);
+        const includeStrategies = paramToBool(req.query.strategies, true);
+        const includeFeatureToggles = paramToBool(
+            req.query.featureToggles,
+            true,
+        );
+        const includeProjects = paramToBool(req.query.projects, true);
+        const includeTags = paramToBool(req.query.tags, true);
 
         try {
             const data = await this.stateService.export({
                 includeStrategies,
                 includeFeatureToggles,
+                includeProjects,
+                includeTags,
             });
             const timestamp = moment().format('YYYY-MM-DD_HH-mm-ss');
             if (format === 'yaml') {

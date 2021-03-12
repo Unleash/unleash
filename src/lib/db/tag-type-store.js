@@ -65,6 +65,24 @@ class TagTypeStore {
         stopTimer();
     }
 
+    async dropTagTypes() {
+        const stopTimer = this.timer('dropTagTypes');
+        await this.db(TABLE).del();
+        stopTimer();
+    }
+
+    async bulkImport(tagTypes) {
+        const rows = await this.db(TABLE)
+            .insert(tagTypes)
+            .returning(COLUMNS)
+            .onConflict('name')
+            .ignore();
+        if (rows.length > 0) {
+            return rows;
+        }
+        return [];
+    }
+
     async updateTagType({ name, description, icon }) {
         const stopTimer = this.timer('updateTagType');
         await this.db(TABLE)

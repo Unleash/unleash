@@ -109,4 +109,15 @@ const querySchema = joi
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
 
-module.exports = { featureSchema, strategiesSchema, nameSchema, querySchema };
+const featureTagSchema = joi.object().keys({
+    featureName: nameType,
+    tagType: nameType,
+    tagValue: joi.string(),
+});
+module.exports = {
+    featureSchema,
+    strategiesSchema,
+    nameSchema,
+    querySchema,
+    featureTagSchema,
+};

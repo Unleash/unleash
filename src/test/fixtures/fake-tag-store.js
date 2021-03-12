@@ -34,5 +34,13 @@ module.exports = (databaseIsUp = true) => {
             }
             return Promise.reject(new NotFoundError('Could not find tag'));
         },
+        bulkImport: tags => {
+            tags.forEach(tag => _tags.push(tag));
+            return Promise.resolve(_tags);
+        },
+        dropTags: () => {
+            _tags.splice(0, _tags.length);
+            return Promise.resolve();
+        },
     };
 };

@@ -23,7 +23,7 @@ const unleash = require('unleash-server');
 const { services } = await unleash.start({...});
 const { stateService } = services;
 
-const exportedData = await stateService.export({includeStrategies: false, includeFeatureToggles: true});
+const exportedData = await stateService.export({includeStrategies: false, includeFeatureToggles: true, includeTags: true, includeProjects: true});
 
 await stateService.import({data: exportedData, userName: 'import', dropBeforeImport: false});
 
@@ -45,11 +45,13 @@ You can customize the export with query parameters:
 | download | `false` | If the exported data should be downloaded as a file |
 | featureToggles | `true` | Include feature-toggles in the exported data |
 | strategies | `true` | Include strategies in the exported data |
+| tags | `true` | Include tagtypes, tags and feature_tags in the exported data |
+| projects | `true` | Include projects in the exported data |
 
-For example if you want to download all feature-toggles as yaml:
+For example if you want to download just feature-toggles as yaml:
 
 ```
-/api/admin/state/export?format=yaml&featureToggles=1&download=1
+/api/admin/state/export?format=yaml&featureToggles=1&strategies=0&tags=0&projects=0&download=1
 ```
 
 ### API Import

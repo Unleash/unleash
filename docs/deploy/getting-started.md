@@ -78,7 +78,7 @@ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 2. Run
 
 ```sh
-docker run -e POSTGRES_PASSWORD={INSERT_PASSWORD} -e POSTGRES_USER={INSERT_USER} -e POSTGRES_DB=unleash --network unleash postgres
+docker run -e POSTGRES_PASSWORD={INSERT_PASSWORD} -e POSTGRES_USER={INSERT_USER} -e POSTGRES_DB=unleash --network unleash --name postgres postgres
 
 docker run -p 4242:4242 --network unleash -e DATABASE_URL=postgres://{INSERT_USER}:{INSERT_PASSWORD}@postgres:5432/unleash unleashorg/unleash-server
 ```

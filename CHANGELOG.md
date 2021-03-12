@@ -1,15 +1,19 @@
 # Changelog
 
-## 3.17.0 [unreleased]
+## 3.17.0
 
+- fix: upgrade docusaurus
+- feat: upgrade unleash-frontend to version 3.14.0
+- Add import/export for tags and projects (#754)
+- feat: Default roles and RBAC permission checker. (#735) (experimental)
 - feat: upgrade unleash-frontend to version 3.14.0
 
 ## 3.16.0
 
 - fix: projectId must follow nameType in query
 - fix: publish events about unannounced applications
-- fix: messages to slack for archied toggles (#750)
-- fix: makes eventstore emit id and createdAt (#746)
+- fix: messages to slack for archived toggles (#750)
+- fix: makes event-store emit id and createdAt (#746)
 - fix: don't use hardcoded timestamps as default values (#745)
 - feat/return feature on create (#742)
 - fix: incorrect sql syntax in migration.

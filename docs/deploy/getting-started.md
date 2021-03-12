@@ -74,7 +74,7 @@ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 
 #### Manually
 
-1. Create a network by running `docker create network unleash`
+1. Create a network by running `docker network create unleash`
 2. Run
 
 ```sh

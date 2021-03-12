@@ -7,14 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.14.0
+- fix: should fetch projects once to make sure we know about projects
+- feat/rbac: edit access for projects. (#251)
+
 # 3.13.5
 - fix: check that strategies exists before calling includes
+
 # 3.13.4
 - fix: metrics invalid date
+
 # 3.13.3
 - fix: content-min-height
+
 # 3.13.2
 - feat: stale dashboard
+
 # 3.13.1
 - fix: fix update-variant-test
 - fix: unsecure => insecure

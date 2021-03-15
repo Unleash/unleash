@@ -12,31 +12,41 @@ class VersionService {
             oss: version,
             enterprise: enterpriseVersion,
         };
-        if (versionCheck) {
-            if (versionCheck.url) {
-                this.versionCheckUrl = versionCheck.url;
-            }
-
+        this.setInstanceId();
+        if (versionCheck && versionCheck.url) {
+            this.versionCheckUrl = versionCheck.url;
             if (versionCheck.enable === 'true') {
                 this.enabled = true;
-                this.checkLatestVersion();
-                setInterval(this.checkLatestVersion, TWO_DAYS);
+                this.checkLatestVersion(this.instanceId);
+                setInterval(
+                    () => this.checkLatestVersion(this.instanceId),
+                    TWO_DAYS,
+                );
             } else {
                 this.enabled = false;
             }
         }
     }
 
-    async checkLatestVersion() {
-        if (this.enabled) {
+    async setInstanceId() {
+        try {
             const { id } = await this.settingStore.get('instanceInfo');
             this.instanceId = id;
+            return id;
+        } catch (err) {
+            this.logger.warn('Could not find instanceInfo');
+            return undefined;
+        }
+    }
+
+    async checkLatestVersion(instanceId) {
+        if (this.enabled) {
             try {
                 const data = await fetch(this.versionCheckUrl, {
                     method: 'POST',
                     body: JSON.stringify({
                         versions: this.current,
-                        id,
+                        instanceId,
                     }),
                     headers: { 'Content-Type': 'application/json' },
                 }).then(res => res.json());

@@ -65,7 +65,8 @@
       "deploy/google_auth",
       "deploy/database_backup",
       "deploy/migration_guide",
-      "deploy/import_export"
+      "deploy/import_export",
+      "deploy/technical_debt"
     ]
   },
   "Integrations": {

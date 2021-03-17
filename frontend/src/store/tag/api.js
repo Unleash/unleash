@@ -18,7 +18,7 @@ function create(tag) {
 }
 
 function deleteTag(tag) {
-    return fetch(`${URI}/${tag.type}/${tag.value}`, {
+    return fetch(`${URI}/${tag.type}/${encodeURIComponent(tag.value)}`, {
         method: 'DELETE',
         headers,
         credentials: 'include',

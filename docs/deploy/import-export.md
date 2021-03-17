@@ -54,6 +54,14 @@ For example if you want to download just feature-toggles as yaml:
 /api/admin/state/export?format=yaml&featureToggles=1&strategies=0&tags=0&projects=0&download=1
 ```
 
+Example with curl:
+
+```sh
+curl -X GET -H "Content-Type: application/json" \
+  -H "Authorization: Basic YWRtaW46" \
+  http://unleash.herokuapp.com/api/admin/state/export?&featureToggles=1&strategies=0 > export.json
+```
+
 ### API Import
 
 You can import feature-toggles and strategies by POSTing to the `/api/admin/state/import` endpoint (keep in mind this will require authentication).\
@@ -77,6 +85,16 @@ POST /api/admin/state/import
     ]
 }
 ```
+
+Example with curl:
+
+```sh
+curl -X POST -H "Content-Type: application/json" \
+  -H "Authorization: Basic YWRtaW46" -d @export.json \
+  http://localhost:4242/api/admin/state/import
+```
+
+\*) Remember to set correct token for Authorization.
 
 ## Startup import
 

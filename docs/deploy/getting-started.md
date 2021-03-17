@@ -23,12 +23,38 @@ Once the server has started, you will see the message:
 Unleash started on http://localhost:4242
 ```
 
-### Option one - from a terminal/bash shell
+### Option one - use Docker
+
+**Useful links:**
+
+- [Docker image on dockerhub](https://hub.docker.com/r/unleashorg/unleash-server/)
+- [Unleash Helm Chart on artifacthub](https://artifacthub.io/packages/helm/unleash/unleash)
+
+**Steps:**
+
+1. Create a network by running `docker network create unleash`
+2. Start a postgres database:
 
 ```sh
-npm install unleash-server -g
-unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
+docker run -e POSTGRES_PASSWORD=some_password \
+  -e POSTGRES_USER=unleash_user -e POSTGRES_DB=unleash \
+  --network unleash --name postgres postgres
 ```
+
+3. Start Unleash via docker:
+
+```sh
+docker run -p 4242:4242 \
+  -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
+  -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=some_password \
+  --network unleash unleashorg/unleash-server
+```
+
+#### Docker-compose
+
+1. Clone the [unleash-docker](https://github.com/Unleash/unleash-docker) repository.
+2. Run `docker-compose build` in repository root folder.
+3. Run `docker-compose up` in repository root folder.
 
 ### Option two - from Node.js
 
@@ -62,25 +88,13 @@ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
    node server.js
    ```
 
-### Option three - use Docker
+### Option three - from a terminal/bash shell
 
-[View the image on dockerhub](https://hub.docker.com/r/unleashorg/unleash-server/)
-
-#### Docker-compose
-
-1. Clone the [unleash-docker](https://github.com/Unleash/unleash-docker) repository.
-2. Run `docker-compose build` in repository root folder.
-3. Run `docker-compose up` in repository root folder.
-
-#### Manually
-
-1. Create a network by running `docker network create unleash`
-2. Run
+_(deprecated)_
 
 ```sh
-docker run -e POSTGRES_PASSWORD={INSERT_PASSWORD} -e POSTGRES_USER={INSERT_USER} -e POSTGRES_DB=unleash --network unleash --name postgres postgres
-
-docker run -p 4242:4242 --network unleash -e DATABASE_URL=postgres://{INSERT_USER}:{INSERT_PASSWORD}@postgres:5432/unleash unleashorg/unleash-server
+npm install unleash-server -g
+unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 ```
 
 ## Test your server and create a sample API call

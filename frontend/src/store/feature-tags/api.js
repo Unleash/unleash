@@ -14,7 +14,7 @@ function tagFeature(featureToggle, tag) {
 }
 
 function untagFeature(featureToggle, tag) {
-    return fetch(`${URI}/${featureToggle}/tags/${tag.type}/${tag.value}`, {
+    return fetch(`${URI}/${featureToggle}/tags/${tag.type}/${encodeURIComponent(tag.value)}`, {
         method: 'DELETE',
         headers,
         credentials: 'include',

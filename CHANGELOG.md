@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.17.1
+
+- fix: initial event.tags should be array type
+- fix: always set instanceId in ui-config
+
 ## 3.17.0
 
 - fix: upgrade docusaurus

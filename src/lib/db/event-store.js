@@ -99,7 +99,7 @@ class EventStore extends EventEmitter {
             type: e.type,
             created_by: e.createdBy,
             data: e.data,
-            tags: JSON.stringify(e.tags || []),
+            tags: JSON.stringify(e.tags),
         };
     }
 }

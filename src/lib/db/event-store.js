@@ -24,12 +24,7 @@ class EventStore extends EventEmitter {
     async store(event) {
         try {
             const rows = await this.db(TABLE)
-                .insert({
-                    type: event.type,
-                created_by: event.createdBy, // eslint-disable-line
-                    data: event.data,
-                    tags: event.tags ? JSON.stringify(event.tags) : [],
-                })
+                .insert(this.eventToDbRow(event))
                 .returning(EVENT_COLUMNS);
             const savedEvent = this.rowToEvent(rows[0]);
             process.nextTick(() => this.emit(event.type, savedEvent));
@@ -104,7 +99,7 @@ class EventStore extends EventEmitter {
             type: e.type,
             created_by: e.createdBy,
             data: e.data,
-            tags: e.tags ? JSON.stringify(e.tags) : [],
+            tags: JSON.stringify(e.tags || []),
         };
     }
 }

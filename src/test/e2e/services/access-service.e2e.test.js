@@ -11,6 +11,7 @@ const {
 const permissions = require('../../../lib/permissions');
 const User = require('../../../lib/user');
 
+let db;
 let stores;
 let accessService;
 
@@ -38,7 +39,7 @@ const createSuperUser = async () => {
 };
 
 test.before(async () => {
-    const db = await dbInit('access_service_serial', getLogger);
+    db = await dbInit('access_service_serial', getLogger);
     stores = db.stores;
     // projectStore = stores.projectStore;
     accessService = new AccessService(stores, { getLogger });
@@ -50,7 +51,7 @@ test.before(async () => {
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('should have access to admin addons', async t => {

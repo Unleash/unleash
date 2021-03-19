@@ -11,13 +11,14 @@ const { UPDATE_PROJECT } = require('../../../lib/permissions');
 const NotFoundError = require('../../../lib/error/notfound-error');
 
 let stores;
-// let projectStore;
+let db;
+
 let projectService;
 let accessService;
 let user;
 
 test.before(async () => {
-    const db = await dbInit('project_service_serial', getLogger);
+    db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
     user = await stores.userStore.insert(
         new User({ name: 'Some Name', email: 'test@getunleash.io' }),
@@ -28,7 +29,7 @@ test.before(async () => {
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('should have default project', async t => {

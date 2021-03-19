@@ -15,14 +15,15 @@ const asyncFilter = async (arr, predicate) => {
 };
 
 let stores;
+let db;
 
 test.before(async () => {
-    const db = await dbInit('register_client', getLogger);
+    db = await dbInit('register_client', getLogger);
     stores = db.stores;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('should register client', async t => {

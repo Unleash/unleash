@@ -7,14 +7,15 @@ const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
 let stores;
+let db;
 
 test.before(async () => {
-    const db = await dbInit('context_api_serial', getLogger);
+    db = await dbInit('context_api_serial', getLogger);
     stores = db.stores;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('gets all context fields', async t => {

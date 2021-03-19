@@ -6,14 +6,15 @@ const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
 
 let stores;
+let db;
 
 test.before(async () => {
-    const db = await dbInit('feature_api_auth', getLogger);
+    db = await dbInit('feature_api_auth', getLogger);
     stores = db.stores;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('creates new feature toggle with createdBy', async t => {

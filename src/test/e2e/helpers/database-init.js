@@ -107,5 +107,13 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
             await resetDatabase(stores);
             await setupDatabase(stores);
         },
+        destroy: async () => {
+            const { clientInstanceStore, clientMetricsStore } = stores;
+            return new Promise((resolve, reject) => {
+                clientInstanceStore.destroy();
+                clientMetricsStore.destroy();
+                db.destroy(error => (error ? reject(error) : resolve()));
+            });
+        },
     };
 };

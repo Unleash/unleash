@@ -98,7 +98,8 @@ If you want to contribute to this project you are encouraged to send issue reque
 
 ## In the media
 
-- Unleash was featured in [Console 42 - The open-source newsletter](https://console.substack.com/p/console-42) 
+- [Node Weekly issue 380](https://nodeweekly.com/issues/380)
+- [Console 42 - The open-source newsletter](https://console.substack.com/p/console-42) 
 - [This Week in Rust 340](https://this-week-in-rust.org/blog/2020/05/27/this-week-in-rust-340/)
 - [Unleash-hosted - Unleash as a Service](https://www.unleash-hosted.com)
 - [Medium blog](https://medium.com/unleash-hosted)

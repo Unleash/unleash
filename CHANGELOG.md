@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.17.2
+
+- fix: make sure applying unique constraint on client_instances works
+
 ## 3.17.1
 
 - fix: initial event.tags should be array type
@@ -12,6 +16,10 @@
 - Add import/export for tags and projects (#754)
 - feat: Default roles and RBAC permission checker. (#735) (experimental)
 - feat: upgrade unleash-frontend to version 3.14.0
+
+## 3.16.1
+
+- fix: make sure applying unique constraint on client_instances works
 
 ## 3.16.0
 

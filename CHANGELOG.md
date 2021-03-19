@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.16.1
+
+- fix: make sure applying unique constraint on client_instances works
+
 ## 3.16.0
 
 - fix: projectId must follow nameType in query

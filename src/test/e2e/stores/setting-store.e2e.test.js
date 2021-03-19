@@ -5,14 +5,15 @@ const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 
 let stores;
+let db;
 
 test.before(async () => {
-    const db = await dbInit('setting_store_serial', getLogger);
+    db = await dbInit('setting_store_serial', getLogger);
     stores = db.stores;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('should have api secret stored', async t => {
@@ -20,7 +21,7 @@ test.serial('should have api secret stored', async t => {
     t.assert(secret);
 });
 
-test.serial('should insert arbitarty value', async t => {
+test.serial('should insert arbitrary value', async t => {
     const value = { b: 'hello' };
     await stores.settingStore.insert('unleash.custom', value);
     const ret = await stores.settingStore.get('unleash.custom');

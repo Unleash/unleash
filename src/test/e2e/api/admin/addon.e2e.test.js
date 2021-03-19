@@ -9,14 +9,15 @@ const getLogger = require('../../../fixtures/no-logger');
 const MASKED_VALUE = '*****';
 
 let stores;
+let db;
 
 test.before(async () => {
-    const db = await dbInit('addon_api_serial', getLogger);
+    db = await dbInit('addon_api_serial', getLogger);
     stores = db.stores;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('gets all addons', async t => {

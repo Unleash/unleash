@@ -6,16 +6,17 @@ const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
 let stores;
+let db;
 let reset = () => {};
 
 test.before(async () => {
-    const db = await dbInit('metrics_serial', getLogger);
+    db = await dbInit('metrics_serial', getLogger);
     stores = db.stores;
     reset = db.reset;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.afterEach(async () => {

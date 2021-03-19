@@ -5,16 +5,17 @@ const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 
 let stores;
+let db;
 let projectStore;
 
 test.before(async () => {
-    const db = await dbInit('project_store_serial', getLogger);
+    db = await dbInit('project_store_serial', getLogger);
     stores = db.stores;
     projectStore = stores.projectStore;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('should have default project', async t => {

@@ -10,17 +10,18 @@ const {
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 
+let db;
 let stores;
 let eventStore;
 
 test.before(async () => {
-    const db = await dbInit('event_store_serial', getLogger);
+    db = await dbInit('event_store_serial', getLogger);
     stores = db.stores;
     eventStore = stores.eventStore;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 test.serial('Should include id and createdAt when saving', async t => {
     const clock = sinon.useFakeTimers();

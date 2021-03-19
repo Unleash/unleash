@@ -6,14 +6,15 @@ const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
 
 let stores;
+let db;
 
 test.before(async () => {
-    const db = await dbInit('archive_serial', getLogger);
+    db = await dbInit('archive_serial', getLogger);
     stores = db.stores;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('returns three archived toggles', async t => {

@@ -48,7 +48,7 @@ export function validateLogProvider(provider: LogProvider): void {
     validate(typeof logger.error === 'function', 'Logger must implement error');
 }
 
-// Deprecated
+// Deprecated (TODO: remove this in v4)
 let loggerProvider = getDefaultLogProvider();
 export const defaultLogProvider = loggerProvider;
 

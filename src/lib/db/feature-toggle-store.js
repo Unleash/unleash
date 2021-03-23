@@ -131,11 +131,11 @@ class FeatureToggleStore {
         return rows.map(this.rowToFeature);
     }
 
-    async lastSeenToggles(togleNames) {
+    async lastSeenToggles(toggleNames) {
         const now = new Date();
         try {
             await this.db(TABLE)
-                .whereIn('name', togleNames)
+                .whereIn('name', toggleNames)
                 .update({ last_seen_at: now });
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);

@@ -1,12 +1,13 @@
 import crypto from 'crypto';
 import { ApiTokenStore, IApiToken, ApiTokenType } from '../db/api-token.store';
+import { Logger, LogProvider } from '../logger';
 
 interface IStores {
     apiTokenStore: ApiTokenStore;
 }
 
 interface IConfig {
-    getLogger: Function;
+    getLogger: LogProvider;
 }
 
 interface CreateTokenRequest {
@@ -18,7 +19,7 @@ interface CreateTokenRequest {
 export class ApiTokenService {
     private store: ApiTokenStore;
 
-    private logger: Function;
+    private logger: Logger;
 
     constructor({ apiTokenStore }: IStores, { getLogger }: IConfig) {
         this.store = apiTokenStore;
@@ -42,7 +43,7 @@ export class ApiTokenService {
     }
 
     private generateSecretKey() {
-        return crypto.randomBytes(16).toString('hex');
+        return crypto.randomBytes(32).toString('hex');
     }
 }
 

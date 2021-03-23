@@ -4,8 +4,7 @@ exports.up = function(db, cb) {
     db.runSql(
         `CREATE TABLE IF NOT EXISTS api_tokens
           (
-              id          SERIAL PRIMARY KEY,
-              secret      text not null UNIQUE,
+              secret      text not null PRIMARY KEY,
               username    text not null,
               type        text not null,
               created_at  TIMESTAMP WITH TIME ZONE DEFAULT now(),

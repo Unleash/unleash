@@ -2,6 +2,8 @@ import { EventEmitter } from 'events';
 import Knex from 'knex';
 import metricsHelper from '../metrics-helper';
 import { DB_TIME } from '../events';
+import { Logger, LogProvider } from '../logger';
+import NotFoundError from '../error/notfound-error';
 
 const TABLE = 'api_tokens';
 
@@ -28,7 +30,6 @@ export interface IApiTokenCreate {
 }
 
 export interface IApiToken extends IApiTokenCreate {
-    id: number;
     createdAt: Date;
     seenAt?: Date;
 }
@@ -41,7 +42,6 @@ const toRow = (newToken: IApiTokenCreate) => ({
 });
 
 const toToken = (row: ITokenTable): IApiToken => ({
-    id: row.id,
     secret: row.secret,
     username: row.username,
     type: row.type,
@@ -50,13 +50,13 @@ const toToken = (row: ITokenTable): IApiToken => ({
 });
 
 export class ApiTokenStore {
-    private logger: Function;
+    private logger: Logger;
 
     private timer: Function;
 
     private db: Knex;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: Function) {
+    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('api-tokens.js');
         this.timer = (action: string) =>
@@ -85,16 +85,38 @@ export class ApiTokenStore {
     }
 
     async insert(newToken: IApiTokenCreate): Promise<IApiToken> {
-        const [id, createdAt] = await this.db<ITokenTable>(TABLE).insert(
+        const [createdAt] = await this.db<ITokenTable>(TABLE).insert(
             toRow(newToken),
-            ['id', 'created_at'],
+            ['created_at'],
         );
-        return { ...newToken, id, createdAt };
+        return { ...newToken, createdAt };
     }
 
-    async remove(id: number): Promise<IApiToken> {
+    async remove(secret: string): Promise<IApiToken> {
         return this.db<ITokenTable>(TABLE)
-            .where({ id })
+            .where({ secret })
             .del();
+    }
+
+    async setExpiry(secret: string, expiresAt: Date): Promise<IApiToken> {
+        const rows = await this.db<ITokenTable>(TABLE)
+            .update({ expires_at: expiresAt })
+            .where({ secret })
+            .returning('*');
+        if (rows.length > 0) {
+            return toToken(rows[0]);
+        }
+        throw new NotFoundError('Could not find api-token.');
+    }
+
+    async markSeenAt(secrets: string[]): Promise<void> {
+        const now = new Date();
+        try {
+            await this.db(TABLE)
+                .whereIn('secrets', secrets)
+                .update({ seen_at: now });
+        } catch (err) {
+            this.logger.error('Could not update lastSeen, error: ', err);
+        }
     }
 }

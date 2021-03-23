@@ -1,14 +1,33 @@
-'use strict';
-
-const metricsHelper = require('../metrics-helper');
-const { DB_TIME } = require('../events');
-const NotFoundError = require('../error/notfound-error');
+import { Knex } from 'knex';
+import { EventEmitter } from 'events';
+import { LogProvider, Logger } from '../logger';
+import { DB_TIME } from '../events';
+import metricsHelper from '../metrics-helper';
+import NotFoundError from '../error/notfound-error';
 
 const COLUMNS = ['name', 'description', 'icon'];
 const TABLE = 'tag_types';
 
+interface ITagTypeTable {
+    name: string;
+    description: string;
+    icon: string;
+}
+
+interface ITagType {
+    name: string;
+    description: string;
+    icon: string;
+}
+
 class TagTypeStore {
-    constructor(db, eventBus, getLogger) {
+    private db: Knex;
+
+    private logger: Logger;
+
+    private readonly timer: Function;
+
+    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('tag-type-store.js');
         this.timer = action =>
@@ -18,14 +37,14 @@ class TagTypeStore {
             });
     }
 
-    async getAll() {
+    async getAll(): Promise<ITagType[]> {
         const stopTimer = this.timer('getTagTypes');
         const rows = await this.db.select(COLUMNS).from(TABLE);
         stopTimer();
         return rows.map(this.rowToTagType);
     }
 
-    async getTagType(name) {
+    async getTagType(name): Promise<ITagType> {
         const stopTimer = this.timer('getTagTypeByName');
         return this.db
             .first(COLUMNS)
@@ -41,23 +60,24 @@ class TagTypeStore {
             });
     }
 
-    async exists(name) {
+    async exists(name): Promise<Boolean> {
         const stopTimer = this.timer('exists');
-        const row = await this.db
-            .first(COLUMNS)
-            .from(TABLE)
-            .where({ name });
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE name = ?) AS present`,
+            [name],
+        );
+        const { present } = result.rows[0];
         stopTimer();
-        return row;
+        return present;
     }
 
-    async createTagType(newTagType) {
+    async createTagType(newTagType: ITagType): Promise<void> {
         const stopTimer = this.timer('createTagType');
         await this.db(TABLE).insert(newTagType);
         stopTimer();
     }
 
-    async deleteTagType(name) {
+    async deleteTagType(name: string): Promise<void> {
         const stopTimer = this.timer('deleteTagType');
         await this.db(TABLE)
             .where({ name })
@@ -65,13 +85,13 @@ class TagTypeStore {
         stopTimer();
     }
 
-    async dropTagTypes() {
+    async dropTagTypes(): Promise<void> {
         const stopTimer = this.timer('dropTagTypes');
         await this.db(TABLE).del();
         stopTimer();
     }
 
-    async bulkImport(tagTypes) {
+    async bulkImport(tagTypes: ITagType[]): Promise<ITagType[]> {
         const rows = await this.db(TABLE)
             .insert(tagTypes)
             .returning(COLUMNS)
@@ -83,7 +103,7 @@ class TagTypeStore {
         return [];
     }
 
-    async updateTagType({ name, description, icon }) {
+    async updateTagType({ name, description, icon }: ITagType): Promise<void> {
         const stopTimer = this.timer('updateTagType');
         await this.db(TABLE)
             .where({ name })
@@ -91,7 +111,7 @@ class TagTypeStore {
         stopTimer();
     }
 
-    rowToTagType(row) {
+    rowToTagType(row: ITagTypeTable): ITagType {
         return {
             name: row.name,
             description: row.description,

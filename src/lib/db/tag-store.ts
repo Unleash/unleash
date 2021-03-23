@@ -1,13 +1,33 @@
 'use strict';
 
-const metricsHelper = require('../metrics-helper');
-const { DB_TIME } = require('../events');
-const NotFoundError = require('../error/notfound-error');
+import { Knex } from 'knex';
+import { EventEmitter } from 'events';
+import { DB_TIME } from '../events';
+import metricsHelper from '../metrics-helper';
+import { LogProvider, Logger } from '../logger';
+import NotFoundError from '../error/notfound-error';
 
 const COLUMNS = ['type', 'value'];
 const TABLE = 'tags';
+
+interface ITagTable {
+    type: string;
+    value: string;
+}
+
+interface ITag {
+    type: string;
+    value: string;
+}
+
 class TagStore {
-    constructor(db, eventBus, getLogger) {
+    private db: Knex;
+
+    private logger: Logger;
+
+    private readonly timer: Function;
+
+    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('tag-store.js');
         this.timer = action =>
@@ -17,7 +37,7 @@ class TagStore {
             });
     }
 
-    async getTagsByType(type) {
+    async getTagsByType(type): Promise<ITag[]> {
         const stopTimer = this.timer('getTagByType');
         const rows = await this.db
             .select(COLUMNS)
@@ -27,14 +47,14 @@ class TagStore {
         return rows.map(this.rowToTag);
     }
 
-    async getAll() {
+    async getAll(): Promise<ITag[]> {
         const stopTimer = this.timer('getAll');
         const rows = await this.db.select(COLUMNS).from(TABLE);
         stopTimer();
         return rows.map(this.rowToTag);
     }
 
-    async getTag(type, value) {
+    async getTag(type: string, value: string): Promise<ITag> {
         const stopTimer = this.timer('getTag');
         const tag = await this.db
             .first(COLUMNS)
@@ -49,13 +69,13 @@ class TagStore {
         return tag;
     }
 
-    async createTag(tag) {
+    async createTag(tag: ITag): Promise<void> {
         const stopTimer = this.timer('createTag');
         await this.db(TABLE).insert(tag);
         stopTimer();
     }
 
-    async deleteTag(tag) {
+    async deleteTag(tag: ITag): Promise<void> {
         const stopTimer = this.timer('deleteTag');
         await this.db(TABLE)
             .where(tag)
@@ -63,13 +83,13 @@ class TagStore {
         stopTimer();
     }
 
-    async dropTags() {
+    async dropTags(): Promise<void> {
         const stopTimer = this.timer('dropTags');
         await this.db(TABLE).del();
         stopTimer();
     }
 
-    async bulkImport(tags) {
+    async bulkImport(tags: ITag[]): Promise<ITag[]> {
         return this.db(TABLE)
             .insert(tags)
             .returning(COLUMNS)
@@ -77,7 +97,7 @@ class TagStore {
             .ignore();
     }
 
-    rowToTag(row) {
+    rowToTag(row: ITagTable): ITag {
         return {
             type: row.type,
             value: row.value,

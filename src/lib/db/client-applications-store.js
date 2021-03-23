@@ -27,17 +27,27 @@ const mapRow = row => ({
     icon: row.icon,
 });
 
-const remapRow = (input, old = {}) => ({
-    app_name: input.appName,
-    updated_at: input.updatedAt,
-    description: input.description || old.description,
-    created_by: input.createdBy || old.createdBy,
-    announced: input.announced || old.announced || false,
-    url: input.url || old.url,
-    color: input.color || old.color,
-    icon: input.icon || old.icon,
-    strategies: JSON.stringify(input.strategies || old.strategies),
-});
+const remapRow = input => {
+    const temp = {
+        app_name: input.appName,
+        updated_at: input.updatedAt || new Date(),
+        seen_at: input.lastSeen || new Date(),
+        description: input.description,
+        created_by: input.createdBy,
+        announced: input.announced,
+        url: input.url,
+        color: input.color,
+        icon: input.icon,
+        strategies: JSON.stringify(input.strategies),
+    };
+    Object.keys(temp).forEach(k => {
+        if (temp[k] === undefined) {
+            // not using !temp[k] to allow false and null values to get through
+            delete temp[k];
+        }
+    });
+    return temp;
+};
 
 class ClientApplicationsDb {
     constructor(db, eventBus) {
@@ -46,8 +56,9 @@ class ClientApplicationsDb {
     }
 
     async upsert(details) {
+        const row = remapRow(details);
         return this.db(TABLE)
-            .insert(remapRow(details))
+            .insert(row)
             .onConflict('app_name')
             .merge();
     }

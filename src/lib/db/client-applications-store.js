@@ -32,7 +32,7 @@ const remapRow = input => ({
     updated_at: input.updatedAt,
     description: input.description,
     created_by: input.createdBy,
-    announced: input.announced || false,
+    announced: input.announced,
     url: input.url,
     color: input.color,
     icon: input.icon,

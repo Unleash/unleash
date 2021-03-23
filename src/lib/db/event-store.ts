@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import Knex from 'knex';
+import { Knex } from 'knex';
 import { DROP_FEATURES } from '../event-type';
 import { LogProvider, Logger } from '../logger';
 

@@ -27,26 +27,27 @@ const mapRow = row => ({
     icon: row.icon,
 });
 
-const remapRow = input => ({
-    app_name: input.appName,
-    updated_at: input.updatedAt,
-    description: input.description,
-    created_by: input.createdBy,
-    announced: input.announced,
-    url: input.url,
-    color: input.color,
-    icon: input.icon,
-    strategies: JSON.stringify(input.strategies),
-});
-
-const mergeColumns = [
-    'updated_at',
-    'description',
-    'strategies',
-    'url',
-    'color',
-    'icon',
-];
+const remapRow = input => {
+    const temp = {
+        app_name: input.appName,
+        updated_at: input.updatedAt || new Date(),
+        seen_at: input.lastSeen || new Date(),
+        description: input.description,
+        created_by: input.createdBy,
+        announced: input.announced,
+        url: input.url,
+        color: input.color,
+        icon: input.icon,
+        strategies: JSON.stringify(input.strategies),
+    };
+    Object.keys(temp).forEach(k => {
+        if (temp[k] === undefined) {
+            // not using !temp[k] to allow false and null values to get through
+            delete temp[k];
+        }
+    });
+    return temp;
+};
 
 class ClientApplicationsDb {
     constructor(db, eventBus) {
@@ -59,7 +60,7 @@ class ClientApplicationsDb {
         return this.db(TABLE)
             .insert(row)
             .onConflict('app_name')
-            .merge(mergeColumns);
+            .merge();
     }
 
     async bulkUpsert(apps) {
@@ -67,7 +68,7 @@ class ClientApplicationsDb {
         return this.db(TABLE)
             .insert(rows)
             .onConflict('app_name')
-            .merge(mergeColumns);
+            .merge();
     }
 
     async exists({ appName }) {

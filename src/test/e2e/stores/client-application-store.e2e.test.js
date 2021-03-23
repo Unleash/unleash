@@ -121,3 +121,55 @@ test.serial(
         t.is(announce.length, 0);
     },
 );
+
+test.serial('Merge keeps value for single row in database', async t => {
+    const clientRegistration = {
+        appName: faker.internet.domainName(),
+        instanceId: faker.random.uuid(),
+        strategies: ['default'],
+        started: Date.now(),
+        icon: faker.internet.color(),
+        description: faker.company.catchPhrase(),
+        color: faker.internet.color(),
+    };
+    await clientApplicationsStore.upsert(clientRegistration);
+    await clientApplicationsStore.upsert({
+        appName: clientRegistration.appName,
+        description: 'new description',
+    });
+    const stored = await clientApplicationsStore.getApplication(
+        clientRegistration.appName,
+    );
+    t.is(stored.color, clientRegistration.color);
+    t.is(stored.description, 'new description');
+});
+
+test.serial('Multi row merge also works', async t => {
+    const clients = [];
+    while (clients.length < 10) {
+        const clientRegistration = {
+            appName: `${faker.internet.domainName()}_${clients.length}`,
+            instanceId: faker.random.uuid(),
+            strategies: ['default'],
+            started: Date.now(),
+            icon: faker.internet.color(),
+            description: faker.company.catchPhrase(),
+            color: faker.internet.color(),
+        };
+        clients.push(clientRegistration);
+    }
+    await clientApplicationsStore.bulkUpsert(clients);
+    const alteredClients = clients.map(c => {
+        return { appName: c.appName, icon: 'red' };
+    });
+    await clientApplicationsStore.bulkUpsert(alteredClients);
+    const stored = await Promise.all(
+        clients.map(async c =>
+            clientApplicationsStore.getApplication(c.appName),
+        ),
+    );
+    stored.forEach((s, i) => {
+        t.is(s.description, clients[i].description);
+        t.is(s.icon, 'red');
+    });
+});

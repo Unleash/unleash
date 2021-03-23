@@ -10,17 +10,17 @@ const TABLE = 'tag_types';
 
 interface ITagTypeTable {
     name: string;
-    description: string;
-    icon: string;
+    description?: string;
+    icon?: string;
 }
 
-interface ITagType {
+export interface ITagType {
     name: string;
-    description: string;
-    icon: string;
+    description?: string;
+    icon?: string;
 }
 
-class TagTypeStore {
+export default class TagTypeStore {
     private db: Knex;
 
     private logger: Logger;
@@ -44,7 +44,7 @@ class TagTypeStore {
         return rows.map(this.rowToTagType);
     }
 
-    async getTagType(name): Promise<ITagType> {
+    async getTagType(name: string): Promise<ITagType> {
         const stopTimer = this.timer('getTagTypeByName');
         return this.db
             .first(COLUMNS)
@@ -60,7 +60,7 @@ class TagTypeStore {
             });
     }
 
-    async exists(name): Promise<Boolean> {
+    async exists(name: string): Promise<Boolean> {
         const stopTimer = this.timer('exists');
         const result = await this.db.raw(
             `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE name = ?) AS present`,

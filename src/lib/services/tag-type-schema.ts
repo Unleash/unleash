@@ -1,18 +1,15 @@
-'use strict';
+import Joi from 'joi';
+import { customJoi } from '../routes/admin-api/util';
 
-const joi = require('joi');
-const { customJoi } = require('../routes/admin-api/util');
-
-const tagTypeSchema = joi
-    .object()
+export const tagTypeSchema = Joi.object()
     .keys({
         name: customJoi
             .isUrlFriendly()
             .min(2)
             .max(50)
             .required(),
-        description: joi.string().allow(''),
-        icon: joi.string().allow(''),
+        description: Joi.string().allow(''),
+        icon: Joi.string().allow(''),
     })
     .options({
         allowUnknown: false,

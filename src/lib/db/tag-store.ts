@@ -15,12 +15,12 @@ interface ITagTable {
     value: string;
 }
 
-interface ITag {
+export interface ITag {
     type: string;
     value: string;
 }
 
-class TagStore {
+export default class TagStore {
     private db: Knex;
 
     private logger: Logger;
@@ -37,7 +37,7 @@ class TagStore {
             });
     }
 
-    async getTagsByType(type): Promise<ITag[]> {
+    async getTagsByType(type: string): Promise<ITag[]> {
         const stopTimer = this.timer('getTagByType');
         const rows = await this.db
             .select(COLUMNS)
@@ -67,6 +67,17 @@ class TagStore {
             );
         }
         return tag;
+    }
+
+    async exists(tag: ITag): Promise<boolean> {
+        const stopTimer = this.timer('exists');
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE type = ? AND value = ?) AS present`,
+            [tag.type, tag.value],
+        );
+        const { present } = result.rows[0];
+        stopTimer();
+        return present;
     }
 
     async createTag(tag: ITag): Promise<void> {

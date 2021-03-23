@@ -42,5 +42,9 @@ module.exports = (databaseIsUp = true) => {
             _tags.splice(0, _tags.length);
             return Promise.resolve();
         },
+        exists: tag =>
+            Promise.resolve(
+                _tags.some(t => t.type === tag.type && t.value === tag.value),
+            ),
     };
 };

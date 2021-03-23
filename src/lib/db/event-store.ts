@@ -1,7 +1,7 @@
-'use strict';
-
-const { EventEmitter } = require('events');
-const { DROP_FEATURES } = require('../event-type');
+import { EventEmitter } from 'events';
+import Knex from 'knex';
+import { DROP_FEATURES } from '../event-type';
+import { LogProvider, Logger } from '../logger';
 
 const EVENT_COLUMNS = [
     'id',
@@ -12,16 +12,41 @@ const EVENT_COLUMNS = [
     'tags',
 ];
 
+interface IEventTable {
+    id: number;
+    type: string;
+    created_by: string;
+    created_at: Date;
+    data: any;
+    tags: [];
+}
+
+interface ICreateEvent {
+    type: string;
+    createdBy: string;
+    data?: any;
+    tags?: Array<string>;
+}
+
+interface IEvent extends ICreateEvent {
+    id: number;
+    createdAt: Date;
+}
+
 const TABLE = 'events';
 
 class EventStore extends EventEmitter {
-    constructor(db, getLogger) {
+    private db: Knex;
+
+    private logger: Logger;
+
+    constructor(db: Knex, getLogger: LogProvider) {
         super();
         this.db = db;
         this.logger = getLogger('lib/db/event-store.js');
     }
 
-    async store(event) {
+    async store(event: ICreateEvent): Promise<void> {
         try {
             const rows = await this.db(TABLE)
                 .insert(this.eventToDbRow(event))
@@ -33,7 +58,7 @@ class EventStore extends EventEmitter {
         }
     }
 
-    async batchStore(events) {
+    async batchStore(events: ICreateEvent[]): Promise<void> {
         try {
             const savedRows = await this.db(TABLE)
                 .insert(events.map(this.eventToDbRow))
@@ -47,7 +72,7 @@ class EventStore extends EventEmitter {
         }
     }
 
-    async getEvents() {
+    async getEvents(): Promise<IEvent[]> {
         try {
             const rows = await this.db
                 .select(EVENT_COLUMNS)
@@ -61,7 +86,7 @@ class EventStore extends EventEmitter {
         }
     }
 
-    async getEventsFilterByName(name) {
+    async getEventsFilterByName(name: string): Promise<IEvent[]> {
         try {
             const rows = await this.db
                 .select(EVENT_COLUMNS)
@@ -83,7 +108,7 @@ class EventStore extends EventEmitter {
         }
     }
 
-    rowToEvent(row) {
+    rowToEvent(row: IEventTable): IEvent {
         return {
             id: row.id,
             type: row.type,
@@ -94,7 +119,7 @@ class EventStore extends EventEmitter {
         };
     }
 
-    eventToDbRow(e) {
+    eventToDbRow(e: ICreateEvent): any {
         return {
             type: e.type,
             created_by: e.createdBy,
@@ -105,3 +130,4 @@ class EventStore extends EventEmitter {
 }
 
 module.exports = EventStore;
+export default EventStore;

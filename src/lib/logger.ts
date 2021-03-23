@@ -1,18 +1,26 @@
-'use strict';
+import { configure, getLogger, levels } from 'log4js';
 
-const log4js = require('log4js');
+export type LogProvider = (category?: string) => Logger;
 
-function getDefaultLogProvider() {
-    let level;
+export interface Logger {
+    debug(message: any, ...args: any[]): void;
+    info(message: any, ...args: any[]): void;
+    warn(message: any, ...args: any[]): void;
+    error(message: any, ...args: any[]): void;
+    fatal(message: any, ...args: any[]): void;
+}
+
+function getDefaultLogProvider(): LogProvider {
+    let level: string;
     if (process.env.NODE_ENV === 'production') {
-        level = log4js.levels.ERROR.levelStr;
+        level = levels.ERROR.levelStr;
     } else if (process.env.NODE_ENV === 'test') {
-        level = log4js.levels.FATAL.levelStr;
+        level = levels.FATAL.levelStr;
     } else {
-        level = log4js.levels.DEBUG.levelStr;
+        level = levels.DEBUG.levelStr;
     }
 
-    log4js.configure({
+    configure({
         appenders: {
             console: { type: 'console' },
         },
@@ -21,20 +29,16 @@ function getDefaultLogProvider() {
         },
     });
 
-    return log4js.getLogger;
+    return getLogger;
 }
 
-let loggerProvider = getDefaultLogProvider();
-
-function validate(isValid, msg) {
+function validate(isValid: boolean, msg: string) {
     if (!isValid) {
         throw new TypeError(msg);
     }
 }
 
-module.exports.defaultLogProvider = loggerProvider;
-
-function validateLogProvider(provider) {
+export function validateLogProvider(provider: LogProvider): void {
     validate(typeof provider === 'function', 'Provider needs to be a function');
 
     const logger = provider('unleash:logger');
@@ -44,14 +48,15 @@ function validateLogProvider(provider) {
     validate(typeof logger.error === 'function', 'Logger must implement error');
 }
 
-exports.validateLogProvider = validateLogProvider;
+// Deprecated (TODO: remove this in v4)
+let loggerProvider = getDefaultLogProvider();
+export const defaultLogProvider = loggerProvider;
 
-// Deprecated
-exports.setLoggerProvider = function setLoggerProvider(provider) {
+export function setLoggerProvider(provider: LogProvider): void {
     validateLogProvider(provider);
 
     loggerProvider = provider;
     const logger = provider('unleash:logger');
     logger.info(`Your way of configuring a logProvider is deprecated. 
         See https://docs.getunleash.io/docs/deploy/configuring_unleash for details`);
-};
+}

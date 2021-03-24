@@ -17,5 +17,5 @@ exports.up = function(db, cb) {
 };
 
 exports.down = function(db, cb) {
-    db.runSql('DROP TABLE api_tokens;', cb);
+    db.runSql('DROP TABLE IF EXISTS api_tokens;', cb);
 };

@@ -1,13 +1,9 @@
 import crypto from 'crypto';
-import AuthenticationRequired from '../authentication-required';
 import { ApiTokenStore, IApiToken, ApiTokenType } from '../db/api-token-store';
 import { Logger, LogProvider } from '../logger';
 import { ADMIN, CLIENT } from '../permissions';
 import User from '../user';
 
-// TODO: constants
-const googleConfigId = 'unleash.enterprise.auth.google';
-const samlConfigId = 'unleash.enterprise.auth.saml';
 
 interface IStores {
     apiTokenStore: ApiTokenStore;
@@ -83,35 +79,6 @@ export class ApiTokenService {
         const secret = this.generateSecretKey();
         const createNewToken = { ...creteTokenRequest, secret };
         return this.store.insert(createNewToken);
-    }
-
-    // TODO: does not feel like the right place for this..
-    // TODO: only relevant for enterprise-authentication...
-    public async generateAuthResponse(): Promise<AuthenticationRequired> {
-        const { baseUriPath } = this.config;
-        const googleConfig = await this.settingStore.get(googleConfigId);
-        const options = [];
-        if (googleConfig && googleConfig.enabled) {
-            options.push({
-                type: 'google',
-                value: 'Sign in with Google',
-                path: `${baseUriPath}/auth/google/login`,
-            });
-        }
-        const samlConfig = await this.settingStore.get(samlConfigId);
-        if (samlConfig && samlConfig.enabled) {
-            options.push({
-                type: 'saml',
-                value: 'Sign in with SAML 2.0',
-                path: `${baseUriPath}/auth/saml/login`,
-            });
-        }
-        return new AuthenticationRequired({
-            type: 'password',
-            path: `${baseUriPath}/auth/simple/login`,
-            message: 'You must sign in order to use Unleash',
-            options,
-        });
     }
 
     private generateSecretKey() {

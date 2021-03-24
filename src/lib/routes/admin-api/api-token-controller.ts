@@ -1,7 +1,7 @@
 import { Response } from 'express';
 
 import Controller from '../controller';
-import { ADMIN, UPDATE_API_TOKEN } from '../../permissions';
+import { ADMIN, CREATE_API_TOKEN, DELETE_API_TOKEN, UPDATE_API_TOKEN } from '../../permissions';
 import { ApiTokenService } from '../../services/api-token-service';
 import { Logger, LogProvider } from '../../logger';
 import { ApiTokenType } from '../../db/api-token-store';
@@ -45,8 +45,9 @@ class ApiTokenController extends Controller {
         this.logger = config.getLogger('api-token-controller.js');
 
         this.get('/', this.getAllApiTokens);
-        this.post('/', this.createApiToken, ADMIN);
-        this.delete('/:token', this.deleteApiToken, ADMIN);
+        this.post('/', this.createApiToken, CREATE_API_TOKEN);
+        this.put('/:token', this.updateApiToken, UPDATE_API_TOKEN);
+        this.delete('/:token', this.deleteApiToken, DELETE_API_TOKEN);
     }
 
     private isTokenAdmin(user: User) {
@@ -80,7 +81,7 @@ class ApiTokenController extends Controller {
     }
 
     async createApiToken(req: IAuthRequest, res: Response): Promise<any> {
-        const { username, type } = req.body;
+        const { username, type, expiresAt } = req.body;
 
         if (!username || !type) {
             this.logger.error(req.body);
@@ -96,6 +97,7 @@ class ApiTokenController extends Controller {
             const token = await this.apiTokenService.creteApiToken({
                 type: tokenType,
                 username,
+                expiresAt,
             });
             return res.status(201).json(token);
         } catch (error) {
@@ -113,6 +115,24 @@ class ApiTokenController extends Controller {
         } catch (error) {
             this.logger.error('error creating api-token', error);
             res.status(500);
+        }
+    }
+
+    async updateApiToken(req: IAuthRequest, res: Response): Promise<any> {
+        const { token } = req.params;
+        const { expiresAt } = req.body;
+
+        if (!expiresAt) {
+            this.logger.error(req.body);
+            return res.status(400).send();
+        }
+
+        try {
+            await this.apiTokenService.updateExpiry(token, expiresAt);
+            return res.status(200).end();
+        } catch (error) {
+            this.logger.error('error creating api-token', error);
+            return res.status(500);
         }
     }
 }

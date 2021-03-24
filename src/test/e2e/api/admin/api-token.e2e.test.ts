@@ -4,7 +4,7 @@ import test from 'ava';
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { IApiToken } from '../../../../lib/db/api-token-store';
+import { ApiTokenStore, ApiTokenType, IApiToken } from '../../../../lib/db/api-token-store';
 
 let stores;
 let db;
@@ -34,7 +34,7 @@ test.serial('returns empty list of tokens', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.length === 0);
+            t.is(res.body.length, 0);
         });
 });
 
@@ -58,7 +58,7 @@ test.serial('creates new client token', async t => {
 });
 
 test.serial('creates new admin token', async t => {
-    t.plan(4);
+    t.plan(5);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/api-tokens')
@@ -72,7 +72,57 @@ test.serial('creates new admin token', async t => {
             t.is(res.body.username, 'default-admin');
             t.is(res.body.type, 'admin');
             t.truthy(res.body.createdAt);
+            t.falsy(res.body.expiresAt);
             t.true(res.body.secret.length > 16);
+        });
+});
+
+test.serial('creates new admin token with expiry', async t => {
+    t.plan(1);
+    const request = await setupApp(stores);
+    const expiresAt = new Date();
+    const expiresAtAsISOStr = JSON.parse(JSON.stringify(expiresAt));
+    return request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+            expiresAt,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect(res => {
+            t.is(res.body.expiresAt, expiresAtAsISOStr);
+        });
+});
+
+test.serial('update admin token with expiry', async t => {
+    t.plan(2);
+    const request = await setupApp(stores);
+
+    const tokenSecret = 'random-secret-update';
+
+    await stores.apiTokenStore.insert({
+        username: 'test',
+        secret: tokenSecret,
+        type: ApiTokenType.CLIENT,
+    });
+
+    await request
+        .put(`/api/admin/api-tokens/${tokenSecret}`)
+        .send({
+            expiresAt: new Date(),
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    return request
+        .get('/api/admin/api-tokens')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => {
+            t.is(res.body.length, 1);
+            t.truthy(res.body[0].expiresAt);
         });
 });
 
@@ -103,5 +153,31 @@ test.serial('creates a lot of client tokens', async t => {
         .expect(res => {
             t.is(res.body.length, 10);
             t.is(res.body[2].type, 'client');
+        });
+});
+
+test.serial('removes api token', async t => {
+    t.plan(1);
+    const request = await setupApp(stores);
+
+    const tokenSecret = 'random-secret';
+
+    await stores.apiTokenStore.insert({
+        username: 'test',
+        secret: tokenSecret,
+        type: ApiTokenType.CLIENT,
+    });
+
+    await request
+        .delete(`/api/admin/api-tokens/${tokenSecret}`)
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    return request
+        .get('/api/admin/api-tokens')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => {
+            t.is(res.body.length, 0);
         });
 });

@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import Knex from 'knex';
+import { Knex } from 'knex';
 import metricsHelper from '../metrics-helper';
 import { DB_TIME } from '../events';
 import { Logger, LogProvider } from '../logger';
@@ -92,7 +92,7 @@ export class ApiTokenStore {
         return { ...newToken, createdAt };
     }
 
-    async remove(secret: string): Promise<IApiToken> {
+    async delete(secret: string): Promise<void> {
         return this.db<ITokenTable>(TABLE)
             .where({ secret })
             .del();

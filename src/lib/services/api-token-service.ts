@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { ApiTokenStore, IApiToken, ApiTokenType } from '../db/api-token.store';
+import { ApiTokenStore, IApiToken, ApiTokenType } from '../db/api-token-store';
 import { Logger, LogProvider } from '../logger';
 
 interface IStores {
@@ -26,15 +26,26 @@ export class ApiTokenService {
         this.logger = getLogger('/services/api-token-service.ts');
     }
 
-    async getAllTokens(): Promise<IApiToken[]> {
+    public async getAllTokens(): Promise<IApiToken[]> {
         return this.store.getAll();
     }
 
-    async getAllActiveTokens(): Promise<IApiToken[]> {
+    public async getAllActiveTokens(): Promise<IApiToken[]> {
         return this.store.getAllActive();
     }
 
-    async creteApiToken(
+    public async updateExpiry(
+        secret: string,
+        expiresAt: Date,
+    ): Promise<IApiToken> {
+        return this.store.setExpiry(secret, expiresAt);
+    }
+
+    public async delete(secret: string): Promise<void> {
+        return this.store.delete(secret);
+    }
+
+    public async creteApiToken(
         creteTokenRequest: CreateTokenRequest,
     ): Promise<IApiToken> {
         const secret = this.generateSecretKey();
@@ -46,5 +57,3 @@ export class ApiTokenService {
         return crypto.randomBytes(32).toString('hex');
     }
 }
-
-module.exports = ApiTokenService;

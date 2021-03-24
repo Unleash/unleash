@@ -12,7 +12,10 @@ test.before(async () => {
     db = await dbInit('api_tokens_serial', getLogger);
     stores = db.stores;
     // projectStore = stores.projectStore;
-    apiTokenService = new ApiTokenService(stores, { getLogger });
+    apiTokenService = new ApiTokenService(stores, {
+        getLogger,
+        baseUriPath: '/test',
+    });
 });
 
 test.after(async () => {

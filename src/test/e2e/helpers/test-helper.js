@@ -22,6 +22,9 @@ function createApp(stores, adminAuthentication = 'none', preHook) {
             db: true,
             age: 4000,
         },
+        authentication: {
+            customHook: () => {},
+        },
         getLogger,
     };
     const services = createServices(stores, config);

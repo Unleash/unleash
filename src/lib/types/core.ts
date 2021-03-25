@@ -2,6 +2,9 @@ import { LogProvider } from '../logger';
 
 export interface IUnleashConfig {
     getLogger: LogProvider;
+    authentication: {
+        enableApiToken: boolean;
+    };
 }
 
 export enum AuthenticationType {

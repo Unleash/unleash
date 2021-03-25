@@ -84,6 +84,38 @@ test('should add user if unknown token', async t => {
     t.is(req.user, apiUser);
 });
 
+test('should not add user if disabled', async t => {
+    const apiUser = new User({
+        isAPI: true,
+        username: 'default',
+        permissions: [CLIENT],
+    });
+    const apiTokenService = {
+        getUserForToken: sinon.fake.returns(apiUser),
+    };
+
+    const disabledConfig = {
+        getLogger,
+        authentication: {
+            enableApiToken: false,
+        },
+    };
+
+    const func = apiTokenMiddleware(disabledConfig, { apiTokenService });
+
+    const cb = sinon.fake();
+
+    const req = {
+        header: sinon.fake.returns('some-known-token'),
+        user: undefined,
+    };
+
+    await func(req, undefined, cb);
+
+    t.true(cb.called);
+    t.falsy(req.user);
+});
+
 test('should call next if apiTokenService throws', async t => {
     getLogger.setMuteError(true);
     const apiTokenService = {

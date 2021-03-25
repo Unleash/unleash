@@ -83,11 +83,11 @@ export class ApiTokenStore {
     }
 
     async insert(newToken: IApiTokenCreate): Promise<IApiToken> {
-        const [createdAt] = await this.db<ITokenTable>(TABLE).insert(
+        const [row] = await this.db<ITokenTable>(TABLE).insert(
             toRow(newToken),
             ['created_at'],
         );
-        return { ...newToken, createdAt };
+        return { ...newToken, createdAt: row.created_at };
     }
 
     async delete(secret: string): Promise<void> {

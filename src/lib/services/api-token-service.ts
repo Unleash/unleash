@@ -4,6 +4,7 @@ import { Logger, LogProvider } from '../logger';
 import { ADMIN, CLIENT } from '../permissions';
 import User from '../user';
 
+const ONE_MINUTE = 60_000;
 
 interface IStores {
     apiTokenStore: ApiTokenStore;
@@ -24,17 +25,29 @@ interface CreateTokenRequest {
 export class ApiTokenService {
     private store: ApiTokenStore;
 
-    private settingStore: any;
-
     private config: IConfig;
 
     private logger: Logger;
+    
+    private timer: NodeJS.Timeout;
+    
+    private activeTokens: IApiToken[] = [];
 
     constructor(stores: IStores, config: IConfig) {
         this.store = stores.apiTokenStore;
-        this.settingStore = stores.settingStore;
         this.config = config;
         this.logger = config.getLogger('/services/api-token-service.ts');
+        this.fetchActiveTokens();
+        this.timer = setInterval(() => this.fetchActiveTokens(), ONE_MINUTE).unref();
+        console.log('here!')
+    }
+
+    private async fetchActiveTokens(): Promise<void> {
+        try {
+            this.activeTokens = await this.getAllActiveTokens();
+        } finally {
+            return;
+        }
     }
 
     public async getAllTokens(): Promise<IApiToken[]> {
@@ -45,10 +58,8 @@ export class ApiTokenService {
         return this.store.getAllActive();
     }
 
-    public async getUserForToken(secret: string): Promise<User | undefined> {
-        // TODO: memoize this.
-        const tokens = await this.store.getAllActive();
-        const token = tokens.find(t => t.secret === secret);
+    public getUserForToken(secret: string): User | undefined {
+        const token = this.activeTokens.find(t => t.secret === secret);
         if (token) {
             const permissions =
                 token.type === ApiTokenType.ADMIN ? [ADMIN] : [CLIENT];
@@ -83,5 +94,11 @@ export class ApiTokenService {
 
     private generateSecretKey() {
         return crypto.randomBytes(32).toString('hex');
+    }
+
+
+    destroy() {
+        clearInterval(this.timer);
+        this.timer = null;
     }
 }

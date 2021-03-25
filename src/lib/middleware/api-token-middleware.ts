@@ -12,14 +12,14 @@ const apiAccessMiddleware = (
         return (req, res, next) => next();
     }
 
-    return async (req, res, next) => {
+    return (req, res, next) => {
         if (req.user) {
             return next();
         }
 
         try {
             const userToken = req.header('authorization');
-            const user = await apiTokenService.getUserForToken(userToken);
+            const user = apiTokenService.getUserForToken(userToken);
             if (user) {
                 req.user = user;
             }

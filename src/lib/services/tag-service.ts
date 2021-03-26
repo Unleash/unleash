@@ -5,7 +5,7 @@ import NameExistsError from '../error/name-exists-error';
 import { TAG_CREATED, TAG_DELETED } from '../event-type';
 import { Logger } from '../logger';
 
-class TagService {
+export default class TagService {
     private tagStore: TagStore;
 
     private eventStore: EventStore;

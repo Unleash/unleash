@@ -91,7 +91,7 @@ module.exports = class ClientMetricsService {
                 const events = appsToAnnounce.map(app => {
                     return {
                         type: APPLICATION_CREATED,
-                        createdBy: app.createdBy,
+                        createdBy: app.createdBy || 'unknown',
                         data: app,
                     };
                 });

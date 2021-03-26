@@ -22,7 +22,7 @@ export default class TagService {
         return this.tagStore.getAll();
     }
 
-    async getTagsByType(type): Promise<ITag[]> {
+    async getTagsByType(type: string): Promise<ITag[]> {
         return this.tagStore.getTagsByType(type);
     }
 

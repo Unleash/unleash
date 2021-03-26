@@ -37,7 +37,7 @@ export default class TagService {
         }
     }
 
-    async validate(tag): Promise<ITag> {
+    async validate(tag: ITag): Promise<ITag> {
         const data = (await tagSchema.validateAsync(tag)) as ITag;
         await this.validateUnique(tag);
         return data;

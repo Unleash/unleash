@@ -83,7 +83,7 @@ async function setupDatabase(stores) {
 
 module.exports = async function init(databaseSchema = 'test', getLogger) {
     const options = {
-        db: { ...dbConfig.getDb(), pool: { min: 2, max: 20 } },
+        db: { ...dbConfig.getDb(), pool: { min: 0, max: 1 } },
         databaseSchema,
         getLogger,
     };
@@ -102,10 +102,10 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
     await setupDatabase(stores);
 
     const reset = async () => {
-        await db.raw(`DROP SCHEMA IF EXISTS ${options.databaseSchema} CASCADE`);
-        await db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`);
+        // await db.raw(`DROP SCHEMA IF EXISTS ${options.databaseSchema} CASCADE`);
+        // await db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`);
         await migrator.reset(options);
-        await migrator.up(options);
+        // await migrator.up(options);
     };
 
     return {
@@ -117,6 +117,7 @@ module.exports = async function init(databaseSchema = 'test', getLogger) {
         },
         destroy: async () => {
             const { clientInstanceStore, clientMetricsStore } = stores;
+            await reset();
             return new Promise((resolve, reject) => {
                 clientInstanceStore.destroy();
                 clientMetricsStore.destroy();

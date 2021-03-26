@@ -7,20 +7,15 @@ const getLogger = require('../../../fixtures/no-logger');
 
 let stores;
 let db;
-let reset = () => {};
 
 test.before(async () => {
     db = await dbInit('metrics_serial', getLogger);
     stores = db.stores;
-    reset = db.reset;
 });
 
 test.after(async () => {
+    // await db.reset();
     await db.destroy();
-});
-
-test.afterEach(async () => {
-    await reset();
 });
 
 test.serial('should get application details', async t => {

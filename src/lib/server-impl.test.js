@@ -58,6 +58,7 @@ test('should call preHook', async t => {
     let called = 0;
     await serverImpl.start({
         port: 0,
+        disableDBMigration: true,
         getLogger,
         preHook: () => {
             called++;
@@ -71,6 +72,7 @@ test('should call preRouterHook', async t => {
     await serverImpl.start({
         port: 0,
         getLogger,
+        disableDBMigration: true,
         preRouterHook: () => {
             called++;
         },
@@ -83,6 +85,7 @@ test('should call eventHook', async t => {
     await serverImpl.start({
         port: 0,
         getLogger,
+        disableDBMigration: true,
         eventHook: () => {
             called++;
         },
@@ -95,6 +98,7 @@ test('should auto-create server on start()', async t => {
     const { server } = await serverImpl.start({
         port: 0,
         getLogger,
+        disableDBMigration: true,
         start: true,
     });
     t.false(typeof server === 'undefined');
@@ -103,6 +107,7 @@ test('should auto-create server on start()', async t => {
 test('should not create a server using create()', async t => {
     const { server } = await serverImpl.create({
         port: 0,
+        disableDBMigration: true,
         getLogger,
     });
     t.true(typeof server === 'undefined');
@@ -112,6 +117,7 @@ test('should shutdown the server when calling stop()', async t => {
     const { server, stop } = await serverImpl.start({
         port: 0,
         getLogger,
+        disableDBMigration: true,
         start: true,
     });
     await stop();

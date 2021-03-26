@@ -1,13 +1,10 @@
-'use strict';
+import Joi from 'joi';
 
-const joi = require('joi');
-const { customJoi } = require('../routes/admin-api/util');
+import { customJoi } from '../routes/admin-api/util';
 
-const tagSchema = joi
-    .object()
+export const tagSchema = Joi.object()
     .keys({
-        value: joi
-            .string()
+        value: Joi.string()
             .min(2)
             .max(50),
         type: customJoi

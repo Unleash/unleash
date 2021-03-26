@@ -12,49 +12,53 @@ class VersionService {
             oss: version,
             enterprise: enterpriseVersion,
         };
-        this.setInstanceId();
-        if (versionCheck && versionCheck.url) {
-            this.versionCheckUrl = versionCheck.url;
-            if (versionCheck.enable === 'true') {
-                this.enabled = true;
-                this.checkLatestVersion(this.instanceId);
-                setInterval(
-                    () => this.checkLatestVersion(this.instanceId),
-                    TWO_DAYS,
-                );
-            } else {
-                this.enabled = false;
-            }
-        }
+        this.enabled =
+            versionCheck && versionCheck.enable === 'true' && versionCheck.url;
+        this.versionCheckUrl = versionCheck ? versionCheck.url : undefined;
+        process.nextTick(() => this.setup());
+    }
+
+    async setup() {
+        await this.setInstanceId();
+        await this.checkLatestVersion(this.instanceId);
+        setInterval(
+            async () => this.checkLatestVersion(this.instanceId),
+            TWO_DAYS,
+        );
     }
 
     async setInstanceId() {
         try {
             const { id } = await this.settingStore.get('instanceInfo');
             this.instanceId = id;
-            return id;
         } catch (err) {
             this.logger.warn('Could not find instanceInfo');
-            return undefined;
         }
     }
 
-    async checkLatestVersion(instanceId) {
+    async checkLatestVersion() {
         if (this.enabled) {
             try {
-                const data = await fetch(this.versionCheckUrl, {
+                const res = await fetch(this.versionCheckUrl, {
                     method: 'POST',
                     body: JSON.stringify({
                         versions: this.current,
-                        instanceId,
+                        instanceId: this.instanceId,
                     }),
                     headers: { 'Content-Type': 'application/json' },
-                }).then(res => res.json());
-                this.latest = {
-                    oss: data.versions.oss,
-                    enterprise: data.versions.enterprise,
-                };
-                this.isLatest = data.latest;
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    this.latest = {
+                        oss: data.versions.oss,
+                        enterprise: data.versions.enterprise,
+                    };
+                    this.isLatest = data.latest;
+                } else {
+                    this.logger.info(
+                        `Could not check newest version. Status: ${res.status}`,
+                    );
+                }
             } catch (err) {
                 this.logger.info('Could not check newest version', err);
             }

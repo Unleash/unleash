@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.17.4
+
+- fix: version-checker must have instanceId
+- fix: ensure createdBy is not empty
+
 ## 3.17.3
 
 - feat: upgrade unleash-frontend to version 3.14.1

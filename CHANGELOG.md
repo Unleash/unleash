@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.17.3
+
+- feat: upgrade unleash-frontend to version 3.14.1
+- fix: make sure CREATE_APPLICATION events are only sent once per application
+
 ## 3.17.2
 
 - fix: make sure applying unique constraint on client_instances works

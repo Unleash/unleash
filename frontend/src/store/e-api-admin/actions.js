@@ -17,17 +17,17 @@ export function fetchApiKeys() {
             .then(value =>
                 dispatch({
                     type: RECIEVE_KEYS,
-                    keys: value,
+                    tokens: value.tokens,
                 })
             )
             .catch(dispatchAndThrow(dispatch, ERROR_FETCH_KEYS));
 }
 
-export function removeKey(key) {
+export function removeKey(secret) {
     return dispatch =>
         api
-            .remove(key)
-            .then(() => dispatch({ type: REMOVE_KEY, key }))
+            .remove(secret)
+            .then(() => dispatch({ type: REMOVE_KEY, secret }))
             .catch(dispatchAndThrow(dispatch, REMOVE_KEY));
 }
 

@@ -97,8 +97,39 @@ export const sortFeaturesByExpiredAtAscending = features => {
         const diffA = getDiffInDays(dateA, now);
         const diffB = getDiffInDays(dateB, now);
 
-        if (!expired(diffA, a.type)) return -1;
-        if (!expired(diffB, b.type)) return 1;
+        if (!expired(diffA, a.type) && expired(diffB, b.type)) {
+            return 1;
+        }
+
+        if (expired(diffA, a.type) && !expired(diffB, b.type)) {
+            return -1;
+        }
+
+        const expiredByA = diffA - toggleExpiryByTypeMap[a.type];
+        const expiredByB = diffB - toggleExpiryByTypeMap[b.type];
+
+        return expiredByB - expiredByA;
+    });
+    return sorted;
+};
+
+export const sortFeaturesByExpiredAtDescending = features => {
+    const sorted = [...features];
+    const now = new Date();
+    sorted.sort((a, b) => {
+        const dateA = parseISO(a.createdAt);
+        const dateB = parseISO(b.createdAt);
+
+        const diffA = getDiffInDays(dateA, now);
+        const diffB = getDiffInDays(dateB, now);
+
+        if (!expired(diffA, a.type) && expired(diffB, b.type)) {
+            return 1;
+        }
+
+        if (expired(diffA, a.type) && !expired(diffB, b.type)) {
+            return -1;
+        }
 
         const expiredByA = diffA - toggleExpiryByTypeMap[a.type];
         const expiredByB = diffB - toggleExpiryByTypeMap[b.type];
@@ -107,8 +138,6 @@ export const sortFeaturesByExpiredAtAscending = features => {
     });
     return sorted;
 };
-
-export const sortFeaturesByExpiredAtDescending = features => sortFeaturesByExpiredAtAscending([...features]).reverse();
 
 export const sortFeaturesByStatusAscending = features => {
     const sorted = [...features];

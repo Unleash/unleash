@@ -4,11 +4,7 @@ import test from 'ava';
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import {
-    ApiTokenStore,
-    ApiTokenType,
-    IApiToken,
-} from '../../../../lib/db/api-token-store';
+import { ApiTokenType, IApiToken } from '../../../../lib/db/api-token-store';
 
 let stores;
 let db;

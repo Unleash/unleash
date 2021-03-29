@@ -4,7 +4,11 @@ import test from 'ava';
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenStore, ApiTokenType, IApiToken } from '../../../../lib/db/api-token-store';
+import {
+    ApiTokenStore,
+    ApiTokenType,
+    IApiToken,
+} from '../../../../lib/db/api-token-store';
 
 let stores;
 let db;
@@ -18,7 +22,7 @@ test.after(async () => {
     await db.destroy();
 });
 
-test.afterEach(async () => {
+test.afterEach.always(async () => {
     const tokens = await stores.apiTokenStore.getAll();
     const deleteAll = tokens.map((t: IApiToken) =>
         stores.apiTokenStore.delete(t.secret),
@@ -34,7 +38,7 @@ test.serial('returns empty list of tokens', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.length, 0);
+            t.is(res.body.tokens.length, 0);
         });
 });
 
@@ -121,8 +125,8 @@ test.serial('update admin token with expiry', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.length, 1);
-            t.truthy(res.body[0].expiresAt);
+            t.is(res.body.tokens.length, 1);
+            t.truthy(res.body.tokens[0].expiresAt);
         });
 });
 
@@ -151,8 +155,8 @@ test.serial('creates a lot of client tokens', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.length, 10);
-            t.is(res.body[2].type, 'client');
+            t.is(res.body.tokens.length, 10);
+            t.is(res.body.tokens[2].type, 'client');
         });
 });
 
@@ -178,6 +182,6 @@ test.serial('removes api token', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.length, 0);
+            t.is(res.body.tokens.length, 0);
         });
 });

@@ -28,9 +28,9 @@ export class ApiTokenService {
     private config: IConfig;
 
     private logger: Logger;
-    
+
     private timer: NodeJS.Timeout;
-    
+
     private activeTokens: IApiToken[] = [];
 
     constructor(stores: IStores, config: IConfig) {
@@ -38,14 +38,17 @@ export class ApiTokenService {
         this.config = config;
         this.logger = config.getLogger('/services/api-token-service.ts');
         this.fetchActiveTokens();
-        this.timer = setInterval(() => this.fetchActiveTokens(), ONE_MINUTE).unref();
-        console.log('here!')
+        this.timer = setInterval(
+            () => this.fetchActiveTokens(),
+            ONE_MINUTE,
+        ).unref();
     }
 
     private async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.getAllActiveTokens();
         } finally {
+            // eslint-disable-next-line no-unsafe-finally
             return;
         }
     }
@@ -95,7 +98,6 @@ export class ApiTokenService {
     private generateSecretKey() {
         return crypto.randomBytes(32).toString('hex');
     }
-
 
     destroy() {
         clearInterval(this.timer);

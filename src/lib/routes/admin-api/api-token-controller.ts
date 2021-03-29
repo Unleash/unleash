@@ -1,7 +1,12 @@
 import { Response } from 'express';
 
 import Controller from '../controller';
-import { ADMIN, CREATE_API_TOKEN, DELETE_API_TOKEN, UPDATE_API_TOKEN } from '../../permissions';
+import {
+    ADMIN,
+    CREATE_API_TOKEN,
+    DELETE_API_TOKEN,
+    UPDATE_API_TOKEN,
+} from '../../permissions';
 import { ApiTokenService } from '../../services/api-token-service';
 import { Logger, LogProvider } from '../../logger';
 import { ApiTokenType } from '../../db/api-token-store';
@@ -62,8 +67,6 @@ class ApiTokenController extends Controller {
         return true;
     }
 
-    // TODO: Fix-me.
-    // Also needs to work with RBAC
     async getAllApiTokens(req: IAuthRequest, res: Response): Promise<void> {
         const { user } = req;
         const isAdmin = this.isTokenAdmin(user);
@@ -71,12 +74,12 @@ class ApiTokenController extends Controller {
         const tokens = await this.apiTokenService.getAllTokens();
 
         if (isAdmin) {
-            res.json(tokens);
+            res.json({ tokens });
         } else {
             const filteredTokens = tokens.filter(
                 t => !(t.type === ApiTokenType.ADMIN),
             );
-            res.json(filteredTokens);
+            res.json({ tokens: filteredTokens });
         }
     }
 

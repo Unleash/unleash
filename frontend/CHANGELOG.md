@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 3.15.0
+- feat: Adapt API keys to new endpoint (#259)
+- chore(deps): bump elliptic from 6.5.3 to 6.5.4 (#253)
+- chore(deps): bump yargs-parser from 5.0.0 to 5.0.1 (#256)
+- chore(deps): bump y18n from 3.2.1 to 3.2.2 (#261)
+- fix: add ascending sorting (#260)
+- chore: changelog
+- fix: encode URI value when deleting tag
+- Merge pull request #257 from Unleash/fix/encode-tag-values
+- fix: encode tag value
+
 # 3.14.1
 - fix: uriencode tag.value when deleting a tag
 

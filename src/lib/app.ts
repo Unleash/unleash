@@ -62,12 +62,12 @@ module.exports = function(config, services = {}) {
 
     if (config.adminAuthentication === AuthenticationType.enterprise) {
         app.use(baseUriPath, apiTokenMiddleware(config, services));
-        config.authentication.customHook(app, config, services); // TODO: think about signature. Needs user-service and 
+        config.authentication.customHook(app, config, services);
     }
 
     if (config.adminAuthentication === AuthenticationType.custom) {
         app.use(baseUriPath, apiTokenMiddleware(config, services));
-        config.authentication.customHook(app, config, services); // TODO: think about signature.
+        config.authentication.customHook(app, config, services);
     }
 
     app.use(baseUriPath, rbacMiddleware(config, services));

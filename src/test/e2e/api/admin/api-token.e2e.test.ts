@@ -1,10 +1,12 @@
 'use strict';
 
 import test from 'ava';
-import { setupApp } from '../../helpers/test-helper';
+import { setupApp, setupAppWithCustomAuth } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType, IApiToken } from '../../../../lib/db/api-token-store';
+import User from '../../../../lib/user';
+import { CREATE_API_TOKEN, CREATE_FEATURE } from '../../../../lib/permissions';
 
 let stores;
 let db;
@@ -180,4 +182,91 @@ test.serial('removes api token', async t => {
         .expect(res => {
             t.is(res.body.tokens.length, 0);
         });
+});
+
+test.serial('none-admins should only get client tokens', async t => {
+    t.plan(2);
+    const user = new User({ email: 'custom-user@mail.com', permissions: [] });
+
+    const preHook = app => {
+        app.use('/api/', (req, res, next) => {
+            req.user = user;
+            next();
+        });
+    };
+
+    const request = await setupAppWithCustomAuth(stores, preHook, true);
+
+    await stores.apiTokenStore.insert({
+        username: 'test',
+        secret: '1234',
+        type: ApiTokenType.CLIENT,
+    });
+
+    await stores.apiTokenStore.insert({
+        username: 'test',
+        secret: 'sdfsdf2d',
+        type: ApiTokenType.ADMIN,
+    });
+
+    return request
+        .get('/api/admin/api-tokens')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => {
+            t.is(res.body.tokens.length, 1);
+            t.is(res.body.tokens[0].type, ApiTokenType.CLIENT);
+        });
+});
+
+test.serial('Only token-admins should be allowed to create token', async t => {
+    t.plan(0);
+    const user = new User({
+        email: 'custom-user@mail.com',
+        permissions: [CREATE_FEATURE],
+    });
+
+    const preHook = app => {
+        app.use('/api/', (req, res, next) => {
+            req.user = user;
+            next();
+        });
+    };
+
+    const request = await setupAppWithCustomAuth(stores, preHook, true);
+
+    return request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(403);
+});
+
+test.serial('Token-admin should be allowed to create token', async t => {
+    t.plan(0);
+    const user = new User({
+        email: 'custom-user@mail.com',
+        permissions: [CREATE_API_TOKEN],
+    });
+
+    const preHook = app => {
+        app.use('/api/', (req, res, next) => {
+            req.user = user;
+            next();
+        });
+    };
+
+    const request = await setupAppWithCustomAuth(stores, preHook, true);
+
+    return request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
 });

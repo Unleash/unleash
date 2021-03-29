@@ -9,6 +9,7 @@ const AddonService = require('./addon-service');
 const ContextService = require('./context-service');
 const VersionService = require('./version-service');
 const { AccessService } = require('./access-service');
+const { ApiTokenService } = require('./api-token-service');
 
 module.exports.createServices = (stores, config) => {
     const accessService = new AccessService(stores, config);
@@ -26,6 +27,7 @@ module.exports.createServices = (stores, config) => {
     const addonService = new AddonService(stores, config, tagTypeService);
     const contextService = new ContextService(stores, config);
     const versionService = new VersionService(stores, config);
+    const apiTokenService = new ApiTokenService(stores, config);
 
     return {
         accessService,
@@ -39,5 +41,6 @@ module.exports.createServices = (stores, config) => {
         clientMetricsService,
         contextService,
         versionService,
+        apiTokenService,
     };
 };

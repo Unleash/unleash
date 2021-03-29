@@ -1,5 +1,7 @@
 import { responseTimeMetrics } from './middleware/response-time-metrics';
 import rbacMiddleware from './middleware/rbac-middleware';
+import apiTokenMiddleware from './middleware/api-token-middleware';
+import { AuthenticationType } from './types/core';
 
 const express = require('express');
 
@@ -48,19 +50,31 @@ module.exports = function(config, services = {}) {
         app.use(`${baseUriPath}/oas`, express.static('docs/api/oas'));
     }
 
-    if (config.adminAuthentication === 'unsecure') {
+    if (config.adminAuthentication === AuthenticationType.none) {
+        noAuthentication(baseUriPath, app);
+    }
+
+    // Deprecated. Will go away in v4.
+    if (config.adminAuthentication === AuthenticationType.unsecure) {
+        app.use(baseUriPath, apiTokenMiddleware(config, services));
         simpleAuthentication(baseUriPath, app);
     }
 
-    if (config.adminAuthentication === 'none') {
-        noAuthentication(baseUriPath, app);
+    if (config.adminAuthentication === AuthenticationType.enterprise) {
+        app.use(baseUriPath, apiTokenMiddleware(config, services));
+        config.authentication.customHook(app, config, services);
     }
+
+    if (config.adminAuthentication === AuthenticationType.custom) {
+        app.use(baseUriPath, apiTokenMiddleware(config, services));
+        config.authentication.customHook(app, config, services);
+    }
+
+    app.use(baseUriPath, rbacMiddleware(config, services));
 
     if (typeof config.preRouterHook === 'function') {
         config.preRouterHook(app);
     }
-
-    app.use(baseUriPath, rbacMiddleware(config, services));
 
     // Setup API routes
     app.use(`${baseUriPath}/`, new IndexRouter(config, services).router);

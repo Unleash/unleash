@@ -19,6 +19,7 @@ const ProjectStore = require('./project-store');
 const TagStore = require('./tag-store');
 const TagTypeStore = require('./tag-type-store');
 const AddonStore = require('./addon-store');
+const { ApiTokenStore } = require('./api-token-store');
 
 module.exports.createStores = (config, eventBus) => {
     const { getLogger } = config;
@@ -55,5 +56,6 @@ module.exports.createStores = (config, eventBus) => {
         tagTypeStore: new TagTypeStore(db, eventBus, getLogger),
         addonStore: new AddonStore(db, eventBus, getLogger),
         accessStore: new AccessStore(db, eventBus, getLogger),
+        apiTokenStore: new ApiTokenStore(db, eventBus, getLogger),
     };
 };

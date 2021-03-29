@@ -11,16 +11,25 @@ const { createServices } = require('../../../lib/services');
 
 const eventBus = new EventEmitter();
 
-function createApp(stores, adminAuthentication = 'none', preHook) {
+function createApp(
+    stores,
+    adminAuthentication = 'none',
+    preHook,
+    extendedPermissions = false,
+) {
     const config = {
         stores,
         eventBus,
         preHook,
         adminAuthentication,
+        extendedPermissions,
         secret: 'super-secret',
         session: {
             db: true,
             age: 4000,
+        },
+        authentication: {
+            customHook: () => {},
         },
         getLogger,
     };
@@ -40,8 +49,8 @@ module.exports = {
         return supertest.agent(app);
     },
 
-    async setupAppWithCustomAuth(stores, preHook) {
-        const app = createApp(stores, 'custom', preHook);
+    async setupAppWithCustomAuth(stores, preHook, extendedPermissions) {
+        const app = createApp(stores, 'custom', preHook, extendedPermissions);
         return supertest.agent(app);
     },
 };

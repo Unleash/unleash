@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.0-alpha.0
+
+- chore(deps): bump y18n from 4.0.0 to 4.0.1 (#775)
+- Feat: Api-Tokens (#774)
+
 ## 3.17.4
 
 - fix: version-checker must have instanceId

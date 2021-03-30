@@ -1,5 +1,5 @@
 import React from 'react';
-import Tags from '../../component/tags/list-container';
+import Tags from '../../component/tags';
 import PropTypes from 'prop-types';
 
 const render = ({ history }) => <Tags history={history} />;

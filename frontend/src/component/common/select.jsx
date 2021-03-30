@@ -1,50 +1,46 @@
 import React from 'react';
-import classnames from 'classnames';
+import { Select, FormControl, MenuItem, InputLabel } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-const Select = ({ name, value, label, options, style, onChange, disabled = false, filled, className }) => {
-    const wrapper = Object.assign({ width: 'auto' }, style);
+const SelectMenu = ({ name, value, label, options, onChange, id, disabled = false, className, ...rest }) => {
+    const renderSelectItems = () =>
+        options.map(option => (
+            <MenuItem key={option.key} value={option.key} title={option.title}>
+                {option.label}
+            </MenuItem>
+        ));
+
     return (
-        <div
-            className={classnames(
-                'mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty is-upgraded',
-                className
-            )}
-            style={wrapper}
-        >
-            <select
-                className="mdl-textfield__input"
+        <FormControl variant="outlined" size="small">
+            <InputLabel htmlFor={id} id={id}>
+                {label}
+            </InputLabel>
+            <Select
                 name={name}
                 disabled={disabled}
                 onChange={onChange}
+                className={className}
+                label={label}
+                id={id}
+                size="small"
                 value={value}
-                style={{
-                    width: 'auto',
-                    background: filled ? '#f5f5f5' : 'none',
-                }}
+                {...rest}
             >
-                {options.map(o => (
-                    <option key={o.key} value={o.key} title={o.title}>
-                        {o.label}
-                    </option>
-                ))}
-            </select>
-            <label className="mdl-textfield__label" htmlFor="textfield-contextName">
-                {label}
-            </label>
-        </div>
+                {renderSelectItems()}
+            </Select>
+        </FormControl>
     );
 };
 
-Select.propTypes = {
+SelectMenu.propTypes = {
     name: PropTypes.string,
+    id: PropTypes.string,
     value: PropTypes.string,
     label: PropTypes.string,
     options: PropTypes.array,
     style: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
-    filled: PropTypes.bool,
 };
 
-export default Select;
+export default SelectMenu;

@@ -4,13 +4,32 @@
     border: 2px solid #ffffff;
 }
 
+.showLocale {
+    display: flex;
+    align-items: center;
+}
+
+.labelFlag,
 .showLocale img {
     border-radius: 2px;
-    height: 30px;
+    width: 30px;
+    height: 18px;
     margin: 0 10px;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    margin-left: 5px;
 }
 
 .showUserSettings {
     display: flex;
     align-items: center;
+}
+
+.dropdown {
+    color: #fff;
+    font-weight: normal;
 }

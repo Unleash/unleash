@@ -11,15 +11,28 @@ class FeatureTypeSelectComponent extends Component {
     }
 
     render() {
-        const { value, types, onChange, filled } = this.props;
+        const {
+            value,
+            types,
+            onChange,
+            label,
+            id,
+            // eslint-disable-next-line no-unused-vars
+            fetchFeatureTypes,
+            ...rest
+        } = this.props;
 
-        const options = types.map(t => ({ key: t.id, label: t.name, title: t.description }));
+        const options = types.map(t => ({
+            key: t.id,
+            label: t.name,
+            title: t.description,
+        }));
 
         if (!options.find(o => o.key === value)) {
             options.push({ key: value, label: value });
         }
 
-        return <MySelect label="Toggle type" options={options} value={value} onChange={onChange} filled={filled} />;
+        return <MySelect options={options} value={value} onChange={onChange} label={label} id={id} {...rest} />;
     }
 }
 
@@ -29,6 +42,8 @@ FeatureTypeSelectComponent.propTypes = {
     types: PropTypes.array.isRequired,
     fetchFeatureTypes: PropTypes.func,
     onChange: PropTypes.func.isRequired,
+    label: PropTypes.string,
+    id: PropTypes.string,
 };
 
 export default FeatureTypeSelectComponent;

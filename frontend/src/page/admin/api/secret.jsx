@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'react-mdl';
+import { Icon } from '@material-ui/core';
 
 function Secret({ value }) {
     const [show, setShow] = useState(false);
@@ -18,7 +18,7 @@ function Secret({ value }) {
             )}
 
             <a href="" onClick={toggle} title="Show token">
-                <Icon style={{ marginLeft: '5px', fontSize: '1.2em' }} name="visibility" />
+                <Icon style={{ marginLeft: '5px', fontSize: '1.2em' }}>visibility</Icon>
             </a>
         </div>
     );

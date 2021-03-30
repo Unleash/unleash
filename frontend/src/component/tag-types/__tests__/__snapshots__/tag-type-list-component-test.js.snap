@@ -1,141 +1,201 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders a list with elements correctly 1`] = `
-<react-mdl-Card
-  className="fullwidth"
-  shadow={0}
-  style={
-    Object {
-      "overflow": "visible",
-    }
-  }
+<div
+  className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
 >
   <div
-    style={
-      Object {
-        "borderBottom": "1px solid #f9f9f9",
-        "display": "flex",
-        "marginBottom": "10px",
-        "padding": "16px",
-      }
-    }
+    className="makeStyles-headerContainer-1"
   >
     <div
-      style={
-        Object {
-          "flex": "2",
-        }
-      }
+      className="makeStyles-headerTitleContainer-5"
     >
-      <h6
-        style={
-          Object {
-            "margin": 0,
-          }
-        }
+      <div
+        className=""
       >
-        Tag Types
-      </h6>
-    </div>
-    <div
-      style={
-        Object {
-          "flex": "1",
-          "textAlign": "right",
-        }
-      }
-    >
-      <react-mdl-IconButton
-        name="add"
-        onClick={[Function]}
-        raised={true}
-        title="Add new tag type"
-      />
+        <h2
+          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
+        >
+          Tag Types
+        </h2>
+      </div>
+      <div
+        className="makeStyles-headerActions-7"
+      >
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiButton-label"
+          >
+            Add new tag type
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
     </div>
   </div>
-  <react-mdl-List>
-    <react-mdl-ListItem
-      twoLine={true}
+  <div
+    className="makeStyles-bodyContainer-2"
+  >
+    <ul
+      className="MuiList-root MuiList-padding"
     >
-      <react-mdl-ListItemContent
-        icon="label"
-        subtitle="Some simple description"
+      <li
+        className="MuiListItem-root tagListItem MuiListItem-gutters"
+        disabled={false}
       >
-        <a
-          href="/tag-types/edit/simple"
-          onClick={[Function]}
+        <div
+          className="MuiListItemIcon-root"
         >
-          <strong>
-            simple
-          </strong>
-        </a>
-      </react-mdl-ListItemContent>
-      <react-mdl-IconButton
-        name="delete"
-        onClick={[Function]}
-      />
-    </react-mdl-ListItem>
-  </react-mdl-List>
-</react-mdl-Card>
+          <span
+            aria-hidden={true}
+            className="material-icons MuiIcon-root"
+          >
+            label
+          </span>
+        </div>
+        <div
+          className="MuiListItemText-root MuiListItemText-multiline"
+        >
+          <span
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            <a
+              href="/tag-types/edit/simple"
+              onClick={[Function]}
+            >
+              <strong>
+                simple
+              </strong>
+            </a>
+          </span>
+          <p
+            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+          >
+            Some simple description
+          </p>
+        </div>
+        <button
+          aria-describedby={null}
+          className="MuiButtonBase-root MuiIconButton-root"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          title="Delete simple"
+          type="button"
+        >
+          <span
+            className="MuiIconButton-label"
+          >
+            <span
+              aria-hidden={true}
+              className="material-icons MuiIcon-root"
+            >
+              delete
+            </span>
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
 `;
 
 exports[`renders an empty list correctly 1`] = `
-<react-mdl-Card
-  className="fullwidth"
-  shadow={0}
-  style={
-    Object {
-      "overflow": "visible",
-    }
-  }
+<div
+  className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
 >
   <div
-    style={
-      Object {
-        "borderBottom": "1px solid #f9f9f9",
-        "display": "flex",
-        "marginBottom": "10px",
-        "padding": "16px",
-      }
-    }
+    className="makeStyles-headerContainer-1"
   >
     <div
-      style={
-        Object {
-          "flex": "2",
-        }
-      }
+      className="makeStyles-headerTitleContainer-5"
     >
-      <h6
-        style={
-          Object {
-            "margin": 0,
-          }
-        }
+      <div
+        className=""
       >
-        Tag Types
-      </h6>
-    </div>
-    <div
-      style={
-        Object {
-          "flex": "1",
-          "textAlign": "right",
-        }
-      }
-    >
-      <react-mdl-IconButton
-        name="add"
-        onClick={[Function]}
-        raised={true}
-        title="Add new tag type"
-      />
+        <h2
+          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
+        >
+          Tag Types
+        </h2>
+      </div>
+      <div
+        className="makeStyles-headerActions-7"
+      >
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiButton-label"
+          >
+            Add new tag type
+          </span>
+        </button>
+      </div>
     </div>
   </div>
-  <react-mdl-List>
-    <react-mdl-ListItem>
-      No entries
-    </react-mdl-ListItem>
-  </react-mdl-List>
-</react-mdl-Card>
+  <div
+    className="makeStyles-bodyContainer-2"
+  >
+    <ul
+      className="MuiList-root MuiList-padding"
+    >
+      <li
+        className="MuiListItem-root MuiListItem-gutters"
+        disabled={false}
+      >
+        No entries
+      </li>
+    </ul>
+  </div>
+</div>
 `;

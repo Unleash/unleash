@@ -1,5 +1,5 @@
 .chip {
-    display: inline-block;
+    display: inline-flex;
     vertical-align: middle;
     margin-left: 30px;
     position: relative;
@@ -26,7 +26,7 @@
 }
 
 .chip:first-child:before {
-    content: ''
+    content: "";
 }
 
 .problemIcon {
@@ -34,4 +34,8 @@
     height: 100px;
     font-size: 100px !important;
     color: #ccc;
+}
+
+.grid {
+    text-align: center;
 }

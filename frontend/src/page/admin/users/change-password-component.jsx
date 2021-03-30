@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import Modal from 'react-modal';
-import { Button, Textfield, DialogTitle, DialogContent, DialogActions } from 'react-mdl';
+import { TextField, DialogTitle, DialogContent } from '@material-ui/core';
 import { trim } from '../../../component/common/util';
 import { modalStyles } from './util';
+import Dialogue from '../../../component/common/Dialogue/Dialogue';
 
 function ChangePassword({ showDialog, closeDialog, changePassword, validatePassword, user = {} }) {
     const [data, setData] = useState({});
@@ -57,42 +57,45 @@ function ChangePassword({ showDialog, closeDialog, changePassword, validatePassw
     };
 
     return (
-        <Modal isOpen={showDialog} style={modalStyles} onRequestClose={onCancel}>
+        <Dialogue
+            open={showDialog}
+            onClick={submit}
+            style={modalStyles}
+            onClose={onCancel}
+            primaryButtonText="Save"
+            secondaryButtonText="Cancel"
+        >
             <form onSubmit={submit}>
                 <DialogTitle>Update password</DialogTitle>
                 <DialogContent>
                     <p>User: {user.username || user.email}</p>
                     <p style={{ color: 'red' }}>{error.general}</p>
-                    <Textfield
-                        floatingLabel
+                    <TextField
                         label="New passord"
                         name="password"
                         type="password"
                         value={data.password}
-                        error={error.password}
+                        error={error.password !== undefined}
+                        helperText={error.password}
                         onChange={updateField}
                         onBlur={onPasswordBlur}
+                        variant="outlined"
+                        size="small"
                     />
-                    <Textfield
-                        floatingLabel
+                    <TextField
                         label="Confirm passord"
                         name="confirm"
                         type="password"
                         value={data.confirm}
-                        error={error.confirm}
+                        error={error.confirm !== undefined}
+                        helperText={error.confirm}
                         onChange={updateField}
+                        variant="outlined"
+                        size="small"
                     />
                 </DialogContent>
-                <DialogActions>
-                    <Button type="button" raised colored type="submit">
-                        Save
-                    </Button>
-                    <Button type="button" onClick={onCancel}>
-                        Cancel
-                    </Button>
-                </DialogActions>
             </form>
-        </Modal>
+        </Dialogue>
     );
 }
 

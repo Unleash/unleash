@@ -1,62 +1,65 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { List, ListItem, ListItemContent, Button, Icon, Switch, MenuItem } from 'react-mdl';
+import {
+    List,
+    MenuItem,
+    Icon,
+    ListItem,
+    ListItemText,
+    ListItemAvatar,
+    Button,
+    Avatar,
+    Typography,
+} from '@material-ui/core';
 import styles from './common.module.scss';
+import ConditionallyRender from './ConditionallyRender/ConditionallyRender';
 
 export { styles };
 
 export const shorten = (str, len = 50) => (str && str.length > len ? `${str.substring(0, len)}...` : str);
-
 export const AppsLinkList = ({ apps }) => (
     <List>
-        {apps.length > 0 &&
-            apps.map(({ appName, description, icon }) => (
-                <ListItem twoLine key={appName}>
-                    <span className="mdl-list__item-primary-content" style={{ minWidth: 0 }}>
-                        <Icon name={icon || 'apps'} className="mdl-list__item-avatar" />
-                        <Link to={`/applications/${appName}`} className={[styles.listLink, styles.truncate].join(' ')}>
-                            {appName}
-                            <span className={['mdl-list__item-sub-title', styles.truncate].join(' ')}>
-                                {description || 'No description'}
-                            </span>
-                        </Link>
-                    </span>
+        <ConditionallyRender
+            condition={apps.length > 0}
+            show={apps.map(({ appName, description, icon }) => (
+                <ListItem key={appName} className={styles.listItem}>
+                    <ListItemAvatar>
+                        <Avatar>
+                            <ConditionallyRender
+                                key={`avatar_conditional_${appName}`}
+                                condition={icon}
+                                show={<Icon>{icon}</Icon>}
+                                elseShow={<Icon>apps</Icon>}
+                            />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={
+                            <Link
+                                to={`/applications/${appName}`}
+                                className={[styles.listLink, styles.truncate].join(' ')}
+                            >
+                                {appName}
+                            </Link>
+                        }
+                        secondary={description || 'No description'}
+                    />
                 </ListItem>
             ))}
+        />
     </List>
 );
 AppsLinkList.propTypes = {
     apps: PropTypes.array.isRequired,
 };
 
-export const HeaderTitle = ({ title, actions, subtitle }) => (
-    <div
-        style={{
-            display: 'flex',
-            borderBottom: '1px solid #f9f9f9',
-            marginBottom: '10px',
-            padding: '16px',
-        }}
-    >
-        <div style={{ flex: '2' }}>
-            <h6 style={{ margin: 0 }}>{title}</h6>
-            {subtitle && <small>{subtitle}</small>}
-        </div>
-
-        {actions && <div style={{ flex: '1', textAlign: 'right' }}>{actions}</div>}
-    </div>
-);
-HeaderTitle.propTypes = {
-    title: PropTypes.string,
-    subtitle: PropTypes.string,
-    actions: PropTypes.any,
-};
-
 export const DataTableHeader = ({ title, actions }) => (
     <div className={styles.dataTableHeader}>
         <div className={styles.title}>
-            <h2 className={styles.titleText}>{title}</h2>
+            <Typography variant="h2" className={styles.titleText}>
+                {title}
+            </Typography>
         </div>
         {actions && <div className={styles.actions}>{actions}</div>}
     </div>
@@ -66,11 +69,15 @@ DataTableHeader.propTypes = {
     actions: PropTypes.any,
 };
 
-export const FormButtons = ({ submitText = 'Create', onCancel }) => (
+export const FormButtons = ({ submitText = 'Create', onCancel, primaryButtonTestId }) => (
     <div>
-        <Button type="submit" ripple raised primary icon="add">
-            <Icon name="add" />
-            &nbsp;&nbsp;&nbsp;
+        <Button
+            data-test={primaryButtonTestId}
+            type="submit"
+            color="primary"
+            variant="contained"
+            startIcon={<Icon>add</Icon>}
+        >
             {submitText}
         </Button>
         &nbsp;
@@ -82,37 +89,7 @@ export const FormButtons = ({ submitText = 'Create', onCancel }) => (
 FormButtons.propTypes = {
     submitText: PropTypes.string,
     onCancel: PropTypes.func.isRequired,
-};
-
-export const SwitchWithLabel = ({ onChange, checked, children, ...switchProps }) => (
-    <span className={styles.switchWithLabel}>
-        <span className={styles.label}>{children}</span>
-        <span className={styles.switch}>
-            <Switch checked={checked} onChange={onChange} {...switchProps} />
-        </span>
-    </span>
-);
-SwitchWithLabel.propTypes = {
-    checked: PropTypes.bool,
-    onChange: PropTypes.func,
-};
-
-export const TogglesLinkList = ({ toggles }) => (
-    <List style={{ textAlign: 'left' }} className={styles.truncate}>
-        {toggles.length > 0 &&
-            toggles.map(({ name, description = '-', icon = 'toggle' }) => (
-                <ListItem twoLine key={name}>
-                    <ListItemContent avatar={icon} subtitle={description}>
-                        <Link key={name} to={`/features/view/${name}`}>
-                            {name}
-                        </Link>
-                    </ListItemContent>
-                </ListItem>
-            ))}
-    </List>
-);
-TogglesLinkList.propTypes = {
-    toggles: PropTypes.array,
+    primaryButtonTestId: PropTypes.string,
 };
 
 export function getIcon(type) {
@@ -132,7 +109,7 @@ export function getIcon(type) {
 
 export const IconLink = ({ url, icon }) => (
     <a href={url} target="_blank" rel="noopener" className="mdl-color-text--grey-600">
-        <Icon name={icon} />
+        <Icon>{icon}</Icon>
     </a>
 );
 IconLink.propTypes = {
@@ -140,22 +117,41 @@ IconLink.propTypes = {
     icon: PropTypes.string,
 };
 
-export const DropdownButton = ({ label, id, className = styles.dropdownButton, title, style }) => (
-    <Button id={id} className={className} title={title} style={style}>
+export const DropdownButton = ({
+    label,
+    id,
+    className = styles.dropdownButton,
+    title,
+    icon,
+    startIcon,
+    style,
+    ...rest
+}) => (
+    <Button
+        id={id}
+        className={className}
+        title={title}
+        style={style}
+        {...rest}
+        startIcon={startIcon}
+        endIcon={<Icon>{icon}</Icon>}
+    >
         {label}
-        <Icon name="arrow_drop_down" className="mdl-color-text--grey-600" />
     </Button>
 );
+
 DropdownButton.propTypes = {
     label: PropTypes.string,
     style: PropTypes.object,
     id: PropTypes.string,
     title: PropTypes.string,
+    icon: PropTypes.string,
+    startIcon: PropTypes.string,
 };
 
 export const MenuItemWithIcon = ({ icon, label, disabled, ...menuItemProps }) => (
     <MenuItem disabled={disabled} style={{ display: 'flex', alignItems: 'center' }} {...menuItemProps}>
-        <Icon name={icon} style={{ paddingRight: '16px' }} />
+        <Icon style={{ paddingRight: '16px' }}>{icon}</Icon>
         {label}
     </MenuItem>
 );

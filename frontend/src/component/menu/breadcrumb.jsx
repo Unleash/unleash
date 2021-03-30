@@ -9,17 +9,12 @@ const renderDoubleBread = (currentTitle, parentRoute) => {
     document.title = `${currentTitle} -  ${parentRoute.title} - Unleash`;
     return (
         <span>
-            <Link
-                className={[styles.headerTitleLink, 'mdl-color-text--primary-contrast'].join(' ')}
-                to={parentRoute.path}
-            >
+            <Link className={styles.headerTitleLink} to={parentRoute.path}>
                 {parentRoute.title}
             </Link>
-            <span className="mdl-layout--large-screen-only">
+            <span>
                 <span> › </span>
-                <span className={[styles.headerTitleLink, 'mdl-color-text--primary-contrast'].join(' ')}>
-                    {currentTitle}
-                </span>
+                <span className={styles.headerTitleLink}>{currentTitle}</span>
             </span>
         </span>
     );
@@ -28,10 +23,8 @@ const renderDoubleBread = (currentTitle, parentRoute) => {
 const renderBread = route => {
     document.title = `${route.title} - Unleash`;
     return (
-        <span className="mdl-layout--large-screen-only">
-            <span className={[styles.headerTitleLink, 'mdl-color-text--primary-contrast'].join(' ')}>
-                {route.title}
-            </span>
+        <span>
+            <span className={styles.headerTitleLink}>{route.title}</span>
         </span>
     );
 };

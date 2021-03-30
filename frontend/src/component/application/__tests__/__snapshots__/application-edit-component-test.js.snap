@@ -5,409 +5,615 @@ exports[`renders correctly if no application 1`] = `
   <p>
     Loading...
   </p>
-  <react-mdl-ProgressBar
-    indeterminate={true}
-  />
+  <div
+    className="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate"
+    role="progressbar"
+  >
+    <div
+      className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate"
+      style={Object {}}
+    />
+    <div
+      className="MuiLinearProgress-bar MuiLinearProgress-bar2Indeterminate MuiLinearProgress-barColorPrimary"
+      style={Object {}}
+    />
+  </div>
 </div>
 `;
 
 exports[`renders correctly with permissions 1`] = `
-<react-mdl-Card
-  className="fullwidth"
-  shadow={0}
+<div
+  className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
 >
-  <react-mdl-CardTitle
-    style={
-      Object {
-        "paddingRight": "64px",
-        "paddingTop": "24px",
-        "wordBreak": "break-all",
-      }
-    }
+  <div
+    className="makeStyles-headerContainer-1"
   >
-    <react-mdl-Icon
-      name="apps"
-    />
-     
-    test-app
-  </react-mdl-CardTitle>
-  <react-mdl-CardText
-    style={
-      Object {
-        "paddingTop": "0",
-      }
-    }
-  >
-    <p>
-      app description
-    </p>
-    <p>
-      Created: 
-      <strong>
-        Invalid Date
-      </strong>
-    </p>
-  </react-mdl-CardText>
-  <react-mdl-CardMenu>
-    <a
-      className="mdl-color-text--grey-600"
-      href="http://example.org"
-      rel="noopener"
-      target="_blank"
+    <div
+      className="makeStyles-headerTitleContainer-5"
     >
-      <react-mdl-Icon
-        name="link"
-      />
-    </a>
-  </react-mdl-CardMenu>
-  <div>
-    <react-mdl-CardActions
-      border={true}
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "justifyContent": "space-between",
-        }
-      }
-    >
-      <span />
-      <react-mdl-Button
-        accent={true}
-        onClick={[Function]}
-        title="Delete application"
+      <div
+        className=""
       >
-        Delete
-      </react-mdl-Button>
-    </react-mdl-CardActions>
-    <hr />
-    <react-mdl-Tabs
-      activeTab={0}
-      className="mdl-color--grey-100"
-      onChange={[Function]}
-      ripple={true}
-      tabBarProps={
-        Object {
-          "style": Object {
-            "width": "100%",
-          },
-        }
-      }
-    >
-      <react-mdl-Tab>
-        Details
-      </react-mdl-Tab>
-      <react-mdl-Tab>
-        Edit
-      </react-mdl-Tab>
-    </react-mdl-Tabs>
+        <h2
+          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
+        >
+          <span
+            style={
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+              }
+            }
+          >
+            <div
+              className="MuiAvatar-root MuiAvatar-circle MuiAvatar-colorDefault"
+              style={
+                Object {
+                  "marginRight": "8px",
+                }
+              }
+            >
+              <span
+                aria-hidden={true}
+                className="material-icons MuiIcon-root"
+              >
+                apps
+              </span>
+            </div>
+            test-app
+          </span>
+        </h2>
+      </div>
+      <div
+        className="makeStyles-headerActions-7"
+      >
+        <a
+          aria-disabled={false}
+          className="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiButtonBase-root MuiIconButton-root MuiTypography-colorPrimary"
+          href="http://example.org"
+          onBlur={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="button"
+          tabIndex={0}
+        >
+          <span
+            className="MuiIconButton-label"
+          >
+            <span
+              aria-hidden={true}
+              className="material-icons MuiIcon-root"
+            >
+              link
+            </span>
+          </span>
+        </a>
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          title="Delete application"
+          type="button"
+        >
+          <span
+            className="MuiButton-label"
+          >
+            Delete
+          </span>
+        </button>
+      </div>
+    </div>
   </div>
-  <react-mdl-Grid
-    style={
-      Object {
-        "margin": 0,
-      }
-    }
+  <div
+    className="makeStyles-bodyContainer-2"
   >
-    <react-mdl-Cell
-      col={6}
-      hidePhone={true}
-      phone={12}
-      tablet={4}
-    >
-      <h6>
-         Toggles
-      </h6>
-      <hr />
-      <react-mdl-List>
-        <react-mdl-ListItem
-          twoLine={true}
+    <div>
+      <p
+        className="MuiTypography-root MuiTypography-body1"
+      >
+        app description
+      </p>
+      <p
+        className="MuiTypography-root MuiTypography-body2"
+      >
+        Created: 
+        <strong>
+          Invalid Date
+        </strong>
+      </p>
+    </div>
+    <div>
+      <div
+        className="MuiPaper-root makeStyles-tabNav-8 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <div
+          className="MuiTabs-root"
         >
-          <react-mdl-ListItemContent
-            icon={
-              <span>
-                <react-mdl-Switch
-                  checked={true}
-                  disabled={true}
+          <div
+            className="MuiTabs-scroller MuiTabs-fixed"
+            onScroll={[Function]}
+            style={
+              Object {
+                "marginBottom": null,
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="MuiTabs-flexContainer MuiTabs-centered"
+              onKeyDown={[Function]}
+              role="tablist"
+            >
+              <button
+                aria-controls="tabpanel-0"
+                aria-selected={true}
+                className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected"
+                disabled={false}
+                id="tab-0"
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                role="tab"
+                tabIndex={0}
+                type="button"
+              >
+                <span
+                  className="MuiTab-wrapper"
+                >
+                  Application overview
+                </span>
+                <span
+                  className="PrivateTabIndicator-root-9 PrivateTabIndicator-colorPrimary-10 MuiTabs-indicator"
+                  style={Object {}}
                 />
-              </span>
-            }
-            subtitle="this is A toggle"
-          >
-            <a
-              href="/features/view/ToggleA"
-              onClick={[Function]}
-            >
-              ToggleA
-            </a>
-          </react-mdl-ListItemContent>
-        </react-mdl-ListItem>
-        <react-mdl-ListItem
-          twoLine={true}
+              </button>
+              <button
+                aria-controls="tabpanel-1"
+                aria-selected={false}
+                className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary"
+                disabled={false}
+                id="tab-1"
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                role="tab"
+                tabIndex={-1}
+                type="button"
+              >
+                <span
+                  className="MuiTab-wrapper"
+                >
+                  Edit application
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          aria-labelledby="wrapped-tab-0"
+          hidden={false}
+          id="wrapped-tabpanel-0"
+          role="tabpanel"
         >
-          <react-mdl-ListItemContent
-            icon="report"
-            subtitle="Missing, want to create?"
-          >
-            <a
-              href="/features/create?name=ToggleB"
-              onClick={[Function]}
-            >
-              ToggleB
-            </a>
-          </react-mdl-ListItemContent>
-        </react-mdl-ListItem>
-      </react-mdl-List>
-    </react-mdl-Cell>
-    <react-mdl-Cell
-      col={6}
-      phone={12}
-      tablet={4}
-    >
-      <h6>
-        Implemented strategies
-      </h6>
-      <hr />
-      <react-mdl-List>
-        <react-mdl-ListItem
-          twoLine={true}
-        >
-          <react-mdl-ListItemContent
-            icon="extension"
-            subtitle="A description"
-          >
-            <a
-              href="/strategies/view/StrategyA"
-              onClick={[Function]}
-            >
-              StrategyA
-            </a>
-          </react-mdl-ListItemContent>
-        </react-mdl-ListItem>
-        <react-mdl-ListItem
-          twoLine={true}
-        >
-          <react-mdl-ListItemContent
-            icon="report"
-            subtitle="Missing, want to create?"
-          >
-            <a
-              href="/strategies/create?name=StrategyB"
-              onClick={[Function]}
-            >
-              StrategyB
-            </a>
-          </react-mdl-ListItemContent>
-        </react-mdl-ListItem>
-      </react-mdl-List>
-    </react-mdl-Cell>
-    <react-mdl-Cell
-      col={12}
-      tablet={12}
-    >
-      <h6>
-        1
-         Instances registered
-      </h6>
-      <hr />
-      <react-mdl-List>
-        <react-mdl-ListItem
-          twoLine={true}
-        >
-          <react-mdl-ListItemContent
-            icon="timeline"
-            subtitle={
-              <span>
-                123.123.123.123
-                 last seen at 
-                <small>
-                  02/23/2017, 03:56:49 PM
-                </small>
-              </span>
+          <div
+            className="MuiGrid-root MuiGrid-container"
+            style={
+              Object {
+                "margin": 0,
+              }
             }
           >
-            instance-1
-             
-            (4.0)
-          </react-mdl-ListItemContent>
-        </react-mdl-ListItem>
-      </react-mdl-List>
-    </react-mdl-Cell>
-  </react-mdl-Grid>
-</react-mdl-Card>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-6 MuiGrid-grid-xl-6"
+            >
+              <h6
+                className="MuiTypography-root MuiTypography-subtitle1"
+                style={
+                  Object {
+                    "padding": "1rem 0",
+                  }
+                }
+              >
+                Toggles
+              </h6>
+              <hr />
+              <ul
+                className="MuiList-root MuiList-padding"
+              >
+                <li
+                  className="MuiListItem-root MuiListItem-gutters"
+                  disabled={false}
+                >
+                  <div
+                    className="MuiListItemAvatar-root"
+                  >
+                    <span
+                      className="MuiSwitch-root"
+                    >
+                      <span
+                        aria-disabled={true}
+                        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-13 MuiSwitch-switchBase MuiSwitch-colorSecondary PrivateSwitchBase-disabled-15 Mui-disabled Mui-disabled Mui-disabled"
+                        onBlur={[Function]}
+                        onDragLeave={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onKeyUp={[Function]}
+                        onMouseDown={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseUp={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchMove={[Function]}
+                        onTouchStart={[Function]}
+                        tabIndex={-1}
+                      >
+                        <span
+                          className="MuiIconButton-label"
+                        >
+                          <input
+                            className="PrivateSwitchBase-input-16 MuiSwitch-input"
+                            disabled={true}
+                            onChange={[Function]}
+                            type="checkbox"
+                            value={true}
+                          />
+                          <span
+                            className="MuiSwitch-thumb"
+                          />
+                        </span>
+                      </span>
+                      <span
+                        className="MuiSwitch-track"
+                      />
+                    </span>
+                  </div>
+                  <div
+                    className="MuiListItemText-root MuiListItemText-multiline"
+                  >
+                    <span
+                      className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                    >
+                      <a
+                        href="/features/strategies/ToggleA"
+                        onClick={[Function]}
+                      >
+                        ToggleA
+                      </a>
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                    >
+                      this is A toggle
+                    </p>
+                  </div>
+                </li>
+                <li
+                  className="MuiListItem-root MuiListItem-gutters"
+                  disabled={false}
+                >
+                  <div
+                    className="MuiListItemAvatar-root"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root"
+                    >
+                      report
+                    </span>
+                  </div>
+                  <div
+                    className="MuiListItemText-root MuiListItemText-multiline"
+                  >
+                    <span
+                      className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                    >
+                      <a
+                        href="/features/create?name=ToggleB"
+                        onClick={[Function]}
+                      >
+                        ToggleB
+                      </a>
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                    >
+                      Missing, want to create?
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-6 MuiGrid-grid-xl-6"
+            >
+              <h6
+                className="MuiTypography-root MuiTypography-subtitle1"
+                style={
+                  Object {
+                    "padding": "1rem 0",
+                  }
+                }
+              >
+                Implemented strategies
+              </h6>
+              <hr />
+              <ul
+                className="MuiList-root MuiList-padding"
+              >
+                <li
+                  className="MuiListItem-root MuiListItem-gutters"
+                  disabled={false}
+                >
+                  <div
+                    className="MuiListItemAvatar-root"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root"
+                    >
+                      extension
+                    </span>
+                  </div>
+                  <div
+                    className="MuiListItemText-root MuiListItemText-multiline"
+                  >
+                    <span
+                      className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                    >
+                      <a
+                        href="/strategies/view/StrategyA"
+                        onClick={[Function]}
+                      >
+                        StrategyA
+                      </a>
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                    >
+                      A description
+                    </p>
+                  </div>
+                </li>
+                <li
+                  className="MuiListItem-root MuiListItem-gutters"
+                  disabled={false}
+                >
+                  <div
+                    className="MuiListItemAvatar-root"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root"
+                    >
+                      report
+                    </span>
+                  </div>
+                  <div
+                    className="MuiListItemText-root MuiListItemText-multiline"
+                  >
+                    <span
+                      className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                    >
+                      <a
+                        href="/strategies/create?name=StrategyB"
+                        onClick={[Function]}
+                      >
+                        StrategyB
+                      </a>
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                    >
+                      Missing, want to create?
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-md-12 MuiGrid-grid-xl-12"
+            >
+              <h6
+                className="MuiTypography-root MuiTypography-subtitle1"
+                style={
+                  Object {
+                    "padding": "1rem 0",
+                  }
+                }
+              >
+                1
+                 Instances registered
+              </h6>
+              <hr />
+              <ul
+                className="MuiList-root MuiList-padding"
+              >
+                <li
+                  className="MuiListItem-root MuiListItem-gutters"
+                  disabled={false}
+                >
+                  <div
+                    className="MuiListItemAvatar-root"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root"
+                    >
+                      timeline
+                    </span>
+                  </div>
+                  <div
+                    className="MuiListItemText-root MuiListItemText-multiline"
+                  >
+                    <span
+                      className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                    >
+                      instance-1 (4.0)
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                    >
+                      <span>
+                        123.123.123.123
+                         last seen at 
+                        <small>
+                          02/23/2017, 03:56:49 PM
+                        </small>
+                      </span>
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div
+          aria-labelledby="wrapped-tab-1"
+          hidden={true}
+          id="wrapped-tabpanel-1"
+          role="tabpanel"
+        />
+      </div>
+    </div>
+  </div>
+</div>
 `;
 
 exports[`renders correctly without permission 1`] = `
-<react-mdl-Card
-  className="fullwidth"
-  shadow={0}
+<div
+  className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
 >
-  <react-mdl-CardTitle
-    style={
-      Object {
-        "paddingRight": "64px",
-        "paddingTop": "24px",
-        "wordBreak": "break-all",
-      }
-    }
+  <div
+    className="makeStyles-headerContainer-1"
   >
-    <react-mdl-Icon
-      name="apps"
-    />
-     
-    test-app
-  </react-mdl-CardTitle>
-  <react-mdl-CardText
-    style={
-      Object {
-        "paddingTop": "0",
-      }
-    }
-  >
-    <p>
-      app description
-    </p>
-    <p>
-      Created: 
-      <strong>
-        Invalid Date
-      </strong>
-    </p>
-  </react-mdl-CardText>
-  <react-mdl-CardMenu>
-    <a
-      className="mdl-color-text--grey-600"
-      href="http://example.org"
-      rel="noopener"
-      target="_blank"
+    <div
+      className="makeStyles-headerTitleContainer-5"
     >
-      <react-mdl-Icon
-        name="link"
-      />
-    </a>
-  </react-mdl-CardMenu>
-  
-  <react-mdl-Grid
-    style={
-      Object {
-        "margin": 0,
-      }
-    }
-  >
-    <react-mdl-Cell
-      col={6}
-      hidePhone={true}
-      phone={12}
-      tablet={4}
-    >
-      <h6>
-         Toggles
-      </h6>
-      <hr />
-      <react-mdl-List>
-        <react-mdl-ListItem
-          twoLine={true}
+      <div
+        className=""
+      >
+        <h2
+          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
         >
-          <react-mdl-ListItemContent
-            icon={
-              <span>
-                <react-mdl-Switch
-                  checked={true}
-                  disabled={true}
-                />
-              </span>
-            }
-            subtitle="this is A toggle"
-          >
-            <a
-              href="/features/view/ToggleA"
-              onClick={[Function]}
-            >
-              ToggleA
-            </a>
-          </react-mdl-ListItemContent>
-        </react-mdl-ListItem>
-        <react-mdl-ListItem
-          twoLine={true}
-        >
-          <react-mdl-ListItemContent
-            icon="report"
-            subtitle="Missing"
-          >
-            ToggleB
-          </react-mdl-ListItemContent>
-        </react-mdl-ListItem>
-      </react-mdl-List>
-    </react-mdl-Cell>
-    <react-mdl-Cell
-      col={6}
-      phone={12}
-      tablet={4}
-    >
-      <h6>
-        Implemented strategies
-      </h6>
-      <hr />
-      <react-mdl-List>
-        <react-mdl-ListItem
-          twoLine={true}
-        >
-          <react-mdl-ListItemContent
-            icon="extension"
-            subtitle="A description"
-          >
-            <a
-              href="/strategies/view/StrategyA"
-              onClick={[Function]}
-            >
-              StrategyA
-            </a>
-          </react-mdl-ListItemContent>
-        </react-mdl-ListItem>
-        <react-mdl-ListItem
-          twoLine={true}
-        >
-          <react-mdl-ListItemContent
-            icon="report"
-            subtitle="Missing"
-          >
-            StrategyB
-          </react-mdl-ListItemContent>
-        </react-mdl-ListItem>
-      </react-mdl-List>
-    </react-mdl-Cell>
-    <react-mdl-Cell
-      col={12}
-      tablet={12}
-    >
-      <h6>
-        1
-         Instances registered
-      </h6>
-      <hr />
-      <react-mdl-List>
-        <react-mdl-ListItem
-          twoLine={true}
-        >
-          <react-mdl-ListItemContent
-            icon="timeline"
-            subtitle={
-              <span>
-                123.123.123.123
-                 last seen at 
-                <small>
-                  02/23/2017, 03:56:49 PM
-                </small>
-              </span>
+          <span
+            style={
+              Object {
+                "alignItems": "center",
+                "display": "flex",
+              }
             }
           >
-            instance-1
-             
-            (4.0)
-          </react-mdl-ListItemContent>
-        </react-mdl-ListItem>
-      </react-mdl-List>
-    </react-mdl-Cell>
-  </react-mdl-Grid>
-</react-mdl-Card>
+            <div
+              className="MuiAvatar-root MuiAvatar-circle MuiAvatar-colorDefault"
+              style={
+                Object {
+                  "marginRight": "8px",
+                }
+              }
+            >
+              <span
+                aria-hidden={true}
+                className="material-icons MuiIcon-root"
+              >
+                apps
+              </span>
+            </div>
+            test-app
+          </span>
+        </h2>
+      </div>
+      <div
+        className="makeStyles-headerActions-7"
+      >
+        <a
+          aria-disabled={false}
+          className="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiButtonBase-root MuiIconButton-root MuiTypography-colorPrimary"
+          href="http://example.org"
+          onBlur={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="button"
+          tabIndex={0}
+        >
+          <span
+            className="MuiIconButton-label"
+          >
+            <span
+              aria-hidden={true}
+              className="material-icons MuiIcon-root"
+            >
+              link
+            </span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div
+    className="makeStyles-bodyContainer-2"
+  >
+    <div>
+      <p
+        className="MuiTypography-root MuiTypography-body1"
+      >
+        app description
+      </p>
+      <p
+        className="MuiTypography-root MuiTypography-body2"
+      >
+        Created: 
+        <strong>
+          Invalid Date
+        </strong>
+      </p>
+    </div>
+  </div>
+</div>
 `;

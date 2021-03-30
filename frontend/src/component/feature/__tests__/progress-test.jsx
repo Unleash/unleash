@@ -3,7 +3,7 @@ import React from 'react';
 import Progress from '../progress-component';
 import renderer from 'react-test-renderer';
 
-jest.mock('react-mdl');
+jest.mock('@material-ui/core');
 
 test('renders correctly with 15% done no fallback', () => {
     const percent = 15;

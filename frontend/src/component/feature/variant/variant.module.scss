@@ -5,7 +5,6 @@
     th,
     td {
         text-align: center;
-        width: 100px;
     }
     th:first-of-type,
     td:first-of-type {
@@ -40,8 +39,14 @@ th.actions {
 }
 
 td.actions {
+    height: 100%;
     text-align: right;
     vertical-align: top;
+}
+
+.actionsContainer {
+    display: flex;
+    align-items: center;
 }
 
 .modal {
@@ -79,4 +84,17 @@ td.actions {
 
 .marginL10 {
     margin-left: 10px;
+}
+
+.addVariantButton {
+    margin: 1rem 0;
+}
+
+.paragraph {
+    max-width: 400px;
+}
+
+.helperText {
+    display: block;
+    margin-top: 0.5rem;
 }

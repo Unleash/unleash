@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Modal from 'react-modal';
-import { Button, Textfield, DialogActions, Grid, Cell, Icon, Switch } from 'react-mdl';
-import styles from './variant.module.scss';
+import { TextField, FormControl, FormControlLabel, Grid, Icon, Switch } from '@material-ui/core';
+import Dialog from '../../common/Dialogue';
 import MySelect from '../../common/select';
 import { trim, modalStyles } from '../../common/util';
 import { weightTypes } from './enums';
 import OverrideConfig from './e-override-config';
-
-Modal.setAppElement('#app');
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -150,101 +147,105 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
     const isFixWeight = data.weightType === weightTypes.FIX;
 
     return (
-        <Modal isOpen={showDialog} contentLabel="Example Modal" style={modalStyles} onRequestClose={onCancel}>
-            <h3>{title}</h3>
+        <Dialog
+            open={showDialog}
+            contentLabel="Example Modal"
+            style={modalStyles}
+            onClose={onCancel}
+            onClick={submit}
+            primaryButtonText="Save"
+            secondaryButtonText="Cancel"
+        >
+            <>
+                <h3>{title}</h3>
 
-            <form onSubmit={submit}>
-                <p style={{ color: 'red' }}>{error.general}</p>
-                <Textfield
-                    floatingLabel
-                    label="Variant name"
-                    name="name"
-                    placeholder=""
-                    style={{ width: '100%' }}
-                    value={data.name}
-                    error={error.name}
-                    type="name"
-                    onChange={setVariantValue}
-                />
-                <br />
-                <Grid noSpacing className={styles.flex}>
-                    <Cell col={3} className={styles.flex}>
-                        <Textfield
-                            id="weight"
-                            floatingLabel
-                            label="Weight"
-                            name="weight"
-                            placeholder=""
-                            style={{ width: '40px', marginRight: '5px' }}
-                            inputClassName={styles.inputWeight}
-                            value={data.weight}
-                            error={error.weight}
-                            type="number"
-                            disabled={!isFixWeight}
-                            onChange={setVariantValue}
-                        />
-                        <span>%</span>
-                    </Cell>
-                    <Cell col={9} className={[styles.flexCenter, styles.marginL10].join(' ')}>
-                        <Switch name="weightType" checked={isFixWeight} onChange={setVariantWeightType}>
-                            Custom percentage
-                        </Switch>
-                    </Cell>
-                </Grid>
-                <p style={{ marginBottom: '0' }}>
-                    <strong>Payload </strong>
-                    <Icon name="info" title="Passed to the variant object. Can be anything (json, value, csv)" />
-                </p>
-                <Grid noSpacing>
-                    <Cell col={3}>
-                        <MySelect
-                            name="type"
-                            label="Type"
-                            style={{ width: '100%' }}
-                            value={payload.type}
-                            options={payloadOptions}
-                            onChange={onPayload}
-                        />
-                    </Cell>
-                    <Cell col={9}>
-                        <Textfield
-                            floatingLabel
-                            rows={1}
-                            label="Value"
-                            name="value"
-                            style={{ width: '100%' }}
-                            value={payload.value}
-                            onChange={onPayload}
-                        />
-                    </Cell>
-                </Grid>
-                {overrides.length > 0 && (
-                    <p style={{ marginBottom: '0' }}>
-                        <strong>Overrides </strong>
-                        <Icon name="info" title="Here you can specify which users that should get this variant." />
+                <form onSubmit={submit}>
+                    <p style={{ color: 'red' }}>{error.general}</p>
+                    <TextField
+                        label="Variant name"
+                        name="name"
+                        placeholder=""
+                        style={{ width: '100%' }}
+                        value={data.name}
+                        error={error.name}
+                        type="name"
+                        onChange={setVariantValue}
+                    />
+                    <br />
+                    <Grid container>
+                        <Grid item md={3}>
+                            <TextField
+                                id="weight"
+                                label="Weight"
+                                name="weight"
+                                placeholder=""
+                                value={data.weight}
+                                error={error.weight}
+                                type="number"
+                                disabled={!isFixWeight}
+                                onChange={setVariantValue}
+                            />
+                            <span>%</span>
+                        </Grid>
+                        <Grid item md={9}>
+                            <FormControl>
+                                <FormControlLabel
+                                    control={
+                                        <Switch name="weightType" value={isFixWeight} onChange={setVariantWeightType} />
+                                    }
+                                    label="Custom percentage"
+                                />
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <p style={{ marginBottom: '1rem' }}>
+                        <strong>Payload </strong>
+                        <Icon name="info" title="Passed to the variant object. Can be anything (json, value, csv)" />
                     </p>
-                )}
+                    <Grid container>
+                        <Grid item md={3}>
+                            <MySelect
+                                name="type"
+                                label="Type"
+                                style={{ width: '100%' }}
+                                value={payload.type}
+                                options={payloadOptions}
+                                onChange={onPayload}
+                            />
+                        </Grid>
+                        <Grid item md={9}>
+                            <TextField
+                                rows={1}
+                                label="Value"
+                                name="value"
+                                style={{ width: '100%' }}
+                                value={payload.value}
+                                onChange={onPayload}
+                                variant="outlined"
+                                size="small"
+                            />
+                        </Grid>
+                    </Grid>
+                    {overrides.length > 0 && (
+                        <p style={{ marginBottom: '.5rem' }}>
+                            <strong>Overrides </strong>
+                            <Icon name="info" title="Here you can specify which users that should get this variant." />
+                        </p>
+                    )}
 
-                <OverrideConfig
-                    overrides={overrides}
-                    removeOverride={removeOverride}
-                    updateOverrideType={updateOverrideType}
-                    updateOverrideValues={updateOverrideValues}
-                    updateValues={updateOverrideValues}
-                />
-                <a href="#add-override" onClick={onAddOverride}>
-                    <small>Add override</small>
-                </a>
-                <DialogActions>
-                    <Button type="button" raised colored type="submit">
-                        Save
-                    </Button>
-                    <Button type="button" onClick={onCancel}>
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </form>
-        </Modal>
+                    <OverrideConfig
+                        overrides={overrides}
+                        removeOverride={removeOverride}
+                        updateOverrideType={updateOverrideType}
+                        updateOverrideValues={updateOverrideValues}
+                        updateValues={updateOverrideValues}
+                    />
+                    <a href="#add-override" onClick={onAddOverride}>
+                        <small>Add override</small>
+                    </a>
+                </form>
+            </>
+        </Dialog>
     );
 }
 

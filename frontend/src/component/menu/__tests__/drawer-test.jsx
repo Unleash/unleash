@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { DrawerMenu } from '../drawer';
 
-jest.mock('react-mdl');
+jest.mock('@material-ui/core');
 
 test('should render DrawerMenu', () => {
     const tree = renderer.create(

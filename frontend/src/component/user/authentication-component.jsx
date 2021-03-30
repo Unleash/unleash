@@ -1,36 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardTitle, CardText } from 'react-mdl';
-import Modal from 'react-modal';
-import AuthenticationSimpleComponent from './authentication-simple-component';
+import { Dialog, Icon, DialogTitle } from '@material-ui/core';
+import SimpleAuth from './SimpleAuth/SimpleAuth';
 import AuthenticationCustomComponent from './authentication-custom-component';
-import AuthenticationPasswordComponent from './authentication-password-component';
+import AuthenticationPasswordComponent from './PasswordAuth/PasswordAuth';
 
 const SIMPLE_TYPE = 'unsecure';
 const PASSWORD_TYPE = 'password';
 
-const customStyles = {
-    overlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
-        zIndex: 99999,
-    },
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-        backgroundColor: 'transparent',
-        padding: 0,
-        overflow: 'none',
-    },
-};
+const customStyles = {};
 
 class AuthComponent extends React.Component {
     static propTypes = {
@@ -57,7 +35,7 @@ class AuthComponent extends React.Component {
             );
         } else if (authDetails.type === SIMPLE_TYPE) {
             content = (
-                <AuthenticationSimpleComponent
+                <SimpleAuth
                     insecureLogin={this.props.insecureLogin}
                     authDetails={authDetails}
                     loadInitialData={this.props.loadInitialData}
@@ -69,20 +47,21 @@ class AuthComponent extends React.Component {
         }
         return (
             <div>
-                <Modal isOpen={this.props.user.showDialog} contentLabel="test" style={customStyles}>
-                    <Card shadow={0}>
-                        <CardTitle
-                            expand
-                            style={{
-                                color: '#fff',
-                                background: 'rgb(96, 125, 139)',
-                            }}
-                        >
-                            Action Required
-                        </CardTitle>
-                        <CardText>{content}</CardText>
-                    </Card>
-                </Modal>
+                <Dialog open={this.props.user.showDialog} style={customStyles}>
+                    <DialogTitle
+                        id="simple-dialog-title"
+                        style={{
+                            background: 'rgb(96, 125, 139)',
+                            color: '#fff',
+                        }}
+                    >
+                        <span style={{ display: 'flex', alignItems: 'center' }}>
+                            <Icon style={{ marginRight: '8px' }}>person</Icon> Login
+                        </span>
+                    </DialogTitle>
+
+                    <div style={{ padding: '1rem' }}>{content}</div>
+                </Dialog>
             </div>
         );
     }

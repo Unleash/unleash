@@ -1,11 +1,10 @@
 import React from 'react';
-
+import { ThemeProvider } from '@material-ui/core';
 import StrategyDetails from '../strategy-details-component';
 import renderer from 'react-test-renderer';
 import { UPDATE_STRATEGY } from '../../../permissions';
 import { MemoryRouter } from 'react-router-dom';
-
-jest.mock('react-mdl');
+import theme from '../../../themes/main-theme';
 
 test('renders correctly with one strategy', () => {
     const strategy = {
@@ -35,18 +34,20 @@ test('renders correctly with one strategy', () => {
     ];
     const tree = renderer.create(
         <MemoryRouter>
-            <StrategyDetails
-                strategyName={'Another'}
-                strategy={strategy}
-                activeTab="view"
-                applications={applications}
-                toggles={toggles}
-                fetchStrategies={jest.fn()}
-                fetchApplications={jest.fn()}
-                fetchFeatureToggles={jest.fn()}
-                history={{}}
-                hasPermission={permission => [UPDATE_STRATEGY].indexOf(permission) !== -1}
-            />
+            <ThemeProvider theme={theme}>
+                <StrategyDetails
+                    strategyName={'Another'}
+                    strategy={strategy}
+                    activeTab="view"
+                    applications={applications}
+                    toggles={toggles}
+                    fetchStrategies={jest.fn()}
+                    fetchApplications={jest.fn()}
+                    fetchFeatureToggles={jest.fn()}
+                    history={{}}
+                    hasPermission={permission => [UPDATE_STRATEGY].indexOf(permission) !== -1}
+                />
+            </ThemeProvider>
         </MemoryRouter>
     );
 

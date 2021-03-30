@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, MenuItem, IconButton } from 'react-mdl';
+import { MenuItem } from '@material-ui/core';
+import DropdownMenu from '../../common/dropdown-menu';
+
+import styles from './strategy.module.scss';
 
 function resolveDefaultParamVale(name, featureToggleName) {
     switch (name) {
@@ -45,33 +48,26 @@ class AddStrategy extends React.Component {
     }
 
     render() {
-        const menuStyle = {
-            maxHeight: '400px',
-            overflowY: 'auto',
-            backgroundColor: 'rgb(247, 248, 255)',
-        };
-        const { disabled = false } = this.props;
+        const addStrategiesOptions = () =>
+            this.props.strategies
+                .filter(s => !s.deprecated)
+                .map(s => (
+                    <MenuItem key={s.name} title={s.description} onClick={() => this.addStrategy(s.name)}>
+                        {s.name}
+                    </MenuItem>
+                ));
+
         return (
-            <div style={{ position: 'relative', width: '25px', height: '25px', display: 'inline-block' }}>
-                <IconButton
-                    name="add"
+            <div>
+                <DropdownMenu
                     id="strategies-add"
-                    raised
-                    accent
-                    disabled={disabled}
-                    title="Add Strategy"
-                    onClick={this.stopPropagation}
+                    renderOptions={addStrategiesOptions}
+                    label="Add strategy"
+                    icon="add"
+                    className={styles.addStrategyButton}
+                    color="secondary"
+                    variant="contained"
                 />
-                <Menu target="strategies-add" valign="bottom" align="right" ripple style={menuStyle}>
-                    <MenuItem disabled>Add Strategy:</MenuItem>
-                    {this.props.strategies
-                        .filter(s => !s.deprecated)
-                        .map(s => (
-                            <MenuItem key={s.name} title={s.description} onClick={() => this.addStrategy(s.name)}>
-                                {s.name}
-                            </MenuItem>
-                        ))}
-                </Menu>
             </div>
         );
     }

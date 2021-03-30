@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Grid, Cell, Switch, Textfield } from 'react-mdl';
+import { Button, Grid, Switch, TextField, Typography } from '@material-ui/core';
+import PageContent from '../../../component/common/PageContent/PageContent';
 
 const initialState = {
     enabled: false,
@@ -53,123 +54,129 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, hasPermission }) {
         }
     };
     return (
-        <div>
-            <Grid style={{ background: '#EFEFEF' }}>
-                <Cell col={12}>
-                    <p>
+        <PageContent>
+            <Grid container style={{ marginBottom: '1rem' }}>
+                <Grid item md={12}>
+                    <Typography variant="subtitle1">
                         Please read the{' '}
                         <a href="https://www.unleash-hosted.com/docs/enterprise-authentication" target="_blank">
                             documentation
                         </a>{' '}
-                        to learn how to integrate with specific SMAL 2.0 providers (Okta, Keycloak, etc). <br />
-                        <br />
+                        to learn how to integrate with specific SAML 2.0 providers (Okta, Keycloak, etc). <br />
                         Callback URL: <code>https://[unleash.hostname.com]/auth/saml/callback</code>
-                    </p>
-                </Cell>
+                    </Typography>
+                </Grid>
             </Grid>
             <form onSubmit={onSubmit}>
-                <Grid>
-                    <Cell col={5}>
+                <Grid container spacing={3}>
+                    <Grid item md={5}>
                         <strong>Enable</strong>
                         <p>Enable SAML 2.0 Authentication.</p>
-                    </Cell>
-                    <Cell col={6} style={{ padding: '20px' }}>
-                        <Switch onChange={updateEnabled} name="enabled" checked={data.enabled}>
+                    </Grid>
+                    <Grid item md={6}>
+                        <Switch onChange={updateEnabled} value={data.enabled} name="enabled" checked={data.enabled}>
                             {data.enabled ? 'Enabled' : 'Disabled'}
                         </Switch>
-                    </Cell>
+                    </Grid>
                 </Grid>
-                <Grid>
-                    <Cell col={5}>
+                <Grid container spacing={3}>
+                    <Grid item md={5}>
                         <strong>Entity ID</strong>
                         <p>(Required) The Entity Identity provider issuer.</p>
-                    </Cell>
-                    <Cell col={6}>
-                        <Textfield
+                    </Grid>
+                    <Grid item md={6}>
+                        <TextField
                             onChange={updateField}
                             label="Entity ID"
                             name="entityId"
-                            placeholder=""
-                            value={data.entityId}
-                            floatingLabel
+                            value={data.entityId || ''}
                             style={{ width: '400px' }}
+                            variant="outlined"
+                            size="small"
                         />
-                    </Cell>
+                    </Grid>
                 </Grid>
-                <Grid>
-                    <Cell col={5}>
+                <Grid container spacing={3}>
+                    <Grid item md={5}>
                         <strong>Single Sign-On URL</strong>
                         <p>(Required) The url to redirect the user to for signing in.</p>
-                    </Cell>
-                    <Cell col={6}>
-                        <Textfield
+                    </Grid>
+                    <Grid item md={6}>
+                        <TextField
                             onChange={updateField}
                             label="Single Sign-On URL"
                             name="signOnUrl"
-                            value={data.signOnUrl}
-                            placeholder=""
-                            floatingLabel
+                            value={data.signOnUrl || ''}
                             style={{ width: '400px' }}
+                            variant="outlined"
+                            size="small"
                         />
-                    </Cell>
+                    </Grid>
                 </Grid>
-                <Grid>
-                    <Cell col={5}>
+                <Grid container spacing={3}>
+                    <Grid item md={5}>
                         <strong>X.509 Certificate</strong>
                         <p>(Required) The certificate used to sign the SAML 2.0 request.</p>
-                    </Cell>
-                    <Cell col={7}>
-                        <textarea
+                    </Grid>
+                    <Grid item md={7}>
+                        <TextField
                             onChange={updateField}
                             label="X.509 Certificate"
                             name="certificate"
-                            placeholder=""
-                            value={data.certificate}
-                            floatingLabel
-                            style={{ width: '100%', fontSize: '0.7em', fontFamily: 'monospace' }}
+                            value={data.certificate || ''}
+                            style={{
+                                width: '100%',
+                                fontSize: '0.7em',
+                                fontFamily: 'monospace',
+                            }}
+                            multiline
                             rows={14}
+                            rowsMax={14}
+                            variant="outlined"
+                            size="small"
                         />
-                    </Cell>
+                    </Grid>
                 </Grid>
-                <Grid>
-                    <Cell col={5}>
+                <Grid container spacing={3}>
+                    <Grid item md={5}>
                         <strong>Auto-create users</strong>
                         <p>Enable automatic creation of new users when signing in with Saml.</p>
-                    </Cell>
-                    <Cell col={6} style={{ padding: '20px' }}>
+                    </Grid>
+                    <Grid item md={6} style={{ padding: '20px' }}>
                         <Switch onChange={updateAutoCreate} name="enabled" checked={data.autoCreate}>
                             Auto-create users
                         </Switch>
-                    </Cell>
+                    </Grid>
                 </Grid>
-                <Grid>
-                    <Cell col={5}>
+                <Grid container spacing={3}>
+                    <Grid item md={5}>
                         <strong>Email domains</strong>
                         <p>(Optional) Comma separated list of email domains that should be allowed to sign in.</p>
-                    </Cell>
-                    <Cell col={6}>
-                        <Textfield
+                    </Grid>
+                    <Grid item md={6}>
+                        <TextField
                             onChange={updateField}
                             label="Email domains"
                             name="emailDomains"
-                            value={data.emailDomains}
+                            value={data.emailDomains || ''}
                             placeholder="@company.com, @anotherCompany.com"
-                            floatingLabel
                             style={{ width: '400px' }}
                             rows={2}
+                            variant="outlined"
+                            size="small"
                         />
-                    </Cell>
+                    </Grid>
                 </Grid>
-                <Grid>
-                    <Cell col={5}>
-                        <Button raised accent type="submit">
+                <Grid container spacing={3}>
+                    <Grid item md={5}>
+                        <Button variant="contained" color="primary" type="submit">
                             Save
                         </Button>{' '}
                         <small>{info}</small>
-                    </Cell>
+                    </Grid>
                 </Grid>
             </form>
-        </div>
+        </PageContent>
     );
 }
 

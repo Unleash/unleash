@@ -2,14 +2,14 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
 
-import { FooterMenu } from '../footer';
+import Footer from '../Footer/Footer';
 
-jest.mock('react-mdl');
+jest.mock('@material-ui/core');
 
 test('should render DrawerMenu', () => {
     const tree = renderer.create(
         <MemoryRouter>
-            <FooterMenu />
+            <Footer />
         </MemoryRouter>
     );
 
@@ -19,7 +19,7 @@ test('should render DrawerMenu', () => {
 test('should render DrawerMenu with "features" selected', () => {
     const tree = renderer.create(
         <MemoryRouter initialEntries={['/features']}>
-            <FooterMenu />
+            <Footer />
         </MemoryRouter>
     );
 

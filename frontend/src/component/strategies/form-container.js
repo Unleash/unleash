@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { createStrategy, updateStrategy } from '../../store/strategy/actions';
 
-import AddStrategy from './from-strategy';
+import AddStrategy from './form-strategy';
 import { loadNameFromHash } from '../common/util';
 
 class WrapperComponent extends Component {

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Card } from 'react-mdl';
+import { Card } from '@material-ui/core';
 import HistoryList from './history-list-container';
 import { styles as commonStyles } from '../common';
 
@@ -25,7 +25,7 @@ class History extends PureComponent {
         }
 
         return (
-            <Card shadow={0} className={commonStyles.fullwidth}>
+            <Card className={commonStyles.fullwidth}>
                 <HistoryList history={history} title="Recent changes" />
             </Card>
         );

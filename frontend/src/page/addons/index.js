@@ -1,5 +1,5 @@
 import React from 'react';
-import Addons from '../../component/addons/list-container';
+import Addons from '../../component/addons';
 import PropTypes from 'prop-types';
 
 const render = ({ history }) => <Addons history={history} />;

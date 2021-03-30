@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 
-import { Button, Icon, Textfield, Checkbox, Card, CardTitle, CardActions } from 'react-mdl';
+import { Button, Icon, TextField, Switch, Paper, FormControlLabel } from '@material-ui/core';
 
 import { styles as commonStyles } from '../../common';
+import styles from './copy-feature-component.module.scss';
 
 import { trim } from '../../common/util';
 
@@ -15,6 +16,7 @@ class CopyFeatureComponent extends Component {
     constructor() {
         super();
         this.state = { newToggleName: '', replaceGroupId: true };
+        this.inputRef = React.createRef();
     }
 
     // eslint-disable-next-line camelcase
@@ -27,7 +29,7 @@ class CopyFeatureComponent extends Component {
 
     componentDidMount() {
         if (this.props.copyToggle) {
-            this.refs.name.inputRef.focus();
+            this.inputRef.current.focus();
         } else {
             this.props.fetchFeatureToggles();
         }
@@ -84,47 +86,51 @@ class CopyFeatureComponent extends Component {
         const { newToggleName, nameError, replaceGroupId } = this.state;
 
         return (
-            <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
-                <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>
-                    Copy&nbsp;{copyToggle.name}
-                </CardTitle>
+            <Paper className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
+                <div className={styles.header}>
+                    <h1>Copy&nbsp;{copyToggle.name}</h1>
+                </div>
 
-                <form onSubmit={this.onSubmit}>
-                    <section style={{ padding: '16px' }}>
-                        <p>
-                            You are about to create a new feature toggle by cloning the configuration of feature
-                            toggle&nbsp;
-                            <Link to={`/features/strategies/${copyToggle.name}`}>{copyToggle.name}</Link>. You must give
-                            the new feature toggle a unique name before you can proceed.
-                        </p>
-                        <Textfield
-                            floatingLabel
+                <section className={styles.content}>
+                    <p className={styles.text}>
+                        You are about to create a new feature toggle by cloning the configuration of feature
+                        toggle&nbsp;
+                        <Link to={`/features/strategies/${copyToggle.name}`}>{copyToggle.name}</Link>. You must give the
+                        new feature toggle a unique name before you can proceed.
+                    </p>
+                    <form onSubmit={this.onSubmit}>
+                        <TextField
                             label="Feature toggle name"
                             name="name"
                             value={newToggleName}
                             error={nameError}
                             onBlur={this.onValidateName}
                             onChange={this.setValue}
-                            ref="name"
+                            error={nameError !== undefined}
+                            helperText={nameError}
+                            variant="outlined"
+                            size="small"
+                            inputRef={this.inputRef}
                         />
-                        <br />
-                        <br />
-                        <Checkbox
-                            checked={replaceGroupId}
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    value={replaceGroupId}
+                                    checked={replaceGroupId}
+                                    label="Replace groupId"
+                                    onChange={this.toggleReplaceGroupId}
+                                />
+                            }
                             label="Replace groupId"
-                            onChange={this.toggleReplaceGroupId}
                         />
-                        <br />
-                    </section>
-                    <CardActions>
-                        <Button type="submit" ripple raised primary>
-                            <Icon name="file_copy" />
-                            &nbsp;&nbsp;&nbsp; Copy feature toggle
+
+                        <Button type="submit" color="primary" variant="contained">
+                            <Icon>file_copy</Icon>
+                            &nbsp;&nbsp;&nbsp; Create from copy
                         </Button>
-                        <br />
-                    </CardActions>
-                </form>
-            </Card>
+                    </form>
+                </section>
+            </Paper>
         );
     }
 }

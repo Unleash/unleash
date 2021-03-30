@@ -1,0 +1,381 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with one feature 1`] = `
+<div>
+  <div
+    className="makeStyles-searchBarContainer-3"
+  >
+    <div>
+      <div
+        className="makeStyles-search-4"
+      >
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root makeStyles-searchIcon-5"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+          />
+        </svg>
+        <div
+          className="MuiInputBase-root makeStyles-inputRoot-6"
+          onClick={[Function]}
+          onKeyPress={[Function]}
+        >
+          <input
+            aria-label="search"
+            className="MuiInputBase-input"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder="Search…"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
+  >
+    <div
+      className="makeStyles-headerContainer-7"
+    >
+      <div
+        className="makeStyles-headerTitleContainer-11"
+      >
+        <div
+          className=""
+        >
+          <h2
+            className="MuiTypography-root makeStyles-headerTitle-12 MuiTypography-h2"
+          >
+            Feature toggles
+          </h2>
+        </div>
+        <div
+          className="makeStyles-headerActions-13"
+        >
+          <div
+            className="makeStyles-actionsContainer-1"
+          >
+            <div
+              className="makeStyles-actions-14"
+            >
+              <button
+                aria-controls="metric"
+                aria-haspopup="true"
+                className="MuiButtonBase-root MuiButton-root MuiButton-text"
+                disabled={false}
+                id="metric"
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={0}
+                title="Metric interval"
+                type="button"
+              >
+                <span
+                  className="MuiButton-label"
+                >
+                  Last minute
+                  <span
+                    className="MuiButton-endIcon MuiButton-iconSizeMedium"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root"
+                    >
+                      arrow_drop_down
+                    </span>
+                  </span>
+                </span>
+              </button>
+              <button
+                aria-controls="sorting"
+                aria-haspopup="true"
+                className="MuiButtonBase-root MuiButton-root MuiButton-text"
+                disabled={false}
+                id="sorting"
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={0}
+                title="Sort by"
+                type="button"
+              >
+                <span
+                  className="MuiButton-label"
+                >
+                  By name
+                  <span
+                    className="MuiButton-endIcon MuiButton-iconSizeMedium"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root"
+                    >
+                      arrow_drop_down
+                    </span>
+                  </span>
+                </span>
+              </button>
+            </div>
+            <a
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+              data-test="add-feature-btn"
+              href="/features/create"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <span
+                className="MuiButton-label"
+              >
+                Create feature toggle
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="makeStyles-bodyContainer-8"
+    >
+      <ul
+        className="MuiList-root MuiList-padding"
+      >
+        <ListItem
+          feature={
+            Object {
+              "name": "Another",
+              "reviveName": "Another",
+            }
+          }
+          hasPermission={[Function]}
+          settings={
+            Object {
+              "sort": "name",
+            }
+          }
+          toggleFeature={[MockFunction]}
+        />
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`renders correctly with one feature without permissions 1`] = `
+<div>
+  <div
+    className="makeStyles-searchBarContainer-3"
+  >
+    <div>
+      <div
+        className="makeStyles-search-4"
+      >
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root makeStyles-searchIcon-5"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+          />
+        </svg>
+        <div
+          className="MuiInputBase-root makeStyles-inputRoot-6"
+          onClick={[Function]}
+          onKeyPress={[Function]}
+        >
+          <input
+            aria-label="search"
+            className="MuiInputBase-input"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder="Search…"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
+  >
+    <div
+      className="makeStyles-headerContainer-7"
+    >
+      <div
+        className="makeStyles-headerTitleContainer-11"
+      >
+        <div
+          className=""
+        >
+          <h2
+            className="MuiTypography-root makeStyles-headerTitle-12 MuiTypography-h2"
+          >
+            Feature toggles
+          </h2>
+        </div>
+        <div
+          className="makeStyles-headerActions-13"
+        >
+          <div
+            className="makeStyles-actionsContainer-1"
+          >
+            <div
+              className="makeStyles-actions-14"
+            >
+              <button
+                aria-controls="metric"
+                aria-haspopup="true"
+                className="MuiButtonBase-root MuiButton-root MuiButton-text"
+                disabled={false}
+                id="metric"
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={0}
+                title="Metric interval"
+                type="button"
+              >
+                <span
+                  className="MuiButton-label"
+                >
+                  Last minute
+                  <span
+                    className="MuiButton-endIcon MuiButton-iconSizeMedium"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root"
+                    >
+                      arrow_drop_down
+                    </span>
+                  </span>
+                </span>
+                <span
+                  className="MuiTouchRipple-root"
+                />
+              </button>
+              <button
+                aria-controls="sorting"
+                aria-haspopup="true"
+                className="MuiButtonBase-root MuiButton-root MuiButton-text"
+                disabled={false}
+                id="sorting"
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={0}
+                title="Sort by"
+                type="button"
+              >
+                <span
+                  className="MuiButton-label"
+                >
+                  By name
+                  <span
+                    className="MuiButton-endIcon MuiButton-iconSizeMedium"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root"
+                    >
+                      arrow_drop_down
+                    </span>
+                  </span>
+                </span>
+                <span
+                  className="MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="makeStyles-bodyContainer-8"
+    >
+      <ul
+        className="MuiList-root MuiList-padding"
+      >
+        <ListItem
+          feature={
+            Object {
+              "name": "Another",
+              "reviveName": "Another",
+            }
+          }
+          hasPermission={[Function]}
+          settings={
+            Object {
+              "sort": "name",
+            }
+          }
+          toggleFeature={[MockFunction]}
+        />
+      </ul>
+    </div>
+  </div>
+</div>
+`;

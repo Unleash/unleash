@@ -1,3 +1,5 @@
+/** Select **/
+
 .truncate {
     white-space: nowrap;
     overflow: hidden;
@@ -42,27 +44,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 64px;
-
-    .title {
-        padding: 20px 16px 20px 24px;
-    }
 
     .titleText {
         margin: 0;
         font-size: 20px;
-        line-height: 24px
+        line-height: 24px;
     }
 
     .actions {
         flex-shrink: 0;
-        padding: 20px 14px 20px 16px;
     }
 }
 
 .switchWithLabel {
     display: flex;
-    
+
     .label {
         padding-right: 16px;
         line-height: 24px;
@@ -106,4 +102,30 @@
 
 .error {
     color: #d50000;
+}
+
+.headerTitle {
+    font-size: var(--h1-size);
+    margin: 0;
+}
+
+.listItem {
+    padding: 0;
+}
+
+.section {
+    padding: 8px 16px 8px 16px;
+}
+
+.contentPadding {
+    padding: var(--card-padding);
+}
+
+.contentSpacing > * {
+    margin: 0.5rem 0;
+}
+
+.searchField {
+    margin-bottom: 2rem;
+    max-width: 400px;
 }

@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const devMode = process.env.NODE_ENV !== 'production';
 const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 const entry = ['whatwg-fetch', './src/index'];
@@ -73,7 +74,9 @@ module.exports = {
             {
                 test: /(\.scss)$/,
                 use: [
-                    { loader: devMode ? 'style-loader' : MiniCssExtractPlugin.loader },
+                    {
+                        loader: devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+                    },
                     {
                         loader: 'css-loader',
                         options: {
@@ -94,7 +97,12 @@ module.exports = {
             },
             {
                 test: /(\.css)$/,
-                use: [{ loader: devMode ? 'style-loader' : MiniCssExtractPlugin.loader }, { loader: 'css-loader' }],
+                use: [
+                    {
+                        loader: devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+                    },
+                    { loader: 'css-loader' },
+                ],
             },
         ],
     },

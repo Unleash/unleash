@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { fetchArchive, revive } from './../../store/archive/actions';
-import ViewToggleComponent from './../feature/view/view-component';
+import ViewToggleComponent from '../feature/FeatureView/FeatureView';
 import { hasPermission } from '../../permissions';
 import { fetchTags } from '../../store/feature-tags/actions';
 

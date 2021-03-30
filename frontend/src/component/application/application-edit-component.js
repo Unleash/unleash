@@ -2,12 +2,16 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Card, CardActions, CardTitle, CardText, CardMenu, Icon, ProgressBar, Tabs, Tab } from 'react-mdl';
-import { IconLink, styles as commonStyles } from '../common';
+import { Avatar, Link, Icon, IconButton, Button, LinearProgress, Typography } from '@material-ui/core';
+import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
 import { formatFullDateTimeWithLocale, formatDateWithLocale } from '../common/util';
 import { UPDATE_APPLICATION } from '../../permissions';
 import ApplicationView from './application-view';
 import ApplicationUpdate from './application-update';
+import TabNav from '../common/TabNav/TabNav';
+import Dialogue from '../common/Dialogue';
+import PageContent from '../common/PageContent';
+import HeaderTitle from '../common/HeaderTitle';
 
 class ClientApplications extends PureComponent {
     static propTypes = {
@@ -23,7 +27,11 @@ class ClientApplications extends PureComponent {
 
     constructor(props) {
         super();
-        this.state = { activeTab: 0, loading: !props.application };
+        this.state = {
+            activeTab: 0,
+            loading: !props.application,
+            prompt: false,
+        };
     }
 
     componentDidMount() {
@@ -34,9 +42,11 @@ class ClientApplications extends PureComponent {
 
     deleteApplication = async evt => {
         evt.preventDefault();
+        // if (window.confirm('Are you sure you want to remove this application?')) {
         const { deleteApplication, appName } = this.props;
         await deleteApplication(appName);
         this.props.history.push('/applications');
+        // }
     };
 
     render() {
@@ -44,7 +54,7 @@ class ClientApplications extends PureComponent {
             return (
                 <div>
                     <p>Loading...</p>
-                    <ProgressBar indeterminate />
+                    <LinearProgress />
                 </div>
             );
         } else if (!this.props.application) {
@@ -53,69 +63,98 @@ class ClientApplications extends PureComponent {
         const { application, storeApplicationMetaData, hasPermission } = this.props;
         const { appName, instances, strategies, seenToggles, url, description, icon = 'apps', createdAt } = application;
 
-        const content =
-            this.state.activeTab === 0 ? (
-                <ApplicationView
-                    strategies={strategies}
-                    instances={instances}
-                    seenToggles={seenToggles}
-                    hasPermission={hasPermission}
-                    formatFullDateTime={this.formatFullDateTime}
-                />
-            ) : (
-                <ApplicationUpdate application={application} storeApplicationMetaData={storeApplicationMetaData} />
-            );
+        const toggleModal = () => {
+            this.setState(prev => ({ ...prev, prompt: !prev.prompt }));
+        };
+
+        const renderModal = () => (
+            <Dialogue
+                open={this.state.prompt}
+                onClose={toggleModal}
+                onClick={this.deleteApplication}
+                title="Are you sure you want to delete this application?"
+            />
+        );
+
+        const tabData = [
+            {
+                label: 'Application overview',
+                component: (
+                    <ApplicationView
+                        strategies={strategies}
+                        instances={instances}
+                        seenToggles={seenToggles}
+                        hasPermission={hasPermission}
+                        formatFullDateTime={this.formatFullDateTime}
+                    />
+                ),
+            },
+            {
+                label: 'Edit application',
+                component: (
+                    <ApplicationUpdate application={application} storeApplicationMetaData={storeApplicationMetaData} />
+                ),
+            },
+        ];
 
         return (
-            <Card shadow={0} className={commonStyles.fullwidth}>
-                <CardTitle style={{ paddingTop: '24px', paddingRight: '64px', wordBreak: 'break-all' }}>
-                    <Icon name={icon || 'apps'} />
-                    &nbsp;{appName}
-                </CardTitle>
-                <CardText style={{ paddingTop: '0' }}>
-                    <p>{description || ''}</p>
-                    <p>
-                        Created: <strong>{this.formatDate(createdAt)}</strong>
-                    </p>
-                </CardText>
-                {url && (
-                    <CardMenu>
-                        <IconLink url={url} icon="link" />
-                    </CardMenu>
-                )}
-                {hasPermission(UPDATE_APPLICATION) ? (
-                    <div>
-                        <CardActions
-                            border
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <span />
-                            <Button accent title="Delete application" onClick={this.deleteApplication}>
-                                Delete
-                            </Button>
-                        </CardActions>
-                        <hr />
-                        <Tabs
-                            activeTab={this.state.activeTab}
-                            onChange={tabId => this.setState({ activeTab: tabId })}
-                            ripple
-                            tabBarProps={{ style: { width: '100%' } }}
-                            className="mdl-color--grey-100"
-                        >
-                            <Tab>Details</Tab>
-                            <Tab>Edit</Tab>
-                        </Tabs>
-                    </div>
-                ) : (
-                    ''
-                )}
+            <PageContent
+                headerContent={
+                    <HeaderTitle
+                        title={
+                            <span
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Avatar style={{ marginRight: '8px' }}>
+                                    <Icon>{icon || 'apps'}</Icon>
+                                </Avatar>
+                                {appName}
+                            </span>
+                        }
+                        actions={
+                            <>
+                                <ConditionallyRender
+                                    condition={url}
+                                    show={
+                                        <IconButton component={Link} href={url}>
+                                            <Icon>link</Icon>
+                                        </IconButton>
+                                    }
+                                />
 
-                {content}
-            </Card>
+                                <ConditionallyRender
+                                    condition={hasPermission(UPDATE_APPLICATION)}
+                                    show={
+                                        <Button color="secondary" title="Delete application" onClick={toggleModal}>
+                                            Delete
+                                        </Button>
+                                    }
+                                />
+                            </>
+                        }
+                    />
+                }
+            >
+                <div>
+                    <Typography variant="body1">{description || ''}</Typography>
+                    <Typography variant="body2">
+                        Created: <strong>{this.formatDate(createdAt)}</strong>
+                    </Typography>
+                </div>
+                <ConditionallyRender
+                    condition={hasPermission(UPDATE_APPLICATION)}
+                    show={
+                        <div>
+                            {renderModal()}
+
+                            <TabNav tabData={tabData} />
+                        </div>
+                    }
+                />
+            </PageContent>
         );
     }
 }

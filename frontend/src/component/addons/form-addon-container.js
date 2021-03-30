@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import FormComponent from './form-addon-component';
 import { updateAddon, createAddon, fetchAddons } from '../../store/addons/actions';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash.clonedeep';
 
 // Required for to fill the initial form.
 const DEFAULT_DATA = {

@@ -1,11 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`breadcrumb for /features 1`] = `
-<span
-  className="mdl-layout--large-screen-only"
->
+<span>
   <span
-    className="headerTitleLink mdl-color-text--primary-contrast"
+    className="headerTitleLink"
   >
     Feature Toggles
   </span>
@@ -15,20 +13,18 @@ exports[`breadcrumb for /features 1`] = `
 exports[`breadcrumb for /features/view/Demo 1`] = `
 <span>
   <a
-    className="headerTitleLink mdl-color-text--primary-contrast"
+    className="headerTitleLink"
     href="/features"
     onClick={[Function]}
   >
     Feature Toggles
   </a>
-  <span
-    className="mdl-layout--large-screen-only"
-  >
+  <span>
     <span>
        › 
     </span>
     <span
-      className="headerTitleLink mdl-color-text--primary-contrast"
+      className="headerTitleLink"
     >
       Demo
     </span>
@@ -37,11 +33,9 @@ exports[`breadcrumb for /features/view/Demo 1`] = `
 `;
 
 exports[`breadcrumb for /strategies 1`] = `
-<span
-  className="mdl-layout--large-screen-only"
->
+<span>
   <span
-    className="headerTitleLink mdl-color-text--primary-contrast"
+    className="headerTitleLink"
   >
     Strategies
   </span>

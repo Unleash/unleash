@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
 import Features from '../page/features';
-import { routes } from './menu/routes';
-import styles from './styles.module.scss';
 import AuthenticationContainer from './user/authentication-container';
 import MainLayout from './layout/main';
 
+import { routes } from './menu/routes';
+
+import styles from './styles.module.scss';
 class App extends PureComponent {
     static propTypes = {
         location: PropTypes.object.isRequired,

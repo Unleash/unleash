@@ -1,20 +1,26 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { createStore } from 'redux';
 
-import ViewFeatureToggleComponent from './../view-component';
+import { Provider } from 'react-redux';
+
+import { ThemeProvider } from '@material-ui/core';
+import ViewFeatureToggleComponent from '../../FeatureView/FeatureView';
 import renderer from 'react-test-renderer';
 import { DELETE_FEATURE, UPDATE_FEATURE } from '../../../../permissions';
 
-jest.mock('react-mdl');
+import theme from '../../../../themes/main-theme';
+
 jest.mock('../update-strategies-container', () => ({
     __esModule: true,
     default: 'UpdateStrategiesComponent',
 }));
 jest.mock('../../feature-type-select-container', () => 'FeatureTypeSelect');
-jest.mock('../../project-select-container', () => 'ProjectSelect');
+jest.mock('../../../common/ProjectSelect', () => 'ProjectSelect');
 jest.mock('../../tag-type-select-container', () => 'TagTypeSelect');
 jest.mock('../../feature-tag-component', () => 'FeatureTagComponent');
 jest.mock('../../add-tag-dialog-container', () => 'AddTagDialog');
+
 test('renders correctly with one feature', () => {
     const feature = {
         name: 'Another',
@@ -32,20 +38,43 @@ test('renders correctly with one feature', () => {
         ],
         createdAt: '2018-02-04T20:27:52.127Z',
     };
+
+    const mockStore = {
+        projects: {
+            toJS: () => [
+                { id: 'default', initial: false, name: 'Default' },
+                { id: 'myProject', initial: false, name: 'MyProject' },
+            ],
+        },
+        uiConfig: {
+            toJS: () => ({
+                flags: {
+                    P: true,
+                },
+            }),
+        },
+    };
+
+    const mockReducer = state => state;
+
     const tree = renderer.create(
         <MemoryRouter>
-            <ViewFeatureToggleComponent
-                activeTab={'strategies'}
-                featureToggleName="another"
-                features={[feature]}
-                featureToggle={feature}
-                fetchFeatureToggles={jest.fn()}
-                history={{}}
-                featureTags={[]}
-                hasPermission={permission => [DELETE_FEATURE, UPDATE_FEATURE].indexOf(permission) !== -1}
-                fetchTags={jest.fn()}
-                untagFeature={jest.fn()}
-            />
+            <Provider store={createStore(mockReducer, mockStore)}>
+                <ThemeProvider theme={theme}>
+                    <ViewFeatureToggleComponent
+                        activeTab={'strategies'}
+                        featureToggleName="another"
+                        features={[feature]}
+                        featureToggle={feature}
+                        fetchFeatureToggles={jest.fn()}
+                        history={{}}
+                        featureTags={[]}
+                        hasPermission={permission => [DELETE_FEATURE, UPDATE_FEATURE].indexOf(permission) !== -1}
+                        fetchTags={jest.fn()}
+                        untagFeature={jest.fn()}
+                    />
+                </ThemeProvider>
+            </Provider>
         </MemoryRouter>
     );
 

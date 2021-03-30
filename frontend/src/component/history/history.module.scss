@@ -1,10 +1,10 @@
-.history {    
+.history {
     code {
         word-wrap: break-word;
         white-space: pre;
         font-family: monospace;
         line-height: 100%;
-        color: #0B8C8F
+        color: #0b8c8f;
     }
 
     code > .diff-N {
@@ -15,7 +15,8 @@
         color: red;
     }
 
-    code > .diff-A, .diff-E {
+    code > .diff-A,
+    .diff-E {
         color: black;
     }
 
@@ -30,7 +31,6 @@
     .blue {
         color: blue;
     }
-
 
     dl {
         padding: 0em;
@@ -54,4 +54,11 @@
 
 .history-item {
     padding: 5px;
+}
+
+.eventEntry {
+    border: 1px solid #f1f1f1;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 3px;
 }

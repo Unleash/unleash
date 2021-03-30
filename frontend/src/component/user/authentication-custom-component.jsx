@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CardActions, Button } from 'react-mdl';
+import { CardActions, Button } from '@material-ui/core';
 
 class AuthenticationCustomComponent extends React.Component {
     static propTypes = {

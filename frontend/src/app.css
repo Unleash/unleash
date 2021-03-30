@@ -1,17 +1,74 @@
+* {
+    box-sizing: border-box;
+}
 
+html {
+    height: 100%;
+    overflow: auto;
+}
+body {
+    height: 100%;
+}
 
-html { height: 100%; overflow:auto; }
-body { height: 100%; }
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: #e2e8f0;
+    z-index: 9999;
+    box-shadow: none;
+}
+
+.skeleton::before {
+    background-color: #e2e8f0;
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    content-visibility: hidden;
+    bottom: 0;
+    z-index: 5000;
+    left: 0;
+}
+
+.skeleton::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.2) 100%,
+        rgba(255, 255, 255, 0.5) 100%,
+        rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 3s infinite;
+    content: "";
+    z-index: 5001;
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
 
 :root {
     /* FONT SIZE */
     --h1-size: 1.25rem;
-    --p-size: 1.1rem;
+    --p-size: 1rem;
+    --caption-size: 0.9rem;
 
     /* PADDING */
     --card-padding: 2rem;
     --card-padding-x: 2rem;
     --card-padding-y: 2rem;
+    --card-header-padding: 1rem 2rem;
+    --drawer-padding: 1rem 1.5rem;
+    --page-padding: 2rem 0;
+    --list-header-padding: 1rem;
 
     /* MARGIN */
     --card-margin-y: 1rem;
@@ -21,6 +78,25 @@ body { height: 100%; }
     --success: #3bd86e;
     --danger: #d95e5e;
     --warning: #d67c3d;
+    --drawer-link-active: #000;
+    --drawer-link-active-bg: #f1f1f1;
+    --drawer-link-inactive: #424242;
+    --primary: #607d8b;
+
+    /* WIDTHS */
+    --drawer-width: 250px;
+    --dropdownMenuWidth: 200px;
+
+    /* BOX SHADOWS */
+    --chip-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+    /* BORDERS */
+    --default-border: 1px solid #f1f1f1;
+}
+
+body {
+    font-size: 16px;
 }
 
 h1,
@@ -28,4 +104,23 @@ h2 {
     padding: 0;
     margin: 0;
     line-height: 24px;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+#app {
+    height: 100%;
+}
+
+.MuiCardHeader-title {
+    font-size: var(--p-size);
+}
+
+@media screen and (max-width: 1024px) {
+    :root {
+        --drawer-padding: 0.75rem 1.25rem;
+    }
 }

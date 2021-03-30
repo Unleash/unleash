@@ -1,16 +1,17 @@
 import 'whatwg-fetch';
-import 'react-mdl/extra/material.js';
 
-import 'react-mdl/extra/css/material.blue_grey-pink.min.css';
 import './app.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { ThemeProvider, CssBaseline } from '@material-ui/core';
 import thunkMiddleware from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
+import { StylesProvider } from '@material-ui/core/styles';
 
+import mainTheme from './themes/main-theme';
 import store from './store';
 import MetricsPoller from './metrics-poller';
 import App from './component/app';
@@ -33,9 +34,14 @@ metricsPoller.start();
 ReactDOM.render(
     <Provider store={unleashStore}>
         <HashRouter>
-            <ScrollToTop>
-                <Route path="/" component={App} />
-            </ScrollToTop>
+            <ThemeProvider theme={mainTheme}>
+                <StylesProvider injectFirst>
+                    <CssBaseline />
+                    <ScrollToTop>
+                        <Route path="/" component={App} />
+                    </ScrollToTop>
+                </StylesProvider>
+            </ThemeProvider>
         </HashRouter>
     </Provider>,
     document.getElementById('app')

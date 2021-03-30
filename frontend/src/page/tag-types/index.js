@@ -1,5 +1,5 @@
 import React from 'react';
-import TagTypes from '../../component/tag-types/list-container';
+import TagTypes from '../../component/tag-types';
 import PropTypes from 'prop-types';
 
 const render = ({ history }) => <TagTypes history={history} />;

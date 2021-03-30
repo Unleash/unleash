@@ -16,10 +16,10 @@ const mapStateToProps = (state, props) => {
     };
 };
 
-const Constainer = connect(mapStateToProps, {
+const Container = connect(mapStateToProps, {
     fetchApplication,
     storeApplicationMetaData,
     deleteApplication,
 })(ApplicationEdit);
 
-export default Constainer;
+export default Container;

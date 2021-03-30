@@ -1,17 +1,21 @@
 .item {
     flex: 1;
-    min-width: 400px;
-    max-width: 537px;
+    width: 100%;
     margin: 5px 0 5px 5px;
     position: relative;
     z-index: 1;
-};
+    margin-bottom: 2rem;
+}
 
 .card {
     width: 100%;
     display: block;
     background-color: #f2f9fc;
-    overflow: 'visible';
+    overflow: "visible";
+}
+
+.paragraph {
+    max-width: 400px;
 }
 
 .cardText {
@@ -61,18 +65,21 @@
 }
 */
 
+.actionButton {
+    color: #fff;
+}
+
 .cardTitle {
     color: #fff;
-    height: 65px;
-    background-color: rgba(96, 125, 139, .85) !important;
+    background-color: var(--primary);
 }
 
 .helpText {
-    color: rgba(0,0,0, 0.54);
+    color: rgba(0, 0, 0, 0.54);
     font-size: 12px;
     line-height: 14px;
-};
-
+    margin: 0.5rem 0;
+}
 
 .editLink {
     color: #fff;
@@ -88,18 +95,60 @@
 
     &.disabled {
         cursor: default;
-        color: silver;
+        background-color: #f1f1f1;
+        color: #f1f1f1;
     }
+}
+
+.strategyListAdd {
+    padding: var(--card-padding);
+    margin-top: 2rem;
 }
 
 .strategyList {
     display: flex;
     flex-wrap: wrap;
-    padding: 10px;
+    flex-direction: column;
+    margin-top: 2rem;
+}
+
+.strategyListCards {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    padding: 1.5rem 0;
+}
+
+.infoCard {
+    margin-top: 2rem;
+}
+
+.strategyListCards > * {
+    margin: 0.25rem;
 }
 
 .strategyListAdd {
     background-color: #f9f9f9;
+}
+
+.generalSection {
+    margin: 1rem 0;
+}
+
+/*
+    ADD STRATEGY
+*/
+.addStrategyButton {
+    font-size: 0.935rem;
+}
+
+.subheader {
+    color: #fff;
+}
+
+.isDirty {
+    background-color: #f3e5f5;
 }
 
 @media (max-width: 500px) {
@@ -107,4 +156,3 @@
         padding: 0;
     }
 }
-

@@ -1,34 +1,50 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, Chip } from 'react-mdl';
-import styles from './variant.module.scss';
+import { IconButton, Chip, Icon, TableCell, TableRow } from '@material-ui/core';
 import { UPDATE_FEATURE } from '../../../permissions';
 import { weightTypes } from './enums';
 
+import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+
+import styles from './variant.module.scss';
 function VariantViewComponent({ variant, editVariant, removeVariant, hasPermission }) {
     const { FIX } = weightTypes;
     return (
-        <tr>
-            <td onClick={editVariant}>{variant.name}</td>
-            <td className={styles.labels}>
-                {variant.payload ? <Chip>Payload</Chip> : undefined}{' '}
-                {variant.overrides && variant.overrides.length > 0 ? (
-                    <Chip style={{ backgroundColor: 'rgba(173, 216, 230, 0.2)' }}>Overrides</Chip>
-                ) : (
-                    undefined
-                )}
-            </td>
-            <td>{variant.weight / 10.0} %</td>
-            <td>{variant.weightType === FIX ? 'Fix' : 'Variable'}</td>
-            {hasPermission(UPDATE_FEATURE) ? (
-                <td className={styles.actions}>
-                    <IconButton name="edit" onClick={editVariant} />
-                    <IconButton name="delete" onClick={removeVariant} />
-                </td>
-            ) : (
-                <td className={styles.actions} />
-            )}
-        </tr>
+        <TableRow>
+            <TableCell onClick={editVariant}>{variant.name}</TableCell>
+            <TableCell className={styles.chipContainer}>
+                <ConditionallyRender condition={variant.payload} show={<Chip label="Payload" />} />
+                <ConditionallyRender
+                    condition={variant.overrides && variant.overrides.length > 0}
+                    show={
+                        <Chip
+                            style={{
+                                backgroundColor: 'rgba(173, 216, 230, 0.2)',
+                            }}
+                            label="Overrides"
+                        />
+                    }
+                />
+            </TableCell>
+            <TableCell>{variant.weight / 10.0} %</TableCell>
+            <TableCell>{variant.weightType === FIX ? 'Fix' : 'Variable'}</TableCell>
+            <ConditionallyRender
+                condition={hasPermission(UPDATE_FEATURE)}
+                show={
+                    <TableCell className={styles.actions}>
+                        <div className={styles.actionsContainer}>
+                            <IconButton onClick={editVariant}>
+                                <Icon>edit</Icon>
+                            </IconButton>
+                            <IconButton onClick={removeVariant}>
+                                <Icon>delete</Icon>
+                            </IconButton>
+                        </div>
+                    </TableCell>
+                }
+                elseShow={<TableCell className={styles.actions} />}
+            />
+        </TableRow>
     );
 }
 

@@ -1,0 +1,65 @@
+.header {
+    padding: var(--card-header-padding);
+    margin-bottom: var(--card-margin-y);
+    word-break: break-all;
+    border-bottom: var(--default-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header h1 {
+    font-size: var(--h1-size);
+}
+
+.formButtons {
+    padding-top: 1rem;
+}
+
+.supporting {
+    font-size: var(--caption-size);
+    max-width: 450px;
+}
+
+.container {
+    padding: var(--card-padding);
+}
+
+.container section {
+    margin: 1rem 0
+}
+
+.h6 {
+    margin-top: 0;
+}
+
+.alpha {
+    color: rgba(0,0,0,.54);
+}
+
+.inset {
+    background-color: rgb(250, 250, 250);
+    padding: var(--card-padding);
+    max-width: 450px;
+}
+
+.chip {
+    margin-right: 4px;
+}
+
+.valueField {
+    width: 130px;
+}
+
+.legalValueButton {
+    margin-left: 10px;
+}
+
+.formContainer {
+    margin-bottom: 1.5rem;
+    max-width: 350px;
+}
+
+.formContainer > *, .inset > * {
+    margin: 0.5rem 0;
+}

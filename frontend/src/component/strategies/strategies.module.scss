@@ -11,5 +11,51 @@
     a {
         color: #1d1818;
     }
-    
+}
+
+.formButtons {
+    padding-top: 1rem;
+}
+
+.header {
+    padding: var(--card-header-padding);
+    margin-bottom: var(--card-margin-y);
+    word-break: break-all;
+    border-bottom: var(--default-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header h1 {
+    font-size: var(--h1-size);
+}
+
+.formContainer {
+    margin-bottom: 1.5rem;
+    max-width: 350px;
+}
+
+.formContainer > *,
+.inset > * {
+    margin: 0.5rem 0;
+}
+
+.parameter_menu {
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.04),
+        0 3px 1px -2px rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    margin-left: 10px;
+    border: 1px solid #f1f1f1;
+    background-color: white;
+    padding: 10px 2px 10px 20px;
+}
+
+.listcontainer {
+    padding: 0 0.5rem;
+}
+
+.listItem {
+    padding: 0;
 }

@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { List, ListItem, ListItemAction, ListItemContent, IconButton, Card } from 'react-mdl';
+import { List, ListItem, IconButton, Icon, Paper, ListItemAvatar, ListItemText, Tooltip } from '@material-ui/core';
 import { HeaderTitle, styles as commonStyles } from '../common';
-import { CREATE_PROJECT, DELETE_PROJECT, UPDATE_PROJECT } from '../../permissions';
+import { CREATE_PROJECT, DELETE_PROJECT } from '../../permissions';
+import ConditionallyRender from '../common/conditionally-render';
 
 class ProjectListComponent extends Component {
     static propTypes = {
@@ -25,62 +26,69 @@ class ProjectListComponent extends Component {
         this.props.removeProject(project);
     };
 
+    projectLink = ({ id, name }) => (
+        <Link to={`/projects/edit/${id}`}>
+            <strong>{name}</strong>
+        </Link>
+    );
+
+    deleteProjectButton = project => (
+        <Tooltip title="Remove project">
+            <IconButton aria-label="delete" onClick={this.removeProject.bind(this, project)}>
+                <Icon>delete</Icon>
+            </IconButton>
+        </Tooltip>
+    );
+
+    projectList = () => {
+        const { projects, hasPermission } = this.props;
+        return projects.map((project, i) => (
+            <ListItem key={i}>
+                <ListItemAvatar>
+                    <Icon>folder_open</Icon>
+                </ListItemAvatar>
+                <ListItemText primary={this.projectLink(project)} secondary={project.description} />
+                <ConditionallyRender
+                    condition={hasPermission(DELETE_PROJECT)}
+                    show={this.deleteProjectButton(project)}
+                />
+            </ListItem>
+        ));
+    };
+
+    addProjectButton = () => {
+        const { hasPermission } = this.props;
+        return (
+            <ConditionallyRender
+                condition={hasPermission(CREATE_PROJECT)}
+                show={
+                    <Tooltip title="Add new project">
+                        <IconButton
+                            aria-label="add-project"
+                            onClick={() => this.props.history.push('/projects/create')}
+                        >
+                            <Icon>add</Icon>
+                        </IconButton>
+                    </Tooltip>
+                }
+            />
+        );
+    };
+
     render() {
-        const { projects, hasPermission, rbacEnabled } = this.props;
+        const { projects } = this.props;
 
         return (
-            <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
-                <HeaderTitle
-                    title="Projects (beta)"
-                    actions={
-                        hasPermission(CREATE_PROJECT) ? (
-                            <IconButton
-                                raised
-                                colored
-                                accent
-                                name="add"
-                                onClick={() => this.props.history.push('/projects/create')}
-                                title="Add new project field"
-                            />
-                        ) : (
-                            ''
-                        )
-                    }
-                />
+            <Paper shadow={0} className={commonStyles.fullwidth}>
+                <HeaderTitle title="Projects (beta)" actions={this.addProjectButton()} />
                 <List>
-                    {projects.length > 0 ? (
-                        projects.map((project, i) => (
-                            <ListItem key={i} twoLine>
-                                <ListItemContent icon="folder_open" subtitle={project.description}>
-                                    <Link to={`/projects/edit/${project.id}`}>
-                                        <strong>{project.name}</strong>
-                                    </Link>
-                                </ListItemContent>
-                                <ListItemAction>
-                                    {hasPermission(UPDATE_PROJECT) && rbacEnabled ? (
-                                        <Link to={`/projects/${project.id}/access`} style={{ color: 'black' }}>
-                                            <IconButton name="supervised_user_circle" title="Manage access" />
-                                        </Link>
-                                    ) : (
-                                        ''
-                                    )}
-                                    {hasPermission(DELETE_PROJECT) ? (
-                                        <IconButton
-                                            name="delete"
-                                            title="Remove project"
-                                            onClick={this.removeProject.bind(this, project)}
-                                        />
-                                    ) : (
-                                        ''
-                                    )}
-                                </ListItemAction>
-                            </ListItem>
-                        ))
-                    ) : (
-                        <ListItem>No projects defined</ListItem>
-                    )}
+                    <ConditionallyRender
+                        condition={projects.length > 0}
+                        show={this.projectList()}
+                        elseShow={<ListItem>No projects defined</ListItem>}
+                    />
                 </List>
-            </Card>
+            </Paper>
         );
     }
 }

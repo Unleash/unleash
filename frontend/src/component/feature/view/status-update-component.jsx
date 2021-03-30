@@ -1,33 +1,38 @@
 import React from 'react';
-import { Menu, MenuItem } from 'react-mdl';
-import { DropdownButton } from '../../common';
+import { MenuItem } from '@material-ui/core';
+import DropdownMenu from '../../common/dropdown-menu';
 import PropTypes from 'prop-types';
 
 export default function StatusUpdateComponent({ stale, updateStale }) {
     function setStatus(field) {
         if (field === 'active') {
             updateStale(false);
-        } else {
+        } else if (field === 'stale') {
             updateStale(true);
         }
     }
 
+    const renderOptions = () => [
+        <MenuItem disabled={!stale} key="status_update_0" data-target="active">
+            Set toggle Active
+        </MenuItem>,
+        <MenuItem disabled={stale} key="status_update_1" data-target="stale">
+            Mark toggle as Stale
+        </MenuItem>,
+    ];
+
+    const onClick = e => {
+        setStatus(e.target.getAttribute('data-target'));
+    };
+
     return (
-        <span>
-            <DropdownButton className="mdl-button" id="update_status" label="Status" />
-            <Menu
-                target="update_status"
-                onClick={e => setStatus(e.target.getAttribute('data-target'))}
-                style={{ width: '168px' }}
-            >
-                <MenuItem disabled={!stale} data-target="active">
-                    Set toggle Active
-                </MenuItem>
-                <MenuItem disabled={stale} data-target="stale">
-                    Mark toggle as Stale
-                </MenuItem>
-            </Menu>
-        </span>
+        <DropdownMenu
+            callback={onClick}
+            renderOptions={renderOptions}
+            id="feature-stale-dropdown"
+            label={stale ? 'STALE' : 'ACTIVE'}
+            style={{ fontWeight: 'bold' }}
+        />
     );
 }
 

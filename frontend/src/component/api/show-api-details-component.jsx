@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FooterSection } from 'react-mdl';
+import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
 
 class ShowApiDetailsComponent extends Component {
     static propTypes = {
@@ -15,12 +15,12 @@ class ShowApiDetailsComponent extends Component {
         if (versionInfo) {
             if (versionInfo.current.enterprise) {
                 versionStr = `${name} ${versionInfo.current.enterprise}`;
-                if (versionInfo.latest && !versionInfo.isLatest) {
+                if (Object.keys(versionInfo.latest).includes('enterprise') && !versionInfo.isLatest) {
                     updateNotification = `Upgrade available - Latest Enterprise release: ${versionInfo.latest.enterprise}`;
                 }
             } else {
                 versionStr = `${name} ${versionInfo.current.oss}`;
-                if (versionInfo.latest && !versionInfo.isLatest) {
+                if (Object.keys(versionInfo.latest).includes('oss') && !versionInfo.isLatest) {
                     updateNotification = `Upgrade available - Latest OSS release: ${versionInfo.latest.oss}`;
                 }
             }
@@ -29,15 +29,17 @@ class ShowApiDetailsComponent extends Component {
             versionStr = `${name} ${version}`;
         }
         return (
-            <FooterSection type="bottom" logo={`${versionStr}`}>
-                <small>{environment ? `(${environment})` : ''}</small>
+            <section title="API details">
+                <h4>{`${versionStr}`}</h4>
+                <ConditionallyRender condition={environment} show={<small>`(${environment})`</small>} />
                 <br />
-                <small>{updateNotification ? `${updateNotification}` : ''}</small>
+                <ConditionallyRender condition={updateNotification} show={<small>{updateNotification}`</small>} />
+                <br />
                 <br />
                 <small>{slogan}</small>
                 <br />
-                <small>{instanceId ? `${instanceId}` : ''}</small>
-            </FooterSection>
+                <ConditionallyRender condition={instanceId} show={<small>{`${instanceId}`}</small>} />
+            </section>
         );
     }
 }

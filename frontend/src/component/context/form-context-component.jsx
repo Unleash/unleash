@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Chip, Textfield, Card, CardTitle, CardText, CardActions, Checkbox } from 'react-mdl';
-
+import { Button, Chip, TextField, Switch, Icon, Typography } from '@material-ui/core';
+import styles from './Context.module.scss';
+import classnames from 'classnames';
 import { FormButtons, styles as commonStyles } from '../common';
 import { trim } from '../common/util';
+import PageContent from '../common/PageContent/PageContent';
 
 const sortIgnoreCase = (a, b) => {
     a = a.toLowerCase();
@@ -99,12 +101,10 @@ class AddContextComponent extends Component {
     renderLegalValue = (value, index) => (
         <Chip
             key={`${value}:${index}`}
-            className="mdl-color--blue-grey-100"
-            style={{ marginRight: '4px' }}
-            onClose={() => this.removeLegalValue(index)}
-        >
-            {value}
-        </Chip>
+            className={styles.chip}
+            onDelete={() => this.removeLegalValue(index)}
+            label={value}
+        />
     );
 
     render() {
@@ -113,85 +113,96 @@ class AddContextComponent extends Component {
         const submitText = editMode ? 'Update' : 'Create';
 
         return (
-            <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
-                <CardTitle style={{ paddingTop: '24px', paddingBottom: '0', wordBreak: 'break-all' }}>
-                    Create context field
-                </CardTitle>
-                <CardText>
+            <PageContent headerContent="Create context field">
+                <div className={styles.supporting}>
                     Context fields are a basic building block used in Unleash to control roll-out. They can be used
                     together with strategy constraints as part of the activation strategy evaluation.
-                </CardText>
+                </div>
                 <form onSubmit={this.onSubmit}>
-                    <section style={{ padding: '16px' }}>
-                        <Textfield
-                            floatingLabel
+                    <section className={styles.formContainer}>
+                        <TextField
+                            className={commonStyles.fullwidth}
                             label="Name"
                             name="name"
-                            value={contextField.name}
+                            defaultValue={contextField.name}
                             error={errors.name}
+                            helperText={errors.name}
                             disabled={editMode}
+                            variant="outlined"
+                            size="small"
                             onBlur={v => this.validateContextName(v.target.value)}
                             onChange={v => this.setValue('name', trim(v.target.value))}
                         />
-                        <Textfield
-                            floatingLabel
-                            style={{ width: '100%' }}
-                            rows={1}
+                        <TextField
+                            className={commonStyles.fullwidth}
+                            rowsMax={1}
                             label="Description"
                             error={errors.description}
-                            value={contextField.description}
+                            helperText={errors.description}
+                            variant="outlined"
+                            size="small"
+                            defaultValue={contextField.description}
                             onChange={v => this.setValue('description', v.target.value)}
                         />
                         <br />
                         <br />
-                        <section style={{ padding: '16px', background: '#fafafa' }}>
-                            <h6 style={{ marginTop: '0' }}>Legal values</h6>
-                            <p style={{ color: 'rgba(0,0,0,.54)' }}>
-                                By defining the legal values the Unleash Admin UI will validate the user input. A
-                                concrete example would be that we know all values for our “environment” (local,
-                                development, stage, production).
-                            </p>
-                            <Textfield
-                                floatingLabel
+                    </section>
+                    <section className={styles.inset}>
+                        <h6 className={styles.h6}>Legal values</h6>
+                        <p className={styles.alpha}>
+                            By defining the legal values the Unleash Admin UI will validate the user input. A concrete
+                            example would be that we know all values for our “environment” (local, development, stage,
+                            production).
+                        </p>
+                        <div>
+                            <TextField
                                 label="Value"
                                 name="value"
-                                style={{ width: '130px' }}
+                                className={styles.valueField}
                                 value={this.state.currentLegalValue}
-                                error={errors.currentLegalValue}
+                                error={!!errors.currentLegalValue}
+                                helperText={errors.currentLegalValue}
+                                variant="outlined"
+                                size="small"
                                 onChange={this.updateCurrentLegalValue}
                             />
-                            <Button onClick={this.addLegalValue} colored accent raised>
+                            <Button
+                                className={styles.legalValueButton}
+                                startIcon={<Icon>add</Icon>}
+                                onClick={this.addLegalValue}
+                                variant="contained"
+                                color="primary"
+                            >
                                 Add
                             </Button>
-                            <div>{contextField.legalValues.map(this.renderLegalValue)}</div>
-                        </section>
-                        <br />
-                        <section style={{ padding: '16px' }}>
-                            <h6 style={{ marginTop: '0' }}>Custom stickiness (beta)</h6>
-                            <p style={{ color: 'rgba(0,0,0,.54)' }}>
-                                By enabling stickiness on this context field you can use it together with the
-                                flexible-rollout strategy. This will guarantee a consistent behavior for specific values
-                                of this context field. PS! Not all client SDK's support this feature yet!{' '}
-                                <a
-                                    href="https://unleash.github.io/docs/activation_strategy#flexiblerollout"
-                                    target="_blank"
-                                >
-                                    Read more
-                                </a>
-                            </p>
-                            <Checkbox
-                                label="Allow stickiness"
-                                ripple
-                                checked={contextField.stickiness}
-                                onChange={() => this.setValue('stickiness', !contextField.stickiness)}
-                            />
-                        </section>
+                        </div>
+                        <div>{contextField.legalValues.map(this.renderLegalValue)}</div>
                     </section>
-                    <CardActions>
+                    <br />
+                    <section>
+                        <Typography variant="subtitle1">Custom stickiness (beta)</Typography>
+                        <p className={classnames(styles.alpha, styles.formContainer)}>
+                            By enabling stickiness on this context field you can use it together with the
+                            flexible-rollout strategy. This will guarantee a consistent behavior for specific values of
+                            this context field. PS! Not all client SDK's support this feature yet!{' '}
+                            <a
+                                href="https://unleash.github.io/docs/activation_strategy#flexiblerollout"
+                                target="_blank"
+                            >
+                                Read more
+                            </a>
+                        </p>
+                        <Switch
+                            label="Allow stickiness"
+                            value={contextField.stickiness}
+                            onChange={() => this.setValue('stickiness', !contextField.stickiness)}
+                        />
+                    </section>
+                    <div className={styles.formButtons}>
                         <FormButtons submitText={submitText} onCancel={this.onCancel} />
-                    </CardActions>
+                    </div>
                 </form>
-            </Card>
+            </PageContent>
         );
     }
 }

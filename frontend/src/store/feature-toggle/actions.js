@@ -11,6 +11,7 @@ export const TOGGLE_FEATURE_TOGGLE = 'TOGGLE_FEATURE_TOGGLE';
 export const START_FETCH_FEATURE_TOGGLES = 'START_FETCH_FEATURE_TOGGLES';
 export const START_UPDATE_FEATURE_TOGGLE = 'START_UPDATE_FEATURE_TOGGLE';
 export const START_CREATE_FEATURE_TOGGLE = 'START_CREATE_FEATURE_TOGGLE';
+export const FETCH_FEATURE_TOGGLES_SUCCESS = 'FETCH_FEATURE_TOGGLES_SUCCESS';
 export const START_REMOVE_FEATURE_TOGGLE = 'START_REMOVE_FEATURE_TOGGLE';
 export const RECEIVE_FEATURE_TOGGLES = 'RECEIVE_FEATURE_TOGGLES';
 export const ERROR_FETCH_FEATURE_TOGGLES = 'ERROR_FETCH_FEATURE_TOGGLES';
@@ -18,6 +19,7 @@ export const ERROR_CREATING_FEATURE_TOGGLE = 'ERROR_CREATING_FEATURE_TOGGLE';
 export const ERROR_UPDATE_FEATURE_TOGGLE = 'ERROR_UPDATE_FEATURE_TOGGLE';
 export const ERROR_REMOVE_FEATURE_TOGGLE = 'ERROR_REMOVE_FEATURE_TOGGLE';
 export const UPDATE_FEATURE_TOGGLE_STRATEGIES = 'UPDATE_FEATURE_TOGGLE_STRATEGIES';
+export const FETCH_FEATURE_TOGGLE_ERROR = 'FETCH_FEATURE_TOGGLE_ERROR';
 
 export const RECEIVE_FEATURE_TOGGLE = 'RECEIVE_FEATURE_TOGGLE';
 export const START_FETCH_FEATURE_TOGGLE = 'START_FETCH_FEATURE_TOGGLE';
@@ -69,8 +71,14 @@ export function fetchFeatureToggles() {
 
         return api
             .fetchAll()
-            .then(json => dispatch(receiveFeatureToggles(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_TOGGLES));
+            .then(json => {
+                dispatch({ type: FETCH_FEATURE_TOGGLES_SUCCESS });
+                dispatch(receiveFeatureToggles(json));
+            })
+            .catch(() => {
+                dispatch({ type: FETCH_FEATURE_TOGGLE_ERROR });
+                dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_TOGGLES);
+            });
     };
 }
 

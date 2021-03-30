@@ -1,0 +1,71 @@
+.reportToggleList {
+    width: 100%;
+    margin: var(--card-margin-y) 0;
+}
+
+.bulkAction {
+    background-color: #f2f2f2;
+    font-size: var(--p-size);
+}
+
+.sortIcon {
+    margin-left: 8px;
+}
+
+.reportToggleListHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f1f1f1;
+    padding: 1rem var(--card-padding-x);
+}
+
+.reportToggleListInnerContainer {
+    padding: var(--card-padding);
+}
+
+.reportToggleListHeading {
+    font-size: var(--h1-size);
+    margin: 0;
+    font-weight: 500;
+}
+
+.reportingToggleTable {
+    width: 100%;
+    border-spacing: 0 0.8rem;
+}
+
+.reportingToggleTable th {
+    text-align: left;
+}
+
+.expired {
+    color: var(--danger);
+}
+
+.active {
+    color: var(--success);
+}
+
+.stale {
+    color: var(--danger);
+}
+
+.reportStatus {
+    display: flex;
+    align-items: center;
+}
+
+.reportIcon {
+    font-size: 1.5rem;
+    margin-right: 5px;
+}
+
+.tableRow {
+    cursor: pointer;
+}
+
+.checkbox {
+    margin: 0;
+    padding: 0;
+}

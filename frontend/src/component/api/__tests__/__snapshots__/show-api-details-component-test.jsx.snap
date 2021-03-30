@@ -1,68 +1,60 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly with empty version 1`] = `
-<react-mdl-FooterSection
-  logo="Unleash "
-  type="bottom"
+<section
+  title="API details"
 >
+  <h4>
+    Unleash 
+  </h4>
   <small>
-    (test)
+    \`($
+    test
+    )\`
   </small>
   <br />
-  <small>
-    
-  </small>
+  <br />
   <br />
   <small>
     We are the best!
   </small>
   <br />
-  <small>
-    
-  </small>
-</react-mdl-FooterSection>
+</section>
 `;
 
 exports[`renders correctly with ui-config 1`] = `
-<react-mdl-FooterSection
-  logo="Unleash 1.1.0"
-  type="bottom"
+<section
+  title="API details"
 >
+  <h4>
+    Unleash 1.1.0
+  </h4>
   <small>
-    (test)
+    \`($
+    test
+    )\`
   </small>
   <br />
-  <small>
-    
-  </small>
+  <br />
   <br />
   <small>
     We are the best!
   </small>
   <br />
-  <small>
-    
-  </small>
-</react-mdl-FooterSection>
+</section>
 `;
 
 exports[`renders correctly without uiConfig 1`] = `
-<react-mdl-FooterSection
-  logo="Unleash 1.1.0"
-  type="bottom"
+<section
+  title="API details"
 >
-  <small>
-    
-  </small>
+  <h4>
+    Unleash 1.1.0
+  </h4>
   <br />
-  <small>
-    
-  </small>
+  <br />
   <br />
   <small />
   <br />
-  <small>
-    
-  </small>
-</react-mdl-FooterSection>
+</section>
 `;

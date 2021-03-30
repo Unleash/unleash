@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import UsersList from './users-list-container';
+import UsersList from './UsersList';
 import AdminMenu from '../admin-menu';
+import PageContent from '../../../component/common/PageContent/PageContent';
 
 const render = () => (
     <div>
         <AdminMenu />
-        <h3>Users</h3>
-        <UsersList />
+        <PageContent headerContent="Users">
+            <UsersList />
+        </PageContent>
     </div>
 );
 

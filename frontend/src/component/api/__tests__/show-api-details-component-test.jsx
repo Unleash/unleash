@@ -3,8 +3,6 @@ import React from 'react';
 import ShowApiDetailsComponent from '../show-api-details-component';
 import renderer from 'react-test-renderer';
 
-jest.mock('react-mdl');
-
 test('renders correctly with empty version', () => {
     const uiConfig = {
         name: 'Unleash',

@@ -31,16 +31,12 @@ function create(tagType) {
 }
 
 function update(tagType) {
-    return validateTagType(tagType)
-        .then(() =>
-            fetch(`${URI}/${tagType.name}`, {
-                method: 'PUT',
-                headers,
-                credentials: 'include',
-                body: JSON.stringify(tagType),
-            })
-        )
-        .then(throwIfNotSuccess);
+    return fetch(`${URI}/${tagType.name}`, {
+        method: 'PUT',
+        headers,
+        credentials: 'include',
+        body: JSON.stringify(tagType),
+    }).then(throwIfNotSuccess);
 }
 
 function deleteTagType(tagTypeName) {

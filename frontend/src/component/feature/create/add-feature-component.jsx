@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Textfield, Switch, Card, CardTitle, CardActions, Grid, Cell } from 'react-mdl';
+import { CardActions, Switch, TextField } from '@material-ui/core';
 import FeatureTypeSelect from '../feature-type-select-container';
 import ProjectSelect from '../project-select-container';
-import StrategiesList from '../strategy/strategies-list-add-container';
+import StrategiesList from '../strategy/strategies-list-container';
+import PageContent from '../../common/PageContent/PageContent';
 
 import { FormButtons, styles as commonStyles } from '../../common';
 import { trim } from '../../common/util';
+
+import styles from './add-feature-component.module.scss';
+import { CF_CREATE_BTN_ID, CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from '../../../testIds';
 
 class AddFeatureComponent extends Component {
     // static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
@@ -22,53 +26,69 @@ class AddFeatureComponent extends Component {
         const { input, errors, setValue, validateName, onSubmit, onCancel } = this.props;
 
         return (
-            <Card shadow={0} className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
-                <CardTitle style={{ paddingTop: '24px', wordBreak: 'break-all' }}>Create new feature toggle</CardTitle>
+            <PageContent headerContent="Create new feature toggle">
                 <form onSubmit={onSubmit}>
-                    <Grid>
-                        <Cell col={4}>
-                            <Textfield
-                                floatingLabel
-                                className={commonStyles.fullwidth}
-                                label="Name"
-                                placeholder="Unique-name"
-                                name="name"
-                                value={input.name}
-                                error={errors.name}
-                                onBlur={v => validateName(v.target.value)}
-                                onChange={v => setValue('name', trim(v.target.value))}
-                            />
-                        </Cell>
-                        <Cell col={3}>
-                            <FeatureTypeSelect value={input.type} onChange={v => setValue('type', v.target.value)} />
-                        </Cell>
-                    </Grid>
-                    <section className={commonStyles.sectionPadding}>
+                    <div className={styles.formContainer}>
+                        <TextField
+                            size="small"
+                            variant="outlined"
+                            label="Name"
+                            placeholder="Unique-name"
+                            className={styles.nameInput}
+                            name="name"
+                            inputProps={{
+                                'data-test': CF_NAME_ID,
+                            }}
+                            value={input.name}
+                            error={errors.name !== undefined}
+                            helperText={errors.name}
+                            onBlur={v => validateName(v.target.value)}
+                            onChange={v => setValue('name', trim(v.target.value))}
+                        />
+                    </div>
+                    <div className={styles.formContainer}>
+                        <FeatureTypeSelect
+                            value={input.type}
+                            onChange={v => setValue('type', v.target.value)}
+                            label={'Toggle type'}
+                            id="feature-type-select"
+                            inputProps={{
+                                'data-test': CF_TYPE_ID,
+                            }}
+                        />
+                    </div>
+
+                    <section className={styles.formContainer}>
                         <ProjectSelect value={input.project} onChange={v => setValue('project', v.target.value)} />
                     </section>
-                    <section className={commonStyles.sectionPadding}>
-                        <Textfield
-                            floatingLabel
+                    <section className={styles.formContainer}>
+                        <TextField
+                            size="small"
+                            variant="outlined"
                             className={commonStyles.fullwidth}
-                            rows={1}
+                            multiline
+                            rows={4}
                             label="Description"
                             placeholder="A short description of the feature toggle"
-                            error={errors.description}
+                            error={errors.description !== undefined}
+                            helperText={errors.description}
                             value={input.description}
+                            inputProps={{
+                                'data-test': CF_DESC_ID,
+                            }}
                             onChange={v => setValue('description', v.target.value)}
                         />
                     </section>
-                    <section style={{ padding: '10px 16px' }}>
+                    <section className={styles.toggleContainer}>
                         <Switch
                             checked={input.enabled}
                             onChange={() => {
                                 setValue('enabled', !input.enabled);
                             }}
-                        >
-                            {input.enabled ? 'Enabled' : 'Disabled'} feature toggle
-                        </Switch>
+                        />
+                        <p className={styles.toggleText}>{input.enabled ? 'Enabled' : 'Disabled'} feature toggle</p>
                     </section>
-                    <section style={{ margin: '40px 0' }}>
+                    <section className={styles.strategiesContainer}>
                         <StrategiesList
                             configuredStrategies={input.strategies}
                             featureToggleName={input.name}
@@ -77,10 +97,10 @@ class AddFeatureComponent extends Component {
                         />
                     </section>
                     <CardActions>
-                        <FormButtons submitText={'Create'} onCancel={onCancel} />
+                        <FormButtons submitText={'Create'} primaryButtonTestId={CF_CREATE_BTN_ID} onCancel={onCancel} />
                     </CardActions>
                 </form>
-            </Card>
+            </PageContent>
         );
     }
 }

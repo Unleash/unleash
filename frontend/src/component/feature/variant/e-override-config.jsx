@@ -2,14 +2,17 @@ import { connect } from 'react-redux';
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Cell, IconButton } from 'react-mdl';
-import Select from 'react-select';
+import { Grid, IconButton, Icon } from '@material-ui/core';
 import MySelect from '../../common/select';
 import InputListField from '../../common/input-list-field';
 import { selectStyles } from '../../common';
+import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 
 function OverrideConfig({ overrides, updateOverrideType, updateOverrideValues, removeOverride, contextDefinitions }) {
-    const contextNames = contextDefinitions.map(c => ({ key: c.name, label: c.name }));
+    const contextNames = contextDefinitions.map(c => ({
+        key: c.name,
+        label: c.name,
+    }));
 
     const updateValues = i => values => {
         updateOverrideValues(i, values);
@@ -26,8 +29,8 @@ function OverrideConfig({ overrides, updateOverrideType, updateOverrideValues, r
         const options = legalValues.map(v => ({ value: v, label: v, key: v }));
 
         return (
-            <Grid noSpacing key={`override=${i}`}>
-                <Cell col={3}>
+            <Grid container key={`override=${i}`}>
+                <Grid item md={3}>
                     <MySelect
                         name="contextName"
                         label="Context Field"
@@ -35,33 +38,38 @@ function OverrideConfig({ overrides, updateOverrideType, updateOverrideValues, r
                         options={contextNames}
                         onChange={updateOverrideType(i)}
                     />
-                </Cell>
-                <Cell col={8}>
-                    {legalValues && legalValues.length > 0 ? (
-                        <div style={{ paddingTop: '12px' }}>
-                            <Select
-                                key={`override-select=${i}`}
-                                styles={selectStyles}
-                                value={mapSelectValues(o.values)}
-                                options={options}
-                                isMulti
-                                onChange={updateSelectValues(i)}
+                </Grid>
+                <Grid md={8} item>
+                    <ConditionallyRender
+                        condition={legalValues && legalValues.length > 0}
+                        show={
+                            <div style={{ paddingTop: '12px' }}>
+                                <MySelect
+                                    key={`override-select=${i}`}
+                                    className={selectStyles}
+                                    value={mapSelectValues(o.values)}
+                                    options={options}
+                                    onChange={updateSelectValues(i)}
+                                />
+                            </div>
+                        }
+                        elseShow={
+                            <InputListField
+                                label="Values (v1, v2, ...)"
+                                name="values"
+                                placeholder=""
+                                style={{ width: '100%' }}
+                                values={o.values}
+                                updateValues={updateValues(i)}
                             />
-                        </div>
-                    ) : (
-                        <InputListField
-                            label="Values (v1, v2, ...)"
-                            name="values"
-                            placeholder=""
-                            style={{ width: '100%' }}
-                            values={o.values}
-                            updateValues={updateValues(i)}
-                        />
-                    )}
-                </Cell>
-                <Cell col={1} style={{ textAlign: 'right', paddingTop: '12px' }}>
-                    <IconButton name="delete" onClick={removeOverride(i)} />
-                </Cell>
+                        }
+                    />
+                </Grid>
+                <Grid item md={1}>
+                    <IconButton onClick={removeOverride(i)}>
+                        <Icon>delete</Icon>
+                    </IconButton>
+                </Grid>
             </Grid>
         );
     });

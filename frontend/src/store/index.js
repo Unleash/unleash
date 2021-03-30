@@ -6,7 +6,7 @@ import featureTags from './feature-tags';
 import tagTypes from './tag-type';
 import tags from './tag';
 import strategies from './strategy';
-import history from './history'; // eslint-disable-line
+import history from "./history"; // eslint-disable-line
 import archive from './archive';
 import error from './error';
 import settings from './settings';
@@ -19,6 +19,7 @@ import addons from './addons';
 import userAdmin from './e-user-admin';
 import apiAdmin from './e-api-admin';
 import authAdmin from './e-admin-auth';
+import apiCalls from './api-calls';
 
 const unleashStore = combineReducers({
     features,
@@ -41,6 +42,7 @@ const unleashStore = combineReducers({
     userAdmin,
     apiAdmin,
     authAdmin,
+    apiCalls,
 });
 
 export default unleashStore;

@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectList from '../../component/project/list-container';
+import ProjectList from '../../component/project/ProjectList';
 import PropTypes from 'prop-types';
 
 const render = ({ history }) => <ProjectList history={history} />;

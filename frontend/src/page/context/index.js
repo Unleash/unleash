@@ -1,8 +1,8 @@
 import React from 'react';
-import ContextFields from '../../component/context/list-container';
+import ContextList from '../../component/context/ContextList';
 import PropTypes from 'prop-types';
 
-const render = ({ history }) => <ContextFields history={history} />;
+const render = ({ history }) => <ContextList history={history} />;
 
 render.propTypes = {
     history: PropTypes.object.isRequired,

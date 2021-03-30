@@ -1,7 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Cell, List, ListItem, ListItemContent } from 'react-mdl';
-import { AppsLinkList, TogglesLinkList } from '../common';
+import { Grid, List, ListItem, ListItemText, ListItemAvatar, Icon, Tooltip } from '@material-ui/core';
+import { TogglesLinkList } from './toggles-link-list';
+import { AppsLinkList } from '../common';
+import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
+import styles from './strategies.module.scss';
 
 class ShowStrategyComponent extends PureComponent {
     static propTypes = {
@@ -13,10 +16,32 @@ class ShowStrategyComponent extends PureComponent {
     renderParameters(params) {
         if (params) {
             return params.map(({ name, type, description, required }, i) => (
-                <ListItem twoLine key={`${name}-${i}`} title={required ? 'Required' : ''}>
-                    <ListItemContent avatar={required ? 'add' : ' '} subtitle={description}>
-                        {name} <small>({type})</small>
-                    </ListItemContent>
+                <ListItem key={`${name}-${i}`}>
+                    <ConditionallyRender
+                        condition={required}
+                        show={
+                            <Tooltip title="Required">
+                                <ListItemAvatar>
+                                    <Icon>add</Icon>
+                                </ListItemAvatar>
+                            </Tooltip>
+                        }
+                        elseShow={
+                            <Tooltip title="Optional">
+                                <ListItemAvatar>
+                                    <Icon>radio_button_unchecked</Icon>
+                                </ListItemAvatar>
+                            </Tooltip>
+                        }
+                    />
+                    <ListItemText
+                        primary={
+                            <div>
+                                {name} <small>({type})</small>
+                            </div>
+                        }
+                        secondary={description}
+                    />
                 </ListItem>
             ));
         } else {
@@ -30,32 +55,33 @@ class ShowStrategyComponent extends PureComponent {
         const { parameters = [] } = strategy;
 
         return (
-            <div>
-                <Grid>
-                    {strategy.deprecated ? (
-                        <Cell>
-                            <h5 style={{ color: '#ff0000' }}>Deprecated</h5>
-                        </Cell>
-                    ) : (
-                        ''
-                    )}
-                    <Cell col={12}>
+            <div className={styles.listcontainer}>
+                <Grid container>
+                    <ConditionallyRender
+                        condition={strategy.deprecated}
+                        show={
+                            <Grid item>
+                                <h5 style={{ color: '#ff0000' }}>Deprecated</h5>
+                            </Grid>
+                        }
+                    />
+                    <Grid item sm={12} md={12}>
                         <h6>Parameters</h6>
                         <hr />
                         <List>{this.renderParameters(parameters)}</List>
-                    </Cell>
+                    </Grid>
 
-                    <Cell col={6} tablet={12}>
+                    <Grid item sm={12} md={6}>
                         <h6>Applications using this strategy</h6>
                         <hr />
                         <AppsLinkList apps={applications} />
-                    </Cell>
+                    </Grid>
 
-                    <Cell col={6} tablet={12}>
+                    <Grid item sm={12} md={6}>
                         <h6>Toggles using this strategy</h6>
                         <hr />
                         <TogglesLinkList toggles={toggles} />
-                    </Cell>
+                    </Grid>
                 </Grid>
             </div>
         );

@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Textfield, Button } from 'react-mdl';
+import { Select, TextField, Button, MenuItem, FormControl, InputLabel } from '@material-ui/core';
+import Dialogue from '../../../component/common/Dialogue/Dialogue';
+import classnames from 'classnames';
+import { styles as commonStyles } from '../../../component/common';
+import { useStyles } from './styles';
 
 function CreateApiKey({ addKey }) {
+    const styles = useStyles();
     const [type, setType] = useState('CLIENT');
     const [show, setShow] = useState(false);
     const [username, setUsername] = useState();
@@ -27,32 +32,50 @@ function CreateApiKey({ addKey }) {
 
     return (
         <div style={{ margin: '5px' }}>
-            {show ? (
-                <form onSubmit={submit}>
-                    <Textfield
+            <Dialogue
+                onClick={e => {
+                    submit(e);
+                    setShow(false);
+                }}
+                open={show}
+                primaryButtonText="Create new key"
+                onClose={toggle}
+                secondaryButtonText="Cancel"
+                title="Add new API key"
+            >
+                <form onSubmit={submit} className={classnames(styles.addApiKeyForm, commonStyles.contentSpacing)}>
+                    <TextField
                         value={username}
                         name="username"
                         onChange={e => setUsername(e.target.value)}
                         label="Username"
-                        floatingLabel
                         style={{ width: '200px' }}
-                        error={error}
+                        error={error !== undefined}
+                        helperText={error}
+                        variant="outlined"
+                        size="small"
                     />
-
-                    <select value={type} onChange={e => setType(e.target.value)}>
-                        <option value="CLIENT">Client</option>
-                        <option value="ADMIN">Admin</option>
-                    </select>
-
-                    <Button primary mini="true" type="submit">
-                        Create new key
-                    </Button>
+                    <FormControl variant="outlined" size="small" style={{ minWidth: '120px' }}>
+                        <InputLabel id="apikey_type" />
+                        <Select
+                            labelId="apikey_type"
+                            id="apikey_select"
+                            value={type}
+                            onChange={e => setType(e.target.value)}
+                        >
+                            <MenuItem value="CLIENT" key="apikey_client" title="Client">
+                                Client
+                            </MenuItem>
+                            <MenuItem value="ADMIN" key="apikey_admin" title="Admin">
+                                Admin
+                            </MenuItem>
+                        </Select>
+                    </FormControl>
                 </form>
-            ) : (
-                <a href="" onClick={toggle}>
-                    Add new access key
-                </a>
-            )}
+            </Dialogue>
+            <Button onClick={toggle} variant="contained" color="primary">
+                Add new API key
+            </Button>
         </div>
     );
 }

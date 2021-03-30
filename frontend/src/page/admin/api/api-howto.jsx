@@ -2,7 +2,7 @@ import React from 'react';
 
 function ApiHowTo() {
     return (
-        <div>
+        <div style={{ marginBottom: '1rem' }}>
             <p
                 style={{
                     backgroundColor: '#cfe5ff',

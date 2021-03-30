@@ -1,8 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Textfield } from 'react-mdl';
+import { Link } from 'react-router-dom';
+import { Typography, IconButton, FormControl, TextField, Button } from '@material-ui/core';
+import CreateIcon from '@material-ui/icons/Create';
+import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 
 import { UPDATE_FEATURE } from '../../../permissions';
+
+import styles from './update-description-component.module.scss';
 
 export default class UpdateDescriptionComponent extends React.Component {
     constructor(props) {
@@ -39,15 +44,26 @@ export default class UpdateDescriptionComponent extends React.Component {
     };
 
     renderRead({ description, isFeatureView, hasPermission }) {
+        const showButton = isFeatureView && hasPermission(UPDATE_FEATURE);
         return (
-            <div>
-                {description}&nbsp;
-                {isFeatureView && hasPermission(UPDATE_FEATURE) ? (
-                    <a href="#edit" onClick={this.onEditMode.bind(this, description)}>
-                        edit
-                    </a>
-                ) : null}
-            </div>
+            <FormControl size="small" variant="outlined">
+                <Typography>
+                    {description || 'No feature toggle description'}
+                    <ConditionallyRender
+                        condition={showButton}
+                        show={
+                            <IconButton
+                                aria-label="toggle description edit"
+                                to="#edit"
+                                component={Link}
+                                onClick={this.onEditMode.bind(this, description)}
+                            >
+                                <CreateIcon />
+                            </IconButton>
+                        }
+                    />
+                </Typography>
+            </FormControl>
         );
     }
 
@@ -55,16 +71,18 @@ export default class UpdateDescriptionComponent extends React.Component {
         const { description } = this.state;
         return (
             <div>
-                <Textfield
-                    floatingLabel
-                    style={{ width: '100%' }}
+                <TextField
+                    className={styles.descriptionInput}
                     label="Description"
                     required
+                    multiline
+                    rows={4}
+                    variant="outlined"
                     value={description}
                     onChange={this.updateValue}
                 />
-                <div>
-                    <Button type="submit" raised accent onClick={this.onSave}>
+                <div style={{ marginTop: '0.5rem' }}>
+                    <Button type="submit" color="primary" variant="contained" onClick={this.onSave}>
                         Save
                     </Button>
                     &nbsp;

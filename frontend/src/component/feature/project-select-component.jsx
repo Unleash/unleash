@@ -11,19 +11,23 @@ class ProjectSelectComponent extends Component {
     }
 
     render() {
-        const { value, projects, onChange, filled, enabled } = this.props;
+        const { value, projects, onChange, enabled } = this.props;
 
         if (!enabled) {
             return null;
         }
 
-        const options = projects.map(t => ({ key: t.id, label: t.name, title: t.description }));
+        const options = projects.map(t => ({
+            key: t.id,
+            label: t.name,
+            title: t.description,
+        }));
 
-        if (!options.find(o => o.key === value)) {
+        if (value && !options.find(o => o.key === value)) {
             options.push({ key: value, label: value });
         }
 
-        return <MySelect label="Project" options={options} value={value} onChange={onChange} filled={filled} />;
+        return <MySelect label="Project" options={options} value={value} onChange={onChange} />;
     }
 }
 

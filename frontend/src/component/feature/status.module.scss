@@ -1,0 +1,14 @@
+.stale {
+    background-color: var(--danger);
+    color: #fff;
+}
+
+.active {
+    background-color: var(--success);
+    color: #000;
+}
+
+.stale,
+.active {
+    box-shadow: var(--chip-shadow);
+}

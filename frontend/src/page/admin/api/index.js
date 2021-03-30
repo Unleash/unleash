@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import ApiKeyList from './api-key-list-container';
 
 import AdminMenu from '../admin-menu';
+import PageContent from '../../../component/common/PageContent/PageContent';
 
 const render = () => (
     <div>
         <AdminMenu />
-        <h3>API Access</h3>
-        <ApiKeyList />
+        <PageContent headerContent="API Access">
+            <ApiKeyList />
+        </PageContent>
     </div>
 );
 

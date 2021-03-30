@@ -1,22 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Cell, Icon, Chip, ChipContact } from 'react-mdl';
-import Progress from '../progress-component';
+import { Icon, Chip, Grid } from '@material-ui/core';
+import LinkIcon from '@material-ui/icons/Link';
+
 import { Link } from 'react-router-dom';
 import { AppsLinkList, calc } from '../../common';
 import { formatFullDateTimeWithLocale } from '../../common/util';
+import Progress from '../progress-component';
+import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+
 import styles from './metric.module.scss';
-import ConditionallyRender from '../../common/conditionally-render';
 
 const StrategyChipItem = ({ strategy }) => (
-    <Chip className={styles.chip}>
-        <ChipContact className="mdl-color--blue-grey mdl-color-text--white">
-            <Icon style={{ marginTop: '3px' }} name="link" />
-        </ChipContact>
-        <Link to={`/strategies/view/${strategy.name}`} className="mdl-color-text--blue-grey">
-            {strategy.name}
-        </Link>
-    </Chip>
+    <Chip
+        clickable
+        className={styles.chip}
+        label={strategy.name}
+        component={Link}
+        to={`/strategies/view/${strategy.name}`}
+        icon={<LinkIcon />}
+    />
 );
 StrategyChipItem.propTypes = {
     strategy: PropTypes.object.isRequired,
@@ -66,55 +69,61 @@ export default class MetricComponent extends React.Component {
         const lastMinutePercent = 1 * calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
 
         return (
-            <div style={{ padding: '16px' }}>
-                <Grid style={{ textAlign: 'center' }}>
-                    <Cell col={4} tablet={4} phone={12}>
+            <div style={{ padding: '16px', flexGrow: 1 }}>
+                <Grid container spacing={2} justify="center" className={styles.grid}>
+                    <Grid item xs={12} sm={4}>
                         <Progress
                             percentage={lastMinutePercent}
                             isFallback={lastMinute.isFallback}
-                            colorClassName="mdl-color-text--accent"
                             animatePercentageText
                         />
-                        {lastMinute.isFallback ? (
-                            <p className="mdl-color-text--grey-500">No metrics available</p>
-                        ) : (
-                            <p>
-                                <strong>Last minute</strong>
-                                <br /> Yes {lastMinute.yes}, No: {lastMinute.no}
-                            </p>
-                        )}
-                    </Cell>
-                    <Cell col={4} tablet={4} phone={12}>
+                        <ConditionallyRender
+                            condition={lastMinute.isFallback}
+                            show={<p>No metrics available</p>}
+                            elseShow={
+                                <p>
+                                    <strong>Last minute</strong>
+                                    <br /> Yes {lastMinute.yes}, No: {lastMinute.no}
+                                </p>
+                            }
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
                         <Progress percentage={lastHourPercent} isFallback={lastHour.isFallback} />
-                        {lastHour.isFallback ? (
-                            <p className="mdl-color-text--grey-500">No metrics available</p>
-                        ) : (
-                            <p>
-                                <strong>Last hour</strong>
-                                <br /> Yes {lastHour.yes}, No: {lastHour.no}
-                            </p>
-                        )}
-                    </Cell>
-                    <Cell col={4} tablet={12}>
-                        {seenApps.length > 0 ? (
-                            <div>
-                                <strong>Seen in applications:</strong>
-                            </div>
-                        ) : (
-                            <div>
-                                <Icon
-                                    className={styles.problemIcon}
-                                    name="report problem"
-                                    title="Not used in an app in the last hour"
-                                />
+                        <ConditionallyRender
+                            condition={lastHour.isFallback}
+                            show={<p>No metrics available</p>}
+                            elseShow={
+                                <p>
+                                    <strong>Last hour</strong>
+                                    <br /> Yes {lastHour.yes}, No: {lastHour.no}
+                                </p>
+                            }
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <ConditionallyRender
+                            condition={seenApps.length}
+                            show={
                                 <div>
-                                    <small>
-                                        <strong>Not used in an app in the last hour. </strong>
-                                        This might be due to your client implementation not reporting usage.
-                                    </small>
+                                    <strong>Seen in applications:</strong>
                                 </div>
-                            </div>
-                        )}
+                            }
+                            elseShow={
+                                <div>
+                                    <Icon className={styles.problemIcon} title="Not used in an app in the last hour">
+                                        report problem
+                                    </Icon>
+                                    <div>
+                                        <small>
+                                            <strong>Not used in an app in the last hour. </strong>
+                                            This might be due to your client implementation not reporting usage.
+                                        </small>
+                                    </div>
+                                </div>
+                            }
+                        />
+
                         <AppsLinkList apps={seenApps} />
                         <div>
                             <ConditionallyRender
@@ -131,7 +140,7 @@ export default class MetricComponent extends React.Component {
                             <strong>Last seen: </strong>
                             <span>{this.renderLastSeen(featureToggle.lastSeenAt)}</span>
                         </div>
-                    </Cell>
+                    </Grid>
                 </Grid>
                 <hr />
                 <StrategiesList strategies={featureToggle.strategies} />

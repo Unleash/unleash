@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Textfield } from 'react-mdl';
+import { TextField } from '@material-ui/core';
 
 function InputListField({ label, values = [], error, name, updateValues, placeholder = '', onBlur = () => {} }) {
     const handleChange = evt => {
@@ -21,10 +21,10 @@ function InputListField({ label, values = [], error, name, updateValues, placeho
     };
 
     return (
-        <Textfield
+        <TextField
             name={name}
-            floatingLabel
-            error={error}
+            error={error !== undefined}
+            helperText={error}
             placeholder={placeholder}
             value={values ? values.join(', ') : ''}
             onKeyDown={handleKeyDown}
@@ -32,6 +32,8 @@ function InputListField({ label, values = [], error, name, updateValues, placeho
             onBlur={onBlur}
             label={label}
             style={{ width: '100%' }}
+            variant="outlined"
+            size="small"
         />
     );
 }

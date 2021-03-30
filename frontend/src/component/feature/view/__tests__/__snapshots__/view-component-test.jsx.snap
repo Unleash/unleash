@@ -1,83 +1,166 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly with one feature 1`] = `
-<react-mdl-Card
-  className="fullwidth"
-  shadow={0}
+<div
+  className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
   style={
     Object {
       "overflow": "visible",
     }
   }
 >
-  <react-mdl-Chip
-    className="mdl-color--light-green-500 mdl-color-text--white mdl-shadow--2dp"
-    style={
-      Object {
-        "position": "absolute",
-        "right": "4px",
-        "top": "4px",
-      }
-    }
-    title="Feature toggle is active."
-  >
-    Active
-  </react-mdl-Chip>
-  <react-mdl-CardTitle
-    style={
-      Object {
-        "paddingBottom": 0,
-        "wordBreak": "break-all",
-      }
-    }
-  >
-    Another
-     
-  </react-mdl-CardTitle>
-  <react-mdl-CardText>
-    <div>
-      another's description
-       
-      <a
-        href="#edit"
-        onClick={[Function]}
+  <div>
+    <div
+      className="header"
+    >
+      <h1
+        className="MuiTypography-root heading MuiTypography-h1"
       >
-        edit
-      </a>
+        Another
+      </h1>
+      <div
+        className="MuiChip-root active"
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        title="Feature toggle is active."
+      >
+        <span
+          className="MuiChip-label"
+        >
+          Active
+        </span>
+      </div>
     </div>
-  </react-mdl-CardText>
-  <react-mdl-CardText
-    style={
-      Object {
-        "paddingTop": 0,
-      }
-    }
-  >
-    <FeatureTypeSelect
-      filled={true}
-      onChange={[Function]}
-      value="release"
-    />
-     
-    <ProjectSelect
-      filled={true}
-      onChange={[Function]}
-    />
-    <FeatureTagComponent
-      featureToggleName="Another"
-      tags={Array []}
-      untagFeature={[MockFunction]}
-    />
-  </react-mdl-CardText>
-  <react-mdl-CardActions
-    border={true}
-    style={
-      Object {
-        "alignItems": "center",
-        "display": "flex",
-        "justifyContent": "space-between",
-      }
-    }
+    <div
+      className="featureInfoContainer makeStyles-contentSpacingY-1"
+    >
+      <div
+        className="MuiFormControl-root"
+      >
+        <p
+          className="MuiTypography-root MuiTypography-body1"
+        >
+          another's description
+          <a
+            aria-disabled={false}
+            aria-label="toggle description edit"
+            className="MuiButtonBase-root MuiIconButton-root"
+            href="/#edit"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            role="button"
+            tabIndex={0}
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                />
+              </svg>
+            </span>
+          </a>
+        </p>
+      </div>
+      <div
+        className="selectContainer"
+      >
+        <FeatureTypeSelect
+          label="Feature type"
+          onChange={[Function]}
+          value="release"
+        />
+         
+        <div
+          className="MuiFormControl-root"
+        >
+          <label
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-marginDense MuiInputLabel-outlined"
+            data-shrink={false}
+          >
+            Project
+          </label>
+          <div
+            className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl MuiInputBase-marginDense MuiOutlinedInput-marginDense"
+            onClick={[Function]}
+            size="small"
+          >
+            <div
+              aria-haspopup="listbox"
+              className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <span
+                dangerouslySetInnerHTML={
+                  Object {
+                    "__html": "&#8203;",
+                  }
+                }
+              />
+            </div>
+            <input
+              aria-hidden={true}
+              className="MuiSelect-nativeInput"
+              onAnimationStart={[Function]}
+              onChange={[Function]}
+              required={false}
+              tabIndex={-1}
+            />
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+            <fieldset
+              aria-hidden={true}
+              className="PrivateNotchedOutline-root-9 MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                className="PrivateNotchedOutline-legendLabelled-11"
+              >
+                <span>
+                  Project
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <FeatureTagComponent
+        featureToggleName="Another"
+        tags={Array []}
+        untagFeature={[MockFunction]}
+      />
+    </div>
+  </div>
+  <div
+    className="actions"
   >
     <span
       style={
@@ -86,171 +169,363 @@ exports[`renders correctly with one feature 1`] = `
         }
       }
     >
-      <react-mdl-Switch
-        checked={false}
-        disabled={false}
-        onChange={[Function]}
-        ripple={true}
+      <span
+        className="MuiSwitch-root"
       >
         <span
-          className="mdl-cell--hide-phone"
+          aria-disabled={false}
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-13 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+          onBlur={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={null}
         >
-          Disabled
+          <span
+            className="MuiIconButton-label"
+          >
+            <input
+              checked={false}
+              className="PrivateSwitchBase-input-16 MuiSwitch-input"
+              disabled={false}
+              onChange={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="MuiSwitch-thumb"
+            />
+          </span>
         </span>
-      </react-mdl-Switch>
+        <span
+          className="MuiSwitch-track"
+        />
+      </span>
+      <span>
+        Disabled
+      </span>
     </span>
     <div>
       <AddTagDialog
         featureToggleName="Another"
       />
-      <span>
-        <react-mdl-Button
-          className="mdl-button"
-          id="update_status"
-        >
-          Status
-          <react-mdl-Icon
-            className="mdl-color-text--grey-600"
-            name="arrow_drop_down"
-          />
-        </react-mdl-Button>
-        <react-mdl-Menu
-          onClick={[Function]}
-          style={
-            Object {
-              "width": "168px",
-            }
-          }
-          target="update_status"
-        >
-          <react-mdl-MenuItem
-            data-target="active"
-            disabled={true}
-          >
-            Set toggle Active
-          </react-mdl-MenuItem>
-          <react-mdl-MenuItem
-            data-target="stale"
-            disabled={false}
-          >
-            Mark toggle as Stale
-          </react-mdl-MenuItem>
-        </react-mdl-Menu>
-      </span>
-      <a
-        href="/features/copy/Another"
+      <button
+        aria-controls="feature-stale-dropdown"
+        aria-haspopup="true"
+        className="MuiButtonBase-root MuiButton-root MuiButton-text dropdownButton"
+        disabled={false}
+        id="feature-stale-dropdown"
+        onBlur={[Function]}
         onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "fontWeight": "bold",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        <span
+          className="MuiButton-label"
+        >
+          ACTIVE
+          <span
+            className="MuiButton-endIcon MuiButton-iconSizeMedium"
+          >
+            <span
+              aria-hidden={true}
+              className="material-icons MuiIcon-root"
+            >
+              arrow_drop_down
+            </span>
+          </span>
+        </span>
+      </button>
+      <a
+        aria-disabled={false}
+        className="MuiButtonBase-root MuiButton-root MuiButton-text"
+        href="/features/copy/Another"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        role="button"
+        tabIndex={0}
         title="Create new feature toggle by cloning configuration"
       >
-        <react-mdl-Button
-          style={
-            Object {
-              "flexShrink": 0,
-            }
-          }
+        <span
+          className="MuiButton-label"
         >
           Clone
-        </react-mdl-Button>
+        </span>
       </a>
-      <react-mdl-Button
-        accent={true}
+      <button
+        className="MuiButtonBase-root MuiButton-root MuiButton-text"
         disabled={false}
+        onBlur={[Function]}
         onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
         style={
           Object {
             "flexShrink": 0,
           }
         }
+        tabIndex={0}
         title="Archive feature toggle"
+        type="button"
       >
-        Archive
-      </react-mdl-Button>
+        <span
+          className="MuiButton-label"
+        >
+          Archive
+        </span>
+      </button>
     </div>
-  </react-mdl-CardActions>
+  </div>
   <hr />
-  <react-mdl-Tabs
-    activeTab={0}
-    className="mdl-color--grey-100"
-    ripple={true}
-    tabBarProps={
-      Object {
-        "style": Object {
-          "width": "100%",
-        },
-      }
-    }
+  <div
+    className="MuiPaper-root makeStyles-tabNav-17 MuiPaper-elevation1 MuiPaper-rounded"
   >
-    <react-mdl-Tab
-      onClick={[Function]}
+    <div
+      className="MuiTabs-root"
     >
-      Activation
-    </react-mdl-Tab>
-    <react-mdl-Tab
-      onClick={[Function]}
-    >
-      Metrics
-    </react-mdl-Tab>
-    <react-mdl-Tab
-      onClick={[Function]}
-    >
-      V
-      <span
-        className="mdl-cell--hide-phone"
-      >
-        ariants
-      </span>
-    </react-mdl-Tab>
-    <react-mdl-Tab
-      onClick={[Function]}
-    >
-      L
-      <span
-        className="mdl-cell--hide-phone"
-      >
-        og
-      </span>
-    </react-mdl-Tab>
-  </react-mdl-Tabs>
-  <UpdateStrategiesComponent
-    featureToggle={
-      Object {
-        "createdAt": "2018-02-04T20:27:52.127Z",
-        "description": "another's description",
-        "enabled": false,
-        "name": "Another",
-        "stale": false,
-        "strategies": Array [
+      <div
+        className="MuiTabs-scroller MuiTabs-fixed"
+        onScroll={[Function]}
+        style={
           Object {
-            "name": "gradualRolloutRandom",
-            "parameters": Object {
-              "percentage": 50,
-            },
-          },
-        ],
-        "type": "release",
-      }
-    }
-    features={
-      Array [
-        Object {
-          "createdAt": "2018-02-04T20:27:52.127Z",
-          "description": "another's description",
-          "enabled": false,
-          "name": "Another",
-          "stale": false,
-          "strategies": Array [
-            Object {
-              "name": "gradualRolloutRandom",
-              "parameters": Object {
-                "percentage": 50,
+            "marginBottom": null,
+            "overflow": "hidden",
+          }
+        }
+      >
+        <div
+          className="MuiTabs-flexContainer MuiTabs-centered"
+          onKeyDown={[Function]}
+          role="tablist"
+        >
+          <button
+            aria-controls="tabpanel-0"
+            aria-selected={true}
+            className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected"
+            disabled={false}
+            id="tab-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            role="tab"
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiTab-wrapper"
+            >
+              Activation
+            </span>
+            <span
+              className="PrivateTabIndicator-root-18 PrivateTabIndicator-colorPrimary-19 MuiTabs-indicator"
+              style={Object {}}
+            />
+          </button>
+          <button
+            aria-controls="tabpanel-1"
+            aria-selected={false}
+            className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary"
+            disabled={false}
+            id="tab-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            role="tab"
+            tabIndex={-1}
+            type="button"
+          >
+            <span
+              className="MuiTab-wrapper"
+            >
+              Metrics
+            </span>
+          </button>
+          <button
+            aria-controls="tabpanel-2"
+            aria-selected={false}
+            className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary"
+            disabled={false}
+            id="tab-2"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            role="tab"
+            tabIndex={-1}
+            type="button"
+          >
+            <span
+              className="MuiTab-wrapper"
+            >
+              Variants
+            </span>
+          </button>
+          <button
+            aria-controls="tabpanel-3"
+            aria-selected={false}
+            className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary"
+            disabled={false}
+            id="tab-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            role="tab"
+            tabIndex={-1}
+            type="button"
+          >
+            <span
+              className="MuiTab-wrapper"
+            >
+              Log
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="tabContentContainer"
+  >
+    <div
+      aria-labelledby="wrapped-tab-0"
+      hidden={false}
+      id="wrapped-tabpanel-0"
+      role="tabpanel"
+    >
+      <UpdateStrategiesComponent
+        featureToggle={
+          Object {
+            "createdAt": "2018-02-04T20:27:52.127Z",
+            "description": "another's description",
+            "enabled": false,
+            "name": "Another",
+            "stale": false,
+            "strategies": Array [
+              Object {
+                "name": "gradualRolloutRandom",
+                "parameters": Object {
+                  "percentage": 50,
+                },
               },
+            ],
+            "type": "release",
+          }
+        }
+        features={
+          Array [
+            Object {
+              "createdAt": "2018-02-04T20:27:52.127Z",
+              "description": "another's description",
+              "enabled": false,
+              "name": "Another",
+              "stale": false,
+              "strategies": Array [
+                Object {
+                  "name": "gradualRolloutRandom",
+                  "parameters": Object {
+                    "percentage": 50,
+                  },
+                },
+              ],
+              "type": "release",
             },
-          ],
-          "type": "release",
-        },
-      ]
-    }
-    history={Object {}}
-  />
-</react-mdl-Card>
+          ]
+        }
+        history={Object {}}
+      />
+    </div>
+    <div
+      aria-labelledby="wrapped-tab-1"
+      hidden={true}
+      id="wrapped-tabpanel-1"
+      role="tabpanel"
+    />
+    <div
+      aria-labelledby="wrapped-tab-2"
+      hidden={true}
+      id="wrapped-tabpanel-2"
+      role="tabpanel"
+    />
+    <div
+      aria-labelledby="wrapped-tab-3"
+      hidden={true}
+      id="wrapped-tabpanel-3"
+      role="tabpanel"
+    />
+  </div>
+</div>
 `;

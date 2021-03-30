@@ -1,7 +1,7 @@
 {
   "name": "unleash-frontend",
   "description": "unleash your features",
-  "version": "3.15.0",
+  "version": "4.0.0-alpha.1",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -121,6 +121,5 @@
       "/src/store/addons/__tests__/data.js"
     ]
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

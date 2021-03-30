@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 4.0.0-alpha.0
+- feat: Switch to material-ui
+
 # 3.15.0
 - feat: Adapt API keys to new endpoint (#259)
 - chore(deps): bump elliptic from 6.5.3 to 6.5.4 (#253)

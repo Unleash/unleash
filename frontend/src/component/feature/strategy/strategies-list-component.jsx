@@ -82,8 +82,14 @@ const StrategiesList = props => {
         setDelStrategy(index);
     };
 
-    const removeStrategy = () => {
+    const removeStrategy = async () => {
+        const strategy = editableStrategies[delStrategy];
+
+        if (!strategy.new) {
+            await props.saveStrategies(props.configuredStrategies.filter((_, i) => i !== delStrategy));
+        }
         updateEditableStrategies(editableStrategies.filter((_, i) => i !== delStrategy));
+
         setDelStrategy(undefined);
         setShowDelDialog(null);
     };

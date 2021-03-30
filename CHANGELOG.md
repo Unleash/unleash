@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.0-alpha.1
+
+- chore: upgrade frontend 4.0.0-alpha.1
+
 ## 4.0.0-alpha.0
 
 - chore(deps): bump y18n from 4.0.0 to 4.0.1 (#775)

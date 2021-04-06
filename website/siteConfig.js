@@ -48,7 +48,7 @@ const users = [
     },
     {
         caption: 'Amedia',
-        image: '/img/amedia.png',
+        image: '/img/amedia-logo.png',
         infoLink: 'https://www.amedia.no/',
         pinned: true,
     },

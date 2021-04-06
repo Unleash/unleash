@@ -37,15 +37,23 @@ export interface IUserWithRole {
     imageUrl?: string;
 }
 
-interface IRoleData {
+export interface IRoleData {
     role: IRole;
     users: User[];
     permissions: IUserPermission[];
 }
 
-interface IPermission {
+export interface IPermission {
     name: string;
     type: PermissionType;
+}
+
+export interface IUserRoles {
+    userId: number;
+    roles: {
+        id: number;
+        name: string;
+    }[];
 }
 
 enum PermissionType {
@@ -123,6 +131,11 @@ export class AccessService {
                 this.logger.warn('Could not add role=${roleName} to userId=${userId}');
             }
         }
+    }
+
+    async getUserRootRoles(userId: number) {
+        const userRoles = await this.store.getRolesForUserId(userId);
+        return userRoles.filter(r => r.type === RoleType.ROOT);
     }
 
     async removeUserFromRole(userId: number, roleId: number) {
@@ -219,5 +232,20 @@ export class AccessService {
     async removeDefaultProjectRoles(owner: User, projectId: string) {
         this.logger.info(`Removing project roles for ${projectId}`);
         return this.store.removeRolesForProject(projectId);
+    }
+
+    async getRootRolesForAllUsers(): Promise<IUserRoles[]> {
+        const roles = await this.store.getRootRolesForAllUsers();
+
+        return roles.reduce((acc, curVal, index, src) => {
+            let item = acc.find(i => i.userId == curVal.userId);
+            if(!item) {
+                item = { userId: curVal.userId, roles: [] };
+                acc.push(item);
+            }
+
+            item.roles.push({id: curVal.id, name: curVal.name });
+            return acc;
+        }, []);
     }
 }

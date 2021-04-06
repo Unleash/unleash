@@ -22,6 +22,12 @@ export interface IRole {
     project?: string;
 }
 
+export interface IRoleAndUser {
+    id: number;
+    name: string;
+    userId: number;
+}
+
 export class AccessStore {
     private logger: Function;
 
@@ -159,5 +165,34 @@ export class AccessStore {
                 project: projectId,
             })
             .delete();
+    }
+
+    async getRootRolesForAllUsers(): Promise<IRoleAndUser[]> {
+        const rows = await this.db
+            .select('id', 'name', 'user_id')
+            .from(`${T.ROLES} AS r`)
+            .leftJoin(`${T.ROLE_USER} AS ru`, 'r.id', 'ru.role_id')
+            .where('r.type', '=', 'root');
+
+        return rows.map(row => ({
+            id: +row.id,
+            name: row.name,
+            userId: +row.user_id,
+        }));
+
+        /*
+        const result = rows.reduce((acc, curVal) => {
+            acc[curVal.user_id] = acc[curVal.user_id] || [];
+            acc[curVal.user_id].push({ id: curVal.id, name: curVal.name });
+            return acc;
+        }, {});
+
+        const userRoles = Object.keys(result).map(userId => ({
+            userId,
+            roles: result[userId],
+        }));
+
+        return userRoles;
+        */
     }
 }

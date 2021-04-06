@@ -1,12 +1,6 @@
-interface IExperimentalFlags {
-    [key: string]: boolean;
-}
+import { IUnleashConfig } from '../types/core';
 
-interface IConfig {
-    experimental: IExperimentalFlags;
-}
-
-export const isRbacEnabled = (config: IConfig): boolean => {
+export const isRbacEnabled = (config: IUnleashConfig): boolean => {
     return config && config.experimental && config.experimental.rbac;
 };
 

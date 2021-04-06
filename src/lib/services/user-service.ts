@@ -1,0 +1,168 @@
+import assert from 'assert';
+import bcrypt from 'bcrypt';
+import owasp from 'owasp-password-strength-test';
+import UserStore, { IUserLookup, IUserSearch } from '../db/user-store';
+import { Logger } from '../logger';
+import { IUnleashConfig } from '../types/core';
+import User from '../user';
+import isEmail from '../util/is-email';
+import { AccessService, RoleName } from './access-service';
+import { ADMIN } from '../permissions';
+
+export interface ICreateUser {
+    email?: string;
+    username?: string;
+    name?: string;
+}
+
+interface IStores {
+    userStore: UserStore;
+}
+
+const saltRounds = 10;
+
+class UserService {
+    private logger: Logger;
+
+    private store: UserStore;
+
+    private accessService: AccessService;
+
+    private defaultRole: RoleName = RoleName.REGULAR;
+
+    constructor(stores: IStores, config: IUnleashConfig, accessService: AccessService) {
+        this.logger = config.getLogger('service/user-server.js');
+        this.store = stores.userStore;
+        this.accessService = accessService;
+        this.defaultRole = this.accessService.RoleName.REGULAR;
+
+        this.initDefaultUser();
+    }
+
+    validatePassword(password: string): boolean {
+        const result = owasp.test(password);
+        if (!result.strong) {
+            throw new Error(result.errors[0]);
+        } else return true;
+    }
+
+    async initDefaultUser(): Promise<void> {
+        const users = await this.store.getAll();
+
+        if (users.length === 0) {
+            // create default admin user
+            this.logger.info(
+                'Creating default user "admin" with password "admin"',
+            );
+            const passwordHash = await bcrypt.hash('admin', saltRounds);
+            const user = await this.store.insert(
+                new User({
+                    username: 'admin',
+                    permissions: [ADMIN], // TODO: remove in v4
+                }),
+            );
+            await this.store.setPasswordHash(user.id, passwordHash);
+            
+            await this.accessService.setUserRootRole(
+                user.id,
+                this.accessService.RoleName.ADMIN,
+            );
+        }
+    }
+
+    async getAll(): Promise<User[]> {
+        return this.store.getAll();
+    }
+
+    async getUser(id: number): Promise<User> {
+        return this.store.get({ id });
+    }
+
+    async findUser({ email, username }: IUserLookup): Promise<User> {
+        return this.store.get({ email, username });
+    }
+
+    async search(query: IUserSearch): Promise<User[]> {
+        return this.store.search(query);
+    }
+
+    async createUser(
+        { username, email, name }: ICreateUser,
+        rootRole = this.defaultRole,
+    ): Promise<User> {
+        assert.ok(username || email, 'You must specify username or email');
+
+        const exists = await this.store.hasUser({ username, email });
+        if (exists) {
+            throw new Error('User already exists');
+        }
+
+        const user = await this.store.insert(
+            new User({ username, email, name }),
+        );
+
+        await this.accessService.setUserRootRole(user.id, rootRole);
+
+        return user;
+    }
+
+    async updateUser(id: number, { name }: {name: string}, rootRole = this.defaultRole): Promise<User>  {
+        const user = await this.store.get({ id });
+        user.name = name;
+
+        await this.accessService.setUserRootRole(id, rootRole);
+
+        return await this.store.update(id, user);
+    }
+
+    async createUserWithoutPassword({ username, email }) {
+        assert.ok(username || email, 'You must specify username or email');
+        const exists = await this.store.hasUser({ username, email });
+        if (exists) {
+            throw new Error('User already exists');
+        }
+
+        const user = await this.store.insert(
+            new User({ username, email }),
+        );
+
+        await this.accessService.setUserRootRole(user.id, this.defaultRole);
+
+        return user;
+    }
+
+    async loginUser(usernameOrEmail: string, password: string) {
+        const idQuery = isEmail(usernameOrEmail)
+            ? { email: usernameOrEmail }
+            : { username: usernameOrEmail };
+        const user = await this.store.get(idQuery);
+        const passwordHash = await this.store.getPasswordHash(user.id);
+
+        const match = await bcrypt.compare(password, passwordHash);
+        if (match) {
+            await this.store.successfullyLogin(user);
+            return user;
+        }
+        throw new Error('Wrong password, try again.');
+    }
+
+    async changePassword(userId: number, password: string) {
+        this.validatePassword(password);
+        const passwordHash = await bcrypt.hash(password, saltRounds);
+        return this.store.setPasswordHash(userId, passwordHash);
+    }
+
+    async deleteUser(userId: number) {
+        const roles = await this.accessService.getRolesForUser(userId);
+        await Promise.all(
+            roles.map(role =>
+                this.accessService.removeUserFromRole(userId, role.id),
+            ),
+        );
+
+        await this.store.delete(userId);
+    }
+}
+
+module.exports = UserService;
+export default UserService;

@@ -2,7 +2,7 @@
 
 const Controller = require('./controller');
 
-class HealthCheckController extends Controller {
+class LogoutController extends Controller {
     constructor(config) {
         super(config);
         this.get('/', this.logout);
@@ -15,9 +15,9 @@ class HealthCheckController extends Controller {
         if (req.logout) {
             req.logout();
         }
-        res.set('Clear-Site-Data', '*');
+        res.set('Clear-Site-Data', '"cookies"');
         res.redirect(`${this.config.baseUriPath}/`);
     }
 }
 
-module.exports = HealthCheckController;
+module.exports = LogoutController;

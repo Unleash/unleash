@@ -76,7 +76,7 @@ function defaultOptions() {
             enable: process.env.CHECK_VERSION || 'true',
         },
         enableRequestLogger: false,
-        adminAuthentication: process.env.ADMIN_AUTHENTICATION || 'unsecure', // deprecated. Remove in v4,
+        adminAuthentication: process.env.ADMIN_AUTHENTICATION || 'open-source', // deprecated. Remove in v4,
         authentication: {
             enableApiToken: process.env.AUTH_ENABLE_API_TOKEN || true,
             type: process.env.AUTH_TYPE || 'open-source',

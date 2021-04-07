@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.0-alpha.2
+
+- feat: Email service (#757)
+
 ## 4.0.0-alpha.1
 
 - chore: upgrade frontend 4.0.0-alpha.1

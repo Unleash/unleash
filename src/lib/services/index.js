@@ -8,6 +8,7 @@ const StrategyService = require('./strategy-service');
 const AddonService = require('./addon-service');
 const ContextService = require('./context-service');
 const VersionService = require('./version-service');
+const { EmailService } = require('./email-service');
 const { AccessService } = require('./access-service');
 const { ApiTokenService } = require('./api-token-service');
 
@@ -28,6 +29,7 @@ module.exports.createServices = (stores, config) => {
     const contextService = new ContextService(stores, config);
     const versionService = new VersionService(stores, config);
     const apiTokenService = new ApiTokenService(stores, config);
+    const emailService = new EmailService(config.email, config.getLogger);
 
     return {
         accessService,
@@ -42,5 +44,6 @@ module.exports.createServices = (stores, config) => {
         contextService,
         versionService,
         apiTokenService,
+        emailService,
     };
 };

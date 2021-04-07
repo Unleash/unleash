@@ -153,3 +153,61 @@ test.serial('update user name', async t => {
             t.is(res.body.id, body.id);
         });
 });
+
+test.serial('should delete user', async t => {
+    t.plan(0);
+
+    const user = await userStore.insert(new User({ email: 'some@mail.com' }));
+
+    const request = await setupApp(stores);
+    return request.delete(`/api/admin/user-admin/${user.id}`).expect(200);
+});
+
+test.serial('validator should require strong password', async t => {
+    t.plan(0);
+
+    const request = await setupApp(stores);
+    return request
+        .post('/api/admin/user-admin/validate-password')
+        .send({ password: 'simple' })
+        .expect(400);
+});
+
+test.serial('validator should accept strong password', async t => {
+    t.plan(0);
+
+    const request = await setupApp(stores);
+    return request
+        .post('/api/admin/user-admin/validate-password')
+        .send({ password: 'simple123-_ASsad' })
+        .expect(200);
+});
+
+test.serial('should change password', async t => {
+    t.plan(0);
+
+    const user = await userStore.insert(new User({ email: 'some@mail.com' }));
+
+    const request = await setupApp(stores);
+    return request
+        .post(`/api/admin/user-admin/${user.id}/change-password`)
+        .send({ password: 'simple123-_ASsad' })
+        .expect(200);
+});
+
+test.serial('should search for users', async t => {
+    t.plan(2);
+
+    await userStore.insert(new User({ email: 'some@mail.com' }));
+    await userStore.insert(new User({ email: 'another@mail.com' }));
+    await userStore.insert(new User({ email: 'another2@mail.com' }));
+
+    const request = await setupApp(stores);
+    return request
+        .get('/api/admin/user-admin/search?q=another')
+        .expect(200)
+        .expect(res => {
+            t.is(res.body.length, 2);
+            t.true(res.body.some(u => u.email === 'another@mail.com'));
+        });
+});

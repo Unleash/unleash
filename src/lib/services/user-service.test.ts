@@ -7,7 +7,7 @@ import { RoleName } from './access-service';
 
 const config = {
     getLogger: noLogger,
-    authentication: { enableApiToken: true },
+    authentication: { enableApiToken: true, createAdminUser: false },
 };
 
 test('Should create new user', async t => {

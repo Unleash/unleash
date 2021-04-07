@@ -36,7 +36,9 @@ class UserService {
         this.accessService = accessService;
         this.defaultRole = this.accessService.RoleName.REGULAR;
 
-        this.initDefaultUser();
+        if(config.authentication && config.authentication.createAdminUser) {
+            process.nextTick(() => this.initAdminUser());
+        }       
     }
 
     validatePassword(password: string): boolean {
@@ -46,27 +48,34 @@ class UserService {
         } else return true;
     }
 
-    async initDefaultUser(): Promise<void> {
-        const users = await this.store.getAll();
+    async initAdminUser(): Promise<void> {
+        const hasAdminUser = await this.store.hasUser({username: 'admin'});
 
-        if (users.length === 0) {
+        if (!hasAdminUser) {
             // create default admin user
-            this.logger.info(
-                'Creating default user "admin" with password "admin"',
-            );
-            const passwordHash = await bcrypt.hash('admin', saltRounds);
-            const user = await this.store.insert(
-                new User({
-                    username: 'admin',
-                    permissions: [ADMIN], // TODO: remove in v4
-                }),
-            );
-            await this.store.setPasswordHash(user.id, passwordHash);
+            try {
+                this.logger.info(
+                    'Creating default user "admin" with password "admin"',
+                );
+                const passwordHash = await bcrypt.hash('admin', saltRounds);
+                const user = await this.store.insert(
+                    new User({
+                        username: 'admin',
+                        permissions: [ADMIN], // TODO: remove in v4
+                    }),
+                );
+                await this.store.setPasswordHash(user.id, passwordHash);
+                
+                await this.accessService.setUserRootRole(
+                    user.id,
+                    this.accessService.RoleName.ADMIN,
+                );
+            } catch (e) {
+                this.logger.error(
+                    'Unable to create default user "admin"',
+                );
+            }
             
-            await this.accessService.setUserRootRole(
-                user.id,
-                this.accessService.RoleName.ADMIN,
-            );
         }
     }
 

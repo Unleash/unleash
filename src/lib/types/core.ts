@@ -10,6 +10,7 @@ export interface IUnleashConfig {
     experimental?: IExperimentalFlags;
     authentication: {
         enableApiToken: boolean;
+        createAdminUser: boolean;
     };
 }
 

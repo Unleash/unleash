@@ -81,6 +81,7 @@ function defaultOptions() {
             enableApiToken: process.env.AUTH_ENABLE_API_TOKEN || true,
             type: process.env.AUTH_TYPE || 'open-source',
             customHook: () => {},
+            createAdminUser: true,
         },
         ui: {},
         importFile: process.env.IMPORT_FILE,

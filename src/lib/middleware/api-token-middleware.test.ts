@@ -98,6 +98,7 @@ test('should not add user if disabled', async t => {
         getLogger,
         authentication: {
             enableApiToken: false,
+            createAdminUser: false,
         },
     };
 

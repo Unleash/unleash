@@ -34,7 +34,8 @@ const StrategiesList = props => {
         if (!editStrategyIndex) {
             updateEditableStrategies(cloneDeep(props.configuredStrategies));
         }
-    }, [props.configuredStrategies, editStrategyIndex]);
+        /* eslint-disable-next-line */
+    }, [props.configuredStrategies]);
 
     const updateStrategy = index => strategy => {
         const newStrategy = { ...strategy };

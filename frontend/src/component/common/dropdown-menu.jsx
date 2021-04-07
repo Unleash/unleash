@@ -51,7 +51,7 @@ DropdownMenu.propTypes = {
     callback: PropTypes.func,
     icon: PropTypes.string,
     label: PropTypes.string,
-    startIcon: PropTypes.string,
+    startIcon: PropTypes.object,
 };
 
 export default DropdownMenu;

@@ -15,12 +15,14 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, hasPermission }) {
 
     useEffect(() => {
         getSamlConfig();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         if (config.entityId) {
             setData(config);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [config]);
 
     if (!hasPermission('ADMIN')) {
@@ -59,7 +61,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, hasPermission }) {
                 <Grid item md={12}>
                     <Typography variant="subtitle1">
                         Please read the{' '}
-                        <a href="https://www.unleash-hosted.com/docs/enterprise-authentication" target="_blank">
+                        <a href="https://www.unleash-hosted.com/docs/enterprise-authentication" target="_blank" rel="noreferrer">
                             documentation
                         </a>{' '}
                         to learn how to integrate with specific SAML 2.0 providers (Okta, Keycloak, etc). <br />

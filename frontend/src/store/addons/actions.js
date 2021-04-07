@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 
 export const RECEIVE_ADDON_CONFIG = 'RECEIVE_ADDON_CONFIG';
 export const ERROR_RECEIVE_ADDON_CONFIG = 'ERROR_RECEIVE_ADDON_CONFIG';
@@ -22,7 +22,7 @@ export function fetchAddons() {
         api
             .fetchAll()
             .then(success(dispatch, RECEIVE_ADDON_CONFIG))
-            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_ADDON_CONFIG));
+            .catch(dispatchError(dispatch, ERROR_RECEIVE_ADDON_CONFIG));
 }
 
 export function removeAddon(addon) {
@@ -30,7 +30,7 @@ export function removeAddon(addon) {
         api
             .remove(addon)
             .then(() => dispatch(removeAddonconfig(addon)))
-            .catch(dispatchAndThrow(dispatch, ERROR_REMOVING_ADDON_CONFIG));
+            .catch(dispatchError(dispatch, ERROR_REMOVING_ADDON_CONFIG));
 }
 
 export function createAddon(addon) {
@@ -39,7 +39,7 @@ export function createAddon(addon) {
             .create(addon)
             .then(res => res.json())
             .then(value => dispatch(addAddonConfig(value)))
-            .catch(dispatchAndThrow(dispatch, ERROR_ADD_ADDON_CONFIG));
+            .catch(dispatchError(dispatch, ERROR_ADD_ADDON_CONFIG));
 }
 
 export function updateAddon(addon) {
@@ -47,5 +47,5 @@ export function updateAddon(addon) {
         api
             .update(addon)
             .then(() => dispatch(updateAdddonConfig(addon)))
-            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_ADDON_CONFIG));
+            .catch(dispatchError(dispatch, ERROR_UPDATE_ADDON_CONFIG));
 }

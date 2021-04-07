@@ -1,7 +1,7 @@
 {
   "name": "unleash-frontend",
   "description": "unleash your features",
-  "version": "4.0.0-alpha.1",
+  "version": "3.15.1",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -10,7 +10,7 @@
   ],
   "files": [
     "index.js",
-    "dist/"
+    "build/"
   ],
   "repository": {
     "type": "git",
@@ -20,106 +20,93 @@
     "url": "https://github.com/Unleash/unleash-frontend"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "license": "Apache-2.0",
   "scripts": {
-    "build": "npm run build:assets && npm run build:html && npm run build:img && npm run build:ico",
-    "build:assets": "NODE_ENV=production webpack -p --display-optimization-bailout",
-    "build:html": "cp public/*.html dist/.",
-    "build:ico": "cp public/*.ico dist/.",
-    "build:img": "cp public/*.png dist/public/. && cp public/*.svg dist/public/.",
-    "start": "NODE_ENV=development webpack-dev-server --progress --colors",
-    "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com npm run start",
-    "lint": "eslint . --ext js,jsx",
-    "lint:fix": "eslint . --ext js,jsx --fix",
-    "test": "jest",
-    "test:ci": "npm run lint && npm run build && npm run test",
-    "prepublish": "npm run build"
+    "build": "react-scripts build",
+    "start": "react-scripts start",
+    "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
+    "test": "react-scripts test",
+    "prepublish": "yarn run build"
   },
-  "main": "./index.js",
-  "devDependencies": {
-    "@material-ui/lab": "4.0.0-alpha.57",
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-decorators": "^7.8.3",
-    "@babel/plugin-transform-modules-commonjs": "^7.9.0",
-    "@babel/plugin-transform-runtime": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
-    "@babel/preset-react": "^7.9.4",
+  "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
-    "@material-ui/styles": "^4.11.3",
-    "array-move": "^2.2.1",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "^25.3.0",
-    "babel-loader": "^8.1.0",
-    "classnames": "^2.2.6",
-    "clean-webpack-plugin": "^3.0.0",
-    "css-loader": "^2.1.1",
-    "date-fns": "^2.17.0",
-    "debounce": "^1.2.0",
-    "debug": "^4.1.1",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.11.0",
-    "enzyme-to-json": "^3.3.5",
-    "eslint": "^6.5.1",
-    "eslint-config-finn": "^3.0.1",
-    "eslint-config-finn-prettier": "^3.0.2",
-    "eslint-config-finn-react": "^2.0.2",
-    "eslint-plugin-react": "^7.11.1",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/enzyme": "^3.10.8",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-router-dom": "^5.1.7",
+    "array-move": "^3.0.1",
+    "classnames": "^2.3.1",
+    "css-loader": "^5.2.0",
+    "date-fns": "^2.19.0",
+    "debounce": "^1.2.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
     "fetch-mock": "^9.11.0",
-    "identity-obj-proxy": "^3.0.0",
-    "immutable": "^3.8.1",
-    "jest": "^26.6.3",
+    "immutable": "^4.0.0-rc.12",
     "lodash.clonedeep": "^4.5.0",
     "lodash.flow": "^3.5.0",
-    "mini-css-extract-plugin": "^0.9.0",
     "node-fetch": "^2.6.1",
-    "node-sass": "^4.5.3",
-    "normalize.css": "^8.0.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.0",
-    "prettier": "^1.18.2",
-    "prop-types": "^15.6.2",
-    "react": "^16.14.0",
-    "react-dnd": "^11.1.3",
-    "react-dnd-html5-backend": "^11.1.3",
-    "react-dom": "^16.14.0",
-    "react-redux": "^7.2.0",
-    "react-router-dom": "^5.1.2",
-    "react-test-renderer": "^16.14.0",
-    "react-timeago": "^4.4.0",
+    "react": "^17.0.2",
+    "react-dnd": "^14.0.2",
+    "react-dnd-html5-backend": "^14.0.0",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.3",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "react-timeago": "^5.2.0",
     "redux": "^4.0.5",
-    "redux-devtools": "^3.7.0",
+    "redux-devtools-extension": "^2.13.9",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.3.0",
-    "sass-loader": "^7.0.1",
-    "style-loader": "^1.0.0",
-    "toolbox-loader": "0.0.3",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.17.1",
-    "webpack-bundle-analyzer": "^4.4.0",
-    "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.11.2",
-    "whatwg-fetch": "^3.4.1"
+    "sass": "^1.32.8",
+    "typescript": "^4.2.3",
+    "web-vitals": "^1.0.1"
   },
   "jest": {
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js",
       "\\.(css|scss)$": "identity-obj-proxy"
     },
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/setupTests.js"
-    ],
-    "setupFiles": [
-      "<rootDir>/jest-setup.js"
-    ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
-    ],
-    "testPathIgnorePatterns": [
-      "/src/store/addons/__tests__/data.js"
     ]
   },
-  "dependencies": {}
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "rules": {
+      "no-restricted-globals": "off",
+      "no-useless-computed-key": "off",
+      "import/no-anonymous-default-export": "off"
+
+    }
+  },
+  "proxy": "http://localhost:4242",
+  "devDependencies": {
+    "enzyme-to-json": "^3.6.1"
+  }
 }

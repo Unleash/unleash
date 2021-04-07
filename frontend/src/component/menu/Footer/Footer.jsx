@@ -33,7 +33,7 @@ export const Footer = () => (
                             <ListItem key="github_link" className={styles.listItem}>
                                 <ListItemText
                                     primary={
-                                        <a href="https://github.com/Unleash/unleash/" target="_blank">
+                                        <a href="https://github.com/Unleash/unleash/" target="_blank" rel="noreferrer">
                                             GitHub
                                         </a>
                                     }

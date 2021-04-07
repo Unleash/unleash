@@ -34,9 +34,10 @@ function remove(addonConfig) {
     }).then(throwIfNotSuccess);
 }
 
-export default {
+const api = {
     fetchAll,
     create,
     update,
     remove,
 };
+export default api;

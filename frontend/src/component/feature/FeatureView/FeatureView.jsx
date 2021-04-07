@@ -52,6 +52,7 @@ const FeatureView = ({
     useEffect(() => {
         scrollToTop();
         fetchTags(featureToggleName);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useLayoutEffect(() => {
@@ -62,6 +63,7 @@ const FeatureView = ({
                 fetchArchive();
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [features]);
 
     const getTabComponent = key => {
@@ -91,6 +93,8 @@ const FeatureView = ({
                 );
             case 'log':
                 return <HistoryComponent toggleName={featureToggleName} />;
+            default:
+                return null
         }
     };
     const getTabData = () => [

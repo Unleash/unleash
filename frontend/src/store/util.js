@@ -1,7 +1,7 @@
 export const AUTH_REQUIRED = 'AUTH_REQUIRED';
 export const FORBIDDEN = 'FORBIDDEN';
 
-export function dispatchAndThrow(dispatch, type) {
+export function dispatchError(dispatch, type) {
     return error => {
         switch (error.statusCode) {
             case 401:
@@ -14,7 +14,6 @@ export function dispatchAndThrow(dispatch, type) {
                 dispatch({ type, error, receivedAt: Date.now() });
                 break;
         }
-        throw error;
     };
 }
 

@@ -1,6 +1,6 @@
 import reducer from '../index';
 import { RECEIVE_ADDON_CONFIG, ADD_ADDON_CONFIG, REMOVE_ADDON_CONFIG, UPDATE_ADDON_CONFIG } from '../actions';
-import { addonSimple, addonsWithConfig, addonConfig } from './data';
+import { addonSimple, addonsWithConfig, addonConfig } from '../__testdata__/data';
 import { USER_LOGOUT } from '../../user/actions';
 
 test('should be default state', () => {

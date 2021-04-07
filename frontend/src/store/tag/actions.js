@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 
 export const START_FETCH_TAGS = 'START_FETCH_TAGS';
 export const RECEIVE_TAGS = 'RECEIVE_TAGS';
@@ -25,7 +25,7 @@ export function fetchTags() {
         return api
             .fetchTags()
             .then(json => dispatch(receiveTags(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_TAGS));
+            .catch(dispatchError(dispatch, ERROR_FETCH_TAGS));
     };
 }
 
@@ -35,7 +35,7 @@ export function create({ type, value }) {
         return api
             .create({ type, value })
             .then(() => dispatch({ type: ADD_TAG, tag: { type, value } }))
-            .catch(dispatchAndThrow(dispatch, ERROR_CREATE_TAG));
+            .catch(dispatchError(dispatch, ERROR_CREATE_TAG));
     };
 }
 
@@ -45,6 +45,6 @@ export function removeTag(tag) {
         return api
             .deleteTag(tag)
             .then(() => dispatch({ type: DELETE_TAG, tag }))
-            .catch(dispatchAndThrow(dispatch, ERROR_DELETE_TAG));
+            .catch(dispatchError(dispatch, ERROR_DELETE_TAG));
     };
 }

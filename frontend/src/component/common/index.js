@@ -108,7 +108,7 @@ export function getIcon(type) {
 }
 
 export const IconLink = ({ url, icon }) => (
-    <a href={url} target="_blank" rel="noopener" className="mdl-color-text--grey-600">
+    <a href={url} target="_blank" rel="noreferrer" className="mdl-color-text--grey-600">
         <Icon>{icon}</Icon>
     </a>
 );

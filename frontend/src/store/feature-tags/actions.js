@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 
 export const TAG_FEATURE_TOGGLE = 'TAG_FEATURE_TOGGLE';
 export const UNTAG_FEATURE_TOGGLE = 'UNTAG_FEATURE_TOGGLE';
@@ -25,7 +25,7 @@ export function tagFeature(featureToggle, tag) {
         return api
             .tagFeature(featureToggle, tag)
             .then(json => dispatch({ type: TAG_FEATURE_TOGGLE, featureToggle, tag: json }))
-            .catch(dispatchAndThrow(dispatch, ERROR_TAG_FEATURE_TOGGLE));
+            .catch(dispatchError(dispatch, ERROR_TAG_FEATURE_TOGGLE));
     };
 }
 
@@ -35,7 +35,7 @@ export function untagFeature(featureToggle, tag) {
         return api
             .untagFeature(featureToggle, tag)
             .then(() => dispatch({ type: UNTAG_FEATURE_TOGGLE, featureToggle, tag }))
-            .catch(dispatchAndThrow(dispatch, ERROR_UNTAG_FEATURE_TOGGLE));
+            .catch(dispatchError(dispatch, ERROR_UNTAG_FEATURE_TOGGLE));
     };
 }
 
@@ -45,6 +45,6 @@ export function fetchTags(featureToggle) {
         return api
             .fetchFeatureToggleTags(featureToggle)
             .then(json => dispatch(receiveFeatureToggleTags(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_TOGGLE_TAGS));
+            .catch(dispatchError(dispatch, ERROR_FETCH_FEATURE_TOGGLE_TAGS));
     };
 }

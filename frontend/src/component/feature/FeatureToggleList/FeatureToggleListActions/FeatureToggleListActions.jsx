@@ -5,6 +5,8 @@ import { MenuItem } from '@material-ui/core';
 import { MenuItemWithIcon } from '../../../common';
 import DropdownMenu from '../../../common/dropdown-menu';
 import ProjectSelect from '../../../common/ProjectSelect';
+import { useStyles } from './styles';
+import classnames from 'classnames';
 
 const sortingOptions = [
     { type: 'name', displayName: 'Name' },
@@ -17,8 +19,6 @@ const sortingOptions = [
     { type: 'metrics', displayName: 'Metrics' },
 ];
 
-import { useStyles } from './styles';
-import classnames from 'classnames';
 
 const FeatureToggleListActions = ({ settings, setSort, toggleMetrics, updateSetting, loading }) => {
     const styles = useStyles();

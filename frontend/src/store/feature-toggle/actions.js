@@ -1,7 +1,7 @@
 import api from './api';
-const debug = require('debug')('unleash:feature-actions');
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 import { MUTE_ERROR } from '../error/actions';
+const debug = require('debug')('unleash:feature-actions');
 
 export const ADD_FEATURE_TOGGLE = 'ADD_FEATURE_TOGGLE';
 export const COPY_FEATURE_TOGGLE = 'COPY_FEATURE_TOGGLE';
@@ -77,7 +77,7 @@ export function fetchFeatureToggles() {
             })
             .catch(() => {
                 dispatch({ type: FETCH_FEATURE_TOGGLE_ERROR });
-                dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_TOGGLES);
+                dispatchError(dispatch, ERROR_FETCH_FEATURE_TOGGLES);
             });
     };
 }
@@ -91,7 +91,7 @@ export function fetchFeatureToggle(name) {
         return api
             .fetchFeatureToggle(name)
             .then(json => dispatch(receiveFeatureToggle(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_TOGGLE));
+            .catch(dispatchError(dispatch, ERROR_FETCH_FEATURE_TOGGLE));
     };
 }
 
@@ -108,7 +108,7 @@ export function createFeatureToggles(featureToggle) {
                     featureToggle: createdFeature,
                 });
             })
-            .catch(dispatchAndThrow(dispatch, ERROR_CREATING_FEATURE_TOGGLE));
+            .catch(dispatchError(dispatch, ERROR_CREATING_FEATURE_TOGGLE));
     };
 }
 
@@ -119,7 +119,7 @@ export function requestToggleFeatureToggle(enable, name) {
         return api
             .toggle(enable, name)
             .then(() => dispatch({ type: TOGGLE_FEATURE_TOGGLE, name }))
-            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
+            .catch(dispatchError(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
 
@@ -134,7 +134,7 @@ export function requestSetStaleFeatureToggle(stale, name) {
                 setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
                 dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle, info });
             })
-            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
+            .catch(dispatchError(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
 
@@ -149,7 +149,7 @@ export function requestUpdateFeatureToggle(featureToggle) {
                 setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
                 dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle, info });
             })
-            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
+            .catch(dispatchError(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
 
@@ -169,7 +169,7 @@ export function requestUpdateFeatureToggleStrategies(featureToggle, newStrategie
                     info,
                 });
             })
-            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
+            .catch(dispatchError(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
 
@@ -189,7 +189,7 @@ export function requestUpdateFeatureToggleVariants(featureToggle, newVariants) {
                     info,
                 });
             })
-            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
+            .catch(dispatchError(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
 
@@ -200,7 +200,7 @@ export function removeFeatureToggle(featureToggleName) {
         return api
             .remove(featureToggleName)
             .then(() => dispatch({ type: REMOVE_FEATURE_TOGGLE, featureToggleName }))
-            .catch(dispatchAndThrow(dispatch, ERROR_REMOVE_FEATURE_TOGGLE));
+            .catch(dispatchError(dispatch, ERROR_REMOVE_FEATURE_TOGGLE));
     };
 }
 

@@ -499,6 +499,7 @@ exports[`renders correctly with with variants 1`] = `
          
         <a
           href="https://unleash.github.io/docs/toggle_variants"
+          rel="noreferrer"
           target="_blank"
         >
           Read more

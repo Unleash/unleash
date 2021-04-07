@@ -13,12 +13,13 @@ import {
 import { showPermissions, modalStyles } from './util';
 
 function AddUser({ user, showDialog, closeDialog, updateUser }) {
+    const [data, setData] = useState(user);
+    const [error, setError] = useState({});
+
     if (!user) {
         return null;
     }
 
-    const [data, setData] = useState(user);
-    const [error, setError] = useState({});
 
     const updateField = e => {
         setData({

@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 
 export const RECEIVE_CONFIG = 'RECEIVE_CONFIG';
 export const ERROR_RECEIVE_CONFIG = 'ERROR_RECEIVE_CONFIG';
@@ -14,5 +14,5 @@ export function fetchUIConfig() {
         api
             .fetchConfig()
             .then(json => dispatch(receiveConfig(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_CONFIG));
+            .catch(dispatchError(dispatch, ERROR_RECEIVE_CONFIG));
 }

@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 
 export const RECEIVE_PROJECT = 'RECEIVE_PROJECT';
 export const ERROR_RECEIVE_PROJECT = 'ERROR_RECEIVE_PROJECT';
@@ -22,7 +22,7 @@ export function fetchProjects() {
             .then(json => {
                 dispatch(receiveProjects(json.projects));
             })
-            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_PROJECT));
+            .catch(dispatchError(dispatch, ERROR_RECEIVE_PROJECT));
 }
 
 export function removeProject(project) {
@@ -30,7 +30,7 @@ export function removeProject(project) {
         api
             .remove(project)
             .then(() => dispatch(delProject(project)))
-            .catch(dispatchAndThrow(dispatch, ERROR_REMOVING_PROJECT));
+            .catch(dispatchError(dispatch, ERROR_REMOVING_PROJECT));
 }
 
 export function createProject(project) {
@@ -38,7 +38,7 @@ export function createProject(project) {
         api
             .create(project)
             .then(() => dispatch(addProject(project)))
-            .catch(dispatchAndThrow(dispatch, ERROR_ADD_PROJECT));
+            .catch(dispatchError(dispatch, ERROR_ADD_PROJECT));
 }
 
 export function updateProject(project) {
@@ -46,7 +46,7 @@ export function updateProject(project) {
         api
             .update(project)
             .then(() => dispatch(upProject(project)))
-            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_PROJECT));
+            .catch(dispatchError(dispatch, ERROR_UPDATE_PROJECT));
 }
 
 export function validateId(id) {

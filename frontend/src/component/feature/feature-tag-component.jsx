@@ -20,11 +20,11 @@ function FeatureTagComponent({ tags, tagTypes, featureToggleName, untagFeature }
         if (tagType && tagType.icon) {
             switch (tagType.name) {
                 case 'slack':
-                    return <img style={style} alt="slack" src="public/slack.svg" />;
+                    return <img style={style} alt="slack" src="slack.svg" />;
                 case 'jira':
-                    return <img style={style} alt="jira" src="public/jira.svg" />;
+                    return <img style={style} alt="jira" src="jira.svg" />;
                 case 'webhook':
-                    return <img style={style} alt="webhook" src="public/webhooks.svg" />;
+                    return <img style={style} alt="webhook" src="webhooks.svg" />;
                 default:
                     return <Icon>label</Icon>;
             }

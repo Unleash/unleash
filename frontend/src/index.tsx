@@ -18,10 +18,11 @@ import App from './component/app';
 import ScrollToTop from './component/scroll-to-top';
 import { writeWarning } from './security-logger';
 
+
 let composeEnhancers;
 
-if (process.env.NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
-    composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+if (process.env.NODE_ENV !== 'production' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+    composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 } else {
     composeEnhancers = compose;
     writeWarning();

@@ -29,7 +29,7 @@ const SimpleAuth = ({ insecureLogin, loadInitialData, history, authDetails }) =>
                 <p>
                     This instance of Unleash is not set up with a secure authentication provider. You can read more
                     about{' '}
-                    <a href="https://github.com/Unleash/unleash/blob/master/docs/securing-unleash.md" target="_blank">
+                    <a href="https://github.com/Unleash/unleash/blob/master/docs/securing-unleash.md" target="_blank" rel="noreferrer">
                         securing Unleash on GitHub
                     </a>
                 </p>

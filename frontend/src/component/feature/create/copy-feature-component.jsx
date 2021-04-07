@@ -103,7 +103,6 @@ class CopyFeatureComponent extends Component {
                             label="Feature toggle name"
                             name="name"
                             value={newToggleName}
-                            error={nameError}
                             onBlur={this.onValidateName}
                             onChange={this.setValue}
                             error={nameError !== undefined}

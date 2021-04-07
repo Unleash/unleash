@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { CardActions, Button, TextField, Typography } from '@material-ui/core';
+import { CardActions, Button, TextField, Typography, IconButton } from '@material-ui/core';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
@@ -121,9 +121,9 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
                 condition={showFields}
                 show={renderLoginForm()}
                 elseShow={
-                    <a href="" onClick={onShowOptions}>
+                    <IconButton> onClick={onShowOptions}>
                         Show more options
-                    </a>
+                    </IconButton>
                 }
             />
         </div>

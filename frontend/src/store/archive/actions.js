@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 
 export const REVIVE_TOGGLE = 'REVIVE_TOGGLE';
 export const RECEIVE_ARCHIVE = 'RECEIVE_ARCHIVE';
@@ -20,7 +20,7 @@ export function revive(featureToggle) {
         api
             .revive(featureToggle)
             .then(() => dispatch(reviveToggle(featureToggle)))
-            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_ARCHIVE));
+            .catch(dispatchError(dispatch, ERROR_RECEIVE_ARCHIVE));
 }
 
 export function fetchArchive() {
@@ -28,5 +28,5 @@ export function fetchArchive() {
         api
             .fetchAll()
             .then(json => dispatch(receiveArchive(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_ARCHIVE));
+            .catch(dispatchError(dispatch, ERROR_RECEIVE_ARCHIVE));
 }

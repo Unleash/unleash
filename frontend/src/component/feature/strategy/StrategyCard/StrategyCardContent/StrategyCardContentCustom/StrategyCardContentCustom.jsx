@@ -67,6 +67,8 @@ const StrategyCardContentCustom = ({ strategy, strategyDefinition }) => {
                         show={<StrategyCardField title={paramDefinition.name} value={param} />}
                     />
                 );
+            default:
+                return null
         }
     };
 

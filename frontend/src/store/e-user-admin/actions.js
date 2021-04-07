@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 export const START_FETCH_USERS = 'START_FETCH_USERS';
 export const RECIEVE_USERS = 'RECIEVE_USERS';
 export const ERROR_FETCH_USERS = 'ERROR_FETCH_USERS';
@@ -27,7 +27,7 @@ export function fetchUsers() {
         return api
             .fetchAll()
             .then(json => dispatch(gotUsers(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_USERS));
+            .catch(dispatchError(dispatch, ERROR_FETCH_USERS));
     };
 }
 
@@ -36,7 +36,7 @@ export function removeUser(user) {
         api
             .remove(user)
             .then(() => dispatch({ type: REMOVE_USER, user }))
-            .catch(dispatchAndThrow(dispatch, REMOVE_USER_ERROR));
+            .catch(dispatchError(dispatch, REMOVE_USER_ERROR));
 }
 
 export function addUser(user) {
@@ -44,7 +44,7 @@ export function addUser(user) {
         api
             .create(user)
             .then(newUser => dispatch({ type: ADD_USER, user: newUser }))
-            .catch(dispatchAndThrow(dispatch, ADD_USER_ERROR));
+            .catch(dispatchError(dispatch, ADD_USER_ERROR));
 }
 
 export function updateUser(user) {
@@ -52,13 +52,13 @@ export function updateUser(user) {
         api
             .update(user)
             .then(newUser => dispatch({ type: UPDATE_USER, user: newUser }))
-            .catch(dispatchAndThrow(dispatch, UPDATE_USER_ERROR));
+            .catch(dispatchError(dispatch, UPDATE_USER_ERROR));
 }
 
 export function changePassword(user, newPassword) {
-    return dispatch => api.changePassword(user, newPassword).catch(dispatchAndThrow(dispatch, CHANGE_PASSWORD_ERROR));
+    return dispatch => api.changePassword(user, newPassword).catch(dispatchError(dispatch, CHANGE_PASSWORD_ERROR));
 }
 
 export function validatePassword(password) {
-    return dispatch => api.validatePassword(password).catch(dispatchAndThrow(dispatch, VALIDATE_PASSWORD_ERROR));
+    return dispatch => api.validatePassword(password).catch(dispatchError(dispatch, VALIDATE_PASSWORD_ERROR));
 }

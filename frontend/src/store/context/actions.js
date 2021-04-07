@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 
 export const RECEIVE_CONTEXT = 'RECEIVE_CONTEXT';
 export const ERROR_RECEIVE_CONTEXT = 'ERROR_RECEIVE_CONTEXT';
@@ -23,7 +23,7 @@ export function fetchContext() {
                 json.sort((a, b) => a.sortOrder - b.sortOrder);
                 dispatch(receiveContext(json));
             })
-            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_CONTEXT));
+            .catch(dispatchError(dispatch, ERROR_RECEIVE_CONTEXT));
 }
 
 export function removeContextField(context) {
@@ -31,7 +31,7 @@ export function removeContextField(context) {
         api
             .remove(context)
             .then(() => dispatch(createRemoveContext(context)))
-            .catch(dispatchAndThrow(dispatch, ERROR_REMOVING_CONTEXT));
+            .catch(dispatchError(dispatch, ERROR_REMOVING_CONTEXT));
 }
 
 export function createContextField(context) {
@@ -39,7 +39,7 @@ export function createContextField(context) {
         api
             .create(context)
             .then(() => dispatch(addContextField(context)))
-            .catch(dispatchAndThrow(dispatch, ERROR_ADD_CONTEXT_FIELD));
+            .catch(dispatchError(dispatch, ERROR_ADD_CONTEXT_FIELD));
 }
 
 export function updateContextField(context) {
@@ -47,7 +47,7 @@ export function updateContextField(context) {
         api
             .update(context)
             .then(() => dispatch(upContextField(context)))
-            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_CONTEXT_FIELD));
+            .catch(dispatchError(dispatch, ERROR_UPDATE_CONTEXT_FIELD));
 }
 
 export function validateName(name) {

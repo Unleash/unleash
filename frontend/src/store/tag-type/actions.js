@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 
 export const START_FETCH_TAG_TYPES = 'START_FETCH_TAG_TYPES';
 export const RECEIVE_TAG_TYPES = 'RECEIVE_TAG_TYPES';
@@ -28,7 +28,7 @@ export function fetchTagTypes() {
         return api
             .fetchTagTypes()
             .then(json => dispatch(receiveTagTypes(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_TAG_TYPES));
+            .catch(dispatchError(dispatch, ERROR_FETCH_TAG_TYPES));
     };
 }
 
@@ -38,7 +38,7 @@ export function createTagType({ name, description, icon }) {
         return api
             .create({ name, description, icon })
             .then(() => dispatch({ type: ADD_TAG_TYPE, tagType: { name, description, icon } }))
-            .catch(dispatchAndThrow(dispatch, ERROR_CREATE_TAG_TYPE));
+            .catch(dispatchError(dispatch, ERROR_CREATE_TAG_TYPE));
     };
 }
 
@@ -48,7 +48,7 @@ export function updateTagType({ name, description, icon }) {
         return api
             .update({ name, description, icon })
             .then(() => dispatch({ type: UPDATE_TAG_TYPE, tagType: { name, description, icon } }))
-            .catch(dispatchAndThrow(dispatch, ERROR_UPDATE_TAG_TYPE));
+            .catch(dispatchError(dispatch, ERROR_UPDATE_TAG_TYPE));
     };
 }
 
@@ -58,7 +58,7 @@ export function removeTagType(name) {
         return api
             .deleteTagType(name)
             .then(() => dispatch({ type: DELETE_TAG_TYPE, tagType: { name } }))
-            .catch(dispatchAndThrow(dispatch, ERROR_DELETE_TAG_TYPE));
+            .catch(dispatchError(dispatch, ERROR_DELETE_TAG_TYPE));
     };
 }
 

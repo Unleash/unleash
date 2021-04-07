@@ -22,17 +22,17 @@ const AddonFormComponent = ({ editMode, provider, addon, fetch, cancel, submit }
         if (!provider) {
             fetch();
         }
-    }, []); // empty array => fetch only first time
+    }, [fetch, provider]); // empty array => fetch only first time
 
     useEffect(() => {
         setConfig({ ...addon });
-    }, [addon.id]);
+    }, [addon]);
 
     useEffect(() => {
         if (provider && !config.provider) {
             setConfig({ ...addon, provider: provider.name });
         }
-    }, [provider]);
+    }, [provider, addon, config.provider]);
 
     const setFieldValue = field => evt => {
         evt.preventDefault();
@@ -104,7 +104,7 @@ const AddonFormComponent = ({ editMode, provider, addon, fetch, cancel, submit }
         <PageContent headerContent={`Configure ${name} addon`}>
             <section className={styles.formSection}>
                 {description}&nbsp;
-                <a href={documentationUrl} target="_blank">
+                <a href={documentationUrl} target="_blank" rel="noreferrer">
                     Read more
                 </a>
                 <p className={commonStyles.error}>{errors.general}</p>

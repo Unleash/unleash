@@ -29,6 +29,7 @@ const TagTypeList = ({ tagTypes, fetchTagTypes, removeTagType, hasPermission }) 
 
     useEffect(() => {
         fetchTagTypes();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     let header = (

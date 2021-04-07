@@ -1,7 +1,7 @@
 import { List, Map as $Map } from 'immutable';
-const debug = require('debug')('unleash:tag-type-store');
-
 import { RECEIVE_TAG_TYPES, ADD_TAG_TYPE, DELETE_TAG_TYPE, UPDATE_TAG_TYPE, ERROR_FETCH_TAG_TYPES } from './actions';
+
+const debug = require('debug')('unleash:tag-type-store');
 
 const tagTypes = (state = new List([]), action) => {
     switch (action.type) {

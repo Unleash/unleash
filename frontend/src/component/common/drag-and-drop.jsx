@@ -1,15 +1,12 @@
-import { DndProvider, createDndContext } from 'react-dnd';
+import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import React, { useRef } from 'react';
-
-const RNDContext = createDndContext(HTML5Backend);
+import React from 'react';
 
 function useDNDProviderElement(props) {
-    const manager = useRef(RNDContext);
 
     if (!props.children) return null;
 
-    return <DndProvider manager={manager.current.dragDropManager}>{props.children}</DndProvider>;
+    return <DndProvider backend={HTML5Backend}>{props.children}</DndProvider>;
 }
 
 export default function DragAndDrop(props) {

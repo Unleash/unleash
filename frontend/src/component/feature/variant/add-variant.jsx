@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, FormControl, FormControlLabel, Grid, Icon, Switch } from '@material-ui/core';
+import { FormControl, FormControlLabel, Grid, Icon, Switch, TextField } from '@material-ui/core';
 import Dialog from '../../common/Dialogue';
 import MySelect from '../../common/select';
-import { trim, modalStyles } from '../../common/util';
+import { modalStyles, trim } from '../../common/util';
 import { weightTypes } from './enums';
 import OverrideConfig from './e-override-config';
 
@@ -46,6 +46,7 @@ function AddVariant({ showDialog, closeDialog, save, validateName, editVariant, 
 
     useEffect(() => {
         clear();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editVariant]);
 
     const setVariantValue = e => {

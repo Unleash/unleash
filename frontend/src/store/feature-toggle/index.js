@@ -1,6 +1,4 @@
 import { List, Map as $Map } from 'immutable';
-const debug = require('debug')('unleash:feature-store');
-
 import {
     ADD_FEATURE_TOGGLE,
     RECEIVE_FEATURE_TOGGLES,
@@ -12,6 +10,8 @@ import {
 } from './actions';
 
 import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
+
+const debug = require('debug')('unleash:feature-store');
 
 const features = (state = new List([]), action) => {
     switch (action.type) {

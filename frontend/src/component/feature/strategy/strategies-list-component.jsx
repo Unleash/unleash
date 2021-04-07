@@ -34,7 +34,7 @@ const StrategiesList = props => {
         if (!editStrategyIndex) {
             updateEditableStrategies(cloneDeep(props.configuredStrategies));
         }
-    }, [props.configuredStrategies]);
+    }, [props.configuredStrategies, editStrategyIndex]);
 
     const updateStrategy = index => strategy => {
         const newStrategy = { ...strategy };

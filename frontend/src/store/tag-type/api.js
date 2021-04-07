@@ -47,10 +47,11 @@ function deleteTagType(tagTypeName) {
     }).then(throwIfNotSuccess);
 }
 
-export default {
+const api = {
     fetchTagTypes,
     create,
     update,
     deleteTagType,
     validateTagType,
-};
+}
+export default api;

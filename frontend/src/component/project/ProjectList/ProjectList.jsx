@@ -15,7 +15,7 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history, hasPermi
     const styles = useStyles();
     useEffect(() => {
         fetchProjects();
-    }, []);
+    }, [fetchProjects]);
 
     const addProjectButton = () => (
         <ConditionallyRender

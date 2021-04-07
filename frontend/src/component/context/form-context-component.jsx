@@ -188,6 +188,7 @@ class AddContextComponent extends Component {
                             <a
                                 href="https://unleash.github.io/docs/activation_strategy#flexiblerollout"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 Read more
                             </a>

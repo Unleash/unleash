@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 export const RECIEVE_GOOGLE_CONFIG = 'RECIEVE_GOOGLE_CONFIG';
 export const RECIEVE_GOOGLE_CONFIG_ERROR = 'RECIEVE_GOOGLE_CONFIG_ERROR';
 export const UPDATE_GOOGLE_AUTH = 'UPDATE_GOOGLE_AUTH';
@@ -22,7 +22,7 @@ export function getGoogleConfig() {
                     config,
                 })
             )
-            .catch(dispatchAndThrow(dispatch, RECIEVE_GOOGLE_CONFIG_ERROR));
+            .catch(dispatchError(dispatch, RECIEVE_GOOGLE_CONFIG_ERROR));
 }
 
 export function updateGoogleConfig(data) {
@@ -30,7 +30,7 @@ export function updateGoogleConfig(data) {
         api
             .updateGoogleConfig(data)
             .then(config => dispatch({ type: UPDATE_GOOGLE_AUTH, config }))
-            .catch(dispatchAndThrow(dispatch, UPDATE_GOOGLE_AUTH_ERROR));
+            .catch(dispatchError(dispatch, UPDATE_GOOGLE_AUTH_ERROR));
 }
 
 export function getSamlConfig() {
@@ -44,7 +44,7 @@ export function getSamlConfig() {
                     config,
                 })
             )
-            .catch(dispatchAndThrow(dispatch, RECIEVE_SAML_CONFIG_ERROR));
+            .catch(dispatchError(dispatch, RECIEVE_SAML_CONFIG_ERROR));
 }
 
 export function updateSamlConfig(data) {
@@ -52,5 +52,5 @@ export function updateSamlConfig(data) {
         api
             .updateSamlConfig(data)
             .then(config => dispatch({ type: UPDATE_SAML_AUTH, config }))
-            .catch(dispatchAndThrow(dispatch, UPDATE_SAML_AUTH_ERROR));
+            .catch(dispatchError(dispatch, UPDATE_SAML_AUTH_ERROR));
 }

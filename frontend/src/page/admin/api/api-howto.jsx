@@ -12,7 +12,7 @@ function ApiHowTo() {
                 }}
             >
                 Read the{' '}
-                <a href="https://www.unleash-hosted.com/docs" target="_blank">
+                <a href="https://www.unleash-hosted.com/docs" target="_blank" rel="noreferrer">
                     Getting started guide
                 </a>{' '}
                 to learn how to connect to the Unleash API form your application or programmatically. <br /> <br />

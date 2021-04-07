@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 export const RECIEVE_KEYS = 'RECIEVE_KEYS';
 export const ERROR_FETCH_KEYS = 'ERROR_FETCH_KEYS';
 export const REMOVE_KEY = 'REMOVE_KEY';
@@ -20,7 +20,7 @@ export function fetchApiKeys() {
                     tokens: value.tokens,
                 })
             )
-            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_KEYS));
+            .catch(dispatchError(dispatch, ERROR_FETCH_KEYS));
 }
 
 export function removeKey(secret) {
@@ -28,7 +28,7 @@ export function removeKey(secret) {
         api
             .remove(secret)
             .then(() => dispatch({ type: REMOVE_KEY, secret }))
-            .catch(dispatchAndThrow(dispatch, REMOVE_KEY));
+            .catch(dispatchError(dispatch, REMOVE_KEY));
 }
 
 export function addKey(data) {
@@ -36,5 +36,5 @@ export function addKey(data) {
         api
             .create(data)
             .then(newToken => dispatch({ type: ADD_KEY, token: newToken }))
-            .catch(dispatchAndThrow(dispatch, ADD_KEY_ERROR));
+            .catch(dispatchError(dispatch, ADD_KEY_ERROR));
 }

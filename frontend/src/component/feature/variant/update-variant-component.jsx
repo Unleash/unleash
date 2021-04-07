@@ -111,7 +111,7 @@ class UpdateVariantComponent extends Component {
                 >
                     By overriding the stickiness you can control which parameter you want to be used in order to ensure
                     consistent traffic allocation across variants.{' '}
-                    <a href="https://unleash.github.io/docs/toggle_variants" target="_blank">
+                    <a href="https://unleash.github.io/docs/toggle_variants" target="_blank" rel="noreferrer">
                         Read more
                     </a>
                 </small>

@@ -15,11 +15,11 @@ const style = {
 const getIcon = name => {
     switch (name) {
         case 'slack':
-            return <img style={style} src="public/slack.svg" />;
+            return <img style={style} alt="Slack Logo" src="slack.svg" />;
         case 'jira-comment':
-            return <img style={style} src="public/jira.svg" />;
+            return <img style={style} alt="JIRA Logo" src="jira.svg" />;
         case 'webhook':
-            return <img style={style} src="public/webhooks.svg" />;
+            return <img style={style} alt="Generic Webhook logo" src="webhooks.svg" />;
         default:
             return (
                 <Avatar>
@@ -34,7 +34,8 @@ const AddonList = ({ addons, providers, fetchAddons, removeAddon, toggleAddon, h
         if (addons.length === 0) {
             fetchAddons();
         }
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [addons.length]);
 
     return (
         <>

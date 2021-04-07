@@ -43,7 +43,7 @@ function renderLink(link, toggleDrawer) {
                 key={link.href}
                 target="_blank"
                 className={[styles.navigationLink].join(' ')}
-                title={link.title}
+                title={link.title} rel="noreferrer"
             >
                 {getIcon(link.icon)} {link.value}
             </a>
@@ -56,7 +56,7 @@ export const DrawerMenu = ({ links = [], title = 'Unleash', flags = {}, open = f
         <div className={styles.drawerContainer}>
             <div className={styles.drawerTitleContainer}>
                 <span className={[styles.drawerTitle].join(' ')}>
-                    <img src="public/logo.png" width="32" height="32" className={styles.drawerTitleLogo} />
+                    <img alt="Unleash Logo" src="logo.png" width="32" height="32" className={styles.drawerTitleLogo} />
                     <span className={styles.drawerTitleText}>{title}</span>
                 </span>
             </div>

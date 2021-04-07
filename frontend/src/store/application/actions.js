@@ -1,5 +1,5 @@
 import api from './api';
-import { dispatchAndThrow } from '../util';
+import { dispatchError } from '../util';
 import { MUTE_ERROR } from '../error/actions';
 
 export const RECEIVE_ALL_APPLICATIONS = 'RECEIVE_ALL_APPLICATIONS';
@@ -26,7 +26,7 @@ export function fetchAll() {
         api
             .fetchAll()
             .then(json => dispatch(recieveAllApplications(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_ALL_APPLICATIONS));
+            .catch(dispatchError(dispatch, ERROR_RECEIVE_ALL_APPLICATIONS));
 }
 
 export function storeApplicationMetaData(appName, key, value) {
@@ -38,7 +38,7 @@ export function storeApplicationMetaData(appName, key, value) {
                 setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
                 dispatch({ type: UPDATE_APPLICATION_FIELD, appName, key, value, info });
             })
-            .catch(dispatchAndThrow(dispatch, ERROR_UPDATING_APPLICATION_DATA));
+            .catch(dispatchError(dispatch, ERROR_UPDATING_APPLICATION_DATA));
 }
 
 export function fetchApplication(appName) {
@@ -46,7 +46,7 @@ export function fetchApplication(appName) {
         api
             .fetchApplication(appName)
             .then(json => dispatch(recieveApplication(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_RECEIVE_ALL_APPLICATIONS));
+            .catch(dispatchError(dispatch, ERROR_RECEIVE_ALL_APPLICATIONS));
 }
 
 export function deleteApplication(appName) {
@@ -54,5 +54,5 @@ export function deleteApplication(appName) {
         api
             .deleteApplication(appName)
             .then(() => dispatch({ type: DELETE_APPLICATION, appName }))
-            .catch(dispatchAndThrow(dispatch, ERROR_DELETE_APPLICATION));
+            .catch(dispatchError(dispatch, ERROR_DELETE_APPLICATION));
 }

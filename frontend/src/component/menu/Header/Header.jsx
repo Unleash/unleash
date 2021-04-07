@@ -20,6 +20,7 @@ const Header = ({ uiConfig, init }) => {
 
     useEffect(() => {
         init(uiConfig.flags);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const toggleDrawer = () => setOpenDrawer(prev => !prev);

@@ -14,6 +14,7 @@ const userStore = (state = new $Map(), action) => {
             state = state.set('authDetails', action.error.body).set('showDialog', true);
             return state;
         case USER_LOGOUT:
+            console.log("Resetting state due to logout");
             return new $Map();
         default:
             return state;

@@ -42,7 +42,7 @@ export default function GeneralStrategyInput({ parameters, strategyDefinition, u
                             maxLabel="on"
                         />
                         {description && (
-                            <p className={styles.helpText} className={styles.helperText}>
+                            <p className={styles.helpText}>
                                 {description}
                             </p>
                         )}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from '@material-ui/core';
+import { Icon, IconButton } from '@material-ui/core';
 
 function Secret({ value }) {
     const [show, setShow] = useState(false);
@@ -17,9 +17,9 @@ function Secret({ value }) {
                 <span>***************************</span>
             )}
 
-            <a href="" onClick={toggle} title="Show token">
+            <IconButton aria-label="Show token" onClick={toggle} title="Show token">
                 <Icon style={{ marginLeft: '5px', fontSize: '1.2em' }}>visibility</Icon>
-            </a>
+            </IconButton>
         </div>
     );
 }

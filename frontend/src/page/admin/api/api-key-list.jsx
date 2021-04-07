@@ -20,6 +20,7 @@ function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, hasPermis
 
     useEffect(() => {
         fetchApiKeys();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

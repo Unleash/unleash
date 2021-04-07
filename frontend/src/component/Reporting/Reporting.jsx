@@ -20,7 +20,7 @@ const Reporting = ({ fetchFeatureToggles, projects }) => {
     useEffect(() => {
         fetchFeatureToggles();
         setSelectedProject(projects[0].id);
-    }, []);
+    }, [fetchFeatureToggles, projects]);
 
     useEffect(() => {
         setProjectOptions(formatProjectOptions(projects));
@@ -43,7 +43,7 @@ const Reporting = ({ fetchFeatureToggles, projects }) => {
                 options={projectOptions}
                 value={selectedProject}
                 onChange={onChange}
-                inputProps={{ ['data-test']: REPORTING_SELECT_ID }}
+                inputProps={{ ['data-testid']: REPORTING_SELECT_ID }}
             />
         </div>
     );

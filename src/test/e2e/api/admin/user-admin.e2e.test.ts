@@ -47,7 +47,7 @@ test.serial('creates and returns all users', async t => {
         request
             .post('/api/admin/user-admin')
             .send({
-                email: `some${i}@getunelash.ai`,
+                email: `some${i}@getunleash.ai`,
                 name: `Some Name ${i}`,
                 rootRole: 'Regular',
             })

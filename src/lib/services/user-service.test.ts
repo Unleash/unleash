@@ -4,9 +4,11 @@ import UserStoreMock from '../../test/fixtures/fake-user-store';
 import AccessServiceMock from '../../test/fixtures/access-service-mock';
 import noLogger from '../../test/fixtures/no-logger';
 import { RoleName } from './access-service';
+import { IUnleashConfig } from '../types/core';
 
-const config = {
+const config: IUnleashConfig = {
     getLogger: noLogger,
+    baseUriPath: '',
     authentication: { enableApiToken: true, createAdminUser: false },
 };
 

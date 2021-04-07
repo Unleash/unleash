@@ -71,7 +71,7 @@ export interface IUserUpdateFields {
     email?: string;
 }
 
-export class UserStore {
+class UserStore {
     private db: Knex;
 
     private logger: Logger;

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable import/no-named-as-default */
 import {
     AccessStore,
     IRole,

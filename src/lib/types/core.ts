@@ -6,6 +6,7 @@ interface IExperimentalFlags {
 
 export interface IUnleashConfig {
     getLogger: LogProvider;
+    baseUriPath: string;
     extendedPermissions?: boolean;
     experimental?: IExperimentalFlags;
     authentication: {

@@ -1,4 +1,3 @@
-/* eslint-disable import/no-named-as-default */
 import test from 'ava';
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';

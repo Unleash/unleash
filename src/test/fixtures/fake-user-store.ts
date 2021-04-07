@@ -1,4 +1,3 @@
-/* eslint-disable import/no-named-as-default */
 import UserStore, { IUserLookup } from '../../lib/db/user-store';
 import User from '../../lib/user';
 import noLoggerProvider from './no-logger';

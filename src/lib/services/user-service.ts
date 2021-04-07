@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events';
 import assert from 'assert';
 import bcrypt from 'bcrypt';
 import owasp from 'owasp-password-strength-test';
@@ -44,7 +45,7 @@ class UserService {
         config: IUnleashConfig,
         accessService: AccessService,
     ) {
-        this.logger = config.getLogger('service/user-server.js');
+        this.logger = config.getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.accessService = accessService;
         this.defaultRole = this.accessService.RoleName.REGULAR;

@@ -3,8 +3,11 @@
 const Controller = require('../controller');
 
 class UserController extends Controller {
-    constructor(config) {
+    constructor(config, services) {
         super(config);
+
+        this.accessService = services.accessService;
+
         this.get('/', this.getUser);
         this.get('/logout', this.logout);
     }
@@ -25,7 +28,7 @@ class UserController extends Controller {
         return res.status(404).end();
     }
 
-    // Depcreated, use "/logout" instead.  Will be removed in later release.
+    // Deprecated, use "/logout" instead.  Will be removed in v4.
     logout(req, res) {
         if (req.session) {
             req.session = null;

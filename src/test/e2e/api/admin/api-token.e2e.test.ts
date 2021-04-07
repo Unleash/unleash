@@ -1,5 +1,3 @@
-'use strict';
-
 import test from 'ava';
 import { setupApp, setupAppWithCustomAuth } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';

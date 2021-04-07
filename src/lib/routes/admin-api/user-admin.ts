@@ -5,12 +5,6 @@ import UserService from '../../services/user-service';
 import { AccessService, RoleName } from '../../services/access-service';
 import { Logger } from '../../logger';
 
-const findRoleName = (userType: string) => {
-    if (userType === RoleName.REGULAR) return RoleName.REGULAR;
-    if (userType === RoleName.ADMIN) return RoleName.ADMIN;
-    return RoleName.READ;
-};
-
 class UserAdminController extends Controller {
     private userService: UserService;
 
@@ -29,8 +23,14 @@ class UserAdminController extends Controller {
         this.post('/', this.createUser, ADMIN);
         this.post('/validate-password', this.validatePassword);
         this.put('/:id', this.updateUser, ADMIN);
-        this.post('/:id/change-password', this.changePassword);
+        this.post('/:id/change-password', this.changePassword, ADMIN);
         this.delete('/:id', this.deleteUser, ADMIN);
+    }
+
+    private validateRootRole(roleName) {
+        if (!Object.values(RoleName).includes(roleName)) {
+            throw new Error(`Unknown rootRole = ${roleName}`);
+        }
     }
 
     async getUsers(req, res) {
@@ -70,15 +70,17 @@ class UserAdminController extends Controller {
         const { username, email, name, rootRole = 'Regular' } = req.body;
 
         try {
+            this.validateRootRole(rootRole);
+
             const user = await this.userService.createUser({
                 username,
                 email,
                 name,
                 rootRole,
             });
-            res.status(200).send({ ...user, rootRole });
+            res.status(201).send({ ...user, rootRole });
         } catch (e) {
-            this.logger.error(e.message);
+            this.logger.warn(e.message);
             res.status(400).send([{ msg: e.message }]);
         }
     }
@@ -86,6 +88,8 @@ class UserAdminController extends Controller {
     async updateUser(req, res) {
         const { id } = req.params;
         const { name, email, rootRole = 'Regular' } = req.body;
+
+        this.validateRootRole(rootRole);
 
         try {
             const user = await this.userService.updateUser({
@@ -96,7 +100,7 @@ class UserAdminController extends Controller {
             });
             res.status(200).send({ ...user, rootRole });
         } catch (e) {
-            this.logger.error(e.message);
+            this.logger.warn(e.message);
             res.status(400).send([{ msg: e.message }]);
         }
     }
@@ -108,7 +112,7 @@ class UserAdminController extends Controller {
             await this.userService.deleteUser(+id);
             res.status(200).send();
         } catch (error) {
-            this.logger.error(error);
+            this.logger.warn(error);
             res.status(500).send();
         }
     }
@@ -128,19 +132,11 @@ class UserAdminController extends Controller {
         const { id } = req.params;
         const { password } = req.body;
 
-        if (req.user.id === +id || req.user.permissions.includes(ADMIN)) {
-            try {
-                await this.userService.changePassword(+id, password);
-                res.status(200).send();
-            } catch (e) {
-                res.status(400).send([{ msg: e.message }]);
-            }
-        } else {
-            res.status(401).send([
-                {
-                    msg: 'You are not allowed to perform this action.',
-                },
-            ]);
+        try {
+            await this.userService.changePassword(+id, password);
+            res.status(200).send();
+        } catch (e) {
+            res.status(400).send([{ msg: e.message }]);
         }
     }
 }

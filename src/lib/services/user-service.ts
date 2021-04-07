@@ -10,9 +10,18 @@ import { AccessService, RoleName } from './access-service';
 import { ADMIN } from '../permissions';
 
 export interface ICreateUser {
+    name?: string;
     email?: string;
     username?: string;
+    password?: string;
+    rootRole: RoleName;
+}
+
+export interface IUpdateUser {
+    id: number;
     name?: string;
+    email?: string;
+    rootRole: RoleName;
 }
 
 interface IStores {
@@ -30,15 +39,19 @@ class UserService {
 
     private defaultRole: RoleName = RoleName.REGULAR;
 
-    constructor(stores: IStores, config: IUnleashConfig, accessService: AccessService) {
+    constructor(
+        stores: IStores,
+        config: IUnleashConfig,
+        accessService: AccessService,
+    ) {
         this.logger = config.getLogger('service/user-server.js');
         this.store = stores.userStore;
         this.accessService = accessService;
         this.defaultRole = this.accessService.RoleName.REGULAR;
 
-        if(config.authentication && config.authentication.createAdminUser) {
+        if (config.authentication && config.authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
-        }       
+        }
     }
 
     validatePassword(password: string): boolean {
@@ -49,7 +62,7 @@ class UserService {
     }
 
     async initAdminUser(): Promise<void> {
-        const hasAdminUser = await this.store.hasUser({username: 'admin'});
+        const hasAdminUser = await this.store.hasUser({ username: 'admin' });
 
         if (!hasAdminUser) {
             // create default admin user
@@ -65,17 +78,14 @@ class UserService {
                     }),
                 );
                 await this.store.setPasswordHash(user.id, passwordHash);
-                
+
                 await this.accessService.setUserRootRole(
                     user.id,
                     this.accessService.RoleName.ADMIN,
                 );
             } catch (e) {
-                this.logger.error(
-                    'Unable to create default user "admin"',
-                );
+                this.logger.error('Unable to create default user "admin"');
             }
-            
         }
     }
 
@@ -95,10 +105,13 @@ class UserService {
         return this.store.search(query);
     }
 
-    async createUser(
-        { username, email, name }: ICreateUser,
+    async createUser({
+        username,
+        email,
+        name,
+        password,
         rootRole = this.defaultRole,
-    ): Promise<User> {
+    }: ICreateUser): Promise<User> {
         assert.ok(username || email, 'You must specify username or email');
 
         const exists = await this.store.hasUser({ username, email });
@@ -112,35 +125,26 @@ class UserService {
 
         await this.accessService.setUserRootRole(user.id, rootRole);
 
-        return user;
-    }
-
-    async updateUser(id: number, { name }: {name: string}, rootRole = this.defaultRole): Promise<User>  {
-        const user = await this.store.get({ id });
-        user.name = name;
-
-        await this.accessService.setUserRootRole(id, rootRole);
-
-        return await this.store.update(id, user);
-    }
-
-    async createUserWithoutPassword({ username, email }) {
-        assert.ok(username || email, 'You must specify username or email');
-        const exists = await this.store.hasUser({ username, email });
-        if (exists) {
-            throw new Error('User already exists');
+        if (password) {
+            const passwordHash = await bcrypt.hash(password, saltRounds);
+            await this.store.setPasswordHash(user.id, passwordHash);
         }
 
-        const user = await this.store.insert(
-            new User({ username, email }),
-        );
-
-        await this.accessService.setUserRootRole(user.id, this.defaultRole);
-
         return user;
     }
 
-    async loginUser(usernameOrEmail: string, password: string) {
+    async updateUser({
+        id,
+        name,
+        email,
+        rootRole,
+    }: IUpdateUser): Promise<User> {
+        await this.accessService.setUserRootRole(id, rootRole);
+
+        return this.store.update(id, { name, email });
+    }
+
+    async loginUser(usernameOrEmail: string, password: string): Promise<User> {
         const idQuery = isEmail(usernameOrEmail)
             ? { email: usernameOrEmail }
             : { username: usernameOrEmail };
@@ -155,13 +159,13 @@ class UserService {
         throw new Error('Wrong password, try again.');
     }
 
-    async changePassword(userId: number, password: string) {
+    async changePassword(userId: number, password: string): Promise<void> {
         this.validatePassword(password);
         const passwordHash = await bcrypt.hash(password, saltRounds);
         return this.store.setPasswordHash(userId, passwordHash);
     }
 
-    async deleteUser(userId: number) {
+    async deleteUser(userId: number): Promise<void> {
         const roles = await this.accessService.getRolesForUser(userId);
         await Promise.all(
             roles.map(role =>

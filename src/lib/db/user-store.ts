@@ -66,6 +66,11 @@ export interface IUserSearch {
     email: string;
 }
 
+export interface IUserUpdateFields {
+    name?: string;
+    email?: string;
+}
+
 export class UserStore {
     private db: Knex;
 
@@ -76,10 +81,10 @@ export class UserStore {
         this.logger = getLogger('user-store.js');
     }
 
-    async update(id: number, user: User): Promise<User> {
+    async update(id: number, fields: IUserUpdateFields): Promise<User> {
         await this.db(TABLE)
             .where('id', id)
-            .update(mapUserToColumns(user));
+            .update(mapUserToColumns(fields));
         return this.get({ id });
     }
 

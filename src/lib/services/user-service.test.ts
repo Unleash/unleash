@@ -14,7 +14,10 @@ test('Should create new user', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
     const service = new UserService({ userStore }, config, accessService);
-    const user = await service.createUser({ username: 'test' }, RoleName.ADMIN);
+    const user = await service.createUser({
+        username: 'test',
+        rootRole: RoleName.ADMIN,
+    });
     const storedUser = await userStore.get(user);
     const allUsers = await userStore.getAll();
 

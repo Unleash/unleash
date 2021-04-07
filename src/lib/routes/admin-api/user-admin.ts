@@ -70,14 +70,12 @@ class UserAdminController extends Controller {
         const { username, email, name, rootRole = 'Regular' } = req.body;
 
         try {
-            const user = await this.userService.createUser(
-                {
-                    username,
-                    email,
-                    name,
-                },
-                findRoleName(rootRole),
-            );
+            const user = await this.userService.createUser({
+                username,
+                email,
+                name,
+                rootRole,
+            });
             res.status(200).send({ ...user, rootRole });
         } catch (e) {
             this.logger.error(e.message);
@@ -87,17 +85,15 @@ class UserAdminController extends Controller {
 
     async updateUser(req, res) {
         const { id } = req.params;
-        const { name, rootRole = 'Regular' } = req.body;
-        const role = findRoleName(rootRole);
+        const { name, email, rootRole = 'Regular' } = req.body;
 
         try {
-            const user = await this.userService.updateUser(
-                Number(id),
-                {
-                    name,
-                },
-                role,
-            );
+            const user = await this.userService.updateUser({
+                id: Number(id),
+                name,
+                email,
+                rootRole,
+            });
             res.status(200).send({ ...user, rootRole });
         } catch (e) {
             this.logger.error(e.message);

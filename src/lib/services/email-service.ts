@@ -3,13 +3,14 @@ import Mustache from 'mustache';
 import path from 'path';
 import { readFileSync, existsSync } from 'fs';
 import { Logger, LogProvider } from '../logger';
+import NotFoundError from '../error/notfound-error';
 
 export type AuthOptions = {
     user: string;
     password: string;
 };
 
-enum TemplateFormat {
+export enum TemplateFormat {
     HTML = 'html',
     PLAIN = 'plain',
 }
@@ -142,8 +143,13 @@ export class EmailService {
         format: TemplateFormat,
         context: any,
     ): Promise<string> {
-        const template = this.resolveTemplate(templateName, format);
-        return Promise.resolve(Mustache.render(template, context));
+        try {
+            const template = this.resolveTemplate(templateName, format);
+            return await Promise.resolve(Mustache.render(template, context));
+        } catch (e) {
+            this.logger.info(`Could not find template ${templateName}`);
+            return Promise.reject(e);
+        }
     }
 
     private resolveTemplate(
@@ -159,6 +165,9 @@ export class EmailService {
             templateName,
             `${templateName}.${format}.mustache`,
         );
-        return readFileSync(template, 'utf-8');
+        if (existsSync(template)) {
+            return readFileSync(template, 'utf-8');
+        }
+        throw new NotFoundError('Could not find template');
     }
 }

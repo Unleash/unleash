@@ -89,10 +89,10 @@ class UserStore {
     }
 
     async insert(user: User): Promise<User> {
-        const [id] = await this.db(TABLE)
+        const rows = await this.db(TABLE)
             .insert(mapUserToColumns(user))
-            .returning('id');
-        return this.get({ id });
+            .returning(USER_COLUMNS);
+        return rowToUser(rows[0]);
     }
 
     async upsert(user: User): Promise<User> {

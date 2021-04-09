@@ -20,7 +20,7 @@ const mapRow = row => ({
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     description: row.description,
-    strategies: row.strategies,
+    strategies: row.strategies || [],
     createdBy: row.created_by,
     url: row.url,
     color: row.color,

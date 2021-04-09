@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 4.0.0-alpha.2
+- feat: admin users (#266)
+- fix: remove editableStrategies from useEffect deps
+- fix: Migrate to create-react-app and react-scripts (#263)
+
 # 4.0.0-alpha.1
 
 -   fix: delete strategy

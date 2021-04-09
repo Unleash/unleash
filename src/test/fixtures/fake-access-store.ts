@@ -2,7 +2,7 @@
 import {
     AccessStore,
     IRole,
-    IRoleAndUser,
+    IUserRole,
     IUserPermission,
 } from '../../lib/db/access-store';
 import noLoggerProvider from './no-logger';
@@ -77,7 +77,7 @@ class AccessStoreMock extends AccessStore {
         throw new Error('Method not implemented.');
     }
 
-    getRootRolesForAllUsers(): Promise<IRoleAndUser[]> {
+    getRootRoleForAllUsers(): Promise<IUserRole[]> {
         throw new Error('Method not implemented.');
     }
 }

@@ -6,11 +6,13 @@ import { AccessService, RoleName } from '../../../lib/services/access-service';
 import UserStore from '../../../lib/db/user-store';
 import User from '../../../lib/user';
 import { IUnleashConfig } from '../../../lib/types/core';
+import { IRole } from '../../../lib/db/access-store';
 
 let db;
 let stores;
 let userService: UserService;
 let userStore: UserStore;
+let adminRole: IRole;
 
 test.before(async () => {
     db = await dbInit('user_service_serial', getLogger);
@@ -26,6 +28,8 @@ test.before(async () => {
     const accessService = new AccessService(stores, config);
     userService = new UserService(stores, config, accessService);
     userStore = stores.userStore;
+    const rootRoles = await accessService.getRootRoles();
+    adminRole = rootRoles.find(r => r.name === RoleName.ADMIN);
 });
 
 test.after(async () => {
@@ -47,7 +51,7 @@ test.serial('should create initial admin user', async t => {
 test.serial('should not be allowed to create existing user', async t => {
     await userStore.insert(new User({ username: 'test', name: 'Hans Mola' }));
     await t.throwsAsync(
-        userService.createUser({ username: 'test', rootRole: RoleName.ADMIN }),
+        userService.createUser({ username: 'test', rootRole: adminRole.id }),
     );
 });
 
@@ -55,7 +59,7 @@ test.serial('should create user with password', async t => {
     await userService.createUser({
         username: 'test',
         password: 'A very strange P4ssw0rd_',
-        rootRole: RoleName.ADMIN,
+        rootRole: adminRole.id,
     });
     const user = await userService.loginUser(
         'test',

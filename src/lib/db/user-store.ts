@@ -14,7 +14,7 @@ const USER_COLUMNS = [
     'username',
     'email',
     'image_url',
-    'permissions',
+    'permissions', // TODO: remove in v4
     'login_attempts',
     'seen_at',
     'created_at',

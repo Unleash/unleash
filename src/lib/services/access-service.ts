@@ -1,4 +1,4 @@
-import { AccessStore, IRole, IUserPermission } from '../db/access-store';
+import { AccessStore, IRole, IUserPermission, IUserRole } from '../db/access-store';
 import p from '../permissions';
 import User from '../user';
 
@@ -48,14 +48,6 @@ export interface IPermission {
     type: PermissionType;
 }
 
-export interface IUserRoles {
-    userId: number;
-    roles: {
-        id: number;
-        name: string;
-    }[];
-}
-
 enum PermissionType {
     root='root',
     project='project',
@@ -70,6 +62,11 @@ export enum RoleName {
 export enum RoleType {
     ROOT = 'root',
     PROJECT = 'project',
+}
+
+export interface IRoleIdentifier {
+    roleId?: number;
+    roleName?: RoleName;
 }
 
 export class AccessService {
@@ -117,19 +114,20 @@ export class AccessService {
         return this.store.addUserToRole(userId, roleId);
     }
 
-    async setUserRootRole(userId: number, roleName: RoleName ) {
-        const userRoles = await this.store.getRolesForUserId(userId);
-        const currentRootRoles = userRoles.filter(r => r.type === RoleType.ROOT);
-
-        const roles = await this.getRoles();
-        const role = roles.find(r => r.type === RoleType.ROOT && r.name === roleName);
-        if(role) {
+    async setUserRootRole(userId: number, roleId: number) {
+        const currentRootRoles = await this.getUserRootRoles(userId);        
+        const roles = await this.getRootRoles();
+        const newRootRole = roles.find(r => r.id === roleId);
+        
+        if(newRootRole) {
             try {
                 await Promise.all(currentRootRoles.map(r => this.store.removeUserFromRole(userId, r.id)));
-                await this.store.addUserToRole(userId, role.id);
+                await this.store.addUserToRole(userId, newRootRole.id);
             } catch (error) {
                 this.logger.warn('Could not add role=${roleName} to userId=${userId}');
             }
+        } else {
+            throw new Error(`Could not find rootRole with id=${roleId}`);
         }
     }
 
@@ -234,18 +232,16 @@ export class AccessService {
         return this.store.removeRolesForProject(projectId);
     }
 
-    async getRootRolesForAllUsers(): Promise<IUserRoles[]> {
-        const roles = await this.store.getRootRolesForAllUsers();
+    async getRootRoleForAllUsers(): Promise<IUserRole[]> {
+        return this.store.getRootRoleForAllUsers();
+    }
 
-        return roles.reduce((acc, curVal, index, src) => {
-            let item = acc.find(i => i.userId == curVal.userId);
-            if(!item) {
-                item = { userId: curVal.userId, roles: [] };
-                acc.push(item);
-            }
+    async getRootRoles(): Promise<IRole[]> {
+        return this.store.getRootRoles();
+    }
 
-            item.roles.push({id: curVal.id, name: curVal.name });
-            return acc;
-        }, []);
+    async getRootRole(roleName: RoleName): Promise<IRole> {
+        const roles = await this.store.getRootRoles();
+        return roles.find(r => r.name === roleName);
     }
 }

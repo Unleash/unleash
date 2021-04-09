@@ -1,11 +1,12 @@
-import { EventEmitter } from 'events';
 import assert from 'assert';
 import bcrypt from 'bcrypt';
 import owasp from 'owasp-password-strength-test';
+import Joi from 'joi';
+
 import UserStore, { IUserLookup, IUserSearch } from '../db/user-store';
 import { Logger } from '../logger';
 import { IUnleashConfig } from '../types/core';
-import User from '../user';
+import User, { IUser } from '../user';
 import isEmail from '../util/is-email';
 import { AccessService, RoleName } from './access-service';
 import { ADMIN } from '../permissions';
@@ -15,14 +16,18 @@ export interface ICreateUser {
     email?: string;
     username?: string;
     password?: string;
-    rootRole: RoleName;
+    rootRole: number;
 }
 
 export interface IUpdateUser {
     id: number;
     name?: string;
     email?: string;
-    rootRole: RoleName;
+    rootRole?: number;
+}
+
+interface IUserWithRole extends IUser {
+    rootRole: number;
 }
 
 interface IStores {
@@ -71,31 +76,44 @@ class UserService {
                 this.logger.info(
                     'Creating default user "admin" with password "admin"',
                 );
-                const passwordHash = await bcrypt.hash('admin', saltRounds);
                 const user = await this.store.insert(
                     new User({
                         username: 'admin',
                         permissions: [ADMIN], // TODO: remove in v4
                     }),
                 );
+                const passwordHash = await bcrypt.hash('admin', saltRounds);
                 await this.store.setPasswordHash(user.id, passwordHash);
 
-                await this.accessService.setUserRootRole(
-                    user.id,
-                    this.accessService.RoleName.ADMIN,
+                const rootRoles = await this.accessService.getRootRoles();
+                const adminRole = rootRoles.find(
+                    r => r.name === RoleName.ADMIN,
                 );
+                await this.accessService.setUserRootRole(user.id, adminRole.id);
             } catch (e) {
                 this.logger.error('Unable to create default user "admin"');
             }
         }
     }
 
-    async getAll(): Promise<User[]> {
-        return this.store.getAll();
+    async getAll(): Promise<IUserWithRole[]> {
+        const users = await this.store.getAll();
+        const defaultRole = await this.accessService.getRootRole(RoleName.READ);
+        const userRoles = await this.accessService.getRootRoleForAllUsers();
+        const usersWithRootRole = users.map(u => {
+            const rootRole = userRoles.find(r => r.userId === u.id);
+            const roleId = rootRole ? rootRole.roleId : defaultRole.id;
+            return { ...u, rootRole: roleId };
+        });
+        return usersWithRootRole;
     }
 
-    async getUser(id: number): Promise<User> {
-        return this.store.get({ id });
+    async getUser(id: number): Promise<IUserWithRole> {
+        const roles = await this.accessService.getUserRootRoles(id);
+        const defaultRole = await this.accessService.getRootRole(RoleName.READ);
+        const roleId = roles.length > 0 ? roles[0].id : defaultRole.id;
+        const user = await this.store.get({ id });
+        return { ...user, rootRole: roleId };
     }
 
     async findUser({ email, username }: IUserLookup): Promise<User> {
@@ -111,9 +129,13 @@ class UserService {
         email,
         name,
         password,
-        rootRole = this.defaultRole,
+        rootRole,
     }: ICreateUser): Promise<User> {
         assert.ok(username || email, 'You must specify username or email');
+
+        if (email) {
+            Joi.assert(email, Joi.string().email(), 'Email');
+        }
 
         const exists = await this.store.hasUser({ username, email });
         if (exists) {
@@ -140,7 +162,13 @@ class UserService {
         email,
         rootRole,
     }: IUpdateUser): Promise<User> {
-        await this.accessService.setUserRootRole(id, rootRole);
+        if (email) {
+            Joi.assert(email, Joi.string().email(), 'Email');
+        }
+
+        if (rootRole) {
+            await this.accessService.setUserRootRole(id, rootRole);
+        }
 
         return this.store.update(id, { name, email });
     }

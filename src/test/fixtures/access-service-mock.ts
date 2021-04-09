@@ -37,7 +37,7 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    setUserRootRole(userId: number, roleName: RoleName): Promise<void> {
+    setUserRootRole(userId: number, roleId: number): Promise<void> {
         return Promise.resolve();
     }
 

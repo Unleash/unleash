@@ -15,10 +15,11 @@ const config: IUnleashConfig = {
 test('Should create new user', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
+
     const service = new UserService({ userStore }, config, accessService);
     const user = await service.createUser({
         username: 'test',
-        rootRole: RoleName.ADMIN,
+        rootRole: 1,
     });
     const storedUser = await userStore.get(user);
     const allUsers = await userStore.getAll();

@@ -27,27 +27,12 @@ class UserAdminController extends Controller {
         this.delete('/:id', this.deleteUser, ADMIN);
     }
 
-    private validateRootRole(roleName) {
-        if (!Object.values(RoleName).includes(roleName)) {
-            throw new Error(`Unknown rootRole = ${roleName}`);
-        }
-    }
-
     async getUsers(req, res) {
         try {
             const users = await this.userService.getAll();
-            const rootRoles = await this.accessService.getRootRolesForAllUsers();
+            const rootRoles = await this.accessService.getRootRoles();
 
-            const usersWithRootRole = users.map(u => {
-                const rootRole = rootRoles.find(r => r.userId === u.id);
-                const rootRoleName =
-                    rootRole && rootRole.roles.length > 0
-                        ? rootRole.roles[0].name
-                        : RoleName.READ;
-                return { ...u, rootRole: rootRoleName };
-            });
-
-            res.json({ users: usersWithRootRole });
+            res.json({ users, rootRoles });
         } catch (error) {
             this.logger.error(error);
             res.status(500).send({ msg: 'server errors' });
@@ -67,16 +52,14 @@ class UserAdminController extends Controller {
     }
 
     async createUser(req, res) {
-        const { username, email, name, rootRole = 'Regular' } = req.body;
+        const { username, email, name, rootRole } = req.body;
 
         try {
-            this.validateRootRole(rootRole);
-
             const user = await this.userService.createUser({
                 username,
                 email,
                 name,
-                rootRole,
+                rootRole: Number(rootRole),
             });
             res.status(201).send({ ...user, rootRole });
         } catch (e) {
@@ -87,16 +70,14 @@ class UserAdminController extends Controller {
 
     async updateUser(req, res) {
         const { id } = req.params;
-        const { name, email, rootRole = 'Regular' } = req.body;
-
-        this.validateRootRole(rootRole);
+        const { name, email, rootRole } = req.body;
 
         try {
             const user = await this.userService.updateUser({
                 id: Number(id),
                 name,
                 email,
-                rootRole,
+                rootRole: Number(rootRole),
             });
             res.status(200).send({ ...user, rootRole });
         } catch (e) {

@@ -22,9 +22,8 @@ export interface IRole {
     project?: string;
 }
 
-export interface IRoleAndUser {
-    id: number;
-    name: string;
+export interface IUserRole {
+    roleId: number;
     userId: number;
 }
 
@@ -86,6 +85,13 @@ export class AccessStore {
             .from<IRole>(T.ROLES)
             .where('project', projectId)
             .andWhere('type', 'project');
+    }
+
+    async getRootRoles(): Promise<IRole[]> {
+        return this.db
+            .select(['id', 'name', 'type', 'project', 'description'])
+            .from<IRole>(T.ROLES)
+            .andWhere('type', 'root');
     }
 
     async removeRolesForProject(projectId: string): Promise<void> {
@@ -167,32 +173,17 @@ export class AccessStore {
             .delete();
     }
 
-    async getRootRolesForAllUsers(): Promise<IRoleAndUser[]> {
+    async getRootRoleForAllUsers(): Promise<IUserRole[]> {
         const rows = await this.db
-            .select('id', 'name', 'user_id')
+            .select('id', 'user_id')
+            .distinctOn('user_id')
             .from(`${T.ROLES} AS r`)
             .leftJoin(`${T.ROLE_USER} AS ru`, 'r.id', 'ru.role_id')
             .where('r.type', '=', 'root');
 
         return rows.map(row => ({
-            id: +row.id,
-            name: row.name,
+            roleId: +row.id,
             userId: +row.user_id,
         }));
-
-        /*
-        const result = rows.reduce((acc, curVal) => {
-            acc[curVal.user_id] = acc[curVal.user_id] || [];
-            acc[curVal.user_id].push({ id: curVal.id, name: curVal.name });
-            return acc;
-        }, {});
-
-        const userRoles = Object.keys(result).map(userId => ({
-            userId,
-            roles: result[userId],
-        }));
-
-        return userRoles;
-        */
     }
 }

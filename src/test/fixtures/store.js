@@ -12,6 +12,8 @@ const contextFieldStore = require('./fake-context-store');
 const settingStore = require('./fake-setting-store');
 const addonStore = require('./fake-addon-store');
 const projectStore = require('./fake-project-store');
+const UserStore = require('./fake-user-store');
+const AccessStore = require('./fake-access-store');
 
 module.exports = {
     createStores: (databaseIsUp = true) => {
@@ -35,6 +37,8 @@ module.exports = {
             settingStore: settingStore(databaseIsUp),
             addonStore: addonStore(databaseIsUp),
             projectStore: projectStore(databaseIsUp),
+            userStore: new UserStore(),
+            accessStore: new AccessStore(),
         };
     },
 };

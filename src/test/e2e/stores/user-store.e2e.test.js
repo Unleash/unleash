@@ -127,14 +127,14 @@ test.serial('should reset user after successful login', async t => {
     await store.incLoginAttempts(user);
     await store.incLoginAttempts(user);
 
-    await store.succesfullLogin(user);
+    await store.successfullyLogin(user);
     const storedUser = await store.get(user);
 
     t.is(storedUser.loginAttempts, 0);
     t.true(storedUser.seenAt >= user.seenAt);
 });
 
-test.serial('should store and get permsissions', async t => {
+test.serial('should store and get permissions', async t => {
     const store = stores.userStore;
     const email = 'userWithPermissions@mail.com';
     const user = new User({

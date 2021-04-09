@@ -15,6 +15,7 @@ const unleashDbSession = require('./middleware/session-db');
 
 const requestLogger = require('./middleware/request-logger');
 const simpleAuthentication = require('./middleware/simple-authentication');
+const ossAuthentication = require('./middleware/oss-authentication');
 const noAuthentication = require('./middleware/no-authentication');
 const secureHeaders = require('./middleware/secure-headers');
 
@@ -57,7 +58,12 @@ module.exports = function(config, services = {}) {
     // Deprecated. Will go away in v4.
     if (config.adminAuthentication === AuthenticationType.unsecure) {
         app.use(baseUriPath, apiTokenMiddleware(config, services));
-        simpleAuthentication(baseUriPath, app);
+        simpleAuthentication(app, config, services);
+    }
+
+    if (config.adminAuthentication === AuthenticationType.openSource) {
+        app.use(baseUriPath, apiTokenMiddleware(config, services));
+        ossAuthentication(app, config, services);
     }
 
     if (config.adminAuthentication === AuthenticationType.enterprise) {

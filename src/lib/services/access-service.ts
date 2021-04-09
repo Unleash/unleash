@@ -1,4 +1,4 @@
-import { AccessStore, IRole, IUserPermission } from '../db/access-store';
+import { AccessStore, IRole, IUserPermission, IUserRole } from '../db/access-store';
 import p from '../permissions';
 import User from '../user';
 
@@ -37,13 +37,13 @@ export interface IUserWithRole {
     imageUrl?: string;
 }
 
-interface IRoleData {
+export interface IRoleData {
     role: IRole;
     users: User[];
     permissions: IUserPermission[];
 }
 
-interface IPermission {
+export interface IPermission {
     name: string;
     type: PermissionType;
 }
@@ -62,6 +62,11 @@ export enum RoleName {
 export enum RoleType {
     ROOT = 'root',
     PROJECT = 'project',
+}
+
+export interface IRoleIdentifier {
+    roleId?: number;
+    roleName?: RoleName;
 }
 
 export class AccessService {
@@ -101,6 +106,10 @@ export class AccessService {
                 .some(p => p.permission === permission || p.permission === ADMIN);
     }
 
+    async getPermissionsForUser(user: User) {
+        return this.store.getPermissionsForUser(user.id);
+    }
+
     getPermissions(): IPermission[] {
         return this.permissions;
     }
@@ -109,20 +118,25 @@ export class AccessService {
         return this.store.addUserToRole(userId, roleId);
     }
 
-    async setUserRootRole(userId: number, roleName: RoleName ) {
-        const userRoles = await this.store.getRolesForUserId(userId);
-        const currentRootRoles = userRoles.filter(r => r.type === RoleType.ROOT);
-
-        const roles = await this.getRoles();
-        const role = roles.find(r => r.type === RoleType.ROOT && r.name === roleName);
-        if(role) {
+    async setUserRootRole(userId: number, roleId: number) {
+        const roles = await this.getRootRoles();
+        const newRootRole = roles.find(r => r.id === roleId);
+        
+        if(newRootRole) {
             try {
-                await Promise.all(currentRootRoles.map(r => this.store.removeUserFromRole(userId, r.id)));
-                await this.store.addUserToRole(userId, role.id);
+                await this.store.removeRolesOfTypeForUser(userId, RoleType.ROOT);
+                await this.store.addUserToRole(userId, newRootRole.id);
             } catch (error) {
-                this.logger.warn('Could not add role=${roleName} to userId=${userId}');
+                throw new Error('Could not add role=${roleName} to userId=${userId}');
             }
+        } else {
+            throw new Error(`Could not find rootRole with id=${roleId}`);
         }
+    }
+
+    async getUserRootRoles(userId: number) {
+        const userRoles = await this.store.getRolesForUserId(userId);
+        return userRoles.filter(r => r.type === RoleType.ROOT);
     }
 
     async removeUserFromRole(userId: number, roleId: number) {
@@ -219,5 +233,18 @@ export class AccessService {
     async removeDefaultProjectRoles(owner: User, projectId: string) {
         this.logger.info(`Removing project roles for ${projectId}`);
         return this.store.removeRolesForProject(projectId);
+    }
+
+    async getRootRoleForAllUsers(): Promise<IUserRole[]> {
+        return this.store.getRootRoleForAllUsers();
+    }
+
+    async getRootRoles(): Promise<IRole[]> {
+        return this.store.getRootRoles();
+    }
+
+    async getRootRole(roleName: RoleName): Promise<IRole> {
+        const roles = await this.store.getRootRoles();
+        return roles.find(r => r.name === roleName);
     }
 }

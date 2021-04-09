@@ -14,7 +14,15 @@ export interface UserData {
     createdAt?: Date;
 }
 
-export default class User {
+export interface IUser {
+    id: number;
+    name?: string;
+    username?: string;
+    email?: string;
+    createdAt: Date;
+}
+
+export default class User implements IUser {
     id: number;
 
     isAPI: boolean;

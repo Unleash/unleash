@@ -96,8 +96,10 @@ test('should not add user if disabled', async t => {
 
     const disabledConfig = {
         getLogger,
+        baseUriPath: '',
         authentication: {
             enableApiToken: false,
+            createAdminUser: false,
         },
     };
 

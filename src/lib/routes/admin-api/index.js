@@ -16,6 +16,7 @@ const TagTypeController = require('./tag-type');
 const AddonController = require('./addon');
 const ApiTokenController = require('./api-token-controller');
 const EmailController = require('./email');
+const UserAdminController = require('./user-admin');
 const apiDef = require('./api-def.json');
 
 class AdminApi extends Controller {
@@ -65,6 +66,10 @@ class AdminApi extends Controller {
             new ApiTokenController(config, services).router,
         );
         this.app.use('/email', new EmailController(config, services).router);
+        this.app.use(
+            '/user-admin',
+            new UserAdminController(config, services).router,
+        );
     }
 
     index(req, res) {

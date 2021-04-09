@@ -17,12 +17,13 @@ let accessService;
 
 let regularUser;
 let superUser;
+let regularRole;
+let adminRole;
+let readRole;
 
 const createUserWithRegularAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert(new User({ name, email }));
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(r => r.name === 'Regular');
     await accessService.addUserToRole(user.id, regularRole.id);
     return user;
 };
@@ -32,9 +33,7 @@ const createSuperUser = async () => {
     const user = await userStore.insert(
         new User({ name: 'Alice Admin', email: 'admin@getunleash.io' }),
     );
-    const roles = await accessService.getRoles();
-    const superRole = roles.find(r => r.name === 'Admin');
-    await accessService.addUserToRole(user.id, superRole.id);
+    await accessService.addUserToRole(user.id, adminRole.id);
     return user;
 };
 
@@ -43,6 +42,11 @@ test.before(async () => {
     stores = db.stores;
     // projectStore = stores.projectStore;
     accessService = new AccessService(stores, { getLogger });
+    const roles = await accessService.getRootRoles();
+    regularRole = roles.find(r => r.name === RoleName.REGULAR);
+    adminRole = roles.find(r => r.name === RoleName.ADMIN);
+    readRole = roles.find(r => r.name === RoleName.READ);
+
     regularUser = await createUserWithRegularAccess(
         'Bob Test',
         'bob@getunleash.io',
@@ -120,11 +124,6 @@ test.serial('should grant regular CREATE_FEATURE on all projects', async t => {
     const { CREATE_FEATURE } = permissions;
     const user = regularUser;
 
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(
-        r => r.name === 'Regular' && r.type === 'root',
-    );
-
     await accessService.addPermissionToRole(
         regularRole.id,
         permissions.CREATE_FEATURE,
@@ -137,11 +136,6 @@ test.serial('should grant regular CREATE_FEATURE on all projects', async t => {
 });
 
 test.serial('cannot add CREATE_FEATURE without defining project', async t => {
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(
-        r => r.name === 'Regular' && r.type === 'root',
-    );
-
     await t.throwsAsync(
         async () => {
             await accessService.addPermissionToRole(
@@ -159,11 +153,6 @@ test.serial('cannot add CREATE_FEATURE without defining project', async t => {
 test.serial(
     'cannot remove CREATE_FEATURE without defining project',
     async t => {
-        const roles = await accessService.getRoles();
-        const regularRole = roles.find(
-            r => r.name === 'Regular' && r.type === 'root',
-        );
-
         await t.throwsAsync(
             async () => {
                 await accessService.removePermissionFromRole(
@@ -183,11 +172,6 @@ test.serial(
 test.serial('should remove CREATE_FEATURE on all projects', async t => {
     const { CREATE_FEATURE } = permissions;
     const user = regularUser;
-
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(
-        r => r.name === 'Regular' && r.type === 'root',
-    );
 
     await accessService.addPermissionToRole(
         regularRole.id,
@@ -272,10 +256,10 @@ test.serial('should grant user access to project', async t => {
 
     const roles = await accessService.getRolesForProject(project);
 
-    const regularRole = roles.find(
+    const projectRole = roles.find(
         r => r.name === 'Regular' && r.project === project,
     );
-    await accessService.addUserToRole(sUser.id, regularRole.id);
+    await accessService.addUserToRole(sUser.id, projectRole.id);
 
     // Should be able to update feature toggles inside the project
     t.true(await accessService.hasPermission(sUser, CREATE_FEATURE, project));
@@ -299,10 +283,10 @@ test.serial('should not get access if not specifying project', async t => {
 
     const roles = await accessService.getRolesForProject(project);
 
-    const regularRole = roles.find(
+    const projectRole = roles.find(
         r => r.name === 'Regular' && r.project === project,
     );
-    await accessService.addUserToRole(sUser.id, regularRole.id);
+    await accessService.addUserToRole(sUser.id, projectRole.id);
 
     // Should not be able to update feature toggles outside project
     t.false(await accessService.hasPermission(sUser, CREATE_FEATURE));
@@ -316,8 +300,6 @@ test.serial('should remove user from role', async t => {
         new User({ name: 'Some User', email: 'random123@getunleash.io' }),
     );
 
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(r => r.name === 'Regular');
     await accessService.addUserToRole(user.id, regularRole.id);
 
     // check user has one role
@@ -336,8 +318,6 @@ test.serial('should return role with users', async t => {
         new User({ name: 'Some User', email: 'random2223@getunleash.io' }),
     );
 
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(r => r.name === 'Regular');
     await accessService.addUserToRole(user.id, regularRole.id);
 
     const roleWithUsers = await accessService.getRole(regularRole.id);
@@ -354,8 +334,6 @@ test.serial('should return role with permissions and users', async t => {
         new User({ name: 'Some User', email: 'random2244@getunleash.io' }),
     );
 
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(r => r.name === 'Regular');
     await accessService.addUserToRole(user.id, regularRole.id);
 
     const roleWithPermission = await accessService.getRole(regularRole.id);
@@ -397,7 +375,7 @@ test.serial('should set root role for user', async t => {
         new User({ name: 'Some User', email: 'random2255@getunleash.io' }),
     );
 
-    await accessService.setUserRootRole(user.id, RoleName.REGULAR);
+    await accessService.setUserRootRole(user.id, regularRole.id);
 
     const roles = await accessService.getRolesForUser(user.id);
 
@@ -411,8 +389,8 @@ test.serial('should switch root role for user', async t => {
         new User({ name: 'Some User', email: 'random22Read@getunleash.io' }),
     );
 
-    await accessService.setUserRootRole(user.id, RoleName.REGULAR);
-    await accessService.setUserRootRole(user.id, RoleName.READ);
+    await accessService.setUserRootRole(user.id, regularRole.id);
+    await accessService.setUserRootRole(user.id, readRole.id);
 
     const roles = await accessService.getRolesForUser(user.id);
 

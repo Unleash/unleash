@@ -22,6 +22,11 @@ export interface IRole {
     project?: string;
 }
 
+export interface IUserRole {
+    roleId: number;
+    userId: number;
+}
+
 export class AccessStore {
     private logger: Function;
 
@@ -82,6 +87,13 @@ export class AccessStore {
             .andWhere('type', 'project');
     }
 
+    async getRootRoles(): Promise<IRole[]> {
+        return this.db
+            .select(['id', 'name', 'type', 'project', 'description'])
+            .from<IRole>(T.ROLES)
+            .andWhere('type', 'root');
+    }
+
     async removeRolesForProject(projectId: string): Promise<void> {
         return this.db(T.ROLES)
             .where({
@@ -122,6 +134,20 @@ export class AccessStore {
             .delete();
     }
 
+    async removeRolesOfTypeForUser(
+        userId: number,
+        roleType: string,
+    ): Promise<void> {
+        const rolesToRemove = this.db(T.ROLES)
+            .select('id')
+            .where({ type: roleType });
+
+        return this.db(T.ROLE_USER)
+            .where({ user_id: userId })
+            .whereIn('role_id', rolesToRemove)
+            .delete();
+    }
+
     async createRole(
         name: string,
         type: string,
@@ -159,5 +185,19 @@ export class AccessStore {
                 project: projectId,
             })
             .delete();
+    }
+
+    async getRootRoleForAllUsers(): Promise<IUserRole[]> {
+        const rows = await this.db
+            .select('id', 'user_id')
+            .distinctOn('user_id')
+            .from(`${T.ROLES} AS r`)
+            .leftJoin(`${T.ROLE_USER} AS ru`, 'r.id', 'ru.role_id')
+            .where('r.type', '=', 'root');
+
+        return rows.map(row => ({
+            roleId: +row.id,
+            userId: +row.user_id,
+        }));
     }
 }

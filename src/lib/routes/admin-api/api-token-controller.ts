@@ -14,16 +14,7 @@ import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
 import { isRbacEnabled } from '../../util/feature-enabled';
 import User from '../../user';
-
-interface IExperimentalFlags {
-    [key: string]: boolean;
-}
-
-interface IConfig {
-    getLogger: LogProvider;
-    extendedPermissions: boolean;
-    experimental: IExperimentalFlags;
-}
+import { IUnleashConfig } from '../../types/core';
 
 interface IServices {
     apiTokenService: ApiTokenService;
@@ -41,7 +32,7 @@ class ApiTokenController extends Controller {
 
     private logger: Logger;
 
-    constructor(config: IConfig, services: IServices) {
+    constructor(config: IUnleashConfig, services: IServices) {
         super(config);
         this.apiTokenService = services.apiTokenService;
         this.accessService = services.accessService;

@@ -1,9 +1,10 @@
 /* eslint camelcase: "off" */
 
-'use strict';
+import { Knex } from 'knex';
+import { Logger, LogProvider } from '../logger';
+import User from '../user';
 
 const NotFoundError = require('../error/notfound-error');
-const User = require('../user');
 
 const TABLE = 'users';
 
@@ -13,7 +14,7 @@ const USER_COLUMNS = [
     'username',
     'email',
     'image_url',
-    'permissions',
+    'permissions', // TODO: remove in v4
     'login_attempts',
     'seen_at',
     'created_at',
@@ -53,27 +54,57 @@ const rowToUser = row => {
     });
 };
 
+export interface IUserLookup {
+    id?: number;
+    username?: string;
+    email?: string;
+}
+
+export interface IUserSearch {
+    name?: string;
+    username?: string;
+    email: string;
+}
+
+export interface IUserUpdateFields {
+    name?: string;
+    email?: string;
+}
+
 class UserStore {
-    constructor(db, getLogger) {
+    private db: Knex;
+
+    private logger: Logger;
+
+    constructor(db: Knex, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('user-store.js');
     }
 
-    async update(id, user) {
+    async update(id: number, fields: IUserUpdateFields): Promise<User> {
         await this.db(TABLE)
             .where('id', id)
-            .update(mapUserToColumns(user));
+            .update(mapUserToColumns(fields));
         return this.get({ id });
     }
 
-    async insert(user) {
-        const [id] = await this.db(TABLE)
+    async insert(user: User): Promise<User> {
+        const rows = await this.db(TABLE)
             .insert(mapUserToColumns(user))
-            .returning('id');
-        return this.get({ id });
+            .returning(USER_COLUMNS);
+        return rowToUser(rows[0]);
     }
 
-    buildSelectUser(q) {
+    async upsert(user: User): Promise<User> {
+        const id = await this.hasUser(user);
+
+        if (id) {
+            return this.update(id, user);
+        }
+        return this.insert(user);
+    }
+
+    buildSelectUser(q: IUserLookup): any {
         const query = this.db(TABLE);
         if (q.id) {
             return query.where('id', q.id);
@@ -87,27 +118,18 @@ class UserStore {
         throw new Error('Can only find users with id, username or email.');
     }
 
-    async hasUser(idQuery) {
+    async hasUser(idQuery: IUserLookup): Promise<number | undefined> {
         const query = this.buildSelectUser(idQuery);
         const item = await query.first('id');
         return item ? item.id : undefined;
     }
 
-    async upsert(user) {
-        const id = await this.hasUser(user);
-
-        if (id) {
-            return this.update(id, user);
-        }
-        return this.insert(user);
-    }
-
-    async getAll() {
+    async getAll(): Promise<User[]> {
         const users = await this.db.select(USER_COLUMNS).from(TABLE);
         return users.map(rowToUser);
     }
 
-    async search(query) {
+    async search(query: IUserSearch): Promise<User[]> {
         const users = await this.db
             .select(USER_COLUMNS_PUBLIC)
             .from(TABLE)
@@ -117,7 +139,7 @@ class UserStore {
         return users.map(rowToUser);
     }
 
-    async getAllWithId(userIdList) {
+    async getAllWithId(userIdList: number[]): Promise<User[]> {
         const users = await this.db
             .select(USER_COLUMNS_PUBLIC)
             .from(TABLE)
@@ -125,18 +147,18 @@ class UserStore {
         return users.map(rowToUser);
     }
 
-    async get(idQuery) {
+    async get(idQuery: IUserLookup): Promise<User> {
         const row = await this.buildSelectUser(idQuery).first(USER_COLUMNS);
         return rowToUser(row);
     }
 
-    async delete(id) {
+    async delete(id: number): Promise<void> {
         return this.db(TABLE)
             .where({ id })
             .del();
     }
 
-    async getPasswordHash(userId) {
+    async getPasswordHash(userId: number): Promise<string> {
         const item = await this.db(TABLE)
             .where('id', userId)
             .first('password_hash');
@@ -148,7 +170,7 @@ class UserStore {
         return item.password_hash;
     }
 
-    async setPasswordHash(userId, passwordHash) {
+    async setPasswordHash(userId: number, passwordHash: string): Promise<void> {
         return this.db(TABLE)
             .where('id', userId)
             .update({
@@ -156,13 +178,11 @@ class UserStore {
             });
     }
 
-    async incLoginAttempts(user) {
-        return this.buildSelectUser(user).increment({
-            login_attempts: 1,
-        });
+    async incLoginAttempts(user: User): Promise<void> {
+        return this.buildSelectUser(user).increment('login_attempts', 1);
     }
 
-    async succesfullLogin(user) {
+    async successfullyLogin(user: User): Promise<void> {
         return this.buildSelectUser(user).update({
             login_attempts: 0,
             seen_at: new Date(),
@@ -171,3 +191,4 @@ class UserStore {
 }
 
 module.exports = UserStore;
+export default UserStore;

@@ -5,7 +5,7 @@ import { readFileSync, existsSync } from 'fs';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 
-export interface AuthOptions {
+export interface IAuthOptions {
     user: string;
     password: string;
 }
@@ -20,12 +20,12 @@ export enum TransporterType {
     JSON = 'json',
 }
 
-export interface EmailOptions {
+export interface IEmailOptions {
     host: string;
     port: number;
     secure: boolean;
     sender: string;
-    auth: AuthOptions;
+    auth: IAuthOptions;
     transporterType: TransporterType;
 }
 
@@ -40,7 +40,7 @@ export class EmailService {
 
     private readonly sender: string;
 
-    constructor(email: EmailOptions | undefined, getLogger: LogProvider) {
+    constructor(email: IEmailOptions | undefined, getLogger: LogProvider) {
         this.logger = getLogger('services/email-service.ts');
         if (email) {
             this.sender = email.sender;

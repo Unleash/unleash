@@ -23,6 +23,6 @@ npm run start:heroku
 ```
 
 ## UI Framework
-Currently using [react-mdl](https://tleunen.github.io/react-mdl/components/) which is a deprecated and closed project.
+We are using [material-ui](http://material-ui.com/).
 
 Happy coding!

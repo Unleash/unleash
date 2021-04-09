@@ -30,7 +30,7 @@
     "test": "react-scripts test",
     "prepublish": "yarn run build"
   },
-  "dependencies": {
+  "devDependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
@@ -51,6 +51,7 @@
     "debounce": "^1.2.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
+    "enzyme-to-json": "^3.6.1",
     "fetch-mock": "^9.11.0",
     "immutable": "^4.0.0-rc.12",
     "lodash.clonedeep": "^4.5.0",
@@ -105,8 +106,5 @@
 
     }
   },
-  "proxy": "http://localhost:4242",
-  "devDependencies": {
-    "enzyme-to-json": "^3.6.1"
-  }
+  "proxy": "http://localhost:4242"
 }

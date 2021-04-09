@@ -43,8 +43,6 @@ class UserService {
 
     private accessService: AccessService;
 
-    private defaultRole: RoleName = RoleName.REGULAR;
-
     constructor(
         stores: IStores,
         config: IUnleashConfig,
@@ -53,7 +51,6 @@ class UserService {
         this.logger = config.getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.accessService = accessService;
-        this.defaultRole = this.accessService.RoleName.REGULAR;
 
         if (config.authentication && config.authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
@@ -143,7 +140,8 @@ class UserService {
         }
 
         const user = await this.store.insert(
-            new User({ username, email, name }),
+            // TODO: remove permission in v4.
+            new User({ username, email, name, permissions: [ADMIN] }),
         );
 
         await this.accessService.setUserRootRole(user.id, rootRole);
@@ -186,6 +184,39 @@ class UserService {
             return user;
         }
         throw new Error('Wrong password, try again.');
+    }
+
+    /**
+     * Used to login users without specifying password. Used when integrating
+     * with external identity providers.
+     *
+     * @param usernameOrEmail
+     * @param autoCreateUser
+     * @returns
+     */
+    async loginUserWithoutPassword(
+        email: string,
+        autoCreateUser: boolean = false,
+    ): Promise<User> {
+        let user: User;
+
+        try {
+            user = await this.store.get({ email });
+        } catch (e) {
+            if (autoCreateUser) {
+                const defaultRole = await this.accessService.getRootRole(
+                    RoleName.REGULAR,
+                );
+                user = await this.createUser({
+                    email,
+                    rootRole: defaultRole.id,
+                });
+            } else {
+                throw e;
+            }
+        }
+        this.store.successfullyLogin(user);
+        return user;
     }
 
     async changePassword(userId: number, password: string): Promise<void> {

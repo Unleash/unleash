@@ -28,56 +28,6 @@ test('Should create new user', async t => {
     t.is(user.username, 'test');
     t.is(allUsers.length, 1);
     t.is(storedUser.username, 'test');
-    // t.truthy(storedUser.passwordHash);
-});
-
-/*
-test('Should delete user', async t => {
-    const userStore = new UserStoreMock();
-    const accessService = new AccessServiceMock();
-    const service = new UserService(
-        { userStore, getLogger, accessService },
-        false,
-    );
-    const user = await service.createUser({
-        username: 'test',
-        password: 'somePassWithManyChars',
-        permissions: ['ADMIN'],
-    });
-    await service.deleteUser(user.id);
-    const hasUser = userStore.hasUser(user.id);
-    t.falsy(hasUser);
-});
-
-test('Should login user', async t => {
-    const userStore = new UserStoreMock();
-    const accessService = new AccessServiceMock();
-    const service = new UserService(
-        { userStore, getLogger, accessService },
-        false,
-    );
-    await service.createUser({
-        username: 'test',
-        password: 'somePassWithManyChars',
-        permissions: ['ADMIN'],
-    });
-    const user = await service.loginUser('test', 'somePassWithManyChars');
-    t.is(user.username, 'test');
-});
-
-test('Should update password for user', async t => {
-    const userStore = new UserStoreMock();
-    const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
-
-    const u = await service.createUser({
-        username: 'test',
-        password: 'somePassWithManyChars2_',
-        permissions: ['ADMIN'],
-    });
-    await service.changePassword(u.id, 'newpassword2_sDAS');
-    const user = await service.loginUser('test', 'newpassword2_sDAS');
-    t.is(user.username, 'test');
 });
 
 test('Should create default user', async t => {
@@ -85,7 +35,7 @@ test('Should create default user', async t => {
     const accessService = new AccessServiceMock();
     const service = new UserService({ userStore }, config, accessService);
 
-    await service.initDefaultUser();
+    await service.initAdminUser();
 
     const user = await service.loginUser('admin', 'admin');
     t.is(user.username, 'admin');
@@ -150,5 +100,3 @@ test('Should be a valid password with special chars', async t => {
 
     t.true(valid);
 });
-
-*/

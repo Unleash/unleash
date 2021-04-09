@@ -58,7 +58,7 @@ module.exports = function(config, services = {}) {
     // Deprecated. Will go away in v4.
     if (config.adminAuthentication === AuthenticationType.unsecure) {
         app.use(baseUriPath, apiTokenMiddleware(config, services));
-        simpleAuthentication(baseUriPath, app);
+        simpleAuthentication(app, config, services);
     }
 
     if (config.adminAuthentication === AuthenticationType.openSource) {

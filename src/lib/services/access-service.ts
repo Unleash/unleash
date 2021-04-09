@@ -106,6 +106,10 @@ export class AccessService {
                 .some(p => p.permission === permission || p.permission === ADMIN);
     }
 
+    async getPermissionsForUser(user: User) {
+        return this.store.getPermissionsForUser(user.id);
+    }
+
     getPermissions(): IPermission[] {
         return this.permissions;
     }
@@ -115,16 +119,15 @@ export class AccessService {
     }
 
     async setUserRootRole(userId: number, roleId: number) {
-        const currentRootRoles = await this.getUserRootRoles(userId);        
         const roles = await this.getRootRoles();
         const newRootRole = roles.find(r => r.id === roleId);
         
         if(newRootRole) {
             try {
-                await Promise.all(currentRootRoles.map(r => this.store.removeUserFromRole(userId, r.id)));
+                await this.store.removeRolesOfTypeForUser(userId, RoleType.ROOT);
                 await this.store.addUserToRole(userId, newRootRole.id);
             } catch (error) {
-                this.logger.warn('Could not add role=${roleName} to userId=${userId}');
+                throw new Error('Could not add role=${roleName} to userId=${userId}');
             }
         } else {
             throw new Error(`Could not find rootRole with id=${roleId}`);

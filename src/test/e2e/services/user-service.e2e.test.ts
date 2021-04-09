@@ -67,3 +67,14 @@ test.serial('should create user with password', async t => {
     );
     t.is(user.username, 'test');
 });
+
+test.serial('should login for user _without_ password', async t => {
+    const email = 'some@test.com';
+    await userService.createUser({
+        email,
+        password: 'A very strange P4ssw0rd_',
+        rootRole: adminRole.id,
+    });
+    const user = await userService.loginUserWithoutPassword(email);
+    t.is(user.email, email);
+});

@@ -134,6 +134,20 @@ export class AccessStore {
             .delete();
     }
 
+    async removeRolesOfTypeForUser(
+        userId: number,
+        roleType: string,
+    ): Promise<void> {
+        const rolesToRemove = this.db(T.ROLES)
+            .select('id')
+            .where({ type: roleType });
+
+        return this.db(T.ROLE_USER)
+            .where({ user_id: userId })
+            .whereIn('role_id', rolesToRemove)
+            .delete();
+    }
+
     async createRole(
         name: string,
         type: string,

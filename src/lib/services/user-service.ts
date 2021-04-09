@@ -10,6 +10,7 @@ import User, { IUser } from '../user';
 import isEmail from '../util/is-email';
 import { AccessService, RoleName } from './access-service';
 import { ADMIN } from '../permissions';
+import ResetTokenService from './reset-token-service';
 
 export interface ICreateUser {
     name?: string;
@@ -34,6 +35,11 @@ interface IStores {
     userStore: UserStore;
 }
 
+interface IServices {
+    accessService: AccessService;
+    resetTokenService: ResetTokenService;
+}
+
 const saltRounds = 10;
 
 class UserService {
@@ -43,15 +49,17 @@ class UserService {
 
     private accessService: AccessService;
 
+    private resetTokenService: ResetTokenService;
+
     constructor(
         stores: IStores,
         config: IUnleashConfig,
-        accessService: AccessService,
+        { accessService, resetTokenService }: IServices,
     ) {
         this.logger = config.getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.accessService = accessService;
-
+        this.resetTokenService = resetTokenService;
         if (config.authentication && config.authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }

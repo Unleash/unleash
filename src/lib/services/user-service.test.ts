@@ -3,8 +3,8 @@ import UserService from './user-service';
 import UserStoreMock from '../../test/fixtures/fake-user-store';
 import AccessServiceMock from '../../test/fixtures/access-service-mock';
 import noLogger from '../../test/fixtures/no-logger';
-import { RoleName } from './access-service';
 import { IUnleashConfig } from '../types/core';
+import ResetTokenServiceMock from '../../test/fixtures/reset-token-service-mock';
 
 const config: IUnleashConfig = {
     getLogger: noLogger,
@@ -15,8 +15,11 @@ const config: IUnleashConfig = {
 test('Should create new user', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenService = new ResetTokenServiceMock();
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+    });
     const user = await service.createUser({
         username: 'test',
         rootRole: 1,
@@ -33,7 +36,11 @@ test('Should create new user', async t => {
 test('Should create default user', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenService = new ResetTokenServiceMock();
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+    });
 
     await service.initAdminUser();
 
@@ -44,7 +51,11 @@ test('Should create default user', async t => {
 test('Should be a valid password', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenService = new ResetTokenServiceMock();
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+    });
 
     const valid = service.validatePassword('this is a strong password!');
 
@@ -54,7 +65,11 @@ test('Should be a valid password', async t => {
 test('Password must be at least 10 chars', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenService = new ResetTokenServiceMock();
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+    });
 
     t.throws(() => service.validatePassword('admin'), {
         message: 'The password must be at least 10 characters long.',
@@ -64,7 +79,11 @@ test('Password must be at least 10 chars', async t => {
 test('The password must contain at least one uppercase letter.', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenService = new ResetTokenServiceMock();
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+    });
 
     t.throws(() => service.validatePassword('qwertyabcde'), {
         message: 'The password must contain at least one uppercase letter.',
@@ -74,7 +93,11 @@ test('The password must contain at least one uppercase letter.', async t => {
 test('The password must contain at least one number', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenService = new ResetTokenServiceMock();
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+    });
 
     t.throws(() => service.validatePassword('qwertyabcdE'), {
         message: 'The password must contain at least one number.',
@@ -84,7 +107,11 @@ test('The password must contain at least one number', async t => {
 test('The password must contain at least one special character', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenService = new ResetTokenServiceMock();
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+    });
 
     t.throws(() => service.validatePassword('qwertyabcdE2'), {
         message: 'The password must contain at least one special character.',
@@ -94,7 +121,11 @@ test('The password must contain at least one special character', async t => {
 test('Should be a valid password with special chars', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenService = new ResetTokenServiceMock();
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+    });
 
     const valid = service.validatePassword('this is a strong password!');
 

@@ -141,7 +141,7 @@
     "supertest": "^5.0.0",
     "ts-node": "^9.1.1",
     "tsc-watch": "^4.2.9",
-    "typescript": "^4.1.5"
+    "typescript": "^4.2.4"
   },
   "resolutions": {
     "set-value": "^2.0.1",

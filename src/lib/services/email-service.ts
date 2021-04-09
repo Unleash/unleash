@@ -5,10 +5,10 @@ import { readFileSync, existsSync } from 'fs';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 
-export type AuthOptions = {
+export interface AuthOptions {
     user: string;
     password: string;
-};
+}
 
 export enum TemplateFormat {
     HTML = 'html',
@@ -20,14 +20,14 @@ export enum TransporterType {
     JSON = 'json',
 }
 
-export type EmailOptions = {
+export interface EmailOptions {
     host: string;
     port: number;
     secure: boolean;
     sender: string;
     auth: AuthOptions;
     transporterType: TransporterType;
-};
+}
 
 const RESET_MAIL_SUBJECT = 'Someone has requested to reset your password';
 const GETTING_STARTED_SUBJECT =

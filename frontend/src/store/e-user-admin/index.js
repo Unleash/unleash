@@ -1,10 +1,10 @@
 import { List } from 'immutable';
-import { RECIEVE_USERS, ADD_USER, REMOVE_USER, UPDATE_USER } from './actions';
+import { RECEIVE_USERS, ADD_USER, REMOVE_USER, UPDATE_USER } from './actions';
 
 const store = (state = new List(), action) => {
     switch (action.type) {
-        case RECIEVE_USERS:
-            return new List(action.value);
+        case RECEIVE_USERS:
+            return new List(action.value.users);
         case ADD_USER:
             return state.push(action.user);
         case UPDATE_USER:

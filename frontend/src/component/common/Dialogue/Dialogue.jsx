@@ -3,10 +3,20 @@ import { Dialog, DialogTitle, DialogActions, DialogContent, Button } from '@mate
 import PropTypes from 'prop-types';
 import ConditionallyRender from '../ConditionallyRender/ConditionallyRender';
 
-const ConfirmDialogue = ({ children, open, onClick, onClose, title, primaryButtonText, secondaryButtonText }) => (
+const ConfirmDialogue = ({
+    children,
+    open,
+    onClick,
+    onClose,
+    title,
+    primaryButtonText,
+    secondaryButtonText,
+    fullWidth = false,
+}) => (
     <Dialog
         open={open}
         onClose={onClose}
+        fullWidth={fullWidth}
         aria-labelledby={'simple-modal-title'}
         aria-describedby={'simple-modal-description'}
     >
@@ -32,6 +42,7 @@ ConfirmDialogue.propTypes = {
     ariaLabel: PropTypes.string,
     ariaDescription: PropTypes.string,
     title: PropTypes.string,
+    fullWidth: PropTypes.bool,
 };
 
 export default ConfirmDialogue;

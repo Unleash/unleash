@@ -1,13 +1,3 @@
-export const showPermissions = permissions => {
-    if (!permissions || permissions.length === 0) {
-        return 'read';
-    } else if (permissions.includes('ADMIN')) {
-        return 'admin';
-    } else {
-        return 'regular';
-    }
-};
-
 export const modalStyles = {
     overlay: {
         position: 'absolute',

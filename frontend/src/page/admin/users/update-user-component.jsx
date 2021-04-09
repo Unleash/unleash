@@ -1,99 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-    Button,
-    TextField,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    RadioGroup,
-    Radio,
-    Modal,
-} from '@material-ui/core';
-import { showPermissions, modalStyles } from './util';
+import Dialogue from '../../../component/common/Dialogue';
+import UserForm from './user-form';
 
-function AddUser({ user, showDialog, closeDialog, updateUser }) {
-    const [data, setData] = useState(user);
+function AddUser({ user = {}, showDialog, closeDialog, updateUser, roles }) {
+    const [data, setData] = useState({});
     const [error, setError] = useState({});
+
+    useEffect(() => {
+        setData({
+            id: user.id,
+            email: user.email || '',
+            rootRole: user.rootRole || '',
+            name: user.name || '',
+        });
+    }, [user])
+
+
 
     if (!user) {
         return null;
     }
-
-
-    const updateField = e => {
-        setData({
-            ...data,
-            [e.target.name]: e.target.value,
-        });
-    };
 
     const submit = async e => {
         e.preventDefault();
 
         try {
             await updateUser(data);
+            setData({});
+            setError({});
             closeDialog();
         } catch (error) {
-            setError({ general: 'Could not create user' });
+            setError({ general: 'Could not update user' });
         }
     };
 
     const onCancel = e => {
         e.preventDefault();
+        setData({});
+        setError({});
         closeDialog();
     };
 
-    const userType = data.userType || showPermissions(user.permissions);
-
     return (
-        <Modal open={showDialog} style={modalStyles} onClose={onCancel}>
-            <form onSubmit={submit}>
-                <DialogTitle>Edit user</DialogTitle>
-
-                <DialogContent>
-                    <p>{error.general}</p>
-                    <TextField
-                        label="Full name"
-                        name="name"
-                        value={data.name}
-                        error={error.name}
-                        type="name"
-                        onChange={updateField}
-                    />
-                    <TextField
-                        label="Email"
-                        name="email"
-                        contentEditable="false"
-                        editable="false"
-                        readOnly
-                        value={data.email}
-                        type="email"
-                    />
-                    <br />
-                    <br />
-                    <RadioGroup name="userType" value={userType} onChange={updateField} childContainer="div">
-                        <Radio value="regular" ripple>
-                            Regular user
-                        </Radio>
-                        <Radio value="admin" ripple>
-                            Admin user
-                        </Radio>
-                        <Radio value="read" ripple>
-                            Read only
-                        </Radio>
-                    </RadioGroup>
-                </DialogContent>
-                <DialogActions>
-                    <Button raised colored type="submit">
-                        Update
-                    </Button>
-                    <Button type="button" onClick={onCancel}>
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </form>
-        </Modal>
+        <Dialogue
+            onClick={e => {
+                submit(e);
+            }}
+            open={showDialog}
+            onClose={onCancel}
+            primaryButtonText="Update user"
+            secondaryButtonText="Cancel"
+            fullWidth
+        >
+            <UserForm title="Update user" data={data} setData={setData} roles={roles} submit={submit} error={error} />
+        </Dialogue>
     );
 }
 
@@ -102,6 +63,7 @@ AddUser.propTypes = {
     closeDialog: PropTypes.func.isRequired,
     updateUser: PropTypes.func.isRequired,
     user: PropTypes.object,
+    roles: PropTypes.array.isRequired,
 };
 
 export default AddUser;

@@ -4,6 +4,7 @@ import { TextField, DialogTitle, DialogContent } from '@material-ui/core';
 import { trim } from '../../../component/common/util';
 import { modalStyles } from './util';
 import Dialogue from '../../../component/common/Dialogue/Dialogue';
+import commonStyles from '../../../component/common/common.module.scss';
 
 function ChangePassword({ showDialog, closeDialog, changePassword, validatePassword, user = {} }) {
     const [data, setData] = useState({});
@@ -67,11 +68,14 @@ function ChangePassword({ showDialog, closeDialog, changePassword, validatePassw
         >
             <form onSubmit={submit}>
                 <DialogTitle>Update password</DialogTitle>
-                <DialogContent>
+                <DialogContent
+                    className={commonStyles.contentSpacing}
+                    style={{ display: 'flex', flexDirection: 'column' }}
+                >
                     <p>User: {user.username || user.email}</p>
                     <p style={{ color: 'red' }}>{error.general}</p>
                     <TextField
-                        label="New passord"
+                        label="New password"
                         name="password"
                         type="password"
                         value={data.password}
@@ -83,7 +87,7 @@ function ChangePassword({ showDialog, closeDialog, changePassword, validatePassw
                         size="small"
                     />
                     <TextField
-                        label="Confirm passord"
+                        label="Confirm password"
                         name="confirm"
                         type="password"
                         value={data.confirm}

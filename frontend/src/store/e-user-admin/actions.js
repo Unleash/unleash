@@ -1,7 +1,7 @@
 import api from './api';
 import { dispatchError } from '../util';
 export const START_FETCH_USERS = 'START_FETCH_USERS';
-export const RECIEVE_USERS = 'RECIEVE_USERS';
+export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const ERROR_FETCH_USERS = 'ERROR_FETCH_USERS';
 export const REMOVE_USER = 'REMOVE_USER';
 export const REMOVE_USER_ERROR = 'REMOVE_USER_ERROR';
@@ -15,7 +15,7 @@ export const VALIDATE_PASSWORD_ERROR = 'VALIDATE_PASSWORD_ERROR';
 const debug = require('debug')('unleash:e-user-admin-actions');
 
 const gotUsers = value => ({
-    type: RECIEVE_USERS,
+    type: RECEIVE_USERS,
     value,
 });
 

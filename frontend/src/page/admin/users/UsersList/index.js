@@ -12,6 +12,7 @@ import { hasPermission } from '../../../../permissions';
 
 const mapStateToProps = state => ({
     users: state.userAdmin.toJS(),
+    roles: state.roles.get('root').toJS() || [],
     location: state.settings.toJS().location || {},
     hasPermission: permission => hasPermission(state.user.get('profile'), permission),
 });

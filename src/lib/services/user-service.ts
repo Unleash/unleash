@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import owasp from 'owasp-password-strength-test';
 import Joi from 'joi';
 
-import UserStore, { IUserLookup, IUserSearch } from '../db/user-store';
+import UserStore, { IUserSearch } from '../db/user-store';
 import { Logger } from '../logger';
 import { IUnleashConfig } from '../types/core';
 import User, { IUser } from '../user';
@@ -111,10 +111,6 @@ class UserService {
         const roleId = roles.length > 0 ? roles[0].id : defaultRole.id;
         const user = await this.store.get({ id });
         return { ...user, rootRole: roleId };
-    }
-
-    async findUser({ email, username }: IUserLookup): Promise<User> {
-        return this.store.get({ email, username });
     }
 
     async search(query: IUserSearch): Promise<User[]> {

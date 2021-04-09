@@ -78,3 +78,16 @@ test.serial('should login for user _without_ password', async t => {
     const user = await userService.loginUserWithoutPassword(email);
     t.is(user.email, email);
 });
+
+test.serial('should get user with root role', async t => {
+    const email = 'some@test.com';
+    const u = await userService.createUser({
+        email,
+        password: 'A very strange P4ssw0rd_',
+        rootRole: adminRole.id,
+    });
+    const user = await userService.getUser(u.id);
+    t.is(user.email, email);
+    t.is(user.id, u.id);
+    t.is(user.rootRole, adminRole.id);
+});

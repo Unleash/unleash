@@ -67,7 +67,7 @@ function defaultOptions() {
         unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
         serverMetrics: true,
         enableLegacyRoutes: false, // deprecated. Remove in v4,
-        extendedPermissions: true, // deprecated. Remove in v4,
+        extendedPermissions: false, // deprecated. Remove in v4,
         publicFolder,
         versionCheck: {
             url:

@@ -79,5 +79,5 @@ test('Should not login user with wrong password', async t => {
         .post('/auth/simple/login')
         .send({ username, password: 'not-correct' });
 
-    t.is(400, res.status);
+    t.is(401, res.status);
 });

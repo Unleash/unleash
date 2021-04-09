@@ -23,7 +23,7 @@ class PasswordProvider extends Controller {
             req.session.user = user;
             return res.status(200).json(user);
         } catch (e) {
-            return res.status(400).json({ message: e.message });
+            return res.status(401).json({ message: e.message });
         }
     }
 }

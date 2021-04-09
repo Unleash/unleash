@@ -3,13 +3,10 @@
 const Controller = require('../controller');
 
 class UserController extends Controller {
-    constructor(config, services) {
+    constructor(config) {
         super(config);
 
-        this.accessService = services.accessService;
-
         this.get('/', this.getUser);
-        this.get('/permissions', this.getUserPermissions);
         this.get('/logout', this.logout);
     }
 
@@ -24,21 +21,6 @@ class UserController extends Controller {
             return res
                 .status(200)
                 .json(user)
-                .end();
-        }
-        return res.status(404).end();
-    }
-
-    async getUserPermissions(req, res) {
-        if (req.user) {
-            const user = { ...req.user };
-            const permissions = await this.accessService.getPermissionsForUser(
-                user,
-            );
-
-            return res
-                .status(200)
-                .json(permissions)
                 .end();
         }
         return res.status(404).end();

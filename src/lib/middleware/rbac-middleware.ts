@@ -6,13 +6,7 @@ import {
     ADMIN,
 } from '../permissions';
 
-import { isRbacEnabled } from '../util/feature-enabled';
-
 const rbacMiddleware = (config: any, { accessService }: any): any => {
-    if (!isRbacEnabled(config)) {
-        return (req, res, next) => next();
-    }
-
     const logger = config.getLogger('/middleware/rbac-middleware.js');
     logger.info('Enabling RBAC');
 
@@ -45,7 +39,7 @@ const rbacMiddleware = (config: any, { accessService }: any): any => {
                 const { featureName } = params;
                 projectId = await featureToggleStore.getProjectId(featureName);
             } else if (permission === CREATE_FEATURE) {
-                projectId = req.body.project;
+                projectId = req.body.project || 'default';
             }
 
             return accessService.hasPermission(user, permission, projectId);

@@ -1,6 +1,5 @@
 import User from '../user';
 import { AccessService, RoleName } from './access-service';
-import { isRbacEnabled } from '../util/feature-enabled';
 
 const NameExistsError = require('../error/name-exists-error');
 const InvalidOperationError = require('../error/invalid-operation-error');
@@ -30,8 +29,6 @@ class ProjectService {
 
     private logger: any;
 
-    private rbacEnabled: boolean;
-
     constructor(
         { projectStore, eventStore, featureToggleStore },
         config: any,
@@ -42,7 +39,6 @@ class ProjectService {
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
         this.logger = config.getLogger('services/project-service.js');
-        this.rbacEnabled = isRbacEnabled(config);
     }
 
     async getProjects() {
@@ -59,9 +55,7 @@ class ProjectService {
 
         await this.projectStore.create(data);
 
-        if (this.rbacEnabled) {
-            await this.accessService.createDefaultProjectRoles(user, data.id);
-        }
+        await this.accessService.createDefaultProjectRoles(user, data.id);
 
         await this.eventStore.store({
             type: eventType.PROJECT_CREATED,
@@ -111,9 +105,7 @@ class ProjectService {
             data: { id },
         });
 
-        if (this.rbacEnabled) {
-            this.accessService.removeDefaultProjectRoles(user, id);
-        }
+        this.accessService.removeDefaultProjectRoles(user, id);
     }
 
     async validateId(id: string): Promise<boolean> {

@@ -8,11 +8,10 @@ import {
     UPDATE_API_TOKEN,
 } from '../../permissions';
 import { ApiTokenService } from '../../services/api-token-service';
-import { Logger, LogProvider } from '../../logger';
+import { Logger } from '../../logger';
 import { ApiTokenType } from '../../db/api-token-store';
 import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
-import { isRbacEnabled } from '../../util/feature-enabled';
 import User from '../../user';
 import { IUnleashConfig } from '../../types/core';
 
@@ -26,18 +25,12 @@ class ApiTokenController extends Controller {
 
     private accessService: AccessService;
 
-    private extendedPermissions: boolean;
-
-    private isRbacEnabled: boolean;
-
     private logger: Logger;
 
     constructor(config: IUnleashConfig, services: IServices) {
         super(config);
         this.apiTokenService = services.apiTokenService;
         this.accessService = services.accessService;
-        this.extendedPermissions = config.extendedPermissions;
-        this.isRbacEnabled = isRbacEnabled(config);
         this.logger = config.getLogger('api-token-controller.js');
 
         this.get('/', this.getAllApiTokens);
@@ -46,21 +39,17 @@ class ApiTokenController extends Controller {
         this.delete('/:token', this.deleteApiToken, DELETE_API_TOKEN);
     }
 
-    private isTokenAdmin(user: User) {
-        if (this.isRbacEnabled) {
-            return this.accessService.hasPermission(user, UPDATE_API_TOKEN);
+    private async isTokenAdmin(user: User) {
+        if (user.isAPI) {
+            return user.permissions.includes(ADMIN);
         }
-        if (this.extendedPermissions) {
-            return user.permissions.some(
-                t => t === UPDATE_API_TOKEN || t === ADMIN,
-            );
-        }
-        return true;
+
+        return this.accessService.hasPermission(user, UPDATE_API_TOKEN);
     }
 
     async getAllApiTokens(req: IAuthRequest, res: Response): Promise<void> {
         const { user } = req;
-        const isAdmin = this.isTokenAdmin(user);
+        const isAdmin = await this.isTokenAdmin(user);
 
         const tokens = await this.apiTokenService.getAllTokens();
 

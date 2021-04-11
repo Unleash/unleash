@@ -14,13 +14,14 @@ const getApp = proxyquire('./app', {
 });
 
 test('should not throw when valid config', t => {
-    const app = getApp({ getLogger });
+    const app = getApp({ getLogger, stores: {} });
     t.true(typeof app.listen === 'function');
 });
 
 test('should call preHook', t => {
     let called = 0;
     getApp({
+        stores: {},
         getLogger,
         preHook: () => {
             called++;
@@ -32,6 +33,7 @@ test('should call preHook', t => {
 test('should call preRouterHook', t => {
     let called = 0;
     getApp({
+        stores: {},
         getLogger,
         preRouterHook: () => {
             called++;

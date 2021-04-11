@@ -5,6 +5,7 @@ import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType, IApiToken } from '../../../../lib/db/api-token-store';
 import User from '../../../../lib/user';
 import { CREATE_API_TOKEN, CREATE_FEATURE } from '../../../../lib/permissions';
+import { RoleName } from '../../../../lib/services/access-service';
 
 let stores;
 let db;
@@ -184,16 +185,22 @@ test.serial('removes api token', async t => {
 
 test.serial('none-admins should only get client tokens', async t => {
     t.plan(2);
-    const user = new User({ email: 'custom-user@mail.com', permissions: [] });
 
-    const preHook = app => {
-        app.use('/api/', (req, res, next) => {
+    const email = 'custom-user@mail.com';
+
+    const preHook = (app, config, { userService, accessService }) => {
+        app.use('/api/admin/', async (req, res, next) => {
+            const role = await accessService.getRootRole(RoleName.REGULAR);
+            const user = await userService.createUser({
+                email,
+                rootRole: role.id,
+            });
             req.user = user;
             next();
         });
     };
 
-    const request = await setupAppWithCustomAuth(stores, preHook, true);
+    const request = await setupAppWithCustomAuth(stores, preHook);
 
     await stores.apiTokenStore.insert({
         username: 'test',
@@ -219,19 +226,21 @@ test.serial('none-admins should only get client tokens', async t => {
 
 test.serial('Only token-admins should be allowed to create token', async t => {
     t.plan(0);
-    const user = new User({
-        email: 'custom-user@mail.com',
-        permissions: [CREATE_FEATURE],
-    });
 
-    const preHook = app => {
-        app.use('/api/', (req, res, next) => {
-            req.user = user;
+    const email = 'custom-user2@mail.com';
+
+    const preHook = (app, config, { userService, accessService }) => {
+        app.use('/api/admin/', async (req, res, next) => {
+            const role = await accessService.getRootRole(RoleName.REGULAR);
+            req.user = await userService.createUser({
+                email,
+                rootRole: role.id,
+            });
             next();
         });
     };
 
-    const request = await setupAppWithCustomAuth(stores, preHook, true);
+    const request = await setupAppWithCustomAuth(stores, preHook);
 
     return request
         .post('/api/admin/api-tokens')
@@ -245,19 +254,20 @@ test.serial('Only token-admins should be allowed to create token', async t => {
 
 test.serial('Token-admin should be allowed to create token', async t => {
     t.plan(0);
-    const user = new User({
-        email: 'custom-user@mail.com',
-        permissions: [CREATE_API_TOKEN],
-    });
+    const email = 'custom-user3@mail.com';
 
-    const preHook = app => {
-        app.use('/api/', (req, res, next) => {
-            req.user = user;
+    const preHook = (app, config, { userService, accessService }) => {
+        app.use('/api/admin/', async (req, res, next) => {
+            const role = await accessService.getRootRole(RoleName.ADMIN);
+            req.user = await userService.createUser({
+                email,
+                rootRole: role.id,
+            });
             next();
         });
     };
 
-    const request = await setupAppWithCustomAuth(stores, preHook, true);
+    const request = await setupAppWithCustomAuth(stores, preHook);
 
     return request
         .post('/api/admin/api-tokens')

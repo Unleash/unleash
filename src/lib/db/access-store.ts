@@ -44,13 +44,13 @@ export class AccessStore {
             });
     }
 
-    async getPermissionsForUser(userId: Number): Promise<IUserPermission[]> {
+    async getPermissionsForUser(userId: number): Promise<IUserPermission[]> {
         const stopTimer = this.timer('getPermissionsForUser');
         const rows = await this.db
             .select('project', 'permission')
             .from<IUserPermission>(`${T.ROLE_PERMISSION} AS rp`)
             .leftJoin(`${T.ROLE_USER} AS ur`, 'ur.role_id', 'rp.role_id')
-            .where('user_id', '=', userId);
+            .where('ur.user_id', '=', userId);
         stopTimer();
         return rows;
     }

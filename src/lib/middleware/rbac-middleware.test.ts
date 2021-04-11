@@ -24,21 +24,7 @@ test.beforeEach(() => {
     };
 });
 
-test('should be disabled if rbac is disabled', t => {
-    const accessService = {};
-
-    const func = rbacMiddleware(config, { accessService });
-
-    const cb = sinon.fake();
-
-    func(undefined, undefined, cb);
-
-    t.true(cb.calledOnce);
-});
-
-test('should add checkRbac to request if enabled', t => {
-    config.experimental.rbac = true;
-
+test('should add checkRbac to request', t => {
     const accessService = {};
 
     const func = rbacMiddleware(config, { accessService });

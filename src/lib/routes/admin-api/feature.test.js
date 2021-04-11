@@ -8,11 +8,6 @@ const { createServices } = require('../../services');
 const permissions = require('../../../test/fixtures/permissions');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
-const {
-    UPDATE_FEATURE,
-    CREATE_FEATURE,
-    DELETE_FEATURE,
-} = require('../../permissions');
 
 const eventBus = new EventEmitter();
 
@@ -24,8 +19,7 @@ function getSetup(databaseIsUp = true) {
         baseUriPath: base,
         stores,
         eventBus,
-        extendedPermissions: true,
-        preRouterHook: perms.hook,
+        preHook: perms.hook,
         getLogger,
     };
     const services = createServices(stores, config);
@@ -88,8 +82,7 @@ test('should add version numbers for /features', t => {
 
 test('should require at least one strategy when creating a feature toggle', t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_FEATURE);
+    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/features`)
@@ -100,8 +93,7 @@ test('should require at least one strategy when creating a feature toggle', t =>
 
 test('should be allowed to use new toggle name', t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_FEATURE);
+    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/features/validate`)
@@ -112,8 +104,7 @@ test('should be allowed to use new toggle name', t => {
 
 test('should get unsupported media-type when posting as form-url-encoded', t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_FEATURE);
+    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/features`)
@@ -126,8 +117,7 @@ test('should get unsupported media-type when posting as form-url-encoded', t => 
 
 test('should be allowed to have variants="null"', t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_FEATURE);
+    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/features`)
@@ -185,8 +175,7 @@ test('should not be allowed to reuse archived toggle name', t => {
 
 test('should require at least one strategy when updating a feature toggle', t => {
     t.plan(0);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: 'ts',
         strategies: [{ name: 'default' }],
@@ -201,8 +190,7 @@ test('should require at least one strategy when updating a feature toggle', t =>
 
 test('updating a feature toggle also requires application/json as content-type', t => {
     t.plan(0);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: 'ts',
         strategies: [{ name: 'default' }],
@@ -218,8 +206,7 @@ test('updating a feature toggle also requires application/json as content-type',
 
 test('valid feature names should pass validation', t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_FEATURE);
+    const { request, base } = getSetup();
 
     const validNames = [
         'com.example',
@@ -247,8 +234,7 @@ test('valid feature names should pass validation', t => {
 
 test('invalid feature names should not pass validation', t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_FEATURE);
+    const { request, base } = getSetup();
 
     const invalidNames = [
         'some example',
@@ -276,8 +262,7 @@ test('invalid feature names should not pass validation', t => {
 // Make sure current UI works. Should align on joi errors in future.
 test('invalid feature names should have error msg', t => {
     t.plan(1);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_FEATURE);
+    const { request, base } = getSetup();
 
     const name = 'ØÆ`';
 
@@ -299,8 +284,7 @@ test('invalid feature names should have error msg', t => {
 
 test('should not allow variants with same name when creating feature flag', t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_FEATURE);
+    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/features`)
@@ -319,8 +303,7 @@ test('should not allow variants with same name when creating feature flag', t =>
 
 test('should not allow variants with same name when updating feature flag', t => {
     t.plan(0);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'ts',
@@ -340,8 +323,7 @@ test('should not allow variants with same name when updating feature flag', t =>
 
 test('should toggle on', t => {
     t.plan(1);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'toggle.disabled',
@@ -361,8 +343,7 @@ test('should toggle on', t => {
 
 test('should toggle off', t => {
     t.plan(1);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'toggle.enabled',
@@ -382,8 +363,7 @@ test('should toggle off', t => {
 
 test('should toggle', t => {
     t.plan(1);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'toggle.disabled',
@@ -403,8 +383,7 @@ test('should toggle', t => {
 
 test('should be able to add tag for feature', t => {
     t.plan(0);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: 'toggle.disabled',
         enabled: false,
@@ -421,8 +400,7 @@ test('should be able to add tag for feature', t => {
 });
 test('should be able to get tags for feature', t => {
     t.plan(1);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'toggle.disabled',
@@ -445,8 +423,7 @@ test('should be able to get tags for feature', t => {
 
 test('Invalid tag for feature should be rejected', t => {
     t.plan(1);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'toggle.disabled',
@@ -469,8 +446,7 @@ test('Invalid tag for feature should be rejected', t => {
 
 test('Should be able to filter on tag', t => {
     t.plan(2);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'toggle.tagged',
@@ -499,8 +475,7 @@ test('Should be able to filter on tag', t => {
 
 test('Should be able to filter on name prefix', t => {
     t.plan(3);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'a_team.toggle',
@@ -531,8 +506,7 @@ test('Should be able to filter on name prefix', t => {
 
 test('Should be able to filter on project', t => {
     t.plan(3);
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'a_team.toggle',
@@ -564,8 +538,7 @@ test('Should be able to filter on project', t => {
 });
 
 test('Tags should be included in archive events', async t => {
-    const { request, eventStore, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE, DELETE_FEATURE);
+    const { request, eventStore, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'a_team.toggle',
@@ -587,8 +560,7 @@ test('Tags should be included in archive events', async t => {
 });
 
 test('Tags should be included in updated events', async t => {
-    const { request, eventStore, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE, DELETE_FEATURE);
+    const { request, eventStore, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'a_team.toggle',
@@ -625,8 +597,7 @@ test('Trying to get features while database is down should yield 500', t => {
 test('should mark toggle as stale', t => {
     t.plan(1);
     const toggleName = 'toggle-stale';
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE, DELETE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: toggleName,
         strategies: [{ name: 'default' }],
@@ -644,8 +615,7 @@ test('should mark toggle as stale', t => {
 test('should mark toggle as NOT stale', t => {
     t.plan(1);
     const toggleName = 'toggle-stale';
-    const { request, featureToggleStore, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE, DELETE_FEATURE);
+    const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: toggleName,
         strategies: [{ name: 'default' }],

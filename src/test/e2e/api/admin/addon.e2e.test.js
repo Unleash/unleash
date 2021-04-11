@@ -2,27 +2,43 @@
 
 const test = require('ava');
 
-const dbInit = require('../../helpers/database-init');
-const { setupApp } = require('../../helpers/test-helper');
-const getLogger = require('../../../fixtures/no-logger');
+// const dbInit = require('../../helpers/database-init');
+const { setupApp } = require('../../helpers/test-helper-2');
+// const getLogger = require('../../../fixtures/no-logger');
 
 const MASKED_VALUE = '*****';
 
-let stores;
-let db;
+// let stores;
+let request;
+let stop;
+let currentUser;
 
 test.before(async () => {
-    db = await dbInit('addon_api_serial', getLogger);
-    stores = db.stores;
+    const preHook = app => {
+        app.use((req, res, next) => {
+            req.user = currentUser;
+            next();
+        });
+    };
+    const data = await setupApp('addon_api_serial', preHook);
+    request = data.request;
+    currentUser = await data.services.userService.loginUserWithoutPassword(
+        'regular-test@getunleash.io',
+        true,
+    );
+
+    stop = data.stop;
+    // stores = db.stores;
 });
 
 test.after(async () => {
-    await db.destroy();
+    // await db.destroy();
+    await stop();
 });
 
 test.serial('gets all addons', async t => {
     t.plan(3);
-    const request = await setupApp(stores);
+
     return request
         .get('/api/admin/addons')
         .expect('Content-Type', /json/)
@@ -36,7 +52,6 @@ test.serial('gets all addons', async t => {
 
 test.serial('should not be able to create invalid addon', async t => {
     t.plan(0);
-    const request = await setupApp(stores);
     return request
         .post('/api/admin/addons')
         .send({ invalid: 'field' })
@@ -45,7 +60,6 @@ test.serial('should not be able to create invalid addon', async t => {
 
 test.serial('should create addon configuration', async t => {
     t.plan(0);
-    const request = await setupApp(stores);
 
     const config = {
         provider: 'webhook',
@@ -65,7 +79,6 @@ test.serial('should create addon configuration', async t => {
 
 test.serial('should delete addon configuration', async t => {
     t.plan(0);
-    const request = await setupApp(stores);
 
     const config = {
         provider: 'webhook',
@@ -88,7 +101,6 @@ test.serial('should delete addon configuration', async t => {
 
 test.serial('should update addon configuration', async t => {
     t.plan(2);
-    const request = await setupApp(stores);
 
     const config = {
         provider: 'webhook',
@@ -135,7 +147,6 @@ test.serial('should update addon configuration', async t => {
 
 test.serial('should not update with invalid addon configuration', async t => {
     t.plan(0);
-    const request = await setupApp(stores);
 
     const config = {
         enabled: true,
@@ -154,7 +165,6 @@ test.serial('should not update with invalid addon configuration', async t => {
 
 test.serial('should not update unknown addon configuration', async t => {
     t.plan(0);
-    const request = await setupApp(stores);
 
     const config = {
         provider: 'webhook',
@@ -174,7 +184,6 @@ test.serial('should not update unknown addon configuration', async t => {
 
 test.serial('should get addon configuration', async t => {
     t.plan(3);
-    const request = await setupApp(stores);
 
     const config = {
         provider: 'webhook',
@@ -208,14 +217,12 @@ test.serial('should get addon configuration', async t => {
 
 test.serial('should not get unknown addon configuration', async t => {
     t.plan(0);
-    const request = await setupApp(stores);
 
     await request.get('/api/admin/addons/445').expect(404);
 });
 
 test.serial('should not delete unknown addon configuration', async t => {
     t.plan(0);
-    const request = await setupApp(stores);
 
     return request.delete('/api/admin/addons/21231').expect(404);
 });

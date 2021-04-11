@@ -30,7 +30,7 @@ module.exports = function(config, services = {}) {
     app.locals.baseUriPath = baseUriPath;
 
     if (typeof config.preHook === 'function') {
-        config.preHook(app);
+        config.preHook(app, config, services);
     }
 
     app.use(compression());

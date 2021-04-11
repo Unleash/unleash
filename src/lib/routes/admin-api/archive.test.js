@@ -8,7 +8,6 @@ const permissions = require('../../../test/fixtures/permissions');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
 const { createServices } = require('../../services');
-const { UPDATE_FEATURE } = require('../../permissions');
 
 const eventBus = new EventEmitter();
 
@@ -20,8 +19,7 @@ function getSetup() {
         baseUriPath: base,
         stores,
         eventBus,
-        extendedPermissions: true,
-        preRouterHook: perms.hook,
+        preHook: perms.hook,
         getLogger,
     };
     const services = createServices(stores, config);
@@ -72,8 +70,7 @@ test('should get archived toggles via admin', t => {
 test('should revive toggle', t => {
     t.plan(0);
     const name = 'name1';
-    const { request, base, archiveStore, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, base, archiveStore } = getSetup();
     archiveStore.addArchivedFeature({
         name,
         strategies: [{ name: 'default' }],
@@ -88,14 +85,7 @@ test('should revive toggle', t => {
 test('should create event when reviving toggle', async t => {
     t.plan(6);
     const name = 'name1';
-    const {
-        request,
-        base,
-        featureToggleService,
-        eventStore,
-        perms,
-    } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, base, featureToggleService, eventStore } = getSetup();
 
     await featureToggleService.addArchivedFeature({
         name,

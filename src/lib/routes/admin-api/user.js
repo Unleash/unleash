@@ -13,11 +13,7 @@ class UserController extends Controller {
     getUser(req, res) {
         if (req.user) {
             const user = { ...req.user };
-            if (!this.config.extendedPermissions) {
-                delete user.permissions;
-            } else if (!Array.isArray(user.permissions)) {
-                user.permissions = [];
-            }
+            delete user.permissions; // TODO: remove
             return res
                 .status(200)
                 .json(user)

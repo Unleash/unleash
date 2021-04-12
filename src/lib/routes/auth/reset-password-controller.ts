@@ -42,9 +42,9 @@ class ResetPasswordController extends Controller {
     }
 
     async changePassword(req: Request, res: Response): Promise<void> {
-        const { token, password, email } = req.body;
+        const { token, password } = req.body;
         try {
-            await this.userService.resetPassword(email, token, password);
+            await this.userService.resetPassword(token, password);
             res.status(200).end();
         } catch (e) {
             handleErrors(res, this.logger, e);

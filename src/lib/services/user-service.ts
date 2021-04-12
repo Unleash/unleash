@@ -12,6 +12,7 @@ import { AccessService, RoleName } from './access-service';
 import { ADMIN } from '../permissions';
 import ResetTokenService from './reset-token-service';
 import NoAccessError from '../error/no-access-error';
+import InvalidTokenError from '../error/invalid-token-error';
 
 export interface ICreateUser {
     name?: string;
@@ -260,17 +261,17 @@ class UserService {
         };
     }
 
-    async resetPassword(
-        email: string,
-        token: string,
-        password: string,
-    ): Promise<void> {
+    async resetPassword(token: string, password: string): Promise<void> {
         const user = await this.getUserForToken(token);
-        await this.resetTokenService.useAccessToken({
+        const allowed = await this.resetTokenService.useAccessToken({
             userId: user.id,
             token,
         });
-        await this.changePassword(user.id, password);
+        if (allowed) {
+            await this.changePassword(user.id, password);
+        } else {
+            throw new InvalidTokenError();
+        }
     }
 }
 

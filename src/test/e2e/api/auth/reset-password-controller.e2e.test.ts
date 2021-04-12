@@ -19,6 +19,7 @@ const config: IUnleashConfig = {
     baseUriPath: '',
     authentication: { enableApiToken: true, createAdminUser: false },
 };
+const password = 'DtUYwi&l5I1KX4@Le';
 let userService;
 let accessService;
 let resetTokenService;
@@ -70,7 +71,6 @@ test.serial('Can validate token for password reset', async t => {
 });
 
 test.serial('Can use token to reset password', async t => {
-    const password = 'DtUYwi&l5I1KX4@Le';
     const request = await setupApp(stores);
     const url = await resetTokenService.createResetUrl(user, adminUser);
     const relative = url.toString().substring(config.unleashUrl.length);
@@ -105,7 +105,6 @@ test.serial('Can use token to reset password', async t => {
 test.serial(
     'Trying to reset password with same token twice does not work',
     async t => {
-        const password = 'DtUYwi&l5I1KX4@Le';
         const request = await setupApp(stores);
         const url = await resetTokenService.createResetUrl(user, adminUser);
         const relative = url.toString().substring(config.unleashUrl.length);
@@ -139,9 +138,23 @@ test.serial(
     },
 );
 
-test.serial('Invalid token should yield 403', async t => {
+test.serial('Invalid token should yield 401', async t => {
     const request = await setupApp(stores);
     return request.get('/auth/reset/validate?token=abc123').expect(res => {
         t.is(res.status, 401);
     });
 });
+
+test.serial(
+    'Trying to change password with an invalid token should yield 401',
+    async t => {
+        const request = await setupApp(stores);
+        return request
+            .post('/auth/reset/password')
+            .send({
+                token: 'abc123',
+                password,
+            })
+            .expect(res => t.is(res.status, 401));
+    },
+);

@@ -5,7 +5,7 @@ import noLoggerProvider from './no-logger';
 import { IResetQuery, IResetToken } from '../../lib/db/reset-token-store';
 import User from '../../lib/user';
 
-export default class ResetTokenServiceMock extends ResetTokenService {
+class ResetTokenServiceMock extends ResetTokenService {
     constructor() {
         super(
             { resetTokenStore: undefined, userStore: undefined },
@@ -16,7 +16,7 @@ export default class ResetTokenServiceMock extends ResetTokenService {
                     enableApiToken: true,
                     createAdminUser: false,
                 },
-                unleashUrl: '',
+                unleashUrl: 'http://localhost:4242',
             },
         );
     }
@@ -41,3 +41,6 @@ export default class ResetTokenServiceMock extends ResetTokenService {
         throw new Error('Method not implemented');
     }
 }
+
+export default ResetTokenServiceMock;
+module.exports = ResetTokenServiceMock;

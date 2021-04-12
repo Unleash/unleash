@@ -31,7 +31,11 @@ export default class ResetTokenService {
 
     constructor(
         stores: IStores,
-        { getLogger, baseUriPath, unleashUrl }: IUnleashConfig,
+        {
+            getLogger,
+            baseUriPath,
+            unleashUrl = 'http://localhost:4242',
+        }: IUnleashConfig,
     ) {
         this.store = stores.resetTokenStore;
         this.logger = getLogger('/services/reset-token-service.ts');

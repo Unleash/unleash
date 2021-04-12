@@ -25,7 +25,7 @@ test.before(async () => {
             enableApiToken: false,
             createAdminUser: false,
         },
-        unleashUrl: '',
+        unleashUrl: 'http://localhost:4242',
     };
     const accessService = new AccessService(stores, config);
     const resetTokenService = new ResetTokenService(stores, config);

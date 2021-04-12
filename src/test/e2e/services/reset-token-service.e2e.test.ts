@@ -20,7 +20,7 @@ let adminUser;
 let userToCreateResetFor;
 let accessService;
 let userService;
-let resetTokenService;
+let resetTokenService: ResetTokenService;
 test.before(async () => {
     db = await dbInit('reset_token_service_serial', getLogger);
     stores = db.stores;
@@ -39,6 +39,10 @@ test.before(async () => {
         username: 'test@test.com',
         rootRole: 2,
     });
+});
+
+test.after.always(async () => {
+    db.destroy();
 });
 
 test.serial('Should create a reset link', async t => {
@@ -64,22 +68,6 @@ test.serial('Tokens should be one-time only', async t => {
     t.is(secondGo, false);
 });
 
-test.serial(
-    'Tokens should be connected to the user they are created for',
-    async t => {
-        const token = await resetTokenService.createToken(
-            userToCreateResetFor,
-            adminUser,
-        );
-        t.is(token.userId, userToCreateResetFor.id);
-        const accessGranted = await resetTokenService.useAccessToken({
-            userId: adminUser.id,
-            token: token.token,
-        });
-        t.is(accessGranted, false);
-    },
-);
-
 test.serial('Creating a new token should expire older tokens', async t => {
     const firstToken = await resetTokenService.createToken(
         userToCreateResetFor,
@@ -90,8 +78,8 @@ test.serial('Creating a new token should expire older tokens', async t => {
         adminUser,
     );
     await t.throwsAsync<NotFoundError>(async () =>
-        resetTokenService.isValid(firstToken),
+        resetTokenService.isValid(firstToken.token),
     );
-    const validToken = await resetTokenService.isValid(secondToken);
+    const validToken = await resetTokenService.isValid(secondToken.token);
     t.is(secondToken.token, validToken.token);
 });

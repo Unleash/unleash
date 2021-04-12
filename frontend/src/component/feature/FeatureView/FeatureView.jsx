@@ -2,16 +2,26 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Paper, Typography, Button, Switch, LinearProgress } from '@material-ui/core';
+import {
+    Paper,
+    Typography,
+    Button,
+    Switch,
+    LinearProgress,
+} from '@material-ui/core';
 
-import HistoryComponent from '../../history/history-list-toggle-container';
+import HistoryComponent from '../../history/FeatureEventHistory';
 import MetricComponent from '../view/metric-container';
 import UpdateStrategies from '../view/update-strategies-container';
 import EditVariants from '../variant/update-variant-container';
 import FeatureTypeSelect from '../feature-type-select-container';
 import ProjectSelect from '../project-select-container';
 import UpdateDescriptionComponent from '../view/update-description-component';
-import { CREATE_FEATURE, DELETE_FEATURE, UPDATE_FEATURE } from '../../../permissions';
+import {
+    CREATE_FEATURE,
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from '../../../permissions';
 import StatusComponent from '../status-component';
 import FeatureTagComponent from '../feature-tag-component';
 import StatusUpdateComponent from '../view/status-update-component';
@@ -70,7 +80,13 @@ const FeatureView = ({
         switch (key) {
             case 'activation':
                 if (isFeatureView && hasPermission(UPDATE_FEATURE)) {
-                    return <UpdateStrategies featureToggle={featureToggle} features={features} history={history} />;
+                    return (
+                        <UpdateStrategies
+                            featureToggle={featureToggle}
+                            features={features}
+                            history={history}
+                        />
+                    );
                 }
                 return (
                     <UpdateStrategies
@@ -94,7 +110,7 @@ const FeatureView = ({
             case 'log':
                 return <HistoryComponent toggleName={featureToggleName} />;
             default:
-                return null
+                return null;
         }
     };
     const getTabData = () => [
@@ -199,9 +215,13 @@ const FeatureView = ({
 
     const tabs = getTabData();
 
-    const findActiveTab = activeTab => tabs.findIndex(tab => tab.name === activeTab);
+    const findActiveTab = activeTab =>
+        tabs.findIndex(tab => tab.name === activeTab);
     return (
-        <Paper className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
+        <Paper
+            className={commonStyles.fullwidth}
+            style={{ overflow: 'visible' }}
+        >
             <div>
                 <div className={styles.header}>
                     <Typography variant="h1" className={styles.heading}>
@@ -209,7 +229,12 @@ const FeatureView = ({
                     </Typography>
                     <StatusComponent stale={featureToggle.stale} />
                 </div>
-                <div className={classnames(styles.featureInfoContainer, commonStyles.contentSpacingY)}>
+                <div
+                    className={classnames(
+                        styles.featureInfoContainer,
+                        commonStyles.contentSpacingY
+                    )}
+                >
                     <UpdateDescriptionComponent
                         isFeatureView={isFeatureView}
                         description={featureToggle.description}
@@ -217,9 +242,18 @@ const FeatureView = ({
                         hasPermission={hasPermission}
                     />
                     <div className={styles.selectContainer}>
-                        <FeatureTypeSelect value={featureToggle.type} onChange={updateType} label="Feature type" />
+                        <FeatureTypeSelect
+                            value={featureToggle.type}
+                            onChange={updateType}
+                            label="Feature type"
+                        />
                         &nbsp;
-                        <ProjectSelect value={featureToggle.project} onChange={updateProject} label="Project" filled />
+                        <ProjectSelect
+                            value={featureToggle.project}
+                            onChange={updateProject}
+                            label="Project"
+                            filled
+                        />
                     </div>
                     <FeatureTagComponent
                         featureToggleName={featureToggle.name}
@@ -239,15 +273,31 @@ const FeatureView = ({
                                 <Switch
                                     disabled={!isFeatureView}
                                     checked={featureToggle.enabled}
-                                    onChange={() => toggleFeature(!featureToggle.enabled, featureToggle.name)}
+                                    onChange={() =>
+                                        toggleFeature(
+                                            !featureToggle.enabled,
+                                            featureToggle.name
+                                        )
+                                    }
                                 />
-                                <span>{featureToggle.enabled ? 'Enabled' : 'Disabled'}</span>
+                                <span>
+                                    {featureToggle.enabled
+                                        ? 'Enabled'
+                                        : 'Disabled'}
+                                </span>
                             </>
                         }
                         elseShow={
                             <>
-                                <Switch disabled checked={featureToggle.enabled} />
-                                <span>{featureToggle.enabled ? 'Enabled' : 'Disabled'}</span>
+                                <Switch
+                                    disabled
+                                    checked={featureToggle.enabled}
+                                />
+                                <span>
+                                    {featureToggle.enabled
+                                        ? 'Enabled'
+                                        : 'Disabled'}
+                                </span>
                             </>
                         }
                     />
@@ -257,8 +307,13 @@ const FeatureView = ({
                     condition={isFeatureView}
                     show={
                         <div>
-                            <AddTagDialog featureToggleName={featureToggle.name} />
-                            <StatusUpdateComponent stale={featureToggle.stale} updateStale={updateStale} />
+                            <AddTagDialog
+                                featureToggleName={featureToggle.name}
+                            />
+                            <StatusUpdateComponent
+                                stale={featureToggle.stale}
+                                updateStale={updateStale}
+                            />
                             <Button
                                 title="Create new feature toggle by cloning configuration"
                                 component={Link}
@@ -293,7 +348,11 @@ const FeatureView = ({
 
             <hr />
 
-            <TabNav tabData={tabs} className={styles.tabContentContainer} startingTab={findActiveTab(activeTab)} />
+            <TabNav
+                tabData={tabs}
+                className={styles.tabContentContainer}
+                startingTab={findActiveTab(activeTab)}
+            />
             <ConfirmDialogue
                 open={delDialog}
                 title="Are you sure you want to archive this toggle"

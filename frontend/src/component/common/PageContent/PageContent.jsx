@@ -6,7 +6,13 @@ import HeaderTitle from '../HeaderTitle';
 import { Paper } from '@material-ui/core';
 import { useStyles } from './styles';
 
-const PageContent = ({ children, headerContent, disablePadding, disableBorder, ...rest }) => {
+const PageContent = ({
+    children,
+    headerContent,
+    disablePadding,
+    disableBorder,
+    ...rest
+}) => {
     const styles = useStyles();
 
     const headerClasses = classnames(styles.headerContainer, {

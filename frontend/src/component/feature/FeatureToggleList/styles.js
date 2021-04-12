@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/styles';
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles(theme => ({
     actionsContainer: {
         display: 'flex',
         alignItems: 'center',
@@ -11,4 +11,12 @@ export const useStyles = makeStyles({
     searchBarContainer: {
         marginBottom: '2rem',
     },
-});
+    emptyStateListItem: {
+        border: `2px dashed ${theme.palette.borders.main}`,
+        padding: '0.8rem',
+        textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+}));

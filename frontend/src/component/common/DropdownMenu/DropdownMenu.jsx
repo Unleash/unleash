@@ -1,11 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu } from '@material-ui/core';
-import { DropdownButton } from '.';
+import { DropdownButton } from '..';
 
-import styles from './common.module.scss';
+import styles from '../common.module.scss';
 
-const DropdownMenu = ({ renderOptions, id, title, callback, icon = 'arrow_drop_down', label, startIcon, ...rest }) => {
+const DropdownMenu = ({
+    renderOptions,
+    id,
+    title,
+    callback,
+    icon = 'arrow_drop_down',
+    label,
+    startIcon,
+    ...rest
+}) => {
     const [anchor, setAnchor] = React.useState(null);
 
     const handleOpen = e => setAnchor(e.currentTarget);

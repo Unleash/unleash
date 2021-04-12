@@ -5,9 +5,13 @@ import PropTypes from 'prop-types';
 import ReportToggleListItem from './ReportToggleListItem/ReportToggleListItem';
 import ReportToggleListHeader from './ReportToggleListHeader/ReportToggleListHeader';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import DropdownMenu from '../../common/dropdown-menu';
+import DropdownMenu from '../../common/DropdownMenu/DropdownMenu';
 
-import { getObjectProperties, getCheckedState, applyCheckedToFeatures } from '../utils';
+import {
+    getObjectProperties,
+    getCheckedState,
+    applyCheckedToFeatures,
+} from '../utils';
 
 import useSort from '../useSort';
 
@@ -23,7 +27,14 @@ const ReportToggleList = ({ features, selectedProject }) => {
 
     useEffect(() => {
         const formattedFeatures = features.map(feature => ({
-            ...getObjectProperties(feature, 'name', 'lastSeenAt', 'createdAt', 'stale', 'type'),
+            ...getObjectProperties(
+                feature,
+                'name',
+                'lastSeenAt',
+                'createdAt',
+                'stale',
+                'type'
+            ),
             checked: getCheckedState(feature.name, features),
             setFeatures,
         }));
@@ -42,7 +53,11 @@ const ReportToggleList = ({ features, selectedProject }) => {
 
     const renderListRows = () =>
         sort(localFeatures).map(feature => (
-            <ReportToggleListItem key={feature.name} {...feature} bulkActionsOn={BULK_ACTIONS_ON} />
+            <ReportToggleListItem
+                key={feature.name}
+                {...feature}
+                bulkActionsOn={BULK_ACTIONS_ON}
+            />
         ));
 
     const renderBulkActionsMenu = () => (
@@ -62,7 +77,10 @@ const ReportToggleList = ({ features, selectedProject }) => {
         <Paper className={styles.reportToggleList}>
             <div className={styles.reportToggleListHeader}>
                 <h3 className={styles.reportToggleListHeading}>Overview</h3>
-                <ConditionallyRender condition={BULK_ACTIONS_ON} show={renderBulkActionsMenu} />
+                <ConditionallyRender
+                    condition={BULK_ACTIONS_ON}
+                    show={renderBulkActionsMenu}
+                />
             </div>
             <div className={styles.reportToggleListInnerContainer}>
                 <table className={styles.reportingToggleTable}>

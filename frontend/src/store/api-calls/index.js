@@ -2,6 +2,7 @@ import {
     START_FETCH_FEATURE_TOGGLES,
     FETCH_FEATURE_TOGGLES_SUCCESS,
     FETCH_FEATURE_TOGGLE_ERROR,
+    RESET_LOADING,
 } from '../feature-toggle/actions';
 
 const apiCalls = (
@@ -21,10 +22,10 @@ const apiCalls = (
             return {
                 ...state,
                 fetchTogglesState: {
+                    ...state.fetchTogglesState,
                     loading: true,
                     success: false,
                     error: null,
-                    count: (state.fetchTogglesState.count += 1),
                 },
             };
         case FETCH_FEATURE_TOGGLES_SUCCESS:
@@ -35,6 +36,7 @@ const apiCalls = (
                     loading: false,
                     success: true,
                     error: null,
+                    count: (state.fetchTogglesState.count += 1),
                 },
             };
         case FETCH_FEATURE_TOGGLE_ERROR:
@@ -46,6 +48,11 @@ const apiCalls = (
                     success: false,
                     error: true,
                 },
+            };
+        case RESET_LOADING:
+            return {
+                ...state,
+                fetchTogglesState: { ...state.fetchTogglesState, count: 0 },
             };
         default:
             return state;

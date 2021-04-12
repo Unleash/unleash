@@ -1,52 +1,22 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 
 import { List, ListItem, ListItemText, Grid } from '@material-ui/core';
-import { baseRoutes as routes } from '../../menu/routes';
-import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+
 import ShowApiDetailsContainer from '../../api/show-api-details-container';
 
-import styles from './Footer.module.scss';
+import { useStyles } from './Footer.styles';
 
-export const Footer = () => (
-    <React.Fragment>
-        <footer>
+export const Footer = () => {
+    const styles = useStyles();
+
+    return (
+        <footer className={styles.footer}>
             <Grid container>
-                <Grid item xs={3}>
-                    <section title="Menu">
-                        <h4>Menu</h4>
-                        <List className={styles.list}>
-                            <ConditionallyRender
-                                condition={routes && routes.length > 0}
-                                show={routes.map(route => (
-                                    <ListItem key={`listitem_${route.path}`} className={styles.listItem}>
-                                        <ListItemText
-                                            primary={
-                                                <NavLink key={route.path} to={route.path} className={styles.link}>
-                                                    {route.title}
-                                                </NavLink>
-                                            }
-                                        />
-                                    </ListItem>
-                                ))}
-                            />
-                            <ListItem key="github_link" className={styles.listItem}>
-                                <ListItemText
-                                    primary={
-                                        <a href="https://github.com/Unleash/unleash/" target="_blank" rel="noreferrer">
-                                            GitHub
-                                        </a>
-                                    }
-                                />
-                            </ListItem>
-                        </List>
-                    </section>
-                </Grid>
                 <Grid item xs={3}>
                     <section title="Client SDKs">
                         <h4>Client SDKs</h4>
                         <List className={styles.list}>
-                            <ListItem>
+                            <ListItem className={styles.listItem}>
                                 <ListItemText
                                     primary={
                                         <a
@@ -58,7 +28,7 @@ export const Footer = () => (
                                     }
                                 />
                             </ListItem>
-                            <ListItem>
+                            <ListItem className={styles.listItem}>
                                 <ListItemText
                                     primary={
                                         <a
@@ -69,17 +39,20 @@ export const Footer = () => (
                                         </a>
                                     }
                                 />
-                            </ListItem>{' '}
-                            <ListItem>
+                            </ListItem>
+                            <ListItem className={styles.listItem}>
                                 <ListItemText
                                     primary={
-                                        <a href="https://github.com/Unleash/unleash-client-go" className={styles.link}>
+                                        <a
+                                            href="https://github.com/Unleash/unleash-client-go"
+                                            className={styles.link}
+                                        >
                                             Go
                                         </a>
                                     }
                                 />
                             </ListItem>{' '}
-                            <ListItem>
+                            <ListItem className={styles.listItem}>
                                 <ListItemText
                                     primary={
                                         <a
@@ -91,7 +64,7 @@ export const Footer = () => (
                                     }
                                 />
                             </ListItem>{' '}
-                            <ListItem>
+                            <ListItem className={styles.listItem}>
                                 <ListItemText
                                     primary={
                                         <a
@@ -103,7 +76,7 @@ export const Footer = () => (
                                     }
                                 />
                             </ListItem>
-                            <ListItem>
+                            <ListItem className={styles.listItem}>
                                 <ListItemText
                                     primary={
                                         <a
@@ -115,10 +88,13 @@ export const Footer = () => (
                                     }
                                 />
                             </ListItem>
-                            <ListItem>
+                            <ListItem className={styles.listItem}>
                                 <ListItemText
                                     primary={
-                                        <a href="https://unleash.github.io/docs/client_sdk" className={styles.link}>
+                                        <a
+                                            href="https://unleash.github.io/docs/client_sdk"
+                                            className={styles.link}
+                                        >
                                             All client SDKs
                                         </a>
                                     }
@@ -132,7 +108,7 @@ export const Footer = () => (
                 </Grid>
             </Grid>
         </footer>
-    </React.Fragment>
-);
+    );
+};
 
 export default Footer;

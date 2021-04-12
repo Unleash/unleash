@@ -1,14 +1,24 @@
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, IconButton, Icon } from '@material-ui/core';
-import MySelect from '../../common/select';
-import InputListField from '../../common/input-list-field';
-import { selectStyles } from '../../common';
-import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import MySelect from '../../../../common/select';
+import InputListField from '../../../../common/input-list-field';
+import { selectStyles } from '../../../../common';
+import ConditionallyRender from '../../../../common/ConditionallyRender/ConditionallyRender';
+import { useCommonStyles } from '../../../../../common.styles';
+import { useStyles } from './OverrideConfig.styles.js';
 
-function OverrideConfig({ overrides, updateOverrideType, updateOverrideValues, removeOverride, contextDefinitions }) {
+const OverrideConfig = ({
+    overrides,
+    updateOverrideType,
+    updateOverrideValues,
+    removeOverride,
+    contextDefinitions,
+}) => {
+    const styles = useStyles();
+    const commonStyles = useCommonStyles();
     const contextNames = contextDefinitions.map(c => ({
         key: c.name,
         label: c.name,
@@ -22,24 +32,30 @@ function OverrideConfig({ overrides, updateOverrideType, updateOverrideValues, r
         updateOverrideValues(i, values ? values.map(v => v.value) : undefined);
     };
 
-    const mapSelectValues = (values = []) => values.map(v => ({ label: v, value: v }));
+    const mapSelectValues = (values = []) =>
+        values.map(v => ({ label: v, value: v }));
 
     return overrides.map((o, i) => {
-        const legalValues = contextDefinitions.find(c => c.name === o.contextName).legalValues || [];
+        const legalValues =
+            contextDefinitions.find(c => c.name === o.contextName)
+                .legalValues || [];
         const options = legalValues.map(v => ({ value: v, label: v, key: v }));
 
         return (
-            <Grid container key={`override=${i}`}>
-                <Grid item md={3}>
+            <Grid container key={`override=${i}`} alignItems="center">
+                <Grid item md={3} className={styles.contextFieldSelect}>
                     <MySelect
                         name="contextName"
                         label="Context Field"
                         value={o.contextName}
                         options={contextNames}
+                        classes={{
+                            root: classnames(commonStyles.fullWidth),
+                        }}
                         onChange={updateOverrideType(i)}
                     />
                 </Grid>
-                <Grid md={8} item>
+                <Grid md={7} item>
                     <ConditionallyRender
                         condition={legalValues && legalValues.length > 0}
                         show={
@@ -47,6 +63,7 @@ function OverrideConfig({ overrides, updateOverrideType, updateOverrideValues, r
                                 <MySelect
                                     key={`override-select=${i}`}
                                     className={selectStyles}
+                                    classes={{ root: commonStyles.fullWidth }}
                                     value={mapSelectValues(o.values)}
                                     options={options}
                                     onChange={updateSelectValues(i)}
@@ -58,7 +75,7 @@ function OverrideConfig({ overrides, updateOverrideType, updateOverrideValues, r
                                 label="Values (v1, v2, ...)"
                                 name="values"
                                 placeholder=""
-                                style={{ width: '100%' }}
+                                classes={{ root: commonStyles.fullWidth }}
                                 values={o.values}
                                 updateValues={updateValues(i)}
                             />
@@ -73,7 +90,7 @@ function OverrideConfig({ overrides, updateOverrideType, updateOverrideValues, r
             </Grid>
         );
     });
-}
+};
 
 OverrideConfig.propTypes = {
     overrides: PropTypes.array.isRequired,

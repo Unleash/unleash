@@ -1,5 +1,5 @@
 import React from 'react';
-import HistoryComponent from '../../component/history/history-container';
+import HistoryComponent from '../../component/history/EventHistory';
 
 const render = () => <HistoryComponent />;
 

@@ -1,8 +1,15 @@
-import React, { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { Button, List, Tooltip, IconButton, Icon } from '@material-ui/core';
+import {
+    Button,
+    List,
+    Tooltip,
+    IconButton,
+    Icon,
+    ListItem,
+} from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import FeatureToggleListItem from './FeatureToggleListItem';
@@ -32,7 +39,7 @@ const FeatureToggleList = ({
     const styles = useStyles();
     const smallScreen = useMediaQuery('(max-width:700px)');
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         fetcher();
     }, [fetcher]);
 
@@ -65,18 +72,32 @@ const FeatureToggleList = ({
             ));
         }
 
-        return features.map(feature => (
-            <FeatureToggleListItem
-                key={feature.name}
-                settings={settings}
-                metricsLastHour={featureMetrics.lastHour[feature.name]}
-                metricsLastMinute={featureMetrics.lastMinute[feature.name]}
-                feature={feature}
-                toggleFeature={toggleFeature}
-                revive={revive}
-                hasPermission={hasPermission}
+        return (
+            <ConditionallyRender
+                condition={features.length > 0}
+                show={features.map(feature => (
+                    <FeatureToggleListItem
+                        key={feature.name}
+                        settings={settings}
+                        metricsLastHour={featureMetrics.lastHour[feature.name]}
+                        metricsLastMinute={
+                            featureMetrics.lastMinute[feature.name]
+                        }
+                        feature={feature}
+                        toggleFeature={toggleFeature}
+                        revive={revive}
+                        hasPermission={hasPermission}
+                    />
+                ))}
+                elseShow={
+                    <ListItem className={styles.emptyStateListItem}>
+                        No features available. Get started by adding a new
+                        feature toggle.
+                        <Link to="/features/create">Add your first toggle</Link>
+                    </ListItem>
+                }
             />
-        ));
+        );
     };
 
     return (

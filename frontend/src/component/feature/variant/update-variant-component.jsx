@@ -5,8 +5,16 @@ import classnames from 'classnames';
 import VariantViewComponent from './variant-view-component';
 import styles from './variant.module.scss';
 import { UPDATE_FEATURE } from '../../../permissions';
-import { Table, TableHead, TableRow, TableCell, TableBody, Button } from '@material-ui/core';
-import AddVariant from './add-variant';
+import {
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+    Button,
+    Typography,
+} from '@material-ui/core';
+import AddVariant from './AddVariant/AddVariant';
 import MySelect from '../../common/select';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 
@@ -103,15 +111,25 @@ class UpdateVariantComponent extends Component {
 
         return (
             <section style={{ paddingTop: '16px' }}>
-                <MySelect label="Stickiness" options={options} value={value} onChange={onChange} />
+                <MySelect
+                    label="Stickiness"
+                    options={options}
+                    value={value}
+                    onChange={onChange}
+                />
                 &nbsp;&nbsp;
                 <small
                     className={classnames(styles.paragraph, styles.helperText)}
                     style={{ display: 'block', marginTop: '0.5rem' }}
                 >
-                    By overriding the stickiness you can control which parameter you want to be used in order to ensure
-                    consistent traffic allocation across variants.{' '}
-                    <a href="https://unleash.github.io/docs/toggle_variants" target="_blank" rel="noreferrer">
+                    By overriding the stickiness you can control which parameter
+                    you want to be used in order to ensure consistent traffic
+                    allocation across variants.{' '}
+                    <a
+                        href="https://unleash.github.io/docs/toggle_variants"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
                         Read more
                     </a>
                 </small>
@@ -122,15 +140,19 @@ class UpdateVariantComponent extends Component {
     render() {
         const { showDialog, editVariant, editIndex, title } = this.state;
         const { variants, addVariant, updateVariant } = this.props;
-        const saveVariant = editVariant ? updateVariant.bind(null, editIndex) : addVariant;
+        const saveVariant = editVariant
+            ? updateVariant.bind(null, editIndex)
+            : addVariant;
 
         return (
             <section style={{ padding: '16px' }}>
-                <p className={styles.paragraph}>
-                    Variants allows you to return a variant object if the feature toggle is considered enabled for the
-                    current request. When using variants you should use the{' '}
-                    <code style={{ color: 'navy' }}>getVariant()</code> method in the Client SDK.
-                </p>
+                <Typography variant="body1">
+                    Variants allows you to return a variant object if the
+                    feature toggle is considered enabled for the current
+                    request. When using variants you should use the{' '}
+                    <code style={{ color: 'navy' }}>getVariant()</code> method
+                    in the Client SDK.
+                </Typography>
 
                 <ConditionallyRender
                     condition={variants.length > 0}

@@ -32,4 +32,10 @@ export const useCommonStyles = makeStyles(theme => ({
     textCenter: {
         textAlign: 'center',
     },
+    fullWidth: {
+        width: '100%',
+    },
+    fullHeight: {
+        height: '100%',
+    },
 }));

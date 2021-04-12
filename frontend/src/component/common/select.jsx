@@ -2,7 +2,18 @@ import React from 'react';
 import { Select, FormControl, MenuItem, InputLabel } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-const SelectMenu = ({ name, value, label, options, onChange, id, disabled = false, className, ...rest }) => {
+const SelectMenu = ({
+    name,
+    value,
+    label,
+    options,
+    onChange,
+    id,
+    disabled = false,
+    className,
+    classes,
+    ...rest
+}) => {
     const renderSelectItems = () =>
         options.map(option => (
             <MenuItem key={option.key} value={option.key} title={option.title}>
@@ -11,7 +22,7 @@ const SelectMenu = ({ name, value, label, options, onChange, id, disabled = fals
         ));
 
     return (
-        <FormControl variant="outlined" size="small">
+        <FormControl variant="outlined" size="small" classes={classes}>
             <InputLabel htmlFor={id} id={id}>
                 {label}
             </InputLabel>

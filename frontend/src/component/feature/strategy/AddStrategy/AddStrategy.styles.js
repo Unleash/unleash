@@ -4,7 +4,6 @@ export const useStyles = makeStyles(theme => ({
     createStrategyCardContainer: {
         display: 'flex',
         flexWrap: 'wrap',
-        justifyContent: 'center',
         '& > *': {
             marginRight: '0.5rem',
             marginTop: '0.5rem',

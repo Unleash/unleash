@@ -1,5 +1,341 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should render DrawerMenu 1`] = `<footer />`;
+exports[`should render DrawerMenu 1`] = `
+<footer
+  className="makeStyles-footer-1"
+>
+  <div
+    className="MuiGrid-root MuiGrid-container"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-3"
+    >
+      <section
+        title="Client SDKs"
+      >
+        <h4>
+          Client SDKs
+        </h4>
+        <ul
+          className="MuiList-root makeStyles-list-2 MuiList-padding"
+        >
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-node"
+                >
+                  Node.js
+                </a>
+              </span>
+            </div>
+          </li>
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-java"
+                >
+                  Java
+                </a>
+              </span>
+            </div>
+          </li>
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-go"
+                >
+                  Go
+                </a>
+              </span>
+            </div>
+          </li>
+           
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-ruby"
+                >
+                  Ruby
+                </a>
+              </span>
+            </div>
+          </li>
+           
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-python"
+                >
+                  Python
+                </a>
+              </span>
+            </div>
+          </li>
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-core"
+                >
+                  .Net Core
+                </a>
+              </span>
+            </div>
+          </li>
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://unleash.github.io/docs/client_sdk"
+                >
+                  All client SDKs
+                </a>
+              </span>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <div
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+    >
+      <section
+        title="API details"
+      >
+        <h4>
+          undefined undefined
+        </h4>
+        <br />
+        <br />
+        <br />
+        <small />
+        <br />
+      </section>
+    </div>
+  </div>
+</footer>
+`;
 
-exports[`should render DrawerMenu with "features" selected 1`] = `<footer />`;
+exports[`should render DrawerMenu with "features" selected 1`] = `
+<footer
+  className="makeStyles-footer-1"
+>
+  <div
+    className="MuiGrid-root MuiGrid-container"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-3"
+    >
+      <section
+        title="Client SDKs"
+      >
+        <h4>
+          Client SDKs
+        </h4>
+        <ul
+          className="MuiList-root makeStyles-list-2 MuiList-padding"
+        >
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-node"
+                >
+                  Node.js
+                </a>
+              </span>
+            </div>
+          </li>
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-java"
+                >
+                  Java
+                </a>
+              </span>
+            </div>
+          </li>
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-go"
+                >
+                  Go
+                </a>
+              </span>
+            </div>
+          </li>
+           
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-ruby"
+                >
+                  Ruby
+                </a>
+              </span>
+            </div>
+          </li>
+           
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-python"
+                >
+                  Python
+                </a>
+              </span>
+            </div>
+          </li>
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://github.com/Unleash/unleash-client-core"
+                >
+                  .Net Core
+                </a>
+              </span>
+            </div>
+          </li>
+          <li
+            className="MuiListItem-root makeStyles-listItem-3 MuiListItem-gutters"
+            disabled={false}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                <a
+                  href="https://unleash.github.io/docs/client_sdk"
+                >
+                  All client SDKs
+                </a>
+              </span>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <div
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+    >
+      <section
+        title="API details"
+      >
+        <h4>
+          undefined undefined
+        </h4>
+        <br />
+        <br />
+        <br />
+        <small />
+        <br />
+      </section>
+    </div>
+  </div>
+</footer>
+`;

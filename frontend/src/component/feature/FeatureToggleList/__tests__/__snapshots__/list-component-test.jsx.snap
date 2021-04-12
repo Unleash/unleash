@@ -7,11 +7,11 @@ exports[`renders correctly with one feature 1`] = `
   >
     <div>
       <div
-        className="makeStyles-search-4"
+        className="makeStyles-search-5"
       >
         <svg
           aria-hidden={true}
-          className="MuiSvgIcon-root makeStyles-searchIcon-5"
+          className="MuiSvgIcon-root makeStyles-searchIcon-6"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -20,7 +20,7 @@ exports[`renders correctly with one feature 1`] = `
           />
         </svg>
         <div
-          className="MuiInputBase-root makeStyles-inputRoot-6"
+          className="MuiInputBase-root makeStyles-inputRoot-7"
           onClick={[Function]}
           onKeyPress={[Function]}
         >
@@ -43,28 +43,28 @@ exports[`renders correctly with one feature 1`] = `
     className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
   >
     <div
-      className="makeStyles-headerContainer-7"
+      className="makeStyles-headerContainer-8"
     >
       <div
-        className="makeStyles-headerTitleContainer-11"
+        className="makeStyles-headerTitleContainer-12"
       >
         <div
           className=""
         >
           <h2
-            className="MuiTypography-root makeStyles-headerTitle-12 MuiTypography-h2"
+            className="MuiTypography-root makeStyles-headerTitle-13 MuiTypography-h2"
           >
             Feature toggles
           </h2>
         </div>
         <div
-          className="makeStyles-headerActions-13"
+          className="makeStyles-headerActions-14"
         >
           <div
             className="makeStyles-actionsContainer-1"
           >
             <div
-              className="makeStyles-actions-14"
+              className="makeStyles-actions-15"
             >
               <button
                 aria-controls="metric"
@@ -174,7 +174,7 @@ exports[`renders correctly with one feature 1`] = `
       </div>
     </div>
     <div
-      className="makeStyles-bodyContainer-8"
+      className="makeStyles-bodyContainer-9"
     >
       <ul
         className="MuiList-root MuiList-padding"
@@ -207,11 +207,11 @@ exports[`renders correctly with one feature without permissions 1`] = `
   >
     <div>
       <div
-        className="makeStyles-search-4"
+        className="makeStyles-search-5"
       >
         <svg
           aria-hidden={true}
-          className="MuiSvgIcon-root makeStyles-searchIcon-5"
+          className="MuiSvgIcon-root makeStyles-searchIcon-6"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -220,7 +220,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
           />
         </svg>
         <div
-          className="MuiInputBase-root makeStyles-inputRoot-6"
+          className="MuiInputBase-root makeStyles-inputRoot-7"
           onClick={[Function]}
           onKeyPress={[Function]}
         >
@@ -243,28 +243,28 @@ exports[`renders correctly with one feature without permissions 1`] = `
     className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
   >
     <div
-      className="makeStyles-headerContainer-7"
+      className="makeStyles-headerContainer-8"
     >
       <div
-        className="makeStyles-headerTitleContainer-11"
+        className="makeStyles-headerTitleContainer-12"
       >
         <div
           className=""
         >
           <h2
-            className="MuiTypography-root makeStyles-headerTitle-12 MuiTypography-h2"
+            className="MuiTypography-root makeStyles-headerTitle-13 MuiTypography-h2"
           >
             Feature toggles
           </h2>
         </div>
         <div
-          className="makeStyles-headerActions-13"
+          className="makeStyles-headerActions-14"
         >
           <div
             className="makeStyles-actionsContainer-1"
           >
             <div
-              className="makeStyles-actions-14"
+              className="makeStyles-actions-15"
             >
               <button
                 aria-controls="metric"
@@ -354,7 +354,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
       </div>
     </div>
     <div
-      className="makeStyles-bodyContainer-8"
+      className="makeStyles-bodyContainer-9"
     >
       <ul
         className="MuiList-root MuiList-padding"

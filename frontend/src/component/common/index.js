@@ -17,7 +17,8 @@ import ConditionallyRender from './ConditionallyRender/ConditionallyRender';
 
 export { styles };
 
-export const shorten = (str, len = 50) => (str && str.length > len ? `${str.substring(0, len)}...` : str);
+export const shorten = (str, len = 50) =>
+    str && str.length > len ? `${str.substring(0, len)}...` : str;
 export const AppsLinkList = ({ apps }) => (
     <List>
         <ConditionallyRender
@@ -38,7 +39,10 @@ export const AppsLinkList = ({ apps }) => (
                         primary={
                             <Link
                                 to={`/applications/${appName}`}
-                                className={[styles.listLink, styles.truncate].join(' ')}
+                                className={[
+                                    styles.listLink,
+                                    styles.truncate,
+                                ].join(' ')}
                             >
                                 {appName}
                             </Link>
@@ -69,7 +73,11 @@ DataTableHeader.propTypes = {
     actions: PropTypes.any,
 };
 
-export const FormButtons = ({ submitText = 'Create', onCancel, primaryButtonTestId }) => (
+export const FormButtons = ({
+    submitText = 'Create',
+    onCancel,
+    primaryButtonTestId,
+}) => (
     <div>
         <Button
             data-test={primaryButtonTestId}
@@ -108,7 +116,12 @@ export function getIcon(type) {
 }
 
 export const IconLink = ({ url, icon }) => (
-    <a href={url} target="_blank" rel="noreferrer" className="mdl-color-text--grey-600">
+    <a
+        href={url}
+        target="_blank"
+        rel="noreferrer"
+        className="mdl-color-text--grey-600"
+    >
         <Icon>{icon}</Icon>
     </a>
 );
@@ -146,11 +159,20 @@ DropdownButton.propTypes = {
     id: PropTypes.string,
     title: PropTypes.string,
     icon: PropTypes.string,
-    startIcon: PropTypes.string,
+    startIcon: PropTypes.object,
 };
 
-export const MenuItemWithIcon = ({ icon, label, disabled, ...menuItemProps }) => (
-    <MenuItem disabled={disabled} style={{ display: 'flex', alignItems: 'center' }} {...menuItemProps}>
+export const MenuItemWithIcon = ({
+    icon,
+    label,
+    disabled,
+    ...menuItemProps
+}) => (
+    <MenuItem
+        disabled={disabled}
+        style={{ display: 'flex', alignItems: 'center' }}
+        {...menuItemProps}
+    >
         <Icon style={{ paddingRight: '16px' }}>{icon}</Icon>
         {label}
     </MenuItem>
@@ -163,7 +185,11 @@ MenuItemWithIcon.propTypes = {
 
 const badNumbers = [NaN, Infinity, -Infinity];
 export function calc(value, total, decimal) {
-    if (typeof value !== 'number' || typeof total !== 'number' || typeof decimal !== 'number') {
+    if (
+        typeof value !== 'number' ||
+        typeof total !== 'number' ||
+        typeof decimal !== 'number'
+    ) {
         return null;
     }
 

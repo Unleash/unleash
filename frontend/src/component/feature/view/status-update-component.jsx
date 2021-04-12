@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuItem } from '@material-ui/core';
-import DropdownMenu from '../../common/dropdown-menu';
+import DropdownMenu from '../../common/DropdownMenu/DropdownMenu';
 import PropTypes from 'prop-types';
 
 export default function StatusUpdateComponent({ stale, updateStale }) {
@@ -31,7 +31,7 @@ export default function StatusUpdateComponent({ stale, updateStale }) {
             renderOptions={renderOptions}
             id="feature-stale-dropdown"
             label={stale ? 'STALE' : 'ACTIVE'}
-            style={{ fontWeight: 'bold' }}
+            style={{ fontWeight: '500' }}
         />
     );
 }

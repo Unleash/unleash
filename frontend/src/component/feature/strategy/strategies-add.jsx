@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MenuItem } from '@material-ui/core';
-import DropdownMenu from '../../common/dropdown-menu';
+import DropdownMenu from '../../common/DropdownMenu/DropdownMenu';
 
 import styles from './strategy.module.scss';
 
@@ -29,7 +29,9 @@ class AddStrategy extends React.Component {
 
     addStrategy(strategyName) {
         const featureToggleName = this.props.featureToggleName;
-        const selectedStrategy = this.props.strategies.find(s => s.name === strategyName);
+        const selectedStrategy = this.props.strategies.find(
+            s => s.name === strategyName
+        );
         const parameters = {};
 
         selectedStrategy.parameters.forEach(({ name }) => {
@@ -52,7 +54,11 @@ class AddStrategy extends React.Component {
             this.props.strategies
                 .filter(s => !s.deprecated)
                 .map(s => (
-                    <MenuItem key={s.name} title={s.description} onClick={() => this.addStrategy(s.name)}>
+                    <MenuItem
+                        key={s.name}
+                        title={s.description}
+                        onClick={() => this.addStrategy(s.name)}
+                    >
                         {s.name}
                     </MenuItem>
                 ));

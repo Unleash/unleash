@@ -9,7 +9,7 @@ exports[`renders correctly with with variants 1`] = `
   }
 >
   <p
-    className="paragraph"
+    className="MuiTypography-root MuiTypography-body1"
   >
     Variants allows you to return a variant object if the feature toggle is considered enabled for the current request. When using variants you should use the
      
@@ -473,10 +473,10 @@ exports[`renders correctly with with variants 1`] = `
           </svg>
           <fieldset
             aria-hidden={true}
-            className="PrivateNotchedOutline-root-1 MuiOutlinedInput-notchedOutline"
+            className="PrivateNotchedOutline-root-11 MuiOutlinedInput-notchedOutline"
           >
             <legend
-              className="PrivateNotchedOutline-legendLabelled-3 PrivateNotchedOutline-legendNotched-4"
+              className="PrivateNotchedOutline-legendLabelled-13 PrivateNotchedOutline-legendNotched-14"
             >
               <span>
                 Stickiness
@@ -519,7 +519,7 @@ exports[`renders correctly with without variants 1`] = `
   }
 >
   <p
-    className="paragraph"
+    className="MuiTypography-root MuiTypography-body1"
   >
     Variants allows you to return a variant object if the feature toggle is considered enabled for the current request. When using variants you should use the
      
@@ -577,7 +577,7 @@ exports[`renders correctly with without variants and no permissions 1`] = `
   }
 >
   <p
-    className="paragraph"
+    className="MuiTypography-root MuiTypography-body1"
   >
     Variants allows you to return a variant object if the feature toggle is considered enabled for the current request. When using variants you should use the
      

@@ -1,14 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, Icon, DialogTitle } from '@material-ui/core';
 import SimpleAuth from './SimpleAuth/SimpleAuth';
 import AuthenticationCustomComponent from './authentication-custom-component';
-import AuthenticationPasswordComponent from './PasswordAuth/PasswordAuth';
+import PasswordAuth from './PasswordAuth/PasswordAuth';
 
 const SIMPLE_TYPE = 'unsecure';
 const PASSWORD_TYPE = 'password';
-
-const customStyles = {};
 
 class AuthComponent extends React.Component {
     static propTypes = {
@@ -26,7 +23,7 @@ class AuthComponent extends React.Component {
         let content;
         if (authDetails.type === PASSWORD_TYPE) {
             content = (
-                <AuthenticationPasswordComponent
+                <PasswordAuth
                     passwordLogin={this.props.passwordLogin}
                     authDetails={authDetails}
                     loadInitialData={this.props.loadInitialData}
@@ -43,27 +40,11 @@ class AuthComponent extends React.Component {
                 />
             );
         } else {
-            content = <AuthenticationCustomComponent authDetails={authDetails} />;
+            content = (
+                <AuthenticationCustomComponent authDetails={authDetails} />
+            );
         }
-        return (
-            <div>
-                <Dialog open={this.props.user.showDialog} style={customStyles}>
-                    <DialogTitle
-                        id="simple-dialog-title"
-                        style={{
-                            background: 'rgb(96, 125, 139)',
-                            color: '#fff',
-                        }}
-                    >
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                            <Icon style={{ marginRight: '8px' }}>person</Icon> Login
-                        </span>
-                    </DialogTitle>
-
-                    <div style={{ padding: '1rem' }}>{content}</div>
-                </Dialog>
-            </div>
-        );
+        return <div>{content}</div>;
     }
 }
 

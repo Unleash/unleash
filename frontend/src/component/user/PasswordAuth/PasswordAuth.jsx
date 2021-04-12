@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { CardActions, Button, TextField, Typography, IconButton } from '@material-ui/core';
+import {
+    CardActions,
+    Button,
+    TextField,
+    Typography,
+    IconButton,
+} from '@material-ui/core';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
@@ -71,12 +77,23 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
         const { usernameError, passwordError, apiError } = errors;
 
         return (
-            <form onSubmit={handleSubmit} action={authDetails.path} className={styles.loginContainer}>
-                <Typography variant="subtitle1">{authDetails.message}</Typography>
+            <form
+                onSubmit={handleSubmit}
+                action={authDetails.path}
+                className={styles.loginContainer}
+            >
+                <Typography variant="subtitle1">
+                    {authDetails.message}
+                </Typography>
                 <Typography variant="subtitle2" className={styles.apiError}>
                     {apiError}
                 </Typography>
-                <div className={classnames(styles.contentContainer, commonStyles.contentSpacingY)}>
+                <div
+                    className={classnames(
+                        styles.contentContainer,
+                        commonStyles.contentSpacingY
+                    )}
+                >
                     <TextField
                         label="Username or email"
                         name="username"
@@ -100,7 +117,12 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
                         size="small"
                     />
 
-                    <Button variant="contained" color="primary" type="submit">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        style={{ maxWidth: '150px' }}
+                    >
                         Sign in
                     </Button>
                 </div>
@@ -121,8 +143,9 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
                 condition={showFields}
                 show={renderLoginForm()}
                 elseShow={
-                    <IconButton> onClick={onShowOptions}>
-                        Show more options
+                    <IconButton>
+                        {' '}
+                        onClick={onShowOptions} Show more options
                     </IconButton>
                 }
             />

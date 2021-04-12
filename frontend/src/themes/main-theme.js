@@ -4,11 +4,13 @@ const theme = createMuiTheme({
     palette: {
         primary: {
             main: '#607d8b',
-            light: '#B2DFDB',
-            dark: '#00796B',
+            light: '#8eacbb',
+            dark: '#34515e',
         },
         secondary: {
-            main: '#217584',
+            main: '#00695c',
+            light: '#439889',
+            dark: '#003d33',
         },
         neutral: {
             main: '#18243e',
@@ -31,6 +33,9 @@ const theme = createMuiTheme({
         links: {
             deprecated: '#1d1818',
         },
+        borders: {
+            main: '#f1f1f1',
+        },
         error: {
             main: '#d95e5e',
         },
@@ -40,6 +45,18 @@ const theme = createMuiTheme({
         division: {
             main: '#f1f1f1',
         },
+        footer: {
+            main: '#000',
+            background: '#fff',
+        },
+        code: {
+            main: '#0b8c8f',
+            diffAdd: 'green',
+            diffSub: 'red',
+            diffNeutral: 'black',
+            edited: 'blue',
+            background: '#efefef',
+        },
         cards: {
             gradient: {
                 top: '#617D8B',
@@ -48,6 +65,13 @@ const theme = createMuiTheme({
             container: {
                 bg: '#f1f1f1',
             },
+        },
+        login: {
+            gradient: {
+                top: '#607D8B',
+                bottom: '#173341',
+            },
+            main: '#fff',
         },
     },
     padding: {

@@ -1,11 +1,15 @@
 import React from 'react';
 import { MenuItem } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import DropdownMenu from '../dropdown-menu';
+import DropdownMenu from '../DropdownMenu/DropdownMenu';
 
 const ALL_PROJECTS = { id: '*', name: '> All projects' };
 
-const ProjectSelect = ({ projects, currentProjectId, updateCurrentProject }) => {
+const ProjectSelect = ({
+    projects,
+    currentProjectId,
+    updateCurrentProject,
+}) => {
     const setProject = v => {
         const id = typeof v === 'string' ? v.trim() : '';
         updateCurrentProject(id);
@@ -27,19 +31,29 @@ const ProjectSelect = ({ projects, currentProjectId, updateCurrentProject }) => 
     };
 
     const renderProjectItem = (selectedId, item) => (
-        <MenuItem disabled={selectedId === item.id} data-target={item.id} key={item.id}>
+        <MenuItem
+            disabled={selectedId === item.id}
+            data-target={item.id}
+            key={item.id}
+        >
             {item.name}
         </MenuItem>
     );
 
     const renderProjectOptions = () => {
         const start = [
-            <MenuItem disabled={curentProject === ALL_PROJECTS} data-target={ALL_PROJECTS.id}>
+            <MenuItem
+                disabled={curentProject === ALL_PROJECTS}
+                data-target={ALL_PROJECTS.id}
+            >
                 {ALL_PROJECTS.name}
             </MenuItem>,
         ];
 
-        return [...start, ...projects.map(p => renderProjectItem(currentProjectId, p))];
+        return [
+            ...start,
+            ...projects.map(p => renderProjectItem(currentProjectId, p)),
+        ];
     };
 
     return (

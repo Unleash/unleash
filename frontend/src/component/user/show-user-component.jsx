@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './user.module.scss';
 import { MenuItem, Avatar, Typography, Icon } from '@material-ui/core';
-import DropdownMenu from '../common/dropdown-menu';
+import DropdownMenu from '../common/DropdownMenu/DropdownMenu';
 
 export default class ShowUserComponent extends React.Component {
     static propTypes = {
@@ -38,7 +38,11 @@ export default class ShowUserComponent extends React.Component {
     }
 
     getLocale() {
-        return (this.props.location && this.props.location.locale) || navigator.language || navigator.userLanguage;
+        return (
+            (this.props.location && this.props.location.locale) ||
+            navigator.language ||
+            navigator.userLanguage
+        );
     }
 
     setLocale(locale) {
@@ -49,26 +53,50 @@ export default class ShowUserComponent extends React.Component {
         const email = this.props.profile ? this.props.profile.email : '';
         const locale = this.getLocale();
         let foundLocale = this.possibleLocales.find(l => l.value === locale);
-        const imageUrl = email ? this.props.profile.imageUrl : 'unknown-user.png';
-        const imageLocale = foundLocale ? `${foundLocale.image}.png` : `unknown-locale.png`;
+        const imageUrl = email
+            ? this.props.profile.imageUrl
+            : 'unknown-user.png';
+        const imageLocale = foundLocale
+            ? `${foundLocale.image}.png`
+            : `unknown-locale.png`;
         return (
             <div className={styles.showUserSettings}>
                 <DropdownMenu
                     className={styles.dropdown}
-                    startIcon={<Icon component={'img'} alt={locale} src={imageLocale} className={styles.labelFlag} />}
+                    startIcon={
+                        <Icon
+                            component={'img'}
+                            alt={locale}
+                            src={imageLocale}
+                            className={styles.labelFlag}
+                        />
+                    }
                     renderOptions={() =>
                         this.possibleLocales.map(i => (
-                            <MenuItem key={i.value} onClick={() => this.setLocale(i)}>
+                            <MenuItem
+                                key={i.value}
+                                onClick={() => this.setLocale(i)}
+                            >
                                 <div className={styles.showLocale}>
-                                    <img src={`${i.image}.png`} title={i.value} alt={i.value} />
-                                    <Typography variant="p">{i.value}</Typography>
+                                    <img
+                                        src={`${i.image}.png`}
+                                        title={i.value}
+                                        alt={i.value}
+                                    />
+                                    <Typography variant="p">
+                                        {i.value}
+                                    </Typography>
                                 </div>
                             </MenuItem>
                         ))
                     }
                     label="Locale"
                 />
-                <Avatar alt="user image" src={imageUrl} className={styles.avatar} />
+                <Avatar
+                    alt="user image"
+                    src={imageUrl}
+                    className={styles.avatar}
+                />
             </div>
         );
     }

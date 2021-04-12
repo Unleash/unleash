@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import HistoryListToggleComponent from './history-list-component';
-import { updateSettingForGroup } from '../../store/settings/actions';
+import EventLog from './EventLog';
+import { updateSettingForGroup } from '../../../store/settings/actions';
 
 const mapStateToProps = state => {
     const settings = state.settings.toJS().history || {};
@@ -11,8 +11,8 @@ const mapStateToProps = state => {
     };
 };
 
-const HistoryListContainer = connect(mapStateToProps, {
+const EventLogContainer = connect(mapStateToProps, {
     updateSetting: updateSettingForGroup('history'),
-})(HistoryListToggleComponent);
+})(EventLog);
 
-export default HistoryListContainer;
+export default EventLogContainer;

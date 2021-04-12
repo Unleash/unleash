@@ -18,8 +18,10 @@ export const ERROR_FETCH_FEATURE_TOGGLES = 'ERROR_FETCH_FEATURE_TOGGLES';
 export const ERROR_CREATING_FEATURE_TOGGLE = 'ERROR_CREATING_FEATURE_TOGGLE';
 export const ERROR_UPDATE_FEATURE_TOGGLE = 'ERROR_UPDATE_FEATURE_TOGGLE';
 export const ERROR_REMOVE_FEATURE_TOGGLE = 'ERROR_REMOVE_FEATURE_TOGGLE';
-export const UPDATE_FEATURE_TOGGLE_STRATEGIES = 'UPDATE_FEATURE_TOGGLE_STRATEGIES';
+export const UPDATE_FEATURE_TOGGLE_STRATEGIES =
+    'UPDATE_FEATURE_TOGGLE_STRATEGIES';
 export const FETCH_FEATURE_TOGGLE_ERROR = 'FETCH_FEATURE_TOGGLE_ERROR';
+export const RESET_LOADING = 'RESET_LOADING';
 
 export const RECEIVE_FEATURE_TOGGLE = 'RECEIVE_FEATURE_TOGGLE';
 export const START_FETCH_FEATURE_TOGGLE = 'START_FETCH_FEATURE_TOGGLE';
@@ -131,7 +133,10 @@ export function requestSetStaleFeatureToggle(stale, name) {
             .setStale(stale, name)
             .then(featureToggle => {
                 const info = `${name} marked as ${stale ? 'Stale' : 'Active'}.`;
-                setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
+                setTimeout(
+                    () => dispatch({ type: MUTE_ERROR, error: info }),
+                    1000
+                );
                 dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle, info });
             })
             .catch(dispatchError(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
@@ -146,14 +151,20 @@ export function requestUpdateFeatureToggle(featureToggle) {
             .update(featureToggle)
             .then(() => {
                 const info = `${featureToggle.name} successfully updated!`;
-                setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
+                setTimeout(
+                    () => dispatch({ type: MUTE_ERROR, error: info }),
+                    1000
+                );
                 dispatch({ type: UPDATE_FEATURE_TOGGLE, featureToggle, info });
             })
             .catch(dispatchError(dispatch, ERROR_UPDATE_FEATURE_TOGGLE));
     };
 }
 
-export function requestUpdateFeatureToggleStrategies(featureToggle, newStrategies) {
+export function requestUpdateFeatureToggleStrategies(
+    featureToggle,
+    newStrategies
+) {
     return dispatch => {
         featureToggle.strategies = newStrategies;
         dispatch({ type: START_UPDATE_FEATURE_TOGGLE });
@@ -162,7 +173,10 @@ export function requestUpdateFeatureToggleStrategies(featureToggle, newStrategie
             .update(featureToggle)
             .then(() => {
                 const info = `${featureToggle.name} successfully updated!`;
-                setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
+                setTimeout(
+                    () => dispatch({ type: MUTE_ERROR, error: info }),
+                    1000
+                );
                 return dispatch({
                     type: UPDATE_FEATURE_TOGGLE_STRATEGIES,
                     featureToggle,
@@ -182,7 +196,10 @@ export function requestUpdateFeatureToggleVariants(featureToggle, newVariants) {
             .update(featureToggle)
             .then(() => {
                 const info = `${featureToggle.name} successfully updated!`;
-                setTimeout(() => dispatch({ type: MUTE_ERROR, error: info }), 1000);
+                setTimeout(
+                    () => dispatch({ type: MUTE_ERROR, error: info }),
+                    1000
+                );
                 return dispatch({
                     type: UPDATE_FEATURE_TOGGLE_STRATEGIES,
                     featureToggle,
@@ -199,7 +216,9 @@ export function removeFeatureToggle(featureToggleName) {
 
         return api
             .remove(featureToggleName)
-            .then(() => dispatch({ type: REMOVE_FEATURE_TOGGLE, featureToggleName }))
+            .then(() =>
+                dispatch({ type: REMOVE_FEATURE_TOGGLE, featureToggleName })
+            )
             .catch(dispatchError(dispatch, ERROR_REMOVE_FEATURE_TOGGLE));
     };
 }

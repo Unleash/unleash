@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { MenuItem } from '@material-ui/core';
 import { MenuItemWithIcon } from '../../../common';
-import DropdownMenu from '../../../common/dropdown-menu';
+import DropdownMenu from '../../../common/DropdownMenu/DropdownMenu';
 import ProjectSelect from '../../../common/ProjectSelect';
 import { useStyles } from './styles';
 import classnames from 'classnames';
@@ -19,8 +19,13 @@ const sortingOptions = [
     { type: 'metrics', displayName: 'Metrics' },
 ];
 
-
-const FeatureToggleListActions = ({ settings, setSort, toggleMetrics, updateSetting, loading }) => {
+const FeatureToggleListActions = ({
+    settings,
+    setSort,
+    toggleMetrics,
+    updateSetting,
+    loading,
+}) => {
     const styles = useStyles();
 
     const handleSort = e => {
@@ -32,7 +37,11 @@ const FeatureToggleListActions = ({ settings, setSort, toggleMetrics, updateSett
 
     const renderSortingOptions = () =>
         sortingOptions.map(option => (
-            <MenuItem key={option.type} disabled={isDisabled(option.type)} data-target={option.type}>
+            <MenuItem
+                key={option.type}
+                disabled={isDisabled(option.type)}
+                data-target={option.type}
+            >
                 {option.displayName}
             </MenuItem>
         ));

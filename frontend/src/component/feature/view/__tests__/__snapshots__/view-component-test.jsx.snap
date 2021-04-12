@@ -139,10 +139,10 @@ exports[`renders correctly with one feature 1`] = `
             </svg>
             <fieldset
               aria-hidden={true}
-              className="PrivateNotchedOutline-root-9 MuiOutlinedInput-notchedOutline"
+              className="PrivateNotchedOutline-root-11 MuiOutlinedInput-notchedOutline"
             >
               <legend
-                className="PrivateNotchedOutline-legendLabelled-11"
+                className="PrivateNotchedOutline-legendLabelled-13"
               >
                 <span>
                   Project
@@ -174,7 +174,7 @@ exports[`renders correctly with one feature 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-13 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-15 MuiSwitch-switchBase MuiSwitch-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -193,7 +193,7 @@ exports[`renders correctly with one feature 1`] = `
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-16 MuiSwitch-input"
+              className="PrivateSwitchBase-input-18 MuiSwitch-input"
               disabled={false}
               onChange={[Function]}
               type="checkbox"
@@ -235,7 +235,7 @@ exports[`renders correctly with one feature 1`] = `
         onTouchStart={[Function]}
         style={
           Object {
-            "fontWeight": "bold",
+            "fontWeight": "500",
           }
         }
         tabIndex={0}
@@ -317,7 +317,7 @@ exports[`renders correctly with one feature 1`] = `
   </div>
   <hr />
   <div
-    className="MuiPaper-root makeStyles-tabNav-17 MuiPaper-elevation1 MuiPaper-rounded"
+    className="MuiPaper-root makeStyles-tabNav-19 MuiPaper-elevation1 MuiPaper-rounded"
   >
     <div
       className="MuiTabs-root"
@@ -365,7 +365,7 @@ exports[`renders correctly with one feature 1`] = `
               Activation
             </span>
             <span
-              className="PrivateTabIndicator-root-18 PrivateTabIndicator-colorPrimary-19 MuiTabs-indicator"
+              className="PrivateTabIndicator-root-20 PrivateTabIndicator-colorPrimary-21 MuiTabs-indicator"
               style={Object {}}
             />
           </button>

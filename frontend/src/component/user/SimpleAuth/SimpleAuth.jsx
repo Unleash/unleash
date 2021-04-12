@@ -4,7 +4,12 @@ import { Button, TextField } from '@material-ui/core';
 
 import styles from './SimpleAuth.module.scss';
 
-const SimpleAuth = ({ insecureLogin, loadInitialData, history, authDetails }) => {
+const SimpleAuth = ({
+    insecureLogin,
+    loadInitialData,
+    history,
+    authDetails,
+}) => {
     const [email, setEmail] = useState('');
 
     const handleSubmit = evt => {
@@ -27,9 +32,13 @@ const SimpleAuth = ({ insecureLogin, loadInitialData, history, authDetails }) =>
             <div className={styles.container}>
                 <p>{authDetails.message}</p>
                 <p>
-                    This instance of Unleash is not set up with a secure authentication provider. You can read more
-                    about{' '}
-                    <a href="https://github.com/Unleash/unleash/blob/master/docs/securing-unleash.md" target="_blank" rel="noreferrer">
+                    This instance of Unleash is not set up with a secure
+                    authentication provider. You can read more about{' '}
+                    <a
+                        href="https://github.com/Unleash/unleash/blob/master/docs/securing-unleash.md"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
                         securing Unleash on GitHub
                     </a>
                 </p>
@@ -47,7 +56,13 @@ const SimpleAuth = ({ insecureLogin, loadInitialData, history, authDetails }) =>
                 <br />
 
                 <div>
-                    <Button type="submit" variant="contained" color="primary" data-test="login-submit">
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        data-test="login-submit"
+                        className={styles.button}
+                    >
                         Sign in
                     </Button>
                 </div>

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import HistoryListToggleComponent from './history-list-toggle-component';
-import { fetchHistoryForToggle } from '../..//store/history/actions';
+import FeatureEventHistory from './FeatureEventHistory';
+import { fetchHistoryForToggle } from '../../../store/history/actions';
 
 function getHistoryFromToggle(state, toggleName) {
     if (!toggleName) {
@@ -18,8 +18,8 @@ const mapStateToProps = (state, props) => ({
     history: getHistoryFromToggle(state, props.toggleName),
 });
 
-const HistoryListToggleContainer = connect(mapStateToProps, {
+const FeatureEventHistoryContainer = connect(mapStateToProps, {
     fetchHistoryForToggle,
-})(HistoryListToggleComponent);
+})(FeatureEventHistory);
 
-export default HistoryListToggleContainer;
+export default FeatureEventHistoryContainer;

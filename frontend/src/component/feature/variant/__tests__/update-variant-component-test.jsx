@@ -1,27 +1,33 @@
-import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { ThemeProvider } from '@material-ui/core';
 
 import UpdateVariant from './../update-variant-component';
 import renderer from 'react-test-renderer';
 import { UPDATE_FEATURE } from '../../../../permissions';
 import { weightTypes } from '../enums';
+import theme from '../../../../themes/main-theme';
 
-jest.mock('../e-override-config', () => 'OverrideConfig');
+jest.mock(
+    '../AddVariant/OverrideConfig/OverrideConfig.jsx',
+    () => 'OverrideConfig'
+);
 
 test('renders correctly with without variants', () => {
     const tree = renderer.create(
-        <MemoryRouter>
-            <UpdateVariant
-                key={0}
-                variants={[]}
-                addVariant={jest.fn()}
-                removeVariant={jest.fn()}
-                updateVariant={jest.fn()}
-                stickinessOptions={['default']}
-                updateStickiness={jest.fn()}
-                hasPermission={permission => permission === UPDATE_FEATURE}
-            />
-        </MemoryRouter>
+        <ThemeProvider theme={theme}>
+            <MemoryRouter>
+                <UpdateVariant
+                    key={0}
+                    variants={[]}
+                    addVariant={jest.fn()}
+                    removeVariant={jest.fn()}
+                    updateVariant={jest.fn()}
+                    stickinessOptions={['default']}
+                    updateStickiness={jest.fn()}
+                    hasPermission={permission => permission === UPDATE_FEATURE}
+                />
+            </MemoryRouter>
+        </ThemeProvider>
     );
 
     expect(tree).toMatchSnapshot();
@@ -29,18 +35,20 @@ test('renders correctly with without variants', () => {
 
 test('renders correctly with without variants and no permissions', () => {
     const tree = renderer.create(
-        <MemoryRouter>
-            <UpdateVariant
-                key={0}
-                variants={[]}
-                addVariant={jest.fn()}
-                removeVariant={jest.fn()}
-                updateVariant={jest.fn()}
-                stickinessOptions={['default']}
-                updateStickiness={jest.fn()}
-                hasPermission={() => false}
-            />
-        </MemoryRouter>
+        <ThemeProvider theme={theme}>
+            <MemoryRouter>
+                <UpdateVariant
+                    key={0}
+                    variants={[]}
+                    addVariant={jest.fn()}
+                    removeVariant={jest.fn()}
+                    updateVariant={jest.fn()}
+                    stickinessOptions={['default']}
+                    updateStickiness={jest.fn()}
+                    hasPermission={() => false}
+                />
+            </MemoryRouter>
+        </ThemeProvider>
     );
 
     expect(tree).toMatchSnapshot();
@@ -87,18 +95,20 @@ test('renders correctly with with variants', () => {
         createdAt: '2018-02-04T20:27:52.127Z',
     };
     const tree = renderer.create(
-        <MemoryRouter>
-            <UpdateVariant
-                key={0}
-                variants={featureToggle.variants}
-                addVariant={jest.fn()}
-                removeVariant={jest.fn()}
-                updateVariant={jest.fn()}
-                stickinessOptions={['default']}
-                updateStickiness={jest.fn()}
-                hasPermission={permission => permission === UPDATE_FEATURE}
-            />
-        </MemoryRouter>
+        <ThemeProvider theme={theme}>
+            <MemoryRouter>
+                <UpdateVariant
+                    key={0}
+                    variants={featureToggle.variants}
+                    addVariant={jest.fn()}
+                    removeVariant={jest.fn()}
+                    updateVariant={jest.fn()}
+                    stickinessOptions={['default']}
+                    updateStickiness={jest.fn()}
+                    hasPermission={permission => permission === UPDATE_FEATURE}
+                />
+            </MemoryRouter>
+        </ThemeProvider>
     );
 
     expect(tree).toMatchSnapshot();

@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 4.0.0-alpha.3
+- fix: logout redirect logic
+- fix: redirect from login page if authorized
+- fix: material UI cleanup (#264)
+
+
 # 4.0.0-alpha.2
 - feat: admin users (#266)
 - fix: remove editableStrategies from useEffect deps

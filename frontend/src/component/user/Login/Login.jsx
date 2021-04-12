@@ -11,17 +11,19 @@ import { ReactComponent as UnleashLogo } from '../../../icons/unleash-logo-inver
 import { ReactComponent as SwitchesSVG } from '../../../icons/switches.svg';
 import { useStyles } from './Login.styles';
 
-const Login = ({ history, loadInitialData, authDetails }) => {
+const Login = ({ history, loadInitialData, isUnauthorized, authDetails }) => {
     const theme = useTheme();
     const styles = useStyles();
     const smallScreen = useMediaQuery(theme.breakpoints.up('md'));
 
     useEffect(() => {
-        if (!authDetails) {
+        if (isUnauthorized()) {
             loadInitialData();
+        } else {
+            history.push('features');
         }
         /* eslint-disable-next-line */
-    }, []);
+    }, [authDetails]);
 
     return (
         <div className={styles.loginContainer}>

@@ -50,7 +50,12 @@ const App = ({ location, user }: IAppProps) => {
             <Route
                 key={route.path}
                 path={route.path}
-                render={props => <route.component {...props} />}
+                render={props => (
+                    <route.component
+                        {...props}
+                        isUnauthorized={isUnauthorized}
+                    />
+                )}
             />
         );
     };

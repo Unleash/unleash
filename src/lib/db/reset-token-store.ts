@@ -26,6 +26,7 @@ export interface IResetTokenCreate {
 export interface IResetToken {
     userId: number;
     token: string;
+    createdBy: string;
     expiresAt: Date;
     createdAt: Date;
     usedAt?: Date;
@@ -47,6 +48,7 @@ const rowToResetToken = (row: IResetTokenTable): IResetToken => {
         token: row.reset_token,
         expiresAt: row.expires_at,
         createdAt: row.created_at,
+        createdBy: row.created_by,
         usedAt: row.used_at,
     };
 };
@@ -68,9 +70,9 @@ export class ResetTokenStore {
             });
     }
 
-    async getActive({ userId, token }: IResetQuery): Promise<IResetToken> {
+    async getActive(token: string): Promise<IResetToken> {
         const row = await this.db<IResetTokenTable>(TABLE)
-            .where({ reset_token: token, user_id: userId })
+            .where({ reset_token: token })
             .where('expires_at', '>', new Date())
             .first();
         if (!row) {
@@ -88,6 +90,7 @@ export class ResetTokenStore {
             token: newToken.reset_token,
             expiresAt: newToken.expires_at,
             createdAt: row.created_at,
+            createdBy: newToken.created_by,
         };
     }
 
@@ -106,6 +109,10 @@ export class ResetTokenStore {
         return this.db(TABLE)
             .where(reset_token)
             .del();
+    }
+
+    async deleteAll(): Promise<void> {
+        return this.db(TABLE).del();
     }
 
     async deleteExpired(): Promise<void> {

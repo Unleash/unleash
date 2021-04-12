@@ -12,6 +12,7 @@ export interface IUnleashConfig {
         enableApiToken: boolean;
         createAdminUser: boolean;
     };
+    unleashUrl: string;
 }
 
 export enum AuthenticationType {

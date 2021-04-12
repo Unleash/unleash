@@ -11,6 +11,7 @@ import isEmail from '../util/is-email';
 import { AccessService, RoleName } from './access-service';
 import { ADMIN } from '../permissions';
 import ResetTokenService from './reset-token-service';
+import NoAccessError from '../error/no-access-error';
 
 export interface ICreateUser {
     name?: string;
@@ -29,6 +30,11 @@ export interface IUpdateUser {
 
 interface IUserWithRole extends IUser {
     rootRole: number;
+}
+
+interface ITokenUser extends IUpdateUser {
+    createdBy: string;
+    token: string;
 }
 
 interface IStores {
@@ -238,6 +244,33 @@ class UserService {
         );
 
         await this.store.delete(userId);
+    }
+
+    async getUserForToken(token: string): Promise<ITokenUser> {
+        const { createdBy, userId } = await this.resetTokenService.isValid(
+            token,
+        );
+        const user = await this.getUser(userId);
+        return {
+            token,
+            createdBy,
+            email: user.email,
+            name: user.name,
+            id: user.id,
+        };
+    }
+
+    async resetPassword(
+        email: string,
+        token: string,
+        password: string,
+    ): Promise<void> {
+        const user = await this.getUserForToken(token);
+        await this.resetTokenService.useAccessToken({
+            userId: user.id,
+            token,
+        });
+        await this.changePassword(user.id, password);
     }
 }
 

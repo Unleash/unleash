@@ -1,4 +1,5 @@
 import { BackstageController } from './backstage';
+import ResetPasswordController from './auth/reset-password-controller';
 
 const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
@@ -17,6 +18,10 @@ class IndexRouter extends Controller {
         this.use(
             '/auth/simple',
             new SimplePasswordProvider(config, services).router,
+        );
+        this.use(
+            '/auth/reset',
+            new ResetPasswordController(config, services).router,
         );
         this.get(api.uri, this.index);
         this.use(api.links.admin.uri, new AdminApi(config, services).router);

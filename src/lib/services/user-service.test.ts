@@ -10,6 +10,7 @@ const config: IUnleashConfig = {
     getLogger: noLogger,
     baseUriPath: '',
     authentication: { enableApiToken: true, createAdminUser: false },
+    unleashUrl: '',
 };
 
 test('Should create new user', async t => {

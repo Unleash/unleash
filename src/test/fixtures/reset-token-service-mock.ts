@@ -9,7 +9,15 @@ export default class ResetTokenServiceMock extends ResetTokenService {
     constructor() {
         super(
             { resetTokenStore: undefined, userStore: undefined },
-            { getLogger: noLoggerProvider, baseUriPath: '' },
+            {
+                getLogger: noLoggerProvider,
+                baseUriPath: '',
+                authentication: {
+                    enableApiToken: true,
+                    createAdminUser: false,
+                },
+                unleashUrl: '',
+            },
         );
     }
 
@@ -17,7 +25,7 @@ export default class ResetTokenServiceMock extends ResetTokenService {
         throw new Error('Method not implemented');
     }
 
-    async isValid(token: IResetQuery): Promise<IResetToken> {
+    async isValid(token: string): Promise<IResetToken> {
         throw new Error('Method not implemented');
     }
 

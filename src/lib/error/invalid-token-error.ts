@@ -1,9 +1,9 @@
-class UsedTokenError extends Error {
-    constructor(usedAt: Date) {
+class InvalidTokenError extends Error {
+    constructor() {
         super();
         Error.captureStackTrace(this, this.constructor);
         this.name = this.constructor.name;
-        this.message = `Token was already used at ${usedAt}`;
+        this.message = 'Token was not valid';
     }
 
     toJSON(): any {
@@ -20,5 +20,5 @@ class UsedTokenError extends Error {
     }
 }
 
-export default UsedTokenError;
-module.exports = UsedTokenError;
+export default InvalidTokenError;
+module.exports = InvalidTokenError;

@@ -9,8 +9,9 @@ import NotFoundError from '../../../lib/error/notfound-error';
 
 const config: IUnleashConfig = {
     getLogger,
-    baseUriPath: 'http://localhost:3000',
+    baseUriPath: '',
     authentication: { enableApiToken: true, createAdminUser: false },
+    unleashUrl: 'http://localhost:3000',
 };
 
 let stores;
@@ -41,7 +42,6 @@ test.before(async () => {
 });
 
 test.serial('Should create a reset link', async t => {
-    const resetTokenService = new ResetTokenService(stores, config);
     const url = await resetTokenService.createResetUrl(
         userToCreateResetFor,
         adminUser,

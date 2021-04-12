@@ -101,6 +101,7 @@ test('should not add user if disabled', async t => {
             enableApiToken: false,
             createAdminUser: false,
         },
+        unleashUrl: '',
     };
 
     const func = apiTokenMiddleware(disabledConfig, { apiTokenService });

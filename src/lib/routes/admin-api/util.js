@@ -52,6 +52,16 @@ const handleErrors = (res, logger, error) => {
                 .status(409)
                 .json(error)
                 .end();
+        case 'UsedTokenError':
+            return res
+                .status(403)
+                .json(error)
+                .end();
+        case 'InvalidTokenError':
+            return res
+                .status(401)
+                .json(error)
+                .end();
         default:
             logger.error('Server failed executing request', error);
             return res.status(500).end();

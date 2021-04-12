@@ -16,10 +16,8 @@ export class ResetTokenStoreMock extends ResetTokenStore {
         this.data = [];
     }
 
-    async getActive({ userId, token }: IResetToken): Promise<IResetToken> {
-        const row = this.data.find(
-            tokens => tokens.token === token && tokens.userId === userId,
-        );
+    async getActive(token: string): Promise<IResetToken> {
+        const row = this.data.find(tokens => tokens.token === token);
         if (!row) {
             throw new NotFoundError();
         }
@@ -31,6 +29,7 @@ export class ResetTokenStoreMock extends ResetTokenStore {
             userId: newToken.user_id,
             token: newToken.reset_token,
             expiresAt: newToken.expires_at,
+            createdBy: newToken.created_by,
             createdAt: new Date(),
         };
         this.data.push(token);

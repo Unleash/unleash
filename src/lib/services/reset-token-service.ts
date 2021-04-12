@@ -10,17 +10,14 @@ import { Logger, LogProvider } from '../logger';
 import User from '../user';
 import UserStore from '../db/user-store';
 import UsedTokenError from '../error/used-token-error';
+import { IUnleashConfig } from '../types/core';
+import InvalidTokenError from '../error/invalid-token-error';
 
 const ONE_DAY = 86_400_000;
 
 interface IStores {
     resetTokenStore: ResetTokenStore;
     userStore: UserStore;
-}
-
-export interface IConfig {
-    getLogger: LogProvider;
-    baseUriPath: string;
 }
 
 const getCreatedBy = (user: User) => user.email || user.username;
@@ -30,17 +27,20 @@ export default class ResetTokenService {
 
     private logger: Logger;
 
-    private readonly baseUriPath: string;
+    private readonly unleashBase: URL;
 
-    constructor(stores: IStores, { getLogger, baseUriPath }: IConfig) {
+    constructor(
+        stores: IStores,
+        { getLogger, baseUriPath, unleashUrl }: IUnleashConfig,
+    ) {
         this.store = stores.resetTokenStore;
         this.logger = getLogger('/services/reset-token-service.ts');
-        this.baseUriPath = baseUriPath;
+        this.unleashBase = new URL(baseUriPath, unleashUrl);
     }
 
     async useAccessToken(token: IResetQuery): Promise<boolean> {
         try {
-            await this.isValid(token);
+            await this.isValid(token.token);
             await this.store.useToken(token);
             return true;
         } catch (e) {
@@ -48,10 +48,15 @@ export default class ResetTokenService {
         }
     }
 
-    async isValid(token: IResetQuery): Promise<IResetToken> {
-        const t = await this.store.getActive(token);
-        if (!t.usedAt) {
-            return t;
+    async isValid(token: string): Promise<IResetToken> {
+        let t;
+        try {
+            t = await this.store.getActive(token);
+            if (!t.usedAt) {
+                return t;
+            }
+        } catch (e) {
+            throw new InvalidTokenError();
         }
         throw new UsedTokenError(t.usedAt);
     }
@@ -59,7 +64,10 @@ export default class ResetTokenService {
     async createResetUrl(forUser: User, creator: User): Promise<URL> {
         const token = await this.createToken(forUser, creator);
         return Promise.resolve(
-            new URL(`/auth/setpassword?token=${token.token}`, this.baseUriPath),
+            new URL(
+                `/auth/reset/validate?token=${token.token}`,
+                this.unleashBase,
+            ),
         );
     }
 

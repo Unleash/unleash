@@ -25,6 +25,7 @@ function createApp(stores, adminAuthentication = 'none', preHook) {
         authentication: {
             customHook: () => {},
         },
+        unleashUrl: 'http://localhost:4242',
         getLogger,
     };
     const services = createServices(stores, config);

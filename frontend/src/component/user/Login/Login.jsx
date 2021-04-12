@@ -17,6 +17,7 @@ const Login = ({ history, loadInitialData, isUnauthorized, authDetails }) => {
     const smallScreen = useMediaQuery(theme.breakpoints.up('md'));
 
     useEffect(() => {
+        console.log(isUnauthorized());
         if (isUnauthorized()) {
             loadInitialData();
         } else {

@@ -8,7 +8,7 @@ const apiAccessMiddleware = (
     const logger = config.getLogger('/middleware/api-token.ts');
     logger.info('Enabling api-token middleware');
 
-    if(!config.authentication.enableApiToken) {
+    if (!config.authentication.enableApiToken) {
         return (req, res, next) => next();
     }
 

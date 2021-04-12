@@ -8,7 +8,6 @@ const permissions = require('../../../test/fixtures/permissions');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
 const { createServices } = require('../../services');
-const { UPDATE_FEATURE } = require('../../permissions');
 
 const eventBus = new EventEmitter();
 
@@ -20,7 +19,6 @@ function getSetup(databaseIsUp = true) {
         baseUriPath: base,
         stores,
         eventBus,
-        extendedPermissions: true,
         preRouterHook: perms.hook,
         getLogger,
     };
@@ -85,8 +83,7 @@ test('trying to get non-existing tag by name and type should not be found', t =>
 });
 test('should be able to delete a tag', t => {
     t.plan(0);
-    const { request, base, tagStore, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, base, tagStore } = getSetup();
     tagStore.createTag({ type: 'simple', value: 'TeamRed' });
     return request
         .delete(`${base}/api/admin/tags/simple/TeamGreen`)

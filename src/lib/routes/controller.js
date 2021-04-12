@@ -1,8 +1,24 @@
 'use strict';
 
 const { Router } = require('express');
-const checkPermission = require('../middleware/permission-checker');
+const NoAccessError = require('../error/no-access-error');
 const requireContentType = require('../middleware/content_type_checker');
+
+const checkPermission = permission => {
+    return async (req, res, next) => {
+        if (!permission) {
+            return next();
+        }
+        if (await req.checkRbac(permission)) {
+            return next();
+        }
+        return res
+            .status(403)
+            .json(new NoAccessError(permission))
+            .end();
+    };
+};
+
 /**
  * Base class for Controllers to standardize binding to express Router.
  */
@@ -14,17 +30,13 @@ class Controller {
     }
 
     get(path, handler, permission) {
-        this.app.get(
-            path,
-            checkPermission(this.config, permission),
-            handler.bind(this),
-        );
+        this.app.get(path, checkPermission(permission), handler.bind(this));
     }
 
     post(path, handler, permission, ...acceptedContentTypes) {
         this.app.post(
             path,
-            checkPermission(this.config, permission),
+            checkPermission(permission),
             requireContentType(...acceptedContentTypes),
             handler.bind(this),
         );
@@ -33,24 +45,20 @@ class Controller {
     put(path, handler, permission, ...acceptedContentTypes) {
         this.app.put(
             path,
-            checkPermission(this.config, permission),
+            checkPermission(permission),
             requireContentType(...acceptedContentTypes),
             handler.bind(this),
         );
     }
 
     delete(path, handler, permission) {
-        this.app.delete(
-            path,
-            checkPermission(this.config, permission),
-            handler.bind(this),
-        );
+        this.app.delete(path, checkPermission(permission), handler.bind(this));
     }
 
     fileupload(path, filehandler, handler, permission) {
         this.app.post(
             path,
-            checkPermission(this.config, permission),
+            checkPermission(permission),
             filehandler,
             handler.bind(this),
         );

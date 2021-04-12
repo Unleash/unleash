@@ -67,7 +67,6 @@ function defaultOptions() {
         unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
         serverMetrics: true,
         enableLegacyRoutes: false, // deprecated. Remove in v4,
-        extendedPermissions: false, // deprecated. Remove in v4,
         publicFolder,
         versionCheck: {
             url:
@@ -101,7 +100,6 @@ function defaultOptions() {
                 enabled: process.env.CLIENT_FEATURE_MEMOIZE || false,
                 maxAge: process.env.CLIENT_FEATURE_MAXAGE || 1000,
             },
-            rbac: false,
         },
         email: {
             host: process.env.EMAIL_HOST,

@@ -20,7 +20,6 @@ function getSetup(databaseIsUp = true) {
         stores,
         eventBus,
         getLogger,
-        extendedPermissions: true,
         preRouterHook: perms.hook,
     };
     const services = createServices(stores, config);

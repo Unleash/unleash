@@ -17,7 +17,6 @@ function getSetup() {
     const config = {
         baseUriPath: '',
         eventBus,
-        extendedPermissions: true,
         preRouterHook: perms.hook,
         getLogger,
     };

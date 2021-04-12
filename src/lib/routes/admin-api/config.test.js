@@ -21,7 +21,6 @@ function getSetup() {
         baseUriPath: base,
         stores,
         eventBus,
-        extendedPermissions: false,
         ui: uiConfig,
         getLogger,
     });

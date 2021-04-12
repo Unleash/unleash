@@ -19,7 +19,6 @@ function getSetup(databaseIsUp = true) {
         baseUriPath: base,
         stores,
         eventBus,
-        extendedPermissions: true,
         preRouterHook: perms.hook,
         getLogger,
     };

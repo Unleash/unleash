@@ -5,6 +5,31 @@ title: Migration Guide
 
 Generally, the intention is that `unleash-server` should always provide support for clients one major version lower than the current one. This should make it possible to upgrade `unleash` gradually.
 
+## Upgrading from v3.x to v4.x
+
+(Work In Process!)
+
+### Role-based Access Control (RBAC)
+
+We have implemented RBAC in Unleash v4. This has totally changed the permission system in Unleash.
+
+**Required actions:** If you have implemented "custom authentication" for your users you will need to make changes to your integration:
+
+- _extendedPermissions_ option has been removed. You can no longer specify custom permission per-user basis. All "logged_in users" must belong to a "root" role. This can be "Admin", "Editor" or "Viewer". This is taken care of when you create new users via userService.
+- All "logged-in users" needs to be defined in Unleash and have a unique ID. This can be achieved by calling "createUser" on "userService".
+
+Code example:
+
+```js
+const user = userService.loginUserWithoutPassword(
+  'some@getunleash.io',
+  false, // autoCreateUser. Set to true if you want to create users on the fly.
+);
+
+// The user needs to be set on the current active session
+req.session.user = user;
+```
+
 ## Upgrading from v2.x to v3.x
 
 The notable change introduced in Unleash v3.x is a strict separation of API paths for client requests and admin requests. This makes it easier to implement different authentication mechanisms for the admin UI and all unleash-clients. You can read more about [securing unleash](https://github.com/Unleash/unleash/blob/master/docs/securing-unleash.md).

@@ -74,17 +74,3 @@ test('client api defintion', t => {
             t.true(res.body.links.metrics.uri === '/api/client/metrics');
         });
 });
-
-test('client legacy features uri', t => {
-    t.plan(3);
-    const { request, base } = getSetup();
-    return request
-        .get(`${base}/api/features`)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect(res => {
-            t.truthy(res.body);
-            t.true(res.body.version === 1);
-            t.deepEqual(res.body.features, []);
-        });
-});

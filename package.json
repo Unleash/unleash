@@ -20,7 +20,7 @@
     "url": "https://github.com/unleash/unleash/issues"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "license": "Apache-2.0",
   "main": "./dist/lib/server-impl.js",
@@ -109,7 +109,7 @@
     "@passport-next/passport": "^3.1.0",
     "@passport-next/passport-google-oauth2": "^1.0.0",
     "@types/express": "^4.17.11",
-    "@types/node": "^14.0.0",
+    "@types/node": "^14.14.37",
     "@types/nodemailer": "^6.4.1",
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",

@@ -3,6 +3,17 @@
 ## 4.0.0-alpha.2
 
 - feat: Email service (#757)
+- feat: unleash v4 will require node 14 or higher (#784)
+- feat: Add username/password authentication (#777)
+- fix: should only do checkRbac if it exists
+- fix: docs transitive dependencies
+- chore: typos in migration-guide
+- fix: remove enableLegacyRoutes option from v2
+- fix: upgrade unleash-frontend to latest alpha
+- fix: migrate all permissions to rbac (#782)
+- fix: add default empty array to strategies from db (#781)
+- feat: added basic email-service (#780)
+- fix: Clear-Site-Data header needs to be double quoted
 
 ## 4.0.0-alpha.1
 

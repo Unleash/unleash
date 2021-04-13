@@ -9,7 +9,7 @@ const checkPermission = permission => {
         if (!permission) {
             return next();
         }
-        if (await req.checkRbac(permission)) {
+        if (req.checkRbac && (await req.checkRbac(permission))) {
             return next();
         }
         return res

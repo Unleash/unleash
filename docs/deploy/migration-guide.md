@@ -9,7 +9,7 @@ Generally, the intention is that `unleash-server` should always provide support 
 
 (Work In Process!)
 
-### Role-based Access Control (RBAC)
+### 1. Role-based Access Control (RBAC)
 
 We have implemented RBAC in Unleash v4. This has totally changed the permission system in Unleash.
 
@@ -29,6 +29,12 @@ const user = userService.loginUserWithoutPassword(
 // The user needs to be set on the current active session
 req.session.user = user;
 ```
+
+### 3. Legacy v2 routes removed
+
+Only relevant if you use the `enableLegacyRoutes` option.
+
+Im v2 you could query feature toggles on `/api/features`. This was deprecated in v4 and we introduced two different endpoints (`/api/admin/features` and `/api/client/features`) to be able to optimize performance and security. In v3 you could still enable the legacy routes via the `enableLegacyRoutes` option. This was removed in v4.
 
 ## Upgrading from v2.x to v3.x
 

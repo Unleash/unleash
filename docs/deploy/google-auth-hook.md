@@ -85,7 +85,6 @@ Add `googleAdminAuth()` function and other options
 function googleAdminAuth(app) {}
 
 let options = {
-  enableLegacyRoutes: false,
   adminAuthentication: 'custom',
   preRouterHook: googleAdminAuth,
 };
@@ -242,7 +241,6 @@ function googleAdminAuth(app) {
 }
 
 const options = {
-  enableLegacyRoutes: false,
   adminAuthentication: 'custom',
   preRouterHook: googleAdminAuth,
 };

@@ -17,7 +17,6 @@ function getSetup() {
         baseUriPath: base,
         stores,
         eventBus,
-        enableLegacyRoutes: true,
         getLogger,
     };
     const services = createServices(stores, config);

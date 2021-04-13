@@ -3,7 +3,7 @@ id: securing_unleash
 title: Securing Unleash
 ---
 
-> This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with a secure setup and multiple SSO options. 
+> This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with a secure setup and multiple SSO options.
 
 The Unleash API is split into two different paths: `/api/client` and `/api/admin`. This makes it easy to have different authentication strategy for the admin interface and the client-api used by the applications integrating with Unleash.
 
@@ -73,7 +73,6 @@ const sharedSecret = '12312Random';
 unleash
   .start({
     databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash',
-    enableLegacyRoutes: false,
     preRouterHook: app => {
       app.use('/api/client', (req, res, next) => {
         if (req.header('authorization') !== sharedSecret) {

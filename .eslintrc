@@ -52,5 +52,5 @@
             }
         }
     ],
-    "ignorePatterns": ["**/docs/api/oas/"]
+    "ignorePatterns": ["**/docs/api/oas/", "examples/**"]
 }

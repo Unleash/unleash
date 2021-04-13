@@ -66,7 +66,6 @@ function defaultOptions() {
         baseUriPath: process.env.BASE_URI_PATH || '',
         unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
         serverMetrics: true,
-        enableLegacyRoutes: false, // deprecated. Remove in v4,
         publicFolder,
         versionCheck: {
             url:

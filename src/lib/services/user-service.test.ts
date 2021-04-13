@@ -4,7 +4,8 @@ import UserStoreMock from '../../test/fixtures/fake-user-store';
 import AccessServiceMock from '../../test/fixtures/access-service-mock';
 import noLogger from '../../test/fixtures/no-logger';
 import { IUnleashConfig } from '../types/core';
-import ResetTokenServiceMock from '../../test/fixtures/reset-token-service-mock';
+import { ResetTokenStoreMock } from '../../test/fixtures/fake-reset-token-store';
+import ResetTokenService from './reset-token-service';
 
 const config: IUnleashConfig = {
     getLogger: noLogger,
@@ -16,7 +17,8 @@ const config: IUnleashConfig = {
 test('Should create new user', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenService = new ResetTokenServiceMock();
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService({ userStore, resetTokenStore }, config);
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
@@ -37,7 +39,8 @@ test('Should create new user', async t => {
 test('Should create default user', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenService = new ResetTokenServiceMock();
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService({ userStore, resetTokenStore }, config);
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
@@ -52,7 +55,8 @@ test('Should create default user', async t => {
 test('Should be a valid password', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenService = new ResetTokenServiceMock();
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService({ userStore, resetTokenStore }, config);
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
@@ -66,7 +70,8 @@ test('Should be a valid password', async t => {
 test('Password must be at least 10 chars', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenService = new ResetTokenServiceMock();
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService({ userStore, resetTokenStore }, config);
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
@@ -80,7 +85,8 @@ test('Password must be at least 10 chars', async t => {
 test('The password must contain at least one uppercase letter.', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenService = new ResetTokenServiceMock();
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService({ userStore, resetTokenStore }, config);
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
@@ -94,7 +100,8 @@ test('The password must contain at least one uppercase letter.', async t => {
 test('The password must contain at least one number', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenService = new ResetTokenServiceMock();
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService({ userStore, resetTokenStore }, config);
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
@@ -108,7 +115,8 @@ test('The password must contain at least one number', async t => {
 test('The password must contain at least one special character', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenService = new ResetTokenServiceMock();
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService({ userStore, resetTokenStore }, config);
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
@@ -122,7 +130,8 @@ test('The password must contain at least one special character', async t => {
 test('Should be a valid password with special chars', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenService = new ResetTokenServiceMock();
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService({ userStore, resetTokenStore }, config);
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,

@@ -11,8 +11,9 @@ import isEmail from '../util/is-email';
 import { AccessService, RoleName } from './access-service';
 import { ADMIN } from '../permissions';
 import ResetTokenService from './reset-token-service';
-import NoAccessError from '../error/no-access-error';
 import InvalidTokenError from '../error/invalid-token-error';
+import NotFoundError from '../error/notfound-error';
+import { URL } from 'url';
 
 export interface ICreateUser {
     name?: string;
@@ -130,6 +131,10 @@ class UserService {
 
     async search(query: IUserSearch): Promise<User[]> {
         return this.store.search(query);
+    }
+    
+    async getByEmail(email: string): Promise<User> {
+        return this.store.get({ email });
     }
 
     async createUser({
@@ -273,6 +278,14 @@ class UserService {
             throw new InvalidTokenError();
         }
     }
+
+    async createResetPasswordEmail(receiverEmail: string, requester: string): Promise<URL> {
+        const receiver = await this.getByEmail(receiverEmail);
+        if (receiver) {
+            return this.resetTokenService.createResetPasswordUrl(receiver.id, requester);
+        }
+        throw new NotFoundError(`Could not find ${receiverEmail}`);
+    } 
 }
 
 module.exports = UserService;

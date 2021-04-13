@@ -6,8 +6,7 @@ import {
     IResetToken,
     IResetQuery,
 } from '../db/reset-token-store';
-import { Logger, LogProvider } from '../logger';
-import User from '../user';
+import { Logger } from '../logger';
 import UserStore from '../db/user-store';
 import UsedTokenError from '../error/used-token-error';
 import { IUnleashConfig } from '../types/core';
@@ -19,8 +18,6 @@ interface IStores {
     resetTokenStore: ResetTokenStore;
     userStore: UserStore;
 }
-
-const getCreatedBy = (user: User) => user.email || user.username;
 
 export default class ResetTokenService {
     private store: ResetTokenStore;
@@ -65,29 +62,38 @@ export default class ResetTokenService {
         throw new UsedTokenError(t.usedAt);
     }
 
-    async createResetUrl(forUser: User, creator: User): Promise<URL> {
+    private async createResetUrl(forUser: number, creator: string, path: string): Promise<URL> {
         const token = await this.createToken(forUser, creator);
         return Promise.resolve(
-            new URL(
-                `/auth/reset/validate?token=${token.token}`,
+            new URL(`${path}?token=${token.token}`,
                 this.unleashBase,
             ),
         );
     }
 
+    async createWelcomeUrl(forUser: number, creator: string): Promise<URL> {
+       const path = '/#/new-user';
+       return this.createResetUrl(forUser, creator, path);
+    }
+
+    async createResetPasswordUrl(forUser: number, creator: string): Promise<URL>  {
+        const path = '/#/reset-password';
+        return this.createResetUrl(forUser, creator, path);
+    }
+
     async createToken(
-        tokenUser: User,
-        creator: User,
+        tokenUser: number,
+        creator: string,
         expiryDelta: number = ONE_DAY,
     ): Promise<IResetToken> {
         const token = await this.generateToken();
-        const expiry = new Date(new Date().getTime() + expiryDelta);
-        await this.store.expireExistingTokensForUser(tokenUser.id);
+        const expiry = new Date(Date.now() + expiryDelta);
+        await this.store.expireExistingTokensForUser(tokenUser);
         return this.store.insert({
             reset_token: token,
-            user_id: tokenUser.id,
+            user_id: tokenUser,
             expires_at: expiry,
-            created_by: getCreatedBy(creator),
+            created_by: creator,
         });
     }
 

@@ -2,8 +2,9 @@ import Controller from '../controller';
 import { ADMIN } from '../../permissions';
 import { IUnleashConfig } from '../../types/core';
 import UserService from '../../services/user-service';
-import { AccessService, RoleName } from '../../services/access-service';
+import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
+import { handleErrors } from './util';
 
 class UserAdminController extends Controller {
     private userService: UserService;
@@ -25,6 +26,18 @@ class UserAdminController extends Controller {
         this.put('/:id', this.updateUser, ADMIN);
         this.post('/:id/change-password', this.changePassword, ADMIN);
         this.delete('/:id', this.deleteUser, ADMIN);
+        this.post('/reset-password', this.resetPassword);
+    }
+
+    async resetPassword(req, res) {
+        try {
+            const requester = req.user;
+            const receiver = req.body.id;
+            const resetPasswordUrl = await this.userService.createResetPasswordEmail(receiver, requester);
+            res.json({ resetPasswordUrl });
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async getUsers(req, res) {

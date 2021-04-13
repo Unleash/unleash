@@ -13,6 +13,11 @@ interface IValidateQuery {
     token: string;
 }
 
+interface IChangePasswordBody {
+    token: string;
+    password: string;
+}
+
 class ResetPasswordController extends Controller {
     userService: UserService;
 
@@ -41,7 +46,7 @@ class ResetPasswordController extends Controller {
         }
     }
 
-    async changePassword(req: Request, res: Response): Promise<void> {
+    async changePassword(req: Request<unknown, unknown, IChangePasswordBody, unknown>, res: Response): Promise<void> {
         const { token, password } = req.body;
         try {
             await this.userService.resetPassword(token, password);

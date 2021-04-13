@@ -46,14 +46,20 @@ test.after.always(async () => {
 });
 
 test.serial('Should create a reset link', async t => {
-    const url = await resetTokenService.createResetUrl(
+    const url = await resetTokenService.createResetPasswordUrl(
         userToCreateResetFor,
         adminUser,
     );
 
-    t.true(url.toString().indexOf('token') > 0);
+    t.true(url.toString().indexOf('/reset-password') > 0);
     t.truthy(url.searchParams.get('token'));
-    //    t.true(url.searchParams.token.value.length > 0);
+});
+
+test.serial('Should create a welcome link', async t => {
+    const url = await resetTokenService.createWelcomeUrl(userToCreateResetFor.id, adminUser.username);
+    t.true(url.toString().indexOf('/new-user') > 0);
+    t.truthy(url.searchParams.get('token'));
+
 });
 
 test.serial('Tokens should be one-time only', async t => {

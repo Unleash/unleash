@@ -7,7 +7,9 @@ Generally, the intention is that `unleash-server` should always provide support 
 
 ## Upgrading from v3.x to v4.x
 
-(Work In Process!)
+(**Work In Progress**: Will be finalized when we release the official v4 version).
+
+Before you upgrade we strongly recommends that you take a full [database backup](/database_backup), to make sure you can downgrade to version 3.
 
 ### 1. Role-based Access Control (RBAC)
 
@@ -34,7 +36,7 @@ req.session.user = user;
 
 Only relevant if you use the `enableLegacyRoutes` option.
 
-Im v2 you could query feature toggles on `/api/features`. This was deprecated in v4 and we introduced two different endpoints (`/api/admin/features` and `/api/client/features`) to be able to optimize performance and security. In v3 you could still enable the legacy routes via the `enableLegacyRoutes` option. This was removed in v4.
+In v2 you could query feature toggles on `/api/features`. This was deprecated in v4 and we introduced two different endpoints (`/api/admin/features` and `/api/client/features`) to be able to optimize performance and security. In v3 you could still enable the legacy routes via the `enableLegacyRoutes` option. This was removed in v4.
 
 ## Upgrading from v2.x to v3.x
 

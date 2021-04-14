@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import owasp from 'owasp-password-strength-test';
 import Joi from 'joi';
 
+import { URL } from 'url';
 import UserStore, { IUserSearch } from '../db/user-store';
 import { Logger } from '../logger';
 import { IUnleashConfig } from '../types/core';
@@ -300,7 +301,7 @@ class UserService {
     async createResetPasswordEmail(
         receiverEmail: string,
         requester: string,
-    ): Promise<void> {
+    ): Promise<URL> {
         const receiver = await this.getByEmail(receiverEmail);
         if (!receiver) {
             throw new NotFoundError(`Could not find ${receiverEmail}`);
@@ -310,11 +311,12 @@ class UserService {
             requester,
         );
 
-        this.emailService.sendResetMail(
+        await this.emailService.sendResetMail(
             receiver.name,
             receiver.email,
             resetLink.toString(),
         );
+        return resetLink;
     }
 }
 

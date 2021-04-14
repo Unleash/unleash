@@ -73,25 +73,25 @@ module.exports = (databaseIsUp = true) => {
                 const activeQueryKeys = Object.keys(query).filter(
                     t => query[t],
                 );
-                const filtered = _features.filter(feature => {
-                    return activeQueryKeys.every(key => {
+                const filtered = _features.filter(feature =>
+                    activeQueryKeys.every(key => {
                         if (key === 'namePrefix') {
                             return feature.name.indexOf(query[key]) > -1;
                         }
                         if (key === 'tag') {
-                            return query[key].some(tagQuery => {
-                                return _featureTags
+                            return query[key].some(tagQuery =>
+                                _featureTags
                                     .filter(t => t.featureName === feature.name)
                                     .some(
                                         tag =>
                                             tag.tagType === tagQuery[0] &&
                                             tag.tagValue === tagQuery[1],
-                                    );
-                            });
+                                    ),
+                            );
                         }
                         return query[key].some(v => v === feature[key]);
-                    });
-                });
+                    }),
+                );
                 return Promise.resolve(filtered);
             }
             return Promise.resolve(_features);
@@ -112,18 +112,15 @@ module.exports = (databaseIsUp = true) => {
             );
             _featureTags.splice(index, 1);
         },
-        getAllTagsForFeature: featureName => {
-            return Promise.resolve(
+        getAllTagsForFeature: featureName =>
+            Promise.resolve(
                 _featureTags
                     .filter(f => f.featureName === featureName)
-                    .map(t => {
-                        return {
-                            type: t.tagType,
-                            value: t.tagValue,
-                        };
-                    }),
-            );
-        },
+                    .map(t => ({
+                        type: t.tagType,
+                        value: t.tagValue,
+                    })),
+            ),
         getAllFeatureTags: () => Promise.resolve(_featureTags),
         importFeatureTags: tags => {
             tags.forEach(tag => {

@@ -272,13 +272,11 @@ class FeatureToggleStore {
         const rows = await this.db(FEATURE_TAG_TABLE).select(
             FEATURE_TAG_COLUMNS,
         );
-        return rows.map(row => {
-            return {
-                featureName: row.feature_name,
-                tagType: row.tag_type,
-                tagValue: row.tag_value,
-            };
-        });
+        return rows.map(row => ({
+            featureName: row.feature_name,
+            tagType: row.tag_type,
+            tagValue: row.tag_value,
+        }));
     }
 
     async dropFeatureTags() {

@@ -88,13 +88,11 @@ module.exports = class ClientMetricsService {
         if (this.clientAppStore) {
             const appsToAnnounce = await this.clientAppStore.setUnannouncedToAnnounced();
             if (appsToAnnounce.length > 0) {
-                const events = appsToAnnounce.map(app => {
-                    return {
-                        type: APPLICATION_CREATED,
-                        createdBy: app.createdBy || 'unknown',
-                        data: app,
-                    };
-                });
+                const events = appsToAnnounce.map(app => ({
+                    type: APPLICATION_CREATED,
+                    createdBy: app.createdBy || 'unknown',
+                    data: app,
+                }));
                 await this.eventStore.batchStore(events);
             }
         }

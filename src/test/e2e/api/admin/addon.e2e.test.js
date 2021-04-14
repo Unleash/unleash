@@ -16,7 +16,7 @@ test.before(async () => {
     stores = db.stores;
 });
 
-test.after(async () => {
+test.after.always(async () => {
     await db.destroy();
 });
 

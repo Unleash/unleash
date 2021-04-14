@@ -15,7 +15,7 @@ test.before(async () => {
     reset = db.reset;
 });
 
-test.after(async () => {
+test.after.always(async () => {
     await db.destroy();
 });
 

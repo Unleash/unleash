@@ -3,13 +3,12 @@ const AuthenticationRequired = require('../authentication-required');
 function ossAuthHook(app, config) {
     const { baseUriPath } = config;
 
-    const generateAuthResponse = async () => {
-        return new AuthenticationRequired({
+    const generateAuthResponse = async () =>
+        new AuthenticationRequired({
             type: 'password',
             path: `${baseUriPath}/auth/simple/login`,
             message: 'You must sign in order to use Unleash',
         });
-    };
 
     app.use(`${baseUriPath}/api`, async (req, res, next) => {
         if (req.session && req.session.user) {

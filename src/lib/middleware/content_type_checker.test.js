@@ -11,26 +11,20 @@ const mockRequest = contentType => ({
     },
 });
 
-const returns415 = t => {
-    return {
-        status: code => {
-            t.is(415, code);
-            return {
-                end: t.pass,
-            };
-        },
-    };
-};
+const returns415 = t => ({
+    status: code => {
+        t.is(415, code);
+        return {
+            end: t.pass,
+        };
+    },
+});
 
-const expectNoCall = t => {
-    return {
-        status: () => {
-            return {
-                end: t.fail,
-            };
-        },
-    };
-};
+const expectNoCall = t => ({
+    status: () => ({
+        end: t.fail,
+    }),
+});
 
 test('Content-type middleware should by default only support application/json', t => {
     const middleware = requireContentType();

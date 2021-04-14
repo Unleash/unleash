@@ -62,21 +62,26 @@ export default class ResetTokenService {
         throw new UsedTokenError(t.usedAt);
     }
 
-    private async createResetUrl(forUser: number, creator: string, path: string): Promise<URL> {
+    private async createResetUrl(
+        forUser: number,
+        creator: string,
+        path: string,
+    ): Promise<URL> {
         const token = await this.createToken(forUser, creator);
         return Promise.resolve(
-            new URL(`${path}?token=${token.token}`,
-                this.unleashBase,
-            ),
+            new URL(`${path}?token=${token.token}`, this.unleashBase),
         );
     }
 
     async createWelcomeUrl(forUser: number, creator: string): Promise<URL> {
-       const path = '/#/new-user';
-       return this.createResetUrl(forUser, creator, path);
+        const path = '/#/new-user';
+        return this.createResetUrl(forUser, creator, path);
     }
 
-    async createResetPasswordUrl(forUser: number, creator: string): Promise<URL>  {
+    async createResetPasswordUrl(
+        forUser: number,
+        creator: string,
+    ): Promise<URL> {
         const path = '/#/reset-password';
         return this.createResetUrl(forUser, creator, path);
     }

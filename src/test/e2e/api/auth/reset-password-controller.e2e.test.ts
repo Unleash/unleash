@@ -1,4 +1,5 @@
 import test from 'ava';
+import { URL } from 'url';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 
@@ -11,6 +12,7 @@ import UserService from '../../../../lib/services/user-service';
 import { IUnleashConfig } from '../../../../lib/types/core';
 import { setupApp } from '../../helpers/test-helper';
 import { EmailService } from '../../../../lib/services/email-service';
+import User from '../../../../lib/user';
 
 let stores;
 let db;
@@ -21,11 +23,18 @@ const config: IUnleashConfig = {
     authentication: { enableApiToken: true, createAdminUser: false },
 };
 const password = 'DtUYwi&l5I1KX4@Le';
-let userService;
-let accessService;
-let resetTokenService;
-let adminUser;
-let user;
+let userService: UserService;
+let accessService: AccessService;
+let resetTokenService: ResetTokenService;
+let adminUser: User;
+let user: User;
+
+const getBackendResetUrl = (url: URL): string => {
+    const urlString = url.toString();
+
+    const params = urlString.substring(urlString.indexOf('?'));
+    return `/auth/reset/validate${params}`;
+};
 
 test.before(async () => {
     db = await dbInit('reset_password_api_serial', getLogger);
@@ -63,8 +72,11 @@ test.after(async () => {
 
 test.serial('Can validate token for password reset', async t => {
     const request = await setupApp(stores);
-    const url = await resetTokenService.createResetUrl(user, adminUser);
-    const relative = url.toString().substring(config.unleashUrl.length);
+    const url = await resetTokenService.createResetPasswordUrl(
+        user.id,
+        adminUser.username,
+    );
+    const relative = getBackendResetUrl(url);
     return request
         .get(relative)
         .expect(200)
@@ -76,8 +88,11 @@ test.serial('Can validate token for password reset', async t => {
 
 test.serial('Can use token to reset password', async t => {
     const request = await setupApp(stores);
-    const url = await resetTokenService.createResetUrl(user, adminUser);
-    const relative = url.toString().substring(config.unleashUrl.length);
+    const url = await resetTokenService.createResetPasswordUrl(
+        user.id,
+        adminUser.username,
+    );
+    const relative = getBackendResetUrl(url);
     // Can't login before reset
     t.throwsAsync<Error>(
         async () => userService.loginUser(user.email, password),
@@ -97,7 +112,6 @@ test.serial('Can use token to reset password', async t => {
     await request
         .post('/auth/reset/password')
         .send({
-            email: user.email,
             token,
             password,
         })
@@ -110,8 +124,11 @@ test.serial(
     'Trying to reset password with same token twice does not work',
     async t => {
         const request = await setupApp(stores);
-        const url = await resetTokenService.createResetUrl(user, adminUser);
-        const relative = url.toString().substring(config.unleashUrl.length);
+        const url = await resetTokenService.createResetPasswordUrl(
+            user.id,
+            adminUser.username,
+        );
+        const relative = getBackendResetUrl(url);
         let token;
         await request
             .get(relative)

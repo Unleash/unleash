@@ -7,6 +7,7 @@ import UserService from '../../../lib/services/user-service';
 import { AccessService } from '../../../lib/services/access-service';
 import NotFoundError from '../../../lib/error/notfound-error';
 import { EmailService } from '../../../lib/services/email-service';
+import User from '../../../lib/user';
 
 const config: IUnleashConfig = {
     getLogger,
@@ -18,9 +19,10 @@ const config: IUnleashConfig = {
 let stores;
 let db;
 let adminUser;
-let userToCreateResetFor;
-let accessService;
-let userService;
+let userToCreateResetFor: User;
+let userIdToCreateResetFor: number;
+let accessService: AccessService;
+let userService: UserService;
 let resetTokenService: ResetTokenService;
 test.before(async () => {
     db = await dbInit('reset_token_service_serial', getLogger);
@@ -45,6 +47,7 @@ test.before(async () => {
         username: 'test@test.com',
         rootRole: 2,
     });
+    userIdToCreateResetFor = userToCreateResetFor.id;
 });
 
 test.after.always(async () => {
@@ -53,26 +56,24 @@ test.after.always(async () => {
 
 test.serial('Should create a reset link', async t => {
     const url = await resetTokenService.createResetPasswordUrl(
-        userToCreateResetFor,
+        userIdToCreateResetFor,
         adminUser,
     );
 
     t.true(url.toString().indexOf('/reset-password') > 0);
-    t.truthy(url.searchParams.get('token'));
 });
 
 test.serial('Should create a welcome link', async t => {
     const url = await resetTokenService.createWelcomeUrl(
-        userToCreateResetFor.id,
+        userIdToCreateResetFor,
         adminUser.username,
     );
     t.true(url.toString().indexOf('/new-user') > 0);
-    t.truthy(url.searchParams.get('token'));
 });
 
 test.serial('Tokens should be one-time only', async t => {
     const token = await resetTokenService.createToken(
-        userToCreateResetFor,
+        userIdToCreateResetFor,
         adminUser,
     );
 
@@ -84,11 +85,11 @@ test.serial('Tokens should be one-time only', async t => {
 
 test.serial('Creating a new token should expire older tokens', async t => {
     const firstToken = await resetTokenService.createToken(
-        userToCreateResetFor,
+        userIdToCreateResetFor,
         adminUser,
     );
     const secondToken = await resetTokenService.createToken(
-        userToCreateResetFor,
+        userIdToCreateResetFor,
         adminUser,
     );
     await t.throwsAsync<NotFoundError>(async () =>

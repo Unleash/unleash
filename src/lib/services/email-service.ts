@@ -41,8 +41,6 @@ export class EmailService {
     private readonly sender: string;
 
     constructor(email: IEmailOptions | undefined, getLogger: LogProvider) {
-        console.log(process.env.EMAIL_PASSWORD);
-        console.log(email);
         this.logger = getLogger('services/email-service.ts');
         if (email) {
             this.sender = email.sender;
@@ -50,7 +48,6 @@ export class EmailService {
                 this.mailer = createTransport({ jsonTransport: true });
             } else {
                 const connectionString = `${email.auth.user}:${email.auth.pass}@${email.host}:${email.port}`;
-                console.log(connectionString);
                 this.mailer = email.secure
                     ? createTransport(`smtps://${connectionString}`)
                     : createTransport(`smtp://${connectionString}`);

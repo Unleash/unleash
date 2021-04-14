@@ -6,6 +6,8 @@ import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
 import { handleErrors } from './util';
 
+const getCreatorUsernameOrPassword = req => req.user.username || req.user.email;
+
 class UserAdminController extends Controller {
     private userService: UserService;
 
@@ -31,9 +33,12 @@ class UserAdminController extends Controller {
 
     async resetPassword(req, res) {
         try {
-            const requester = req.user;
+            const requester = getCreatorUsernameOrPassword(req);
             const receiver = req.body.id;
-            const resetPasswordUrl = await this.userService.createResetPasswordEmail(receiver, requester);
+            const resetPasswordUrl = await this.userService.createResetPasswordEmail(
+                receiver,
+                requester,
+            );
             res.json({ resetPasswordUrl });
         } catch (e) {
             handleErrors(res, this.logger, e);

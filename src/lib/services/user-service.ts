@@ -8,14 +8,14 @@ import { Logger } from '../logger';
 import { IUnleashConfig } from '../types/core';
 import User, { IUser } from '../user';
 import isEmail from '../util/is-email';
-import { AccessService, RoleName } from './access-service';
+import { AccessService, IRoleData, RoleName } from './access-service';
 import { ADMIN } from '../permissions';
 import ResetTokenService from './reset-token-service';
 import InvalidTokenError from '../error/invalid-token-error';
 import NotFoundError from '../error/notfound-error';
 import OwaspValidationError from '../error/owasp-validation-error';
-import { URL } from 'url';
 import { EmailService } from './email-service';
+import { IRole } from '../db/access-store';
 
 export interface ICreateUser {
     name?: string;
@@ -35,10 +35,15 @@ export interface IUpdateUser {
 interface IUserWithRole extends IUser {
     rootRole: number;
 }
-
+interface IRoleDescription {
+    description: string;
+    name: string;
+    type: string;
+}
 interface ITokenUser extends IUpdateUser {
     createdBy: string;
     token: string;
+    role: IRoleDescription;
 }
 
 interface IStores {
@@ -263,12 +268,18 @@ class UserService {
             token,
         );
         const user = await this.getUser(userId);
+        const role = await this.accessService.getRole(user.rootRole);
         return {
             token,
             createdBy,
             email: user.email,
             name: user.name,
             id: user.id,
+            role: {
+                description: role.role.description,
+                type: role.role.type,
+                name: role.role.name,
+            },
         };
     }
 

@@ -5,7 +5,7 @@ import noLoggerProvider from '../../test/fixtures/no-logger';
 test('Can send reset email', async t => {
     const emailService = new EmailService(
         {
-            host: '',
+            host: 'test',
             port: 587,
             secure: false,
             auth: {
@@ -34,7 +34,7 @@ test('Can send reset email', async t => {
 test('Can send welcome mail', async t => {
     const emailService = new EmailService(
         {
-            host: '',
+            host: 'test',
             port: 9999,
             secure: false,
             sender: 'noreply@getunleash.ai',

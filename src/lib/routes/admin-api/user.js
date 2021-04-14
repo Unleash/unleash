@@ -3,9 +3,8 @@
 const Controller = require('../controller');
 
 class UserController extends Controller {
-    constructor(config, { userService }) {
+    constructor(config) {
         super(config);
-        this.userService = userService;
         this.logger = config.getLogger('admin-api/user.js');
         this.get('/', this.getUser);
         this.get('/logout', this.logout);

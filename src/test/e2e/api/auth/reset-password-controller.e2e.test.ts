@@ -10,6 +10,7 @@ import ResetTokenService from '../../../../lib/services/reset-token-service';
 import UserService from '../../../../lib/services/user-service';
 import { IUnleashConfig } from '../../../../lib/types/core';
 import { setupApp } from '../../helpers/test-helper';
+import { EmailService } from '../../../../lib/services/email-service';
 
 let stores;
 let db;
@@ -30,9 +31,12 @@ test.before(async () => {
     db = await dbInit('reset_password_api_serial', getLogger);
     stores = db.stores;
     accessService = new AccessService(stores, config);
+    const emailService = new EmailService(config.email, config.getLogger);
+
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
+        emailService,
     });
     resetTokenService = new ResetTokenService(stores, config);
     const adminRole = await accessService.getRootRole(RoleName.ADMIN);

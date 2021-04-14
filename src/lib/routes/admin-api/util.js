@@ -62,6 +62,11 @@ const handleErrors = (res, logger, error) => {
                 .status(401)
                 .json(error)
                 .end();
+        case 'OwaspValidationError':
+            return res
+                .status(400)
+                .json(error)
+                .end();
         default:
             logger.error('Server failed executing request', error);
             return res.status(500).end();

@@ -6,6 +6,7 @@ import ResetTokenService from '../../../lib/services/reset-token-service';
 import UserService from '../../../lib/services/user-service';
 import { AccessService } from '../../../lib/services/access-service';
 import NotFoundError from '../../../lib/error/notfound-error';
+import { EmailService } from '../../../lib/services/email-service';
 
 const config: IUnleashConfig = {
     getLogger,
@@ -26,10 +27,15 @@ test.before(async () => {
     stores = db.stores;
     accessService = new AccessService(stores, config);
     resetTokenService = new ResetTokenService(stores, config);
+
+    const emailService = new EmailService(config.email, config.getLogger);
+
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
+        emailService,
     });
+
     adminUser = await userService.createUser({
         username: 'admin@test.com',
         rootRole: 1,
@@ -56,10 +62,12 @@ test.serial('Should create a reset link', async t => {
 });
 
 test.serial('Should create a welcome link', async t => {
-    const url = await resetTokenService.createWelcomeUrl(userToCreateResetFor.id, adminUser.username);
+    const url = await resetTokenService.createWelcomeUrl(
+        userToCreateResetFor.id,
+        adminUser.username,
+    );
     t.true(url.toString().indexOf('/new-user') > 0);
     t.truthy(url.searchParams.get('token'));
-
 });
 
 test.serial('Tokens should be one-time only', async t => {

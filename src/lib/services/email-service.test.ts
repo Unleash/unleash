@@ -10,7 +10,7 @@ test('Can send reset email', async t => {
             secure: false,
             auth: {
                 user: '',
-                password: '',
+                pass: '',
             },
             sender: 'noreply@getunleash.ai',
             transporterType: TransporterType.JSON,
@@ -40,7 +40,7 @@ test('Can send welcome mail', async t => {
             sender: 'noreply@getunleash.ai',
             auth: {
                 user: '',
-                password: '',
+                pass: '',
             },
             transporterType: TransporterType.JSON,
         },

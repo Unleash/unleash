@@ -1,6 +1,5 @@
 import { TemplateFormat } from '../../services/email-service';
 import { handleErrors } from './util';
-import { ADMIN } from '../../permissions';
 
 const Controller = require('../controller');
 
@@ -9,8 +8,8 @@ class EmailController extends Controller {
         super(config);
         this.emailService = emailService;
         this.logger = config.getLogger('routes/admin-api/email');
-        this.get('/preview/html/:template', this.getHtmlPreview, ADMIN);
-        this.get('/preview/text/:template', this.getTextPreview, ADMIN);
+        this.get('/preview/html/:template', this.getHtmlPreview);
+        this.get('/preview/text/:template', this.getTextPreview);
     }
 
     async getHtmlPreview(req, res) {

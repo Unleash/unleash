@@ -36,6 +36,7 @@ module.exports.createServices = (stores, config) => {
     const userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
+        emailService,
     });
 
     return {

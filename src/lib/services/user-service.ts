@@ -13,7 +13,9 @@ import { ADMIN } from '../permissions';
 import ResetTokenService from './reset-token-service';
 import InvalidTokenError from '../error/invalid-token-error';
 import NotFoundError from '../error/notfound-error';
+import OwaspValidationError from '../error/owasp-validation-error';
 import { URL } from 'url';
+import { EmailService } from './email-service';
 
 export interface ICreateUser {
     name?: string;
@@ -46,6 +48,7 @@ interface IStores {
 interface IServices {
     accessService: AccessService;
     resetTokenService: ResetTokenService;
+    emailService: EmailService;
 }
 
 const saltRounds = 10;
@@ -59,15 +62,18 @@ class UserService {
 
     private resetTokenService: ResetTokenService;
 
+    private emailService: EmailService;
+
     constructor(
         stores: IStores,
         config: IUnleashConfig,
-        { accessService, resetTokenService }: IServices,
+        { accessService, resetTokenService, emailService }: IServices,
     ) {
         this.logger = config.getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.accessService = accessService;
         this.resetTokenService = resetTokenService;
+        this.emailService = emailService;
         if (config.authentication && config.authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
@@ -76,7 +82,7 @@ class UserService {
     validatePassword(password: string): boolean {
         const result = owasp.test(password);
         if (!result.strong) {
-            throw new Error(result.errors[0]);
+            throw new OwaspValidationError(result.errors[0]);
         } else return true;
     }
 
@@ -132,7 +138,7 @@ class UserService {
     async search(query: IUserSearch): Promise<User[]> {
         return this.store.search(query);
     }
-    
+
     async getByEmail(email: string): Promise<User> {
         return this.store.get({ email });
     }
@@ -267,6 +273,7 @@ class UserService {
     }
 
     async resetPassword(token: string, password: string): Promise<void> {
+        this.validatePassword(password);
         const user = await this.getUserForToken(token);
         const allowed = await this.resetTokenService.useAccessToken({
             userId: user.id,
@@ -279,13 +286,25 @@ class UserService {
         }
     }
 
-    async createResetPasswordEmail(receiverEmail: string, requester: string): Promise<URL> {
+    async createResetPasswordEmail(
+        receiverEmail: string,
+        requester: string,
+    ): Promise<void> {
         const receiver = await this.getByEmail(receiverEmail);
-        if (receiver) {
-            return this.resetTokenService.createResetPasswordUrl(receiver.id, requester);
+        if (!receiver) {
+            throw new NotFoundError(`Could not find ${receiverEmail}`);
         }
-        throw new NotFoundError(`Could not find ${receiverEmail}`);
-    } 
+        const resetLink = await this.resetTokenService.createResetPasswordUrl(
+            receiver.id,
+            requester,
+        );
+
+        this.emailService.sendResetMail(
+            receiver.name,
+            receiver.email,
+            resetLink.toString(),
+        );
+    }
 }
 
 module.exports = UserService;

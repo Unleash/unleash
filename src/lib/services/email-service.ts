@@ -7,7 +7,7 @@ import NotFoundError from '../error/notfound-error';
 
 export interface IAuthOptions {
     user: string;
-    password: string;
+    pass: string;
 }
 
 export enum TemplateFormat {
@@ -41,13 +41,16 @@ export class EmailService {
     private readonly sender: string;
 
     constructor(email: IEmailOptions | undefined, getLogger: LogProvider) {
+        console.log(process.env.EMAIL_PASSWORD);
+        console.log(email);
         this.logger = getLogger('services/email-service.ts');
         if (email) {
             this.sender = email.sender;
             if (email.transporterType === TransporterType.JSON) {
                 this.mailer = createTransport({ jsonTransport: true });
             } else {
-                const connectionString = `${email.auth.user}:${email.auth.password}@${email.host}:${email.port}`;
+                const connectionString = `${email.auth.user}:${email.auth.pass}@${email.host}:${email.port}`;
+                console.log(connectionString);
                 this.mailer = email.secure
                     ? createTransport(`smtps://${connectionString}`)
                     : createTransport(`smtp://${connectionString}`);

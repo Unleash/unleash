@@ -8,6 +8,7 @@ import User from '../../../lib/user';
 import { IUnleashConfig } from '../../../lib/types/core';
 import { IRole } from '../../../lib/db/access-store';
 import ResetTokenService from '../../../lib/services/reset-token-service';
+import { EmailService } from '../../../lib/services/email-service';
 
 let db;
 let stores;
@@ -29,9 +30,12 @@ test.before(async () => {
     };
     const accessService = new AccessService(stores, config);
     const resetTokenService = new ResetTokenService(stores, config);
+    const emailService = new EmailService(config.email, config.getLogger);
+
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
+        emailService,
     });
     userStore = stores.userStore;
     const rootRoles = await accessService.getRootRoles();

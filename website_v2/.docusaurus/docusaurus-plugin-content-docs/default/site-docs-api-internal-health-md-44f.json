@@ -1,0 +1,23 @@
+{
+  "unversionedId": "api/internal/health",
+  "id": "api/internal/health",
+  "isDocsHomePage": false,
+  "title": "/health",
+  "description": "Health API",
+  "source": "@site/../docs/api/internal/health.md",
+  "slug": "/api/internal/health",
+  "permalink": "/docs/api/internal/health",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/internal-backstage/prometheus",
+    "permalink": "/docs/api/internal/internal"
+  },
+  "next": {
+    "title": "Open API Specification",
+    "permalink": "/docs/api/open_api"
+  }
+}

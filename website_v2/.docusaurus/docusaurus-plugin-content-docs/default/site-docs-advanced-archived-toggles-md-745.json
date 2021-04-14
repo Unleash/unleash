@@ -1,0 +1,23 @@
+{
+  "unversionedId": "advanced/archived_toggles",
+  "id": "advanced/archived_toggles",
+  "isDocsHomePage": false,
+  "title": "Archived toggles",
+  "description": "In unleash you may choose to \"archive\" a feature toggle when it is not needed anymore. You do this by clicking the \"Archive\" button on the feature toggle details view. By archiving a feature toggle it will not be available to Client SDKs anymore.",
+  "source": "@site/../docs/advanced/archived-toggles.md",
+  "slug": "/advanced/archived_toggles",
+  "permalink": "/docs/advanced/archived_toggles",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Feature Toggle Variants",
+    "permalink": "/docs/advanced/toggle_variants"
+  },
+  "next": {
+    "title": "The audit log",
+    "permalink": "/docs/advanced/audit_log"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "unversionedId": "api/client/features",
+  "id": "api/client/features",
+  "isDocsHomePage": false,
+  "title": "/api/client/features",
+  "description": "Fetching Feature Toggles",
+  "source": "@site/../docs/api/client/feature-toggles-api.md",
+  "slug": "/api/client/features",
+  "permalink": "/docs/api/client/features",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "next": {
+    "title": "/api/client/register",
+    "permalink": "/docs/api/client/register"
+  }
+}

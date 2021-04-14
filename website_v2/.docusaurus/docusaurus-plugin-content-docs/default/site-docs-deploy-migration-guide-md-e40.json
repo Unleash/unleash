@@ -1,0 +1,23 @@
+{
+  "unversionedId": "deploy/migration_guide",
+  "id": "deploy/migration_guide",
+  "isDocsHomePage": false,
+  "title": "Migration Guide",
+  "description": "Generally, the intention is that unleash-server should always provide support for clients one major version lower than the current one. This should make it possible to upgrade unleash gradually.",
+  "source": "@site/../docs/deploy/migration-guide.md",
+  "slug": "/deploy/migration_guide",
+  "permalink": "/docs/deploy/migration_guide",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Deploy and manage",
+  "previous": {
+    "title": "Database Backup",
+    "permalink": "/docs/deploy/database_backup"
+  },
+  "next": {
+    "title": "Import & Export",
+    "permalink": "/docs/deploy/import_export"
+  }
+}

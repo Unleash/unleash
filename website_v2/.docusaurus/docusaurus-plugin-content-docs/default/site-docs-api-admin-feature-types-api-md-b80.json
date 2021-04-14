@@ -1,0 +1,23 @@
+{
+  "unversionedId": "api/admin/feature-types",
+  "id": "api/admin/feature-types",
+  "isDocsHomePage": false,
+  "title": "/api/admin/feature-types",
+  "description": "In order to access the admin api endpoints you need to identify yourself. If you are using the unsecure authentication method, you may use basic authentication to identify yourself.",
+  "source": "@site/../docs/api/admin/feature-types-api.md",
+  "slug": "/api/admin/feature-types",
+  "permalink": "/docs/api/admin/feature-types",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/api/admin/state",
+    "permalink": "/docs/api/admin/state"
+  },
+  "next": {
+    "title": "/api/admin/addons",
+    "permalink": "/docs/api/admin/addons"
+  }
+}

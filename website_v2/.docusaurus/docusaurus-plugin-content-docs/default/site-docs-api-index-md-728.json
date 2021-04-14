@@ -1,0 +1,14 @@
+{
+  "unversionedId": "api/index",
+  "id": "api/index",
+  "isDocsHomePage": false,
+  "title": "API Documentation",
+  "description": "Client API",
+  "source": "@site/../docs/api/index.md",
+  "slug": "/api/index",
+  "permalink": "/docs/api/index",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018"
+}

@@ -1,0 +1,23 @@
+{
+  "unversionedId": "api/internal/internal",
+  "id": "api/internal/internal",
+  "isDocsHomePage": false,
+  "title": "/internal-backstage/prometheus",
+  "description": "Internal Backstage API",
+  "source": "@site/../docs/api/internal/internal-backstage-api.md",
+  "slug": "/api/internal/internal",
+  "permalink": "/docs/api/internal/internal",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/api/admin/projects",
+    "permalink": "/docs/api/admin/projects"
+  },
+  "next": {
+    "title": "/health",
+    "permalink": "/docs/api/internal/health"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "unversionedId": "user_guide/single_page_apps",
+  "id": "user_guide/single_page_apps",
+  "isDocsHomePage": false,
+  "title": "Working with single page apps",
+  "description": "This is an Enterprise feature.",
+  "source": "@site/../docs/user_guide/single-page-apps.md",
+  "slug": "/user_guide/single_page_apps",
+  "permalink": "/docs/user_guide/single_page_apps",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Working with native apps",
+    "permalink": "/docs/user_guide/native_apps"
+  },
+  "next": {
+    "title": "Java SDK",
+    "permalink": "/docs/sdks/java_sdk"
+  }
+}

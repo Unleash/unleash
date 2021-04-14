@@ -1,0 +1,23 @@
+{
+  "unversionedId": "sdks/java_sdk",
+  "id": "sdks/java_sdk",
+  "isDocsHomePage": false,
+  "title": "Java SDK",
+  "description": "In this guide we explain how to use feature toggles in a Java application using Unleash-hosted. We will be using the open source Unleash Java Client SDK.",
+  "source": "@site/../docs/sdks/java.md",
+  "slug": "/sdks/java_sdk",
+  "permalink": "/docs/sdks/java_sdk",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Working with single page apps",
+    "permalink": "/docs/user_guide/single_page_apps"
+  },
+  "next": {
+    "title": "Node SDK",
+    "permalink": "/docs/sdks/node_sdk"
+  }
+}

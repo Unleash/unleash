@@ -1,0 +1,23 @@
+{
+  "unversionedId": "user_guide/connect_sdk",
+  "id": "user_guide/connect_sdk",
+  "isDocsHomePage": false,
+  "title": "Connect your SDK",
+  "description": "In order to connect your application to Unleash you need to use a client SDK (software developer kit) for your programming language. The SDK will handle connecting to the Unleash server instance and retrieve feature toggles based upon your configuration. Both open-source and the Unleash enterprise offering utilize the same set of client SDKs.",
+  "source": "@site/../docs/user_guide/connect-sdk.md",
+  "slug": "/user_guide/connect_sdk",
+  "permalink": "/docs/user_guide/connect_sdk",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Introduction",
+    "permalink": "/docs/"
+  },
+  "next": {
+    "title": "Client SDK",
+    "permalink": "/docs/user_guide/client_sdk"
+  }
+}

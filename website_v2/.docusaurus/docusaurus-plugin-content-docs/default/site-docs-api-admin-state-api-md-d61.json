@@ -1,0 +1,23 @@
+{
+  "unversionedId": "api/admin/state",
+  "id": "api/admin/state",
+  "isDocsHomePage": false,
+  "title": "/api/admin/state",
+  "description": "In order to access the admin api endpoints you need to identify yourself. If you are using the unsecure authentication method, you may use basic authentication to identify yourself.",
+  "source": "@site/../docs/api/admin/state-api.md",
+  "slug": "/api/admin/state",
+  "permalink": "/docs/api/admin/state",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/api/admin/events",
+    "permalink": "/docs/api/admin/events"
+  },
+  "next": {
+    "title": "/api/admin/feature-types",
+    "permalink": "/docs/api/admin/feature-types"
+  }
+}

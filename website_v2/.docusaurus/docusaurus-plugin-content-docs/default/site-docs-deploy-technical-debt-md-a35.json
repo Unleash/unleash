@@ -1,0 +1,19 @@
+{
+  "unversionedId": "deploy/technical_debt",
+  "id": "deploy/technical_debt",
+  "isDocsHomePage": false,
+  "title": "Technical Debt",
+  "description": "At Unleash we care deeply about code quality. Technical debt creeps up over time and slowly builds to the point where it really starts to hurt. At that point it's too late. Feature toggles that have outlived their feature and are not cleaned up represent technical dept that should be cleaned up and removed from your code.",
+  "source": "@site/../docs/deploy/technical-debt.md",
+  "slug": "/deploy/technical_debt",
+  "permalink": "/docs/deploy/technical_debt",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Deploy and manage",
+  "previous": {
+    "title": "Import & Export",
+    "permalink": "/docs/deploy/import_export"
+  }
+}

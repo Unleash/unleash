@@ -1,0 +1,23 @@
+{
+  "unversionedId": "addons/jira-commenter",
+  "id": "addons/jira-commenter",
+  "isDocsHomePage": false,
+  "title": "Jira commenter",
+  "description": "This feature was introduced in Unleash v3.11.0.",
+  "source": "@site/../docs/addons/jira-commenter.md",
+  "slug": "/addons/jira-commenter",
+  "permalink": "/docs/addons/jira-commenter",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Slack",
+    "permalink": "/docs/addons/slack"
+  },
+  "next": {
+    "title": "Strategy Constraints",
+    "permalink": "/docs/advanced/strategy_constraints"
+  }
+}

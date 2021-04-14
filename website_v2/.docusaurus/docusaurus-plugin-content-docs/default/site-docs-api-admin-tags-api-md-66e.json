@@ -1,0 +1,14 @@
+{
+  "unversionedId": "api/admin/tags",
+  "id": "api/admin/tags",
+  "isDocsHomePage": false,
+  "title": "/api/admin/tags",
+  "description": "In order to access the admin API endpoints you need to identify yourself. If you are using the insecure authentication method, you may use basic authentication to identify yourself.",
+  "source": "@site/../docs/api/admin/tags-api.md",
+  "slug": "/api/admin/tags",
+  "permalink": "/docs/api/admin/tags",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018"
+}

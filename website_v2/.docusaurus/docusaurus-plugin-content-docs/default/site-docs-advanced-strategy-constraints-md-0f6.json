@@ -1,0 +1,23 @@
+{
+  "unversionedId": "advanced/strategy_constraints",
+  "id": "advanced/strategy_constraints",
+  "isDocsHomePage": false,
+  "title": "Strategy Constraints",
+  "description": "Enterprise feature",
+  "source": "@site/../docs/advanced/strategy-constraints.md",
+  "slug": "/advanced/strategy_constraints",
+  "permalink": "/docs/advanced/strategy_constraints",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Jira commenter",
+    "permalink": "/docs/addons/jira-commenter"
+  },
+  "next": {
+    "title": "Custom Activation Strategy",
+    "permalink": "/docs/advanced/custom_activation_strategy"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "unversionedId": "toggle_variants",
+  "id": "toggle_variants",
+  "isDocsHomePage": false,
+  "title": "toggle_variants",
+  "description": "Please see /docs/advanced/toggle_variants",
+  "source": "@site/../docs/toggle_variants.md",
+  "slug": "/toggle_variants",
+  "permalink": "/docs/toggle_variants",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018"
+}

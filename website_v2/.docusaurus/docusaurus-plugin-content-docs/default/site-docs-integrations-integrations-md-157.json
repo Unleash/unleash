@@ -1,0 +1,15 @@
+{
+  "unversionedId": "integrations/integrations",
+  "id": "integrations/integrations",
+  "isDocsHomePage": false,
+  "title": "Integrations and plugins",
+  "description": "Available integrations with Unleash",
+  "source": "@site/../docs/integrations/integrations.md",
+  "slug": "/integrations/integrations",
+  "permalink": "/docs/integrations/integrations",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Integrations"
+}

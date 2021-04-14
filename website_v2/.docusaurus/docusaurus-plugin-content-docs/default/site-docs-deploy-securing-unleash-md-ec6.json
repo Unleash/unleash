@@ -1,0 +1,23 @@
+{
+  "unversionedId": "deploy/securing_unleash",
+  "id": "deploy/securing_unleash",
+  "isDocsHomePage": false,
+  "title": "Securing Unleash",
+  "description": "This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with a secure setup and multiple SSO options.",
+  "source": "@site/../docs/deploy/securing-unleash.md",
+  "slug": "/deploy/securing_unleash",
+  "permalink": "/docs/deploy/securing_unleash",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Deploy and manage",
+  "previous": {
+    "title": "Configuring Unleash",
+    "permalink": "/docs/deploy/configuring_unleash"
+  },
+  "next": {
+    "title": "Google Auth Hook",
+    "permalink": "/docs/deploy/google_auth"
+  }
+}

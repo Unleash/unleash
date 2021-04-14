@@ -1,0 +1,19 @@
+{
+  "unversionedId": "deploy/getting_started",
+  "id": "deploy/getting_started",
+  "isDocsHomePage": false,
+  "title": "Getting Started",
+  "description": "This section only applies if you plan to self-host Unleash. If you are looking for our hosted solution you should head over to Unleash-hosted.com",
+  "source": "@site/../docs/deploy/getting-started.md",
+  "slug": "/deploy/getting_started",
+  "permalink": "/docs/deploy/getting_started",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Deploy and manage",
+  "next": {
+    "title": "Configuring Unleash",
+    "permalink": "/docs/deploy/configuring_unleash"
+  }
+}

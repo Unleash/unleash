@@ -1,0 +1,333 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docs",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/docs",
+          "mainDocId": "user_guide/introduction",
+          "docs": [
+            {
+              "id": "activation_strategy",
+              "path": "/docs/activation_strategy"
+            },
+            {
+              "id": "addons/index",
+              "path": "/docs/addons/index",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "addons/jira-commenter",
+              "path": "/docs/addons/jira-commenter",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "addons/slack",
+              "path": "/docs/addons/slack",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "addons/webhook",
+              "path": "/docs/addons/webhook",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "advanced/api_access",
+              "path": "/docs/advanced/api_access",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "advanced/archived_toggles",
+              "path": "/docs/advanced/archived_toggles",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "advanced/audit_log",
+              "path": "/docs/advanced/audit_log",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "advanced/custom_activation_strategy",
+              "path": "/docs/advanced/custom_activation_strategy",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "advanced/feature_toggle_types",
+              "path": "/docs/advanced/feature_toggle_types",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "advanced/strategy_constraints",
+              "path": "/docs/advanced/strategy_constraints",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "advanced/tags",
+              "path": "/docs/advanced/tags",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "advanced/toggle_variants",
+              "path": "/docs/advanced/toggle_variants",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "api/admin/addons",
+              "path": "/docs/api/admin/addons",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/admin/context",
+              "path": "/docs/api/admin/context",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/admin/events",
+              "path": "/docs/api/admin/events",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/admin/feature-types",
+              "path": "/docs/api/admin/feature-types",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/admin/features",
+              "path": "/docs/api/admin/features",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/admin/metrics",
+              "path": "/docs/api/admin/metrics",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/admin/projects",
+              "path": "/docs/api/admin/projects",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/admin/state",
+              "path": "/docs/api/admin/state",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/admin/strategies",
+              "path": "/docs/api/admin/strategies",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/admin/tags",
+              "path": "/docs/api/admin/tags"
+            },
+            {
+              "id": "api/client/features",
+              "path": "/docs/api/client/features",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/client/metrics",
+              "path": "/docs/api/client/metrics",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/client/register",
+              "path": "/docs/api/client/register",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/index",
+              "path": "/docs/api/index"
+            },
+            {
+              "id": "api/internal/health",
+              "path": "/docs/api/internal/health",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/internal/internal",
+              "path": "/docs/api/internal/internal",
+              "sidebar": "api"
+            },
+            {
+              "id": "api/open_api",
+              "path": "/docs/api/open_api",
+              "sidebar": "api"
+            },
+            {
+              "id": "client_sdk",
+              "path": "/docs/client_sdk"
+            },
+            {
+              "id": "client_specification",
+              "path": "/docs/client_specification",
+              "sidebar": "Contribute"
+            },
+            {
+              "id": "database_schema",
+              "path": "/docs/database_schema",
+              "sidebar": "Contribute"
+            },
+            {
+              "id": "deploy/configuring_unleash",
+              "path": "/docs/deploy/configuring_unleash",
+              "sidebar": "Deploy and manage"
+            },
+            {
+              "id": "deploy/database_backup",
+              "path": "/docs/deploy/database_backup",
+              "sidebar": "Deploy and manage"
+            },
+            {
+              "id": "deploy/getting_started",
+              "path": "/docs/deploy/getting_started",
+              "sidebar": "Deploy and manage"
+            },
+            {
+              "id": "deploy/google_auth",
+              "path": "/docs/deploy/google_auth",
+              "sidebar": "Deploy and manage"
+            },
+            {
+              "id": "deploy/import_export",
+              "path": "/docs/deploy/import_export",
+              "sidebar": "Deploy and manage"
+            },
+            {
+              "id": "deploy/migration_guide",
+              "path": "/docs/deploy/migration_guide",
+              "sidebar": "Deploy and manage"
+            },
+            {
+              "id": "deploy/securing_unleash",
+              "path": "/docs/deploy/securing_unleash",
+              "sidebar": "Deploy and manage"
+            },
+            {
+              "id": "deploy/technical_debt",
+              "path": "/docs/deploy/technical_debt",
+              "sidebar": "Deploy and manage"
+            },
+            {
+              "id": "developer_guide",
+              "path": "/docs/developer_guide",
+              "sidebar": "Contribute"
+            },
+            {
+              "id": "getting_started",
+              "path": "/docs/getting_started"
+            },
+            {
+              "id": "guides/feature_updates_to_slack",
+              "path": "/docs/guides/feature_updates_to_slack"
+            },
+            {
+              "id": "index",
+              "path": "/docs/index"
+            },
+            {
+              "id": "integrations/integrations",
+              "path": "/docs/integrations/integrations",
+              "sidebar": "Integrations"
+            },
+            {
+              "id": "sdks/dot_net_sdk",
+              "path": "/docs/sdks/dot_net_sdk",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "sdks/go_sdk",
+              "path": "/docs/sdks/go_sdk",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "sdks/java_sdk",
+              "path": "/docs/sdks/java_sdk",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "sdks/node_sdk",
+              "path": "/docs/sdks/node_sdk",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "sdks/python_sdk",
+              "path": "/docs/sdks/python_sdk",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "sdks/ruby_sdk",
+              "path": "/docs/sdks/ruby_sdk",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "toggle_variants",
+              "path": "/docs/toggle_variants"
+            },
+            {
+              "id": "unleash_context",
+              "path": "/docs/unleash_context"
+            },
+            {
+              "id": "user_guide/activation_strategy",
+              "path": "/docs/user_guide/activation_strategy",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "user_guide/client_sdk",
+              "path": "/docs/user_guide/client_sdk",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "user_guide/connect_sdk",
+              "path": "/docs/user_guide/connect_sdk",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "user_guide/control_rollout",
+              "path": "/docs/user_guide/control_rollout",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "user_guide/create_feature_toggle",
+              "path": "/docs/user_guide/create_feature_toggle",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "user_guide/discover_unknown_toggles",
+              "path": "/docs/user_guide/discover_unknown_toggles"
+            },
+            {
+              "id": "user_guide/introduction",
+              "path": "/docs/",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "user_guide/native_apps",
+              "path": "/docs/user_guide/native_apps",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "user_guide/projects",
+              "path": "/docs/user_guide/projects",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "user_guide/single_page_apps",
+              "path": "/docs/user_guide/single_page_apps",
+              "sidebar": "documentation"
+            },
+            {
+              "id": "user_guide/unleash_context",
+              "path": "/docs/user_guide/unleash_context",
+              "sidebar": "documentation"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

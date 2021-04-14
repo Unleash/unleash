@@ -1,0 +1,23 @@
+{
+  "unversionedId": "api/client/metrics",
+  "id": "api/client/metrics",
+  "isDocsHomePage": false,
+  "title": "/api/client/metrics",
+  "description": "Send metrics",
+  "source": "@site/../docs/api/client/metrics-api.md",
+  "slug": "/api/client/metrics",
+  "permalink": "/docs/api/client/metrics",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/api/client/register",
+    "permalink": "/docs/api/client/register"
+  },
+  "next": {
+    "title": "/api/admin/features",
+    "permalink": "/docs/api/admin/features"
+  }
+}

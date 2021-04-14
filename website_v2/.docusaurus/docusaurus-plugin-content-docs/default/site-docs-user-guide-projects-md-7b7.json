@@ -1,0 +1,23 @@
+{
+  "unversionedId": "user_guide/projects",
+  "id": "user_guide/projects",
+  "isDocsHomePage": false,
+  "title": "Projects",
+  "description": "Enterprise",
+  "source": "@site/../docs/user_guide/projects.md",
+  "slug": "/user_guide/projects",
+  "permalink": "/docs/user_guide/projects",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Control rollout",
+    "permalink": "/docs/user_guide/control_rollout"
+  },
+  "next": {
+    "title": "Unleash Context",
+    "permalink": "/docs/user_guide/unleash_context"
+  }
+}

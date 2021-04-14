@@ -1,0 +1,23 @@
+{
+  "unversionedId": "addons/slack",
+  "id": "addons/slack",
+  "isDocsHomePage": false,
+  "title": "Slack",
+  "description": "This feature was introduced in Unleash v3.11.0.",
+  "source": "@site/../docs/addons/slack.md",
+  "slug": "/addons/slack",
+  "permalink": "/docs/addons/slack",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Webhook",
+    "permalink": "/docs/addons/webhook"
+  },
+  "next": {
+    "title": "Jira commenter",
+    "permalink": "/docs/addons/jira-commenter"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "unversionedId": "user_guide/introduction",
+  "id": "user_guide/introduction",
+  "isDocsHomePage": false,
+  "title": "Introduction",
+  "description": "Welcome to the Unleash getting started guides. We know that getting to know a new solution might be tedious. Our goal with this documentation is to guide you through the most essential concepts of Unleash.",
+  "source": "@site/../docs/user_guide/introduction.md",
+  "slug": "/",
+  "permalink": "/docs/",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "next": {
+    "title": "Connect your SDK",
+    "permalink": "/docs/user_guide/connect_sdk"
+  }
+}

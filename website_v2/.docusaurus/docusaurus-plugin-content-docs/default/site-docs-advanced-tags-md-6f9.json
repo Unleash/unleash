@@ -1,0 +1,19 @@
+{
+  "unversionedId": "advanced/tags",
+  "id": "advanced/tags",
+  "isDocsHomePage": false,
+  "title": "Tagging Features",
+  "description": "This feature was introduced in Unleash 3.11.0",
+  "source": "@site/../docs/advanced/tags.md",
+  "slug": "/advanced/tags",
+  "permalink": "/docs/advanced/tags",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "API Access",
+    "permalink": "/docs/advanced/api_access"
+  }
+}

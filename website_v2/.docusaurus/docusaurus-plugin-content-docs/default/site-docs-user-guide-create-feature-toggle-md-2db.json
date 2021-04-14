@@ -1,0 +1,23 @@
+{
+  "unversionedId": "user_guide/create_feature_toggle",
+  "id": "user_guide/create_feature_toggle",
+  "isDocsHomePage": false,
+  "title": "Create a feature toggle",
+  "description": "In this guide you will learn how to create your first feature toggle using Unleash.",
+  "source": "@site/../docs/user_guide/create-feature-toggle.md",
+  "slug": "/user_guide/create_feature_toggle",
+  "permalink": "/docs/user_guide/create_feature_toggle",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Client SDK",
+    "permalink": "/docs/user_guide/client_sdk"
+  },
+  "next": {
+    "title": "Activation Strategies",
+    "permalink": "/docs/user_guide/activation_strategy"
+  }
+}

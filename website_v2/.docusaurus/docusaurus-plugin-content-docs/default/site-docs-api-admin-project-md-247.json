@@ -1,0 +1,23 @@
+{
+  "unversionedId": "api/admin/projects",
+  "id": "api/admin/projects",
+  "isDocsHomePage": false,
+  "title": "/api/admin/projects",
+  "description": "The projects feature is only available as part of Unleash Enterprise. In order to access the API programmatically you need to make sure you obtain a API token with admin permissions.",
+  "source": "@site/../docs/api/admin/project.md",
+  "slug": "/api/admin/projects",
+  "permalink": "/docs/api/admin/projects",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/api/admin/context",
+    "permalink": "/docs/api/admin/context"
+  },
+  "next": {
+    "title": "/internal-backstage/prometheus",
+    "permalink": "/docs/api/internal/internal"
+  }
+}

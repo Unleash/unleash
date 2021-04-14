@@ -1,0 +1,23 @@
+{
+  "unversionedId": "deploy/import_export",
+  "id": "deploy/import_export",
+  "isDocsHomePage": false,
+  "title": "Import & Export",
+  "description": "since v3.3.0",
+  "source": "@site/../docs/deploy/import-export.md",
+  "slug": "/deploy/import_export",
+  "permalink": "/docs/deploy/import_export",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Deploy and manage",
+  "previous": {
+    "title": "Migration Guide",
+    "permalink": "/docs/deploy/migration_guide"
+  },
+  "next": {
+    "title": "Technical Debt",
+    "permalink": "/docs/deploy/technical_debt"
+  }
+}

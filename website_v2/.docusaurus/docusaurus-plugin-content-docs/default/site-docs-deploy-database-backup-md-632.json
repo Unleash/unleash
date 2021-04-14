@@ -1,0 +1,23 @@
+{
+  "unversionedId": "deploy/database_backup",
+  "id": "deploy/database_backup",
+  "isDocsHomePage": false,
+  "title": "Database Backup",
+  "description": "When upgrading to a new major version of Unleash, we advise to do a full database backup to ease rollback in case of failures.",
+  "source": "@site/../docs/deploy/database-backup.md",
+  "slug": "/deploy/database_backup",
+  "permalink": "/docs/deploy/database_backup",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Deploy and manage",
+  "previous": {
+    "title": "Google Auth Hook",
+    "permalink": "/docs/deploy/google_auth"
+  },
+  "next": {
+    "title": "Migration Guide",
+    "permalink": "/docs/deploy/migration_guide"
+  }
+}

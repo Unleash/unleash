@@ -1,0 +1,19 @@
+{
+  "unversionedId": "database_schema",
+  "id": "database_schema",
+  "isDocsHomePage": false,
+  "title": "Database Schema",
+  "description": "This document describes our current database schema used in PostgreSQL. We use db-migrate to migrate (create tables, add columns, etc.) the database.",
+  "source": "@site/../docs/database-schema.md",
+  "slug": "/database_schema",
+  "permalink": "/docs/database_schema",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Contribute",
+  "previous": {
+    "title": "Client Specification",
+    "permalink": "/docs/client_specification"
+  }
+}

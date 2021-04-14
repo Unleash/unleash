@@ -1,0 +1,23 @@
+{
+  "unversionedId": "deploy/configuring_unleash",
+  "id": "deploy/configuring_unleash",
+  "isDocsHomePage": false,
+  "title": "Configuring Unleash",
+  "description": "In order to customize \"anything\" in Unleash you need to use Unleash from Node.js:",
+  "source": "@site/../docs/deploy/configuring-unleash.md",
+  "slug": "/deploy/configuring_unleash",
+  "permalink": "/docs/deploy/configuring_unleash",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Deploy and manage",
+  "previous": {
+    "title": "Getting Started",
+    "permalink": "/docs/deploy/getting_started"
+  },
+  "next": {
+    "title": "Securing Unleash",
+    "permalink": "/docs/deploy/securing_unleash"
+  }
+}

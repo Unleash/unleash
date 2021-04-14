@@ -37,8 +37,7 @@ A flexible rollout strategy which combines all gradual rollout strategies in to 
 
 ### Customize stickiness (beta)
 
-By enabling the stickiness option on a custom context field you can use it together with the flexible rollout strategy. This will guarantee a consistent behavior for specific values of this context field.
-NB! this feature is currently only supported by the following SDKs:
+By enabling the stickiness option on a custom context field you can use it together with the flexible rollout strategy. This will guarantee a consistent behavior for specific values of this context field. NB! this feature is currently only supported by the following SDKs:
 
 - [unleash-client-node](https://github.com/Unleash/unleash-client-node) (from v3.6.0)
 
@@ -46,7 +45,7 @@ NB! this feature is currently only supported by the following SDKs:
 
 The `gradualRolloutUserId` strategy gradually activates a feature toggle for logged-in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.
 
-![hash_and_normalise](assets/hash_and_normalise.png)
+![hash_and_normalise](../assets/hash_and_normalise.png)
 
 Starting from v3.x all clients should use the 32-bit [MurmurHash3](https://en.wikipedia.org/wiki/MurmurHash) algorithm to normalize values. ([issue 247](https://github.com/Unleash/unleash/issues/247))
 

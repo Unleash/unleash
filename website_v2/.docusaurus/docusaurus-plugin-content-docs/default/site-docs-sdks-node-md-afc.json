@@ -1,0 +1,23 @@
+{
+  "unversionedId": "sdks/node_sdk",
+  "id": "sdks/node_sdk",
+  "isDocsHomePage": false,
+  "title": "Node SDK",
+  "description": "In this guide we explain how to use feature toggles in a Node application using Unleash-hosted. We will be using the open source Unleash Node.js Client SDK.",
+  "source": "@site/../docs/sdks/node.md",
+  "slug": "/sdks/node_sdk",
+  "permalink": "/docs/sdks/node_sdk",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Java SDK",
+    "permalink": "/docs/sdks/java_sdk"
+  },
+  "next": {
+    "title": ".net SDK",
+    "permalink": "/docs/sdks/dot_net_sdk"
+  }
+}

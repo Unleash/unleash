@@ -1,0 +1,23 @@
+{
+  "unversionedId": "advanced/custom_activation_strategy",
+  "id": "advanced/custom_activation_strategy",
+  "isDocsHomePage": false,
+  "title": "Custom Activation Strategy",
+  "description": "Even though Unleash comes with a few powerful activation strategies there might be scenarios where you would like to extend Unleash with your own custom strategies.",
+  "source": "@site/../docs/advanced/custom-activation-strategy.md",
+  "slug": "/advanced/custom_activation_strategy",
+  "permalink": "/docs/advanced/custom_activation_strategy",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Strategy Constraints",
+    "permalink": "/docs/advanced/strategy_constraints"
+  },
+  "next": {
+    "title": "Feature Toggle Types",
+    "permalink": "/docs/advanced/feature_toggle_types"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "unversionedId": "addons/index",
+  "id": "addons/index",
+  "isDocsHomePage": false,
+  "title": "Addons Introduction",
+  "description": "This feature was introduced in Unleash v3.11.0.",
+  "source": "@site/../docs/addons/addons.md",
+  "slug": "/addons/index",
+  "permalink": "/docs/addons/index",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Ruby SDK",
+    "permalink": "/docs/sdks/ruby_sdk"
+  },
+  "next": {
+    "title": "Webhook",
+    "permalink": "/docs/addons/webhook"
+  }
+}

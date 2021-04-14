@@ -1,0 +1,23 @@
+{
+  "unversionedId": "sdks/go_sdk",
+  "id": "sdks/go_sdk",
+  "isDocsHomePage": false,
+  "title": "GO SDK",
+  "description": "1. Install unleash-client-go",
+  "source": "@site/../docs/sdks/go.md",
+  "slug": "/sdks/go_sdk",
+  "permalink": "/docs/sdks/go_sdk",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": ".net SDK",
+    "permalink": "/docs/sdks/dot_net_sdk"
+  },
+  "next": {
+    "title": "Python SDK",
+    "permalink": "/docs/sdks/python_sdk"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "unversionedId": "api/admin/events",
+  "id": "api/admin/events",
+  "isDocsHomePage": false,
+  "title": "/api/admin/events",
+  "description": "In order to access the admin api endpoints you need to identify yourself. If you are using the unsecure authentication method, you may use basic authentication to identify yourself.",
+  "source": "@site/../docs/api/admin/events-api.md",
+  "slug": "/api/admin/events",
+  "permalink": "/docs/api/admin/events",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/api/admin/metrics",
+    "permalink": "/docs/api/admin/metrics"
+  },
+  "next": {
+    "title": "/api/admin/state",
+    "permalink": "/docs/api/admin/state"
+  }
+}

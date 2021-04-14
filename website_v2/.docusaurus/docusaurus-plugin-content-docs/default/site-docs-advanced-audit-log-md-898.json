@@ -1,0 +1,23 @@
+{
+  "unversionedId": "advanced/audit_log",
+  "id": "advanced/audit_log",
+  "isDocsHomePage": false,
+  "title": "The audit log",
+  "description": "When something is not working as expected it is important to be able to track what changed when, and who performed the change.",
+  "source": "@site/../docs/advanced/audit-log.md",
+  "slug": "/advanced/audit_log",
+  "permalink": "/docs/advanced/audit_log",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Archived toggles",
+    "permalink": "/docs/advanced/archived_toggles"
+  },
+  "next": {
+    "title": "API Access",
+    "permalink": "/docs/advanced/api_access"
+  }
+}

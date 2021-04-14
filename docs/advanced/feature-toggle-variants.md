@@ -9,7 +9,7 @@ Do you want to facilitate more advanced experimentations? Do you want to use Unl
 
 You can now extend feature toggles with multiple variants. This feature enables you to extend a feature toggle to divide your traffic among a set of variants.
 
-![toggle_variants](assets/variants.png 'Feature Toggle Variants')
+![toggle_variants](../assets/variants.png 'Feature Toggle Variants')
 
 #### How does it work?
 

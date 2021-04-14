@@ -1,0 +1,23 @@
+{
+  "unversionedId": "user_guide/client_sdk",
+  "id": "user_guide/client_sdk",
+  "isDocsHomePage": false,
+  "title": "Client SDK",
+  "description": "To use Unleash in your application, you will need an Unleash Client SDK. Unleash has official client SDKs for Java, Node.js, Go, Ruby, Python and .Net. We will be happy to add implementations in other languages written by you! These libraries make it very easy to use Unleash in your application.",
+  "source": "@site/../docs/user_guide/client-sdk.md",
+  "slug": "/user_guide/client_sdk",
+  "permalink": "/docs/user_guide/client_sdk",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Connect your SDK",
+    "permalink": "/docs/user_guide/connect_sdk"
+  },
+  "next": {
+    "title": "Create a feature toggle",
+    "permalink": "/docs/user_guide/create_feature_toggle"
+  }
+}

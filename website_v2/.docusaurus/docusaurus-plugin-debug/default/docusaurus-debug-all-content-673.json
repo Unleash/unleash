@@ -1,0 +1,1770 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "loadedVersions": [
+        {
+          "versionName": "current",
+          "versionLabel": "Next",
+          "versionPath": "/docs",
+          "isLast": true,
+          "routePriority": -1,
+          "sidebarFilePath": "/home/ivarconr/code/unleash/website_v2/sidebars.json",
+          "contentPath": "/home/ivarconr/code/unleash/docs",
+          "contentPathLocalized": "/home/ivarconr/code/unleash/website_v2/i18n/en/docusaurus-plugin-content-docs/current",
+          "mainDocId": "user_guide/introduction",
+          "sidebars": {
+            "documentation": [
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Getting started",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "user_guide/introduction"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "user_guide/connect_sdk"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "user_guide/client_sdk"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "user_guide/create_feature_toggle"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "user_guide/activation_strategy"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "user_guide/control_rollout"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "user_guide/projects"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "user_guide/unleash_context"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "user_guide/native_apps"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "user_guide/single_page_apps"
+                  }
+                ]
+              },
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Working with the SDK",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "sdks/java_sdk"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "sdks/node_sdk"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "sdks/dot_net_sdk"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "sdks/go_sdk"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "sdks/python_sdk"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "sdks/ruby_sdk"
+                  }
+                ]
+              },
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Addons framework",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "addons/index"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "addons/webhook"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "addons/slack"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "addons/jira-commenter"
+                  }
+                ]
+              },
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Advanced",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "advanced/strategy_constraints"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "advanced/custom_activation_strategy"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "advanced/feature_toggle_types"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "advanced/toggle_variants"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "advanced/archived_toggles"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "advanced/audit_log"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "advanced/api_access"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "advanced/tags"
+                  }
+                ]
+              }
+            ],
+            "api": [
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Client",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "api/client/features"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/client/register"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/client/metrics"
+                  }
+                ]
+              },
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Admin",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "api/admin/features"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/admin/strategies"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/admin/metrics"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/admin/events"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/admin/state"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/admin/feature-types"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/admin/addons"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/admin/context"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/admin/projects"
+                  }
+                ]
+              },
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Internal",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "api/internal/internal"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "api/internal/health"
+                  }
+                ]
+              },
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Specification",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "api/open_api"
+                  }
+                ]
+              }
+            ],
+            "Deploy and manage": [
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Deploy & configure",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "deploy/getting_started"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "deploy/configuring_unleash"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "deploy/securing_unleash"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "deploy/google_auth"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "deploy/database_backup"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "deploy/migration_guide"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "deploy/import_export"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "deploy/technical_debt"
+                  }
+                ]
+              }
+            ],
+            "Integrations": [
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Integrations",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "integrations/integrations"
+                  }
+                ]
+              }
+            ],
+            "Contribute": [
+              {
+                "collapsed": true,
+                "type": "category",
+                "label": "Contribute to Unleash",
+                "items": [
+                  {
+                    "type": "doc",
+                    "id": "developer_guide"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "client_specification"
+                  },
+                  {
+                    "type": "doc",
+                    "id": "database_schema"
+                  }
+                ]
+              }
+            ]
+          },
+          "permalinkToSidebar": {
+            "/docs/addons/index": "documentation",
+            "/docs/addons/jira-commenter": "documentation",
+            "/docs/addons/slack": "documentation",
+            "/docs/addons/webhook": "documentation",
+            "/docs/advanced/api_access": "documentation",
+            "/docs/advanced/archived_toggles": "documentation",
+            "/docs/advanced/audit_log": "documentation",
+            "/docs/advanced/custom_activation_strategy": "documentation",
+            "/docs/advanced/feature_toggle_types": "documentation",
+            "/docs/advanced/strategy_constraints": "documentation",
+            "/docs/advanced/tags": "documentation",
+            "/docs/advanced/toggle_variants": "documentation",
+            "/docs/api/admin/addons": "api",
+            "/docs/api/admin/context": "api",
+            "/docs/api/admin/events": "api",
+            "/docs/api/admin/feature-types": "api",
+            "/docs/api/admin/features": "api",
+            "/docs/api/admin/metrics": "api",
+            "/docs/api/admin/projects": "api",
+            "/docs/api/admin/state": "api",
+            "/docs/api/admin/strategies": "api",
+            "/docs/api/client/features": "api",
+            "/docs/api/client/metrics": "api",
+            "/docs/api/client/register": "api",
+            "/docs/api/internal/health": "api",
+            "/docs/api/internal/internal": "api",
+            "/docs/api/open_api": "api",
+            "/docs/client_specification": "Contribute",
+            "/docs/database_schema": "Contribute",
+            "/docs/deploy/configuring_unleash": "Deploy and manage",
+            "/docs/deploy/database_backup": "Deploy and manage",
+            "/docs/deploy/getting_started": "Deploy and manage",
+            "/docs/deploy/google_auth": "Deploy and manage",
+            "/docs/deploy/import_export": "Deploy and manage",
+            "/docs/deploy/migration_guide": "Deploy and manage",
+            "/docs/deploy/securing_unleash": "Deploy and manage",
+            "/docs/deploy/technical_debt": "Deploy and manage",
+            "/docs/developer_guide": "Contribute",
+            "/docs/integrations/integrations": "Integrations",
+            "/docs/sdks/dot_net_sdk": "documentation",
+            "/docs/sdks/go_sdk": "documentation",
+            "/docs/sdks/java_sdk": "documentation",
+            "/docs/sdks/node_sdk": "documentation",
+            "/docs/sdks/python_sdk": "documentation",
+            "/docs/sdks/ruby_sdk": "documentation",
+            "/docs/user_guide/activation_strategy": "documentation",
+            "/docs/user_guide/client_sdk": "documentation",
+            "/docs/user_guide/connect_sdk": "documentation",
+            "/docs/user_guide/control_rollout": "documentation",
+            "/docs/user_guide/create_feature_toggle": "documentation",
+            "/docs/": "documentation",
+            "/docs/user_guide/native_apps": "documentation",
+            "/docs/user_guide/projects": "documentation",
+            "/docs/user_guide/single_page_apps": "documentation",
+            "/docs/user_guide/unleash_context": "documentation"
+          },
+          "docs": [
+            {
+              "unversionedId": "activation_strategy",
+              "id": "activation_strategy",
+              "isDocsHomePage": false,
+              "title": "Activation Strategies",
+              "description": "It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users. We achieve this level of control with the help of activation strategies. The most straightforward strategy is the “default” strategy, which basically means that the feature should be enabled to everyone.",
+              "source": "@site/../docs/activation-strategies.md",
+              "slug": "/activation_strategy",
+              "permalink": "/docs/activation_strategy",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018"
+            },
+            {
+              "unversionedId": "addons/index",
+              "id": "addons/index",
+              "isDocsHomePage": false,
+              "title": "Addons Introduction",
+              "description": "This feature was introduced in Unleash v3.11.0.",
+              "source": "@site/../docs/addons/addons.md",
+              "slug": "/addons/index",
+              "permalink": "/docs/addons/index",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Ruby SDK",
+                "permalink": "/docs/sdks/ruby_sdk"
+              },
+              "next": {
+                "title": "Webhook",
+                "permalink": "/docs/addons/webhook"
+              }
+            },
+            {
+              "unversionedId": "addons/jira-commenter",
+              "id": "addons/jira-commenter",
+              "isDocsHomePage": false,
+              "title": "Jira commenter",
+              "description": "This feature was introduced in Unleash v3.11.0.",
+              "source": "@site/../docs/addons/jira-commenter.md",
+              "slug": "/addons/jira-commenter",
+              "permalink": "/docs/addons/jira-commenter",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Slack",
+                "permalink": "/docs/addons/slack"
+              },
+              "next": {
+                "title": "Strategy Constraints",
+                "permalink": "/docs/advanced/strategy_constraints"
+              }
+            },
+            {
+              "unversionedId": "addons/slack",
+              "id": "addons/slack",
+              "isDocsHomePage": false,
+              "title": "Slack",
+              "description": "This feature was introduced in Unleash v3.11.0.",
+              "source": "@site/../docs/addons/slack.md",
+              "slug": "/addons/slack",
+              "permalink": "/docs/addons/slack",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Webhook",
+                "permalink": "/docs/addons/webhook"
+              },
+              "next": {
+                "title": "Jira commenter",
+                "permalink": "/docs/addons/jira-commenter"
+              }
+            },
+            {
+              "unversionedId": "addons/webhook",
+              "id": "addons/webhook",
+              "isDocsHomePage": false,
+              "title": "Webhook",
+              "description": "This feature was introduced in Unleash v3.11.0.",
+              "source": "@site/../docs/addons/webhook.md",
+              "slug": "/addons/webhook",
+              "permalink": "/docs/addons/webhook",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Addons Introduction",
+                "permalink": "/docs/addons/index"
+              },
+              "next": {
+                "title": "Slack",
+                "permalink": "/docs/addons/slack"
+              }
+            },
+            {
+              "unversionedId": "advanced/api_access",
+              "id": "advanced/api_access",
+              "isDocsHomePage": false,
+              "title": "API Access",
+              "description": "Enterprise",
+              "source": "@site/../docs/advanced/api_access.md",
+              "slug": "/advanced/api_access",
+              "permalink": "/docs/advanced/api_access",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "The audit log",
+                "permalink": "/docs/advanced/audit_log"
+              },
+              "next": {
+                "title": "Tagging Features",
+                "permalink": "/docs/advanced/tags"
+              }
+            },
+            {
+              "unversionedId": "advanced/archived_toggles",
+              "id": "advanced/archived_toggles",
+              "isDocsHomePage": false,
+              "title": "Archived toggles",
+              "description": "In unleash you may choose to \"archive\" a feature toggle when it is not needed anymore. You do this by clicking the \"Archive\" button on the feature toggle details view. By archiving a feature toggle it will not be available to Client SDKs anymore.",
+              "source": "@site/../docs/advanced/archived-toggles.md",
+              "slug": "/advanced/archived_toggles",
+              "permalink": "/docs/advanced/archived_toggles",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Feature Toggle Variants",
+                "permalink": "/docs/advanced/toggle_variants"
+              },
+              "next": {
+                "title": "The audit log",
+                "permalink": "/docs/advanced/audit_log"
+              }
+            },
+            {
+              "unversionedId": "advanced/audit_log",
+              "id": "advanced/audit_log",
+              "isDocsHomePage": false,
+              "title": "The audit log",
+              "description": "When something is not working as expected it is important to be able to track what changed when, and who performed the change.",
+              "source": "@site/../docs/advanced/audit-log.md",
+              "slug": "/advanced/audit_log",
+              "permalink": "/docs/advanced/audit_log",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Archived toggles",
+                "permalink": "/docs/advanced/archived_toggles"
+              },
+              "next": {
+                "title": "API Access",
+                "permalink": "/docs/advanced/api_access"
+              }
+            },
+            {
+              "unversionedId": "advanced/custom_activation_strategy",
+              "id": "advanced/custom_activation_strategy",
+              "isDocsHomePage": false,
+              "title": "Custom Activation Strategy",
+              "description": "Even though Unleash comes with a few powerful activation strategies there might be scenarios where you would like to extend Unleash with your own custom strategies.",
+              "source": "@site/../docs/advanced/custom-activation-strategy.md",
+              "slug": "/advanced/custom_activation_strategy",
+              "permalink": "/docs/advanced/custom_activation_strategy",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Strategy Constraints",
+                "permalink": "/docs/advanced/strategy_constraints"
+              },
+              "next": {
+                "title": "Feature Toggle Types",
+                "permalink": "/docs/advanced/feature_toggle_types"
+              }
+            },
+            {
+              "unversionedId": "advanced/feature_toggle_types",
+              "id": "advanced/feature_toggle_types",
+              "isDocsHomePage": false,
+              "title": "Feature Toggle Types",
+              "description": "This feature was introduced in Unleash v3.5.0.",
+              "source": "@site/../docs/advanced/feature-toggle-types.md",
+              "slug": "/advanced/feature_toggle_types",
+              "permalink": "/docs/advanced/feature_toggle_types",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Custom Activation Strategy",
+                "permalink": "/docs/advanced/custom_activation_strategy"
+              },
+              "next": {
+                "title": "Feature Toggle Variants",
+                "permalink": "/docs/advanced/toggle_variants"
+              }
+            },
+            {
+              "unversionedId": "advanced/strategy_constraints",
+              "id": "advanced/strategy_constraints",
+              "isDocsHomePage": false,
+              "title": "Strategy Constraints",
+              "description": "Enterprise feature",
+              "source": "@site/../docs/advanced/strategy-constraints.md",
+              "slug": "/advanced/strategy_constraints",
+              "permalink": "/docs/advanced/strategy_constraints",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Jira commenter",
+                "permalink": "/docs/addons/jira-commenter"
+              },
+              "next": {
+                "title": "Custom Activation Strategy",
+                "permalink": "/docs/advanced/custom_activation_strategy"
+              }
+            },
+            {
+              "unversionedId": "advanced/tags",
+              "id": "advanced/tags",
+              "isDocsHomePage": false,
+              "title": "Tagging Features",
+              "description": "This feature was introduced in Unleash 3.11.0",
+              "source": "@site/../docs/advanced/tags.md",
+              "slug": "/advanced/tags",
+              "permalink": "/docs/advanced/tags",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "API Access",
+                "permalink": "/docs/advanced/api_access"
+              }
+            },
+            {
+              "unversionedId": "advanced/toggle_variants",
+              "id": "advanced/toggle_variants",
+              "isDocsHomePage": false,
+              "title": "Feature Toggle Variants",
+              "description": "This feature was introduced in Unleash v3.2.0.",
+              "source": "@site/../docs/advanced/feature-toggle-variants.md",
+              "slug": "/advanced/toggle_variants",
+              "permalink": "/docs/advanced/toggle_variants",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Feature Toggle Types",
+                "permalink": "/docs/advanced/feature_toggle_types"
+              },
+              "next": {
+                "title": "Archived toggles",
+                "permalink": "/docs/advanced/archived_toggles"
+              }
+            },
+            {
+              "unversionedId": "api/admin/addons",
+              "id": "api/admin/addons",
+              "isDocsHomePage": false,
+              "title": "/api/admin/addons",
+              "description": "In order to access the admin API endpoints you need to identify yourself. If you are using the insecure authentication method, you may use basic authentication to identify yourself.",
+              "source": "@site/../docs/api/admin/addons.md",
+              "slug": "/api/admin/addons",
+              "permalink": "/docs/api/admin/addons",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/admin/feature-types",
+                "permalink": "/docs/api/admin/feature-types"
+              },
+              "next": {
+                "title": "/api/admin/context",
+                "permalink": "/docs/api/admin/context"
+              }
+            },
+            {
+              "unversionedId": "api/admin/context",
+              "id": "api/admin/context",
+              "isDocsHomePage": false,
+              "title": "/api/admin/context",
+              "description": "The context feature is only available as part of Unleash Enterprise. In order to access the API programmatically you need to make sure you obtain a API token with admin permissions.",
+              "source": "@site/../docs/api/admin/context.md",
+              "slug": "/api/admin/context",
+              "permalink": "/docs/api/admin/context",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/admin/addons",
+                "permalink": "/docs/api/admin/addons"
+              },
+              "next": {
+                "title": "/api/admin/projects",
+                "permalink": "/docs/api/admin/projects"
+              }
+            },
+            {
+              "unversionedId": "api/admin/events",
+              "id": "api/admin/events",
+              "isDocsHomePage": false,
+              "title": "/api/admin/events",
+              "description": "In order to access the admin api endpoints you need to identify yourself. If you are using the unsecure authentication method, you may use basic authentication to identify yourself.",
+              "source": "@site/../docs/api/admin/events-api.md",
+              "slug": "/api/admin/events",
+              "permalink": "/docs/api/admin/events",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/admin/metrics",
+                "permalink": "/docs/api/admin/metrics"
+              },
+              "next": {
+                "title": "/api/admin/state",
+                "permalink": "/docs/api/admin/state"
+              }
+            },
+            {
+              "unversionedId": "api/admin/feature-types",
+              "id": "api/admin/feature-types",
+              "isDocsHomePage": false,
+              "title": "/api/admin/feature-types",
+              "description": "In order to access the admin api endpoints you need to identify yourself. If you are using the unsecure authentication method, you may use basic authentication to identify yourself.",
+              "source": "@site/../docs/api/admin/feature-types-api.md",
+              "slug": "/api/admin/feature-types",
+              "permalink": "/docs/api/admin/feature-types",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/admin/state",
+                "permalink": "/docs/api/admin/state"
+              },
+              "next": {
+                "title": "/api/admin/addons",
+                "permalink": "/docs/api/admin/addons"
+              }
+            },
+            {
+              "unversionedId": "api/admin/features",
+              "id": "api/admin/features",
+              "isDocsHomePage": false,
+              "title": "/api/admin/features",
+              "description": "In order to access the admin api endpoints you need to identify yourself. If you are using the unsecure authentication method, you may use basic authentication to identify yourself.",
+              "source": "@site/../docs/api/admin/feature-toggles-api.md",
+              "slug": "/api/admin/features",
+              "permalink": "/docs/api/admin/features",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/client/metrics",
+                "permalink": "/docs/api/client/metrics"
+              },
+              "next": {
+                "title": "/api/admin/strategies",
+                "permalink": "/docs/api/admin/strategies"
+              }
+            },
+            {
+              "unversionedId": "api/admin/metrics",
+              "id": "api/admin/metrics",
+              "isDocsHomePage": false,
+              "title": "/api/admin/metrics",
+              "description": "In order to access the admin api endpoints you need to identify yourself. If you are using the unsecure authentication method, you may use basic authentication to identify yourself.",
+              "source": "@site/../docs/api/admin/metrics-api.md",
+              "slug": "/api/admin/metrics",
+              "permalink": "/docs/api/admin/metrics",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/admin/strategies",
+                "permalink": "/docs/api/admin/strategies"
+              },
+              "next": {
+                "title": "/api/admin/events",
+                "permalink": "/docs/api/admin/events"
+              }
+            },
+            {
+              "unversionedId": "api/admin/projects",
+              "id": "api/admin/projects",
+              "isDocsHomePage": false,
+              "title": "/api/admin/projects",
+              "description": "The projects feature is only available as part of Unleash Enterprise. In order to access the API programmatically you need to make sure you obtain a API token with admin permissions.",
+              "source": "@site/../docs/api/admin/project.md",
+              "slug": "/api/admin/projects",
+              "permalink": "/docs/api/admin/projects",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/admin/context",
+                "permalink": "/docs/api/admin/context"
+              },
+              "next": {
+                "title": "/internal-backstage/prometheus",
+                "permalink": "/docs/api/internal/internal"
+              }
+            },
+            {
+              "unversionedId": "api/admin/state",
+              "id": "api/admin/state",
+              "isDocsHomePage": false,
+              "title": "/api/admin/state",
+              "description": "In order to access the admin api endpoints you need to identify yourself. If you are using the unsecure authentication method, you may use basic authentication to identify yourself.",
+              "source": "@site/../docs/api/admin/state-api.md",
+              "slug": "/api/admin/state",
+              "permalink": "/docs/api/admin/state",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/admin/events",
+                "permalink": "/docs/api/admin/events"
+              },
+              "next": {
+                "title": "/api/admin/feature-types",
+                "permalink": "/docs/api/admin/feature-types"
+              }
+            },
+            {
+              "unversionedId": "api/admin/strategies",
+              "id": "api/admin/strategies",
+              "isDocsHomePage": false,
+              "title": "/api/admin/strategies",
+              "description": "In order to access the admin api endpoints you need to identify yourself. If you are using the unsecure authentication method, you may use basic authentication to identify yourself.",
+              "source": "@site/../docs/api/admin/strategies-api.md",
+              "slug": "/api/admin/strategies",
+              "permalink": "/docs/api/admin/strategies",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/admin/features",
+                "permalink": "/docs/api/admin/features"
+              },
+              "next": {
+                "title": "/api/admin/metrics",
+                "permalink": "/docs/api/admin/metrics"
+              }
+            },
+            {
+              "unversionedId": "api/admin/tags",
+              "id": "api/admin/tags",
+              "isDocsHomePage": false,
+              "title": "/api/admin/tags",
+              "description": "In order to access the admin API endpoints you need to identify yourself. If you are using the insecure authentication method, you may use basic authentication to identify yourself.",
+              "source": "@site/../docs/api/admin/tags-api.md",
+              "slug": "/api/admin/tags",
+              "permalink": "/docs/api/admin/tags",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018"
+            },
+            {
+              "unversionedId": "api/client/features",
+              "id": "api/client/features",
+              "isDocsHomePage": false,
+              "title": "/api/client/features",
+              "description": "Fetching Feature Toggles",
+              "source": "@site/../docs/api/client/feature-toggles-api.md",
+              "slug": "/api/client/features",
+              "permalink": "/docs/api/client/features",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "next": {
+                "title": "/api/client/register",
+                "permalink": "/docs/api/client/register"
+              }
+            },
+            {
+              "unversionedId": "api/client/metrics",
+              "id": "api/client/metrics",
+              "isDocsHomePage": false,
+              "title": "/api/client/metrics",
+              "description": "Send metrics",
+              "source": "@site/../docs/api/client/metrics-api.md",
+              "slug": "/api/client/metrics",
+              "permalink": "/docs/api/client/metrics",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/client/register",
+                "permalink": "/docs/api/client/register"
+              },
+              "next": {
+                "title": "/api/admin/features",
+                "permalink": "/docs/api/admin/features"
+              }
+            },
+            {
+              "unversionedId": "api/client/register",
+              "id": "api/client/register",
+              "isDocsHomePage": false,
+              "title": "/api/client/register",
+              "description": "Client registration",
+              "source": "@site/../docs/api/client/register-api.md",
+              "slug": "/api/client/register",
+              "permalink": "/docs/api/client/register",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/client/features",
+                "permalink": "/docs/api/client/features"
+              },
+              "next": {
+                "title": "/api/client/metrics",
+                "permalink": "/docs/api/client/metrics"
+              }
+            },
+            {
+              "unversionedId": "api/index",
+              "id": "api/index",
+              "isDocsHomePage": false,
+              "title": "API Documentation",
+              "description": "Client API",
+              "source": "@site/../docs/api/index.md",
+              "slug": "/api/index",
+              "permalink": "/docs/api/index",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018"
+            },
+            {
+              "unversionedId": "api/internal/health",
+              "id": "api/internal/health",
+              "isDocsHomePage": false,
+              "title": "/health",
+              "description": "Health API",
+              "source": "@site/../docs/api/internal/health.md",
+              "slug": "/api/internal/health",
+              "permalink": "/docs/api/internal/health",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/internal-backstage/prometheus",
+                "permalink": "/docs/api/internal/internal"
+              },
+              "next": {
+                "title": "Open API Specification",
+                "permalink": "/docs/api/open_api"
+              }
+            },
+            {
+              "unversionedId": "api/internal/internal",
+              "id": "api/internal/internal",
+              "isDocsHomePage": false,
+              "title": "/internal-backstage/prometheus",
+              "description": "Internal Backstage API",
+              "source": "@site/../docs/api/internal/internal-backstage-api.md",
+              "slug": "/api/internal/internal",
+              "permalink": "/docs/api/internal/internal",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/api/admin/projects",
+                "permalink": "/docs/api/admin/projects"
+              },
+              "next": {
+                "title": "/health",
+                "permalink": "/docs/api/internal/health"
+              }
+            },
+            {
+              "unversionedId": "api/open_api",
+              "id": "api/open_api",
+              "isDocsHomePage": false,
+              "title": "Open API Specification",
+              "description": "The Unleash Open API Specifications are still considered a beta functionality. We have (for now) manually written all the specifications for all API endpoints. We are testing this functionality, and the ultimate goal will be to auto-generate these specifications from the code itself.",
+              "source": "@site/../docs/api/open-api.md",
+              "slug": "/api/open_api",
+              "permalink": "/docs/api/open_api",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "api",
+              "previous": {
+                "title": "/health",
+                "permalink": "/docs/api/internal/health"
+              }
+            },
+            {
+              "unversionedId": "client_sdk",
+              "id": "client_sdk",
+              "isDocsHomePage": false,
+              "title": "client_sdk",
+              "description": "window.location = '/docs/userguide/clientsdk';",
+              "source": "@site/../docs/client_sdk.md",
+              "slug": "/client_sdk",
+              "permalink": "/docs/client_sdk",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018"
+            },
+            {
+              "unversionedId": "client_specification",
+              "id": "client_specification",
+              "isDocsHomePage": false,
+              "title": "Client Specification",
+              "description": "Client Specification 1.0",
+              "source": "@site/../docs/client-specification.md",
+              "slug": "/client_specification",
+              "permalink": "/docs/client_specification",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Contribute",
+              "previous": {
+                "title": "Developer guide",
+                "permalink": "/docs/developer_guide"
+              },
+              "next": {
+                "title": "Database Schema",
+                "permalink": "/docs/database_schema"
+              }
+            },
+            {
+              "unversionedId": "database_schema",
+              "id": "database_schema",
+              "isDocsHomePage": false,
+              "title": "Database Schema",
+              "description": "This document describes our current database schema used in PostgreSQL. We use db-migrate to migrate (create tables, add columns, etc.) the database.",
+              "source": "@site/../docs/database-schema.md",
+              "slug": "/database_schema",
+              "permalink": "/docs/database_schema",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Contribute",
+              "previous": {
+                "title": "Client Specification",
+                "permalink": "/docs/client_specification"
+              }
+            },
+            {
+              "unversionedId": "deploy/configuring_unleash",
+              "id": "deploy/configuring_unleash",
+              "isDocsHomePage": false,
+              "title": "Configuring Unleash",
+              "description": "In order to customize \"anything\" in Unleash you need to use Unleash from Node.js:",
+              "source": "@site/../docs/deploy/configuring-unleash.md",
+              "slug": "/deploy/configuring_unleash",
+              "permalink": "/docs/deploy/configuring_unleash",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Deploy and manage",
+              "previous": {
+                "title": "Getting Started",
+                "permalink": "/docs/deploy/getting_started"
+              },
+              "next": {
+                "title": "Securing Unleash",
+                "permalink": "/docs/deploy/securing_unleash"
+              }
+            },
+            {
+              "unversionedId": "deploy/database_backup",
+              "id": "deploy/database_backup",
+              "isDocsHomePage": false,
+              "title": "Database Backup",
+              "description": "When upgrading to a new major version of Unleash, we advise to do a full database backup to ease rollback in case of failures.",
+              "source": "@site/../docs/deploy/database-backup.md",
+              "slug": "/deploy/database_backup",
+              "permalink": "/docs/deploy/database_backup",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Deploy and manage",
+              "previous": {
+                "title": "Google Auth Hook",
+                "permalink": "/docs/deploy/google_auth"
+              },
+              "next": {
+                "title": "Migration Guide",
+                "permalink": "/docs/deploy/migration_guide"
+              }
+            },
+            {
+              "unversionedId": "deploy/getting_started",
+              "id": "deploy/getting_started",
+              "isDocsHomePage": false,
+              "title": "Getting Started",
+              "description": "This section only applies if you plan to self-host Unleash. If you are looking for our hosted solution you should head over to Unleash-hosted.com",
+              "source": "@site/../docs/deploy/getting-started.md",
+              "slug": "/deploy/getting_started",
+              "permalink": "/docs/deploy/getting_started",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Deploy and manage",
+              "next": {
+                "title": "Configuring Unleash",
+                "permalink": "/docs/deploy/configuring_unleash"
+              }
+            },
+            {
+              "unversionedId": "deploy/google_auth",
+              "id": "deploy/google_auth",
+              "isDocsHomePage": false,
+              "title": "Google Auth Hook",
+              "description": "This part of the tutorial shows how to create a sign-in flow for users and integrate with Unleash server project. The implementation assumes that I am working in localhost with 4242 port.",
+              "source": "@site/../docs/deploy/google-auth-hook.md",
+              "slug": "/deploy/google_auth",
+              "permalink": "/docs/deploy/google_auth",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Deploy and manage",
+              "previous": {
+                "title": "Securing Unleash",
+                "permalink": "/docs/deploy/securing_unleash"
+              },
+              "next": {
+                "title": "Database Backup",
+                "permalink": "/docs/deploy/database_backup"
+              }
+            },
+            {
+              "unversionedId": "deploy/import_export",
+              "id": "deploy/import_export",
+              "isDocsHomePage": false,
+              "title": "Import & Export",
+              "description": "since v3.3.0",
+              "source": "@site/../docs/deploy/import-export.md",
+              "slug": "/deploy/import_export",
+              "permalink": "/docs/deploy/import_export",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Deploy and manage",
+              "previous": {
+                "title": "Migration Guide",
+                "permalink": "/docs/deploy/migration_guide"
+              },
+              "next": {
+                "title": "Technical Debt",
+                "permalink": "/docs/deploy/technical_debt"
+              }
+            },
+            {
+              "unversionedId": "deploy/migration_guide",
+              "id": "deploy/migration_guide",
+              "isDocsHomePage": false,
+              "title": "Migration Guide",
+              "description": "Generally, the intention is that unleash-server should always provide support for clients one major version lower than the current one. This should make it possible to upgrade unleash gradually.",
+              "source": "@site/../docs/deploy/migration-guide.md",
+              "slug": "/deploy/migration_guide",
+              "permalink": "/docs/deploy/migration_guide",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Deploy and manage",
+              "previous": {
+                "title": "Database Backup",
+                "permalink": "/docs/deploy/database_backup"
+              },
+              "next": {
+                "title": "Import & Export",
+                "permalink": "/docs/deploy/import_export"
+              }
+            },
+            {
+              "unversionedId": "deploy/securing_unleash",
+              "id": "deploy/securing_unleash",
+              "isDocsHomePage": false,
+              "title": "Securing Unleash",
+              "description": "This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with a secure setup and multiple SSO options.",
+              "source": "@site/../docs/deploy/securing-unleash.md",
+              "slug": "/deploy/securing_unleash",
+              "permalink": "/docs/deploy/securing_unleash",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Deploy and manage",
+              "previous": {
+                "title": "Configuring Unleash",
+                "permalink": "/docs/deploy/configuring_unleash"
+              },
+              "next": {
+                "title": "Google Auth Hook",
+                "permalink": "/docs/deploy/google_auth"
+              }
+            },
+            {
+              "unversionedId": "deploy/technical_debt",
+              "id": "deploy/technical_debt",
+              "isDocsHomePage": false,
+              "title": "Technical Debt",
+              "description": "At Unleash we care deeply about code quality. Technical debt creeps up over time and slowly builds to the point where it really starts to hurt. At that point it's too late. Feature toggles that have outlived their feature and are not cleaned up represent technical dept that should be cleaned up and removed from your code.",
+              "source": "@site/../docs/deploy/technical-debt.md",
+              "slug": "/deploy/technical_debt",
+              "permalink": "/docs/deploy/technical_debt",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Deploy and manage",
+              "previous": {
+                "title": "Import & Export",
+                "permalink": "/docs/deploy/import_export"
+              }
+            },
+            {
+              "unversionedId": "developer_guide",
+              "id": "developer_guide",
+              "isDocsHomePage": false,
+              "title": "Developer guide",
+              "description": "PostgreSQL",
+              "source": "@site/../docs/developer-guide.md",
+              "slug": "/developer_guide",
+              "permalink": "/docs/developer_guide",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Contribute",
+              "next": {
+                "title": "Client Specification",
+                "permalink": "/docs/client_specification"
+              }
+            },
+            {
+              "unversionedId": "getting_started",
+              "id": "getting_started",
+              "isDocsHomePage": false,
+              "title": "Getting Started",
+              "description": "Requirements",
+              "source": "@site/../docs/getting-started.md",
+              "slug": "/getting_started",
+              "permalink": "/docs/getting_started",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018"
+            },
+            {
+              "unversionedId": "guides/feature_updates_to_slack",
+              "id": "guides/feature_updates_to_slack",
+              "isDocsHomePage": false,
+              "title": "Feature Updates To slack",
+              "description": "Create a custom Slack WebHook url:",
+              "source": "@site/../docs/guides/feature-updates-to-slack.md",
+              "slug": "/guides/feature_updates_to_slack",
+              "permalink": "/docs/guides/feature_updates_to_slack",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018"
+            },
+            {
+              "unversionedId": "index",
+              "id": "index",
+              "isDocsHomePage": false,
+              "title": "index",
+              "description": "window.location = '/docs/user_guide';",
+              "source": "@site/../docs/index.md",
+              "slug": "/index",
+              "permalink": "/docs/index",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018"
+            },
+            {
+              "unversionedId": "integrations/integrations",
+              "id": "integrations/integrations",
+              "isDocsHomePage": false,
+              "title": "Integrations and plugins",
+              "description": "Available integrations with Unleash",
+              "source": "@site/../docs/integrations/integrations.md",
+              "slug": "/integrations/integrations",
+              "permalink": "/docs/integrations/integrations",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "Integrations"
+            },
+            {
+              "unversionedId": "sdks/dot_net_sdk",
+              "id": "sdks/dot_net_sdk",
+              "isDocsHomePage": false,
+              "title": ".net SDK",
+              "description": "In this guide we explain how to use feature toggles in a .NET application using Unleash-hosted. We will be using the open source Unleash .net Client SDK.",
+              "source": "@site/../docs/sdks/dot_net.md",
+              "slug": "/sdks/dot_net_sdk",
+              "permalink": "/docs/sdks/dot_net_sdk",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Node SDK",
+                "permalink": "/docs/sdks/node_sdk"
+              },
+              "next": {
+                "title": "GO SDK",
+                "permalink": "/docs/sdks/go_sdk"
+              }
+            },
+            {
+              "unversionedId": "sdks/go_sdk",
+              "id": "sdks/go_sdk",
+              "isDocsHomePage": false,
+              "title": "GO SDK",
+              "description": "1. Install unleash-client-go",
+              "source": "@site/../docs/sdks/go.md",
+              "slug": "/sdks/go_sdk",
+              "permalink": "/docs/sdks/go_sdk",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": ".net SDK",
+                "permalink": "/docs/sdks/dot_net_sdk"
+              },
+              "next": {
+                "title": "Python SDK",
+                "permalink": "/docs/sdks/python_sdk"
+              }
+            },
+            {
+              "unversionedId": "sdks/java_sdk",
+              "id": "sdks/java_sdk",
+              "isDocsHomePage": false,
+              "title": "Java SDK",
+              "description": "In this guide we explain how to use feature toggles in a Java application using Unleash-hosted. We will be using the open source Unleash Java Client SDK.",
+              "source": "@site/../docs/sdks/java.md",
+              "slug": "/sdks/java_sdk",
+              "permalink": "/docs/sdks/java_sdk",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Working with single page apps",
+                "permalink": "/docs/user_guide/single_page_apps"
+              },
+              "next": {
+                "title": "Node SDK",
+                "permalink": "/docs/sdks/node_sdk"
+              }
+            },
+            {
+              "unversionedId": "sdks/node_sdk",
+              "id": "sdks/node_sdk",
+              "isDocsHomePage": false,
+              "title": "Node SDK",
+              "description": "In this guide we explain how to use feature toggles in a Node application using Unleash-hosted. We will be using the open source Unleash Node.js Client SDK.",
+              "source": "@site/../docs/sdks/node.md",
+              "slug": "/sdks/node_sdk",
+              "permalink": "/docs/sdks/node_sdk",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Java SDK",
+                "permalink": "/docs/sdks/java_sdk"
+              },
+              "next": {
+                "title": ".net SDK",
+                "permalink": "/docs/sdks/dot_net_sdk"
+              }
+            },
+            {
+              "unversionedId": "sdks/python_sdk",
+              "id": "sdks/python_sdk",
+              "isDocsHomePage": false,
+              "title": "Python SDK",
+              "description": "`java",
+              "source": "@site/../docs/sdks/python.md",
+              "slug": "/sdks/python_sdk",
+              "permalink": "/docs/sdks/python_sdk",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "GO SDK",
+                "permalink": "/docs/sdks/go_sdk"
+              },
+              "next": {
+                "title": "Ruby SDK",
+                "permalink": "/docs/sdks/ruby_sdk"
+              }
+            },
+            {
+              "unversionedId": "sdks/ruby_sdk",
+              "id": "sdks/ruby_sdk",
+              "isDocsHomePage": false,
+              "title": "Ruby SDK",
+              "description": "`sh",
+              "source": "@site/../docs/sdks/ruby.md",
+              "slug": "/sdks/ruby_sdk",
+              "permalink": "/docs/sdks/ruby_sdk",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Python SDK",
+                "permalink": "/docs/sdks/python_sdk"
+              },
+              "next": {
+                "title": "Addons Introduction",
+                "permalink": "/docs/addons/index"
+              }
+            },
+            {
+              "unversionedId": "toggle_variants",
+              "id": "toggle_variants",
+              "isDocsHomePage": false,
+              "title": "toggle_variants",
+              "description": "Please see /docs/advanced/toggle_variants",
+              "source": "@site/../docs/toggle_variants.md",
+              "slug": "/toggle_variants",
+              "permalink": "/docs/toggle_variants",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018"
+            },
+            {
+              "unversionedId": "unleash_context",
+              "id": "unleash_context",
+              "isDocsHomePage": false,
+              "title": "Unleash Context",
+              "description": "To standardise a few activation strategies, we also needed to standardise the Unleash context, which contains fields that vary per request, required to implement the activation strategies.",
+              "source": "@site/../docs/unleash-context.md",
+              "slug": "/unleash_context",
+              "permalink": "/docs/unleash_context",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018"
+            },
+            {
+              "unversionedId": "user_guide/activation_strategy",
+              "id": "user_guide/activation_strategy",
+              "isDocsHomePage": false,
+              "title": "Activation Strategies",
+              "description": "It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users. We achieve this level of control with the help of activation strategies. The most straightforward strategy is the “default” strategy, which basically means that the feature should be enabled to everyone.",
+              "source": "@site/../docs/user_guide/activation-strategies.md",
+              "slug": "/user_guide/activation_strategy",
+              "permalink": "/docs/user_guide/activation_strategy",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Create a feature toggle",
+                "permalink": "/docs/user_guide/create_feature_toggle"
+              },
+              "next": {
+                "title": "Control rollout",
+                "permalink": "/docs/user_guide/control_rollout"
+              }
+            },
+            {
+              "unversionedId": "user_guide/client_sdk",
+              "id": "user_guide/client_sdk",
+              "isDocsHomePage": false,
+              "title": "Client SDK",
+              "description": "To use Unleash in your application, you will need an Unleash Client SDK. Unleash has official client SDKs for Java, Node.js, Go, Ruby, Python and .Net. We will be happy to add implementations in other languages written by you! These libraries make it very easy to use Unleash in your application.",
+              "source": "@site/../docs/user_guide/client-sdk.md",
+              "slug": "/user_guide/client_sdk",
+              "permalink": "/docs/user_guide/client_sdk",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Connect your SDK",
+                "permalink": "/docs/user_guide/connect_sdk"
+              },
+              "next": {
+                "title": "Create a feature toggle",
+                "permalink": "/docs/user_guide/create_feature_toggle"
+              }
+            },
+            {
+              "unversionedId": "user_guide/connect_sdk",
+              "id": "user_guide/connect_sdk",
+              "isDocsHomePage": false,
+              "title": "Connect your SDK",
+              "description": "In order to connect your application to Unleash you need to use a client SDK (software developer kit) for your programming language. The SDK will handle connecting to the Unleash server instance and retrieve feature toggles based upon your configuration. Both open-source and the Unleash enterprise offering utilize the same set of client SDKs.",
+              "source": "@site/../docs/user_guide/connect-sdk.md",
+              "slug": "/user_guide/connect_sdk",
+              "permalink": "/docs/user_guide/connect_sdk",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Introduction",
+                "permalink": "/docs/"
+              },
+              "next": {
+                "title": "Client SDK",
+                "permalink": "/docs/user_guide/client_sdk"
+              }
+            },
+            {
+              "unversionedId": "user_guide/control_rollout",
+              "id": "user_guide/control_rollout",
+              "isDocsHomePage": false,
+              "title": "Control rollout",
+              "description": "It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users.",
+              "source": "@site/../docs/user_guide/control-rollout.md",
+              "slug": "/user_guide/control_rollout",
+              "permalink": "/docs/user_guide/control_rollout",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Activation Strategies",
+                "permalink": "/docs/user_guide/activation_strategy"
+              },
+              "next": {
+                "title": "Projects",
+                "permalink": "/docs/user_guide/projects"
+              }
+            },
+            {
+              "unversionedId": "user_guide/create_feature_toggle",
+              "id": "user_guide/create_feature_toggle",
+              "isDocsHomePage": false,
+              "title": "Create a feature toggle",
+              "description": "In this guide you will learn how to create your first feature toggle using Unleash.",
+              "source": "@site/../docs/user_guide/create-feature-toggle.md",
+              "slug": "/user_guide/create_feature_toggle",
+              "permalink": "/docs/user_guide/create_feature_toggle",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Client SDK",
+                "permalink": "/docs/user_guide/client_sdk"
+              },
+              "next": {
+                "title": "Activation Strategies",
+                "permalink": "/docs/user_guide/activation_strategy"
+              }
+            },
+            {
+              "unversionedId": "user_guide/discover_unknown_toggles",
+              "id": "user_guide/discover_unknown_toggles",
+              "isDocsHomePage": false,
+              "title": "Discover unknown toggles",
+              "description": "Discover unknown toggles",
+              "source": "@site/../docs/user_guide/discover-unknown-toggles.md",
+              "slug": "/user_guide/discover_unknown_toggles",
+              "permalink": "/docs/user_guide/discover_unknown_toggles",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018"
+            },
+            {
+              "unversionedId": "user_guide/introduction",
+              "id": "user_guide/introduction",
+              "isDocsHomePage": false,
+              "title": "Introduction",
+              "description": "Welcome to the Unleash getting started guides. We know that getting to know a new solution might be tedious. Our goal with this documentation is to guide you through the most essential concepts of Unleash.",
+              "source": "@site/../docs/user_guide/introduction.md",
+              "slug": "/",
+              "permalink": "/docs/",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "next": {
+                "title": "Connect your SDK",
+                "permalink": "/docs/user_guide/connect_sdk"
+              }
+            },
+            {
+              "unversionedId": "user_guide/native_apps",
+              "id": "user_guide/native_apps",
+              "isDocsHomePage": false,
+              "title": "Working with native apps",
+              "description": "Enterprise feature",
+              "source": "@site/../docs/user_guide/native-apps.md",
+              "slug": "/user_guide/native_apps",
+              "permalink": "/docs/user_guide/native_apps",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Unleash Context",
+                "permalink": "/docs/user_guide/unleash_context"
+              },
+              "next": {
+                "title": "Working with single page apps",
+                "permalink": "/docs/user_guide/single_page_apps"
+              }
+            },
+            {
+              "unversionedId": "user_guide/projects",
+              "id": "user_guide/projects",
+              "isDocsHomePage": false,
+              "title": "Projects",
+              "description": "Enterprise",
+              "source": "@site/../docs/user_guide/projects.md",
+              "slug": "/user_guide/projects",
+              "permalink": "/docs/user_guide/projects",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Control rollout",
+                "permalink": "/docs/user_guide/control_rollout"
+              },
+              "next": {
+                "title": "Unleash Context",
+                "permalink": "/docs/user_guide/unleash_context"
+              }
+            },
+            {
+              "unversionedId": "user_guide/single_page_apps",
+              "id": "user_guide/single_page_apps",
+              "isDocsHomePage": false,
+              "title": "Working with single page apps",
+              "description": "This is an Enterprise feature.",
+              "source": "@site/../docs/user_guide/single-page-apps.md",
+              "slug": "/user_guide/single_page_apps",
+              "permalink": "/docs/user_guide/single_page_apps",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Working with native apps",
+                "permalink": "/docs/user_guide/native_apps"
+              },
+              "next": {
+                "title": "Java SDK",
+                "permalink": "/docs/sdks/java_sdk"
+              }
+            },
+            {
+              "unversionedId": "user_guide/unleash_context",
+              "id": "user_guide/unleash_context",
+              "isDocsHomePage": false,
+              "title": "Unleash Context",
+              "description": "To standardise a few activation strategies, we also needed to standardise the Unleash context, which contains fields that vary per request, required to implement the activation strategies.",
+              "source": "@site/../docs/user_guide/unleash-context.md",
+              "slug": "/user_guide/unleash_context",
+              "permalink": "/docs/user_guide/unleash_context",
+              "version": "current",
+              "lastUpdatedBy": "Author",
+              "lastUpdatedAt": 1539502055,
+              "formattedLastUpdatedAt": "10/14/2018",
+              "sidebar": "documentation",
+              "previous": {
+                "title": "Projects",
+                "permalink": "/docs/user_guide/projects"
+              },
+              "next": {
+                "title": "Working with native apps",
+                "permalink": "/docs/user_guide/native_apps"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "docusaurus-plugin-content-blog": {
+    "default": null
+  },
+  "docusaurus-plugin-content-pages": {
+    "default": [
+      {
+        "type": "jsx",
+        "permalink": "/",
+        "source": "@site/src/pages/index.js"
+      }
+    ]
+  },
+  "docusaurus-plugin-debug": {
+    "default": null
+  },
+  "docusaurus-theme-classic": {
+    "default": null
+  }
+}

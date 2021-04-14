@@ -1,0 +1,14 @@
+{
+  "unversionedId": "index",
+  "id": "index",
+  "isDocsHomePage": false,
+  "title": "index",
+  "description": "window.location = '/docs/user_guide';",
+  "source": "@site/../docs/index.md",
+  "slug": "/index",
+  "permalink": "/docs/index",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018"
+}

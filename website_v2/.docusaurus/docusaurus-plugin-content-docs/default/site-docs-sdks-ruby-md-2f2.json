@@ -1,0 +1,23 @@
+{
+  "unversionedId": "sdks/ruby_sdk",
+  "id": "sdks/ruby_sdk",
+  "isDocsHomePage": false,
+  "title": "Ruby SDK",
+  "description": "`sh",
+  "source": "@site/../docs/sdks/ruby.md",
+  "slug": "/sdks/ruby_sdk",
+  "permalink": "/docs/sdks/ruby_sdk",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Python SDK",
+    "permalink": "/docs/sdks/python_sdk"
+  },
+  "next": {
+    "title": "Addons Introduction",
+    "permalink": "/docs/addons/index"
+  }
+}

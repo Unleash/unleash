@@ -1,0 +1,19 @@
+{
+  "unversionedId": "api/open_api",
+  "id": "api/open_api",
+  "isDocsHomePage": false,
+  "title": "Open API Specification",
+  "description": "The Unleash Open API Specifications are still considered a beta functionality. We have (for now) manually written all the specifications for all API endpoints. We are testing this functionality, and the ultimate goal will be to auto-generate these specifications from the code itself.",
+  "source": "@site/../docs/api/open-api.md",
+  "slug": "/api/open_api",
+  "permalink": "/docs/api/open_api",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/health",
+    "permalink": "/docs/api/internal/health"
+  }
+}

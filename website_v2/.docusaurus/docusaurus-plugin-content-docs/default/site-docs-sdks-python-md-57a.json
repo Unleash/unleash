@@ -1,0 +1,23 @@
+{
+  "unversionedId": "sdks/python_sdk",
+  "id": "sdks/python_sdk",
+  "isDocsHomePage": false,
+  "title": "Python SDK",
+  "description": "`java",
+  "source": "@site/../docs/sdks/python.md",
+  "slug": "/sdks/python_sdk",
+  "permalink": "/docs/sdks/python_sdk",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "GO SDK",
+    "permalink": "/docs/sdks/go_sdk"
+  },
+  "next": {
+    "title": "Ruby SDK",
+    "permalink": "/docs/sdks/ruby_sdk"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "unversionedId": "guides/feature_updates_to_slack",
+  "id": "guides/feature_updates_to_slack",
+  "isDocsHomePage": false,
+  "title": "Feature Updates To slack",
+  "description": "Create a custom Slack WebHook url:",
+  "source": "@site/../docs/guides/feature-updates-to-slack.md",
+  "slug": "/guides/feature_updates_to_slack",
+  "permalink": "/docs/guides/feature_updates_to_slack",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018"
+}

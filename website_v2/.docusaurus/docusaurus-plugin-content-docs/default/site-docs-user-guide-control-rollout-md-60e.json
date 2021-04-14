@@ -1,0 +1,23 @@
+{
+  "unversionedId": "user_guide/control_rollout",
+  "id": "user_guide/control_rollout",
+  "isDocsHomePage": false,
+  "title": "Control rollout",
+  "description": "It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users.",
+  "source": "@site/../docs/user_guide/control-rollout.md",
+  "slug": "/user_guide/control_rollout",
+  "permalink": "/docs/user_guide/control_rollout",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Activation Strategies",
+    "permalink": "/docs/user_guide/activation_strategy"
+  },
+  "next": {
+    "title": "Projects",
+    "permalink": "/docs/user_guide/projects"
+  }
+}

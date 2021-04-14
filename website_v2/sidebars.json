@@ -1,0 +1,82 @@
+{
+  "documentation": {
+    "Getting started": [
+      "user_guide/introduction",
+      "user_guide/connect_sdk",
+      "user_guide/client_sdk",
+      "user_guide/create_feature_toggle",
+      "user_guide/activation_strategy",
+      "user_guide/control_rollout",
+      "user_guide/projects",
+      "user_guide/unleash_context",
+      "user_guide/native_apps",
+      "user_guide/single_page_apps"
+    ],
+    "Working with the SDK": [
+      "sdks/java_sdk",
+      "sdks/node_sdk",
+      "sdks/dot_net_sdk",
+      "sdks/go_sdk",
+      "sdks/python_sdk",
+      "sdks/ruby_sdk"
+    ],
+    "Addons framework": [
+      "addons/index",
+      "addons/webhook",
+      "addons/slack",
+      "addons/jira-commenter"
+    ],
+    "Advanced": [
+      "advanced/strategy_constraints",
+      "advanced/custom_activation_strategy",
+      "advanced/feature_toggle_types",
+      "advanced/toggle_variants",
+      "advanced/archived_toggles",
+      "advanced/audit_log",
+      "advanced/api_access",
+      "advanced/tags"
+    ]
+  },
+  "api": {
+    "Client": [
+      "api/client/features",
+      "api/client/register",
+      "api/client/metrics"
+    ],
+    "Admin": [
+      "api/admin/features",
+      "api/admin/strategies",
+      "api/admin/metrics",
+      "api/admin/events",
+      "api/admin/state",
+      "api/admin/feature-types",
+      "api/admin/addons",
+      "api/admin/context",
+      "api/admin/projects"
+    ],
+    "Internal": ["api/internal/internal", "api/internal/health"],
+    "Specification": ["api/open_api"]
+  },
+  "Deploy and manage": {
+    "Deploy & configure": [
+      "deploy/getting_started",
+      "deploy/configuring_unleash",
+      "deploy/securing_unleash",
+      "deploy/google_auth",
+      "deploy/database_backup",
+      "deploy/migration_guide",
+      "deploy/import_export",
+      "deploy/technical_debt"
+    ]
+  },
+  "Integrations": {
+    "Integrations": ["integrations/integrations"]
+  },
+  "Contribute": {
+    "Contribute to Unleash": [
+      "developer_guide",
+      "client_specification",
+      "database_schema"
+    ]
+  }
+}

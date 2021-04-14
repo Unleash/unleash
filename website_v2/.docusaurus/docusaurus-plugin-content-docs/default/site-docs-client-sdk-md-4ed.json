@@ -1,0 +1,14 @@
+{
+  "unversionedId": "client_sdk",
+  "id": "client_sdk",
+  "isDocsHomePage": false,
+  "title": "client_sdk",
+  "description": "window.location = '/docs/userguide/clientsdk';",
+  "source": "@site/../docs/client_sdk.md",
+  "slug": "/client_sdk",
+  "permalink": "/docs/client_sdk",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018"
+}

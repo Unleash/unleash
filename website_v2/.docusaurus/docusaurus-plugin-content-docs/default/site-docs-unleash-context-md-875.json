@@ -1,0 +1,14 @@
+{
+  "unversionedId": "unleash_context",
+  "id": "unleash_context",
+  "isDocsHomePage": false,
+  "title": "Unleash Context",
+  "description": "To standardise a few activation strategies, we also needed to standardise the Unleash context, which contains fields that vary per request, required to implement the activation strategies.",
+  "source": "@site/../docs/unleash-context.md",
+  "slug": "/unleash_context",
+  "permalink": "/docs/unleash_context",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018"
+}

@@ -1,0 +1,23 @@
+{
+  "unversionedId": "api/client/register",
+  "id": "api/client/register",
+  "isDocsHomePage": false,
+  "title": "/api/client/register",
+  "description": "Client registration",
+  "source": "@site/../docs/api/client/register-api.md",
+  "slug": "/api/client/register",
+  "permalink": "/docs/api/client/register",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/api/client/features",
+    "permalink": "/docs/api/client/features"
+  },
+  "next": {
+    "title": "/api/client/metrics",
+    "permalink": "/docs/api/client/metrics"
+  }
+}

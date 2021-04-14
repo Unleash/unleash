@@ -1,0 +1,14 @@
+{
+  "unversionedId": "getting_started",
+  "id": "getting_started",
+  "isDocsHomePage": false,
+  "title": "Getting Started",
+  "description": "Requirements",
+  "source": "@site/../docs/getting-started.md",
+  "slug": "/getting_started",
+  "permalink": "/docs/getting_started",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018"
+}

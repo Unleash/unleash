@@ -1,0 +1,23 @@
+{
+  "unversionedId": "api/admin/strategies",
+  "id": "api/admin/strategies",
+  "isDocsHomePage": false,
+  "title": "/api/admin/strategies",
+  "description": "In order to access the admin api endpoints you need to identify yourself. If you are using the unsecure authentication method, you may use basic authentication to identify yourself.",
+  "source": "@site/../docs/api/admin/strategies-api.md",
+  "slug": "/api/admin/strategies",
+  "permalink": "/docs/api/admin/strategies",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/api/admin/features",
+    "permalink": "/docs/api/admin/features"
+  },
+  "next": {
+    "title": "/api/admin/metrics",
+    "permalink": "/docs/api/admin/metrics"
+  }
+}

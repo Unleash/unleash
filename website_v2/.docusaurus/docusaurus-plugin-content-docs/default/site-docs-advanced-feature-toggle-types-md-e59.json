@@ -1,0 +1,23 @@
+{
+  "unversionedId": "advanced/feature_toggle_types",
+  "id": "advanced/feature_toggle_types",
+  "isDocsHomePage": false,
+  "title": "Feature Toggle Types",
+  "description": "This feature was introduced in Unleash v3.5.0.",
+  "source": "@site/../docs/advanced/feature-toggle-types.md",
+  "slug": "/advanced/feature_toggle_types",
+  "permalink": "/docs/advanced/feature_toggle_types",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Custom Activation Strategy",
+    "permalink": "/docs/advanced/custom_activation_strategy"
+  },
+  "next": {
+    "title": "Feature Toggle Variants",
+    "permalink": "/docs/advanced/toggle_variants"
+  }
+}

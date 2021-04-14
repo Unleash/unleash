@@ -1,0 +1,23 @@
+{
+  "unversionedId": "api/admin/addons",
+  "id": "api/admin/addons",
+  "isDocsHomePage": false,
+  "title": "/api/admin/addons",
+  "description": "In order to access the admin API endpoints you need to identify yourself. If you are using the insecure authentication method, you may use basic authentication to identify yourself.",
+  "source": "@site/../docs/api/admin/addons.md",
+  "slug": "/api/admin/addons",
+  "permalink": "/docs/api/admin/addons",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "api",
+  "previous": {
+    "title": "/api/admin/feature-types",
+    "permalink": "/docs/api/admin/feature-types"
+  },
+  "next": {
+    "title": "/api/admin/context",
+    "permalink": "/docs/api/admin/context"
+  }
+}

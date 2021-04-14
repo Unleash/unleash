@@ -1,0 +1,19 @@
+{
+  "unversionedId": "developer_guide",
+  "id": "developer_guide",
+  "isDocsHomePage": false,
+  "title": "Developer guide",
+  "description": "PostgreSQL",
+  "source": "@site/../docs/developer-guide.md",
+  "slug": "/developer_guide",
+  "permalink": "/docs/developer_guide",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Contribute",
+  "next": {
+    "title": "Client Specification",
+    "permalink": "/docs/client_specification"
+  }
+}

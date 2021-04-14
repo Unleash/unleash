@@ -1,0 +1,23 @@
+{
+  "unversionedId": "advanced/toggle_variants",
+  "id": "advanced/toggle_variants",
+  "isDocsHomePage": false,
+  "title": "Feature Toggle Variants",
+  "description": "This feature was introduced in Unleash v3.2.0.",
+  "source": "@site/../docs/advanced/feature-toggle-variants.md",
+  "slug": "/advanced/toggle_variants",
+  "permalink": "/docs/advanced/toggle_variants",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "documentation",
+  "previous": {
+    "title": "Feature Toggle Types",
+    "permalink": "/docs/advanced/feature_toggle_types"
+  },
+  "next": {
+    "title": "Archived toggles",
+    "permalink": "/docs/advanced/archived_toggles"
+  }
+}

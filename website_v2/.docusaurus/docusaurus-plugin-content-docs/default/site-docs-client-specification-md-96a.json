@@ -1,0 +1,23 @@
+{
+  "unversionedId": "client_specification",
+  "id": "client_specification",
+  "isDocsHomePage": false,
+  "title": "Client Specification",
+  "description": "Client Specification 1.0",
+  "source": "@site/../docs/client-specification.md",
+  "slug": "/client_specification",
+  "permalink": "/docs/client_specification",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar": "Contribute",
+  "previous": {
+    "title": "Developer guide",
+    "permalink": "/docs/developer_guide"
+  },
+  "next": {
+    "title": "Database Schema",
+    "permalink": "/docs/database_schema"
+  }
+}

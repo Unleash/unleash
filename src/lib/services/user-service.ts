@@ -88,7 +88,7 @@ class UserService {
     validatePassword(password: string): boolean {
         const result = owasp.test(password);
         if (!result.strong) {
-            throw new OwaspValidationError(result.errors[0]);
+            throw new OwaspValidationError(result);
         } else return true;
     }
 

@@ -71,6 +71,7 @@
     "migrations",
     "node_modules",
     "website",
+    "website_v2",
     "src/binver-dev.js",
     "dist",
     "snapshots",

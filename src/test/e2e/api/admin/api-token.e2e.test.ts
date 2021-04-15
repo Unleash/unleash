@@ -190,7 +190,7 @@ test.serial('none-admins should only get client tokens', async t => {
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.REGULAR);
+            const role = await accessService.getRootRole(RoleName.EDITOR);
             const user = await userService.createUser({
                 email,
                 rootRole: role.id,
@@ -231,7 +231,7 @@ test.serial('Only token-admins should be allowed to create token', async t => {
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.REGULAR);
+            const role = await accessService.getRootRole(RoleName.EDITOR);
             req.user = await userService.createUser({
                 email,
                 rootRole: role.id,

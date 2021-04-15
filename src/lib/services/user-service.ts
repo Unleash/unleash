@@ -95,7 +95,7 @@ class UserService {
 
     async getAll(): Promise<IUserWithRole[]> {
         const users = await this.store.getAll();
-        const defaultRole = await this.accessService.getRootRole(RoleName.READ);
+        const defaultRole = await this.accessService.getRootRole(RoleName.VIEWER);
         const userRoles = await this.accessService.getRootRoleForAllUsers();
         const usersWithRootRole = users.map(u => {
             const rootRole = userRoles.find(r => r.userId === u.id);
@@ -107,7 +107,7 @@ class UserService {
 
     async getUser(id: number): Promise<IUserWithRole> {
         const roles = await this.accessService.getUserRootRoles(id);
-        const defaultRole = await this.accessService.getRootRole(RoleName.READ);
+        const defaultRole = await this.accessService.getRootRole(RoleName.VIEWER);
         const roleId = roles.length > 0 ? roles[0].id : defaultRole.id;
         const user = await this.store.get({ id });
         return { ...user, rootRole: roleId };
@@ -201,7 +201,7 @@ class UserService {
         } catch (e) {
             if (autoCreateUser) {
                 const defaultRole = await this.accessService.getRootRole(
-                    RoleName.REGULAR,
+                    RoleName.EDITOR,
                 );
                 user = await this.createUser({
                     email,

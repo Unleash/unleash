@@ -12,7 +12,7 @@ let db;
 
 let userStore: UserStore;
 let accessStore: AccessStore;
-let regularRole: IRole;
+let editorRole: IRole;
 let adminRole: IRole;
 
 test.before(async () => {
@@ -21,7 +21,7 @@ test.before(async () => {
     userStore = stores.userStore;
     accessStore = stores.accessStore;
     const roles = await accessStore.getRootRoles();
-    regularRole = roles.find(r => r.name === RoleName.REGULAR);
+    editorRole = roles.find(r => r.name === RoleName.EDITOR);
     adminRole = roles.find(r => r.name === RoleName.ADMIN);
 });
 
@@ -57,7 +57,7 @@ test.serial('creates and returns all users', async t => {
             .send({
                 email: `some${i}@getunleash.ai`,
                 name: `Some Name ${i}`,
-                rootRole: regularRole.id,
+                rootRole: editorRole.id,
             })
             .set('Content-Type', 'application/json'),
     );
@@ -70,11 +70,11 @@ test.serial('creates and returns all users', async t => {
         .expect(200)
         .expect(res => {
             t.is(res.body.users.length, 20);
-            t.is(res.body.users[2].rootRole, regularRole.id);
+            t.is(res.body.users[2].rootRole, editorRole.id);
         });
 });
 
-test.serial('creates regular-user without password', async t => {
+test.serial('creates editor-user without password', async t => {
     t.plan(3);
     const request = await setupApp(stores);
     return request
@@ -82,13 +82,13 @@ test.serial('creates regular-user without password', async t => {
         .send({
             email: 'some@getunelash.ai',
             name: 'Some Name',
-            rootRole: regularRole.id,
+            rootRole: editorRole.id,
         })
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
             t.is(res.body.email, 'some@getunelash.ai');
-            t.is(res.body.rootRole, regularRole.id);
+            t.is(res.body.rootRole, editorRole.id);
             t.truthy(res.body.id);
         });
 });
@@ -143,7 +143,7 @@ test.serial('update user name', async t => {
         .send({
             email: 'some@getunelash.ai',
             name: 'Some Name',
-            rootRole: regularRole.id,
+            rootRole: editorRole.id,
         })
         .set('Content-Type', 'application/json');
 
@@ -157,7 +157,6 @@ test.serial('update user name', async t => {
         .expect(res => {
             t.is(res.body.email, 'some@getunelash.ai');
             t.is(res.body.name, 'New name');
-            // t.is(res.body.rootRole, 'Regular');
             t.is(res.body.id, body.id);
         });
 });

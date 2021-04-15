@@ -91,5 +91,3 @@ unleash
 ```
 
 [client-auth-unleash.js](https://github.com/Unleash/unleash/blob/master/examples/client-auth-unleash.js)
-
-PS! Remember to disable legacy routes by setting the `enableLegacyRoutes` option to false. This will require all your clients to be on v3.x.

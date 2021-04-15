@@ -32,6 +32,18 @@ class ResetPasswordController extends Controller {
         this.get('/validate', this.validateToken);
         this.post('/password', this.changePassword);
         this.post('/validate-password', this.validatePassword);
+        this.post('/password-email', this.sendResetPasswordEmail);
+    }
+
+    async sendResetPasswordEmail(req: Request, res: Response): Promise<void> {
+        const { email } = req.body;
+
+        try {
+            await this.userService.createResetPasswordEmail(email, 'unleash');
+            res.status(200).end();
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async validatePassword(req: Request, res: Response): Promise<void> {

@@ -2,8 +2,6 @@ import { BackstageController } from './backstage';
 
 const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
-const FeatureController = require('./client-api/feature.js');
-
 const Controller = require('./controller');
 const HealthCheckController = require('./health-check');
 const LogoutController = require('./logout');

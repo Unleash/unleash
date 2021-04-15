@@ -6,8 +6,12 @@ class ConfigController extends Controller {
     constructor(config, { versionService }) {
         super(config);
         this.versionService = versionService;
+        const authenticationType = config.authentication.type;
         this.uiConfig = {
             ...config.ui,
+            authenticationType,
+            unleashUrl: config.unleashUrl,
+            baseUriPath: config.baseUriPath,
             version: config.version,
         };
         this.get('/', this.getUIConfig);

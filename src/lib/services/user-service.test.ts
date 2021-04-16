@@ -7,6 +7,7 @@ import { IUnleashConfig } from '../types/core';
 import { ResetTokenStoreMock } from '../../test/fixtures/fake-reset-token-store';
 import ResetTokenService from './reset-token-service';
 import { EmailService } from './email-service';
+import OwaspValidationError from '../error/owasp-validation-error';
 
 const config: IUnleashConfig = {
     getLogger: noLogger,
@@ -106,6 +107,7 @@ test('Password must be at least 10 chars', async t => {
 
     t.throws(() => service.validatePassword('admin'), {
         message: 'The password must be at least 10 characters long.',
+        instanceOf: OwaspValidationError,
     });
 });
 
@@ -127,6 +129,7 @@ test('The password must contain at least one uppercase letter.', async t => {
 
     t.throws(() => service.validatePassword('qwertyabcde'), {
         message: 'The password must contain at least one uppercase letter.',
+        instanceOf: OwaspValidationError,
     });
 });
 
@@ -148,6 +151,7 @@ test('The password must contain at least one number', async t => {
 
     t.throws(() => service.validatePassword('qwertyabcdE'), {
         message: 'The password must contain at least one number.',
+        instanceOf: OwaspValidationError,
     });
 });
 
@@ -169,6 +173,7 @@ test('The password must contain at least one special character', async t => {
 
     t.throws(() => service.validatePassword('qwertyabcdE2'), {
         message: 'The password must contain at least one special character.',
+        instanceOf: OwaspValidationError,
     });
 });
 

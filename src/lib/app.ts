@@ -12,7 +12,6 @@ const path = require('path');
 const errorHandler = require('errorhandler');
 const IndexRouter = require('./routes');
 const unleashDbSession = require('./middleware/session-db');
-const cors = require('cors');
 
 const requestLogger = require('./middleware/request-logger');
 const simpleAuthentication = require('./middleware/simple-authentication');
@@ -34,7 +33,6 @@ module.exports = function(config, services = {}) {
         config.preHook(app, config, services);
     }
 
-    app.use(cors());
     app.use(compression());
     app.use(cookieParser());
     app.use(express.json({ strict: false }));

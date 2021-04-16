@@ -1,11 +1,13 @@
-class OwaspValidationError extends Error {
-    private testResult;
+import { TestResult } from 'owasp-password-strength-test';
 
-    constructor(testResult: owaspPasswordStrengthTest.TestResult) {
-        super();
+class OwaspValidationError extends Error {
+    private errors: string[];
+
+    constructor(testResult: TestResult) {
+        super(testResult.errors[0]);
         Error.captureStackTrace(this, this.constructor);
         this.name = this.constructor.name;
-        this.testResult = testResult;
+        this.errors = testResult.errors;
     }
 
     toJSON(): any {
@@ -14,8 +16,8 @@ class OwaspValidationError extends Error {
             name: this.constructor.name,
             details: [
                 {
-                    validationErrors: this.testResult.errors,
-                    message: 'Error',
+                    validationErrors: this.errors,
+                    message: this.errors[0],
                 },
             ],
         };

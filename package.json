@@ -20,7 +20,7 @@
     "url": "https://github.com/unleash/unleash/issues"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "license": "Apache-2.0",
   "main": "./dist/lib/server-impl.js",
@@ -72,7 +72,6 @@
     "connect-session-knex": "^2.0.0",
     "cookie-parser": "^1.4.4",
     "cookie-session": "^2.0.0-rc.1",
-    "cors": "^2.8.5",
     "db-migrate": "0.11.11",
     "db-migrate-pg": "^1.2.2",
     "db-migrate-shared": "^1.2.0",

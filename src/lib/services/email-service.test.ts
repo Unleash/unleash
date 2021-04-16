@@ -17,15 +17,18 @@ test('Can send reset email', async t => {
         },
         noLoggerProvider,
     );
+    const resetLinkUrl =
+        'https://unleash-hosted.com/reset-password?token=$2b$10$M06Ysso6KL4ueH/xR6rdSuY5GSymdIwmIkEUJMRkB.Qn26r5Gi5vW';
+
     const content = await emailService.sendResetMail(
         'Some username',
-        'test@test.com',
-        'abc123',
+        'test@resetLinkUrl.com',
+        resetLinkUrl,
     );
     const message = JSON.parse(content.message);
     t.is(message.from.address, 'noreply@getunleash.ai');
     t.is(message.subject, 'Someone has requested to reset your password');
-    t.true(message.html.indexOf('abc123') > 0);
+    t.true(message.html.indexOf('https://unleash') > 0);
     t.true(message.text.indexOf('abc123') > 0);
 });
 

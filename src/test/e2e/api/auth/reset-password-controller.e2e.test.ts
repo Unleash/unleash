@@ -54,7 +54,7 @@ test.before(async () => {
         rootRole: adminRole.id,
     });
 
-    const userRole = await accessService.getRootRole(RoleName.REGULAR);
+    const userRole = await accessService.getRootRole(RoleName.EDITOR);
     user = await userService.createUser({
         username: 'test@test.com',
         email: 'test@test.com',

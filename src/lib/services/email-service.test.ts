@@ -27,9 +27,9 @@ test('Can send reset email', async t => {
     );
     const message = JSON.parse(content.message);
     t.is(message.from.address, 'noreply@getunleash.ai');
-    t.is(message.subject, 'Someone has requested to reset your password');
-    t.true(message.html.indexOf('https://unleash') > 0);
-    t.true(message.text.indexOf('abc123') > 0);
+    t.is(message.subject, 'Unleash - Reset your password');
+    t.true(message.html.includes(resetLinkUrl));
+    t.true(message.text.includes(resetLinkUrl));
 });
 
 test('Can send welcome mail', async t => {
@@ -54,8 +54,5 @@ test('Can send welcome mail', async t => {
     );
     const message = JSON.parse(content.message);
     t.is(message.from.address, 'noreply@getunleash.ai');
-    t.is(
-        message.subject,
-        'Welcome to Unleash. Please configure your password.',
-    );
+    t.is(message.subject, 'Welcome to Unleash');
 });

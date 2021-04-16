@@ -4,9 +4,9 @@ import UsersList from './UsersList';
 import AdminMenu from '../admin-menu';
 import PageContent from '../../../component/common/PageContent/PageContent';
 
-const render = () => (
+const render = ({history}) => (
     <div>
-        <AdminMenu />
+        <AdminMenu history={history} />
         <PageContent headerContent="Users">
             <UsersList />
         </PageContent>

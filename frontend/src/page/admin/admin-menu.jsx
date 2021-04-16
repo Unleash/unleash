@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Grid, Icon } from '@material-ui/core';
-import PageContent from '../../component/common/PageContent/PageContent';
+import { Paper, Icon, Tabs, Tab } from '@material-ui/core';
 
 const navLinkStyle = {
     display: 'flex',
@@ -23,30 +22,36 @@ const iconStyle = {
     marginRight: '5px',
 };
 
-function AdminMenu() {
+function AdminMenu({history}) {
+    const { location } = history;
+    const { pathname } = location;
     return (
-        <PageContent style={{ marginBottom: '1rem' }}>
-            <Grid container justify={'center'}>
-                <Grid item md={4}>
+        <Paper style={{ marginBottom: '1rem' }}>
+            <Tabs centered value={pathname} >
+                <Tab value="/admin/users" label={
                     <NavLink to="/admin/users" activeStyle={activeNavLinkStyle} style={navLinkStyle}>
-                        <Icon style={iconStyle}>supervised_user_circle</Icon>
-                        Users
-                    </NavLink>
-                </Grid>
-                <Grid item md={4}>
+                    <Icon style={iconStyle}>supervised_user_circle</Icon>
+                            <span>Users</span>
+                            </NavLink>
+                    }
+                >
+                </Tab>
+                <Tab value="/admin/api" label={
                     <NavLink to="/admin/api" activeStyle={activeNavLinkStyle} style={navLinkStyle}>
                         <Icon style={iconStyle}>apps</Icon>
                         API Access
                     </NavLink>
-                </Grid>
-                <Grid item md={4}>
+                    }>
+                </Tab>
+                <Tab value="/admin/auth" label={
                     <NavLink to="/admin/auth" activeStyle={activeNavLinkStyle} style={navLinkStyle}>
                         <Icon style={iconStyle}>lock</Icon>
                         Authentication
                     </NavLink>
-                </Grid>
-            </Grid>
-        </PageContent>
+                    }>
+                </Tab>
+            </Tabs>
+        </Paper>
     );
 }
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Grid, Switch, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, Switch, TextField } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import PageContent from '../../../component/common/PageContent/PageContent';
 
 const initialState = {
@@ -9,7 +10,7 @@ const initialState = {
     unleashHostname: location.hostname,
 };
 
-function SamlAuth({ config, getSamlConfig, updateSamlConfig, hasPermission }) {
+function SamlAuth({ config, getSamlConfig, updateSamlConfig, hasPermission, unleashUrl }) {
     const [data, setData] = useState(initialState);
     const [info, setInfo] = useState();
 
@@ -26,7 +27,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, hasPermission }) {
     }, [config]);
 
     if (!hasPermission('ADMIN')) {
-        return <span>You need admin privileges to access this section.</span>;
+        return <Alert severity="error">You need to be a root admin to access this section.</Alert>;
     }
 
     const updateField = e => {
@@ -59,14 +60,14 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, hasPermission }) {
         <PageContent>
             <Grid container style={{ marginBottom: '1rem' }}>
                 <Grid item md={12}>
-                    <Typography variant="subtitle1">
+                    <Alert severity="info">
                         Please read the{' '}
                         <a href="https://www.unleash-hosted.com/docs/enterprise-authentication" target="_blank" rel="noreferrer">
                             documentation
                         </a>{' '}
                         to learn how to integrate with specific SAML 2.0 providers (Okta, Keycloak, etc). <br />
-                        Callback URL: <code>https://[unleash.hostname.com]/auth/saml/callback</code>
-                    </Typography>
+                        Callback URL: <code>{unleashUrl}/auth/saml/callback</code>
+                    </Alert>
                 </Grid>
             </Grid>
             <form onSubmit={onSubmit}>
@@ -184,6 +185,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, hasPermission }) {
 
 SamlAuth.propTypes = {
     config: PropTypes.object,
+    unleash: PropTypes.string,
     getSamlConfig: PropTypes.func.isRequired,
     updateSamlConfig: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,

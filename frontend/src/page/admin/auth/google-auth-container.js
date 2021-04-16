@@ -5,6 +5,7 @@ import { hasPermission } from '../../../permissions';
 
 const mapStateToProps = state => ({
     config: state.authAdmin.get('google'),
+    unleashUrl: state.uiConfig.toJS().unleashUrl,
     hasPermission: permission => hasPermission(state.user.get('profile'), permission),
 });
 

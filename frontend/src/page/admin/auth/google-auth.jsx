@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Grid, Switch, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, Switch, TextField } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import PageContent from '../../../component/common/PageContent/PageContent';
 
 const initialState = {
@@ -9,7 +10,7 @@ const initialState = {
     unleashHostname: location.hostname,
 };
 
-function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, hasPermission }) {
+function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, hasPermission, unleashUrl }) {
     const [data, setData] = useState(initialState);
     const [info, setInfo] = useState();
 
@@ -58,14 +59,14 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, hasPermission
         <PageContent>
             <Grid container style={{ marginBottom: '1rem' }}>
                 <Grid item xs={12}>
-                    <Typography variant="subtitle1">
+                    <Alert severity="info">
                         Please read the{' '}
                         <a href="https://www.unleash-hosted.com/docs/enterprise-authentication/google" target="_blank" rel="noreferrer">
                             documentation
                         </a>{' '}
                         to learn how to integrate with Google OAuth 2.0. <br />
-                        Callback URL: <code>https://[unleash.hostname.com]/auth/google/callback</code>
-                    </Typography>
+                        Callback URL: <code>{unleashUrl}/auth/google/callback</code>
+                    </Alert>
                 </Grid>
             </Grid>
             <form onSubmit={onSubmit}>
@@ -189,6 +190,7 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, hasPermission
 
 GoogleAuth.propTypes = {
     config: PropTypes.object,
+    unleashUrl: PropTypes.string,
     getGoogleConfig: PropTypes.func.isRequired,
     updateGoogleConfig: PropTypes.func.isRequired,
     hasPermission: PropTypes.func.isRequired,

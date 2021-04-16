@@ -2,14 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Table, TableHead, TableBody, TableRow, TableCell, IconButton } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { formatFullDateTimeWithLocale } from '../../../component/common/util';
 import CreateApiKey from './api-key-create';
 import Secret from './secret';
-import ApiHowTo from './api-howto';
 import ConditionallyRender from '../../../component/common/ConditionallyRender/ConditionallyRender';
 import Dialogue from '../../../component/common/Dialogue/Dialogue';
 
-function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, hasPermission }) {
+function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, hasPermission, unleashUrl }) {
     const [showDelete, setShowDelete] = useState(false);
     const [delKey, setDelKey] = useState(undefined);
     const deleteKey = async () => {
@@ -25,7 +25,22 @@ function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, hasPermis
 
     return (
         <div>
-            <ApiHowTo />
+            <Alert severity="info" >
+                <p>
+                    Read the{' '}
+                    <a href="https://docs.getunleash.io/docs" target="_blank" rel="noreferrer">
+                        Getting started guide
+                    </a>{' '}
+                    to learn how to connect to the Unleash API form your application or programmatically. 
+                    Please note it can take up to 1 minute before a new API key is activated.
+                </p>
+                <br />
+                <strong>API URL: </strong> <pre style={{display: 'inline'}}>{unleashUrl}/api/</pre>
+            </Alert>
+            
+            <br /><br />
+            
+            <br />
             <Table>
                 <TableHead>
                     <TableRow>
@@ -93,6 +108,7 @@ ApiKeyList.propTypes = {
     removeKey: PropTypes.func.isRequired,
     addKey: PropTypes.func.isRequired,
     keys: PropTypes.array.isRequired,
+    unleashUrl: PropTypes.string,
     hasPermission: PropTypes.func.isRequired,
 };
 

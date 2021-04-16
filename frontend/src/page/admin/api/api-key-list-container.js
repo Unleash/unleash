@@ -7,6 +7,7 @@ import { hasPermission } from '../../../permissions';
 export default connect(
     state => ({
         location: state.settings.toJS().location || {},
+        unleashUrl: state.uiConfig.toJS().unleashUrl,
         keys: state.apiAdmin.toJS(),
         hasPermission: permission => hasPermission(state.user.get('profile'), permission),
     }),

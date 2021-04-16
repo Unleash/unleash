@@ -6,7 +6,7 @@ test('returns all defined routes', () => {
 });
 
 test('returns all baseRoutes', () => {
-    expect(baseRoutes.length).toEqual(11);
+    expect(baseRoutes.length).toEqual(12);
     expect(baseRoutes).toMatchSnapshot();
 });
 

@@ -213,41 +213,6 @@ export const routes = [
         layout: 'main',
     },
 
-    // Admin
-    {
-        path: '/admin/api',
-        parent: '/admin',
-        title: 'API access',
-        component: AdminApi,
-        type: 'protected',
-        layout: 'main',
-    },
-    {
-        path: '/admin/users',
-        parent: '/admin',
-        title: 'Users',
-        component: AdminUsers,
-        type: 'protected',
-        layout: 'main',
-    },
-    {
-        path: '/admin/auth',
-        parent: '/admin',
-        title: 'Authentication',
-        component: AdminAuth,
-        type: 'protected',
-        layout: 'main',
-    },
-    {
-        path: '/admin',
-        title: 'Admin',
-        icon: 'album',
-        component: Admin,
-        hidden: true,
-        type: 'protected',
-        layout: 'main',
-    },
-
     {
         path: '/tag-types/create',
         parent: '/tag-types',
@@ -342,6 +307,40 @@ export const routes = [
         hidden: true,
         layout: 'standalone',
     },
+        // Admin
+        {
+            path: '/admin/api',
+            parent: '/admin',
+            title: 'API access',
+            component: AdminApi,
+            type: 'protected',
+            layout: 'main',
+        },
+        {
+            path: '/admin/users',
+            parent: '/admin',
+            title: 'Users',
+            component: AdminUsers,
+            type: 'protected',
+            layout: 'main',
+        },
+        {
+            path: '/admin/auth',
+            parent: '/admin',
+            title: 'Authentication',
+            component: AdminAuth,
+            type: 'protected',
+            layout: 'main',
+        },
+        {
+            path: '/admin',
+            title: 'Admin',
+            icon: 'album',
+            component: Admin,
+            hidden: false,
+            type: 'protected',
+            layout: 'main',
+        },
 ];
 
 export const getRoute = path => routes.find(route => route.path === path);

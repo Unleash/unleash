@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import { CREATE_PROJECT, DELETE_PROJECT } from '../../../permissions';
+import { CREATE_PROJECT, DELETE_PROJECT, UPDATE_PROJECT } from '../../../permissions';
 import { Icon, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import ConfirmDialogue from '../../common/Dialogue';
@@ -36,6 +36,16 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history, hasPermi
         </Link>
     );
 
+    const mgmAccessButton = project => (
+        <Tooltip title="Manage access">
+            <Link to={`/projects/${project.id}/access`} style={{ color: 'black' }}>
+                <IconButton aria-label="manage_access" >
+                    <Icon>supervised_user_circle</Icon>
+                </IconButton>
+            </Link>
+        </Tooltip>
+    );
+
     const deleteProjectButton = project => (
         <Tooltip title="Remove project">
             <IconButton
@@ -57,12 +67,16 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history, hasPermi
                     <Icon>folder_open</Icon>
                 </ListItemAvatar>
                 <ListItemText primary={projectLink(project)} secondary={project.description} />
+                <ConditionallyRender
+                    condition={hasPermission(UPDATE_PROJECT)}
+                    show={mgmAccessButton(project)}
+                />
                 <ConditionallyRender condition={hasPermission(DELETE_PROJECT)} show={deleteProjectButton(project)} />
             </ListItem>
         ));
 
     return (
-        <PageContent headerContent={<HeaderTitle title="Projects (beta)" actions={addProjectButton()} />}>
+        <PageContent headerContent={<HeaderTitle title="Projects" actions={addProjectButton()} />}>
             <List>
                 <ConditionallyRender
                     condition={projects.length > 0}
@@ -93,8 +107,6 @@ ProjectList.propTypes = {
     removeProject: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     hasPermission: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
 };
 
 export default ProjectList;

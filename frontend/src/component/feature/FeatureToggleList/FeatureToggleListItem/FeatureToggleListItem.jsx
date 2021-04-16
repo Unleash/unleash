@@ -64,7 +64,7 @@ const FeatureToggleListItem = ({
                         <TimeAgo date={createdAt} live={false} />
                     </small>
                     <div>
-                        <span className={commonStyles.truncate}>{description}</span>
+                        <span className={commonStyles.truncate}><small>{description}</small></span>
                     </div>
                 </Link>
             </span>

@@ -84,7 +84,9 @@ exports[`renders correctly with one feature 1`] = `
         <span
           className="truncate"
         >
-          another's description
+          <small>
+            another's description
+          </small>
         </span>
       </div>
     </a>
@@ -180,7 +182,9 @@ exports[`renders correctly with one feature without permission 1`] = `
         <span
           className="truncate"
         >
-          another's description
+          <small>
+            another's description
+          </small>
         </span>
       </div>
     </a>

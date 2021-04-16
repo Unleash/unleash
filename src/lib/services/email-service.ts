@@ -29,9 +29,8 @@ export interface IEmailOptions {
     transporterType: TransporterType;
 }
 
-const RESET_MAIL_SUBJECT = 'Someone has requested to reset your password';
-const GETTING_STARTED_SUBJECT =
-    'Welcome to Unleash. Please configure your password.';
+const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
+const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
 
 export class EmailService {
     private logger: Logger;

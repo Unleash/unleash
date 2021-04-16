@@ -18,6 +18,7 @@ interface IChangePasswordBody {
     password: string;
 }
 
+const UNLEASH = 'Unleash';
 class ResetPasswordController extends Controller {
     userService: UserService;
 
@@ -39,7 +40,7 @@ class ResetPasswordController extends Controller {
         const { email } = req.body;
 
         try {
-            await this.userService.createResetPasswordEmail(email, 'unleash');
+            await this.userService.createResetPasswordEmail(email, UNLEASH);
             res.status(200).end();
         } catch (e) {
             handleErrors(res, this.logger, e);

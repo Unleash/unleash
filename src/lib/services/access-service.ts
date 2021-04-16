@@ -5,8 +5,8 @@ import User from '../user';
 export const ALL_PROJECTS = '*';
 
 const PROJECT_DESCRIPTION = {
-    ADMIN: 'Users with the project admin role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
-    REGULAR: 'Users with the regular role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
+    OWNER: 'Users with this role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
+    MEMBER: 'Users with this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
 };
 
 const { ADMIN } = p;
@@ -55,8 +55,10 @@ enum PermissionType {
 
 export enum RoleName {
     ADMIN = 'Admin',
-    REGULAR = 'Regular',
-    READ = 'Read',
+    EDITOR = 'Editor',
+    VIEWER = 'Viewer',
+    OWNER = 'Owner',
+    MEMBER = 'Member'
 }
 
 export enum RoleType {
@@ -199,32 +201,32 @@ export class AccessService {
             throw new Error("ProjectId cannot be empty");
         }
 
-        const adminRole = await this.store.createRole(
-            RoleName.ADMIN,
+        const ownerRole = await this.store.createRole(
+            RoleName.OWNER,
             RoleType.PROJECT,
             projectId,
-            PROJECT_DESCRIPTION.ADMIN,
+            PROJECT_DESCRIPTION.OWNER,
         );
         await this.store.addPermissionsToRole(
-            adminRole.id,
+            ownerRole.id,
             PROJECT_ADMIN,
             projectId,
         );
 
         // TODO: remove this when all users is guaranteed to have a unique id. 
         if (owner.id) {
-            this.logger.info(`Making ${owner.id} admin of ${projectId} via roleId=${adminRole.id}`);
-            await this.store.addUserToRole(owner.id, adminRole.id);    
+            this.logger.info(`Making ${owner.id} admin of ${projectId} via roleId=${ownerRole.id}`);
+            await this.store.addUserToRole(owner.id, ownerRole.id);    
         };
         
-        const regularRole = await this.store.createRole(
-            RoleName.REGULAR,
+        const memberRole = await this.store.createRole(
+            RoleName.MEMBER,
             RoleType.PROJECT,
             projectId,
-            PROJECT_DESCRIPTION.REGULAR,
+            PROJECT_DESCRIPTION.MEMBER,
         );
         await this.store.addPermissionsToRole(
-            regularRole.id,
+            memberRole.id,
             PROJECT_REGULAR,
             projectId
         );

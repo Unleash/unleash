@@ -159,9 +159,10 @@ test.serial('Multi row merge also works', async t => {
         clients.push(clientRegistration);
     }
     await clientApplicationsStore.bulkUpsert(clients);
-    const alteredClients = clients.map(c => {
-        return { appName: c.appName, icon: 'red' };
-    });
+    const alteredClients = clients.map(c => ({
+        appName: c.appName,
+        icon: 'red',
+    }));
     await clientApplicationsStore.bulkUpsert(alteredClients);
     const stored = await Promise.all(
         clients.map(async c =>

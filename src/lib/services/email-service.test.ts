@@ -5,42 +5,43 @@ import noLoggerProvider from '../../test/fixtures/no-logger';
 test('Can send reset email', async t => {
     const emailService = new EmailService(
         {
-            host: '',
+            host: 'test',
             port: 587,
             secure: false,
             auth: {
                 user: '',
-                password: '',
+                pass: '',
             },
             sender: 'noreply@getunleash.ai',
             transporterType: TransporterType.JSON,
         },
         noLoggerProvider,
     );
+    const resetLinkUrl =
+        'https://unleash-hosted.com/reset-password?token=$2b$10$M06Ysso6KL4ueH/xR6rdSuY5GSymdIwmIkEUJMRkB.Qn26r5Gi5vW';
+
     const content = await emailService.sendResetMail(
         'Some username',
-        'test@test.com',
-        'abc123',
+        'test@resetLinkUrl.com',
+        resetLinkUrl,
     );
     const message = JSON.parse(content.message);
     t.is(message.from.address, 'noreply@getunleash.ai');
-    t.is(message.subject, 'Someone has requested to reset your password');
-    t.true(message.html.indexOf('Some username') > 0);
-    t.true(message.text.indexOf('Some username') > 0);
-    t.true(message.html.indexOf('abc123') > 0);
-    t.true(message.text.indexOf('abc123') > 0);
+    t.is(message.subject, 'Unleash - Reset your password');
+    t.true(message.html.includes(resetLinkUrl));
+    t.true(message.text.includes(resetLinkUrl));
 });
 
 test('Can send welcome mail', async t => {
     const emailService = new EmailService(
         {
-            host: '',
+            host: 'test',
             port: 9999,
             secure: false,
             sender: 'noreply@getunleash.ai',
             auth: {
                 user: '',
-                password: '',
+                pass: '',
             },
             transporterType: TransporterType.JSON,
         },
@@ -53,8 +54,5 @@ test('Can send welcome mail', async t => {
     );
     const message = JSON.parse(content.message);
     t.is(message.from.address, 'noreply@getunleash.ai');
-    t.is(
-        message.subject,
-        'Welcome to Unleash. Please configure your password.',
-    );
+    t.is(message.subject, 'Welcome to Unleash');
 });

@@ -2,6 +2,7 @@
 
 // eslint-disable-next-line
 import { AccessStore } from './access-store';
+import { ResetTokenStore } from './reset-token-store';
 
 const { createDb } = require('./db-pool');
 const EventStore = require('./event-store');
@@ -57,5 +58,6 @@ module.exports.createStores = (config, eventBus) => {
         addonStore: new AddonStore(db, eventBus, getLogger),
         accessStore: new AccessStore(db, eventBus, getLogger),
         apiTokenStore: new ApiTokenStore(db, eventBus, getLogger),
+        resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),
     };
 };

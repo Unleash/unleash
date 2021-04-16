@@ -1,6 +1,6 @@
+import { ADMIN } from '../../permissions';
 import { TemplateFormat } from '../../services/email-service';
 import { handleErrors } from './util';
-import { ADMIN } from '../../permissions';
 
 const Controller = require('../controller');
 

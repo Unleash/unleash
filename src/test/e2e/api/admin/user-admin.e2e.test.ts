@@ -25,7 +25,7 @@ test.before(async () => {
     adminRole = roles.find(r => r.name === RoleName.ADMIN);
 });
 
-test.after(async () => {
+test.after.always(async () => {
     await db.destroy();
 });
 

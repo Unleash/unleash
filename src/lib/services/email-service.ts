@@ -7,7 +7,7 @@ import NotFoundError from '../error/notfound-error';
 
 export interface IAuthOptions {
     user: string;
-    password: string;
+    pass: string;
 }
 
 export enum TemplateFormat {
@@ -29,9 +29,8 @@ export interface IEmailOptions {
     transporterType: TransporterType;
 }
 
-const RESET_MAIL_SUBJECT = 'Someone has requested to reset your password';
-const GETTING_STARTED_SUBJECT =
-    'Welcome to Unleash. Please configure your password.';
+const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
+const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
 
 export class EmailService {
     private logger: Logger;
@@ -42,12 +41,12 @@ export class EmailService {
 
     constructor(email: IEmailOptions | undefined, getLogger: LogProvider) {
         this.logger = getLogger('services/email-service.ts');
-        if (email) {
+        if (email && email.host) {
             this.sender = email.sender;
             if (email.transporterType === TransporterType.JSON) {
                 this.mailer = createTransport({ jsonTransport: true });
             } else {
-                const connectionString = `${email.auth.user}:${email.auth.password}@${email.host}:${email.port}`;
+                const connectionString = `${email.auth.user}:${email.auth.pass}@${email.host}:${email.port}`;
                 this.mailer = email.secure
                     ? createTransport(`smtps://${connectionString}`)
                     : createTransport(`smtp://${connectionString}`);

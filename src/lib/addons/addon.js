@@ -38,9 +38,10 @@ class Addon {
             return res;
         }
         if (retries > 0 && retryCodes.includes(res.status)) {
-            setTimeout(() => {
-                return this.fetchRetry(url, options, retries - 1, backoff * 2);
-            }, backoff);
+            setTimeout(
+                () => this.fetchRetry(url, options, retries - 1, backoff * 2),
+                backoff,
+            );
         }
         return res;
     }

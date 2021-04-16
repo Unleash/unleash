@@ -4,16 +4,12 @@ const async = require('async');
 
 const settingsId = 'unleash.enterprise.api.keys';
 
-const toApiToken = legacyToken => {
-    return {
-        secret: legacyToken.key,
-        username: legacyToken.username,
-        createdAt: legacyToken.created || new Date(),
-        type: legacyToken.priviliges.some(n => n === 'ADMIN')
-            ? 'admin'
-            : 'client',
-    };
-};
+const toApiToken = legacyToken => ({
+    secret: legacyToken.key,
+    username: legacyToken.username,
+    createdAt: legacyToken.created || new Date(),
+    type: legacyToken.priviliges.some(n => n === 'ADMIN') ? 'admin' : 'client',
+});
 
 exports.up = function(db, cb) {
     db.runSql(

@@ -183,13 +183,11 @@ class StateService {
             const importedProjects = await this.projectStore.importProjects(
                 projectsToImport,
             );
-            const importedProjectEvents = importedProjects.map(project => {
-                return {
-                    type: PROJECT_IMPORT,
-                    createdBy: userName,
-                    data: project,
-                };
-            });
+            const importedProjectEvents = importedProjects.map(project => ({
+                type: PROJECT_IMPORT,
+                createdBy: userName,
+                data: project,
+            }));
             await this.eventStore.batchStore(importedProjectEvents);
         }
     }
@@ -272,13 +270,11 @@ class StateService {
             const importedFeatureTags = await this.toggleStore.importFeatureTags(
                 featureTagsToInsert,
             );
-            const importedFeatureTagEvents = importedFeatureTags.map(tag => {
-                return {
-                    type: FEATURE_TAG_IMPORT,
-                    createdBy: userName,
-                    data: tag,
-                };
-            });
+            const importedFeatureTagEvents = importedFeatureTags.map(tag => ({
+                type: FEATURE_TAG_IMPORT,
+                createdBy: userName,
+                data: tag,
+            }));
             await this.eventStore.batchStore(importedFeatureTagEvents);
         }
     }
@@ -294,13 +290,11 @@ class StateService {
         );
         if (tagsToInsert.length > 0) {
             const importedTags = await this.tagStore.bulkImport(tagsToInsert);
-            const importedTagEvents = importedTags.map(tag => {
-                return {
-                    type: TAG_IMPORT,
-                    createdBy: userName,
-                    data: tag,
-                };
-            });
+            const importedTagEvents = importedTags.map(tag => ({
+                type: TAG_IMPORT,
+                createdBy: userName,
+                data: tag,
+            }));
             await this.eventStore.batchStore(importedTagEvents);
         }
     }
@@ -315,13 +309,11 @@ class StateService {
             const importedTagTypes = await this.tagTypeStore.bulkImport(
                 tagTypesToInsert,
             );
-            const importedTagTypeEvents = importedTagTypes.map(tagType => {
-                return {
-                    type: TAG_TYPE_IMPORT,
-                    createdBy: userName,
-                    data: tagType,
-                };
-            });
+            const importedTagTypeEvents = importedTagTypes.map(tagType => ({
+                type: TAG_TYPE_IMPORT,
+                createdBy: userName,
+                data: tagType,
+            }));
             await this.eventStore.batchStore(importedTagTypeEvents);
         }
     }

@@ -3,13 +3,20 @@ import bcrypt from 'bcrypt';
 import owasp from 'owasp-password-strength-test';
 import Joi from 'joi';
 
+import { URL } from 'url';
 import UserStore, { IUserSearch } from '../db/user-store';
 import { Logger } from '../logger';
 import { IUnleashConfig } from '../types/core';
 import User, { IUser } from '../user';
 import isEmail from '../util/is-email';
-import { AccessService, RoleName } from './access-service';
+import { AccessService, IRoleData, RoleName } from './access-service';
 import { ADMIN } from '../permissions';
+import ResetTokenService from './reset-token-service';
+import InvalidTokenError from '../error/invalid-token-error';
+import NotFoundError from '../error/notfound-error';
+import OwaspValidationError from '../error/owasp-validation-error';
+import { EmailService } from './email-service';
+import { IRole } from '../db/access-store';
 
 export interface ICreateUser {
     name?: string;
@@ -29,9 +36,25 @@ export interface IUpdateUser {
 interface IUserWithRole extends IUser {
     rootRole: number;
 }
+interface IRoleDescription {
+    description: string;
+    name: string;
+    type: string;
+}
+interface ITokenUser extends IUpdateUser {
+    createdBy: string;
+    token: string;
+    role: IRoleDescription;
+}
 
 interface IStores {
     userStore: UserStore;
+}
+
+interface IServices {
+    accessService: AccessService;
+    resetTokenService: ResetTokenService;
+    emailService: EmailService;
 }
 
 const saltRounds = 10;
@@ -43,15 +66,20 @@ class UserService {
 
     private accessService: AccessService;
 
+    private resetTokenService: ResetTokenService;
+
+    private emailService: EmailService;
+
     constructor(
         stores: IStores,
         config: IUnleashConfig,
-        accessService: AccessService,
+        { accessService, resetTokenService, emailService }: IServices,
     ) {
         this.logger = config.getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.accessService = accessService;
-
+        this.resetTokenService = resetTokenService;
+        this.emailService = emailService;
         if (config.authentication && config.authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
@@ -60,7 +88,7 @@ class UserService {
     validatePassword(password: string): boolean {
         const result = owasp.test(password);
         if (!result.strong) {
-            throw new Error(result.errors[0]);
+            throw new OwaspValidationError(result);
         } else return true;
     }
 
@@ -115,6 +143,10 @@ class UserService {
 
     async search(query: IUserSearch): Promise<User[]> {
         return this.store.search(query);
+    }
+
+    async getByEmail(email: string): Promise<User> {
+        return this.store.get({ email });
     }
 
     async createUser({
@@ -230,6 +262,61 @@ class UserService {
         );
 
         await this.store.delete(userId);
+    }
+
+    async getUserForToken(token: string): Promise<ITokenUser> {
+        const { createdBy, userId } = await this.resetTokenService.isValid(
+            token,
+        );
+        const user = await this.getUser(userId);
+        const role = await this.accessService.getRole(user.rootRole);
+        return {
+            token,
+            createdBy,
+            email: user.email,
+            name: user.name,
+            id: user.id,
+            role: {
+                description: role.role.description,
+                type: role.role.type,
+                name: role.role.name,
+            },
+        };
+    }
+
+    async resetPassword(token: string, password: string): Promise<void> {
+        this.validatePassword(password);
+        const user = await this.getUserForToken(token);
+        const allowed = await this.resetTokenService.useAccessToken({
+            userId: user.id,
+            token,
+        });
+        if (allowed) {
+            await this.changePassword(user.id, password);
+        } else {
+            throw new InvalidTokenError();
+        }
+    }
+
+    async createResetPasswordEmail(
+        receiverEmail: string,
+        requester: string,
+    ): Promise<URL> {
+        const receiver = await this.getByEmail(receiverEmail);
+        if (!receiver) {
+            throw new NotFoundError(`Could not find ${receiverEmail}`);
+        }
+        const resetLink = await this.resetTokenService.createResetPasswordUrl(
+            receiver.id,
+            requester,
+        );
+
+        await this.emailService.sendResetMail(
+            receiver.name,
+            receiver.email,
+            resetLink.toString(),
+        );
+        return resetLink;
     }
 }
 

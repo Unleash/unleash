@@ -1,4 +1,5 @@
 import { LogProvider } from '../logger';
+import { IEmailOptions } from '../services/email-service';
 
 interface IExperimentalFlags {
     [key: string]: boolean;
@@ -12,6 +13,8 @@ export interface IUnleashConfig {
         enableApiToken: boolean;
         createAdminUser: boolean;
     };
+    unleashUrl: string;
+    email?: IEmailOptions;
 }
 
 export enum AuthenticationType {

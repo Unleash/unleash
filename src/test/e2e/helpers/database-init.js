@@ -29,6 +29,7 @@ async function resetDatabase(stores) {
         stores.db('tag_types').del(),
         stores.db('addons').del(),
         stores.db('users').del(),
+        stores.db('reset_tokens').del(),
     ]);
 }
 

@@ -85,9 +85,9 @@ async function createApp(options) {
             const stop = () => {
                 logger.info('Shutting down Unleash...');
 
-                return closeServer({ server, metricsMonitor }).then(() => {
-                    return destroyDatabase(stores);
-                });
+                return closeServer({ server, metricsMonitor }).then(() =>
+                    destroyDatabase(stores),
+                );
             };
 
             server.keepAliveTimeout = options.keepAliveTimeout;

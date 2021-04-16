@@ -12,6 +12,7 @@ const { EmailService } = require('./email-service');
 const { AccessService } = require('./access-service');
 const { ApiTokenService } = require('./api-token-service');
 const UserService = require('./user-service');
+const ResetTokenService = require('./reset-token-service');
 
 module.exports.createServices = (stores, config) => {
     const accessService = new AccessService(stores, config);
@@ -31,7 +32,12 @@ module.exports.createServices = (stores, config) => {
     const versionService = new VersionService(stores, config);
     const apiTokenService = new ApiTokenService(stores, config);
     const emailService = new EmailService(config.email, config.getLogger);
-    const userService = new UserService(stores, config, accessService);
+    const resetTokenService = new ResetTokenService(stores, config);
+    const userService = new UserService(stores, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+    });
 
     return {
         accessService,
@@ -48,5 +54,6 @@ module.exports.createServices = (stores, config) => {
         apiTokenService,
         emailService,
         userService,
+        resetTokenService,
     };
 };

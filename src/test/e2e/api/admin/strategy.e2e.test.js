@@ -14,7 +14,7 @@ test.before(async () => {
     stores = db.stores;
 });
 
-test.after(async () => {
+test.after.always(async () => {
     await db.destroy();
 });
 
@@ -42,7 +42,7 @@ test.serial('gets a strategy by name', async t => {
         .expect(200);
 });
 
-test.serial('cant get a strategy by name that dose not exist', async t => {
+test.serial('cant get a strategy by name that does not exist', async t => {
     t.plan(0);
     const request = await setupApp(stores);
     return request

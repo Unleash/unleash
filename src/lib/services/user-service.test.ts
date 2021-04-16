@@ -3,20 +3,35 @@ import UserService from './user-service';
 import UserStoreMock from '../../test/fixtures/fake-user-store';
 import AccessServiceMock from '../../test/fixtures/access-service-mock';
 import noLogger from '../../test/fixtures/no-logger';
-import { RoleName } from './access-service';
 import { IUnleashConfig } from '../types/core';
+import { ResetTokenStoreMock } from '../../test/fixtures/fake-reset-token-store';
+import ResetTokenService from './reset-token-service';
+import { EmailService } from './email-service';
+import OwaspValidationError from '../error/owasp-validation-error';
 
 const config: IUnleashConfig = {
     getLogger: noLogger,
     baseUriPath: '',
     authentication: { enableApiToken: true, createAdminUser: false },
+    unleashUrl: 'http://localhost:4242',
+    email: undefined,
 };
 
 test('Should create new user', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService(
+        { userStore, resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
 
-    const service = new UserService({ userStore }, config, accessService);
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+    });
     const user = await service.createUser({
         username: 'test',
         rootRole: 1,
@@ -33,7 +48,18 @@ test('Should create new user', async t => {
 test('Should create default user', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService(
+        { userStore, resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+    });
 
     await service.initAdminUser();
 
@@ -44,7 +70,19 @@ test('Should create default user', async t => {
 test('Should be a valid password', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService(
+        { userStore, resetTokenStore },
+        config,
+    );
+
+    const emailService = new EmailService(config.email, config.getLogger);
+
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+    });
 
     const valid = service.validatePassword('this is a strong password!');
 
@@ -54,47 +92,106 @@ test('Should be a valid password', async t => {
 test('Password must be at least 10 chars', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService(
+        { userStore, resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+    });
 
     t.throws(() => service.validatePassword('admin'), {
         message: 'The password must be at least 10 characters long.',
+        instanceOf: OwaspValidationError,
     });
 });
 
 test('The password must contain at least one uppercase letter.', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService(
+        { userStore, resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+    });
 
     t.throws(() => service.validatePassword('qwertyabcde'), {
         message: 'The password must contain at least one uppercase letter.',
+        instanceOf: OwaspValidationError,
     });
 });
 
 test('The password must contain at least one number', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService(
+        { userStore, resetTokenStore },
+        config,
+    );
+
+    const emailService = new EmailService(config.email, config.getLogger);
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+    });
 
     t.throws(() => service.validatePassword('qwertyabcdE'), {
         message: 'The password must contain at least one number.',
+        instanceOf: OwaspValidationError,
     });
 });
 
 test('The password must contain at least one special character', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService(
+        { userStore, resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+    });
 
     t.throws(() => service.validatePassword('qwertyabcdE2'), {
         message: 'The password must contain at least one special character.',
+        instanceOf: OwaspValidationError,
     });
 });
 
 test('Should be a valid password with special chars', async t => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
-    const service = new UserService({ userStore }, config, accessService);
+    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenService = new ResetTokenService(
+        { userStore, resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+    });
 
     const valid = service.validatePassword('this is a strong password!');
 

@@ -6,7 +6,7 @@ const DESCRIPTION = {
     OWNER:
         'Users with this role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
     MEMBER:
-        'Users with the this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
+        'Users with this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
 };
 
 exports.up = function(db, cb) {

@@ -4,7 +4,7 @@ import apiTokenMiddleware from './middleware/api-token-middleware';
 import { AuthenticationType } from './types/core';
 
 const express = require('express');
-
+const cors = require('cors');
 const compression = require('compression');
 const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
@@ -31,6 +31,10 @@ module.exports = function(config, services = {}) {
 
     if (typeof config.preHook === 'function') {
         config.preHook(app, config, services);
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+        app.use(cors());
     }
 
     app.use(compression());

@@ -74,7 +74,7 @@ const FeatureView = ({
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [features]);
+    }, []);
 
     const getTabComponent = key => {
         switch (key) {

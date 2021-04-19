@@ -28,7 +28,6 @@ const App = ({ location, user }: IAppProps) => {
     const isUnauthorized = () => {
         // authDetails only exists if the user is not logged in.
 
-        if (Object.keys(user).length === 0) return false;
         return user?.authDetails !== undefined;
     };
 
@@ -54,6 +53,7 @@ const App = ({ location, user }: IAppProps) => {
                     <route.component
                         {...props}
                         isUnauthorized={isUnauthorized}
+                        authDetails={user.authDetails}
                     />
                 )}
             />

@@ -24,7 +24,7 @@ export const useStyles = makeStyles(theme => ({
         color: theme.palette.login.main,
     },
     title: {
-        fontSize: '1.5rem',
+        fontSize: theme.fontSizes.mainHeader,
         marginBottom: '0.5rem',
         display: 'flex',
         alignItems: 'center',

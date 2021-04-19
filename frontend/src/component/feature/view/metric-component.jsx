@@ -6,7 +6,7 @@ import LinkIcon from '@material-ui/icons/Link';
 import { Link } from 'react-router-dom';
 import { AppsLinkList, calc } from '../../common';
 import { formatFullDateTimeWithLocale } from '../../common/util';
-import Progress from '../progress-component';
+import Progress from '../ProgressWheel';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 
 import styles from './metric.module.scss';
@@ -55,7 +55,8 @@ export default class MetricComponent extends React.Component {
     formatFullDateTime(v) {
         return formatFullDateTimeWithLocale(v, this.props.location.locale);
     }
-    renderLastSeen = lastSeenAt => (lastSeenAt ? this.formatFullDateTime(lastSeenAt) : 'Never reported');
+    renderLastSeen = lastSeenAt =>
+        lastSeenAt ? this.formatFullDateTime(lastSeenAt) : 'Never reported';
 
     render() {
         const { metrics = {}, featureToggle } = this.props;
@@ -65,12 +66,19 @@ export default class MetricComponent extends React.Component {
             seenApps = [],
         } = metrics;
 
-        const lastHourPercent = 1 * calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
-        const lastMinutePercent = 1 * calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
+        const lastHourPercent =
+            1 * calc(lastHour.yes, lastHour.yes + lastHour.no, 0);
+        const lastMinutePercent =
+            1 * calc(lastMinute.yes, lastMinute.yes + lastMinute.no, 0);
 
         return (
             <div style={{ padding: '16px', flexGrow: 1 }}>
-                <Grid container spacing={2} justify="center" className={styles.grid}>
+                <Grid
+                    container
+                    spacing={2}
+                    justify="center"
+                    className={styles.grid}
+                >
                     <Grid item xs={12} sm={4}>
                         <Progress
                             percentage={lastMinutePercent}
@@ -83,13 +91,17 @@ export default class MetricComponent extends React.Component {
                             elseShow={
                                 <p>
                                     <strong>Last minute</strong>
-                                    <br /> Yes {lastMinute.yes}, No: {lastMinute.no}
+                                    <br /> Yes {lastMinute.yes}, No:{' '}
+                                    {lastMinute.no}
                                 </p>
                             }
                         />
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        <Progress percentage={lastHourPercent} isFallback={lastHour.isFallback} />
+                        <Progress
+                            percentage={lastHourPercent}
+                            isFallback={lastHour.isFallback}
+                        />
                         <ConditionallyRender
                             condition={lastHour.isFallback}
                             show={<p>No metrics available</p>}
@@ -111,13 +123,20 @@ export default class MetricComponent extends React.Component {
                             }
                             elseShow={
                                 <div>
-                                    <Icon className={styles.problemIcon} title="Not used in an app in the last hour">
+                                    <Icon
+                                        className={styles.problemIcon}
+                                        title="Not used in an app in the last hour"
+                                    >
                                         report problem
                                     </Icon>
                                     <div>
                                         <small>
-                                            <strong>Not used in an app in the last hour. </strong>
-                                            This might be due to your client implementation not reporting usage.
+                                            <strong>
+                                                Not used in an app in the last
+                                                hour.{' '}
+                                            </strong>
+                                            This might be due to your client
+                                            implementation not reporting usage.
                                         </small>
                                     </div>
                                 </div>
@@ -131,14 +150,20 @@ export default class MetricComponent extends React.Component {
                                 show={
                                     <>
                                         <strong>Created: </strong>
-                                        <span>{this.formatFullDateTime(featureToggle.createdAt)}</span>
+                                        <span>
+                                            {this.formatFullDateTime(
+                                                featureToggle.createdAt
+                                            )}
+                                        </span>
                                     </>
                                 }
                             />
 
                             <br />
                             <strong>Last seen: </strong>
-                            <span>{this.renderLastSeen(featureToggle.lastSeenAt)}</span>
+                            <span>
+                                {this.renderLastSeen(featureToggle.lastSeenAt)}
+                            </span>
                         </div>
                     </Grid>
                 </Grid>

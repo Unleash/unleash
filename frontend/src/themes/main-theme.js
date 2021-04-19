@@ -85,7 +85,8 @@ const theme = createMuiTheme({
         radius: { main: '3px' },
     },
     fontSizes: {
-        mainHeader: '1.1rem',
+        mainHeader: '1.2rem',
+        subHeader: '1.1rem',
     },
     boxShadows: {
         chip: {

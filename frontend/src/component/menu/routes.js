@@ -34,6 +34,9 @@ import AdminAuth from '../../page/admin/auth';
 import Reporting from '../../page/reporting';
 import Login from '../user/Login';
 import { P, C } from '../common/flags';
+import NewUser from '../user/NewUser/NewUser';
+import ResetPassword from '../user/ResetPassword/ResetPassword';
+import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
 
 export const routes = [
     // Features
@@ -307,40 +310,64 @@ export const routes = [
         hidden: true,
         layout: 'standalone',
     },
-        // Admin
-        {
-            path: '/admin/api',
-            parent: '/admin',
-            title: 'API access',
-            component: AdminApi,
-            type: 'protected',
-            layout: 'main',
-        },
-        {
-            path: '/admin/users',
-            parent: '/admin',
-            title: 'Users',
-            component: AdminUsers,
-            type: 'protected',
-            layout: 'main',
-        },
-        {
-            path: '/admin/auth',
-            parent: '/admin',
-            title: 'Authentication',
-            component: AdminAuth,
-            type: 'protected',
-            layout: 'main',
-        },
-        {
-            path: '/admin',
-            title: 'Admin',
-            icon: 'album',
-            component: Admin,
-            hidden: false,
-            type: 'protected',
-            layout: 'main',
-        },
+    // Admin
+    {
+        path: '/admin/api',
+        parent: '/admin',
+        title: 'API access',
+        component: AdminApi,
+        type: 'protected',
+        layout: 'main',
+    },
+    {
+        path: '/admin/users',
+        parent: '/admin',
+        title: 'Users',
+        component: AdminUsers,
+        type: 'protected',
+        layout: 'main',
+    },
+    {
+        path: '/admin/auth',
+        parent: '/admin',
+        title: 'Authentication',
+        component: AdminAuth,
+        type: 'protected',
+        layout: 'main',
+    },
+    {
+        path: '/admin',
+        title: 'Admin',
+        icon: 'album',
+        component: Admin,
+        hidden: false,
+        type: 'protected',
+        layout: 'main',
+    },
+    {
+        path: '/new-user',
+        title: 'New user',
+        hidden: true,
+        component: NewUser,
+        type: 'unprotected',
+        layout: 'standalone',
+    },
+    {
+        path: '/reset-password',
+        title: 'reset-password',
+        hidden: true,
+        component: ResetPassword,
+        type: 'unprotected',
+        layout: 'standalone',
+    },
+    {
+        path: '/forgotten-password',
+        title: 'reset-password',
+        hidden: true,
+        component: ForgottenPassword,
+        type: 'unprotected',
+        layout: 'standalone',
+    },
 ];
 
 export const getRoute = path => routes.find(route => route.path === path);

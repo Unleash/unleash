@@ -26,6 +26,7 @@ export default class ShowUserComponent extends React.Component {
 
     componentDidMount() {
         this.props.fetchUser();
+
         // find default locale and add it in choices if not present
         const locale = navigator.language || navigator.userLanguage;
         let found = this.possibleLocales.find(l => l.value === locale);

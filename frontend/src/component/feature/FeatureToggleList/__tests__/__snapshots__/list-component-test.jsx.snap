@@ -145,7 +145,7 @@ exports[`renders correctly with one feature 1`] = `
             </div>
             <a
               aria-disabled={false}
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
               data-test="add-feature-btn"
               href="/features/create"
               onBlur={[Function]}

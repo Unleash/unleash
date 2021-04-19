@@ -11,10 +11,11 @@ const userStore = (state = new $Map(), action) => {
                 .set('authDetails', undefined);
             return state;
         case AUTH_REQUIRED:
-            state = state.set('authDetails', action.error.body).set('showDialog', true);
+            state = state
+                .set('authDetails', action.error.body)
+                .set('showDialog', true);
             return state;
         case USER_LOGOUT:
-            console.log("Resetting state due to logout");
             return new $Map();
         default:
             return state;

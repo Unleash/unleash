@@ -10,6 +10,10 @@ body {
     height: 100%;
 }
 
+.MuiButton-root {
+    border-radius: 25px;
+}
+
 .skeleton {
     position: relative;
     overflow: hidden;
@@ -20,7 +24,7 @@ body {
 
 .skeleton::before {
     background-color: #e2e8f0;
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     right: 0;
@@ -45,7 +49,7 @@ body {
         rgba(255, 255, 255, 0)
     );
     animation: shimmer 3s infinite;
-    content: "";
+    content: '';
     z-index: 5001;
 }
 

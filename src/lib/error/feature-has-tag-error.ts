@@ -1,7 +1,5 @@
-'use strict';
-
-class NameExistsError extends Error {
-    constructor(message) {
+class FeatureHasTagError extends Error {
+    constructor(message: string) {
         super();
         Error.captureStackTrace(this, this.constructor);
 
@@ -9,8 +7,8 @@ class NameExistsError extends Error {
         this.message = message;
     }
 
-    toJSON() {
-        const obj = {
+    toJSON(): object {
+        return {
             isJoi: true,
             name: this.constructor.name,
             details: [
@@ -19,8 +17,7 @@ class NameExistsError extends Error {
                 },
             ],
         };
-        return obj;
     }
 }
-
-module.exports = NameExistsError;
+export default FeatureHasTagError;
+module.exports = FeatureHasTagError;

@@ -1,7 +1,5 @@
-'use strict';
-
 class NotFoundError extends Error {
-    constructor(message) {
+    constructor(message?: string) {
         super();
         Error.captureStackTrace(this, this.constructor);
 
@@ -9,5 +7,5 @@ class NotFoundError extends Error {
         this.message = message;
     }
 }
-
+export default NotFoundError;
 module.exports = NotFoundError;

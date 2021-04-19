@@ -18,6 +18,7 @@ const ApiTokenController = require('./api-token-controller');
 const EmailController = require('./email');
 const UserAdminController = require('./user-admin');
 const apiDef = require('./api-def.json');
+const BootstrapController = require('./bootstrap-controller');
 
 class AdminApi extends Controller {
     constructor(config, services) {
@@ -49,6 +50,10 @@ class AdminApi extends Controller {
         this.app.use(
             '/ui-config',
             new ConfigController(config, services).router,
+        );
+        this.app.use(
+            '/ui-bootstrap',
+            new BootstrapController(config, services).router,
         );
         this.app.use(
             '/context',

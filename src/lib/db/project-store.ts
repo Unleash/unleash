@@ -1,15 +1,40 @@
+import { Knex } from 'knex';
+import { Logger, LogProvider } from '../logger';
+
 const NotFoundError = require('../error/notfound-error');
 
 const COLUMNS = ['id', 'name', 'description', 'created_at'];
 const TABLE = 'projects';
 
+export interface IProject {
+    id: number;
+    name: string;
+    description: string;
+    createdAt: Date;
+}
+
+interface IProjectInsert {
+    id: number;
+    name: string;
+    description: string;
+}
+
+interface IProjectArchived {
+    id: number;
+    archived: boolean;
+}
+
 class ProjectStore {
-    constructor(db, getLogger) {
+    private db: Knex;
+
+    private logger: Logger;
+
+    constructor(db: Knex, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('project-store.js');
     }
 
-    fieldToRow(data) {
+    fieldToRow(data): IProjectInsert {
         return {
             id: data.id,
             name: data.name,
@@ -17,7 +42,7 @@ class ProjectStore {
         };
     }
 
-    async getAll() {
+    async getAll(): Promise<IProject[]> {
         const rows = await this.db
             .select(COLUMNS)
             .from(TABLE)
@@ -26,7 +51,7 @@ class ProjectStore {
         return rows.map(this.mapRow);
     }
 
-    async get(id) {
+    async get(id): Promise<IProject> {
         return this.db
             .first(COLUMNS)
             .from(TABLE)
@@ -34,7 +59,7 @@ class ProjectStore {
             .then(this.mapRow);
     }
 
-    async hasProject(id) {
+    async hasProject(id): Promise<IProjectArchived> {
         return this.db
             .first('id')
             .from(TABLE)
@@ -50,14 +75,14 @@ class ProjectStore {
             });
     }
 
-    async create(project) {
+    async create(project): Promise<IProject> {
         const [id] = await this.db(TABLE)
             .insert(this.fieldToRow(project))
             .returning('id');
         return { ...project, id };
     }
 
-    async update(data) {
+    async update(data): Promise<void> {
         try {
             await this.db(TABLE)
                 .where({ id: data.id })
@@ -67,7 +92,7 @@ class ProjectStore {
         }
     }
 
-    async importProjects(projects) {
+    async importProjects(projects): Promise<IProject[]> {
         const rows = await this.db(TABLE)
             .insert(projects.map(this.fieldToRow))
             .returning(COLUMNS)
@@ -79,11 +104,11 @@ class ProjectStore {
         return [];
     }
 
-    async dropProjects() {
+    async dropProjects(): Promise<void> {
         await this.db(TABLE).del();
     }
 
-    async delete(id) {
+    async delete(id): Promise<void> {
         try {
             await this.db(TABLE)
                 .where({ id })
@@ -93,7 +118,7 @@ class ProjectStore {
         }
     }
 
-    mapRow(row) {
+    mapRow(row): IProject {
         if (!row) {
             throw new NotFoundError('No project found');
         }
@@ -106,5 +131,5 @@ class ProjectStore {
         };
     }
 }
-
+export default ProjectStore;
 module.exports = ProjectStore;

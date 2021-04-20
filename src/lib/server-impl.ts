@@ -1,5 +1,8 @@
 'use strict';
 
+import { IUnleashConfig } from './types/core';
+import { IUnleashOptions } from './types/option';
+
 const { EventEmitter } = require('events');
 
 const migrator = require('../migrator');
@@ -108,7 +111,7 @@ async function createApp(options) {
     });
 }
 
-async function start(opts) {
+async function start(opts: IUnleashOptions) {
     const options = createOptions(opts);
     const logger = options.getLogger('server-impl.js');
 

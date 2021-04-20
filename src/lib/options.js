@@ -34,7 +34,6 @@ function safeNumber(envVar, defaultVal) {
 function defaultOptions() {
     return {
         databaseUrl: defaultDatabaseUrl(),
-        databaseSchema: process.env.DATABASE_SCHEMA || 'public',
         db: {
             user: process.env.DATABASE_USERNAME,
             password: process.env.DATABASE_PASSWORD,
@@ -55,9 +54,10 @@ function defaultOptions() {
                     30000,
                 ),
             },
+            schema: process.env.DATABASE_SCHEMA || 'public',
         },
         session: {
-            db: process.env.DB_SESSION || true,
+            db: process.env.DB_SESSION || true, // deprecated in v4
             age: TWO_DAYS,
         },
         port: process.env.HTTP_PORT || process.env.PORT || 4242,
@@ -66,7 +66,7 @@ function defaultOptions() {
         baseUriPath: process.env.BASE_URI_PATH || '',
         unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
         serverMetrics: true,
-        publicFolder,
+        publicFolder, // remove in v4
         versionCheck: {
             url:
                 process.env.UNLEASH_VERSION_URL ||
@@ -74,7 +74,6 @@ function defaultOptions() {
             enable: process.env.CHECK_VERSION || 'true',
         },
         enableRequestLogger: false,
-        adminAuthentication: process.env.ADMIN_AUTHENTICATION || 'unsecure', // deprecated. Remove in v4,
         authentication: {
             enableApiToken: process.env.AUTH_ENABLE_API_TOKEN || true,
             type: process.env.AUTH_TYPE || 'open-source',
@@ -82,16 +81,18 @@ function defaultOptions() {
             createAdminUser: true,
         },
         ui: {},
-        importFile: process.env.IMPORT_FILE,
-        importKeepExisting: process.env.IMPORT_KEEP_EXISTING || false,
-        dropBeforeImport: process.env.IMPORT_DROP_BEFORE_IMPORT || false,
+        import: {
+            importFile: process.env.IMPORT_FILE,
+            importKeepExisting: process.env.IMPORT_KEEP_EXISTING || false,
+            dropBeforeImport: process.env.IMPORT_DROP_BEFORE_IMPORT || false,
+        },
         getLogger: defaultLogProvider,
         customContextFields: [], // deprecated. Remove in v4,
-        disableDBMigration: false,
-        start: true,
+        disableDBMigration: false, // move to "db"
+        start: true, // removed in v4
         keepAliveTimeout: 60 * 1000,
         headersTimeout: 61 * 1000,
-        version,
+        version, // not exposed
         secureHeaders: process.env.SECURE_HEADERS || false,
         enableOAS: process.env.ENABLE_OAS || false,
         experimental: {

@@ -62,8 +62,14 @@ export default class UserAdminController extends Controller {
         try {
             const users = await this.userService.getAll();
             const rootRoles = await this.accessService.getRootRoles();
+            const inviteLinks = await this.resetTokenService.getActiveInvitations();
 
-            res.json({ users, rootRoles });
+            const usersWithInviteLinks = users.map(user => {
+                const inviteLink = inviteLinks[user.id] || '';
+                return { ...user, inviteLink };
+            });
+
+            res.json({ users: usersWithInviteLinks, rootRoles });
         } catch (error) {
             this.logger.error(error);
             res.status(500).send({ msg: 'server errors' });
@@ -103,13 +109,14 @@ export default class UserAdminController extends Controller {
 
             const emailConfigured = this.emailService.configured();
             if (emailConfigured) {
+                // Add return type to indicate whether or not email was sent and include in response
                 await this.emailService.sendGettingStartedMail(
                     createdUser.name,
                     createdUser.email,
                     inviteLink.toString(),
                 );
             }
-
+            // Change emailConfigured to emailSent
             res.status(201).send({
                 ...createdUser,
                 inviteLink,

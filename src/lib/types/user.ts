@@ -17,6 +17,7 @@ export interface IUser {
     name?: string;
     username?: string;
     email?: string;
+    inviteLink?: string;
     createdAt: Date;
 }
 

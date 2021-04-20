@@ -81,6 +81,14 @@ export class ResetTokenStore {
         return rowToResetToken(row);
     }
 
+    async getActiveTokens(): Promise<IResetToken[]> {
+        const rows = await this.db<IResetTokenTable>(TABLE)
+            .whereNull('used_at')
+            .andWhere('expires_at', '>', new Date());
+
+        return rows.map(rowToResetToken);
+    }
+
     async insert(newToken: IResetTokenCreate): Promise<IResetToken> {
         const [row] = await this.db<IResetTokenTable>(TABLE)
             .insert(newToken)

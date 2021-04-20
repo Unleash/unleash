@@ -1,5 +1,10 @@
 'use strict';
 
+import ContextFieldStore from '../db/context-field-store';
+import EventStore from '../db/event-store';
+import ProjectStore from '../db/project-store';
+import { Logger } from '../logger';
+
 const { contextSchema, nameSchema } = require('./context-schema');
 const NameExistsError = require('../error/name-exists-error');
 
@@ -10,6 +15,14 @@ const {
 } = require('../event-type');
 
 class ContextService {
+    private projectStore: ProjectStore;
+
+    private eventStore: EventStore;
+
+    private contextFieldStore: ContextFieldStore;
+
+    private logger: Logger;
+
     constructor(
         { projectStore, eventStore, contextFieldStore },
         { getLogger },
@@ -88,5 +101,5 @@ class ContextService {
         await this.validateUniqueName({ name });
     }
 }
-
+export default ContextService;
 module.exports = ContextService;

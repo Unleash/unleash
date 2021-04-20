@@ -1,7 +1,7 @@
 'use strict';
 
 class InvalidOperationError extends Error {
-    constructor(message) {
+    constructor(message: string) {
         super();
         Error.captureStackTrace(this, this.constructor);
 
@@ -9,8 +9,8 @@ class InvalidOperationError extends Error {
         this.message = message;
     }
 
-    toJSON() {
-        const obj = {
+    toJSON(): object {
+        return {
             isJoi: true,
             name: this.constructor.name,
             details: [
@@ -19,8 +19,7 @@ class InvalidOperationError extends Error {
                 },
             ],
         };
-        return obj;
     }
 }
-
+export default InvalidOperationError;
 module.exports = InvalidOperationError;

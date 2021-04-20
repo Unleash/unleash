@@ -1,5 +1,8 @@
 'use strict';
 
+import { Knex } from 'knex';
+import { Logger, LogProvider } from '../logger';
+
 const COLUMNS = [
     'name',
     'description',
@@ -10,7 +13,7 @@ const COLUMNS = [
 ];
 const TABLE = 'context_fields';
 
-const mapRow = row => ({
+const mapRow: (IContextRow) => IContextField = row => ({
     name: row.name,
     description: row.description,
     stickiness: row.stickiness,
@@ -19,8 +22,30 @@ const mapRow = row => ({
     createdAt: row.created_at,
 });
 
+export interface ICreateContextField {
+    name: string;
+    description: string;
+    stickiness: boolean;
+    sort_order: number;
+    legal_values?: string[];
+    updated_at: Date;
+}
+
+export interface IContextField {
+    name: string;
+    description: string;
+    stickiness: boolean;
+    sortOrder: number;
+    legalValues?: string[];
+    createdAt: Date;
+}
+
 class ContextFieldStore {
-    constructor(db, customContextFields, getLogger) {
+    private db: Knex;
+
+    private logger: Logger;
+
+    constructor(db: Knex, customContextFields, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('context-field-store.js');
         this._createFromConfig(customContextFields);
@@ -45,7 +70,7 @@ class ContextFieldStore {
         }
     }
 
-    fieldToRow(data) {
+    fieldToRow(data): ICreateContextField {
         return {
             name: data.name,
             description: data.description,
@@ -56,7 +81,7 @@ class ContextFieldStore {
         };
     }
 
-    async getAll() {
+    async getAll(): Promise<IContextField[]> {
         const rows = await this.db
             .select(COLUMNS)
             .from(TABLE)
@@ -65,7 +90,7 @@ class ContextFieldStore {
         return rows.map(mapRow);
     }
 
-    async get(name) {
+    async get(name): Promise<IContextField> {
         return this.db
             .first(COLUMNS)
             .from(TABLE)
@@ -73,21 +98,21 @@ class ContextFieldStore {
             .then(mapRow);
     }
 
-    async create(contextField) {
+    async create(contextField): Promise<void> {
         return this.db(TABLE).insert(this.fieldToRow(contextField));
     }
 
-    async update(data) {
+    async update(data): Promise<void> {
         return this.db(TABLE)
             .where({ name: data.name })
             .update(this.fieldToRow(data));
     }
 
-    async delete(name) {
+    async delete(name): Promise<void> {
         return this.db(TABLE)
             .where({ name })
             .del();
     }
 }
-
+export default ContextFieldStore;
 module.exports = ContextFieldStore;

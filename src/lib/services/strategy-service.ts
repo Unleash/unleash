@@ -1,3 +1,8 @@
+import { Logger } from '../logger';
+import EventStore from '../db/event-store';
+import StrategyStore, { IStrategy, IStrategyName } from '../db/strategy-store';
+import { IUnleashConfig, IUnleashStores } from '../types/core';
+
 const strategySchema = require('./strategy-schema');
 const NameExistsError = require('../error/name-exists-error');
 const {
@@ -9,21 +14,36 @@ const {
 } = require('../event-type');
 
 class StrategyService {
-    constructor({ strategyStore, eventStore }, { getLogger }) {
+    private logger: Logger;
+
+    private strategyStore: StrategyStore;
+
+    private eventStore: EventStore;
+
+    constructor(
+        {
+            strategyStore,
+            eventStore,
+        }: Pick<IUnleashStores, 'strategyStore' | 'eventStore'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+    ) {
         this.strategyStore = strategyStore;
         this.eventStore = eventStore;
         this.logger = getLogger('services/strategy-service.js');
     }
 
-    async getStrategies() {
+    async getStrategies(): Promise<IStrategy[]> {
         return this.strategyStore.getStrategies();
     }
 
-    async getStrategy(name) {
+    async getStrategy(name: string): Promise<IStrategy> {
         return this.strategyStore.getStrategy(name);
     }
 
-    async removeStrategy(strategyName, userName) {
+    async removeStrategy(
+        strategyName: string,
+        userName: string,
+    ): Promise<void> {
         const strategy = await this.strategyStore.getStrategy(strategyName);
         await this._validateEditable(strategy);
         await this.strategyStore.deleteStrategy({ name: strategyName });
@@ -36,7 +56,10 @@ class StrategyService {
         });
     }
 
-    async deprecateStrategy(strategyName, userName) {
+    async deprecateStrategy(
+        strategyName: string,
+        userName: string,
+    ): Promise<void> {
         await this.strategyStore.getStrategy(strategyName); // Check existence
         await this.strategyStore.deprecateStrategy({ name: strategyName });
         await this.eventStore.store({
@@ -48,7 +71,10 @@ class StrategyService {
         });
     }
 
-    async reactivateStrategy(strategyName, userName) {
+    async reactivateStrategy(
+        strategyName: string,
+        userName: string,
+    ): Promise<void> {
         await this.strategyStore.getStrategy(strategyName); // Check existence
         await this.strategyStore.reactivateStrategy({ name: strategyName });
         await this.eventStore.store({
@@ -60,7 +86,7 @@ class StrategyService {
         });
     }
 
-    async createStrategy(value, userName) {
+    async createStrategy(value, userName: string): Promise<void> {
         const strategy = await strategySchema.validateAsync(value);
         strategy.deprecated = false;
         await this._validateStrategyName(strategy);
@@ -72,7 +98,7 @@ class StrategyService {
         });
     }
 
-    async updateStrategy(input, userName) {
+    async updateStrategy(input, userName: string): Promise<void> {
         const value = await strategySchema.validateAsync(input);
         const strategy = await this.strategyStore.getStrategy(input.name);
         await this._validateEditable(strategy);
@@ -84,7 +110,9 @@ class StrategyService {
         });
     }
 
-    async _validateStrategyName(data) {
+    private _validateStrategyName(
+        data: Pick<IStrategy, 'name'>,
+    ): Promise<Pick<IStrategy, 'name'>> {
         return new Promise((resolve, reject) => {
             this.strategyStore
                 .getStrategy(data.name)
@@ -100,11 +128,11 @@ class StrategyService {
     }
 
     // This check belongs in the store.
-    _validateEditable(strategy) {
+    _validateEditable(strategy: IStrategy): void {
         if (strategy.editable === false) {
             throw new Error(`Cannot edit strategy ${strategy.name}`);
         }
     }
 }
-
+export default StrategyService;
 module.exports = StrategyService;

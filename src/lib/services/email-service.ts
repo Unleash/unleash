@@ -137,6 +137,10 @@ export class EmailService {
         });
     }
 
+    isEnabled(): boolean {
+        return this.mailer !== undefined;
+    }
+
     private async compileTemplate(
         templateName: string,
         format: TemplateFormat,

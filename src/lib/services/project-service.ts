@@ -1,31 +1,33 @@
 import User from '../user';
-import { AccessService, RoleName } from './access-service';
-
-const NameExistsError = require('../error/name-exists-error');
-const InvalidOperationError = require('../error/invalid-operation-error');
-const eventType = require('../event-type');
-const { nameType } = require('../routes/admin-api/util');
-const schema = require('./project-schema');
-const NotFoundError = require('../error/notfound-error');
-
-interface IProject {
-    id: string;
-    name: string;
-    description?: string;
-}
+import { AccessService, IUserWithRole, RoleName } from './access-service';
+import ProjectStore, { IProject } from '../db/project-store';
+import EventStore from '../db/event-store';
+import NameExistsError from '../error/name-exists-error';
+import InvalidOperationError from '../error/invalid-operation-error';
+import eventType from '../event-type';
+import { nameType } from '../routes/admin-api/util';
+import schema from './project-schema';
+import NotFoundError from '../error/notfound-error';
+import FeatureToggleStore from '../db/feature-toggle-store';
+import { IRole } from '../db/access-store';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
 const DEFAULT_PROJECT = 'default';
 
-class ProjectService {
-    private projectStore: any;
+export interface UsersWithRoles {
+    users: IUserWithRole[];
+    roles: IRole[];
+}
+
+export default class ProjectService {
+    private projectStore: ProjectStore;
 
     private accessService: AccessService;
 
-    private eventStore: any;
+    private eventStore: EventStore;
 
-    private featureToggleStore: any;
+    private featureToggleStore: FeatureToggleStore;
 
     private logger: any;
 
@@ -41,11 +43,11 @@ class ProjectService {
         this.logger = config.getLogger('services/project-service.js');
     }
 
-    async getProjects() {
+    async getProjects(): Promise<IProject[]> {
         return this.projectStore.getAll();
     }
 
-    async getProject(id) {
+    async getProject(id: number): Promise<IProject> {
         return this.projectStore.get(id);
     }
 
@@ -127,7 +129,7 @@ class ProjectService {
     }
 
     // RBAC methods
-    async getUsersWithAccess(projectId: string) {
+    async getUsersWithAccess(projectId: string): Promise<UsersWithRoles> {
         const [roles, users] = await this.accessService.getProjectRoleUsers(
             projectId,
         );

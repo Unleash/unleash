@@ -49,7 +49,7 @@ export default class TagTypeService {
         return data;
     }
 
-    async validateUnique({ name }: Partial<ITagType>): Promise<boolean> {
+    async validateUnique({ name }: Pick<ITagType, 'name'>): Promise<boolean> {
         const exists = await this.tagTypeStore.exists(name);
         if (exists) {
             throw new NameExistsError(

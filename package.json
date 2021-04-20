@@ -101,7 +101,7 @@
     "prom-client": "^13.1.0",
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
-    "unleash-frontend": "4.0.0-alpha.3",
+    "unleash-frontend": "4.0.0-alpha.4",
     "uuid": "^8.3.2",
     "yargs": "^16.0.3"
   },

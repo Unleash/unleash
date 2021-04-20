@@ -82,6 +82,11 @@ export default class ResetTokenService {
         return this.createResetUrl(forUser, creator, path);
     }
 
+    async createNewUserUrl(forUser: number, creator: string): Promise<URL> {
+        const path = '/#/new-user';
+        return this.createResetUrl(forUser, creator, path);
+    }
+
     async createToken(
         tokenUser: number,
         creator: string,

@@ -218,3 +218,27 @@ test.serial('should search for users', async t => {
             t.true(res.body.some(u => u.email === 'another@mail.com'));
         });
 });
+
+test.serial(
+    'Creates a user and includes inviteLink and emailConfigured',
+    async t => {
+        t.plan(5);
+        const request = await setupApp(stores);
+        return request
+            .post('/api/admin/user-admin')
+            .send({
+                email: 'some@getunelash.ai',
+                name: 'Some Name',
+                rootRole: editorRole.id,
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201)
+            .expect(res => {
+                t.is(res.body.email, 'some@getunelash.ai');
+                t.is(res.body.rootRole, editorRole.id);
+                t.truthy(res.body.inviteLink);
+                t.false(res.body.emailConfigured);
+                t.truthy(res.body.id);
+            });
+    },
+);

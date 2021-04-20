@@ -66,7 +66,7 @@ export class EmailService {
         recipient: string,
         resetLink: string,
     ): Promise<SentMessageInfo> {
-        if (this.mailer !== undefined) {
+        if (this.configured()) {
             const year = new Date().getFullYear();
             const bodyHtml = await this.compileTemplate(
                 'reset-password',
@@ -108,7 +108,7 @@ export class EmailService {
         recipient: string,
         passwordLink: string,
     ): Promise<SentMessageInfo> {
-        if (this.mailer !== undefined) {
+        if (this.configured()) {
             const year = new Date().getFullYear();
             const context = { passwordLink, name, year };
             const bodyHtml = await this.compileTemplate(
@@ -173,5 +173,12 @@ export class EmailService {
             return readFileSync(template, 'utf-8');
         }
         throw new NotFoundError('Could not find template');
+    }
+
+    configured(): boolean {
+        if (this.sender !== 'not-configured' && this.mailer !== undefined) {
+            return true;
+        }
+        return false;
     }
 }

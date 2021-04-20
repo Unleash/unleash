@@ -5,6 +5,8 @@ import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
 import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
+import { EmailService } from '../../services/email-service';
+import ResetTokenService from '../../services/reset-token-service';
 
 const getCreatorUsernameOrPassword = req => req.user.username || req.user.email;
 
@@ -15,11 +17,20 @@ export default class UserAdminController extends Controller {
 
     private readonly logger: Logger;
 
-    constructor(config: IUnleashConfig, { userService, accessService }) {
+    private emailService: EmailService;
+
+    private resetTokenService: ResetTokenService;
+
+    constructor(
+        config: IUnleashConfig,
+        { userService, accessService, emailService, resetTokenService },
+    ) {
         super(config);
         this.userService = userService;
         this.accessService = accessService;
         this.logger = config.getLogger('routes/user-controller.ts');
+        this.emailService = emailService;
+        this.resetTokenService = resetTokenService;
 
         this.get('/', this.getUsers, ADMIN);
         this.get('/search', this.search);
@@ -75,15 +86,36 @@ export default class UserAdminController extends Controller {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async createUser(req, res): Promise<void> {
         const { username, email, name, rootRole } = req.body;
+        const { user } = req;
 
         try {
-            const user = await this.userService.createUser({
+            const createdUser = await this.userService.createUser({
                 username,
                 email,
                 name,
                 rootRole: Number(rootRole),
             });
-            res.status(201).send({ ...user, rootRole });
+
+            const inviteLink = await this.resetTokenService.createNewUserUrl(
+                createdUser.id,
+                user.email,
+            );
+
+            const emailConfigured = this.emailService.configured();
+            if (emailConfigured) {
+                await this.emailService.sendGettingStartedMail(
+                    createdUser.name,
+                    createdUser.email,
+                    inviteLink.toString(),
+                );
+            }
+
+            res.status(201).send({
+                ...createdUser,
+                inviteLink,
+                emailConfigured,
+                rootRole,
+            });
         } catch (e) {
             this.logger.warn(e.message);
             res.status(400).send([{ msg: e.message }]);

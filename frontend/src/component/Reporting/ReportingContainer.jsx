@@ -11,6 +11,9 @@ const mapDispatchToProps = {
     fetchFeatureToggles,
 };
 
-const ReportingContainer = connect(mapStateToProps, mapDispatchToProps)(Reporting);
+const ReportingContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Reporting);
 
 export default ReportingContainer;

@@ -113,32 +113,36 @@ const FeatureView = ({
                 return null;
         }
     };
-    const getTabData = () => [
-        {
-            label: 'Activation',
-            component: getTabComponent('activation'),
-            name: 'strategies',
-            path: `/features/strategies/${featureToggleName}`,
-        },
-        {
-            label: 'Metrics',
-            component: getTabComponent('metrics'),
-            name: 'metrics',
-            path: `/features/metrics/${featureToggleName}`,
-        },
-        {
-            label: 'Variants',
-            component: getTabComponent('variants'),
-            name: 'variants',
-            path: `/features/variants/${featureToggleName}`,
-        },
-        {
-            label: 'Log',
-            component: getTabComponent('log'),
-            name: 'logs',
-            path: `/features/logs/${featureToggleName}`,
-        },
-    ];
+
+    const getTabData = () => {
+        const path = !!isFeatureView ? 'features' : 'archive';
+        return [
+            {
+                label: 'Activation',
+                component: getTabComponent('activation'),
+                name: 'strategies',
+                path: `/${path}/strategies/${featureToggleName}`,
+            },
+            {
+                label: 'Metrics',
+                component: getTabComponent('metrics'),
+                name: 'metrics',
+                path: `/${path}/metrics/${featureToggleName}`,
+            },
+            {
+                label: 'Variants',
+                component: getTabComponent('variants'),
+                name: 'variants',
+                path: `/${path}/variants/${featureToggleName}`,
+            },
+            {
+                label: 'Log',
+                component: getTabComponent('log'),
+                name: 'logs',
+                path: `/${path}/logs/${featureToggleName}`,
+            },
+        ];
+    };
 
     if (!featureToggle) {
         if (features.length === 0) {

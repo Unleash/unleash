@@ -14,13 +14,16 @@ import { REPORTING_SELECT_ID } from '../../testIds';
 import styles from './Reporting.module.scss';
 
 const Reporting = ({ fetchFeatureToggles, projects }) => {
-    const [projectOptions, setProjectOptions] = useState([{ key: 'default', label: 'Default' }]);
+    const [projectOptions, setProjectOptions] = useState([
+        { key: 'default', label: 'Default' },
+    ]);
     const [selectedProject, setSelectedProject] = useState('default');
 
     useEffect(() => {
         fetchFeatureToggles();
         setSelectedProject(projects[0].id);
-    }, [fetchFeatureToggles, projects]);
+        /* eslint-disable-next-line */
+    }, []);
 
     useEffect(() => {
         setProjectOptions(formatProjectOptions(projects));
@@ -29,7 +32,9 @@ const Reporting = ({ fetchFeatureToggles, projects }) => {
     const onChange = e => {
         const { value } = e.target;
 
-        const selectedProject = projectOptions.find(option => option.key === value);
+        const selectedProject = projectOptions.find(
+            option => option.key === value
+        );
 
         setSelectedProject(selectedProject.key);
     };
@@ -52,7 +57,10 @@ const Reporting = ({ fetchFeatureToggles, projects }) => {
 
     return (
         <React.Fragment>
-            <ConditionallyRender condition={multipleProjects} show={renderSelect} />
+            <ConditionallyRender
+                condition={multipleProjects}
+                show={renderSelect}
+            />
 
             <ReportCardContainer selectedProject={selectedProject} />
             <ReportToggleListContainer selectedProject={selectedProject} />

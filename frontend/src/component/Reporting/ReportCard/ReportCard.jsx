@@ -21,30 +21,45 @@ const ReportCard = ({ features }) => {
     };
 
     const getPotentiallyStaleToggles = activeToggles => {
-        const result = activeToggles.filter(feature => isFeatureExpired(feature) && !feature.stale);
+        const result = activeToggles.filter(
+            feature => isFeatureExpired(feature) && !feature.stale
+        );
 
         return result;
     };
 
-    const getHealthRating = (total, staleTogglesCount, potentiallyStaleTogglesCount) => {
+    const getHealthRating = (
+        total,
+        staleTogglesCount,
+        potentiallyStaleTogglesCount
+    ) => {
         const startPercentage = 100;
 
         const stalePercentage = (staleTogglesCount / total) * 100;
 
-        const potentiallyStalePercentage = (potentiallyStaleTogglesCount / total) * 100;
+        const potentiallyStalePercentage =
+            (potentiallyStaleTogglesCount / total) * 100;
 
-        return Math.round(startPercentage - stalePercentage - potentiallyStalePercentage);
+        return Math.round(
+            startPercentage - stalePercentage - potentiallyStalePercentage
+        );
     };
 
     const total = features.length;
     const activeTogglesArray = getActiveToggles();
-    const potentiallyStaleToggles = getPotentiallyStaleToggles(activeTogglesArray);
+    const potentiallyStaleToggles = getPotentiallyStaleToggles(
+        activeTogglesArray
+    );
 
     const activeTogglesCount = activeTogglesArray.length;
     const staleTogglesCount = features.length - activeTogglesCount;
     const potentiallyStaleTogglesCount = potentiallyStaleToggles.length;
 
-    const healthRating = getHealthRating(total, staleTogglesCount, potentiallyStaleTogglesCount);
+    const healthRating = getHealthRating(
+        total,
+        staleTogglesCount,
+        potentiallyStaleTogglesCount
+    );
 
     const healthLessThan50 = healthRating < 50;
     const healthLessThan75 = healthRating < 75;
@@ -71,7 +86,9 @@ const ReportCard = ({ features }) => {
     const renderPotentiallyStaleToggles = () => (
         <>
             <ReportProblemOutlinedIcon className={styles.danger} />
-            <span>{potentiallyStaleTogglesCount} potentially stale toggles</span>
+            <span>
+                {potentiallyStaleTogglesCount} potentially stale toggles
+            </span>
         </>
     );
 
@@ -82,10 +99,16 @@ const ReportCard = ({ features }) => {
                     <h2 className={styles.header}>Toggle report</h2>
                     <ul className={styles.reportCardList}>
                         <li>
-                            <ConditionallyRender condition={activeTogglesCount} show={renderActiveToggles} />
+                            <ConditionallyRender
+                                condition={activeTogglesCount}
+                                show={renderActiveToggles}
+                            />
                         </li>
                         <li>
-                            <ConditionallyRender condition={staleTogglesCount} show={renderStaleToggles} />
+                            <ConditionallyRender
+                                condition={staleTogglesCount}
+                                show={renderStaleToggles}
+                            />
                         </li>
                         <li>
                             <ConditionallyRender
@@ -99,8 +122,10 @@ const ReportCard = ({ features }) => {
                     <h2 className={styles.header}>Health rating</h2>
                     <div className={styles.reportCardHealthInnerContainer}>
                         <ConditionallyRender
-                            condition={healthRating}
-                            show={<p className={healthClasses}>{healthRating}%</p>}
+                            condition={healthRating > -1}
+                            show={
+                                <p className={healthClasses}>{healthRating}%</p>
+                            }
                         />
                     </div>
                 </div>
@@ -108,7 +133,8 @@ const ReportCard = ({ features }) => {
                     <h2 className={styles.header}>Potential actions</h2>
                     <div className={styles.reportCardActionContainer}>
                         <p className={styles.reportCardActionText}>
-                            Review your feature toggles and delete unused toggles.
+                            Review your feature toggles and delete unused
+                            toggles.
                         </p>
                     </div>
                 </div>

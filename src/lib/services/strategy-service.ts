@@ -1,6 +1,7 @@
 import { Logger } from '../logger';
 import EventStore from '../db/event-store';
 import StrategyStore, { IStrategy, IStrategyName } from '../db/strategy-store';
+import { IUnleashConfig, IUnleashStores } from '../types/core';
 
 const strategySchema = require('./strategy-schema');
 const NameExistsError = require('../error/name-exists-error');
@@ -19,7 +20,13 @@ class StrategyService {
 
     private eventStore: EventStore;
 
-    constructor({ strategyStore, eventStore }, { getLogger }) {
+    constructor(
+        {
+            strategyStore,
+            eventStore,
+        }: Pick<IUnleashStores, 'strategyStore' | 'eventStore'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+    ) {
         this.strategyStore = strategyStore;
         this.eventStore = eventStore;
         this.logger = getLogger('services/strategy-service.js');
@@ -103,7 +110,9 @@ class StrategyService {
         });
     }
 
-    async _validateStrategyName(data: IStrategyName): Promise<IStrategyName> {
+    private _validateStrategyName(
+        data: Pick<IStrategy, 'name'>,
+    ): Promise<Pick<IStrategy, 'name'>> {
         return new Promise((resolve, reject) => {
             this.strategyStore
                 .getStrategy(data.name)

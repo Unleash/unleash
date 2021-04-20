@@ -1,8 +1,11 @@
+import { Request } from 'express';
 import { LogProvider } from '../logger';
 import { IEmailOptions } from '../services/email-service';
 import ProjectStore from '../db/project-store';
 import EventStore from '../db/event-store';
 import FeatureTypeStore from '../db/feature-type-store';
+import User from '../user';
+import StrategyStore from '../db/strategy-store';
 
 interface IExperimentalFlags {
     [key: string]: boolean;
@@ -25,6 +28,7 @@ export interface IUnleashStores {
     projectStore: ProjectStore;
     eventStore: EventStore;
     featureTypeStore: FeatureTypeStore;
+    strategyStore: StrategyStore;
 }
 
 export enum AuthenticationType {
@@ -33,4 +37,8 @@ export enum AuthenticationType {
     custom = 'custom',
     openSource = 'open-source',
     enterprise = 'enterprise',
+}
+
+export interface AuthedRequest extends Request {
+    user: User;
 }

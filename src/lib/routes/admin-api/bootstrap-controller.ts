@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
-import { IUnleashConfig } from '../../types/core';
+import { AuthedRequest, IUnleashConfig } from '../../types/core';
 import { Logger } from '../../logger';
 import ContextService from '../../services/context-service';
 import FeatureTypeStore, { IFeatureType } from '../../db/feature-type-store';
@@ -43,7 +43,7 @@ export default class BootstrapController extends Controller {
         this.get('/', this.bootstrap);
     }
 
-    async bootstrap(req: Request, res: Response): Promise<void> {
+    async bootstrap(req: AuthedRequest, res: Response): Promise<void> {
         const jobs: [
             Promise<IContextField[]>,
             Promise<IFeatureType[]>,
@@ -70,7 +70,6 @@ export default class BootstrapController extends Controller {
             unleashUrl: this.config.unleashUrl,
             baseUriPath: this.config.baseUriPath,
             version: this.config.version,
-            // @ts-ignore
             user: req.user,
             context,
             featureTypes,

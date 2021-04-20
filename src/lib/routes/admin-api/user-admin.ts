@@ -5,7 +5,7 @@ import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
 import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
-import { EmailService } from '../../services/email-service';
+import { EmailService, MAIL_ACCEPTED } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
 
 const getCreatorUsernameOrPassword = req => req.user.username || req.user.email;
@@ -108,19 +108,27 @@ export default class UserAdminController extends Controller {
             );
 
             const emailConfigured = this.emailService.configured();
+            let sentMetaData = null;
             if (emailConfigured) {
                 // Add return type to indicate whether or not email was sent and include in response
-                await this.emailService.sendGettingStartedMail(
+                sentMetaData = await this.emailService.sendGettingStartedMail(
                     createdUser.name,
                     createdUser.email,
                     inviteLink.toString(),
                 );
+            } else {
+                this.logger.warn(
+                    'email was not sent to the user because email configuration is lacking',
+                );
             }
+
+            const emailSent =
+                sentMetaData?.response.includes(MAIL_ACCEPTED) || null;
             // Change emailConfigured to emailSent
             res.status(201).send({
                 ...createdUser,
                 inviteLink,
-                emailConfigured,
+                emailSent,
                 rootRole,
             });
         } catch (e) {

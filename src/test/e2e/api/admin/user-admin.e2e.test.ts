@@ -237,7 +237,7 @@ test.serial(
                 t.is(res.body.email, 'some@getunelash.ai');
                 t.is(res.body.rootRole, editorRole.id);
                 t.truthy(res.body.inviteLink);
-                t.false(res.body.emailConfigured);
+                t.falsy(res.body.emailSent);
                 t.truthy(res.body.id);
             });
     },

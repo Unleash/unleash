@@ -94,3 +94,15 @@ test.serial('Creating a new token should expire older tokens', async t => {
     const validToken = await resetTokenService.isValid(secondToken.token);
     t.is(secondToken.token, validToken.token);
 });
+
+test.serial(
+    'Retrieving valid invitation links should retrieve an object with userid key and token value',
+    async t => {
+        await resetTokenService.createToken(userIdToCreateResetFor, adminUser);
+
+        const activeInvitations = await resetTokenService.getActiveInvitations();
+        t.true(Object.keys(activeInvitations).length === 1);
+        t.true(+Object.keys(activeInvitations)[0] === userIdToCreateResetFor);
+        t.truthy(activeInvitations[userIdToCreateResetFor]);
+    },
+);

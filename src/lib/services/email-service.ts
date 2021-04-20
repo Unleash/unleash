@@ -33,6 +33,8 @@ export interface IEmailOptions {
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
 
+export const MAIL_ACCEPTED = '250 Accepted';
+
 export class EmailService {
     private logger: Logger;
 

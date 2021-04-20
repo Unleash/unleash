@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ConfiguredAddons from './ConfiguredAddons';
 import AvailableAddons from './AvailableAddons';
 import { Avatar, Icon } from '@material-ui/core';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import AccessContext from '../../../contexts/AccessContext';
 
 const style = {
     width: '40px',
@@ -29,7 +30,8 @@ const getIcon = name => {
     }
 };
 
-const AddonList = ({ addons, providers, fetchAddons, removeAddon, toggleAddon, history, hasPermission }) => {
+const AddonList = ({ addons, providers, fetchAddons, removeAddon, toggleAddon, history }) => {
+    const { hasAccess } = useContext(AccessContext);
     useEffect(() => {
         if (addons.length === 0) {
             fetchAddons();
@@ -45,7 +47,7 @@ const AddonList = ({ addons, providers, fetchAddons, removeAddon, toggleAddon, h
                     <ConfiguredAddons
                         addons={addons}
                         toggleAddon={toggleAddon}
-                        hasPermission={hasPermission}
+                        hasAccess={hasAccess}
                         removeAddon={removeAddon}
                         getIcon={getIcon}
                     />
@@ -53,7 +55,7 @@ const AddonList = ({ addons, providers, fetchAddons, removeAddon, toggleAddon, h
             />
 
             <br />
-            <AvailableAddons providers={providers} hasPermission={hasPermission} history={history} getIcon={getIcon} />
+            <AvailableAddons providers={providers} hasAccess={hasAccess} history={history} getIcon={getIcon} />
         </>
     );
 };
@@ -65,7 +67,6 @@ AddonList.propTypes = {
     removeAddon: PropTypes.func.isRequired,
     toggleAddon: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    hasPermission: PropTypes.func.isRequired,
 };
 
 export default AddonList;

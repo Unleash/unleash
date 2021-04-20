@@ -82,6 +82,7 @@ exports[`renders correctly with one feature 1`] = `
         className="selectContainer"
       >
         <FeatureTypeSelect
+          editable={true}
           label="Feature type"
           onChange={[Function]}
           value="release"
@@ -467,6 +468,7 @@ exports[`renders correctly with one feature 1`] = `
       role="tabpanel"
     >
       <UpdateStrategiesComponent
+        editable={true}
         featureToggle={
           Object {
             "createdAt": "2018-02-04T20:27:52.127Z",

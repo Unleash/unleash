@@ -9,12 +9,12 @@ import {
     ListItemText,
 } from '@material-ui/core';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
-import { DELETE_ADDON, UPDATE_ADDON } from '../../../../permissions';
+import { DELETE_ADDON, UPDATE_ADDON } from '../../../AccessProvider/permissions';
 import { Link } from 'react-router-dom';
 import PageContent from '../../../common/PageContent/PageContent';
 import PropTypes from 'prop-types';
 
-const ConfiguredAddons = ({ addons, hasPermission, removeAddon, getIcon, toggleAddon }) => {
+const ConfiguredAddons = ({ addons, hasAccess, removeAddon, getIcon, toggleAddon }) => {
     const onRemoveAddon = addon => () => removeAddon(addon);
     const renderAddon = addon => (
         <ListItem key={addon.id}>
@@ -23,7 +23,7 @@ const ConfiguredAddons = ({ addons, hasPermission, removeAddon, getIcon, toggleA
                 primary={
                     <span>
                         <ConditionallyRender
-                            condition={hasPermission(UPDATE_ADDON)}
+                            condition={hasAccess(UPDATE_ADDON)}
                             show={
                                 <Link to={`/addons/edit/${addon.id}`}>
                                     <strong>{addon.provider}</strong>
@@ -38,7 +38,7 @@ const ConfiguredAddons = ({ addons, hasPermission, removeAddon, getIcon, toggleA
             />
             <ListItemSecondaryAction>
                 <ConditionallyRender
-                    condition={hasPermission(UPDATE_ADDON)}
+                    condition={hasAccess(UPDATE_ADDON)}
                     show={
                         <IconButton
                             size="small"
@@ -50,7 +50,7 @@ const ConfiguredAddons = ({ addons, hasPermission, removeAddon, getIcon, toggleA
                     }
                 />
                 <ConditionallyRender
-                    condition={hasPermission(DELETE_ADDON)}
+                    condition={hasAccess(DELETE_ADDON)}
                     show={
                         <IconButton size="small" title="Remove addon" onClick={onRemoveAddon(addon)}>
                             <Icon>delete</Icon>
@@ -68,7 +68,7 @@ const ConfiguredAddons = ({ addons, hasPermission, removeAddon, getIcon, toggleA
 };
 ConfiguredAddons.propTypes = {
     addons: PropTypes.array.isRequired,
-    hasPermission: PropTypes.func.isRequired,
+    hasAccess: PropTypes.func.isRequired,
     removeAddon: PropTypes.func.isRequired,
     toggleAddon: PropTypes.func.isRequired,
     getIcon: PropTypes.func.isRequired,

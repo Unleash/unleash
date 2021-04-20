@@ -293,23 +293,6 @@ export const routes = [
         type: 'protected',
         layout: 'main',
     },
-    {
-        path: '/logout',
-        title: 'Sign out',
-        icon: 'exit_to_app',
-        component: LogoutFeatures,
-        type: 'protected',
-        layout: 'main',
-    },
-    {
-        path: '/login',
-        title: 'Log in',
-        icon: 'user',
-        component: Login,
-        type: 'unprotected',
-        hidden: true,
-        layout: 'standalone',
-    },
     // Admin
     {
         path: '/admin/api',
@@ -343,6 +326,23 @@ export const routes = [
         hidden: false,
         type: 'protected',
         layout: 'main',
+    },
+    {
+        path: '/logout',
+        title: 'Sign out',
+        icon: 'exit_to_app',
+        component: LogoutFeatures,
+        type: 'protected',
+        layout: 'main',
+    },
+    {
+        path: '/login',
+        title: 'Log in',
+        icon: 'user',
+        component: Login,
+        type: 'unprotected',
+        hidden: true,
+        layout: 'standalone',
     },
     {
         path: '/new-user',

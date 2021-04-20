@@ -1,15 +1,17 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import { CREATE_PROJECT, DELETE_PROJECT, UPDATE_PROJECT } from '../../../permissions';
+import { CREATE_PROJECT, DELETE_PROJECT, UPDATE_PROJECT } from '../../AccessProvider/permissions';
 import { Icon, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import ConfirmDialogue from '../../common/Dialogue';
 import PageContent from '../../common/PageContent/PageContent';
 import { useStyles } from './styles';
+import AccessContext from '../../../contexts/AccessContext';
 
-const ProjectList = ({ projects, fetchProjects, removeProject, history, hasPermission }) => {
+const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
+    const { hasAccess } = useContext(AccessContext);
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [project, setProject] = useState(undefined);
     const styles = useStyles();
@@ -19,7 +21,7 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history, hasPermi
 
     const addProjectButton = () => (
         <ConditionallyRender
-            condition={hasPermission(CREATE_PROJECT)}
+            condition={hasAccess(CREATE_PROJECT)}
             show={
                 <Tooltip title="Add new project">
                     <IconButton aria-label="add-project" onClick={() => history.push('/projects/create')}>
@@ -68,10 +70,10 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history, hasPermi
                 </ListItemAvatar>
                 <ListItemText primary={projectLink(project)} secondary={project.description} />
                 <ConditionallyRender
-                    condition={hasPermission(UPDATE_PROJECT)}
+                    condition={hasAccess(UPDATE_PROJECT, project.name)}
                     show={mgmAccessButton(project)}
                 />
-                <ConditionallyRender condition={hasPermission(DELETE_PROJECT)} show={deleteProjectButton(project)} />
+                <ConditionallyRender condition={hasAccess(DELETE_PROJECT, project.name)} show={deleteProjectButton(project)} />
             </ListItem>
         ));
 
@@ -106,7 +108,6 @@ ProjectList.propTypes = {
     fetchProjects: PropTypes.func.isRequired,
     removeProject: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    hasPermission: PropTypes.func.isRequired,
 };
 
 export default ProjectList;

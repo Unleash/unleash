@@ -20,10 +20,6 @@ export const DELETE_TAG = 'DELETE_TAG';
 export const CREATE_ADDON = 'CREATE_ADDON';
 export const UPDATE_ADDON = 'UPDATE_ADDON';
 export const DELETE_ADDON = 'DELETE_ADDON';
-
-export function hasPermission(user, permission) {
-    return (
-        user &&
-        (!user.permissions || user.permissions.indexOf(ADMIN) !== -1 || user.permissions.indexOf(permission) !== -1)
-    );
-}
+export const UPDATE_API_TOKEN = 'UPDATE_API_TOKEN';
+export const CREATE_API_TOKEN = 'CREATE_API_TOKEN';
+export const DELETE_API_TOKEN = 'DELETE_API_TOKEN';

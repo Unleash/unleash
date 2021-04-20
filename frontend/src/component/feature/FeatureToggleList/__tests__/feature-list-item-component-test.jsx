@@ -4,7 +4,6 @@ import { ThemeProvider } from '@material-ui/core';
 
 import FeatureToggleListItem from '../FeatureToggleListItem';
 import renderer from 'react-test-renderer';
-import { UPDATE_FEATURE } from '../../../../permissions';
 
 import theme from '../../../../themes/main-theme';
 
@@ -38,7 +37,7 @@ test('renders correctly with one feature', () => {
                     metricsLastMinute={featureMetrics.lastMinute[feature.name]}
                     feature={feature}
                     toggleFeature={jest.fn()}
-                    hasPermission={permission => permission === UPDATE_FEATURE}
+                    hasAccess={() => true}
                 />
             </ThemeProvider>
         </MemoryRouter>
@@ -75,7 +74,7 @@ test('renders correctly with one feature without permission', () => {
                     metricsLastMinute={featureMetrics.lastMinute[feature.name]}
                     feature={feature}
                     toggleFeature={jest.fn()}
-                    hasPermission={() => false}
+                    hasAccess={() => true}
                 />
             </ThemeProvider>
         </MemoryRouter>

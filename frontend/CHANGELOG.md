@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 4.0.0-alpha.4
+- fix: overall bugs
+- feat: user flow
+- fix: small description for toggles
+- fix: make admin pages fork for OSS and enterprise
+
 # 4.0.0-alpha.3
 - fix: logout redirect logic
 - fix: redirect from login page if authorized

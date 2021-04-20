@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link, useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import { List, ListItem, ListItemAvatar, IconButton, Icon, ListItemText, Button, Tooltip } from '@material-ui/core';
-import { CREATE_STRATEGY, DELETE_STRATEGY } from '../../../permissions';
+import { CREATE_STRATEGY, DELETE_STRATEGY } from '../../AccessProvider/permissions';
 
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import PageContent from '../../common/PageContent/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
 
 import { useStyles } from './styles';
+import AccessContext from '../../../contexts/AccessContext';
 
 const StrategiesList = ({
     strategies,
@@ -19,11 +20,11 @@ const StrategiesList = ({
     removeStrategy,
     deprecateStrategy,
     reactivateStrategy,
-    hasPermission,
 }) => {
     const history = useHistory();
     const styles = useStyles();
     const smallScreen = useMediaQuery('(max-width:700px)');
+    const { hasAccess } = useContext(AccessContext);
 
     useEffect(() => {
         fetchStrategies();
@@ -32,7 +33,7 @@ const StrategiesList = ({
 
     const headerButton = () => (
         <ConditionallyRender
-            condition={hasPermission(CREATE_STRATEGY)}
+            condition={hasAccess(CREATE_STRATEGY)}
             show={
                 <ConditionallyRender
                     condition={smallScreen}
@@ -133,7 +134,7 @@ const StrategiesList = ({
                     show={reactivateButton(strategy)}
                     elseShow={deprecateButton(strategy)}
                 />
-                <ConditionallyRender condition={hasPermission(DELETE_STRATEGY)} show={deleteButton(strategy)} />
+                <ConditionallyRender condition={hasAccess(DELETE_STRATEGY)} show={deleteButton(strategy)} />
             </ListItem>
         ));
 
@@ -157,7 +158,6 @@ StrategiesList.propTypes = {
     deprecateStrategy: PropTypes.func.isRequired,
     reactivateStrategy: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    hasPermission: PropTypes.func.isRequired,
     name: PropTypes.string,
     deprecated: PropTypes.bool,
 };

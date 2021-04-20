@@ -4,19 +4,23 @@ import { ThemeProvider } from '@material-ui/core';
 import ClientApplications from '../application-edit-component';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
-import { CREATE_FEATURE, CREATE_STRATEGY, UPDATE_APPLICATION } from '../../../permissions';
+import { ADMIN, CREATE_FEATURE, CREATE_STRATEGY, UPDATE_APPLICATION } from '../../AccessProvider/permissions';
 import theme from '../../../themes/main-theme';
+
+import { createFakeStore } from '../../../accessStoreFake';
+import AccessProvider from '../../AccessProvider/AccessProvider';
 
 test('renders correctly if no application', () => {
     const tree = renderer
         .create(
-            <ClientApplications
-                fetchApplication={() => Promise.resolve({})}
-                storeApplicationMetaData={jest.fn()}
-                deleteApplication={jest.fn()}
-                hasPermission={() => true}
-                history={{}}
-            />
+            <AccessProvider store={createFakeStore([{permission: ADMIN}])}>
+                <ClientApplications
+                    fetchApplication={() => Promise.resolve({})}
+                    storeApplicationMetaData={jest.fn()}
+                    deleteApplication={jest.fn()}
+                    history={{}}
+                />
+            </AccessProvider>
         )
         .toJSON();
 
@@ -28,6 +32,7 @@ test('renders correctly without permission', () => {
         .create(
             <MemoryRouter>
                 <ThemeProvider theme={theme}>
+                <AccessProvider store={createFakeStore([])}>
                     <ClientApplications
                         fetchApplication={() => Promise.resolve({})}
                         storeApplicationMetaData={jest.fn()}
@@ -71,8 +76,8 @@ test('renders correctly without permission', () => {
                             description: 'app description',
                         }}
                         location={{ locale: 'en-GB' }}
-                        hasPermission={() => false}
                     />
+                    </AccessProvider>
                 </ThemeProvider>
             </MemoryRouter>
         )
@@ -86,6 +91,7 @@ test('renders correctly with permissions', () => {
         .create(
             <MemoryRouter>
                 <ThemeProvider theme={theme}>
+                <AccessProvider store={createFakeStore([{permission: ADMIN}])}>
                     <ClientApplications
                         fetchApplication={() => Promise.resolve({})}
                         storeApplicationMetaData={jest.fn()}
@@ -129,10 +135,8 @@ test('renders correctly with permissions', () => {
                             description: 'app description',
                         }}
                         location={{ locale: 'en-GB' }}
-                        hasPermission={permission =>
-                            [CREATE_FEATURE, CREATE_STRATEGY, UPDATE_APPLICATION].indexOf(permission) !== -1
-                        }
                     />
+                    </AccessProvider>
                 </ThemeProvider>
             </MemoryRouter>
         )

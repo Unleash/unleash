@@ -52,6 +52,7 @@ class AddFeatureComponent extends Component {
                             onChange={v => setValue('type', v.target.value)}
                             label={'Toggle type'}
                             id="feature-type-select"
+                            editable
                             inputProps={{
                                 'data-test': CF_TYPE_ID,
                             }}

@@ -144,8 +144,8 @@ exports[`renders correctly with one feature 1`] = `
               </button>
             </div>
             <a
-              aria-disabled={false}
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+              aria-disabled={true}
+              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
               data-test="add-feature-btn"
               href="/features/create"
               onBlur={[Function]}
@@ -161,7 +161,7 @@ exports[`renders correctly with one feature 1`] = `
               onTouchMove={[Function]}
               onTouchStart={[Function]}
               role="button"
-              tabIndex={0}
+              tabIndex={-1}
             >
               <span
                 className="MuiButton-label"
@@ -186,7 +186,7 @@ exports[`renders correctly with one feature 1`] = `
               "reviveName": "Another",
             }
           }
-          hasPermission={[Function]}
+          hasAccess={[Function]}
           settings={
             Object {
               "sort": "name",
@@ -349,6 +349,32 @@ exports[`renders correctly with one feature without permissions 1`] = `
                 />
               </button>
             </div>
+            <a
+              aria-disabled={true}
+              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
+              data-test="add-feature-btn"
+              href="/features/create"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={-1}
+            >
+              <span
+                className="MuiButton-label"
+              >
+                Create feature toggle
+              </span>
+            </a>
           </div>
         </div>
       </div>
@@ -366,7 +392,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
               "reviveName": "Another",
             }
           }
-          hasPermission={[Function]}
+          hasAccess={[Function]}
           settings={
             Object {
               "sort": "name",

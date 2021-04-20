@@ -12,6 +12,7 @@ class FeatureTypeSelectComponent extends Component {
 
     render() {
         const {
+            editable,
             value,
             types,
             onChange,
@@ -32,11 +33,12 @@ class FeatureTypeSelectComponent extends Component {
             options.push({ key: value, label: value });
         }
 
-        return <MySelect options={options} value={value} onChange={onChange} label={label} id={id} {...rest} />;
+        return <MySelect disabled={!editable} options={options} value={value} onChange={onChange} label={label} id={id} {...rest} />;
     }
 }
 
 FeatureTypeSelectComponent.propTypes = {
+    editable: PropTypes.bool.isRequired,
     value: PropTypes.string,
     filled: PropTypes.bool,
     types: PropTypes.array.isRequired,

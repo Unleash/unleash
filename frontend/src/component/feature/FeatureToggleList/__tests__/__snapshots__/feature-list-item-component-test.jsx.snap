@@ -120,8 +120,8 @@ exports[`renders correctly with one feature without permission 1`] = `
       className="MuiSwitch-root"
     >
       <span
-        aria-disabled={true}
-        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiSwitch-switchBase MuiSwitch-colorSecondary PrivateSwitchBase-disabled-8 Mui-disabled Mui-disabled Mui-disabled"
+        aria-disabled={false}
+        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiSwitch-switchBase MuiSwitch-colorSecondary"
         onBlur={[Function]}
         onDragLeave={[Function]}
         onFocus={[Function]}
@@ -133,7 +133,7 @@ exports[`renders correctly with one feature without permission 1`] = `
         onTouchEnd={[Function]}
         onTouchMove={[Function]}
         onTouchStart={[Function]}
-        tabIndex={-1}
+        tabIndex={null}
         title="Toggle Another"
       >
         <span
@@ -142,7 +142,7 @@ exports[`renders correctly with one feature without permission 1`] = `
           <input
             checked={false}
             className="PrivateSwitchBase-input-9 MuiSwitch-input"
-            disabled={true}
+            disabled={false}
             onChange={[Function]}
             type="checkbox"
           />
@@ -150,6 +150,9 @@ exports[`renders correctly with one feature without permission 1`] = `
             className="MuiSwitch-thumb"
           />
         </span>
+        <span
+          className="MuiTouchRipple-root"
+        />
       </span>
       <span
         className="MuiSwitch-track"

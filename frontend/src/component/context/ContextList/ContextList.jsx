@@ -2,14 +2,16 @@ import PropTypes from 'prop-types';
 import PageContent from '../../common/PageContent/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import { CREATE_CONTEXT_FIELD, DELETE_CONTEXT_FIELD } from '../../../permissions';
+import { CREATE_CONTEXT_FIELD, DELETE_CONTEXT_FIELD } from '../../AccessProvider/permissions';
 import { Icon, IconButton, List, ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStyles } from './styles';
 import ConfirmDialogue from '../../common/Dialogue';
+import AccessContext from '../../../contexts/AccessContext';
 
-const ContextList = ({ removeContextField, hasPermission, history, contextFields }) => {
+const ContextList = ({ removeContextField, history, contextFields }) => {
+    const { hasAccess } = useContext(AccessContext);
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [name, setName] = useState();
 
@@ -29,7 +31,7 @@ const ContextList = ({ removeContextField, hasPermission, history, contextFields
                     secondary={field.description}
                 />
                 <ConditionallyRender
-                    condition={hasPermission(DELETE_CONTEXT_FIELD)}
+                    condition={hasAccess(DELETE_CONTEXT_FIELD)}
                     show={
                         <Tooltip title="Delete context field">
                             <IconButton
@@ -48,7 +50,7 @@ const ContextList = ({ removeContextField, hasPermission, history, contextFields
         ));
     const headerButton = () => (
         <ConditionallyRender
-            condition={hasPermission(CREATE_CONTEXT_FIELD)}
+            condition={hasAccess(CREATE_CONTEXT_FIELD)}
             show={
                 <Tooltip title="Add context type">
                     <IconButton onClick={() => history.push('/context/create')}>
@@ -88,7 +90,6 @@ ContextList.propTypes = {
     contextFields: PropTypes.array.isRequired,
     removeContextField: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    hasPermission: PropTypes.func.isRequired,
 };
 
 export default ContextList;

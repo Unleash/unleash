@@ -16,6 +16,7 @@ import MetricsPoller from './metrics-poller';
 import App from './component/App';
 import ScrollToTop from './component/scroll-to-top';
 import { writeWarning } from './security-logger';
+import AccessProvider from './component/AccessProvider/AccessProvider';
 
 let composeEnhancers;
 
@@ -38,16 +39,18 @@ metricsPoller.start();
 
 ReactDOM.render(
     <Provider store={unleashStore}>
-        <HashRouter>
-            <ThemeProvider theme={mainTheme}>
-                <StylesProvider injectFirst>
-                    <CssBaseline />
-                    <ScrollToTop>
-                        <Route path="/" component={App} />
-                    </ScrollToTop>
-                </StylesProvider>
-            </ThemeProvider>
-        </HashRouter>
+        <AccessProvider store={unleashStore}>
+            <HashRouter>
+                <ThemeProvider theme={mainTheme}>
+                    <StylesProvider injectFirst>
+                        <CssBaseline />
+                        <ScrollToTop>
+                            <Route path="/" component={App} />
+                        </ScrollToTop>
+                    </StylesProvider>
+                </ThemeProvider>
+            </HashRouter>
+        </AccessProvider>
     </Provider>,
     document.getElementById('app')
 );

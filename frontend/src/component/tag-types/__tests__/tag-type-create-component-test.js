@@ -15,7 +15,6 @@ test('renders correctly for creating', () => {
                     title="Add tag type"
                     createTagType={jest.fn()}
                     validateName={() => Promise.resolve(true)}
-                    hasPermission={() => true}
                     tagType={{ name: '', description: '', icon: '' }}
                     editMode={false}
                     submit={jest.fn()}
@@ -35,7 +34,6 @@ test('it supports editMode', () => {
                     title="Add tag type"
                     createTagType={jest.fn()}
                     validateName={() => Promise.resolve(true)}
-                    hasPermission={() => true}
                     tagType={{ name: '', description: '', icon: '' }}
                     editMode
                     submit={jest.fn()}

@@ -2,17 +2,17 @@ import React from 'react';
 import PageContent from '../../../common/PageContent/PageContent';
 import { Button, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
-import { CREATE_ADDON } from '../../../../permissions';
+import { CREATE_ADDON } from '../../../AccessProvider/permissions';
 import PropTypes from 'prop-types';
 
-const AvailableAddons = ({ providers, getIcon, hasPermission, history }) => {
+const AvailableAddons = ({ providers, getIcon, hasAccess, history }) => {
     const renderProvider = provider => (
         <ListItem key={provider.name}>
             <ListItemAvatar>{getIcon(provider.name)}</ListItemAvatar>
             <ListItemText primary={provider.displayName} secondary={provider.description} />
             <ListItemSecondaryAction>
                 <ConditionallyRender
-                    condition={hasPermission(CREATE_ADDON)}
+                    condition={hasAccess(CREATE_ADDON)}
                     show={
                         <Button
                             variant="contained"
@@ -37,7 +37,7 @@ const AvailableAddons = ({ providers, getIcon, hasPermission, history }) => {
 AvailableAddons.propTypes = {
     providers: PropTypes.array.isRequired,
     getIcon: PropTypes.func.isRequired,
-    hasPermission: PropTypes.func.isRequired,
+    hasAccess: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
 };
 

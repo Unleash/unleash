@@ -3,13 +3,17 @@ import { toggleFeature, fetchFeatureToggles } from '../../../store/feature-toggl
 import { updateSettingForGroup } from '../../../store/settings/actions';
 import FeatureToggleList from './FeatureToggleList';
 
-import { hasPermission } from '../../../permissions';
-
 function checkConstraints(strategy, regex) {
     if (!strategy.constraints) {
         return;
     }
     return strategy.constraints.some(c => c.values.some(v => regex.test(v)));
+}
+
+function resolveCurrentProjectId(settings) {
+    if(!settings.currentProjectId || settings.currentProjectId === '*') {
+        return 'default';
+    } return settings.currentProjectId;
 }
 
 export const mapStateToPropsConfigurable = isFeature => state => {
@@ -96,9 +100,9 @@ export const mapStateToPropsConfigurable = isFeature => state => {
 
     return {
         features,
+        currentProjectId: resolveCurrentProjectId(settings),
         featureMetrics,
         settings,
-        hasPermission: hasPermission.bind(null, state.user.get('profile')),
         loading: state.apiCalls.fetchTogglesState.loading,
     };
 };

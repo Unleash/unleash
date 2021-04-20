@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Grid, List, ListItem, ListItemText, ListItemAvatar, Switch, Icon, Typography } from '@material-ui/core';
 import { shorten } from '../common';
-import { CREATE_FEATURE, CREATE_STRATEGY } from '../../permissions';
+import { CREATE_FEATURE, CREATE_STRATEGY } from '../AccessProvider/permissions';
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
 
-function ApplicationView({ seenToggles, hasPermission, strategies, instances, formatFullDateTime }) {
+function ApplicationView({ seenToggles, hasAccess, strategies, instances, formatFullDateTime }) {
     const notFoundListItem = ({ createUrl, name, permission }) => (
         <ConditionallyRender
             key={`not_found_conditional_${name}`}
-            condition={hasPermission(permission)}
+            condition={hasAccess(permission)}
             show={
                 <ListItem key={`not_found_${name}`}>
                     <ListItemAvatar>
@@ -149,7 +149,7 @@ ApplicationView.propTypes = {
     instances: PropTypes.array.isRequired,
     seenToggles: PropTypes.array.isRequired,
     strategies: PropTypes.array.isRequired,
-    hasPermission: PropTypes.func.isRequired,
+    hasAccess: PropTypes.func.isRequired,
     formatFullDateTime: PropTypes.func.isRequired,
 };
 

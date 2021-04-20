@@ -1,5 +1,5 @@
 /* eslint-disable no-alert */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Icon, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Avatar } from '@material-ui/core';
 import { formatDateWithLocale } from '../../../../component/common/util';
@@ -8,6 +8,8 @@ import ChangePassword from '../change-password-component';
 import UpdateUser from '../update-user-component';
 import DelUser from '../del-user-component';
 import ConditionallyRender from '../../../../component/common/ConditionallyRender/ConditionallyRender';
+import AccessContext from '../../../../contexts/AccessContext';
+import { ADMIN } from '../../../../component/AccessProvider/permissions';
 
 function UsersList({
     roles,
@@ -18,9 +20,9 @@ function UsersList({
     changePassword,
     users,
     location,
-    hasPermission,
     validatePassword,
 }) {
+    const { hasAccess } = useContext(AccessContext);
     const [showDialog, setDialog] = useState(false);
     const [pwDialog, setPwDialog] = useState({ open: false });
     const [delDialog, setDelDialog] = useState(false);
@@ -83,7 +85,7 @@ function UsersList({
                         <TableCell>Name</TableCell>
                         <TableCell>Username</TableCell>
                         <TableCell align="center">Role</TableCell>
-                        <TableCell align="right">{hasPermission('ADMIN') ? 'Action' : ''}</TableCell>
+                        <TableCell align="right">{hasAccess('ADMIN') ? 'Action' : ''}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -95,7 +97,7 @@ function UsersList({
                             <TableCell style={{ textAlign: 'left' }}>{item.username || item.email}</TableCell>
                             <TableCell align="center">{renderRole(item.rootRole)}</TableCell>
                             <ConditionallyRender
-                                condition={hasPermission('ADMIN')}
+                                condition={hasAccess(ADMIN)}
                                 show={
                                     <TableCell align="right">
                                         <IconButton aria-label="Edit" title="Edit" onClick={openUpdateDialog(item)}>
@@ -117,7 +119,7 @@ function UsersList({
             </Table>
             <br />
             <ConditionallyRender
-                condition={hasPermission('ADMIN')}
+                condition={hasAccess(ADMIN)}
                 show={
                     <Button variant="contained" color="primary" onClick={openDialog}>
                         Add new user
@@ -168,7 +170,6 @@ UsersList.propTypes = {
     fetchUsers: PropTypes.func.isRequired,
     removeUser: PropTypes.func.isRequired,
     addUser: PropTypes.func.isRequired,
-    hasPermission: PropTypes.func.isRequired,
     validatePassword: PropTypes.func.isRequired,
     updateUser: PropTypes.func.isRequired,
     changePassword: PropTypes.func.isRequired,

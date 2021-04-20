@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Grid, Switch, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import PageContent from '../../../component/common/PageContent/PageContent';
+import AccessContext from '../../../contexts/AccessContext';
+import { ADMIN } from '../../../component/AccessProvider/permissions';
 
 const initialState = {
     enabled: false,
@@ -10,9 +12,10 @@ const initialState = {
     unleashHostname: location.hostname,
 };
 
-function SamlAuth({ config, getSamlConfig, updateSamlConfig, hasPermission, unleashUrl }) {
+function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
     const [data, setData] = useState(initialState);
     const [info, setInfo] = useState();
+    const { hasAccess } = useContext(AccessContext);
 
     useEffect(() => {
         getSamlConfig();
@@ -26,7 +29,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, hasPermission, unle
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [config]);
 
-    if (!hasPermission('ADMIN')) {
+    if (!hasAccess(ADMIN)) {
         return <Alert severity="error">You need to be a root admin to access this section.</Alert>;
     }
 
@@ -188,7 +191,6 @@ SamlAuth.propTypes = {
     unleash: PropTypes.string,
     getSamlConfig: PropTypes.func.isRequired,
     updateSamlConfig: PropTypes.func.isRequired,
-    hasPermission: PropTypes.func.isRequired,
 };
 
 export default SamlAuth;

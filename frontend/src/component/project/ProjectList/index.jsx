@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { fetchProjects, removeProject } from '../../../store/project/actions';
-import { hasPermission } from '../../../permissions';
 import ProjectList from './ProjectList';
 
 const mapStateToProps = state => {
@@ -8,7 +7,6 @@ const mapStateToProps = state => {
 
     return {
         projects,
-        hasPermission: hasPermission.bind(null, state.user.get('profile')),
     };
 };
 

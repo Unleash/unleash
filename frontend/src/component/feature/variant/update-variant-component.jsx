@@ -4,7 +4,6 @@ import classnames from 'classnames';
 
 import VariantViewComponent from './variant-view-component';
 import styles from './variant.module.scss';
-import { UPDATE_FEATURE } from '../../../permissions';
 import {
     Table,
     TableHead,
@@ -46,7 +45,7 @@ class UpdateVariantComponent extends Component {
 
     openEditVariant = (e, index, variant) => {
         e.preventDefault();
-        if (this.props.hasPermission(UPDATE_FEATURE)) {
+        if (this.props.editable) {
             this.setState({
                 showDialog: true,
                 editVariant: variant,
@@ -73,7 +72,7 @@ class UpdateVariantComponent extends Component {
             variant={variant}
             editVariant={e => this.openEditVariant(e, index, variant)}
             removeVariant={e => this.onRemoveVariant(e, index)}
-            hasPermission={this.props.hasPermission}
+            editable={this.props.editable}
         />
     );
 
@@ -162,7 +161,7 @@ class UpdateVariantComponent extends Component {
 
                 <br />
                 <ConditionallyRender
-                    condition={this.props.hasPermission(UPDATE_FEATURE)}
+                    condition={this.props.editable}
                     show={
                         <div>
                             <Button
@@ -198,7 +197,7 @@ UpdateVariantComponent.propTypes = {
     removeVariant: PropTypes.func.isRequired,
     updateVariant: PropTypes.func.isRequired,
     updateStickiness: PropTypes.func.isRequired,
-    hasPermission: PropTypes.func.isRequired,
+    editable: PropTypes.bool.isRequired,
     stickinessOptions: PropTypes.array,
 };
 

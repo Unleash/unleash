@@ -10,7 +10,6 @@ import {
 } from '../../../store/feature-toggle/actions';
 
 import FeatureView from './FeatureView';
-import { hasPermission } from '../../../permissions';
 import { fetchTags, tagFeature, untagFeature } from '../../../store/feature-tags/actions';
 
 export default connect(
@@ -20,7 +19,6 @@ export default connect(
         featureTags: state.featureTags.toJS(),
         tagTypes: state.tagTypes.toJS(),
         activeTab: props.activeTab,
-        hasPermission: hasPermission.bind(null, state.user.get('profile')),
     }),
     {
         fetchFeatureToggles,

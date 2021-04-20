@@ -6,11 +6,14 @@ const mapDispatchToProps = {
     muteError,
 };
 
-const mapStateToProps = state => ({
-    errors: state.error
+const mapStateToProps = state => {
+    return {
+        errors: state.error
         .get('list')
         .toArray()
-        .reverse(),
-});
+        .reverse()
+    }
+    
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ErrorComponent);

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -18,10 +18,9 @@ import FeatureTypeSelect from '../feature-type-select-container';
 import ProjectSelect from '../project-select-container';
 import UpdateDescriptionComponent from '../view/update-description-component';
 import {
-    CREATE_FEATURE,
     DELETE_FEATURE,
     UPDATE_FEATURE,
-} from '../../../permissions';
+} from '../../AccessProvider/permissions';
 import StatusComponent from '../status-component';
 import FeatureTagComponent from '../feature-tag-component';
 import StatusUpdateComponent from '../view/status-update-component';
@@ -35,6 +34,7 @@ import styles from './FeatureView.module.scss';
 import ConfirmDialogue from '../../common/Dialogue';
 
 import { useCommonStyles } from '../../../common.styles';
+import AccessContext from '../../../contexts/AccessContext';
 
 const FeatureView = ({
     activeTab,
@@ -49,7 +49,6 @@ const FeatureView = ({
     editFeatureToggle,
     featureToggle,
     history,
-    hasPermission,
     untagFeature,
     featureTags,
     fetchTags,
@@ -58,6 +57,8 @@ const FeatureView = ({
     const isFeatureView = !!fetchFeatureToggles;
     const [delDialog, setDelDialog] = useState(false);
     const commonStyles = useCommonStyles();
+    const { hasAccess } = useContext(AccessContext);
+    const { project } = featureToggle || { };
 
     useEffect(() => {
         scrollToTop();
@@ -76,26 +77,17 @@ const FeatureView = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const editable = isFeatureView && hasAccess(UPDATE_FEATURE, project);
+
     const getTabComponent = key => {
         switch (key) {
             case 'activation':
-                if (isFeatureView && hasPermission(UPDATE_FEATURE)) {
-                    return (
-                        <UpdateStrategies
-                            featureToggle={featureToggle}
-                            features={features}
-                            history={history}
-                        />
-                    );
-                }
-                return (
-                    <UpdateStrategies
+                return <UpdateStrategies
                         featureToggle={featureToggle}
                         features={features}
                         history={history}
-                        editable={false}
+                        editable={editable}
                     />
-                );
             case 'metrics':
                 return <MetricComponent featureToggle={featureToggle} />;
             case 'variants':
@@ -104,7 +96,7 @@ const FeatureView = ({
                         featureToggle={featureToggle}
                         features={features}
                         history={history}
-                        hasPermission={hasPermission}
+                        editable={editable}
                     />
                 );
             case 'log':
@@ -152,7 +144,7 @@ const FeatureView = ({
             <span>
                 Could not find the toggle{' '}
                 <ConditionallyRender
-                    condition={hasPermission(CREATE_FEATURE)}
+                    condition={editable}
                     show={
                         <Link
                             to={{
@@ -243,13 +235,14 @@ const FeatureView = ({
                         isFeatureView={isFeatureView}
                         description={featureToggle.description}
                         update={updateDescription}
-                        hasPermission={hasPermission}
+                        editable={editable}
                     />
                     <div className={styles.selectContainer}>
                         <FeatureTypeSelect
                             value={featureToggle.type}
                             onChange={updateType}
                             label="Feature type"
+                            editable={editable}
                         />
                         &nbsp;
                         <ProjectSelect
@@ -257,6 +250,7 @@ const FeatureView = ({
                             onChange={updateProject}
                             label="Project"
                             filled
+                            editable={editable}
                         />
                     </div>
                     <FeatureTagComponent
@@ -271,7 +265,7 @@ const FeatureView = ({
             <div className={styles.actions}>
                 <span style={{ paddingRight: '24px' }}>
                     <ConditionallyRender
-                        condition={hasPermission(UPDATE_FEATURE)}
+                        condition={editable}
                         show={
                             <>
                                 <Switch
@@ -327,7 +321,7 @@ const FeatureView = ({
                             </Button>
 
                             <Button
-                                disabled={!hasPermission(DELETE_FEATURE)}
+                                disabled={!hasAccess(DELETE_FEATURE, project)}
                                 onClick={() => {
                                     setDelDialog(true);
                                 }}
@@ -340,7 +334,7 @@ const FeatureView = ({
                     }
                     elseShow={
                         <Button
-                            disabled={!hasPermission(UPDATE_FEATURE)}
+                            disabled={!hasAccess(UPDATE_FEATURE, hasAccess)}
                             onClick={reviveToggle}
                             style={{ flexShrink: 0 }}
                         >
@@ -383,7 +377,6 @@ FeatureView.propTypes = {
     editFeatureToggle: PropTypes.func,
     featureToggle: PropTypes.object,
     history: PropTypes.object.isRequired,
-    hasPermission: PropTypes.func.isRequired,
     fetchTags: PropTypes.func,
     untagFeature: PropTypes.func,
     featureTags: PropTypes.array,

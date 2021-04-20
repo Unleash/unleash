@@ -5,15 +5,18 @@ import PropTypes from 'prop-types';
 import { Avatar, Link, Icon, IconButton, Button, LinearProgress, Typography } from '@material-ui/core';
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
 import { formatFullDateTimeWithLocale, formatDateWithLocale } from '../common/util';
-import { UPDATE_APPLICATION } from '../../permissions';
+import { UPDATE_APPLICATION } from '../AccessProvider/permissions';
 import ApplicationView from './application-view';
 import ApplicationUpdate from './application-update';
 import TabNav from '../common/TabNav/TabNav';
 import Dialogue from '../common/Dialogue';
 import PageContent from '../common/PageContent';
 import HeaderTitle from '../common/HeaderTitle';
+import AccessContext from '../../contexts/AccessContext';
 
 class ClientApplications extends PureComponent {
+    static contextType = AccessContext;
+
     static propTypes = {
         fetchApplication: PropTypes.func.isRequired,
         appName: PropTypes.string,
@@ -21,7 +24,6 @@ class ClientApplications extends PureComponent {
         location: PropTypes.object,
         storeApplicationMetaData: PropTypes.func.isRequired,
         deleteApplication: PropTypes.func.isRequired,
-        hasPermission: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
     };
 
@@ -60,7 +62,8 @@ class ClientApplications extends PureComponent {
         } else if (!this.props.application) {
             return <p>Application ({this.props.appName}) not found</p>;
         }
-        const { application, storeApplicationMetaData, hasPermission } = this.props;
+        const { hasAccess } = this.context;
+        const { application, storeApplicationMetaData } = this.props;
         const { appName, instances, strategies, seenToggles, url, description, icon = 'apps', createdAt } = application;
 
         const toggleModal = () => {
@@ -84,7 +87,7 @@ class ClientApplications extends PureComponent {
                         strategies={strategies}
                         instances={instances}
                         seenToggles={seenToggles}
-                        hasPermission={hasPermission}
+                        hasAccess={hasAccess}
                         formatFullDateTime={this.formatFullDateTime}
                     />
                 ),
@@ -126,7 +129,7 @@ class ClientApplications extends PureComponent {
                                 />
 
                                 <ConditionallyRender
-                                    condition={hasPermission(UPDATE_APPLICATION)}
+                                    condition={hasAccess(UPDATE_APPLICATION)}
                                     show={
                                         <Button color="secondary" title="Delete application" onClick={toggleModal}>
                                             Delete
@@ -145,7 +148,7 @@ class ClientApplications extends PureComponent {
                     </Typography>
                 </div>
                 <ConditionallyRender
-                    condition={hasPermission(UPDATE_APPLICATION)}
+                    condition={hasAccess(UPDATE_APPLICATION)}
                     show={
                         <div>
                             {renderModal()}

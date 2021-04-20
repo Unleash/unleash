@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { fetchArchive, revive } from './../../store/archive/actions';
 import ViewToggleComponent from '../feature/FeatureView/FeatureView';
-import { hasPermission } from '../../permissions';
 import { fetchTags } from '../../store/feature-tags/actions';
 
 export default connect(
@@ -14,7 +13,6 @@ export default connect(
         tagTypes: state.tagTypes.toJS(),
         featureTags: state.featureTags.toJS(),
         activeTab: props.activeTab,
-        hasPermission: hasPermission.bind(null, state.user.get('profile')),
     }),
     {
         fetchArchive,

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Grid, Switch, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import PageContent from '../../../component/common/PageContent/PageContent';
+import AccessContext from '../../../contexts/AccessContext';
+import { ADMIN } from '../../../component/AccessProvider/permissions';
 
 const initialState = {
     enabled: false,
@@ -10,9 +12,10 @@ const initialState = {
     unleashHostname: location.hostname,
 };
 
-function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, hasPermission, unleashUrl }) {
+function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, unleashUrl }) {
     const [data, setData] = useState(initialState);
     const [info, setInfo] = useState();
+    const { hasAccess } = useContext(AccessContext);
 
     useEffect(() => {
         getGoogleConfig();
@@ -25,7 +28,7 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, hasPermission
         }
     }, [config]);
 
-    if (!hasPermission('ADMIN')) {
+    if (!hasAccess(ADMIN)) {
         return <span>You need admin privileges to access this section.</span>;
     }
 
@@ -193,7 +196,6 @@ GoogleAuth.propTypes = {
     unleashUrl: PropTypes.string,
     getGoogleConfig: PropTypes.func.isRequired,
     updateGoogleConfig: PropTypes.func.isRequired,
-    hasPermission: PropTypes.func.isRequired,
 };
 
 export default GoogleAuth;

@@ -35,294 +35,187 @@ exports[`renders correctly with one strategy 1`] = `
         >
           another's description
         </h6>
-        <div>
+        <section>
           <div
-            className="MuiPaper-root makeStyles-tabNav-8 MuiPaper-elevation1 MuiPaper-rounded"
+            className="content"
           >
             <div
-              className="MuiTabs-root"
+              className="listcontainer"
             >
               <div
-                className="MuiTabs-scroller MuiTabs-fixed"
-                onScroll={[Function]}
-                style={
-                  Object {
-                    "marginBottom": null,
-                    "overflow": "hidden",
-                  }
-                }
+                className="MuiGrid-root MuiGrid-container"
               >
                 <div
-                  className="MuiTabs-flexContainer MuiTabs-centered"
-                  onKeyDown={[Function]}
-                  role="tablist"
+                  className="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-12 MuiGrid-grid-md-12"
                 >
-                  <button
-                    aria-controls="tabpanel-0"
-                    aria-selected={true}
-                    className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected"
-                    disabled={false}
-                    id="tab-0"
-                    onBlur={[Function]}
-                    onClick={[Function]}
-                    onDragLeave={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onKeyUp={[Function]}
-                    onMouseDown={[Function]}
-                    onMouseLeave={[Function]}
-                    onMouseUp={[Function]}
-                    onTouchEnd={[Function]}
-                    onTouchMove={[Function]}
-                    onTouchStart={[Function]}
-                    role="tab"
-                    tabIndex={0}
-                    type="button"
+                  <h6>
+                    Parameters
+                  </h6>
+                  <hr />
+                  <ul
+                    className="MuiList-root MuiList-padding"
                   >
-                    <span
-                      className="MuiTab-wrapper"
+                    <li
+                      className="MuiListItem-root MuiListItem-gutters"
+                      disabled={false}
                     >
-                      Details
-                    </span>
-                    <span
-                      className="MuiTouchRipple-root"
-                    />
-                  </button>
-                  <button
-                    aria-controls="tabpanel-1"
-                    aria-selected={false}
-                    className="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary"
-                    disabled={false}
-                    id="tab-1"
-                    onBlur={[Function]}
-                    onClick={[Function]}
-                    onDragLeave={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onKeyUp={[Function]}
-                    onMouseDown={[Function]}
-                    onMouseLeave={[Function]}
-                    onMouseUp={[Function]}
-                    onTouchEnd={[Function]}
-                    onTouchMove={[Function]}
-                    onTouchStart={[Function]}
-                    role="tab"
-                    tabIndex={-1}
-                    type="button"
-                  >
-                    <span
-                      className="MuiTab-wrapper"
-                    >
-                      Edit
-                    </span>
-                    <span
-                      className="MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
-                <span
-                  className="PrivateTabIndicator-root-9 PrivateTabIndicator-colorPrimary-10 MuiTabs-indicator"
-                  style={
-                    Object {
-                      "left": 0,
-                      "width": 0,
-                    }
-                  }
-                />
-              </div>
-            </div>
-          </div>
-          <div>
-            <div
-              aria-labelledby="wrapped-tab-0"
-              hidden={false}
-              id="wrapped-tabpanel-0"
-              role="tabpanel"
-            >
-              <div
-                className="listcontainer"
-              >
-                <div
-                  className="MuiGrid-root MuiGrid-container"
-                >
-                  <div
-                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-12 MuiGrid-grid-md-12"
-                  >
-                    <h6>
-                      Parameters
-                    </h6>
-                    <hr />
-                    <ul
-                      className="MuiList-root MuiList-padding"
-                    >
-                      <li
-                        className="MuiListItem-root MuiListItem-gutters"
-                        disabled={false}
+                      <div
+                        aria-describedby={null}
+                        className="MuiListItemAvatar-root"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
+                        title="Required"
                       >
-                        <div
-                          aria-describedby={null}
-                          className="MuiListItemAvatar-root"
-                          onBlur={[Function]}
-                          onFocus={[Function]}
-                          onMouseLeave={[Function]}
-                          onMouseOver={[Function]}
-                          onTouchEnd={[Function]}
-                          onTouchStart={[Function]}
-                          title="Required"
+                        <span
+                          aria-hidden={true}
+                          className="material-icons MuiIcon-root"
                         >
-                          <span
-                            aria-hidden={true}
-                            className="material-icons MuiIcon-root"
-                          >
-                            add
-                          </span>
-                        </div>
-                        <div
-                          className="MuiListItemText-root MuiListItemText-multiline"
-                        >
-                          <span
-                            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-                          >
-                            <div>
-                              customParam
-                               
-                              <small>
-                                (
-                                list
-                                )
-                              </small>
-                            </div>
-                          </span>
-                          <p
-                            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                          >
-                            customList
-                          </p>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                  <div
-                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-12 MuiGrid-grid-md-6"
-                  >
-                    <h6>
-                      Applications using this strategy
-                    </h6>
-                    <hr />
-                    <ul
-                      className="MuiList-root MuiList-padding"
-                    >
-                      <li
-                        className="MuiListItem-root listItem MuiListItem-gutters"
-                        disabled={false}
+                          add
+                        </span>
+                      </div>
+                      <div
+                        className="MuiListItemText-root MuiListItemText-multiline"
                       >
-                        <div
-                          className="MuiListItemAvatar-root"
+                        <span
+                          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
                         >
-                          <div
-                            className="MuiAvatar-root MuiAvatar-circle MuiAvatar-colorDefault"
-                          >
-                            <span
-                              aria-hidden={true}
-                              className="material-icons MuiIcon-root"
-                            >
-                              apps
-                            </span>
+                          <div>
+                            customParam
+                             
+                            <small>
+                              (
+                              list
+                              )
+                            </small>
                           </div>
-                        </div>
-                        <div
-                          className="MuiListItemText-root MuiListItemText-multiline"
+                        </span>
+                        <p
+                          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                         >
-                          <span
-                            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-                          >
-                            <a
-                              className="listLink truncate"
-                              href="/applications/appA"
-                              onClick={[Function]}
-                            >
-                              appA
-                            </a>
-                          </span>
-                          <p
-                            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                          >
-                            app description
-                          </p>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                  <div
-                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-12 MuiGrid-grid-md-6"
+                          customList
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-12 MuiGrid-grid-md-6"
+                >
+                  <h6>
+                    Applications using this strategy
+                  </h6>
+                  <hr />
+                  <ul
+                    className="MuiList-root MuiList-padding"
                   >
-                    <h6>
-                      Toggles using this strategy
-                    </h6>
-                    <hr />
-                    <ul
-                      className="MuiList-root truncate MuiList-padding"
-                      style={
-                        Object {
-                          "textAlign": "left",
-                        }
-                      }
+                    <li
+                      className="MuiListItem-root listItem MuiListItem-gutters"
+                      disabled={false}
                     >
-                      <li
-                        className="MuiListItem-root MuiListItem-gutters"
-                        disabled={false}
+                      <div
+                        className="MuiListItemAvatar-root"
                       >
                         <div
-                          aria-describedby={null}
-                          className="MuiListItemAvatar-root"
-                          onBlur={[Function]}
-                          onFocus={[Function]}
-                          onMouseLeave={[Function]}
-                          onMouseOver={[Function]}
-                          onTouchEnd={[Function]}
-                          onTouchStart={[Function]}
-                          title="Disabled"
+                          className="MuiAvatar-root MuiAvatar-circle MuiAvatar-colorDefault"
                         >
                           <span
                             aria-hidden={true}
                             className="material-icons MuiIcon-root"
                           >
-                            pause
+                            apps
                           </span>
                         </div>
-                        <div
-                          className="MuiListItemText-root MuiListItemText-multiline"
+                      </div>
+                      <div
+                        className="MuiListItemText-root MuiListItemText-multiline"
+                      >
+                        <span
+                          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
                         >
-                          <span
-                            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                          <a
+                            className="listLink truncate"
+                            href="/applications/appA"
+                            onClick={[Function]}
                           >
-                            <a
-                              href="/features/view/toggleA"
-                              onClick={[Function]}
-                            >
-                              toggleA
-                            </a>
-                          </span>
-                          <p
-                            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                            appA
+                          </a>
+                        </span>
+                        <p
+                          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                        >
+                          app description
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-12 MuiGrid-grid-md-6"
+                >
+                  <h6>
+                    Toggles using this strategy
+                  </h6>
+                  <hr />
+                  <ul
+                    className="MuiList-root truncate MuiList-padding"
+                    style={
+                      Object {
+                        "textAlign": "left",
+                      }
+                    }
+                  >
+                    <li
+                      className="MuiListItem-root MuiListItem-gutters"
+                      disabled={false}
+                    >
+                      <div
+                        aria-describedby={null}
+                        className="MuiListItemAvatar-root"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
+                        title="Disabled"
+                      >
+                        <span
+                          aria-hidden={true}
+                          className="material-icons MuiIcon-root"
+                        >
+                          pause
+                        </span>
+                      </div>
+                      <div
+                        className="MuiListItemText-root MuiListItemText-multiline"
+                      >
+                        <span
+                          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                        >
+                          <a
+                            href="/features/view/toggleA"
+                            onClick={[Function]}
                           >
-                            toggle description
-                          </p>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
+                            toggleA
+                          </a>
+                        </span>
+                        <p
+                          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                        >
+                          toggle description
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-            <div
-              aria-labelledby="wrapped-tab-1"
-              hidden={true}
-              id="wrapped-tabpanel-1"
-              role="tabpanel"
-            />
           </div>
-        </div>
+        </section>
       </div>
     </div>
   </div>

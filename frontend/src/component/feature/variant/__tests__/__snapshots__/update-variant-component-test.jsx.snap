@@ -596,5 +596,35 @@ exports[`renders correctly with without variants and no permissions 1`] = `
     No variants defined.
   </p>
   <br />
+  <div>
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained addVariantButton MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      title="Add variant"
+      type="button"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Add variant
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
 </section>
 `;

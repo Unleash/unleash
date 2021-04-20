@@ -3,7 +3,6 @@ import { ThemeProvider } from '@material-ui/core';
 
 import UpdateVariant from './../update-variant-component';
 import renderer from 'react-test-renderer';
-import { UPDATE_FEATURE } from '../../../../permissions';
 import { weightTypes } from '../enums';
 import theme from '../../../../themes/main-theme';
 
@@ -24,7 +23,7 @@ test('renders correctly with without variants', () => {
                     updateVariant={jest.fn()}
                     stickinessOptions={['default']}
                     updateStickiness={jest.fn()}
-                    hasPermission={permission => permission === UPDATE_FEATURE}
+                    editable
                 />
             </MemoryRouter>
         </ThemeProvider>
@@ -45,7 +44,7 @@ test('renders correctly with without variants and no permissions', () => {
                     updateVariant={jest.fn()}
                     stickinessOptions={['default']}
                     updateStickiness={jest.fn()}
-                    hasPermission={() => false}
+                    editable
                 />
             </MemoryRouter>
         </ThemeProvider>
@@ -105,7 +104,7 @@ test('renders correctly with with variants', () => {
                     updateVariant={jest.fn()}
                     stickinessOptions={['default']}
                     updateStickiness={jest.fn()}
-                    hasPermission={permission => permission === UPDATE_FEATURE}
+                    editable
                 />
             </MemoryRouter>
         </ThemeProvider>

@@ -87,19 +87,19 @@ Array [
   },
   Object {
     "component": [Function],
-    "icon": "exit_to_app",
-    "layout": "main",
-    "path": "/logout",
-    "title": "Sign out",
-    "type": "protected",
-  },
-  Object {
-    "component": [Function],
     "hidden": false,
     "icon": "album",
     "layout": "main",
     "path": "/admin",
     "title": "Admin",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
+    "icon": "exit_to_app",
+    "layout": "main",
+    "path": "/logout",
+    "title": "Sign out",
     "type": "protected",
   },
 ]

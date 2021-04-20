@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, Chip, Icon, TableCell, TableRow } from '@material-ui/core';
-import { UPDATE_FEATURE } from '../../../permissions';
 import { weightTypes } from './enums';
 
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 
 import styles from './variant.module.scss';
-function VariantViewComponent({ variant, editVariant, removeVariant, hasPermission }) {
+function VariantViewComponent({ variant, editVariant, removeVariant, editable }) {
     const { FIX } = weightTypes;
     return (
         <TableRow>
@@ -29,7 +28,7 @@ function VariantViewComponent({ variant, editVariant, removeVariant, hasPermissi
             <TableCell>{variant.weight / 10.0} %</TableCell>
             <TableCell>{variant.weightType === FIX ? 'Fix' : 'Variable'}</TableCell>
             <ConditionallyRender
-                condition={hasPermission(UPDATE_FEATURE)}
+                condition={editable}
                 show={
                     <TableCell className={styles.actions}>
                         <div className={styles.actionsContainer}>
@@ -52,7 +51,7 @@ VariantViewComponent.propTypes = {
     variant: PropTypes.object,
     removeVariant: PropTypes.func,
     editVariant: PropTypes.func,
-    hasPermission: PropTypes.func.isRequired,
+    editable: PropTypes.bool.isRequired,
 };
 
 export default VariantViewComponent;

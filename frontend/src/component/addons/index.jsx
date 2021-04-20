@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import AddonsListComponent from './AddonList';
 import { fetchAddons, removeAddon, updateAddon } from '../../store/addons/actions';
-import { hasPermission } from '../../permissions';
 
 const mapStateToProps = state => {
     const list = state.addons.toJS();
@@ -9,7 +8,6 @@ const mapStateToProps = state => {
     return {
         addons: list.addons,
         providers: list.providers,
-        hasPermission: hasPermission.bind(null, state.user.get('profile')),
     };
 };
 

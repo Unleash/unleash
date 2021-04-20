@@ -7,7 +7,6 @@ import { updateWeight } from '../../common/util';
 const mapStateToProps = (state, ownProps) => ({
     variants: ownProps.featureToggle.variants || [],
     stickinessOptions: ['default', ...state.context.filter(c => c.stickiness).map(c => c.name)],
-    hasPermission: ownProps.hasPermission,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

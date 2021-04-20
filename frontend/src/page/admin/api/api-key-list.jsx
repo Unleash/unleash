@@ -1,5 +1,5 @@
 /* eslint-disable no-alert */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Table, TableHead, TableBody, TableRow, TableCell, IconButton } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
@@ -8,8 +8,11 @@ import CreateApiKey from './api-key-create';
 import Secret from './secret';
 import ConditionallyRender from '../../../component/common/ConditionallyRender/ConditionallyRender';
 import Dialogue from '../../../component/common/Dialogue/Dialogue';
+import AccessContext from '../../../contexts/AccessContext';
+import { DELETE_API_TOKEN, CREATE_API_TOKEN } from '../../../component/AccessProvider/permissions';
 
-function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, hasPermission, unleashUrl }) {
+function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, unleashUrl }) {
+    const { hasAccess } = useContext(AccessContext);
     const [showDelete, setShowDelete] = useState(false);
     const [delKey, setDelKey] = useState(undefined);
     const deleteKey = async () => {
@@ -55,7 +58,7 @@ function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, hasPermis
                     {keys.map(item => (
                         <TableRow key={item.secret}>
                             <TableCell style={{ textAlign: 'left' }}>
-                                {formatFullDateTimeWithLocale(item.created, location.locale)}
+                                {formatFullDateTimeWithLocale(item.createdAt, location.locale)}
                             </TableCell>
                             <TableCell style={{ textAlign: 'left' }}>{item.username}</TableCell>
                             <TableCell style={{ textAlign: 'left' }}>{item.type}</TableCell>
@@ -63,7 +66,7 @@ function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, hasPermis
                                 <Secret value={item.secret} />
                             </TableCell>
                             <ConditionallyRender
-                                condition={hasPermission('ADMIN')}
+                                condition={hasAccess(DELETE_API_TOKEN)}
                                 show={
                                     <TableCell style={{ textAlign: 'right' }}>
                                         <IconButton
@@ -81,23 +84,18 @@ function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, hasPermis
                     ))}
                 </TableBody>
             </Table>
-            <ConditionallyRender
-                condition={hasPermission('ADMIN')}
-                show={
-                    <Dialogue
-                        open={showDelete}
-                        onClick={deleteKey}
-                        onClose={() => {
-                            setShowDelete(false);
-                            setDelKey(undefined);
-                        }}
-                        title="Really delete API key?"
-                    >
-                        <div>Are you sure you want to delete?</div>
-                    </Dialogue>
-                }
-            />
-            <ConditionallyRender condition={hasPermission('ADMIN')} show={<CreateApiKey addKey={addKey} />} />
+            <Dialogue
+                open={showDelete}
+                onClick={deleteKey}
+                onClose={() => {
+                    setShowDelete(false);
+                    setDelKey(undefined);
+                }}
+                title="Really delete API key?"
+            >
+                <div>Are you sure you want to delete?</div>
+            </Dialogue>
+            <ConditionallyRender condition={hasAccess(CREATE_API_TOKEN)} show={<CreateApiKey addKey={addKey} />} />
         </div>
     );
 }
@@ -109,7 +107,6 @@ ApiKeyList.propTypes = {
     addKey: PropTypes.func.isRequired,
     keys: PropTypes.array.isRequired,
     unleashUrl: PropTypes.string,
-    hasPermission: PropTypes.func.isRequired,
 };
 
 export default ApiKeyList;

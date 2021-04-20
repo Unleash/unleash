@@ -10,7 +10,7 @@ import Status from '../../status-component';
 import FeatureToggleListItemChip from './FeatureToggleListItemChip';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 
-import { UPDATE_FEATURE } from '../../../../permissions';
+import { UPDATE_FEATURE } from '../../../AccessProvider/permissions';
 import { calc, styles as commonStyles } from '../../../common';
 
 import { useStyles } from './styles';
@@ -22,12 +22,12 @@ const FeatureToggleListItem = ({
     metricsLastHour = { yes: 0, no: 0, isFallback: true },
     metricsLastMinute = { yes: 0, no: 0, isFallback: true },
     revive,
-    hasPermission,
+    hasAccess,
     ...rest
 }) => {
     const styles = useStyles();
 
-    const { name, description, enabled, type, stale, createdAt } = feature;
+    const { name, description, enabled, type, stale, createdAt, project } = feature;
     const { showLastHour = false } = settings;
     const isStale = showLastHour
         ? metricsLastHour.isFallback
@@ -64,7 +64,7 @@ const FeatureToggleListItem = ({
             </span>
             <span className={styles.listItemToggle}>
                 <ConditionallyRender
-                    condition={hasPermission(UPDATE_FEATURE)}
+                    condition={hasAccess(UPDATE_FEATURE, project)}
                     show={
                         <Switch
                             disabled={toggleFeature === undefined}
@@ -115,7 +115,7 @@ const FeatureToggleListItem = ({
                 <FeatureToggleListItemChip type={type} />
             </span>
             <ConditionallyRender
-                condition={revive && hasPermission(UPDATE_FEATURE)}
+                condition={revive && hasAccess(UPDATE_FEATURE, project)}
                 show={
                     <IconButton onClick={() => revive(feature.name)}>
                         <Icon>undo</Icon>
@@ -134,7 +134,7 @@ FeatureToggleListItem.propTypes = {
     metricsLastHour: PropTypes.object,
     metricsLastMinute: PropTypes.object,
     revive: PropTypes.func,
-    hasPermission: PropTypes.func.isRequired,
+    hasAccess: PropTypes.func.isRequired,
 };
 
 export default memo(FeatureToggleListItem);

@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import ApplicationEdit from './application-edit-component';
 import { fetchApplication, storeApplicationMetaData, deleteApplication } from './../../store/application/actions';
-import { hasPermission } from '../../permissions';
 
 const mapStateToProps = (state, props) => {
     let application = state.applications.getIn(['apps', props.appName]);
@@ -12,7 +11,6 @@ const mapStateToProps = (state, props) => {
     return {
         application,
         location,
-        hasPermission: hasPermission.bind(null, state.user.get('profile')),
     };
 };
 

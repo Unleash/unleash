@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useContext, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -21,21 +21,24 @@ import HeaderTitle from '../../common/HeaderTitle';
 
 import loadingFeatures from './loadingFeatures';
 
-import { CREATE_FEATURE } from '../../../permissions';
+import { CREATE_FEATURE } from '../../AccessProvider/permissions';
+
+import AccessContext from '../../../contexts/AccessContext';
 
 import { useStyles } from './styles';
 
 const FeatureToggleList = ({
     fetcher,
     features,
-    hasPermission,
     settings,
     revive,
+    currentProjectId,
     updateSetting,
     featureMetrics,
     toggleFeature,
     loading,
 }) => {
+    const { hasAccess } = useContext(AccessContext);
     const styles = useStyles();
     const smallScreen = useMediaQuery('(max-width:700px)');
 
@@ -66,7 +69,7 @@ const FeatureToggleList = ({
                     feature={feature}
                     toggleFeature={toggleFeature}
                     revive={revive}
-                    hasPermission={hasPermission}
+                    hasAccess={hasAccess}
                     className={'skeleton'}
                 />
             ));
@@ -86,7 +89,7 @@ const FeatureToggleList = ({
                         feature={feature}
                         toggleFeature={toggleFeature}
                         revive={revive}
-                        hasPermission={hasPermission}
+                        hasAccess={hasAccess}
                     />
                 ))}
                 elseShow={
@@ -132,39 +135,38 @@ const FeatureToggleList = ({
                                     }
                                 />
 
+ 
                                 <ConditionallyRender
-                                    condition={hasPermission(CREATE_FEATURE)}
+                                    condition={smallScreen}
                                     show={
-                                        <ConditionallyRender
-                                            condition={smallScreen}
-                                            show={
-                                                <Tooltip title="Create feature toggle">
-                                                    <IconButton
-                                                        component={Link}
-                                                        to="/features/create"
-                                                        data-test="add-feature-btn"
-                                                    >
-                                                        <Icon>add</Icon>
-                                                    </IconButton>
-                                                </Tooltip>
-                                            }
-                                            elseShow={
-                                                <Button
-                                                    to="/features/create"
-                                                    data-test="add-feature-btn"
-                                                    color="secondary"
-                                                    variant="contained"
-                                                    component={Link}
-                                                    className={classnames({
-                                                        skeleton: loading,
-                                                    })}
-                                                >
-                                                    Create feature toggle
-                                                </Button>
-                                            }
-                                        />
+                                        <Tooltip title="Create feature toggle">
+                                            <IconButton
+                                                component={Link}
+                                                to="/features/create"
+                                                data-test="add-feature-btn"
+                                                disabled={!hasAccess(CREATE_FEATURE, currentProjectId)}
+                                            >
+                                                <Icon>add</Icon>
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
+                                    elseShow={
+                                        <Button
+                                            to="/features/create"
+                                            data-test="add-feature-btn"
+                                            color="secondary"
+                                            variant="contained"
+                                            component={Link}
+                                            disabled={!hasAccess(CREATE_FEATURE, currentProjectId)}
+                                            className={classnames({
+                                                skeleton: loading,
+                                            })}
+                                        >
+                                            Create feature toggle
+                                        </Button>
                                     }
                                 />
+                
                             </div>
                         }
                     />
@@ -185,8 +187,8 @@ FeatureToggleList.propTypes = {
     toggleFeature: PropTypes.func,
     settings: PropTypes.object,
     history: PropTypes.object.isRequired,
-    hasPermission: PropTypes.func.isRequired,
     loading: PropTypes.bool,
+    currentProjectId: PropTypes.string.isRequired,
 };
 
 export default FeatureToggleList;

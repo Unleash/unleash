@@ -8,5 +8,5 @@ exports.up = function(db, cb) {
 };
 
 exports.down = function(db, cb) {
-    db.runSql(``, cb);
+    db.runSql('', cb);
 };

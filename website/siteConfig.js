@@ -77,7 +77,7 @@ const siteConfig = {
         { doc: 'integrations/integrations', label: 'Integrations' },
         { doc: 'developer_guide', label: 'Contribute' },
         { doc: 'api/client/features', label: 'API' },
-        { href: 'https://www.unleash-hosted.com/open-source', label: 'Enterprise' },
+        { href: 'https://www.unleash-hosted.com/pricing', label: 'Enterprise' },
         { page: 'help', label: 'Help' },
         // {blog: true, label: 'Blog'},
     ],

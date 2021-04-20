@@ -185,7 +185,7 @@ const SASSOffering = () => (
     <p className="alert alert-primary">
       Unleash also comes in a enterprise edition with additional features and a hosted option. <br />
       Check out&nbsp;
-      <a href="https://www.unleash-hosted.com/open-source">unleash-hosted.com</a>
+      <a href="https://www.unleash-hosted.com/pricing">unleash-hosted.com</a>
     </p>
   </div>
 );

@@ -1,8 +1,12 @@
 'use strict';
 
 // eslint-disable-next-line
-import { AccessStore } from './access-store';
+import EventEmitter from "events";
+import { Knex } from 'knex';
+import { AccessStore } from './access-store';
 import { ResetTokenStore } from './reset-token-store';
+import { IUnleashConfig } from '../types/option';
+import { IUnleashStores } from '../types/stores';
 
 const { createDb } = require('./db-pool');
 const EventStore = require('./event-store');
@@ -22,7 +26,10 @@ const TagTypeStore = require('./tag-type-store');
 const AddonStore = require('./addon-store');
 const { ApiTokenStore } = require('./api-token-store');
 
-module.exports.createStores = (config, eventBus) => {
+export const createStores = (
+    config: IUnleashConfig,
+    eventBus: EventEmitter,
+): IUnleashStores => {
     const { getLogger } = config;
     const db = createDb(config);
     const eventStore = new EventStore(db, getLogger);
@@ -45,11 +52,7 @@ module.exports.createStores = (config, eventBus) => {
             eventBus,
             getLogger,
         ),
-        contextFieldStore: new ContextFieldStore(
-            db,
-            config.customContextFields,
-            getLogger,
-        ),
+        contextFieldStore: new ContextFieldStore(db, getLogger),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),
         projectStore: new ProjectStore(db, getLogger),
@@ -60,4 +63,8 @@ module.exports.createStores = (config, eventBus) => {
         apiTokenStore: new ApiTokenStore(db, eventBus, getLogger),
         resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),
     };
+};
+
+module.exports = {
+    createStores,
 };

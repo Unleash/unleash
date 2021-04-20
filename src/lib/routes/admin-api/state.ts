@@ -1,13 +1,18 @@
 'use strict';
 
-const mime = require('mime');
-const YAML = require('js-yaml');
-const moment = require('moment');
-const multer = require('multer');
-const Controller = require('../controller');
-const { ADMIN } = require('../../permissions');
-const extractUser = require('../../extract-user');
-const { handleErrors } = require('./util');
+import * as mime from 'mime';
+import YAML from 'js-yaml';
+import moment from 'moment';
+import multer from 'multer';
+import { Request, Response } from 'express';
+import Controller from '../controller';
+import { ADMIN } from '../../permissions';
+import extractUser from '../../extract-user';
+import { handleErrors } from './util';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
+import { Logger } from '../../logger';
+import StateService from '../../services/state-service';
 
 const upload = multer({ limits: { fileSize: 5242880 } });
 const paramToBool = (param, def) => {
@@ -21,24 +26,35 @@ const paramToBool = (param, def) => {
     return Boolean(nu);
 };
 class StateController extends Controller {
-    constructor(config, services) {
+    private logger: Logger;
+
+    private stateService: StateService;
+
+    constructor(
+        config: IUnleashConfig,
+        { stateService }: Pick<IUnleashServices, 'stateService'>,
+    ) {
         super(config);
         this.logger = config.getLogger('/admin-api/state.js');
-        this.stateService = services.stateService;
+        this.stateService = stateService;
         this.fileupload('/import', upload.single('file'), this.import, ADMIN);
         this.get('/export', this.export, ADMIN);
     }
 
-    async import(req, res) {
+    async import(req: Request, res: Response): Promise<void> {
         const userName = extractUser(req);
         const { drop, keep } = req.query;
-
+        // TODO: Should override request type so file is a type on request
         try {
             let data;
+            // @ts-ignore
             if (req.file) {
-                if (mime.getType(req.file.originalname) === 'text/yaml') {
+                // @ts-ignore
+                if (mime.lookup(req.file.originalname) === 'text/yaml') {
+                    // @ts-ignore
                     data = YAML.safeLoad(req.file.buffer);
                 } else {
+                    // @ts-ignore
                     data = JSON.parse(req.file.buffer);
                 }
             } else {
@@ -48,8 +64,8 @@ class StateController extends Controller {
             await this.stateService.import({
                 data,
                 userName,
-                dropBeforeImport: paramToBool(drop),
-                keepExisting: paramToBool(keep),
+                dropBeforeImport: paramToBool(drop, false),
+                keepExisting: paramToBool(keep, true),
             });
             res.sendStatus(202);
         } catch (err) {
@@ -57,7 +73,7 @@ class StateController extends Controller {
         }
     }
 
-    async export(req, res) {
+    async export(req: Request, res: Response): Promise<void> {
         const { format } = req.query;
 
         const downloadFile = paramToBool(req.query.download, false);
@@ -95,5 +111,5 @@ class StateController extends Controller {
         }
     }
 }
-
+export default StateController;
 module.exports = StateController;

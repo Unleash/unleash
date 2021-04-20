@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { IUnleashConfig } from '../types/core';
+import { IUnleashConfig } from '../types/option';
 
 const apiAccessMiddleware = (
-    config: IUnleashConfig,
+    {
+        getLogger,
+        authentication,
+    }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
     { apiTokenService }: any,
 ): any => {
-    const logger = config.getLogger('/middleware/api-token.ts');
+    const logger = getLogger('/middleware/api-token.ts');
     logger.info('Enabling api-token middleware');
 
-    if (!config.authentication.enableApiToken) {
+    if (!authentication.enableApiToken) {
         return (req, res, next) => next();
     }
 

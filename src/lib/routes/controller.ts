@@ -1,4 +1,5 @@
-'use strict';
+import { IRouter } from 'express';
+import { IUnleashConfig } from '../types/option';
 
 const { Router } = require('express');
 const NoAccessError = require('../error/no-access-error');
@@ -20,18 +21,26 @@ const checkPermission = permission => async (req, res, next) => {
 /**
  * Base class for Controllers to standardize binding to express Router.
  */
-class Controller {
-    constructor(config) {
-        const router = Router();
-        this.app = router;
+export default class Controller {
+    app: IRouter;
+
+    config: IUnleashConfig;
+
+    constructor(config: IUnleashConfig) {
+        this.app = Router();
         this.config = config;
     }
 
-    get(path, handler, permission) {
+    get(path: string, handler: Function, permission?: string): void {
         this.app.get(path, checkPermission(permission), handler.bind(this));
     }
 
-    post(path, handler, permission, ...acceptedContentTypes) {
+    post(
+        path: string,
+        handler: Function,
+        permission?: string,
+        ...acceptedContentTypes: string[]
+    ): void {
         this.app.post(
             path,
             checkPermission(permission),
@@ -40,7 +49,12 @@ class Controller {
         );
     }
 
-    put(path, handler, permission, ...acceptedContentTypes) {
+    put(
+        path: string,
+        handler: Function,
+        permission?: string,
+        ...acceptedContentTypes: string[]
+    ): void {
         this.app.put(
             path,
             checkPermission(permission),
@@ -49,24 +63,30 @@ class Controller {
         );
     }
 
-    delete(path, handler, permission) {
+    delete(path: string, handler: Function, permission?: string): void {
         this.app.delete(path, checkPermission(permission), handler.bind(this));
     }
 
-    fileupload(path, filehandler, handler, permission) {
+    fileupload(
+        path: string,
+        filehandler: Function,
+        handler: Function,
+        permission?: string,
+    ): void {
         this.app.post(
             path,
             checkPermission(permission),
-            filehandler,
+            filehandler.bind(this),
             handler.bind(this),
         );
     }
 
-    use(path, router) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    use(path: string, router: IRouter): void {
         this.app.use(path, router);
     }
 
-    get router() {
+    get router(): any {
         return this.app;
     }
 }

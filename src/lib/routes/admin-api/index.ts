@@ -1,27 +1,27 @@
-'use strict';
-
-const Controller = require('../controller');
-const FeatureController = require('./feature.js');
-const FeatureTypeController = require('./feature-type.js');
-const ArchiveController = require('./archive.js');
-const EventController = require('./event.js');
-const StrategyController = require('./strategy');
-const MetricsController = require('./metrics');
-const UserController = require('./user');
-const ConfigController = require('./config');
-const ContextController = require('./context');
-const StateController = require('./state');
-const TagController = require('./tag');
-const TagTypeController = require('./tag-type');
-const AddonController = require('./addon');
-const ApiTokenController = require('./api-token-controller');
-const EmailController = require('./email');
-const UserAdminController = require('./user-admin');
-const apiDef = require('./api-def.json');
-const BootstrapController = require('./bootstrap-controller');
+import apiDef from './api-def.json';
+import Controller from '../controller';
+import { IUnleashServices } from '../../types/services';
+import { IUnleashConfig } from '../../types/option';
+import FeatureController from './feature';
+import FeatureTypeController from './feature-type';
+import ArchiveController from './archive';
+import StrategyController from './strategy';
+import EventController from './event';
+import MetricsController from './metrics';
+import UserController from './user';
+import ConfigController from './config';
+import ContextController from './context';
+import BootstrapController from './bootstrap-controller';
+import StateController from './state';
+import TagController from './tag';
+import TagTypeController from './tag-type';
+import AddonController from './addon';
+import ApiTokenController from './api-token-controller';
+import UserAdminController from './user-admin';
+import EmailController from './email';
 
 class AdminApi extends Controller {
-    constructor(config, services) {
+    constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);
 
         this.app.get('/', this.index);

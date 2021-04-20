@@ -1,25 +1,25 @@
 import Controller from '../controller';
 import { ADMIN } from '../../permissions';
-import { IUnleashConfig } from '../../types/core';
 import UserService from '../../services/user-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
 import { handleErrors } from './util';
+import { IUnleashConfig } from '../../types/option';
 
 const getCreatorUsernameOrPassword = req => req.user.username || req.user.email;
 
-class UserAdminController extends Controller {
+export default class UserAdminController extends Controller {
     private userService: UserService;
 
     private accessService: AccessService;
 
-    private logger: Logger;
+    private readonly logger: Logger;
 
     constructor(config: IUnleashConfig, { userService, accessService }) {
         super(config);
         this.userService = userService;
         this.accessService = accessService;
-        this.logger = config.getLogger('routes/user-controller.js');
+        this.logger = config.getLogger('routes/user-controller.ts');
 
         this.get('/', this.getUsers);
         this.get('/search', this.search);
@@ -31,7 +31,8 @@ class UserAdminController extends Controller {
         this.post('/reset-password', this.resetPassword);
     }
 
-    async resetPassword(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async resetPassword(req, res): Promise<void> {
         try {
             const requester = getCreatorUsernameOrPassword(req);
             const receiver = req.body.id;
@@ -45,7 +46,8 @@ class UserAdminController extends Controller {
         }
     }
 
-    async getUsers(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async getUsers(req, res): Promise<void> {
         try {
             const users = await this.userService.getAll();
             const rootRoles = await this.accessService.getRootRoles();
@@ -57,7 +59,8 @@ class UserAdminController extends Controller {
         }
     }
 
-    async search(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async search(req, res): Promise<void> {
         const { q } = req.query;
         try {
             const users =
@@ -69,7 +72,8 @@ class UserAdminController extends Controller {
         }
     }
 
-    async createUser(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async createUser(req, res): Promise<void> {
         const { username, email, name, rootRole } = req.body;
 
         try {
@@ -86,7 +90,8 @@ class UserAdminController extends Controller {
         }
     }
 
-    async updateUser(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async updateUser(req, res): Promise<void> {
         const { id } = req.params;
         const { name, email, rootRole } = req.body;
 
@@ -104,7 +109,8 @@ class UserAdminController extends Controller {
         }
     }
 
-    async deleteUser(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async deleteUser(req, res): Promise<void> {
         const { id } = req.params;
 
         try {
@@ -116,7 +122,8 @@ class UserAdminController extends Controller {
         }
     }
 
-    async validatePassword(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async validatePassword(req, res): Promise<void> {
         const { password } = req.body;
 
         try {
@@ -127,7 +134,8 @@ class UserAdminController extends Controller {
         }
     }
 
-    async changePassword(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async changePassword(req, res): Promise<void> {
         const { id } = req.params;
         const { password } = req.body;
 

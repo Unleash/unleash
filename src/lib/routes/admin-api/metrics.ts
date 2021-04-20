@@ -1,9 +1,23 @@
-const Controller = require('../controller');
-const { handleErrors } = require('./util');
-const { UPDATE_APPLICATION } = require('../../permissions');
+import { Request, Response } from 'express';
+import Controller from '../controller';
+import { handleErrors } from './util';
+import { UPDATE_APPLICATION } from '../../permissions';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
+import { Logger } from '../../logger';
+import ClientMetricsService from '../../services/client-metrics';
 
 class MetricsController extends Controller {
-    constructor(config, { clientMetricsService }) {
+    private logger: Logger;
+
+    private metrics: ClientMetricsService;
+
+    constructor(
+        config: IUnleashConfig,
+        {
+            clientMetricsService,
+        }: Pick<IUnleashServices, 'clientMetricsService'>,
+    ) {
         super(config);
         this.logger = config.getLogger('/admin-api/metrics.js');
 
@@ -27,7 +41,7 @@ class MetricsController extends Controller {
         this.get('/applications/:appName', this.getApplication);
     }
 
-    async getSeenToggles(req, res) {
+    async getSeenToggles(req: Request, res: Response): Promise<void> {
         try {
             const seenAppToggles = await this.metrics.getAppsWithToggles();
             res.json(seenAppToggles);
@@ -36,7 +50,7 @@ class MetricsController extends Controller {
         }
     }
 
-    async getSeenApps(req, res) {
+    async getSeenApps(req: Request, res: Response): Promise<void> {
         try {
             const seenApps = await this.metrics.getSeenApps();
             res.json(seenApps);
@@ -45,7 +59,7 @@ class MetricsController extends Controller {
         }
     }
 
-    async getFeatureToggles(req, res) {
+    async getFeatureToggles(req: Request, res: Response): Promise<void> {
         try {
             const toggles = await this.metrics.getTogglesMetrics();
             res.json(toggles);
@@ -54,7 +68,7 @@ class MetricsController extends Controller {
         }
     }
 
-    async getFeatureToggle(req, res) {
+    async getFeatureToggle(req: Request, res: Response): Promise<void> {
         try {
             const { name } = req.params;
             const data = await this.metrics.getTogglesMetrics();
@@ -69,7 +83,7 @@ class MetricsController extends Controller {
         }
     }
 
-    async deleteApplication(req, res) {
+    async deleteApplication(req: Request, res: Response): Promise<void> {
         const { appName } = req.params;
 
         try {
@@ -80,7 +94,7 @@ class MetricsController extends Controller {
         }
     }
 
-    async createApplication(req, res) {
+    async createApplication(req: Request, res: Response): Promise<void> {
         const input = { ...req.body, appName: req.params.appName };
         try {
             await this.metrics.createApplication(input);
@@ -90,7 +104,7 @@ class MetricsController extends Controller {
         }
     }
 
-    async getApplications(req, res) {
+    async getApplications(req: Request, res: Response): Promise<void> {
         try {
             const applications = await this.metrics.getApplications(req.query);
             res.json({ applications });
@@ -99,7 +113,7 @@ class MetricsController extends Controller {
         }
     }
 
-    async getApplication(req, res) {
+    async getApplication(req: Request, res: Response): Promise<void> {
         const { appName } = req.params;
 
         try {
@@ -110,5 +124,5 @@ class MetricsController extends Controller {
         }
     }
 }
-
+export default MetricsController;
 module.exports = MetricsController;

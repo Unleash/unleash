@@ -13,7 +13,7 @@ import { ApiTokenType } from '../../db/api-token-store';
 import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
 import User from '../../user';
-import { IUnleashConfig } from '../../types/core';
+import { IUnleashConfig } from '../../types/option';
 
 interface IServices {
     apiTokenService: ApiTokenService;

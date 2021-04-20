@@ -4,33 +4,26 @@ process.env.NODE_ENV = 'test';
 /* eslint-disable-next-line */
 const supertest = require('supertest');
 
-const { EventEmitter } = require('events');
 const getApp = require('../../../lib/app');
 const getLogger = require('../../fixtures/no-logger');
+const createConfig = require('../../../lib/create-config');
+const { AuthType } = require('../../../lib/types/option');
 const { createServices } = require('../../../lib/services');
 
-const eventBus = new EventEmitter();
-
-function createApp(stores, adminAuthentication = 'none', preHook) {
-    const config = {
-        stores,
-        eventBus,
-        preHook,
-        adminAuthentication,
-        secret: 'super-secret',
-        session: {
-            db: true,
-            age: 4000,
-        },
+function createApp(stores, adminAuthentication = AuthType.NONE, preHook) {
+    const config = createConfig({
         authentication: {
-            customHook: () => {},
+            type: adminAuthentication,
+            customAuthHandler: preHook,
         },
-        unleashUrl: 'http://localhost:4242',
+        server: {
+            unleashUrl: 'http://localhost:4242',
+        },
         getLogger,
-    };
+    });
     const services = createServices(stores, config);
     // TODO: use create from server-impl instead?
-    return getApp(config, services);
+    return getApp(config, stores, services);
 }
 
 module.exports = {
@@ -40,12 +33,12 @@ module.exports = {
     },
 
     async setupAppWithAuth(stores) {
-        const app = createApp(stores, 'unsecure');
+        const app = createApp(stores, AuthType.DEMO);
         return supertest.agent(app);
     },
 
     async setupAppWithCustomAuth(stores, preHook) {
-        const app = createApp(stores, 'custom', preHook);
+        const app = createApp(stores, AuthType.CUSTOM, preHook);
         return supertest.agent(app);
     },
 };

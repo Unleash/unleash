@@ -1,5 +1,10 @@
 'use strict';
 
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
+import StrategyService from '../../services/strategy-service';
+import { Logger } from '../../logger';
+
 const Controller = require('../controller');
 
 const extractUser = require('../../extract-user');
@@ -13,12 +18,19 @@ const {
 const version = 1;
 
 class StrategyController extends Controller {
-    constructor(config, { strategyService }) {
+    private logger: Logger;
+
+    private strategyService: StrategyService;
+
+    constructor(
+        config: IUnleashConfig,
+        { strategyService }: Pick<IUnleashServices, 'strategyService'>,
+    ) {
         super(config);
         this.logger = config.getLogger('/admin-api/strategy.js');
         this.strategyService = strategyService;
 
-        this.get('/', this.getAllStratgies);
+        this.get('/', this.getAllStrategies);
         this.get('/:name', this.getStrategy);
         this.delete('/:name', this.removeStrategy, DELETE_STRATEGY);
         this.post('/', this.createStrategy, CREATE_STRATEGY);
@@ -35,7 +47,8 @@ class StrategyController extends Controller {
         );
     }
 
-    async getAllStratgies(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async getAllStrategies(req, res): Promise<void> {
         try {
             const strategies = await this.strategyService.getStrategies();
             res.json({ version, strategies });
@@ -44,7 +57,8 @@ class StrategyController extends Controller {
         }
     }
 
-    async getStrategy(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async getStrategy(req, res): Promise<void> {
         try {
             const { name } = req.params;
             const strategy = await this.strategyService.getStrategy(name);
@@ -54,7 +68,8 @@ class StrategyController extends Controller {
         }
     }
 
-    async removeStrategy(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async removeStrategy(req, res): Promise<void> {
         const strategyName = req.params.name;
         const userName = extractUser(req);
 
@@ -66,7 +81,8 @@ class StrategyController extends Controller {
         }
     }
 
-    async createStrategy(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async createStrategy(req, res): Promise<void> {
         const userName = extractUser(req);
         try {
             await this.strategyService.createStrategy(req.body, userName);
@@ -76,7 +92,8 @@ class StrategyController extends Controller {
         }
     }
 
-    async updateStrategy(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async updateStrategy(req, res): Promise<void> {
         const userName = extractUser(req);
         try {
             await this.strategyService.updateStrategy(req.body, userName);
@@ -86,7 +103,8 @@ class StrategyController extends Controller {
         }
     }
 
-    async deprecateStrategy(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async deprecateStrategy(req, res): Promise<void> {
         const userName = extractUser(req);
         const { strategyName } = req.params;
         if (strategyName === 'default') {
@@ -104,7 +122,8 @@ class StrategyController extends Controller {
         }
     }
 
-    async reactivateStrategy(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async reactivateStrategy(req, res): Promise<void> {
         const userName = extractUser(req);
         const { strategyName } = req.params;
         try {
@@ -118,5 +137,5 @@ class StrategyController extends Controller {
         }
     }
 }
-
+export default StrategyController;
 module.exports = StrategyController;

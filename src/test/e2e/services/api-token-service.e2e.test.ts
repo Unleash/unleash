@@ -3,19 +3,21 @@ import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { ApiTokenService } from '../../../lib/services/api-token-service';
 import { ApiTokenType, IApiToken } from '../../../lib/db/api-token-store';
+import createConfig from '../../../lib/create-config';
 
 let db;
 let stores;
 let apiTokenService: ApiTokenService;
 
 test.before(async () => {
+    const config = createConfig({
+        getLogger,
+        server: { baseUriPath: '/test' },
+    });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;
     // projectStore = stores.projectStore;
-    apiTokenService = new ApiTokenService(stores, {
-        getLogger,
-        baseUriPath: '/test',
-    });
+    apiTokenService = new ApiTokenService(stores, config);
 });
 
 test.after(async () => {

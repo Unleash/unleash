@@ -1,5 +1,8 @@
 'use strict';
 
+import createConfig from '../create-config';
+import { createServices } from '../services';
+
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
@@ -13,16 +16,12 @@ const eventBus = new EventEmitter();
 
 function getSetup(preRouterHook) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
-    const stores = store.createStores();
-    const app = getApp({
-        baseUriPath: base,
-        stores,
-        eventBus,
+    const config = createConfig({
+        server: { baseUriPath: base },
         getLogger,
-        preRouterHook(_app) {
+        preRouterHook: _app => {
             preRouterHook(_app);
-            ossAuth(_app, { baseUriPath: base });
-
+            ossAuth(_app, config.server.baseUriPath);
             _app.get(`${base}/api/protectedResource`, (req, res) => {
                 res.status(200)
                     .json({ message: 'OK' })
@@ -30,6 +29,9 @@ function getSetup(preRouterHook) {
             });
         },
     });
+    const stores = store.createStores();
+    const services = createServices(stores, config);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,

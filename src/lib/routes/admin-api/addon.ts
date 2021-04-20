@@ -1,17 +1,25 @@
 'use strict';
 
-const Controller = require('../controller');
+import { Request, Response } from 'express';
+import Controller from '../controller';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
+import { Logger } from '../../logger';
+import AddonService from '../../services/addon-service';
 
-const extractUser = require('../../extract-user');
-const { handleErrors } = require('./util');
-const {
-    CREATE_ADDON,
-    UPDATE_ADDON,
-    DELETE_ADDON,
-} = require('../../permissions');
+import extractUser from '../../extract-user';
+import { handleErrors } from './util';
+import { CREATE_ADDON, UPDATE_ADDON, DELETE_ADDON } from '../../permissions';
 
 class AddonController extends Controller {
-    constructor(config, { addonService }) {
+    private logger: Logger;
+
+    private addonService: AddonService;
+
+    constructor(
+        config: IUnleashConfig,
+        { addonService }: Pick<IUnleashServices, 'addonService'>,
+    ) {
         super(config);
         this.logger = config.getLogger('/admin-api/addon.js');
         this.addonService = addonService;
@@ -23,7 +31,7 @@ class AddonController extends Controller {
         this.delete('/:id', this.deleteAddon, DELETE_ADDON);
     }
 
-    async getAddons(req, res) {
+    async getAddons(req: Request, res: Response): Promise<void> {
         try {
             const addons = await this.addonService.getAddons();
             const providers = await this.addonService.getProviderDefinition();
@@ -33,7 +41,7 @@ class AddonController extends Controller {
         }
     }
 
-    async getAddon(req, res) {
+    async getAddon(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
         try {
             const addon = await this.addonService.getAddon(id);
@@ -43,7 +51,7 @@ class AddonController extends Controller {
         }
     }
 
-    async updateAddon(req, res) {
+    async updateAddon(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
         const createdBy = extractUser(req);
         const data = req.body;
@@ -60,7 +68,7 @@ class AddonController extends Controller {
         }
     }
 
-    async createAddon(req, res) {
+    async createAddon(req: Request, res: Response): Promise<void> {
         const createdBy = extractUser(req);
         const data = req.body;
         try {
@@ -71,7 +79,7 @@ class AddonController extends Controller {
         }
     }
 
-    async deleteAddon(req, res) {
+    async deleteAddon(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
         const username = extractUser(req);
         try {
@@ -82,5 +90,5 @@ class AddonController extends Controller {
         }
     }
 }
-
+export default AddonController;
 module.exports = AddonController;

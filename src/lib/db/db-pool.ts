@@ -1,15 +1,21 @@
 'use strict';
 
+import { Knex } from 'knex';
+import { IUnleashConfig } from '../types/option';
+
 const knex = require('knex');
 
-module.exports.createDb = function({ db, databaseSchema, getLogger }) {
+export function createDb({
+    db,
+    getLogger,
+}: Pick<IUnleashConfig, 'db' | 'getLogger'>): Knex {
     const logger = getLogger('db-pool.js');
     return knex({
         client: 'pg',
         version: db.version,
         connection: db,
         pool: db.pool,
-        searchPath: databaseSchema,
+        searchPath: db.schema,
         asyncStackTraces: true,
         log: {
             debug: msg => logger.debug(msg),
@@ -18,4 +24,7 @@ module.exports.createDb = function({ db, databaseSchema, getLogger }) {
             error: msg => logger.error(msg),
         },
     });
+}
+module.exports = {
+    createDb,
 };

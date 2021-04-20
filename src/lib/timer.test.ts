@@ -1,9 +1,7 @@
-'use strict';
+import test from 'ava';
+import timer from './timer';
 
-const test = require('ava');
-const timer = require('./timer');
-
-function timeout(fn, ms) {
+function timeout(fn, ms): Promise<void> {
     return new Promise(resolve =>
         setTimeout(() => {
             fn();

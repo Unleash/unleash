@@ -1,12 +1,18 @@
-const Controller = require('../controller');
+import { Request, Response } from 'express';
 
-const { handleErrors } = require('./util');
-const extractUser = require('../../extract-user');
-const {
+import Controller from '../controller';
+
+import { handleErrors } from './util';
+import extractUser from '../../extract-user';
+import {
     UPDATE_FEATURE,
     DELETE_FEATURE,
     CREATE_FEATURE,
-} = require('../../permissions');
+} from '../../permissions';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
+import { Logger } from '../../logger';
+import FeatureToggleService from '../../services/feature-toggle-service';
 
 const version = 1;
 const fields = [
@@ -23,7 +29,16 @@ const fields = [
 ];
 
 class FeatureController extends Controller {
-    constructor(config, { featureToggleService }) {
+    private logger: Logger;
+
+    private featureService: FeatureToggleService;
+
+    constructor(
+        config: IUnleashConfig,
+        {
+            featureToggleService,
+        }: Pick<IUnleashServices, 'featureToggleService'>,
+    ) {
         super(config);
         this.featureService = featureToggleService;
         this.logger = config.getLogger('/admin-api/feature.js');
@@ -48,7 +63,7 @@ class FeatureController extends Controller {
         );
     }
 
-    async getAllToggles(req, res) {
+    async getAllToggles(req: Request, res: Response): Promise<void> {
         try {
             const features = await this.featureService.getFeatures(
                 req.query,
@@ -60,7 +75,7 @@ class FeatureController extends Controller {
         }
     }
 
-    async getToggle(req, res) {
+    async getToggle(req: Request, res: Response): Promise<void> {
         try {
             const name = req.params.featureName;
             const feature = await this.featureService.getFeature(name);
@@ -70,7 +85,7 @@ class FeatureController extends Controller {
         }
     }
 
-    async listTags(req, res) {
+    async listTags(req: Request, res: Response): Promise<void> {
         try {
             const tags = await this.featureService.listTags(
                 req.params.featureName,
@@ -81,7 +96,7 @@ class FeatureController extends Controller {
         }
     }
 
-    async addTag(req, res) {
+    async addTag(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUser(req);
         try {
@@ -96,7 +111,7 @@ class FeatureController extends Controller {
         }
     }
 
-    async removeTag(req, res) {
+    async removeTag(req: Request, res: Response): Promise<void> {
         const { featureName, type, value } = req.params;
         const userName = extractUser(req);
         try {
@@ -111,7 +126,7 @@ class FeatureController extends Controller {
         }
     }
 
-    async validate(req, res) {
+    async validate(req: Request, res: Response): Promise<void> {
         const { name } = req.body;
 
         try {
@@ -122,7 +137,7 @@ class FeatureController extends Controller {
         }
     }
 
-    async createToggle(req, res) {
+    async createToggle(req: Request, res: Response): Promise<void> {
         const userName = extractUser(req);
 
         try {
@@ -136,7 +151,7 @@ class FeatureController extends Controller {
         }
     }
 
-    async updateToggle(req, res) {
+    async updateToggle(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUser(req);
         const updatedFeature = req.body;
@@ -152,7 +167,7 @@ class FeatureController extends Controller {
     }
 
     // Kept to keep backward compatibility
-    async toggle(req, res) {
+    async toggle(req: Request, res: Response): Promise<void> {
         const userName = extractUser(req);
         try {
             const name = req.params.featureName;
@@ -163,15 +178,15 @@ class FeatureController extends Controller {
         }
     }
 
-    async toggleOn(req, res) {
+    async toggleOn(req: Request, res: Response): Promise<void> {
         await this._updateField('enabled', true, req, res);
     }
 
-    async toggleOff(req, res) {
+    async toggleOff(req: Request, res: Response): Promise<void> {
         await this._updateField('enabled', false, req, res);
     }
 
-    async staleOn(req, res) {
+    async staleOn(req: Request, res: Response): Promise<void> {
         try {
             const { featureName } = req.params;
             const userName = extractUser(req);
@@ -186,7 +201,7 @@ class FeatureController extends Controller {
         }
     }
 
-    async staleOff(req, res) {
+    async staleOff(req: Request, res: Response): Promise<void> {
         try {
             const { featureName } = req.params;
             const userName = extractUser(req);
@@ -218,7 +233,7 @@ class FeatureController extends Controller {
         }
     }
 
-    async deleteToggle(req, res) {
+    async deleteToggle(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUser(req);
 
@@ -230,5 +245,5 @@ class FeatureController extends Controller {
         }
     }
 }
-
+export default FeatureController;
 module.exports = FeatureController;

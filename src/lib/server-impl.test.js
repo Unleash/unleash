@@ -44,11 +44,6 @@ const serverImpl = proxyquire('./server-impl', {
             };
         },
     },
-    './options': {
-        createOptions(o) {
-            return o;
-        },
-    },
     '../migrator': function() {
         return Promise.resolve();
     },

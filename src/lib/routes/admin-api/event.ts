@@ -1,6 +1,9 @@
 'use strict';
 
 import { handleErrors } from './util';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
+import EventService from '../../services/event-service';
 
 const Controller = require('../controller');
 
@@ -8,17 +11,23 @@ const eventDiffer = require('../../event-differ');
 
 const version = 1;
 
-class EventController extends Controller {
-    constructor(config) {
+export default class EventController extends Controller {
+    private eventService: EventService;
+
+    constructor(
+        config: IUnleashConfig,
+        { eventService }: Pick<IUnleashServices, 'eventService'>,
+    ) {
         super(config);
-        this.eventStore = config.stores.eventStore;
+        this.eventService = eventService;
         this.get('/', this.getEvents);
         this.get('/:name', this.getEventsForToggle);
     }
 
-    async getEvents(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async getEvents(req, res): Promise<void> {
         try {
-            const events = await this.eventStore.getEvents();
+            const events = await this.eventService.getEvents();
             eventDiffer.addDiffs(events);
             res.json({ version, events });
         } catch (e) {
@@ -26,10 +35,11 @@ class EventController extends Controller {
         }
     }
 
-    async getEventsForToggle(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async getEventsForToggle(req, res): Promise<void> {
         const toggleName = req.params.name;
         try {
-            const events = await this.eventStore.getEventsFilterByName(
+            const events = await this.eventService.getEventsForToggle(
                 toggleName,
             );
 

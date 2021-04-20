@@ -1,5 +1,6 @@
 import { LogProvider } from '../logger';
 import { IEmailOptions } from '../services/email-service';
+import { IUnleashStores } from './stores';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;
@@ -34,10 +35,16 @@ export interface IVersionOption {
     url?: string;
     enable?: boolean;
 }
-
+export enum AuthType {
+    OPEN_SOURCE = 'open-source',
+    DEMO = 'demo',
+    ENTERPRISE = 'enterprise',
+    CUSTOM = 'custom',
+    NONE = 'none',
+}
 export interface IAuthOption {
     enableApiToken: boolean;
-    type: 'open-source' | 'demo' | 'enterprise' | 'custom';
+    type: AuthType;
     customAuthHandler?: Function;
     createAdminUser: boolean;
 }
@@ -73,9 +80,28 @@ export interface IUnleashOptions {
     experimental?: {
         [key: string]: object;
     };
-    email?: Partial<IEmailOptions>;
+    email?: Partial<IEmailOption>;
     secureHeaders?: boolean;
     enableOAS?: boolean;
+    preHook?: Function;
+    preRouterHook?: Function;
+}
+
+export interface IEmailOption {
+    host?: string;
+    secure: boolean;
+    port: number;
+    sender: string;
+    smtpuser?: string;
+    smtppass?: string;
+}
+
+export interface ListeningPipe {
+    path: string;
+}
+export interface ListeningHost {
+    host?: string;
+    port: number;
 }
 
 export interface IUnleashConfig {
@@ -83,6 +109,7 @@ export interface IUnleashConfig {
     session: ISessionOption;
     getLogger: LogProvider;
     server: IServerOption;
+    listen: ListeningHost | ListeningPipe;
     versionCheck: IVersionOption;
     authentication: IAuthOption;
     ui: object;
@@ -90,7 +117,9 @@ export interface IUnleashConfig {
     experimental: {
         [key: string]: object;
     };
-    email: IEmailOptions;
+    email: IEmailOption;
     secureHeaders: boolean;
     enableOAS: boolean;
-};
+    preHook?: Function;
+    preRouterHook?: Function;
+}

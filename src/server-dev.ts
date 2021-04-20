@@ -11,12 +11,11 @@ unleash.start({
         database: 'unleash',
         ssl: false,
     },
-    enableRequestLogger: true,
-    enableOAS: true,
-    session: {
-        db: true
+    server: {
+        enableRequestLogger: true,
     },
+    enableOAS: true,
     versionCheck: {
         enable: false,
-    }
+    },
 });

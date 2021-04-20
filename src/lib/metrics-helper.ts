@@ -1,8 +1,5 @@
 /* eslint-disable no-param-reassign */
-
-'use strict';
-
-const timer = require('./timer');
+import timer from './timer';
 
 // wrapTimer keeps track of the timing of a async operation and emits
 // a event on the given eventBus once the operation is complete
@@ -11,7 +8,11 @@ const timer = require('./timer');
 // It transparently passes the data to the following .then(<func>)
 //
 // usage: promise.then(wrapTimer(bus, type, { payload: 'ok' }))
-const wrapTimer = (eventBus, event, args = {}) => {
+const wrapTimer: (EventEmitter, string, object) => (any) => any = (
+    eventBus,
+    event,
+    args = {},
+) => {
     const t = timer.new();
     return data => {
         args.time = t();
@@ -20,6 +21,10 @@ const wrapTimer = (eventBus, event, args = {}) => {
     };
 };
 
+const metricsHelper = {
+    wrapTimer,
+};
+export default metricsHelper;
 module.exports = {
     wrapTimer,
 };

@@ -1,9 +1,17 @@
 'use strict';
 
+import { Request, Response } from 'express';
+import { IUnleashServices } from '../../types/services';
+import { IUnleashConfig } from '../../types/option';
+import version from '../../util/version';
+
 const Controller = require('../controller');
 
 class ConfigController extends Controller {
-    constructor(config, { versionService }) {
+    constructor(
+        config: IUnleashConfig,
+        { versionService }: Pick<IUnleashServices, 'versionService'>,
+    ) {
         super(config);
         this.versionService = versionService;
         const authenticationType =
@@ -11,14 +19,14 @@ class ConfigController extends Controller {
         this.uiConfig = {
             ...config.ui,
             authenticationType,
-            unleashUrl: config.unleashUrl,
-            baseUriPath: config.baseUriPath,
-            version: config.version,
+            unleashUrl: config.server.unleashUrl,
+            baseUriPath: config.server.baseUriPath,
+            version,
         };
         this.get('/', this.getUIConfig);
     }
 
-    async getUIConfig(req, res) {
+    async getUIConfig(req: Request, res: Response): Promise<void> {
         const config = this.uiConfig;
         if (this.versionService) {
             const versionInfo = this.versionService.getVersionInfo();
@@ -28,5 +36,5 @@ class ConfigController extends Controller {
         }
     }
 }
-
+export default ConfigController;
 module.exports = ConfigController;

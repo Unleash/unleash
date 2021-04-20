@@ -11,8 +11,8 @@ const SimplePasswordProvider = require('./auth/simple-password-provider');
 
 class IndexRouter extends Controller {
     constructor(config, services) {
-        super(config);
-        this.use('/health', new HealthCheckController(config).router);
+        super(config, services);
+        this.use('/health', new HealthCheckController(config, services).router);
         this.use('/internal-backstage', new BackstageController(config).router);
         this.use('/logout', new LogoutController(config).router);
         this.use(

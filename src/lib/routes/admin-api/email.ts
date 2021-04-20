@@ -1,11 +1,16 @@
 import { ADMIN } from '../../permissions';
 import { TemplateFormat } from '../../services/email-service';
 import { handleErrors } from './util';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
 
 const Controller = require('../controller');
 
-class EmailController extends Controller {
-    constructor(config, { emailService }) {
+export default class EmailController extends Controller {
+    constructor(
+        config: IUnleashConfig,
+        { emailService }: Pick<IUnleashServices, 'emailService'>,
+    ) {
         super(config);
         this.emailService = emailService;
         this.logger = config.getLogger('routes/admin-api/email');
@@ -13,7 +18,8 @@ class EmailController extends Controller {
         this.get('/preview/text/:template', this.getTextPreview, ADMIN);
     }
 
-    async getHtmlPreview(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async getHtmlPreview(req, res): Promise<void> {
         try {
             const { template } = req.params;
             const ctx = req.query;
@@ -31,6 +37,7 @@ class EmailController extends Controller {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async getTextPreview(req, res) {
         try {
             const { template } = req.params;

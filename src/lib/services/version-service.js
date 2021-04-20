@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
 const TWO_DAYS = 48 * 60 * 60 * 1000;
-class VersionService {
+export default class VersionService {
     constructor(
         { settingStore },
         { getLogger, versionCheck, version, enterpriseVersion },

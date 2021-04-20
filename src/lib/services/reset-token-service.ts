@@ -9,8 +9,8 @@ import {
 import { Logger } from '../logger';
 import UserStore from '../db/user-store';
 import UsedTokenError from '../error/used-token-error';
-import { IUnleashConfig } from '../types/core';
 import InvalidTokenError from '../error/invalid-token-error';
+import { IUnleashConfig } from '../types/option';
 
 const ONE_DAY = 86_400_000;
 
@@ -28,15 +28,11 @@ export default class ResetTokenService {
 
     constructor(
         stores: IStores,
-        {
-            getLogger,
-            baseUriPath,
-            unleashUrl = 'http://localhost:4242',
-        }: IUnleashConfig,
+        { getLogger, server }: Pick<IUnleashConfig, 'getLogger' | 'server'>,
     ) {
         this.store = stores.resetTokenStore;
         this.logger = getLogger('/services/reset-token-service.ts');
-        this.unleashBase = new URL(baseUriPath, unleashUrl);
+        this.unleashBase = new URL(server.baseUriPath, server.unleashUrl);
     }
 
     async useAccessToken(token: IResetQuery): Promise<boolean> {

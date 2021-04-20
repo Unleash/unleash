@@ -6,20 +6,16 @@ const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
+const createConfig = require('../../create-config');
 const { createServices } = require('../../services');
 
 const eventBus = new EventEmitter();
 
 function getSetup() {
     const stores = store.createStores();
-    const config = {
-        baseUriPath: '',
-        stores,
-        eventBus,
-        getLogger,
-    };
+    const config = createConfig({ getLogger });
     const services = createServices(stores, config);
-    const app = getApp(config, services);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         request: supertest(app),
@@ -91,18 +87,15 @@ test('should fail if store fails', t => {
     getLogger.setMuteError(true);
 
     // --- start custom config
+    const config = createConfig({ getLogger });
     const stores = store.createStores();
+    const services = createServices(stores, config);
     stores.clientApplicationsStore = {
         upsert: () => {
             throw new Error('opps');
         },
     };
-    const app = getApp({
-        baseUriPath: '',
-        stores,
-        eventBus,
-        getLogger,
-    });
+    const app = getApp(config, stores, services, eventBus);
     // --- end custom config
 
     const request = supertest(app);

@@ -1,15 +1,27 @@
 'use strict';
 
-const Controller = require('../controller');
+import { Request, Response } from 'express';
+import Controller from '../controller';
 
-const { UPDATE_FEATURE } = require('../../permissions');
-const { handleErrors } = require('./util');
-const extractUsername = require('../../extract-user');
+import { UPDATE_FEATURE } from '../../permissions';
+import { handleErrors } from './util';
+import extractUsername from '../../extract-user';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
+import TagTypeService from '../../services/tag-type-service';
+import { Logger } from '../../logger';
 
 const version = 1;
 
 class TagTypeController extends Controller {
-    constructor(config, { tagTypeService }) {
+    private logger: Logger;
+
+    private tagTypeService: TagTypeService;
+
+    constructor(
+        config: IUnleashConfig,
+        { tagTypeService }: Pick<IUnleashServices, 'tagTypeService'>,
+    ) {
         super(config);
         this.logger = config.getLogger('/admin-api/tag-type.js');
         this.tagTypeService = tagTypeService;
@@ -21,7 +33,7 @@ class TagTypeController extends Controller {
         this.delete('/:name', this.deleteTagType, UPDATE_FEATURE);
     }
 
-    async getTagTypes(req, res) {
+    async getTagTypes(req: Request, res: Response): Promise<void> {
         try {
             const tagTypes = await this.tagTypeService.getAll();
             res.json({ version, tagTypes });
@@ -30,7 +42,7 @@ class TagTypeController extends Controller {
         }
     }
 
-    async validate(req, res) {
+    async validate(req: Request, res: Response): Promise<void> {
         try {
             await this.tagTypeService.validate(req.body);
             res.status(200).json({ valid: true, tagType: req.body });
@@ -39,7 +51,7 @@ class TagTypeController extends Controller {
         }
     }
 
-    async createTagType(req, res) {
+    async createTagType(req: Request, res: Response): Promise<void> {
         const userName = extractUsername(req);
         try {
             const tagType = await this.tagTypeService.createTagType(
@@ -52,7 +64,7 @@ class TagTypeController extends Controller {
         }
     }
 
-    async updateTagType(req, res) {
+    async updateTagType(req: Request, res: Response): Promise<void> {
         const { description, icon } = req.body;
         const { name } = req.params;
         const userName = extractUsername(req);
@@ -67,7 +79,7 @@ class TagTypeController extends Controller {
         }
     }
 
-    async getTagType(req, res) {
+    async getTagType(req: Request, res: Response): Promise<void> {
         const { name } = req.params;
         try {
             const tagType = await this.tagTypeService.getTagType(name);
@@ -77,7 +89,7 @@ class TagTypeController extends Controller {
         }
     }
 
-    async deleteTagType(req, res) {
+    async deleteTagType(req: Request, res: Response): Promise<void> {
         const { name } = req.params;
         const userName = extractUsername(req);
         try {
@@ -88,5 +100,5 @@ class TagTypeController extends Controller {
         }
     }
 }
-
+export default TagTypeController;
 module.exports = TagTypeController;

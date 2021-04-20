@@ -45,31 +45,12 @@ class ContextFieldStore {
 
     private logger: Logger;
 
-    constructor(db: Knex, customContextFields, getLogger: LogProvider) {
+    constructor(db: Knex, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('context-field-store.js');
-        this._createFromConfig(customContextFields);
     }
 
-    async _createFromConfig(customContextFields) {
-        if (customContextFields && customContextFields.length > 0) {
-            this.logger.info(
-                'Create custom context fields',
-                customContextFields,
-            );
-            const contextFields = await this.getAll();
-            customContextFields
-                .filter(c => !contextFields.some(cf => cf.name === c.name))
-                .forEach(async field => {
-                    try {
-                        await this.create(field);
-                    } catch (e) {
-                        this.logger.error(e);
-                    }
-                });
-        }
-    }
-
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     fieldToRow(data): ICreateContextField {
         return {
             name: data.name,
@@ -90,7 +71,7 @@ class ContextFieldStore {
         return rows.map(mapRow);
     }
 
-    async get(name): Promise<IContextField> {
+    async get(name: string): Promise<IContextField> {
         return this.db
             .first(COLUMNS)
             .from(TABLE)
@@ -98,17 +79,19 @@ class ContextFieldStore {
             .then(mapRow);
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async create(contextField): Promise<void> {
         return this.db(TABLE).insert(this.fieldToRow(contextField));
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async update(data): Promise<void> {
         return this.db(TABLE)
             .where({ name: data.name })
             .update(this.fieldToRow(data));
     }
 
-    async delete(name): Promise<void> {
+    async delete(name: string): Promise<void> {
         return this.db(TABLE)
             .where({ name })
             .del();

@@ -1,24 +1,22 @@
 'use strict';
 
-import { IUnleashConfig } from './types/core';
-import { IUnleashOptions } from './types/option';
+import EventEmitter from 'events';
+import { IUnleash } from './types/core';
+import { IUnleashConfig, IUnleashOptions } from './types/option';
+import version from './util/version';
+import migrator from '../migrator';
+import getApp from './app';
+import { createMetricsMonitor } from './metrics';
+import { createStores } from './db';
+import { createServices } from './services';
+import createConfig from './create-config';
+import User from './user';
 
-const { EventEmitter } = require('events');
+import permissions from './permissions';
+import AuthenticationRequired from './authentication-required';
+import eventType from './event-type';
 
-const migrator = require('../migrator');
-const getApp = require('./app');
-
-const { createMetricsMonitor } = require('./metrics');
-const { createStores } = require('./db');
-const { createServices } = require('./services');
-const { createOptions } = require('./options');
-const User = require('./user');
-const permissions = require('./permissions');
-const AuthenticationRequired = require('./authentication-required');
-const { addEventHook } = require('./event-hook');
-const eventType = require('./event-type');
-
-async function closeServer(opts) {
+async function closeServer(opts): Promise<void> {
     const { server, metricsMonitor } = opts;
 
     metricsMonitor.stopMonitoring();
@@ -28,7 +26,7 @@ async function closeServer(opts) {
     });
 }
 
-async function destroyDatabase(stores) {
+async function destroyDatabase(stores): Promise<void> {
     const { db, clientInstanceStore, clientMetricsStore } = stores;
 
     return new Promise((resolve, reject) => {
@@ -39,50 +37,41 @@ async function destroyDatabase(stores) {
     });
 }
 
-async function createApp(options) {
+async function createApp(
+    config: IUnleashConfig,
+    startApp: boolean,
+): Promise<IUnleash> {
     // Database dependencies (stateful)
-    const logger = options.getLogger('server-impl.js');
+    const logger = config.getLogger('server-impl.js');
+    const serverVersion = version();
     const eventBus = new EventEmitter();
-    const stores = createStores(options, eventBus);
-    const services = createServices(stores, options, eventBus);
-    const secret = await stores.settingStore.get('unleash.secret');
+    const stores = createStores(config, eventBus);
+    const services = createServices(stores, config);
 
-    const config = {
+    const app = getApp(config, stores, services, eventBus);
+    const metricsMonitor = createMetricsMonitor();
+    metricsMonitor.startMonitoring(config, stores, serverVersion, eventBus);
+    const unleash: Omit<IUnleash, 'stop'> = {
         stores,
         eventBus,
-        secret,
-        logFactory: options.getLogger, // TODO: remove in v4.x
-        ...options,
+        services,
+        app,
+        config,
+        version: serverVersion,
     };
 
-    const app = getApp(config, services);
-    const metricsMonitor = createMetricsMonitor();
-    metricsMonitor.startMonitoring(config);
-
-    if (typeof config.eventHook === 'function') {
-        addEventHook(config.eventHook, stores.eventStore);
-    }
-
-    if (config.importFile) {
+    if (config.import.file) {
         await services.stateService.importFile({
-            file: config.importFile,
-            dropBeforeImport: config.dropBeforeImport,
+            file: config.import.file,
+            dropBeforeImport: config.import.dropBeforeImport,
             userName: 'import',
-            keepExisting: config.importKeepExisting,
+            keepExisting: config.import.keepExisting,
         });
     }
 
     return new Promise((resolve, reject) => {
-        const payload = {
-            app,
-            config,
-            stores,
-            services,
-            eventBus,
-        };
-
-        if (options.start) {
-            const server = app.listen(options.listen, () =>
+        if (startApp) {
+            const server = app.listen(config.listen, () =>
                 logger.info('Unleash has started.', server.address()),
             );
             const stop = () => {
@@ -93,10 +82,10 @@ async function createApp(options) {
                 );
             };
 
-            server.keepAliveTimeout = options.keepAliveTimeout;
-            server.headersTimeout = options.headersTimeout;
+            server.keepAliveTimeout = config.server.keepAliveTimeout;
+            server.headersTimeout = config.server.headersTimeout;
             server.on('listening', () => {
-                resolve({ ...payload, server, stop });
+                resolve({ ...unleash, server, stop });
             });
             server.on('error', reject);
         } else {
@@ -106,34 +95,48 @@ async function createApp(options) {
                 return destroyDatabase(stores);
             };
 
-            resolve({ ...payload, stop });
+            resolve({ ...unleash, stop });
         }
     });
 }
 
-async function start(opts: IUnleashOptions) {
-    const options = createOptions(opts);
-    const logger = options.getLogger('server-impl.js');
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+async function start(opts: IUnleashOptions): Promise<IUnleash> {
+    const config = createConfig(opts);
+    const logger = config.getLogger('server-impl.js');
 
     try {
-        if (options.disableDBMigration) {
+        if (config) {
             logger.info('DB migrations disabled');
         } else {
-            await migrator(options);
+            await migrator(config);
         }
     } catch (err) {
         logger.error('Failed to migrate db', err);
         throw err;
     }
 
-    return createApp(options);
+    return createApp(config, true);
 }
 
-async function create(opts) {
-    return start({ ...opts, start: false });
-}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+async function create(opts: IUnleashOptions): Promise<IUnleash> {
+    const config = createConfig(opts);
+    const logger = config.getLogger('server-impl.js');
 
-module.exports = {
+    try {
+        if (config) {
+            logger.info('DB migrations disabled');
+        } else {
+            await migrator(config);
+        }
+    } catch (err) {
+        logger.error('Failed to migrate db', err);
+        throw err;
+    }
+    return createApp(config, false);
+}
+const serverImpl = {
     start,
     create,
     User,
@@ -141,3 +144,5 @@ module.exports = {
     permissions,
     eventType,
 };
+export default serverImpl;
+module.exports = serverImpl;

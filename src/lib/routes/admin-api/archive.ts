@@ -1,14 +1,21 @@
 'use strict';
 
 import { handleErrors } from './util';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
 
 const Controller = require('../controller');
 
 const extractUser = require('../../extract-user');
 const { UPDATE_FEATURE } = require('../../permissions');
 
-class ArchiveController extends Controller {
-    constructor(config, { featureToggleService }) {
+export default class ArchiveController extends Controller {
+    constructor(
+        config: IUnleashConfig,
+        {
+            featureToggleService,
+        }: Pick<IUnleashServices, 'featureToggleService'>,
+    ) {
         super(config);
         this.logger = config.getLogger('/admin-api/archive.js');
         this.featureService = featureToggleService;
@@ -17,7 +24,8 @@ class ArchiveController extends Controller {
         this.post('/revive/:name', this.reviveFeatureToggle, UPDATE_FEATURE);
     }
 
-    async getArchivedFeatures(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async getArchivedFeatures(req, res): Promise<void> {
         try {
             const features = await this.featureService.getArchivedFeatures();
             res.json({ features });
@@ -26,7 +34,8 @@ class ArchiveController extends Controller {
         }
     }
 
-    async reviveFeatureToggle(req, res) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async reviveFeatureToggle(req, res): Promise<void> {
         const userName = extractUser(req);
 
         try {

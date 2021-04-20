@@ -1,18 +1,29 @@
-'use strict';
+import { Request, Response } from 'express';
 
-const Controller = require('../controller');
+import Controller from '../controller';
 
-const { handleErrors } = require('./util');
-const extractUser = require('../../extract-user');
+import { handleErrors } from './util';
+import extractUser from '../../extract-user';
 
-const {
+import {
     CREATE_CONTEXT_FIELD,
     UPDATE_CONTEXT_FIELD,
     DELETE_CONTEXT_FIELD,
-} = require('../../permissions');
+} from '../../permissions';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
+import ContextService from '../../services/context-service';
+import { Logger } from '../../logger';
 
 class ContextController extends Controller {
-    constructor(config, { contextService }) {
+    private logger: Logger;
+
+    private contextService: ContextService;
+
+    constructor(
+        config: IUnleashConfig,
+        { contextService }: Pick<IUnleashServices, 'contextService'>,
+    ) {
         super(config);
         this.logger = config.getLogger('/admin-api/feature.js');
         this.contextService = contextService;
@@ -33,7 +44,7 @@ class ContextController extends Controller {
         this.post('/validate', this.validate);
     }
 
-    async getContextFields(req, res) {
+    async getContextFields(req: Request, res: Response): Promise<void> {
         try {
             const fields = await this.contextService.getAll();
             res.status(200)
@@ -44,7 +55,7 @@ class ContextController extends Controller {
         }
     }
 
-    async getContextField(req, res) {
+    async getContextField(req: Request, res: Response): Promise<void> {
         try {
             const name = req.params.contextField;
             const contextField = await this.contextService.getContextField(
@@ -56,7 +67,7 @@ class ContextController extends Controller {
         }
     }
 
-    async createContextField(req, res) {
+    async createContextField(req: Request, res: Response): Promise<void> {
         const value = req.body;
         const userName = extractUser(req);
 
@@ -68,7 +79,7 @@ class ContextController extends Controller {
         }
     }
 
-    async updateContextField(req, res) {
+    async updateContextField(req: Request, res: Response): Promise<void> {
         const name = req.params.contextField;
         const userName = extractUser(req);
         const contextField = req.body;
@@ -86,7 +97,7 @@ class ContextController extends Controller {
         }
     }
 
-    async deleteContextField(req, res) {
+    async deleteContextField(req: Request, res: Response): Promise<void> {
         const name = req.params.contextField;
         const userName = extractUser(req);
 
@@ -98,7 +109,7 @@ class ContextController extends Controller {
         }
     }
 
-    async validate(req, res) {
+    async validate(req: Request, res: Response): Promise<void> {
         const { name } = req.body;
 
         try {
@@ -109,5 +120,5 @@ class ContextController extends Controller {
         }
     }
 }
-
+export default ContextController;
 module.exports = ContextController;

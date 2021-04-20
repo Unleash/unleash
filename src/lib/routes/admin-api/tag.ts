@@ -1,15 +1,28 @@
 'use strict';
 
-const Controller = require('../controller');
+import { Request, Response } from 'express';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
+import TagService from '../../services/tag-service';
+import { Logger } from '../../logger';
 
-const { UPDATE_FEATURE } = require('../../permissions');
-const { handleErrors } = require('./util');
-const extractUsername = require('../../extract-user');
+import Controller from '../controller';
+
+import { UPDATE_FEATURE } from '../../permissions';
+import { handleErrors } from './util';
+import extractUsername from '../../extract-user';
 
 const version = 1;
 
 class TagController extends Controller {
-    constructor(config, { tagService }) {
+    private logger: Logger;
+
+    private tagService: TagService;
+
+    constructor(
+        config: IUnleashConfig,
+        { tagService }: Pick<IUnleashServices, 'tagService'>,
+    ) {
         super(config);
         this.tagService = tagService;
         this.logger = config.getLogger('/admin-api/tag.js');
@@ -21,7 +34,7 @@ class TagController extends Controller {
         this.delete('/:type/:value', this.deleteTag, UPDATE_FEATURE);
     }
 
-    async getTags(req, res) {
+    async getTags(req: Request, res: Response): Promise<void> {
         try {
             const tags = await this.tagService.getTags();
             res.json({ version, tags });
@@ -30,7 +43,7 @@ class TagController extends Controller {
         }
     }
 
-    async getTagsByType(req, res) {
+    async getTagsByType(req: Request, res: Response): Promise<void> {
         try {
             const tags = await this.tagService.getTagsByType(req.params.type);
             res.json({ version, tags });
@@ -39,7 +52,7 @@ class TagController extends Controller {
         }
     }
 
-    async getTag(req, res) {
+    async getTag(req: Request, res: Response): Promise<void> {
         const { type, value } = req.params;
         try {
             const tag = await this.tagService.getTag({ type, value });
@@ -49,7 +62,7 @@ class TagController extends Controller {
         }
     }
 
-    async createTag(req, res) {
+    async createTag(req: Request, res: Response): Promise<void> {
         const userName = extractUsername(req);
         try {
             await this.tagService.createTag(req.body, userName);
@@ -59,7 +72,7 @@ class TagController extends Controller {
         }
     }
 
-    async deleteTag(req, res) {
+    async deleteTag(req: Request, res: Response): Promise<void> {
         const { type, value } = req.params;
         const userName = extractUsername(req);
         try {
@@ -70,5 +83,5 @@ class TagController extends Controller {
         }
     }
 }
-
+export default TagController;
 module.exports = TagController;

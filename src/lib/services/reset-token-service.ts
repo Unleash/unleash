@@ -69,11 +69,6 @@ export default class ResetTokenService {
         );
     }
 
-    async createWelcomeUrl(forUser: number, creator: string): Promise<URL> {
-        const path = '/#/new-user';
-        return this.createResetUrl(forUser, creator, path);
-    }
-
     async createResetPasswordUrl(
         forUser: number,
         creator: string,

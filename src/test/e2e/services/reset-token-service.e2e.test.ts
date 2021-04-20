@@ -60,7 +60,7 @@ test.serial('Should create a reset link', async t => {
 });
 
 test.serial('Should create a welcome link', async t => {
-    const url = await resetTokenService.createWelcomeUrl(
+    const url = await resetTokenService.createNewUserUrl(
         userIdToCreateResetFor,
         adminUser.username,
     );

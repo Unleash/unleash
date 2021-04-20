@@ -12,21 +12,28 @@ const eventBus = new EventEmitter();
 
 const currentUser = new User({ email: 'test@mail.com' });
 
+const fakeAccessService = {
+    getPermissionsForUser: () => [],
+};
+
 function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = store.createStores();
-    const app = getApp({
-        baseUriPath: base,
-        stores,
-        eventBus,
-        getLogger,
-        preHook: a => {
-            a.use((req, res, next) => {
-                req.user = currentUser;
-                next();
-            });
+    const app = getApp(
+        {
+            baseUriPath: base,
+            stores,
+            eventBus,
+            getLogger,
+            preHook: a => {
+                a.use((req, res, next) => {
+                    req.user = currentUser;
+                    next();
+                });
+            },
         },
-    });
+        { accessService: fakeAccessService },
+    );
 
     return {
         base,
@@ -44,7 +51,7 @@ test('should return current user', t => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
-            t.true(res.body.email === currentUser.email);
+            t.true(res.body.user.email === currentUser.email);
         });
 });
 

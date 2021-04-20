@@ -13,7 +13,7 @@ class AccessStoreMock extends AccessStore {
     }
 
     getPermissionsForUser(userId: Number): Promise<IUserPermission[]> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve([]);
     }
 
     getPermissionsForRole(roleId: number): Promise<IUserPermission[]> {

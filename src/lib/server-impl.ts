@@ -44,7 +44,7 @@ async function createApp(
 ): Promise<IUnleash> {
     // Database dependencies (stateful)
     const logger = config.getLogger('server-impl.js');
-    const serverVersion = version();
+    const serverVersion = version;
     const eventBus = new EventEmitter();
     const stores = createStores(config, eventBus);
     const services = createServices(stores, config);
@@ -115,7 +115,7 @@ async function start(opts: IUnleashOptions): Promise<IUnleash> {
     const logger = config.getLogger('server-impl.js');
 
     try {
-        if (config) {
+        if (config.db.disableMigration) {
             logger.info('DB migrations disabled');
         } else {
             await migrator(config);
@@ -134,7 +134,7 @@ async function create(opts: IUnleashOptions): Promise<IUnleash> {
     const logger = config.getLogger('server-impl.js');
 
     try {
-        if (config) {
+        if (config.db.disableMigration) {
             logger.info('DB migrations disabled');
         } else {
             await migrator(config);

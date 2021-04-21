@@ -60,6 +60,7 @@ export default class StrategyStore {
         const rows = await this.db
             .select(STRATEGY_COLUMNS)
             .from(TABLE)
+            .orderBy('sort_order', 'asc')
             .orderBy('name', 'asc');
 
         return rows.map(this.rowToStrategy);
@@ -70,7 +71,9 @@ export default class StrategyStore {
             .select(STRATEGY_COLUMNS)
             .from(TABLE)
             .where({ built_in: 0 }) // eslint-disable-line
+            .orderBy('sort_order', 'asc')
             .orderBy('name', 'asc');
+
         return rows.map(this.rowToEditableStrategy);
     }
 

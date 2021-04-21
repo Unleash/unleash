@@ -1,8 +1,9 @@
 'use strict';
 
 import unleash from './lib/server-impl';
+import createConfig from "./lib/create-config";
 
-unleash.start({
+unleash.start(createConfig({
     db: {
         user: 'unleash_user',
         password: 'passord',
@@ -18,4 +19,4 @@ unleash.start({
     versionCheck: {
         enable: false,
     },
-});
+}));

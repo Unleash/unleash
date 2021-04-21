@@ -6877,10 +6877,10 @@ universalify@^0.1.0:
   resolved "https://registry.npmjs.org/universalify/-/universalify-0.1.2.tgz"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unleash-frontend@4.0.0-alpha.5:
-  version "4.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.0.0-alpha.5.tgz#6af3cff68598263b74aecb973af169827190fb35"
-  integrity sha512-CtmWlwsJqxYErDI0ULb/mU5Vrk4E41LcllfpsAc57KG+p8zW1+SGOs7DkWfDLZcoMLfSHXTH8Adr3QhHzwjO2Q==
+unleash-frontend@4.0.0-alpha.6:
+  version "4.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.0.0-alpha.6.tgz#313cd3544bf74da221a85251b82c9ac7ef2ed59d"
+  integrity sha512-ZhfFyHCBdLI99PCxtNKVSsHWooamNRvHlzofkKtcf2su4nSQcryTfjskI9H04BcbBCGBZcEE3stqRIpyymKNYg==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

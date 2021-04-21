@@ -110,7 +110,6 @@ export default class UserAdminController extends Controller {
             const emailConfigured = this.emailService.configured();
             let sentMetaData = null;
             if (emailConfigured) {
-                // Add return type to indicate whether or not email was sent and include in response
                 sentMetaData = await this.emailService.sendGettingStartedMail(
                     createdUser.name,
                     createdUser.email,
@@ -123,8 +122,8 @@ export default class UserAdminController extends Controller {
             }
 
             const emailSent =
-                sentMetaData?.response.includes(MAIL_ACCEPTED) || null;
-            // Change emailConfigured to emailSent
+                sentMetaData?.response.includes(MAIL_ACCEPTED) || false;
+
             res.status(201).send({
                 ...createdUser,
                 inviteLink,

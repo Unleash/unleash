@@ -1,10 +1,12 @@
 'use strict';
 
+import { createServices } from '../services';
+import { createTestConfig } from '../../test/config/test-config';
+
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../test/fixtures/store');
-const getLogger = require('../../test/fixtures/no-logger');
 const getApp = require('../app');
 const User = require('../user');
 
@@ -15,11 +17,8 @@ const currentUser = new User({ email: 'test@mail.com' });
 function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = store.createStores();
-    const app = getApp({
-        baseUriPath: base,
-        stores,
-        eventBus,
-        getLogger,
+    const config = createTestConfig({
+        server: { baseUriPath: base },
         preHook: a => {
             a.use((req, res, next) => {
                 req.user = currentUser;
@@ -27,6 +26,12 @@ function getSetup() {
             });
         },
     });
+    const app = getApp(
+        config,
+        stores,
+        createServices(stores, config),
+        eventBus,
+    );
 
     return {
         base,

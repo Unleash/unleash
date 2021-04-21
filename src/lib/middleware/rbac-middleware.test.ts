@@ -19,13 +19,11 @@ test.beforeEach(() => {
 });
 
 test('should add checkRbac to request', t => {
-    const accessService = {};
+    const accessService = {
+        hasPermission: sinon.fake(),
+    };
 
-    const func = rbacMiddleware(
-        config,
-        { featureToggleStore },
-        { accessService },
-    );
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
     const cb = sinon.fake();
 
@@ -38,17 +36,11 @@ test('should add checkRbac to request', t => {
 });
 
 test('should give api-user ADMIN permission', async t => {
-    config.experimental.rbac = {
-        enabled: true,
+    const accessService = {
+        hasPermission: sinon.fake(),
     };
 
-    const accessService = {};
-
-    const func = rbacMiddleware(
-        config,
-        { featureToggleStore },
-        { accessService },
-    );
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
     const cb = sinon.fake();
     const req: any = {
@@ -67,17 +59,11 @@ test('should give api-user ADMIN permission', async t => {
 });
 
 test('should not give api-user ADMIN permission', async t => {
-    config.experimental.rbac = {
-        enabled: true,
+    const accessService = {
+        hasPermission: sinon.fake(),
     };
 
-    const accessService = {};
-
-    const func = rbacMiddleware(
-        config,
-        { featureToggleStore },
-        { accessService },
-    );
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
     const cb = sinon.fake();
     const req: any = {
@@ -93,20 +79,15 @@ test('should not give api-user ADMIN permission', async t => {
     const hasAccess = await req.checkRbac(perms.ADMIN);
 
     t.false(hasAccess);
+    t.is(accessService.hasPermission.callCount, 0);
 });
 
 test('should not allow user to miss userId', async t => {
-    config.experimental.rbac = {
-        enabled: true,
+    const accessService = {
+        hasPermission: sinon.fake(),
     };
 
-    const accessService = {};
-
-    const func = rbacMiddleware(
-        config,
-        { featureToggleStore },
-        { accessService },
-    );
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
     const cb = sinon.fake();
     const req: any = {
@@ -124,17 +105,11 @@ test('should not allow user to miss userId', async t => {
 });
 
 test('should return false for missing user', async t => {
-    config.experimental.rbac = {
-        enabled: true,
+    const accessService = {
+        hasPermission: sinon.fake(),
     };
 
-    const accessService = {};
-
-    const func = rbacMiddleware(
-        config,
-        { featureToggleStore },
-        { accessService },
-    );
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
     const cb = sinon.fake();
     const req: any = {};
@@ -144,22 +119,15 @@ test('should return false for missing user', async t => {
     const hasAccess = await req.checkRbac(perms.ADMIN);
 
     t.false(hasAccess);
+    t.is(accessService.hasPermission.callCount, 0);
 });
 
 test('should verify permission for root resource', async t => {
-    config.experimental.rbac = {
-        enabled: true,
-    };
-
     const accessService = {
         hasPermission: sinon.fake(),
     };
 
-    const func = rbacMiddleware(
-        config,
-        { featureToggleStore },
-        { accessService },
-    );
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
     const cb = sinon.fake();
     const req: any = {
@@ -181,19 +149,11 @@ test('should verify permission for root resource', async t => {
 });
 
 test('should lookup projectId from params', async t => {
-    config.experimental.rbac = {
-        enabled: true,
-    };
-
     const accessService = {
         hasPermission: sinon.fake(),
     };
 
-    const func = rbacMiddleware(
-        config,
-        { featureToggleStore },
-        { accessService },
-    );
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
     const cb = sinon.fake();
     const req: any = {
@@ -216,9 +176,6 @@ test('should lookup projectId from params', async t => {
 test('should lookup projectId from feature toggle', async t => {
     const projectId = 'some-project-33';
     const featureName = 'some-feature-toggle';
-    config.experimental.rbac = {
-        enabled: true,
-    };
 
     const accessService = {
         hasPermission: sinon.fake(),
@@ -226,11 +183,7 @@ test('should lookup projectId from feature toggle', async t => {
 
     featureToggleStore.getProjectId = sinon.fake.returns(projectId);
 
-    const func = rbacMiddleware(
-        config,
-        { featureToggleStore },
-        { accessService },
-    );
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
     const cb = sinon.fake();
     const req: any = {
@@ -254,19 +207,12 @@ test('should lookup projectId from feature toggle', async t => {
 test('should lookup projectId from data', async t => {
     const projectId = 'some-project-33';
     const featureName = 'some-feature-toggle';
-    config.experimental.rbac = {
-        enabled: true,
-    };
 
     const accessService = {
         hasPermission: sinon.fake(),
     };
 
-    const func = rbacMiddleware(
-        config,
-        { featureToggleStore },
-        { accessService },
-    );
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
     const cb = sinon.fake();
     const req: any = {

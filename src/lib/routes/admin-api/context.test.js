@@ -1,11 +1,12 @@
 'use strict';
 
+import { createTestConfig } from '../../../test/config/test-config';
+
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
 const { createServices } = require('../../services');
-const getLogger = require('../../../test/fixtures/no-logger');
 const permissions = require('../../../test/fixtures/permissions');
 const getApp = require('../../app');
 
@@ -13,19 +14,15 @@ const eventBus = new EventEmitter();
 
 function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
-    const stores = store.createStores();
     const perms = permissions();
-    const config = {
-        baseUriPath: base,
-        stores,
-        eventBus,
+    const config = createTestConfig({
         preHook: perms.hook,
-        customContextFields: [{ name: 'tenantId' }],
-        getLogger,
-    };
+        server: { baseUriPath: base },
+    });
+    const stores = store.createStores();
 
     const services = createServices(stores, config);
-    const app = getApp(config, services);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,

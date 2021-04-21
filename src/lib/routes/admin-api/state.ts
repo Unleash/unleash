@@ -50,7 +50,7 @@ class StateController extends Controller {
             // @ts-ignore
             if (req.file) {
                 // @ts-ignore
-                if (mime.lookup(req.file.originalname) === 'text/yaml') {
+                if (mime.getType(req.file.originalname) === 'text/yaml') {
                     // @ts-ignore
                     data = YAML.safeLoad(req.file.buffer);
                 } else {

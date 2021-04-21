@@ -1,6 +1,4 @@
 import { LogProvider } from '../logger';
-import { IEmailOptions } from '../services/email-service';
-import { IUnleashStores } from './stores';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;
@@ -29,6 +27,7 @@ export interface IDBOption {
 
 export interface ISessionOption {
     ttlHours: number;
+    db: boolean;
 }
 
 export interface IVersionOption {
@@ -65,6 +64,7 @@ export interface IServerOption {
     unleashUrl: string;
     serverMetrics: boolean;
     enableRequestLogger: boolean;
+    secret: string;
 }
 
 export interface IUnleashOptions {
@@ -85,6 +85,7 @@ export interface IUnleashOptions {
     enableOAS?: boolean;
     preHook?: Function;
     preRouterHook?: Function;
+    eventHook?: Function;
 }
 
 export interface IEmailOption {
@@ -122,4 +123,5 @@ export interface IUnleashConfig {
     enableOAS: boolean;
     preHook?: Function;
     preRouterHook?: Function;
+    eventHook?: Function;
 }

@@ -1,5 +1,8 @@
+import { Request, Response } from 'express';
 import { BackstageController } from './backstage';
 import ResetPasswordController from './auth/reset-password-controller';
+import { IUnleashConfig } from '../types/option';
+import { IUnleashServices } from '../types/services';
 
 const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
@@ -10,8 +13,8 @@ const api = require('./api-def');
 const SimplePasswordProvider = require('./auth/simple-password-provider');
 
 class IndexRouter extends Controller {
-    constructor(config, services) {
-        super(config, services);
+    constructor(config: IUnleashConfig, services: IUnleashServices) {
+        super(config);
         this.use('/health', new HealthCheckController(config, services).router);
         this.use('/internal-backstage', new BackstageController(config).router);
         this.use('/logout', new LogoutController(config).router);
@@ -28,9 +31,11 @@ class IndexRouter extends Controller {
         this.use(api.links.client.uri, new ClientApi(config, services).router);
     }
 
-    index(req, res) {
+    async index(req: Request, res: Response): Promise<void> {
         res.json(api);
     }
 }
+
+export default IndexRouter;
 
 module.exports = IndexRouter;

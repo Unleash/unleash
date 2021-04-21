@@ -15,6 +15,7 @@ import User from './user';
 import permissions from './permissions';
 import AuthenticationRequired from './authentication-required';
 import eventType from './event-type';
+import { addEventHook } from './event-hook';
 
 async function closeServer(opts): Promise<void> {
     const { server, metricsMonitor } = opts;
@@ -48,8 +49,16 @@ async function createApp(
     const stores = createStores(config, eventBus);
     const services = createServices(stores, config);
 
+    if (!config.server.secret) {
+        const secret = await stores.settingStore.get('unleash.secret');
+        // eslint-disable-next-line no-param-reassign
+        config.server.secret = secret;
+    }
     const app = getApp(config, stores, services, eventBus);
     const metricsMonitor = createMetricsMonitor();
+    if (typeof config.eventHook === 'function') {
+        addEventHook(config.eventHook, stores.eventStore);
+    }
     metricsMonitor.startMonitoring(config, stores, serverVersion, eventBus);
     const unleash: Omit<IUnleash, 'stop'> = {
         stores,

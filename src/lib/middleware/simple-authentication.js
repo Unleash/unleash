@@ -2,7 +2,7 @@ const auth = require('basic-auth');
 const User = require('../user');
 const AuthenticationRequired = require('../authentication-required');
 
-function insecureAuthentication(app, { basePath = '' }, { userService }) {
+function insecureAuthentication(app, basePath = '', { userService }) {
     app.post(`${basePath}/api/admin/login`, async (req, res) => {
         const { email } = req.body;
         const user = await userService.loginUserWithoutPassword(email, true);

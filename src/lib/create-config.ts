@@ -65,6 +65,7 @@ const defaultDbOptions: IDBOption = {
 
 const defaultSessionOption: ISessionOption = {
     ttlHours: safeNumber(process.env.SESSION_TTL_HOURS, 48),
+    db: true,
 };
 
 const defaultServerOption: IServerOption = {
@@ -77,6 +78,7 @@ const defaultServerOption: IServerOption = {
     keepAliveTimeout: 60 * 1000,
     headersTimeout: 61 * 1000,
     enableRequestLogger: false,
+    secret: process.env.UNLEASH_SECRET || 'super-secret',
 };
 
 const defaultVersionOption: IVersionOption = {
@@ -117,10 +119,7 @@ const dbPort = (dbConfig: Partial<IDBOption>): Partial<IDBOption> => {
     return dbConfig;
 };
 
-function createConfig(
-    options: IUnleashOptions,
-    test: boolean = false,
-): IUnleashConfig {
+function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
     if (options.databaseUrl) {
         extraDbOptions = parse(options.databaseUrl);
@@ -184,12 +183,13 @@ function createConfig(
         authentication,
         ui,
         import: importSetting,
-        experimental,
+        experimental: experimental || {},
         email,
         secureHeaders: safeBoolean(process.env.SECURE_HEADERS, false),
         enableOAS: safeBoolean(process.env.ENABLE_OAS, false),
         preHook: options.preHook,
         preRouterHook: options.preRouterHook,
+        eventHook: options.eventHook,
     };
 }
 

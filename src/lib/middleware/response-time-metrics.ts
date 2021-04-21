@@ -5,7 +5,7 @@ import { REQUEST_TIME } from '../events';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const _responseTime = responseTime.default;
 
-export function responseTimeMetrics(eventBus: EventEmitter): Function {
+export function responseTimeMetrics(eventBus: EventEmitter): any {
     return _responseTime((req, res, time) => {
         const { statusCode } = res;
 

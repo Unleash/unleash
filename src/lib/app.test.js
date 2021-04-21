@@ -1,9 +1,10 @@
 'use strict';
 
+import { createTestConfig } from '../test/config/test-config';
+
 const test = require('ava');
 const express = require('express');
 const proxyquire = require('proxyquire');
-const getLogger = require('../test/fixtures/no-logger');
 
 const getApp = proxyquire('./app', {
     './routes': class Index {
@@ -14,30 +15,29 @@ const getApp = proxyquire('./app', {
 });
 
 test('should not throw when valid config', t => {
-    const app = getApp({ getLogger, stores: {} });
+    const config = createTestConfig();
+    const app = getApp(config, {}, {});
     t.true(typeof app.listen === 'function');
 });
 
 test('should call preHook', t => {
     let called = 0;
-    getApp({
-        stores: {},
-        getLogger,
+    const config = createTestConfig({
         preHook: () => {
             called++;
         },
     });
+    getApp(config, {}, {});
     t.true(called === 1);
 });
 
 test('should call preRouterHook', t => {
     let called = 0;
-    getApp({
-        stores: {},
-        getLogger,
+    const config = createTestConfig({
         preRouterHook: () => {
             called++;
         },
     });
+    getApp(config, {}, {});
     t.true(called === 1);
 });

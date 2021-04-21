@@ -18,7 +18,7 @@
 
 .supporting {
     font-size: var(--caption-size);
-    max-width: 450px;
+    max-width: 800px;
 }
 
 .container {
@@ -40,7 +40,7 @@
 .inset {
     background-color: rgb(250, 250, 250);
     padding: var(--card-padding);
-    max-width: 450px;
+    max-width: 650px;
 }
 
 .chip {
@@ -57,7 +57,7 @@
 
 .formContainer {
     margin-bottom: 1.5rem;
-    max-width: 350px;
+    max-width: 650px;
 }
 
 .formContainer > *, .inset > * {

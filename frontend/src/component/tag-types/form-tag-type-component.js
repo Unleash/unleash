@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
@@ -8,6 +8,9 @@ import { Typography, TextField } from '@material-ui/core';
 
 import styles from './TagType.module.scss';
 import commonStyles from '../common/common.module.scss';
+import AccessContext from '../../contexts/AccessContext';
+import { CREATE_TAG_TYPE, UPDATE_TAG_TYPE } from '../AccessProvider/permissions';
+import ConditionallyRender from '../common/ConditionallyRender';
 
 const AddTagTypeComponent = ({ tagType, validateName, submit, history, editMode }) => {
     const [tagTypeName, setTagTypeName] = useState(tagType.name || '');
@@ -17,6 +20,7 @@ const AddTagTypeComponent = ({ tagType, validateName, submit, history, editMode 
         name: undefined,
         description: undefined,
     });
+    const { hasAccess } = useContext(AccessContext);
 
     const onValidateName = async evt => {
         evt.preventDefault();
@@ -80,9 +84,11 @@ const AddTagTypeComponent = ({ tagType, validateName, submit, history, editMode 
                         variant="outlined"
                         size="small"
                     />
-                    <div className={styles.formButtons}>
-                        <FormButtons submitText={submitText} onCancel={onCancel} />
-                    </div>
+                    <ConditionallyRender condition={hasAccess(editMode ? UPDATE_TAG_TYPE : CREATE_TAG_TYPE)} show={
+                        <div className={styles.formButtons}>
+                            <FormButtons submitText={submitText} onCancel={onCancel} />
+                        </div>
+                    } elseShow={<span>You do not have permissions to save.</span>} />
                 </form>
             </section>
         </PageContent>

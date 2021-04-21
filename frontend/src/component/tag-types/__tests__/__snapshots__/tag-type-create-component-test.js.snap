@@ -72,9 +72,6 @@ exports[`it supports editMode 1`] = `
                 </span>
                 Update
               </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
             </button>
              
             <button
@@ -100,9 +97,6 @@ exports[`it supports editMode 1`] = `
               >
                 Cancel
               </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
             </button>
           </div>
         </div>
@@ -212,6 +206,51 @@ exports[`renders correctly for creating 1`] = `
             </button>
           </div>
         </div>
+      </form>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`renders correctly for creating without permissions 1`] = `
+<div
+  className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
+>
+  <div
+    className="makeStyles-headerContainer-1"
+  >
+    <div
+      className="makeStyles-headerTitleContainer-5"
+    >
+      <div
+        className=""
+      >
+        <h2
+          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
+        >
+          Create Tag type
+        </h2>
+      </div>
+    </div>
+  </div>
+  <div
+    className="makeStyles-bodyContainer-2"
+  >
+    <section
+      className="contentSpacing tagTypeContainer"
+    >
+      <h6
+        className="MuiTypography-root MuiTypography-subtitle1"
+      >
+        Tag types allows you to group tags together in the management UI
+      </h6>
+      <form
+        className="addTagTypeForm contentSpacing"
+        onSubmit={[Function]}
+      >
+        <span>
+          You do not have permissions to save.
+        </span>
       </form>
     </section>
   </div>

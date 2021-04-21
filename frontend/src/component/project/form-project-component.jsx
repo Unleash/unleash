@@ -7,8 +7,13 @@ import classnames from 'classnames';
 import { FormButtons, styles as commonStyles } from '../common';
 import { trim } from '../common/util';
 import PageContent from '../common/PageContent/PageContent';
+import AccessContext from '../../contexts/AccessContext';
+import ConditionallyRender from '../common/ConditionallyRender';
+import { CREATE_PROJECT } from '../AccessProvider/permissions';
 
 class AddContextComponent extends Component {
+    static contextType = AccessContext;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -60,6 +65,7 @@ class AddContextComponent extends Component {
 
     render() {
         const { project, errors } = this.state;
+        const { hasAccess } = this.context;
         const { editMode } = this.props;
         const submitText = editMode ? 'Update' : 'Create';
 
@@ -110,9 +116,12 @@ class AddContextComponent extends Component {
                         value={project.description}
                         onChange={v => this.setValue('description', v.target.value)}
                     />
-                    <div className={styles.formButtons}>
-                        <FormButtons submitText={submitText} onCancel={this.onCancel} />
-                    </div>
+                    <ConditionallyRender condition={hasAccess(CREATE_PROJECT)} show={
+                        <div className={styles.formButtons}>
+                            <FormButtons submitText={submitText} onCancel={this.onCancel} />
+                        </div>
+                    } />
+                    
                 </form>
             </PageContent>
         );

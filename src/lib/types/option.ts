@@ -100,7 +100,7 @@ export interface IEmailOption {
 export interface ListeningPipe {
     path: string;
 }
-export interface ListeningHost {
+export interface IListeningHost {
     host?: string;
     port: number;
 }

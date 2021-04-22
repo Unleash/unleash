@@ -41,6 +41,7 @@ export enum IAuthType {
     CUSTOM = 'custom',
     NONE = 'none',
 }
+
 export interface IAuthOption {
     enableApiToken: boolean;
     type: IAuthType;

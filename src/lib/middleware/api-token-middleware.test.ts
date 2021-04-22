@@ -6,7 +6,7 @@ import apiTokenMiddleware from './api-token-middleware';
 import getLogger from '../../test/fixtures/no-logger';
 import User from '../user';
 import { CLIENT } from '../permissions';
-import createConfig from '../create-config';
+import { createTestConfig } from '../../test/config/test-config';
 
 let config: any;
 
@@ -95,7 +95,7 @@ test('should not add user if disabled', async t => {
         getUserForToken: sinon.fake.returns(apiUser),
     };
 
-    const disabledConfig = createConfig({
+    const disabledConfig = createTestConfig({
         getLogger,
         authentication: {
             enableApiToken: false,

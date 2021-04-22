@@ -16,6 +16,15 @@ import {
 } from './types/option';
 import { defaultLogProvider, validateLogProvider } from './logger';
 
+const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
+
+export function authTypeFromString(
+    s?: string,
+    defaultType: IAuthType = IAuthType.OPEN_SOURCE,
+): IAuthType {
+    return IAuthType[safeToUpper(s)] || defaultType;
+}
+
 function safeNumber(envVar, defaultVal): number {
     if (envVar) {
         try {
@@ -86,12 +95,9 @@ const defaultVersionOption: IVersionOption = {
     enable: safeBoolean(process.env.CHECK_VERSION, true),
 };
 
-const authType = (defaultType: IAuthType): IAuthType =>
-    IAuthType[process.env.AUTH_TYPE] || defaultType;
-
 const defaultAuthentication: IAuthOption = {
     enableApiToken: safeBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
-    type: authType(IAuthType.OPEN_SOURCE),
+    type: authTypeFromString(process.env.AUTH_TYPE),
     customAuthHandler: () => {},
     createAdminUser: false,
 };
@@ -119,7 +125,7 @@ const dbPort = (dbConfig: Partial<IDBOption>): Partial<IDBOption> => {
     return dbConfig;
 };
 
-function createConfig(options: IUnleashOptions): IUnleashConfig {
+export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
     if (options.databaseUrl) {
         extraDbOptions = parse(options.databaseUrl);
@@ -193,5 +199,7 @@ function createConfig(options: IUnleashOptions): IUnleashConfig {
     };
 }
 
-export default createConfig;
-module.exports = createConfig;
+module.exports = {
+    createConfig,
+    authTypeFromString,
+};

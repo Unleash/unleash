@@ -8,8 +8,7 @@ import User from '../../../lib/user';
 import { IRole } from '../../../lib/db/access-store';
 import ResetTokenService from '../../../lib/services/reset-token-service';
 import { EmailService } from '../../../lib/services/email-service';
-import { IAuthType } from '../../../lib/types/option';
-import createConfig from '../../../lib/create-config';
+import { createTestConfig } from '../../config/test-config';
 
 let db;
 let stores;
@@ -20,7 +19,7 @@ let adminRole: IRole;
 test.before(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
-    const config = createConfig({ getLogger });
+    const config = createTestConfig();
     const accessService = new AccessService(stores, config);
     const resetTokenService = new ResetTokenService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);

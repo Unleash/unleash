@@ -1,7 +1,7 @@
 'use strict';
 
 import unleash from './lib/server-impl';
-import createConfig from "./lib/create-config";
+import { createConfig } from './lib/create-config';
 
 unleash.start(createConfig({
     db: {

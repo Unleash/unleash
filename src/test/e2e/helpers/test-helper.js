@@ -5,13 +5,12 @@ process.env.NODE_ENV = 'test';
 const supertest = require('supertest');
 
 const getApp = require('../../../lib/app');
-const getLogger = require('../../fixtures/no-logger');
-const createConfig = require('../../../lib/create-config');
+const { createTestConfig } = require('../../config/test-config');
 const { AuthType } = require('../../../lib/types/option');
 const { createServices } = require('../../../lib/services');
 
 function createApp(stores, adminAuthentication = AuthType.NONE, preHook) {
-    const config = createConfig({
+    const config = createTestConfig({
         authentication: {
             type: adminAuthentication,
             customAuthHandler: preHook,
@@ -19,7 +18,6 @@ function createApp(stores, adminAuthentication = AuthType.NONE, preHook) {
         server: {
             unleashUrl: 'http://localhost:4242',
         },
-        getLogger,
     });
     const services = createServices(stores, config);
     // TODO: use create from server-impl instead?

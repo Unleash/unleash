@@ -17,6 +17,8 @@ const currentUser = new User({ email: 'test@mail.com' });
 function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = store.createStores();
+    stores.userStore.insert(currentUser);
+
     const config = createTestConfig({
         preHook: a => {
             a.use((req, res, next) => {
@@ -30,12 +32,12 @@ function getSetup() {
     const app = getApp(config, stores, services, eventBus);
     return {
         base,
-        strategyStore: stores.strategyStore,
+        userStore: stores.userStore,
         request: supertest(app),
     };
 }
 
-test.only('should return current user', t => {
+test('should return current user', t => {
     t.plan(1);
     const { request, base } = getSetup();
 
@@ -47,13 +49,35 @@ test.only('should return current user', t => {
             t.is(res.body.user.email, currentUser.email);
         });
 });
+const owaspPassword = 't7GTx&$Y9pcsnxRv6';
 
-test('should logout and redirect', t => {
+test('should allow user to change password', async t => {
+    t.plan(2);
+    const { request, base, userStore } = getSetup();
+    const before = await userStore.get(currentUser);
+    t.falsy(before.passwordHash);
+    await request
+        .post(`${base}/api/admin/user/change-password`)
+        .send({ password: owaspPassword, confirmPassword: owaspPassword })
+        .expect(200);
+    const updated = await userStore.get(currentUser);
+    t.truthy(updated.passwordHash);
+});
+
+test('should deny if password and confirmPassword are not equal', async t => {
     t.plan(0);
     const { request, base } = getSetup();
-
     return request
-        .get(`${base}/api/admin/user/logout`)
-        .expect(302)
-        .expect('Location', `${base}/`);
+        .post(`${base}/api/admin/user/change-password`)
+        .send({ password: owaspPassword, confirmPassword: 'somethingelse' })
+        .expect(400);
+});
+
+test('should deny if password does not fulfill owasp criteria', async t => {
+    t.plan(0);
+    const { request, base } = getSetup();
+    return request
+        .post(`${base}/api/admin/user/change-password`)
+        .send({ password: 'hunter123', confirmPassword: 'hunter123' })
+        .expect(400);
 });

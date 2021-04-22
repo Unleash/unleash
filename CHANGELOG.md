@@ -24,6 +24,10 @@
 - chore(deps): bump y18n from 4.0.0 to 4.0.1 (#775)
 - Feat: Api-Tokens (#774)
 
+## 3.17.6
+
+- fix: skipLocked when updating lastSeen for toggles (second attempt)
+
 ## 3.17.5
 
 - fix: skipLocked when updating lastSeen for toggles

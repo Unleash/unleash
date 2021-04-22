@@ -135,10 +135,15 @@ class FeatureToggleStore {
         const now = new Date();
         try {
             await this.db(TABLE)
-                .whereIn('name', toggleNames)
-                .forUpdate()
-                .skipLocked()
-                .update({ last_seen_at: now });
+                .update({ last_seen_at: now })
+                .whereIn(
+                    'name',
+                    this.db(TABLE)
+                        .select('name')
+                        .whereIn('name', toggleNames)
+                        .forUpdate()
+                        .skipLocked(),
+                );
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);
         }

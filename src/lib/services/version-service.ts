@@ -13,8 +13,8 @@ export interface IVersionInfo {
 }
 
 export interface IVersionHolder {
-    current: VersionInfo;
-    latest: VersionInfo | {};
+    current: IVersionInfo;
+    latest: IVersionInfo | {};
     isLatest: boolean;
     instanceId: string;
 }
@@ -24,9 +24,9 @@ export default class VersionService {
 
     private settingStore: SettingStore;
 
-    private current: VersionInfo;
+    private current: IVersionInfo;
 
-    private latest?: VersionInfo;
+    private latest?: IVersionInfo;
 
     private enabled: boolean;
 
@@ -100,7 +100,7 @@ export default class VersionService {
         }
     }
 
-    getVersionInfo(): VersionHolder {
+    getVersionInfo(): IVersionHolder {
         return {
             current: this.current,
             latest: this.latest || {},

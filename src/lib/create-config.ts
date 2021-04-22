@@ -13,6 +13,7 @@ import {
     IEmailOption,
     IListeningPipe,
     IListeningHost,
+    authTypeFromString,
 } from './types/option';
 import { defaultLogProvider, validateLogProvider } from './logger';
 
@@ -88,12 +89,9 @@ const defaultVersionOption: IVersionOption = {
     enable: safeBoolean(process.env.CHECK_VERSION, true),
 };
 
-const authType = (defaultType: IAuthType): IAuthType =>
-    IAuthType[safeToUpper(process.env.AUTH_TYPE)] || defaultType;
-
 const defaultAuthentication: IAuthOption = {
     enableApiToken: safeBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
-    type: authType(IAuthType.OPEN_SOURCE),
+    type: authTypeFromString(process.env.AUTH_TYPE),
     customAuthHandler: () => {},
     createAdminUser: false,
 };

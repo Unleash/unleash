@@ -1,6 +1,10 @@
 import test from 'ava';
 import createConfig from '../../lib/create-config';
-import { IDBOption } from '../../lib/types/option';
+import {
+    authTypeFromString,
+    IAuthType,
+    IDBOption,
+} from '../../lib/types/option';
 
 test('Should use DATABASE_URL from env', t => {
     const databaseUrl = 'postgres://u:p@localhost:5432/name';
@@ -70,4 +74,29 @@ test('Can set baseUriPath', t => {
     const baseUriPath = 'some';
     const config = createConfig({ server: { baseUriPath } });
     t.is(config.server.baseUriPath, baseUriPath);
+});
+
+test('can convert both upper and lowercase string to enum', t => {
+    t.is(authTypeFromString('demo'), IAuthType.DEMO);
+    t.is(authTypeFromString('DEMO'), IAuthType.DEMO);
+    t.is(authTypeFromString('DeMo'), IAuthType.DEMO);
+    t.is(authTypeFromString('open_source'), IAuthType.OPEN_SOURCE);
+    t.is(authTypeFromString('OPEN_SOURCE'), IAuthType.OPEN_SOURCE);
+    t.is(authTypeFromString('ENTERPRISE'), IAuthType.ENTERPRISE);
+    t.is(authTypeFromString('enterprise'), IAuthType.ENTERPRISE);
+    t.is(authTypeFromString('custom'), IAuthType.CUSTOM);
+    t.is(authTypeFromString('CUSTOM'), IAuthType.CUSTOM);
+    t.is(authTypeFromString('none'), IAuthType.NONE);
+    t.is(authTypeFromString('NONE'), IAuthType.NONE);
+    t.is(authTypeFromString('unknown-string'), IAuthType.OPEN_SOURCE);
+});
+
+test('Can set auth type programmatically with a string', t => {
+    const config = createConfig({
+        authentication: {
+            // @ts-ignore
+            type: 'demo',
+        },
+    });
+    t.is(config.authentication.type, IAuthType.DEMO);
 });

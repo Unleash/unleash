@@ -37,12 +37,12 @@
     "build:watch": "tsc -w",
     "build": "yarn run copy-templates && tsc --pretty",
     "prepare": "yarn run build",
-    "test": "yarn build && NODE_ENV=test PORT=4243 ava",
+    "test": "NODE_ENV=test PORT=4243 jest",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "yarn test --watch",
-    "test:coverage": "nyc --reporter=lcov yarn test",
-    "test:coverage-report": "nyc report --reporter=text-lcov | coveralls",
-    "clean": "rimraf dist/"
+    "test:coverage": "yarn test --coverage",
+    "test:coverage-report": "yarn test:coverage && cat ./coverage/lcov.info | coveralls",
+    "clean": "rimraf dist/ coverage/"
   },
   "jest": {
     "transform": {
@@ -50,6 +50,7 @@
     },
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "coverageProvider": "v8",
     "moduleFileExtensions": [
       "ts",
       "tsx",

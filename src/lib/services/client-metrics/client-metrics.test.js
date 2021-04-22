@@ -24,7 +24,7 @@ test('should work without state', () => {
 });
 
 test('data should expire', () => {
-    jest.useFakeTimers();
+    jest.useFakeTimers('modern').setSystemTime(new Date());
 
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(
@@ -197,7 +197,7 @@ test('should handle a lot of toggles', () => {
 });
 
 test('should have correct values for lastMinute', () => {
-    jest.useFakeTimers();
+    jest.useFakeTimers('modern').setSystemTime(new Date());
 
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(
@@ -253,13 +253,13 @@ test('should have correct values for lastMinute', () => {
     });
 
     const seenToggles = metrics.getSeenTogglesByAppName(appName);
-    expect(seenToggles.length === 1).toBeTruthy();
+    expect(seenToggles).toHaveLength(1);
 
     // metrics.se
     let c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 20, no: 20 });
 
-    jest.advanceTimersByTime(10 * 1000);
+    jest.advanceTimersByTime(15 * 1000);
     c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 10, no: 10 });
 
@@ -271,8 +271,8 @@ test('should have correct values for lastMinute', () => {
     jest.useRealTimers();
 });
 
-test('should have correct values for lastHour', () => {
-    jest.useFakeTimers();
+test('should have correct values for lastHour', async () => {
+    jest.useFakeTimers('modern').setSystemTime(new Date());
 
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(
@@ -329,11 +329,13 @@ test('should have correct values for lastHour', () => {
     expect(c.lastHour.toggle).toEqual({ yes: 41, no: 41 });
 
     jest.advanceTimersByTime(10 * 1000);
+    await Promise.resolve();
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 41, no: 41 });
 
     // at 30
     jest.advanceTimersByTime(30 * 60 * 1000);
+    await Promise.resolve();
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 31, no: 31 });
 
@@ -428,14 +430,18 @@ test('Multiple registrations of same appname and instanceid within same time per
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await jest.advanceTimersByTime(7 * 1000);
-    expect(appStoreSpy.callCount).toBe(1);
-    expect(bulkSpy.callCount).toBe(1);
-    const registrations = appStoreSpy.firstCall.args[0];
-    expect(registrations.length).toBe(1);
-    expect(registrations[0].appName).toBe(client1.appName);
-    expect(registrations[0].instanceId).toBe(client1.instanceId);
-    expect(registrations[0].started).toBe(client1.started);
-    expect(registrations[0].interval).toBe(client1.interval);
+    expect(appStoreSpy).toHaveBeenCalledTimes(1);
+    expect(bulkSpy).toHaveBeenCalledTimes(1);
+    expect(appStoreSpy).toHaveBeenCalledWith(
+        expect.arrayContaining([
+            expect.objectContaining({
+                appName: client1.appName,
+                instanceId: client1.instanceId,
+                started: client1.started,
+                interval: client1.interval,
+            }),
+        ]),
+    );
     jest.useRealTimers();
 });
 
@@ -475,10 +481,18 @@ test('Multiple unique clients causes multiple registrations', async () => {
     await clientMetrics.registerClient(client2, '127.0.0.1');
     await clientMetrics.registerClient(client2, '127.0.0.1');
     await jest.advanceTimersByTime(7 * 1000);
-    expect(appStoreSpy.callCount).toBe(1);
-    expect(bulkSpy.callCount).toBe(1);
-    const registrations = appStoreSpy.firstCall.args[0];
-    expect(registrations.length).toBe(2);
+    expect(appStoreSpy).toHaveBeenCalledTimes(1);
+    expect(bulkSpy).toHaveBeenCalledTimes(1);
+    expect(appStoreSpy).toHaveBeenCalledWith(
+        expect.arrayContaining([
+            expect.objectContaining({
+                instanceId: client1.instanceId,
+            }),
+            expect.objectContaining({
+                instanceId: client2.instanceId,
+            }),
+        ]),
+    );
     jest.useRealTimers();
 });
 test('Same client registered outside of dedup interval will be registered twice', async () => {
@@ -512,13 +526,25 @@ test('Same client registered outside of dedup interval will be registered twice'
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await jest.advanceTimersByTime(3 * 1000);
-    expect(appStoreSpy.callCount).toBe(2);
-    expect(bulkSpy.callCount).toBe(2);
-    const firstRegistrations = appStoreSpy.firstCall.args[0];
-    const secondRegistrations = appStoreSpy.secondCall.args[0];
-    expect(firstRegistrations[0].appName).toBe(secondRegistrations[0].appName);
-    expect(firstRegistrations[0].instanceId).toBe(
-        secondRegistrations[0].instanceId,
+    expect(appStoreSpy).toHaveBeenCalledTimes(2);
+    expect(bulkSpy).toHaveBeenCalledTimes(2);
+    expect(appStoreSpy).toHaveBeenNthCalledWith(
+        1,
+        expect.arrayContaining([
+            expect.objectContaining({
+                appName: client1.appName,
+                instanceId: client1.instanceId,
+            }),
+        ]),
+    );
+    expect(appStoreSpy).toHaveBeenNthCalledWith(
+        2,
+        expect.arrayContaining([
+            expect.objectContaining({
+                appName: client1.appName,
+                instanceId: client1.instanceId,
+            }),
+        ]),
     );
     jest.useRealTimers();
 });

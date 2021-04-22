@@ -160,7 +160,7 @@ export class EmailService {
         templateName: string,
         format: TemplateFormat,
     ): string {
-        let topPath = path.resolve('mailtemplates');
+        let topPath = path.resolve('src/mailtemplates');
         if (!existsSync(topPath)) {
             topPath = path.resolve('dist', 'mailtemplates');
         }

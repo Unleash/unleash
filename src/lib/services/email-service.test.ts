@@ -1,4 +1,4 @@
-import { EmailService, TransporterType } from './email-service';
+import { EmailService } from './email-service';
 import noLoggerProvider from '../../test/fixtures/no-logger';
 
 test('Can send reset email', async () => {

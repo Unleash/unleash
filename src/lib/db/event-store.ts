@@ -52,7 +52,7 @@ class EventStore extends EventEmitter {
                 .insert(this.eventToDbRow(event))
                 .returning(EVENT_COLUMNS);
             const savedEvent = this.rowToEvent(rows[0]);
-            process.nextTick(() => this.emit(event.type, savedEvent));
+            this.emit(event.type, savedEvent);
         } catch (e) {
             this.logger.warn(`Failed to store event ${e}`);
         }
@@ -64,9 +64,7 @@ class EventStore extends EventEmitter {
                 .insert(events.map(this.eventToDbRow))
                 .returning(EVENT_COLUMNS);
             const savedEvents = savedRows.map(this.rowToEvent);
-            process.nextTick(() =>
-                savedEvents.forEach(e => this.emit(e.type, e)),
-            );
+            savedEvents.forEach(e => this.emit(e.type, e));
         } catch (e) {
             this.logger.warn('Failed to store events');
         }

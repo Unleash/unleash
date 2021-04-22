@@ -14,7 +14,9 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await db.destroy();
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('should have default project', async () => {

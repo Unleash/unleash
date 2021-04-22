@@ -11,6 +11,7 @@ const STRATEGY_COLUMNS = [
     'parameters',
     'built_in',
     'deprecated',
+    'display_name',
 ];
 const TABLE = 'strategies';
 
@@ -20,6 +21,7 @@ export interface IStrategy {
     description: string;
     parameters: object;
     deprecated: boolean;
+    displayName: string;
 }
 
 export interface IEditableStrategy {
@@ -41,6 +43,7 @@ interface IStrategyRow {
     description: string;
     parameters: object;
     deprecated: boolean;
+    display_name: string;
 }
 export default class StrategyStore {
     private db: Knex;
@@ -56,6 +59,7 @@ export default class StrategyStore {
         const rows = await this.db
             .select(STRATEGY_COLUMNS)
             .from(TABLE)
+            .orderBy('sort_order', 'asc')
             .orderBy('name', 'asc');
 
         return rows.map(this.rowToStrategy);
@@ -66,7 +70,9 @@ export default class StrategyStore {
             .select(STRATEGY_COLUMNS)
             .from(TABLE)
             .where({ built_in: 0 }) // eslint-disable-line
+            .orderBy('sort_order', 'asc')
             .orderBy('name', 'asc');
+
         return rows.map(this.rowToEditableStrategy);
     }
 
@@ -83,6 +89,7 @@ export default class StrategyStore {
             throw new NotFoundError('No strategy found');
         }
         return {
+            displayName: row.display_name,
             name: row.name,
             editable: row.built_in !== 1,
             description: row.description,

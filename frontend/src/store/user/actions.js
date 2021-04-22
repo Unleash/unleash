@@ -40,6 +40,17 @@ export function insecureLogin(path, user) {
     };
 }
 
+export function demoLogin(path, user) {
+    return dispatch => {
+        dispatch({ type: START_FETCH_USER });
+
+        return api
+            .demoLogin(path, user)
+            .then(json => dispatch(updateUser(json)))
+            .catch(handleError);
+    };
+}
+
 export function passwordLogin(path, user) {
     return dispatch => {
         dispatch({ type: START_FETCH_USER });

@@ -26,6 +26,17 @@ function insecureLogin(path, user) {
         .then((response) => response.json());
 }
 
+function demoLogin(path, user) {
+    return fetch(path, {
+        method: "POST",
+        credentials: "include",
+        headers,
+        body: JSON.stringify(user),
+    })
+        .then(throwIfNotSuccess)
+        .then((response) => response.json());
+}
+
 function passwordLogin(path, data) {
     return fetch(path, {
         method: "POST",
@@ -40,6 +51,7 @@ function passwordLogin(path, data) {
 const api = {
     fetchUser,
     insecureLogin,
+    demoLogin,
     logoutUser,
     passwordLogin,
 };

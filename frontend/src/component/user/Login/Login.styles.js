@@ -38,7 +38,7 @@ export const useStyles = makeStyles(theme => ({
         fontSize: '1.25rem',
     },
     loginFormContainer: {
-        maxWidth: '300px',
+        maxWidth: '500px',
     },
     imageContainer: {
         display: 'flex',

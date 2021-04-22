@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 import SimpleAuth from './SimpleAuth/SimpleAuth';
 import AuthenticationCustomComponent from './authentication-custom-component';
 import PasswordAuth from './PasswordAuth/PasswordAuth';
+import DemoAuth from './DemoAuth';
 
 const SIMPLE_TYPE = 'unsecure';
+const DEMO_TYPE = 'demo';
 const PASSWORD_TYPE = 'password';
 
 class AuthComponent extends React.Component {
     static propTypes = {
         user: PropTypes.object.isRequired,
+        demoLogin: PropTypes.func.isRequired,
         insecureLogin: PropTypes.func.isRequired,
         passwordLogin: PropTypes.func.isRequired,
         loadInitialData: PropTypes.func.isRequired,
@@ -34,6 +37,15 @@ class AuthComponent extends React.Component {
             content = (
                 <SimpleAuth
                     insecureLogin={this.props.insecureLogin}
+                    authDetails={authDetails}
+                    loadInitialData={this.props.loadInitialData}
+                    history={this.props.history}
+                />
+            );
+        } else if (authDetails.type === DEMO_TYPE) {
+            content = (
+                <DemoAuth
+                    demoLogin={this.props.demoLogin}
                     authDetails={authDetails}
                     loadInitialData={this.props.loadInitialData}
                     history={this.props.history}

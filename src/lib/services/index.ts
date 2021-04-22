@@ -20,6 +20,7 @@ const { AccessService } = require('./access-service');
 const { ApiTokenService } = require('./api-token-service');
 const UserService = require('./user-service');
 const ResetTokenService = require('./reset-token-service');
+const SettingService = require('./setting-service');
 
 export const createServices = (
     stores: IUnleashStores,
@@ -51,6 +52,7 @@ export const createServices = (
     });
     const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
+    const settingService = new SettingService(stores, config);
 
     return {
         accessService,
@@ -71,6 +73,7 @@ export const createServices = (
         userService,
         resetTokenService,
         eventService,
+        settingService,
     };
 };
 

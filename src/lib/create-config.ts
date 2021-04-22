@@ -99,7 +99,7 @@ const defaultAuthentication: IAuthOption = {
     enableApiToken: safeBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
     type: authTypeFromString(process.env.AUTH_TYPE),
     customAuthHandler: () => {},
-    createAdminUser: false,
+    createAdminUser: true,
 };
 
 const defaultImport: IImportOption = {

@@ -16,6 +16,7 @@ import ResetTokenService from '../services/reset-token-service';
 import FeatureTypeService from '../services/feature-type-service';
 import EventService from '../services/event-service';
 import HealthService from '../services/health-service';
+import SettingService from '../services/setting-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -30,6 +31,7 @@ export interface IUnleashServices {
     healthService: HealthService;
     projectService: ProjectService;
     resetTokenService: ResetTokenService;
+    settingService: SettingService;
     stateService: StateService;
     strategyService: StrategyService;
     tagTypeService: TagTypeService;

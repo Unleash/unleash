@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.17.6
+
+- fix: skipLocked when updating lastSeen for toggles (second attempt)
+
 ## 3.17.5
 
 - fix: skipLocked when updating lastSeen for toggles

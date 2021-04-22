@@ -15,5 +15,5 @@ exports.up = function(db, cb) {
 };
 
 exports.down = function(db, cb) {
-    db.runSql(`ALTER TABLE strategies REMOVE COLUMN sort_order;`, cb);
+    db.runSql(`ALTER TABLE strategies DROP COLUMN sort_order;`, cb);
 };

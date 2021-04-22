@@ -21,7 +21,7 @@ export default class UserAdminController extends Controller {
         this.accessService = accessService;
         this.logger = config.getLogger('routes/user-controller.ts');
 
-        this.get('/', this.getUsers);
+        this.get('/', this.getUsers, ADMIN);
         this.get('/search', this.search);
         this.post('/', this.createUser, ADMIN);
         this.post('/validate-password', this.validatePassword);

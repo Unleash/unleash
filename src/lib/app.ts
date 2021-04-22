@@ -18,7 +18,7 @@ import unleashDbSession from './middleware/session-db';
 import IndexRouter from './routes';
 
 import requestLogger from './middleware/request-logger';
-import simpleAuthentication from './middleware/simple-authentication';
+import demoAuthentication from './middleware/demo-authentication';
 import ossAuthentication from './middleware/oss-authentication';
 import noAuthentication from './middleware/no-authentication';
 import secureHeaders from './middleware/secure-headers';
@@ -74,7 +74,7 @@ export default function getApp(
             break;
         }
         case IAuthType.DEMO: {
-            simpleAuthentication(app, config.server.baseUriPath, services);
+            demoAuthentication(app, config.server.baseUriPath, services);
             break;
         }
         case IAuthType.CUSTOM: {
@@ -87,7 +87,7 @@ export default function getApp(
             break;
         }
         default: {
-            simpleAuthentication(app, config.server.baseUriPath, services);
+            demoAuthentication(app, config.server.baseUriPath, services);
             break;
         }
     }

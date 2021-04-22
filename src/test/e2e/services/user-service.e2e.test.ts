@@ -8,7 +8,7 @@ import User from '../../../lib/user';
 import { IRole } from '../../../lib/db/access-store';
 import ResetTokenService from '../../../lib/services/reset-token-service';
 import { EmailService } from '../../../lib/services/email-service';
-import { AuthType } from '../../../lib/types/option';
+import { IAuthType } from '../../../lib/types/option';
 import createConfig from '../../../lib/create-config';
 
 let db;

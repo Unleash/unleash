@@ -11,7 +11,7 @@ import { responseTimeMetrics } from './middleware/response-time-metrics';
 import rbacMiddleware from './middleware/rbac-middleware';
 import apiTokenMiddleware from './middleware/api-token-middleware';
 import { IUnleashServices } from './types/services';
-import { AuthType, IUnleashConfig } from './types/option';
+import { IAuthType, IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
 import unleashDbSession from './middleware/session-db';
 
@@ -63,26 +63,26 @@ export default function getApp(
         app.use(`${baseUriPath}/oas`, express.static('docs/api/oas'));
     }
     switch (config.authentication.type) {
-        case AuthType.OPEN_SOURCE: {
+        case IAuthType.OPEN_SOURCE: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
             ossAuthentication(app, config);
             break;
         }
-        case AuthType.ENTERPRISE: {
+        case IAuthType.ENTERPRISE: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
             config.authentication.customAuthHandler(app, config, services);
             break;
         }
-        case AuthType.DEMO: {
+        case IAuthType.DEMO: {
             simpleAuthentication(app, config.server.baseUriPath, services);
             break;
         }
-        case AuthType.CUSTOM: {
+        case IAuthType.CUSTOM: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
             config.authentication.customAuthHandler(app, config, services);
             break;
         }
-        case AuthType.NONE: {
+        case IAuthType.NONE: {
             noAuthentication(baseUriPath, app);
             break;
         }

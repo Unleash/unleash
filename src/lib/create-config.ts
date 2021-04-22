@@ -8,11 +8,11 @@ import {
     IServerOption,
     IVersionOption,
     IAuthOption,
-    AuthType,
+    IAuthType,
     IImportOption,
     IEmailOption,
-    ListeningPipe,
-    ListeningHost,
+    IListeningPipe,
+    IListeningHost,
 } from './types/option';
 import { defaultLogProvider, validateLogProvider } from './logger';
 
@@ -86,12 +86,12 @@ const defaultVersionOption: IVersionOption = {
     enable: safeBoolean(process.env.CHECK_VERSION, true),
 };
 
-const authType = (defaultType: AuthType): AuthType =>
-    AuthType[process.env.AUTH_TYPE] || defaultType;
+const authType = (defaultType: IAuthType): IAuthType =>
+    IAuthType[process.env.AUTH_TYPE] || defaultType;
 
 const defaultAuthentication: IAuthOption = {
     enableApiToken: safeBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
-    type: authType(AuthType.OPEN_SOURCE),
+    type: authType(IAuthType.OPEN_SOURCE),
     customAuthHandler: () => {},
     createAdminUser: false,
 };
@@ -166,7 +166,7 @@ function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const email: IEmailOption = mergeAll([defaultEmail, options.email]);
 
-    let listen: ListeningPipe | ListeningHost;
+    let listen: IListeningPipe | IListeningHost;
     if (server.pipe) {
         listen = { path: server.pipe };
     } else {

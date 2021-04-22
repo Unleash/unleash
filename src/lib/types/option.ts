@@ -34,7 +34,7 @@ export interface IVersionOption {
     url?: string;
     enable?: boolean;
 }
-export enum AuthType {
+export enum IAuthType {
     OPEN_SOURCE = 'open-source',
     DEMO = 'demo',
     ENTERPRISE = 'enterprise',
@@ -43,7 +43,7 @@ export enum AuthType {
 }
 export interface IAuthOption {
     enableApiToken: boolean;
-    type: AuthType;
+    type: IAuthType;
     customAuthHandler?: Function;
     createAdminUser: boolean;
 }
@@ -110,7 +110,7 @@ export interface IUnleashConfig {
     session: ISessionOption;
     getLogger: LogProvider;
     server: IServerOption;
-    listen: ListeningHost | ListeningPipe;
+    listen: IListeningHost | IListeningPipe;
     versionCheck: IVersionOption;
     authentication: IAuthOption;
     ui: object;

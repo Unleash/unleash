@@ -6,10 +6,10 @@ const supertest = require('supertest');
 
 const getApp = require('../../../lib/app');
 const { createTestConfig } = require('../../config/test-config');
-const { AuthType } = require('../../../lib/types/option');
+const { IAuthType } = require('../../../lib/types/option');
 const { createServices } = require('../../../lib/services');
 
-function createApp(stores, adminAuthentication = AuthType.NONE, preHook) {
+function createApp(stores, adminAuthentication = IAuthType.NONE, preHook) {
     const config = createTestConfig({
         authentication: {
             type: adminAuthentication,
@@ -31,12 +31,12 @@ module.exports = {
     },
 
     async setupAppWithAuth(stores) {
-        const app = createApp(stores, AuthType.DEMO);
+        const app = createApp(stores, IAuthType.DEMO);
         return supertest.agent(app);
     },
 
     async setupAppWithCustomAuth(stores, preHook) {
-        const app = createApp(stores, AuthType.CUSTOM, preHook);
+        const app = createApp(stores, IAuthType.CUSTOM, preHook);
         return supertest.agent(app);
     },
 };

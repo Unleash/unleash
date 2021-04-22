@@ -1,6 +1,6 @@
 import merge from 'deepmerge';
 import {
-    AuthType,
+    IAuthType,
     IUnleashConfig,
     IUnleashOptions,
 } from '../../lib/types/option';
@@ -15,7 +15,7 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
     const testConfig: IUnleashOptions = {
         getLogger,
-        authentication: { type: AuthType.NONE, createAdminUser: false },
+        authentication: { type: IAuthType.NONE, createAdminUser: false },
         server: { secret: 'really-secret' },
         session: {
             db: false,

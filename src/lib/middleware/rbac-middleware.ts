@@ -5,12 +5,25 @@ import {
     DELETE_FEATURE,
     ADMIN,
 } from '../permissions';
+import { IUnleashConfig } from '../types/option';
+import { IUnleashStores } from '../types/stores';
+import User from '../user';
 
-const rbacMiddleware = (config: any, { accessService }: any): any => {
+interface PermissionChecker {
+    hasPermission(
+        user: User,
+        permission: string,
+        projectId?: string,
+    ): Promise<boolean>;
+}
+
+const rbacMiddleware = (
+    config: Pick<IUnleashConfig, 'getLogger'>,
+    { featureToggleStore }: Pick<IUnleashStores, 'featureToggleStore'>,
+    accessService: PermissionChecker,
+): any => {
     const logger = config.getLogger('/middleware/rbac-middleware.js');
     logger.info('Enabling RBAC');
-
-    const { featureToggleStore } = config.stores;
 
     return (req, res, next) => {
         req.checkRbac = async (permission: string) => {

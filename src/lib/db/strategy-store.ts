@@ -35,10 +35,6 @@ export interface IMinimalStrategy {
     parameters: string;
 }
 
-export interface IStrategyName {
-    name: string;
-}
-
 interface IStrategyRow {
     name: string;
     built_in: number;
@@ -107,6 +103,7 @@ export default class StrategyStore {
         };
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     eventDataToRow(data): IMinimalStrategy {
         return {
             name: data.name,
@@ -115,7 +112,8 @@ export default class StrategyStore {
         };
     }
 
-    async createStrategy(data) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async createStrategy(data): Promise<void> {
         this.db(TABLE)
             .insert(this.eventDataToRow(data))
             .catch(err =>
@@ -123,6 +121,7 @@ export default class StrategyStore {
             );
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async updateStrategy(data): Promise<void> {
         this.db(TABLE)
             .where({ name: data.name })
@@ -132,7 +131,7 @@ export default class StrategyStore {
             );
     }
 
-    async deprecateStrategy({ name }: IStrategyName): Promise<void> {
+    async deprecateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void> {
         this.db(TABLE)
             .where({ name })
             .update({ deprecated: true })
@@ -141,7 +140,7 @@ export default class StrategyStore {
             );
     }
 
-    async reactivateStrategy({ name }: IStrategyName) {
+    async reactivateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void> {
         this.db(TABLE)
             .where({ name })
             .update({ deprecated: false })
@@ -153,8 +152,8 @@ export default class StrategyStore {
             );
     }
 
-    async deleteStrategy({ name }: IStrategyName) {
-        return this.db(TABLE)
+    async deleteStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void> {
+        await this.db(TABLE)
             .where({ name })
             .del()
             .catch(err => {
@@ -162,7 +161,8 @@ export default class StrategyStore {
             });
     }
 
-    async importStrategy(data) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async importStrategy(data): Promise<void> {
         const rowData = this.eventDataToRow(data);
         await this.db(TABLE)
             .insert(rowData)

@@ -42,7 +42,7 @@ module.exports = class ClientMetricsService {
         this.lastHourList = new TTLList({
             interval: 10000,
         });
-        this.logger = getLogger('services/client-metrics/index.js');
+        this.logger = getLogger('services/client-metrics/index.ts');
 
         this.lastMinuteList = new TTLList({
             interval: 10000,

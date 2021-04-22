@@ -1,5 +1,4 @@
 import test from 'ava';
-import { IUnleashConfig } from '../../../lib/types/core';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import ResetTokenService from '../../../lib/services/reset-token-service';
@@ -8,13 +7,12 @@ import { AccessService } from '../../../lib/services/access-service';
 import NotFoundError from '../../../lib/error/notfound-error';
 import { EmailService } from '../../../lib/services/email-service';
 import User from '../../../lib/user';
+import { IUnleashConfig } from '../../../lib/types/option';
+import createConfig from '../../../lib/create-config';
 
-const config: IUnleashConfig = {
+const config: IUnleashConfig = createConfig({
     getLogger,
-    baseUriPath: '',
-    authentication: { enableApiToken: true, createAdminUser: false },
-    unleashUrl: 'http://localhost:3000',
-};
+});
 
 let stores;
 let db;
@@ -30,7 +28,7 @@ test.before(async () => {
     accessService = new AccessService(stores, config);
     resetTokenService = new ResetTokenService(stores, config);
 
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(undefined, config.getLogger);
 
     userService = new UserService(stores, config, {
         accessService,

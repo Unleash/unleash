@@ -1,5 +1,8 @@
 'use strict';
 
+import { createServices } from '../services';
+import { createTestConfig } from '../../test/config/test-config';
+
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
@@ -12,12 +15,13 @@ const eventBus = new EventEmitter();
 function getSetup() {
     const stores = store.createStores();
     const { db } = stores;
-    const app = getApp({
-        baseUriPath: '',
+    const config = createTestConfig();
+    const app = getApp(
+        config,
         stores,
+        createServices(stores, config),
         eventBus,
-        getLogger,
-    });
+    );
 
     return {
         db,
@@ -33,9 +37,7 @@ test('should give 500 when db is failing', t => {
     getLogger.setMuteError(true);
     t.plan(2);
     const { request, db } = getSetup();
-    db.select = () => ({
-        from: () => Promise.reject(new Error('db error')),
-    });
+    db.raw = () => Promise.reject(new Error('db error'));
     return request
         .get('/health')
         .expect(500)
@@ -47,13 +49,15 @@ test('should give 500 when db is failing', t => {
 
 test('should give 200 when db is not failing', t => {
     t.plan(0);
-    const { request } = getSetup();
+    const { request, db } = getSetup();
+    db.raw = () => Promise.resolve();
     return request.get('/health').expect(200);
 });
 
 test('should give health=GOOD when db is not failing', t => {
     t.plan(2);
-    const { request } = getSetup();
+    const { request, db } = getSetup();
+    db.raw = () => Promise.resolve();
     return request
         .get('/health')
         .expect(200)

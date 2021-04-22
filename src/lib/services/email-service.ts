@@ -4,6 +4,7 @@ import path from 'path';
 import { readFileSync, existsSync } from 'fs';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
+import { IEmailOption } from '../types/option';
 
 export interface IAuthOptions {
     user: string;
@@ -39,20 +40,20 @@ export class EmailService {
 
     private readonly sender: string;
 
-    constructor(email: IEmailOptions | undefined, getLogger: LogProvider) {
+    constructor(email: IEmailOption, getLogger: LogProvider) {
         this.logger = getLogger('services/email-service.ts');
         if (email && email.host) {
             this.sender = email.sender;
-            if (email.transporterType === TransporterType.JSON) {
+            if (email.host === 'test') {
                 this.mailer = createTransport({ jsonTransport: true });
             } else {
-                const connectionString = `${email.auth.user}:${email.auth.pass}@${email.host}:${email.port}`;
+                const connectionString = `${email.smtpuser}:${email.smtppass}@${email.host}:${email.port}`;
                 this.mailer = email.secure
                     ? createTransport(`smtps://${connectionString}`)
                     : createTransport(`smtp://${connectionString}`);
             }
             this.logger.info(
-                `Initialized transport to ${email.host} on port ${email.port} with user: ${email.auth.user}`,
+                `Initialized transport to ${email.host} on port ${email.port} with user: ${email.smtpuser}`,
             );
         } else {
             this.sender = 'not-configured';

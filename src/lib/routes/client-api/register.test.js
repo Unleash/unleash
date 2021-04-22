@@ -1,5 +1,7 @@
 'use strict';
 
+import { createTestConfig } from '../../../test/config/test-config';
+
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
@@ -12,14 +14,9 @@ const eventBus = new EventEmitter();
 
 function getSetup() {
     const stores = store.createStores();
-    const config = {
-        baseUriPath: '',
-        stores,
-        eventBus,
-        getLogger,
-    };
+    const config = createTestConfig();
     const services = createServices(stores, config);
-    const app = getApp(config, services);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         request: supertest(app),
@@ -84,37 +81,4 @@ test('should require strategies field', t => {
             interval: 10,
         })
         .expect(400);
-});
-
-test('should fail if store fails', t => {
-    t.plan(0);
-    getLogger.setMuteError(true);
-
-    // --- start custom config
-    const stores = store.createStores();
-    stores.clientApplicationsStore = {
-        upsert: () => {
-            throw new Error('opps');
-        },
-    };
-    const app = getApp({
-        baseUriPath: '',
-        stores,
-        eventBus,
-        getLogger,
-    });
-    // --- end custom config
-
-    const request = supertest(app);
-
-    return request
-        .post('/api/client/register')
-        .send({
-            appName: 'demo',
-            instanceId: 'test',
-            strategies: ['default'],
-            started: Date.now(),
-            interval: 10,
-        })
-        .expect(500);
 });

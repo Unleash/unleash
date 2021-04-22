@@ -4,8 +4,7 @@
     },
     "extends": [
         "airbnb-typescript/base",
-        "prettier"
-
+        "prettier",
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {

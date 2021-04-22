@@ -5,10 +5,11 @@ import UserService from '../../../lib/services/user-service';
 import { AccessService, RoleName } from '../../../lib/services/access-service';
 import UserStore from '../../../lib/db/user-store';
 import User from '../../../lib/user';
-import { IUnleashConfig } from '../../../lib/types/core';
 import { IRole } from '../../../lib/db/access-store';
 import ResetTokenService from '../../../lib/services/reset-token-service';
 import { EmailService } from '../../../lib/services/email-service';
+import { IAuthType } from '../../../lib/types/option';
+import createConfig from '../../../lib/create-config';
 
 let db;
 let stores;
@@ -19,18 +20,10 @@ let adminRole: IRole;
 test.before(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
-    const config: IUnleashConfig = {
-        getLogger,
-        baseUriPath: '/test',
-        authentication: {
-            enableApiToken: false,
-            createAdminUser: false,
-        },
-        unleashUrl: 'http://localhost:4242',
-    };
+    const config = createConfig({ getLogger });
     const accessService = new AccessService(stores, config);
     const resetTokenService = new ResetTokenService(stores, config);
-    const emailService = new EmailService(config.email, config.getLogger);
+    const emailService = new EmailService(undefined, config.getLogger);
 
     userService = new UserService(stores, config, {
         accessService,

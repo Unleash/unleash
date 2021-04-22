@@ -1,8 +1,9 @@
 'use strict';
 
 import unleash from './lib/server-impl';
+import createConfig from "./lib/create-config";
 
-unleash.start({
+unleash.start(createConfig({
     db: {
         user: 'unleash_user',
         password: 'passord',
@@ -11,12 +12,11 @@ unleash.start({
         database: 'unleash',
         ssl: false,
     },
-    enableRequestLogger: true,
-    enableOAS: true,
-    session: {
-        db: true
+    server: {
+        enableRequestLogger: true,
     },
+    enableOAS: true,
     versionCheck: {
         enable: false,
-    }
-});
+    },
+}));

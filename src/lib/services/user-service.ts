@@ -6,17 +6,16 @@ import Joi from 'joi';
 import { URL } from 'url';
 import UserStore, { IUserSearch } from '../db/user-store';
 import { Logger } from '../logger';
-import { IUnleashConfig } from '../types/core';
 import User, { IUser } from '../user';
 import isEmail from '../util/is-email';
-import { AccessService, IRoleData, RoleName } from './access-service';
+import { AccessService, RoleName } from './access-service';
 import { ADMIN } from '../permissions';
 import ResetTokenService from './reset-token-service';
 import InvalidTokenError from '../error/invalid-token-error';
 import NotFoundError from '../error/notfound-error';
 import OwaspValidationError from '../error/owasp-validation-error';
 import { EmailService } from './email-service';
-import { IRole } from '../db/access-store';
+import { IUnleashConfig } from '../types/option';
 
 export interface ICreateUser {
     name?: string;
@@ -72,15 +71,25 @@ class UserService {
 
     constructor(
         stores: IStores,
-        config: IUnleashConfig,
-        { accessService, resetTokenService, emailService }: IServices,
+        {
+            getLogger,
+            authentication,
+        }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+        {
+            accessService,
+            resetTokenService,
+            emailService,
+        }: Pick<
+        IServices,
+            'accessService' | 'resetTokenService' | 'emailService'
+        >,
     ) {
-        this.logger = config.getLogger('service/user-service.js');
+        this.logger = getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.accessService = accessService;
         this.resetTokenService = resetTokenService;
         this.emailService = emailService;
-        if (config.authentication && config.authentication.createAdminUser) {
+        if (authentication && authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
     }
@@ -123,7 +132,9 @@ class UserService {
 
     async getAll(): Promise<IUserWithRole[]> {
         const users = await this.store.getAll();
-        const defaultRole = await this.accessService.getRootRole(RoleName.VIEWER);
+        const defaultRole = await this.accessService.getRootRole(
+            RoleName.VIEWER,
+        );
         const userRoles = await this.accessService.getRootRoleForAllUsers();
         const usersWithRootRole = users.map(u => {
             const rootRole = userRoles.find(r => r.userId === u.id);
@@ -135,7 +146,9 @@ class UserService {
 
     async getUser(id: number): Promise<IUserWithRole> {
         const roles = await this.accessService.getUserRootRoles(id);
-        const defaultRole = await this.accessService.getRootRole(RoleName.VIEWER);
+        const defaultRole = await this.accessService.getRootRole(
+            RoleName.VIEWER,
+        );
         const roleId = roles.length > 0 ? roles[0].id : defaultRole.id;
         const user = await this.store.get({ id });
         return { ...user, rootRole: roleId };

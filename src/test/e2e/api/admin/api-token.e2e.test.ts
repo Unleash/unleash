@@ -3,8 +3,6 @@ import { setupApp, setupAppWithCustomAuth } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType, IApiToken } from '../../../../lib/db/api-token-store';
-import User from '../../../../lib/user';
-import { CREATE_API_TOKEN, CREATE_FEATURE } from '../../../../lib/permissions';
 import { RoleName } from '../../../../lib/services/access-service';
 
 let stores;

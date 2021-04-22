@@ -28,7 +28,7 @@ interface ICreateEvent {
     tags?: Array<string>;
 }
 
-interface IEvent extends ICreateEvent {
+export interface IEvent extends ICreateEvent {
     id: number;
     createdAt: Date;
 }

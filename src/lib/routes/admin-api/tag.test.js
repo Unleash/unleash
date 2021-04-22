@@ -7,6 +7,7 @@ const store = require('../../../test/fixtures/store');
 const permissions = require('../../../test/fixtures/permissions');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
+const { createTestConfig } = require('../../../test/config/test-config');
 const { createServices } = require('../../services');
 
 const eventBus = new EventEmitter();
@@ -15,15 +16,12 @@ function getSetup(databaseIsUp = true) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = store.createStores(databaseIsUp);
     const perms = permissions();
-    const config = {
-        baseUriPath: base,
-        stores,
-        eventBus,
+    const config = createTestConfig({
+        server: { baseUriPath: base },
         preRouterHook: perms.hook,
-        getLogger,
-    };
+    });
     const services = createServices(stores, config);
-    const app = getApp(config, services);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,

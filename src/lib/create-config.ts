@@ -16,6 +16,8 @@ import {
 } from './types/option';
 import { defaultLogProvider, validateLogProvider } from './logger';
 
+const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
+
 function safeNumber(envVar, defaultVal): number {
     if (envVar) {
         try {
@@ -87,7 +89,7 @@ const defaultVersionOption: IVersionOption = {
 };
 
 const authType = (defaultType: IAuthType): IAuthType =>
-    IAuthType[process.env.AUTH_TYPE] || defaultType;
+    IAuthType[safeToUpper(process.env.AUTH_TYPE)] || defaultType;
 
 const defaultAuthentication: IAuthOption = {
     enableApiToken: safeBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),

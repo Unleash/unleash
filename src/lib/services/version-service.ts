@@ -12,7 +12,7 @@ export interface IVersionInfo {
     enterprise?: string;
 }
 
-export interface VersionHolder {
+export interface IVersionHolder {
     current: VersionInfo;
     latest: VersionInfo | {};
     isLatest: boolean;

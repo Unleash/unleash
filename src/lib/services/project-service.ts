@@ -1,4 +1,4 @@
-import User from '../user';
+import User from '../types/user';
 import { AccessService, IUserWithRole, RoleName } from './access-service';
 import ProjectStore, { IProject } from '../db/project-store';
 import EventStore from '../db/event-store';

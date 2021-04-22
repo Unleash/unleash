@@ -11,7 +11,7 @@ import ResetTokenService from '../../../../lib/services/reset-token-service';
 import UserService from '../../../../lib/services/user-service';
 import { setupApp } from '../../helpers/test-helper';
 import { EmailService } from '../../../../lib/services/email-service';
-import User from '../../../../lib/user';
+import User from '../../../../lib/types/user';
 import { IUnleashConfig } from '../../../../lib/types/option';
 import { createTestConfig } from '../../../config/test-config';
 

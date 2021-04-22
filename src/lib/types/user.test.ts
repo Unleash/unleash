@@ -1,10 +1,8 @@
-'use strict';
-
-const test = require('ava');
-const User = require('./user');
+import test from 'ava';
+import User from './user';
 
 test('should create user', t => {
-    const user = new User({ name: 'ole', email: 'some@email.com' });
+    const user = new User({ id: 11, name: 'ole', email: 'some@email.com' });
     t.is(user.name, 'ole');
     t.is(user.email, 'some@email.com');
     t.is(
@@ -15,15 +13,14 @@ test('should create user', t => {
 
 test('should create user, all fields', t => {
     const user = new User({
+        id: 11,
         name: 'Admin',
         username: 'admin',
         email: 'some@email.com',
-        permissions: ['admin', 'client'],
     });
     t.is(user.name, 'Admin');
     t.is(user.username, 'admin');
     t.is(user.email, 'some@email.com');
-    t.deepEqual(user.permissions, ['admin', 'client']);
     t.is(
         user.imageUrl,
         'https://gravatar.com/avatar/d8ffeba65ee5baf57e4901690edc8e1b?size=42&default=retro',
@@ -33,7 +30,7 @@ test('should create user, all fields', t => {
 test('should require email or username', t => {
     const error = t.throws(
         () => {
-        const user = new User(); // eslint-disable-line
+        const user = new User({ id: 11 }); // eslint-disable-line
         },
         { instanceOf: Error },
     );
@@ -42,7 +39,7 @@ test('should require email or username', t => {
 });
 
 test('Should create user with only email defined', t => {
-    const user = new User({ email: 'some@email.com' });
+    const user = new User({ id: 123, email: 'some@email.com' });
 
     t.is(user.email, 'some@email.com');
 });
@@ -50,7 +47,7 @@ test('Should create user with only email defined', t => {
 test('Should require valid email', t => {
     const error = t.throws(
         () => {
-            new User({ email: 'some@' }); // eslint-disable-line
+            new User({ id: 11, email: 'some@' }); // eslint-disable-line
         },
         { instanceOf: Error },
     );
@@ -59,7 +56,7 @@ test('Should require valid email', t => {
 });
 
 test('Should create user with only username defined', t => {
-    const user = new User({ username: 'some-user' });
+    const user = new User({ id: 133, username: 'some-user' });
     t.is(user.username, 'some-user');
     t.is(
         user.imageUrl,
@@ -68,6 +65,10 @@ test('Should create user with only username defined', t => {
 });
 
 test('Should create user with only username defined and undefined email', t => {
-    const user = new User({ username: 'some-user', email: undefined });
+    const user = new User({
+        id: 1447,
+        username: 'some-user',
+        email: undefined,
+    });
     t.is(user.username, 'some-user');
 });

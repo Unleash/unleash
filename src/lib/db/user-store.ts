@@ -2,7 +2,7 @@
 
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
-import User from '../user';
+import User from '../types/user';
 
 const NotFoundError = require('../error/notfound-error');
 
@@ -14,7 +14,6 @@ const USER_COLUMNS = [
     'username',
     'email',
     'image_url',
-    'permissions', // TODO: remove in v4
     'login_attempts',
     'seen_at',
     'created_at',
@@ -29,13 +28,19 @@ const emptify = value => {
     return value;
 };
 
-const mapUserToColumns = user => ({
+const mapUserToColumns = (user: ICreateUser) => ({
     name: user.name,
     username: user.username,
     email: user.email,
     image_url: user.imageUrl,
-    permissions: user.permissions ? JSON.stringify(user.permissions) : null,
 });
+
+interface ICreateUser {
+    name?: string;
+    username?: string;
+    email?: string;
+    imageUrl?: string;
+}
 
 const rowToUser = row => {
     if (!row) {
@@ -48,7 +53,6 @@ const rowToUser = row => {
         email: emptify(row.email),
         imageUrl: emptify(row.image_url),
         loginAttempts: row.login_attempts,
-        permissions: row.permissions,
         seenAt: row.seen_at,
         createdAt: row.created_at,
     });
@@ -88,14 +92,14 @@ class UserStore {
         return this.get({ id });
     }
 
-    async insert(user: User): Promise<User> {
+    async insert(user: ICreateUser): Promise<User> {
         const rows = await this.db(TABLE)
             .insert(mapUserToColumns(user))
             .returning(USER_COLUMNS);
         return rowToUser(rows[0]);
     }
 
-    async upsert(user: User): Promise<User> {
+    async upsert(user: ICreateUser): Promise<User> {
         const id = await this.hasUser(user);
 
         if (id) {

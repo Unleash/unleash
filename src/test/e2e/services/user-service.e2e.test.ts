@@ -4,7 +4,7 @@ import getLogger from '../../fixtures/no-logger';
 import UserService from '../../../lib/services/user-service';
 import { AccessService, RoleName } from '../../../lib/services/access-service';
 import UserStore from '../../../lib/db/user-store';
-import User from '../../../lib/user';
+import User from '../../../lib/types/user';
 import { IRole } from '../../../lib/db/access-store';
 import ResetTokenService from '../../../lib/services/reset-token-service';
 import { EmailService } from '../../../lib/services/email-service';
@@ -51,7 +51,7 @@ test.serial('should create initial admin user', async t => {
 });
 
 test.serial('should not be allowed to create existing user', async t => {
-    await userStore.insert(new User({ username: 'test', name: 'Hans Mola' }));
+    await userStore.insert({ username: 'test', name: 'Hans Mola' });
     await t.throwsAsync(
         userService.createUser({ username: 'test', rootRole: adminRole.id }),
     );

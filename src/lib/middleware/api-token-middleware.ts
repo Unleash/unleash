@@ -16,15 +16,15 @@ const apiAccessMiddleware = (
     }
 
     return (req, res, next) => {
-        if (req.user) {
+        if (req.apiUser) {
             return next();
         }
 
         try {
-            const userToken = req.header('authorization');
-            const user = apiTokenService.getUserForToken(userToken);
-            if (user) {
-                req.user = user;
+            const apiToken = req.header('authorization');
+            const apiUser = apiTokenService.getUserForToken(apiToken);
+            if (apiUser) {
+                req.user = apiUser;
             }
         } catch (error) {
             logger.error(error);

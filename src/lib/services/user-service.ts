@@ -6,7 +6,7 @@ import Joi from 'joi';
 import { URL } from 'url';
 import UserStore, { IUserSearch } from '../db/user-store';
 import { Logger } from '../logger';
-import User, { IUser } from '../user';
+import User, { IUser } from '../types/user';
 import isEmail from '../util/is-email';
 import { AccessService, RoleName } from './access-service';
 import { ADMIN } from '../permissions';
@@ -110,12 +110,9 @@ class UserService {
                 this.logger.info(
                     'Creating default user "admin" with password "admin"',
                 );
-                const user = await this.store.insert(
-                    new User({
-                        username: 'admin',
-                        permissions: [ADMIN], // TODO: remove in v4
-                    }),
-                );
+                const user = await this.store.insert({
+                    username: 'admin',
+                });
                 const passwordHash = await bcrypt.hash('admin', saltRounds);
                 await this.store.setPasswordHash(user.id, passwordHash);
 
@@ -180,10 +177,11 @@ class UserService {
             throw new Error('User already exists');
         }
 
-        const user = await this.store.insert(
-            // TODO: remove permission in v4.
-            new User({ username, email, name, permissions: [ADMIN] }),
-        );
+        const user = await this.store.insert({
+            username,
+            email,
+            name,
+        });
 
         await this.accessService.setUserRootRole(user.id, rootRole);
 

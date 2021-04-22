@@ -1,22 +1,12 @@
 import crypto from 'crypto';
 import { ApiTokenStore, IApiToken, ApiTokenType } from '../db/api-token-store';
-import { Logger, LogProvider } from '../logger';
+import { Logger } from '../logger';
 import { ADMIN, CLIENT } from '../permissions';
-import User from '../user';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
+import ApiUser from '../types/api-user';
 
 const ONE_MINUTE = 60_000;
-
-interface IStores {
-    apiTokenStore: ApiTokenStore;
-    settingStore: any;
-}
-
-interface IConfig {
-    getLogger: LogProvider;
-    baseUriPath: string;
-}
 
 interface CreateTokenRequest {
     username: string;
@@ -63,14 +53,13 @@ export class ApiTokenService {
         return this.store.getAllActive();
     }
 
-    public getUserForToken(secret: string): User | undefined {
+    public getUserForToken(secret: string): ApiUser | undefined {
         const token = this.activeTokens.find(t => t.secret === secret);
         if (token) {
             const permissions =
                 token.type === ApiTokenType.ADMIN ? [ADMIN] : [CLIENT];
 
-            return new User({
-                isAPI: true,
+            return new ApiUser({
                 username: token.username,
                 permissions,
             });
@@ -101,7 +90,7 @@ export class ApiTokenService {
         return crypto.randomBytes(32).toString('hex');
     }
 
-    destroy() {
+    destroy(): void {
         clearInterval(this.timer);
         this.timer = null;
     }

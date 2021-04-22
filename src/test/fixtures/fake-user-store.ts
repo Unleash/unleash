@@ -1,5 +1,5 @@
 import UserStore, { IUserLookup } from '../../lib/db/user-store';
-import User from '../../lib/user';
+import User from '../../lib/types/user';
 import noLoggerProvider from './no-logger';
 
 class UserStoreMock extends UserStore {

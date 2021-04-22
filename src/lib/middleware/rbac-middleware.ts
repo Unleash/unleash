@@ -5,9 +5,10 @@ import {
     DELETE_FEATURE,
     ADMIN,
 } from '../permissions';
+import ApiUser from '../types/api-user';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
-import User from '../user';
+import User from '../types/user';
 
 interface PermissionChecker {
     hasPermission(
@@ -34,7 +35,6 @@ const rbacMiddleware = (
                 return false;
             }
 
-            // Support ADMIN API tokens for enterpriseAuthentication.
             if (user.isAPI) {
                 return user.permissions.includes(ADMIN);
             }

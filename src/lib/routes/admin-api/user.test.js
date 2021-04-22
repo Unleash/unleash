@@ -8,11 +8,11 @@ const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
 const getApp = require('../../app');
-const User = require('../../user');
+const User = require('../../types/user');
 
 const eventBus = new EventEmitter();
 
-const currentUser = new User({ email: 'test@mail.com' });
+const currentUser = new User({ id: 1337, email: 'test@mail.com' });
 
 function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;

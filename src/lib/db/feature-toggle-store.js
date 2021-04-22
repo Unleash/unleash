@@ -136,6 +136,8 @@ class FeatureToggleStore {
         try {
             await this.db(TABLE)
                 .whereIn('name', togleNames)
+                .forUpdate()
+                .skipLocked()
                 .update({ last_seen_at: now });
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);

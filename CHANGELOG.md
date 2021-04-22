@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.17.5
+
+- fix: skipLocked when updating lastSeen for toggles
+
 ## 3.17.4
 
 - fix: version-checker must have instanceId

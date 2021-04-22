@@ -7,7 +7,7 @@ import SettingStore from '../db/setting-store';
 
 const TWO_DAYS = 48 * 60 * 60 * 1000;
 
-export interface VersionInfo {
+export interface IVersionInfo {
     oss: string;
     enterprise?: string;
 }

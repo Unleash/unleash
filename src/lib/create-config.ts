@@ -13,11 +13,17 @@ import {
     IEmailOption,
     IListeningPipe,
     IListeningHost,
-    authTypeFromString,
 } from './types/option';
 import { defaultLogProvider, validateLogProvider } from './logger';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
+
+export function authTypeFromString(
+    s?: string,
+    defaultType: IAuthType = IAuthType.OPEN_SOURCE,
+): IAuthType {
+    return IAuthType[safeToUpper(s)] || defaultType;
+}
 
 function safeNumber(envVar, defaultVal): number {
     if (envVar) {

@@ -42,12 +42,6 @@ export enum IAuthType {
     NONE = 'none',
 }
 
-export function authTypeFromString(
-    s?: string,
-    defaultType: IAuthType = IAuthType.OPEN_SOURCE,
-): IAuthType {
-    return s ? IAuthType[s.toUpperCase()] || defaultType : defaultType;
-}
 export interface IAuthOption {
     enableApiToken: boolean;
     type: IAuthType;

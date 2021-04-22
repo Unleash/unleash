@@ -2,7 +2,7 @@ const auth = require('basic-auth');
 const User = require('../user');
 const AuthenticationRequired = require('../authentication-required');
 
-function insecureAuthentication(app, basePath = '', { userService }) {
+function demoAuthentication(app, basePath = '', { userService }) {
     app.post(`${basePath}/api/admin/login`, async (req, res) => {
         const { email } = req.body;
         const user = await userService.loginUserWithoutPassword(email, true);
@@ -33,7 +33,7 @@ function insecureAuthentication(app, basePath = '', { userService }) {
             .json(
                 new AuthenticationRequired({
                     path: `${basePath}/api/admin/login`,
-                    type: 'unsecure',
+                    type: 'demo',
                     message:
                         'You have to identify yourself in order to use Unleash.',
                 }),
@@ -42,4 +42,4 @@ function insecureAuthentication(app, basePath = '', { userService }) {
     });
 }
 
-module.exports = insecureAuthentication;
+module.exports = demoAuthentication;

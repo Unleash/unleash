@@ -5314,6 +5314,11 @@ pg-connection-string@2.4.0, pg-connection-string@^2.3.0:
   resolved "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-2.4.0.tgz"
   integrity sha512-3iBXuv7XKvxeMrIgym7njT+HlZkwZqqGX4Bu9cci8xHZNT+Um1gWKqCsAzcC0d95rcKMU5WBg6YRUcHyV0HZKQ==
 
+pg-connection-string@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.5.0.tgz#538cadd0f7e603fc09a12590f3b8a452c2c0cf34"
+  integrity sha512-r5o/V/ORTA6TmUnyWZR9nCj1klXCO2CEKNRlVuJptZe85QuhFayC7WeMic7ndayT5IRIR0S0xFxFi2ousartlQ==
+
 pg-int8@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/pg-int8/-/pg-int8-1.0.1.tgz"
@@ -6877,10 +6882,10 @@ universalify@^0.1.0:
   resolved "https://registry.npmjs.org/universalify/-/universalify-0.1.2.tgz"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unleash-frontend@4.0.0-alpha.6:
-  version "4.0.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.0.0-alpha.6.tgz#313cd3544bf74da221a85251b82c9ac7ef2ed59d"
-  integrity sha512-ZhfFyHCBdLI99PCxtNKVSsHWooamNRvHlzofkKtcf2su4nSQcryTfjskI9H04BcbBCGBZcEE3stqRIpyymKNYg==
+unleash-frontend@4.0.0-alpha.7:
+  version "4.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.0.0-alpha.7.tgz#bee86ea40471b3ffbdf7880506b219a7e25e68b4"
+  integrity sha512-WW3LU8/2T0zUPVn0JMvlwLpFYP3YvB+JbagMUXhM+BaSN7xIUWUGcfEdmbyk7e3pDs0g7wIPZjjtZ++C5DT4KA==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

@@ -1,10 +1,12 @@
 'use strict';
 
+import { createServices } from '../services';
+import { createTestConfig } from '../../test/config/test-config';
+
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../test/fixtures/store');
-const getLogger = require('../../test/fixtures/no-logger');
 const getApp = require('../app');
 
 const eventBus = new EventEmitter();
@@ -12,13 +14,13 @@ const eventBus = new EventEmitter();
 test('should use enable prometheus', t => {
     t.plan(0);
     const stores = store.createStores();
-    const app = getApp({
-        baseUriPath: '',
-        serverMetrics: true,
+    const config = createTestConfig();
+    const app = getApp(
+        config,
         stores,
+        createServices(stores, config),
         eventBus,
-        getLogger,
-    });
+    );
 
     const request = supertest(app);
 

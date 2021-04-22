@@ -2,20 +2,14 @@ import test from 'ava';
 import UserService from './user-service';
 import UserStoreMock from '../../test/fixtures/fake-user-store';
 import AccessServiceMock from '../../test/fixtures/access-service-mock';
-import noLogger from '../../test/fixtures/no-logger';
-import { IUnleashConfig } from '../types/core';
 import { ResetTokenStoreMock } from '../../test/fixtures/fake-reset-token-store';
 import ResetTokenService from './reset-token-service';
 import { EmailService } from './email-service';
 import OwaspValidationError from '../error/owasp-validation-error';
+import { IUnleashConfig } from '../types/option';
+import { createTestConfig } from '../../test/config/test-config';
 
-const config: IUnleashConfig = {
-    getLogger: noLogger,
-    baseUriPath: '',
-    authentication: { enableApiToken: true, createAdminUser: false },
-    unleashUrl: 'http://localhost:4242',
-    email: undefined,
-};
+const config: IUnleashConfig = createTestConfig();
 
 test('Should create new user', async t => {
     const userStore = new UserStoreMock();

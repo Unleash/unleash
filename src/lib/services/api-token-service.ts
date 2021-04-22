@@ -3,6 +3,8 @@ import { ApiTokenStore, IApiToken, ApiTokenType } from '../db/api-token-store';
 import { Logger, LogProvider } from '../logger';
 import { ADMIN, CLIENT } from '../permissions';
 import User from '../user';
+import { IUnleashStores } from '../types/stores';
+import { IUnleashConfig } from '../types/option';
 
 const ONE_MINUTE = 60_000;
 
@@ -25,17 +27,17 @@ interface CreateTokenRequest {
 export class ApiTokenService {
     private store: ApiTokenStore;
 
-    private config: IConfig;
-
     private logger: Logger;
 
     private timer: NodeJS.Timeout;
 
     private activeTokens: IApiToken[] = [];
 
-    constructor(stores: IStores, config: IConfig) {
+    constructor(
+        stores: Pick<IUnleashStores, 'apiTokenStore'>,
+        config: Pick<IUnleashConfig, 'getLogger'>,
+    ) {
         this.store = stores.apiTokenStore;
-        this.config = config;
         this.logger = config.getLogger('/services/api-token-service.ts');
         this.fetchActiveTokens();
         this.timer = setInterval(

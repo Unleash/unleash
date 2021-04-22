@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import Controller from '../controller';
-import { AuthedRequest, IUnleashConfig } from '../../types/core';
+import { AuthedRequest } from '../../types/core';
 import { Logger } from '../../logger';
 import ContextService from '../../services/context-service';
 import FeatureTypeStore, { IFeatureType } from '../../db/feature-type-store';
@@ -14,23 +14,29 @@ import { IStrategy } from '../../db/strategy-store';
 import { IUserPermission } from '../../db/access-store';
 import { AccessService } from '../../services/access-service';
 import { EmailService } from '../../services/email-service';
+import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices } from '../../types/services';
+import VersionService from '../../services/version-service';
+import FeatureTypeService from '../../services/feature-type-service';
 
-export default class BootstrapController extends Controller {
+class BootstrapController extends Controller {
     private logger: Logger;
-
-    private contextService: ContextService;
-
-    private featureTypeStore: FeatureTypeStore;
-
-    private tagTypeService: TagTypeService;
-
-    private strategyService: StrategyService;
-
-    private projectService: ProjectService;
 
     private accessService: AccessService;
 
+    private contextService: ContextService;
+
     private emailService: EmailService;
+
+    private featureTypeService: FeatureTypeService;
+
+    private projectService: ProjectService;
+
+    private strategyService: StrategyService;
+
+    private tagTypeService: TagTypeService;
+
+    private versionService: VersionService;
 
     constructor(
         config: IUnleashConfig,
@@ -41,7 +47,19 @@ export default class BootstrapController extends Controller {
             projectService,
             accessService,
             emailService,
-        },
+            versionService,
+            featureTypeService,
+        }: Pick<
+        IUnleashServices,
+            | 'contextService'
+            | 'tagTypeService'
+            | 'strategyService'
+            | 'projectService'
+            | 'accessService'
+            | 'emailService'
+            | 'versionService'
+            | 'featureTypeService'
+        >,
     ) {
         super(config);
         this.contextService = contextService;
@@ -49,22 +67,15 @@ export default class BootstrapController extends Controller {
         this.strategyService = strategyService;
         this.projectService = projectService;
         this.accessService = accessService;
-        this.featureTypeStore = config.stores.featureTypeStore;
+        this.featureTypeService = featureTypeService;
         this.emailService = emailService;
+        this.versionService = versionService;
 
         this.logger = config.getLogger(
             'routes/admin-api/bootstrap-controller.ts',
         );
 
         this.get('/', this.bootstrap);
-    }
-
-    private isContextEnabled(): boolean {
-        return this.config.ui && this.config.ui.flags && this.config.ui.flags.C;
-    }
-
-    private isProjectEnabled(): boolean {
-        return this.config.ui && this.config.ui.flags && this.config.ui.flags.P;
     }
 
     async bootstrap(req: AuthedRequest, res: Response): Promise<void> {
@@ -76,15 +87,11 @@ export default class BootstrapController extends Controller {
             Promise<IProject[]>,
             Promise<IUserPermission[]>,
         ] = [
-            this.isContextEnabled()
-                ? this.contextService.getAll()
-                : Promise.resolve([]),
-            this.featureTypeStore.getAll(),
+            this.contextService.getAll(),
+            this.featureTypeService.getAll(),
             this.tagTypeService.getAll(),
             this.strategyService.getStrategies(),
-            this.isProjectEnabled()
-                ? this.projectService.getProjects()
-                : Promise.resolve([]),
+            this.projectService.getProjects(),
             this.accessService.getPermissionsForUser(req.user),
         ];
         const [
@@ -98,9 +105,9 @@ export default class BootstrapController extends Controller {
 
         res.json({
             ...this.config.ui,
-            unleashUrl: this.config.unleashUrl,
-            baseUriPath: this.config.baseUriPath,
-            version: this.config.version,
+            unleashUrl: this.config.server.unleashUrl,
+            baseUriPath: this.config.server.baseUriPath,
+            version: this.versionService.getVersionInfo(),
             user: { ...req.user, permissions: userPermissions },
             email: this.emailService.isEnabled(),
             context,
@@ -112,4 +119,5 @@ export default class BootstrapController extends Controller {
     }
 }
 
+export default BootstrapController;
 module.exports = BootstrapController;

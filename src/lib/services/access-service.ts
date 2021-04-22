@@ -1,25 +1,36 @@
-import { AccessStore, IRole, IUserPermission, IUserRole } from '../db/access-store';
-import p from '../permissions';
+import {
+    AccessStore,
+    IRole,
+    IUserPermission,
+    IUserRole,
+} from '../db/access-store';
+import permissions from '../permissions';
 import User from '../user';
 
 export const ALL_PROJECTS = '*';
 
 const PROJECT_DESCRIPTION = {
-    OWNER: 'Users with this role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
-    MEMBER: 'Users with this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
+    OWNER:
+        'Users with this role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
+    MEMBER:
+        'Users with this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
 };
 
-const { ADMIN } = p;
+const { ADMIN } = permissions;
 
 const PROJECT_ADMIN = [
-    p.UPDATE_PROJECT,
-    p.DELETE_PROJECT,
-    p.CREATE_FEATURE,
-    p.UPDATE_FEATURE,
-    p.DELETE_FEATURE,
+    permissions.UPDATE_PROJECT,
+    permissions.DELETE_PROJECT,
+    permissions.CREATE_FEATURE,
+    permissions.UPDATE_FEATURE,
+    permissions.DELETE_FEATURE,
 ];
 
-const PROJECT_REGULAR = [p.CREATE_FEATURE, p.UPDATE_FEATURE, p.DELETE_FEATURE];
+const PROJECT_REGULAR = [
+    permissions.CREATE_FEATURE,
+    permissions.UPDATE_FEATURE,
+    permissions.DELETE_FEATURE,
+];
 
 const isProjectPermission = permission => PROJECT_ADMIN.includes(permission);
 
@@ -31,7 +42,7 @@ interface IStores {
 export interface IUserWithRole {
     id: number;
     roleId: number;
-    name?: string
+    name?: string;
     username?: string;
     email?: string;
     imageUrl?: string;
@@ -49,8 +60,8 @@ export interface IPermission {
 }
 
 enum PermissionType {
-    root='root',
-    project='project',
+    root = 'root',
+    project = 'project',
 }
 
 export enum RoleName {
@@ -58,7 +69,7 @@ export enum RoleName {
     EDITOR = 'Editor',
     VIEWER = 'Viewer',
     OWNER = 'Owner',
-    MEMBER = 'Member'
+    MEMBER = 'Member',
 }
 
 export enum RoleType {
@@ -73,6 +84,7 @@ export interface IRoleIdentifier {
 
 export class AccessService {
     public RoleName = RoleName;
+
     private store: AccessStore;
 
     private userStore: any;
@@ -81,34 +93,50 @@ export class AccessService {
 
     private permissions: IPermission[];
 
-    constructor({ accessStore, userStore }: IStores, { getLogger } : { getLogger: Function}) {
+    constructor(
+        { accessStore, userStore }: IStores,
+        { getLogger }: { getLogger: Function },
+    ) {
         this.store = accessStore;
         this.userStore = userStore;
         this.logger = getLogger('/services/access-service.ts');
-        this.permissions = Object.values(p).map(p => ({
+        this.permissions = Object.values(permissions).map(p => ({
             name: p,
-            type: isProjectPermission(p) ? PermissionType.project : PermissionType.root
-        }))
+            type: isProjectPermission(p)
+                ? PermissionType.project
+                : PermissionType.root,
+        }));
     }
 
     /**
      * Used to check if a user has access to the requested resource
-     * 
-     * @param user 
-     * @param permission 
-     * @param projectId 
+     *
+     * @param user
+     * @param permission
+     * @param projectId
      */
-    async hasPermission(user: User, permission: string, projectId?: string): Promise<boolean> {
-        this.logger.info(`Checking permission=${permission}, userId=${user.id} projectId=${projectId}`);
+    async hasPermission(
+        user: User,
+        permission: string,
+        projectId?: string,
+    ): Promise<boolean> {
+        this.logger.info(
+            `Checking permission=${permission}, userId=${user.id} projectId=${projectId}`,
+        );
 
-        const permissions = await this.store.getPermissionsForUser(user.id);
+        const userP = await this.store.getPermissionsForUser(user.id);
 
-        return permissions
-                .filter(p => !p.project || p.project === projectId || p.project === ALL_PROJECTS)
-                .some(p => p.permission === permission || p.permission === ADMIN);
+        return userP
+            .filter(
+                p =>
+                    !p.project ||
+                    p.project === projectId ||
+                    p.project === ALL_PROJECTS,
+            )
+            .some(p => p.permission === permission || p.permission === ADMIN);
     }
 
-    async getPermissionsForUser(user: User) {
+    async getPermissionsForUser(user: User): Promise<IUserPermission[]> {
         return this.store.getPermissionsForUser(user.id);
     }
 
@@ -116,47 +144,68 @@ export class AccessService {
         return this.permissions;
     }
 
-    async addUserToRole(userId: number, roleId: number) {
+    async addUserToRole(userId: number, roleId: number): Promise<void> {
         return this.store.addUserToRole(userId, roleId);
     }
 
-    async setUserRootRole(userId: number, roleId: number) {
+    async setUserRootRole(userId: number, roleId: number): Promise<void> {
         const roles = await this.getRootRoles();
         const newRootRole = roles.find(r => r.id === roleId);
-        
-        if(newRootRole) {
+
+        if (newRootRole) {
             try {
-                await this.store.removeRolesOfTypeForUser(userId, RoleType.ROOT);
+                await this.store.removeRolesOfTypeForUser(
+                    userId,
+                    RoleType.ROOT,
+                );
                 await this.store.addUserToRole(userId, newRootRole.id);
             } catch (error) {
-                throw new Error('Could not add role=${roleName} to userId=${userId}');
+                throw new Error(
+                    `Could not add role=${newRootRole.name} to userId=${userId}`,
+                );
             }
         } else {
             throw new Error(`Could not find rootRole with id=${roleId}`);
         }
     }
 
-    async getUserRootRoles(userId: number) {
+    async getUserRootRoles(userId: number): Promise<IRole[]> {
         const userRoles = await this.store.getRolesForUserId(userId);
         return userRoles.filter(r => r.type === RoleType.ROOT);
     }
 
-    async removeUserFromRole(userId: number, roleId: number) {
+    async removeUserFromRole(userId: number, roleId: number): Promise<void> {
         return this.store.removeUserFromRole(userId, roleId);
     }
 
-    async addPermissionToRole(roleId: number, permission: string, projectId?: string) {
-        if(isProjectPermission(permission) && !projectId) {
-            throw new Error(`ProjectId cannot be empty for permission=${permission}`)
-        } 
+    async addPermissionToRole(
+        roleId: number,
+        permission: string,
+        projectId?: string,
+    ): Promise<void> {
+        if (isProjectPermission(permission) && !projectId) {
+            throw new Error(
+                `ProjectId cannot be empty for permission=${permission}`,
+            );
+        }
         return this.store.addPermissionsToRole(roleId, [permission], projectId);
     }
 
-    async removePermissionFromRole(roleId: number, permission: string, projectId?: string) {
-        if(isProjectPermission(permission) && !projectId) {
-            throw new Error(`ProjectId cannot be empty for permission=${permission}`)
+    async removePermissionFromRole(
+        roleId: number,
+        permission: string,
+        projectId?: string,
+    ): Promise<void> {
+        if (isProjectPermission(permission) && !projectId) {
+            throw new Error(
+                `ProjectId cannot be empty for permission=${permission}`,
+            );
         }
-        return this.store.removePermissionFromRole(roleId, permission, projectId);
+        return this.store.removePermissionFromRole(
+            roleId,
+            permission,
+            projectId,
+        );
     }
 
     async getRoles(): Promise<IRole[]> {
@@ -164,12 +213,12 @@ export class AccessService {
     }
 
     async getRole(roleId: number): Promise<IRoleData> {
-        const [role, permissions, users] = await Promise.all([
+        const [role, rolePerms, users] = await Promise.all([
             this.store.getRoleWithId(roleId),
             this.store.getPermissionsForRole(roleId),
             this.getUsersForRole(roleId),
         ]);
-        return { role, permissions, users };
+        return { role, permissions: rolePerms, users };
     }
 
     async getRolesForProject(projectId: string): Promise<IRole[]> {
@@ -180,25 +229,32 @@ export class AccessService {
         return this.store.getRolesForUserId(userId);
     }
 
-    async getUsersForRole(roleId) : Promise<User[]> {
+    async getUsersForRole(roleId: number): Promise<User[]> {
         const userIdList = await this.store.getUserIdsForRole(roleId);
         return this.userStore.getAllWithId(userIdList);
     }
 
     // Move to project-service?
-    async getProjectRoleUsers(projectId: string): Promise<[IRole[], IUserWithRole[]]> {
+    async getProjectRoleUsers(
+        projectId: string,
+    ): Promise<[IRole[], IUserWithRole[]]> {
         const roles = await this.store.getRolesForProject(projectId);
 
-        const users = await Promise.all(roles.map(async role => {
-            const users = await this.getUsersForRole(role.id);
-            return users.map(u => ({ ...u, roleId: role.id }))
-        }));
+        const users = await Promise.all(
+            roles.map(async role => {
+                const usrs = await this.getUsersForRole(role.id);
+                return usrs.map(u => ({ ...u, roleId: role.id }));
+            }),
+        );
         return [roles, users.flat()];
     }
 
-    async createDefaultProjectRoles(owner: User, projectId: string) {
-        if(!projectId) {
-            throw new Error("ProjectId cannot be empty");
+    async createDefaultProjectRoles(
+        owner: User,
+        projectId: string,
+    ): Promise<void> {
+        if (!projectId) {
+            throw new Error('ProjectId cannot be empty');
         }
 
         const ownerRole = await this.store.createRole(
@@ -213,12 +269,13 @@ export class AccessService {
             projectId,
         );
 
-        // TODO: remove this when all users is guaranteed to have a unique id. 
+        // TODO: remove this when all users is guaranteed to have a unique id.
         if (owner.id) {
-            this.logger.info(`Making ${owner.id} admin of ${projectId} via roleId=${ownerRole.id}`);
-            await this.store.addUserToRole(owner.id, ownerRole.id);    
-        };
-        
+            this.logger.info(
+                `Making ${owner.id} admin of ${projectId} via roleId=${ownerRole.id}`,
+            );
+            await this.store.addUserToRole(owner.id, ownerRole.id);
+        }
         const memberRole = await this.store.createRole(
             RoleName.MEMBER,
             RoleType.PROJECT,
@@ -228,11 +285,14 @@ export class AccessService {
         await this.store.addPermissionsToRole(
             memberRole.id,
             PROJECT_REGULAR,
-            projectId
+            projectId,
         );
     }
 
-    async removeDefaultProjectRoles(owner: User, projectId: string) {
+    async removeDefaultProjectRoles(
+        owner: User,
+        projectId: string,
+    ): Promise<void> {
         this.logger.info(`Removing project roles for ${projectId}`);
         return this.store.removeRolesForProject(projectId);
     }

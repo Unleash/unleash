@@ -1,5 +1,7 @@
 'use strict';
 
+import { createTestConfig } from '../../../test/config/test-config';
+
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
@@ -15,15 +17,12 @@ function getSetup(databaseIsUp = true) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = store.createStores(databaseIsUp);
     const perms = permissions();
-    const config = {
-        baseUriPath: base,
-        stores,
-        eventBus,
+    const config = createTestConfig({
+        server: { baseUriPath: base },
         preHook: perms.hook,
-        getLogger,
-    };
+    });
     const services = createServices(stores, config);
-    const app = getApp(config, services);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,

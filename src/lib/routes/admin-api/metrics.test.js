@@ -5,8 +5,8 @@ const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
 const permissions = require('../../../test/fixtures/permissions');
-const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
+const { createTestConfig } = require('../../../test/config/test-config');
 const { createServices } = require('../../services');
 
 const eventBus = new EventEmitter();
@@ -14,14 +14,11 @@ const eventBus = new EventEmitter();
 function getSetup() {
     const stores = store.createStores();
     const perms = permissions();
-    const config = {
-        baseUriPath: '',
-        eventBus,
+    const config = createTestConfig({
         preRouterHook: perms.hook,
-        getLogger,
-    };
+    });
     const services = createServices(stores, config);
-    const app = getApp({ ...config, stores }, services);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         request: supertest(app),

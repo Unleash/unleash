@@ -4,9 +4,11 @@ const test = require('ava');
 const { EventEmitter } = require('events');
 
 const eventBus = new EventEmitter();
+
 const eventStore = new EventEmitter();
 const clientMetricsStore = new EventEmitter();
 const { register: prometheusRegister } = require('prom-client');
+const { createTestConfig } = require('../test/config/test-config');
 const { REQUEST_TIME, DB_TIME } = require('./events');
 const { FEATURE_UPDATED } = require('./event-type');
 const { createMetricsMonitor } = require('./metrics');
@@ -17,29 +19,29 @@ test.before(() => {
     const featureToggleStore = {
         count: async () => 123,
     };
-    const config = {
-        serverMetrics: true,
-        eventBus,
-        stores: {
-            eventStore,
-            clientMetricsStore,
-            featureToggleStore,
-            db: {
-                client: {
-                    pool: {
-                        min: 0,
-                        max: 4,
-                        numUsed: () => 2,
-                        numFree: () => 2,
-                        numPendingAcquires: () => 0,
-                        numPendingCreates: () => 1,
-                    },
+    const config = createTestConfig({
+        server: {
+            serverMetrics: true,
+        },
+    });
+    const stores = {
+        eventStore,
+        clientMetricsStore,
+        featureToggleStore,
+        db: {
+            client: {
+                pool: {
+                    min: 0,
+                    max: 4,
+                    numUsed: () => 2,
+                    numFree: () => 2,
+                    numPendingAcquires: () => 0,
+                    numPendingCreates: () => 1,
                 },
             },
         },
-        version: '3.4.1',
     };
-    monitor.startMonitoring(config);
+    monitor.startMonitoring(config, stores, '4.0.0', eventBus);
 });
 
 test.after(() => {

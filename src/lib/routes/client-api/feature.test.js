@@ -9,19 +9,22 @@ const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
 const { createServices } = require('../../services');
 const FeatureController = require('./feature');
+const { createTestConfig } = require('../../../test/config/test-config');
 
 const eventBus = new EventEmitter();
 
 function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = store.createStores();
-    const config = {
-        baseUriPath: base,
+    const config = createTestConfig({
+        server: { baseUriPath: base },
+    });
+    const app = getApp(
+        config,
         stores,
+        createServices(stores, config),
         eventBus,
-        getLogger,
-    };
-    const app = getApp(config, createServices(stores, config));
+    );
 
     return {
         base,

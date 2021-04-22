@@ -1,10 +1,10 @@
 'use strict';
 
 import { Response } from 'express';
-import { IUnleashConfig } from '../../types/core';
 import { IAuthRequest } from '../unleash-types';
 import Controller from '../controller';
 import { AccessService } from '../../services/access-service';
+import { IUnleashConfig } from '../../types/option';
 
 interface IService {
     accessService: AccessService;
@@ -44,7 +44,7 @@ class UserController extends Controller {
         if (req.logout) {
             req.logout();
         }
-        res.redirect(`${this.config.baseUriPath}/`);
+        res.redirect(`${this.config.server.baseUriPath}/`);
     }
 }
 

@@ -1,7 +1,8 @@
 import { Logger } from '../logger';
 import EventStore from '../db/event-store';
-import StrategyStore, { IStrategy, IStrategyName } from '../db/strategy-store';
-import { IUnleashConfig, IUnleashStores } from '../types/core';
+import StrategyStore, { IStrategy } from '../db/strategy-store';
+import { IUnleashConfig } from '../types/option';
+import { IUnleashStores } from '../types/stores';
 
 const strategySchema = require('./strategy-schema');
 const NameExistsError = require('../error/name-exists-error');

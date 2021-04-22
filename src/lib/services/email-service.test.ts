@@ -8,12 +8,9 @@ test('Can send reset email', async t => {
             host: 'test',
             port: 587,
             secure: false,
-            auth: {
-                user: '',
-                pass: '',
-            },
+            smtpuser: '',
+            smtppass: '',
             sender: 'noreply@getunleash.ai',
-            transporterType: TransporterType.JSON,
         },
         noLoggerProvider,
     );
@@ -39,11 +36,8 @@ test('Can send welcome mail', async t => {
             port: 9999,
             secure: false,
             sender: 'noreply@getunleash.ai',
-            auth: {
-                user: '',
-                pass: '',
-            },
-            transporterType: TransporterType.JSON,
+            smtpuser: '',
+            smtppass: '',
         },
         noLoggerProvider,
     );

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
 import UserService from '../../services/user-service';
-import { IUnleashConfig } from '../../types/core';
 import { Logger } from '../../logger';
 import { handleErrors } from '../admin-api/util';
+import { IUnleashConfig } from '../../types/option';
 
 interface IServices {
     userService: UserService;

@@ -17,8 +17,8 @@ test.serial('yields current versions', async t => {
         content: { id: '1234abc' },
     });
     const latest = {
-        oss: '4.0.0',
-        enterprise: '4.0.0',
+        oss: '5.0.0',
+        enterprise: '5.0.0',
     };
     fetchMock.mock(
         { url: testurl, method: 'POST' },
@@ -29,7 +29,7 @@ test.serial('yields current versions', async t => {
     );
     const service = new VersionService(
         { settingStore },
-        { getLogger, versionCheck: { url: testurl, enable: 'true' }, version },
+        { getLogger, versionCheck: { url: testurl, enable: true } },
     );
     await service.checkLatestVersion();
     fetchMock.done();
@@ -63,10 +63,10 @@ test.serial('supports setting enterprise version as well', async t => {
         { settingStore },
         {
             getLogger,
-            versionCheck: { url: testurl, enable: 'true' },
+            versionCheck: { url: testurl, enable: true },
             version,
-            enterpriseVersion,
         },
+        enterpriseVersion,
     );
     await service.checkLatestVersion();
     fetchMock.done();
@@ -104,8 +104,8 @@ test.serial(
                 getLogger,
                 versionCheck: { url: testurl, enable: false },
                 version,
-                enterpriseVersion,
             },
+            enterpriseVersion,
         );
         await service.checkLatestVersion();
         t.false(fetchMock.called(testurl));

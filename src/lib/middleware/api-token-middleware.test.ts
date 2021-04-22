@@ -6,6 +6,7 @@ import apiTokenMiddleware from './api-token-middleware';
 import getLogger from '../../test/fixtures/no-logger';
 import User from '../user';
 import { CLIENT } from '../permissions';
+import createConfig from '../create-config';
 
 let config: any;
 
@@ -94,15 +95,13 @@ test('should not add user if disabled', async t => {
         getUserForToken: sinon.fake.returns(apiUser),
     };
 
-    const disabledConfig = {
+    const disabledConfig = createConfig({
         getLogger,
-        baseUriPath: '',
         authentication: {
             enableApiToken: false,
             createAdminUser: false,
         },
-        unleashUrl: 'http://localhost:4242',
-    };
+    });
 
     const func = apiTokenMiddleware(disabledConfig, { apiTokenService });
 

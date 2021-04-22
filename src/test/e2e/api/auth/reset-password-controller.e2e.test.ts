@@ -9,19 +9,24 @@ import {
 } from '../../../../lib/services/access-service';
 import ResetTokenService from '../../../../lib/services/reset-token-service';
 import UserService from '../../../../lib/services/user-service';
-import { IUnleashConfig } from '../../../../lib/types/core';
 import { setupApp } from '../../helpers/test-helper';
 import { EmailService } from '../../../../lib/services/email-service';
 import User from '../../../../lib/user';
+import createConfig from '../../../../lib/create-config';
+import { IUnleashConfig } from '../../../../lib/types/option';
 
 let stores;
 let db;
-const config: IUnleashConfig = {
+const config: IUnleashConfig = createConfig({
     getLogger,
-    unleashUrl: 'http://localhost:3000',
-    baseUriPath: '',
-    authentication: { enableApiToken: true, createAdminUser: false },
-};
+    server: {
+        unleashUrl: 'http://localhost:3000',
+        baseUriPath: '',
+    },
+    email: {
+        host: 'test',
+    },
+});
 const password = 'DtUYwi&l5I1KX4@Le';
 let userService: UserService;
 let accessService: AccessService;

@@ -1,7 +1,7 @@
 const AuthenticationRequired = require('../authentication-required');
 
 function ossAuthHook(app, config) {
-    const { baseUriPath } = config;
+    const { baseUriPath } = config.server;
 
     const generateAuthResponse = async () =>
         new AuthenticationRequired({

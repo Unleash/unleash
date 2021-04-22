@@ -5,6 +5,7 @@ const Controller = require('./controller');
 class LogoutController extends Controller {
     constructor(config) {
         super(config);
+        this.baseUri = config.server.baseUriPath;
         this.get('/', this.logout);
     }
 
@@ -16,7 +17,7 @@ class LogoutController extends Controller {
             req.logout();
         }
         res.set('Clear-Site-Data', '"cookies"');
-        res.redirect(`${this.config.baseUriPath}/`);
+        res.redirect(`${this.baseUri}/`);
     }
 }
 

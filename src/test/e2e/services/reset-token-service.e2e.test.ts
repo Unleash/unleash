@@ -19,6 +19,7 @@ let userIdToCreateResetFor: number;
 let accessService: AccessService;
 let userService: UserService;
 let resetTokenService: ResetTokenService;
+
 beforeAll(async () => {
     db = await dbInit('reset_token_service_serial', getLogger);
     stores = db.stores;
@@ -45,8 +46,10 @@ beforeAll(async () => {
     userIdToCreateResetFor = userToCreateResetFor.id;
 });
 
-test(async () => {
-    db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('Should create a reset link', async () => {

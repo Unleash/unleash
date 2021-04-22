@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
@@ -11,8 +12,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('returns list of tags', async () => {
@@ -85,8 +88,12 @@ test('Can validate a tag', async () => {
         .expect(400)
         .expect(res => {
             expect(res.body.details.length).toBe(2);
-            expect(res.body.details[0].message).toBe('"value" must be a string');
-            expect(res.body.details[1].message).toBe('"type" must be URL friendly');
+            expect(res.body.details[0].message).toBe(
+                '"value" must be a string',
+            );
+            expect(res.body.details[1].message).toBe(
+                '"type" must be URL friendly',
+            );
         });
 });
 test('Can delete a tag', async () => {
@@ -101,8 +108,10 @@ test('Can delete a tag', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.tags.indexOf(
-                tag => tag.value === 'Tester' && tag.type === 'simple',
-            )).toBe(-1);
+            expect(
+                res.body.tags.indexOf(
+                    tag => tag.value === 'Tester' && tag.type === 'simple',
+                ),
+            ).toBe(-1);
         });
 });

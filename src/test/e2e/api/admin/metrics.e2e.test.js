@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
@@ -13,8 +14,10 @@ beforeAll(async () => {
     reset = db.reset;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 afterEach(async () => {
@@ -62,15 +65,12 @@ test('should delete application', async () => {
         });
 });
 
-test(
-    'deleting an application should be idempotent, so expect 200',
-    async () => {
-        expect.assertions(1);
-        const request = await setupApp(stores);
-        return request
-            .delete('/api/admin/metrics/applications/unknown')
-            .expect(res => {
-                expect(res.status).toBe(200);
-            });
-    }
-);
+test('deleting an application should be idempotent, so expect 200', async () => {
+    expect.assertions(1);
+    const request = await setupApp(stores);
+    return request
+        .delete('/api/admin/metrics/applications/unknown')
+        .expect(res => {
+            expect(res.status).toBe(200);
+        });
+});

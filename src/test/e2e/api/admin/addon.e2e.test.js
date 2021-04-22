@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
@@ -13,8 +14,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('gets all addons', async () => {
@@ -123,7 +126,9 @@ test('should update addon configuration', async () => {
         .expect(200)
         .expect(r => {
             expect(r.body.parameters.url).toBe(MASKED_VALUE);
-            expect(r.body.parameters.bodyTemplate).toBe(updatedConfig.parameters.bodyTemplate);
+            expect(r.body.parameters.bodyTemplate).toBe(
+                updatedConfig.parameters.bodyTemplate,
+            );
         });
 });
 
@@ -192,7 +197,9 @@ test('should get addon configuration', async () => {
         .expect(200)
         .expect(r => {
             expect(r.body.provider).toBe(config.provider);
-            expect(r.body.parameters.bodyTemplate).toBe(config.parameters.bodyTemplate);
+            expect(r.body.parameters.bodyTemplate).toBe(
+                config.parameters.bodyTemplate,
+            );
             expect(r.body.parameters.url).toBe(MASKED_VALUE);
         });
 });

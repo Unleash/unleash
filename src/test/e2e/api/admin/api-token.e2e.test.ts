@@ -12,11 +12,13 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
-test(async () => {
+afterEach(async () => {
     const tokens = await stores.apiTokenStore.getAll();
     const deleteAll = tokens.map((t: IApiToken) =>
         stores.apiTokenStore.delete(t.secret),

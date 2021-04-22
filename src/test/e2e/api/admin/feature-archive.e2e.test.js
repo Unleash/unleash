@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { setupApp } = require('../../helpers/test-helper');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
@@ -11,8 +12,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('returns three archived toggles', async () => {
@@ -36,18 +39,15 @@ test('revives a feature by name', async () => {
         .expect(200);
 });
 
-test(
-    'archived feature is not accessible via /features/:featureName',
-    async () => {
-        expect.assertions(0);
-        const request = await setupApp(stores);
+test('archived feature is not accessible via /features/:featureName', async () => {
+    expect.assertions(0);
+    const request = await setupApp(stores);
 
-        return request
-            .get('/api/admin/features/featureArchivedZ')
-            .set('Content-Type', 'application/json')
-            .expect(404);
-    }
-);
+    return request
+        .get('/api/admin/features/featureArchivedZ')
+        .set('Content-Type', 'application/json')
+        .expect(404);
+});
 
 test('must set name when reviving toggle', async () => {
     expect.assertions(0);

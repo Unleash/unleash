@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { setupAppWithAuth } = require('../../helpers/test-helper');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
@@ -11,8 +12,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('creates new feature toggle with createdBy', async () => {

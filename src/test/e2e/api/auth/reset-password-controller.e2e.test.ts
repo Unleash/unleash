@@ -66,12 +66,14 @@ beforeAll(async () => {
     });
 });
 
-test(async () => {
+afterEach(async () => {
     await stores.resetTokenStore.deleteAll();
 });
 
 afterAll(async () => {
-    await db.destroy();
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('Can validate token for password reset', async () => {
@@ -124,44 +126,41 @@ test('Can use token to reset password', async () => {
     expect(user.email).toBe(loggedInUser.email);
 });
 
-test(
-    'Trying to reset password with same token twice does not work',
-    async () => {
-        const request = await setupApp(stores);
-        const url = await resetTokenService.createResetPasswordUrl(
-            user.id,
-            adminUser.username,
-        );
-        const relative = getBackendResetUrl(url);
-        let token;
-        await request
-            .get(relative)
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .expect(res => {
-                token = res.body.token;
-            });
-        await request
-            .post('/auth/reset/password')
-            .send({
-                email: user.email,
-                token,
-                password,
-            })
-            .expect(200);
-        await request
-            .post('/auth/reset/password')
-            .send({
-                email: user.email,
-                token,
-                password,
-            })
-            .expect(403)
-            .expect(res => {
-                expect(res.body.details[0].message).toBeTruthy();
-            });
-    }
-);
+test('Trying to reset password with same token twice does not work', async () => {
+    const request = await setupApp(stores);
+    const url = await resetTokenService.createResetPasswordUrl(
+        user.id,
+        adminUser.username,
+    );
+    const relative = getBackendResetUrl(url);
+    let token;
+    await request
+        .get(relative)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+            token = res.body.token;
+        });
+    await request
+        .post('/auth/reset/password')
+        .send({
+            email: user.email,
+            token,
+            password,
+        })
+        .expect(200);
+    await request
+        .post('/auth/reset/password')
+        .send({
+            email: user.email,
+            token,
+            password,
+        })
+        .expect(403)
+        .expect(res => {
+            expect(res.body.details[0].message).toBeTruthy();
+        });
+});
 
 test('Invalid token should yield 401', async () => {
     const request = await setupApp(stores);
@@ -170,16 +169,13 @@ test('Invalid token should yield 401', async () => {
     });
 });
 
-test(
-    'Trying to change password with an invalid token should yield 401',
-    async () => {
-        const request = await setupApp(stores);
-        return request
-            .post('/auth/reset/password')
-            .send({
-                token: 'abc123',
-                password,
-            })
-            .expect(res => expect(res.status).toBe(401));
-    }
-);
+test('Trying to change password with an invalid token should yield 401', async () => {
+    const request = await setupApp(stores);
+    return request
+        .post('/auth/reset/password')
+        .send({
+            token: 'abc123',
+            password,
+        })
+        .expect(res => expect(res.status).toBe(401));
+});

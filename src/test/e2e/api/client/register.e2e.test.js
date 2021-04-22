@@ -1,5 +1,5 @@
-'use strict';;
-const sinon = require('sinon');
+'use strict';
+
 const faker = require('faker');
 const { setupApp } = require('../../helpers/test-helper');
 const dbInit = require('../../helpers/database-init');
@@ -20,8 +20,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('should register client', async () => {
@@ -41,7 +43,7 @@ test('should register client', async () => {
 
 test('should allow client to register multiple times', async () => {
     expect.assertions(2);
-    const clock = sinon.useFakeTimers();
+    jest.useFakeTimers();
     const { clientInstanceStore, clientApplicationsStore } = stores;
     const request = await setupApp(stores);
     const clientRegistration = {
@@ -62,10 +64,10 @@ test('should allow client to register multiple times', async () => {
                 .send(clientRegistration)
                 .expect(202),
         );
-    await clock.tickAsync(6 * 1000);
-    t.assert(clientApplicationsStore.exists(clientRegistration));
-    t.assert(clientInstanceStore.exists(clientRegistration));
-    clock.restore();
+    jest.runTimersToTime(6000);
+    expect(clientApplicationsStore.exists(clientRegistration)).toEqual(true);
+    expect(clientInstanceStore.exists(clientRegistration)).toEqual(true);
+    jest.useRealTimers();
 });
 
 test.skip('Should handle a massive bulk registration', async () => {

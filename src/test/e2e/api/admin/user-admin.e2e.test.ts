@@ -24,11 +24,13 @@ beforeAll(async () => {
     adminRole = roles.find(r => r.name === RoleName.ADMIN);
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
-test(async () => {
+afterEach(async () => {
     const users = await userStore.getAll();
     const deleteAll = users.map((u: User) => userStore.delete(u.id));
     await Promise.all(deleteAll);
@@ -214,6 +216,8 @@ test('should search for users', async () => {
         .expect(200)
         .expect(res => {
             expect(res.body.length).toBe(2);
-            expect(res.body.some(u => u.email === 'another@mail.com')).toBe(true);
+            expect(res.body.some(u => u.email === 'another@mail.com')).toBe(
+                true,
+            );
         });
 });

@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const importData = require('../../../examples/import.json');
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
@@ -12,8 +13,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('exports strategies and features as json by default', async () => {

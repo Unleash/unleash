@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const faker = require('faker');
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
@@ -12,8 +13,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('returns list of feature toggles', async () => {
@@ -118,18 +121,15 @@ test('require new feature toggle to have a name', async () => {
         .expect(400);
 });
 
-test(
-    'can not change status of feature toggle that does not exist',
-    async () => {
-        expect.assertions(0);
-        const request = await setupApp(stores);
-        return request
-            .put('/api/admin/features/should-not-exist')
-            .send({ name: 'should-not-exist', enabled: false })
-            .set('Content-Type', 'application/json')
-            .expect(404);
-    }
-);
+test('can not change status of feature toggle that does not exist', async () => {
+    expect.assertions(0);
+    const request = await setupApp(stores);
+    return request
+        .put('/api/admin/features/should-not-exist')
+        .send({ name: 'should-not-exist', enabled: false })
+        .set('Content-Type', 'application/json')
+        .expect(404);
+});
 
 test('can change status of feature toggle that does exist', async () => {
     expect.assertions(0);
@@ -195,28 +195,25 @@ test('refuses to validate a feature with an existing name', async () => {
         .expect(409);
 });
 
-test(
-    'new strategies api can add two strategies to a feature toggle',
-    async () => {
-        expect.assertions(0);
-        const request = await setupApp(stores);
-        return request
-            .put('/api/admin/features/featureY')
-            .send({
-                name: 'featureY',
-                description: 'soon to be the #14 feature',
-                enabled: false,
-                strategies: [
-                    {
-                        name: 'baz',
-                        parameters: { foo: 'bar' },
-                    },
-                ],
-            })
-            .set('Content-Type', 'application/json')
-            .expect(200);
-    }
-);
+test('new strategies api can add two strategies to a feature toggle', async () => {
+    expect.assertions(0);
+    const request = await setupApp(stores);
+    return request
+        .put('/api/admin/features/featureY')
+        .send({
+            name: 'featureY',
+            description: 'soon to be the #14 feature',
+            enabled: false,
+            strategies: [
+                {
+                    name: 'baz',
+                    parameters: { foo: 'bar' },
+                },
+            ],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+});
 
 test('should not be possible to create archived toggle', async () => {
     expect.assertions(0);
@@ -310,35 +307,32 @@ test('tags feature with new tag', async () => {
     });
 });
 
-test(
-    'tagging a feature with an already existing tag should be a noop',
-    async () => {
-        expect.assertions(1);
-        const request = await setupApp(stores);
-        await request.post('/api/admin/features').send({
-            name: 'test.feature',
-            type: 'killswitch',
-            enabled: true,
-            strategies: [{ name: 'default' }],
+test('tagging a feature with an already existing tag should be a noop', async () => {
+    expect.assertions(1);
+    const request = await setupApp(stores);
+    await request.post('/api/admin/features').send({
+        name: 'test.feature',
+        type: 'killswitch',
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
+    await request.post('/api/admin/features/test.feature/tags').send({
+        value: 'TeamGreen',
+        type: 'simple',
+    });
+    await request.post('/api/admin/features/test.feature/tags').send({
+        value: 'TeamGreen',
+        type: 'simple',
+    });
+    await new Promise(r => setTimeout(r, 200));
+    return request
+        .get('/api/admin/features/test.feature/tags')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => {
+            expect(res.body.tags.length).toBe(1);
         });
-        await request.post('/api/admin/features/test.feature/tags').send({
-            value: 'TeamGreen',
-            type: 'simple',
-        });
-        await request.post('/api/admin/features/test.feature/tags').send({
-            value: 'TeamGreen',
-            type: 'simple',
-        });
-        await new Promise(r => setTimeout(r, 200));
-        return request
-            .get('/api/admin/features/test.feature/tags')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .expect(res => {
-                expect(res.body.tags.length).toBe(1);
-            });
-    }
-);
+});
 
 test('can untag feature', async () => {
     expect.assertions(1);
@@ -438,8 +432,12 @@ test('Can query for multiple tags using OR', async () => {
         .expect(200)
         .expect(res => {
             expect(res.body.features.length).toBe(2);
-            expect(res.body.features.some(f => f.name === feature1Name)).toBe(true);
-            expect(res.body.features.some(f => f.name === feature2Name)).toBe(true);
+            expect(res.body.features.some(f => f.name === feature1Name)).toBe(
+                true,
+            );
+            expect(res.body.features.some(f => f.name === feature2Name)).toBe(
+                true,
+            );
         });
 });
 test('Querying with multiple filters ANDs the filters', async () => {
@@ -494,34 +492,31 @@ test('Querying with multiple filters ANDs the filters', async () => {
         });
 });
 
-test(
-    'Tagging a feature with a tag it already has should return 409',
-    async () => {
-        const request = await setupApp(stores);
-        const feature1Name = `test.${faker.helpers.slugify(
-            faker.lorem.words(3),
-        )}`;
-        await request.post('/api/admin/features').send({
-            name: feature1Name,
-            type: 'killswitch',
-            enabled: true,
-            strategies: [{ name: 'default' }],
-        });
+test('Tagging a feature with a tag it already has should return 409', async () => {
+    const request = await setupApp(stores);
+    const feature1Name = `test.${faker.helpers.slugify(faker.lorem.words(3))}`;
+    await request.post('/api/admin/features').send({
+        name: feature1Name,
+        type: 'killswitch',
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
 
-        const tag = { value: faker.lorem.word(), type: 'simple' };
-        await request
-            .post(`/api/admin/features/${feature1Name}/tags`)
-            .send(tag)
-            .expect(201);
-        return request
-            .post(`/api/admin/features/${feature1Name}/tags`)
-            .send(tag)
-            .expect(409)
-            .expect(res => {
-                expect(res.body.details[0].message).toBe(`${feature1Name} already had the tag: [${tag.type}:${tag.value}]`);
-            });
-    }
-);
+    const tag = { value: faker.lorem.word(), type: 'simple' };
+    await request
+        .post(`/api/admin/features/${feature1Name}/tags`)
+        .send(tag)
+        .expect(201);
+    return request
+        .post(`/api/admin/features/${feature1Name}/tags`)
+        .send(tag)
+        .expect(409)
+        .expect(res => {
+            expect(res.body.details[0].message).toBe(
+                `${feature1Name} already had the tag: [${tag.type}:${tag.value}]`,
+            );
+        });
+});
 
 test('marks feature toggle as stale', async () => {
     expect.assertions(1);

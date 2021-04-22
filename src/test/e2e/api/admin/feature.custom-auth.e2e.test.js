@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { setupAppWithCustomAuth } = require('../../helpers/test-helper');
 const AuthenticationRequired = require('../../../../lib/authentication-required');
 
@@ -13,8 +14,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('should require authenticated user', async () => {

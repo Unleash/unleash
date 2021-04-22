@@ -1,6 +1,7 @@
 {
     "env": {
-        "node": true
+        "node": true,
+        "jest/globals": true,
     },
     "extends": [
         "airbnb-typescript/base",
@@ -11,7 +12,7 @@
         "ecmaVersion": 2019,
         "project": "./tsconfig.json"
     },
-    "plugins": ["prettier","@typescript-eslint"],
+    "plugins": ["jest","prettier","@typescript-eslint"],
     "root": true,
     "rules": {
         "@typescript-eslint/no-var-requires": 0,

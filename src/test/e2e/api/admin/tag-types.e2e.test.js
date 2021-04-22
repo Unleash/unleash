@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
@@ -11,8 +12,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('returns list of tag-types', async () => {
@@ -60,7 +63,7 @@ test('Can create a new tag type', async () => {
         .expect(200)
         .expect(res => {
             expect(res.body.tagType.icon).toBe(
-                'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png'
+                'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png',
             );
         });
 });
@@ -77,7 +80,9 @@ test('Invalid tag types gets rejected', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect(res => {
-            expect(res.body.details[0].message).toBe('"name" must be URL friendly');
+            expect(res.body.details[0].message).toBe(
+                '"name" must be URL friendly',
+            );
         });
 });
 
@@ -110,7 +115,9 @@ test('Invalid updates gets rejected', async () => {
         })
         .expect(400)
         .expect(res => {
-            expect(res.body.details[0].message).toBe('"description" must be a string');
+            expect(res.body.details[0].message).toBe(
+                '"description" must be a string',
+            );
             expect(res.body.details[1].message).toBe('"icon" must be a string');
         });
 });
@@ -142,7 +149,9 @@ test('Invalid tag-types get refused by validator', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect(res => {
-            expect(res.body.details[0].message).toBe('"name" must be URL friendly');
+            expect(res.body.details[0].message).toBe(
+                '"name" must be URL friendly',
+            );
         });
 });
 

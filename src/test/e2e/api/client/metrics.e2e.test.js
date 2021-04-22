@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { setupApp } = require('../../helpers/test-helper');
 const metricsExample = require('../../../examples/client-metrics.json');
 const dbInit = require('../../helpers/database-init');
@@ -12,8 +13,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
-test(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('should be possble to send metrics', async () => {

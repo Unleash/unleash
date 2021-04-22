@@ -33,7 +33,7 @@ test('should return seen toggles even when there is nothing', () => {
         .get('/api/admin/metrics/seen-toggles')
         .expect(200)
         .expect(res => {
-            expect(res.body.length === 0).toBe(true);
+            expect(res.body).toHaveLength(0);
         });
 });
 

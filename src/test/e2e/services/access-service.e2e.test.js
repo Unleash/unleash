@@ -166,16 +166,15 @@ test('cannot add CREATE_FEATURE without defining project', async () => {
     }
 });
 
-test('cannot remove CREATE_FEATURE without defining project', async () => {
-    await expect(async () => {
+test('cannot remove CREATE_FEATURE without defining project', async () =>
+    expect(async () => {
         await accessService.removePermissionFromRole(
             editorRole.id,
             permissions.CREATE_FEATURE,
         );
     }).rejects.toStrictEqual(
         new Error('ProjectId cannot be empty for permission=CREATE_FEATURE'),
-    );
-});
+    ));
 
 test('should remove CREATE_FEATURE on all projects', async () => {
     const { CREATE_FEATURE } = permissions;

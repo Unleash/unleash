@@ -86,7 +86,7 @@ async function init(databaseSchema = 'test', getLogger) {
     const config = createTestConfig({
         db: {
             ...dbConfig.getDb(),
-            pool: { min: 2, max: 8 },
+            pool: { min: 2, max: 4 },
             schema: databaseSchema,
         },
         getLogger,

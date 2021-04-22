@@ -19,7 +19,7 @@ afterAll(async () => {
     }
 });
 
-test('should be possble to send metrics', async () => {
+test('should be possible to send metrics', async () => {
     expect.assertions(0);
     const request = await setupApp(stores);
     return request

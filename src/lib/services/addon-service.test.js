@@ -114,7 +114,7 @@ test('should load provider definitions', async () => {
 test('should not allow addon-config for unknown provider', async () => {
     const { addonService } = getSetup();
 
-    await expect(async () => {
+    return expect(async () => {
         await addonService.createAddon({ provider: 'unknown' });
     }).rejects.toStrictEqual(new TypeError('Unknown addon provider unknown'));
 });
@@ -325,7 +325,7 @@ test('should reject addon config with missing required parameter when creating',
         events: [FEATURE_CREATED],
     };
 
-    await expect(async () =>
+    return expect(async () =>
         addonService.createAddon(config, 'me@mail.com'),
     ).rejects.toBeInstanceOf(ValidationError);
 });
@@ -349,7 +349,7 @@ test('should reject updating addon config with missing required parameter', asyn
         parameters: { var: 'some-new-value' },
         description: 'test',
     };
-    await expect(async () =>
+    return expect(async () =>
         addonService.updateAddon(config.id, updated, 'me@mail.com'),
     ).rejects.toBeInstanceOf(ValidationError);
 });
@@ -367,7 +367,7 @@ test('Should reject addon config if a required parameter is just the empty strin
         events: [FEATURE_CREATED],
     };
 
-    await expect(async () =>
+    return expect(async () =>
         addonService.createAddon(config, 'me@mail.com'),
     ).rejects.toBeInstanceOf(ValidationError);
 });

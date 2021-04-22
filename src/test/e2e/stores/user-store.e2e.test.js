@@ -41,12 +41,11 @@ test('should insert new user with email', async () => {
     expect(users[0].id).toBeTruthy();
 });
 
-test('should not allow two users with same email', async () => {
-    await expect(async () => {
+test('should not allow two users with same email', async () =>
+    expect(async () => {
         await stores.userStore.insert({ email: 'me2@mail.com' });
         await stores.userStore.insert({ email: 'me2@mail.com' });
-    }).rejects.toThrow(/duplicate key value violates unique constraint/);
-});
+    }).rejects.toThrow(/duplicate key value violates unique constraint/));
 
 test('should insert new user with email and return it', async () => {
     const user = new User({ email: 'me2@mail.com' });
@@ -82,7 +81,7 @@ test('should set password_hash for user', async () => {
 
 test('should not get password_hash for unknown userId', async () => {
     const store = stores.userStore;
-    await expect(async () => {
+    return expect(async () => {
         await store.getPasswordHash(-12);
     }).rejects.toStrictEqual(new NotFoundError('User not found'));
 });

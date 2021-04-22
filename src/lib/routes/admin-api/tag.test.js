@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
@@ -31,20 +29,20 @@ function getSetup(databaseIsUp = true) {
     };
 }
 
-test('should get empty getTags via admin', t => {
-    t.plan(1);
+test('should get empty getTags via admin', () => {
+    expect.assertions(1);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/tags`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.tags.length === 0);
+            expect(res.body.tags.length === 0).toBe(true);
         });
 });
 
-test('should get all tags added', t => {
-    t.plan(1);
+test('should get all tags added', () => {
+    expect.assertions(1);
     const { request, tagStore, base } = getSetup();
     tagStore.createTag({
         type: 'simple',
@@ -56,12 +54,12 @@ test('should get all tags added', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.tags.length === 1);
+            expect(res.body.tags.length === 1).toBe(true);
         });
 });
 
-test('should be able to get single tag by type and value', t => {
-    t.plan(1);
+test('should be able to get single tag by type and value', () => {
+    expect.assertions(1);
     const { request, base, tagStore } = getSetup();
     tagStore.createTag({ value: 'TeamRed', type: 'simple' });
     return request
@@ -69,18 +67,18 @@ test('should be able to get single tag by type and value', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tag.value, 'TeamRed');
+            expect(res.body.tag.value).toBe('TeamRed');
         });
 });
 
-test('trying to get non-existing tag by name and type should not be found', t => {
+test('trying to get non-existing tag by name and type should not be found', () => {
     const { request, base } = getSetup();
     return request.get(`${base}/api/admin/tags/simple/TeamRed`).expect(res => {
-        t.is(res.status, 404);
+        expect(res.status).toBe(404);
     });
 });
-test('should be able to delete a tag', t => {
-    t.plan(0);
+test('should be able to delete a tag', () => {
+    expect.assertions(0);
     const { request, base, tagStore } = getSetup();
     tagStore.createTag({ type: 'simple', value: 'TeamRed' });
     return request
@@ -88,19 +86,19 @@ test('should be able to delete a tag', t => {
         .expect(200);
 });
 
-test('should get empty tags of type', t => {
-    t.plan(1);
+test('should get empty tags of type', () => {
+    expect.assertions(1);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/tags/simple`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tags.length, 0);
+            expect(res.body.tags.length).toBe(0);
         });
 });
 
-test('should be able to filter by type', t => {
+test('should be able to filter by type', () => {
     const { request, base, tagStore } = getSetup();
     tagStore.createTag({ type: 'simple', value: 'TeamRed' });
     tagStore.createTag({ type: 'slack', value: 'TeamGreen' });
@@ -109,13 +107,13 @@ test('should be able to filter by type', t => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
-            t.is(res.body.tags.length, 1);
-            t.is(res.body.tags[0].value, 'TeamRed');
+            expect(res.body.tags.length).toBe(1);
+            expect(res.body.tags[0].value).toBe('TeamRed');
         });
 });
 
-test('Getting tags while database is down should be a 500', t => {
-    t.plan(0);
+test('Getting tags while database is down should be a 500', () => {
+    expect.assertions(0);
     getLogger.setMuteError(true);
     const { request, base } = getSetup(false);
     return request.get(`${base}/api/admin/tags`).expect(500);

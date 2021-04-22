@@ -1,11 +1,9 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const moment = require('moment');
 const lolex = require('lolex');
 const TTLList = require('./ttl-list');
 
-test.cb('should emit expire', t => {
+test('should emit expire', done => {
     const clock = lolex.install();
     const list = new TTLList({
         interval: 20,
@@ -15,15 +13,15 @@ test.cb('should emit expire', t => {
 
     list.on('expire', entry => {
         list.destroy();
-        t.true(entry.n === 1);
-        t.end();
+        expect(entry.n === 1).toBe(true);
+        done();
     });
 
     list.add({ n: 1 });
     clock.tick(21);
 });
 
-test.cb('should slice off list', t => {
+test('should slice off list', () => {
     const clock = lolex.install();
 
     const list = new TTLList({
@@ -45,19 +43,17 @@ test.cb('should slice off list', t => {
     });
 
     clock.tick(21);
-    t.true(expired.length === 1);
+    expect(expired.length === 1).toBe(true);
 
     clock.tick(51);
-    t.true(expired.length === 2);
+    expect(expired.length === 2).toBe(true);
 
     clock.tick(201);
-    t.true(expired.length === 3);
+    expect(expired.length === 3).toBe(true);
 
     clock.tick(301);
-    t.true(expired.length === 4);
+    expect(expired.length === 4).toBe(true);
 
     list.destroy();
     clock.uninstall();
-
-    t.end();
 });

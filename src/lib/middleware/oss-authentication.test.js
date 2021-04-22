@@ -1,9 +1,7 @@
-'use strict';
-
+'use strict';;
 import { createServices } from '../services';
 import { createTestConfig } from '../../test/config/test-config';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../test/fixtures/store');
@@ -37,15 +35,15 @@ function getSetup(preRouterHook) {
     };
 }
 
-test('should return 401 when missing user', t => {
-    t.plan(0);
+test('should return 401 when missing user', () => {
+    expect.assertions(0);
     const { base, request } = getSetup(() => {});
 
     return request.get(`${base}/api/protectedResource`).expect(401);
 });
 
-test('should return 200 when user exists', t => {
-    t.plan(0);
+test('should return 200 when user exists', () => {
+    expect.assertions(0);
     const user = new User({ id: 1, email: 'some@mail.com' });
     const { base, request } = getSetup(app =>
         app.use((req, res, next) => {

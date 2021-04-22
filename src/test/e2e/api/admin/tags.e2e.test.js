@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
@@ -8,16 +6,16 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('tag_api_serial', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
+test(async () => {
     await db.destroy();
 });
 
-test.serial('returns list of tags', async t => {
+test('returns list of tags', async () => {
     const request = await setupApp(stores);
     request
         .post('/api/admin/tags')
@@ -32,11 +30,11 @@ test.serial('returns list of tags', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tags.length, 1);
+            expect(res.body.tags.length).toBe(1);
         });
 });
 
-test.serial('gets a tag by type and value', async t => {
+test('gets a tag by type and value', async () => {
     const request = await setupApp(stores);
     request
         .post('/api/admin/tags')
@@ -50,19 +48,19 @@ test.serial('gets a tag by type and value', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tag.value, 'Tester');
+            expect(res.body.tag.value).toBe('Tester');
         });
 });
 
-test.serial('cannot get tag that does not exist', async t => {
-    t.plan(1);
+test('cannot get tag that does not exist', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     return request.get('/api/admin/tags/simple/12158091').expect(res => {
-        t.is(res.status, 404);
+        expect(res.status).toBe(404);
     });
 });
 
-test.serial('Can create a tag', async t => {
+test('Can create a tag', async () => {
     const request = await setupApp(stores);
     return request
         .post('/api/admin/tags')
@@ -72,10 +70,10 @@ test.serial('Can create a tag', async t => {
             type: 'simple',
         })
         .expect(res => {
-            t.is(res.status, 201);
+            expect(res.status).toBe(201);
         });
 });
-test.serial('Can validate a tag', async t => {
+test('Can validate a tag', async () => {
     const request = await setupApp(stores);
     return request
         .post('/api/admin/tags')
@@ -86,12 +84,12 @@ test.serial('Can validate a tag', async t => {
         .expect('Content-Type', /json/)
         .expect(400)
         .expect(res => {
-            t.is(res.body.details.length, 2);
-            t.is(res.body.details[0].message, '"value" must be a string');
-            t.is(res.body.details[1].message, '"type" must be URL friendly');
+            expect(res.body.details.length).toBe(2);
+            expect(res.body.details[0].message).toBe('"value" must be a string');
+            expect(res.body.details[1].message).toBe('"type" must be URL friendly');
         });
 });
-test.serial('Can delete a tag', async t => {
+test('Can delete a tag', async () => {
     const request = await setupApp(stores);
     await request
         .delete('/api/admin/tags/simple/Tester')
@@ -103,11 +101,8 @@ test.serial('Can delete a tag', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(
-                res.body.tags.indexOf(
-                    tag => tag.value === 'Tester' && tag.type === 'simple',
-                ),
-                -1,
-            );
+            expect(res.body.tags.indexOf(
+                tag => tag.value === 'Tester' && tag.type === 'simple',
+            )).toBe(-1);
         });
 });

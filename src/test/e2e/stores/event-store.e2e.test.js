@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const sinon = require('sinon');
 const {
     APPLICATION_CREATED,
@@ -14,16 +12,16 @@ let db;
 let stores;
 let eventStore;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('event_store_serial', getLogger);
     stores = db.stores;
     eventStore = stores.eventStore;
 });
 
-test.after(async () => {
+afterAll(async () => {
     await db.destroy();
 });
-test.serial('Should include id and createdAt when saving', async t => {
+test('Should include id and createdAt when saving', async () => {
     const clock = sinon.useFakeTimers();
     const event1 = {
         type: APPLICATION_CREATED,
@@ -37,15 +35,15 @@ test.serial('Should include id and createdAt when saving', async t => {
     eventStore.on(APPLICATION_CREATED, e => seen.push(e));
     await eventStore.store(event1);
     await clock.tickAsync(100);
-    t.is(seen.length, 1);
-    t.truthy(seen[0].id);
-    t.truthy(seen[0].createdAt);
-    t.is(seen[0].data.clientIp, event1.data.clientIp);
-    t.is(seen[0].data.appName, event1.data.appName);
+    expect(seen.length).toBe(1);
+    expect(seen[0].id).toBeTruthy();
+    expect(seen[0].createdAt).toBeTruthy();
+    expect(seen[0].data.clientIp).toBe(event1.data.clientIp);
+    expect(seen[0].data.appName).toBe(event1.data.appName);
 });
 
-test.serial('Should include empty tags array for new event', async t => {
-    t.plan(2);
+test('Should include empty tags array for new event', async () => {
+    expect.assertions(2);
     const event = {
         type: FEATURE_CREATED,
         createdBy: 'me@mail.com',
@@ -58,8 +56,8 @@ test.serial('Should include empty tags array for new event', async t => {
 
     const promise = new Promise(resolve => {
         eventStore.on(FEATURE_CREATED, storedEvent => {
-            t.is(storedEvent.name, event.name);
-            t.true(Array.isArray(storedEvent.tags), 'tags should be an array');
+            expect(storedEvent.name).toBe(event.name);
+            expect(Array.isArray(storedEvent.tags)).toBe(true);
             resolve();
         });
     });
@@ -70,7 +68,7 @@ test.serial('Should include empty tags array for new event', async t => {
     return promise;
 });
 
-test.serial('Should be able to store multiple events at once', async t => {
+test('Should be able to store multiple events at once', async () => {
     const clock = sinon.useFakeTimers();
     const event1 = {
         type: APPLICATION_CREATED,
@@ -101,10 +99,10 @@ test.serial('Should be able to store multiple events at once', async t => {
     eventStore.on(APPLICATION_CREATED, e => seen.push(e));
     await eventStore.batchStore([event1, event2, event3]);
     await clock.tickAsync(100);
-    t.is(seen.length, 3);
+    expect(seen.length).toBe(3);
     seen.forEach(e => {
-        t.truthy(e.id);
-        t.truthy(e.createdAt);
+        expect(e.id).toBeTruthy();
+        expect(e.createdAt).toBeTruthy();
     });
     clock.restore();
 });

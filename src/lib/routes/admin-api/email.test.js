@@ -1,8 +1,6 @@
-'use strict';
-
+'use strict';;
 import { createTestConfig } from '../../../test/config/test-config';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
@@ -30,8 +28,8 @@ function getSetup() {
     };
 }
 
-test('should render html preview of template', t => {
-    t.plan(0);
+test('should render html preview of template', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
     return request
         .get(
@@ -42,8 +40,8 @@ test('should render html preview of template', t => {
         .expect(res => 'Test Test' in res.body);
 });
 
-test('should render text preview of template', t => {
-    t.plan(0);
+test('should render text preview of template', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
     return request
         .get(
@@ -54,8 +52,8 @@ test('should render text preview of template', t => {
         .expect(res => 'Test Test' in res.body);
 });
 
-test('Requesting a non-existing template should yield 404', t => {
-    t.plan(0);
+test('Requesting a non-existing template should yield 404', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/email/preview/text/some-non-existing-template`)

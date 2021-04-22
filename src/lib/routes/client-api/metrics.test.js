@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
@@ -26,8 +24,8 @@ function getSetup() {
     };
 }
 
-test('should validate client metrics', t => {
-    t.plan(0);
+test('should validate client metrics', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     return request
         .post('/api/client/metrics')
@@ -35,8 +33,8 @@ test('should validate client metrics', t => {
         .expect(400);
 });
 
-test('should accept empty client metrics', t => {
-    t.plan(0);
+test('should accept empty client metrics', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     return request
         .post('/api/client/metrics')
@@ -52,8 +50,8 @@ test('should accept empty client metrics', t => {
         .expect(202);
 });
 
-test('should accept client metrics with yes/no', t => {
-    t.plan(0);
+test('should accept client metrics with yes/no', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     return request
         .post('/api/client/metrics')
@@ -74,8 +72,8 @@ test('should accept client metrics with yes/no', t => {
         .expect(202);
 });
 
-test('should accept client metrics with variants', t => {
-    t.plan(0);
+test('should accept client metrics with variants', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     return request
         .post('/api/client/metrics')
@@ -100,8 +98,8 @@ test('should accept client metrics with variants', t => {
         .expect(202);
 });
 
-test('should accept client metrics without yes/no', t => {
-    t.plan(0);
+test('should accept client metrics without yes/no', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     return request
         .post('/api/client/metrics')
@@ -122,7 +120,7 @@ test('should accept client metrics without yes/no', t => {
         .expect(202);
 });
 
-test('shema allow empty strings', t => {
+test('shema allow empty strings', () => {
     const data = {
         appName: 'java-test',
         instanceId: 'instance y',
@@ -133,12 +131,12 @@ test('shema allow empty strings', t => {
         },
     };
     const { error, value } = clientMetricsSchema.validate(data);
-    t.falsy(error);
-    t.is(value.bucket.toggles.Demo2.yes, 0);
-    t.is(value.bucket.toggles.Demo2.no, 0);
+    expect(error).toBeFalsy();
+    expect(value.bucket.toggles.Demo2.yes).toBe(0);
+    expect(value.bucket.toggles.Demo2.no).toBe(0);
 });
 
-test('shema allow yes=<string nbr>', t => {
+test('shema allow yes=<string nbr>', () => {
     const data = {
         appName: 'java-test',
         instanceId: 'instance y',
@@ -149,13 +147,13 @@ test('shema allow yes=<string nbr>', t => {
         },
     };
     const { error, value } = clientMetricsSchema.validate(data);
-    t.falsy(error);
-    t.is(value.bucket.toggles.Demo2.yes, 12);
-    t.is(value.bucket.toggles.Demo2.no, 256);
+    expect(error).toBeFalsy();
+    expect(value.bucket.toggles.Demo2.yes).toBe(12);
+    expect(value.bucket.toggles.Demo2.no).toBe(256);
 });
 
-test('should set lastSeen on toggle', async t => {
-    t.plan(1);
+test('should set lastSeen on toggle', async () => {
+    expect.assertions(1);
     const { request, stores } = getSetup();
     stores.featureToggleStore.createFeature({ name: 'toggleLastSeen' });
     await request
@@ -178,5 +176,5 @@ test('should set lastSeen on toggle', async t => {
 
     const toggle = await stores.featureToggleStore.getFeature('toggleLastSeen');
 
-    t.truthy(toggle.lastSeenAt);
+    expect(toggle.lastSeenAt).toBeTruthy();
 });

@@ -1,4 +1,3 @@
-const test = require('ava');
 const faker = require('faker');
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
@@ -9,7 +8,7 @@ let stores;
 let db;
 let clientMetricsService;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('client_metrics_service_serial', getLogger);
     stores = db.stores;
     clientMetricsService = new ClientMetricsService(stores, {
@@ -19,11 +18,11 @@ test.before(async () => {
     });
 });
 
-test.after(async () => {
+afterAll(async () => {
     await db.destroy();
 });
-test.serial('Apps registered should be announced', async t => {
-    t.plan(3);
+test('Apps registered should be announced', async () => {
+    expect.assertions(3);
     const clientRegistration = {
         appName: faker.internet.domainName(),
         instanceId: faker.random.uuid(),
@@ -48,12 +47,12 @@ test.serial('Apps registered should be announced', async t => {
     await clientMetricsService.registerClient(differentClient, '127.0.0.1');
     await new Promise(res => setTimeout(res, 1200));
     const first = await stores.clientApplicationsStore.getUnannounced();
-    t.is(first.length, 2);
+    expect(first.length).toBe(2);
     await clientMetricsService.registerClient(clientRegistration, '127.0.0.1');
     await new Promise(res => setTimeout(res, 2000));
     const second = await stores.clientApplicationsStore.getUnannounced();
-    t.is(second.length, 0);
+    expect(second.length).toBe(0);
     const events = await stores.eventStore.getEvents();
     const appCreatedEvents = events.filter(e => e.type === APPLICATION_CREATED);
-    t.is(appCreatedEvents.length, 2);
+    expect(appCreatedEvents.length).toBe(2);
 });

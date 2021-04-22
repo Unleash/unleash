@@ -1,7 +1,4 @@
-'use strict';
-
-const test = require('ava');
-
+'use strict';;
 const store = require('../../test/fixtures/store');
 const getLogger = require('../../test/fixtures/no-logger');
 
@@ -26,7 +23,7 @@ function getSetup() {
     };
 }
 
-test('should import a feature', async t => {
+test('should import a feature', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -42,12 +39,12 @@ test('should import a feature', async t => {
     await stateService.import({ data });
 
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 1);
-    t.is(events[0].type, FEATURE_IMPORT);
-    t.is(events[0].data.name, 'new-feature');
+    expect(events.length).toBe(1);
+    expect(events[0].type).toBe(FEATURE_IMPORT);
+    expect(events[0].data.name).toBe('new-feature');
 });
 
-test('should not import an existing feature', async t => {
+test('should not import an existing feature', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -65,10 +62,10 @@ test('should not import an existing feature', async t => {
     await stateService.import({ data, keepExisting: true });
 
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 0);
+    expect(events.length).toBe(0);
 });
 
-test('should not keep existing feature if drop-before-import', async t => {
+test('should not keep existing feature if drop-before-import', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -90,12 +87,12 @@ test('should not keep existing feature if drop-before-import', async t => {
     });
 
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 2);
-    t.is(events[0].type, DROP_FEATURES);
-    t.is(events[1].type, FEATURE_IMPORT);
+    expect(events.length).toBe(2);
+    expect(events[0].type).toBe(DROP_FEATURES);
+    expect(events[1].type).toBe(FEATURE_IMPORT);
 });
 
-test('should drop feature before import if specified', async t => {
+test('should drop feature before import if specified', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -111,13 +108,13 @@ test('should drop feature before import if specified', async t => {
     await stateService.import({ data, dropBeforeImport: true });
 
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 2);
-    t.is(events[0].type, DROP_FEATURES);
-    t.is(events[1].type, FEATURE_IMPORT);
-    t.is(events[1].data.name, 'new-feature');
+    expect(events.length).toBe(2);
+    expect(events[0].type).toBe(DROP_FEATURES);
+    expect(events[1].type).toBe(FEATURE_IMPORT);
+    expect(events[1].data.name).toBe('new-feature');
 });
 
-test('should import a strategy', async t => {
+test('should import a strategy', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -132,12 +129,12 @@ test('should import a strategy', async t => {
     await stateService.import({ data });
 
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 1);
-    t.is(events[0].type, STRATEGY_IMPORT);
-    t.is(events[0].data.name, 'new-strategy');
+    expect(events.length).toBe(1);
+    expect(events[0].type).toBe(STRATEGY_IMPORT);
+    expect(events[0].data.name).toBe('new-strategy');
 });
 
-test('should not import an existing strategy', async t => {
+test('should not import an existing strategy', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -154,10 +151,10 @@ test('should not import an existing strategy', async t => {
     await stateService.import({ data, keepExisting: true });
 
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 0);
+    expect(events.length).toBe(0);
 });
 
-test('should drop strategies before import if specified', async t => {
+test('should drop strategies before import if specified', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -172,13 +169,13 @@ test('should drop strategies before import if specified', async t => {
     await stateService.import({ data, dropBeforeImport: true });
 
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 2);
-    t.is(events[0].type, DROP_STRATEGIES);
-    t.is(events[1].type, STRATEGY_IMPORT);
-    t.is(events[1].data.name, 'new-strategy');
+    expect(events.length).toBe(2);
+    expect(events[0].type).toBe(DROP_STRATEGIES);
+    expect(events[1].type).toBe(STRATEGY_IMPORT);
+    expect(events[1].data.name).toBe('new-strategy');
 });
 
-test('should drop neither features nor strategies when neither is imported', async t => {
+test('should drop neither features nor strategies when neither is imported', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {};
@@ -186,10 +183,10 @@ test('should drop neither features nor strategies when neither is imported', asy
     await stateService.import({ data, dropBeforeImport: true });
 
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 0);
+    expect(events.length).toBe(0);
 });
 
-test('should not accept gibberish', async t => {
+test('should not accept gibberish', async () => {
     const { stateService } = getSetup();
 
     const data1 = {
@@ -203,29 +200,29 @@ test('should not accept gibberish', async t => {
     await t.throwsAsync(stateService.import({ data: data2 }));
 });
 
-test('should export featureToggles', async t => {
+test('should export featureToggles', async () => {
     const { stateService, stores } = getSetup();
 
     stores.featureToggleStore.createFeature({ name: 'a-feature' });
 
     const data = await stateService.export({ includeFeatureToggles: true });
 
-    t.is(data.features.length, 1);
-    t.is(data.features[0].name, 'a-feature');
+    expect(data.features.length).toBe(1);
+    expect(data.features[0].name).toBe('a-feature');
 });
 
-test('should export strategies', async t => {
+test('should export strategies', async () => {
     const { stateService, stores } = getSetup();
 
     stores.strategyStore.createStrategy({ name: 'a-strategy', editable: true });
 
     const data = await stateService.export({ includeStrategies: true });
 
-    t.is(data.strategies.length, 1);
-    t.is(data.strategies[0].name, 'a-strategy');
+    expect(data.strategies.length).toBe(1);
+    expect(data.strategies[0].name).toBe('a-strategy');
 });
 
-test('should import a tag and tag type', async t => {
+test('should import a tag and tag type', async () => {
     const { stateService, stores } = getSetup();
     const data = {
         tagTypes: [
@@ -242,16 +239,16 @@ test('should import a tag and tag type', async t => {
     };
     await stateService.import({ data });
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 3);
-    t.is(events[0].type, TAG_TYPE_IMPORT);
-    t.is(events[0].data.name, 'simple');
-    t.is(events[1].type, TAG_IMPORT);
-    t.is(events[1].data.value, 'test');
-    t.is(events[2].type, FEATURE_TAG_IMPORT);
-    t.is(events[2].data.featureName, 'demo-feature');
+    expect(events.length).toBe(3);
+    expect(events[0].type).toBe(TAG_TYPE_IMPORT);
+    expect(events[0].data.name).toBe('simple');
+    expect(events[1].type).toBe(TAG_IMPORT);
+    expect(events[1].data.value).toBe('test');
+    expect(events[2].type).toBe(FEATURE_TAG_IMPORT);
+    expect(events[2].data.featureName).toBe('demo-feature');
 });
 
-test('Should not import an existing tag', async t => {
+test('Should not import an existing tag', async () => {
     const { stateService, stores } = getSetup();
     const data = {
         tagTypes: [
@@ -277,10 +274,10 @@ test('Should not import an existing tag', async t => {
     );
     await stateService.import({ data, keepExisting: true });
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 0);
+    expect(events.length).toBe(0);
 });
 
-test('Should not keep existing tags if drop-before-import', async t => {
+test('Should not keep existing tags if drop-before-import', async () => {
     const { stateService, stores } = getSetup();
     const notSoSimple = {
         name: 'notsosimple',
@@ -310,10 +307,10 @@ test('Should not keep existing tags if drop-before-import', async t => {
     };
     await stateService.import({ data, dropBeforeImport: true });
     const tagTypes = await stores.tagTypeStore.getAll();
-    t.is(tagTypes.length, 1);
+    expect(tagTypes.length).toBe(1);
 });
 
-test('should export tag, tagtypes and feature tags', async t => {
+test('should export tag, tagtypes and feature tags', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -345,18 +342,18 @@ test('should export tag, tagtypes and feature tags', async t => {
         includeTags: true,
         includeProjects: false,
     });
-    t.is(exported.tags.length, 1);
-    t.is(exported.tags[0].type, data.tags[0].type);
-    t.is(exported.tags[0].value, data.tags[0].value);
-    t.is(exported.tagTypes.length, 1);
-    t.is(exported.tagTypes[0].name, data.tagTypes[0].name);
-    t.is(exported.featureTags.length, 1);
-    t.is(exported.featureTags[0].featureName, data.featureTags[0].featureName);
-    t.is(exported.featureTags[0].tagType, data.featureTags[0].tagType);
-    t.is(exported.featureTags[0].tagValue, data.featureTags[0].tagValue);
+    expect(exported.tags.length).toBe(1);
+    expect(exported.tags[0].type).toBe(data.tags[0].type);
+    expect(exported.tags[0].value).toBe(data.tags[0].value);
+    expect(exported.tagTypes.length).toBe(1);
+    expect(exported.tagTypes[0].name).toBe(data.tagTypes[0].name);
+    expect(exported.featureTags.length).toBe(1);
+    expect(exported.featureTags[0].featureName).toBe(data.featureTags[0].featureName);
+    expect(exported.featureTags[0].tagType).toBe(data.featureTags[0].tagType);
+    expect(exported.featureTags[0].tagValue).toBe(data.featureTags[0].tagValue);
 });
 
-test('should import a project', async t => {
+test('should import a project', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -372,12 +369,12 @@ test('should import a project', async t => {
     await stateService.import({ data });
 
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 1);
-    t.is(events[0].type, PROJECT_IMPORT);
-    t.is(events[0].data.name, 'default');
+    expect(events.length).toBe(1);
+    expect(events[0].type).toBe(PROJECT_IMPORT);
+    expect(events[0].data.name).toBe('default');
 });
 
-test('Should not import an existing project', async t => {
+test('Should not import an existing project', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -393,12 +390,12 @@ test('Should not import an existing project', async t => {
 
     await stateService.import({ data, keepExisting: true });
     const events = await stores.eventStore.getEvents();
-    t.is(events.length, 0);
+    expect(events.length).toBe(0);
 
     await stateService.import({ data });
 });
 
-test('Should drop projects before import if specified', async t => {
+test('Should drop projects before import if specified', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -421,7 +418,7 @@ test('Should drop projects before import if specified', async t => {
     });
 });
 
-test('Should export projects', async t => {
+test('Should export projects', async () => {
     const { stateService, stores } = getSetup();
     await stores.projectStore.create({
         id: 'fancy',
@@ -434,7 +431,7 @@ test('Should export projects', async t => {
         includeTags: false,
         includeProjects: true,
     });
-    t.is(exported.projects[0].id, 'fancy');
-    t.is(exported.projects[0].name, 'extra');
-    t.is(exported.projects[0].description, 'No surprises here');
+    expect(exported.projects[0].id).toBe('fancy');
+    expect(exported.projects[0].name).toBe('extra');
+    expect(exported.projects[0].description).toBe('No surprises here');
 });

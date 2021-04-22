@@ -1,9 +1,7 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const { featureSchema, querySchema } = require('./feature-schema');
 
-test('should require URL firendly name', t => {
+test('should require URL firendly name', () => {
     const toggle = {
         name: 'io`dasd',
         enabled: false,
@@ -11,10 +9,10 @@ test('should require URL firendly name', t => {
     };
 
     const { error } = featureSchema.validate(toggle);
-    t.deepEqual(error.details[0].message, '"name" must be URL friendly');
+    expect(error.details[0].message).toEqual('"name" must be URL friendly');
 });
 
-test('should be valid toggle name', t => {
+test('should be valid toggle name', () => {
     const toggle = {
         name: 'app.name',
         enabled: false,
@@ -22,10 +20,10 @@ test('should be valid toggle name', t => {
     };
 
     const { value } = featureSchema.validate(toggle);
-    t.is(value.name, toggle.name);
+    expect(value.name).toBe(toggle.name);
 });
 
-test('should strip extra variant fields', t => {
+test('should strip extra variant fields', () => {
     const toggle = {
         name: 'app.name',
         type: 'release',
@@ -42,11 +40,11 @@ test('should strip extra variant fields', t => {
     };
 
     const { value } = featureSchema.validate(toggle);
-    t.notDeepEqual(value, toggle);
-    t.falsy(value.variants[0].unkown);
+    expect(value).not.toEqual(toggle);
+    expect(value.variants[0].unkown).toBeFalsy();
 });
 
-test('should allow weightType=fix', t => {
+test('should allow weightType=fix', () => {
     const toggle = {
         name: 'app.name',
         type: 'release',
@@ -65,10 +63,10 @@ test('should allow weightType=fix', t => {
     };
 
     const { value } = featureSchema.validate(toggle);
-    t.deepEqual(value, toggle);
+    expect(value).toEqual(toggle);
 });
 
-test('should disallow weightType=unknown', t => {
+test('should disallow weightType=unknown', () => {
     const toggle = {
         name: 'app.name',
         type: 'release',
@@ -85,13 +83,10 @@ test('should disallow weightType=unknown', t => {
     };
 
     const { error } = featureSchema.validate(toggle);
-    t.deepEqual(
-        error.details[0].message,
-        '"variants[0].weightType" must be one of [variable, fix]',
-    );
+    expect(error.details[0].message).toEqual('"variants[0].weightType" must be one of [variable, fix]');
 });
 
-test('should be possible to define variant overrides', t => {
+test('should be possible to define variant overrides', () => {
     const toggle = {
         name: 'app.name',
         type: 'release',
@@ -116,12 +111,12 @@ test('should be possible to define variant overrides', t => {
     };
 
     const { value, error } = featureSchema.validate(toggle);
-    t.deepEqual(value, toggle);
-    t.falsy(error);
+    expect(value).toEqual(toggle);
+    expect(error).toBeFalsy();
 });
 
-test('variant overrides must have corect shape', async t => {
-    t.plan(1);
+test('variant overrides must have corect shape', async () => {
+    expect.assertions(1);
     const toggle = {
         name: 'app.name',
         type: 'release',
@@ -143,14 +138,11 @@ test('variant overrides must have corect shape', async t => {
     try {
         await featureSchema.validateAsync(toggle);
     } catch (error) {
-        t.is(
-            error.details[0].message,
-            '"variants[0].overrides" must be an array',
-        );
+        expect(error.details[0].message).toBe('"variants[0].overrides" must be an array');
     }
 });
 
-test('should keep constraints', t => {
+test('should keep constraints', () => {
     const toggle = {
         name: 'app.constraints',
         type: 'release',
@@ -172,11 +164,11 @@ test('should keep constraints', t => {
     };
 
     const { value, error } = featureSchema.validate(toggle);
-    t.deepEqual(value, toggle);
-    t.falsy(error);
+    expect(value).toEqual(toggle);
+    expect(error).toBeFalsy();
 });
 
-test('should not accept empty constraint values', t => {
+test('should not accept empty constraint values', () => {
     const toggle = {
         name: 'app.constraints.empty.value',
         type: 'release',
@@ -197,13 +189,10 @@ test('should not accept empty constraint values', t => {
     };
 
     const { error } = featureSchema.validate(toggle);
-    t.deepEqual(
-        error.details[0].message,
-        '"strategies[0].constraints[0].values[0]" is not allowed to be empty',
-    );
+    expect(error.details[0].message).toEqual('"strategies[0].constraints[0].values[0]" is not allowed to be empty');
 });
 
-test('should not accept empty list of constraint values', t => {
+test('should not accept empty list of constraint values', () => {
     const toggle = {
         name: 'app.constraints.empty.value.list',
         type: 'release',
@@ -224,43 +213,37 @@ test('should not accept empty list of constraint values', t => {
     };
 
     const { error } = featureSchema.validate(toggle);
-    t.deepEqual(
-        error.details[0].message,
-        '"strategies[0].constraints[0].values" must contain at least 1 items',
-    );
+    expect(error.details[0].message).toEqual('"strategies[0].constraints[0].values" must contain at least 1 items');
 });
 
-test('Filter queries should accept a list of tag values', t => {
+test('Filter queries should accept a list of tag values', () => {
     const query = {
         tag: ['simple:valuea', 'simple:valueb'],
     };
     const { value } = querySchema.validate(query);
-    t.deepEqual(value, { tag: ['simple:valuea', 'simple:valueb'] });
+    expect(value).toEqual({ tag: ['simple:valuea', 'simple:valueb'] });
 });
 
-test('Filter queries should reject tag values with missing type prefix', t => {
+test('Filter queries should reject tag values with missing type prefix', () => {
     const query = {
         tag: ['simple', 'simple'],
     };
     const { error } = querySchema.validate(query);
-    t.deepEqual(
-        error.details[0].message,
-        '"tag[0]" with value "simple" fails to match the tag pattern',
-    );
+    expect(error.details[0].message).toEqual('"tag[0]" with value "simple" fails to match the tag pattern');
 });
 
-test('Filter queries should allow project names', t => {
+test('Filter queries should allow project names', () => {
     const query = {
         project: ['projecta'],
     };
     const { value } = querySchema.validate(query);
-    t.deepEqual(value, { project: ['projecta'] });
+    expect(value).toEqual({ project: ['projecta'] });
 });
 
-test('Filter queries should reject project names that are not alphanum', t => {
+test('Filter queries should reject project names that are not alphanum', () => {
     const query = {
         project: ['project name with space'],
     };
     const { error } = querySchema.validate(query);
-    t.deepEqual(error.details[0].message, '"project[0]" must be URL friendly');
+    expect(error.details[0].message).toEqual('"project[0]" must be URL friendly');
 });

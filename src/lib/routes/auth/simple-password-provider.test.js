@@ -1,4 +1,3 @@
-const test = require('ava');
 const request = require('supertest');
 const express = require('express');
 const User = require('../../user');
@@ -6,7 +5,7 @@ const PasswordProvider = require('./simple-password-provider');
 
 const getLogger = () => ({ info: () => {}, error: () => {} });
 
-test('Should require password', async t => {
+test('Should require password', async () => {
     const app = express();
     app.use(express.json());
     const userService = () => {};
@@ -18,10 +17,10 @@ test('Should require password', async t => {
         .post('/auth/simple/login')
         .send({ name: 'john' });
 
-    t.is(400, res.status);
+    expect(400).toBe(res.status);
 });
 
-test('Should login user', async t => {
+test('Should login user', async () => {
     const username = 'ola';
     const password = 'simplepass';
     const user = new User({ username, permissions: ['ADMIN'] });
@@ -48,11 +47,11 @@ test('Should login user', async t => {
         .post('/auth/simple/login')
         .send({ username, password });
 
-    t.is(200, res.status);
-    t.is(user.username, res.body.username);
+    expect(200).toBe(res.status);
+    expect(user.username).toBe(res.body.username);
 });
 
-test('Should not login user with wrong password', async t => {
+test('Should not login user with wrong password', async () => {
     const username = 'ola';
     const password = 'simplepass';
     const user = new User({ username, permissions: ['ADMIN'] });
@@ -79,5 +78,5 @@ test('Should not login user with wrong password', async t => {
         .post('/auth/simple/login')
         .send({ username, password: 'not-correct' });
 
-    t.is(401, res.status);
+    expect(401).toBe(res.status);
 });

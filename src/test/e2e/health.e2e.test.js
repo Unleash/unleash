@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const { setupApp } = require('./helpers/test-helper');
 const dbInit = require('./helpers/database-init');
 const getLogger = require('../fixtures/no-logger');
@@ -8,17 +6,17 @@ const getLogger = require('../fixtures/no-logger');
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('health_api', getLogger);
     stores = db.stores;
 });
 
-test.after(async () => {
+afterAll(async () => {
     await db.destroy();
 });
 
-test('returns health good', async t => {
-    t.plan(0);
+test('returns health good', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .get('/health')

@@ -1,14 +1,12 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const { tagSchema } = require('./tag-schema');
 
-test('should require url friendly type if defined', t => {
+test('should require url friendly type if defined', () => {
     const tag = {
         value: 'io`dasd',
         type: 'io`dasd',
     };
 
     const { error } = tagSchema.validate(tag);
-    t.deepEqual(error.details[0].message, '"type" must be URL friendly');
+    expect(error.details[0].message).toEqual('"type" must be URL friendly');
 });

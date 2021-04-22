@@ -1,26 +1,27 @@
-const test = require('ava');
-const proxyquire = require('proxyquire');
 const fetchMock = require('fetch-mock').sandbox();
 const lolex = require('lolex');
 const noLogger = require('../../test/fixtures/no-logger');
 
-const addonMocked = proxyquire('./addon', { 'node-fetch': fetchMock });
-const JiraAddon = proxyquire('./jira-comment', { './addon': addonMocked });
+jest.mock('node-fetch', () => fetchMock);
+
+const addonMocked = require('./addon');
+jest.mock('./addon', () => addonMocked);
+const JiraAddon = require('./jira-comment');
 const { addonDefinitionSchema } = require('./addon-schema');
 
-test.beforeEach(() => {
+beforeEach(() => {
     fetchMock.restore();
     fetchMock.reset();
 });
 
-test('Addon definition should validate', t => {
+test('Addon definition should validate', () => {
     const { error } = addonDefinitionSchema.validate(JiraAddon.definition);
-    t.is(error, undefined);
+    expect(error).toBe(undefined);
 });
 
-test.serial(
+test(
     'An update event should post updated comment with updater and link back to issue',
-    async t => {
+    async () => {
         const jiraIssue = 'TEST-1';
         const jiraBaseUrl = 'https://test.jira.com';
         const addon = new JiraAddon({
@@ -46,62 +47,59 @@ test.serial(
                 apiKey: 'test',
             },
         );
-        t.is(fetchMock.calls(true).length, 1);
-        t.true(fetchMock.done());
-    },
+        expect(fetchMock.calls(true).length).toBe(1);
+        expect(fetchMock.done()).toBe(true);
+    }
 );
 
-test.serial(
-    'An event that is tagged with two tags causes two updates',
-    async t => {
-        const jiraBaseUrl = 'https://test.jira.com';
-        const addon = new JiraAddon({
-            getLogger: noLogger,
-            unleashUrl: 'https://test.unleash.com',
-        });
-        fetchMock.mock(
-            {
-                name: 'test-1',
-                url: `${jiraBaseUrl}/rest/api/3/issue/TEST-1/comment`,
+test('An event that is tagged with two tags causes two updates', async () => {
+    const jiraBaseUrl = 'https://test.jira.com';
+    const addon = new JiraAddon({
+        getLogger: noLogger,
+        unleashUrl: 'https://test.unleash.com',
+    });
+    fetchMock.mock(
+        {
+            name: 'test-1',
+            url: `${jiraBaseUrl}/rest/api/3/issue/TEST-1/comment`,
+        },
+        {
+            status: 201,
+            statusText: 'Accepted',
+        },
+    );
+    fetchMock.mock(
+        {
+            name: 'test-2',
+            url: `${jiraBaseUrl}/rest/api/3/issue/TEST-2/comment`,
+        },
+        {
+            status: 201,
+            statusText: 'Accepted',
+        },
+    );
+    await addon.handleEvent(
+        {
+            createdBy: 'test@test.com',
+            type: 'feature-updated',
+            data: {
+                name: 'feature.toggle',
             },
-            {
-                status: 201,
-                statusText: 'Accepted',
-            },
-        );
-        fetchMock.mock(
-            {
-                name: 'test-2',
-                url: `${jiraBaseUrl}/rest/api/3/issue/TEST-2/comment`,
-            },
-            {
-                status: 201,
-                statusText: 'Accepted',
-            },
-        );
-        await addon.handleEvent(
-            {
-                createdBy: 'test@test.com',
-                type: 'feature-updated',
-                data: {
-                    name: 'feature.toggle',
-                },
-                tags: [
-                    { type: 'jira', value: 'TEST-1' },
-                    { type: 'jira', value: 'TEST-2' },
-                ],
-            },
-            {
-                baseUrl: 'https://test.jira.com',
-                user: 'test@test.com',
-                apiKey: 'test',
-            },
-        );
-        t.true(fetchMock.done(), 'All routes should be matched');
-    },
-);
+            tags: [
+                { type: 'jira', value: 'TEST-1' },
+                { type: 'jira', value: 'TEST-2' },
+            ],
+        },
+        {
+            baseUrl: 'https://test.jira.com',
+            user: 'test@test.com',
+            apiKey: 'test',
+        },
+    );
+    expect(fetchMock.done()).toBe(true);
+});
 
-test.serial('An event with no jira tags will be ignored', async t => {
+test('An event with no jira tags will be ignored', async () => {
     const addon = new JiraAddon({
         getLogger: noLogger,
         unleashUrl: 'https://test.unleash.com',
@@ -122,10 +120,10 @@ test.serial('An event with no jira tags will be ignored', async t => {
             apiKey: 'test',
         },
     );
-    t.is(fetchMock.calls().length, 0); // No calls
+    expect(fetchMock.calls().length).toBe(0); // No calls
 });
 
-test.serial('Retries if error code in the 500s', async t => {
+test('Retries if error code in the 500s', async () => {
     const jiraBaseUrl = 'https://test.jira.com';
     const jiraIssue = 'TEST-1';
     const clock = lolex.install();
@@ -166,9 +164,9 @@ test.serial('Retries if error code in the 500s', async t => {
         },
     );
     clock.tick(1000);
-    t.true(fetchMock.done());
+    expect(fetchMock.done()).toBe(true);
 });
-test.serial('Only retries once', async t => {
+test('Only retries once', async () => {
     const jiraBaseUrl = 'https://test.jira.com';
     const jiraIssue = 'TEST-1';
     const clock = lolex.install();
@@ -193,10 +191,10 @@ test.serial('Only retries once', async t => {
         },
     );
     clock.tick(1000);
-    t.true(fetchMock.done());
+    expect(fetchMock.done()).toBe(true);
 });
 
-test.serial('Does not retry if a 4xx error is given', async t => {
+test('Does not retry if a 4xx error is given', async () => {
     const jiraBaseUrl = 'https://test.jira.com';
     const jiraIssue = 'TEST-1';
     const addon = new JiraAddon({
@@ -226,5 +224,5 @@ test.serial('Does not retry if a 4xx error is given', async t => {
             apiKey: 'test',
         },
     );
-    t.true(fetchMock.done());
+    expect(fetchMock.done()).toBe(true);
 });

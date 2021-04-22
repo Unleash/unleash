@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const { EventEmitter } = require('events');
 
 const eventBus = new EventEmitter();
@@ -15,7 +13,7 @@ const { createMetricsMonitor } = require('./metrics');
 
 const monitor = createMetricsMonitor();
 
-test.before(() => {
+beforeAll(() => {
     const featureToggleStore = {
         count: async () => 123,
     };
@@ -44,11 +42,11 @@ test.before(() => {
     monitor.startMonitoring(config, stores, '4.0.0', eventBus);
 });
 
-test.after(() => {
+afterAll(() => {
     monitor.stopMonitoring();
 });
 
-test('should collect metrics for requests', async t => {
+test('should collect metrics for requests', async () => {
     eventBus.emit(REQUEST_TIME, {
         path: 'somePath',
         method: 'GET',
@@ -57,22 +55,21 @@ test('should collect metrics for requests', async t => {
     });
 
     const metrics = await prometheusRegister.metrics();
-    t.regex(
-        metrics,
-        /http_request_duration_milliseconds{quantile="0\.99",path="somePath",method="GET",status="200"} 1337/,
+    expect(metrics).toMatch(
+        /http_request_duration_milliseconds{quantile="0\.99",path="somePath",method="GET",status="200"} 1337/
     );
 });
 
-test('should collect metrics for updated toggles', async t => {
+test('should collect metrics for updated toggles', async () => {
     eventStore.emit(FEATURE_UPDATED, {
         data: { name: 'TestToggle' },
     });
 
     const metrics = await prometheusRegister.metrics();
-    t.regex(metrics, /feature_toggle_update_total{toggle="TestToggle"} 1/);
+    expect(metrics).toMatch(/feature_toggle_update_total{toggle="TestToggle"} 1/);
 });
 
-test('should collect metrics for client metric reports', async t => {
+test('should collect metrics for client metric reports', async () => {
     clientMetricsStore.emit('metrics', {
         bucket: {
             toggles: {
@@ -85,13 +82,12 @@ test('should collect metrics for client metric reports', async t => {
     });
 
     const metrics = await prometheusRegister.metrics();
-    t.regex(
-        metrics,
-        /feature_toggle_usage_total{toggle="TestToggle",active="true",appName="undefined"} 10\nfeature_toggle_usage_total{toggle="TestToggle",active="false",appName="undefined"} 5/,
+    expect(metrics).toMatch(
+        /feature_toggle_usage_total{toggle="TestToggle",active="true",appName="undefined"} 10\nfeature_toggle_usage_total{toggle="TestToggle",active="false",appName="undefined"} 5/
     );
 });
 
-test('should collect metrics for db query timings', async t => {
+test('should collect metrics for db query timings', async () => {
     eventBus.emit(DB_TIME, {
         store: 'foo',
         action: 'bar',
@@ -99,23 +95,22 @@ test('should collect metrics for db query timings', async t => {
     });
 
     const metrics = await prometheusRegister.metrics();
-    t.regex(
-        metrics,
-        /db_query_duration_seconds{quantile="0\.99",store="foo",action="bar"} 0.1337/,
+    expect(metrics).toMatch(
+        /db_query_duration_seconds{quantile="0\.99",store="foo",action="bar"} 0.1337/
     );
 });
 
-test('should collect metrics for feature toggle size', async t => {
+test('should collect metrics for feature toggle size', async () => {
     const metrics = await prometheusRegister.metrics();
-    t.regex(metrics, /feature_toggles_total{version="(.*)"} 123/);
+    expect(metrics).toMatch(/feature_toggles_total{version="(.*)"} 123/);
 });
 
-test('Should collect metrics for database', async t => {
+test('Should collect metrics for database', async () => {
     const metrics = await prometheusRegister.metrics();
-    t.regex(metrics, /db_pool_max/);
-    t.regex(metrics, /db_pool_min/);
-    t.regex(metrics, /db_pool_used/);
-    t.regex(metrics, /db_pool_free/);
-    t.regex(metrics, /db_pool_pending_creates/);
-    t.regex(metrics, /db_pool_pending_acquires/);
+    expect(metrics).toMatch(/db_pool_max/);
+    expect(metrics).toMatch(/db_pool_min/);
+    expect(metrics).toMatch(/db_pool_used/);
+    expect(metrics).toMatch(/db_pool_free/);
+    expect(metrics).toMatch(/db_pool_pending_creates/);
+    expect(metrics).toMatch(/db_pool_pending_acquires/);
 });

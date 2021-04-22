@@ -1,7 +1,4 @@
-'use strict';
-
-const test = require('ava');
-
+'use strict';;
 const { setupApp } = require('../../helpers/test-helper');
 const metricsExample = require('../../../examples/client-metrics.json');
 const dbInit = require('../../helpers/database-init');
@@ -10,17 +7,17 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('metrics_api_client', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
+test(async () => {
     await db.destroy();
 });
 
-test.serial('should be possble to send metrics', async t => {
-    t.plan(0);
+test('should be possble to send metrics', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/client/metrics')
@@ -28,8 +25,8 @@ test.serial('should be possble to send metrics', async t => {
         .expect(202);
 });
 
-test.serial('should require valid send metrics', async t => {
-    t.plan(0);
+test('should require valid send metrics', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/client/metrics')
@@ -39,8 +36,8 @@ test.serial('should require valid send metrics', async t => {
         .expect(400);
 });
 
-test.serial('should accept client metrics', async t => {
-    t.plan(0);
+test('should accept client metrics', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/client/metrics')

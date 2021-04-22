@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 
@@ -8,23 +6,23 @@ let stores;
 let db;
 let projectStore;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('project_store_serial', getLogger);
     stores = db.stores;
     projectStore = stores.projectStore;
 });
 
-test.after(async () => {
+afterAll(async () => {
     await db.destroy();
 });
 
-test.serial('should have default project', async t => {
+test('should have default project', async () => {
     const project = await projectStore.get('default');
     t.assert(project);
-    t.is(project.id, 'default');
+    expect(project.id).toBe('default');
 });
 
-test.serial('should create new project', async t => {
+test('should create new project', async () => {
     const project = {
         id: 'test',
         name: 'New project',
@@ -32,13 +30,13 @@ test.serial('should create new project', async t => {
     };
     await projectStore.create(project);
     const ret = await projectStore.get('test');
-    t.deepEqual(project.id, ret.id);
-    t.deepEqual(project.name, ret.name);
-    t.deepEqual(project.description, ret.description);
-    t.truthy(ret.createdAt);
+    expect(project.id).toEqual(ret.id);
+    expect(project.name).toEqual(ret.name);
+    expect(project.description).toEqual(ret.description);
+    expect(ret.createdAt).toBeTruthy();
 });
 
-test.serial('should delete project', async t => {
+test('should delete project', async () => {
     const project = {
         id: 'test-delete',
         name: 'New project',
@@ -50,11 +48,11 @@ test.serial('should delete project', async t => {
     try {
         await projectStore.get(project.id);
     } catch (err) {
-        t.is(err.message, 'No project found');
+        expect(err.message).toBe('No project found');
     }
 });
 
-test.serial('should update project', async t => {
+test('should update project', async () => {
     const project = {
         id: 'test-update',
         name: 'New project',
@@ -72,14 +70,14 @@ test.serial('should update project', async t => {
 
     const readProject = await projectStore.get(project.id);
 
-    t.is(updatedProject.name, readProject.name);
-    t.is(updatedProject.description, readProject.description);
+    expect(updatedProject.name).toBe(readProject.name);
+    expect(updatedProject.description).toBe(readProject.description);
 });
 
-test.serial('should give error when getting unkown project', async t => {
+test('should give error when getting unkown project', async () => {
     try {
         await projectStore.get('unknown');
     } catch (err) {
-        t.is(err.message, 'No project found');
+        expect(err.message).toBe('No project found');
     }
 });

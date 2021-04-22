@@ -1,8 +1,6 @@
-'use strict';
-
+'use strict';;
 import { createTestConfig } from '../../../test/config/test-config';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
@@ -33,20 +31,20 @@ function getSetup(databaseIsUp = true) {
     };
 }
 
-test('should get empty getFeatures via admin', t => {
-    t.plan(1);
+test('should get empty getFeatures via admin', () => {
+    expect.assertions(1);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/features`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.features.length === 0);
+            expect(res.body.features.length === 0).toBe(true);
         });
 });
 
-test('should get one getFeature', t => {
-    t.plan(1);
+test('should get one getFeature', () => {
+    expect.assertions(1);
     const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: 'test_',
@@ -58,12 +56,12 @@ test('should get one getFeature', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.features.length === 1);
+            expect(res.body.features.length === 1).toBe(true);
         });
 });
 
-test('should add version numbers for /features', t => {
-    t.plan(1);
+test('should add version numbers for /features', () => {
+    expect.assertions(1);
     const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: 'test2',
@@ -75,12 +73,12 @@ test('should add version numbers for /features', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.version === 1);
+            expect(res.body.version === 1).toBe(true);
         });
 });
 
-test('should require at least one strategy when creating a feature toggle', t => {
-    t.plan(0);
+test('should require at least one strategy when creating a feature toggle', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -90,8 +88,8 @@ test('should require at least one strategy when creating a feature toggle', t =>
         .expect(400);
 });
 
-test('should be allowed to use new toggle name', t => {
-    t.plan(0);
+test('should be allowed to use new toggle name', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -101,8 +99,8 @@ test('should be allowed to use new toggle name', t => {
         .expect(200);
 });
 
-test('should get unsupported media-type when posting as form-url-encoded', t => {
-    t.plan(0);
+test('should get unsupported media-type when posting as form-url-encoded', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -114,8 +112,8 @@ test('should get unsupported media-type when posting as form-url-encoded', t => 
         .expect(415);
 });
 
-test('should be allowed to have variants="null"', t => {
-    t.plan(0);
+test('should be allowed to have variants="null"', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -130,8 +128,8 @@ test('should be allowed to have variants="null"', t => {
         .expect(201);
 });
 
-test('should not be allowed to reuse active toggle name', t => {
-    t.plan(1);
+test('should not be allowed to reuse active toggle name', () => {
+    expect.assertions(1);
     const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: 'ts',
@@ -144,15 +142,12 @@ test('should not be allowed to reuse active toggle name', t => {
         .set('Content-Type', 'application/json')
         .expect(409)
         .expect(res => {
-            t.is(
-                res.body.details[0].message,
-                'A toggle with that name already exists',
-            );
+            expect(res.body.details[0].message).toBe('A toggle with that name already exists');
         });
 });
 
-test('should not be allowed to reuse archived toggle name', t => {
-    t.plan(1);
+test('should not be allowed to reuse archived toggle name', () => {
+    expect.assertions(1);
     const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.addArchivedFeature({
         name: 'ts.archived',
@@ -165,15 +160,12 @@ test('should not be allowed to reuse archived toggle name', t => {
         .set('Content-Type', 'application/json')
         .expect(409)
         .expect(res => {
-            t.is(
-                res.body.details[0].message,
-                'An archived toggle with that name already exists',
-            );
+            expect(res.body.details[0].message).toBe('An archived toggle with that name already exists');
         });
 });
 
-test('should require at least one strategy when updating a feature toggle', t => {
-    t.plan(0);
+test('should require at least one strategy when updating a feature toggle', () => {
+    expect.assertions(0);
     const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: 'ts',
@@ -187,8 +179,8 @@ test('should require at least one strategy when updating a feature toggle', t =>
         .expect(400);
 });
 
-test('updating a feature toggle also requires application/json as content-type', t => {
-    t.plan(0);
+test('updating a feature toggle also requires application/json as content-type', () => {
+    expect.assertions(0);
     const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: 'ts',
@@ -203,8 +195,8 @@ test('updating a feature toggle also requires application/json as content-type',
         .expect(415);
 });
 
-test('valid feature names should pass validation', t => {
-    t.plan(0);
+test('valid feature names should pass validation', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     const validNames = [
@@ -231,8 +223,8 @@ test('valid feature names should pass validation', t => {
     );
 });
 
-test('invalid feature names should not pass validation', t => {
-    t.plan(0);
+test('invalid feature names should not pass validation', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     const invalidNames = [
@@ -259,8 +251,8 @@ test('invalid feature names should not pass validation', t => {
 });
 
 // Make sure current UI works. Should align on joi errors in future.
-test('invalid feature names should have error msg', t => {
-    t.plan(1);
+test('invalid feature names should have error msg', () => {
+    expect.assertions(1);
     const { request, base } = getSetup();
 
     const name = 'ØÆ`';
@@ -275,14 +267,12 @@ test('invalid feature names should have error msg', t => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect(res => {
-            t.true(
-                res.body.details[0].message === '"name" must be URL friendly',
-            );
+            expect(res.body.details[0].message === '"name" must be URL friendly').toBe(true);
         });
 });
 
-test('should not allow variants with same name when creating feature flag', t => {
-    t.plan(0);
+test('should not allow variants with same name when creating feature flag', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -300,8 +290,8 @@ test('should not allow variants with same name when creating feature flag', t =>
         .expect(400);
 });
 
-test('should not allow variants with same name when updating feature flag', t => {
-    t.plan(0);
+test('should not allow variants with same name when updating feature flag', () => {
+    expect.assertions(0);
     const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -320,8 +310,8 @@ test('should not allow variants with same name when updating feature flag', t =>
         .expect(400);
 });
 
-test('should toggle on', t => {
-    t.plan(1);
+test('should toggle on', () => {
+    expect.assertions(1);
     const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -336,12 +326,12 @@ test('should toggle on', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.enabled === true);
+            expect(res.body.enabled === true).toBe(true);
         });
 });
 
-test('should toggle off', t => {
-    t.plan(1);
+test('should toggle off', () => {
+    expect.assertions(1);
     const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -356,12 +346,12 @@ test('should toggle off', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.enabled === false);
+            expect(res.body.enabled === false).toBe(true);
         });
 });
 
-test('should toggle', t => {
-    t.plan(1);
+test('should toggle', () => {
+    expect.assertions(1);
     const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -376,12 +366,12 @@ test('should toggle', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.enabled === true);
+            expect(res.body.enabled === true).toBe(true);
         });
 });
 
-test('should be able to add tag for feature', t => {
-    t.plan(0);
+test('should be able to add tag for feature', () => {
+    expect.assertions(0);
     const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: 'toggle.disabled',
@@ -397,8 +387,8 @@ test('should be able to add tag for feature', t => {
         .set('Content-Type', 'application/json')
         .expect(201);
 });
-test('should be able to get tags for feature', t => {
-    t.plan(1);
+test('should be able to get tags for feature', () => {
+    expect.assertions(1);
     const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -416,12 +406,12 @@ test('should be able to get tags for feature', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tags.length, 1);
+            expect(res.body.tags.length).toBe(1);
         });
 });
 
-test('Invalid tag for feature should be rejected', t => {
-    t.plan(1);
+test('Invalid tag for feature should be rejected', () => {
+    expect.assertions(1);
     const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -439,12 +429,12 @@ test('Invalid tag for feature should be rejected', t => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect(res => {
-            t.is(res.body.details[0].message, '"type" must be URL friendly');
+            expect(res.body.details[0].message).toBe('"type" must be URL friendly');
         });
 });
 
-test('Should be able to filter on tag', t => {
-    t.plan(2);
+test('Should be able to filter on tag', () => {
+    expect.assertions(2);
     const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -467,13 +457,13 @@ test('Should be able to filter on tag', t => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
-            t.is(res.body.features.length, 1);
-            t.is(res.body.features[0].name, 'toggle.tagged');
+            expect(res.body.features.length).toBe(1);
+            expect(res.body.features[0].name).toBe('toggle.tagged');
         });
 });
 
-test('Should be able to filter on name prefix', t => {
-    t.plan(3);
+test('Should be able to filter on name prefix', () => {
+    expect.assertions(3);
     const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -497,14 +487,14 @@ test('Should be able to filter on name prefix', t => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
-            t.is(res.body.features.length, 2);
-            t.is(res.body.features[0].name, 'a_team.toggle');
-            t.is(res.body.features[1].name, 'a_tag.toggle');
+            expect(res.body.features.length).toBe(2);
+            expect(res.body.features[0].name).toBe('a_team.toggle');
+            expect(res.body.features[1].name).toBe('a_tag.toggle');
         });
 });
 
-test('Should be able to filter on project', t => {
-    t.plan(3);
+test('Should be able to filter on project', () => {
+    expect.assertions(3);
     const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -530,13 +520,13 @@ test('Should be able to filter on project', t => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
-            t.is(res.body.features.length, 2);
-            t.is(res.body.features[0].name, 'a_team.toggle');
-            t.is(res.body.features[1].name, 'a_tag.toggle');
+            expect(res.body.features.length).toBe(2);
+            expect(res.body.features[0].name).toBe('a_team.toggle');
+            expect(res.body.features[1].name).toBe('a_tag.toggle');
         });
 });
 
-test('Tags should be included in archive events', async t => {
+test('Tags should be included in archive events', async () => {
     const { request, eventStore, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -553,12 +543,12 @@ test('Tags should be included in archive events', async t => {
         .delete(`${base}/api/admin/features/a_team.toggle`)
         .expect(200);
     const events = await eventStore.getEvents();
-    t.is(events[0].type, 'feature-archived');
-    t.is(events[0].tags[0].type, 'simple');
-    t.is(events[0].tags[0].value, 'tag');
+    expect(events[0].type).toBe('feature-archived');
+    expect(events[0].tags[0].type).toBe('simple');
+    expect(events[0].tags[0].value).toBe('tag');
 });
 
-test('Tags should be included in updated events', async t => {
+test('Tags should be included in updated events', async () => {
     const { request, eventStore, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
@@ -581,20 +571,20 @@ test('Tags should be included in updated events', async t => {
         })
         .expect(200);
     const events = await eventStore.getEvents();
-    t.is(events[0].type, 'feature-updated');
-    t.is(events[0].tags[0].type, 'simple');
-    t.is(events[0].tags[0].value, 'tag');
+    expect(events[0].type).toBe('feature-updated');
+    expect(events[0].tags[0].type).toBe('simple');
+    expect(events[0].tags[0].value).toBe('tag');
 });
 
-test('Trying to get features while database is down should yield 500', t => {
-    t.plan(0);
+test('Trying to get features while database is down should yield 500', () => {
+    expect.assertions(0);
     getLogger.setMuteError(true);
     const { request, base } = getSetup(false);
     return request.get(`${base}/api/admin/features`).expect(500);
 });
 
-test('should mark toggle as stale', t => {
-    t.plan(1);
+test('should mark toggle as stale', () => {
+    expect.assertions(1);
     const toggleName = 'toggle-stale';
     const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
@@ -607,12 +597,12 @@ test('should mark toggle as stale', t => {
         .set('Content-Type', 'application/json')
         .expect(200)
         .expect(res => {
-            t.true(res.body.stale);
+            expect(res.body.stale).toBe(true);
         });
 });
 
-test('should mark toggle as NOT stale', t => {
-    t.plan(1);
+test('should mark toggle as NOT stale', () => {
+    expect.assertions(1);
     const toggleName = 'toggle-stale';
     const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
@@ -626,6 +616,6 @@ test('should mark toggle as NOT stale', t => {
         .set('Content-Type', 'application/json')
         .expect(200)
         .expect(res => {
-            t.false(res.body.stale);
+            expect(res.body.stale).toBe(false);
         });
 });

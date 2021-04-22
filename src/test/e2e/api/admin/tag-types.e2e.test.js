@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
@@ -8,46 +6,46 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('tag_types_api_serial', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
+test(async () => {
     await db.destroy();
 });
 
-test.serial('returns list of tag-types', async t => {
-    t.plan(1);
+test('returns list of tag-types', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     return request
         .get('/api/admin/tag-types')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tagTypes.length, 1);
+            expect(res.body.tagTypes.length).toBe(1);
         });
 });
 
-test.serial('gets a tag-type by name', async t => {
-    t.plan(1);
+test('gets a tag-type by name', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     return request
         .get('/api/admin/tag-types/simple')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tagType.name, 'simple');
+            expect(res.body.tagType.name).toBe('simple');
         });
 });
 
-test.serial('querying a tag-type that does not exist yields 404', async t => {
-    t.plan(0);
+test('querying a tag-type that does not exist yields 404', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request.get('/api/admin/tag-types/non-existent').expect(404);
 });
 
-test.serial('Can create a new tag type', async t => {
+test('Can create a new tag type', async () => {
     const request = await setupApp(stores);
     await request.post('/api/admin/tag-types').send({
         name: 'slack',
@@ -61,14 +59,13 @@ test.serial('Can create a new tag type', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(
-                res.body.tagType.icon,
-                'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png',
+            expect(res.body.tagType.icon).toBe(
+                'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png'
             );
         });
 });
 
-test.serial('Invalid tag types gets rejected', async t => {
+test('Invalid tag types gets rejected', async () => {
     const request = await setupApp(stores);
     await request
         .post('/api/admin/tag-types')
@@ -80,11 +77,11 @@ test.serial('Invalid tag types gets rejected', async t => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect(res => {
-            t.is(res.body.details[0].message, '"name" must be URL friendly');
+            expect(res.body.details[0].message).toBe('"name" must be URL friendly');
         });
 });
 
-test.serial('Can update a tag types description and icon', async t => {
+test('Can update a tag types description and icon', async () => {
     const request = await setupApp(stores);
     await request.get('/api/admin/tag-types/simple').expect(200);
     await request
@@ -99,10 +96,10 @@ test.serial('Can update a tag types description and icon', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tagType.icon, '$');
+            expect(res.body.tagType.icon).toBe('$');
         });
 });
-test.serial('Invalid updates gets rejected', async t => {
+test('Invalid updates gets rejected', async () => {
     const request = await setupApp(stores);
     await request.get('/api/admin/tag-types/simple').expect(200);
     await request
@@ -113,30 +110,27 @@ test.serial('Invalid updates gets rejected', async t => {
         })
         .expect(400)
         .expect(res => {
-            t.is(res.body.details[0].message, '"description" must be a string');
-            t.is(res.body.details[1].message, '"icon" must be a string');
+            expect(res.body.details[0].message).toBe('"description" must be a string');
+            expect(res.body.details[1].message).toBe('"icon" must be a string');
         });
 });
 
-test.serial(
-    'Validation of tag-types returns 200 for valid tag-types',
-    async t => {
-        const request = await setupApp(stores);
-        await request
-            .post('/api/admin/tag-types/validate')
-            .send({
-                name: 'something',
-                description: 'A fancy description',
-                icon: 'NoIcon',
-            })
-            .set('Content-Type', 'application/json')
-            .expect(200)
-            .expect(res => {
-                t.is(res.body.valid, true);
-            });
-    },
-);
-test.serial('Invalid tag-types get refused by validator', async t => {
+test('Validation of tag-types returns 200 for valid tag-types', async () => {
+    const request = await setupApp(stores);
+    await request
+        .post('/api/admin/tag-types/validate')
+        .send({
+            name: 'something',
+            description: 'A fancy description',
+            icon: 'NoIcon',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200)
+        .expect(res => {
+            expect(res.body.valid).toBe(true);
+        });
+});
+test('Invalid tag-types get refused by validator', async () => {
     const request = await setupApp(stores);
     await request
         .post('/api/admin/tag-types/validate')
@@ -148,12 +142,12 @@ test.serial('Invalid tag-types get refused by validator', async t => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect(res => {
-            t.is(res.body.details[0].message, '"name" must be URL friendly');
+            expect(res.body.details[0].message).toBe('"name" must be URL friendly');
         });
 });
 
-test.serial('Can delete tag type', async t => {
-    t.plan(0);
+test('Can delete tag type', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     await request
         .delete('/api/admin/tag-types/simple')
@@ -162,7 +156,7 @@ test.serial('Can delete tag type', async t => {
     return request.get('/api/admin/tag-types/simple').expect(404);
 });
 
-test.serial('Non unique tag-types gets rejected', async t => {
+test('Non unique tag-types gets rejected', async () => {
     const request = await setupApp(stores);
     await request
         .post('/api/admin/tag-types')
@@ -182,11 +176,11 @@ test.serial('Non unique tag-types gets rejected', async t => {
         })
         .set('Content-Type', 'application/json')
         .expect(res => {
-            t.is(res.status, 409);
+            expect(res.status).toBe(409);
         });
 });
 
-test.serial('Only required argument should be name', async t => {
+test('Only required argument should be name', async () => {
     const request = await setupApp(stores);
     const name = 'some-tag-type';
     return request
@@ -195,6 +189,6 @@ test.serial('Only required argument should be name', async t => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            t.is(res.body.name, name);
+            expect(res.body.name).toBe(name);
         });
 });

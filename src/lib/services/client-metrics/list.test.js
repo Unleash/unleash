@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const List = require('./list');
 
 function getList() {
@@ -15,14 +13,14 @@ function getList() {
     return list;
 }
 
-test('should emit "evicted" events for objects leaving list', t => {
+test('should emit "evicted" events for objects leaving list', () => {
     const list = getList();
     const evictedList = [];
     list.on('evicted', value => {
         evictedList.push(value);
     });
 
-    t.true(evictedList.length === 0);
+    expect(evictedList.length === 0).toBe(true);
 
     list.reverseRemoveUntilTrue(({ value }) => {
         if (value === 4) {
@@ -31,63 +29,63 @@ test('should emit "evicted" events for objects leaving list', t => {
         return false;
     });
 
-    t.true(evictedList.length === 3);
+    expect(evictedList.length === 3).toBe(true);
 
     list.reverseRemoveUntilTrue(() => false);
 
-    t.true(evictedList.length === 7);
+    expect(evictedList.length === 7).toBe(true);
 
     list.add(1);
     list.reverseRemoveUntilTrue(() => false);
 
-    t.true(evictedList.length === 8);
+    expect(evictedList.length === 8).toBe(true);
 });
 
-test('list should be able remove until given value', t => {
+test('list should be able remove until given value', () => {
     const list = getList();
 
-    t.true(list.toArray().length === 7);
+    expect(list.toArray().length === 7).toBe(true);
 
     list.reverseRemoveUntilTrue(({ value }) => value === 4);
-    t.true(list.toArray().length === 4);
+    expect(list.toArray().length === 4).toBe(true);
 
     list.reverseRemoveUntilTrue(({ value }) => value === 5);
-    t.true(list.toArray().length === 3);
+    expect(list.toArray().length === 3).toBe(true);
 
     list.reverseRemoveUntilTrue(({ value }) => value === 5);
-    t.true(list.toArray().length === 3);
+    expect(list.toArray().length === 3).toBe(true);
 });
 
-test('list can be cleared and re-add entries', t => {
+test('list can be cleared and re-add entries', () => {
     const list = getList();
 
     list.add(8);
     list.add(9);
 
-    t.true(list.toArray().length === 9);
+    expect(list.toArray().length === 9).toBe(true);
 
     list.reverseRemoveUntilTrue(() => false);
 
-    t.true(list.toArray().length === 0);
+    expect(list.toArray().length === 0).toBe(true);
 
     list.add(1);
     list.add(2);
     list.add(3);
 
-    t.true(list.toArray().length === 3);
+    expect(list.toArray().length === 3).toBe(true);
 });
 
-test('should not iterate empty list ', t => {
+test('should not iterate empty list ', () => {
     const list = new List();
 
     let iterateCount = 0;
     list.iterate(() => {
         iterateCount++;
     });
-    t.true(iterateCount === 0);
+    expect(iterateCount === 0).toBe(true);
 });
 
-test('should iterate', t => {
+test('should iterate', () => {
     const list = getList();
 
     let iterateCount = 0;
@@ -98,10 +96,10 @@ test('should iterate', t => {
         }
         return true;
     });
-    t.true(iterateCount === 4);
+    expect(iterateCount === 4).toBe(true);
 });
 
-test('should reverse iterate', t => {
+test('should reverse iterate', () => {
     const list = getList();
 
     let iterateCount = 0;
@@ -112,15 +110,15 @@ test('should reverse iterate', t => {
         }
         return true;
     });
-    t.true(iterateCount === 5);
+    expect(iterateCount === 5).toBe(true);
 });
 
-test('should not reverse iterate empty list', t => {
+test('should not reverse iterate empty list', () => {
     const list = new List();
 
     let iterateCount = 0;
     list.iterateReverse(() => {
         iterateCount++;
     });
-    t.true(iterateCount === 0);
+    expect(iterateCount === 0).toBe(true);
 });

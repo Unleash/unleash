@@ -1,8 +1,6 @@
-'use strict';
-
+'use strict';;
 import { createTestConfig } from '../../test/config/test-config';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../test/fixtures/store');
@@ -26,49 +24,45 @@ function getSetup() {
     };
 }
 
-test('api defintion', t => {
-    t.plan(5);
+test('api defintion', () => {
+    expect.assertions(5);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.truthy(res.body);
+            expect(res.body).toBeTruthy();
             const { admin, client } = res.body.links;
-            t.true(admin.uri === '/api/admin');
-            t.true(client.uri === '/api/client');
-            t.true(
-                admin.links['feature-toggles'].uri === '/api/admin/features',
-            );
-            t.true(client.links.metrics.uri === '/api/client/metrics');
+            expect(admin.uri === '/api/admin').toBe(true);
+            expect(client.uri === '/api/client').toBe(true);
+            expect(admin.links['feature-toggles'].uri === '/api/admin/features').toBe(true);
+            expect(client.links.metrics.uri === '/api/client/metrics').toBe(true);
         });
 });
 
-test('admin api defintion', t => {
-    t.plan(2);
+test('admin api defintion', () => {
+    expect.assertions(2);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.truthy(res.body);
-            t.true(
-                res.body.links['feature-toggles'].uri === '/api/admin/features',
-            );
+            expect(res.body).toBeTruthy();
+            expect(res.body.links['feature-toggles'].uri === '/api/admin/features').toBe(true);
         });
 });
 
-test('client api defintion', t => {
-    t.plan(2);
+test('client api defintion', () => {
+    expect.assertions(2);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/client`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.truthy(res.body);
-            t.true(res.body.links.metrics.uri === '/api/client/metrics');
+            expect(res.body).toBeTruthy();
+            expect(res.body.links.metrics.uri === '/api/client/metrics').toBe(true);
         });
 });

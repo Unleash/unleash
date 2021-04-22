@@ -1,8 +1,6 @@
-'use strict';
-
+'use strict';;
 import { createTestConfig } from '../../../test/config/test-config';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
@@ -30,34 +28,34 @@ function getSetup() {
     };
 }
 
-test('should get all context definitions', t => {
-    t.plan(2);
+test('should get all context definitions', () => {
+    expect.assertions(2);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/context`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.length === 3);
+            expect(res.body.length === 3).toBe(true);
             const envField = res.body.find(c => c.name === 'environment');
-            t.true(envField.name === 'environment');
+            expect(envField.name === 'environment').toBe(true);
         });
 });
 
-test('should get context definition', t => {
-    t.plan(1);
+test('should get context definition', () => {
+    expect.assertions(1);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/context/userId`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.name, 'userId');
+            expect(res.body.name).toBe('userId');
         });
 });
 
-test('should be allowed to use new context field name', t => {
-    t.plan(0);
+test('should be allowed to use new context field name', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -67,8 +65,8 @@ test('should be allowed to use new context field name', t => {
         .expect(200);
 });
 
-test('should not be allowed reuse context field name', t => {
-    t.plan(0);
+test('should not be allowed reuse context field name', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -78,8 +76,8 @@ test('should not be allowed reuse context field name', t => {
         .expect(409);
 });
 
-test('should create a context field', t => {
-    t.plan(0);
+test('should create a context field', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -89,8 +87,8 @@ test('should create a context field', t => {
         .expect(201);
 });
 
-test('should create a context field with legal values', t => {
-    t.plan(0);
+test('should create a context field with legal values', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -104,8 +102,8 @@ test('should create a context field with legal values', t => {
         .expect(201);
 });
 
-test('should require name when creating a context field', t => {
-    t.plan(0);
+test('should require name when creating a context field', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -115,8 +113,8 @@ test('should require name when creating a context field', t => {
         .expect(400);
 });
 
-test('should not create a context field with existing name', t => {
-    t.plan(0);
+test('should not create a context field with existing name', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -126,8 +124,8 @@ test('should not create a context field with existing name', t => {
         .expect(409);
 });
 
-test('should not create a context field with duplicate legal values', t => {
-    t.plan(0);
+test('should not create a context field with duplicate legal values', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -141,8 +139,8 @@ test('should not create a context field with duplicate legal values', t => {
         .expect(400);
 });
 
-test('should update a context field with new legal values', t => {
-    t.plan(0);
+test('should update a context field with new legal values', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -156,8 +154,8 @@ test('should update a context field with new legal values', t => {
         .expect(200);
 });
 
-test('should not delete a unknown context field', t => {
-    t.plan(0);
+test('should not delete a unknown context field', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -166,8 +164,8 @@ test('should not delete a unknown context field', t => {
         .expect(404);
 });
 
-test('should delete a context field', t => {
-    t.plan(0);
+test('should delete a context field', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request

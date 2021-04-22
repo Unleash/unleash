@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const faker = require('faker');
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
@@ -9,28 +7,28 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('feature_api_serial', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
+test(async () => {
     await db.destroy();
 });
 
-test.serial('returns list of feature toggles', async t => {
+test('returns list of feature toggles', async () => {
     const request = await setupApp(stores);
     return request
         .get('/api/admin/features')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.features.length === 4);
+            expect(res.body.features.length === 4).toBe(true);
         });
 });
 
-test.serial('gets a feature by name', async t => {
-    t.plan(0);
+test('gets a feature by name', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .get('/api/admin/features/featureX')
@@ -38,8 +36,8 @@ test.serial('gets a feature by name', async t => {
         .expect(200);
 });
 
-test.serial('cant get feature that dose not exist', async t => {
-    t.plan(0);
+test('cant get feature that dose not exist', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .get('/api/admin/features/myfeature')
@@ -47,8 +45,8 @@ test.serial('cant get feature that dose not exist', async t => {
         .expect(404);
 });
 
-test.serial('creates new feature toggle', async t => {
-    t.plan(3);
+test('creates new feature toggle', async () => {
+    expect.assertions(3);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
@@ -60,14 +58,14 @@ test.serial('creates new feature toggle', async t => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            t.is(res.body.name, 'com.test.feature');
-            t.is(res.body.enabled, false);
-            t.truthy(res.body.createdAt);
+            expect(res.body.name).toBe('com.test.feature');
+            expect(res.body.enabled).toBe(false);
+            expect(res.body.createdAt).toBeTruthy();
         });
 });
 
-test.serial('creates new feature toggle with variants', async t => {
-    t.plan(0);
+test('creates new feature toggle with variants', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
@@ -84,18 +82,18 @@ test.serial('creates new feature toggle with variants', async t => {
         .expect(201);
 });
 
-test.serial('fetch feature toggle with variants', async t => {
-    t.plan(1);
+test('fetch feature toggle with variants', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     return request
         .get('/api/admin/features/feature.with.variants')
         .expect(res => {
-            t.true(res.body.variants.length === 2);
+            expect(res.body.variants.length === 2).toBe(true);
         });
 });
 
-test.serial('creates new feature toggle with createdBy unknown', async t => {
-    t.plan(1);
+test('creates new feature toggle with createdBy unknown', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     await request
         .post('/api/admin/features')
@@ -106,12 +104,12 @@ test.serial('creates new feature toggle with createdBy unknown', async t => {
         })
         .expect(201);
     await request.get('/api/admin/events').expect(res => {
-        t.is(res.body.events[0].createdBy, 'unknown');
+        expect(res.body.events[0].createdBy).toBe('unknown');
     });
 });
 
-test.serial('require new feature toggle to have a name', async t => {
-    t.plan(0);
+test('require new feature toggle to have a name', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
@@ -120,21 +118,21 @@ test.serial('require new feature toggle to have a name', async t => {
         .expect(400);
 });
 
-test.serial(
+test(
     'can not change status of feature toggle that does not exist',
-    async t => {
-        t.plan(0);
+    async () => {
+        expect.assertions(0);
         const request = await setupApp(stores);
         return request
             .put('/api/admin/features/should-not-exist')
             .send({ name: 'should-not-exist', enabled: false })
             .set('Content-Type', 'application/json')
             .expect(404);
-    },
+    }
 );
 
-test.serial('can change status of feature toggle that does exist', async t => {
-    t.plan(0);
+test('can change status of feature toggle that does exist', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .put('/api/admin/features/featureY')
@@ -147,8 +145,8 @@ test.serial('can change status of feature toggle that does exist', async t => {
         .expect(200);
 });
 
-test.serial('can not toggle of feature that does not exist', async t => {
-    t.plan(0);
+test('can not toggle of feature that does not exist', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/features/should-not-exist/toggle')
@@ -156,8 +154,8 @@ test.serial('can not toggle of feature that does not exist', async t => {
         .expect(404);
 });
 
-test.serial('can toggle a feature that does exist', async t => {
-    t.plan(0);
+test('can toggle a feature that does exist', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/features/featureY/toggle')
@@ -165,20 +163,20 @@ test.serial('can toggle a feature that does exist', async t => {
         .expect(200);
 });
 
-test.serial('archives a feature by name', async t => {
-    t.plan(0);
+test('archives a feature by name', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request.delete('/api/admin/features/featureX').expect(200);
 });
 
-test.serial('can not archive unknown feature', async t => {
-    t.plan(0);
+test('can not archive unknown feature', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request.delete('/api/admin/features/featureUnknown').expect(404);
 });
 
-test.serial('refuses to create a feature with an existing name', async t => {
-    t.plan(0);
+test('refuses to create a feature with an existing name', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
@@ -187,8 +185,8 @@ test.serial('refuses to create a feature with an existing name', async t => {
         .expect(409);
 });
 
-test.serial('refuses to validate a feature with an existing name', async t => {
-    t.plan(0);
+test('refuses to validate a feature with an existing name', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/features/validate')
@@ -197,10 +195,10 @@ test.serial('refuses to validate a feature with an existing name', async t => {
         .expect(409);
 });
 
-test.serial(
+test(
     'new strategies api can add two strategies to a feature toggle',
-    async t => {
-        t.plan(0);
+    async () => {
+        expect.assertions(0);
         const request = await setupApp(stores);
         return request
             .put('/api/admin/features/featureY')
@@ -217,11 +215,11 @@ test.serial(
             })
             .set('Content-Type', 'application/json')
             .expect(200);
-    },
+    }
 );
 
-test.serial('should not be possible to create archived toggle', async t => {
-    t.plan(0);
+test('should not be possible to create archived toggle', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
@@ -234,8 +232,8 @@ test.serial('should not be possible to create archived toggle', async t => {
         .expect(409);
 });
 
-test.serial('creates new feature toggle with variant overrides', async t => {
-    t.plan(0);
+test('creates new feature toggle with variant overrides', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/features')
@@ -261,8 +259,8 @@ test.serial('creates new feature toggle with variant overrides', async t => {
         .expect(201);
 });
 
-test.serial('creates new feature toggle without type', async t => {
-    t.plan(1);
+test('creates new feature toggle without type', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     await request.post('/api/admin/features').send({
         name: 'com.test.noType',
@@ -271,12 +269,12 @@ test.serial('creates new feature toggle without type', async t => {
     });
     await new Promise(r => setTimeout(r, 200));
     return request.get('/api/admin/features/com.test.noType').expect(res => {
-        t.is(res.body.type, 'release');
+        expect(res.body.type).toBe('release');
     });
 });
 
-test.serial('creates new feature toggle with type', async t => {
-    t.plan(1);
+test('creates new feature toggle with type', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     await request.post('/api/admin/features').send({
         name: 'com.test.withType',
@@ -286,12 +284,12 @@ test.serial('creates new feature toggle with type', async t => {
     });
     await new Promise(r => setTimeout(r, 200));
     return request.get('/api/admin/features/com.test.withType').expect(res => {
-        t.is(res.body.type, 'killswitch');
+        expect(res.body.type).toBe('killswitch');
     });
 });
 
-test.serial('tags feature with new tag', async t => {
-    t.plan(1);
+test('tags feature with new tag', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     await request.post('/api/admin/features').send({
         name: 'test.feature',
@@ -308,14 +306,14 @@ test.serial('tags feature with new tag', async t => {
         .set('Content-Type', 'application/json');
     await new Promise(r => setTimeout(r, 200));
     return request.get('/api/admin/features/test.feature/tags').expect(res => {
-        t.is(res.body.tags[0].value, 'TeamGreen');
+        expect(res.body.tags[0].value).toBe('TeamGreen');
     });
 });
 
-test.serial(
+test(
     'tagging a feature with an already existing tag should be a noop',
-    async t => {
-        t.plan(1);
+    async () => {
+        expect.assertions(1);
         const request = await setupApp(stores);
         await request.post('/api/admin/features').send({
             name: 'test.feature',
@@ -337,13 +335,13 @@ test.serial(
             .expect('Content-Type', /json/)
             .expect(200)
             .expect(res => {
-                t.is(res.body.tags.length, 1);
+                expect(res.body.tags.length).toBe(1);
             });
-    },
+    }
 );
 
-test.serial('can untag feature', async t => {
-    t.plan(1);
+test('can untag feature', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     const feature1Name = faker.lorem.slug(3);
     await request.post('/api/admin/features').send({
@@ -370,12 +368,12 @@ test.serial('can untag feature', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tags.length, 0);
+            expect(res.body.tags.length).toBe(0);
         });
 });
 
-test.serial('Can get features tagged by tag', async t => {
-    t.plan(2);
+test('Can get features tagged by tag', async () => {
+    expect.assertions(2);
     const request = await setupApp(stores);
     const feature1Name = faker.helpers.slugify(faker.lorem.words(3));
     const feature2Name = faker.helpers.slugify(faker.lorem.words(3));
@@ -401,12 +399,12 @@ test.serial('Can get features tagged by tag', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.features.length, 1);
-            t.is(res.body.features[0].name, feature1Name);
+            expect(res.body.features.length).toBe(1);
+            expect(res.body.features[0].name).toBe(feature1Name);
         });
 });
-test.serial('Can query for multiple tags using OR', async t => {
-    t.plan(3);
+test('Can query for multiple tags using OR', async () => {
+    expect.assertions(3);
     const request = await setupApp(stores);
     const feature1Name = faker.helpers.slugify(faker.lorem.words(3));
     const feature2Name = faker.helpers.slugify(faker.lorem.words(3));
@@ -439,12 +437,12 @@ test.serial('Can query for multiple tags using OR', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.features.length, 2);
-            t.true(res.body.features.some(f => f.name === feature1Name));
-            t.true(res.body.features.some(f => f.name === feature2Name));
+            expect(res.body.features.length).toBe(2);
+            expect(res.body.features.some(f => f.name === feature1Name)).toBe(true);
+            expect(res.body.features.some(f => f.name === feature2Name)).toBe(true);
         });
 });
-test.serial('Querying with multiple filters ANDs the filters', async t => {
+test('Querying with multiple filters ANDs the filters', async () => {
     const request = await setupApp(stores);
     const feature1Name = `test.${faker.helpers.slugify(faker.hacker.phrase())}`;
     const feature2Name = faker.helpers.slugify(faker.lorem.words());
@@ -485,20 +483,20 @@ test.serial('Querying with multiple filters ANDs the filters', async t => {
         .get(`/api/admin/features?tag=${tag.type}:${tag.value}`)
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => t.is(res.body.features.length, 2));
+        .expect(res => expect(res.body.features.length).toBe(2));
     await request
         .get(`/api/admin/features?namePrefix=test&tag=${tag.type}:${tag.value}`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.features.length, 1);
-            t.is(res.body.features[0].name, feature1Name);
+            expect(res.body.features.length).toBe(1);
+            expect(res.body.features[0].name).toBe(feature1Name);
         });
 });
 
-test.serial(
+test(
     'Tagging a feature with a tag it already has should return 409',
-    async t => {
+    async () => {
         const request = await setupApp(stores);
         const feature1Name = `test.${faker.helpers.slugify(
             faker.lorem.words(3),
@@ -520,22 +518,19 @@ test.serial(
             .send(tag)
             .expect(409)
             .expect(res => {
-                t.is(
-                    res.body.details[0].message,
-                    `${feature1Name} already had the tag: [${tag.type}:${tag.value}]`,
-                );
+                expect(res.body.details[0].message).toBe(`${feature1Name} already had the tag: [${tag.type}:${tag.value}]`);
             });
-    },
+    }
 );
 
-test.serial('marks feature toggle as stale', async t => {
-    t.plan(1);
+test('marks feature toggle as stale', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     await request
         .post('/api/admin/features/featureZ/stale/on')
         .set('Content-Type', 'application/json');
 
     return request.get('/api/admin/features/featureZ').expect(res => {
-        t.true(res.body.stale);
+        expect(res.body.stale).toBe(true);
     });
 });

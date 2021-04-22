@@ -1,40 +1,32 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const logger = require('./logger');
 
-test('should expose a setLoggerProvider function', t => {
-    t.true(logger.setLoggerProvider instanceof Function);
+test('should expose a setLoggerProvider function', () => {
+    expect(logger.setLoggerProvider instanceof Function).toBe(true);
 });
 
-test('should require custom logger to implement info', t => {
+test('should require custom logger to implement info', () => {
     const loggerImpl = {
         debug: () => {},
         warn: () => {},
         error: () => {},
     };
     const provider = () => loggerImpl;
-    const error = t.throws(
-        () => {
-            logger.setLoggerProvider(provider)();
-        },
-        { instanceOf: TypeError },
-    );
-    t.is(error.message, 'Logger must implement info');
+    const error = expect(() => {
+        logger.setLoggerProvider(provider)();
+    }).toThrowError({ instanceOf: TypeError });
+    expect(error.message).toBe('Logger must implement info');
 });
 
-test('should require custom logger to implement error', t => {
+test('should require custom logger to implement error', () => {
     const loggerImpl = {
         debug: () => {},
         warn: () => {},
         info: () => {},
     };
     const provider = () => loggerImpl;
-    const error = t.throws(
-        () => {
-            logger.setLoggerProvider(provider)();
-        },
-        { instanceOf: TypeError },
-    );
-    t.is(error.message, 'Logger must implement error');
+    const error = expect(() => {
+        logger.setLoggerProvider(provider)();
+    }).toThrowError({ instanceOf: TypeError });
+    expect(error.message).toBe('Logger must implement error');
 });

@@ -1,9 +1,7 @@
-'use strict';
-
+'use strict';;
 import { createServices } from '../services';
 import { createTestConfig } from '../../test/config/test-config';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../test/fixtures/store');
@@ -11,8 +9,8 @@ const getApp = require('../app');
 
 const eventBus = new EventEmitter();
 
-test('should use enable prometheus', t => {
-    t.plan(0);
+test('should use enable prometheus', () => {
+    expect.assertions(0);
     const stores = store.createStores();
     const config = createTestConfig();
     const app = getApp(

@@ -1,9 +1,7 @@
-'use strict';
-
+'use strict';;
 import { createServices } from '../../services';
 import { createTestConfig } from '../../../test/config/test-config';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
@@ -36,15 +34,15 @@ function getSetup() {
     };
 }
 
-test('should get ui config', t => {
-    t.plan(2);
+test('should get ui config', () => {
+    expect.assertions(2);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/ui-config`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.slogan === 'hello');
-            t.true(res.body.headerBackground === 'red');
+            expect(res.body.slogan === 'hello').toBe(true);
+            expect(res.body.headerBackground === 'red').toBe(true);
         });
 });

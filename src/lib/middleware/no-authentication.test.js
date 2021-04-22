@@ -1,12 +1,10 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const supertest = require('supertest');
 const express = require('express');
 const noAuthentication = require('./no-authentication');
 
-test('should add dummy user object to all requests', t => {
-    t.plan(1);
+test('should add dummy user object to all requests', () => {
+    expect.assertions(1);
 
     const app = express();
     noAuthentication('', app);
@@ -24,6 +22,6 @@ test('should add dummy user object to all requests', t => {
         .get('/api/admin/test')
         .expect(200)
         .expect(res => {
-            t.true(res.body.username === 'unknown');
+            expect(res.body.username === 'unknown').toBe(true);
         });
 });

@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const { EventEmitter } = require('events');
 
 const eventStore = new EventEmitter();
@@ -18,16 +16,16 @@ function testHook(feature, data) {
     o[feature] = data;
 }
 
-test.before(() => {
+beforeAll(() => {
     addEventHook(testHook, eventStore);
 });
 
 [FEATURE_CREATED, FEATURE_UPDATED, FEATURE_ARCHIVED, FEATURE_REVIVED].forEach(
     feature => {
-        test(`should invoke hook on ${feature}`, t => {
+        test(`should invoke hook on ${feature}`, () => {
             const data = { dataKey: feature };
             eventStore.emit(feature, data);
-            t.true(o[feature] === data);
+            expect(o[feature] === data).toBe(true);
         });
     },
 );

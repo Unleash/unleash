@@ -1,10 +1,8 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const eventDiffer = require('./event-differ');
 const { FEATURE_CREATED, FEATURE_UPDATED } = require('./event-type');
 
-test('should not fail if events include an unknown event type', t => {
+test('should not fail if events include an unknown event type', () => {
     const events = [
         { type: FEATURE_CREATED, data: {} },
         { type: 'unknown-type', data: {} },
@@ -12,10 +10,10 @@ test('should not fail if events include an unknown event type', t => {
 
     eventDiffer.addDiffs(events);
 
-    t.true(true, 'No exceptions here =)');
+    expect(true).toBe(true);
 });
 
-test('diffs a feature-update event', t => {
+test('diffs a feature-update event', () => {
     const feature = 'foo';
     const desc = 'bar';
 
@@ -45,22 +43,22 @@ test('diffs a feature-update event', t => {
     eventDiffer.addDiffs(events);
 
     const { diffs } = events[0];
-    t.true(diffs[0].kind === 'E');
-    t.true(diffs[0].path[0] === 'enabled');
-    t.true(diffs[0].kind === 'E');
-    t.true(diffs[0].lhs === false);
-    t.true(diffs[0].rhs);
+    expect(diffs[0].kind === 'E').toBe(true);
+    expect(diffs[0].path[0] === 'enabled').toBe(true);
+    expect(diffs[0].kind === 'E').toBe(true);
+    expect(diffs[0].lhs === false).toBe(true);
+    expect(diffs[0].rhs).toBe(true);
 
-    t.true(diffs[1].kind === 'E');
-    t.true(diffs[1].path[0] === 'parameters');
-    t.true(diffs[1].path[1] === 'value');
-    t.true(diffs[1].kind === 'E');
-    t.true(diffs[1].lhs === 1);
+    expect(diffs[1].kind === 'E').toBe(true);
+    expect(diffs[1].path[0] === 'parameters').toBe(true);
+    expect(diffs[1].path[1] === 'value').toBe(true);
+    expect(diffs[1].kind === 'E').toBe(true);
+    expect(diffs[1].lhs === 1).toBe(true);
 
-    t.true(events[1].diffs === null);
+    expect(events[1].diffs === null).toBe(true);
 });
 
-test('diffs only against features with the same name', t => {
+test('diffs only against features with the same name', () => {
     const events = [
         {
             type: FEATURE_UPDATED,
@@ -106,13 +104,13 @@ test('diffs only against features with the same name', t => {
 
     eventDiffer.addDiffs(events);
 
-    t.true(events[0].diffs[0].rhs === true);
-    t.true(events[1].diffs[0].rhs === false);
-    t.true(events[2].diffs === null);
-    t.true(events[3].diffs === null);
+    expect(events[0].diffs[0].rhs === true).toBe(true);
+    expect(events[1].diffs[0].rhs === false).toBe(true);
+    expect(events[2].diffs === null).toBe(true);
+    expect(events[3].diffs === null).toBe(true);
 });
 
-test('sets an empty array of diffs if nothing was changed', t => {
+test('sets an empty array of diffs if nothing was changed', () => {
     const events = [
         {
             type: FEATURE_UPDATED,
@@ -137,10 +135,10 @@ test('sets an empty array of diffs if nothing was changed', t => {
     ];
 
     eventDiffer.addDiffs(events);
-    t.deepEqual(events[0].diffs, []);
+    expect(events[0].diffs).toEqual([]);
 });
 
-test('sets diffs to null if there was nothing to diff against', t => {
+test('sets diffs to null if there was nothing to diff against', () => {
     const events = [
         {
             type: FEATURE_UPDATED,
@@ -155,5 +153,5 @@ test('sets diffs to null if there was nothing to diff against', t => {
     ];
 
     eventDiffer.addDiffs(events);
-    t.true(events[0].diffs === null);
+    expect(events[0].diffs === null).toBe(true);
 });

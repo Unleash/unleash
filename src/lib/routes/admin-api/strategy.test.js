@@ -1,8 +1,6 @@
-'use strict';
-
+'use strict';;
 import { createTestConfig } from '../../../test/config/test-config';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
@@ -32,12 +30,12 @@ function getSetup(databaseIsUp = true) {
     };
 }
 
-test.afterEach(() => {
+afterEach(() => {
     getLogger.setMuteError(false);
 });
 
-test('add version numbers for /stategies', t => {
-    t.plan(1);
+test('add version numbers for /stategies', () => {
+    expect.assertions(1);
     const { request, base } = getSetup();
 
     return request
@@ -45,12 +43,12 @@ test('add version numbers for /stategies', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.version === 1);
+            expect(res.body.version === 1).toBe(true);
         });
 });
 
-test('require a name when creating a new stratey', t => {
-    t.plan(1);
+test('require a name when creating a new stratey', () => {
+    expect.assertions(1);
     const { request, base } = getSetup();
 
     return request
@@ -58,12 +56,12 @@ test('require a name when creating a new stratey', t => {
         .send({})
         .expect(400)
         .expect(res => {
-            t.true(res.body.details[0].message === '"name" is required');
+            expect(res.body.details[0].message === '"name" is required').toBe(true);
         });
 });
 
-test('require parameters array when creating a new stratey', t => {
-    t.plan(1);
+test('require parameters array when creating a new stratey', () => {
+    expect.assertions(1);
     const { request, base } = getSetup();
 
     return request
@@ -71,15 +69,12 @@ test('require parameters array when creating a new stratey', t => {
         .send({ name: 'TestStrat' })
         .expect(400)
         .expect(res => {
-            t.deepEqual(
-                res.body.details[0].message,
-                '"parameters" is required',
-            );
+            expect(res.body.details[0].message).toEqual('"parameters" is required');
         });
 });
 
-test('create a new stratey with empty parameters', t => {
-    t.plan(0);
+test('create a new stratey with empty parameters', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request
@@ -88,8 +83,8 @@ test('create a new stratey with empty parameters', t => {
         .expect(201);
 });
 
-test('not be possible to override name', t => {
-    t.plan(0);
+test('not be possible to override name', () => {
+    expect.assertions(0);
     const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name: 'Testing', parameters: [] });
 
@@ -99,8 +94,8 @@ test('not be possible to override name', t => {
         .expect(409);
 });
 
-test('update strategy', t => {
-    t.plan(0);
+test('update strategy', () => {
+    expect.assertions(0);
     const name = 'AnotherStrat';
     const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
@@ -111,8 +106,8 @@ test('update strategy', t => {
         .expect(200);
 });
 
-test('not update unknown strategy', t => {
-    t.plan(0);
+test('not update unknown strategy', () => {
+    expect.assertions(0);
     const name = 'UnknownStrat';
     const { request, base } = getSetup();
 
@@ -122,8 +117,8 @@ test('not update unknown strategy', t => {
         .expect(404);
 });
 
-test('validate format when updating strategy', t => {
-    t.plan(0);
+test('validate format when updating strategy', () => {
+    expect.assertions(0);
     const name = 'AnotherStrat';
     const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
@@ -134,18 +129,18 @@ test('validate format when updating strategy', t => {
         .expect(400);
 });
 
-test('editable=false will stop delete request', t => {
+test('editable=false will stop delete request', () => {
     getLogger.setMuteError(true);
-    t.plan(0);
+    expect.assertions(0);
     const name = 'default';
     const { request, base } = getSetup();
 
     return request.delete(`${base}/api/admin/strategies/${name}`).expect(500);
 });
 
-test('editable=false will stop edit request', t => {
+test('editable=false will stop edit request', () => {
     getLogger.setMuteError(true);
-    t.plan(0);
+    expect.assertions(0);
     const name = 'default';
     const { request, base } = getSetup();
 
@@ -155,8 +150,8 @@ test('editable=false will stop edit request', t => {
         .expect(500);
 });
 
-test('editable=true will allow delete request', t => {
-    t.plan(0);
+test('editable=true will allow delete request', () => {
+    expect.assertions(0);
     const name = 'deleteStrat';
     const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
@@ -167,8 +162,8 @@ test('editable=true will allow delete request', t => {
         .expect(200);
 });
 
-test('editable=true will allow edit request', t => {
-    t.plan(0);
+test('editable=true will allow edit request', () => {
+    expect.assertions(0);
     const name = 'editStrat';
     const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
@@ -179,8 +174,8 @@ test('editable=true will allow edit request', t => {
         .expect(200);
 });
 
-test('deprecating a strategy works', async t => {
-    t.plan(1);
+test('deprecating a strategy works', async () => {
+    expect.assertions(1);
     const name = 'editStrat';
     const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
@@ -193,11 +188,11 @@ test('deprecating a strategy works', async t => {
     return request
         .get(`${base}/api/admin/strategies/${name}`)
         .expect(200)
-        .expect(res => t.is(res.body.deprecated, true));
+        .expect(res => expect(res.body.deprecated).toBe(true));
 });
 
-test('deprecating a non-existent strategy yields 404', t => {
-    t.plan(0);
+test('deprecating a non-existent strategy yields 404', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies/non-existent-strategy/deprecate`)
@@ -205,8 +200,8 @@ test('deprecating a non-existent strategy yields 404', t => {
         .expect(404);
 });
 
-test('reactivating a strategy works', async t => {
-    t.plan(1);
+test('reactivating a strategy works', async () => {
+    expect.assertions(1);
     const name = 'editStrat';
     const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
@@ -219,19 +214,19 @@ test('reactivating a strategy works', async t => {
     return request
         .get(`${base}/api/admin/strategies/${name}`)
         .expect(200)
-        .expect(res => t.is(res.body.deprecated, false));
+        .expect(res => expect(res.body.deprecated).toBe(false));
 });
 
-test('reactivating a non-existent strategy yields 404', t => {
-    t.plan(0);
+test('reactivating a non-existent strategy yields 404', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies/non-existent-strategy/reactivate`)
         .set('Content-Type', 'application/json')
         .expect(404);
 });
-test("deprecating 'default' strategy will yield 403", t => {
-    t.plan(0);
+test("deprecating 'default' strategy will yield 403", () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies/default/deprecate`)
@@ -239,8 +234,8 @@ test("deprecating 'default' strategy will yield 403", t => {
         .expect(403);
 });
 
-test('Getting strategies while database is down should yield 500', t => {
-    t.plan(0);
+test('Getting strategies while database is down should yield 500', () => {
+    expect.assertions(0);
     const { request, base } = getSetup(false);
     return request.get(`${base}/api/admin/strategies`).expect(500);
 });

@@ -1,24 +1,22 @@
-const test = require('ava');
-const proxyquire = require('proxyquire').noCallThru();
 const { FEATURE_CREATED } = require('../event-type');
 
-const WebhookAddon = proxyquire.load('./webhook', {
-    './addon': class Addon {
-        constructor(definition, { getLogger }) {
-            this.logger = getLogger('addon/test');
-            this.fetchRetryCalls = [];
-        }
+jest.mock('./addon', () => (class Addon {
+    constructor(definition, { getLogger }) {
+        this.logger = getLogger('addon/test');
+        this.fetchRetryCalls = [];
+    }
 
-        async fetchRetry(url, options, retries, backoff) {
-            this.fetchRetryCalls.push({ url, options, retries, backoff });
-            return Promise.resolve({ status: 200 });
-        }
-    },
-});
+    async fetchRetry(url, options, retries, backoff) {
+        this.fetchRetryCalls.push({ url, options, retries, backoff });
+        return Promise.resolve({ status: 200 });
+    }
+}));
+
+const WebhookAddon = require('./webhook');
 
 const noLogger = require('../../test/fixtures/no-logger');
 
-test('Should handle event without "bodyTemplate"', t => {
+test('Should handle event without "bodyTemplate"', () => {
     const addon = new WebhookAddon({ getLogger: noLogger });
     const event = {
         type: FEATURE_CREATED,
@@ -35,12 +33,12 @@ test('Should handle event without "bodyTemplate"', t => {
     };
 
     addon.handleEvent(event, parameters);
-    t.is(addon.fetchRetryCalls.length, 1);
-    t.is(addon.fetchRetryCalls[0].url, parameters.url);
-    t.is(addon.fetchRetryCalls[0].options.body, JSON.stringify(event));
+    expect(addon.fetchRetryCalls.length).toBe(1);
+    expect(addon.fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(addon.fetchRetryCalls[0].options.body).toBe(JSON.stringify(event));
 });
 
-test('Should format event with "bodyTemplate"', t => {
+test('Should format event with "bodyTemplate"', () => {
     const addon = new WebhookAddon({ getLogger: noLogger });
     const event = {
         type: FEATURE_CREATED,
@@ -60,8 +58,8 @@ test('Should format event with "bodyTemplate"', t => {
 
     addon.handleEvent(event, parameters);
     const call = addon.fetchRetryCalls[0];
-    t.is(addon.fetchRetryCalls.length, 1);
-    t.is(call.url, parameters.url);
-    t.is(call.options.headers['Content-Type'], 'text/plain');
-    t.is(call.options.body, 'feature-created on toggle some-toggle');
+    expect(addon.fetchRetryCalls.length).toBe(1);
+    expect(call.url).toBe(parameters.url);
+    expect(call.options.headers['Content-Type']).toBe('text/plain');
+    expect(call.options.body).toBe('feature-created on toggle some-toggle');
 });

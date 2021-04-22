@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const { EventEmitter } = require('events');
 const lolex = require('lolex');
 const ClientMetricStore = require('./client-metrics-store');
@@ -26,23 +24,23 @@ function getMockDb() {
     };
 }
 
-test.cb('should call database on startup', t => {
+test('should call database on startup', done => {
     const mock = getMockDb();
     const ee = new EventEmitter();
     const store = new ClientMetricStore(mock, ee, getLogger);
 
-    t.plan(2);
+    expect.assertions(2);
 
     store.on('metrics', metrics => {
-        t.true(store.highestIdSeen === 1);
-        t.true(metrics.appName === 'test');
+        expect(store.highestIdSeen === 1).toBe(true);
+        expect(metrics.appName === 'test').toBe(true);
         store.destroy();
 
-        t.end();
+        done();
     });
 });
 
-test.cb('should start poller even if inital database fetch fails', t => {
+test('should start poller even if inital database fetch fails', done => {
     getLogger.setMuteError(true);
     const clock = lolex.install();
     const mock = getMockDb();
@@ -54,19 +52,19 @@ test.cb('should start poller even if inital database fetch fails', t => {
     store.on('metrics', m => metrics.push(m));
 
     store.on('ready', () => {
-        t.true(metrics.length === 0);
+        expect(metrics.length === 0).toBe(true);
         clock.tick(300);
         process.nextTick(() => {
-            t.true(metrics.length === 3);
-            t.true(store.highestIdSeen === 4);
+            expect(metrics.length === 3).toBe(true);
+            expect(store.highestIdSeen === 4).toBe(true);
             store.destroy();
-            t.end();
+            done();
         });
     });
     getLogger.setMuteError(false);
 });
 
-test.cb('should poll for updates', t => {
+test('should poll for updates', done => {
     const clock = lolex.install();
 
     const mock = getMockDb();
@@ -76,16 +74,16 @@ test.cb('should poll for updates', t => {
     const metrics = [];
     store.on('metrics', m => metrics.push(m));
 
-    t.true(metrics.length === 0);
+    expect(metrics.length === 0).toBe(true);
 
     store.on('ready', () => {
-        t.true(metrics.length === 1);
+        expect(metrics.length === 1).toBe(true);
         clock.tick(300);
         process.nextTick(() => {
-            t.true(metrics.length === 4);
-            t.true(store.highestIdSeen === 4);
+            expect(metrics.length === 4).toBe(true);
+            expect(store.highestIdSeen === 4).toBe(true);
             store.destroy();
-            t.end();
+            done();
         });
     });
 });

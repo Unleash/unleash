@@ -1,7 +1,4 @@
-'use strict';
-
-const test = require('ava');
-
+'use strict';;
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
@@ -9,41 +6,41 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('context_api_serial', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
+test(async () => {
     await db.destroy();
 });
 
-test.serial('gets all context fields', async t => {
-    t.plan(1);
+test('gets all context fields', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     return request
         .get('/api/admin/context')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.length, 3, 'expected to have three context fields');
+            expect(res.body.length).toBe(3);
         });
 });
 
-test.serial('get the context field', async t => {
-    t.plan(1);
+test('get the context field', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     return request
         .get('/api/admin/context/environment')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.name, 'environment');
+            expect(res.body.name).toBe('environment');
         });
 });
 
-test.serial('should create context field', async t => {
-    t.plan(0);
+test('should create context field', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/context')
@@ -55,8 +52,8 @@ test.serial('should create context field', async t => {
         .expect(201);
 });
 
-test.serial('should create context field with legalValues', async t => {
-    t.plan(0);
+test('should create context field with legalValues', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/context')
@@ -69,8 +66,8 @@ test.serial('should create context field with legalValues', async t => {
         .expect(201);
 });
 
-test.serial('should update context field with legalValues', async t => {
-    t.plan(0);
+test('should update context field with legalValues', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .put('/api/admin/context/environment')
@@ -83,8 +80,8 @@ test.serial('should update context field with legalValues', async t => {
         .expect(200);
 });
 
-test.serial('should create context field with stickiness', async t => {
-    t.plan(1);
+test('should create context field with stickiness', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     const name = 'with-sticky';
     await request
@@ -99,11 +96,11 @@ test.serial('should create context field with stickiness', async t => {
     const res = await request.get(`/api/admin/context/${name}`);
     const contextField = res.body;
 
-    t.is(contextField.stickiness, true);
+    expect(contextField.stickiness).toBe(true);
 });
 
-test.serial('should not create context field when name is missing', async t => {
-    t.plan(0);
+test('should not create context field when name is missing', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/context')
@@ -114,27 +111,24 @@ test.serial('should not create context field when name is missing', async t => {
         .expect(400);
 });
 
-test.serial(
-    'refuses to create a context field with an existing name',
-    async t => {
-        t.plan(0);
-        const request = await setupApp(stores);
-        return request
-            .post('/api/admin/context')
-            .send({ name: 'userId' })
-            .set('Content-Type', 'application/json')
-            .expect(409);
-    },
-);
+test('refuses to create a context field with an existing name', async () => {
+    expect.assertions(0);
+    const request = await setupApp(stores);
+    return request
+        .post('/api/admin/context')
+        .send({ name: 'userId' })
+        .set('Content-Type', 'application/json')
+        .expect(409);
+});
 
-test.serial('should delete context field', async t => {
-    t.plan(0);
+test('should delete context field', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request.delete('/api/admin/context/userId').expect(200);
 });
 
-test.serial('refuses to create a context not url-friendly name', async t => {
-    t.plan(0);
+test('refuses to create a context not url-friendly name', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/context')
@@ -143,8 +137,8 @@ test.serial('refuses to create a context not url-friendly name', async t => {
         .expect(400);
 });
 
-test.serial('should validate name to ok', async t => {
-    t.plan(0);
+test('should validate name to ok', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/context/validate')
@@ -153,8 +147,8 @@ test.serial('should validate name to ok', async t => {
         .expect(200);
 });
 
-test.serial('should validate name to not ok', async t => {
-    t.plan(0);
+test('should validate name to not ok', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/context/validate')
@@ -163,8 +157,8 @@ test.serial('should validate name to not ok', async t => {
         .expect(409);
 });
 
-test.serial('should validate name to not ok for non url-friendly', async t => {
-    t.plan(0);
+test('should validate name to not ok for non url-friendly', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/context/validate')

@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const { setupApp } = require('../../helpers/test-helper');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
@@ -8,39 +6,39 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('feature_api_client', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
+test(async () => {
     await db.destroy();
 });
 
-test.serial('returns four feature toggles', async t => {
+test('returns four feature toggles', async () => {
     const request = await setupApp(stores);
     return request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.features.length, 4);
+            expect(res.body.features.length).toBe(4);
         });
 });
 
-test.serial('returns four feature toggles without createdAt', async t => {
+test('returns four feature toggles without createdAt', async () => {
     const request = await setupApp(stores);
     return request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.falsy(res.body.features[0].createdAt);
+            expect(res.body.features[0].createdAt).toBeFalsy();
         });
 });
 
-test.serial('gets a feature by name', async t => {
-    t.plan(0);
+test('gets a feature by name', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .get('/api/client/features/featureX')
@@ -48,8 +46,8 @@ test.serial('gets a feature by name', async t => {
         .expect(200);
 });
 
-test.serial('cant get feature that does not exist', async t => {
-    t.plan(0);
+test('cant get feature that does not exist', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .get('/api/client/features/myfeature')
@@ -57,21 +55,21 @@ test.serial('cant get feature that does not exist', async t => {
         .expect(404);
 });
 
-test.serial('Can filter features by namePrefix', async t => {
-    t.plan(2);
+test('Can filter features by namePrefix', async () => {
+    expect.assertions(2);
     const request = await setupApp(stores);
     return request
         .get('/api/client/features?namePrefix=feature.')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.features.length, 1);
-            t.is(res.body.features[0].name, 'feature.with.variants');
+            expect(res.body.features.length).toBe(1);
+            expect(res.body.features[0].name).toBe('feature.with.variants');
         });
 });
 
-test.serial('Can use multiple filters', async t => {
-    t.plan(3);
+test('Can use multiple filters', async () => {
+    expect.assertions(3);
     const request = await setupApp(stores);
     await request.post('/api/admin/features').send({
         name: 'test.feature',
@@ -109,13 +107,13 @@ test.serial('Can use multiple filters', async t => {
         .get('/api/client/features?tag=simple:Crazy')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => t.is(res.body.features.length, 2));
+        .expect(res => expect(res.body.features.length).toBe(2));
     await request
         .get('/api/client/features?namePrefix=test&tag=simple:Crazy')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.features.length, 1);
-            t.is(res.body.features[0].name, 'test.feature');
+            expect(res.body.features.length).toBe(1);
+            expect(res.body.features[0].name).toBe('test.feature');
         });
 });

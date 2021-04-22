@@ -1,8 +1,6 @@
-'use strict';
-
+'use strict';;
 import { createTestConfig } from '../../../test/config/test-config';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
@@ -24,12 +22,12 @@ function getSetup() {
     };
 }
 
-test.afterEach(() => {
+afterEach(() => {
     getLogger.setMuteError(false);
 });
 
-test('should register client', t => {
-    t.plan(0);
+test('should register client', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     return request
         .post('/api/client/register')
@@ -44,8 +42,8 @@ test('should register client', t => {
         .expect(202);
 });
 
-test('should register client without sdkVersion', t => {
-    t.plan(0);
+test('should register client without sdkVersion', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     return request
         .post('/api/client/register')
@@ -59,8 +57,8 @@ test('should register client without sdkVersion', t => {
         .expect(202);
 });
 
-test('should require appName field', t => {
-    t.plan(0);
+test('should require appName field', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     return request
         .post('/api/client/register')
@@ -68,8 +66,8 @@ test('should require appName field', t => {
         .expect(400);
 });
 
-test('should require strategies field', t => {
-    t.plan(0);
+test('should require strategies field', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     return request
         .post('/api/client/register')

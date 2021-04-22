@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const { setupApp } = require('../../helpers/test-helper');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
@@ -8,29 +6,29 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
+test(async () => {
     await db.destroy();
 });
 
-test.serial('returns three archived toggles', async t => {
-    t.plan(1);
+test('returns three archived toggles', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     return request
         .get('/api/admin/archive/features')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.features.length === 3);
+            expect(res.body.features.length === 3).toBe(true);
         });
 });
 
-test.serial('revives a feature by name', async t => {
-    t.plan(0);
+test('revives a feature by name', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/archive/revive/featureArchivedX')
@@ -38,21 +36,21 @@ test.serial('revives a feature by name', async t => {
         .expect(200);
 });
 
-test.serial(
+test(
     'archived feature is not accessible via /features/:featureName',
-    async t => {
-        t.plan(0);
+    async () => {
+        expect.assertions(0);
         const request = await setupApp(stores);
 
         return request
             .get('/api/admin/features/featureArchivedZ')
             .set('Content-Type', 'application/json')
             .expect(404);
-    },
+    }
 );
 
-test.serial('must set name when reviving toggle', async t => {
-    t.plan(0);
+test('must set name when reviving toggle', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request.post('/api/admin/archive/revive/').expect(404);
 });

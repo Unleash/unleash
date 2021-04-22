@@ -1,6 +1,4 @@
-'use strict';
-
-const test = require('ava');
+'use strict';;
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
@@ -27,19 +25,19 @@ function getSetup() {
     };
 }
 
-test('should return seen toggles even when there is nothing', t => {
-    t.plan(1);
+test('should return seen toggles even when there is nothing', () => {
+    expect.assertions(1);
     const { request } = getSetup();
     return request
         .get('/api/admin/metrics/seen-toggles')
         .expect(200)
         .expect(res => {
-            t.true(res.body.length === 0);
+            expect(res.body.length === 0).toBe(true);
         });
 });
 
-test('should return list of seen-toggles per app', t => {
-    t.plan(3);
+test('should return list of seen-toggles per app', () => {
+    expect.assertions(3);
     const { request, stores } = getSetup();
     const appName = 'asd!23';
     stores.clientMetricsStore.emit('metrics', {
@@ -60,20 +58,20 @@ test('should return list of seen-toggles per app', t => {
         .expect(200)
         .expect(res => {
             const seenAppsWithToggles = res.body;
-            t.true(seenAppsWithToggles.length === 1);
-            t.true(seenAppsWithToggles[0].appName === appName);
-            t.true(seenAppsWithToggles[0].seenToggles.length === 2);
+            expect(seenAppsWithToggles.length === 1).toBe(true);
+            expect(seenAppsWithToggles[0].appName === appName).toBe(true);
+            expect(seenAppsWithToggles[0].seenToggles.length === 2).toBe(true);
         });
 });
 
-test('should return feature-toggles metrics even when there is nothing', t => {
-    t.plan(0);
+test('should return feature-toggles metrics even when there is nothing', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     return request.get('/api/admin/metrics/feature-toggles').expect(200);
 });
 
-test('should return metrics for all toggles', t => {
-    t.plan(2);
+test('should return metrics for all toggles', () => {
+    expect.assertions(2);
     const { request, stores } = getSetup();
     const appName = 'asd!23';
     stores.clientMetricsStore.emit('metrics', {
@@ -94,25 +92,25 @@ test('should return metrics for all toggles', t => {
         .expect(200)
         .expect(res => {
             const metrics = res.body;
-            t.true(metrics.lastHour !== undefined);
-            t.true(metrics.lastMinute !== undefined);
+            expect(metrics.lastHour !== undefined).toBe(true);
+            expect(metrics.lastMinute !== undefined).toBe(true);
         });
 });
 
-test('should return empty list of client applications', t => {
-    t.plan(1);
+test('should return empty list of client applications', () => {
+    expect.assertions(1);
     const { request } = getSetup();
 
     return request
         .get('/api/admin/metrics/applications')
         .expect(200)
         .expect(res => {
-            t.true(res.body.applications.length === 0);
+            expect(res.body.applications.length === 0).toBe(true);
         });
 });
 
-test('should return applications', t => {
-    t.plan(2);
+test('should return applications', () => {
+    expect.assertions(2);
     const { request, stores } = getSetup();
     const appName = '123!23';
 
@@ -123,13 +121,13 @@ test('should return applications', t => {
         .expect(200)
         .expect(res => {
             const metrics = res.body;
-            t.true(metrics.applications.length === 1);
-            t.true(metrics.applications[0].appName === appName);
+            expect(metrics.applications.length === 1).toBe(true);
+            expect(metrics.applications[0].appName === appName).toBe(true);
         });
 });
 
-test('should store application', t => {
-    t.plan(0);
+test('should store application', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     const appName = '123!23';
 
@@ -139,8 +137,8 @@ test('should store application', t => {
         .expect(202);
 });
 
-test('should store application details wihtout strategies', t => {
-    t.plan(0);
+test('should store application details wihtout strategies', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     const appName = '123!23';
 
@@ -150,8 +148,8 @@ test('should store application details wihtout strategies', t => {
         .expect(202);
 });
 
-test('should accept a delete call to unknown application', t => {
-    t.plan(0);
+test('should accept a delete call to unknown application', () => {
+    expect.assertions(0);
     const { request } = getSetup();
     const appName = 'unknown';
 
@@ -160,8 +158,8 @@ test('should accept a delete call to unknown application', t => {
         .expect(200);
 });
 
-test('should delete application', t => {
-    t.plan(0);
+test('should delete application', () => {
+    expect.assertions(0);
     const { request, stores } = getSetup();
     const appName = 'deletable-test';
 

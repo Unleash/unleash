@@ -1,7 +1,7 @@
 const test = require('ava');
 const request = require('supertest');
 const express = require('express');
-const User = require('../../user');
+const User = require('../../types/user');
 const PasswordProvider = require('./simple-password-provider');
 
 const getLogger = () => ({ info: () => {}, error: () => {} });
@@ -24,7 +24,7 @@ test('Should require password', async t => {
 test('Should login user', async t => {
     const username = 'ola';
     const password = 'simplepass';
-    const user = new User({ username, permissions: ['ADMIN'] });
+    const user = new User({ id: 123, username });
 
     const app = express();
     app.use(express.json());
@@ -55,7 +55,7 @@ test('Should login user', async t => {
 test('Should not login user with wrong password', async t => {
     const username = 'ola';
     const password = 'simplepass';
-    const user = new User({ username, permissions: ['ADMIN'] });
+    const user = new User({ id: 133, username });
 
     const app = express();
     app.use(express.json());

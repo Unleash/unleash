@@ -2,7 +2,7 @@ import test from 'ava';
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import User from '../../../../lib/user';
+import User from '../../../../lib/types/user';
 import UserStore from '../../../../lib/db/user-store';
 import { AccessStore, IRole } from '../../../../lib/db/access-store';
 import { RoleName } from '../../../../lib/services/access-service';
@@ -164,7 +164,7 @@ test.serial('update user name', async t => {
 test.serial('should delete user', async t => {
     t.plan(0);
 
-    const user = await userStore.insert(new User({ email: 'some@mail.com' }));
+    const user = await userStore.insert({ email: 'some@mail.com' });
 
     const request = await setupApp(stores);
     return request.delete(`/api/admin/user-admin/${user.id}`).expect(200);
@@ -193,7 +193,7 @@ test.serial('validator should accept strong password', async t => {
 test.serial('should change password', async t => {
     t.plan(0);
 
-    const user = await userStore.insert(new User({ email: 'some@mail.com' }));
+    const user = await userStore.insert({ email: 'some@mail.com' });
 
     const request = await setupApp(stores);
     return request
@@ -205,9 +205,9 @@ test.serial('should change password', async t => {
 test.serial('should search for users', async t => {
     t.plan(2);
 
-    await userStore.insert(new User({ email: 'some@mail.com' }));
-    await userStore.insert(new User({ email: 'another@mail.com' }));
-    await userStore.insert(new User({ email: 'another2@mail.com' }));
+    await userStore.insert({ email: 'some@mail.com' });
+    await userStore.insert({ email: 'another@mail.com' });
+    await userStore.insert({ email: 'another2@mail.com' });
 
     const request = await setupApp(stores);
     return request

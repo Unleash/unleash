@@ -9,7 +9,6 @@ const {
     ALL_PROJECTS,
 } = require('../../../lib/services/access-service');
 const permissions = require('../../../lib/permissions');
-const User = require('../../../lib/user');
 
 let db;
 let stores;
@@ -23,16 +22,17 @@ let readRole;
 
 const createUserEditorAccess = async (name, email) => {
     const { userStore } = stores;
-    const user = await userStore.insert(new User({ name, email }));
+    const user = await userStore.insert({ name, email });
     await accessService.addUserToRole(user.id, editorRole.id);
     return user;
 };
 
 const createSuperUser = async () => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Alice Admin', email: 'admin@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Alice Admin',
+        email: 'admin@getunleash.io',
+    });
     await accessService.addUserToRole(user.id, adminRole.id);
     return user;
 };
@@ -293,9 +293,10 @@ test.serial('should not get access if not specifying project', async t => {
 
 test.serial('should remove user from role', async t => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Some User', email: 'random123@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random123@getunleash.io',
+    });
 
     await accessService.addUserToRole(user.id, editorRole.id);
 
@@ -311,9 +312,10 @@ test.serial('should remove user from role', async t => {
 
 test.serial('should return role with users', async t => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Some User', email: 'random2223@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random2223@getunleash.io',
+    });
 
     await accessService.addUserToRole(user.id, editorRole.id);
 
@@ -327,9 +329,10 @@ test.serial('should return role with users', async t => {
 
 test.serial('should return role with permissions and users', async t => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Some User', email: 'random2244@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random2244@getunleash.io',
+    });
 
     await accessService.addUserToRole(user.id, editorRole.id);
 
@@ -368,9 +371,10 @@ test.serial('should return list of permissions', async t => {
 
 test.serial('should set root role for user', async t => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Some User', email: 'random2255@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random2255@getunleash.io',
+    });
 
     await accessService.setUserRootRole(user.id, editorRole.id);
 
@@ -382,9 +386,10 @@ test.serial('should set root role for user', async t => {
 
 test.serial('should switch root role for user', async t => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Some User', email: 'random22Read@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random22Read@getunleash.io',
+    });
 
     await accessService.setUserRootRole(user.id, editorRole.id);
     await accessService.setUserRootRole(user.id, readRole.id);

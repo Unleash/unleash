@@ -6,7 +6,6 @@ const {
     AccessService,
     RoleName,
 } = require('../../../lib/services/access-service');
-const User = require('../../../lib/user');
 const { UPDATE_PROJECT } = require('../../../lib/permissions');
 const NotFoundError = require('../../../lib/error/notfound-error');
 
@@ -20,9 +19,10 @@ let user;
 test.before(async () => {
     db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
-    user = await stores.userStore.insert(
-        new User({ name: 'Some Name', email: 'test@getunleash.io' }),
-    );
+    user = await stores.userStore.insert({
+        name: 'Some Name',
+        email: 'test@getunleash.io',
+    });
     const config = { getLogger, experimental: { rbac: true } };
     accessService = new AccessService(stores, config);
     projectService = new ProjectService(stores, config, accessService);
@@ -240,12 +240,14 @@ test.serial('should add a member user to the project', async t => {
     };
     await projectService.createProject(project, user);
 
-    const projectMember1 = await stores.userStore.insert(
-        new User({ name: 'Some Member', email: 'member1@getunleash.io' }),
-    );
-    const projectMember2 = await stores.userStore.insert(
-        new User({ name: 'Some Member 2', email: 'member2@getunleash.io' }),
-    );
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'member1@getunleash.io',
+    });
+    const projectMember2 = await stores.userStore.insert({
+        name: 'Some Member 2',
+        email: 'member2@getunleash.io',
+    });
 
     const roles = await stores.accessStore.getRolesForProject(project.id);
     const memberRole = roles.find(r => r.name === RoleName.MEMBER);
@@ -271,12 +273,14 @@ test.serial('should add admin users to the project', async t => {
     };
     await projectService.createProject(project, user);
 
-    const projectAdmin1 = await stores.userStore.insert(
-        new User({ name: 'Some Member', email: 'admin1@getunleash.io' }),
-    );
-    const projectAdmin2 = await stores.userStore.insert(
-        new User({ name: 'Some Member 2', email: 'admin2@getunleash.io' }),
-    );
+    const projectAdmin1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'admin1@getunleash.io',
+    });
+    const projectAdmin2 = await stores.userStore.insert({
+        name: 'Some Member 2',
+        email: 'admin2@getunleash.io',
+    });
 
     const projectRoles = await stores.accessStore.getRolesForProject(
         project.id,
@@ -320,9 +324,10 @@ test.serial('add user should fail if user already have access', async t => {
     };
     await projectService.createProject(project, user);
 
-    const projectMember1 = await stores.userStore.insert(
-        new User({ name: 'Some Member', email: 'member42@getunleash.io' }),
-    );
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'member42@getunleash.io',
+    });
 
     const roles = await stores.accessStore.getRolesForProject(project.id);
     const memberRole = roles.find(r => r.name === RoleName.MEMBER);
@@ -352,9 +357,10 @@ test.serial('should remove user from the project', async t => {
     };
     await projectService.createProject(project, user);
 
-    const projectMember1 = await stores.userStore.insert(
-        new User({ name: 'Some Member', email: 'member99@getunleash.io' }),
-    );
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'member99@getunleash.io',
+    });
 
     const roles = await stores.accessStore.getRolesForProject(project.id);
     const memberRole = roles.find(r => r.name === RoleName.MEMBER);

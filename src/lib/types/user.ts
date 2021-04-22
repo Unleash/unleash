@@ -2,12 +2,10 @@ import gravatarUrl from 'gravatar-url';
 import Joi from 'joi';
 
 export interface UserData {
-    id?: number;
-    isAPI?: boolean;
+    id: number;
     name?: string;
     username?: string;
     email?: string;
-    permissions?: string[];
     imageUrl?: string;
     seenAt?: Date;
     loginAttempts?: number;
@@ -25,8 +23,6 @@ export interface IUser {
 export default class User implements IUser {
     id: number;
 
-    isAPI: boolean;
-
     name: string;
 
     username: string;
@@ -43,20 +39,19 @@ export default class User implements IUser {
 
     createdAt: Date;
 
-    constructor(
-        {
-            id,
-            isAPI,
-            name,
-            email,
-            username,
-            imageUrl,
-            permissions,
-            seenAt,
-            loginAttempts,
-            createdAt,
-        }: UserData = { isAPI: false },
-    ) {
+    constructor({
+        id,
+        name,
+        email,
+        username,
+        imageUrl,
+        seenAt,
+        loginAttempts,
+        createdAt,
+    }: UserData) {
+        if (!id) {
+            throw new TypeError('Id is required');
+        }
         if (!username && !email) {
             throw new TypeError('Username or Email is required');
         }
@@ -65,11 +60,9 @@ export default class User implements IUser {
         Joi.assert(name, Joi.string(), 'Name');
 
         this.id = id;
-        this.isAPI = isAPI;
         this.name = name;
         this.username = username;
         this.email = email;
-        this.permissions = permissions;
         this.imageUrl = imageUrl || this.generateImageUrl();
         this.seenAt = seenAt;
         this.loginAttempts = loginAttempts;

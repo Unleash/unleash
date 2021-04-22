@@ -8,7 +8,7 @@ import {
     IPermission,
     IRoleData,
 } from '../../lib/services/access-service';
-import User from '../../lib/user';
+import User from '../../lib/types/user';
 import noLoggerProvider from './no-logger';
 
 class AccessServiceMock extends AccessService {

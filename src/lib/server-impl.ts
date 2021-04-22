@@ -10,7 +10,7 @@ import { createMetricsMonitor } from './metrics';
 import { createStores } from './db';
 import { createServices } from './services';
 import { createConfig } from './create-config';
-import User from './user';
+import User from './types/user';
 
 import permissions from './permissions';
 import AuthenticationRequired from './authentication-required';

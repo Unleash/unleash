@@ -1,5 +1,3 @@
-const auth = require('basic-auth');
-const User = require('../user');
 const AuthenticationRequired = require('../authentication-required');
 
 function demoAuthentication(app, basePath = '', { userService }) {
@@ -15,11 +13,6 @@ function demoAuthentication(app, basePath = '', { userService }) {
     app.use(`${basePath}/api/admin/`, (req, res, next) => {
         if (req.session.user && req.session.user.email) {
             req.user = req.session.user;
-        } else if (req.header('authorization')) {
-            const user = auth(req);
-            if (user && user.name) {
-                req.user = new User({ username: user.name });
-            }
         }
         next();
     });

@@ -4,10 +4,11 @@ import sinon from 'sinon';
 
 import rbacMiddleware from './rbac-middleware';
 import ffStore from '../../test/fixtures/fake-feature-toggle-store';
-import User from '../user';
+import User from '../types/user';
 import perms from '../permissions';
 import { IUnleashConfig } from '../types/option';
 import { createTestConfig } from '../../test/config/test-config';
+import ApiUser from '../types/api-user';
 
 let config: IUnleashConfig;
 let featureToggleStore: any;
@@ -43,10 +44,9 @@ test('should give api-user ADMIN permission', async t => {
 
     const cb = sinon.fake();
     const req: any = {
-        user: new User({
+        user: new ApiUser({
             username: 'api',
             permissions: [perms.ADMIN],
-            isAPI: true,
         }),
     };
 
@@ -66,10 +66,9 @@ test('should not give api-user ADMIN permission', async t => {
 
     const cb = sinon.fake();
     const req: any = {
-        user: new User({
+        user: new ApiUser({
             username: 'api',
             permissions: [perms.CLIENT],
-            isAPI: true,
         }),
     };
 
@@ -90,10 +89,9 @@ test('should not allow user to miss userId', async t => {
 
     const cb = sinon.fake();
     const req: any = {
-        user: new User({
+        user: {
             username: 'user',
-            permissions: [perms.ADMIN],
-        }),
+        },
     };
 
     func(req, undefined, cb);

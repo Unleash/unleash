@@ -1,14 +1,13 @@
 'use strict';
 
 const { ADMIN } = require('../permissions');
-const User = require('../user');
+const ApiUser = require('../types/api-user');
 
 function noneAuthentication(basePath = '', app) {
     app.use(`${basePath}/api/admin/`, (req, res, next) => {
         if (!req.user) {
-            req.user = new User({
+            req.user = new ApiUser({
                 username: 'unknown',
-                isAPI: true,
                 permissions: [ADMIN],
             });
         }

@@ -4,9 +4,9 @@ import sinon from 'sinon';
 
 import apiTokenMiddleware from './api-token-middleware';
 import getLogger from '../../test/fixtures/no-logger';
-import User from '../user';
 import { CLIENT } from '../permissions';
 import { createTestConfig } from '../../test/config/test-config';
+import ApiUser from '../types/api-user';
 
 let config: any;
 
@@ -60,8 +60,7 @@ test('should not add user if unknown token', async t => {
 });
 
 test('should add user if unknown token', async t => {
-    const apiUser = new User({
-        isAPI: true,
+    const apiUser = new ApiUser({
         username: 'default',
         permissions: [CLIENT],
     });
@@ -86,8 +85,7 @@ test('should add user if unknown token', async t => {
 });
 
 test('should not add user if disabled', async t => {
-    const apiUser = new User({
-        isAPI: true,
+    const apiUser = new ApiUser({
         username: 'default',
         permissions: [CLIENT],
     });

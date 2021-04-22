@@ -97,7 +97,7 @@ export interface IEmailOption {
     smtppass?: string;
 }
 
-export interface ListeningPipe {
+export interface IListeningPipe {
     path: string;
 }
 export interface IListeningHost {

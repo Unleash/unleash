@@ -7,7 +7,6 @@ const {
 } = require('../../../lib/services/access-service');
 const User = require('../../../lib/user');
 const { UPDATE_PROJECT } = require('../../../lib/permissions');
-const NotFoundError = require('../../../lib/error/notfound-error');
 
 let stores;
 let db;
@@ -28,12 +27,14 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await db.destroy();
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('should have default project', async () => {
     const project = await projectService.getProject('default');
-    t.assert(project);
+    expect(project).toBeDefined();
     expect(project.id).toBe('default');
 });
 
@@ -97,7 +98,9 @@ test('should not be able to delete project with toggles', async () => {
     try {
         await projectService.deleteProject(project.id, user);
     } catch (err) {
-        expect(err.message).toBe('You can not delete as project with active feature toggles');
+        expect(err.message).toBe(
+            'You can not delete as project with active feature toggles',
+        );
     }
 });
 
@@ -174,23 +177,22 @@ test('should give error when getting unknown project', async () => {
     }
 });
 
-test(
-    '(TODO: v4): should create roles for new project if userId is missing',
-    async () => {
-        const project = {
-            id: 'test-roles-no-id',
-            name: 'New project',
-            description: 'Blah',
-        };
-        await projectService.createProject(project, {
-            username: 'random-user',
-        });
-        const roles = await stores.accessStore.getRolesForProject(project.id);
+test('(TODO: v4): should create roles for new project if userId is missing', async () => {
+    const project = {
+        id: 'test-roles-no-id',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(project, {
+        username: 'random-user',
+    });
+    const roles = await stores.accessStore.getRolesForProject(project.id);
 
-        expect(roles.length).toBe(2);
-        expect(await accessService.hasPermission(user, UPDATE_PROJECT, project.id)).toBe(false);
-    }
-);
+    expect(roles.length).toBe(2);
+    expect(
+        await accessService.hasPermission(user, UPDATE_PROJECT, project.id),
+    ).toBe(false);
+});
 
 test('should create roles when project is created', async () => {
     const project = {
@@ -201,7 +203,9 @@ test('should create roles when project is created', async () => {
     await projectService.createProject(project, user);
     const roles = await stores.accessStore.getRolesForProject(project.id);
     expect(roles.length).toBe(2);
-    expect(await accessService.hasPermission(user, UPDATE_PROJECT, project.id)).toBe(true);
+    expect(
+        await accessService.hasPermission(user, UPDATE_PROJECT, project.id),
+    ).toBe(true);
 });
 
 test('should get list of users with access to project', async () => {
@@ -295,15 +299,14 @@ test('add user only accept to add users to project roles', async () => {
     const roles = await accessService.getRoles();
     const memberRole = roles.find(r => r.name === RoleName.MEMBER);
 
-    await t.throwsAsync(
-        async () => {
-            await projectService.addUser('some-id', memberRole.id, user.id);
-        },
-        {
-            instanceOf: NotFoundError,
-            message: /Could not find roleId=\d+ on project=some-id/,
-        },
-    );
+    expect.assertions(1);
+    try {
+        await projectService.addUser('some-id', memberRole.id, user.id);
+    } catch (e) {
+        expect(e.message).toMatch(
+            /Could not find roleId=\d+ on project=some-id/,
+        );
+    }
 });
 
 test('add user should fail if user already have access', async () => {
@@ -322,20 +325,18 @@ test('add user should fail if user already have access', async () => {
     const memberRole = roles.find(r => r.name === RoleName.MEMBER);
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
-
-    await t.throwsAsync(
-        async () => {
-            await projectService.addUser(
-                project.id,
-                memberRole.id,
-                projectMember1.id,
-            );
-        },
-        {
-            instanceOf: Error,
-            message: 'User already have access to project=add-users-twice',
-        },
-    );
+    expect.assertions(1);
+    try {
+        await projectService.addUser(
+            project.id,
+            memberRole.id,
+            projectMember1.id,
+        );
+    } catch (e) {
+        expect(e).toStrictEqual(
+            new Error('User already have access to project=add-users-twice'),
+        );
+    }
 });
 
 test('should remove user from the project', async () => {

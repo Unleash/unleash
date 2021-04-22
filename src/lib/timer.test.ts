@@ -23,7 +23,6 @@ test('timer should track the time', async done => {
         diff = tt();
     }, 20);
     if (diff > 0.019 && diff < 0.05) {
-        return;
+        done();
     }
-    return done.fail();
 });

@@ -8,6 +8,7 @@ import { EmailService } from '../../../lib/services/email-service';
 import User from '../../../lib/user';
 import { IUnleashConfig } from '../../../lib/types/option';
 import { createTestConfig } from '../../config/test-config';
+import InvalidTokenError from '../../../lib/error/invalid-token-error';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -90,9 +91,12 @@ test('Creating a new token should expire older tokens', async () => {
         userIdToCreateResetFor,
         adminUser,
     );
-    await t.throwsAsync<NotFoundError>(async () =>
-        resetTokenService.isValid(firstToken.token),
-    );
+    expect.assertions(2);
+    try {
+        await resetTokenService.isValid(firstToken.token);
+    } catch (e) {
+        expect(e).toStrictEqual(new InvalidTokenError());
+    }
     const validToken = await resetTokenService.isValid(secondToken.token);
     expect(secondToken.token).toBe(validToken.token);
 });

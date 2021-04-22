@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');

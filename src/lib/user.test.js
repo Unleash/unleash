@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const User = require('./user');
 
 test('should create user', () => {
@@ -6,7 +7,7 @@ test('should create user', () => {
     expect(user.name).toBe('ole');
     expect(user.email).toBe('some@email.com');
     expect(user.imageUrl).toBe(
-        'https://gravatar.com/avatar/d8ffeba65ee5baf57e4901690edc8e1b?size=42&default=retro'
+        'https://gravatar.com/avatar/d8ffeba65ee5baf57e4901690edc8e1b?size=42&default=retro',
     );
 });
 
@@ -22,16 +23,14 @@ test('should create user, all fields', () => {
     expect(user.email).toBe('some@email.com');
     expect(user.permissions).toEqual(['admin', 'client']);
     expect(user.imageUrl).toBe(
-        'https://gravatar.com/avatar/d8ffeba65ee5baf57e4901690edc8e1b?size=42&default=retro'
+        'https://gravatar.com/avatar/d8ffeba65ee5baf57e4901690edc8e1b?size=42&default=retro',
     );
 });
 
 test('should require email or username', () => {
-    const error = expect(() => {
-    const user = new User(); // eslint-disable-line
-    }).toThrowError({ instanceOf: Error });
-
-    expect(error.message).toBe('Username or Email is required');
+    expect(() => {
+        const user = new User(); // eslint-disable-line
+    }).toThrowError(new TypeError('Username or Email is required'));
 });
 
 test('Should create user with only email defined', () => {
@@ -41,18 +40,16 @@ test('Should create user with only email defined', () => {
 });
 
 test('Should require valid email', () => {
-    const error = expect(() => {
+    expect(() => {
         new User({ email: 'some@' }); // eslint-disable-line
-    }).toThrowError({ instanceOf: Error });
-
-    expect(error.message).toBe('Email "value" must be a valid email');
+    }).toThrowError(new Error('Email "value" must be a valid email'));
 });
 
 test('Should create user with only username defined', () => {
     const user = new User({ username: 'some-user' });
     expect(user.username).toBe('some-user');
     expect(user.imageUrl).toBe(
-        'https://gravatar.com/avatar/140fd5a002fb8d728a9848f8c9fcea2a?size=42&default=retro'
+        'https://gravatar.com/avatar/140fd5a002fb8d728a9848f8c9fcea2a?size=42&default=retro',
     );
 });
 

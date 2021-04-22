@@ -1,5 +1,4 @@
-'use strict';;
-import { createTestConfig } from '../../../test/config/test-config';
+'use strict';
 
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
@@ -7,6 +6,7 @@ const store = require('../../../test/fixtures/store');
 const { createServices } = require('../../services');
 const permissions = require('../../../test/fixtures/permissions');
 const getApp = require('../../app');
+const { createTestConfig } = require('../../../test/config/test-config');
 
 const eventBus = new EventEmitter();
 

@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 
@@ -16,7 +17,7 @@ afterAll(async () => {
 
 test('should have api secret stored', async () => {
     const secret = await stores.settingStore.get('unleash.secret');
-    t.assert(secret);
+    expect(secret).toBeDefined();
 });
 
 test('should insert arbitrary value', async () => {

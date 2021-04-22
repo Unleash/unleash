@@ -1,5 +1,5 @@
-'use strict';;
-const sinon = require('sinon');
+'use strict';
+
 const {
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -22,7 +22,7 @@ afterAll(async () => {
     await db.destroy();
 });
 test('Should include id and createdAt when saving', async () => {
-    const clock = sinon.useFakeTimers();
+    jest.useFakeTimers();
     const event1 = {
         type: APPLICATION_CREATED,
         createdBy: '127.0.0.1',
@@ -34,12 +34,13 @@ test('Should include id and createdAt when saving', async () => {
     const seen = [];
     eventStore.on(APPLICATION_CREATED, e => seen.push(e));
     await eventStore.store(event1);
-    await clock.tickAsync(100);
+    await jest.advanceTimersByTime(200);
     expect(seen.length).toBe(1);
     expect(seen[0].id).toBeTruthy();
     expect(seen[0].createdAt).toBeTruthy();
     expect(seen[0].data.clientIp).toBe(event1.data.clientIp);
     expect(seen[0].data.appName).toBe(event1.data.appName);
+    jest.useRealTimers();
 });
 
 test('Should include empty tags array for new event', async () => {
@@ -69,7 +70,7 @@ test('Should include empty tags array for new event', async () => {
 });
 
 test('Should be able to store multiple events at once', async () => {
-    const clock = sinon.useFakeTimers();
+    jest.useFakeTimers();
     const event1 = {
         type: APPLICATION_CREATED,
         createdBy: '127.0.0.1',
@@ -98,11 +99,11 @@ test('Should be able to store multiple events at once', async () => {
     const seen = [];
     eventStore.on(APPLICATION_CREATED, e => seen.push(e));
     await eventStore.batchStore([event1, event2, event3]);
-    await clock.tickAsync(100);
+    jest.advanceTimersToNextTimer();
     expect(seen.length).toBe(3);
     seen.forEach(e => {
         expect(e.id).toBeTruthy();
         expect(e.createdAt).toBeTruthy();
     });
-    clock.restore();
+    jest.useRealTimers();
 });

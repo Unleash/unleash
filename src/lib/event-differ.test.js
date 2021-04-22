@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const eventDiffer = require('./event-differ');
 const { FEATURE_CREATED, FEATURE_UPDATED } = require('./event-type');
 

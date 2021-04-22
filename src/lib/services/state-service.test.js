@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const store = require('../../test/fixtures/store');
 const getLogger = require('../../test/fixtures/no-logger');
 
@@ -195,9 +196,17 @@ test('should not accept gibberish', async () => {
     };
     const data2 = '{somerandomtext/';
 
-    await t.throwsAsync(stateService.import({ data: data1 }));
-
-    await t.throwsAsync(stateService.import({ data: data2 }));
+    expect.assertions(2);
+    try {
+        await stateService.import({ data: data1 });
+    } catch (e) {
+        expect(e).toBeDefined();
+    }
+    try {
+        await stateService.import({ data: data2 });
+    } catch (e) {
+        expect(e).toBeDefined();
+    }
 });
 
 test('should export featureToggles', async () => {
@@ -348,7 +357,9 @@ test('should export tag, tagtypes and feature tags', async () => {
     expect(exported.tagTypes.length).toBe(1);
     expect(exported.tagTypes[0].name).toBe(data.tagTypes[0].name);
     expect(exported.featureTags.length).toBe(1);
-    expect(exported.featureTags[0].featureName).toBe(data.featureTags[0].featureName);
+    expect(exported.featureTags[0].featureName).toBe(
+        data.featureTags[0].featureName,
+    );
     expect(exported.featureTags[0].tagType).toBe(data.featureTags[0].tagType);
     expect(exported.featureTags[0].tagValue).toBe(data.featureTags[0].tagValue);
 });
@@ -413,9 +424,13 @@ test('Should drop projects before import if specified', async () => {
         description: 'Not expected to be seen after import',
     });
     await stateService.import({ data, dropBeforeImport: true });
-    return t.throwsAsync(async () => stores.projectStore.hasProject('fancy'), {
-        instanceOf: NotFoundError,
-    });
+    try {
+        await stores.projectStore.hasProject('fancy');
+    } catch (e) {
+        expect(e).toStrictEqual(
+            new NotFoundError('Could not find project with id fancy'),
+        );
+    }
 });
 
 test('Should export projects', async () => {

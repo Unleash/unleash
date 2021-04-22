@@ -34,9 +34,10 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await db.destroy();
+    if (db) {
+        await db.destroy();
+    }
 });
-
 afterEach(async () => {
     const users = await userStore.getAll();
     const deleteAll = users.map((u: User) => userStore.delete(u.id));
@@ -44,16 +45,28 @@ afterEach(async () => {
 });
 
 test('should create initial admin user', async () => {
+    expect.assertions(2);
     await userService.initAdminUser();
-    await t.notThrowsAsync(userService.loginUser('admin', 'admin'));
-    await t.throwsAsync(userService.loginUser('admin', 'wrong-password'));
+    const user = await userService.loginUser('admin', 'admin');
+    expect(user).toBeDefined();
+    try {
+        const user = await userService.loginUser('admin', 'wrong-password');
+    } catch (e) {
+        expect(e).toBeDefined();
+    }
 });
 
 test('should not be allowed to create existing user', async () => {
     await userStore.insert(new User({ username: 'test', name: 'Hans Mola' }));
-    await t.throwsAsync(
-        userService.createUser({ username: 'test', rootRole: adminRole.id }),
-    );
+    expect.assertions(1);
+    try {
+        await userService.createUser({
+            username: 'test',
+            rootRole: adminRole.id,
+        });
+    } catch (e) {
+        expect(e).toBeDefined();
+    }
 });
 
 test('should create user with password', async () => {

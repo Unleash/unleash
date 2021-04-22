@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const logger = require('./logger');
 
 test('should expose a setLoggerProvider function', () => {
@@ -12,10 +13,9 @@ test('should require custom logger to implement info', () => {
         error: () => {},
     };
     const provider = () => loggerImpl;
-    const error = expect(() => {
+    expect(() => {
         logger.setLoggerProvider(provider)();
-    }).toThrowError({ instanceOf: TypeError });
-    expect(error.message).toBe('Logger must implement info');
+    }).toThrowError(new TypeError('Logger must implement info'));
 });
 
 test('should require custom logger to implement error', () => {
@@ -25,8 +25,7 @@ test('should require custom logger to implement error', () => {
         info: () => {},
     };
     const provider = () => loggerImpl;
-    const error = expect(() => {
+    expect(() => {
         logger.setLoggerProvider(provider)();
-    }).toThrowError({ instanceOf: TypeError });
-    expect(error.message).toBe('Logger must implement error');
+    }).toThrowError(new TypeError('Logger must implement error'));
 });

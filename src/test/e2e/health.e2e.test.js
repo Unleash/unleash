@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { setupApp } = require('./helpers/test-helper');
 const dbInit = require('./helpers/database-init');
 const getLogger = require('../fixtures/no-logger');
@@ -12,7 +13,9 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await db.destroy();
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('returns health good', async () => {

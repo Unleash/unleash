@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 
@@ -18,7 +19,7 @@ afterAll(async () => {
 
 test('should have default project', async () => {
     const project = await projectStore.get('default');
-    t.assert(project);
+    expect(project).toBeDefined();
     expect(project.id).toBe('default');
 });
 

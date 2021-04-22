@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { EventEmitter } = require('events');
 
 const eventStore = new EventEmitter();

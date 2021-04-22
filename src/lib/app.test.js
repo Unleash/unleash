@@ -1,15 +1,19 @@
-'use strict';;
-import { createTestConfig } from '../test/config/test-config';
+'use strict';
 
 const express = require('express');
 
-jest.mock('./routes', () => (class Index {
-    router() {
-        return express.Router();
-    }
-}));
+jest.mock(
+    './routes',
+    () =>
+        class Index {
+            router() {
+                return express.Router();
+            }
+        },
+);
 
 const getApp = require('./app');
+const { createTestConfig } = require('../test/config/test-config');
 
 test('should not throw when valid config', () => {
     const config = createTestConfig();

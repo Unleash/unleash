@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const List = require('./list');
 
 function getList() {

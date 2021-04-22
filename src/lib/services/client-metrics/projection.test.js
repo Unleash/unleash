@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const Projection = require('./projection');
 
 test('should return set empty if missing', () => {

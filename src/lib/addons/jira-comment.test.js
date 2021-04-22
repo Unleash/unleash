@@ -5,6 +5,7 @@ const noLogger = require('../../test/fixtures/no-logger');
 jest.mock('node-fetch', () => fetchMock);
 
 const addonMocked = require('./addon');
+
 jest.mock('./addon', () => addonMocked);
 const JiraAddon = require('./jira-comment');
 const { addonDefinitionSchema } = require('./addon-schema');
@@ -19,38 +20,35 @@ test('Addon definition should validate', () => {
     expect(error).toBe(undefined);
 });
 
-test(
-    'An update event should post updated comment with updater and link back to issue',
-    async () => {
-        const jiraIssue = 'TEST-1';
-        const jiraBaseUrl = 'https://test.jira.com';
-        const addon = new JiraAddon({
-            getLogger: noLogger,
-            unleashUrl: 'https://test.unleash.com',
-        });
-        fetchMock.mock(
-            { url: `${jiraBaseUrl}/rest/api/3/issue/${jiraIssue}/comment` },
-            201,
-        );
-        await addon.handleEvent(
-            {
-                createdBy: 'test@test.com',
-                type: 'feature-updated',
-                data: {
-                    name: 'feature.toggle',
-                },
-                tags: [{ type: 'jira', value: jiraIssue }],
+test('An update event should post updated comment with updater and link back to issue', async () => {
+    const jiraIssue = 'TEST-1';
+    const jiraBaseUrl = 'https://test.jira.com';
+    const addon = new JiraAddon({
+        getLogger: noLogger,
+        unleashUrl: 'https://test.unleash.com',
+    });
+    fetchMock.mock(
+        { url: `${jiraBaseUrl}/rest/api/3/issue/${jiraIssue}/comment` },
+        201,
+    );
+    await addon.handleEvent(
+        {
+            createdBy: 'test@test.com',
+            type: 'feature-updated',
+            data: {
+                name: 'feature.toggle',
             },
-            {
-                baseUrl: jiraBaseUrl,
-                user: 'test@test.com',
-                apiKey: 'test',
-            },
-        );
-        expect(fetchMock.calls(true).length).toBe(1);
-        expect(fetchMock.done()).toBe(true);
-    }
-);
+            tags: [{ type: 'jira', value: jiraIssue }],
+        },
+        {
+            baseUrl: jiraBaseUrl,
+            user: 'test@test.com',
+            apiKey: 'test',
+        },
+    );
+    expect(fetchMock.calls(true).length).toBe(1);
+    expect(fetchMock.done()).toBe(true);
+});
 
 test('An event that is tagged with two tags causes two updates', async () => {
     const jiraBaseUrl = 'https://test.jira.com';

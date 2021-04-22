@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { EventEmitter } = require('events');
 
 const eventBus = new EventEmitter();
@@ -56,7 +57,7 @@ test('should collect metrics for requests', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /http_request_duration_milliseconds{quantile="0\.99",path="somePath",method="GET",status="200"} 1337/
+        /http_request_duration_milliseconds{quantile="0\.99",path="somePath",method="GET",status="200"} 1337/,
     );
 });
 
@@ -66,7 +67,9 @@ test('should collect metrics for updated toggles', async () => {
     });
 
     const metrics = await prometheusRegister.metrics();
-    expect(metrics).toMatch(/feature_toggle_update_total{toggle="TestToggle"} 1/);
+    expect(metrics).toMatch(
+        /feature_toggle_update_total{toggle="TestToggle"} 1/,
+    );
 });
 
 test('should collect metrics for client metric reports', async () => {
@@ -83,7 +86,7 @@ test('should collect metrics for client metric reports', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /feature_toggle_usage_total{toggle="TestToggle",active="true",appName="undefined"} 10\nfeature_toggle_usage_total{toggle="TestToggle",active="false",appName="undefined"} 5/
+        /feature_toggle_usage_total{toggle="TestToggle",active="true",appName="undefined"} 10\nfeature_toggle_usage_total{toggle="TestToggle",active="false",appName="undefined"} 5/,
     );
 });
 
@@ -96,7 +99,7 @@ test('should collect metrics for db query timings', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /db_query_duration_seconds{quantile="0\.99",store="foo",action="bar"} 0.1337/
+        /db_query_duration_seconds{quantile="0\.99",store="foo",action="bar"} 0.1337/,
     );
 });
 

@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const faker = require('faker');
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
@@ -20,10 +21,10 @@ afterEach(async () => {
 test("Should be able to keep track of what we've announced", async () => {
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.random.uuid(),
+        instanceId: faker.datatype.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.random.number(),
+        interval: faker.datatype.number(),
         sdkVersion: '3.11.2',
         icon: '',
         description: faker.company.catchPhrase(),
@@ -38,41 +39,38 @@ test("Should be able to keep track of what we've announced", async () => {
     expect(unannounced.length).toBe(0);
 });
 
-test(
-    'Multiple instances should still only announce once per app',
-    async () => {
-        const clientRegistration = {
-            appName: faker.internet.domainName(),
-            instanceId: faker.random.uuid(),
-            strategies: ['default'],
-            started: Date.now(),
-            interval: faker.random.number(),
-            sdkVersion: '3.11.2',
-            icon: '',
-            description: faker.company.catchPhrase(),
-            color: faker.internet.color(),
-        };
-        const clientReg2 = { ...clientRegistration, instanceId: 'someotherid' };
-        await clientApplicationsStore.upsert(clientRegistration);
-        await clientApplicationsStore.upsert(clientReg2);
-        let unannounced = await clientApplicationsStore.getUnannounced();
-        expect(unannounced.length).toBe(1);
-        const announce = await clientApplicationsStore.setUnannouncedToAnnounced();
-        expect(announce.length).toBe(1);
-        unannounced = await clientApplicationsStore.getUnannounced();
-        expect(unannounced.length).toBe(0);
-    }
-);
+test('Multiple instances should still only announce once per app', async () => {
+    const clientRegistration = {
+        appName: faker.internet.domainName(),
+        instanceId: faker.datatype.uuid(),
+        strategies: ['default'],
+        started: Date.now(),
+        interval: faker.datatype.number(),
+        sdkVersion: '3.11.2',
+        icon: '',
+        description: faker.company.catchPhrase(),
+        color: faker.internet.color(),
+    };
+    const clientReg2 = { ...clientRegistration, instanceId: 'someotherid' };
+    await clientApplicationsStore.upsert(clientRegistration);
+    await clientApplicationsStore.upsert(clientReg2);
+    let unannounced = await clientApplicationsStore.getUnannounced();
+    expect(unannounced.length).toBe(1);
+    const announce = await clientApplicationsStore.setUnannouncedToAnnounced();
+    expect(announce.length).toBe(1);
+    unannounced = await clientApplicationsStore.getUnannounced();
+    expect(unannounced.length).toBe(0);
+});
 
 test('Multiple applications should also be possible to announce', async () => {
     const clients = [];
     while (clients.length < 10) {
         const clientRegistration = {
             appName: `${faker.internet.domainName()}_${clients.length}`,
-            instanceId: faker.random.uuid(),
+            instanceId: faker.datatype.uuid(),
             strategies: ['default'],
             started: Date.now(),
-            interval: faker.random.number(),
+            interval: faker.datatype.number(),
             sdkVersion: '3.11.2',
             icon: '',
             description: faker.company.catchPhrase(),
@@ -89,38 +87,35 @@ test('Multiple applications should also be possible to announce', async () => {
     expect(unannounced.length).toBe(0);
 });
 
-test(
-    'Same application registered multiple times should still only be announced once',
-    async () => {
-        const clientRegistration = {
-            appName: faker.internet.domainName(),
-            instanceId: faker.random.uuid(),
-            strategies: ['default'],
-            started: Date.now(),
-            interval: faker.random.number(),
-            sdkVersion: '3.11.2',
-            icon: '',
-            description: faker.company.catchPhrase(),
-            color: faker.internet.color(),
-        };
-        await clientApplicationsStore.upsert(clientRegistration);
-        let unannounced = await clientApplicationsStore.getUnannounced();
-        expect(unannounced.length).toBe(1);
-        let announce = await clientApplicationsStore.setUnannouncedToAnnounced();
-        expect(announce.length).toBe(1);
-        unannounced = await clientApplicationsStore.getUnannounced();
-        expect(unannounced.length).toBe(0);
+test('Same application registered multiple times should still only be announced once', async () => {
+    const clientRegistration = {
+        appName: faker.internet.domainName(),
+        instanceId: faker.datatype.uuid(),
+        strategies: ['default'],
+        started: Date.now(),
+        interval: faker.datatype.number(),
+        sdkVersion: '3.11.2',
+        icon: '',
+        description: faker.company.catchPhrase(),
+        color: faker.internet.color(),
+    };
+    await clientApplicationsStore.upsert(clientRegistration);
+    let unannounced = await clientApplicationsStore.getUnannounced();
+    expect(unannounced.length).toBe(1);
+    let announce = await clientApplicationsStore.setUnannouncedToAnnounced();
+    expect(announce.length).toBe(1);
+    unannounced = await clientApplicationsStore.getUnannounced();
+    expect(unannounced.length).toBe(0);
 
-        await clientApplicationsStore.upsert(clientRegistration);
-        announce = await clientApplicationsStore.setUnannouncedToAnnounced();
-        expect(announce.length).toBe(0);
-    }
-);
+    await clientApplicationsStore.upsert(clientRegistration);
+    announce = await clientApplicationsStore.setUnannouncedToAnnounced();
+    expect(announce.length).toBe(0);
+});
 
 test('Merge keeps value for single row in database', async () => {
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.random.uuid(),
+        instanceId: faker.datatype.uuid(),
         strategies: ['default'],
         started: Date.now(),
         icon: faker.internet.color(),
@@ -144,7 +139,7 @@ test('Multi row merge also works', async () => {
     while (clients.length < 10) {
         const clientRegistration = {
             appName: `${faker.internet.domainName()}_${clients.length}`,
-            instanceId: faker.random.uuid(),
+            instanceId: faker.datatype.uuid(),
             strategies: ['default'],
             started: Date.now(),
             icon: faker.internet.color(),

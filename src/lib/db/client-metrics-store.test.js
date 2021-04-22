@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { EventEmitter } = require('events');
 const lolex = require('lolex');
 const ClientMetricStore = require('./client-metrics-store');

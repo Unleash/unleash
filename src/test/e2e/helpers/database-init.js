@@ -82,7 +82,7 @@ async function setupDatabase(stores) {
     await tagFeatures(stores.tagStore, stores.featureToggleStore);
 }
 
-export default async function init(databaseSchema = 'test', getLogger) {
+async function init(databaseSchema = 'test', getLogger) {
     const config = createTestConfig({
         db: {
             ...dbConfig.getDb(),

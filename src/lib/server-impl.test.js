@@ -1,13 +1,18 @@
-'use strict';;
+'use strict';
+
 const { EventEmitter } = require('events');
 const express = require('express');
 const { createTestConfig } = require('../test/config/test-config');
 
-jest.mock('./routes', () => (class Index {
-    router() {
-        return express.Router();
-    }
-}));
+jest.mock(
+    './routes',
+    () =>
+        class Index {
+            router() {
+                return express.Router();
+            }
+        },
+);
 
 const getApp = require('./app');
 
@@ -28,7 +33,7 @@ jest.mock('./metrics', () => ({
             startMonitoring: noop,
             stopMonitoring: noop,
         };
-    }
+    },
 }));
 
 jest.mock('./db', () => ({
@@ -40,16 +45,24 @@ jest.mock('./db', () => ({
             eventStore,
             settingStore,
         };
-    }
+    },
 }));
 
-jest.mock('../migrator', () => (function() {
-    return Promise.resolve();
-}));
+jest.mock(
+    '../migrator',
+    () =>
+        function() {
+            return Promise.resolve();
+        },
+);
 
-jest.mock('./util/version', () => (function() {
-    return 'unleash-test-version';
-}));
+jest.mock(
+    './util/version',
+    () =>
+        function() {
+            return 'unleash-test-version';
+        },
+);
 
 const serverImpl = require('./server-impl');
 

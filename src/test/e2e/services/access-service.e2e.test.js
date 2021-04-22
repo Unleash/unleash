@@ -51,7 +51,9 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await db.destroy();
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test('should have access to admin addons', async () => {
@@ -77,9 +79,15 @@ test('should have access to admin contexts', async () => {
         DELETE_CONTEXT_FIELD,
     } = permissions;
     const user = editorUser;
-    expect(await accessService.hasPermission(user, CREATE_CONTEXT_FIELD)).toBe(true);
-    expect(await accessService.hasPermission(user, UPDATE_CONTEXT_FIELD)).toBe(true);
-    expect(await accessService.hasPermission(user, DELETE_CONTEXT_FIELD)).toBe(true);
+    expect(await accessService.hasPermission(user, CREATE_CONTEXT_FIELD)).toBe(
+        true,
+    );
+    expect(await accessService.hasPermission(user, UPDATE_CONTEXT_FIELD)).toBe(
+        true,
+    );
+    expect(await accessService.hasPermission(user, DELETE_CONTEXT_FIELD)).toBe(
+        true,
+    );
 });
 
 test('should have access to create projects', async () => {
@@ -91,7 +99,9 @@ test('should have access to create projects', async () => {
 test('should have access to update applications', async () => {
     const { UPDATE_APPLICATION } = permissions;
     const user = editorUser;
-    expect(await accessService.hasPermission(user, UPDATE_APPLICATION)).toBe(true);
+    expect(await accessService.hasPermission(user, UPDATE_APPLICATION)).toBe(
+        true,
+    );
 });
 
 test('should not have admin permission', async () => {
@@ -109,11 +119,21 @@ test('should have project admin to default project', async () => {
         DELETE_FEATURE,
     } = permissions;
     const user = editorUser;
-    expect(await accessService.hasPermission(user, DELETE_PROJECT, 'default')).toBe(true);
-    expect(await accessService.hasPermission(user, UPDATE_PROJECT, 'default')).toBe(true);
-    expect(await accessService.hasPermission(user, CREATE_FEATURE, 'default')).toBe(true);
-    expect(await accessService.hasPermission(user, UPDATE_FEATURE, 'default')).toBe(true);
-    expect(await accessService.hasPermission(user, DELETE_FEATURE, 'default')).toBe(true);
+    expect(
+        await accessService.hasPermission(user, DELETE_PROJECT, 'default'),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, UPDATE_PROJECT, 'default'),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, CREATE_FEATURE, 'default'),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, UPDATE_FEATURE, 'default'),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, DELETE_FEATURE, 'default'),
+    ).toBe(true);
 });
 
 test('should grant member CREATE_FEATURE on all projects', async () => {
@@ -126,37 +146,34 @@ test('should grant member CREATE_FEATURE on all projects', async () => {
         ALL_PROJECTS,
     );
 
-    expect(await accessService.hasPermission(user, CREATE_FEATURE, 'some-project')).toBe(true);
+    expect(
+        await accessService.hasPermission(user, CREATE_FEATURE, 'some-project'),
+    ).toBe(true);
 });
 
 test('cannot add CREATE_FEATURE without defining project', async () => {
-    await t.throwsAsync(
-        async () => {
-            await accessService.addPermissionToRole(
-                editorRole.id,
-                permissions.CREATE_FEATURE,
-            );
-        },
-        {
-            instanceOf: Error,
-            message: 'ProjectId cannot be empty for permission=CREATE_FEATURE',
-        },
-    );
+    try {
+        await accessService.addPermissionToRole(
+            editorRole.id,
+            permissions.CREATE_FEATURE,
+        );
+    } catch (e) {
+        expect(e).toStrictEqual(
+            new Error(
+                'ProjectId cannot be empty for permission=CREATE_FEATURE',
+            ),
+        );
+    }
 });
 
 test('cannot remove CREATE_FEATURE without defining project', async () => {
-    await t.throwsAsync(
-        async () => {
-            await accessService.removePermissionFromRole(
-                editorRole.id,
-                permissions.CREATE_FEATURE,
-            );
-        },
-        {
-            instanceOf: Error,
-            message:
-                'ProjectId cannot be empty for permission=CREATE_FEATURE',
-        },
+    await expect(async () => {
+        await accessService.removePermissionFromRole(
+            editorRole.id,
+            permissions.CREATE_FEATURE,
+        );
+    }).rejects.toStrictEqual(
+        new Error('ProjectId cannot be empty for permission=CREATE_FEATURE'),
     );
 });
 
@@ -176,7 +193,9 @@ test('should remove CREATE_FEATURE on all projects', async () => {
         ALL_PROJECTS,
     );
 
-    expect(await accessService.hasPermission(user, CREATE_FEATURE, 'some-project')).toBe(false);
+    expect(
+        await accessService.hasPermission(user, CREATE_FEATURE, 'some-project'),
+    ).toBe(false);
 });
 
 test('admin should be admin', async () => {
@@ -189,11 +208,21 @@ test('admin should be admin', async () => {
         ADMIN,
     } = permissions;
     const user = superUser;
-    expect(await accessService.hasPermission(user, DELETE_PROJECT, 'default')).toBe(true);
-    expect(await accessService.hasPermission(user, UPDATE_PROJECT, 'default')).toBe(true);
-    expect(await accessService.hasPermission(user, CREATE_FEATURE, 'default')).toBe(true);
-    expect(await accessService.hasPermission(user, UPDATE_FEATURE, 'default')).toBe(true);
-    expect(await accessService.hasPermission(user, DELETE_FEATURE, 'default')).toBe(true);
+    expect(
+        await accessService.hasPermission(user, DELETE_PROJECT, 'default'),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, UPDATE_PROJECT, 'default'),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, CREATE_FEATURE, 'default'),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, UPDATE_FEATURE, 'default'),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, DELETE_FEATURE, 'default'),
+    ).toBe(true);
     expect(await accessService.hasPermission(user, ADMIN)).toBe(true);
 });
 
@@ -208,20 +237,27 @@ test('should create default roles to project', async () => {
     const project = 'some-project';
     const user = editorUser;
     await accessService.createDefaultProjectRoles(user, project);
-    expect(await accessService.hasPermission(user, UPDATE_PROJECT, project)).toBe(true);
-    expect(await accessService.hasPermission(user, DELETE_PROJECT, project)).toBe(true);
-    expect(await accessService.hasPermission(user, CREATE_FEATURE, project)).toBe(true);
-    expect(await accessService.hasPermission(user, UPDATE_FEATURE, project)).toBe(true);
-    expect(await accessService.hasPermission(user, DELETE_FEATURE, project)).toBe(true);
+    expect(
+        await accessService.hasPermission(user, UPDATE_PROJECT, project),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, DELETE_PROJECT, project),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, CREATE_FEATURE, project),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, UPDATE_FEATURE, project),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(user, DELETE_FEATURE, project),
+    ).toBe(true);
 });
 
 test('should require name when create default roles to project', async () => {
-    await t.throwsAsync(
-        async () => {
-            await accessService.createDefaultProjectRoles(editorUser);
-        },
-        { instanceOf: Error, message: 'ProjectId cannot be empty' },
-    );
+    await expect(async () => {
+        await accessService.createDefaultProjectRoles(editorUser);
+    }).rejects.toStrictEqual(new Error('ProjectId cannot be empty'));
 });
 
 test('should grant user access to project', async () => {
@@ -248,13 +284,23 @@ test('should grant user access to project', async () => {
     await accessService.addUserToRole(sUser.id, projectRole.id);
 
     // Should be able to update feature toggles inside the project
-    expect(await accessService.hasPermission(sUser, CREATE_FEATURE, project)).toBe(true);
-    expect(await accessService.hasPermission(sUser, UPDATE_FEATURE, project)).toBe(true);
-    expect(await accessService.hasPermission(sUser, DELETE_FEATURE, project)).toBe(true);
+    expect(
+        await accessService.hasPermission(sUser, CREATE_FEATURE, project),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(sUser, UPDATE_FEATURE, project),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(sUser, DELETE_FEATURE, project),
+    ).toBe(true);
 
     // Should not be able to admin the project itself.
-    expect(await accessService.hasPermission(sUser, UPDATE_PROJECT, project)).toBe(false);
-    expect(await accessService.hasPermission(sUser, DELETE_PROJECT, project)).toBe(false);
+    expect(
+        await accessService.hasPermission(sUser, UPDATE_PROJECT, project),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(sUser, DELETE_PROJECT, project),
+    ).toBe(false);
 });
 
 test('should not get access if not specifying project', async () => {
@@ -275,9 +321,15 @@ test('should not get access if not specifying project', async () => {
     await accessService.addUserToRole(sUser.id, projectRole.id);
 
     // Should not be able to update feature toggles outside project
-    expect(await accessService.hasPermission(sUser, CREATE_FEATURE)).toBe(false);
-    expect(await accessService.hasPermission(sUser, UPDATE_FEATURE)).toBe(false);
-    expect(await accessService.hasPermission(sUser, DELETE_FEATURE)).toBe(false);
+    expect(await accessService.hasPermission(sUser, CREATE_FEATURE)).toBe(
+        false,
+    );
+    expect(await accessService.hasPermission(sUser, UPDATE_FEATURE)).toBe(
+        false,
+    );
+    expect(await accessService.hasPermission(sUser, DELETE_FEATURE)).toBe(
+        false,
+    );
 });
 
 test('should remove user from role', async () => {
@@ -326,9 +378,11 @@ test('should return role with permissions and users', async () => {
 
     expect(roleWithPermission.role.name).toBe(RoleName.EDITOR);
     expect(roleWithPermission.permissions.length > 2).toBe(true);
-    expect(roleWithPermission.permissions.find(
-        p => p.permission === permissions.CREATE_PROJECT,
-    )).toBeTruthy();
+    expect(
+        roleWithPermission.permissions.find(
+            p => p.permission === permissions.CREATE_PROJECT,
+        ),
+    ).toBeTruthy();
     expect(roleWithPermission.users.length > 2).toBe(true);
 });
 

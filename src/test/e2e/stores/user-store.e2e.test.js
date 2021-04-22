@@ -1,13 +1,14 @@
-'use strict';;
+'use strict';
+
 const User = require('../../../lib/user');
 const {
     CREATE_FEATURE,
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } = require('../../../lib/permissions');
-const NotFoundError = require('../../../lib/error/notfound-error');
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
+const NotFoundError = require('../../../lib/error/notfound-error');
 
 let stores;
 let db;
@@ -18,7 +19,13 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await db.destroy();
+    if (db) {
+        await db.destroy();
+    }
+});
+
+afterEach(async () => {
+    stores.userStore.deleteAll();
 });
 
 test('should have no users', async () => {
@@ -35,17 +42,10 @@ test('should insert new user with email', async () => {
 });
 
 test('should not allow two users with same email', async () => {
-    const error = await t.throwsAsync(
-        async () => {
-            await stores.userStore.insert({ email: 'me2@mail.com' });
-            await stores.userStore.insert({ email: 'me2@mail.com' });
-        },
-        { instanceOf: Error },
-    );
-
-    expect(error.message.includes(
-        'duplicate key value violates unique constraint',
-    )).toBe(true);
+    await expect(async () => {
+        await stores.userStore.insert({ email: 'me2@mail.com' });
+        await stores.userStore.insert({ email: 'me2@mail.com' });
+    }).rejects.toThrow(/duplicate key value violates unique constraint/);
 });
 
 test('should insert new user with email and return it', async () => {
@@ -63,14 +63,12 @@ test('should insert new user with username', async () => {
 });
 
 test('Should require email or username', async () => {
-    const error = await t.throwsAsync(
-        async () => {
-            await stores.userStore.upsert({});
-        },
-        { instanceOf: Error },
-    );
-
-    expect(error.message).toBe('Can only find users with id, username or email.');
+    expect.assertions(1);
+    try {
+        await stores.userStore.upsert({});
+    } catch (e) {
+        expect(e).toStrictEqual(new TypeError('Username or Email is required'));
+    }
 });
 
 test('should set password_hash for user', async () => {
@@ -84,14 +82,9 @@ test('should set password_hash for user', async () => {
 
 test('should not get password_hash for unknown userId', async () => {
     const store = stores.userStore;
-    const error = await t.throwsAsync(
-        async () => {
-            await store.getPasswordHash(-12);
-        },
-        { instanceOf: NotFoundError },
-    );
-
-    expect(error.message).toBe('User not found');
+    await expect(async () => {
+        await store.getPasswordHash(-12);
+    }).rejects.toStrictEqual(new NotFoundError('User not found'));
 });
 
 test('should update loginAttempts for user', async () => {

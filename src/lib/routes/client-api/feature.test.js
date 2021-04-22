@@ -1,7 +1,7 @@
-'use strict';;
+'use strict';
+
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
-const sinon = require('sinon');
 const store = require('../../../test/fixtures/store');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
@@ -44,7 +44,7 @@ test('should get empty getFeatures via client', () => {
 });
 
 test('if caching is enabled should memoize', () => {
-    const getFeatures = sinon.fake.returns([]);
+    const getFeatures = jest.fn().mockReturnValue([]);
 
     const featureToggleService = {
         getFeatures,
@@ -63,11 +63,11 @@ test('if caching is enabled should memoize', () => {
     );
     controller.getAll({ query: {} }, { json: () => {} });
     controller.getAll({ query: {} }, { json: () => {} });
-    expect(getFeatures.callCount).toBe(1);
+    expect(getFeatures).toHaveBeenCalledTimes(1);
 });
 
 test('if caching is not enabled all calls goes to service', () => {
-    const getFeatures = sinon.fake.returns([]);
+    const getFeatures = jest.fn().mockReturnValue([]);
 
     const featureToggleService = {
         getFeatures,
@@ -86,7 +86,7 @@ test('if caching is not enabled all calls goes to service', () => {
     );
     controller.getAll({ query: {} }, { json: () => {} });
     controller.getAll({ query: {} }, { json: () => {} });
-    expect(getFeatures.callCount).toBe(2);
+    expect(getFeatures).toHaveBeenCalledTimes(2);
 });
 
 test('fetch single feature', () => {

@@ -1,5 +1,4 @@
-'use strict';;
-import { createTestConfig } from '../../../test/config/test-config';
+'use strict';
 
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
@@ -8,6 +7,7 @@ const { createServices } = require('../../services');
 const permissions = require('../../../test/fixtures/permissions');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
+const { createTestConfig } = require('../../../test/config/test-config');
 
 const eventBus = new EventEmitter();
 
@@ -142,7 +142,9 @@ test('should not be allowed to reuse active toggle name', () => {
         .set('Content-Type', 'application/json')
         .expect(409)
         .expect(res => {
-            expect(res.body.details[0].message).toBe('A toggle with that name already exists');
+            expect(res.body.details[0].message).toBe(
+                'A toggle with that name already exists',
+            );
         });
 });
 
@@ -160,7 +162,9 @@ test('should not be allowed to reuse archived toggle name', () => {
         .set('Content-Type', 'application/json')
         .expect(409)
         .expect(res => {
-            expect(res.body.details[0].message).toBe('An archived toggle with that name already exists');
+            expect(res.body.details[0].message).toBe(
+                'An archived toggle with that name already exists',
+            );
         });
 });
 
@@ -267,7 +271,9 @@ test('invalid feature names should have error msg', () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect(res => {
-            expect(res.body.details[0].message === '"name" must be URL friendly').toBe(true);
+            expect(
+                res.body.details[0].message === '"name" must be URL friendly',
+            ).toBe(true);
         });
 });
 
@@ -429,7 +435,9 @@ test('Invalid tag for feature should be rejected', () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect(res => {
-            expect(res.body.details[0].message).toBe('"type" must be URL friendly');
+            expect(res.body.details[0].message).toBe(
+                '"type" must be URL friendly',
+            );
         });
 });
 

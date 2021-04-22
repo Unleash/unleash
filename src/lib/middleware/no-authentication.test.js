@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const supertest = require('supertest');
 const express = require('express');
 const noAuthentication = require('./no-authentication');

@@ -100,12 +100,11 @@ test('Can use token to reset password', async () => {
     );
     const relative = getBackendResetUrl(url);
     // Can't login before reset
-    t.throwsAsync<Error>(
-        async () => userService.loginUser(user.email, password),
-        {
-            instanceOf: Error,
-        },
-    );
+    try {
+        await userService.loginUser(user.email, password);
+    } catch (e) {
+        expect(e).toBeTruthy();
+    }
 
     let token;
     await request

@@ -65,8 +65,8 @@ test('should allow client to register multiple times', async () => {
                 .expect(202),
         );
     jest.runTimersToTime(6000);
-    expect(clientApplicationsStore.exists(clientRegistration)).toEqual(true);
-    expect(clientInstanceStore.exists(clientRegistration)).toEqual(true);
+    expect(clientApplicationsStore.exists(clientRegistration)).toBeDefined();
+    expect(clientInstanceStore.exists(clientRegistration)).toBeDefined();
     jest.useRealTimers();
 });
 
@@ -77,10 +77,10 @@ test.skip('Should handle a massive bulk registration', async () => {
     while (clients.length < 2000) {
         const clientRegistration = {
             appName: faker.internet.domainName(),
-            instanceId: faker.random.uuid(),
+            instanceId: faker.datatype.uuid(),
             strategies: ['default'],
             started: Date.now(),
-            interval: faker.random.number(),
+            interval: faker.datatype.number(),
             sdkVersion: version,
             icon: '',
             description: faker.company.catchPhrase(),

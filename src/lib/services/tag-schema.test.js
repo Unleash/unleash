@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { tagSchema } = require('./tag-schema');
 
 test('should require url friendly type if defined', () => {

@@ -98,10 +98,9 @@ test('Password must be at least 10 chars', async () => {
         emailService,
     });
 
-    expect(() => service.validatePassword('admin')).toThrowError({
-        message: 'The password must be at least 10 characters long.',
-        instanceOf: OwaspValidationError,
-    });
+    expect(() => service.validatePassword('admin')).toThrowError(
+        OwaspValidationError,
+    );
 });
 
 test('The password must contain at least one uppercase letter.', async () => {
@@ -120,10 +119,9 @@ test('The password must contain at least one uppercase letter.', async () => {
         emailService,
     });
 
-    expect(() => service.validatePassword('qwertyabcde')).toThrowError({
-        message: 'The password must contain at least one uppercase letter.',
-        instanceOf: OwaspValidationError,
-    });
+    expect(() => service.validatePassword('qwertyabcde')).toThrow(
+        'The password must contain at least one uppercase letter.',
+    );
 });
 
 test('The password must contain at least one number', async () => {
@@ -142,10 +140,9 @@ test('The password must contain at least one number', async () => {
         emailService,
     });
 
-    expect(() => service.validatePassword('qwertyabcdE')).toThrowError({
-        message: 'The password must contain at least one number.',
-        instanceOf: OwaspValidationError,
-    });
+    expect(() => service.validatePassword('qwertyabcdE')).toThrow(
+        'The password must contain at least one number.',
+    );
 });
 
 test('The password must contain at least one special character', async () => {
@@ -164,10 +161,9 @@ test('The password must contain at least one special character', async () => {
         emailService,
     });
 
-    expect(() => service.validatePassword('qwertyabcdE2')).toThrowError({
-        message: 'The password must contain at least one special character.',
-        instanceOf: OwaspValidationError,
-    });
+    expect(() => service.validatePassword('qwertyabcdE2')).toThrow(
+        'The password must contain at least one special character.',
+    );
 });
 
 test('Should be a valid password with special chars', async () => {

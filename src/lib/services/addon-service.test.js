@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { ValidationError } = require('joi');
 const Addon = require('../addons/addon');
 
@@ -113,14 +114,9 @@ test('should load provider definitions', async () => {
 test('should not allow addon-config for unknown provider', async () => {
     const { addonService } = getSetup();
 
-    const error = await t.throwsAsync(
-        async () => {
-            await addonService.createAddon({ provider: 'unknown' });
-        },
-        { instanceOf: TypeError },
-    );
-
-    expect(error.message).toBe('Unknown addon provider unknown');
+    await expect(async () => {
+        await addonService.createAddon({ provider: 'unknown' });
+    }).rejects.toStrictEqual(new TypeError('Unknown addon provider unknown'));
 });
 
 test('should trigger simple-addon eventHandler', async () => {
@@ -329,10 +325,9 @@ test('should reject addon config with missing required parameter when creating',
         events: [FEATURE_CREATED],
     };
 
-    await t.throwsAsync(
-        async () => addonService.createAddon(config, 'me@mail.com'),
-        { instanceOf: ValidationError },
-    );
+    await expect(async () =>
+        addonService.createAddon(config, 'me@mail.com'),
+    ).rejects.toBeInstanceOf(ValidationError);
 });
 
 test('should reject updating addon config with missing required parameter', async () => {
@@ -354,10 +349,9 @@ test('should reject updating addon config with missing required parameter', asyn
         parameters: { var: 'some-new-value' },
         description: 'test',
     };
-    await t.throwsAsync(
-        async () => addonService.updateAddon(config.id, updated, 'me@mail.com'),
-        { instanceOf: ValidationError },
-    );
+    await expect(async () =>
+        addonService.updateAddon(config.id, updated, 'me@mail.com'),
+    ).rejects.toBeInstanceOf(ValidationError);
 });
 
 test('Should reject addon config if a required parameter is just the empty string', async () => {
@@ -373,8 +367,7 @@ test('Should reject addon config if a required parameter is just the empty strin
         events: [FEATURE_CREATED],
     };
 
-    await t.throwsAsync(
-        async () => addonService.createAddon(config, 'me@mail.com'),
-        { instanceOf: ValidationError },
-    );
+    await expect(async () =>
+        addonService.createAddon(config, 'me@mail.com'),
+    ).rejects.toBeInstanceOf(ValidationError);
 });

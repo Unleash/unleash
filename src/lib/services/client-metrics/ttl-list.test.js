@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const moment = require('moment');
 const lolex = require('lolex');
 const TTLList = require('./ttl-list');

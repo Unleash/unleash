@@ -1,16 +1,20 @@
 const { FEATURE_CREATED } = require('../event-type');
 
-jest.mock('./addon', () => (class Addon {
-    constructor(definition, { getLogger }) {
-        this.logger = getLogger('addon/test');
-        this.fetchRetryCalls = [];
-    }
+jest.mock(
+    './addon',
+    () =>
+        class Addon {
+            constructor(definition, { getLogger }) {
+                this.logger = getLogger('addon/test');
+                this.fetchRetryCalls = [];
+            }
 
-    async fetchRetry(url, options, retries, backoff) {
-        this.fetchRetryCalls.push({ url, options, retries, backoff });
-        return Promise.resolve({ status: 200 });
-    }
-}));
+            async fetchRetry(url, options, retries, backoff) {
+                this.fetchRetryCalls.push({ url, options, retries, backoff });
+                return Promise.resolve({ status: 200 });
+            }
+        },
+);
 
 const WebhookAddon = require('./webhook');
 

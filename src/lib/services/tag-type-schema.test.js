@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { tagTypeSchema } = require('./tag-type-schema');
 
 test('should require a URLFriendly name but allow empty description and icon', () => {

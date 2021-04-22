@@ -13,7 +13,7 @@ const {
     TAG_CREATED,
 } = require('../event-type');
 
-export default class FeatureToggleService {
+class FeatureToggleService {
     constructor({ featureToggleStore, tagStore, eventStore }, { getLogger }) {
         this.featureToggleStore = featureToggleStore;
         this.tagStore = tagStore;

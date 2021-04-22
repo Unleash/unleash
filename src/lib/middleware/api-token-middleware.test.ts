@@ -1,5 +1,3 @@
-import sinon from 'sinon';
-
 import apiTokenMiddleware from './api-token-middleware';
 import getLogger from '../../test/fixtures/no-logger';
 import User from '../user';
@@ -19,41 +17,41 @@ beforeEach(() => {
 
 test('should not do anything if request does not contain a authorization', async () => {
     const apiTokenService = {
-        getUserForToken: sinon.fake(),
+        getUserForToken: jest.fn(),
     };
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
 
     const req = {
-        header: sinon.fake(),
+        header: jest.fn(),
     };
 
     await func(req, undefined, cb);
 
-    expect(req.header.calledOnce).toBe(true);
-    expect(cb.calledOnce).toBe(true);
+    expect(req.header).toHaveBeenCalledTimes(1);
+    expect(cb).toHaveBeenCalledTimes(1);
 });
 
 test('should not add user if unknown token', async () => {
     const apiTokenService = {
-        getUserForToken: sinon.fake(),
+        getUserForToken: jest.fn(),
     };
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
 
     const req = {
-        header: sinon.fake.returns('some-token'),
+        header: jest.fn().mockReturnValue('some-token'),
         user: undefined,
     };
 
     await func(req, undefined, cb);
 
-    expect(cb.called).toBe(true);
-    expect(req.header.called).toBe(true);
+    expect(cb).toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
     expect(req.user).toBeFalsy();
 });
 
@@ -64,22 +62,22 @@ test('should add user if unknown token', async () => {
         permissions: [CLIENT],
     });
     const apiTokenService = {
-        getUserForToken: sinon.fake.returns(apiUser),
+        getUserForToken: jest.fn().mockReturnValue(apiUser),
     };
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
 
     const req = {
-        header: sinon.fake.returns('some-known-token'),
+        header: jest.fn().mockReturnValue('some-known-token'),
         user: undefined,
     };
 
     await func(req, undefined, cb);
 
-    expect(cb.called).toBe(true);
-    expect(req.header.called).toBe(true);
+    expect(cb).toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
     expect(req.user).toBe(apiUser);
 });
 
@@ -90,7 +88,7 @@ test('should not add user if disabled', async () => {
         permissions: [CLIENT],
     });
     const apiTokenService = {
-        getUserForToken: sinon.fake.returns(apiUser),
+        getUserForToken: jest.fn().mockReturnValue(apiUser),
     };
 
     const disabledConfig = createTestConfig({
@@ -103,16 +101,16 @@ test('should not add user if disabled', async () => {
 
     const func = apiTokenMiddleware(disabledConfig, { apiTokenService });
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
 
     const req = {
-        header: sinon.fake.returns('some-known-token'),
+        header: jest.fn().mockReturnValue('some-known-token'),
         user: undefined,
     };
 
     await func(req, undefined, cb);
 
-    expect(cb.called).toBe(true);
+    expect(cb).toHaveBeenCalled();
     expect(req.user).toBeFalsy();
 });
 
@@ -126,16 +124,16 @@ test('should call next if apiTokenService throws', async () => {
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
 
     const req = {
-        header: sinon.fake.returns('some-token'),
+        header: jest.fn().mockReturnValue('some-token'),
         user: undefined,
     };
 
     await func(req, undefined, cb);
 
-    expect(cb.called).toBe(true);
+    expect(cb).toHaveBeenCalled();
     getLogger.setMuteError(false);
 });
 
@@ -148,14 +146,14 @@ test('should call next if apiTokenService throws x2', async () => {
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
 
     const req = {
-        header: sinon.fake.returns('some-token'),
+        header: jest.fn().mockReturnValue('some-token'),
         user: undefined,
     };
 
     await func(req, undefined, cb);
 
-    expect(cb.called).toBe(true);
+    expect(cb).toHaveBeenCalled();
 });

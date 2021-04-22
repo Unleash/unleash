@@ -96,12 +96,12 @@ class UserStore {
     }
 
     async upsert(user: User): Promise<User> {
-        const id = await this.hasUser(user);
-
-        if (id) {
-            return this.update(id, user);
+        try {
+            const id = await this.hasUser(user);
+            return await this.update(id, user);
+        } catch (e) {
+            return this.insert(user);
         }
-        return this.insert(user);
     }
 
     buildSelectUser(q: IUserLookup): any {
@@ -156,6 +156,10 @@ class UserStore {
         return this.db(TABLE)
             .where({ id })
             .del();
+    }
+
+    async deleteAll(): Promise<void> {
+        await this.db(TABLE).del();
     }
 
     async getPasswordHash(userId: number): Promise<string> {

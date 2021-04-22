@@ -1,4 +1,5 @@
-'use strict';;
+'use strict';
+
 const { featureSchema, querySchema } = require('./feature-schema');
 
 test('should require URL firendly name', () => {
@@ -83,7 +84,9 @@ test('should disallow weightType=unknown', () => {
     };
 
     const { error } = featureSchema.validate(toggle);
-    expect(error.details[0].message).toEqual('"variants[0].weightType" must be one of [variable, fix]');
+    expect(error.details[0].message).toEqual(
+        '"variants[0].weightType" must be one of [variable, fix]',
+    );
 });
 
 test('should be possible to define variant overrides', () => {
@@ -138,7 +141,9 @@ test('variant overrides must have corect shape', async () => {
     try {
         await featureSchema.validateAsync(toggle);
     } catch (error) {
-        expect(error.details[0].message).toBe('"variants[0].overrides" must be an array');
+        expect(error.details[0].message).toBe(
+            '"variants[0].overrides" must be an array',
+        );
     }
 });
 
@@ -189,7 +194,9 @@ test('should not accept empty constraint values', () => {
     };
 
     const { error } = featureSchema.validate(toggle);
-    expect(error.details[0].message).toEqual('"strategies[0].constraints[0].values[0]" is not allowed to be empty');
+    expect(error.details[0].message).toEqual(
+        '"strategies[0].constraints[0].values[0]" is not allowed to be empty',
+    );
 });
 
 test('should not accept empty list of constraint values', () => {
@@ -213,7 +220,9 @@ test('should not accept empty list of constraint values', () => {
     };
 
     const { error } = featureSchema.validate(toggle);
-    expect(error.details[0].message).toEqual('"strategies[0].constraints[0].values" must contain at least 1 items');
+    expect(error.details[0].message).toEqual(
+        '"strategies[0].constraints[0].values" must contain at least 1 items',
+    );
 });
 
 test('Filter queries should accept a list of tag values', () => {
@@ -229,7 +238,9 @@ test('Filter queries should reject tag values with missing type prefix', () => {
         tag: ['simple', 'simple'],
     };
     const { error } = querySchema.validate(query);
-    expect(error.details[0].message).toEqual('"tag[0]" with value "simple" fails to match the tag pattern');
+    expect(error.details[0].message).toEqual(
+        '"tag[0]" with value "simple" fails to match the tag pattern',
+    );
 });
 
 test('Filter queries should allow project names', () => {
@@ -245,5 +256,7 @@ test('Filter queries should reject project names that are not alphanum', () => {
         project: ['project name with space'],
     };
     const { error } = querySchema.validate(query);
-    expect(error.details[0].message).toEqual('"project[0]" must be URL friendly');
+    expect(error.details[0].message).toEqual(
+        '"project[0]" must be URL friendly',
+    );
 });

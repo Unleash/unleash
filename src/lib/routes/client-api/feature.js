@@ -1,8 +1,7 @@
 'use strict';
 
-import { handleErrors } from '../admin-api/util';
-
 const memoizee = require('memoizee');
+const { handleErrors } = require('../admin-api/util');
 
 const Controller = require('../controller');
 

@@ -12,7 +12,7 @@ export interface AuthedRequest extends Request {
 }
 
 export interface IUnleash {
-    app: Express.Application;
+    app: any;
     config: IUnleashConfig;
     eventBus: EventEmitter;
     stores: IUnleashStores;

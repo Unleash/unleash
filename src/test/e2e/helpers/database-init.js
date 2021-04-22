@@ -1,13 +1,11 @@
 'use strict';
 
-import createConfig from '../../../lib/create-config';
-
 const { EventEmitter } = require('events');
 const migrator = require('../../../migrator');
 const { createStores } = require('../../../lib/db');
 const { createDb } = require('../../../lib/db/db-pool');
 const dbConfig = require('./database-config');
-
+const { createTestConfig } = require('../../config/test-config');
 const dbState = require('./database.json');
 
 // require('db-migrate-shared').log.silence(false);
@@ -85,7 +83,7 @@ async function setupDatabase(stores) {
 }
 
 export default async function init(databaseSchema = 'test', getLogger) {
-    const config = createConfig({
+    const config = createTestConfig({
         db: {
             ...dbConfig.getDb(),
             pool: { min: 2, max: 8 },

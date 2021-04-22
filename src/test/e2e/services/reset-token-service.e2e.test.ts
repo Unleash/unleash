@@ -8,11 +8,9 @@ import NotFoundError from '../../../lib/error/notfound-error';
 import { EmailService } from '../../../lib/services/email-service';
 import User from '../../../lib/user';
 import { IUnleashConfig } from '../../../lib/types/option';
-import createConfig from '../../../lib/create-config';
+import { createTestConfig } from '../../config/test-config';
 
-const config: IUnleashConfig = createConfig({
-    getLogger,
-});
+const config: IUnleashConfig = createTestConfig();
 
 let stores;
 let db;

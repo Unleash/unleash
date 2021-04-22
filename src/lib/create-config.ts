@@ -125,7 +125,7 @@ const dbPort = (dbConfig: Partial<IDBOption>): Partial<IDBOption> => {
     return dbConfig;
 };
 
-function createConfig(options: IUnleashOptions): IUnleashConfig {
+export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
     if (options.databaseUrl) {
         extraDbOptions = parse(options.databaseUrl);
@@ -199,5 +199,7 @@ function createConfig(options: IUnleashOptions): IUnleashConfig {
     };
 }
 
-export default createConfig;
-module.exports = createConfig;
+module.exports = {
+    createConfig,
+    authTypeFromString,
+};

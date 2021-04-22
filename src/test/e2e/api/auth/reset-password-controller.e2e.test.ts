@@ -12,12 +12,12 @@ import UserService from '../../../../lib/services/user-service';
 import { setupApp } from '../../helpers/test-helper';
 import { EmailService } from '../../../../lib/services/email-service';
 import User from '../../../../lib/user';
-import createConfig from '../../../../lib/create-config';
 import { IUnleashConfig } from '../../../../lib/types/option';
+import { createTestConfig } from '../../../config/test-config';
 
 let stores;
 let db;
-const config: IUnleashConfig = createConfig({
+const config: IUnleashConfig = createTestConfig({
     getLogger,
     server: {
         unleashUrl: 'http://localhost:3000',

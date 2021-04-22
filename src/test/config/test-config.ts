@@ -6,7 +6,7 @@ import {
 } from '../../lib/types/option';
 import getLogger from '../fixtures/no-logger';
 
-import createConfig from '../../lib/create-config';
+import { createConfig } from '../../lib/create-config';
 
 function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter(i => i));
@@ -24,3 +24,7 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
     const options = mergeAll<IUnleashOptions>([testConfig, config]);
     return createConfig(options);
 }
+
+module.exports = {
+    createTestConfig,
+};

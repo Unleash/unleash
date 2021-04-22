@@ -3,19 +3,18 @@ import test from 'ava';
 import sinon from 'sinon';
 
 import rbacMiddleware from './rbac-middleware';
-import getLogger from '../../test/fixtures/no-logger';
 import ffStore from '../../test/fixtures/fake-feature-toggle-store';
 import User from '../user';
 import perms from '../permissions';
 import { IUnleashConfig } from '../types/option';
-import createConfig from '../create-config';
+import { createTestConfig } from '../../test/config/test-config';
 
 let config: IUnleashConfig;
 let featureToggleStore: any;
 
 test.beforeEach(() => {
     featureToggleStore = ffStore();
-    config = createConfig({ getLogger });
+    config = createTestConfig();
 });
 
 test('should add checkRbac to request', t => {

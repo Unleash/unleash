@@ -1,10 +1,6 @@
 import test from 'ava';
-import createConfig from '../../lib/create-config';
-import {
-    authTypeFromString,
-    IAuthType,
-    IDBOption,
-} from '../../lib/types/option';
+import { createConfig, authTypeFromString } from '../../lib/create-config';
+import { IAuthType, IDBOption } from '../../lib/types/option';
 
 test('Should use DATABASE_URL from env', t => {
     const databaseUrl = 'postgres://u:p@localhost:5432/name';

@@ -1,4 +1,3 @@
-import test from 'ava';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import UserService from '../../../lib/services/user-service';
@@ -16,7 +15,7 @@ let userService: UserService;
 let userStore: UserStore;
 let adminRole: IRole;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
@@ -34,30 +33,30 @@ test.before(async () => {
     adminRole = rootRoles.find(r => r.name === RoleName.ADMIN);
 });
 
-test.after(async () => {
+afterAll(async () => {
     await db.destroy();
 });
 
-test.afterEach(async () => {
+afterEach(async () => {
     const users = await userStore.getAll();
     const deleteAll = users.map((u: User) => userStore.delete(u.id));
     await Promise.all(deleteAll);
 });
 
-test.serial('should create initial admin user', async t => {
+test('should create initial admin user', async () => {
     await userService.initAdminUser();
     await t.notThrowsAsync(userService.loginUser('admin', 'admin'));
     await t.throwsAsync(userService.loginUser('admin', 'wrong-password'));
 });
 
-test.serial('should not be allowed to create existing user', async t => {
+test('should not be allowed to create existing user', async () => {
     await userStore.insert(new User({ username: 'test', name: 'Hans Mola' }));
     await t.throwsAsync(
         userService.createUser({ username: 'test', rootRole: adminRole.id }),
     );
 });
 
-test.serial('should create user with password', async t => {
+test('should create user with password', async () => {
     await userService.createUser({
         username: 'test',
         password: 'A very strange P4ssw0rd_',
@@ -67,10 +66,10 @@ test.serial('should create user with password', async t => {
         'test',
         'A very strange P4ssw0rd_',
     );
-    t.is(user.username, 'test');
+    expect(user.username).toBe('test');
 });
 
-test.serial('should login for user _without_ password', async t => {
+test('should login for user _without_ password', async () => {
     const email = 'some@test.com';
     await userService.createUser({
         email,
@@ -78,10 +77,10 @@ test.serial('should login for user _without_ password', async t => {
         rootRole: adminRole.id,
     });
     const user = await userService.loginUserWithoutPassword(email);
-    t.is(user.email, email);
+    expect(user.email).toBe(email);
 });
 
-test.serial('should get user with root role', async t => {
+test('should get user with root role', async () => {
     const email = 'some@test.com';
     const u = await userService.createUser({
         email,
@@ -89,7 +88,7 @@ test.serial('should get user with root role', async t => {
         rootRole: adminRole.id,
     });
     const user = await userService.getUser(u.id);
-    t.is(user.email, email);
-    t.is(user.id, u.id);
-    t.is(user.rootRole, adminRole.id);
+    expect(user.email).toBe(email);
+    expect(user.id).toBe(u.id);
+    expect(user.rootRole).toBe(adminRole.id);
 });

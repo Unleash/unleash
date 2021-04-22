@@ -1,5 +1,3 @@
-import test from 'ava';
-
 import sinon from 'sinon';
 
 import apiTokenMiddleware from './api-token-middleware';
@@ -10,7 +8,7 @@ import { createTestConfig } from '../../test/config/test-config';
 
 let config: any;
 
-test.beforeEach(() => {
+beforeEach(() => {
     config = {
         getLogger,
         authentication: {
@@ -19,7 +17,7 @@ test.beforeEach(() => {
     };
 });
 
-test('should not do anything if request does not contain a authorization', async t => {
+test('should not do anything if request does not contain a authorization', async () => {
     const apiTokenService = {
         getUserForToken: sinon.fake(),
     };
@@ -34,11 +32,11 @@ test('should not do anything if request does not contain a authorization', async
 
     await func(req, undefined, cb);
 
-    t.true(req.header.calledOnce);
-    t.true(cb.calledOnce);
+    expect(req.header.calledOnce).toBe(true);
+    expect(cb.calledOnce).toBe(true);
 });
 
-test('should not add user if unknown token', async t => {
+test('should not add user if unknown token', async () => {
     const apiTokenService = {
         getUserForToken: sinon.fake(),
     };
@@ -54,12 +52,12 @@ test('should not add user if unknown token', async t => {
 
     await func(req, undefined, cb);
 
-    t.true(cb.called);
-    t.true(req.header.called);
-    t.falsy(req.user);
+    expect(cb.called).toBe(true);
+    expect(req.header.called).toBe(true);
+    expect(req.user).toBeFalsy();
 });
 
-test('should add user if unknown token', async t => {
+test('should add user if unknown token', async () => {
     const apiUser = new User({
         isAPI: true,
         username: 'default',
@@ -80,12 +78,12 @@ test('should add user if unknown token', async t => {
 
     await func(req, undefined, cb);
 
-    t.true(cb.called);
-    t.true(req.header.called);
-    t.is(req.user, apiUser);
+    expect(cb.called).toBe(true);
+    expect(req.header.called).toBe(true);
+    expect(req.user).toBe(apiUser);
 });
 
-test('should not add user if disabled', async t => {
+test('should not add user if disabled', async () => {
     const apiUser = new User({
         isAPI: true,
         username: 'default',
@@ -114,11 +112,11 @@ test('should not add user if disabled', async t => {
 
     await func(req, undefined, cb);
 
-    t.true(cb.called);
-    t.falsy(req.user);
+    expect(cb.called).toBe(true);
+    expect(req.user).toBeFalsy();
 });
 
-test('should call next if apiTokenService throws', async t => {
+test('should call next if apiTokenService throws', async () => {
     getLogger.setMuteError(true);
     const apiTokenService = {
         getUserForToken: () => {
@@ -137,11 +135,11 @@ test('should call next if apiTokenService throws', async t => {
 
     await func(req, undefined, cb);
 
-    t.true(cb.called);
+    expect(cb.called).toBe(true);
     getLogger.setMuteError(false);
 });
 
-test('should call next if apiTokenService throws x2', async t => {
+test('should call next if apiTokenService throws x2', async () => {
     const apiTokenService = {
         getUserForToken: () => {
             throw new Error('hi there, i am stupid');
@@ -159,5 +157,5 @@ test('should call next if apiTokenService throws x2', async t => {
 
     await func(req, undefined, cb);
 
-    t.true(cb.called);
+    expect(cb.called).toBe(true);
 });

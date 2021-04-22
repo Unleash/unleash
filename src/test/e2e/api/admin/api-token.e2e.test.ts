@@ -1,4 +1,3 @@
-import test from 'ava';
 import { setupApp, setupAppWithCustomAuth } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
@@ -8,16 +7,16 @@ import { RoleName } from '../../../../lib/services/access-service';
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('token_api_serial', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
+test(async () => {
     await db.destroy();
 });
 
-test.afterEach.always(async () => {
+test(async () => {
     const tokens = await stores.apiTokenStore.getAll();
     const deleteAll = tokens.map((t: IApiToken) =>
         stores.apiTokenStore.delete(t.secret),
@@ -25,20 +24,20 @@ test.afterEach.always(async () => {
     await Promise.all(deleteAll);
 });
 
-test.serial('returns empty list of tokens', async t => {
-    t.plan(1);
+test('returns empty list of tokens', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     return request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tokens.length, 0);
+            expect(res.body.tokens.length).toBe(0);
         });
 });
 
-test.serial('creates new client token', async t => {
-    t.plan(4);
+test('creates new client token', async () => {
+    expect.assertions(4);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/api-tokens')
@@ -49,15 +48,15 @@ test.serial('creates new client token', async t => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            t.is(res.body.username, 'default-client');
-            t.is(res.body.type, 'client');
-            t.truthy(res.body.createdAt);
-            t.true(res.body.secret.length > 16);
+            expect(res.body.username).toBe('default-client');
+            expect(res.body.type).toBe('client');
+            expect(res.body.createdAt).toBeTruthy();
+            expect(res.body.secret.length > 16).toBe(true);
         });
 });
 
-test.serial('creates new admin token', async t => {
-    t.plan(5);
+test('creates new admin token', async () => {
+    expect.assertions(5);
     const request = await setupApp(stores);
     return request
         .post('/api/admin/api-tokens')
@@ -68,16 +67,16 @@ test.serial('creates new admin token', async t => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            t.is(res.body.username, 'default-admin');
-            t.is(res.body.type, 'admin');
-            t.truthy(res.body.createdAt);
-            t.falsy(res.body.expiresAt);
-            t.true(res.body.secret.length > 16);
+            expect(res.body.username).toBe('default-admin');
+            expect(res.body.type).toBe('admin');
+            expect(res.body.createdAt).toBeTruthy();
+            expect(res.body.expiresAt).toBeFalsy();
+            expect(res.body.secret.length > 16).toBe(true);
         });
 });
 
-test.serial('creates new admin token with expiry', async t => {
-    t.plan(1);
+test('creates new admin token with expiry', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
     const expiresAt = new Date();
     const expiresAtAsISOStr = JSON.parse(JSON.stringify(expiresAt));
@@ -91,12 +90,12 @@ test.serial('creates new admin token with expiry', async t => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            t.is(res.body.expiresAt, expiresAtAsISOStr);
+            expect(res.body.expiresAt).toBe(expiresAtAsISOStr);
         });
 });
 
-test.serial('update admin token with expiry', async t => {
-    t.plan(2);
+test('update admin token with expiry', async () => {
+    expect.assertions(2);
     const request = await setupApp(stores);
 
     const tokenSecret = 'random-secret-update';
@@ -120,13 +119,13 @@ test.serial('update admin token with expiry', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tokens.length, 1);
-            t.truthy(res.body.tokens[0].expiresAt);
+            expect(res.body.tokens.length).toBe(1);
+            expect(res.body.tokens[0].expiresAt).toBeTruthy();
         });
 });
 
-test.serial('creates a lot of client tokens', async t => {
-    t.plan(4);
+test('creates a lot of client tokens', async () => {
+    expect.assertions(4);
     const request = await setupApp(stores);
 
     const requests = [];
@@ -144,19 +143,19 @@ test.serial('creates a lot of client tokens', async t => {
         );
     }
     await Promise.all(requests);
-    t.plan(2);
+    expect.assertions(2);
     return request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tokens.length, 10);
-            t.is(res.body.tokens[2].type, 'client');
+            expect(res.body.tokens.length).toBe(10);
+            expect(res.body.tokens[2].type).toBe('client');
         });
 });
 
-test.serial('removes api token', async t => {
-    t.plan(1);
+test('removes api token', async () => {
+    expect.assertions(1);
     const request = await setupApp(stores);
 
     const tokenSecret = 'random-secret';
@@ -177,12 +176,12 @@ test.serial('removes api token', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tokens.length, 0);
+            expect(res.body.tokens.length).toBe(0);
         });
 });
 
-test.serial('none-admins should only get client tokens', async t => {
-    t.plan(2);
+test('none-admins should only get client tokens', async () => {
+    expect.assertions(2);
 
     const email = 'custom-user@mail.com';
 
@@ -217,13 +216,13 @@ test.serial('none-admins should only get client tokens', async t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tokens.length, 1);
-            t.is(res.body.tokens[0].type, ApiTokenType.CLIENT);
+            expect(res.body.tokens.length).toBe(1);
+            expect(res.body.tokens[0].type).toBe(ApiTokenType.CLIENT);
         });
 });
 
-test.serial('Only token-admins should be allowed to create token', async t => {
-    t.plan(0);
+test('Only token-admins should be allowed to create token', async () => {
+    expect.assertions(0);
 
     const email = 'custom-user2@mail.com';
 
@@ -250,8 +249,8 @@ test.serial('Only token-admins should be allowed to create token', async t => {
         .expect(403);
 });
 
-test.serial('Token-admin should be allowed to create token', async t => {
-    t.plan(0);
+test('Token-admin should be allowed to create token', async () => {
+    expect.assertions(0);
     const email = 'custom-user3@mail.com';
 
     const preHook = (app, config, { userService, accessService }) => {

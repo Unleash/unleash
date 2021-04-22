@@ -1,4 +1,3 @@
-import test from 'ava';
 import UserService from './user-service';
 import UserStoreMock from '../../test/fixtures/fake-user-store';
 import AccessServiceMock from '../../test/fixtures/access-service-mock';
@@ -11,7 +10,7 @@ import { createTestConfig } from '../../test/config/test-config';
 
 const config: IUnleashConfig = createTestConfig();
 
-test('Should create new user', async t => {
+test('Should create new user', async () => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new ResetTokenStoreMock();
@@ -33,13 +32,13 @@ test('Should create new user', async t => {
     const storedUser = await userStore.get(user);
     const allUsers = await userStore.getAll();
 
-    t.truthy(user.id);
-    t.is(user.username, 'test');
-    t.is(allUsers.length, 1);
-    t.is(storedUser.username, 'test');
+    expect(user.id).toBeTruthy();
+    expect(user.username).toBe('test');
+    expect(allUsers.length).toBe(1);
+    expect(storedUser.username).toBe('test');
 });
 
-test('Should create default user', async t => {
+test('Should create default user', async () => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new ResetTokenStoreMock();
@@ -58,10 +57,10 @@ test('Should create default user', async t => {
     await service.initAdminUser();
 
     const user = await service.loginUser('admin', 'admin');
-    t.is(user.username, 'admin');
+    expect(user.username).toBe('admin');
 });
 
-test('Should be a valid password', async t => {
+test('Should be a valid password', async () => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new ResetTokenStoreMock();
@@ -80,10 +79,10 @@ test('Should be a valid password', async t => {
 
     const valid = service.validatePassword('this is a strong password!');
 
-    t.true(valid);
+    expect(valid).toBe(true);
 });
 
-test('Password must be at least 10 chars', async t => {
+test('Password must be at least 10 chars', async () => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new ResetTokenStoreMock();
@@ -99,13 +98,13 @@ test('Password must be at least 10 chars', async t => {
         emailService,
     });
 
-    t.throws(() => service.validatePassword('admin'), {
+    expect(() => service.validatePassword('admin')).toThrowError({
         message: 'The password must be at least 10 characters long.',
         instanceOf: OwaspValidationError,
     });
 });
 
-test('The password must contain at least one uppercase letter.', async t => {
+test('The password must contain at least one uppercase letter.', async () => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new ResetTokenStoreMock();
@@ -121,13 +120,13 @@ test('The password must contain at least one uppercase letter.', async t => {
         emailService,
     });
 
-    t.throws(() => service.validatePassword('qwertyabcde'), {
+    expect(() => service.validatePassword('qwertyabcde')).toThrowError({
         message: 'The password must contain at least one uppercase letter.',
         instanceOf: OwaspValidationError,
     });
 });
 
-test('The password must contain at least one number', async t => {
+test('The password must contain at least one number', async () => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new ResetTokenStoreMock();
@@ -143,13 +142,13 @@ test('The password must contain at least one number', async t => {
         emailService,
     });
 
-    t.throws(() => service.validatePassword('qwertyabcdE'), {
+    expect(() => service.validatePassword('qwertyabcdE')).toThrowError({
         message: 'The password must contain at least one number.',
         instanceOf: OwaspValidationError,
     });
 });
 
-test('The password must contain at least one special character', async t => {
+test('The password must contain at least one special character', async () => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new ResetTokenStoreMock();
@@ -165,13 +164,13 @@ test('The password must contain at least one special character', async t => {
         emailService,
     });
 
-    t.throws(() => service.validatePassword('qwertyabcdE2'), {
+    expect(() => service.validatePassword('qwertyabcdE2')).toThrowError({
         message: 'The password must contain at least one special character.',
         instanceOf: OwaspValidationError,
     });
 });
 
-test('Should be a valid password with special chars', async t => {
+test('Should be a valid password with special chars', async () => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new ResetTokenStoreMock();
@@ -189,5 +188,5 @@ test('Should be a valid password with special chars', async t => {
 
     const valid = service.validatePassword('this is a strong password!');
 
-    t.true(valid);
+    expect(valid).toBe(true);
 });

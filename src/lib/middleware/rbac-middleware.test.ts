@@ -1,5 +1,3 @@
-import test from 'ava';
-
 import sinon from 'sinon';
 
 import rbacMiddleware from './rbac-middleware';
@@ -12,12 +10,12 @@ import { createTestConfig } from '../../test/config/test-config';
 let config: IUnleashConfig;
 let featureToggleStore: any;
 
-test.beforeEach(() => {
+beforeEach(() => {
     featureToggleStore = ffStore();
     config = createTestConfig();
 });
 
-test('should add checkRbac to request', t => {
+test('should add checkRbac to request', () => {
     const accessService = {
         hasPermission: sinon.fake(),
     };
@@ -30,11 +28,11 @@ test('should add checkRbac to request', t => {
 
     func(req, undefined, cb);
 
-    t.truthy(req.checkRbac);
-    t.is(typeof req.checkRbac, 'function');
+    expect(req.checkRbac).toBeTruthy();
+    expect(typeof req.checkRbac).toBe('function');
 });
 
-test('should give api-user ADMIN permission', async t => {
+test('should give api-user ADMIN permission', async () => {
     const accessService = {
         hasPermission: sinon.fake(),
     };
@@ -54,10 +52,10 @@ test('should give api-user ADMIN permission', async t => {
 
     const hasAccess = await req.checkRbac(perms.ADMIN);
 
-    t.true(hasAccess);
+    expect(hasAccess).toBe(true);
 });
 
-test('should not give api-user ADMIN permission', async t => {
+test('should not give api-user ADMIN permission', async () => {
     const accessService = {
         hasPermission: sinon.fake(),
     };
@@ -77,11 +75,11 @@ test('should not give api-user ADMIN permission', async t => {
 
     const hasAccess = await req.checkRbac(perms.ADMIN);
 
-    t.false(hasAccess);
-    t.is(accessService.hasPermission.callCount, 0);
+    expect(hasAccess).toBe(false);
+    expect(accessService.hasPermission.callCount).toBe(0);
 });
 
-test('should not allow user to miss userId', async t => {
+test('should not allow user to miss userId', async () => {
     const accessService = {
         hasPermission: sinon.fake(),
     };
@@ -100,10 +98,10 @@ test('should not allow user to miss userId', async t => {
 
     const hasAccess = await req.checkRbac(perms.ADMIN);
 
-    t.false(hasAccess);
+    expect(hasAccess).toBe(false);
 });
 
-test('should return false for missing user', async t => {
+test('should return false for missing user', async () => {
     const accessService = {
         hasPermission: sinon.fake(),
     };
@@ -117,11 +115,11 @@ test('should return false for missing user', async t => {
 
     const hasAccess = await req.checkRbac(perms.ADMIN);
 
-    t.false(hasAccess);
-    t.is(accessService.hasPermission.callCount, 0);
+    expect(hasAccess).toBe(false);
+    expect(accessService.hasPermission.callCount).toBe(0);
 });
 
-test('should verify permission for root resource', async t => {
+test('should verify permission for root resource', async () => {
     const accessService = {
         hasPermission: sinon.fake(),
     };
@@ -141,13 +139,13 @@ test('should verify permission for root resource', async t => {
 
     await req.checkRbac(perms.ADMIN);
 
-    t.true(accessService.hasPermission.calledOnce);
-    t.is(accessService.hasPermission.firstArg, req.user);
-    t.is(accessService.hasPermission.args[0][1], perms.ADMIN);
-    t.is(accessService.hasPermission.args[0][2], undefined);
+    expect(accessService.hasPermission.calledOnce).toBe(true);
+    expect(accessService.hasPermission.firstArg).toBe(req.user);
+    expect(accessService.hasPermission.args[0][1]).toBe(perms.ADMIN);
+    expect(accessService.hasPermission.args[0][2]).toBe(undefined);
 });
 
-test('should lookup projectId from params', async t => {
+test('should lookup projectId from params', async () => {
     const accessService = {
         hasPermission: sinon.fake(),
     };
@@ -169,10 +167,10 @@ test('should lookup projectId from params', async t => {
 
     await req.checkRbac(perms.UPDATE_PROJECT);
 
-    t.is(accessService.hasPermission.args[0][2], req.params.projectId);
+    expect(accessService.hasPermission.args[0][2]).toBe(req.params.projectId);
 });
 
-test('should lookup projectId from feature toggle', async t => {
+test('should lookup projectId from feature toggle', async () => {
     const projectId = 'some-project-33';
     const featureName = 'some-feature-toggle';
 
@@ -199,11 +197,11 @@ test('should lookup projectId from feature toggle', async t => {
 
     await req.checkRbac(perms.UPDATE_FEATURE);
 
-    t.is(accessService.hasPermission.args[0][2], projectId);
-    t.is(featureToggleStore.getProjectId.firstArg, featureName);
+    expect(accessService.hasPermission.args[0][2]).toBe(projectId);
+    expect(featureToggleStore.getProjectId.firstArg).toBe(featureName);
 });
 
-test('should lookup projectId from data', async t => {
+test('should lookup projectId from data', async () => {
     const projectId = 'some-project-33';
     const featureName = 'some-feature-toggle';
 
@@ -230,5 +228,5 @@ test('should lookup projectId from data', async t => {
 
     await req.checkRbac(perms.CREATE_FEATURE);
 
-    t.is(accessService.hasPermission.args[0][2], projectId);
+    expect(accessService.hasPermission.args[0][2]).toBe(projectId);
 });

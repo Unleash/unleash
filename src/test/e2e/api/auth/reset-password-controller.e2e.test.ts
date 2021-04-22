@@ -1,4 +1,3 @@
-import test from 'ava';
 import { URL } from 'url';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
@@ -41,7 +40,7 @@ const getBackendResetUrl = (url: URL): string => {
     return `/auth/reset/validate${params}`;
 };
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('reset_password_api_serial', getLogger);
     stores = db.stores;
     accessService = new AccessService(stores, config);
@@ -67,15 +66,15 @@ test.before(async () => {
     });
 });
 
-test.afterEach.always(async () => {
+test(async () => {
     await stores.resetTokenStore.deleteAll();
 });
 
-test.after(async () => {
+afterAll(async () => {
     await db.destroy();
 });
 
-test.serial('Can validate token for password reset', async t => {
+test('Can validate token for password reset', async () => {
     const request = await setupApp(stores);
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
@@ -87,11 +86,11 @@ test.serial('Can validate token for password reset', async t => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
-            t.is(res.body.email, user.email);
+            expect(res.body.email).toBe(user.email);
         });
 });
 
-test.serial('Can use token to reset password', async t => {
+test('Can use token to reset password', async () => {
     const request = await setupApp(stores);
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
@@ -122,12 +121,12 @@ test.serial('Can use token to reset password', async t => {
         })
         .expect(200);
     const loggedInUser = await userService.loginUser(user.email, password);
-    t.is(user.email, loggedInUser.email);
+    expect(user.email).toBe(loggedInUser.email);
 });
 
-test.serial(
+test(
     'Trying to reset password with same token twice does not work',
-    async t => {
+    async () => {
         const request = await setupApp(stores);
         const url = await resetTokenService.createResetPasswordUrl(
             user.id,
@@ -159,21 +158,21 @@ test.serial(
             })
             .expect(403)
             .expect(res => {
-                t.truthy(res.body.details[0].message);
+                expect(res.body.details[0].message).toBeTruthy();
             });
-    },
+    }
 );
 
-test.serial('Invalid token should yield 401', async t => {
+test('Invalid token should yield 401', async () => {
     const request = await setupApp(stores);
     return request.get('/auth/reset/validate?token=abc123').expect(res => {
-        t.is(res.status, 401);
+        expect(res.status).toBe(401);
     });
 });
 
-test.serial(
+test(
     'Trying to change password with an invalid token should yield 401',
-    async t => {
+    async () => {
         const request = await setupApp(stores);
         return request
             .post('/auth/reset/password')
@@ -181,6 +180,6 @@ test.serial(
                 token: 'abc123',
                 password,
             })
-            .expect(res => t.is(res.status, 401));
-    },
+            .expect(res => expect(res.status).toBe(401));
+    }
 );

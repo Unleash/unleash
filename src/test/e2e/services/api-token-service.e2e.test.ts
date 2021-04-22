@@ -1,4 +1,3 @@
-import test from 'ava';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { ApiTokenService } from '../../../lib/services/api-token-service';
@@ -9,7 +8,7 @@ let db;
 let stores;
 let apiTokenService: ApiTokenService;
 
-test.before(async () => {
+beforeAll(async () => {
     const config = createTestConfig({
         server: { baseUriPath: '/test' },
     });
@@ -19,11 +18,11 @@ test.before(async () => {
     apiTokenService = new ApiTokenService(stores, config);
 });
 
-test.after(async () => {
+afterAll(async () => {
     await db.destroy();
 });
 
-test.afterEach(async () => {
+afterEach(async () => {
     const tokens = await stores.apiTokenStore.getAll();
     const deleteAll = tokens.map((t: IApiToken) =>
         stores.apiTokenStore.delete(t.secret),
@@ -31,38 +30,38 @@ test.afterEach(async () => {
     await Promise.all(deleteAll);
 });
 
-test.serial('should have empty list of tokens', async t => {
+test('should have empty list of tokens', async () => {
     const allTokens = await apiTokenService.getAllTokens();
     const activeTokens = await apiTokenService.getAllTokens();
-    t.is(allTokens.length, 0);
-    t.is(activeTokens.length, 0);
+    expect(allTokens.length).toBe(0);
+    expect(activeTokens.length).toBe(0);
 });
 
-test.serial('should create client token', async t => {
+test('should create client token', async () => {
     const token = await apiTokenService.creteApiToken({
         username: 'default-client',
         type: ApiTokenType.CLIENT,
     });
     const allTokens = await apiTokenService.getAllTokens();
 
-    t.is(allTokens.length, 1);
-    t.true(token.secret.length > 32);
-    t.is(token.type, ApiTokenType.CLIENT);
-    t.is(token.username, 'default-client');
-    t.is(allTokens[0].secret, token.secret);
+    expect(allTokens.length).toBe(1);
+    expect(token.secret.length > 32).toBe(true);
+    expect(token.type).toBe(ApiTokenType.CLIENT);
+    expect(token.username).toBe('default-client');
+    expect(allTokens[0].secret).toBe(token.secret);
 });
 
-test.serial('should create admin token', async t => {
+test('should create admin token', async () => {
     const token = await apiTokenService.creteApiToken({
         username: 'admin',
         type: ApiTokenType.ADMIN,
     });
 
-    t.true(token.secret.length > 32);
-    t.is(token.type, ApiTokenType.ADMIN);
+    expect(token.secret.length > 32).toBe(true);
+    expect(token.type).toBe(ApiTokenType.ADMIN);
 });
 
-test.serial('should set expiry of token', async t => {
+test('should set expiry of token', async () => {
     const time = new Date('2022-01-01');
     await apiTokenService.creteApiToken({
         username: 'default-client',
@@ -72,10 +71,10 @@ test.serial('should set expiry of token', async t => {
 
     const [token] = await apiTokenService.getAllTokens();
 
-    t.deepEqual(token.expiresAt, time);
+    expect(token.expiresAt).toEqual(time);
 });
 
-test.serial('should update expiry of token', async t => {
+test('should update expiry of token', async () => {
     const time = new Date('2022-01-01');
     const newTime = new Date('2023-01-01');
 
@@ -89,10 +88,10 @@ test.serial('should update expiry of token', async t => {
 
     const [updatedToken] = await apiTokenService.getAllTokens();
 
-    t.deepEqual(updatedToken.expiresAt, newTime);
+    expect(updatedToken.expiresAt).toEqual(newTime);
 });
 
-test.serial('should only return valid tokens', async t => {
+test('should only return valid tokens', async () => {
     const today = new Date();
     const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
@@ -110,6 +109,6 @@ test.serial('should only return valid tokens', async t => {
 
     const tokens = await apiTokenService.getAllActiveTokens();
 
-    t.is(tokens.length, 1);
-    t.is(activeToken.secret, tokens[0].secret);
+    expect(tokens.length).toBe(1);
+    expect(activeToken.secret).toBe(tokens[0].secret);
 });

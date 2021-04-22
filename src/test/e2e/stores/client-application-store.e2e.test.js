@@ -14,8 +14,10 @@ beforeEach(async () => {
     clientApplicationsStore = stores.clientApplicationsStore;
 });
 
-afterEach(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
 test("Should be able to keep track of what we've announced", async () => {

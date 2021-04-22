@@ -12,7 +12,11 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await db.destroy();
+    afterAll(async () => {
+        if (db) {
+            await db.destroy();
+        }
+    });
 });
 
 test('should have api secret stored', async () => {

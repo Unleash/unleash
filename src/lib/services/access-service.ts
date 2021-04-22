@@ -65,6 +65,7 @@ enum PermissionType {
 }
 
 export enum RoleName {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     ADMIN = 'Admin',
     EDITOR = 'Editor',
     VIEWER = 'Viewer',

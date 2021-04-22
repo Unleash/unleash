@@ -7,7 +7,7 @@ import { AccessService } from '../../services/access-service';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import UserService from '../../services/user-service';
-import User from '../../user';
+import User from '../../types/user';
 import { Logger } from '../../logger';
 import { handleErrors } from './util';
 

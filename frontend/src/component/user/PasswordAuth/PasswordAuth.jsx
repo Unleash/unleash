@@ -80,11 +80,8 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
             <form
                 onSubmit={handleSubmit}
                 action={authDetails.path}
-                className={styles.loginContainer}
             >
-                <Typography variant="subtitle1">
-                    {authDetails.message}
-                </Typography>
+                
                 <Typography variant="subtitle2" className={styles.apiError}>
                     {apiError}
                 </Typography>
@@ -131,21 +128,24 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
     };
 
     const renderWithOptions = options => (
-        <div style={{ textAlign: 'center' }}>
+        <div>
             {options.map(o => (
-                <CardActions key={o.type}>
-                    <Button raised accent href={o.path}>
+                <div key={o.type}  className={classnames(
+                    styles.contentContainer,
+                    commonStyles.contentSpacingY
+                )}>
+                    <Button color="primary" variant="contained"  href={o.path}>
                         {o.value}
                     </Button>
-                </CardActions>
+                </div>
             ))}
             <ConditionallyRender
                 condition={showFields}
                 show={renderLoginForm()}
                 elseShow={
-                    <IconButton>
+                    <IconButton onClick={onShowOptions} >
                         {' '}
-                        onClick={onShowOptions} Show more options
+                        Show more options
                     </IconButton>
                 }
             />
@@ -155,11 +155,17 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
     const { options = [] } = authDetails;
 
     return (
-        <ConditionallyRender
+        <div>
+            <Typography variant="subtitle1">
+                    {authDetails.message}
+                </Typography>
+                <ConditionallyRender
             condition={options.length > 0}
             show={renderWithOptions(options)}
             elseShow={renderLoginForm()}
         />
+
+        </div>
     );
 };
 

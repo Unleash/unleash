@@ -1,4 +1,3 @@
-import { catch } from 'fetch-mock';
 import {
     AccessStore,
     IRole,

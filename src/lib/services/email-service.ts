@@ -175,9 +175,6 @@ export class EmailService {
     }
 
     configured(): boolean {
-        if (this.sender !== 'not-configured' && this.mailer !== undefined) {
-            return true;
-        }
-        return false;
+        return this.sender !== 'not-configured' && this.mailer !== undefined;
     }
 }

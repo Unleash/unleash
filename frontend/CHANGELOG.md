@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 4.0.0-alpha.8
+- chore(deps): bump ssri from 6.0.1 to 6.0.2 (#270)
+- fix: lint
+- fix: minor tuning on auth
+- feat: add new user (#273)
+
 # 4.0.0-alpha.7
 - feat: add support for demo sign-in
 

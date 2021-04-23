@@ -23,5 +23,18 @@ export const useStyles = makeStyles(theme => ({
     },
     userContainer: {
         marginLeft: 'auto',
+        display: 'flex',
+        alignItems: 'center',
+    },
+    docsLink: {
+        color: '#fff',
+        textDecoration: 'none',
+        padding: '0.25rem 0.8rem',
+        display: 'flex',
+        alignItems: 'center',
+    },
+    docsIcon: {
+        height: '25px',
+        width: '25px',
     },
 }));

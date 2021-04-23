@@ -20,11 +20,13 @@ export const useCommonStyles = makeStyles(theme => ({
         margin: '1rem 0',
         backgroundColor: theme.palette.division.main,
         height: '3px',
+        width: '100%',
     },
     largeDivider: {
         margin: '2rem 0',
         backgroundColor: theme.palette.division.main,
         height: '3px',
+        width: '100%',
     },
     bold: {
         fontWeight: 'bold',
@@ -36,6 +38,12 @@ export const useCommonStyles = makeStyles(theme => ({
     flexColumn: {
         display: 'flex',
         flexDirection: 'column',
+    },
+    itemsCenter: {
+        alignItems: 'center',
+    },
+    justifyCenter: {
+        justifyContent: 'center',
     },
     flexWrap: {
         flexWrap: 'wrap',

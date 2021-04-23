@@ -14,7 +14,7 @@ import {
     IListeningPipe,
     IListeningHost,
 } from './types/option';
-import { defaultLogProvider, validateLogProvider } from './logger';
+import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -143,7 +143,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.session,
     ]);
 
-    const getLogger = options.getLogger || defaultLogProvider;
+    const logLevel =
+        options.logLevel || LogLevel[process.env.LOG_LEVEL] || LogLevel.error;
+    const getLogger = options.getLogger || getDefaultLogProvider(logLevel);
     validateLogProvider(getLogger);
 
     const server: IServerOption = mergeAll([

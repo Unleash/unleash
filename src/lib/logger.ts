@@ -1,6 +1,14 @@
-import { configure, getLogger, levels } from 'log4js';
+import { configure, getLogger } from 'log4js';
 
 export type LogProvider = (category?: string) => Logger;
+
+export enum LogLevel {
+    debug = 'debug',
+    info = 'info',
+    warn = 'warn',
+    error = 'error',
+    fatal = 'fatal',
+}
 
 export interface Logger {
     debug(message: any, ...args: any[]): void;
@@ -10,22 +18,15 @@ export interface Logger {
     fatal(message: any, ...args: any[]): void;
 }
 
-function getDefaultLogProvider(): LogProvider {
-    let level: string;
-    if (process.env.NODE_ENV === 'production') {
-        level = levels.ERROR.levelStr;
-    } else if (process.env.NODE_ENV === 'test') {
-        level = levels.FATAL.levelStr;
-    } else {
-        level = levels.DEBUG.levelStr;
-    }
-
+export function getDefaultLogProvider(
+    logLevel: LogLevel = LogLevel.error,
+): LogProvider {
     configure({
         appenders: {
             console: { type: 'console' },
         },
         categories: {
-            default: { appenders: ['console'], level },
+            default: { appenders: ['console'], level: logLevel },
         },
     });
 
@@ -46,17 +47,4 @@ export function validateLogProvider(provider: LogProvider): void {
     validate(typeof logger.info === 'function', 'Logger must implement info');
     validate(typeof logger.warn === 'function', 'Logger must implement warn');
     validate(typeof logger.error === 'function', 'Logger must implement error');
-}
-
-// Deprecated (TODO: remove this in v4)
-let loggerProvider = getDefaultLogProvider();
-export const defaultLogProvider = loggerProvider;
-
-export function setLoggerProvider(provider: LogProvider): void {
-    validateLogProvider(provider);
-
-    loggerProvider = provider;
-    const logger = provider('unleash:logger');
-    logger.info(`Your way of configuring a logProvider is deprecated. 
-        See https://docs.getunleash.io/docs/deploy/configuring_unleash for details`);
 }

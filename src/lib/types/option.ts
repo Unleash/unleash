@@ -1,4 +1,4 @@
-import { LogProvider } from '../logger';
+import { LogLevel, LogProvider } from '../logger';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;
@@ -73,6 +73,7 @@ export interface IUnleashOptions {
     db?: Partial<IDBOption>;
     session?: Partial<ISessionOption>;
     getLogger?: LogProvider;
+    logLevel?: LogLevel;
     server?: Partial<IServerOption>;
     versionCheck?: Partial<IVersionOption>;
     authentication?: Partial<IAuthOption>;

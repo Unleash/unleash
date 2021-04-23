@@ -2,6 +2,13 @@
 
 # 4.0.0-alpha.4
 
+- feat: add option for LOG_LEVEL (#803)
+- fix: make users emails case-insensitive (#804)
+- fix: update unleash-frontend
+- fix: emailservice now just returns if email was configured
+- fix: simplify isConfigured check
+- fix: loading of emailtemplates
+
 # 4.0.0-alpha.3
 
 - fix: should allow revive toggles

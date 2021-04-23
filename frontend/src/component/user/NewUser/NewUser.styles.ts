@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     container: {
@@ -25,5 +25,8 @@ export const useStyles = makeStyles(theme => ({
     },
     emailField: {
         minWidth: '300px',
+        [theme.breakpoints.down('xs')]: {
+            minWidth: '100%',
+        },
     },
 }));

@@ -135,7 +135,6 @@ const FeatureToggleList = ({
                                     }
                                 />
 
- 
                                 <ConditionallyRender
                                     condition={smallScreen}
                                     show={
@@ -144,7 +143,12 @@ const FeatureToggleList = ({
                                                 component={Link}
                                                 to="/features/create"
                                                 data-test="add-feature-btn"
-                                                disabled={!hasAccess(CREATE_FEATURE, currentProjectId)}
+                                                disabled={
+                                                    !hasAccess(
+                                                        CREATE_FEATURE,
+                                                        currentProjectId
+                                                    )
+                                                }
                                             >
                                                 <Icon>add</Icon>
                                             </IconButton>
@@ -154,10 +158,15 @@ const FeatureToggleList = ({
                                         <Button
                                             to="/features/create"
                                             data-test="add-feature-btn"
-                                            color="secondary"
+                                            color="primary"
                                             variant="contained"
                                             component={Link}
-                                            disabled={!hasAccess(CREATE_FEATURE, currentProjectId)}
+                                            disabled={
+                                                !hasAccess(
+                                                    CREATE_FEATURE,
+                                                    currentProjectId
+                                                )
+                                            }
                                             className={classnames({
                                                 skeleton: loading,
                                             })}
@@ -166,7 +175,6 @@ const FeatureToggleList = ({
                                         </Button>
                                     }
                                 />
-                
                             </div>
                         }
                     />

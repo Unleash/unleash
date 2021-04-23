@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     title: {
@@ -11,12 +11,21 @@ export const useStyles = makeStyles(theme => ({
         padding: '4rem 2rem',
         color: '#fff',
         position: 'relative',
+        [theme.breakpoints.down('sm')]: {
+            padding: '3rem 2rem',
+        },
+        [theme.breakpoints.down('xs')]: {
+            padding: '3rem 1rem',
+        },
     },
     switchesContainer: {
         position: 'fixed',
         bottom: '40px',
         display: 'flex',
         flexDirection: 'column',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
     },
     switchIcon: {
         height: '180px',
@@ -25,25 +34,40 @@ export const useStyles = makeStyles(theme => ({
         position: 'absolute',
         bottom: '-54px',
         left: '100px',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
     },
     bottomRightStar: {
         position: 'absolute',
         bottom: '-100px',
         left: '200px',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
     },
     midRightStar: {
         position: 'absolute',
         bottom: '-80px',
         left: '300px',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
     },
     midLeftStar: {
         position: 'absolute',
         top: '10px',
         left: '150px',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
     },
     midLeftStarTwo: {
         position: 'absolute',
         top: '25px',
         left: '350px',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
     },
 }));

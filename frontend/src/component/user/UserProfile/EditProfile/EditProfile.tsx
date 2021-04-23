@@ -86,7 +86,7 @@ const EditProfile = ({
         <div className={styles.container} ref={ref}>
             <Typography
                 variant="body1"
-                style={{ fontWeight: 'bold' }}
+                className={styles.editProfileTitle}
                 data-loading
             >
                 Update password

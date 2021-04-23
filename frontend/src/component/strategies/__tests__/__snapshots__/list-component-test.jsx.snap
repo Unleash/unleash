@@ -40,6 +40,11 @@ exports[`renders correctly with one strategy 1`] = `
           <span
             aria-hidden={true}
             className="material-icons MuiIcon-root"
+            style={
+              Object {
+                "color": "#0000008a",
+              }
+            }
           >
             extension
           </span>
@@ -183,6 +188,11 @@ exports[`renders correctly with one strategy without permissions 1`] = `
           <span
             aria-hidden={true}
             className="material-icons MuiIcon-root"
+            style={
+              Object {
+                "color": "#0000008a",
+              }
+            }
           >
             extension
           </span>

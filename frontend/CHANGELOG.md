@@ -16,7 +16,6 @@ The latest version of this document is always available in
 
 # 4.0.0-alpha.7
 - feat: add support for demo sign-in
-
 # 4.0.0-alpha.5
 - fix: require ADMIN role to manage users
 - fix: add permissions for tag-types and project

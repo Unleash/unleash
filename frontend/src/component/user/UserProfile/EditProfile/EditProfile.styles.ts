@@ -11,6 +11,9 @@ export const useStyles = makeStyles(theme => ({
             width: '100%',
         },
     },
+    editProfileTitle: {
+        fontWeight: 'bold',
+    },
     button: {
         width: '150px',
         marginTop: '1.15rem',

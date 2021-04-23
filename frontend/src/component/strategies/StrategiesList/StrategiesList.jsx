@@ -4,8 +4,20 @@ import classnames from 'classnames';
 import { Link, useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import { List, ListItem, ListItemAvatar, IconButton, Icon, ListItemText, Button, Tooltip } from '@material-ui/core';
-import { CREATE_STRATEGY, DELETE_STRATEGY } from '../../AccessProvider/permissions';
+import {
+    List,
+    ListItem,
+    ListItemAvatar,
+    IconButton,
+    Icon,
+    ListItemText,
+    Button,
+    Tooltip,
+} from '@material-ui/core';
+import {
+    CREATE_STRATEGY,
+    DELETE_STRATEGY,
+} from '../../AccessProvider/permissions';
 
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import PageContent from '../../common/PageContent/PageContent';
@@ -39,13 +51,21 @@ const StrategiesList = ({
                     condition={smallScreen}
                     show={
                         <Tooltip title="Add new strategy">
-                            <IconButton onClick={() => history.push('/strategies/create')}>
+                            <IconButton
+                                onClick={() =>
+                                    history.push('/strategies/create')
+                                }
+                            >
                                 <Icon>add</Icon>
                             </IconButton>
                         </Tooltip>
                     }
                     elseShow={
-                        <Button onClick={() => history.push('/strategies/create')} color="primary" variant="contained">
+                        <Button
+                            onClick={() => history.push('/strategies/create')}
+                            color="primary"
+                            variant="contained"
+                        >
                             Add new strategy
                         </Button>
                     }
@@ -57,7 +77,10 @@ const StrategiesList = ({
     const strategyLink = ({ name, deprecated }) => (
         <Link to={`/strategies/view/${name}`}>
             <strong>{name}</strong>
-            <ConditionallyRender condition={deprecated} show={<small> (Deprecated)</small>} />
+            <ConditionallyRender
+                condition={deprecated}
+                show={<small> (Deprecated)</small>}
+            />
         </Link>
     );
 
@@ -126,20 +149,30 @@ const StrategiesList = ({
                 }}
             >
                 <ListItemAvatar>
-                    <Icon>extension</Icon>
+                    <Icon style={{ color: '#0000008a' }}>extension</Icon>
                 </ListItemAvatar>
-                <ListItemText primary={strategyLink(strategy)} secondary={strategy.description} />
+                <ListItemText
+                    primary={strategyLink(strategy)}
+                    secondary={strategy.description}
+                />
                 <ConditionallyRender
                     condition={strategy.deprecated}
                     show={reactivateButton(strategy)}
                     elseShow={deprecateButton(strategy)}
                 />
-                <ConditionallyRender condition={hasAccess(DELETE_STRATEGY)} show={deleteButton(strategy)} />
+                <ConditionallyRender
+                    condition={hasAccess(DELETE_STRATEGY)}
+                    show={deleteButton(strategy)}
+                />
             </ListItem>
         ));
 
     return (
-        <PageContent headerContent={<HeaderTitle title="Strategies" actions={headerButton()} />}>
+        <PageContent
+            headerContent={
+                <HeaderTitle title="Strategies" actions={headerButton()} />
+            }
+        >
             <List>
                 <ConditionallyRender
                     condition={strategies.length > 0}

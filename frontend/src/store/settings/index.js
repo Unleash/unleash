@@ -9,7 +9,7 @@ const localStorage = window.localStorage || {
 const basePath = location ? location.pathname : '/';
 const SETTINGS = `${basePath}:settings`;
 
-const DEFAULT = fromJS({});
+const DEFAULT = fromJS({ location: {} });
 
 function getInitState() {
     try {

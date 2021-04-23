@@ -47,6 +47,7 @@ const PasswordChecker = ({ password, callback }: IPasswordCheckerProps) => {
     }, [password]);
 
     const checkPassword = useCallback(async () => {
+        if (password.length < 3) return;
         try {
             const res = await makeValidatePassReq();
             if (res.status === BAD_REQUEST) {
@@ -63,7 +64,7 @@ const PasswordChecker = ({ password, callback }: IPasswordCheckerProps) => {
             // ResetPasswordForm handles errors related to submitting the form.
             console.log(e);
         }
-    }, [makeValidatePassReq, callback]);
+    }, [makeValidatePassReq, callback, password]);
 
     useEffect(() => {
         checkPassword();

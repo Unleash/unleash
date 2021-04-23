@@ -6,6 +6,7 @@ export const useStyles = makeStyles(theme => ({
         borderRadius: '3px',
         right: '100px',
         color: '#44606e',
+        maxWidth: '350px',
     },
     headerContainer: { display: 'flex', padding: '0.5rem' },
     divider: {

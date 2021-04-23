@@ -73,6 +73,11 @@ const theme = createMuiTheme({
             },
             main: '#fff',
         },
+        dialogue: {
+            title: {
+                main: '#fff',
+            },
+        },
     },
     padding: {
         pageContent: {

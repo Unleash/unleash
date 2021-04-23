@@ -6,7 +6,7 @@ import featureTags from './feature-tags';
 import tagTypes from './tag-type';
 import tags from './tag';
 import strategies from './strategy';
-import history from "./history"; // eslint-disable-line
+import history from './history'; // eslint-disable-line
 import archive from './archive';
 import error from './error';
 import settings from './settings';
@@ -16,8 +16,6 @@ import uiConfig from './ui-config';
 import context from './context';
 import projects from './project';
 import addons from './addons';
-import userAdmin from './e-user-admin';
-import roles from './e-user-admin/roles-store';
 import apiAdmin from './e-api-admin';
 import authAdmin from './e-admin-auth';
 import apiCalls from './api-calls';
@@ -40,8 +38,6 @@ const unleashStore = combineReducers({
     context,
     projects,
     addons,
-    userAdmin,
-    roles,
     apiAdmin,
     authAdmin,
     apiCalls,

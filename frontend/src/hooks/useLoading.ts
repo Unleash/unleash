@@ -1,10 +1,10 @@
-import { useEffect, createRef } from 'react';
+import { createRef, useLayoutEffect } from 'react';
 
 type refElement = HTMLDivElement;
 
 const useLoading = (loading: boolean) => {
     const ref = createRef<refElement>();
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (ref.current) {
             const elements = ref.current.querySelectorAll('[data-loading]');
 

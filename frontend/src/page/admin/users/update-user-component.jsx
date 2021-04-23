@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Dialogue from '../../../component/common/Dialogue';
-import UserForm from './user-form';
+import UserForm from './AddUser/AddUserForm/AddUserForm';
 
-function AddUser({ user = {}, showDialog, closeDialog, updateUser, roles }) {
+function AddUser({
+    user,
+    showDialog,
+    closeDialog,
+    updateUser,
+    roles,
+    userApiErrors,
+    userLoading,
+}) {
     const [data, setData] = useState({});
     const [error, setError] = useState({});
 
     useEffect(() => {
         setData({
-            id: user.id,
-            email: user.email || '',
-            rootRole: user.rootRole || '',
-            name: user.name || '',
+            ...user,
         });
-    }, [user])
-
-
+    }, [user]);
 
     if (!user) {
         return null;
@@ -29,7 +32,6 @@ function AddUser({ user = {}, showDialog, closeDialog, updateUser, roles }) {
             await updateUser(data);
             setData({});
             setError({});
-            closeDialog();
         } catch (error) {
             setError({ general: 'Could not update user' });
         }
@@ -51,9 +53,18 @@ function AddUser({ user = {}, showDialog, closeDialog, updateUser, roles }) {
             onClose={onCancel}
             primaryButtonText="Update user"
             secondaryButtonText="Cancel"
+            title="Update team member"
             fullWidth
         >
-            <UserForm title="Update user" data={data} setData={setData} roles={roles} submit={submit} error={error} />
+            <UserForm
+                data={data}
+                setData={setData}
+                roles={roles}
+                submit={submit}
+                error={error}
+                userApiErrors={userApiErrors}
+                userLoading={userLoading}
+            />
         </Dialogue>
     );
 }

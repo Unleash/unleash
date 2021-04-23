@@ -9,9 +9,9 @@ import { routes } from './menu/routes';
 
 import styles from './styles.module.scss';
 
-import IUser from '../interfaces/user';
+import IAuthStatus from '../interfaces/user';
 interface IAppProps extends RouteComponentProps {
-    user: IUser;
+    user: IAuthStatus;
 }
 
 const App = ({ location, user }: IAppProps) => {

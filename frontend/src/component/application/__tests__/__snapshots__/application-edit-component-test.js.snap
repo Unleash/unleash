@@ -144,7 +144,7 @@ exports[`renders correctly with permissions 1`] = `
     </div>
     <div>
       <div
-        className="MuiPaper-root makeStyles-tabNav-8 MuiPaper-elevation1 MuiPaper-rounded"
+        className="MuiPaper-root makeStyles-tabNav-10 MuiPaper-elevation1 MuiPaper-rounded"
       >
         <div
           className="MuiTabs-root"
@@ -192,7 +192,7 @@ exports[`renders correctly with permissions 1`] = `
                   Application overview
                 </span>
                 <span
-                  className="PrivateTabIndicator-root-9 PrivateTabIndicator-colorPrimary-10 MuiTabs-indicator"
+                  className="PrivateTabIndicator-root-11 PrivateTabIndicator-colorPrimary-12 MuiTabs-indicator"
                   style={Object {}}
                 />
               </button>
@@ -272,7 +272,7 @@ exports[`renders correctly with permissions 1`] = `
                     >
                       <span
                         aria-disabled={true}
-                        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-13 MuiSwitch-switchBase MuiSwitch-colorSecondary PrivateSwitchBase-disabled-15 Mui-disabled Mui-disabled Mui-disabled"
+                        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-15 MuiSwitch-switchBase MuiSwitch-colorSecondary PrivateSwitchBase-disabled-17 Mui-disabled Mui-disabled Mui-disabled"
                         onBlur={[Function]}
                         onDragLeave={[Function]}
                         onFocus={[Function]}
@@ -290,7 +290,7 @@ exports[`renders correctly with permissions 1`] = `
                           className="MuiIconButton-label"
                         >
                           <input
-                            className="PrivateSwitchBase-input-16 MuiSwitch-input"
+                            className="PrivateSwitchBase-input-18 MuiSwitch-input"
                             disabled={true}
                             onChange={[Function]}
                             type="checkbox"

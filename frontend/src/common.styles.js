@@ -3,7 +3,12 @@ import { makeStyles } from '@material-ui/styles';
 export const useCommonStyles = makeStyles(theme => ({
     contentSpacingY: {
         '& > *': {
-            margin: '0.6rem 0',
+            margin: '0.5rem 0',
+        },
+    },
+    contentSpacingYLarge: {
+        '& > *': {
+            margin: '1.5rem 0',
         },
     },
     contentSpacingX: {
@@ -26,6 +31,7 @@ export const useCommonStyles = makeStyles(theme => ({
     },
     flexRow: {
         display: 'flex',
+        alignItems: 'center',
     },
     flexColumn: {
         display: 'flex',

@@ -1,9 +1,10 @@
 # Changelog
 
+# 4.0.0-alpha.4
+
 # 4.0.0-alpha.3
 
 - fix: should allow revive toggles
-- fix: lint
 - fix: hasPermission should not throw
 - fix: Added enterpriseVersion to root of IUnleashConfig/IUnleashOptions
 - feat: add new user email (#793)
@@ -11,20 +12,15 @@
 - fix: introduce settingService
 - fix: migration rollback use DROP for column
 - fix: skipLocked when updating lastSeen for toggles
-- fix: skipLocked when updating lastSeen for toggles
 - feat: Add change-password endpoint to user-controller (#800)
 - fix: convert AUTH_TYPE to uppercase (#797)
-- Fix/strategies sort order (#798)
+- Fix: strategies sort order (#798)
 - fix: only ADMIN can list all users
 - fix: enable demo-authentication (#796)
 - fix: default db SSL to undefined
 - fix: use db config with schema for db-migrate
 - feat: options need types (#794)
-- chore: update yarn.lock
-- chore: update frontend version
 - feat: add ui-bootstrap endpoint (#790)
-- chore: update frontend version
-- chore: update frontend
 - feat: add ui-bootstrap endpoint (#790)
 - feat: expose user permissions (#791)
 - feat: Reset token (#786)

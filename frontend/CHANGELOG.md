@@ -8,22 +8,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 4.0.0-alpha.9
+- fix: optimizations
+- feat: user profile
 # 4.0.0-alpha.8
 - chore(deps): bump ssri from 6.0.1 to 6.0.2 (#270)
 - fix: lint
 - fix: minor tuning on auth
 - feat: add new user (#273)
-
 # 4.0.0-alpha.7
 - feat: add support for demo sign-in
 # 4.0.0-alpha.5
-<<<<<<< HEAD
 - fix: require ADMIN role to manage users
 - fix: add permissions for tag-types and project
-
-=======
-- feat: frontend should understand rbac permissions
->>>>>>> chore: update changelog
 # 4.0.0-alpha.4
 - fix: overall bugs
 - feat: user flow

@@ -47,6 +47,7 @@ const PasswordChecker = ({ password, callback }: IPasswordCheckerProps) => {
     }, [password]);
 
     const checkPassword = useCallback(async () => {
+        if (!password) return;
         if (password.length < 3) return;
         try {
             const res = await makeValidatePassReq();

@@ -1,5 +1,6 @@
 # Changelog
 
+<<<<<<< HEAD
 # 4.0.0-alpha.6
 
 - feat: Teams addon for messaging on Microsoft teams (#814)
@@ -23,6 +24,11 @@
 - fix: migration should call cb on down
 - fix: change default admin password
 - fix: add types for node-fetch
+=======
+# 4.0.0-alpha.5
+
+- chore: update frontend
+>>>>>>> chore: update changelog
 
 # 4.0.0-alpha.4
 

@@ -128,7 +128,7 @@ test.serial('should reset user after successful login', async t => {
 
 test.serial('should only update specified fields on user', async t => {
     const store = stores.userStore;
-    const email = 'userTobeUpdated@mail.com';
+    const email = 'usertobeupdated@mail.com';
     const user = {
         email,
         username: 'test',
@@ -142,4 +142,41 @@ test.serial('should only update specified fields on user', async t => {
 
     t.deepEqual(storedUser.email, user.email);
     t.deepEqual(storedUser.username, user.username);
+});
+
+test.serial('should always lowercase emails on inserts', async t => {
+    const store = stores.userStore;
+    const email = 'someCrazyCasingGoingOn@mail.com';
+    const user = {
+        email,
+    };
+
+    await store.upsert(user);
+
+    const storedUser = await store.get({ email });
+
+    t.deepEqual(storedUser.email, user.email.toLowerCase());
+});
+
+test.serial('should always lowercase emails on updates', async t => {
+    const store = stores.userStore;
+    const email = 'someCrazyCasingGoingOn@mail.com';
+    const user = {
+        email,
+    };
+
+    await store.upsert(user);
+
+    let storedUser = await store.get({ email });
+
+    t.deepEqual(storedUser.email, user.email.toLowerCase());
+
+    const updatedUser = {
+        id: storedUser.id,
+        email: 'SomeOtherCasing@hotmail.com',
+    };
+    await store.upsert(updatedUser);
+
+    storedUser = await store.get({ id: storedUser.id });
+    t.is(storedUser.email, updatedUser.email.toLowerCase());
 });

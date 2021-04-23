@@ -28,10 +28,12 @@ const emptify = value => {
     return value;
 };
 
+const safeToLower = (s?: string) => (s ? s.toLowerCase() : s);
+
 const mapUserToColumns = (user: ICreateUser) => ({
     name: user.name,
     username: user.username,
-    email: user.email,
+    email: safeToLower(user.email),
     image_url: user.imageUrl,
 });
 
@@ -114,7 +116,7 @@ class UserStore {
             return query.where('id', q.id);
         }
         if (q.email) {
-            return query.where('email', q.email);
+            return query.where('email', safeToLower(q.email));
         }
         if (q.username) {
             return query.where('username', q.username);

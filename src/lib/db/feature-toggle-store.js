@@ -99,15 +99,18 @@ class FeatureToggleStore {
     }
 
     async getProjectId(name) {
-        return this.db
-            .first(['project'])
-            .from(TABLE)
-            .where({ name })
-            .then(r => (r ? r.project : undefined))
-            .catch(e => {
-                this.logger.error(e);
-                return undefined;
-            });
+        if (name) {
+            return this.db
+                .first(['project'])
+                .from(TABLE)
+                .where({ name })
+                .then(r => (r ? r.project : undefined))
+                .catch(e => {
+                    this.logger.error(e);
+                    return undefined;
+                });
+        }
+        return undefined;
     }
 
     async hasFeature(name) {

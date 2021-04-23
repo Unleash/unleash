@@ -162,10 +162,7 @@ export class EmailService {
         templateName: string,
         format: TemplateFormat,
     ): string {
-        let topPath = path.resolve('mailtemplates');
-        if (!existsSync(topPath)) {
-            topPath = path.resolve('dist', 'mailtemplates');
-        }
+        const topPath = path.resolve(__dirname, '../../mailtemplates');
         const template = path.join(
             topPath,
             templateName,
@@ -178,9 +175,6 @@ export class EmailService {
     }
 
     configured(): boolean {
-        if (this.sender !== 'not-configured' && this.mailer !== undefined) {
-            return true;
-        }
-        return false;
+        return this.sender !== 'not-configured' && this.mailer !== undefined;
     }
 }

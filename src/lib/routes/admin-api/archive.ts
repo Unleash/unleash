@@ -21,7 +21,11 @@ export default class ArchiveController extends Controller {
         this.featureService = featureToggleService;
 
         this.get('/features', this.getArchivedFeatures);
-        this.post('/revive/:name', this.reviveFeatureToggle, UPDATE_FEATURE);
+        this.post(
+            '/revive/:featureName',
+            this.reviveFeatureToggle,
+            UPDATE_FEATURE,
+        );
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -37,9 +41,10 @@ export default class ArchiveController extends Controller {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async reviveFeatureToggle(req, res): Promise<void> {
         const userName = extractUser(req);
+        const { featureName } = req.params;
 
         try {
-            await this.featureService.reviveToggle(req.params.name, userName);
+            await this.featureService.reviveToggle(featureName, userName);
             return res.status(200).end();
         } catch (error) {
             this.logger.error('Server failed executing request', error);

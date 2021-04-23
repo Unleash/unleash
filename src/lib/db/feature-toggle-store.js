@@ -103,7 +103,11 @@ class FeatureToggleStore {
             .first(['project'])
             .from(TABLE)
             .where({ name })
-            .then(r => (r ? r.project : undefined));
+            .then(r => (r ? r.project : undefined))
+            .catch(e => {
+                this.logger.error(e);
+                return undefined;
+            });
     }
 
     async hasFeature(name) {

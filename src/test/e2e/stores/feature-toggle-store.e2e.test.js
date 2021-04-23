@@ -24,3 +24,8 @@ test.serial('should not crash for unknown toggle', async t => {
     );
     t.is(project, undefined);
 });
+
+test.serial('should not crash for undefined toggle name', async t => {
+    const project = await featureToggleStore.getProjectId(undefined);
+    t.is(project, undefined);
+});

@@ -35,6 +35,10 @@
 - fix: change default admin password
 - fix: add types for node-fetch
 
+# 4.0.0-alpha.5
+
+- chore: update frontend
+
 # 4.0.0-alpha.4
 
 - feat: add option for LOG_LEVEL (#803)

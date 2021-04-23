@@ -108,9 +108,8 @@ export default class UserAdminController extends Controller {
             );
 
             const emailConfigured = this.emailService.configured();
-            let sentMetaData = null;
             if (emailConfigured) {
-                sentMetaData = await this.emailService.sendGettingStartedMail(
+                await this.emailService.sendGettingStartedMail(
                     createdUser.name,
                     createdUser.email,
                     inviteLink.toString(),
@@ -121,13 +120,10 @@ export default class UserAdminController extends Controller {
                 );
             }
 
-            const emailSent =
-                sentMetaData?.response.includes(MAIL_ACCEPTED) || false;
-
             res.status(201).send({
                 ...createdUser,
                 inviteLink,
-                emailSent,
+                emailSent: emailConfigured,
                 rootRole,
             });
         } catch (e) {

@@ -65,8 +65,8 @@ test.serial('supports setting enterprise version as well', async t => {
             getLogger,
             versionCheck: { url: testurl, enable: true },
             version,
+            enterpriseVersion,
         },
-        enterpriseVersion,
     );
     await service.checkLatestVersion();
     fetchMock.done();
@@ -104,8 +104,8 @@ test.serial(
                 getLogger,
                 versionCheck: { url: testurl, enable: false },
                 version,
+                enterpriseVersion,
             },
-            enterpriseVersion,
         );
         await service.checkLatestVersion();
         t.false(fetchMock.called(testurl));

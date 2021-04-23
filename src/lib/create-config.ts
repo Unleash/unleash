@@ -196,6 +196,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         preHook: options.preHook,
         preRouterHook: options.preRouterHook,
         eventHook: options.eventHook,
+        enterpriseVersion: options.enterpriseVersion,
     };
 }
 

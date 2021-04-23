@@ -41,14 +41,17 @@ export default class VersionService {
         {
             getLogger,
             versionCheck,
-        }: Pick<IUnleashConfig, 'getLogger' | 'versionCheck'>,
-        enterpriseVersion?: string,
+            enterpriseVersion,
+        }: Pick<
+        IUnleashConfig,
+        'getLogger' | 'versionCheck' | 'enterpriseVersion'
+        >,
     ) {
         this.logger = getLogger('lib/services/version-service.js');
         this.settingStore = settingStore;
         this.current = {
             oss: version,
-            enterprise: enterpriseVersion,
+            enterprise: enterpriseVersion || '',
         };
         this.enabled = versionCheck.enable;
         this.versionCheckUrl = versionCheck.url;

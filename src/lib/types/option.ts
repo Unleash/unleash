@@ -87,6 +87,7 @@ export interface IUnleashOptions {
     preHook?: Function;
     preRouterHook?: Function;
     eventHook?: Function;
+    enterpriseVersion?: string;
 }
 
 export interface IEmailOption {
@@ -125,4 +126,5 @@ export interface IUnleashConfig {
     preHook?: Function;
     preRouterHook?: Function;
     eventHook?: Function;
+    enterpriseVersion?: string;
 }

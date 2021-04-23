@@ -125,16 +125,22 @@ export class AccessService {
             `Checking permission=${permission}, userId=${user.id} projectId=${projectId}`,
         );
 
-        const userP = await this.store.getPermissionsForUser(user.id);
+        try {
+            const userP = await this.store.getPermissionsForUser(user.id);
 
-        return userP
-            .filter(
-                p =>
-                    !p.project ||
-                    p.project === projectId ||
-                    p.project === ALL_PROJECTS,
-            )
-            .some(p => p.permission === permission || p.permission === ADMIN);
+            return userP
+                .filter(
+                    p =>
+                        !p.project ||
+                        p.project === projectId ||
+                        p.project === ALL_PROJECTS,
+                )
+                .some(p => p.permission === permission || p.permission === ADMIN);
+        } catch(e) {
+            this.logger.error(`Error checking permission=${permission}, userId=${user.id} projectId=${projectId}`, e);
+            return Promise.resolve(false);
+        }
+        
     }
 
     async getPermissionsForUser(user: User): Promise<IUserPermission[]> {

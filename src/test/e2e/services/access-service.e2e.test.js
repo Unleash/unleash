@@ -399,3 +399,22 @@ test.serial('should switch root role for user', async t => {
     t.is(roles.length, 1);
     t.is(roles[0].name, RoleName.VIEWER);
 });
+
+test.serial('should not crash if user does not have permission', async t => {
+    const { userStore } = stores;
+
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random55Read@getunleash.io',
+    });
+
+    await accessService.setUserRootRole(user.id, readRole.id);
+
+    const { UPDATE_CONTEXT_FIELD } = permissions;
+    const hasAccess = await accessService.hasPermission(
+        user,
+        UPDATE_CONTEXT_FIELD,
+    );
+
+    t.false(hasAccess);
+});

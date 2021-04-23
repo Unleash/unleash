@@ -3,10 +3,6 @@
 const test = require('ava');
 const logger = require('./logger');
 
-test('should expose a setLoggerProvider function', t => {
-    t.true(logger.setLoggerProvider instanceof Function);
-});
-
 test('should require custom logger to implement info', t => {
     const loggerImpl = {
         debug: () => {},
@@ -16,7 +12,7 @@ test('should require custom logger to implement info', t => {
     const provider = () => loggerImpl;
     const error = t.throws(
         () => {
-            logger.setLoggerProvider(provider)();
+            logger.validateLogProvider(provider)();
         },
         { instanceOf: TypeError },
     );
@@ -32,7 +28,7 @@ test('should require custom logger to implement error', t => {
     const provider = () => loggerImpl;
     const error = t.throws(
         () => {
-            logger.setLoggerProvider(provider)();
+            logger.validateLogProvider(provider)();
         },
         { instanceOf: TypeError },
     );

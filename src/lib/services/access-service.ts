@@ -135,12 +135,16 @@ export class AccessService {
                         p.project === projectId ||
                         p.project === ALL_PROJECTS,
                 )
-                .some(p => p.permission === permission || p.permission === ADMIN);
-        } catch(e) {
-            this.logger.error(`Error checking permission=${permission}, userId=${user.id} projectId=${projectId}`, e);
+                .some(
+                    p => p.permission === permission || p.permission === ADMIN,
+                );
+        } catch (e) {
+            this.logger.error(
+                `Error checking permission=${permission}, userId=${user.id} projectId=${projectId}`,
+                e,
+            );
             return Promise.resolve(false);
         }
-        
     }
 
     async getPermissionsForUser(user: User): Promise<IUserPermission[]> {

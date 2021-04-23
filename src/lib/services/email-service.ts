@@ -162,10 +162,7 @@ export class EmailService {
         templateName: string,
         format: TemplateFormat,
     ): string {
-        let topPath = path.resolve('mailtemplates');
-        if (!existsSync(topPath)) {
-            topPath = path.resolve('dist', 'mailtemplates');
-        }
+        const topPath = path.resolve(__dirname, '../../mailtemplates');
         const template = path.join(
             topPath,
             templateName,

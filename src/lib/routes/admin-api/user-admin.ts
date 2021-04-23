@@ -5,6 +5,8 @@ import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
 import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
+import { EmailService, MAIL_ACCEPTED } from '../../services/email-service';
+import ResetTokenService from '../../services/reset-token-service';
 
 const getCreatorUsernameOrPassword = req => req.user.username || req.user.email;
 
@@ -15,11 +17,20 @@ export default class UserAdminController extends Controller {
 
     private readonly logger: Logger;
 
-    constructor(config: IUnleashConfig, { userService, accessService }) {
+    private emailService: EmailService;
+
+    private resetTokenService: ResetTokenService;
+
+    constructor(
+        config: IUnleashConfig,
+        { userService, accessService, emailService, resetTokenService },
+    ) {
         super(config);
         this.userService = userService;
         this.accessService = accessService;
         this.logger = config.getLogger('routes/user-controller.ts');
+        this.emailService = emailService;
+        this.resetTokenService = resetTokenService;
 
         this.get('/', this.getUsers, ADMIN);
         this.get('/search', this.search);
@@ -51,8 +62,14 @@ export default class UserAdminController extends Controller {
         try {
             const users = await this.userService.getAll();
             const rootRoles = await this.accessService.getRootRoles();
+            const inviteLinks = await this.resetTokenService.getActiveInvitations();
 
-            res.json({ users, rootRoles });
+            const usersWithInviteLinks = users.map(user => {
+                const inviteLink = inviteLinks[user.id] || '';
+                return { ...user, inviteLink };
+            });
+
+            res.json({ users: usersWithInviteLinks, rootRoles });
         } catch (error) {
             this.logger.error(error);
             res.status(500).send({ msg: 'server errors' });
@@ -75,15 +92,44 @@ export default class UserAdminController extends Controller {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async createUser(req, res): Promise<void> {
         const { username, email, name, rootRole } = req.body;
+        const { user } = req;
 
         try {
-            const user = await this.userService.createUser({
+            const createdUser = await this.userService.createUser({
                 username,
                 email,
                 name,
                 rootRole: Number(rootRole),
             });
-            res.status(201).send({ ...user, rootRole });
+
+            const inviteLink = await this.resetTokenService.createNewUserUrl(
+                createdUser.id,
+                user.email,
+            );
+
+            const emailConfigured = this.emailService.configured();
+            let sentMetaData = null;
+            if (emailConfigured) {
+                sentMetaData = await this.emailService.sendGettingStartedMail(
+                    createdUser.name,
+                    createdUser.email,
+                    inviteLink.toString(),
+                );
+            } else {
+                this.logger.warn(
+                    'email was not sent to the user because email configuration is lacking',
+                );
+            }
+
+            const emailSent =
+                sentMetaData?.response.includes(MAIL_ACCEPTED) || false;
+
+            res.status(201).send({
+                ...createdUser,
+                inviteLink,
+                emailSent,
+                rootRole,
+            });
         } catch (e) {
             this.logger.warn(e.message);
             res.status(400).send([{ msg: e.message }]);

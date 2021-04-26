@@ -42,4 +42,7 @@ module.exports = {
     ADDON_CONFIG_UPDATED: 'addon-config-updated',
     ADDON_CONFIG_DELETED: 'addon-config-deleted',
     DB_POOL_UPDATE: 'db-pool-update',
+    USER_CREATED: 'user-created',
+    USER_UPDATED: 'user-updated',
+    USER_DELETED: 'user-deleted',
 };

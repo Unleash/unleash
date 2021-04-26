@@ -6,11 +6,14 @@ import User from '../../../../lib/types/user';
 import UserStore from '../../../../lib/db/user-store';
 import { AccessStore, IRole } from '../../../../lib/db/access-store';
 import { RoleName } from '../../../../lib/services/access-service';
+import EventStore from '../../../../lib/db/event-store';
+import eventType from '../../../../lib/event-type';
 
 let stores;
 let db;
 
 let userStore: UserStore;
+let eventStore: EventStore;
 let accessStore: AccessStore;
 let editorRole: IRole;
 let adminRole: IRole;
@@ -20,6 +23,7 @@ test.before(async () => {
     stores = db.stores;
     userStore = stores.userStore;
     accessStore = stores.accessStore;
+    eventStore = stores.eventStore;
     const roles = await accessStore.getRootRoles();
     editorRole = roles.find(r => r.name === RoleName.EDITOR);
     adminRole = roles.find(r => r.name === RoleName.ADMIN);
@@ -242,3 +246,65 @@ test.serial(
             });
     },
 );
+
+test.serial('generates USER_CREATED event', async t => {
+    t.plan(5);
+    const email = 'some@getunelash.ai';
+    const name = 'Some Name';
+    const request = await setupApp(stores);
+    const { body } = await request
+        .post('/api/admin/user-admin')
+        .send({
+            email,
+            name,
+            password: 'some-strange-pass-123-GH',
+            rootRole: adminRole.id,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    const events = await eventStore.getEvents();
+
+    t.is(events[0].type, eventType.USER_CREATED);
+    t.is(events[0].data.email, email);
+    t.is(events[0].data.name, name);
+    t.is(events[0].data.id, body.id);
+    t.falsy(events[0].data.password);
+});
+
+test.serial('generates USER_DELETED event', async t => {
+    t.plan(2);
+    const request = await setupApp(stores);
+
+    const user = await userStore.insert({ email: 'some@mail.com' });
+    await request.delete(`/api/admin/user-admin/${user.id}`);
+
+    const events = await eventStore.getEvents();
+    t.is(events[0].type, eventType.USER_DELETED);
+    t.is(events[0].data.id, user.id);
+});
+
+test.serial('generates USER_UPDATED event', async t => {
+    t.plan(3);
+    const request = await setupApp(stores);
+    const { body } = await request
+        .post('/api/admin/user-admin')
+        .send({
+            email: 'some@getunelash.ai',
+            name: 'Some Name',
+            rootRole: editorRole.id,
+        })
+        .set('Content-Type', 'application/json');
+
+    await request
+        .put(`/api/admin/user-admin/${body.id}`)
+        .send({
+            name: 'New name',
+        })
+        .set('Content-Type', 'application/json');
+
+    const events = await eventStore.getEvents();
+    t.is(events[0].type, eventType.USER_UPDATED);
+    t.is(events[0].data.id, body.id);
+    t.is(events[0].data.name, 'New name');
+});

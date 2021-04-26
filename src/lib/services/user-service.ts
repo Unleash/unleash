@@ -9,7 +9,6 @@ import { Logger } from '../logger';
 import User, { IUser } from '../types/user';
 import isEmail from '../util/is-email';
 import { AccessService, RoleName } from './access-service';
-import { ADMIN } from '../permissions';
 import ResetTokenService from './reset-token-service';
 import InvalidTokenError from '../error/invalid-token-error';
 import NotFoundError from '../error/notfound-error';
@@ -75,14 +74,7 @@ class UserService {
             getLogger,
             authentication,
         }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
-        {
-            accessService,
-            resetTokenService,
-            emailService,
-        }: Pick<
-        IServices,
-            'accessService' | 'resetTokenService' | 'emailService'
-        >,
+        { accessService, resetTokenService, emailService }: IServices,
     ) {
         this.logger = getLogger('service/user-service.js');
         this.store = stores.userStore;
@@ -107,13 +99,14 @@ class UserService {
         if (!hasAdminUser) {
             // create default admin user
             try {
+                const pwd = 'unleash4all';
                 this.logger.info(
-                    'Creating default user "admin" with password "admin"',
+                    `Creating default user "admin" with password "${pwd}"`,
                 );
                 const user = await this.store.insert({
                     username: 'admin',
                 });
-                const passwordHash = await bcrypt.hash('admin', saltRounds);
+                const passwordHash = await bcrypt.hash(pwd, saltRounds);
                 await this.store.setPasswordHash(user.id, passwordHash);
 
                 const rootRoles = await this.accessService.getRootRoles();

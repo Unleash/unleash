@@ -12,4 +12,6 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function() {};
+exports.down = function(db, cb) {
+    db.runSql('', cb);
+};

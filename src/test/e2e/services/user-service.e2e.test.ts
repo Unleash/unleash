@@ -46,7 +46,7 @@ test.afterEach(async () => {
 
 test.serial('should create initial admin user', async t => {
     await userService.initAdminUser();
-    await t.notThrowsAsync(userService.loginUser('admin', 'admin'));
+    await t.notThrowsAsync(userService.loginUser('admin', 'unleash4all'));
     await t.throwsAsync(userService.loginUser('admin', 'wrong-password'));
 });
 

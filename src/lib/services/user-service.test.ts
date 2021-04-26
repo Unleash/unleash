@@ -57,7 +57,7 @@ test('Should create default user', async t => {
 
     await service.initAdminUser();
 
-    const user = await service.loginUser('admin', 'admin');
+    const user = await service.loginUser('admin', 'unleash4all');
     t.is(user.username, 'admin');
 });
 

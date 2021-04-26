@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import Controller from '../controller';
 import { ADMIN } from '../../permissions';
 import UserService from '../../services/user-service';
@@ -7,6 +8,8 @@ import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
 import { EmailService, MAIL_ACCEPTED } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
+import { IUnleashServices } from '../../types/services';
+import SessionService from '../../services/session-service';
 
 const getCreatorUsernameOrPassword = req => req.user.username || req.user.email;
 
@@ -21,9 +24,24 @@ export default class UserAdminController extends Controller {
 
     private resetTokenService: ResetTokenService;
 
+    private sessionService: SessionService;
+
     constructor(
         config: IUnleashConfig,
-        { userService, accessService, emailService, resetTokenService },
+        {
+            userService,
+            accessService,
+            emailService,
+            resetTokenService,
+            sessionService,
+        }: Pick<
+        IUnleashServices,
+        | 'userService'
+        | 'accessService'
+        | 'emailService'
+        | 'resetTokenService'
+        | 'sessionService'
+        >,
     ) {
         super(config);
         this.userService = userService;
@@ -31,6 +49,7 @@ export default class UserAdminController extends Controller {
         this.logger = config.getLogger('routes/user-controller.ts');
         this.emailService = emailService;
         this.resetTokenService = resetTokenService;
+        this.sessionService = sessionService;
 
         this.get('/', this.getUsers, ADMIN);
         this.get('/search', this.search);
@@ -40,6 +59,7 @@ export default class UserAdminController extends Controller {
         this.post('/:id/change-password', this.changePassword, ADMIN);
         this.delete('/:id', this.deleteUser, ADMIN);
         this.post('/reset-password', this.resetPassword);
+        this.get('/active-sessions', this.getActiveSessions, ADMIN);
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -73,6 +93,15 @@ export default class UserAdminController extends Controller {
         } catch (error) {
             this.logger.error(error);
             res.status(500).send({ msg: 'server errors' });
+        }
+    }
+
+    async getActiveSessions(req: Request, res: Response): Promise<void> {
+        try {
+            const sessions = await this.sessionService.getActiveSessions();
+            res.json(sessions);
+        } catch (error) {
+            handleErrors(res, this.logger, error);
         }
     }
 

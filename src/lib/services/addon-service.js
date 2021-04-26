@@ -16,19 +16,19 @@ const MASKED_VALUE = '*****';
 class AddonService {
     constructor(
         { addonStore, eventStore, featureToggleStore },
-        { getLogger, unleashUrl },
+        config,
         tagTypeService,
     ) {
         this.eventStore = eventStore;
         this.addonStore = addonStore;
         this.featureToggleStore = featureToggleStore;
-        this.getLogger = getLogger;
-        this.logger = getLogger('services/addon-service.js');
+        this.getLogger = config.getLogger;
+        this.logger = config.getLogger('services/addon-service.js');
         this.tagTypeService = tagTypeService;
 
         this.addonProviders = this.loadProviders({
-            getLogger,
-            unleashUrl,
+            getLogger: config.getLogger,
+            unleashUrl: config.server.unleashUrl,
         });
         this.sensitiveParams = this.loadSensitiveParams(this.addonProviders);
         if (addonStore) {

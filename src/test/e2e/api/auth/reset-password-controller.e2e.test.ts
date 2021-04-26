@@ -1,5 +1,7 @@
 import test from 'ava';
+import sinon from 'sinon';
 import { URL } from 'url';
+import EventEmitter from 'events';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 
@@ -9,11 +11,13 @@ import {
 } from '../../../../lib/services/access-service';
 import ResetTokenService from '../../../../lib/services/reset-token-service';
 import UserService from '../../../../lib/services/user-service';
-import { setupApp } from '../../helpers/test-helper';
+import { setupApp, setupAppWithAuth } from '../../helpers/test-helper';
 import { EmailService } from '../../../../lib/services/email-service';
 import User from '../../../../lib/types/user';
 import { IUnleashConfig } from '../../../../lib/types/option';
 import { createTestConfig } from '../../../config/test-config';
+import SessionStore from '../../../../lib/db/session-store';
+import SessionService from '../../../../lib/services/session-service';
 
 let stores;
 let db;
@@ -46,11 +50,17 @@ test.before(async () => {
     stores = db.stores;
     accessService = new AccessService(stores, config);
     const emailService = new EmailService(config.email, config.getLogger);
-
+    const sessionStore = new SessionStore(
+        db,
+        new EventEmitter(),
+        config.getLogger,
+    );
+    const sessionService = new SessionService({ sessionStore }, config);
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
     resetTokenService = new ResetTokenService(stores, config);
     const adminRole = await accessService.getRootRole(RoleName.ADMIN);
@@ -99,7 +109,7 @@ test.serial('Can use token to reset password', async t => {
     );
     const relative = getBackendResetUrl(url);
     // Can't login before reset
-    t.throwsAsync<Error>(
+    await t.throwsAsync<Error>(
         async () => userService.loginUser(user.email, password),
         {
             instanceOf: Error,
@@ -170,6 +180,69 @@ test.serial('Invalid token should yield 401', async t => {
         t.is(res.status, 401);
     });
 });
+
+test.serial(
+    'Calling validate endpoint with already existing session should destroy session',
+    async t => {
+        t.plan(0);
+        const request = await setupAppWithAuth(stores);
+        await request
+            .post('/api/admin/login')
+            .send({
+                email: 'user@mail.com',
+            })
+            .expect(200);
+        await request.get('/api/admin/features').expect(200);
+        const url = await resetTokenService.createResetPasswordUrl(
+            user.id,
+            adminUser.username,
+        );
+        const relative = getBackendResetUrl(url);
+
+        await request
+            .get(relative)
+            .expect(200)
+            .expect('Content-Type', /json/);
+        await request.get('/api/admin/features').expect(401); // we no longer should have a valid session
+    },
+);
+
+test.serial(
+    'Calling reset endpoint with already existing session should logout/destroy existing session',
+    async t => {
+        t.plan(0);
+        const request = await setupAppWithAuth(stores);
+        const url = await resetTokenService.createResetPasswordUrl(
+            user.id,
+            adminUser.username,
+        );
+        const relative = getBackendResetUrl(url);
+        let token;
+        await request
+            .get(relative)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .expect(res => {
+                token = res.body.token;
+            });
+        await request
+            .post('/api/admin/login')
+            .send({
+                email: 'user@mail.com',
+            })
+            .expect(200);
+        await request.get('/api/admin/features').expect(200); // If we login we can access features endpoint
+        await request
+            .post('/auth/reset/password')
+            .send({
+                email: user.email,
+                token,
+                password,
+            })
+            .expect(200);
+        await request.get('/api/admin/features').expect(401); // we no longer have a valid session after using the reset password endpoint
+    },
+);
 
 test.serial(
     'Trying to change password with an invalid token should yield 401',

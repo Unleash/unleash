@@ -16,6 +16,7 @@ import AddonStore from '../db/addon-store';
 import { AccessStore } from '../db/access-store';
 import { ApiTokenStore } from '../db/api-token-store';
 import { ResetTokenStore } from '../db/reset-token-store';
+import SessionStore from '../db/session-store';
 
 export interface IUnleashStores {
     projectStore: ProjectStore;
@@ -28,6 +29,7 @@ export interface IUnleashStores {
     featureToggleStore: FeatureToggleStore;
     contextFieldStore: ContextFieldStore;
     settingStore: SettingStore;
+    sessionStore: SessionStore;
     userStore: UserStore;
     tagStore: TagStore;
     tagTypeStore: TagTypeStore;

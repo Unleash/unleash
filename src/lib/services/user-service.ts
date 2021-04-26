@@ -15,6 +15,9 @@ import NotFoundError from '../error/notfound-error';
 import OwaspValidationError from '../error/owasp-validation-error';
 import { EmailService } from './email-service';
 import { IUnleashConfig } from '../types/option';
+import SessionService from './session-service';
+import { IUnleashServices } from '../types/services';
+import { IUnleashStores } from '../types/stores';
 
 export interface ICreateUser {
     name?: string;
@@ -45,16 +48,6 @@ interface ITokenUser extends IUpdateUser {
     role: IRoleDescription;
 }
 
-interface IStores {
-    userStore: UserStore;
-}
-
-interface IServices {
-    accessService: AccessService;
-    resetTokenService: ResetTokenService;
-    emailService: EmailService;
-}
-
 const saltRounds = 10;
 
 class UserService {
@@ -66,21 +59,35 @@ class UserService {
 
     private resetTokenService: ResetTokenService;
 
+    private sessionService: SessionService;
+
     private emailService: EmailService;
 
     constructor(
-        stores: IStores,
+        stores: Pick<IUnleashStores, 'userStore'>,
         {
             getLogger,
             authentication,
         }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
-        { accessService, resetTokenService, emailService }: IServices,
+        {
+            accessService,
+            resetTokenService,
+            emailService,
+            sessionService,
+        }: Pick<
+        IUnleashServices,
+            | 'accessService'
+            | 'resetTokenService'
+            | 'emailService'
+            | 'sessionService'
+        >,
     ) {
         this.logger = getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.accessService = accessService;
         this.resetTokenService = resetTokenService;
         this.emailService = emailService;
+        this.sessionService = sessionService;
         if (authentication && authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
@@ -288,6 +295,11 @@ class UserService {
         };
     }
 
+    /**
+     * If the password is a strong password will update password and delete all sessions for the user we're changing the password for
+     * @param token - the token authenticating this request
+     * @param password - new password
+     */
     async resetPassword(token: string, password: string): Promise<void> {
         this.validatePassword(password);
         const user = await this.getUserForToken(token);
@@ -297,6 +309,7 @@ class UserService {
         });
         if (allowed) {
             await this.changePassword(user.id, password);
+            await this.sessionService.deleteSessionsForUser(user.id);
         } else {
             throw new InvalidTokenError();
         }

@@ -17,6 +17,7 @@ import FeatureTypeService from '../services/feature-type-service';
 import EventService from '../services/event-service';
 import HealthService from '../services/health-service';
 import SettingService from '../services/setting-service';
+import SessionService from '../services/session-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -31,6 +32,7 @@ export interface IUnleashServices {
     healthService: HealthService;
     projectService: ProjectService;
     resetTokenService: ResetTokenService;
+    sessionService: SessionService;
     settingService: SettingService;
     stateService: StateService;
     strategyService: StrategyService;

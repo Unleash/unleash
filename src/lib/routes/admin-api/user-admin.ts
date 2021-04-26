@@ -7,6 +7,7 @@ import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
 import { EmailService, MAIL_ACCEPTED } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
+import { IUnleashServices } from '../../types/services';
 
 const getCreatorUsernameOrPassword = req => req.user.username || req.user.email;
 
@@ -23,7 +24,18 @@ export default class UserAdminController extends Controller {
 
     constructor(
         config: IUnleashConfig,
-        { userService, accessService, emailService, resetTokenService },
+        {
+            userService,
+            accessService,
+            emailService,
+            resetTokenService,
+        }: Pick<
+        IUnleashServices,
+        | 'userService'
+        | 'accessService'
+        | 'emailService'
+        | 'resetTokenService'
+        >,
     ) {
         super(config);
         this.userService = userService;

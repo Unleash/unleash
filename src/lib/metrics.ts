@@ -1,4 +1,6 @@
 import client from 'prom-client';
+import EventEmitter from 'events';
+import { Knex } from 'knex';
 import * as events from './events';
 import {
     FEATURE_CREATED,
@@ -6,20 +8,27 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
     DB_POOL_UPDATE,
-} from'./event-type';
+} from './event-type';
+import { IUnleashConfig } from './types/option';
+import { IUnleashStores } from './types/stores';
 
 const THREE_HOURS = 3 * 60 * 60 * 1000;
 const ONE_MINUTE = 60 * 1000;
 
-class MetricsMonitor {
+export default class MetricsMonitor {
     timer: any;
 
     constructor() {
         this.timer = null;
     }
 
-    startMonitoring({ serverMetrics, eventBus, stores, version }) {
-        if (!serverMetrics) {
+    startMonitoring(
+        config: IUnleashConfig,
+        stores: IUnleashStores,
+        version: string,
+        eventBus: EventEmitter,
+    ): Promise<void> {
+        if (!config.server.serverMetrics) {
             return;
         }
 
@@ -98,37 +107,38 @@ class MetricsMonitor {
         });
 
         clientMetricsStore.on('metrics', m => {
-            for (const entry of Object.entries(
-                m.bucket.toggles,
-            )) {
+            // eslint-disable-next-line no-restricted-syntax
+            for (const entry of Object.entries(m.bucket.toggles)) {
                 featureToggleUsageTotal
                     .labels(entry[0], 'true', m.appName)
-                    .inc(entry[1]['yes']);
+                    // @ts-ignore
+                    .inc(entry[1].yes);
                 featureToggleUsageTotal
                     .labels(entry[0], 'false', m.appName)
-                    .inc(entry[1]['no']);
+                    // @ts-ignore
+                    .inc(entry[1].no);
             }
         });
 
-        this.configureDbMetrics(stores, eventBus);
+        this.configureDbMetrics(stores.db, eventBus);
     }
 
-    stopMonitoring() {
+    stopMonitoring(): void {
         clearInterval(this.timer);
     }
 
-    configureDbMetrics(stores, eventBus) {
-        if (stores.db && stores.db.client) {
+    configureDbMetrics(db: Knex, eventBus: EventEmitter): void {
+        if (db && db.client) {
             const dbPoolMin = new client.Gauge({
                 name: 'db_pool_min',
                 help: 'Minimum DB pool size',
             });
-            dbPoolMin.set(stores.db.client.pool.min);
+            dbPoolMin.set(db.client.pool.min);
             const dbPoolMax = new client.Gauge({
                 name: 'db_pool_max',
                 help: 'Maximum DB pool size',
             });
-            dbPoolMax.set(stores.db.client.pool.max);
+            dbPoolMax.set(db.client.pool.max);
             const dbPoolFree = new client.Gauge({
                 name: 'db_pool_free',
                 help: 'Current free connections in DB pool',
@@ -155,15 +165,16 @@ class MetricsMonitor {
                 dbPoolPendingAcquires.set(data.pendingAcquires);
             });
 
-            this.registerPoolMetrics(stores.db.client.pool, eventBus);
+            this.registerPoolMetrics(db.client.pool, eventBus);
             setInterval(
-                () => this.registerPoolMetrics(stores.db.client.pool, eventBus),
+                () => this.registerPoolMetrics(db.client.pool, eventBus),
                 ONE_MINUTE,
             );
         }
     }
 
-    registerPoolMetrics(pool, eventBus) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    registerPoolMetrics(pool: any, eventBus: EventEmitter) {
         try {
             eventBus.emit(DB_POOL_UPDATE, {
                 used: pool.numUsed(),
@@ -175,9 +186,10 @@ class MetricsMonitor {
         } catch (e) {}
     }
 }
+export function createMetricsMonitor(): MetricsMonitor {
+    return new MetricsMonitor();
+}
 
 module.exports = {
-    createMetricsMonitor() {
-        return new MetricsMonitor();
-    },
+    createMetricsMonitor,
 };

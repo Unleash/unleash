@@ -5,9 +5,8 @@ const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
 const permissions = require('../../../test/fixtures/permissions');
-const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
-const { UPDATE_APPLICATION } = require('../../permissions');
+const { createTestConfig } = require('../../../test/config/test-config');
 const { createServices } = require('../../services');
 
 const eventBus = new EventEmitter();
@@ -15,15 +14,11 @@ const eventBus = new EventEmitter();
 function getSetup() {
     const stores = store.createStores();
     const perms = permissions();
-    const config = {
-        baseUriPath: '',
-        eventBus,
-        extendedPermissions: true,
+    const config = createTestConfig({
         preRouterHook: perms.hook,
-        getLogger,
-    };
+    });
     const services = createServices(stores, config);
-    const app = getApp({ ...config, stores }, services);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         request: supertest(app),
@@ -135,9 +130,8 @@ test('should return applications', t => {
 
 test('should store application', t => {
     t.plan(0);
-    const { request, perms } = getSetup();
+    const { request } = getSetup();
     const appName = '123!23';
-    perms.withPermissions(UPDATE_APPLICATION);
 
     return request
         .post(`/api/admin/metrics/applications/${appName}`)
@@ -147,9 +141,8 @@ test('should store application', t => {
 
 test('should store application details wihtout strategies', t => {
     t.plan(0);
-    const { request, perms } = getSetup();
+    const { request } = getSetup();
     const appName = '123!23';
-    perms.withPermissions(UPDATE_APPLICATION);
 
     return request
         .post(`/api/admin/metrics/applications/${appName}`)
@@ -159,9 +152,8 @@ test('should store application details wihtout strategies', t => {
 
 test('should accept a delete call to unknown application', t => {
     t.plan(0);
-    const { request, perms } = getSetup();
+    const { request } = getSetup();
     const appName = 'unknown';
-    perms.withPermissions(UPDATE_APPLICATION);
 
     return request
         .delete(`/api/admin/metrics/applications/${appName}`)
@@ -170,10 +162,9 @@ test('should accept a delete call to unknown application', t => {
 
 test('should delete application', t => {
     t.plan(0);
-    const { request, stores, perms } = getSetup();
+    const { request, stores } = getSetup();
     const appName = 'deletable-test';
 
-    perms.withPermissions(UPDATE_APPLICATION);
     stores.clientApplicationsStore.upsert({ appName });
 
     return request

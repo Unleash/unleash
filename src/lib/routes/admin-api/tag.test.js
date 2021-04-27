@@ -7,8 +7,8 @@ const store = require('../../../test/fixtures/store');
 const permissions = require('../../../test/fixtures/permissions');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
+const { createTestConfig } = require('../../../test/config/test-config');
 const { createServices } = require('../../services');
-const { UPDATE_FEATURE } = require('../../permissions');
 
 const eventBus = new EventEmitter();
 
@@ -16,16 +16,12 @@ function getSetup(databaseIsUp = true) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = store.createStores(databaseIsUp);
     const perms = permissions();
-    const config = {
-        baseUriPath: base,
-        stores,
-        eventBus,
-        extendedPermissions: true,
+    const config = createTestConfig({
+        server: { baseUriPath: base },
         preRouterHook: perms.hook,
-        getLogger,
-    };
+    });
     const services = createServices(stores, config);
-    const app = getApp(config, services);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,
@@ -85,8 +81,7 @@ test('trying to get non-existing tag by name and type should not be found', t =>
 });
 test('should be able to delete a tag', t => {
     t.plan(0);
-    const { request, base, tagStore, perms } = getSetup();
-    perms.withPermissions(UPDATE_FEATURE);
+    const { request, base, tagStore } = getSetup();
     tagStore.createTag({ type: 'simple', value: 'TeamRed' });
     return request
         .delete(`${base}/api/admin/tags/simple/TeamGreen`)

@@ -22,5 +22,6 @@ module.exports = () => {
             _tagTypes.splice(0, _tagTypes.length);
             return Promise.resolve();
         },
+        exists: name => Promise.resolve(_tagTypes.some(t => t.name === name)),
     };
 };

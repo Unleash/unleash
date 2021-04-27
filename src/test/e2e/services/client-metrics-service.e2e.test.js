@@ -6,10 +6,11 @@ const ClientMetricsService = require('../../../lib/services/client-metrics');
 const { APPLICATION_CREATED } = require('../../../lib/event-type');
 
 let stores;
+let db;
 let clientMetricsService;
 
 test.before(async () => {
-    const db = await dbInit('client_metrics_service_serial', getLogger);
+    db = await dbInit('client_metrics_service_serial', getLogger);
     stores = db.stores;
     clientMetricsService = new ClientMetricsService(stores, {
         getLogger,
@@ -19,7 +20,7 @@ test.before(async () => {
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 test.serial('Apps registered should be announced', async t => {
     t.plan(3);

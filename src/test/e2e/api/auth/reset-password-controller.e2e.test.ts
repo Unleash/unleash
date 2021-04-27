@@ -257,3 +257,32 @@ test.serial(
             .expect(res => t.is(res.status, 401));
     },
 );
+
+test.serial(
+    'Trying to change password to undefined should yield 400 without crashing the server',
+    async t => {
+        t.plan(0);
+        const request = await setupApp(stores);
+        const url = await resetTokenService.createResetPasswordUrl(
+            user.id,
+            adminUser.username,
+        );
+        const relative = getBackendResetUrl(url);
+        let token;
+        await request
+            .get(relative)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .expect(res => {
+                token = res.body.token;
+            });
+        await request
+            .post('/auth/reset/password')
+            .send({
+                email: user.email,
+                token,
+                password: undefined,
+            })
+            .expect(400);
+    },
+);

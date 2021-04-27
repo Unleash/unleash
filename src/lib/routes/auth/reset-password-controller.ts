@@ -4,10 +4,7 @@ import UserService from '../../services/user-service';
 import { Logger } from '../../logger';
 import { handleErrors } from '../admin-api/util';
 import { IUnleashConfig } from '../../types/option';
-
-interface IServices {
-    userService: UserService;
-}
+import { IUnleashServices } from '../../types/services';
 
 interface IValidateQuery {
     token: string;
@@ -18,13 +15,19 @@ interface IChangePasswordBody {
     password: string;
 }
 
+interface SessionRequest<PARAMS, QUERY, BODY, K>
+    extends Request<PARAMS, QUERY, BODY, K> {
+    session?;
+    user?;
+}
+
 const UNLEASH = 'Unleash';
 class ResetPasswordController extends Controller {
-    userService: UserService;
+    private userService: UserService;
 
-    logger: Logger;
+    private logger: Logger;
 
-    constructor(config: IUnleashConfig, { userService }: IServices) {
+    constructor(config: IUnleashConfig, { userService }: IUnleashServices) {
         super(config);
         this.logger = config.getLogger(
             'lib/routes/auth/reset-password-controller.ts',
@@ -65,6 +68,7 @@ class ResetPasswordController extends Controller {
         const { token } = req.query;
         try {
             const user = await this.userService.getUserForToken(token);
+            await this.logout(req);
             res.status(200).json(user);
         } catch (e) {
             handleErrors(res, this.logger, e);
@@ -75,12 +79,19 @@ class ResetPasswordController extends Controller {
         req: Request<unknown, unknown, IChangePasswordBody, unknown>,
         res: Response,
     ): Promise<void> {
+        await this.logout(req);
         const { token, password } = req.body;
         try {
             await this.userService.resetPassword(token, password);
             res.status(200).end();
         } catch (e) {
             handleErrors(res, this.logger, e);
+        }
+    }
+
+    private async logout(req: SessionRequest<any, any, any, any>) {
+        if (req.session) {
+            req.session.destroy();
         }
     }
 }

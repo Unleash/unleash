@@ -8,6 +8,8 @@ import { EmailService } from './email-service';
 import OwaspValidationError from '../error/owasp-validation-error';
 import { IUnleashConfig } from '../types/option';
 import { createTestConfig } from '../../test/config/test-config';
+import SessionService from './session-service';
+import FakeSessionStore from '../../test/fixtures/fake-session-store';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -19,12 +21,15 @@ test('Should create new user', async t => {
         { userStore, resetTokenStore },
         config,
     );
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
     const emailService = new EmailService(config.email, config.getLogger);
 
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
     const user = await service.createUser({
         username: 'test',
@@ -48,11 +53,14 @@ test('Should create default user', async t => {
         config,
     );
     const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
 
     await service.initAdminUser();
@@ -71,11 +79,14 @@ test('Should be a valid password', async t => {
     );
 
     const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
 
     const valid = service.validatePassword('this is a strong password!');
@@ -92,11 +103,14 @@ test('Password must be at least 10 chars', async t => {
         config,
     );
     const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
 
     t.throws(() => service.validatePassword('admin'), {
@@ -114,11 +128,14 @@ test('The password must contain at least one uppercase letter.', async t => {
         config,
     );
     const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
 
     t.throws(() => service.validatePassword('qwertyabcde'), {
@@ -137,10 +154,14 @@ test('The password must contain at least one number', async t => {
     );
 
     const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
+
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
 
     t.throws(() => service.validatePassword('qwertyabcdE'), {
@@ -158,11 +179,14 @@ test('The password must contain at least one special character', async t => {
         config,
     );
     const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
 
     t.throws(() => service.validatePassword('qwertyabcdE2'), {
@@ -180,11 +204,14 @@ test('Should be a valid password with special chars', async t => {
         config,
     );
     const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
 
     const valid = service.validatePassword('this is a strong password!');

@@ -5,22 +5,23 @@ import FeatureTypeService from './feature-type-service';
 import EventService from './event-service';
 import HealthService from './health-service';
 
-const FeatureToggleService = require('./feature-toggle-service');
-const ProjectService = require('./project-service');
-const StateService = require('./state-service');
-const ClientMetricsService = require('./client-metrics');
-const TagTypeService = require('./tag-type-service');
-const TagService = require('./tag-service');
-const StrategyService = require('./strategy-service');
-const AddonService = require('./addon-service');
-const ContextService = require('./context-service');
-const VersionService = require('./version-service');
-const { EmailService } = require('./email-service');
-const { AccessService } = require('./access-service');
-const { ApiTokenService } = require('./api-token-service');
-const UserService = require('./user-service');
-const ResetTokenService = require('./reset-token-service');
-const SettingService = require('./setting-service');
+import FeatureToggleService from './feature-toggle-service';
+import ProjectService from './project-service';
+import StateService from './state-service';
+import ClientMetricsService from './client-metrics';
+import TagTypeService from './tag-type-service';
+import TagService from './tag-service';
+import StrategyService from './strategy-service';
+import AddonService from './addon-service';
+import ContextService from './context-service';
+import VersionService from './version-service';
+import { EmailService } from './email-service';
+import { AccessService } from './access-service';
+import { ApiTokenService } from './api-token-service';
+import UserService from './user-service';
+import ResetTokenService from './reset-token-service';
+import SettingService from './setting-service';
+import SessionService from './session-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -32,11 +33,7 @@ export const createServices = (
     const contextService = new ContextService(stores, config);
     const emailService = new EmailService(config.email, config.getLogger);
     const eventService = new EventService(stores, config);
-    const featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        accessService,
-    );
+    const featureToggleService = new FeatureToggleService(stores, config);
     const featureTypeService = new FeatureTypeService(stores, config);
     const projectService = new ProjectService(stores, config, accessService);
     const resetTokenService = new ResetTokenService(stores, config);
@@ -45,10 +42,12 @@ export const createServices = (
     const tagService = new TagService(stores, config);
     const tagTypeService = new TagTypeService(stores, config);
     const addonService = new AddonService(stores, config, tagTypeService);
+    const sessionService = new SessionService(stores, config);
     const userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
     const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
@@ -74,6 +73,7 @@ export const createServices = (
         resetTokenService,
         eventService,
         settingService,
+        sessionService,
     };
 };
 

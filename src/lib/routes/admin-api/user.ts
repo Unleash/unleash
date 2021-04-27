@@ -10,6 +10,7 @@ import UserService from '../../services/user-service';
 import User from '../../types/user';
 import { Logger } from '../../logger';
 import { handleErrors } from './util';
+import SessionService from '../../services/session-service';
 
 interface IChangeUserRequest {
     password: string;
@@ -26,6 +27,8 @@ class UserController extends Controller {
 
     private userService: UserService;
 
+    private sessionService: SessionService;
+
     private logger: Logger;
 
     constructor(
@@ -33,15 +36,21 @@ class UserController extends Controller {
         {
             accessService,
             userService,
-        }: Pick<IUnleashServices, 'accessService' | 'userService'>,
+            sessionService,
+        }: Pick<
+        IUnleashServices,
+        'accessService' | 'userService' | 'sessionService'
+        >,
     ) {
         super(config);
         this.accessService = accessService;
         this.userService = userService;
+        this.sessionService = sessionService;
         this.logger = config.getLogger('lib/routes/admin-api/user.ts');
 
         this.get('/', this.getUser);
         this.post('/change-password', this.updateUserPass);
+        this.get('/my-sessions', this.mySessions);
     }
 
     async getUser(req: IAuthRequest, res: Response): Promise<void> {
@@ -74,6 +83,25 @@ class UserController extends Controller {
                 } else {
                     res.status(400).end();
                 }
+            } catch (e) {
+                handleErrors(res, this.logger, e);
+            }
+        } else {
+            res.status(401).end();
+        }
+    }
+
+    async mySessions(
+        req: UserRequest<any, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { user } = req;
+        if (user) {
+            try {
+                const sessions = await this.sessionService.getSessionsForUser(
+                    user.id,
+                );
+                res.json(sessions);
             } catch (e) {
                 handleErrors(res, this.logger, e);
             }

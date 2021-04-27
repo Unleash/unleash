@@ -88,7 +88,11 @@ function getSetup() {
     const stores = store.createStores();
     const tagTypeService = new TagTypeService(stores, { getLogger });
     return {
-        addonService: new AddonService(stores, { getLogger }, tagTypeService),
+        addonService: new AddonService(
+            stores,
+            { getLogger, server: { unleashUrl: 'http://test' } },
+            tagTypeService,
+        ),
         stores,
         tagTypeService,
     };

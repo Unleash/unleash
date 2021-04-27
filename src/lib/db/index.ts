@@ -2,29 +2,29 @@
 
 // eslint-disable-next-line
 import EventEmitter from "events";
-import { Knex } from 'knex';
-import { AccessStore } from './access-store';
-import { ResetTokenStore } from './reset-token-store';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 
-const { createDb } = require('./db-pool');
-const EventStore = require('./event-store');
-const FeatureToggleStore = require('./feature-toggle-store');
-const FeatureTypeStore = require('./feature-type-store');
-const StrategyStore = require('./strategy-store');
-const ClientInstanceStore = require('./client-instance-store');
-const ClientMetricsDb = require('./client-metrics-db');
-const ClientMetricsStore = require('./client-metrics-store');
-const ClientApplicationsStore = require('./client-applications-store');
-const ContextFieldStore = require('./context-field-store');
-const SettingStore = require('./setting-store');
-const UserStore = require('./user-store');
-const ProjectStore = require('./project-store');
-const TagStore = require('./tag-store');
-const TagTypeStore = require('./tag-type-store');
-const AddonStore = require('./addon-store');
-const { ApiTokenStore } = require('./api-token-store');
+import { createDb } from './db-pool';
+import EventStore from './event-store';
+import FeatureToggleStore from './feature-toggle-store';
+import FeatureTypeStore from './feature-type-store';
+import StrategyStore from './strategy-store';
+import ClientInstanceStore from './client-instance-store';
+import ClientMetricsDb from './client-metrics-db';
+import ClientMetricsStore from './client-metrics-store';
+import ClientApplicationsStore from './client-applications-store';
+import ContextFieldStore from './context-field-store';
+import SettingStore from './setting-store';
+import UserStore from './user-store';
+import ProjectStore from './project-store';
+import TagStore from './tag-store';
+import TagTypeStore from './tag-type-store';
+import AddonStore from './addon-store';
+import { ApiTokenStore } from './api-token-store';
+import SessionStore from './session-store';
+import { AccessStore } from './access-store';
+import { ResetTokenStore } from './reset-token-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -41,11 +41,7 @@ export const createStores = (
         featureToggleStore: new FeatureToggleStore(db, eventBus, getLogger),
         featureTypeStore: new FeatureTypeStore(db, getLogger),
         strategyStore: new StrategyStore(db, getLogger),
-        clientApplicationsStore: new ClientApplicationsStore(
-            db,
-            eventBus,
-            getLogger,
-        ),
+        clientApplicationsStore: new ClientApplicationsStore(db, eventBus),
         clientInstanceStore: new ClientInstanceStore(db, eventBus, getLogger),
         clientMetricsStore: new ClientMetricsStore(
             clientMetricsDb,
@@ -62,6 +58,7 @@ export const createStores = (
         accessStore: new AccessStore(db, eventBus, getLogger),
         apiTokenStore: new ApiTokenStore(db, eventBus, getLogger),
         resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),
+        sessionStore: new SessionStore(db, eventBus, getLogger),
     };
 };
 

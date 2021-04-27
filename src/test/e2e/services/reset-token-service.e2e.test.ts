@@ -9,6 +9,7 @@ import { EmailService } from '../../../lib/services/email-service';
 import User from '../../../lib/types/user';
 import { IUnleashConfig } from '../../../lib/types/option';
 import { createTestConfig } from '../../config/test-config';
+import SessionService from '../../../lib/services/session-service';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -20,18 +21,20 @@ let userIdToCreateResetFor: number;
 let accessService: AccessService;
 let userService: UserService;
 let resetTokenService: ResetTokenService;
+let sessionService: SessionService;
 test.before(async () => {
     db = await dbInit('reset_token_service_serial', getLogger);
     stores = db.stores;
     accessService = new AccessService(stores, config);
     resetTokenService = new ResetTokenService(stores, config);
-
+    sessionService = new SessionService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);
 
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
+        sessionService,
     });
 
     adminUser = await userService.createUser({

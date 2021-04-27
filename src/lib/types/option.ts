@@ -38,6 +38,7 @@ export enum IAuthType {
     OPEN_SOURCE = 'open-source',
     DEMO = 'demo',
     ENTERPRISE = 'enterprise',
+    HOSTED = 'hosted',
     CUSTOM = 'custom',
     NONE = 'none',
 }

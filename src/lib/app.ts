@@ -73,6 +73,11 @@ export default function getApp(
             config.authentication.customAuthHandler(app, config, services);
             break;
         }
+        case IAuthType.HOSTED: {
+            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            config.authentication.customAuthHandler(app, config, services);
+            break;
+        }
         case IAuthType.DEMO: {
             demoAuthentication(app, config.server.baseUriPath, services);
             break;

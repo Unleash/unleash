@@ -194,6 +194,10 @@ class UserStore {
             seen_at: new Date(),
         });
     }
+
+    async deleteAll(): Promise<void> {
+        await this.db(TABLE).del();
+    }
 }
 
 module.exports = UserStore;

@@ -30,9 +30,7 @@ test.after.always(async () => {
 });
 
 test.afterEach.always(async () => {
-    const users = await userStore.getAll();
-    const deleteAll = users.map((u: User) => userStore.delete(u.id));
-    await Promise.all(deleteAll);
+    await userStore.deleteAll();
 });
 
 test.serial('returns empty list of users', async t => {

@@ -30,6 +30,14 @@ export interface IEmailOptions {
     transporterType: TransporterType;
 }
 
+export interface IEmailEnvelope {
+    from: string;
+    to: string;
+    subject: string;
+    html: string;
+    text: string;
+}
+
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
 
@@ -38,7 +46,7 @@ export const MAIL_ACCEPTED = '250 Accepted';
 export class EmailService {
     private logger: Logger;
 
-    private mailer?: Transporter;
+    private readonly mailer?: Transporter;
 
     private readonly sender: string;
 
@@ -67,7 +75,7 @@ export class EmailService {
         name: string,
         recipient: string,
         resetLink: string,
-    ): Promise<SentMessageInfo> {
+    ): Promise<IEmailEnvelope> {
         if (this.configured()) {
             const year = new Date().getFullYear();
             const bodyHtml = await this.compileTemplate(
@@ -95,13 +103,32 @@ export class EmailService {
                 html: bodyHtml,
                 text: bodyText,
             };
-            return this.mailer.sendMail(email);
+            process.nextTick(() => {
+                this.mailer.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent reset-password email',
+                        ),
+                    e =>
+                        this.logger.warn(
+                            'Failed to send reset-password email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
         }
         return new Promise(res => {
             this.logger.warn(
                 'No mailer is configured. Please read the docs on how to configure an emailservice',
             );
-            res({});
+            res({
+                from: this.sender,
+                to: recipient,
+                subject: RESET_MAIL_SUBJECT,
+                html: '',
+                text: '',
+            });
         });
     }
 
@@ -109,7 +136,7 @@ export class EmailService {
         name: string,
         recipient: string,
         passwordLink: string,
-    ): Promise<SentMessageInfo> {
+    ): Promise<IEmailEnvelope> {
         if (this.configured()) {
             const year = new Date().getFullYear();
             const context = { passwordLink, name, year };
@@ -130,13 +157,32 @@ export class EmailService {
                 html: bodyHtml,
                 text: bodyText,
             };
-            return this.mailer.sendMail(email);
+            process.nextTick(() => {
+                this.mailer.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent getting started email',
+                        ),
+                    e =>
+                        this.logger.warn(
+                            'Failed to send getting started email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
         }
         return new Promise(res => {
             this.logger.warn(
                 'No mailer is configured. Please read the docs on how to configure an EmailService',
             );
-            res({});
+            res({
+                from: this.sender,
+                to: recipient,
+                subject: GETTING_STARTED_SUBJECT,
+                html: '',
+                text: '',
+            });
         });
     }
 

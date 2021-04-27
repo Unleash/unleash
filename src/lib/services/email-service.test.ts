@@ -22,11 +22,10 @@ test('Can send reset email', async t => {
         'test@resetLinkUrl.com',
         resetLinkUrl,
     );
-    const message = JSON.parse(content.message);
-    t.is(message.from.address, 'noreply@getunleash.ai');
-    t.is(message.subject, 'Unleash - Reset your password');
-    t.true(message.html.includes(resetLinkUrl));
-    t.true(message.text.includes(resetLinkUrl));
+    t.is(content.from, 'noreply@getunleash.ai');
+    t.is(content.subject, 'Unleash - Reset your password');
+    t.true(content.html.includes(resetLinkUrl));
+    t.true(content.text.includes(resetLinkUrl));
 });
 
 test('Can send welcome mail', async t => {
@@ -46,7 +45,6 @@ test('Can send welcome mail', async t => {
         'test@test.com',
         'abc123456',
     );
-    const message = JSON.parse(content.message);
-    t.is(message.from.address, 'noreply@getunleash.ai');
-    t.is(message.subject, 'Welcome to Unleash');
+    t.is(content.from, 'noreply@getunleash.ai');
+    t.is(content.subject, 'Welcome to Unleash');
 });

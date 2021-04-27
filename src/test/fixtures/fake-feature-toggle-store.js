@@ -64,6 +64,13 @@ module.exports = (databaseIsUp = true) => {
             _features.splice(0, _features.length);
             _archive.splice(0, _archive.length);
         },
+        deleteFeature: featureName => {
+            const archivedIdx = _archive.findIndex(f => f.name === featureName);
+            if (archivedIdx > -1) {
+                _archive.splice(archivedIdx, 1);
+            }
+            return Promise.resolve();
+        },
         importFeature: feat => Promise.resolve(_features.push(feat)),
         getFeatures: query => {
             if (!databaseIsUp) {

@@ -48,7 +48,6 @@ class FeatureController extends Controller {
         this.get('/:featureName', this.getToggle);
         this.put('/:featureName', this.updateToggle, UPDATE_FEATURE);
         this.delete('/:featureName', this.archiveToggle, DELETE_FEATURE);
-        this.delete('/:featureName/really', this.deleteToggle, DELETE_FEATURE);
         this.post('/validate', this.validate);
         this.post('/:featureName/toggle', this.toggle, UPDATE_FEATURE);
         this.post('/:featureName/toggle/on', this.toggleOn, UPDATE_FEATURE);
@@ -239,20 +238,6 @@ class FeatureController extends Controller {
 
         try {
             await this.featureService.archiveToggle(featureName);
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
-    }
-
-    async deleteToggle(
-        req: Request<any, { featureName: string }, any, any>,
-        res: Response,
-    ): Promise<void> {
-        const { featureName } = req.params;
-        const userName = extractUser(req);
-        try {
-            await this.featureService.deleteFeature(featureName, userName);
             res.status(200).end();
         } catch (error) {
             handleErrors(res, this.logger, error);

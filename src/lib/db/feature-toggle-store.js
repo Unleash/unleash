@@ -224,7 +224,7 @@ class FeatureToggleStore {
 
     async deleteFeature(name) {
         await this.db(TABLE)
-            .where({ name })
+            .where({ name, archived: 1 }) // Feature toggle must be archived to allow deletion
             .del();
     }
 

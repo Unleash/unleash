@@ -1,15 +1,20 @@
-'use strict';
-
+import { Request, Response } from 'express';
 import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
+import { Logger } from '../../logger';
 
-const Controller = require('../controller');
+import Controller from '../controller';
 
-const extractUser = require('../../extract-user');
-const { UPDATE_FEATURE } = require('../../types/permissions');
+import extractUser from '../../extract-user';
+import { UPDATE_FEATURE, DELETE_FEATURE } from '../../types/permissions';
+import FeatureToggleService from '../../services/feature-toggle-service';
 
 export default class ArchiveController extends Controller {
+    private readonly logger: Logger;
+
+    private featureService: FeatureToggleService;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -21,6 +26,7 @@ export default class ArchiveController extends Controller {
         this.featureService = featureToggleService;
 
         this.get('/features', this.getArchivedFeatures);
+        this.delete('/:featureName', this.deleteFeature, DELETE_FEATURE);
         this.post(
             '/revive/:featureName',
             this.reviveFeatureToggle,
@@ -35,6 +41,19 @@ export default class ArchiveController extends Controller {
             res.json({ features });
         } catch (err) {
             handleErrors(res, this.logger, err);
+        }
+    }
+
+    async deleteFeature(
+        req: Request<any, { featureName: string }, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { featureName } = req.params;
+        try {
+            await this.featureService.deleteFeature(featureName);
+            res.status(200).end();
+        } catch (error) {
+            handleErrors(res, this.logger, error);
         }
     }
 

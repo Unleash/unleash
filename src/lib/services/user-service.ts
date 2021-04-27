@@ -18,6 +18,7 @@ import { IUnleashConfig } from '../types/option';
 import SessionService from './session-service';
 import { IUnleashServices } from '../types/services';
 import { IUnleashStores } from '../types/stores';
+import PasswordUndefinedError from '../error/password-undefined';
 
 export interface ICreateUser {
     name?: string;
@@ -94,10 +95,14 @@ class UserService {
     }
 
     validatePassword(password: string): boolean {
-        const result = owasp.test(password);
-        if (!result.strong) {
-            throw new OwaspValidationError(result);
-        } else return true;
+        if (password) {
+            const result = owasp.test(password);
+            if (!result.strong) {
+                throw new OwaspValidationError(result);
+            } else return true;
+        } else {
+            throw new PasswordUndefinedError();
+        }
     }
 
     async initAdminUser(): Promise<void> {

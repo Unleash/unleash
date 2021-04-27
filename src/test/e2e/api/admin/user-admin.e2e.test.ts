@@ -273,7 +273,7 @@ test.serial('generates USER_CREATED event', async t => {
 });
 
 test.serial('generates USER_DELETED event', async t => {
-    t.plan(2);
+    t.plan(3);
     const request = await setupApp(stores);
 
     const user = await userStore.insert({ email: 'some@mail.com' });
@@ -282,6 +282,7 @@ test.serial('generates USER_DELETED event', async t => {
     const events = await eventStore.getEvents();
     t.is(events[0].type, eventType.USER_DELETED);
     t.is(events[0].data.id, user.id);
+    t.is(events[0].data.email, user.email);
 });
 
 test.serial('generates USER_UPDATED event', async t => {

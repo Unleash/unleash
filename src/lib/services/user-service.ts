@@ -223,7 +223,7 @@ class UserService {
 
     async updateUser(
         { id, name, email, rootRole }: IUpdateUser,
-        updatedBy: User = systemUser,
+        updatedBy?: User,
     ): Promise<User> {
         if (email) {
             Joi.assert(email, Joi.string().email(), 'Email');
@@ -276,13 +276,10 @@ class UserService {
                 const defaultRole = await this.accessService.getRootRole(
                     RoleName.EDITOR,
                 );
-                user = await this.createUser(
-                    {
-                        email,
-                        rootRole: defaultRole.id,
-                    },
-                    systemUser,
-                );
+                user = await this.createUser({
+                    email,
+                    rootRole: defaultRole.id,
+                });
             } else {
                 throw e;
             }
@@ -297,7 +294,8 @@ class UserService {
         return this.store.setPasswordHash(userId, passwordHash);
     }
 
-    async deleteUser(userId: number, updatedBy: User = systemUser): Promise<void> {
+    async deleteUser(userId: number, updatedBy?: User): Promise<void> {
+        const user = await this.store.get({ id: userId });
         const roles = await this.accessService.getRolesForUser(userId);
         await Promise.all(
             roles.map(role =>
@@ -306,13 +304,8 @@ class UserService {
         );
 
         await this.store.delete(userId);
-        await this.eventStore.store({
-            type: USER_DELETED,
-            createdBy: updatedBy.username || updatedBy.email,
-            data: {
-                id: userId,
-            },
-        });
+
+        await this.updateChangeLog(USER_DELETED, user, updatedBy);
     }
 
     async getUserForToken(token: string): Promise<ITokenUser> {

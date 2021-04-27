@@ -23,6 +23,23 @@ import ossAuthentication from './middleware/oss-authentication';
 import noAuthentication from './middleware/no-authentication';
 import secureHeaders from './middleware/secure-headers';
 
+function handleCustomAuth({ customAuthHandler, app, config, services }) {
+    const logger = config.getLogger('src/lib/app/customAuthHandler');
+    if (customAuthHandler) {
+        customAuthHandler(app, config, services);
+    } else {
+        app.use(`${config.server.baseUriPath}/api`, async (req, res) => {
+            logger.error(
+                'You have to configure a custom authentication middleware. Read the docs....',
+            );
+            res.status(401).send({
+                error:
+                    'You have to configure a custom authentication middleware. Read the docs....',
+            });
+        });
+    }
+}
+
 export default function getApp(
     config: IUnleashConfig,
     stores: IUnleashStores,
@@ -70,12 +87,22 @@ export default function getApp(
         }
         case IAuthType.ENTERPRISE: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            config.authentication.customAuthHandler(app, config, services);
+            handleCustomAuth({
+                customAuthHandler: config.authentication.customAuthHandler,
+                app,
+                config,
+                services,
+            });
             break;
         }
         case IAuthType.HOSTED: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            config.authentication.customAuthHandler(app, config, services);
+            handleCustomAuth({
+                customAuthHandler: config.authentication.customAuthHandler,
+                app,
+                config,
+                services,
+            });
             break;
         }
         case IAuthType.DEMO: {
@@ -84,7 +111,12 @@ export default function getApp(
         }
         case IAuthType.CUSTOM: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            config.authentication.customAuthHandler(app, config, services);
+            handleCustomAuth({
+                customAuthHandler: config.authentication.customAuthHandler,
+                app,
+                config,
+                services,
+            });
             break;
         }
         case IAuthType.NONE: {

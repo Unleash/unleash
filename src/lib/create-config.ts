@@ -98,7 +98,7 @@ const defaultVersionOption: IVersionOption = {
 const defaultAuthentication: IAuthOption = {
     enableApiToken: safeBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
     type: authTypeFromString(process.env.AUTH_TYPE),
-    customAuthHandler: () => {},
+    customAuthHandler: undefined,
     createAdminUser: true,
 };
 

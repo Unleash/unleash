@@ -8,6 +8,8 @@ import { Provider } from 'react-redux';
 import { ThemeProvider, CssBaseline } from '@material-ui/core';
 import thunkMiddleware from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { StylesProvider } from '@material-ui/core/styles';
 
 import mainTheme from './themes/main-theme';
@@ -39,18 +41,20 @@ metricsPoller.start();
 
 ReactDOM.render(
     <Provider store={unleashStore}>
-        <AccessProvider store={unleashStore}>
-            <HashRouter>
-                <ThemeProvider theme={mainTheme}>
-                    <StylesProvider injectFirst>
-                        <CssBaseline />
-                        <ScrollToTop>
-                            <Route path="/" component={App} />
-                        </ScrollToTop>
-                    </StylesProvider>
-                </ThemeProvider>
-            </HashRouter>
-        </AccessProvider>
+        <DndProvider backend={HTML5Backend}>
+            <AccessProvider store={unleashStore}>
+                <HashRouter>
+                    <ThemeProvider theme={mainTheme}>
+                        <StylesProvider injectFirst>
+                            <CssBaseline />
+                            <ScrollToTop>
+                                <Route path="/" component={App} />
+                            </ScrollToTop>
+                        </StylesProvider>
+                    </ThemeProvider>
+                </HashRouter>
+            </AccessProvider>
+        </DndProvider>
     </Provider>,
     document.getElementById('app')
 );

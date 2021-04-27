@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import {
-    Button,
-    TextField,
-    Typography,
-    IconButton,
-} from '@material-ui/core';
+import { Button, TextField, Typography, IconButton } from '@material-ui/core';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
 import { useStyles } from './PasswordAuth.styles';
+import { Link } from 'react-router-dom';
 
 const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
     const commonStyles = useCommonStyles();
@@ -76,11 +72,7 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
         const { usernameError, passwordError, apiError } = errors;
 
         return (
-            <form
-                onSubmit={handleSubmit}
-                action={authDetails.path}
-            >
-                
+            <form onSubmit={handleSubmit} action={authDetails.path}>
                 <Typography variant="subtitle2" className={styles.apiError}>
                     {apiError}
                 </Typography>
@@ -113,6 +105,11 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
                         size="small"
                     />
 
+                    <Link to="/forgotten-password">
+                        <Typography variant="body2">
+                            Forgot your password?
+                        </Typography>
+                    </Link>
                     <Button
                         variant="contained"
                         color="primary"
@@ -129,11 +126,14 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
     const renderWithOptions = options => (
         <div>
             {options.map(o => (
-                <div key={o.type}  className={classnames(
-                    styles.contentContainer,
-                    commonStyles.contentSpacingY
-                )}>
-                    <Button color="primary" variant="contained"  href={o.path}>
+                <div
+                    key={o.type}
+                    className={classnames(
+                        styles.contentContainer,
+                        commonStyles.contentSpacingY
+                    )}
+                >
+                    <Button color="primary" variant="contained" href={o.path}>
                         {o.value}
                     </Button>
                 </div>
@@ -142,7 +142,7 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
                 condition={showFields}
                 show={renderLoginForm()}
                 elseShow={
-                    <IconButton onClick={onShowOptions} >
+                    <IconButton onClick={onShowOptions}>
                         {' '}
                         Show more options
                     </IconButton>
@@ -155,15 +155,12 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
 
     return (
         <div>
-            <Typography variant="subtitle1">
-                    {authDetails.message}
-                </Typography>
-                <ConditionallyRender
-            condition={options.length > 0}
-            show={renderWithOptions(options)}
-            elseShow={renderLoginForm()}
-        />
-
+            <Typography variant="subtitle1">{authDetails.message}</Typography>
+            <ConditionallyRender
+                condition={options.length > 0}
+                show={renderWithOptions(options)}
+                elseShow={renderLoginForm()}
+            />
         </div>
     );
 };

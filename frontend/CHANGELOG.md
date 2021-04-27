@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 The latest version of this document is always available in
 [releases][releases-url].
-
+# 4.0.0-alpha.10
+- fix: password
 # 4.0.0-alpha.9
 - fix: optimizations
 - feat: user profile

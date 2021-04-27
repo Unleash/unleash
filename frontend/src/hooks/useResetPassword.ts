@@ -8,6 +8,7 @@ const getFetcher = (token: string) => () =>
     }).then(res => res.json());
 
 const INVALID_TOKEN_ERROR = 'InvalidTokenError';
+const USED_TOKEN_ERROR = 'UsedTokenError';
 
 const useResetPassword = () => {
     const query = useQueryParams();
@@ -30,7 +31,9 @@ const useResetPassword = () => {
         setLoading(!error && !data);
     }, [data, error]);
 
-    const invalidToken = !loading && data?.name === INVALID_TOKEN_ERROR;
+    const invalidToken =
+        (!loading && data?.name === INVALID_TOKEN_ERROR) ||
+        data?.name === USED_TOKEN_ERROR;
 
     return { token, data, error, loading, setLoading, invalidToken, retry };
 };

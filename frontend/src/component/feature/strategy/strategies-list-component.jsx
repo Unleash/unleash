@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import cloneDeep from 'lodash.clonedeep';
@@ -6,7 +6,6 @@ import arrayMove from 'array-move';
 import { Button } from '@material-ui/core';
 
 import { Alert } from '@material-ui/lab';
-import DragAndDrop from '../../common/drag-and-drop';
 import HeaderTitle from '../../common/HeaderTitle';
 import { updateIndexInArray } from '../../common/util';
 import styles from './strategy.module.scss';
@@ -27,7 +26,9 @@ const StrategiesList = props => {
     const [delStrategy, setDelStrategy] = useState(null);
     const [showCreateStrategy, setShowCreateStrategy] = useState(false);
     const [showAlert, setShowAlert] = useState(true);
-    const [editableStrategies, updateEditableStrategies] = useState(cloneDeep(props.configuredStrategies));
+    const [editableStrategies, updateEditableStrategies] = useState(
+        cloneDeep(props.configuredStrategies)
+    );
     const [editStrategyIndex, setEditStrategyIndex] = useState();
 
     useEffect(() => {
@@ -39,7 +40,11 @@ const StrategiesList = props => {
 
     const updateStrategy = index => strategy => {
         const newStrategy = { ...strategy };
-        const newStrategies = updateIndexInArray(editableStrategies, index, newStrategy);
+        const newStrategies = updateIndexInArray(
+            editableStrategies,
+            index,
+            newStrategy
+        );
         updateEditableStrategies(newStrategies);
     };
 
@@ -87,9 +92,13 @@ const StrategiesList = props => {
         const strategy = editableStrategies[delStrategy];
 
         if (!strategy.new) {
-            await props.saveStrategies(props.configuredStrategies.filter((_, i) => i !== delStrategy));
+            await props.saveStrategies(
+                props.configuredStrategies.filter((_, i) => i !== delStrategy)
+            );
         }
-        updateEditableStrategies(editableStrategies.filter((_, i) => i !== delStrategy));
+        updateEditableStrategies(
+            editableStrategies.filter((_, i) => i !== delStrategy)
+        );
 
         setDelStrategy(undefined);
         setShowDelDialog(null);
@@ -100,7 +109,12 @@ const StrategiesList = props => {
         setEditStrategyIndex(undefined);
     };
 
-    const { strategies, configuredStrategies, featureToggleName, editable } = props;
+    const {
+        strategies,
+        configuredStrategies,
+        featureToggleName,
+        editable,
+    } = props;
 
     const resolveStrategyDefinition = strategyName => {
         if (!strategies || strategies.length === 0) {
@@ -139,67 +153,77 @@ const StrategiesList = props => {
                     strategy={editingStrategy}
                     updateStrategy={updateStrategy(editStrategyIndex)}
                     saveStrategy={saveStrategy(editStrategyIndex)}
-                    strategyDefinition={resolveStrategyDefinition(editingStrategy.name)}
+                    strategyDefinition={resolveStrategyDefinition(
+                        editingStrategy.name
+                    )}
                     onCancel={clearAll}
                 />
             ) : null}
-            <DragAndDrop>
-                <ConditionallyRender
-                    condition={editable}
-                    show={
-                        <HeaderTitle
-                            title="Activation strategies"
-                            actions={
-                                <>
-                                    <Button
-                                        variant="contained"
-                                        disabled={!featureToggleName}
-                                        color="primary"
-                                        onClick={() => setShowCreateStrategy(true)}
-                                    >
-                                        Add strategy
-                                    </Button>
-                                </>
-                            }
-                        />
-                    }
-                />
-                <ConditionallyRender
-                    condition={showAlert}
-                    show={
-                        <Alert severity="info" className={styles.infoCard} onClose={() => setShowAlert(false)}>
-                            Strategies allow you fine grained control over how to activate your features, and are
-                            composable blocks that are executed in an OR fashion. As an example, you can have a gradual
-                            rollout that targets 80% of users in a region of the world (using the enterprise feature of
-                            constraints), and another gradual rollout that targets 20% of the users in another region.
-                            If you don't add a strategy, the default strategy is activated which means that the feature
-                            will be strictly on/off for your entire userbase.
-                        </Alert>
-                    }
-                />
-                <ConditionallyRender
-                    condition={!configuredStrategies || configuredStrategies.length === 0}
-                    show={
-                        <p style={{ padding: '0 16px' }}>
-                            <i>No activation strategies selected.</i>
-                        </p>
-                    }
-                />
+            <ConditionallyRender
+                condition={editable}
+                show={
+                    <HeaderTitle
+                        title="Activation strategies"
+                        actions={
+                            <>
+                                <Button
+                                    variant="contained"
+                                    disabled={!featureToggleName}
+                                    color="primary"
+                                    onClick={() => setShowCreateStrategy(true)}
+                                >
+                                    Add strategy
+                                </Button>
+                            </>
+                        }
+                    />
+                }
+            />
+            <ConditionallyRender
+                condition={showAlert}
+                show={
+                    <Alert
+                        severity="info"
+                        className={styles.infoCard}
+                        onClose={() => setShowAlert(false)}
+                    >
+                        Strategies allow you fine grained control over how to
+                        activate your features, and are composable blocks that
+                        are executed in an OR fashion. As an example, you can
+                        have a gradual rollout that targets 80% of users in a
+                        region of the world (using the enterprise feature of
+                        constraints), and another gradual rollout that targets
+                        20% of the users in another region. If you don't add a
+                        strategy, the default strategy is activated which means
+                        that the feature will be strictly on/off for your entire
+                        userbase.
+                    </Alert>
+                }
+            />
+            <ConditionallyRender
+                condition={
+                    !configuredStrategies || configuredStrategies.length === 0
+                }
+                show={
+                    <p style={{ padding: '0 16px' }}>
+                        <i>No activation strategies selected.</i>
+                    </p>
+                }
+            />
 
-                <Dialogue
-                    title="Really delete strategy?"
-                    open={showDelDialog}
-                    onClick={() => removeStrategy()}
-                    onClose={() => {
-                        setDelStrategy(null);
-                        setShowDelDialog(false);
-                    }}
-                />
-                <ConditionallyRender
-                    condition={cards.length > 0}
-                    show={<div className={styles.strategyListCards}>{cards}</div>}
-                />
-            </DragAndDrop>
+            <Dialogue
+                title="Really delete strategy?"
+                open={showDelDialog}
+                onClick={() => removeStrategy()}
+                onClose={() => {
+                    setDelStrategy(null);
+                    setShowDelDialog(false);
+                }}
+            />
+            <ConditionallyRender
+                condition={cards.length > 0}
+                show={<div className={styles.strategyListCards}>{cards}</div>}
+            />
         </div>
     );
 };

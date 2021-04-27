@@ -222,6 +222,12 @@ class FeatureToggleStore {
         }
     }
 
+    async deleteFeature(name) {
+        await this.db(TABLE)
+            .where({ name })
+            .del();
+    }
+
     async reviveFeature({ name }) {
         try {
             await this.db(TABLE)

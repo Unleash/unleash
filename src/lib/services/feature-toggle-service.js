@@ -58,6 +58,10 @@ export default class FeatureToggleService {
         await this.featureToggleStore.addArchivedFeature(feature);
     }
 
+    async deleteFeature(name) {
+        await this.featureToggleStore.deleteFeature(name);
+    }
+
     async getFeature(name) {
         return this.featureToggleStore.getFeature(name);
     }

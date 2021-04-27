@@ -2,22 +2,26 @@
 
 const test = require('ava');
 const sinon = require('sinon');
-const { APPLICATION_CREATED } = require('../../../lib/event-type');
+const {
+    APPLICATION_CREATED,
+    FEATURE_CREATED,
+} = require('../../../lib/event-type');
 
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 
+let db;
 let stores;
 let eventStore;
 
 test.before(async () => {
-    const db = await dbInit('event_store_serial', getLogger);
+    db = await dbInit('event_store_serial', getLogger);
     stores = db.stores;
     eventStore = stores.eventStore;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 test.serial('Should include id and createdAt when saving', async t => {
     const clock = sinon.useFakeTimers();
@@ -38,6 +42,32 @@ test.serial('Should include id and createdAt when saving', async t => {
     t.truthy(seen[0].createdAt);
     t.is(seen[0].data.clientIp, event1.data.clientIp);
     t.is(seen[0].data.appName, event1.data.appName);
+});
+
+test.serial('Should include empty tags array for new event', async t => {
+    t.plan(2);
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'me@mail.com',
+        data: {
+            name: 'someName',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        },
+    };
+
+    const promise = new Promise(resolve => {
+        eventStore.on(FEATURE_CREATED, storedEvent => {
+            t.is(storedEvent.name, event.name);
+            t.true(Array.isArray(storedEvent.tags), 'tags should be an array');
+            resolve();
+        });
+    });
+
+    // Trigger
+    await eventStore.store(event);
+
+    return promise;
 });
 
 test.serial('Should be able to store multiple events at once', async t => {

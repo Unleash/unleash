@@ -6,29 +6,30 @@ const {
     AccessService,
     RoleName,
 } = require('../../../lib/services/access-service');
-const User = require('../../../lib/user');
 const { UPDATE_PROJECT } = require('../../../lib/permissions');
 const NotFoundError = require('../../../lib/error/notfound-error');
 
 let stores;
-// let projectStore;
+let db;
+
 let projectService;
 let accessService;
 let user;
 
 test.before(async () => {
-    const db = await dbInit('project_service_serial', getLogger);
+    db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
-    user = await stores.userStore.insert(
-        new User({ name: 'Some Name', email: 'test@getunleash.io' }),
-    );
+    user = await stores.userStore.insert({
+        name: 'Some Name',
+        email: 'test@getunleash.io',
+    });
     const config = { getLogger, experimental: { rbac: true } };
     accessService = new AccessService(stores, config);
     projectService = new ProjectService(stores, config, accessService);
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('should have default project', async t => {
@@ -221,17 +222,17 @@ test.serial('should get list of users with access to project', async t => {
         user,
     );
 
-    const admin = roles.find(role => role.name === RoleName.ADMIN);
-    const regular = roles.find(role => role.name === RoleName.REGULAR);
+    const owner = roles.find(role => role.name === RoleName.OWNER);
+    const member = roles.find(role => role.name === RoleName.MEMBER);
 
     t.is(users.length, 1);
     t.is(users[0].id, user.id);
     t.is(users[0].name, user.name);
-    t.is(users[0].roleId, admin.id);
-    t.truthy(regular);
+    t.is(users[0].roleId, owner.id);
+    t.truthy(member);
 });
 
-test.serial('should add a regular user to the project', async t => {
+test.serial('should add a member user to the project', async t => {
     const project = {
         id: 'add-users',
         name: 'New project',
@@ -239,27 +240,29 @@ test.serial('should add a regular user to the project', async t => {
     };
     await projectService.createProject(project, user);
 
-    const projectMember1 = await stores.userStore.insert(
-        new User({ name: 'Some Member', email: 'member1@getunleash.io' }),
-    );
-    const projectMember2 = await stores.userStore.insert(
-        new User({ name: 'Some Member 2', email: 'member2@getunleash.io' }),
-    );
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'member1@getunleash.io',
+    });
+    const projectMember2 = await stores.userStore.insert({
+        name: 'Some Member 2',
+        email: 'member2@getunleash.io',
+    });
 
     const roles = await stores.accessStore.getRolesForProject(project.id);
-    const regularRole = roles.find(r => r.name === RoleName.REGULAR);
+    const memberRole = roles.find(r => r.name === RoleName.MEMBER);
 
-    await projectService.addUser(project.id, regularRole.id, projectMember1.id);
-    await projectService.addUser(project.id, regularRole.id, projectMember2.id);
+    await projectService.addUser(project.id, memberRole.id, projectMember1.id);
+    await projectService.addUser(project.id, memberRole.id, projectMember2.id);
 
     const { users } = await projectService.getUsersWithAccess(project.id, user);
-    const regularUsers = users.filter(u => u.roleId === regularRole.id);
+    const memberUsers = users.filter(u => u.roleId === memberRole.id);
 
-    t.is(regularUsers.length, 2);
-    t.is(regularUsers[0].id, projectMember1.id);
-    t.is(regularUsers[0].name, projectMember1.name);
-    t.is(regularUsers[1].id, projectMember2.id);
-    t.is(regularUsers[1].name, projectMember2.name);
+    t.is(memberUsers.length, 2);
+    t.is(memberUsers[0].id, projectMember1.id);
+    t.is(memberUsers[0].name, projectMember1.name);
+    t.is(memberUsers[1].id, projectMember2.id);
+    t.is(memberUsers[1].name, projectMember2.name);
 });
 
 test.serial('should add admin users to the project', async t => {
@@ -270,24 +273,26 @@ test.serial('should add admin users to the project', async t => {
     };
     await projectService.createProject(project, user);
 
-    const projectAdmin1 = await stores.userStore.insert(
-        new User({ name: 'Some Member', email: 'admin1@getunleash.io' }),
-    );
-    const projectAdmin2 = await stores.userStore.insert(
-        new User({ name: 'Some Member 2', email: 'admin2@getunleash.io' }),
-    );
+    const projectAdmin1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'admin1@getunleash.io',
+    });
+    const projectAdmin2 = await stores.userStore.insert({
+        name: 'Some Member 2',
+        email: 'admin2@getunleash.io',
+    });
 
     const projectRoles = await stores.accessStore.getRolesForProject(
         project.id,
     );
-    const adminRole = projectRoles.find(r => r.name === RoleName.ADMIN);
+    const ownerRole = projectRoles.find(r => r.name === RoleName.OWNER);
 
-    await projectService.addUser(project.id, adminRole.id, projectAdmin1.id);
-    await projectService.addUser(project.id, adminRole.id, projectAdmin2.id);
+    await projectService.addUser(project.id, ownerRole.id, projectAdmin1.id);
+    await projectService.addUser(project.id, ownerRole.id, projectAdmin2.id);
 
     const { users } = await projectService.getUsersWithAccess(project.id, user);
 
-    const adminUsers = users.filter(u => u.roleId === adminRole.id);
+    const adminUsers = users.filter(u => u.roleId === ownerRole.id);
 
     t.is(adminUsers.length, 3);
     t.is(adminUsers[1].id, projectAdmin1.id);
@@ -298,15 +303,15 @@ test.serial('should add admin users to the project', async t => {
 
 test.serial('add user only accept to add users to project roles', async t => {
     const roles = await accessService.getRoles();
-    const regularRole = roles.find(r => r.name === RoleName.REGULAR);
+    const memberRole = roles.find(r => r.name === RoleName.MEMBER);
 
     await t.throwsAsync(
         async () => {
-            await projectService.addUser('some-id', regularRole.id, user.id);
+            await projectService.addUser('some-id', memberRole.id, user.id);
         },
         {
             instanceOf: NotFoundError,
-            message: 'Could not find roleId=2 on project=some-id',
+            message: /Could not find roleId=\d+ on project=some-id/,
         },
     );
 });
@@ -319,20 +324,21 @@ test.serial('add user should fail if user already have access', async t => {
     };
     await projectService.createProject(project, user);
 
-    const projectMember1 = await stores.userStore.insert(
-        new User({ name: 'Some Member', email: 'member42@getunleash.io' }),
-    );
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'member42@getunleash.io',
+    });
 
     const roles = await stores.accessStore.getRolesForProject(project.id);
-    const regularRole = roles.find(r => r.name === RoleName.REGULAR);
+    const memberRole = roles.find(r => r.name === RoleName.MEMBER);
 
-    await projectService.addUser(project.id, regularRole.id, projectMember1.id);
+    await projectService.addUser(project.id, memberRole.id, projectMember1.id);
 
     await t.throwsAsync(
         async () => {
             await projectService.addUser(
                 project.id,
-                regularRole.id,
+                memberRole.id,
                 projectMember1.id,
             );
         },
@@ -351,22 +357,23 @@ test.serial('should remove user from the project', async t => {
     };
     await projectService.createProject(project, user);
 
-    const projectMember1 = await stores.userStore.insert(
-        new User({ name: 'Some Member', email: 'member99@getunleash.io' }),
-    );
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'member99@getunleash.io',
+    });
 
     const roles = await stores.accessStore.getRolesForProject(project.id);
-    const regularRole = roles.find(r => r.name === RoleName.REGULAR);
+    const memberRole = roles.find(r => r.name === RoleName.MEMBER);
 
-    await projectService.addUser(project.id, regularRole.id, projectMember1.id);
+    await projectService.addUser(project.id, memberRole.id, projectMember1.id);
     await projectService.removeUser(
         project.id,
-        regularRole.id,
+        memberRole.id,
         projectMember1.id,
     );
 
     const { users } = await projectService.getUsersWithAccess(project.id, user);
-    const regularUsers = users.filter(u => u.roleId === regularRole.id);
+    const memberUsers = users.filter(u => u.roleId === memberRole.id);
 
-    t.is(regularUsers.length, 0);
+    t.is(memberUsers.length, 0);
 });

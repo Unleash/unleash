@@ -5,18 +5,26 @@ import {
     DELETE_FEATURE,
     ADMIN,
 } from '../permissions';
+import ApiUser from '../types/api-user';
+import { IUnleashConfig } from '../types/option';
+import { IUnleashStores } from '../types/stores';
+import User from '../types/user';
 
-import { isRbacEnabled } from '../util/feature-enabled';
+interface PermissionChecker {
+    hasPermission(
+        user: User,
+        permission: string,
+        projectId?: string,
+    ): Promise<boolean>;
+}
 
-const rbacMiddleware = (config: any, { accessService }: any): any => {
-    if (!isRbacEnabled(config)) {
-        return (req, res, next) => next();
-    }
-
+const rbacMiddleware = (
+    config: Pick<IUnleashConfig, 'getLogger'>,
+    { featureToggleStore }: Pick<IUnleashStores, 'featureToggleStore'>,
+    accessService: PermissionChecker,
+): any => {
     const logger = config.getLogger('/middleware/rbac-middleware.js');
     logger.info('Enabling RBAC');
-
-    const { featureToggleStore } = config.stores;
 
     return (req, res, next) => {
         req.checkRbac = async (permission: string) => {
@@ -27,7 +35,6 @@ const rbacMiddleware = (config: any, { accessService }: any): any => {
                 return false;
             }
 
-            // Support ADMIN API tokens for enterpriseAuthentication.
             if (user.isAPI) {
                 return user.permissions.includes(ADMIN);
             }
@@ -45,7 +52,7 @@ const rbacMiddleware = (config: any, { accessService }: any): any => {
                 const { featureName } = params;
                 projectId = await featureToggleStore.getProjectId(featureName);
             } else if (permission === CREATE_FEATURE) {
-                projectId = req.body.project;
+                projectId = req.body.project || 'default';
             }
 
             return accessService.hasPermission(user, permission, projectId);

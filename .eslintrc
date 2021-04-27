@@ -5,7 +5,6 @@
     "extends": [
         "airbnb-typescript/base",
         "prettier"
-
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -52,5 +51,5 @@
             }
         }
     ],
-    "ignorePatterns": ["**/docs/api/oas/"]
+    "ignorePatterns": ["**/docs/api/oas/", "examples/**"]
 }

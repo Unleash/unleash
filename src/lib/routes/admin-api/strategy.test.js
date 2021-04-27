@@ -1,5 +1,7 @@
 'use strict';
 
+import { createTestConfig } from '../../../test/config/test-config';
+
 const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
@@ -8,11 +10,6 @@ const permissions = require('../../../test/fixtures/permissions');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
 const { createServices } = require('../../services');
-const {
-    DELETE_STRATEGY,
-    CREATE_STRATEGY,
-    UPDATE_STRATEGY,
-} = require('../../permissions');
 
 const eventBus = new EventEmitter();
 
@@ -20,16 +17,12 @@ function getSetup(databaseIsUp = true) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const perms = permissions();
     const stores = store.createStores(databaseIsUp);
-    const config = {
-        baseUriPath: base,
-        stores,
-        eventBus,
-        getLogger,
-        extendedPermissions: true,
+    const config = createTestConfig({
+        server: { baseUriPath: base },
         preRouterHook: perms.hook,
-    };
+    });
     const services = createServices(stores, config);
-    const app = getApp(config, services);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,
@@ -58,8 +51,7 @@ test('add version numbers for /stategies', t => {
 
 test('require a name when creating a new stratey', t => {
     t.plan(1);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_STRATEGY);
+    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/strategies`)
@@ -72,8 +64,7 @@ test('require a name when creating a new stratey', t => {
 
 test('require parameters array when creating a new stratey', t => {
     t.plan(1);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_STRATEGY);
+    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/strategies`)
@@ -89,8 +80,7 @@ test('require parameters array when creating a new stratey', t => {
 
 test('create a new stratey with empty parameters', t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(CREATE_STRATEGY);
+    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/strategies`)
@@ -100,8 +90,7 @@ test('create a new stratey with empty parameters', t => {
 
 test('not be possible to override name', t => {
     t.plan(0);
-    const { request, base, strategyStore, perms } = getSetup();
-    perms.withPermissions(CREATE_STRATEGY);
+    const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name: 'Testing', parameters: [] });
 
     return request
@@ -113,8 +102,7 @@ test('not be possible to override name', t => {
 test('update strategy', t => {
     t.plan(0);
     const name = 'AnotherStrat';
-    const { request, base, strategyStore, perms } = getSetup();
-    perms.withPermissions(UPDATE_STRATEGY);
+    const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
 
     return request
@@ -126,8 +114,7 @@ test('update strategy', t => {
 test('not update unknown strategy', t => {
     t.plan(0);
     const name = 'UnknownStrat';
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_STRATEGY);
+    const { request, base } = getSetup();
 
     return request
         .put(`${base}/api/admin/strategies/${name}`)
@@ -138,8 +125,7 @@ test('not update unknown strategy', t => {
 test('validate format when updating strategy', t => {
     t.plan(0);
     const name = 'AnotherStrat';
-    const { request, base, strategyStore, perms } = getSetup();
-    perms.withPermissions(UPDATE_STRATEGY);
+    const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
 
     return request
@@ -152,8 +138,7 @@ test('editable=false will stop delete request', t => {
     getLogger.setMuteError(true);
     t.plan(0);
     const name = 'default';
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(DELETE_STRATEGY);
+    const { request, base } = getSetup();
 
     return request.delete(`${base}/api/admin/strategies/${name}`).expect(500);
 });
@@ -162,8 +147,7 @@ test('editable=false will stop edit request', t => {
     getLogger.setMuteError(true);
     t.plan(0);
     const name = 'default';
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_STRATEGY);
+    const { request, base } = getSetup();
 
     return request
         .put(`${base}/api/admin/strategies/${name}`)
@@ -174,8 +158,7 @@ test('editable=false will stop edit request', t => {
 test('editable=true will allow delete request', t => {
     t.plan(0);
     const name = 'deleteStrat';
-    const { request, base, strategyStore, perms } = getSetup();
-    perms.withPermissions(DELETE_STRATEGY);
+    const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
 
     return request
@@ -187,8 +170,7 @@ test('editable=true will allow delete request', t => {
 test('editable=true will allow edit request', t => {
     t.plan(0);
     const name = 'editStrat';
-    const { request, base, strategyStore, perms } = getSetup();
-    perms.withPermissions(UPDATE_STRATEGY);
+    const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
 
     return request
@@ -200,8 +182,7 @@ test('editable=true will allow edit request', t => {
 test('deprecating a strategy works', async t => {
     t.plan(1);
     const name = 'editStrat';
-    const { request, base, strategyStore, perms } = getSetup();
-    perms.withPermissions(UPDATE_STRATEGY);
+    const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
 
     await request
@@ -217,8 +198,7 @@ test('deprecating a strategy works', async t => {
 
 test('deprecating a non-existent strategy yields 404', t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_STRATEGY);
+    const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies/non-existent-strategy/deprecate`)
         .set('Content-Type', 'application/json')
@@ -228,8 +208,7 @@ test('deprecating a non-existent strategy yields 404', t => {
 test('reactivating a strategy works', async t => {
     t.plan(1);
     const name = 'editStrat';
-    const { request, base, strategyStore, perms } = getSetup();
-    perms.withPermissions(UPDATE_STRATEGY);
+    const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name, parameters: [] });
 
     await request
@@ -245,8 +224,7 @@ test('reactivating a strategy works', async t => {
 
 test('reactivating a non-existent strategy yields 404', t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_STRATEGY);
+    const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies/non-existent-strategy/reactivate`)
         .set('Content-Type', 'application/json')
@@ -254,8 +232,7 @@ test('reactivating a non-existent strategy yields 404', t => {
 });
 test("deprecating 'default' strategy will yield 403", t => {
     t.plan(0);
-    const { request, base, perms } = getSetup();
-    perms.withPermissions(UPDATE_STRATEGY);
+    const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies/default/deprecate`)
         .set('Content-Type', 'application/json')

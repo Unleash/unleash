@@ -5,7 +5,7 @@ const migrator = require('../../../migrator');
 const { createStores } = require('../../../lib/db');
 const { createDb } = require('../../../lib/db/db-pool');
 const dbConfig = require('./database-config');
-
+const { createTestConfig } = require('../../config/test-config');
 const dbState = require('./database.json');
 
 // require('db-migrate-shared').log.silence(false);
@@ -16,19 +16,20 @@ delete process.env.DATABASE_URL;
 // because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
 process.setMaxListeners(0);
 
-async function resetDatabase(stores) {
+async function resetDatabase(knex) {
     return Promise.all([
-        stores.db('strategies').del(),
-        stores.db('features').del(),
-        stores.db('client_applications').del(),
-        stores.db('client_instances').del(),
-        stores.db('context_fields').del(),
-        stores.db('users').del(),
-        stores.db('projects').del(),
-        stores.db('tags').del(),
-        stores.db('tag_types').del(),
-        stores.db('addons').del(),
-        stores.db('users').del(),
+        knex.table('strategies').del(),
+        knex.table('features').del(),
+        knex.table('client_applications').del(),
+        knex.table('client_instances').del(),
+        knex.table('context_fields').del(),
+        knex.table('users').del(),
+        knex.table('projects').del(),
+        knex.table('tags').del(),
+        knex.table('tag_types').del(),
+        knex.table('addons').del(),
+        knex.table('users').del(),
+        knex.table('reset_tokens').del(),
     ]);
 }
 
@@ -81,31 +82,44 @@ async function setupDatabase(stores) {
     await tagFeatures(stores.tagStore, stores.featureToggleStore);
 }
 
-module.exports = async function init(databaseSchema = 'test', getLogger) {
-    const options = {
-        db: { ...dbConfig.getDb(), pool: { min: 2, max: 8 } },
-        databaseSchema,
+export default async function init(databaseSchema = 'test', getLogger) {
+    const config = createTestConfig({
+        db: {
+            ...dbConfig.getDb(),
+            pool: { min: 2, max: 8 },
+            schema: databaseSchema,
+        },
         getLogger,
-    };
+    });
 
-    const db = createDb(options);
+    const db = createDb(config);
     const eventBus = new EventEmitter();
 
-    await db.raw(`DROP SCHEMA IF EXISTS ${options.databaseSchema} CASCADE`);
-    await db.raw(`CREATE SCHEMA IF NOT EXISTS ${options.databaseSchema}`);
-    await migrator(options);
+    await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
+    await db.raw(`CREATE SCHEMA IF NOT EXISTS ${config.db.schema}`);
+    await migrator({ ...config, databaseSchema: config.db.schema });
     await db.destroy();
-    const stores = await createStores(options, eventBus);
+    const stores = await createStores(config, eventBus);
     stores.clientMetricsStore.setMaxListeners(0);
     stores.eventStore.setMaxListeners(0);
-    await resetDatabase(stores);
+    await resetDatabase(stores.db);
     await setupDatabase(stores);
 
     return {
         stores,
         reset: async () => {
-            await resetDatabase(stores);
+            await resetDatabase(stores.db);
             await setupDatabase(stores);
         },
+        destroy: async () => {
+            const { clientInstanceStore, clientMetricsStore } = stores;
+            return new Promise((resolve, reject) => {
+                clientInstanceStore.destroy();
+                clientMetricsStore.destroy();
+                stores.db.destroy(error => (error ? reject(error) : resolve()));
+            });
+        },
     };
-};
+}
+
+module.exports = init;

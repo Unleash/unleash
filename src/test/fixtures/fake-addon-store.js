@@ -17,9 +17,7 @@ module.exports = () => {
             _addons.splice(id, 1);
             Promise.resolve();
         },
-        get: async id => {
-            return _addons[id];
-        },
+        get: async id => _addons[id],
         getAll: () => Promise.resolve(_addons),
     };
 };

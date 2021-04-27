@@ -64,6 +64,14 @@ unleash.start(unleashOptions);
 - **checkVersion** - the checkVersion object deciding where to check for latest version
   - `url` - The url to check version (Defaults to `https://version.unleash.run`) - Overridable with (`UNLEASH_VERSION_URL`)
   - `enable` - Whether version checking is enabled (defaults to true) - Overridable with (`CHECK_VERSION`) (if anything other than `true`, does not check)
+- **email** - the email object configuring an SMTP server for sending welcome mails and password reset mails
+  - `host` - The server URL to your SMTP server
+  - `port` - Which port the SMTP server is running on. Defaults to 465 (Secure SMTP)
+  - `secure` (boolean) - Whether to use SMTPS or not.
+  - `sender` - Which email should be set as sender of mails being sent from Unleash?
+  - **auth** - For now a user/pass object containing auth details for your SMTP server
+    - `user` - Username for your SMTP server
+    - `pass` - Password for your SMTP server
 
 ### Disabling Auto-Start
 

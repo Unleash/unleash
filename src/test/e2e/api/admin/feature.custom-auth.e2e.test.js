@@ -3,20 +3,20 @@
 const test = require('ava');
 const { setupAppWithCustomAuth } = require('../../helpers/test-helper');
 const AuthenticationRequired = require('../../../../lib/authentication-required');
-const User = require('../../../../lib/user');
 
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
 
 let stores;
+let db;
 
 test.before(async () => {
-    const db = await dbInit('feature_api_custom_auth', getLogger);
+    db = await dbInit('feature_api_custom_auth', getLogger);
     stores = db.stores;
 });
 
-test.after(async () => {
-    await stores.db.destroy();
+test.after.always(async () => {
+    await db.destroy();
 });
 
 test.serial('should require authenticated user', async t => {
@@ -41,11 +41,11 @@ test.serial('should require authenticated user', async t => {
 
 test.serial('creates new feature toggle with createdBy', async t => {
     t.plan(1);
-    const user = new User({ email: 'custom-user@mail.com' });
+    const email = 'custom-user@mail.com';
 
-    const preHook = app => {
-        app.use('/api/admin/', (req, res, next) => {
-            req.user = user;
+    const preHook = (app, config, { userService }) => {
+        app.use('/api/admin/', async (req, res, next) => {
+            req.user = await userService.loginUserWithoutPassword(email, true);
             next();
         });
     };
@@ -62,6 +62,6 @@ test.serial('creates new feature toggle with createdBy', async t => {
         .expect(201);
 
     await request.get('/api/admin/events').expect(res => {
-        t.is(res.body.events[0].createdBy, user.email);
+        t.is(res.body.events[0].createdBy, email);
     });
 });

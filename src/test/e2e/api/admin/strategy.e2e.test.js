@@ -7,14 +7,15 @@ const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
 let stores;
+let db;
 
 test.before(async () => {
-    const db = await dbInit('strategy_api_serial', getLogger);
+    db = await dbInit('strategy_api_serial', getLogger);
     stores = db.stores;
 });
 
-test.after(async () => {
-    await stores.db.destroy();
+test.after.always(async () => {
+    await db.destroy();
 });
 
 test.serial('gets all strategies', async t => {
@@ -41,7 +42,7 @@ test.serial('gets a strategy by name', async t => {
         .expect(200);
 });
 
-test.serial('cant get a strategy by name that dose not exist', async t => {
+test.serial('cant get a strategy by name that does not exist', async t => {
     t.plan(0);
     const request = await setupApp(stores);
     return request

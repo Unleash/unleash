@@ -4,8 +4,8 @@ const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
-const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
+const { createTestConfig } = require('../../../test/config/test-config');
 const {
     clientMetricsSchema,
 } = require('../../services/client-metrics/client-metrics-schema');
@@ -15,14 +15,10 @@ const eventBus = new EventEmitter();
 
 function getSetup() {
     const stores = store.createStores();
-    const config = {
-        baseUriPath: '',
-        stores,
-        eventBus,
-        getLogger,
-    };
+
+    const config = createTestConfig();
     const services = createServices(stores, config);
-    const app = getApp(config, services);
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         request: supertest(app),

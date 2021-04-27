@@ -99,11 +99,18 @@ class FeatureToggleStore {
     }
 
     async getProjectId(name) {
-        return this.db
-            .first(['project'])
-            .from(TABLE)
-            .where({ name })
-            .then(r => (r ? r.project : undefined));
+        if (name) {
+            return this.db
+                .first(['project'])
+                .from(TABLE)
+                .where({ name })
+                .then(r => (r ? r.project : undefined))
+                .catch(e => {
+                    this.logger.error(e);
+                    return undefined;
+                });
+        }
+        return undefined;
     }
 
     async hasFeature(name) {
@@ -131,12 +138,19 @@ class FeatureToggleStore {
         return rows.map(this.rowToFeature);
     }
 
-    async lastSeenToggles(togleNames) {
+    async lastSeenToggles(toggleNames) {
         const now = new Date();
         try {
             await this.db(TABLE)
-                .whereIn('name', togleNames)
-                .update({ last_seen_at: now });
+                .update({ last_seen_at: now })
+                .whereIn(
+                    'name',
+                    this.db(TABLE)
+                        .select('name')
+                        .whereIn('name', toggleNames)
+                        .forUpdate()
+                        .skipLocked(),
+                );
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);
         }
@@ -272,13 +286,11 @@ class FeatureToggleStore {
         const rows = await this.db(FEATURE_TAG_TABLE).select(
             FEATURE_TAG_COLUMNS,
         );
-        return rows.map(row => {
-            return {
-                featureName: row.feature_name,
-                tagType: row.tag_type,
-                tagValue: row.tag_value,
-            };
-        });
+        return rows.map(row => ({
+            featureName: row.feature_name,
+            tagType: row.tag_type,
+            tagValue: row.tag_value,
+        }));
     }
 
     async dropFeatureTags() {

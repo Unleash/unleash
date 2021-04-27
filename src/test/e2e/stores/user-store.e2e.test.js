@@ -1,25 +1,20 @@
 'use strict';
 
 const test = require('ava');
-const User = require('../../../lib/user');
-const {
-    CREATE_FEATURE,
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} = require('../../../lib/permissions');
 const NotFoundError = require('../../../lib/error/notfound-error');
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 
 let stores;
+let db;
 
 test.before(async () => {
-    const db = await dbInit('user_store_serial', getLogger);
+    db = await dbInit('user_store_serial', getLogger);
     stores = db.stores;
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('should have no users', async t => {
@@ -28,7 +23,7 @@ test.serial('should have no users', async t => {
 });
 
 test.serial('should insert new user with email', async t => {
-    const user = new User({ email: 'me2@mail.com' });
+    const user = { email: 'me2@mail.com' };
     await stores.userStore.upsert(user);
     const users = await stores.userStore.getAll();
     t.deepEqual(users[0].email, user.email);
@@ -52,14 +47,14 @@ test.serial('should not allow two users with same email', async t => {
 });
 
 test.serial('should insert new user with email and return it', async t => {
-    const user = new User({ email: 'me2@mail.com' });
+    const user = { email: 'me2@mail.com' };
     const newUser = await stores.userStore.upsert(user);
     t.deepEqual(newUser.email, user.email);
     t.truthy(newUser.id);
 });
 
 test.serial('should insert new user with username', async t => {
-    const user = new User({ username: 'admin' });
+    const user = { username: 'admin' };
     await stores.userStore.upsert(user);
     const dbUser = await stores.userStore.get(user);
     t.deepEqual(dbUser.username, user.username);
@@ -78,7 +73,7 @@ test('Should require email or username', async t => {
 
 test.serial('should set password_hash for user', async t => {
     const store = stores.userStore;
-    const user = await store.insert(new User({ email: 'admin@mail.com' }));
+    const user = await store.insert({ email: 'admin@mail.com' });
     await store.setPasswordHash(user.id, 'rubbish');
     const hash = await store.getPasswordHash(user.id);
 
@@ -99,7 +94,7 @@ test.serial('should not get password_hash for unknown userId', async t => {
 
 test.serial('should update loginAttempts for user', async t => {
     const store = stores.userStore;
-    const user = new User({ email: 'admin@mail.com' });
+    const user = { email: 'admin@mail.com' };
     await store.upsert(user);
     await store.incLoginAttempts(user);
     await store.incLoginAttempts(user);
@@ -110,9 +105,9 @@ test.serial('should update loginAttempts for user', async t => {
 
 test.serial('should not increment for user unknwn user', async t => {
     const store = stores.userStore;
-    const user = new User({ email: 'another@mail.com' });
+    const user = { email: 'another@mail.com' };
     await store.upsert(user);
-    await store.incLoginAttempts(new User({ email: 'unknown@mail.com' }));
+    await store.incLoginAttempts({ email: 'unknown@mail.com' });
     const storedUser = await store.get(user);
 
     t.is(storedUser.loginAttempts, 0);
@@ -120,50 +115,68 @@ test.serial('should not increment for user unknwn user', async t => {
 
 test.serial('should reset user after successful login', async t => {
     const store = stores.userStore;
-    const user = await store.insert(
-        new User({ email: 'anotherWithResert@mail.com' }),
-    );
+    const user = await store.insert({ email: 'anotherWithResert@mail.com' });
     await store.incLoginAttempts(user);
     await store.incLoginAttempts(user);
 
-    await store.succesfullLogin(user);
+    await store.successfullyLogin(user);
     const storedUser = await store.get(user);
 
     t.is(storedUser.loginAttempts, 0);
     t.true(storedUser.seenAt >= user.seenAt);
 });
 
-test.serial('should store and get permsissions', async t => {
-    const store = stores.userStore;
-    const email = 'userWithPermissions@mail.com';
-    const user = new User({
-        email,
-        permissions: [CREATE_FEATURE, UPDATE_FEATURE, DELETE_FEATURE],
-    });
-
-    await store.upsert(user);
-
-    const storedUser = await store.get({ email });
-
-    t.deepEqual(storedUser.permissions, user.permissions);
-});
-
 test.serial('should only update specified fields on user', async t => {
     const store = stores.userStore;
-    const email = 'userTobeUpdated@mail.com';
-    const user = new User({
+    const email = 'usertobeupdated@mail.com';
+    const user = {
         email,
         username: 'test',
-        permissions: [CREATE_FEATURE, UPDATE_FEATURE, DELETE_FEATURE],
-    });
+    };
 
     await store.upsert(user);
 
-    await store.upsert({ username: 'test', permissions: [CREATE_FEATURE] });
+    await store.upsert({ username: 'test' });
 
     const storedUser = await store.get({ email });
 
     t.deepEqual(storedUser.email, user.email);
     t.deepEqual(storedUser.username, user.username);
-    t.deepEqual(storedUser.permissions, [CREATE_FEATURE]);
+});
+
+test.serial('should always lowercase emails on inserts', async t => {
+    const store = stores.userStore;
+    const email = 'someCrazyCasingGoingOn@mail.com';
+    const user = {
+        email,
+    };
+
+    await store.upsert(user);
+
+    const storedUser = await store.get({ email });
+
+    t.deepEqual(storedUser.email, user.email.toLowerCase());
+});
+
+test.serial('should always lowercase emails on updates', async t => {
+    const store = stores.userStore;
+    const email = 'someCrazyCasingGoingOn@mail.com';
+    const user = {
+        email,
+    };
+
+    await store.upsert(user);
+
+    let storedUser = await store.get({ email });
+
+    t.deepEqual(storedUser.email, user.email.toLowerCase());
+
+    const updatedUser = {
+        id: storedUser.id,
+        email: 'SomeOtherCasing@hotmail.com',
+    };
+    await store.upsert(updatedUser);
+
+    storedUser = await store.get({ id: storedUser.id });
+    t.is(storedUser.email, updatedUser.email.toLowerCase());
 });

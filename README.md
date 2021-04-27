@@ -4,9 +4,9 @@
 
 Unleash is a open source feature flag & toggle system, that gives you a great overview over all feature toggles across all your applications and services. It comes with official client implementations for Java, Node.js, Go, Ruby, Python and .NET Core.
 
-## Unleash-enterprise [:link:](https://www.unleash-hosted.com/open-source)
+## Unleash-enterprise [:link:](https://www.unleash-hosted.com/pricing)
 
-Unleash is also available in an enterprise edition, which builds on top of the open-source version, with additional features. Go to [unleash-hosted.com](https://www.unleash-hosted.com/open-source) to learn more about the enterprise offering.
+Unleash is also available in an enterprise edition, which builds on top of the open-source version, with additional features. Go to [unleash-hosted.com](https://www.unleash-hosted.com/pricing) to learn more about the enterprise offering.
 
 ## What is a feature toggle?
 
@@ -85,7 +85,7 @@ We have made a separate project which runs Unleash inside docker. Please see [un
 
 After numerous request we have created a separate company, Unleash-hosted, which offer Unleash as a Service. Unleash-hosted allows you to focus on you core business and have someone else taking care of hosting and maintaining Unleash.
 
-Go to [unleash-hosted.com](https://www.unleash-hosted.com/open-source) to learn more about this offering and start using Unleash today. This service also includes official support.
+Go to [unleash-hosted.com](https://www.unleash-hosted.com/pricing) to learn more about this offering and start using Unleash today. This service also includes official support.
 
 # Developer Guide
 
@@ -98,7 +98,8 @@ If you want to contribute to this project you are encouraged to send issue reque
 
 ## In the media
 
-- Unleash was featured in [Console 42 - The open-source newsletter](https://console.substack.com/p/console-42) 
+- [Node Weekly issue 380](https://nodeweekly.com/issues/380)
+- [Console 42 - The open-source newsletter](https://console.substack.com/p/console-42) 
 - [This Week in Rust 340](https://this-week-in-rust.org/blog/2020/05/27/this-week-in-rust-340/)
 - [Unleash-hosted - Unleash as a Service](https://www.unleash-hosted.com)
 - [Medium blog](https://medium.com/unleash-hosted)

@@ -9,53 +9,55 @@ const {
     ALL_PROJECTS,
 } = require('../../../lib/services/access-service');
 const permissions = require('../../../lib/permissions');
-const User = require('../../../lib/user');
 
+let db;
 let stores;
 let accessService;
 
-let regularUser;
+let editorUser;
 let superUser;
+let editorRole;
+let adminRole;
+let readRole;
 
-const createUserWithRegularAccess = async (name, email) => {
+const createUserEditorAccess = async (name, email) => {
     const { userStore } = stores;
-    const user = await userStore.insert(new User({ name, email }));
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(r => r.name === 'Regular');
-    await accessService.addUserToRole(user.id, regularRole.id);
+    const user = await userStore.insert({ name, email });
+    await accessService.addUserToRole(user.id, editorRole.id);
     return user;
 };
 
 const createSuperUser = async () => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Alice Admin', email: 'admin@getunleash.io' }),
-    );
-    const roles = await accessService.getRoles();
-    const superRole = roles.find(r => r.name === 'Admin');
-    await accessService.addUserToRole(user.id, superRole.id);
+    const user = await userStore.insert({
+        name: 'Alice Admin',
+        email: 'admin@getunleash.io',
+    });
+    await accessService.addUserToRole(user.id, adminRole.id);
     return user;
 };
 
 test.before(async () => {
-    const db = await dbInit('access_service_serial', getLogger);
+    db = await dbInit('access_service_serial', getLogger);
     stores = db.stores;
     // projectStore = stores.projectStore;
     accessService = new AccessService(stores, { getLogger });
-    regularUser = await createUserWithRegularAccess(
-        'Bob Test',
-        'bob@getunleash.io',
-    );
+    const roles = await accessService.getRootRoles();
+    editorRole = roles.find(r => r.name === RoleName.EDITOR);
+    adminRole = roles.find(r => r.name === RoleName.ADMIN);
+    readRole = roles.find(r => r.name === RoleName.VIEWER);
+
+    editorUser = await createUserEditorAccess('Bob Test', 'bob@getunleash.io');
     superUser = await createSuperUser();
 });
 
 test.after(async () => {
-    await stores.db.destroy();
+    await db.destroy();
 });
 
 test.serial('should have access to admin addons', async t => {
     const { CREATE_ADDON, UPDATE_ADDON, DELETE_ADDON } = permissions;
-    const user = regularUser;
+    const user = editorUser;
     t.true(await accessService.hasPermission(user, CREATE_ADDON));
     t.true(await accessService.hasPermission(user, UPDATE_ADDON));
     t.true(await accessService.hasPermission(user, DELETE_ADDON));
@@ -63,7 +65,7 @@ test.serial('should have access to admin addons', async t => {
 
 test.serial('should have access to admin strategies', async t => {
     const { CREATE_STRATEGY, UPDATE_STRATEGY, DELETE_STRATEGY } = permissions;
-    const user = regularUser;
+    const user = editorUser;
     t.true(await accessService.hasPermission(user, CREATE_STRATEGY));
     t.true(await accessService.hasPermission(user, UPDATE_STRATEGY));
     t.true(await accessService.hasPermission(user, DELETE_STRATEGY));
@@ -75,7 +77,7 @@ test.serial('should have access to admin contexts', async t => {
         UPDATE_CONTEXT_FIELD,
         DELETE_CONTEXT_FIELD,
     } = permissions;
-    const user = regularUser;
+    const user = editorUser;
     t.true(await accessService.hasPermission(user, CREATE_CONTEXT_FIELD));
     t.true(await accessService.hasPermission(user, UPDATE_CONTEXT_FIELD));
     t.true(await accessService.hasPermission(user, DELETE_CONTEXT_FIELD));
@@ -83,19 +85,19 @@ test.serial('should have access to admin contexts', async t => {
 
 test.serial('should have access to create projects', async t => {
     const { CREATE_PROJECT } = permissions;
-    const user = regularUser;
+    const user = editorUser;
     t.true(await accessService.hasPermission(user, CREATE_PROJECT));
 });
 
 test.serial('should have access to update applications', async t => {
     const { UPDATE_APPLICATION } = permissions;
-    const user = regularUser;
+    const user = editorUser;
     t.true(await accessService.hasPermission(user, UPDATE_APPLICATION));
 });
 
 test.serial('should not have admin permission', async t => {
     const { ADMIN } = permissions;
-    const user = regularUser;
+    const user = editorUser;
     t.false(await accessService.hasPermission(user, ADMIN));
 });
 
@@ -107,7 +109,7 @@ test.serial('should have project admin to default project', async t => {
         UPDATE_FEATURE,
         DELETE_FEATURE,
     } = permissions;
-    const user = regularUser;
+    const user = editorUser;
     t.true(await accessService.hasPermission(user, DELETE_PROJECT, 'default'));
     t.true(await accessService.hasPermission(user, UPDATE_PROJECT, 'default'));
     t.true(await accessService.hasPermission(user, CREATE_FEATURE, 'default'));
@@ -115,17 +117,12 @@ test.serial('should have project admin to default project', async t => {
     t.true(await accessService.hasPermission(user, DELETE_FEATURE, 'default'));
 });
 
-test.serial('should grant regular CREATE_FEATURE on all projects', async t => {
+test.serial('should grant member CREATE_FEATURE on all projects', async t => {
     const { CREATE_FEATURE } = permissions;
-    const user = regularUser;
-
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(
-        r => r.name === 'Regular' && r.type === 'root',
-    );
+    const user = editorUser;
 
     await accessService.addPermissionToRole(
-        regularRole.id,
+        editorRole.id,
         permissions.CREATE_FEATURE,
         ALL_PROJECTS,
     );
@@ -136,15 +133,10 @@ test.serial('should grant regular CREATE_FEATURE on all projects', async t => {
 });
 
 test.serial('cannot add CREATE_FEATURE without defining project', async t => {
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(
-        r => r.name === 'Regular' && r.type === 'root',
-    );
-
     await t.throwsAsync(
         async () => {
             await accessService.addPermissionToRole(
-                regularRole.id,
+                editorRole.id,
                 permissions.CREATE_FEATURE,
             );
         },
@@ -158,15 +150,10 @@ test.serial('cannot add CREATE_FEATURE without defining project', async t => {
 test.serial(
     'cannot remove CREATE_FEATURE without defining project',
     async t => {
-        const roles = await accessService.getRoles();
-        const regularRole = roles.find(
-            r => r.name === 'Regular' && r.type === 'root',
-        );
-
         await t.throwsAsync(
             async () => {
                 await accessService.removePermissionFromRole(
-                    regularRole.id,
+                    editorRole.id,
                     permissions.CREATE_FEATURE,
                 );
             },
@@ -181,21 +168,16 @@ test.serial(
 
 test.serial('should remove CREATE_FEATURE on all projects', async t => {
     const { CREATE_FEATURE } = permissions;
-    const user = regularUser;
-
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(
-        r => r.name === 'Regular' && r.type === 'root',
-    );
+    const user = editorUser;
 
     await accessService.addPermissionToRole(
-        regularRole.id,
+        editorRole.id,
         permissions.CREATE_FEATURE,
         ALL_PROJECTS,
     );
 
     await accessService.removePermissionFromRole(
-        regularRole.id,
+        editorRole.id,
         permissions.CREATE_FEATURE,
         ALL_PROJECTS,
     );
@@ -232,7 +214,7 @@ test.serial('should create default roles to project', async t => {
         DELETE_FEATURE,
     } = permissions;
     const project = 'some-project';
-    const user = regularUser;
+    const user = editorUser;
     await accessService.createDefaultProjectRoles(user, project);
     t.true(await accessService.hasPermission(user, UPDATE_PROJECT, project));
     t.true(await accessService.hasPermission(user, DELETE_PROJECT, project));
@@ -246,7 +228,7 @@ test.serial(
     async t => {
         await t.throwsAsync(
             async () => {
-                await accessService.createDefaultProjectRoles(regularUser);
+                await accessService.createDefaultProjectRoles(editorUser);
             },
             { instanceOf: Error, message: 'ProjectId cannot be empty' },
         );
@@ -262,8 +244,8 @@ test.serial('should grant user access to project', async t => {
         DELETE_FEATURE,
     } = permissions;
     const project = 'another-project';
-    const user = regularUser;
-    const sUser = await createUserWithRegularAccess(
+    const user = editorUser;
+    const sUser = await createUserEditorAccess(
         'Some Random',
         'random@getunleash.io',
     );
@@ -271,10 +253,10 @@ test.serial('should grant user access to project', async t => {
 
     const roles = await accessService.getRolesForProject(project);
 
-    const regularRole = roles.find(
-        r => r.name === 'Regular' && r.project === project,
+    const projectRole = roles.find(
+        r => r.name === 'Member' && r.project === project,
     );
-    await accessService.addUserToRole(sUser.id, regularRole.id);
+    await accessService.addUserToRole(sUser.id, projectRole.id);
 
     // Should be able to update feature toggles inside the project
     t.true(await accessService.hasPermission(sUser, CREATE_FEATURE, project));
@@ -289,8 +271,8 @@ test.serial('should grant user access to project', async t => {
 test.serial('should not get access if not specifying project', async t => {
     const { CREATE_FEATURE, UPDATE_FEATURE, DELETE_FEATURE } = permissions;
     const project = 'another-project-2';
-    const user = regularUser;
-    const sUser = await createUserWithRegularAccess(
+    const user = editorUser;
+    const sUser = await createUserEditorAccess(
         'Some Random',
         'random22@getunleash.io',
     );
@@ -298,10 +280,10 @@ test.serial('should not get access if not specifying project', async t => {
 
     const roles = await accessService.getRolesForProject(project);
 
-    const regularRole = roles.find(
-        r => r.name === 'Regular' && r.project === project,
+    const projectRole = roles.find(
+        r => r.name === 'Member' && r.project === project,
     );
-    await accessService.addUserToRole(sUser.id, regularRole.id);
+    await accessService.addUserToRole(sUser.id, projectRole.id);
 
     // Should not be able to update feature toggles outside project
     t.false(await accessService.hasPermission(sUser, CREATE_FEATURE));
@@ -311,37 +293,35 @@ test.serial('should not get access if not specifying project', async t => {
 
 test.serial('should remove user from role', async t => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Some User', email: 'random123@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random123@getunleash.io',
+    });
 
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(r => r.name === 'Regular');
-    await accessService.addUserToRole(user.id, regularRole.id);
+    await accessService.addUserToRole(user.id, editorRole.id);
 
     // check user has one role
     const userRoles = await accessService.getRolesForUser(user.id);
     t.is(userRoles.length, 1);
-    t.is(userRoles[0].name, 'Regular');
+    t.is(userRoles[0].name, RoleName.EDITOR);
 
-    await accessService.removeUserFromRole(user.id, regularRole.id);
+    await accessService.removeUserFromRole(user.id, editorRole.id);
     const userRolesAfterRemove = await accessService.getRolesForUser(user.id);
     t.is(userRolesAfterRemove.length, 0);
 });
 
 test.serial('should return role with users', async t => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Some User', email: 'random2223@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random2223@getunleash.io',
+    });
 
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(r => r.name === 'Regular');
-    await accessService.addUserToRole(user.id, regularRole.id);
+    await accessService.addUserToRole(user.id, editorRole.id);
 
-    const roleWithUsers = await accessService.getRole(regularRole.id);
+    const roleWithUsers = await accessService.getRole(editorRole.id);
 
-    t.is(roleWithUsers.role.name, 'Regular');
+    t.is(roleWithUsers.role.name, RoleName.EDITOR);
     t.true(roleWithUsers.users.length > 2);
     t.truthy(roleWithUsers.users.find(u => u.id === user.id));
     t.truthy(roleWithUsers.users.find(u => u.email === user.email));
@@ -349,17 +329,16 @@ test.serial('should return role with users', async t => {
 
 test.serial('should return role with permissions and users', async t => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Some User', email: 'random2244@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random2244@getunleash.io',
+    });
 
-    const roles = await accessService.getRoles();
-    const regularRole = roles.find(r => r.name === 'Regular');
-    await accessService.addUserToRole(user.id, regularRole.id);
+    await accessService.addUserToRole(user.id, editorRole.id);
 
-    const roleWithPermission = await accessService.getRole(regularRole.id);
+    const roleWithPermission = await accessService.getRole(editorRole.id);
 
-    t.is(roleWithPermission.role.name, 'Regular');
+    t.is(roleWithPermission.role.name, RoleName.EDITOR);
     t.true(roleWithPermission.permissions.length > 2);
     t.truthy(
         roleWithPermission.permissions.find(
@@ -392,29 +371,50 @@ test.serial('should return list of permissions', async t => {
 
 test.serial('should set root role for user', async t => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Some User', email: 'random2255@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random2255@getunleash.io',
+    });
 
-    await accessService.setUserRootRole(user.id, RoleName.REGULAR);
+    await accessService.setUserRootRole(user.id, editorRole.id);
 
     const roles = await accessService.getRolesForUser(user.id);
 
     t.is(roles.length, 1);
-    t.is(roles[0].name, RoleName.REGULAR);
+    t.is(roles[0].name, RoleName.EDITOR);
 });
 
 test.serial('should switch root role for user', async t => {
     const { userStore } = stores;
-    const user = await userStore.insert(
-        new User({ name: 'Some User', email: 'random22Read@getunleash.io' }),
-    );
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random22Read@getunleash.io',
+    });
 
-    await accessService.setUserRootRole(user.id, RoleName.REGULAR);
-    await accessService.setUserRootRole(user.id, RoleName.READ);
+    await accessService.setUserRootRole(user.id, editorRole.id);
+    await accessService.setUserRootRole(user.id, readRole.id);
 
     const roles = await accessService.getRolesForUser(user.id);
 
     t.is(roles.length, 1);
-    t.is(roles[0].name, RoleName.READ);
+    t.is(roles[0].name, RoleName.VIEWER);
+});
+
+test.serial('should not crash if user does not have permission', async t => {
+    const { userStore } = stores;
+
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'random55Read@getunleash.io',
+    });
+
+    await accessService.setUserRootRole(user.id, readRole.id);
+
+    const { UPDATE_CONTEXT_FIELD } = permissions;
+    const hasAccess = await accessService.hasPermission(
+        user,
+        UPDATE_CONTEXT_FIELD,
+    );
+
+    t.false(hasAccess);
 });

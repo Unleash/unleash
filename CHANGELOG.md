@@ -1,5 +1,93 @@
 # Changelog
 
+# 4.0.0-alpha.4
+
+- feat: add option for LOG_LEVEL (#803)
+- fix: make users emails case-insensitive (#804)
+- fix: update unleash-frontend
+- fix: emailservice now just returns if email was configured
+- fix: simplify isConfigured check
+- fix: loading of emailtemplates
+
+# 4.0.0-alpha.3
+
+- fix: should allow revive toggles
+- fix: hasPermission should not throw
+- fix: Added enterpriseVersion to root of IUnleashConfig/IUnleashOptions
+- feat: add new user email (#793)
+- fix: User should require a ID field set (#799)
+- fix: introduce settingService
+- fix: migration rollback use DROP for column
+- fix: skipLocked when updating lastSeen for toggles
+- feat: Add change-password endpoint to user-controller (#800)
+- fix: convert AUTH_TYPE to uppercase (#797)
+- Fix: strategies sort order (#798)
+- fix: only ADMIN can list all users
+- fix: enable demo-authentication (#796)
+- fix: default db SSL to undefined
+- fix: use db config with schema for db-migrate
+- feat: options need types (#794)
+- feat: add ui-bootstrap endpoint (#790)
+- feat: add ui-bootstrap endpoint (#790)
+- feat: expose user permissions (#791)
+- feat: Reset token (#786)
+- fix: rename rbac roles. (#788)
+- fix: remove unused import
+- fix: fully remove enableLegacyRoutes option
+- fix: failing tests
+- fix: expose auth-type in ui-config
+
+## 4.0.0-alpha.2
+
+- feat: Email service (#757)
+- feat: unleash v4 will require node 14 or higher (#784)
+- feat: Add username/password authentication (#777)
+- fix: should only do checkRbac if it exists
+- fix: docs transitive dependencies
+- chore: typos in migration-guide
+- fix: remove enableLegacyRoutes option from v2
+- fix: upgrade unleash-frontend to latest alpha
+- fix: migrate all permissions to rbac (#782)
+- fix: add default empty array to strategies from db (#781)
+- feat: added basic email-service (#780)
+- fix: Clear-Site-Data header needs to be double quoted
+
+## 4.0.0-alpha.1
+
+- chore: upgrade frontend 4.0.0-alpha.1
+
+## 4.0.0-alpha.0
+
+- chore(deps): bump y18n from 4.0.0 to 4.0.1 (#775)
+- Feat: Api-Tokens (#774)
+
+## 3.17.6
+
+- fix: skipLocked when updating lastSeen for toggles (second attempt)
+
+## 3.17.5
+
+- fix: skipLocked when updating lastSeen for toggles
+
+## 3.17.4
+
+- fix: version-checker must have instanceId
+- fix: ensure createdBy is not empty
+
+## 3.17.3
+
+- feat: upgrade unleash-frontend to version 3.14.1
+- fix: make sure CREATE_APPLICATION events are only sent once per application
+
+## 3.17.2
+
+- fix: make sure applying unique constraint on client_instances works
+
+## 3.17.1
+
+- fix: initial event.tags should be array type
+- fix: always set instanceId in ui-config
+
 ## 3.17.0
 
 - fix: upgrade docusaurus
@@ -7,6 +95,10 @@
 - Add import/export for tags and projects (#754)
 - feat: Default roles and RBAC permission checker. (#735) (experimental)
 - feat: upgrade unleash-frontend to version 3.14.0
+
+## 3.16.1
+
+- fix: make sure applying unique constraint on client_instances works
 
 ## 3.16.0
 

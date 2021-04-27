@@ -42,7 +42,7 @@ module.exports = class ClientMetricsService {
         this.lastHourList = new TTLList({
             interval: 10000,
         });
-        this.logger = getLogger('services/client-metrics/index.js');
+        this.logger = getLogger('services/client-metrics/index.ts');
 
         this.lastMinuteList = new TTLList({
             interval: 10000,
@@ -88,13 +88,11 @@ module.exports = class ClientMetricsService {
         if (this.clientAppStore) {
             const appsToAnnounce = await this.clientAppStore.setUnannouncedToAnnounced();
             if (appsToAnnounce.length > 0) {
-                const events = appsToAnnounce.map(app => {
-                    return {
-                        type: APPLICATION_CREATED,
-                        createdBy: app.createdBy,
-                        data: app,
-                    };
-                });
+                const events = appsToAnnounce.map(app => ({
+                    type: APPLICATION_CREATED,
+                    createdBy: app.createdBy || 'unknown',
+                    data: app,
+                }));
                 await this.eventStore.batchStore(events);
             }
         }

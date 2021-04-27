@@ -1,17 +1,18 @@
 'use strict';
 
 module.exports = () => {
-    let _perms = [];
+    const _perms = ['ADMIN'];
     return {
         hook(app) {
             app.use((req, res, next) => {
-                if (req.user) req.user.permissions = _perms;
-                else req.user = { email: 'unknown', permissions: _perms };
+                req.user = {
+                    isAPI: true,
+                    id: 1,
+                    email: 'unknown',
+                    permissions: _perms,
+                };
                 next();
             });
-        },
-        withPermissions(...perms) {
-            _perms = perms;
         },
     };
 };

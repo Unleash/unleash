@@ -125,6 +125,9 @@
       "deploy/securing_unleash": {
         "title": "Securing Unleash"
       },
+      "deploy/technical_debt": {
+        "title": "Technical Debt"
+      },
       "developer_guide": {
         "title": "Developer guide"
       },
@@ -179,7 +182,7 @@
       "user_guide/create_feature_toggle": {
         "title": "Create a feature toggle"
       },
-      "user_guide/discover_unkonwn_toggles": {
+      "user_guide/discover_unknown_toggles": {
         "title": "Discover unknown toggles"
       },
       "user_guide/index": {

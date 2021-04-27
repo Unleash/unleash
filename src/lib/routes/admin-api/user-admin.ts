@@ -6,12 +6,10 @@ import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
 import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
-import { EmailService, MAIL_ACCEPTED } from '../../services/email-service';
+import { EmailService } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
 import { IUnleashServices } from '../../types/services';
 import SessionService from '../../services/session-service';
-
-const getCreatorUsernameOrPassword = req => req.user.username || req.user.email;
 
 export default class UserAdminController extends Controller {
     private userService: UserService;
@@ -46,8 +44,8 @@ export default class UserAdminController extends Controller {
         super(config);
         this.userService = userService;
         this.accessService = accessService;
-        this.logger = config.getLogger('routes/user-controller.ts');
         this.emailService = emailService;
+        this.logger = config.getLogger('routes/user-controller.ts');
         this.resetTokenService = resetTokenService;
         this.sessionService = sessionService;
 
@@ -64,12 +62,12 @@ export default class UserAdminController extends Controller {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async resetPassword(req, res): Promise<void> {
+        const { user } = req;
         try {
-            const requester = getCreatorUsernameOrPassword(req);
             const receiver = req.body.id;
             const resetPasswordUrl = await this.userService.createResetPasswordEmail(
                 receiver,
-                requester,
+                user,
             );
             res.json({ resetPasswordUrl });
         } catch (e) {
@@ -124,12 +122,15 @@ export default class UserAdminController extends Controller {
         const { user } = req;
 
         try {
-            const createdUser = await this.userService.createUser({
-                username,
-                email,
-                name,
-                rootRole: Number(rootRole),
-            });
+            const createdUser = await this.userService.createUser(
+                {
+                    username,
+                    email,
+                    name,
+                    rootRole: Number(rootRole),
+                },
+                user,
+            );
 
             const inviteLink = await this.resetTokenService.createNewUserUrl(
                 createdUser.id,
@@ -163,17 +164,22 @@ export default class UserAdminController extends Controller {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async updateUser(req, res): Promise<void> {
-        const { id } = req.params;
-        const { name, email, rootRole } = req.body;
+        const { user, params, body } = req;
+
+        const { id } = params;
+        const { name, email, rootRole } = body;
 
         try {
-            const user = await this.userService.updateUser({
-                id: Number(id),
-                name,
-                email,
-                rootRole: Number(rootRole),
-            });
-            res.status(200).send({ ...user, rootRole });
+            const updateUser = await this.userService.updateUser(
+                {
+                    id: Number(id),
+                    name,
+                    email,
+                    rootRole: Number(rootRole),
+                },
+                user,
+            );
+            res.status(200).send({ ...updateUser, rootRole });
         } catch (e) {
             this.logger.warn(e.message);
             res.status(400).send([{ msg: e.message }]);
@@ -182,10 +188,11 @@ export default class UserAdminController extends Controller {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async deleteUser(req, res): Promise<void> {
-        const { id } = req.params;
+        const { user, params } = req;
+        const { id } = params;
 
         try {
-            await this.userService.deleteUser(+id);
+            await this.userService.deleteUser(+id, user);
             res.status(200).send();
         } catch (error) {
             this.logger.warn(error);

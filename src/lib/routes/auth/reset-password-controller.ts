@@ -21,7 +21,6 @@ interface SessionRequest<PARAMS, QUERY, BODY, K>
     user?;
 }
 
-const UNLEASH = 'Unleash';
 class ResetPasswordController extends Controller {
     private userService: UserService;
 
@@ -43,7 +42,7 @@ class ResetPasswordController extends Controller {
         const { email } = req.body;
 
         try {
-            await this.userService.createResetPasswordEmail(email, UNLEASH);
+            await this.userService.createResetPasswordEmail(email);
             res.status(200).end();
         } catch (e) {
             handleErrors(res, this.logger, e);

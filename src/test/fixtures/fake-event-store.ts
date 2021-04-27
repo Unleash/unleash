@@ -1,21 +1,22 @@
-'use strict';
+import EventStore, { IEvent } from '../../lib/db/event-store';
+import noLoggerProvider from './no-logger';
 
-const { EventEmitter } = require('events');
+class FakeEventStore extends EventStore {
+    events: IEvent[];
 
-class EventStore extends EventEmitter {
     constructor() {
-        super();
+        super(undefined, noLoggerProvider);
         this.setMaxListeners(0);
         this.events = [];
     }
 
-    store(event) {
+    store(event: IEvent): Promise<void> {
         this.events.push(event);
         this.emit(event.type, event);
         return Promise.resolve();
     }
 
-    batchStore(events) {
+    batchStore(events: IEvent[]): Promise<void> {
         events.forEach(event => {
             this.events.push(event);
             this.emit(event.type, event);
@@ -23,9 +24,10 @@ class EventStore extends EventEmitter {
         return Promise.resolve();
     }
 
-    getEvents() {
+    getEvents(): Promise<IEvent[]> {
         return Promise.resolve(this.events);
     }
 }
 
-module.exports = EventStore;
+module.exports = FakeEventStore;
+export default FakeEventStore;

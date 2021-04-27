@@ -19,6 +19,10 @@ import SessionService from './session-service';
 import { IUnleashServices } from '../types/services';
 import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
+import EventStore from '../db/event-store';
+import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../event-type';
+
+const systemUser = new User({ id: -1, username: 'system' });
 
 export interface ICreateUser {
     name?: string;
@@ -56,6 +60,8 @@ class UserService {
 
     private store: UserStore;
 
+    private eventStore: EventStore;
+
     private accessService: AccessService;
 
     private resetTokenService: ResetTokenService;
@@ -65,7 +71,7 @@ class UserService {
     private emailService: EmailService;
 
     constructor(
-        stores: Pick<IUnleashStores, 'userStore'>,
+        stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
             getLogger,
             authentication,
@@ -85,6 +91,7 @@ class UserService {
     ) {
         this.logger = getLogger('service/user-service.js');
         this.store = stores.userStore;
+        this.eventStore = stores.eventStore;
         this.accessService = accessService;
         this.resetTokenService = resetTokenService;
         this.emailService = emailService;
@@ -164,13 +171,10 @@ class UserService {
         return this.store.get({ email });
     }
 
-    async createUser({
-        username,
-        email,
-        name,
-        password,
-        rootRole,
-    }: ICreateUser): Promise<User> {
+    async createUser(
+        { username, email, name, password, rootRole }: ICreateUser,
+        updatedBy?: User,
+    ): Promise<User> {
         assert.ok(username || email, 'You must specify username or email');
 
         if (email) {
@@ -195,15 +199,32 @@ class UserService {
             await this.store.setPasswordHash(user.id, passwordHash);
         }
 
+        await this.updateChangeLog(USER_CREATED, user, updatedBy);
+
         return user;
     }
 
-    async updateUser({
-        id,
-        name,
-        email,
-        rootRole,
-    }: IUpdateUser): Promise<User> {
+    private async updateChangeLog(
+        type: string,
+        user: User,
+        updatedBy: User = systemUser,
+    ): Promise<void> {
+        await this.eventStore.store({
+            type,
+            createdBy: updatedBy.username || updatedBy.email,
+            data: {
+                id: user.id,
+                name: user.name,
+                username: user.username,
+                email: user.email,
+            },
+        });
+    }
+
+    async updateUser(
+        { id, name, email, rootRole }: IUpdateUser,
+        updatedBy?: User,
+    ): Promise<User> {
         if (email) {
             Joi.assert(email, Joi.string().email(), 'Email');
         }
@@ -212,7 +233,11 @@ class UserService {
             await this.accessService.setUserRootRole(id, rootRole);
         }
 
-        return this.store.update(id, { name, email });
+        const user = await this.store.update(id, { name, email });
+
+        await this.updateChangeLog(USER_UPDATED, user, updatedBy);
+
+        return user;
     }
 
     async loginUser(usernameOrEmail: string, password: string): Promise<User> {
@@ -269,7 +294,8 @@ class UserService {
         return this.store.setPasswordHash(userId, passwordHash);
     }
 
-    async deleteUser(userId: number): Promise<void> {
+    async deleteUser(userId: number, updatedBy?: User): Promise<void> {
+        const user = await this.store.get({ id: userId });
         const roles = await this.accessService.getRolesForUser(userId);
         await Promise.all(
             roles.map(role =>
@@ -278,6 +304,8 @@ class UserService {
         );
 
         await this.store.delete(userId);
+
+        await this.updateChangeLog(USER_DELETED, user, updatedBy);
     }
 
     async getUserForToken(token: string): Promise<ITokenUser> {
@@ -322,7 +350,7 @@ class UserService {
 
     async createResetPasswordEmail(
         receiverEmail: string,
-        requester: string,
+        user: User = systemUser,
     ): Promise<URL> {
         const receiver = await this.getByEmail(receiverEmail);
         if (!receiver) {
@@ -330,7 +358,7 @@ class UserService {
         }
         const resetLink = await this.resetTokenService.createResetPasswordUrl(
             receiver.id,
-            requester,
+            user.username || user.email,
         );
 
         await this.emailService.sendResetMail(

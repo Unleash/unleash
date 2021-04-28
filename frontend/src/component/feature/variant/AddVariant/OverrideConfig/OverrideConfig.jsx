@@ -2,13 +2,13 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 import PropTypes from 'prop-types';
-import { Grid, IconButton, Icon } from '@material-ui/core';
+import { Grid, IconButton, Icon, TextField } from '@material-ui/core';
 import MySelect from '../../../../common/select';
 import InputListField from '../../../../common/input-list-field';
-import { selectStyles } from '../../../../common';
 import ConditionallyRender from '../../../../common/ConditionallyRender/ConditionallyRender';
 import { useCommonStyles } from '../../../../../common.styles';
 import { useStyles } from './OverrideConfig.styles.js';
+import { Autocomplete } from '@material-ui/lab';
 
 const OverrideConfig = ({
     overrides,
@@ -28,18 +28,14 @@ const OverrideConfig = ({
         updateOverrideValues(i, values);
     };
 
-    const updateSelectValues = i => values => {
-        updateOverrideValues(i, values ? values.map(v => v.value) : undefined);
+    const updateSelectValues = i => (e, options) => {
+        updateOverrideValues(i, options ? options : []);
     };
-
-    const mapSelectValues = (values = []) =>
-        values.map(v => ({ label: v, value: v }));
 
     return overrides.map((o, i) => {
         const legalValues =
             contextDefinitions.find(c => c.name === o.contextName)
                 .legalValues || [];
-        const options = legalValues.map(v => ({ value: v, label: v, key: v }));
 
         return (
             <Grid container key={`override=${i}`} alignItems="center">
@@ -59,16 +55,27 @@ const OverrideConfig = ({
                     <ConditionallyRender
                         condition={legalValues && legalValues.length > 0}
                         show={
-                            <div style={{ paddingTop: '12px' }}>
-                                <MySelect
-                                    key={`override-select=${i}`}
-                                    className={selectStyles}
-                                    classes={{ root: commonStyles.fullWidth }}
-                                    value={mapSelectValues(o.values)}
-                                    options={options}
-                                    onChange={updateSelectValues(i)}
-                                />
-                            </div>
+                            <Autocomplete
+                                multiple
+                                id={`override-select-${i}`}
+                                getOptionSelected={(option, value) => {
+                                    return option === value;
+                                }}
+                                options={legalValues}
+                                onChange={updateSelectValues(i)}
+                                getOptionLabel={option => option}
+                                defaultValue={o.values}
+                                value={o.values}
+                                filterSelectedOptions
+                                size="small"
+                                renderInput={params => (
+                                    <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        label="Legal values"
+                                    />
+                                )}
+                            />
                         }
                         elseShow={
                             <InputListField

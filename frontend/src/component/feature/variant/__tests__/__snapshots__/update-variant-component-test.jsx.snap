@@ -568,7 +568,7 @@ exports[`renders correctly with without variants 1`] = `
 </section>
 `;
 
-exports[`renders correctly with without variants and no permissions 1`] = `
+exports[`renders correctly without variants and no permissions 1`] = `
 <section
   style={
     Object {

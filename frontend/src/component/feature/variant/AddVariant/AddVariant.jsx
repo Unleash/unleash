@@ -16,6 +16,7 @@ import { modalStyles, trim } from '../../../common/util';
 import { weightTypes } from '../enums';
 import OverrideConfig from './OverrideConfig/OverrideConfig';
 import { useCommonStyles } from '../../../../common.styles';
+import ConditionallyRender from '../../../common/ConditionallyRender';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -137,6 +138,7 @@ const AddVariant = ({
                 if (i === index) {
                     o[e.target.name] = e.target.value;
                 }
+
                 return o;
             })
         );
@@ -264,16 +266,18 @@ const AddVariant = ({
                         />
                     </Grid>
                 </Grid>
-                {overrides.length > 0 && (
-                    <p style={{ marginBottom: '.5rem' }}>
-                        <strong>Overrides </strong>
-                        <Icon
-                            name="info"
-                            title="Here you can specify which users that should get this variant."
-                        />
-                    </p>
-                )}
-
+                <ConditionallyRender
+                    condition={overrides.length > 0}
+                    show={
+                        <p style={{ marginBottom: '.5rem' }}>
+                            <strong>Overrides </strong>
+                            <Icon
+                                name="info"
+                                title="Here you can specify which users should get this variant."
+                            />
+                        </p>
+                    }
+                />
                 <OverrideConfig
                     overrides={overrides}
                     removeOverride={removeOverride}
@@ -281,7 +285,7 @@ const AddVariant = ({
                     updateOverrideValues={updateOverrideValues}
                     updateValues={updateOverrideValues}
                 />
-                <Button onClick={onAddOverride}>Add override</Button>
+                <Button onClick={onAddOverride}>Add override</Button>{' '}
             </form>
         </Dialog>
     );
@@ -294,6 +298,7 @@ AddVariant.propTypes = {
     validateName: PropTypes.func.isRequired,
     editVariant: PropTypes.object,
     title: PropTypes.string,
+    uiConfig: PropTypes.object,
 };
 
 export default AddVariant;

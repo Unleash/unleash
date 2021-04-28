@@ -57,7 +57,7 @@ const defaultDbOptions: IDBOption = {
     ssl:
         process.env.DATABASE_SSL != null
             ? JSON.parse(process.env.DATABASE_SSL)
-            : undefined,
+            : { rejectUnauthorized: false },
     driver: 'postgres',
     version: process.env.DATABASE_VERSION,
     pool: {

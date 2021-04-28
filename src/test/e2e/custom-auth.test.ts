@@ -6,7 +6,7 @@ import { setupAppWithCustomAuth } from './helpers/test-helper';
 let db;
 let stores;
 
-before(async t => {
+before(async () => {
     db = await dbInit('custom_auth_serial');
     stores = db.stores;
 });

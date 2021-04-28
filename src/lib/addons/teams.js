@@ -104,11 +104,11 @@ class TeamsAddon extends Addon {
         const { data } = event;
         const typeStr = `*Type*: ${data.type}`;
         const project = `*Project*: ${data.project}`;
-        const strategies = `*Activation strategies*: ${YAML.safeDump(
+        const strategies = `*Activation strategies*: \n${YAML.safeDump(
             data.strategies,
             { skipInvalid: true },
         )}`;
-        return `Feature toggle ${data.name} | ${typeStr} | ${project} ${strategies}`;
+        return `Feature toggle ${data.name} | ${typeStr} | ${project} <br /> ${strategies}`;
     }
 
     getAction(type) {

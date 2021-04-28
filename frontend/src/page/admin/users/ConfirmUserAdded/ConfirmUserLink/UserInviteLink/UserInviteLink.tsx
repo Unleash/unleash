@@ -22,23 +22,30 @@ const UserInviteLink = ({ inviteLink }: IInviteLinkProps) => {
     });
 
     const handleCopy = () => {
-        return navigator.clipboard
-            .writeText(inviteLink)
-            .then(() => {
-                setSnackbar({
-                    show: true,
-                    type: 'success',
-                    text: 'Successfully copied invite link.',
+        try {
+            return navigator.clipboard
+                .writeText(inviteLink)
+                .then(() => {
+                    setSnackbar({
+                        show: true,
+                        type: 'success',
+                        text: 'Successfully copied invite link.',
+                    });
+                })
+                .catch(() => {
+                    setError();
                 });
-            })
-            .catch(() => {
-                setSnackbar({
-                    show: true,
-                    type: 'error',
-                    text: 'Could not copy invite link.',
-                });
-            });
+        } catch (e) {
+            setError();
+        }
     };
+
+    const setError = () =>
+        setSnackbar({
+            show: true,
+            type: 'error',
+            text: 'Could not copy invite link.',
+        });
 
     return (
         <div

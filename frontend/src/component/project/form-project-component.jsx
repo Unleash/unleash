@@ -40,7 +40,9 @@ class AddContextComponent extends Component {
 
     validateId = async id => {
         const { errors } = this.state;
-        const { validateId } = this.props;
+        const { validateId, editMode } = this.props;
+        if (editMode) return true;
+
         try {
             await validateId(id);
             errors.id = undefined;
@@ -49,6 +51,26 @@ class AddContextComponent extends Component {
         }
 
         this.setState({ errors });
+        if (errors.id) return false;
+        return true;
+    };
+
+    validateName = () => {
+        const { project } = this.state;
+        if (project.name.length === 0) {
+            this.setState(prev => ({
+                errors: { ...prev.errors, name: 'Name can not be empty.' },
+            }));
+            return false;
+        }
+        return true;
+    };
+
+    validate = async id => {
+        const validId = await this.validateId(id);
+        const validName = this.validateName();
+
+        return validId && validName;
     };
 
     onCancel = evt => {
@@ -59,8 +81,13 @@ class AddContextComponent extends Component {
     onSubmit = async evt => {
         evt.preventDefault();
         const { project } = this.state;
-        await this.props.submit(project);
-        this.props.history.push('/projects');
+
+        const valid = await this.validate(project.id);
+
+        if (valid) {
+            await this.props.submit(project);
+            this.props.history.push('/projects');
+        }
     };
 
     render() {
@@ -71,12 +98,19 @@ class AddContextComponent extends Component {
 
         return (
             <PageContent headerContent={`${submitText} Project`}>
-                <Typography variant="subtitle1" style={{ marginBottom: '0.5rem' }}>
-                    Projects allows you to group feature toggles together in the management UI.
+                <Typography
+                    variant="subtitle1"
+                    style={{ marginBottom: '0.5rem' }}
+                >
+                    Projects allows you to group feature toggles together in the
+                    management UI.
                 </Typography>
                 <form
                     onSubmit={this.onSubmit}
-                    className={classnames(commonStyles.contentSpacing, styles.formContainer)}
+                    className={classnames(
+                        commonStyles.contentSpacing,
+                        styles.formContainer
+                    )}
                 >
                     <TextField
                         label="Project Id"
@@ -89,7 +123,9 @@ class AddContextComponent extends Component {
                         variant="outlined"
                         size="small"
                         onBlur={v => this.validateId(v.target.value)}
-                        onChange={v => this.setValue('id', trim(v.target.value))}
+                        onChange={v =>
+                            this.setValue('id', trim(v.target.value))
+                        }
                     />
                     <br />
                     <TextField
@@ -114,14 +150,21 @@ class AddContextComponent extends Component {
                         size="small"
                         multiline
                         value={project.description}
-                        onChange={v => this.setValue('description', v.target.value)}
+                        onChange={v =>
+                            this.setValue('description', v.target.value)
+                        }
                     />
-                    <ConditionallyRender condition={hasAccess(CREATE_PROJECT)} show={
-                        <div className={styles.formButtons}>
-                            <FormButtons submitText={submitText} onCancel={this.onCancel} />
-                        </div>
-                    } />
-                    
+                    <ConditionallyRender
+                        condition={hasAccess(CREATE_PROJECT)}
+                        show={
+                            <div className={styles.formButtons}>
+                                <FormButtons
+                                    submitText={submitText}
+                                    onCancel={this.onCancel}
+                                />
+                            </div>
+                        }
+                    />
                 </form>
             </PageContent>
         );

@@ -1,11 +1,20 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Chip, TextField, Switch, Icon, Typography } from '@material-ui/core';
+import {
+    Button,
+    Chip,
+    TextField,
+    Switch,
+    Icon,
+    Typography,
+} from '@material-ui/core';
 import styles from './Context.module.scss';
 import classnames from 'classnames';
 import { FormButtons, styles as commonStyles } from '../common';
 import { trim } from '../common/util';
 import PageContent from '../common/PageContent/PageContent';
+import ConditionallyRender from '../common/ConditionallyRender';
+import { Alert } from '@material-ui/lab';
 
 const sortIgnoreCase = (a, b) => {
     a = a.toLowerCase();
@@ -23,7 +32,24 @@ class AddContextComponent extends Component {
             errors: {},
             currentLegalValue: '',
             dirty: false,
+            focusedLegalValue: false,
         };
+    }
+
+    handleKeydown = e => {
+        if (e.key === 'Enter' && this.state.focusedLegalValue) {
+            this.addLegalValue(e);
+        } else if (e.key === 'Enter') {
+            this.onSubmit(e);
+        }
+    };
+
+    componentDidMount() {
+        window.addEventListener('keydown', this.handleKeydown);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.handleKeydown);
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -42,15 +68,19 @@ class AddContextComponent extends Component {
 
     validateContextName = async name => {
         const { errors } = this.state;
-        const { validateName } = this.props;
+        const { validateName, editMode } = this.props;
+
+        if (editMode) return true;
+
         try {
             await validateName(name);
             errors.name = undefined;
         } catch (err) {
             errors.name = err.message;
         }
-
         this.setState({ errors });
+        if (errors.name) return false;
+        return true;
     };
 
     onCancel = evt => {
@@ -58,10 +88,23 @@ class AddContextComponent extends Component {
         this.props.history.push('/context');
     };
 
-    onSubmit = evt => {
+    onSubmit = async evt => {
         evt.preventDefault();
         const { contextField } = this.state;
-        this.props.submit(contextField).then(() => this.props.history.push('/context'));
+
+        const valid = await this.validateContextName(contextField.name);
+
+        if (valid) {
+            this.props
+                .submit(contextField)
+                .then(() => this.props.history.push('/context'))
+                .catch(e =>
+                    this.setState(prev => ({
+                        ...prev,
+                        errors: { api: e.toString() },
+                    }))
+                );
+        }
     };
 
     updateCurrentLegalValue = evt => {
@@ -82,7 +125,9 @@ class AddContextComponent extends Component {
             return;
         }
 
-        const legalValues = contextField.legalValues.concat(trim(currentLegalValue));
+        const legalValues = contextField.legalValues.concat(
+            trim(currentLegalValue)
+        );
         contextField.legalValues = legalValues.sort(sortIgnoreCase);
         this.setState({
             contextField,
@@ -93,7 +138,9 @@ class AddContextComponent extends Component {
 
     removeLegalValue = index => {
         const { contextField } = this.state;
-        const legalValues = contextField.legalValues.filter((_, i) => i !== index);
+        const legalValues = contextField.legalValues.filter(
+            (_, i) => i !== index
+        );
         contextField.legalValues = legalValues;
         this.setState({ contextField });
     };
@@ -115,11 +162,20 @@ class AddContextComponent extends Component {
         return (
             <PageContent headerContent="Create context field">
                 <div className={styles.supporting}>
-                    Context fields are a basic building block used in Unleash to control roll-out. They can be used
-                    together with strategy constraints as part of the activation strategy evaluation.
+                    Context fields are a basic building block used in Unleash to
+                    control roll-out. They can be used together with strategy
+                    constraints as part of the activation strategy evaluation.
                 </div>
                 <form onSubmit={this.onSubmit}>
                     <section className={styles.formContainer}>
+                        <ConditionallyRender
+                            condition={errors.api}
+                            show={
+                                <Alert severity="error">
+                                    {this.state.errors.api}
+                                </Alert>
+                            }
+                        />
                         <TextField
                             className={commonStyles.fullwidth}
                             label="Name"
@@ -130,8 +186,12 @@ class AddContextComponent extends Component {
                             disabled={editMode}
                             variant="outlined"
                             size="small"
-                            onBlur={v => this.validateContextName(v.target.value)}
-                            onChange={v => this.setValue('name', trim(v.target.value))}
+                            onBlur={v =>
+                                this.validateContextName(v.target.value)
+                            }
+                            onChange={v =>
+                                this.setValue('name', trim(v.target.value))
+                            }
                         />
                         <TextField
                             className={commonStyles.fullwidth}
@@ -142,7 +202,9 @@ class AddContextComponent extends Component {
                             variant="outlined"
                             size="small"
                             defaultValue={contextField.description}
-                            onChange={v => this.setValue('description', v.target.value)}
+                            onChange={v =>
+                                this.setValue('description', v.target.value)
+                            }
                         />
                         <br />
                         <br />
@@ -150,8 +212,10 @@ class AddContextComponent extends Component {
                     <section className={styles.inset}>
                         <h6 className={styles.h6}>Legal values</h6>
                         <p className={styles.alpha}>
-                            By defining the legal values the Unleash Admin UI will validate the user input. A concrete
-                            example would be that we know all values for our “environment” (local, development, stage,
+                            By defining the legal values the Unleash Admin UI
+                            will validate the user input. A concrete example
+                            would be that we know all values for our
+                            “environment” (local, development, stage,
                             production).
                         </p>
                         <div>
@@ -159,6 +223,18 @@ class AddContextComponent extends Component {
                                 label="Value"
                                 name="value"
                                 className={styles.valueField}
+                                onFocus={() =>
+                                    this.setState(prev => ({
+                                        ...prev,
+                                        focusedLegalValue: true,
+                                    }))
+                                }
+                                onBlur={() =>
+                                    this.setState(prev => ({
+                                        ...prev,
+                                        focusedLegalValue: false,
+                                    }))
+                                }
                                 value={this.state.currentLegalValue}
                                 error={!!errors.currentLegalValue}
                                 helperText={errors.currentLegalValue}
@@ -176,15 +252,28 @@ class AddContextComponent extends Component {
                                 Add
                             </Button>
                         </div>
-                        <div>{contextField.legalValues.map(this.renderLegalValue)}</div>
+                        <div>
+                            {contextField.legalValues.map(
+                                this.renderLegalValue
+                            )}
+                        </div>
                     </section>
                     <br />
                     <section>
-                        <Typography variant="subtitle1">Custom stickiness (beta)</Typography>
-                        <p className={classnames(styles.alpha, styles.formContainer)}>
-                            By enabling stickiness on this context field you can use it together with the
-                            flexible-rollout strategy. This will guarantee a consistent behavior for specific values of
-                            this context field. PS! Not all client SDK's support this feature yet!{' '}
+                        <Typography variant="subtitle1">
+                            Custom stickiness (beta)
+                        </Typography>
+                        <p
+                            className={classnames(
+                                styles.alpha,
+                                styles.formContainer
+                            )}
+                        >
+                            By enabling stickiness on this context field you can
+                            use it together with the flexible-rollout strategy.
+                            This will guarantee a consistent behavior for
+                            specific values of this context field. PS! Not all
+                            client SDK's support this feature yet!{' '}
                             <a
                                 href="https://unleash.github.io/docs/activation_strategy#flexiblerollout"
                                 target="_blank"
@@ -193,14 +282,24 @@ class AddContextComponent extends Component {
                                 Read more
                             </a>
                         </p>
+                        {console.log(contextField.stickiness)}
                         <Switch
                             label="Allow stickiness"
+                            checked={contextField.stickiness}
                             value={contextField.stickiness}
-                            onChange={() => this.setValue('stickiness', !contextField.stickiness)}
+                            onChange={() =>
+                                this.setValue(
+                                    'stickiness',
+                                    !contextField.stickiness
+                                )
+                            }
                         />
                     </section>
                     <div className={styles.formButtons}>
-                        <FormButtons submitText={submitText} onCancel={this.onCancel} />
+                        <FormButtons
+                            submitText={submitText}
+                            onCancel={this.onCancel}
+                        />
                     </div>
                 </form>
             </PageContent>

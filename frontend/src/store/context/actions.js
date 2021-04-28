@@ -39,7 +39,10 @@ export function createContextField(context) {
         api
             .create(context)
             .then(() => dispatch(addContextField(context)))
-            .catch(dispatchError(dispatch, ERROR_ADD_CONTEXT_FIELD));
+            .catch(e => {
+                dispatchError(dispatch, ERROR_ADD_CONTEXT_FIELD);
+                throw e;
+            });
 }
 
 export function updateContextField(context) {

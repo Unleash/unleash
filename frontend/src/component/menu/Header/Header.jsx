@@ -15,8 +15,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Breadcrumb from '../breadcrumb';
 import UserProfile from '../../user/UserProfile';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import HelpIcon from '@material-ui/icons/Help';
-
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { useStyles } from './styles';
 
 const Header = ({ uiConfig, init }) => {
@@ -64,7 +63,7 @@ const Header = ({ uiConfig, init }) => {
                                 rel="noopener noreferrer"
                                 className={styles.docsLink}
                             >
-                                <HelpIcon className={styles.docsIcon} />
+                                <MenuBookIcon className={styles.docsIcon} />
                             </a>
                         </Tooltip>
                         <UserProfile />

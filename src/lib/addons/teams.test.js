@@ -18,7 +18,7 @@ const TeamsAddon = proxyquire.load('./teams', {
 
 const noLogger = require('../../test/fixtures/no-logger');
 
-test('Should call slack webhook', async t => {
+test('Should call teams webhook', async t => {
     const addon = new TeamsAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',

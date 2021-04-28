@@ -17,34 +17,35 @@ const UserProfile = ({
     logoutUser,
 }) => {
     const [showProfile, setShowProfile] = useState(false);
+    const [currentLocale, setCurrentLocale] = useState([]);
 
     const styles = useStyles();
     const commonStyles = useCommonStyles();
 
     const [possibleLocales, setPossibleLocales] = useState([
-        { value: 'en-US', image: 'en-US' },
-        { value: 'en-GB', image: 'en-GB' },
-        { value: 'nb-NO', image: 'nb-NO' },
-        { value: 'sv-SE', image: 'sv-SE' },
-        { value: 'da-DK', image: 'da-DK' },
-        { value: 'en-IN', image: 'en-IN' },
-        { value: 'de', image: 'de_DE' },
-        { value: 'cs', image: 'cs_CZ' },
-        { value: 'pt-BR', image: 'pt_BR' },
-        { value: 'fr-FR', image: 'fr-FR' },
+        'en-US',
+        'en-GB',
+        'nb-NO',
+        'sv-SE',
+        'da-DK',
+        'en-IN',
+        'de',
+        'cs',
+        'pt-BR',
+        'fr-FR',
     ]);
 
     useEffect(() => {
         fetchUser();
 
         const locale = navigator.language || navigator.userLanguage;
-        let found = possibleLocales.find(l => l.value === locale);
+        let found = possibleLocales.find(l =>
+            l.toLowerCase().includes(locale.toLowerCase())
+        );
+        setCurrentLocale(found);
+
         if (!found) {
-            setPossibleLocales(prev => ({
-                ...prev,
-                value: locale,
-                image: 'unknown-locale',
-            }));
+            setPossibleLocales(prev => [...prev, locale]);
         }
         /* eslint-disable-next-line*/
     }, []);
@@ -77,6 +78,8 @@ const UserProfile = ({
                     possibleLocales={possibleLocales}
                     logoutUser={logoutUser}
                     location={location}
+                    setCurrentLocale={setCurrentLocale}
+                    currentLocale={currentLocale}
                 />
             </div>
         </OutsideClickHandler>

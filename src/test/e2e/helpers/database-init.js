@@ -88,6 +88,7 @@ export default async function init(databaseSchema = 'test', getLogger) {
             ...dbConfig.getDb(),
             pool: { min: 2, max: 8 },
             schema: databaseSchema,
+            ssl: false,
         },
         getLogger,
     });

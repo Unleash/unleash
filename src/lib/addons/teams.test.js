@@ -43,7 +43,7 @@ test('Should call teams webhook', async t => {
     t.snapshot(addon.fetchRetryCalls[0].options.body);
 });
 
-test('Should call slack webhook for archived toggle', async t => {
+test('Should call teams webhook for archived toggle', async t => {
     const addon = new TeamsAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',

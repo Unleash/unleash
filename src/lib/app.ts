@@ -23,18 +23,18 @@ import ossAuthentication from './middleware/oss-authentication';
 import noAuthentication from './middleware/no-authentication';
 import secureHeaders from './middleware/secure-headers';
 
+const customAuthWarning =
+    'You have to configure a custom authentication middleware. Read https://docs.getunleash.io/docs/deploy/configuring_unleash for more details';
+
 function handleCustomAuth({ customAuthHandler, app, config, services }) {
     const logger = config.getLogger('src/lib/app/customAuthHandler');
     if (customAuthHandler) {
         customAuthHandler(app, config, services);
     } else {
         app.use(`${config.server.baseUriPath}/api`, async (req, res) => {
-            logger.error(
-                'You have to configure a custom authentication middleware. Read the docs....',
-            );
+            logger.error(customAuthWarning);
             res.status(401).send({
-                error:
-                    'You have to configure a custom authentication middleware. Read the docs....',
+                error: customAuthWarning,
             });
         });
     }

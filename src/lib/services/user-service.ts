@@ -302,6 +302,7 @@ class UserService {
                 this.accessService.removeUserFromRole(userId, role.id),
             ),
         );
+        await this.sessionService.deleteSessionsForUser(userId);
 
         await this.store.delete(userId);
 

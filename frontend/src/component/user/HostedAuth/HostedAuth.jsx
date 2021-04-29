@@ -1,29 +1,24 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { Button, TextField, Typography, IconButton } from '@material-ui/core';
-import ConditionallyRender from '../../common/ConditionallyRender';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import LockRounded from '@material-ui/icons/LockRounded';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
-import { useStyles } from './PasswordAuth.styles';
+import { useStyles } from './HostedAuth.styles';
 import { Link } from 'react-router-dom';
+import { GoogleSvg } from './Icons';
 
 const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
     const commonStyles = useCommonStyles();
     const styles = useStyles();
     const history = useHistory();
-    const [showFields, setShowFields] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({
         usernameError: '',
         passwordError: '',
     });
-
-    const onShowOptions = e => {
-        e.preventDefault();
-        setShowFields(true);
-    };
 
     const handleSubmit = async evt => {
         evt.preventDefault();
@@ -68,10 +63,29 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
         }
     };
 
-    const renderLoginForm = () => {
-        const { usernameError, passwordError, apiError } = errors;
+ 
+    const { usernameError, passwordError, apiError } = errors;
+    const { options = [] } = authDetails;
 
-        return (
+    return (
+        <div>
+            <br />
+            <div>
+                {options.map(o => (
+                    <div
+                        key={o.type}
+                        className={classnames(
+                            styles.contentContainer,
+                            commonStyles.contentSpacingY
+                        )}
+                    >
+                        <Button color="primary" variant="outlined" href={o.path} startIcon={o.type === 'google' ? <GoogleSvg /> : <LockRounded />}>
+                            {o.message}
+                        </Button>
+                    </div>
+                ))}
+            </div>
+            <p className={styles.fancyLine}>or</p>
             <form onSubmit={handleSubmit} action={authDetails.path}>
                 <Typography variant="subtitle2" className={styles.apiError}>
                     {apiError}
@@ -104,63 +118,32 @@ const PasswordAuth = ({ authDetails, passwordLogin, loadInitialData }) => {
                         variant="outlined"
                         size="small"
                     />
-
-                    <Link to="/forgotten-password">
-                        <Typography variant="body2">
-                            Forgot your password?
-                        </Typography>
-                    </Link>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                        style={{ maxWidth: '150px' }}
-                    >
-                        Sign in
-                    </Button>
+                    <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                style={{ maxWidth: '150px' }}
+                            >
+                                Sign in
+                            </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Link to="/forgotten-password">
+                                <Typography variant="body2" align="right">
+                                    Forgot your password?
+                                </Typography>
+                            </Link>
+                        </Grid>
+                    </Grid>
+                    <br />
+                    <br />
+                    <Typography variant="body2" align="center">Don't have an account? <br /> <a href="https://www.unleash-hosted.com/pricing">Sign up</a></Typography>
+                   
+                    
                 </div>
             </form>
-        );
-    };
-
-    const renderWithOptions = options => (
-        <div>
-            {options.map(o => (
-                <div
-                    key={o.type}
-                    className={classnames(
-                        styles.contentContainer,
-                        commonStyles.contentSpacingY
-                    )}
-                >
-                    <Button color="primary" variant="contained" href={o.path}>
-                        {o.message || o.value}
-                    </Button>
-                </div>
-            ))}
-            <ConditionallyRender
-                condition={showFields}
-                show={renderLoginForm()}
-                elseShow={
-                    <IconButton onClick={onShowOptions}>
-                        {' '}
-                        Show more options
-                    </IconButton>
-                }
-            />
-        </div>
-    );
-
-    const { options = [] } = authDetails;
-
-    return (
-        <div>
-            <Typography variant="subtitle1">{authDetails.message}</Typography>
-            <ConditionallyRender
-                condition={options.length > 0}
-                show={renderWithOptions(options)}
-                elseShow={renderLoginForm()}
-            />
         </div>
     );
 };

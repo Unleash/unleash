@@ -1,4 +1,4 @@
-const AuthenticationRequired = require('../authentication-required');
+const AuthenticationRequired = require('../types/authentication-required');
 
 function ossAuthHook(app, config) {
     const { baseUriPath } = config.server;

@@ -2,7 +2,7 @@
 
 const test = require('ava');
 const { setupAppWithCustomAuth } = require('../../helpers/test-helper');
-const AuthenticationRequired = require('../../../../lib/authentication-required');
+const AuthenticationRequired = require('../../../../lib/types/authentication-required');
 
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');

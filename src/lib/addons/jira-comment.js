@@ -7,7 +7,7 @@ const {
     FEATURE_UPDATED,
     FEATURE_REVIVED,
     FEATURE_ARCHIVED,
-} = require('../event-type');
+} = require('../types/events');
 
 class JiraAddon extends Addon {
     constructor(args) {

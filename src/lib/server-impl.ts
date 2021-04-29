@@ -14,7 +14,7 @@ import User from './types/user';
 
 import permissions from './permissions';
 import AuthenticationRequired from './types/authentication-required';
-import eventType from './event-type';
+import * as eventType from './types/events';
 import { addEventHook } from './event-hook';
 
 async function closeServer(opts): Promise<void> {

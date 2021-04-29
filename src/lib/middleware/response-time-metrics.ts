@@ -1,6 +1,6 @@
 import * as responseTime from 'response-time';
 import EventEmitter from 'events';
-import { REQUEST_TIME } from '../events';
+import { REQUEST_TIME } from '../metric-events';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const _responseTime = responseTime.default;

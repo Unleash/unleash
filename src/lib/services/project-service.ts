@@ -4,12 +4,16 @@ import ProjectStore, { IProject } from '../db/project-store';
 import EventStore from '../db/event-store';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
-import eventType from '../event-type';
 import { nameType } from '../routes/admin-api/util';
 import schema from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import FeatureToggleStore from '../db/feature-toggle-store';
 import { IRole } from '../db/access-store';
+import {
+    PROJECT_CREATED,
+    PROJECT_DELETED,
+    PROJECT_UPDATED,
+} from '../types/events';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -60,7 +64,7 @@ export default class ProjectService {
         await this.accessService.createDefaultProjectRoles(user, data.id);
 
         await this.eventStore.store({
-            type: eventType.PROJECT_CREATED,
+            type: PROJECT_CREATED,
             createdBy: getCreatedBy(user),
             data,
         });
@@ -75,7 +79,7 @@ export default class ProjectService {
         await this.projectStore.update(project);
 
         await this.eventStore.store({
-            type: eventType.PROJECT_UPDATED,
+            type: PROJECT_UPDATED,
             createdBy: getCreatedBy(user),
             data: project,
         });
@@ -102,7 +106,7 @@ export default class ProjectService {
         await this.projectStore.delete(id);
 
         await this.eventStore.store({
-            type: eventType.PROJECT_DELETED,
+            type: PROJECT_DELETED,
             createdBy: getCreatedBy(user),
             data: { id },
         });

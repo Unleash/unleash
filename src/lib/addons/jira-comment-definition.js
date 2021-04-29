@@ -3,7 +3,7 @@ const {
     FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
-} = require('../event-type');
+} = require('../types/events');
 
 module.exports = {
     name: 'jira-comment',

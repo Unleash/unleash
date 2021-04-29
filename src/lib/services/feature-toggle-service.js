@@ -1,4 +1,4 @@
-const { FEATURE_TAGGED, FEATURE_UNTAGGED } = require('../event-type');
+const { FEATURE_TAGGED, FEATURE_UNTAGGED } = require('../types/events');
 const { featureSchema, nameSchema, querySchema } = require('./feature-schema');
 const { tagSchema } = require('./tag-schema');
 const NameExistsError = require('../error/name-exists-error');
@@ -11,7 +11,7 @@ const {
     FEATURE_STALE_ON,
     FEATURE_STALE_OFF,
     TAG_CREATED,
-} = require('../event-type');
+} = require('../types/events');
 
 export default class FeatureToggleService {
     constructor({ featureToggleStore, tagStore, eventStore }, { getLogger }) {

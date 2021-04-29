@@ -10,7 +10,7 @@ const {
     FEATURE_REVIVED,
     FEATURE_STALE_ON,
     FEATURE_STALE_OFF,
-} = require('../event-type');
+} = require('../types/events');
 
 const definition = require('./teams-definition');
 

@@ -35,7 +35,7 @@ const {
     USER_CREATED,
     USER_UPDATED,
     USER_DELETED,
-} = require('./event-type');
+} = require('./types/events');
 
 const strategyTypes = [
     STRATEGY_CREATED,

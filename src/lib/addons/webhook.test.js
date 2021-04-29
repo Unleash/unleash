@@ -1,6 +1,6 @@
 const test = require('ava');
 const proxyquire = require('proxyquire').noCallThru();
-const { FEATURE_CREATED } = require('../event-type');
+const { FEATURE_CREATED } = require('../types/events');
 
 const WebhookAddon = proxyquire.load('./webhook', {
     './addon': class Addon {

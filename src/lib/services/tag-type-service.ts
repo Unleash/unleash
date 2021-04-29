@@ -6,7 +6,7 @@ import {
     TAG_TYPE_CREATED,
     TAG_TYPE_DELETED,
     TAG_TYPE_UPDATED,
-} from '../event-type';
+} from '../types/events';
 import EventStore from '../db/event-store';
 import { Logger } from '../logger';
 import TagTypeStore, { ITagType } from '../db/tag-type-store';

@@ -32,6 +32,9 @@ const {
     APPLICATION_CREATED,
     FEATURE_STALE_ON,
     FEATURE_STALE_OFF,
+    USER_CREATED,
+    USER_UPDATED,
+    USER_DELETED,
 } = require('./event-type');
 
 const strategyTypes = [
@@ -63,6 +66,8 @@ const contextTypes = [
     CONTEXT_FIELD_UPDATED,
 ];
 
+const userTypes = [USER_CREATED, USER_UPDATED, USER_DELETED];
+
 const tagTypes = [TAG_CREATED, TAG_DELETED];
 
 const tagTypeTypes = [TAG_TYPE_CREATED, TAG_TYPE_DELETED];
@@ -88,23 +93,34 @@ function baseTypeFor(event) {
     if (tagTypeTypes.indexOf(event.type) !== -1) {
         return 'tag-type';
     }
+    if (userTypes.indexOf(event.type) !== -1) {
+        return 'user';
+    }
     if (event.type === APPLICATION_CREATED) {
         return 'application';
     }
     return event.type;
 }
 
+const uniqueFieldForType = baseType => {
+    if (baseType === 'user') {
+        return 'id';
+    }
+    return 'name';
+};
+
 function groupByBaseTypeAndName(events) {
     const groups = {};
 
     events.forEach(event => {
         const baseType = baseTypeFor(event);
+        const uniqueField = uniqueFieldForType(baseType);
 
         groups[baseType] = groups[baseType] || {};
-        groups[baseType][event.data.name] =
-            groups[baseType][event.data.name] || [];
+        groups[baseType][event.data[uniqueField]] =
+            groups[baseType][event.data[uniqueField]] || [];
 
-        groups[baseType][event.data.name].push(event);
+        groups[baseType][event.data[uniqueField]].push(event);
     });
 
     return groups;

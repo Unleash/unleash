@@ -13,7 +13,7 @@ import { createConfig } from './create-config';
 import User from './types/user';
 
 import permissions from './permissions';
-import AuthenticationRequired from './authentication-required';
+import AuthenticationRequired from './types/authentication-required';
 import eventType from './event-type';
 import { addEventHook } from './event-hook';
 

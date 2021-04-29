@@ -2,7 +2,7 @@
 
 const test = require('ava');
 const eventDiffer = require('./event-differ');
-const { FEATURE_CREATED, FEATURE_UPDATED } = require('./event-type');
+const { FEATURE_CREATED, FEATURE_UPDATED } = require('./types/events');
 
 test('should not fail if events include an unknown event type', t => {
     const events = [

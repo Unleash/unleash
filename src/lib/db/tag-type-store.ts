@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import { EventEmitter } from 'events';
 import { LogProvider, Logger } from '../logger';
-import { DB_TIME } from '../events';
+import { DB_TIME } from '../metric-events';
 import metricsHelper from '../metrics-helper';
 import NotFoundError from '../error/notfound-error';
 

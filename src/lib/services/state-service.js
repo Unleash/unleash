@@ -12,7 +12,7 @@ const {
     DROP_TAG_TYPES,
     PROJECT_IMPORT,
     DROP_PROJECTS,
-} = require('../event-type');
+} = require('../types/events');
 
 const {
     readFile,

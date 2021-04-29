@@ -1,14 +1,14 @@
 import client from 'prom-client';
 import EventEmitter from 'events';
 import { Knex } from 'knex';
-import * as events from './events';
+import * as events from './metric-events';
 import {
     FEATURE_CREATED,
     FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
     DB_POOL_UPDATE,
-} from './event-type';
+} from './types/events';
 import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
 

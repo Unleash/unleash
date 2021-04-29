@@ -3,7 +3,7 @@ const faker = require('faker');
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 const ClientMetricsService = require('../../../lib/services/client-metrics');
-const { APPLICATION_CREATED } = require('../../../lib/event-type');
+const { APPLICATION_CREATED } = require('../../../lib/types/events');
 
 let stores;
 let db;

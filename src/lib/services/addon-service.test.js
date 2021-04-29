@@ -16,7 +16,7 @@ const {
     ADDON_CONFIG_CREATED,
     ADDON_CONFIG_UPDATED,
     ADDON_CONFIG_DELETED,
-} = require('../event-type');
+} = require('../types/events');
 
 const MASKED_VALUE = '*****';
 

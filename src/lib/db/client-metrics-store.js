@@ -2,7 +2,7 @@
 
 const { EventEmitter } = require('events');
 const metricsHelper = require('../metrics-helper');
-const { DB_TIME } = require('../events');
+const { DB_TIME } = require('../metric-events');
 
 const TEN_SECONDS = 10 * 1000;
 

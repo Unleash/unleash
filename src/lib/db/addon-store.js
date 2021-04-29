@@ -1,7 +1,7 @@
 'use strict';
 
 const metricsHelper = require('../metrics-helper');
-const { DB_TIME } = require('../events');
+const { DB_TIME } = require('../metric-events');
 const NotFoundError = require('../error/notfound-error');
 
 const COLUMNS = [

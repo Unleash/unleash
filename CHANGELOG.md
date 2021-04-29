@@ -1,5 +1,29 @@
 # Changelog
 
+# 4.0.0-alpha.6
+
+- feat: Teams addon for messaging on Microsoft teams (#814)
+- feat: add user create/update/delete events (#807)
+- fix: upgrade unleash-frontend to version 4.0.0-alpha.11
+- fix: Authentication required options is optional
+- fix: default custom auth hook now denies all requests to api endpoints (#811)
+- fix: deletes sessions for user when user is removed (#810)
+- fix: import statements for type/events
+- fix: refactor event types
+- fix: move AuthenticationRequired to types
+- fix: migrate only users without any role
+- fix: migration to create root roles for users with permissions (#816)
+- fix: set default DATABASE_SSL to not rejectUnauthorized (#817)
+- fix: handle password being undefined when validating (#809)
+- fix: active sessions are now destroyed if auth/reset and auth/validate endpoints are used (#806)
+- fix: send email on process.nextTick (#805)
+- fix: add hosted auth option
+- fix: fix test data
+- fix: correct test data
+- fix: migration should call cb on down
+- fix: change default admin password
+- fix: add types for node-fetch
+
 # 4.0.0-alpha.4
 
 - feat: add option for LOG_LEVEL (#803)

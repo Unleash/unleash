@@ -15,6 +15,7 @@ import {
     IListeningHost,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
+import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -98,7 +99,7 @@ const defaultVersionOption: IVersionOption = {
 const defaultAuthentication: IAuthOption = {
     enableApiToken: safeBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
     type: authTypeFromString(process.env.AUTH_TYPE),
-    customAuthHandler: () => {},
+    customAuthHandler: defaultCustomAuthDenyAll,
     createAdminUser: true,
 };
 
@@ -124,6 +125,16 @@ const dbPort = (dbConfig: Partial<IDBOption>): Partial<IDBOption> => {
     }
     return dbConfig;
 };
+
+const removeUndefinedKeys = (o: object): object =>
+    Object.keys(o).reduce((a, key) => {
+        if (o[key] !== undefined) {
+            // eslint-disable-next-line no-param-reassign
+            a[key] = o[key];
+            return a;
+        }
+        return a;
+    }, {});
 
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
@@ -160,7 +171,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const authentication: IAuthOption = mergeAll([
         defaultAuthentication,
-        options.authentication,
+        options.authentication
+            ? removeUndefinedKeys(options.authentication)
+            : options.authentication,
     ]);
 
     const { ui } = options;

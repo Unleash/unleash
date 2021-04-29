@@ -12,7 +12,7 @@ const {
     CONTEXT_FIELD_CREATED,
     CONTEXT_FIELD_UPDATED,
     CONTEXT_FIELD_DELETED,
-} = require('../event-type');
+} = require('../types/events');
 
 class ContextService {
     private projectStore: ProjectStore;

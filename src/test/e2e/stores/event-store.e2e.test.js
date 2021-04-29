@@ -5,7 +5,7 @@ const sinon = require('sinon');
 const {
     APPLICATION_CREATED,
     FEATURE_CREATED,
-} = require('../../../lib/event-type');
+} = require('../../../lib/types/events');
 
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');

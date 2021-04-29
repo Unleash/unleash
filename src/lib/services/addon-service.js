@@ -3,7 +3,7 @@
 const memoize = require('memoizee');
 const { ValidationError } = require('joi');
 const addonProvidersClasses = require('../addons');
-const events = require('../event-type');
+const events = require('../types/events');
 const { addonSchema } = require('./addon-schema');
 const NameExistsError = require('../error/name-exists-error');
 

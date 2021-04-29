@@ -1,4 +1,4 @@
-const AuthenticationRequired = require('../authentication-required');
+const AuthenticationRequired = require('../types/authentication-required');
 
 function demoAuthentication(app, basePath = '', { userService }) {
     app.post(`${basePath}/api/admin/login`, async (req, res) => {

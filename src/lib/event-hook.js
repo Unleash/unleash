@@ -5,7 +5,7 @@ const {
     FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
-} = require('./event-type');
+} = require('./types/events');
 
 exports.addEventHook = (eventHook, eventStore) => {
     eventStore.on(FEATURE_CREATED, data => {

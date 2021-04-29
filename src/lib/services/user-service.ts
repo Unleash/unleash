@@ -20,7 +20,7 @@ import { IUnleashServices } from '../types/services';
 import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import EventStore from '../db/event-store';
-import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../event-type';
+import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../types/events';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -302,6 +302,7 @@ class UserService {
                 this.accessService.removeUserFromRole(userId, role.id),
             ),
         );
+        await this.sessionService.deleteSessionsForUser(userId);
 
         await this.store.delete(userId);
 

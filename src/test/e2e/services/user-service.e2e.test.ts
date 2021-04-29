@@ -10,12 +10,14 @@ import ResetTokenService from '../../../lib/services/reset-token-service';
 import { EmailService } from '../../../lib/services/email-service';
 import { createTestConfig } from '../../config/test-config';
 import SessionService from '../../../lib/services/session-service';
+import NotFoundError from '../../../lib/error/notfound-error';
 
 let db;
 let stores;
 let userService: UserService;
 let userStore: UserStore;
 let adminRole: IRole;
+let sessionService: SessionService;
 
 test.before(async () => {
     db = await dbInit('user_service_serial', getLogger);
@@ -24,7 +26,7 @@ test.before(async () => {
     const accessService = new AccessService(stores, config);
     const resetTokenService = new ResetTokenService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);
-    const sessionService = new SessionService(stores, config);
+    sessionService = new SessionService(stores, config);
 
     userService = new UserService(stores, config, {
         accessService,
@@ -42,9 +44,7 @@ test.after(async () => {
 });
 
 test.afterEach(async () => {
-    const users = await userStore.getAll();
-    const deleteAll = users.map((u: User) => userStore.delete(u.id));
-    await Promise.all(deleteAll);
+    await userStore.deleteAll();
 });
 
 test.serial('should create initial admin user', async t => {
@@ -95,4 +95,36 @@ test.serial('should get user with root role', async t => {
     t.is(user.email, email);
     t.is(user.id, u.id);
     t.is(user.rootRole, adminRole.id);
+});
+
+test.serial(`deleting a user should delete the user's sessions`, async t => {
+    const email = 'some@test.com';
+    const user = await userService.createUser({
+        email,
+        password: 'A very strange P4ssw0rd_',
+        rootRole: adminRole.id,
+    });
+    const testComSession = {
+        sid: 'xyz321',
+        sess: {
+            cookie: {
+                originalMaxAge: 2880000,
+                expires: new Date(Date.now() + 86400000).toDateString(),
+                secure: false,
+                httpOnly: true,
+                path: '/',
+            },
+            user,
+        },
+    };
+    await sessionService.insertSession(testComSession);
+    const userSessions = await sessionService.getSessionsForUser(user.id);
+    t.is(userSessions.length, 1);
+    await userService.deleteUser(user.id);
+    await t.throwsAsync(
+        async () => sessionService.getSessionsForUser(user.id),
+        {
+            instanceOf: NotFoundError,
+        },
+    );
 });

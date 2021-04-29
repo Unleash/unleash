@@ -7,7 +7,7 @@ const TTLList = require('./ttl-list.js');
 const appSchema = require('./metrics-schema');
 const { clientMetricsSchema } = require('./client-metrics-schema');
 const { clientRegisterSchema } = require('./register-schema');
-const { APPLICATION_CREATED } = require('../../event-type');
+const { APPLICATION_CREATED } = require('../../types/events');
 
 const FIVE_SECONDS = 5 * 1000;
 const FIVE_MINUTES = 5 * 60 * 1000;

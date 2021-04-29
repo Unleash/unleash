@@ -16,7 +16,7 @@ const {
     TAG_IMPORT,
     FEATURE_TAG_IMPORT,
     PROJECT_IMPORT,
-} = require('../event-type');
+} = require('../types/events');
 
 function getSetup() {
     const stores = store.createStores();

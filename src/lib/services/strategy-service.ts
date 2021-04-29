@@ -12,7 +12,7 @@ const {
     STRATEGY_DEPRECATED,
     STRATEGY_REACTIVATED,
     STRATEGY_UPDATED,
-} = require('../event-type');
+} = require('../types/events');
 
 class StrategyService {
     private logger: Logger;

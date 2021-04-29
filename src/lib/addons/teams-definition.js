@@ -7,7 +7,7 @@ const {
     FEATURE_REVIVED,
     FEATURE_STALE_ON,
     FEATURE_STALE_OFF,
-} = require('../event-type');
+} = require('../types/events');
 
 module.exports = {
     name: 'teams',

@@ -2,7 +2,7 @@ import { tagSchema } from './tag-schema';
 import TagStore, { ITag } from '../db/tag-store';
 import EventStore from '../db/event-store';
 import NameExistsError from '../error/name-exists-error';
-import { TAG_CREATED, TAG_DELETED } from '../event-type';
+import { TAG_CREATED, TAG_DELETED } from '../types/events';
 import { Logger } from '../logger';
 
 export default class TagService {

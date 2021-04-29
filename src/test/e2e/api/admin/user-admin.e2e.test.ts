@@ -7,7 +7,11 @@ import UserStore from '../../../../lib/db/user-store';
 import { AccessStore, IRole } from '../../../../lib/db/access-store';
 import { RoleName } from '../../../../lib/services/access-service';
 import EventStore from '../../../../lib/db/event-store';
-import eventType from '../../../../lib/event-type';
+import {
+    USER_CREATED,
+    USER_DELETED,
+    USER_UPDATED,
+} from '../../../../lib/types/events';
 
 let stores;
 let db;
@@ -265,7 +269,7 @@ test.serial('generates USER_CREATED event', async t => {
 
     const events = await eventStore.getEvents();
 
-    t.is(events[0].type, eventType.USER_CREATED);
+    t.is(events[0].type, USER_CREATED);
     t.is(events[0].data.email, email);
     t.is(events[0].data.name, name);
     t.is(events[0].data.id, body.id);
@@ -280,7 +284,7 @@ test.serial('generates USER_DELETED event', async t => {
     await request.delete(`/api/admin/user-admin/${user.id}`);
 
     const events = await eventStore.getEvents();
-    t.is(events[0].type, eventType.USER_DELETED);
+    t.is(events[0].type, USER_DELETED);
     t.is(events[0].data.id, user.id);
     t.is(events[0].data.email, user.email);
 });
@@ -305,7 +309,7 @@ test.serial('generates USER_UPDATED event', async t => {
         .set('Content-Type', 'application/json');
 
     const events = await eventStore.getEvents();
-    t.is(events[0].type, eventType.USER_UPDATED);
+    t.is(events[0].type, USER_UPDATED);
     t.is(events[0].data.id, body.id);
     t.is(events[0].data.name, 'New name');
 });

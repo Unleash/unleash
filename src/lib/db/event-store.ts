@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { Knex } from 'knex';
-import { DROP_FEATURES } from '../event-type';
+import { DROP_FEATURES } from '../types/events';
 import { LogProvider, Logger } from '../logger';
 
 const EVENT_COLUMNS = [

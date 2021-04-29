@@ -9,8 +9,8 @@ const eventStore = new EventEmitter();
 const clientMetricsStore = new EventEmitter();
 const { register: prometheusRegister } = require('prom-client');
 const { createTestConfig } = require('../test/config/test-config');
-const { REQUEST_TIME, DB_TIME } = require('./events');
-const { FEATURE_UPDATED } = require('./event-type');
+const { REQUEST_TIME, DB_TIME } = require('./metric-events');
+const { FEATURE_UPDATED } = require('./types/events');
 const { createMetricsMonitor } = require('./metrics');
 
 const monitor = createMetricsMonitor();

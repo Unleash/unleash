@@ -1,6 +1,6 @@
 const test = require('ava');
 const proxyquire = require('proxyquire').noCallThru();
-const { FEATURE_CREATED, FEATURE_ARCHIVED } = require('../event-type');
+const { FEATURE_CREATED, FEATURE_ARCHIVED } = require('../types/events');
 
 const TeamsAddon = proxyquire.load('./teams', {
     './addon': class Addon {

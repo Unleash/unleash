@@ -21,6 +21,7 @@ import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import EventStore from '../db/event-store';
 import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../types/events';
+import { IRole } from '../db/access-store';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -29,14 +30,14 @@ export interface ICreateUser {
     email?: string;
     username?: string;
     password?: string;
-    rootRole: number;
+    rootRole: number | RoleName;
 }
 
 export interface IUpdateUser {
     id: number;
     name?: string;
     email?: string;
-    rootRole?: number;
+    rootRole?: number | RoleName;
 }
 
 interface IUserWithRole extends IUser {
@@ -128,11 +129,7 @@ class UserService {
                 const passwordHash = await bcrypt.hash(pwd, saltRounds);
                 await this.store.setPasswordHash(user.id, passwordHash);
 
-                const rootRoles = await this.accessService.getRootRoles();
-                const adminRole = rootRoles.find(
-                    r => r.name === RoleName.ADMIN,
-                );
-                await this.accessService.setUserRootRole(user.id, adminRole.id);
+                await this.accessService.setUserRootRole(user.id, RoleName.ADMIN);
             } catch (e) {
                 this.logger.error('Unable to create default user "admin"');
             }

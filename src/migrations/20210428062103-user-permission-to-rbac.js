@@ -22,7 +22,7 @@ exports.up = function(db, cb) {
                     const roleName = resolveRoleName(u.permissions);
                     return db.runSql.bind(
                         db,
-                        `INSERT INTO role_user (role_id, user_id) 
+                        `INSERT INTO role_user (role_id, user_id)
                      SELECT id, '${u.id}'
                      FROM roles
                      WHERE name = '${roleName}' AND type = 'root';`,

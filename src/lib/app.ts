@@ -126,7 +126,7 @@ export default function getApp(
         res.send(indexHTML);
     });
 
-    app.get(`${baseUriPath}*`, (req, res) => {
+    app.get(`${baseUriPath}/*`, (req, res) => {
         if (req.path.includes('api')) {
             res.status(404).send();
             return;

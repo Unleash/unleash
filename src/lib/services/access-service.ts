@@ -159,9 +159,11 @@ export class AccessService {
         return this.store.addUserToRole(userId, roleId);
     }
 
-    async setUserRootRole(userId: number, roleId: number): Promise<void> {
-        const roles = await this.getRootRoles();
-        const newRootRole = roles.find(r => r.id === roleId);
+    async setUserRootRole(
+        userId: number,
+        role: number | RoleName,
+    ): Promise<void> {
+        const newRootRole = await this.resolveRootRole(role);
 
         if (newRootRole) {
             try {
@@ -176,7 +178,7 @@ export class AccessService {
                 );
             }
         } else {
-            throw new Error(`Could not find rootRole with id=${roleId}`);
+            throw new Error(`Could not find rootRole=${role}`);
         }
     }
 
@@ -314,6 +316,17 @@ export class AccessService {
 
     async getRootRoles(): Promise<IRole[]> {
         return this.store.getRootRoles();
+    }
+
+    private async resolveRootRole(rootRole: number | RoleName): Promise<IRole> {
+        const rootRoles = await this.getRootRoles();
+        let role: IRole;
+        if (typeof rootRole === 'number') {
+            role = rootRoles.find(r => r.id === rootRole);
+        } else {
+            role = rootRoles.find(r => r.name === rootRole);
+        }
+        return role;
     }
 
     async getRootRole(roleName: RoleName): Promise<IRole> {

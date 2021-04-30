@@ -112,7 +112,7 @@ export default function getApp(
     );
 
     if (typeof config.preRouterHook === 'function') {
-        config.preRouterHook(app);
+        config.preRouterHook(app, config, services, stores);
     }
 
     // Setup API routes

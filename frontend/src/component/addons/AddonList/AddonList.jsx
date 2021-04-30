@@ -23,6 +23,8 @@ const getIcon = name => {
             return <img style={style} alt="Generic Webhook logo" src="webhooks.svg" />;
         case 'teams':
                 return <img style={style} alt="Microsoft Teams Logo" src="teams.svg" />;
+        case 'datadog':
+            return <img style={style} alt="Datadog" src="datadog.svg" />;
         default:
             return (
                 <Avatar>

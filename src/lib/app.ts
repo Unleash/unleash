@@ -23,6 +23,7 @@ import demoAuthentication from './middleware/demo-authentication';
 import ossAuthentication from './middleware/oss-authentication';
 import noAuthentication from './middleware/no-authentication';
 import secureHeaders from './middleware/secure-headers';
+import { rewriteHTML } from './util/rewriteHTML';
 
 export default function getApp(
     config: IUnleashConfig,
@@ -38,8 +39,7 @@ export default function getApp(
         .readFileSync(path.join(publicFolder, 'index.html'))
         .toString();
 
-    indexHTML = indexHTML.replace(/::baseUriPath::/gi, baseUriPath);
-    indexHTML = indexHTML.replace(/\/static/gi, `${baseUriPath}/static`);
+    indexHTML = rewriteHTML(indexHTML, baseUriPath);
 
     app.set('trust proxy', true);
     app.disable('x-powered-by');

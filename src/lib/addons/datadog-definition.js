@@ -11,16 +11,16 @@ const {
 
 module.exports = {
     name: 'datadog',
-    displayName: 'Data dog',
-    description: 'Allows Unleash to post updates to Data dog.',
+    displayName: 'Datadog',
+    description: 'Allows Unleash to post updates to Datadog.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/datadog',
     parameters: [
         {
             name: 'url',
-            displayName: 'Data dog webhook URL',
+            displayName: 'Datadog Events URL',
+            description: 'Default url: https://api.datadoghq.com/api/v1/events',
             type: 'url',
-            required: true,
-            sensitive: true,
+            required: false,
         },
         {
             name: 'apiKey',
@@ -28,7 +28,8 @@ module.exports = {
             placeholder: 'j96c23b0f12a6b3434a8d710110bd862',
             description: 'Api key from datadog',
             type: 'text',
-            required: false,
+            required: true,
+            sensitive: true,
         },
     ],
     events: [

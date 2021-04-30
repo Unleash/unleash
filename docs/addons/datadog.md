@@ -26,8 +26,9 @@ You can choose to trigger updates for the following events (we might add more ev
 
 Unleash Datadog addon takes the following parameters.
 
-- **Datadog Webhook URL** - This is the only required property.
+- **Datadog Events URL** - This property is optional. The default url is https://api.datadoghq.com/api/v1/events
+- **DD API KEY** - This is a required property.
 
 #### Tags
 
-Datadog's incoming webhooks are channel specific. You will be able to create multiple addons to support messaging on different apps.
+Datadog's incoming webhooks are app specific. You will be able to create multiple addons to support messaging on different apps.

@@ -21,7 +21,10 @@ class DatadogAddon extends Addon {
     }
 
     async handleEvent(event, parameters) {
-        const { url, apiKey } = parameters;
+        const {
+            url = 'https://api.datadoghq.com/api/v1/events',
+            apiKey,
+        } = parameters;
         let text;
 
         if ([FEATURE_ARCHIVED, FEATURE_REVIVED].includes(event.type)) {

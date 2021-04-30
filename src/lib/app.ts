@@ -1,4 +1,5 @@
 import { publicFolder } from 'unleash-frontend';
+import fs from 'fs';
 import EventEmitter from 'events';
 import express from 'express';
 import cors from 'cors';
@@ -33,6 +34,13 @@ export default function getApp(
 
     const baseUriPath = config.server.baseUriPath || '';
 
+    let indexHTML = fs
+        .readFileSync(path.join(publicFolder, 'index.html'))
+        .toString();
+
+    indexHTML = indexHTML.replace(/::baseUriPath::/gi, baseUriPath);
+    indexHTML = indexHTML.replace(/\/static/gi, `${baseUriPath}/static`);
+
     app.set('trust proxy', true);
     app.disable('x-powered-by');
     app.set('port', config.server.port);
@@ -57,7 +65,8 @@ export default function getApp(
     app.use(secureHeaders(config));
     app.use(express.urlencoded({ extended: true }));
     app.use(favicon(path.join(publicFolder, 'favicon.ico')));
-    app.use(baseUriPath, express.static(publicFolder));
+
+    app.use(baseUriPath, express.static(publicFolder, { index: false }));
 
     if (config.enableOAS) {
         app.use(`${baseUriPath}/oas`, express.static('docs/api/oas'));
@@ -112,6 +121,18 @@ export default function getApp(
     if (process.env.NODE_ENV !== 'production') {
         app.use(errorHandler());
     }
+
+    app.get(`${baseUriPath}`, (req, res) => {
+        res.send(indexHTML);
+    });
+
+    app.get('*', (req, res) => {
+        if (req.path.includes('api')) {
+            res.status(404).send();
+        }
+
+        res.send(indexHTML);
+    });
 
     return app;
 }

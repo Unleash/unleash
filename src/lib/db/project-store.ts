@@ -7,20 +7,20 @@ const COLUMNS = ['id', 'name', 'description', 'created_at'];
 const TABLE = 'projects';
 
 export interface IProject {
-    id: number;
+    id: string;
     name: string;
     description: string;
     createdAt: Date;
 }
 
 interface IProjectInsert {
-    id: number;
+    id: string;
     name: string;
     description: string;
 }
 
 interface IProjectArchived {
-    id: number;
+    id: string;
     archived: boolean;
 }
 
@@ -51,7 +51,7 @@ class ProjectStore {
         return rows.map(this.mapRow);
     }
 
-    async get(id): Promise<IProject> {
+    async get(id: string): Promise<IProject> {
         return this.db
             .first(COLUMNS)
             .from(TABLE)
@@ -59,7 +59,7 @@ class ProjectStore {
             .then(this.mapRow);
     }
 
-    async hasProject(id): Promise<IProjectArchived> {
+    async hasProject(id: string): Promise<IProjectArchived> {
         return this.db
             .first('id')
             .from(TABLE)

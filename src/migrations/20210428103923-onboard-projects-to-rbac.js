@@ -21,8 +21,12 @@ exports.up = function(db, cb) {
                         VALUES ('Owner', '${DESCRIPTION.OWNER}', 'project', '${p.name}')
                         RETURNING id role_id
                 )
-                INSERT INTO role_permission(role_id, project, permission)
-                SELECT role_id, '${p.name}', 'ADMIN' from project_owner;
+                INSERT INTO role_permission(role_id, project, permission) VALUES
+                    ((SELECT role_id FROM project_owner), '${p.name}', 'UPDATE_PROJECT'),
+                    ((SELECT role_id FROM project_owner), '${p.name}', 'DELETE_PROJECT'),
+                    ((SELECT role_id FROM project_owner), '${p.name}', 'CREATE_FEATURE'),
+                    ((SELECT role_id FROM project_owner), '${p.name}', 'UPDATE_FEATURE'),
+                    ((SELECT role_id FROM project_owner), '${p.name}', 'DELETE_FEATURE');
 
                 WITH project_member AS (
                     INSERT into roles (name, description, type, project)
@@ -30,13 +34,6 @@ exports.up = function(db, cb) {
                         RETURNING id role_id
                 )
                 INSERT INTO role_permission(role_id, project, permission) VALUES
-                    ((SELECT role_id from project_member), '${p.name}', 'CREATE_STRATEGY'),
-                    ((SELECT role_id from project_member), '${p.name}', 'UPDATE_STRATEGY'),
-                    ((SELECT role_id from project_member), '${p.name}', 'DELETE_STRATEGY'),
-                    ((SELECT role_id from project_member), '${p.name}', 'UPDATE_APPLICATION'),
-                    ((SELECT role_id from project_member), '${p.name}', 'CREATE_CONTEXT_FIELD'),
-                    ((SELECT role_id from project_member), '${p.name}', 'UPDATE_CONTEXT_FIELD'),
-                    ((SELECT role_id from project_member), '${p.name}', 'DELETE_CONTEXT_FIELD'),
                     ((SELECT role_id from project_member), '${p.name}', 'CREATE_FEATURE'),
                     ((SELECT role_id from project_member), '${p.name}', 'UPDATE_FEATURE'),
                     ((SELECT role_id from project_member), '${p.name}', 'DELETE_FEATURE');

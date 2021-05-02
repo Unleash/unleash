@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 4.0.0-alpha.12
+fix: add datadog logo for addons
+
 # 4.0.0-alpha.11
 - Feat/auth hosted section (#280)
 - fix: only get legalValues if definition exists

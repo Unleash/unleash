@@ -13,7 +13,7 @@ const {
     DELETE_STRATEGY,
     CREATE_STRATEGY,
     UPDATE_STRATEGY,
-} = require('../../permissions');
+} = require('../../types/permissions');
 
 const version = 1;
 

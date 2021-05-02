@@ -6,7 +6,7 @@ import moment from 'moment';
 import multer from 'multer';
 import { Request, Response } from 'express';
 import Controller from '../controller';
-import { ADMIN } from '../../permissions';
+import { ADMIN } from '../../types/permissions';
 import extractUser from '../../extract-user';
 import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';

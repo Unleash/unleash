@@ -1,4 +1,4 @@
-import { ADMIN } from '../../permissions';
+import { ADMIN } from '../../types/permissions';
 import { TemplateFormat } from '../../services/email-service';
 import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';

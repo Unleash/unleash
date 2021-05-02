@@ -6,7 +6,7 @@ import {
     CREATE_API_TOKEN,
     DELETE_API_TOKEN,
     UPDATE_API_TOKEN,
-} from '../../permissions';
+} from '../../types/permissions';
 import { ApiTokenService } from '../../services/api-token-service';
 import { Logger } from '../../logger';
 import { ApiTokenType } from '../../db/api-token-store';

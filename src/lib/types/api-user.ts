@@ -1,4 +1,4 @@
-import { CLIENT } from '../permissions';
+import { CLIENT } from './permissions';
 
 interface IApiUserData {
     username: string;

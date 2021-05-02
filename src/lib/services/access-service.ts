@@ -4,7 +4,7 @@ import {
     IUserPermission,
     IUserRole,
 } from '../db/access-store';
-import permissions from '../permissions';
+import * as permissions from '../types/permissions';
 import User from '../types/user';
 
 export const ALL_PROJECTS = '*';

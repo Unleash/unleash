@@ -8,7 +8,7 @@ import {
     UPDATE_FEATURE,
     DELETE_FEATURE,
     CREATE_FEATURE,
-} from '../../permissions';
+} from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';

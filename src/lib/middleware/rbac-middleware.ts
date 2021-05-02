@@ -4,7 +4,7 @@ import {
     UPDATE_FEATURE,
     DELETE_FEATURE,
     ADMIN,
-} from '../permissions';
+} from '../types/permissions';
 import ApiUser from '../types/api-user';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';

@@ -11,7 +11,7 @@ unleash
         databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash',
         preRouterHook: app => {
             app.use('/api/client', (req, res, next) => {
-                if (req.header('authorization') === sharedSecret) {
+                if (req.header('Authorization') === sharedSecret) {
                     next();
                 } else {
                     res.sendStatus(401);

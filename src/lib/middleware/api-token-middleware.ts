@@ -21,7 +21,7 @@ const apiAccessMiddleware = (
         }
 
         try {
-            const apiToken = req.header('authorization');
+            const apiToken = req.header('Authorization');
             const apiUser = apiTokenService.getUserForToken(apiToken);
             if (apiUser) {
                 req.user = apiUser;

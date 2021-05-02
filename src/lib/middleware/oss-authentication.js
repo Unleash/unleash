@@ -18,7 +18,7 @@ function ossAuthHook(app, config) {
         if (req.user) {
             return next();
         }
-        if (req.header('authorization')) {
+        if (req.header('Authorization')) {
             // API clients should get 401 without body
             return res.sendStatus(401);
         }

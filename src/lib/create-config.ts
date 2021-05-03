@@ -16,6 +16,7 @@ import {
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
+import { formatBaseUri } from './util/format-base-uri';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -82,7 +83,7 @@ const defaultServerOption: IServerOption = {
     pipe: undefined,
     host: process.env.HTTP_HOST,
     port: safeNumber(process.env.HTTP_PORT || process.env.PORT, 4242),
-    baseUriPath: process.env.BASE_URI_PATH || '',
+    baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
     serverMetrics: true,
     keepAliveTimeout: 60 * 1000,

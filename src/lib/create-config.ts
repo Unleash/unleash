@@ -137,8 +137,18 @@ const removeUndefinedKeys = (o: object): object =>
         return a;
     }, {});
 
+const formatServerOptions = (
+    serverOptions: Partial<IServerOption>,
+): Partial<IServerOption> => {
+    return {
+        ...serverOptions,
+        baseUriPath: formatBaseUri(serverOptions.baseUriPath),
+    };
+};
+
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
+
     if (options.databaseUrl) {
         extraDbOptions = parse(options.databaseUrl);
     } else if (process.env.DATABASE_URL) {
@@ -162,7 +172,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const server: IServerOption = mergeAll([
         defaultServerOption,
-        options.server,
+        formatServerOptions(options.server),
     ]);
 
     const versionCheck: IVersionOption = mergeAll([

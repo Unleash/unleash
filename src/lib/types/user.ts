@@ -22,6 +22,8 @@ export interface IUser {
 }
 
 export default class User implements IUser {
+    isAPI: boolean = false;
+
     id: number;
 
     name: string;

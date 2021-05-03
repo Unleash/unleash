@@ -67,7 +67,7 @@ test('should allow setting pool size', t => {
 });
 
 test('Can set baseUriPath', t => {
-    const baseUriPath = 'some';
+    const baseUriPath = '/some';
     const config = createConfig({ server: { baseUriPath } });
     t.is(config.server.baseUriPath, baseUriPath);
 });

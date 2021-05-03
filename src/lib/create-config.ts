@@ -138,11 +138,13 @@ const removeUndefinedKeys = (o: object): object =>
     }, {});
 
 const formatServerOptions = (
-    serverOptions: Partial<IServerOption>,
-): Partial<IServerOption> => {
+    serverOptions?: Partial<IServerOption>,
+): Partial<IServerOption> | undefined => {
+    if (!serverOptions) return;
+
     return {
         ...serverOptions,
-        baseUriPath: formatBaseUri(serverOptions.baseUriPath),
+        baseUriPath: formatBaseUri(serverOptions?.baseUriPath),
     };
 };
 

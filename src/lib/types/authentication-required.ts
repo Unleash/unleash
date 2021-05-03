@@ -5,7 +5,7 @@ interface IBaseOptions {
 }
 
 interface IOptions extends IBaseOptions {
-    options: IBaseOptions[];
+    options?: IBaseOptions[];
 }
 
 class AuthenticationRequired {
@@ -15,7 +15,7 @@ class AuthenticationRequired {
 
     private message: string;
 
-    private options: IBaseOptions[];
+    private options?: IBaseOptions[];
 
     constructor({ type, path, message, options }: IOptions) {
         this.type = type;

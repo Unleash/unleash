@@ -52,11 +52,9 @@ class DatadogAddon extends Addon {
             },
             body: JSON.stringify(body),
         };
-        const response = await this.fetchRetry(url, requestOpts);
+        const res = await this.fetchRetry(url, requestOpts);
         this.logger.info(
-            `Handled event ${event.type}. Status codes=${JSON.stringify(
-                response,
-            )}`,
+            `Handled event ${event.type}. Status codes=${res.status}`,
         );
     }
 

@@ -18,7 +18,8 @@ module.exports = {
         {
             name: 'url',
             displayName: 'Datadog Events URL',
-            description: 'Default url: https://api.datadoghq.com/api/v1/events',
+            description:
+                'Default url: https://api.datadoghq.com/api/v1/events. Needs to be changed if your not using the US1 site.',
             type: 'url',
             required: false,
         },

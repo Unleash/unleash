@@ -14,6 +14,8 @@ import {
     PROJECT_DELETED,
     PROJECT_UPDATED,
 } from '../types/events';
+import { IUnleashStores } from '../types/stores';
+import { IUnleashConfig } from '../types/option';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -36,8 +38,15 @@ export default class ProjectService {
     private logger: any;
 
     constructor(
-        { projectStore, eventStore, featureToggleStore },
-        config: any,
+        {
+            projectStore,
+            eventStore,
+            featureToggleStore,
+        }: Pick<
+        IUnleashStores,
+        'projectStore' | 'eventStore' | 'featureToggleStore'
+        >,
+        config: IUnleashConfig,
         accessService: AccessService,
     ) {
         this.projectStore = projectStore;
@@ -51,7 +60,7 @@ export default class ProjectService {
         return this.projectStore.getAll();
     }
 
-    async getProject(id: number): Promise<IProject> {
+    async getProject(id: string): Promise<IProject> {
         return this.projectStore.get(id);
     }
 

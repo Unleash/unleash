@@ -97,6 +97,19 @@ test.serial('should get user with root role', async t => {
     t.is(user.rootRole, adminRole.id);
 });
 
+test.serial('should get user with root role by name', async t => {
+    const email = 'some2@test.com';
+    const u = await userService.createUser({
+        email,
+        password: 'A very strange P4ssw0rd_',
+        rootRole: RoleName.ADMIN,
+    });
+    const user = await userService.getUser(u.id);
+    t.is(user.email, email);
+    t.is(user.id, u.id);
+    t.is(user.rootRole, adminRole.id);
+});
+
 test.serial(`deleting a user should delete the user's sessions`, async t => {
     const email = 'some@test.com';
     const user = await userService.createUser({

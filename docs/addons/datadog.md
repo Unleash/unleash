@@ -26,7 +26,11 @@ You can choose to trigger updates for the following events (we might add more ev
 
 Unleash Datadog addon takes the following parameters.
 
-- **Datadog Events URL** - This property is optional. The default url is https://api.datadoghq.com/api/v1/events
+- **Datadog Events URL** - This property is optional. The default url is https://api.datadoghq.com/api/v1/events. Needs to be changed if you are not not on the US1 [Datadog site](https://docs.datadoghq.com/getting_started/site/). Possible alternatives:
+  - EU: https://app.datadoghq.eu/api/v1/events
+  - US1: https://app.datadoghq.com/api/v1/events
+  - US3: https://us3.datadoghq.com/api/v1/events
+  - US1-FED: https://app.ddog-gov.com/api/v1/events
 - **DD API KEY** - This is a required property.
 
 #### Tags

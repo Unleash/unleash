@@ -9,7 +9,7 @@ title: Getting Started
 
 You will need:
 
-- [Node.js](https://nodejs.org/en/download/) (version 12 or later)
+- [Node.js](https://nodejs.org/en/download/) (version 14 or later)
 - [PostgreSQL](https://www.postgresql.org/download/) (version 10 or later)
 - [Create an unleash user and database](/docs/developer_guide).
 
@@ -47,6 +47,7 @@ docker run -e POSTGRES_PASSWORD=some_password \
 docker run -p 4242:4242 \
   -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
   -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=some_password \
+  -e DATABASE_SSL=false \
   --network unleash unleashorg/unleash-server
 ```
 
@@ -74,7 +75,12 @@ docker run -p 4242:4242 \
    unleash
      .start({
        databaseUrl: 'postgres://unleash_user:password@localhost:5432/unleash',
-       port: 4242,
+       db: {
+         ssl: false
+       },
+       server: { 
+         port: 4242
+       },
      })
      .then(unleash => {
        console.log(

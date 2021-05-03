@@ -103,12 +103,20 @@ docker run -p 4242:4242 \
    node server.js
    ```
 
+## Create an api token for your client
+
+- Click the hamburger menu in the upper left hand corner and select the "Admin" option
+- Then click the `Api Access` tab and click `Create new API key`
+- If you're going to be using this for creating toggles you'll need an API key with `Admin` rights
+- If connecting a client/SDK you should create an API key with `Client` access rights.
+- Create one with `Admin` rights now
+
 ## Test your server and create a sample API call
 
-Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see a list of example feature toggles, try modifying one of them with [curl](https://curl.se/) from a terminal/bash shell:
+Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see a list of example feature toggles, try creating one with [curl](https://curl.se/) from a terminal/bash shell:
 
 ```
-curl --location --request PUT 'http://localhost:4242/api/admin/features/Feature.A' --header 'Content-Type: application/json' --data-raw '{\
+curl --location -H "Authorization: <apitoken from previous step>" --request POST 'http://localhost:4242/api/admin/features' --header 'Content-Type: application/json' --data-raw '{\
   "name": "Feature.A",\
   "description": "Dolor sit amet.",\
   "type": "release",\

@@ -18,6 +18,7 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import VersionService from '../../services/version-service';
 import FeatureTypeService from '../../services/feature-type-service';
+import version from '../../util/version';
 
 class BootstrapController extends Controller {
     private logger: Logger;
@@ -50,7 +51,7 @@ class BootstrapController extends Controller {
             versionService,
             featureTypeService,
         }: Pick<
-        IUnleashServices,
+            IUnleashServices,
             | 'contextService'
             | 'tagTypeService'
             | 'strategyService'
@@ -103,10 +104,24 @@ class BootstrapController extends Controller {
             userPermissions,
         ] = await Promise.all(jobs);
 
+        const authenticationType =
+            this.config.authentication && this.config.authentication.type;
+
         res.json({
-            ...this.config.ui,
-            unleashUrl: this.config.server.unleashUrl,
-            baseUriPath: this.config.server.baseUriPath,
+            uiConfig: {
+                ...this.config.ui,
+                authenticationType,
+                toast: {
+                    message:
+                        'You have been upgraded to Unleash version 4. This release brings a number of important changes to unleash and may affect how you work with Unleash. In order to see all changes, follow the link below.',
+                    id: 'v4-update',
+                    severity: 'info',
+                    link: 'https://docs.getunleash.io/link-to-v4-upgrade',
+                },
+                unleashUrl: this.config.server.unleashUrl,
+                version,
+                baseUriPath: this.config.server.baseUriPath,
+            },
             version: this.versionService.getVersionInfo(),
             user: { ...req.user, permissions: userPermissions },
             email: this.emailService.isEnabled(),

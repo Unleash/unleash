@@ -45,7 +45,7 @@ module.exports = {
         {
             name: 'datadog',
             description:
-                'Datadog tag used by the datadog-addon to specify tags to datadog event stream.',
+                'All Datadog tags added to a specific feature are sent to datadog event stream.',
             icon: 'D',
         },
     ],

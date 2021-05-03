@@ -142,9 +142,10 @@ const formatServerOptions = (
 ): Partial<IServerOption> | undefined => {
     if (!serverOptions) return;
 
+    /* eslint-disable-next-line */
     return {
         ...serverOptions,
-        baseUriPath: formatBaseUri(serverOptions?.baseUriPath),
+        baseUriPath: formatBaseUri(serverOptions.baseUriPath),
     };
 };
 

@@ -1,5 +1,7 @@
 import { LogLevel, LogProvider } from '../logger';
 
+export type EventHook = (eventName: string, data: object) => void;
+
 export interface ISSLOption {
     rejectUnauthorized: boolean;
     ca?: string;
@@ -88,7 +90,7 @@ export interface IUnleashOptions {
     enableOAS?: boolean;
     preHook?: Function;
     preRouterHook?: Function;
-    eventHook?: Function;
+    eventHook?: EventHook;
     enterpriseVersion?: string;
 }
 
@@ -127,6 +129,6 @@ export interface IUnleashConfig {
     enableOAS: boolean;
     preHook?: Function;
     preRouterHook?: Function;
-    eventHook?: Function;
+    eventHook?: EventHook;
     enterpriseVersion?: string;
 }

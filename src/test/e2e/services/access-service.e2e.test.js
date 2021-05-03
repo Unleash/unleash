@@ -8,7 +8,7 @@ const {
     RoleName,
     ALL_PROJECTS,
 } = require('../../../lib/services/access-service');
-const permissions = require('../../../lib/permissions');
+const permissions = require('../../../lib/types/permissions');
 
 let db;
 let stores;

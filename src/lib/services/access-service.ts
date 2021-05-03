@@ -4,7 +4,7 @@ import {
     IUserPermission,
     IUserRole,
 } from '../db/access-store';
-import permissions from '../permissions';
+import * as permissions from '../types/permissions';
 import User from '../types/user';
 
 export const ALL_PROJECTS = '*';
@@ -148,6 +148,9 @@ export class AccessService {
     }
 
     async getPermissionsForUser(user: User): Promise<IUserPermission[]> {
+        if (user.isAPI) {
+            return [];
+        }
         return this.store.getPermissionsForUser(user.id);
     }
 

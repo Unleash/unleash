@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
-import { ADMIN } from '../../permissions';
+import { ADMIN } from '../../types/permissions';
 import UserService from '../../services/user-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';

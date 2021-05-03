@@ -7,7 +7,7 @@ import { IUnleashServices } from '../../types/services';
 const Controller = require('../controller');
 
 const extractUser = require('../../extract-user');
-const { UPDATE_FEATURE } = require('../../permissions');
+const { UPDATE_FEATURE } = require('../../types/permissions');
 
 export default class ArchiveController extends Controller {
     constructor(

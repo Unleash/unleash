@@ -1,6 +1,6 @@
 'use strict';
 
-const metricsHelper = require('../metrics-helper');
+const metricsHelper = require('../util/metrics-helper');
 const { DB_TIME } = require('../metric-events');
 const NotFoundError = require('../error/notfound-error');
 const FeatureHasTagError = require('../error/feature-has-tag-error');

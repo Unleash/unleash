@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import rbacMiddleware from './rbac-middleware';
 import ffStore from '../../test/fixtures/fake-feature-toggle-store';
 import User from '../types/user';
-import perms from '../permissions';
+import * as perms from '../types/permissions';
 import { IUnleashConfig } from '../types/option';
 import { createTestConfig } from '../../test/config/test-config';
 import ApiUser from '../types/api-user';

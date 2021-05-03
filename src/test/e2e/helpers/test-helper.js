@@ -9,7 +9,12 @@ const { createTestConfig } = require('../../config/test-config');
 const { IAuthType } = require('../../../lib/types/option');
 const { createServices } = require('../../../lib/services');
 
-function createApp(stores, adminAuthentication = IAuthType.NONE, preHook) {
+function createApp(
+    stores,
+    adminAuthentication = IAuthType.NONE,
+    preHook,
+    customOptions,
+) {
     const config = createTestConfig({
         authentication: {
             type: adminAuthentication,
@@ -18,6 +23,7 @@ function createApp(stores, adminAuthentication = IAuthType.NONE, preHook) {
         server: {
             unleashUrl: 'http://localhost:4242',
         },
+        ...customOptions,
     });
     const services = createServices(stores, config);
     // TODO: use create from server-impl instead?
@@ -37,6 +43,16 @@ module.exports = {
 
     async setupAppWithCustomAuth(stores, preHook) {
         const app = createApp(stores, IAuthType.CUSTOM, preHook);
+        return supertest.agent(app);
+    },
+    async setupAppWithBaseUrl(stores) {
+        const app = createApp(stores, undefined, undefined, {
+            server: {
+                unleashUrl: 'http://localhost:4242',
+                basePathUri: '/hosted',
+            },
+        });
+
         return supertest.agent(app);
     },
 };

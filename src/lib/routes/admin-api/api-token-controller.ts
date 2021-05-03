@@ -6,7 +6,7 @@ import {
     CREATE_API_TOKEN,
     DELETE_API_TOKEN,
     UPDATE_API_TOKEN,
-} from '../../permissions';
+} from '../../types/permissions';
 import { ApiTokenService } from '../../services/api-token-service';
 import { Logger } from '../../logger';
 import { ApiTokenType } from '../../db/api-token-store';
@@ -14,7 +14,6 @@ import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
 import User from '../../types/user';
 import { IUnleashConfig } from '../../types/option';
-import ApiUser from '../../types/api-user';
 
 interface IServices {
     apiTokenService: ApiTokenService;
@@ -40,8 +39,8 @@ class ApiTokenController extends Controller {
         this.delete('/:token', this.deleteApiToken, DELETE_API_TOKEN);
     }
 
-    private async isTokenAdmin(user: User | ApiUser) {
-        if (user instanceof ApiUser) {
+    private async isTokenAdmin(user: User) {
+        if (user.isAPI) {
             return user.permissions.includes(ADMIN);
         }
 

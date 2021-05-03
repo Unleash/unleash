@@ -9,7 +9,7 @@ import AddonService from '../../services/addon-service';
 
 import extractUser from '../../extract-user';
 import { handleErrors } from './util';
-import { CREATE_ADDON, UPDATE_ADDON, DELETE_ADDON } from '../../permissions';
+import { CREATE_ADDON, UPDATE_ADDON, DELETE_ADDON } from '../../types/permissions';
 
 class AddonController extends Controller {
     private logger: Logger;

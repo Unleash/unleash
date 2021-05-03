@@ -1,4 +1,5 @@
-'use strict';
+import { Knex } from 'knex';
+import { LogProvider } from '../logger';
 
 const METRICS_COLUMNS = ['id', 'created_at', 'metrics'];
 const TABLE = 'client_metrics';
@@ -11,9 +12,18 @@ const mapRow = row => ({
     metrics: row.metrics,
 });
 
-class ClientMetricsDb {
-    constructor(db, getLogger) {
-        this.db = db;
+export interface IClientMetric {
+    id: number;
+    createdAt: Date;
+    metrics: any;
+}
+
+export class ClientMetricsDb {
+    private readonly logger;
+
+    private readonly timer;
+
+    constructor(private db: Knex, getLogger: LogProvider) {
         this.logger = getLogger('client-metrics-db.js');
 
         // Clear old metrics regulary
@@ -22,7 +32,7 @@ class ClientMetricsDb {
         this.timer = setInterval(clearer, ONE_MINUTE).unref();
     }
 
-    async removeMetricsOlderThanOneHour() {
+    async removeMetricsOlderThanOneHour(): Promise<void> {
         try {
             const rows = await this.db(TABLE)
                 .whereRaw("created_at < now() - interval '1 hour'")
@@ -36,12 +46,12 @@ class ClientMetricsDb {
     }
 
     // Insert new client metrics
-    async insert(metrics) {
+    async insert(metrics: IClientMetric): Promise<void> {
         return this.db(TABLE).insert({ metrics });
     }
 
     // Used at startup to load all metrics last week into memory!
-    async getMetricsLastHour() {
+    async getMetricsLastHour(): Promise<IClientMetric[]> {
         try {
             const result = await this.db
                 .select(METRICS_COLUMNS)
@@ -57,7 +67,7 @@ class ClientMetricsDb {
     }
 
     // Used to poll for new metrics
-    async getNewMetrics(lastKnownId) {
+    async getNewMetrics(lastKnownId: number): Promise<IClientMetric[]> {
         try {
             const res = await this.db
                 .select(METRICS_COLUMNS)
@@ -72,9 +82,7 @@ class ClientMetricsDb {
         return [];
     }
 
-    destroy() {
+    destroy(): void {
         clearInterval(this.timer);
     }
 }
-
-module.exports = ClientMetricsDb;

@@ -8,7 +8,7 @@ import HealthService from './health-service';
 import FeatureToggleService from './feature-toggle-service';
 import ProjectService from './project-service';
 import StateService from './state-service';
-import ClientMetricsService from './client-metrics';
+import { ClientMetricsService } from './client-metrics';
 import TagTypeService from './tag-type-service';
 import TagService from './tag-service';
 import StrategyService from './strategy-service';
@@ -30,7 +30,15 @@ export const createServices = (
 ): IUnleashServices => {
     const accessService = new AccessService(stores, config);
     const apiTokenService = new ApiTokenService(stores, config);
-    const clientMetricsService = new ClientMetricsService(stores, config);
+    const clientMetricsService = new ClientMetricsService(
+        stores.clientMetricsStore,
+        stores.strategyStore,
+        stores.featureToggleStore,
+        stores.clientApplicationsStore,
+        stores.clientInstanceStore,
+        stores.eventStore,
+        config.getLogger,
+    );
     const contextService = new ContextService(stores, config);
     const emailService = new EmailService(config.email, config.getLogger);
     const eventService = new EventService(stores, config);

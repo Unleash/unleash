@@ -1,15 +1,13 @@
-'use strict';
+import { IYesNoCount } from './index';
 
-module.exports = class Projection {
-    constructor() {
-        this.store = {};
-    }
+export class Projection {
+    store: Record<string, IYesNoCount> = {};
 
-    getProjection() {
+    getProjection(): Record<string, IYesNoCount> {
         return this.store;
     }
 
-    add(name, countObj) {
+    add(name: string, countObj: IYesNoCount): void {
         if (this.store[name]) {
             this.store[name].yes += countObj.yes;
             this.store[name].no += countObj.no;
@@ -21,7 +19,7 @@ module.exports = class Projection {
         }
     }
 
-    substract(name, countObj) {
+    substract(name: string, countObj: IYesNoCount): void {
         if (this.store[name]) {
             this.store[name].yes -= countObj.yes;
             this.store[name].no -= countObj.no;
@@ -32,4 +30,4 @@ module.exports = class Projection {
             };
         }
     }
-};
+}

@@ -21,7 +21,7 @@ interface IEventTable {
     tags: [];
 }
 
-interface ICreateEvent {
+export interface ICreateEvent {
     type: string;
     createdBy: string;
     data?: any;

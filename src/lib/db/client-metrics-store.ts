@@ -1,13 +1,29 @@
 'use strict';
 
-const { EventEmitter } = require('events');
+import EventEmitter from 'events';
+import { ClientMetricsDb, IClientMetric } from './client-metrics-db';
+import { Logger, LogProvider } from '../logger';
+
 const metricsHelper = require('../util/metrics-helper');
 const { DB_TIME } = require('../metric-events');
 
 const TEN_SECONDS = 10 * 1000;
 
-class ClientMetricsStore extends EventEmitter {
-    constructor(metricsDb, eventBus, getLogger, pollInterval = TEN_SECONDS) {
+export class ClientMetricsStore extends EventEmitter {
+    private logger: Logger;
+
+    highestIdSeen = 0;
+
+    private startTimer;
+
+    private timer;
+
+    constructor(
+        private metricsDb: ClientMetricsDb,
+        private eventBus: EventEmitter,
+        private getLogger: LogProvider,
+        pollInterval = TEN_SECONDS,
+    ) {
         super();
         this.logger = getLogger('client-metrics-store.js');
         this.metricsDb = metricsDb;
@@ -25,7 +41,7 @@ class ClientMetricsStore extends EventEmitter {
         });
     }
 
-    async _init(pollInterval) {
+    async _init(pollInterval: number): Promise<void> {
         try {
             const metrics = await this.metricsDb.getMetricsLastHour();
             this._emitMetrics(metrics);
@@ -36,18 +52,18 @@ class ClientMetricsStore extends EventEmitter {
         this.emit('ready');
     }
 
-    _startPoller(pollInterval) {
+    _startPoller(pollInterval: number): void {
         this.timer = setInterval(() => this._fetchNewAndEmit(), pollInterval);
         this.timer.unref();
     }
 
-    _fetchNewAndEmit() {
+    _fetchNewAndEmit(): void {
         this.metricsDb
             .getNewMetrics(this.highestIdSeen)
             .then(metrics => this._emitMetrics(metrics));
     }
 
-    _emitMetrics(metrics) {
+    _emitMetrics(metrics: IClientMetric[]): void {
         if (metrics && metrics.length > 0) {
             this.highestIdSeen = metrics[metrics.length - 1].id;
             metrics.forEach(m => this.emit('metrics', m.metrics));
@@ -55,7 +71,7 @@ class ClientMetricsStore extends EventEmitter {
     }
 
     // Insert new client metrics
-    async insert(metrics) {
+    async insert(metrics: IClientMetric): Promise<void> {
         const stopTimer = this.startTimer('insert');
 
         await this.metricsDb.insert(metrics);
@@ -63,10 +79,8 @@ class ClientMetricsStore extends EventEmitter {
         stopTimer();
     }
 
-    destroy() {
+    destroy(): void {
         clearInterval(this.timer);
         this.metricsDb.destroy();
     }
 }
-
-module.exports = ClientMetricsStore;

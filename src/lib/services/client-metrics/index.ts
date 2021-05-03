@@ -1,55 +1,119 @@
 /* eslint-disable no-param-reassign */
+import EventStore, { ICreateEvent } from '../../db/event-store';
+import StrategyStore from '../../db/strategy-store';
+import ClientApplicationsDb from '../../db/client-applications-store';
+import ClientInstanceStore from '../../db/client-instance-store';
+import { ClientMetricsStore } from '../../db/client-metrics-store';
+import FeatureToggleStore from '../../db/feature-toggle-store';
+import { LogProvider } from '../../logger';
+import { IApplication, applicationSchema } from './metrics-schema';
+import { Projection } from './projection';
+import { clientMetricsSchema } from './client-metrics-schema';
+import { APPLICATION_CREATED } from '../../types/events';
 
-'use strict';
-
-const Projection = require('./projection');
-const TTLList = require('./ttl-list');
-const appSchema = require('./metrics-schema');
-const { clientMetricsSchema } = require('./client-metrics-schema');
+const TTLList = require('./ttl-list.js');
 const { clientRegisterSchema } = require('./register-schema');
-const { APPLICATION_CREATED } = require('../../types/events');
 
 const FIVE_SECONDS = 5 * 1000;
 const FIVE_MINUTES = 5 * 60 * 1000;
 
-module.exports = class ClientMetricsService {
+export interface IYesNoCount {
+    yes: number;
+    no: number;
+}
+
+export interface IAppInstance {
+    appName: string;
+    instanceId: string;
+    sdkVersion: string;
+    clientIp: string;
+    lastSeen: Date;
+    createdAt: Date;
+}
+
+export interface IClientApp {
+    appName: string;
+    instanceId: string;
+    clientIp?: string;
+    seenToggles?: string[];
+    metricsCount?: number;
+    strategies?: string[] | Record<string, string>[];
+    bucket?: any;
+    count?: number;
+    started?: number | Date;
+    interval?: number;
+    icon?: string;
+    description?: string;
+    color?: string;
+}
+
+export interface IAppFeature {
+    name: string;
+    description: string;
+    type: string;
+    project: string;
+    enabled: boolean;
+    stale: boolean;
+    strategies: any;
+    variants: any[];
+    createdAt: Date;
+    lastSeenAt: Date;
+}
+
+export interface IApplicationQuery {
+    strategyName?: string;
+}
+
+export interface IAppName {
+    appName: string;
+}
+
+export interface IMetricCounts {
+    yes?: number;
+    no?: number;
+    variants?: Record<string, number>;
+}
+
+export interface IMetricsBucket {
+    start: Date;
+    stop: Date;
+    toggles: IMetricCounts;
+}
+
+export class ClientMetricsService {
+    globalCount = 0;
+
+    apps = {};
+
+    lastHourProjection = new Projection();
+
+    lastMinuteProjection = new Projection();
+
+    lastHourList = new TTLList({
+        interval: 10000,
+    });
+
+    logger = null;
+
+    lastMinuteList = new TTLList({
+        interval: 10000,
+        expireType: 'minutes',
+        expireAmount: 1,
+    });
+
+    seenClients: Record<string, IClientApp> = {};
+
     constructor(
-        {
-            clientMetricsStore,
-            strategyStore,
-            featureToggleStore,
-            clientApplicationsStore,
-            clientInstanceStore,
-            eventStore,
-        },
-        {
-            getLogger,
-            bulkInterval = FIVE_SECONDS,
-            announcementInterval: appAnnouncementInterval = FIVE_MINUTES,
-        },
+        private clientMetricsStore: ClientMetricsStore,
+        private strategyStore: StrategyStore,
+        private toggleStore: FeatureToggleStore,
+        private clientAppStore: ClientApplicationsDb,
+        private clientInstanceStore: ClientInstanceStore,
+        private eventStore: EventStore,
+        private getLogger: LogProvider,
+        private bulkInterval = FIVE_SECONDS,
+        private announcementInterval = FIVE_MINUTES,
     ) {
-        this.globalCount = 0;
-        this.apps = {};
-        this.strategyStore = strategyStore;
-        this.toggleStore = featureToggleStore;
-        this.clientAppStore = clientApplicationsStore;
-        this.clientInstanceStore = clientInstanceStore;
-        this.clientMetricsStore = clientMetricsStore;
-        this.lastHourProjection = new Projection();
-        this.lastMinuteProjection = new Projection();
-        this.eventStore = eventStore;
-
-        this.lastHourList = new TTLList({
-            interval: 10000,
-        });
-        this.logger = getLogger('services/client-metrics/index.ts');
-
-        this.lastMinuteList = new TTLList({
-            interval: 10000,
-            expireType: 'minutes',
-            expireAmount: 1,
-        });
-
         this.lastHourList.on('expire', toggles => {
             Object.keys(toggles).forEach(toggleName => {
                 this.lastHourProjection.substract(
@@ -66,18 +130,21 @@ module.exports = class ClientMetricsService {
                 );
             });
         });
-        this.seenClients = {};
-        this.bulkAddTimer = setInterval(() => this.bulkAdd(), bulkInterval);
-        this.bulkAddTimer.unref();
-        this.announceTimer = setInterval(
+
+        this.logger = this.getLogger('services/client-metrics/index.ts');
+
+        setInterval(() => this.bulkAdd(), this.bulkInterval);
+        setInterval(
             () => this.announceUnannounced(),
-            appAnnouncementInterval,
+            this.announcementInterval,
         );
-        this.announceTimer.unref();
         clientMetricsStore.on('metrics', m => this.addPayload(m));
     }
 
-    async registerClientMetrics(data, clientIp) {
+    async registerClientMetrics(
+        data: IClientApp,
+        clientIp: string,
+    ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
         const toggleNames = Object.keys(value.bucket.toggles);
         await this.toggleStore.lastSeenToggles(toggleNames);
@@ -89,36 +156,32 @@ module.exports = class ClientMetricsService {
         });
     }
 
-    async announceUnannounced() {
+    async announceUnannounced(): Promise<void> {
         if (this.clientAppStore) {
-            try {
-                const appsToAnnounce = await this.clientAppStore.setUnannouncedToAnnounced();
-                if (appsToAnnounce.length > 0) {
-                    const events = appsToAnnounce.map(app => ({
-                        type: APPLICATION_CREATED,
-                        createdBy: app.createdBy || 'unknown',
-                        data: app,
-                    }));
-                    await this.eventStore.batchStore(events);
-                }
-            } catch (e) {
-                this.logger.warn(e);
+            const appsToAnnounce = await this.clientAppStore.setUnannouncedToAnnounced();
+            if (appsToAnnounce.length > 0) {
+                const events = appsToAnnounce.map(app => ({
+                    type: APPLICATION_CREATED,
+                    createdBy: app.createdBy || 'unknown',
+                    data: app,
+                }));
+                await this.eventStore.batchStore(events);
             }
         }
     }
 
-    async registerClient(data, clientIp) {
+    async registerClient(data: IClientApp, clientIp: string): Promise<void> {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
         value.createdBy = clientIp;
         this.seenClients[this.clientKey(value)] = value;
     }
 
-    clientKey(client) {
+    clientKey(client: IClientApp): string {
         return `${client.appName}_${client.instanceId}`;
     }
 
-    async bulkAdd() {
+    async bulkAdd(): Promise<void> {
         if (
             this &&
             this.seenClients &&
@@ -146,7 +209,7 @@ module.exports = class ClientMetricsService {
         }
     }
 
-    appToEvent(app) {
+    appToEvent(app: IClientApp): ICreateEvent {
         return {
             type: APPLICATION_CREATED,
             createdBy: app.clientIp,
@@ -154,7 +217,7 @@ module.exports = class ClientMetricsService {
         };
     }
 
-    getAppsWithToggles() {
+    getAppsWithToggles(): IClientApp[] {
         const apps = [];
         Object.keys(this.apps).forEach(appName => {
             const seenToggles = Object.keys(this.apps[appName].seenToggles);
@@ -164,15 +227,15 @@ module.exports = class ClientMetricsService {
         return apps;
     }
 
-    getSeenTogglesByAppName(appName) {
+    getSeenTogglesByAppName(appName: string): string[] {
         return this.apps[appName]
             ? Object.keys(this.apps[appName].seenToggles)
             : [];
     }
 
-    async getSeenApps() {
+    async getSeenApps(): Promise<Record<string, IApplication[]>> {
         const seenApps = this.getSeenAppsPerToggle();
-        const applications = await this.clientAppStore.getApplications();
+        const applications: IApplication[] = await this.clientAppStore.getApplications();
         const metaData = applications.reduce((result, entry) => {
             // eslint-disable-next-line no-param-reassign
             result[entry.appName] = entry;
@@ -190,11 +253,13 @@ module.exports = class ClientMetricsService {
         return seenApps;
     }
 
-    async getApplications(query) {
+    async getApplications(
+        query: IApplicationQuery,
+    ): Promise<Record<string, IApplication>> {
         return this.clientAppStore.getApplications(query);
     }
 
-    async getApplication(appName) {
+    async getApplication(appName: string): Promise<IApplication> {
         const seenToggles = this.getSeenTogglesByAppName(appName);
         const [
             application,
@@ -230,7 +295,7 @@ module.exports = class ClientMetricsService {
         };
     }
 
-    getSeenAppsPerToggle() {
+    getSeenAppsPerToggle(): Record<string, IApplication[]> {
         const toggles = {};
         Object.keys(this.apps).forEach(appName => {
             Object.keys(this.apps[appName].seenToggles).forEach(
@@ -245,20 +310,20 @@ module.exports = class ClientMetricsService {
         return toggles;
     }
 
-    getTogglesMetrics() {
+    getTogglesMetrics(): Record<string, Record<string, IYesNoCount>> {
         return {
             lastHour: this.lastHourProjection.getProjection(),
             lastMinute: this.lastMinuteProjection.getProjection(),
         };
     }
 
-    addPayload(data) {
+    addPayload(data: IClientApp): void {
         const { appName, bucket } = data;
         const app = this.getApp(appName);
         this.addBucket(app, bucket);
     }
 
-    getApp(appName) {
+    getApp(appName: string): IClientApp {
         this.apps[appName] = this.apps[appName] || {
             seenToggles: {},
             count: 0,
@@ -266,7 +331,7 @@ module.exports = class ClientMetricsService {
         return this.apps[appName];
     }
 
-    createCountObject(entry) {
+    createCountObject(entry: IMetricCounts): IYesNoCount {
         let yes = typeof entry.yes === 'number' ? entry.yes : 0;
         let no = typeof entry.no === 'number' ? entry.no : 0;
 
@@ -283,7 +348,7 @@ module.exports = class ClientMetricsService {
         return { yes, no };
     }
 
-    addBucket(app, bucket) {
+    addBucket(app: IClientApp, bucket: IMetricsBucket): void {
         let count = 0;
         // TODO stop should be createdAt
         const { stop, toggles } = bucket;
@@ -305,26 +370,24 @@ module.exports = class ClientMetricsService {
         this.addSeenToggles(app, toggleNames);
     }
 
-    addSeenToggles(app, toggleNames) {
+    addSeenToggles(app: IClientApp, toggleNames: string[]): void {
         toggleNames.forEach(t => {
             app.seenToggles[t] = true;
         });
     }
 
-    async deleteApplication(appName) {
+    async deleteApplication(appName: string): Promise<void> {
         await this.clientInstanceStore.deleteForApplication(appName);
         await this.clientAppStore.deleteApplication(appName);
     }
 
-    async createApplication(input) {
-        const applicationData = await appSchema.validateAsync(input);
+    async createApplication(input: IApplication): Promise<void> {
+        const applicationData = await applicationSchema.validateAsync(input);
         await this.clientAppStore.upsert(applicationData);
     }
 
-    destroy() {
+    destroy(): void {
         this.lastHourList.destroy();
         this.lastMinuteList.destroy();
-        clearInterval(this.announceTimer);
-        clearInterval(this.bulkAddTimer);
     }
-};
+}

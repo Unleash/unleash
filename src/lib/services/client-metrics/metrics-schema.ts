@@ -1,8 +1,21 @@
-'use strict';
+import joi from 'joi';
+import { IAppInstance } from './index';
 
-const joi = require('joi');
+export interface IApplication {
+    appName: string;
+    sdkVersion?: string;
+    strategies?: string[] | any[];
+    description?: string;
+    url?: string;
+    color?: string;
+    icon?: string;
+    createdAt: Date;
+    instances?: IAppInstance;
+    seenToggles: Record<string, any>;
+    links: Record<string, string>;
+}
 
-const applicationSchema = joi
+export const applicationSchema = joi
     .object()
     .options({ stripUnknown: false })
     .keys({
@@ -29,5 +42,3 @@ const applicationSchema = joi
             .allow('')
             .optional(),
     });
-
-module.exports = applicationSchema;

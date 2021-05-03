@@ -113,7 +113,7 @@ class BootstrapController extends Controller {
                 authenticationType,
                 toast: {
                     message:
-                        'You have been upgraded to Unleash version 4. This release brings a number of important changes to unleash and may affect how you work with Unleash. In order to see all changes, follow the link below.',
+                        'You have been upgraded to Unleash version 4. This release brings a number of important changes and may affect how you work with Unleash. In order to view the full scope of changes in this release, please follow the link below.',
                     id: 'v4-update',
                     severity: 'info',
                     link: 'https://docs.getunleash.io/link-to-v4-upgrade',

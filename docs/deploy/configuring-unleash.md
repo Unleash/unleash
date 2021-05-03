@@ -52,15 +52,18 @@ unleash.start(unleashOptions);
     - _baseUriPath_ (string) - use to register a base path for all routes on the application. For example `/my/unleash/base` (note the starting /). Defaults to `/`. Can also be configured through the environment variable `BASE_URI_PATH`.
     - _unleashUrl_ (string) - Used to specify the official URL this instance of Unleash can be accessed at for an end user. Can also be configured through the environment variable `UNLEASH_URL`.
 - **preHook** (function) - this is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first argument.
-- **preRouterHook** (function) - use this to register custom express middlewares before the `unleash` specific routers are added. This is typically how you would register custom middlewares to handle authentication.
+- **preRouterHook** (function) - use this to register custom express middlewares before the `unleash` specific routers are added.
 - **authentication** - (object) - An object for configuring/implementing custom admin authentication
+    - enableApiToken (boolean) - Should unleash require API tokens for access? Defaults to `true`
     - type (string) What kind of authentication to use. Possible values
         - `open-source` - 
         - `custom` - If implementing your own authentication hook, use this
         - `none` - Turn off authentication all together
+    - customAuthHandler: (function) - custom express middleware handling authentication. Used when type is set to `custom`
+    - createAdminUser: (boolean) - whether to create an admin user with default password - Defaults to `true`
 - **ui** (object) - Set of UI specific overrides. You may set the following keys: `headerBackground`, `environment`, `slogan`.
 - **getLogger** (function) - Used to register a [custom log provider](#how-do-i-configure-the-log-output).
-- **logLovel** (`debug` | `info` | `warn` | `error` | `fatal`) - The lowest level to log at. Also configurable with environement variable `LOG_LEVEL`
+- **logLevel** (`debug` | `info` | `warn` | `error` | `fatal`) - The lowest level to log at, also configurable using environment variable `LOG_LEVEL`.
 - **eventHook** (`function(event, data)`) - If provided, this function will be invoked whenever a feature is mutated. The possible values for `event` are `'feature-created'`, `'feature-updated'`, `'feature-archived'`, `'feature-revived'`. The `data` argument contains information about the mutation. Its fields are `type` (string) - the event type (same as `event`); `createdBy` (string) - the user who performed the mutation; `data` - the contents of the change. The contents in `data` differs based on the event type; For `'feature-archived'` and `'feature-revived'`, the only field will be `name` - the name of the feature. For `'feature-created'` and `'feature-updated'` the data follows a schema defined in the code [here](https://github.com/Unleash/unleash/blob/master/lib/routes/admin-api/feature-schema.js#L38-L59). See an [api here](/docs/api/admin/events).
 - **secureHeaders** (boolean) - use this to enable security headers (HSTS, CSP, etc) when serving Unleash from HTTPS. Can also be configured through the environment variable `SECURE_HEADERS`.
 - **versionCheck** - the object deciding where to check for latest version

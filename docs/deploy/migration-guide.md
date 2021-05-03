@@ -9,7 +9,7 @@ Generally, the intention is that `unleash-server` should always provide support 
 
 (**Work In Progress**: Will be finalized when we release the official v4 version).
 
-Before you upgrade we strongly recommends that you take a full [database backup](/database_backup), to make sure you can downgrade to version 3.
+Before you upgrade we strongly recommend that you take a full [database backup](/database_backup), to make sure you can downgrade to version 3.
 
 ### 1. Role-based Access Control (RBAC)
 

@@ -17,6 +17,12 @@ You will need:
 
 Whichever option you choose to start Unleash, you must specify a database URI (it can be set in the environment variable DATABASE_URL).
 
+---
+--- v4 ---
+
+Unless your database server is setup to support SSL you'll also need to set the environment variable DATABASE_SSL to false
+
+---
 Once the server has started, you will see the message:
 
 ```sh
@@ -74,9 +80,12 @@ docker run -p 4242:4242 \
 
    unleash
      .start({
-       databaseUrl: 'postgres://unleash_user:password@localhost:5432/unleash',
        db: {
-         ssl: false
+         ssl: false,
+         host: 'localhost',
+         port: 5432,
+         user: 'unleash_user',
+         password: 'passord'
        },
        server: { 
          port: 4242
@@ -93,15 +102,6 @@ docker run -p 4242:4242 \
    ```sh
    node server.js
    ```
-
-### Option three - from a terminal/bash shell
-
-_(deprecated)_
-
-```sh
-npm install unleash-server -g
-unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
-```
 
 ## Test your server and create a sample API call
 

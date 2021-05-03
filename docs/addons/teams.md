@@ -30,4 +30,4 @@ Unleash Microsoft Teams addon takes the following parameters.
 
 #### Tags
 
-Microsoft teams's income webhooks are channel specific. You will be able to create multiple addons to support messaging on multiple channels.
+Microsoft teams's incoming webhooks are channel specific. You will be able to create multiple addons to support messaging on multiple channels.

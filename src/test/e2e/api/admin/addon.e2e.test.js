@@ -29,7 +29,7 @@ test.serial('gets all addons', async t => {
         .expect(200)
         .expect(res => {
             t.is(res.body.addons.length, 0, 'expected 0 configured addons');
-            t.is(res.body.providers.length, 3, 'expected 3 addon providers');
+            t.is(res.body.providers.length, 4, 'expected 4 addon providers');
             t.is(res.body.providers[0].name, 'webhook');
         });
 });

@@ -76,8 +76,10 @@ class TeamsAddon extends Addon {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
         };
-        const result = await this.fetchRetry(url, requestOpts);
-        this.logger.info(`Handled event ${event.type}. Status codes=${result}`);
+        const res = await this.fetchRetry(url, requestOpts);
+        this.logger.info(
+            `Handled event ${event.type}. Status codes=${res.status}`,
+        );
     }
 
     featureLink(event) {

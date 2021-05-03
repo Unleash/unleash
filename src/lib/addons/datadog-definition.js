@@ -40,4 +40,12 @@ module.exports = {
         FEATURE_STALE_ON,
         FEATURE_STALE_OFF,
     ],
+    tagTypes: [
+        {
+            name: 'datadog',
+            description:
+                'Datadog tag used by the datadog-addon to specify tags to datadog event stream.',
+            icon: 'D',
+        },
+    ],
 };

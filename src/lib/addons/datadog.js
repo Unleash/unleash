@@ -34,9 +34,14 @@ class DatadogAddon extends Addon {
         } else {
             text = this.generateText(event);
         }
+
+        const { tags: eventTags } = event;
+        const tags =
+            eventTags && eventTags.map(tag => `${tag.value}:${tag.type}`);
         const body = {
             text: `%%% \n ${text} \n %%% `,
             title: 'Unleash notification update',
+            tags,
         };
 
         const requestOpts = {

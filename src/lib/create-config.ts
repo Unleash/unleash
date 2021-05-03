@@ -16,6 +16,7 @@ import {
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
+import { formatBaseUri } from './util/format-base-uri';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -82,7 +83,7 @@ const defaultServerOption: IServerOption = {
     pipe: undefined,
     host: process.env.HTTP_HOST,
     port: safeNumber(process.env.HTTP_PORT || process.env.PORT, 4242),
-    baseUriPath: process.env.BASE_URI_PATH || '',
+    baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
     serverMetrics: true,
     keepAliveTimeout: 60 * 1000,
@@ -136,8 +137,21 @@ const removeUndefinedKeys = (o: object): object =>
         return a;
     }, {});
 
+const formatServerOptions = (
+    serverOptions?: Partial<IServerOption>,
+): Partial<IServerOption> | undefined => {
+    if (!serverOptions) return;
+
+    /* eslint-disable-next-line */
+    return {
+        ...serverOptions,
+        baseUriPath: formatBaseUri(serverOptions.baseUriPath),
+    };
+};
+
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
+
     if (options.databaseUrl) {
         extraDbOptions = parse(options.databaseUrl);
     } else if (process.env.DATABASE_URL) {
@@ -161,7 +175,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const server: IServerOption = mergeAll([
         defaultServerOption,
-        options.server,
+        formatServerOptions(options.server),
     ]);
 
     const versionCheck: IVersionOption = mergeAll([

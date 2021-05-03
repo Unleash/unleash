@@ -47,7 +47,7 @@ test('should get empty getFeatures via admin', t => {
 test('should be allowed to reuse deleted toggle name', async t => {
     t.plan(0);
     const { request, archiveStore, base } = getSetup();
-    archiveStore.createFeature({
+    await archiveStore.createFeature({
         name: 'ts.really.delete',
         strategies: [{ name: 'default' }],
     });

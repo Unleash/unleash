@@ -25,7 +25,22 @@ test('Should use databaseURl from options', t => {
     t.is(config.db.schema, 'public');
 });
 
-test('Actual config values takes precedence over environment variables', t => {
+test('should use DATABASE_URL_FILE from env', t => {
+    const databaseUrl = 'postgres://u:p@localhost:5432/name';
+    const path = '/tmp/db_url';
+    fs.writeFileSync(path, databaseUrl, { mode: 0o755 });
+    delete process.env.NODE_ENV;
+    process.env.DATABASE_URL_FILE = path;
+    const config = createConfig({});
+
+    t.is(config.db.host, 'localhost');
+    t.is(config.db.password, 'p');
+    t.is(config.db.user, 'u');
+    t.is(config.db.database, 'name');
+    t.is(config.db.schema, 'public');
+});
+
+test.only('Actual config values takes precedence over environment variables', t => {
     process.env.DATABASE_URL = 'postgres://test:5432/name';
     process.env.NODE_ENV = 'production';
 

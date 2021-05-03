@@ -3,7 +3,7 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
 
-import { UPDATE_FEATURE } from '../../permissions';
+import { UPDATE_FEATURE } from '../../types/permissions';
 import { handleErrors } from './util';
 import extractUsername from '../../extract-user';
 import { IUnleashConfig } from '../../types/option';

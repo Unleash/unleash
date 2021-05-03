@@ -1,5 +1,16 @@
 # Changelog
 
+# 4.0.0-alpha.7
+
+- fix: more types
+- fix: move permission to types
+- fix: bump unleash-frontend to version 4.0.0-alpha.12
+- fix: catch all route only for baseUriPath (#825)
+- Feat/serve frontend with baseuri (#824)
+- fix: define root role by setting the name of the role (#823)
+- feat: automatically add all existing users as owners to all existing … (#818)
+- fix: project store was wrongly typing its id field as number (#822)
+
 # 4.0.0-alpha.6
 
 - feat: Teams addon for messaging on Microsoft teams (#814)
@@ -23,6 +34,10 @@
 - fix: migration should call cb on down
 - fix: change default admin password
 - fix: add types for node-fetch
+
+# 4.0.0-alpha.5
+
+- chore: update frontend
 
 # 4.0.0-alpha.4
 

@@ -1,13 +1,16 @@
-'use strict';
-
-const {
+import EventEmitter from 'node:events';
+import { EventHook } from './types/option';
+import {
     FEATURE_CREATED,
     FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
-} = require('./types/events');
+} from './types/events';
 
-exports.addEventHook = (eventHook, eventStore) => {
+export const addEventHook = (
+    eventHook: EventHook,
+    eventStore: EventEmitter,
+): void => {
     eventStore.on(FEATURE_CREATED, data => {
         eventHook(FEATURE_CREATED, data);
     });

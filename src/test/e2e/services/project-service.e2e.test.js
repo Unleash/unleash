@@ -6,7 +6,7 @@ const {
     AccessService,
     RoleName,
 } = require('../../../lib/services/access-service');
-const { UPDATE_PROJECT } = require('../../../lib/permissions');
+const { UPDATE_PROJECT } = require('../../../lib/types/permissions');
 const NotFoundError = require('../../../lib/error/notfound-error');
 
 let stores;

@@ -1,6 +1,6 @@
 'use strict';
 
-const { ADMIN } = require('../permissions');
+const { ADMIN } = require('../types/permissions');
 const ApiUser = require('../types/api-user');
 
 function noneAuthentication(basePath = '', app) {

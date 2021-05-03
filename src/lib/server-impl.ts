@@ -12,7 +12,7 @@ import { createServices } from './services';
 import { createConfig } from './create-config';
 import User from './types/user';
 
-import permissions from './permissions';
+import * as permissions from './types/permissions';
 import AuthenticationRequired from './types/authentication-required';
 import * as eventType from './types/events';
 import { addEventHook } from './event-hook';

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
 import { handleErrors } from './util';
-import { UPDATE_APPLICATION } from '../../permissions';
+import { UPDATE_APPLICATION } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';

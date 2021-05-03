@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { ApiTokenStore, IApiToken, ApiTokenType } from '../db/api-token-store';
 import { Logger } from '../logger';
-import { ADMIN, CLIENT } from '../permissions';
+import { ADMIN, CLIENT } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';

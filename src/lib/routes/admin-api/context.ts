@@ -9,7 +9,7 @@ import {
     CREATE_CONTEXT_FIELD,
     UPDATE_CONTEXT_FIELD,
     DELETE_CONTEXT_FIELD,
-} from '../../permissions';
+} from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import ContextService from '../../services/context-service';

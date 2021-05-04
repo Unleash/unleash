@@ -7,6 +7,7 @@
       "user_guide/control_rollout",
       "user_guide/projects",
       "user_guide/unleash_context",
+      "user_guide/technical_debt",
       "user_guide/native_apps",
       "user_guide/single_page_apps"
     ],
@@ -64,8 +65,7 @@
       "deploy/google_auth",
       "deploy/database_backup",
       "deploy/migration_guide",
-      "deploy/import_export",
-      "deploy/technical_debt"
+      "deploy/import_export"
     ]
   },
   "Integrations": {

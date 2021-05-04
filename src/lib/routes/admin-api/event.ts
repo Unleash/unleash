@@ -4,6 +4,7 @@ import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import EventService from '../../services/event-service';
+import { ADMIN } from '../../types/permissions';
 
 const Controller = require('../controller');
 
@@ -20,7 +21,7 @@ export default class EventController extends Controller {
     ) {
         super(config);
         this.eventService = eventService;
-        this.get('/', this.getEvents);
+        this.get('/', this.getEvents, ADMIN);
         this.get('/:name', this.getEventsForToggle);
     }
 

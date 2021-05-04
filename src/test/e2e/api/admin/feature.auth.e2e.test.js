@@ -35,7 +35,7 @@ test.serial('creates new feature toggle with createdBy', async t => {
         })
         .expect(201);
 
-    await request.get('/api/admin/events').expect(res => {
+    await request.get('/api/admin/events/com.test.Username').expect(res => {
         t.is(res.body.events[0].createdBy, 'user@mail.com');
     });
 });

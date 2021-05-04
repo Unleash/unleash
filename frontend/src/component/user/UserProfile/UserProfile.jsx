@@ -37,7 +37,6 @@ const UserProfile = ({
 
     useEffect(() => {
         fetchUser();
-
         const locale = navigator.language || navigator.userLanguage;
         let found = possibleLocales.find(l =>
             l.toLowerCase().includes(locale.toLowerCase())

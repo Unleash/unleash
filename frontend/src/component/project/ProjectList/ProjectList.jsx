@@ -2,8 +2,20 @@ import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import { CREATE_PROJECT, DELETE_PROJECT, UPDATE_PROJECT } from '../../AccessProvider/permissions';
-import { Icon, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@material-ui/core';
+import {
+    CREATE_PROJECT,
+    DELETE_PROJECT,
+    UPDATE_PROJECT,
+} from '../../AccessProvider/permissions';
+import {
+    Icon,
+    IconButton,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+    Tooltip,
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import ConfirmDialogue from '../../common/Dialogue';
 import PageContent from '../../common/PageContent/PageContent';
@@ -24,7 +36,10 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
             condition={hasAccess(CREATE_PROJECT)}
             show={
                 <Tooltip title="Add new project">
-                    <IconButton aria-label="add-project" onClick={() => history.push('/projects/create')}>
+                    <IconButton
+                        aria-label="add-project"
+                        onClick={() => history.push('/projects/create')}
+                    >
                         <Icon>add</Icon>
                     </IconButton>
                 </Tooltip>
@@ -40,8 +55,11 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
 
     const mgmAccessButton = project => (
         <Tooltip title="Manage access">
-            <Link to={`/projects/${project.id}/access`} style={{ color: 'black' }}>
-                <IconButton aria-label="manage_access" >
+            <Link
+                to={`/projects/${project.id}/access`}
+                style={{ color: 'black' }}
+            >
+                <IconButton aria-label="manage_access">
                     <Icon>supervised_user_circle</Icon>
                 </IconButton>
             </Link>
@@ -68,17 +86,27 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
                 <ListItemAvatar>
                     <Icon>folder_open</Icon>
                 </ListItemAvatar>
-                <ListItemText primary={projectLink(project)} secondary={project.description} />
+                <ListItemText
+                    primary={projectLink(project)}
+                    secondary={project.description}
+                />
                 <ConditionallyRender
                     condition={hasAccess(UPDATE_PROJECT, project.name)}
                     show={mgmAccessButton(project)}
                 />
-                <ConditionallyRender condition={hasAccess(DELETE_PROJECT, project.name)} show={deleteProjectButton(project)} />
+                <ConditionallyRender
+                    condition={hasAccess(DELETE_PROJECT, project.name)}
+                    show={deleteProjectButton(project)}
+                />
             </ListItem>
         ));
 
     return (
-        <PageContent headerContent={<HeaderTitle title="Projects" actions={addProjectButton()} />}>
+        <PageContent
+            headerContent={
+                <HeaderTitle title="Projects" actions={addProjectButton()} />
+            }
+        >
             <List>
                 <ConditionallyRender
                     condition={projects.length > 0}

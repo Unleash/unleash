@@ -13,6 +13,7 @@ import {
     headers,
     NotFoundError,
 } from '../store/api-helper';
+import { formatApiPath } from '../utils/format-path';
 
 export interface IUserApiErrors {
     addUser?: string;
@@ -62,7 +63,8 @@ const useAdminUsersApi = () => {
 
     const addUser = async (user: IUserPayload) => {
         return makeRequest(() => {
-            return fetch('api/admin/user-admin', {
+            const path = formatApiPath('api/admin/user-admin');
+            return fetch(path, {
                 ...defaultOptions,
                 method: 'POST',
                 body: JSON.stringify(user),
@@ -72,7 +74,8 @@ const useAdminUsersApi = () => {
 
     const removeUser = async (user: IUserPayload) => {
         return makeRequest(() => {
-            return fetch(`api/admin/user-admin/${user.id}`, {
+            const path = formatApiPath(`api/admin/user-admin/${user.id}`);
+            return fetch(path, {
                 ...defaultOptions,
                 method: 'DELETE',
             });
@@ -81,7 +84,9 @@ const useAdminUsersApi = () => {
 
     const updateUser = async (user: IUserPayload) => {
         return makeRequest(() => {
-            return fetch(`api/admin/user-admin/${user.id}`, {
+            const path = formatApiPath(`api/admin/user-admin/${user.id}`);
+
+            return fetch(path, {
                 ...defaultOptions,
                 method: 'PUT',
                 body: JSON.stringify(user),
@@ -91,7 +96,10 @@ const useAdminUsersApi = () => {
 
     const changePassword = async (user: IUserPayload, password: string) => {
         return makeRequest(() => {
-            return fetch(`api/admin/user-admin/${user.id}/change-password`, {
+            const path = formatApiPath(
+                `api/admin/user-admin/${user.id}/change-password`
+            );
+            return fetch(path, {
                 ...defaultOptions,
                 method: 'POST',
                 body: JSON.stringify({ password }),
@@ -101,7 +109,10 @@ const useAdminUsersApi = () => {
 
     const validatePassword = async (password: string) => {
         return makeRequest(() => {
-            return fetch(`api/admin/user-admin/validate-password`, {
+            const path = formatApiPath(
+                `api/admin/user-admin/validate-password`
+            );
+            return fetch(path, {
                 ...defaultOptions,
                 method: 'POST',
                 body: JSON.stringify({ password }),

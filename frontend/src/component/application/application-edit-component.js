@@ -2,9 +2,20 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import { Avatar, Link, Icon, IconButton, Button, LinearProgress, Typography } from '@material-ui/core';
+import {
+    Avatar,
+    Link,
+    Icon,
+    IconButton,
+    Button,
+    LinearProgress,
+    Typography,
+} from '@material-ui/core';
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
-import { formatFullDateTimeWithLocale, formatDateWithLocale } from '../common/util';
+import {
+    formatFullDateTimeWithLocale,
+    formatDateWithLocale,
+} from '../common/util';
 import { UPDATE_APPLICATION } from '../AccessProvider/permissions';
 import ApplicationView from './application-view';
 import ApplicationUpdate from './application-update';
@@ -37,9 +48,12 @@ class ClientApplications extends PureComponent {
     }
 
     componentDidMount() {
-        this.props.fetchApplication(this.props.appName).finally(() => this.setState({ loading: false }));
+        this.props
+            .fetchApplication(this.props.appName)
+            .finally(() => this.setState({ loading: false }));
     }
-    formatFullDateTime = v => formatFullDateTimeWithLocale(v, this.props.location.locale);
+    formatFullDateTime = v =>
+        formatFullDateTimeWithLocale(v, this.props.location.locale);
     formatDate = v => formatDateWithLocale(v, this.props.location.locale);
 
     deleteApplication = async evt => {
@@ -64,7 +78,16 @@ class ClientApplications extends PureComponent {
         }
         const { hasAccess } = this.context;
         const { application, storeApplicationMetaData } = this.props;
-        const { appName, instances, strategies, seenToggles, url, description, icon = 'apps', createdAt } = application;
+        const {
+            appName,
+            instances,
+            strategies,
+            seenToggles,
+            url,
+            description,
+            icon = 'apps',
+            createdAt,
+        } = application;
 
         const toggleModal = () => {
             this.setState(prev => ({ ...prev, prompt: !prev.prompt }));
@@ -95,7 +118,10 @@ class ClientApplications extends PureComponent {
             {
                 label: 'Edit application',
                 component: (
-                    <ApplicationUpdate application={application} storeApplicationMetaData={storeApplicationMetaData} />
+                    <ApplicationUpdate
+                        application={application}
+                        storeApplicationMetaData={storeApplicationMetaData}
+                    />
                 ),
             },
         ];
@@ -131,7 +157,11 @@ class ClientApplications extends PureComponent {
                                 <ConditionallyRender
                                     condition={hasAccess(UPDATE_APPLICATION)}
                                     show={
-                                        <Button color="secondary" title="Delete application" onClick={toggleModal}>
+                                        <Button
+                                            color="secondary"
+                                            title="Delete application"
+                                            onClick={toggleModal}
+                                        >
                                             Delete
                                         </Button>
                                     }

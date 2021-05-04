@@ -15,6 +15,7 @@ import {
     OK,
     UNAUTHORIZED,
 } from '../../../../constants/statusCodes';
+import { formatApiPath } from '../../../../utils/format-path';
 
 interface IEditProfileProps {
     setEditingProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -45,7 +46,8 @@ const EditProfile = ({
             setLoading(true);
             setError('');
             try {
-                const res = await fetch('api/admin/user/change-password', {
+                const path = formatApiPath('api/admin/user/change-password');
+                const res = await fetch(path, {
                     headers,
                     body: JSON.stringify({ password, confirmPassword }),
                     method: 'POST',

@@ -10,11 +10,18 @@ import { routes } from './menu/routes';
 import styles from './styles.module.scss';
 
 import IAuthStatus from '../interfaces/user';
+import { useEffect } from 'react';
 interface IAppProps extends RouteComponentProps {
     user: IAuthStatus;
+    fetchUiBootstrap: any;
 }
 
-const App = ({ location, user }: IAppProps) => {
+const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
+    useEffect(() => {
+        fetchUiBootstrap();
+        /* eslint-disable-next-line */
+    }, []);
+
     const renderMainLayoutRoutes = () => {
         return routes.filter(route => route.layout === 'main').map(renderRoute);
     };

@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { SyntheticEvent, useState } from 'react';
 import { useCommonStyles } from '../../../common.styles';
 import useLoading from '../../../hooks/useLoading';
+import { formatApiPath } from '../../../utils/format-path';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import { useStyles } from './ForgottenPassword.styles';
@@ -22,7 +23,8 @@ const ForgottenPassword = () => {
         setLoading(true);
         setAttemptedEmail(email);
 
-        await fetch('auth/reset/password-email', {
+        const path = formatApiPath('auth/reset/password-email');
+        await fetch(path, {
             headers: {
                 'Content-Type': 'application/json',
             },

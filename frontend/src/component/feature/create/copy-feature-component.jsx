@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 
-import { Button, Icon, TextField, Switch, Paper, FormControlLabel } from '@material-ui/core';
+import {
+    Button,
+    Icon,
+    TextField,
+    Switch,
+    Paper,
+    FormControlLabel,
+} from '@material-ui/core';
 
 import { styles as commonStyles } from '../../common';
 import styles from './copy-feature-component.module.scss';
@@ -75,7 +82,11 @@ class CopyFeatureComponent extends Component {
             });
         }
 
-        this.props.createFeatureToggle(copyToggle).then(() => history.push(`/features/strategies/${copyToggle.name}`));
+        this.props
+            .createFeatureToggle(copyToggle)
+            .then(() =>
+                history.push(`/features/strategies/${copyToggle.name}`)
+            );
     };
 
     render() {
@@ -86,17 +97,23 @@ class CopyFeatureComponent extends Component {
         const { newToggleName, nameError, replaceGroupId } = this.state;
 
         return (
-            <Paper className={commonStyles.fullwidth} style={{ overflow: 'visible' }}>
+            <Paper
+                className={commonStyles.fullwidth}
+                style={{ overflow: 'visible' }}
+            >
                 <div className={styles.header}>
                     <h1>Copy&nbsp;{copyToggle.name}</h1>
                 </div>
 
                 <section className={styles.content}>
                     <p className={styles.text}>
-                        You are about to create a new feature toggle by cloning the configuration of feature
-                        toggle&nbsp;
-                        <Link to={`/features/strategies/${copyToggle.name}`}>{copyToggle.name}</Link>. You must give the
-                        new feature toggle a unique name before you can proceed.
+                        You are about to create a new feature toggle by cloning
+                        the configuration of feature toggle&nbsp;
+                        <Link to={`/features/strategies/${copyToggle.name}`}>
+                            {copyToggle.name}
+                        </Link>
+                        . You must give the new feature toggle a unique name
+                        before you can proceed.
                     </p>
                     <form onSubmit={this.onSubmit}>
                         <TextField
@@ -123,7 +140,11 @@ class CopyFeatureComponent extends Component {
                             label="Replace groupId"
                         />
 
-                        <Button type="submit" color="primary" variant="contained">
+                        <Button
+                            type="submit"
+                            color="primary"
+                            variant="contained"
+                        >
                             <Icon>file_copy</Icon>
                             &nbsp;&nbsp;&nbsp; Create from copy
                         </Button>

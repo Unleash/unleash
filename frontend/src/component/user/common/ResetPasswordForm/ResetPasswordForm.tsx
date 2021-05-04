@@ -16,6 +16,7 @@ import PasswordChecker from './PasswordChecker/PasswordChecker';
 import PasswordMatcher from './PasswordMatcher/PasswordMatcher';
 import { useStyles } from './ResetPasswordForm.styles';
 import { useCallback } from 'react';
+import { formatApiPath } from '../../../../utils/format-path';
 
 interface IResetPasswordProps {
     token: string;
@@ -47,7 +48,8 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
     }, [password, confirmPassword]);
 
     const makeResetPasswordReq = () => {
-        return fetch('auth/reset/password', {
+        const path = formatApiPath('auth/reset/password');
+        return fetch(path, {
             headers: {
                 'Content-Type': 'application/json',
             },

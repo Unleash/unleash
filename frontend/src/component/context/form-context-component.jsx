@@ -282,7 +282,6 @@ class AddContextComponent extends Component {
                                 Read more
                             </a>
                         </p>
-                        {console.log(contextField.stickiness)}
                         <Switch
                             label="Allow stickiness"
                             checked={contextField.stickiness}

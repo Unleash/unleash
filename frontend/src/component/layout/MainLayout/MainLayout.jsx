@@ -8,6 +8,7 @@ import styles from '../../styles.module.scss';
 import ErrorContainer from '../../error/error-container';
 import Header from '../../menu/Header';
 import Footer from '../../menu/Footer/Footer';
+import Proclamation from '../../common/Proclamation/Proclamation';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -16,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const MainLayout = ({ children, location }) => {
+const MainLayout = ({ children, location, uiConfig }) => {
     const muiStyles = useStyles();
 
     return (
@@ -26,6 +27,7 @@ const MainLayout = ({ children, location }) => {
                 <div className={classnames(styles.contentWrapper)}>
                     <Grid item className={styles.content} xs={12} sm={12}>
                         <div className={styles.contentContainer}>
+                            <Proclamation toast={uiConfig.toast} />
                             {children}
                         </div>
                         <ErrorContainer />

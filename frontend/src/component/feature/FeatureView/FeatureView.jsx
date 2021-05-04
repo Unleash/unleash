@@ -58,7 +58,7 @@ const FeatureView = ({
     const [delDialog, setDelDialog] = useState(false);
     const commonStyles = useCommonStyles();
     const { hasAccess } = useContext(AccessContext);
-    const { project } = featureToggle || { };
+    const { project } = featureToggle || {};
 
     useEffect(() => {
         scrollToTop();
@@ -82,12 +82,14 @@ const FeatureView = ({
     const getTabComponent = key => {
         switch (key) {
             case 'activation':
-                return <UpdateStrategies
+                return (
+                    <UpdateStrategies
                         featureToggle={featureToggle}
                         features={features}
                         history={history}
                         editable={editable}
                     />
+                );
             case 'metrics':
                 return <MetricComponent featureToggle={featureToggle} />;
             case 'variants':

@@ -1,5 +1,5 @@
 import ConditionallyRender from '../../common/ConditionallyRender';
-import MainLayout from '../MainLayout/MainLayout';
+import MainLayout from '../MainLayout';
 
 const LayoutPicker = ({ children, location }) => {
     const standalonePages = () => {

@@ -20,22 +20,31 @@ export const ERROR_REMOVING_STRATEGY = 'ERROR_REMOVING_STRATEGY';
 export const ERROR_DEPRECATING_STRATEGY = 'ERROR_DEPRECATING_STRATEGY';
 export const ERROR_REACTIVATING_STRATEGY = 'ERROR_REACTIVATING_STRATEGY';
 
+export const receiveStrategies = json => ({
+    type: RECEIVE_STRATEGIES,
+    value: json,
+});
+
 const addStrategy = strategy => ({ type: ADD_STRATEGY, strategy });
 const createRemoveStrategy = strategy => ({ type: REMOVE_STRATEGY, strategy });
 const updatedStrategy = strategy => ({ type: UPDATE_STRATEGY, strategy });
 
 const startRequest = () => ({ type: REQUEST_STRATEGIES });
 
-const receiveStrategies = json => ({ type: RECEIVE_STRATEGIES, value: json.strategies });
-
 const startCreate = () => ({ type: START_CREATE_STRATEGY });
 
 const startUpdate = () => ({ type: START_UPDATE_STRATEGY });
 
 const startDeprecate = () => ({ type: START_DEPRECATE_STRATEGY });
-const deprecateStrategyEvent = strategy => ({ type: DEPRECATE_STRATEGY, strategy });
+const deprecateStrategyEvent = strategy => ({
+    type: DEPRECATE_STRATEGY,
+    strategy,
+});
 const startReactivate = () => ({ type: START_REACTIVATE_STRATEGY });
-const reactivateStrategyEvent = strategy => ({ type: REACTIVATE_STRATEGY, strategy });
+const reactivateStrategyEvent = strategy => ({
+    type: REACTIVATE_STRATEGY,
+    strategy,
+});
 
 export function fetchStrategies() {
     return dispatch => {
@@ -43,7 +52,7 @@ export function fetchStrategies() {
 
         return api
             .fetchAll()
-            .then(json => dispatch(receiveStrategies(json)))
+            .then(json => dispatch(receiveStrategies(json.strategies)))
             .catch(dispatchError(dispatch, ERROR_RECEIVE_STRATEGIES));
     };
 }

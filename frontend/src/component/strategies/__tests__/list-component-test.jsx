@@ -42,15 +42,17 @@ test('renders correctly with one strategy without permissions', () => {
     const tree = renderer.create(
         <MemoryRouter>
             <ThemeProvider theme={theme}>
-                <AccessProvider store={createFakeStore([{permission: ADMIN}])}>
-                <StrategiesListComponent
-                    strategies={[strategy]}
-                    fetchStrategies={jest.fn()}
-                    removeStrategy={jest.fn()}
-                    deprecateStrategy={jest.fn()}
-                    reactivateStrategy={jest.fn()}
-                    history={{}}
-                />
+                <AccessProvider
+                    store={createFakeStore([{ permission: ADMIN }])}
+                >
+                    <StrategiesListComponent
+                        strategies={[strategy]}
+                        fetchStrategies={jest.fn()}
+                        removeStrategy={jest.fn()}
+                        deprecateStrategy={jest.fn()}
+                        reactivateStrategy={jest.fn()}
+                        history={{}}
+                    />
                 </AccessProvider>
             </ThemeProvider>
         </MemoryRouter>

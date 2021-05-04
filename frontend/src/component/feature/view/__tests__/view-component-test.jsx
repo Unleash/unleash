@@ -7,7 +7,11 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from '@material-ui/core';
 import ViewFeatureToggleComponent from '../../FeatureView/FeatureView';
 import renderer from 'react-test-renderer';
-import { ADMIN, DELETE_FEATURE, UPDATE_FEATURE } from '../../../AccessProvider/permissions';
+import {
+    ADMIN,
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from '../../../AccessProvider/permissions';
 
 import theme from '../../../../themes/main-theme';
 import { createFakeStore } from '../../../../accessStoreFake';
@@ -63,18 +67,20 @@ test('renders correctly with one feature', () => {
         <MemoryRouter>
             <Provider store={createStore(mockReducer, mockStore)}>
                 <ThemeProvider theme={theme}>
-                    <AccessProvider store={createFakeStore([{permission: ADMIN}])}>
-                    <ViewFeatureToggleComponent
-                        activeTab={'strategies'}
-                        featureToggleName="another"
-                        features={[feature]}
-                        featureToggle={feature}
-                        fetchFeatureToggles={jest.fn()}
-                        history={{}}
-                        featureTags={[]}
-                        fetchTags={jest.fn()}
-                        untagFeature={jest.fn()}
-                    />
+                    <AccessProvider
+                        store={createFakeStore([{ permission: ADMIN }])}
+                    >
+                        <ViewFeatureToggleComponent
+                            activeTab={'strategies'}
+                            featureToggleName="another"
+                            features={[feature]}
+                            featureToggle={feature}
+                            fetchFeatureToggles={jest.fn()}
+                            history={{}}
+                            featureTags={[]}
+                            fetchTags={jest.fn()}
+                            untagFeature={jest.fn()}
+                        />
                     </AccessProvider>
                 </ThemeProvider>
             </Provider>

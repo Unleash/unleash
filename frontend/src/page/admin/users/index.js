@@ -8,22 +8,26 @@ import ConditionallyRender from '../../../component/common/ConditionallyRender';
 import { ADMIN } from '../../../component/AccessProvider/permissions';
 import { Alert } from '@material-ui/lab';
 
-const UsersAdmin = ({history}) => {
+const UsersAdmin = ({ history }) => {
     const { hasAccess } = useContext(AccessContext);
-    
+
     return (
         <div>
             <AdminMenu history={history} />
             <PageContent headerContent="Users">
-                <ConditionallyRender 
-                condition={hasAccess(ADMIN)} 
-                show={<UsersList />} 
-                elseShow={<Alert severity="error">You need to be a root admin to access this section.</Alert>} />
-                
+                <ConditionallyRender
+                    condition={hasAccess(ADMIN)}
+                    show={<UsersList />}
+                    elseShow={
+                        <Alert severity="error">
+                            You need to be a root admin to access this section.
+                        </Alert>
+                    }
+                />
             </PageContent>
         </div>
     );
-}
+};
 
 UsersAdmin.propTypes = {
     match: PropTypes.object.isRequired,

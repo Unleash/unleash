@@ -11,7 +11,7 @@ const ProtectedRoute = ({
             {...rest}
             render={props => {
                 if (unauthorized) {
-                    return <Redirect to="/login" />;
+                    return <Redirect to={'/login'} />;
                 } else {
                     return <Component {...props} {...renderProps} />;
                 }

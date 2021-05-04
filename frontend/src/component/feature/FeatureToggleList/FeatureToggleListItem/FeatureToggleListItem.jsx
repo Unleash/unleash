@@ -27,7 +27,15 @@ const FeatureToggleListItem = ({
 }) => {
     const styles = useStyles();
 
-    const { name, description, enabled, type, stale, createdAt, project } = feature;
+    const {
+        name,
+        description,
+        enabled,
+        type,
+        stale,
+        createdAt,
+        project,
+    } = feature;
     const { showLastHour = false } = settings;
     const isStale = showLastHour
         ? metricsLastHour.isFallback

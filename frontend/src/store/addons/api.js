@@ -1,6 +1,7 @@
+import { formatApiPath } from '../../utils/format-path';
 import { throwIfNotSuccess, headers } from '../api-helper';
 
-const URI = 'api/admin/addons';
+const URI = formatApiPath(`api/admin/addons`);
 
 function fetchAll() {
     return fetch(URI, { credentials: 'include' })

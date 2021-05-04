@@ -4,7 +4,7 @@ import { Button, Grid, Switch, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import PageContent from '../../../component/common/PageContent/PageContent';
 import AccessContext from '../../../contexts/AccessContext';
-import { ADMIN } from '../../../component/AccessProvider/permissions';
+import { ADMIN } from '../../../component/AccessProvider/permissions';
 
 const initialState = {
     enabled: false,
@@ -30,7 +30,11 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
     }, [config]);
 
     if (!hasAccess(ADMIN)) {
-        return <Alert severity="error">You need to be a root admin to access this section.</Alert>;
+        return (
+            <Alert severity="error">
+                You need to be a root admin to access this section.
+            </Alert>
+        );
     }
 
     const updateField = e => {
@@ -65,11 +69,17 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                 <Grid item md={12}>
                     <Alert severity="info">
                         Please read the{' '}
-                        <a href="https://www.unleash-hosted.com/docs/enterprise-authentication" target="_blank" rel="noreferrer">
+                        <a
+                            href="https://www.unleash-hosted.com/docs/enterprise-authentication"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
                             documentation
                         </a>{' '}
-                        to learn how to integrate with specific SAML 2.0 providers (Okta, Keycloak, etc). <br />
-                        Callback URL: <code>{unleashUrl}/auth/saml/callback</code>
+                        to learn how to integrate with specific SAML 2.0
+                        providers (Okta, Keycloak, etc). <br />
+                        Callback URL:{' '}
+                        <code>{unleashUrl}/auth/saml/callback</code>
                     </Alert>
                 </Grid>
             </Grid>
@@ -80,7 +90,12 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                         <p>Enable SAML 2.0 Authentication.</p>
                     </Grid>
                     <Grid item md={6}>
-                        <Switch onChange={updateEnabled} value={data.enabled} name="enabled" checked={data.enabled}>
+                        <Switch
+                            onChange={updateEnabled}
+                            value={data.enabled}
+                            name="enabled"
+                            checked={data.enabled}
+                        >
                             {data.enabled ? 'Enabled' : 'Disabled'}
                         </Switch>
                     </Grid>
@@ -105,7 +120,10 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <strong>Single Sign-On URL</strong>
-                        <p>(Required) The url to redirect the user to for signing in.</p>
+                        <p>
+                            (Required) The url to redirect the user to for
+                            signing in.
+                        </p>
                     </Grid>
                     <Grid item md={6}>
                         <TextField
@@ -122,7 +140,10 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <strong>X.509 Certificate</strong>
-                        <p>(Required) The certificate used to sign the SAML 2.0 request.</p>
+                        <p>
+                            (Required) The certificate used to sign the SAML 2.0
+                            request.
+                        </p>
                     </Grid>
                     <Grid item md={7}>
                         <TextField
@@ -146,10 +167,17 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <strong>Auto-create users</strong>
-                        <p>Enable automatic creation of new users when signing in with Saml.</p>
+                        <p>
+                            Enable automatic creation of new users when signing
+                            in with Saml.
+                        </p>
                     </Grid>
                     <Grid item md={6} style={{ padding: '20px' }}>
-                        <Switch onChange={updateAutoCreate} name="enabled" checked={data.autoCreate}>
+                        <Switch
+                            onChange={updateAutoCreate}
+                            name="enabled"
+                            checked={data.autoCreate}
+                        >
                             Auto-create users
                         </Switch>
                     </Grid>
@@ -157,7 +185,10 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <strong>Email domains</strong>
-                        <p>(Optional) Comma separated list of email domains that should be allowed to sign in.</p>
+                        <p>
+                            (Optional) Comma separated list of email domains
+                            that should be allowed to sign in.
+                        </p>
                     </Grid>
                     <Grid item md={6}>
                         <TextField
@@ -175,7 +206,11 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                 </Grid>
                 <Grid container spacing={3}>
                     <Grid item md={5}>
-                        <Button variant="contained" color="primary" type="submit">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                        >
                             Save
                         </Button>{' '}
                         <small>{info}</small>

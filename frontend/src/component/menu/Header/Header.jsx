@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
@@ -18,16 +18,11 @@ import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyR
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { useStyles } from './styles';
 
-const Header = ({ uiConfig, init }) => {
+const Header = ({ uiConfig }) => {
     const theme = useTheme();
     const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const styles = useStyles();
     const [openDrawer, setOpenDrawer] = useState(false);
-
-    useEffect(() => {
-        init(uiConfig.flags);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const toggleDrawer = () => setOpenDrawer(prev => !prev);
 
@@ -83,7 +78,6 @@ const Header = ({ uiConfig, init }) => {
 
 Header.propTypes = {
     uiConfig: PropTypes.object.isRequired,
-    init: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
 };
 

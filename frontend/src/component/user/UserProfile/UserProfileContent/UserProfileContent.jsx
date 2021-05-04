@@ -24,7 +24,6 @@ const UserProfileContent = ({
     imageUrl,
     currentLocale,
     setCurrentLocale,
-    location,
     logoutUser,
 }) => {
     const commonStyles = useCommonStyles();

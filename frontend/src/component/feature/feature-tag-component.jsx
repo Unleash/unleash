@@ -3,7 +3,18 @@ import PropTypes from 'prop-types';
 import { Icon, Chip } from '@material-ui/core';
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
 import Dialogue from '../common/Dialogue';
-function FeatureTagComponent({ tags, tagTypes, featureToggleName, untagFeature }) {
+
+import slackIcon from '../../assets/icons/slack.svg';
+import jiraIcon from '../../assets/icons/jira.svg';
+import webhookIcon from '../../assets/icons/webhooks.svg';
+import { formatAssetPath } from '../../utils/format-path';
+
+function FeatureTagComponent({
+    tags,
+    tagTypes,
+    featureToggleName,
+    untagFeature,
+}) {
     const [showDialog, setShowDialog] = useState(false);
     const [selectedTag, setSelectedTag] = useState(undefined);
     const onUntagFeature = tag => {
@@ -20,11 +31,29 @@ function FeatureTagComponent({ tags, tagTypes, featureToggleName, untagFeature }
         if (tagType && tagType.icon) {
             switch (tagType.name) {
                 case 'slack':
-                    return <img style={style} alt="slack" src="slack.svg" />;
+                    return (
+                        <img
+                            style={style}
+                            alt="slack"
+                            src={formatAssetPath(slackIcon)}
+                        />
+                    );
                 case 'jira':
-                    return <img style={style} alt="jira" src="jira.svg" />;
+                    return (
+                        <img
+                            style={style}
+                            alt="jira"
+                            src={formatAssetPath(jiraIcon)}
+                        />
+                    );
                 case 'webhook':
-                    return <img style={style} alt="webhook" src="webhooks.svg" />;
+                    return (
+                        <img
+                            style={style}
+                            alt="webhook"
+                            src={formatAssetPath(webhookIcon)}
+                        />
+                    );
                 default:
                     return <Icon>label</Icon>;
             }

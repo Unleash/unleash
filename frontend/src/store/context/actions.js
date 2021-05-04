@@ -10,7 +10,7 @@ export const ERROR_ADD_CONTEXT_FIELD = 'ERROR_ADD_CONTEXT_FIELD';
 export const UPDATE_CONTEXT_FIELD = 'UPDATE_CONTEXT_FIELD';
 export const ERROR_UPDATE_CONTEXT_FIELD = 'ERROR_UPDATE_CONTEXT_FIELD';
 
-const receiveContext = value => ({ type: RECEIVE_CONTEXT, value });
+export const receiveContext = value => ({ type: RECEIVE_CONTEXT, value });
 const addContextField = context => ({ type: ADD_CONTEXT_FIELD, context });
 const upContextField = context => ({ type: UPDATE_CONTEXT_FIELD, context });
 const createRemoveContext = context => ({ type: REMOVE_CONTEXT, context });

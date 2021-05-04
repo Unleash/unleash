@@ -4,12 +4,7 @@ import { Button, TextField } from '@material-ui/core';
 
 import styles from './SimpleAuth.module.scss';
 
-const SimpleAuth = ({
-    insecureLogin,
-    loadInitialData,
-    history,
-    authDetails,
-}) => {
+const SimpleAuth = ({ insecureLogin, history, authDetails }) => {
     const [email, setEmail] = useState('');
 
     const handleSubmit = evt => {
@@ -17,9 +12,7 @@ const SimpleAuth = ({
         const user = { email };
         const path = evt.target.action;
 
-        insecureLogin(path, user)
-            .then(loadInitialData)
-            .then(() => history.push(`/`));
+        insecureLogin(path, user).then(() => history.push(`/`));
     };
 
     const handleChange = e => {
@@ -74,7 +67,6 @@ const SimpleAuth = ({
 SimpleAuth.propTypes = {
     authDetails: PropTypes.object.isRequired,
     insecureLogin: PropTypes.func.isRequired,
-    loadInitialData: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
 };
 

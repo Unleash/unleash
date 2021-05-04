@@ -1,6 +1,7 @@
+import { formatApiPath } from '../../utils/format-path';
 import { throwIfNotSuccess, headers } from '../api-helper';
 
-const URI = 'api/admin/tags';
+const URI = formatApiPath('api/admin/tags');
 
 function fetchTags() {
     return fetch(URI, { credentials: 'include' })

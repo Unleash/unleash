@@ -36,7 +36,7 @@ test('renders correctly with one strategy', () => {
     const tree = renderer.create(
         <MemoryRouter>
             <AccessProvider store={createFakeStore()}>
-            <ThemeProvider theme={theme}>
+                <ThemeProvider theme={theme}>
                     <StrategyDetails
                         strategyName={'Another'}
                         strategy={strategy}
@@ -48,7 +48,7 @@ test('renders correctly with one strategy', () => {
                         fetchFeatureToggles={jest.fn()}
                         history={{}}
                     />
-            </ThemeProvider>
+                </ThemeProvider>
             </AccessProvider>
         </MemoryRouter>
     );

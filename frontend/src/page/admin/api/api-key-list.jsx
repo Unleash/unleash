@@ -1,7 +1,15 @@
 /* eslint-disable no-alert */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Table, TableHead, TableBody, TableRow, TableCell, IconButton } from '@material-ui/core';
+import {
+    Icon,
+    Table,
+    TableHead,
+    TableBody,
+    TableRow,
+    TableCell,
+    IconButton,
+} from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { formatFullDateTimeWithLocale } from '../../../component/common/util';
 import CreateApiKey from './api-key-create';
@@ -9,9 +17,19 @@ import Secret from './secret';
 import ConditionallyRender from '../../../component/common/ConditionallyRender/ConditionallyRender';
 import Dialogue from '../../../component/common/Dialogue/Dialogue';
 import AccessContext from '../../../contexts/AccessContext';
-import { DELETE_API_TOKEN, CREATE_API_TOKEN } from '../../../component/AccessProvider/permissions';
+import {
+    DELETE_API_TOKEN,
+    CREATE_API_TOKEN,
+} from '../../../component/AccessProvider/permissions';
 
-function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, unleashUrl }) {
+function ApiKeyList({
+    location,
+    fetchApiKeys,
+    removeKey,
+    addKey,
+    keys,
+    unleashUrl,
+}) {
     const { hasAccess } = useContext(AccessContext);
     const [showDelete, setShowDelete] = useState(false);
     const [delKey, setDelKey] = useState(undefined);
@@ -28,21 +46,28 @@ function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, unleashUr
 
     return (
         <div>
-            <Alert severity="info" >
+            <Alert severity="info">
                 <p>
                     Read the{' '}
-                    <a href="https://docs.getunleash.io/docs" target="_blank" rel="noreferrer">
+                    <a
+                        href="https://docs.getunleash.io/docs"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
                         Getting started guide
                     </a>{' '}
-                    to learn how to connect to the Unleash API form your application or programmatically. 
-                    Please note it can take up to 1 minute before a new API key is activated.
+                    to learn how to connect to the Unleash API from your
+                    application or programmatically. Please note it can take up
+                    to 1 minute before a new API key is activated.
                 </p>
                 <br />
-                <strong>API URL: </strong> <pre style={{display: 'inline'}}>{unleashUrl}/api/</pre>
+                <strong>API URL: </strong>{' '}
+                <pre style={{ display: 'inline' }}>{unleashUrl}/api/</pre>
             </Alert>
-            
-            <br /><br />
-            
+
+            <br />
+            <br />
+
             <br />
             <Table>
                 <TableHead>
@@ -58,10 +83,17 @@ function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, unleashUr
                     {keys.map(item => (
                         <TableRow key={item.secret}>
                             <TableCell style={{ textAlign: 'left' }}>
-                                {formatFullDateTimeWithLocale(item.createdAt, location.locale)}
+                                {formatFullDateTimeWithLocale(
+                                    item.createdAt,
+                                    location.locale
+                                )}
                             </TableCell>
-                            <TableCell style={{ textAlign: 'left' }}>{item.username}</TableCell>
-                            <TableCell style={{ textAlign: 'left' }}>{item.type}</TableCell>
+                            <TableCell style={{ textAlign: 'left' }}>
+                                {item.username}
+                            </TableCell>
+                            <TableCell style={{ textAlign: 'left' }}>
+                                {item.type}
+                            </TableCell>
                             <TableCell style={{ textAlign: 'left' }}>
                                 <Secret value={item.secret} />
                             </TableCell>
@@ -95,7 +127,10 @@ function ApiKeyList({ location, fetchApiKeys, removeKey, addKey, keys, unleashUr
             >
                 <div>Are you sure you want to delete?</div>
             </Dialogue>
-            <ConditionallyRender condition={hasAccess(CREATE_API_TOKEN)} show={<CreateApiKey addKey={addKey} />} />
+            <ConditionallyRender
+                condition={hasAccess(CREATE_API_TOKEN)}
+                show={<CreateApiKey addKey={addKey} />}
+            />
         </div>
     );
 }

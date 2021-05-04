@@ -5,7 +5,7 @@ import MySelect from '../common/select';
 class FeatureTypeSelectComponent extends Component {
     componentDidMount() {
         const { fetchFeatureTypes, types } = this.props;
-        if (types[0].initial && fetchFeatureTypes) {
+        if (types && types[0].initial && fetchFeatureTypes) {
             this.props.fetchFeatureTypes();
         }
     }
@@ -33,7 +33,17 @@ class FeatureTypeSelectComponent extends Component {
             options.push({ key: value, label: value });
         }
 
-        return <MySelect disabled={!editable} options={options} value={value} onChange={onChange} label={label} id={id} {...rest} />;
+        return (
+            <MySelect
+                disabled={!editable}
+                options={options}
+                value={value}
+                onChange={onChange}
+                label={label}
+                id={id}
+                {...rest}
+            />
+        );
     }
 }
 

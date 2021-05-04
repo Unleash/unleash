@@ -33,8 +33,12 @@ const renderRoute = (params, route) => {
     if (!route) {
         return null;
     }
-    const title = route.title.startsWith(':') ? params[route.title.substring(1)] : route.title;
-    return route.parent ? renderDoubleBread(title, getRoute(route.parent)) : renderBread(route);
+    const title = route.title.startsWith(':')
+        ? params[route.title.substring(1)]
+        : route.title;
+    return route.parent
+        ? renderDoubleBread(title, getRoute(route.parent))
+        : renderBread(route);
 };
 
 /*
@@ -53,7 +57,9 @@ const Breadcrumb = () => (
             <Route
                 key={route.path}
                 path={route.path}
-                render={({ match: { params } } = this.props) => renderRoute(params, route)}
+                render={({ match: { params } } = this.props) =>
+                    renderRoute(params, route)
+                }
             />
         ))}
     </Switch>

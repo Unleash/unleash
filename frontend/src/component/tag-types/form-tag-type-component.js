@@ -9,12 +9,23 @@ import { Typography, TextField } from '@material-ui/core';
 import styles from './TagType.module.scss';
 import commonStyles from '../common/common.module.scss';
 import AccessContext from '../../contexts/AccessContext';
-import { CREATE_TAG_TYPE, UPDATE_TAG_TYPE } from '../AccessProvider/permissions';
+import {
+    CREATE_TAG_TYPE,
+    UPDATE_TAG_TYPE,
+} from '../AccessProvider/permissions';
 import ConditionallyRender from '../common/ConditionallyRender';
 
-const AddTagTypeComponent = ({ tagType, validateName, submit, history, editMode }) => {
+const AddTagTypeComponent = ({
+    tagType,
+    validateName,
+    submit,
+    history,
+    editMode,
+}) => {
     const [tagTypeName, setTagTypeName] = useState(tagType.name || '');
-    const [tagTypeDescription, setTagTypeDescription] = useState(tagType.description || '');
+    const [tagTypeDescription, setTagTypeDescription] = useState(
+        tagType.description || ''
+    );
     const [errors, setErrors] = useState({
         general: undefined,
         name: undefined,
@@ -53,11 +64,23 @@ const AddTagTypeComponent = ({ tagType, validateName, submit, history, editMode 
     const submitText = editMode ? 'Update' : 'Create';
     return (
         <PageContent headerContent={`${submitText} Tag type`}>
-            <section className={classnames(commonStyles.contentSpacing, styles.tagTypeContainer)}>
+            <section
+                className={classnames(
+                    commonStyles.contentSpacing,
+                    styles.tagTypeContainer
+                )}
+            >
                 <Typography variant="subtitle1">
-                    Tag types allows you to group tags together in the management UI
+                    Tag types allows you to group tags together in the
+                    management UI
                 </Typography>
-                <form onSubmit={onSubmit} className={classnames(styles.addTagTypeForm, commonStyles.contentSpacing)}>
+                <form
+                    onSubmit={onSubmit}
+                    className={classnames(
+                        styles.addTagTypeForm,
+                        commonStyles.contentSpacing
+                    )}
+                >
                     <TextField
                         label="Name"
                         name="name"
@@ -84,11 +107,22 @@ const AddTagTypeComponent = ({ tagType, validateName, submit, history, editMode 
                         variant="outlined"
                         size="small"
                     />
-                    <ConditionallyRender condition={hasAccess(editMode ? UPDATE_TAG_TYPE : CREATE_TAG_TYPE)} show={
-                        <div className={styles.formButtons}>
-                            <FormButtons submitText={submitText} onCancel={onCancel} />
-                        </div>
-                    } elseShow={<span>You do not have permissions to save.</span>} />
+                    <ConditionallyRender
+                        condition={hasAccess(
+                            editMode ? UPDATE_TAG_TYPE : CREATE_TAG_TYPE
+                        )}
+                        show={
+                            <div className={styles.formButtons}>
+                                <FormButtons
+                                    submitText={submitText}
+                                    onCancel={onCancel}
+                                />
+                            </div>
+                        }
+                        elseShow={
+                            <span>You do not have permissions to save.</span>
+                        }
+                    />
                 </form>
             </section>
         </PageContent>

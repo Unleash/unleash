@@ -3,7 +3,7 @@ import 'whatwg-fetch';
 import './app.css';
 
 import ReactDOM from 'react-dom';
-import { HashRouter, Route } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider, CssBaseline } from '@material-ui/core';
 import thunkMiddleware from 'redux-thunk';
@@ -15,10 +15,11 @@ import { StylesProvider } from '@material-ui/core/styles';
 import mainTheme from './themes/main-theme';
 import store from './store';
 import MetricsPoller from './metrics-poller';
-import App from './component/App';
+import App from './component/AppContainer';
 import ScrollToTop from './component/scroll-to-top';
 import { writeWarning } from './security-logger';
 import AccessProvider from './component/AccessProvider/AccessProvider';
+import { getBasePath } from './utils/format-path';
 
 let composeEnhancers;
 
@@ -43,7 +44,7 @@ ReactDOM.render(
     <Provider store={unleashStore}>
         <DndProvider backend={HTML5Backend}>
             <AccessProvider store={unleashStore}>
-                <HashRouter>
+                <Router basename={`${getBasePath()}`}>
                     <ThemeProvider theme={mainTheme}>
                         <StylesProvider injectFirst>
                             <CssBaseline />
@@ -52,7 +53,7 @@ ReactDOM.render(
                             </ScrollToTop>
                         </StylesProvider>
                     </ThemeProvider>
-                </HashRouter>
+                </Router>
             </AccessProvider>
         </DndProvider>
     </Provider>,

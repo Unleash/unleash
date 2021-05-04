@@ -13,9 +13,9 @@ export const ERROR_UPDATE_PROJECT = 'ERROR_UPDATE_PROJECT';
 const addProject = project => ({ type: ADD_PROJECT, project });
 const upProject = project => ({ type: UPDATE_PROJECT, project });
 const delProject = project => ({ type: REMOVE_PROJECT, project });
+export const receiveProjects = value => ({ type: RECEIVE_PROJECT, value });
 
 export function fetchProjects() {
-    const receiveProjects = value => ({ type: RECEIVE_PROJECT, value });
     return dispatch =>
         api
             .fetchAll()

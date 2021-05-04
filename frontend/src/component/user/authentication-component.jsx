@@ -17,7 +17,6 @@ class AuthComponent extends React.Component {
         demoLogin: PropTypes.func.isRequired,
         insecureLogin: PropTypes.func.isRequired,
         passwordLogin: PropTypes.func.isRequired,
-        loadInitialData: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
     };
 
@@ -31,7 +30,6 @@ class AuthComponent extends React.Component {
                 <PasswordAuth
                     passwordLogin={this.props.passwordLogin}
                     authDetails={authDetails}
-                    loadInitialData={this.props.loadInitialData}
                     history={this.props.history}
                 />
             );
@@ -40,7 +38,6 @@ class AuthComponent extends React.Component {
                 <SimpleAuth
                     insecureLogin={this.props.insecureLogin}
                     authDetails={authDetails}
-                    loadInitialData={this.props.loadInitialData}
                     history={this.props.history}
                 />
             );
@@ -49,7 +46,6 @@ class AuthComponent extends React.Component {
                 <DemoAuth
                     demoLogin={this.props.demoLogin}
                     authDetails={authDetails}
-                    loadInitialData={this.props.loadInitialData}
                     history={this.props.history}
                 />
             );

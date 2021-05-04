@@ -8,15 +8,20 @@ import theme from '../../../themes/main-theme';
 import { createFakeStore } from '../../../accessStoreFake';
 import AccessProvider from '../../AccessProvider/AccessProvider';
 
-import { ADMIN, CREATE_TAG_TYPE, UPDATE_TAG_TYPE, DELETE_TAG_TYPE } from '../../AccessProvider/permissions';
-
-
+import {
+    ADMIN,
+    CREATE_TAG_TYPE,
+    UPDATE_TAG_TYPE,
+    DELETE_TAG_TYPE,
+} from '../../AccessProvider/permissions';
 
 test('renders an empty list correctly', () => {
     const tree = renderer.create(
         <MemoryRouter>
             <ThemeProvider theme={theme}>
-                <AccessProvider store={createFakeStore([{permission: ADMIN }])}>
+                <AccessProvider
+                    store={createFakeStore([{ permission: ADMIN }])}
+                >
                     <TagTypesList
                         tagTypes={[]}
                         fetchTagTypes={jest.fn()}
@@ -34,11 +39,13 @@ test('renders a list with elements correctly', () => {
     const tree = renderer.create(
         <ThemeProvider theme={theme}>
             <MemoryRouter>
-                <AccessProvider store={createFakeStore([
-                    {permission: CREATE_TAG_TYPE },
-                    {permission: UPDATE_TAG_TYPE },
-                    {permission: DELETE_TAG_TYPE }
-                ])}>
+                <AccessProvider
+                    store={createFakeStore([
+                        { permission: CREATE_TAG_TYPE },
+                        { permission: UPDATE_TAG_TYPE },
+                        { permission: DELETE_TAG_TYPE },
+                    ])}
+                >
                     <TagTypesList
                         tagTypes={[
                             {

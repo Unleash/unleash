@@ -494,7 +494,8 @@ exports[`renders correctly with permissions 1`] = `
                     >
                       <span>
                         123.123.123.123
-                         last seen at 
+                         last seen at
+                         
                         <small>
                           02/23/2017, 03:56:49 PM
                         </small>

@@ -1,11 +1,14 @@
 import useSWR from 'swr';
 import useQueryParams from './useQueryParams';
 import { useState, useEffect } from 'react';
+import { formatApiPath } from '../utils/format-path';
 
-const getFetcher = (token: string) => () =>
-    fetch(`auth/reset/validate?token=${token}`, {
+const getFetcher = (token: string) => () => {
+    const path = formatApiPath(`auth/reset/validate?token=${token}`);
+    return fetch(path, {
         method: 'GET',
     }).then(res => res.json());
+};
 
 const INVALID_TOKEN_ERROR = 'InvalidTokenError';
 const USED_TOKEN_ERROR = 'UsedTokenError';
@@ -16,10 +19,9 @@ const useResetPassword = () => {
     const [token, setToken] = useState(initialToken);
 
     const fetcher = getFetcher(token);
-    const { data, error } = useSWR(
-        `auth/reset/validate?token=${token}`,
-        fetcher
-    );
+
+    const key = `auth/reset/validate?token=${token}`;
+    const { data, error } = useSWR(key, fetcher);
     const [loading, setLoading] = useState(!error && !data);
 
     const retry = () => {

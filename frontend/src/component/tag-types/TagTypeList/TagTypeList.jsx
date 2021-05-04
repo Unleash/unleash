@@ -16,7 +16,10 @@ import {
 import HeaderTitle from '../../common/HeaderTitle';
 import PageContent from '../../common/PageContent/PageContent';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import { CREATE_TAG_TYPE, DELETE_TAG_TYPE } from '../../AccessProvider/permissions';
+import {
+    CREATE_TAG_TYPE,
+    DELETE_TAG_TYPE,
+} from '../../AccessProvider/permissions';
 import Dialogue from '../../common/Dialogue/Dialogue';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
@@ -28,7 +31,6 @@ const TagTypeList = ({ tagTypes, fetchTagTypes, removeTagType }) => {
     const [deletion, setDeletion] = useState({ open: false });
     const history = useHistory();
     const smallScreen = useMediaQuery('(max-width:700px)');
-    
 
     useEffect(() => {
         fetchTagTypes();
@@ -48,7 +50,9 @@ const TagTypeList = ({ tagTypes, fetchTagTypes, removeTagType }) => {
                                 <Tooltip title="Add tag type">
                                     <IconButton
                                         aria-label="add tag type"
-                                        onClick={() => history.push('/tag-types/create')}
+                                        onClick={() =>
+                                            history.push('/tag-types/create')
+                                        }
                                     >
                                         <Icon>add</Icon>
                                     </IconButton>
@@ -58,7 +62,9 @@ const TagTypeList = ({ tagTypes, fetchTagTypes, removeTagType }) => {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => history.push('/tag-types/create')}
+                                    onClick={() =>
+                                        history.push('/tag-types/create')
+                                    }
                                 >
                                     Add new tag type
                                 </Button>
@@ -91,12 +97,18 @@ const TagTypeList = ({ tagTypes, fetchTagTypes, removeTagType }) => {
             </Tooltip>
         );
         return (
-            <ListItem key={`${tagType.name}`} classes={{ root: styles.tagListItem }}>
+            <ListItem
+                key={`${tagType.name}`}
+                classes={{ root: styles.tagListItem }}
+            >
                 <ListItemIcon>
                     <Icon>label</Icon>
                 </ListItemIcon>
                 <ListItemText primary={link} secondary={tagType.description} />
-                <ConditionallyRender condition={hasAccess(DELETE_TAG_TYPE)} show={deleteButton} />
+                <ConditionallyRender
+                    condition={hasAccess(DELETE_TAG_TYPE)}
+                    show={deleteButton}
+                />
             </ListItem>
         );
     };

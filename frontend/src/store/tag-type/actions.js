@@ -14,7 +14,7 @@ export const START_UPDATE_TAG_TYPE = 'START_UPDATE_TAG_TYPE';
 export const UPDATE_TAG_TYPE = 'UPDATE_TAG_TYPE';
 export const ERROR_UPDATE_TAG_TYPE = 'ERROR_UPDATE_TAG_TYPE';
 
-function receiveTagTypes(json) {
+export function receiveTagTypes(json) {
     return {
         type: RECEIVE_TAG_TYPES,
         value: json,
@@ -37,7 +37,12 @@ export function createTagType({ name, description, icon }) {
         dispatch({ type: START_CREATE_TAG_TYPE });
         return api
             .create({ name, description, icon })
-            .then(() => dispatch({ type: ADD_TAG_TYPE, tagType: { name, description, icon } }))
+            .then(() =>
+                dispatch({
+                    type: ADD_TAG_TYPE,
+                    tagType: { name, description, icon },
+                })
+            )
             .catch(dispatchError(dispatch, ERROR_CREATE_TAG_TYPE));
     };
 }
@@ -47,7 +52,12 @@ export function updateTagType({ name, description, icon }) {
         dispatch({ type: START_UPDATE_TAG_TYPE });
         return api
             .update({ name, description, icon })
-            .then(() => dispatch({ type: UPDATE_TAG_TYPE, tagType: { name, description, icon } }))
+            .then(() =>
+                dispatch({
+                    type: UPDATE_TAG_TYPE,
+                    tagType: { name, description, icon },
+                })
+            )
             .catch(dispatchError(dispatch, ERROR_UPDATE_TAG_TYPE));
     };
 }

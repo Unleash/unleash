@@ -12,7 +12,12 @@ const initialState = {
     unleashHostname: location.hostname,
 };
 
-function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, unleashUrl }) {
+function GoogleAuth({
+    config,
+    getGoogleConfig,
+    updateGoogleConfig,
+    unleashUrl,
+}) {
     const [data, setData] = useState(initialState);
     const [info, setInfo] = useState();
     const { hasAccess } = useContext(AccessContext);
@@ -64,11 +69,16 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, unleashUrl })
                 <Grid item xs={12}>
                     <Alert severity="info">
                         Please read the{' '}
-                        <a href="https://www.unleash-hosted.com/docs/enterprise-authentication/google" target="_blank" rel="noreferrer">
+                        <a
+                            href="https://www.unleash-hosted.com/docs/enterprise-authentication/google"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
                             documentation
                         </a>{' '}
                         to learn how to integrate with Google OAuth 2.0. <br />
-                        Callback URL: <code>{unleashUrl}/auth/google/callback</code>
+                        Callback URL:{' '}
+                        <code>{unleashUrl}/auth/google/callback</code>
                     </Alert>
                 </Grid>
             </Grid>
@@ -77,12 +87,16 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, unleashUrl })
                     <Grid item xs={5}>
                         <strong>Enable</strong>
                         <p>
-                            Enable Google users to login. Value is ignored if Client ID and Client Secret are not
-                            defined.
+                            Enable Google users to login. Value is ignored if
+                            Client ID and Client Secret are not defined.
                         </p>
                     </Grid>
                     <Grid item xs={6} style={{ padding: '20px' }}>
-                        <Switch onChange={updateEnabled} name="enabled" checked={data.enabled}>
+                        <Switch
+                            onChange={updateEnabled}
+                            name="enabled"
+                            checked={data.enabled}
+                        >
                             {data.enabled ? 'Enabled' : 'Disabled'}
                         </Switch>
                     </Grid>
@@ -90,7 +104,10 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, unleashUrl })
                 <Grid container spacing={3}>
                     <Grid item xs={5}>
                         <strong>Client ID</strong>
-                        <p>(Required) The Client ID provided by Google when registering the application.</p>
+                        <p>
+                            (Required) The Client ID provided by Google when
+                            registering the application.
+                        </p>
                     </Grid>
                     <Grid item xs={6}>
                         <TextField
@@ -108,7 +125,10 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, unleashUrl })
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <strong>Client Secret</strong>
-                        <p>(Required) Client Secret provided by Google when registering the application.</p>
+                        <p>
+                            (Required) Client Secret provided by Google when
+                            registering the application.
+                        </p>
                     </Grid>
                     <Grid item md={6}>
                         <TextField
@@ -127,10 +147,13 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, unleashUrl })
                     <Grid item md={5}>
                         <strong>Unleash hostname</strong>
                         <p>
-                            (Required) The hostname you are running Unleash on that Google should send the user back to.
-                            The final callback URL will be{' '}
+                            (Required) The hostname you are running Unleash on
+                            that Google should send the user back to. The final
+                            callback URL will be{' '}
                             <small>
-                                <code>https://[unleash.hostname.com]/auth/google/callback</code>
+                                <code>
+                                    https://[unleash.hostname.com]/auth/google/callback
+                                </code>
                             </small>
                         </p>
                     </Grid>
@@ -150,10 +173,17 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, unleashUrl })
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <strong>Auto-create users</strong>
-                        <p>Enable automatic creation of new users when signing in with Google.</p>
+                        <p>
+                            Enable automatic creation of new users when signing
+                            in with Google.
+                        </p>
                     </Grid>
                     <Grid item md={6} style={{ padding: '20px' }}>
-                        <Switch onChange={updateAutoCreate} name="enabled" checked={data.autoCreate}>
+                        <Switch
+                            onChange={updateAutoCreate}
+                            name="enabled"
+                            checked={data.autoCreate}
+                        >
                             Auto-create users
                         </Switch>
                     </Grid>
@@ -161,7 +191,10 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, unleashUrl })
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <strong>Email domains</strong>
-                        <p>(Optional) Comma separated list of email domains that should be allowed to sign in.</p>
+                        <p>
+                            (Optional) Comma separated list of email domains
+                            that should be allowed to sign in.
+                        </p>
                     </Grid>
                     <Grid item md={6}>
                         <TextField
@@ -180,7 +213,11 @@ function GoogleAuth({ config, getGoogleConfig, updateGoogleConfig, unleashUrl })
                 </Grid>
                 <Grid container spacing={3}>
                     <Grid item md={5}>
-                        <Button variant="contained" color="primary" type="submit">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                        >
                             Save
                         </Button>{' '}
                         <small>{info}</small>

@@ -1,6 +1,24 @@
-import React from 'react';
+import { Alert } from '@material-ui/lab';
+import React, { useContext } from 'react';
+import { ADMIN } from '../../component/AccessProvider/permissions';
+import ConditionallyRender from '../../component/common/ConditionallyRender';
 import HistoryComponent from '../../component/history/EventHistory';
+import AccessContext from '../../contexts/AccessContext';
 
-const render = () => <HistoryComponent />;
+const HistoryPage = ({ history }) => {
+    const { hasAccess } = useContext(AccessContext);
 
-export default render;
+    return (
+        <ConditionallyRender
+            condition={hasAccess(ADMIN)}
+            show={<HistoryComponent />}
+            elseShow={
+                <Alert severity="error">
+                    You need instance admin to access this section.
+                </Alert>
+            }
+        />
+    );
+};
+
+export default HistoryPage;

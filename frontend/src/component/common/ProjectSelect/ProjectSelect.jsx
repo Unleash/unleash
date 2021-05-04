@@ -45,6 +45,7 @@ const ProjectSelect = ({
             <MenuItem
                 disabled={curentProject === ALL_PROJECTS}
                 data-target={ALL_PROJECTS.id}
+                key={ALL_PROJECTS.id}
             >
                 {ALL_PROJECTS.name}
             </MenuItem>,
@@ -64,6 +65,7 @@ const ProjectSelect = ({
                 label={`${curentProject.name}`}
                 callback={handleChangeProject}
                 renderOptions={renderProjectOptions}
+                className=""
             />
         </React.Fragment>
     );

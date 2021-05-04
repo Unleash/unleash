@@ -20,7 +20,7 @@ const UsersAdmin = ({ history }) => {
                     show={<UsersList />}
                     elseShow={
                         <Alert severity="error">
-                            You need to be a root admin to access this section.
+                            You need instance admin to access this section.
                         </Alert>
                     }
                 />

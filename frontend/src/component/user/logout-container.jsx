@@ -6,6 +6,8 @@ const mapDispatchToProps = {
     logoutUser,
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => ({
+    user: state.user.get('profile'),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(LogoutComponent);

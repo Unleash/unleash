@@ -17,7 +17,7 @@ const userStore = (state = new $Map({permissions: []}), action) => {
                 .set('showDialog', true);
             return state;
         case USER_LOGOUT:
-            return new $Map();
+            return new $Map({permissions: []});
         default:
             return state;
     }

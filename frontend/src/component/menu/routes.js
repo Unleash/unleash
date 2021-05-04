@@ -332,7 +332,7 @@ export const routes = [
         title: 'Sign out',
         icon: 'exit_to_app',
         component: LogoutFeatures,
-        type: 'protected',
+        type: 'unprotected',
         layout: 'main',
     },
     {

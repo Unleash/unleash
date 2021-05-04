@@ -62,6 +62,7 @@ const features = (state = new List([]), action) => {
             return new List(action.featureToggles.map($Map));
         case USER_LOGIN:
         case USER_LOGOUT:
+            console.log('clear toggle store');
             debug(USER_LOGOUT, action);
             return new List([]);
         default:

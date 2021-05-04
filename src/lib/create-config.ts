@@ -190,14 +190,14 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             : options.authentication,
     ]);
 
-    const { ui } = options;
+    const ui = options.ui || {};
 
     const importSetting: IImportOption = mergeAll([
         defaultImport,
         options.import,
     ]);
 
-    const { experimental } = options;
+    const experimental = options.experimental || {};
 
     const email: IEmailOption = mergeAll([defaultEmail, options.email]);
 

@@ -131,9 +131,6 @@
       "deploy/securing_unleash": {
         "title": "Securing Unleash"
       },
-      "deploy/technical_debt": {
-        "title": "Technical Debt"
-      },
       "developer_guide": {
         "title": "Developer guide"
       },
@@ -205,6 +202,9 @@
       },
       "user_guide/single_page_apps": {
         "title": "Working with single page apps"
+      },
+      "user_guide/technical_debt": {
+        "title": "Technical Debt"
       },
       "user_guide/unleash_context": {
         "title": "Unleash Context"

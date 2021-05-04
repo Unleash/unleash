@@ -54,6 +54,7 @@ class UserController extends Controller {
     }
 
     async getUser(req: IAuthRequest, res: Response): Promise<void> {
+        res.setHeader('cache-control', 'no-store');
         const { user } = req;
         if (user) {
             const permissions = await this.accessService.getPermissionsForUser(

@@ -11,11 +11,17 @@
       "addons/index": {
         "title": "Addons Introduction"
       },
+      "addons/datadog": {
+        "title": "Datadog"
+      },
       "addons/jira-commenter": {
         "title": "Jira commenter"
       },
       "addons/slack": {
         "title": "Slack"
+      },
+      "addons/teams": {
+        "title": "Microsoft Teams"
       },
       "addons/webhook": {
         "title": "Webhook"
@@ -148,6 +154,9 @@
       },
       "sdks/go_sdk": {
         "title": "GO SDK"
+      },
+      "sdks/index": {
+        "title": "Introduction"
       },
       "sdks/java_sdk": {
         "title": "Java SDK"

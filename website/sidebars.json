@@ -2,8 +2,6 @@
   "documentation": {
     "Getting started": [
       "user_guide/index",
-      "user_guide/connect_sdk",
-      "user_guide/client_sdk",
       "user_guide/create_feature_toggle",
       "user_guide/activation_strategy",
       "user_guide/control_rollout",
@@ -13,6 +11,7 @@
       "user_guide/single_page_apps"
     ],
     "Working with the SDK": [
+      "sdks/index",
       "sdks/java_sdk",
       "sdks/node_sdk",
       "sdks/dot_net_sdk",

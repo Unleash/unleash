@@ -8,8 +8,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 4.0.0-alpha.13
+- feat: bootstrap endpoint for initial data (#281)
+- fix: allow permissions to be checked without project being defined (#282)
+- fix/strategy constraints (#283)
+- fix: logout should only be called once
+- fix: handle generic errors better
+
+
 # 4.0.0-alpha.12
-fix: add datadog logo for addons
+
+- fix: add datadog logo for addons
 
 # 4.0.0-alpha.11
 - Feat/auth hosted section (#280)

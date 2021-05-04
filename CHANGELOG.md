@@ -1,5 +1,18 @@
 # Changelog
 
+# 4.0.0-alpha.8
+
+- feat: global events requires admin role
+- fix: remove toast info from bootstrap controller (#834)
+- feat: add migration (#832)
+- fix: set name type to be min 1 character (#833)
+- fix: bum unleash-frontend to version 4.0.0-alpha.14
+- fix: /api/admin/user should not allow caching
+- fix: match bootstrap uiConfig with expected data format (#830)
+- feat: Datadog integration (#820)
+- fix: regular users are not API users
+- Feat: format base path (#828)
+
 # 4.0.0-alpha.7
 
 - fix: more types

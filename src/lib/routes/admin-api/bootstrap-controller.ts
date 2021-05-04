@@ -111,13 +111,6 @@ class BootstrapController extends Controller {
             uiConfig: {
                 ...this.config.ui,
                 authenticationType,
-                toast: {
-                    message:
-                        'You have been upgraded to Unleash version 4. This release brings a number of important changes and may affect how you work with Unleash. In order to view the full scope of changes in this release, please follow the link below.',
-                    id: 'v4-update',
-                    severity: 'info',
-                    link: 'https://docs.getunleash.io/link-to-v4-upgrade',
-                },
                 unleashUrl: this.config.server.unleashUrl,
                 version,
                 baseUriPath: this.config.server.baseUriPath,

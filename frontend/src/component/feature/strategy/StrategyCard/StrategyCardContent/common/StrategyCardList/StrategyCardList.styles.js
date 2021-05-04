@@ -8,7 +8,6 @@ export const useStyles = makeStyles(theme => ({
         margin: '0.25rem',
     },
     strategyListHeader: {
-        fontWeight: theme.fontWeight.semi,
         marginBottom: '0.5rem',
     },
 }));

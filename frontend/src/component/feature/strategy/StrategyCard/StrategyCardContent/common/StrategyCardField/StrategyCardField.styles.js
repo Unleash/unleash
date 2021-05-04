@@ -6,9 +6,6 @@ export const useStyles = makeStyles(theme => ({
         justifyContent: 'space-between',
         margin: '0.4rem 0',
     },
-    fieldTitle: {
-        fontWeight: theme.fontWeight.semi,
-    },
     fieldValue: {
         maxWidth: '50%',
     },

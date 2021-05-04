@@ -8,9 +8,7 @@ const StrategyCardField = ({ title, value }) => {
     const styles = useStyles();
     return (
         <div className={styles.fieldContainer}>
-            <Typography variant="body1" className={styles.fieldTitle}>
-                {title}
-            </Typography>
+            <Typography variant="body1">{title}</Typography>
             <Typography className={styles.fieldValue} variant="body1">
                 {value}
             </Typography>

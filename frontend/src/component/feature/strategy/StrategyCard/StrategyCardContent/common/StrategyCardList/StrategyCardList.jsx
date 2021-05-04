@@ -10,9 +10,15 @@ const StrategyCardList = ({ list, valuesName }) => {
 
     return (
         <div className={styles.strategyList}>
-            <Typography className={styles.strategyListHeader}>List of {valuesName}</Typography>
+            <Typography className={styles.strategyListHeader}>
+                List of {valuesName}
+            </Typography>
             {list.map(listItem => (
-                <Chip key={listItem} label={listItem} className={styles.strategyListChip} />
+                <Chip
+                    key={listItem}
+                    label={listItem}
+                    className={styles.strategyListChip}
+                />
             ))}
         </div>
     );

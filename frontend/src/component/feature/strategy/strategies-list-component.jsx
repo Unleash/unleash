@@ -187,16 +187,20 @@ const StrategiesList = props => {
                         className={styles.infoCard}
                         onClose={() => setShowAlert(false)}
                     >
-                        Strategies allow you fine grained control over how to
-                        activate your features, and are composable blocks that
-                        are executed in an OR fashion. As an example, you can
-                        have a gradual rollout that targets 80% of users in a
-                        region of the world (using the enterprise feature of
-                        constraints), and another gradual rollout that targets
-                        20% of the users in another region. If you don't add a
-                        strategy, the default strategy is activated which means
-                        that the feature will be strictly on/off for your entire
-                        userbase.
+                        <div style={{ maxWidth: '800px' }}>
+                            Activation strategies defines how you enable the new
+                            feature to your users. Changes to the activation
+                            strategies does not require redeployment of the
+                            code.
+                            <br />
+                            <br />
+                            Multiple activation strategies are composable blocks
+                            that is executed in an OR fashion.
+                            <br />
+                            E.g. A gradual rollout activation strategy allows
+                            you to gradually enable to feature to a subset of
+                            your users without redeploy to production.
+                        </div>
                     </Alert>
                 }
             />

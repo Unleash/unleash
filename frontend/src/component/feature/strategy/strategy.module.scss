@@ -11,7 +11,7 @@
     width: 100%;
     display: block;
     background-color: #f2f9fc;
-    overflow: "visible";
+    overflow: 'visible';
 }
 
 .paragraph {
@@ -154,5 +154,13 @@
 @media (max-width: 500px) {
     .strategyList {
         padding: 0;
+    }
+}
+
+@media (max-width: 860px) {
+    .strategyListCards {
+        flex-direction: column;
+        flex-wrap: none;
+        align-items: center;
     }
 }

@@ -20,7 +20,7 @@ const customJoi = joi.extend(j => ({
 
 const nameType = customJoi
     .isUrlFriendly()
-    .min(2)
+    .min(1)
     .max(100)
     .required();
 

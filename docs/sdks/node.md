@@ -5,13 +5,12 @@ title: Node SDK
 
 In this guide we explain how to use feature toggles in a Node application using Unleash-hosted. We will be using the open source Unleash [Node.js Client SDK](https://github.com/Unleash/unleash-client-node).
 
-> **Important details**
+> **Required details**
 >
->Make sure your have the following details available:
+> - **API URL** – Where you should connect your client SDK
+> - **API Secret** – Your API secret required to connect to your instance.
 >
->- **API URL** – Where you should connect your client SDK
->- **API Secret** – Your API secret required to connect to your instance. 
->You can find this information in your “Instance admin” available in your Unleash management UI.
+> You can find this information in the “Admin” section Unleash management UI.
 
 ## Step 1: Install the client SDK
 
@@ -27,32 +26,30 @@ Next we must initialize the client SDK in the application:
 
 ```js
 const unleash = require('unleash-client');
-    
+
 unleash.initialize({
   url: 'https://YOUR-API-URL',
   appName: 'my-node-name',
   environment: process.env.APP_ENV,
-  customHeaders: {'Authorization': 'SOME-SECRET'}
+  customHeaders: { Authorization: 'SOME-SECRET' },
 });
 ```
 
 The example code above will initialize the client SDK, and connect to the Unleash-hosted demo instance. It also uses the API token for the demo instance. You should change the URL and the Authorization header (API token) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
 
-Please also pay attention to the “environment” option. Setting this will allow you to use [strategy constraints](../user_guide/strategy-constraints) which enables different roll-out strategies per environment. 
-
- 
+Please also pay attention to the “environment” option. Setting this will allow you to use [strategy constraints](../user_guide/strategy-constraints) which enables different roll-out strategies per environment.
 
 ## Step 3: Use the feature toggle
 
-Now that we have initialized the client SDK in our application we can start using feature toggles defined in Unleash in our application. To achieve this we have the “isEnabled” method available, which will allow us to check the value of a feature toggle. This method will return **true** or **false** based on whether the feature should be enabled or disabled for the current request. 
+Now that we have initialized the client SDK in our application we can start using feature toggles defined in Unleash in our application. To achieve this we have the “isEnabled” method available, which will allow us to check the value of a feature toggle. This method will return **true** or **false** based on whether the feature should be enabled or disabled for the current request.
 
 ```js
 setInterval(() => {
-    if(unleash.isEnabled('DemoToggle')) {
-      console.log('Toggle enabled');
-    } else {
-      console.log('Toggle disabled');
-    }
+  if (unleash.isEnabled('DemoToggle')) {
+    console.log('Toggle enabled');
+  } else {
+    console.log('Toggle disabled');
+  }
 }, 1000);
 ```
 

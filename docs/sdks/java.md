@@ -5,20 +5,18 @@ title: Java SDK
 
 In this guide we explain how to use feature toggles in a Java application using Unleash-hosted. We will be using the open source Unleash [Java Client SDK](https://github.com/Unleash/unleash-client-java).
 
-> **Important details**
+> **Required details**
 >
->Make sure you have the following details available:
+> - **API URL** – Where you should connect your client SDK
+> - **API Secret** – Your API secret required to connect to your instance.
 >
->- **API URL** – Where you should connect your client SDK
->- **API Secret** – Your API secret required to connect to your instance. 
->You can find this information in your “Instance admin” available in your Unleash management UI. 
-
+> You can find this information in the “Admin” section Unleash management UI.
 
 ## Step 1: Install the client SDK
 
 First we must add Unleash Client SDK as a dependency to your project. Below is an example of how you would add it to your pom.xml in Java:
 
-```xml 
+```xml
 <dependency>
     <groupId>no.finn.unleash</groupId>
     <artifactId>unleash-client-java</artifactId>
@@ -42,15 +40,13 @@ UnleashConfig unleashConfig = UnleashConfig.builder()
 Unleash unleash = new DefaultUnleash(config);
 ```
 
-In your app you typically just want one instance of Unleash, and inject that where you need it. You will typically use a dependency injection frameworks such as Spring or Guice to manage this. 
+In your app you typically just want one instance of Unleash, and inject that where you need it. You will typically use a dependency injection frameworks such as Spring or Guice to manage this.
 
 You should change the URL and the Authorization header (API secret) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
 
- 
-
 ## Step 3: Use the feature toggle
 
-Now that we have initialized the client SDK we can start using feature toggles defined in Unleash in our application. To achieve this we have the “isEnabled” method available, which will allow us to check the value of a feature toggle. This method will return **true** or **false** based on whether the feature should be enabled or disabled for the current request. 
+Now that we have initialized the client SDK we can start using feature toggles defined in Unleash in our application. To achieve this we have the “isEnabled” method available, which will allow us to check the value of a feature toggle. This method will return **true** or **false** based on whether the feature should be enabled or disabled for the current request.
 
 ```java
 if(unleash.isEnabled("AwesomeFeature")) {
@@ -60,13 +56,13 @@ if(unleash.isEnabled("AwesomeFeature")) {
 }
 ```
 
-Pleas note the client SDK will synchronize with the Unleash-hosted API on initialization, and thus it can take a few milliseconds the first time before the client has the correct state. You can use the *synchronousFetchOnInitialisation* option to block the client until it has successfully synced with the server. 
+Pleas note the client SDK will synchronize with the Unleash-hosted API on initialization, and thus it can take a few milliseconds the first time before the client has the correct state. You can use the _synchronousFetchOnInitialisation_ option to block the client until it has successfully synced with the server.
 
 Read more about the [Unleash architecture](https://www.unleash-hosted.com/articles/our-unique-architecture) to learn how it works in more details
 
 ## Step 4: Provide Unleash Context
 
-It is the client SDK that computes whether a feature toggle should be considered enabled or disabled for  specific use request. This is the job of the [activation strategies](../user_guide/control_rollout), which are implemented in the client SDK.
+It is the client SDK that computes whether a feature toggle should be considered enabled or disabled for specific use request. This is the job of the [activation strategies](../user_guide/control_rollout), which are implemented in the client SDK.
 
 The activation strategies is an implementation of rules based on data, which you provide as part of the Unleash Context.
 
@@ -99,6 +95,6 @@ UnleashConfig config = new UnleashConfig.Builder()
 
 Unleash unleash = new DefaultUnleash(config);
 
-// Anywhere in the code unleash will get the unleash context from your registered provider. 
+// Anywhere in the code unleash will get the unleash context from your registered provider.
 unleash.isEnabled("someToggle");
 ```

@@ -3,6 +3,13 @@ id: go_sdk
 title: GO SDK
 ---
 
+> **Required details**
+>
+> - **API URL** – Where you should connect your client SDK
+> - **API Secret** – Your API secret required to connect to your instance.
+>
+> You can find this information in the “Admin” section Unleash management UI.
+
 ### 1. Install unleash-client-go
 
 To install the latest version of the client use:
@@ -38,8 +45,7 @@ func init() {
 
 ### 3. Use unleash
 
-After you have initialized the unleash-client you can easily check if a feature
-toggle is enabled or not.
+After you have initialized the unleash-client you can easily check if a feature toggle is enabled or not.
 
 ```go
 unleash.IsEnabled("app.ToggleX")
@@ -47,15 +53,13 @@ unleash.IsEnabled("app.ToggleX")
 
 ### 4. Stop unleash
 
-To shut down the client (turn off the polling) you can simply call the
-destroy-method. This is typically not required.
+To shut down the client (turn off the polling) you can simply call the destroy-method. This is typically not required.
 
 unleash.Close()
 
 ### Built in activation strategies
 
-The Go client comes with implementations for the built-in activation strategies
-provided by unleash.
+The Go client comes with implementations for the built-in activation strategies provided by unleash.
 
 - DefaultStrategy
 - UserIdStrategy
@@ -70,9 +74,7 @@ Read more about the strategies in [activation-strategy.md]().
 
 ### Unleash context
 
-In order to use some of the common activation strategies you must provide a
-[unleash-context](https://github.com/Unleash/unleash/blob/master/docs/unleash-context.md).
-This client SDK allows you to send in the unleash context as part of the `isEnabled` call:
+In order to use some of the common activation strategies you must provide a [unleash-context](https://github.com/Unleash/unleash/blob/master/docs/unleash-context.md). This client SDK allows you to send in the unleash context as part of the `isEnabled` call:
 
 ```go
 ctx := context.Context{

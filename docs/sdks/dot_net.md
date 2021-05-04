@@ -5,13 +5,12 @@ title: .net SDK
 
 In this guide we explain how to use feature toggles in a .NET application using Unleash-hosted. We will be using the open source Unleash [.net Client SDK](https://github.com/Unleash/unleash-client-dotnet).
 
-> **Important details**
+> **Required details**
 >
->Make sure you have the following details available:
+> - **API URL** – Where you should connect your client SDK
+> - **API Secret** – Your API secret required to connect to your instance.
 >
->- **API URL** – Where you should connect your client SDK
->- **API Secret** – Your API secret required to connect to your instance. 
->You can find this information in your “Instance admin” available in your Unleash management UI. 
+> You can find this information in the “Admin” section Unleash management UI.
 
 ## Step 1: Install client SDK
 
@@ -40,32 +39,32 @@ var settings = new UnleashSettings()
 IUnleash unleash = new DefaultUnleash(settings);
 ```
 
-In your app you typically just want one instance of Unleash, and inject that where you need it. 
+In your app you typically just want one instance of Unleash, and inject that where you need it.
 
 You should change the URL and the Authorization header (API secret) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
 
 ## Step 3: Use the feature toggle
 
-Now that we have initialized the client SDK we can start using feature toggles defined in Unleash in our application. To achieve this we have the “isEnabled” method available, which will allow us to check the value of a feature toggle. This method will return true or false based on whether the feature should be enabled or disabled for the current request. 
+Now that we have initialized the client SDK we can start using feature toggles defined in Unleash in our application. To achieve this we have the “isEnabled” method available, which will allow us to check the value of a feature toggle. This method will return true or false based on whether the feature should be enabled or disabled for the current request.
 
 ```csharp
-if (unleash.IsEnabled("Demo")) 
+if (unleash.IsEnabled("Demo"))
 {
   //do some magic
-} 
-else 
+}
+else
 {
   //do old boring stuff
 }
 ```
 
-Pleas note the client SDK will synchronize with the Unleash-hosted API on initialization, and thus it can take a few milliseconds the first time before the client has the correct state. You can use the *SynchronousInitialization* option to block the client until it has successfully synced with the server. 
+Pleas note the client SDK will synchronize with the Unleash-hosted API on initialization, and thus it can take a few milliseconds the first time before the client has the correct state. You can use the _SynchronousInitialization_ option to block the client until it has successfully synced with the server.
 
 Read more about the [Unleash architecture](https://www.unleash-hosted.com/articles/our-unique-architecture) to learn how it works in more details
 
 ## Step 4: Provide Unleash Context
 
-It is the client SDK that computes whether a feature toggle should be considered enabled or disabled for  specific use request. This is the job of the activation strategies, which are implemented in the client SDK.
+It is the client SDK that computes whether a feature toggle should be considered enabled or disabled for specific use request. This is the job of the activation strategies, which are implemented in the client SDK.
 
 The activation strategies is an implementation of rules based on data, which you provide as part of the Unleash Context.
 

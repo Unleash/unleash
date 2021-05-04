@@ -6,7 +6,7 @@ import { useStyles } from './StrategyCardConstraints.styles.js';
 import ConditionallyRender from '../../../../../../common/ConditionallyRender/ConditionallyRender';
 import { C } from '../../../../../../common/flags.js';
 
-const StrategyCardConstraints = ({ constraints, flags }) => {
+const StrategyCardConstraints = ({ constraints= [], flags }) => {
     const styles = useStyles();
 
     const isEnterprise = () => {

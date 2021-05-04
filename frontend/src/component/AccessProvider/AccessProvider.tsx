@@ -21,9 +21,15 @@ const AccessProvider: FC<IAccessProvider> = ({ store, children }) => {
             if (p.permission === ADMIN) {
                 return true;
             }
+
             if (p.permission === permission && p.project === project) {
                 return true;
             }
+
+            if (p.permission === permission && project === undefined) {
+                return true;
+            }
+
             return false;
         });
 

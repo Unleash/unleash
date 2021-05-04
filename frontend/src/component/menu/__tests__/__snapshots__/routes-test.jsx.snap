@@ -100,7 +100,7 @@ Array [
     "layout": "main",
     "path": "/logout",
     "title": "Sign out",
-    "type": "protected",
+    "type": "unprotected",
   },
 ]
 `;

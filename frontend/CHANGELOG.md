@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases][releases-url].
 
+# 4.0.0-alpha.14
+- fix: all global event log requires admin
+- fix: constraints array can be undefined
+
 # 4.0.0-alpha.13
 - feat: bootstrap endpoint for initial data (#281)
 - fix: allow permissions to be checked without project being defined (#282)

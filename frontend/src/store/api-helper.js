@@ -62,7 +62,7 @@ export function throwIfNotSuccess(response) {
                     let error = new Error(errorMsg);
                     error.statusCode = response.status;
                     reject(error);
-                });
+                }).catch(() => reject(new Error(defaultErrorMessage)))
             });
         } else {
             return Promise.reject(new ServiceError(response.status));

@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+# 4.0.0-beta.0
+- feat: upgrade to node.js v14
+- fix: tiny margin for feature toggle list item
+- fix: should be allowed to create toggles without errors
+- Fix: jumping screen (#288)
+- Fix/minor changes (#285)
+- Fix/v4 corrections (#287)
+- fix: use correct baseUriPath with localStorage
+- fix: link to docs for empty apps
+
 # 4.0.0-alpha.14
 - fix: all global event log requires admin
 - fix: constraints array can be undefined

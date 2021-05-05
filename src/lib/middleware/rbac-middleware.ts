@@ -46,10 +46,34 @@ const rbacMiddleware = (
             // For /api/admin/projects/:projectId we will find it as part of params
             let { projectId } = params;
 
-            // Temporary workaround to figure our projectId for feature toggle updates.
-            if ([UPDATE_FEATURE, DELETE_FEATURE].includes(permission)) {
+            // Temporary workaround to figure out projectId for feature toggle updates.
+            if (permission === DELETE_FEATURE) {
                 const { featureName } = params;
                 projectId = await featureToggleStore.getProjectId(featureName);
+            } else if (permission === UPDATE_FEATURE) {
+                // if projectId of feature is different from project in body
+                // need to check that we have UPDATE_FEATURE access on both old and new project
+                // TODO: Look at this to make it smoother once we get around to looking at project
+                // Changing project of a toggle should most likely be a separate endpoint
+                const { featureName } = params;
+                projectId = await featureToggleStore.getProjectId(featureName);
+                const newProjectId = req.body
+                    ? req.body.project || projectId
+                    : projectId;
+                if (newProjectId !== projectId) {
+                    return (
+                        accessService.hasPermission(
+                            user,
+                            permission,
+                            projectId,
+                        ) &&
+                        accessService.hasPermission(
+                            user,
+                            permission,
+                            newProjectId,
+                        )
+                    );
+                }
             } else if (permission === CREATE_FEATURE) {
                 projectId = req.body.project || 'default';
             }

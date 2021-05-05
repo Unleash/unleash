@@ -230,3 +230,49 @@ test('should lookup projectId from data', async t => {
 
     t.is(accessService.hasPermission.args[0][2], projectId);
 });
+
+test('Need access to UPDATE_FEATURE on the project you change to', async t => {
+    const oldProjectId = 'some-project-34';
+    const newProjectId = 'some-project-35';
+    const featureName = 'some-feature-toggle';
+    const accessService = {
+        hasPermission: sinon.fake.returns(true),
+    };
+    featureToggleStore.getProjectId = sinon.fake.returns(oldProjectId);
+
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const cb = sinon.fake();
+    const req: any = {
+        user: new User({ username: 'user', id: 1 }),
+        params: { featureName },
+        body: { featureName, project: newProjectId },
+    };
+    func(req, undefined, cb);
+
+    await req.checkRbac(perms.UPDATE_FEATURE);
+    t.is(accessService.hasPermission.callCount, 2);
+    t.is(accessService.hasPermission.args[0][2], oldProjectId);
+    t.is(accessService.hasPermission.args[1][2], newProjectId);
+});
+
+test('Does not double check permission if not changing project when updating toggle', async t => {
+    const oldProjectId = 'some-project-34';
+    const featureName = 'some-feature-toggle';
+    const accessService = {
+        hasPermission: sinon.fake.returns(true),
+    };
+    featureToggleStore.getProjectId = sinon.fake.returns(oldProjectId);
+
+    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
+    const cb = sinon.fake();
+    const req: any = {
+        user: new User({ username: 'user', id: 1 }),
+        params: { featureName },
+        body: { featureName, project: oldProjectId },
+    };
+    func(req, undefined, cb);
+
+    await req.checkRbac(perms.UPDATE_FEATURE);
+    t.is(accessService.hasPermission.callCount, 1);
+    t.is(accessService.hasPermission.args[0][2], oldProjectId);
+});

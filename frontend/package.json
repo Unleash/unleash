@@ -20,7 +20,7 @@
     "url": "https://github.com/Unleash/unleash-frontend"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "license": "Apache-2.0",
   "scripts": {

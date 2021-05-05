@@ -1,5 +1,9 @@
 # Changelog
 
+# 4.0.0-beta.0
+
+- fix: reload of admin/api page yields 404
+
 # 4.0.0-alpha.8
 
 - feat: global events requires admin role

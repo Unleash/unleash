@@ -1,5 +1,12 @@
 # Changelog
 
+# 4.0.0-beta.1
+
+- fix: upgrade unleash-frontend to version 4.0.0-beta.0
+- fix: rbac now checks permission for both projects (#838)
+- fix: an hour is 3600000 seconds not 60000 seconds
+- fix: readd support for DATABASE_URL_FILE
+
 # 4.0.0-beta.0
 
 - fix: reload of admin/api page yields 404

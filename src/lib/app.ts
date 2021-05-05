@@ -127,8 +127,8 @@ export default function getApp(
     });
 
     app.get(`${baseUriPath}/*`, (req, res) => {
-        if (req.path.includes('api')) {
-            res.status(404).send();
+        if (req.path.startsWith(`${baseUriPath}/api`)) {
+            res.status(404).send({ message: '404 - Not found' });
             return;
         }
 

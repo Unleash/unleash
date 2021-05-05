@@ -16,6 +16,7 @@ unleash.start(
         },
         server: {
             enableRequestLogger: true,
+            baseUriPath: '',
         },
         logLevel: LogLevel.debug,
         enableOAS: true,

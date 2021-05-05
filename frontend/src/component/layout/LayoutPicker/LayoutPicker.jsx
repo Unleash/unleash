@@ -14,13 +14,15 @@ const LayoutPicker = ({ children, location }) => {
         const isForgottenPasswordPage = location.pathname.includes(
             'forgotten-password'
         );
+        const is404 = location.pathname.includes('404');
 
         return (
             isLoginPage ||
             isNewUserPage ||
             isChangePasswordPage ||
             isResetPasswordSuccessPage ||
-            isForgottenPasswordPage
+            isForgottenPasswordPage ||
+            is404
         );
     };
 

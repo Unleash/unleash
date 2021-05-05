@@ -7,13 +7,15 @@ import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
 import { useStyles } from './PasswordAuth.styles';
 import { Link } from 'react-router-dom';
+import useQueryParams from '../../../hooks/useQueryParams';
 
 const PasswordAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
     const styles = useStyles();
     const history = useHistory();
     const [showFields, setShowFields] = useState(false);
-    const [username, setUsername] = useState('');
+    const params = useQueryParams();
+    const [username, setUsername] = useState(params.get('email') || '');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({
         usernameError: '',
@@ -91,6 +93,7 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                         error={!!usernameError}
                         helperText={usernameError}
                         variant="outlined"
+                        autoComplete="true"
                         size="small"
                     />
                     <TextField
@@ -102,6 +105,7 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                         error={!!passwordError}
                         helperText={passwordError}
                         variant="outlined"
+                        autoComplete="true"
                         size="small"
                     />
 

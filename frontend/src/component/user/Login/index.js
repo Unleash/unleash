@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { fetchUser } from '../../../store/user/actions';
 import Login from './Login';
 
 const mapStateToProps = state => ({
@@ -6,4 +7,8 @@ const mapStateToProps = state => ({
     flags: state.uiConfig.toJS().flags,
 });
 
-export default connect(mapStateToProps)(Login);
+const mapDispatchToProps = {
+    fetchUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

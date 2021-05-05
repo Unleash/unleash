@@ -2,11 +2,13 @@ import { fromJS } from 'immutable';
 import { UPDATE_SETTING } from './actions';
 import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
+import { getBasePath } from '../../utils/format-path';
+
 const localStorage = window.localStorage || {
     setItem: () => {},
     getItem: () => {},
 };
-const basePath = location ? location.pathname : '/';
+const basePath =  getBasePath();
 const SETTINGS = `${basePath}:settings`;
 
 const DEFAULT = fromJS({ location: {} });

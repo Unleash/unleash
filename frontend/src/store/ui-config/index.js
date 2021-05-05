@@ -1,12 +1,14 @@
 import { Map as $Map } from 'immutable';
 import { RECEIVE_CONFIG } from './actions';
 
+import { getBasePath } from '../../utils/format-path';
+
 const localStorage = window.localStorage || {
     setItem: () => {},
     getItem: () => {},
 };
 
-const basePath = location ? location.pathname : '/';
+const basePath =  getBasePath();
 const UI_CONFIG = `${basePath}:ui_config`;
 
 const DEFAULT = new $Map({

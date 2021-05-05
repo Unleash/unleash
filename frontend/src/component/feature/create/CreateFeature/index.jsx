@@ -50,7 +50,7 @@ class WrapperComponent extends Component {
     };
 
     validateName = async featureToggleName => {
-        const { errors } = this.state;
+        const { errors } = {...this.state};
         try {
             await validateName(featureToggleName);
             errors.name = undefined;
@@ -66,13 +66,16 @@ class WrapperComponent extends Component {
         const { createFeatureToggles, history } = this.props;
         const { featureToggle } = this.state;
 
-        if (Object.keys(this.state.errors)) {
+        const errors = Object.values(this.state.errors).filter(i => i);
+
+        if (errors.length > 0) {
             return;
         }
 
         if (featureToggle.strategies < 1) {
             featureToggle.strategies = [defaultStrategy];
         }
+
 
         createFeatureToggles(featureToggle).then(() =>
             history.push(`/features/strategies/${featureToggle.name}`)

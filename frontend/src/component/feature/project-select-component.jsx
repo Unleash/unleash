@@ -11,23 +11,43 @@ class ProjectSelectComponent extends Component {
     }
 
     render() {
-        const { value, projects, onChange, enabled } = this.props;
+        const { value, projects, onChange, enabled, filter } = this.props;
 
         if (!enabled) {
             return null;
         }
 
-        const options = projects.map(t => ({
-            key: t.id,
-            label: t.name,
-            title: t.description,
-        }));
+        const formatOption = project => {
+            return {
+                key: project.id,
+                label: project.name,
+                title: project.description,
+            };
+        };
+
+        let options;
+        if (filter) {
+            options = projects
+                .filter(project => {
+                    return filter(project);
+                })
+                .map(formatOption);
+        } else {
+            options = projects.map(formatOption);
+        }
 
         if (value && !options.find(o => o.key === value)) {
             options.push({ key: value, label: value });
         }
 
-        return <MySelect label="Project" options={options} value={value} onChange={onChange} />;
+        return (
+            <MySelect
+                label="Project"
+                options={options}
+                value={value}
+                onChange={onChange}
+            />
+        );
     }
 }
 

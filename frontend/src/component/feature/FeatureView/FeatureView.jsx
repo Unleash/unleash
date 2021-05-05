@@ -18,6 +18,7 @@ import FeatureTypeSelect from '../feature-type-select-container';
 import ProjectSelect from '../project-select-container';
 import UpdateDescriptionComponent from '../view/update-description-component';
 import {
+    CREATE_FEATURE,
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from '../../AccessProvider/permissions';
@@ -35,6 +36,7 @@ import ConfirmDialogue from '../../common/Dialogue';
 
 import { useCommonStyles } from '../../../common.styles';
 import AccessContext from '../../../contexts/AccessContext';
+import { projectFilterGenerator } from '../../../utils/project-filter-generator';
 
 const FeatureView = ({
     activeTab,
@@ -53,6 +55,7 @@ const FeatureView = ({
     featureTags,
     fetchTags,
     tagTypes,
+    user,
 }) => {
     const isFeatureView = !!fetchFeatureToggles;
     const [delDialog, setDelDialog] = useState(false);
@@ -215,6 +218,7 @@ const FeatureView = ({
 
     const findActiveTab = activeTab =>
         tabs.findIndex(tab => tab.name === activeTab);
+
     return (
         <Paper
             className={commonStyles.fullwidth}
@@ -253,6 +257,10 @@ const FeatureView = ({
                             label="Project"
                             filled
                             editable={editable}
+                            filter={projectFilterGenerator(
+                                user,
+                                CREATE_FEATURE
+                            )}
                         />
                     </div>
                     <FeatureTagComponent

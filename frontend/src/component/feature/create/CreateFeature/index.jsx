@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createFeatureToggles, validateName } from '../../../store/feature-toggle/actions';
-import AddFeatureComponent from './add-feature-component';
-import { loadNameFromHash } from '../../common/util';
+import {
+    createFeatureToggles,
+    validateName,
+} from '../../../../store/feature-toggle/actions';
+import CreateFeature from './CreateFeature';
+import { loadNameFromHash } from '../../../common/util';
 
 const defaultStrategy = {
     name: 'default',
@@ -63,11 +66,17 @@ class WrapperComponent extends Component {
         const { createFeatureToggles, history } = this.props;
         const { featureToggle } = this.state;
 
+        if (Object.keys(this.state.errors)) {
+            return;
+        }
+
         if (featureToggle.strategies < 1) {
             featureToggle.strategies = [defaultStrategy];
         }
 
-        createFeatureToggles(featureToggle).then(() => history.push(`/features/strategies/${featureToggle.name}`));
+        createFeatureToggles(featureToggle).then(() =>
+            history.push(`/features/strategies/${featureToggle.name}`)
+        );
     };
 
     onCancel = evt => {
@@ -77,7 +86,7 @@ class WrapperComponent extends Component {
 
     render() {
         return (
-            <AddFeatureComponent
+            <CreateFeature
                 onSubmit={this.onSubmit}
                 onCancel={this.onCancel}
                 validateName={this.validateName}
@@ -85,6 +94,7 @@ class WrapperComponent extends Component {
                 setStrategies={this.setStrategies}
                 input={this.state.featureToggle}
                 errors={this.state.errors}
+                user={this.props.user}
             />
         );
     }
@@ -97,16 +107,20 @@ WrapperComponent.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
     validateName: name => validateName(name)(dispatch),
-    createFeatureToggles: featureToggle => createFeatureToggles(featureToggle)(dispatch),
+    createFeatureToggles: featureToggle =>
+        createFeatureToggles(featureToggle)(dispatch),
 });
 
 const mapStateToProps = state => {
     const settings = state.settings.toJS().feature || {};
     const currentProjectId = resolveCurrentProjectId(settings);
 
-    return { currentProjectId };
+    return { currentProjectId, user: state.user.toJS() };
 };
 
-const FormAddContainer = connect(mapStateToProps, mapDispatchToProps)(WrapperComponent);
+const FormAddContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(WrapperComponent);
 
 export default FormAddContainer;

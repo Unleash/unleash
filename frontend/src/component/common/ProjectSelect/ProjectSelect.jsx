@@ -9,15 +9,12 @@ const ProjectSelect = ({
     projects,
     currentProjectId,
     updateCurrentProject,
+    ...rest
 }) => {
     const setProject = v => {
         const id = typeof v === 'string' ? v.trim() : '';
         updateCurrentProject(id);
     };
-
-    if (!projects || projects.length === 1) {
-        return null;
-    }
 
     // TODO fixme
     let curentProject = projects.find(i => i.id === currentProjectId);
@@ -57,6 +54,8 @@ const ProjectSelect = ({
         ];
     };
 
+    const { updateSetting, fetchProjects, ...passDown } = rest;
+
     return (
         <React.Fragment>
             <DropdownMenu
@@ -66,6 +65,7 @@ const ProjectSelect = ({
                 callback={handleChangeProject}
                 renderOptions={renderProjectOptions}
                 className=""
+                {...passDown}
             />
         </React.Fragment>
     );

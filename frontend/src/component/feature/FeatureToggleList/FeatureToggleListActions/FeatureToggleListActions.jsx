@@ -6,7 +6,7 @@ import { MenuItemWithIcon } from '../../../common';
 import DropdownMenu from '../../../common/DropdownMenu/DropdownMenu';
 import ProjectSelect from '../../../common/ProjectSelect';
 import { useStyles } from './styles';
-import classnames from 'classnames';
+import useLoading from '../../../../hooks/useLoading';
 
 const sortingOptions = [
     { type: 'name', displayName: 'Name' },
@@ -27,6 +27,7 @@ const FeatureToggleListActions = ({
     loading,
 }) => {
     const styles = useStyles();
+    const ref = useLoading(loading);
 
     const handleSort = e => {
         const target = e.target.getAttribute('data-target');
@@ -64,14 +65,15 @@ const FeatureToggleListActions = ({
     ];
 
     return (
-        <div className={styles.actions}>
+        <div className={styles.actions} ref={ref}>
             <DropdownMenu
                 id={'metric'}
                 label={`Last ${settings.showLastHour ? 'hour' : 'minute'}`}
                 title="Metric interval"
                 callback={toggleMetrics}
                 renderOptions={renderMetricsOptions}
-                className={classnames({ skeleton: loading })}
+                className=""
+                data-loading
             />
             <DropdownMenu
                 id={'sorting'}
@@ -79,9 +81,14 @@ const FeatureToggleListActions = ({
                 callback={handleSort}
                 renderOptions={renderSortingOptions}
                 title="Sort by"
-                className={classnames({ skeleton: loading })}
+                className=""
+                data-loading
             />
-            <ProjectSelect settings={settings} updateSetting={updateSetting} />
+            <ProjectSelect
+                settings={settings}
+                updateSetting={updateSetting}
+                data-loading
+            />
         </div>
     );
 };

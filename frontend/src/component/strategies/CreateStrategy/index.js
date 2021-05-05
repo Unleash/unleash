@@ -3,10 +3,15 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 
-import { createStrategy, updateStrategy } from '../../store/strategy/actions';
+import {
+    createStrategy,
+    updateStrategy,
+} from '../../../store/strategy/actions';
 
-import AddStrategy from './form-strategy';
-import { loadNameFromHash } from '../common/util';
+import CreateStrategy from './CreateStrategy';
+import { loadNameFromHash } from '../../common/util';
+
+const STRATEGY_EXIST_ERROR = 'Error: Strategy with name';
 
 class WrapperComponent extends Component {
     constructor(props) {
@@ -17,6 +22,10 @@ class WrapperComponent extends Component {
             dirty: false,
         };
     }
+
+    clearErrors = () => {
+        this.setState({ errors: {} });
+    };
 
     appParameter = () => {
         const { strategy } = this.state;
@@ -47,26 +56,49 @@ class WrapperComponent extends Component {
 
     onSubmit = async evt => {
         evt.preventDefault();
-        const { createStrategy, updateStrategy, history, editMode } = this.props;
+        const {
+            createStrategy,
+            updateStrategy,
+            history,
+            editMode,
+        } = this.props;
         const { strategy } = this.state;
 
         const parameters = (strategy.parameters || [])
             .filter(({ name }) => !!name)
-            .map(({ name, type = 'string', description = '', required = false }) => ({
-                name,
-                type,
-                description,
-                required,
-            }));
+            .map(
+                ({
+                    name,
+                    type = 'string',
+                    description = '',
+                    required = false,
+                }) => ({
+                    name,
+                    type,
+                    description,
+                    required,
+                })
+            );
 
         strategy.parameters = parameters;
 
         if (editMode) {
             await updateStrategy(strategy);
+
             history.push(`/strategies/view/${strategy.name}`);
         } else {
-            await createStrategy(strategy);
-            history.push(`/strategies`);
+            try {
+                await createStrategy(strategy);
+                history.push(`/strategies`);
+            } catch (e) {
+                if (e.toString().includes(STRATEGY_EXIST_ERROR)) {
+                    this.setState({
+                        errors: {
+                            name: 'A strategy with this name already exists ',
+                        },
+                    });
+                }
+            }
         }
     };
 
@@ -84,7 +116,7 @@ class WrapperComponent extends Component {
 
     render() {
         return (
-            <AddStrategy
+            <CreateStrategy
                 onSubmit={this.onSubmit}
                 onCancel={this.onCancel}
                 setValue={this.setValue}
@@ -93,6 +125,7 @@ class WrapperComponent extends Component {
                 input={this.state.strategy}
                 errors={this.state.errors}
                 editMode={this.props.editMode}
+                clearErrors={this.clearErrors}
             />
         );
     }
@@ -110,11 +143,16 @@ const mapDispatchToProps = { createStrategy, updateStrategy };
 const mapStateToProps = (state, props) => {
     const { strategy, editMode } = props;
     return {
-        strategy: strategy ? strategy : { name: loadNameFromHash(), description: '', parameters: [] },
+        strategy: strategy
+            ? strategy
+            : { name: loadNameFromHash(), description: '', parameters: [] },
         editMode,
     };
 };
 
-const FormAddContainer = connect(mapStateToProps, mapDispatchToProps)(WrapperComponent);
+const FormAddContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(WrapperComponent);
 
 export default FormAddContainer;

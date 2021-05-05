@@ -9,13 +9,28 @@ import {
     UPDATE_FEATURE_TOGGLE,
 } from '../feature-toggle/actions';
 
-import { ERROR_UPDATING_STRATEGY, ERROR_CREATING_STRATEGY, ERROR_RECEIVE_STRATEGIES } from '../strategy/actions';
+import {
+    ERROR_UPDATING_STRATEGY,
+    ERROR_CREATING_STRATEGY,
+    ERROR_RECEIVE_STRATEGIES,
+} from '../strategy/actions';
 
-import { ERROR_ADD_CONTEXT_FIELD, ERROR_UPDATE_CONTEXT_FIELD } from '../context/actions';
+import {
+    ERROR_ADD_CONTEXT_FIELD,
+    ERROR_UPDATE_CONTEXT_FIELD,
+} from '../context/actions';
 
-import { ERROR_REMOVING_PROJECT, ERROR_ADD_PROJECT, ERROR_UPDATE_PROJECT } from '../project/actions';
+import {
+    ERROR_REMOVING_PROJECT,
+    ERROR_ADD_PROJECT,
+    ERROR_UPDATE_PROJECT,
+} from '../project/actions';
 
-import { ERROR_ADD_ADDON_CONFIG, ERROR_UPDATE_ADDON_CONFIG, ERROR_REMOVING_ADDON_CONFIG } from '../addons/actions'
+import {
+    ERROR_ADD_ADDON_CONFIG,
+    ERROR_UPDATE_ADDON_CONFIG,
+    ERROR_REMOVING_ADDON_CONFIG,
+} from '../addons/actions';
 
 import { UPDATE_APPLICATION_FIELD } from '../application/actions';
 
@@ -54,12 +69,16 @@ const strategies = (state = getInitState(), action) => {
         case ERROR_UPDATE_ADDON_CONFIG:
         case ERROR_REMOVING_ADDON_CONFIG:
         case ERROR_ADD_PROJECT:
-            console.log(action);
             return addErrorIfNotAlreadyInList(state, action.error.message);
         case FORBIDDEN:
-            return addErrorIfNotAlreadyInList(state, action.error.message || '403 Forbidden');
+            return addErrorIfNotAlreadyInList(
+                state,
+                action.error.message || '403 Forbidden'
+            );
         case MUTE_ERROR:
-            return state.update('list', list => list.remove(list.indexOf(action.error)));
+            return state.update('list', list =>
+                list.remove(list.indexOf(action.error))
+            );
         case UPDATE_FEATURE_TOGGLE:
         case UPDATE_FEATURE_TOGGLE_STRATEGIES:
         case UPDATE_APPLICATION_FIELD:

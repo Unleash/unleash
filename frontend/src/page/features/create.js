@@ -1,8 +1,10 @@
 import React from 'react';
-import AddFeatureToggleForm from '../../component/feature/create/add-feature-container';
+import CreateFeature from '../../component/feature/create/CreateFeature';
 import PropTypes from 'prop-types';
 
-const render = ({ history }) => <AddFeatureToggleForm title="Create feature toggle" history={history} />;
+const render = ({ history }) => (
+    <CreateFeature title="Create feature toggle" history={history} />
+);
 
 render.propTypes = {
     history: PropTypes.object.isRequired,

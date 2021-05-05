@@ -1,7 +1,13 @@
-interface IAuthStatus {
+export interface IAuthStatus {
     authDetails: IAuthDetails;
     showDialog: boolean;
     profile?: IUser;
+    permissions: IPermission[];
+}
+
+export interface IPermission {
+    permission: string;
+    project: string;
 }
 
 interface IAuthDetails {

@@ -64,7 +64,10 @@ export function createStrategy(strategy) {
         return api
             .create(strategy)
             .then(() => dispatch(addStrategy(strategy)))
-            .catch(dispatchError(dispatch, ERROR_CREATING_STRATEGY));
+            .catch(e => {
+                dispatchError(dispatch, ERROR_CREATING_STRATEGY);
+                throw e;
+            });
     };
 }
 

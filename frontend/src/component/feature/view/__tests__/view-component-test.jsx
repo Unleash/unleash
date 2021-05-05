@@ -77,6 +77,7 @@ test('renders correctly with one feature', () => {
                             featureToggle={feature}
                             fetchFeatureToggles={jest.fn()}
                             history={{}}
+                            user={{ permissions: [] }}
                             featureTags={[]}
                             fetchTags={jest.fn()}
                             untagFeature={jest.fn()}

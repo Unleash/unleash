@@ -1,5 +1,5 @@
 import React from 'react';
-import AddStrategies from '../../component/strategies/form-container';
+import AddStrategies from '../../component/strategies/CreateStrategy';
 import PropTypes from 'prop-types';
 
 const render = ({ history }) => <AddStrategies history={history} />;

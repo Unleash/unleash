@@ -20,7 +20,9 @@ const features = (state = new List([]), action) => {
             return state.push(new $Map(action.featureToggle));
         case REMOVE_FEATURE_TOGGLE:
             debug(REMOVE_FEATURE_TOGGLE, action);
-            return state.filter(toggle => toggle.get('name') !== action.featureToggleName);
+            return state.filter(
+                toggle => toggle.get('name') !== action.featureToggleName
+            );
         case TOGGLE_FEATURE_TOGGLE:
             debug(TOGGLE_FEATURE_TOGGLE, action);
             return state.map(toggle => {
@@ -62,7 +64,6 @@ const features = (state = new List([]), action) => {
             return new List(action.featureToggles.map($Map));
         case USER_LOGIN:
         case USER_LOGOUT:
-            console.log('clear toggle store');
             debug(USER_LOGOUT, action);
             return new List([]);
         default:

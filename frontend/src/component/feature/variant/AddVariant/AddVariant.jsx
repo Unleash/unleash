@@ -188,7 +188,7 @@ const AddVariant = ({
                     name="name"
                     placeholder=""
                     className={commonStyles.fullWidth}
-                    value={data.name}
+                    value={data.name || ''}
                     error={error.name}
                     variant="outlined"
                     size="small"
@@ -213,7 +213,7 @@ const AddVariant = ({
                                 ),
                             }}
                             style={{ marginRight: '0.8rem' }}
-                            value={data.weight}
+                            value={data.weight || ''}
                             error={error.weight}
                             type="number"
                             disabled={!isFixWeight}

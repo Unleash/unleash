@@ -20,7 +20,7 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
     useEffect(() => {
         fetchUiBootstrap();
         /* eslint-disable-next-line */
-    }, []);
+    }, [user.authDetails?.type]);
 
     const renderMainLayoutRoutes = () => {
         return routes.filter(route => route.layout === 'main').map(renderRoute);

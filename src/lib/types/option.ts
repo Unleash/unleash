@@ -73,6 +73,7 @@ export interface IServerOption {
 
 export interface IUnleashOptions {
     databaseUrl?: string;
+    databaseUrlFile?: string;
     db?: Partial<IDBOption>;
     session?: Partial<ISessionOption>;
     getLogger?: LogProvider;

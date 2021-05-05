@@ -1,5 +1,6 @@
 import { parse } from 'pg-connection-string';
 import merge from 'deepmerge';
+import * as fs from 'fs';
 import {
     IUnleashOptions,
     IUnleashConfig,
@@ -157,9 +158,23 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     } else if (process.env.DATABASE_URL) {
         extraDbOptions = parse(process.env.DATABASE_URL);
     }
+    let fileDbOptions = {};
+    if (options.databaseUrlFile && fs.existsSync(options.databaseUrlFile)) {
+        fileDbOptions = parse(
+            fs.readFileSync(options.databaseUrlFile, 'utf-8'),
+        );
+    } else if (
+        process.env.DATABASE_URL_FILE &&
+        fs.existsSync(process.env.DATABASE_URL_FILE)
+    ) {
+        fileDbOptions = parse(
+            fs.readFileSync(process.env.DATABASE_URL_FILE, 'utf-8'),
+        );
+    }
     const db: IDBOption = mergeAll<IDBOption>([
         defaultDbOptions,
         dbPort(extraDbOptions),
+        dbPort(fileDbOptions),
         options.db,
     ]);
 

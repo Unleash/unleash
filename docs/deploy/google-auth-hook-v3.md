@@ -85,10 +85,8 @@ Add `googleAdminAuth()` function and other options
 function googleAdminAuth(app) {}
 
 let options = {
-  authentication: {
-    type: 'custom',
-    customAuthHandler: googleAdminAuth  
-  },
+  adminAuthentication: 'custom',
+  preRouterHook: googleAdminAuth,
 };
 
 unleash.start(options).then(instance => {
@@ -243,10 +241,8 @@ function googleAdminAuth(app) {
 }
 
 const options = {
-  authentication: {
-      type: 'custom',
-      customAuthHandler: googleAdminAuth
-  }
+  adminAuthentication: 'custom',
+  preRouterHook: googleAdminAuth,
 };
 
 unleash.start(options).then(instance => {

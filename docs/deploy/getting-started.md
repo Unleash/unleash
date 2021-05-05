@@ -20,7 +20,7 @@ Whichever option you choose to start Unleash, you must specify a database URI (i
 ---
 --- v4 ---
 
-Unless your database server is setup to support SSL you'll also need to set the environment variable DATABASE_SSL to false
+If your database server is not set up to support SSL you'll also need to set the environment variable DATABASE_SSL to false
 
 ---
 Once the server has started, you will see the message:
@@ -84,6 +84,7 @@ docker run -p 4242:4242 \
          ssl: false,
          host: 'localhost',
          port: 5432,
+         database: 'unleash',
          user: 'unleash_user',
          password: 'passord'
        },
@@ -113,7 +114,7 @@ docker run -p 4242:4242 \
 
 ## Test your server and create a sample API call
 
-Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see a list of example feature toggles, try creating one with [curl](https://curl.se/) from a terminal/bash shell:
+Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see an empty list of feature toggles, try creating one with [curl](https://curl.se/) from a terminal/bash shell:
 
 ```
 curl --location -H "Authorization: <apitoken from previous step>" --request POST 'http://localhost:4242/api/admin/features' --header 'Content-Type: application/json' --data-raw '{\

@@ -78,7 +78,7 @@ unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
 ```sh
 docker run -e POSTGRES_PASSWORD={INSERT_PASSWORD} -e POSTGRES_USER={INSERT_USER} -e POSTGRES_DB=unleash --network unleash postgres
 
-docker run -p 4242:4242 --network unleash -e DATABASE_URL=postgres://{INSERT_USER}:{INSERT_PASSWORD}@postgres:5432/unleash unleashorg/unleash-server
+docker run -p 4242:4242 --network unleash -e DATABASE_URL=postgres://{INSERT_USER}:{INSERT_PASSWORD}@postgres:5432/unleash -e DATABASE_SSL=false unleashorg/unleash-server
 ```
 
 ## Test your server and create a sample API call

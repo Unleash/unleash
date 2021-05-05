@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 The latest version of this document is always available in
-[releases][releases-url].
+[releases](https://github.com/Unleash/unleash-frontend/releases).
 
 # 4.0.0-alpha.14
 - fix: all global event log requires admin

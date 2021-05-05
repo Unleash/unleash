@@ -16,7 +16,7 @@ const Empty = () => (
             <br />
             <br />
             You can read more about how to use Unleash in your application in the{' '}
-            <a href="https://www.unleash-hosted.com/docs/use-feature-toggle">documentation.</a>
+            <a href="https://docs.getunleash.io/docs/sdks/">documentation.</a>
         </section>
     </React.Fragment>
 );

@@ -39,7 +39,10 @@ class AddTagDialogComponent extends Component {
 
     onCancel = evt => {
         evt.preventDefault();
-        this.setState({ openDialog: false, tag: { type: 'simple', value: '' } });
+        this.setState({
+            openDialog: false,
+            tag: { type: 'simple', value: '' },
+        });
     };
     onSubmit = async evt => {
         evt.preventDefault();
@@ -49,7 +52,10 @@ class AddTagDialogComponent extends Component {
         }
         try {
             await this.props.submit(this.props.featureToggleName, tag);
-            this.setState({ openDialog: false, tag: { type: 'simple', value: '' } });
+            this.setState({
+                openDialog: false,
+                tag: { type: 'simple', value: '' },
+            });
         } catch (e) {
             this.setState({ errors: { general: e.message } });
         }
@@ -58,7 +64,9 @@ class AddTagDialogComponent extends Component {
         const { tag, errors, openDialog } = this.state;
         return (
             <React.Fragment>
-                <Button onClick={this.handleOpenDialog.bind(this)}>Add tag</Button>
+                <Button onClick={this.handleOpenDialog.bind(this)}>
+                    Add tag
+                </Button>
 
                 <Dialogue
                     open={openDialog}
@@ -69,13 +77,17 @@ class AddTagDialogComponent extends Component {
                     onClose={this.onCancel}
                 >
                     <>
-                        <DialogContentText>Tags allows you to group features together</DialogContentText>
+                        <DialogContentText>
+                            Tags allows you to group features together
+                        </DialogContentText>
                         <form onSubmit={this.onSubmit}>
                             <section className={styles.dialogueFormContent}>
                                 <TagTypeSelect
                                     name="type"
                                     value={tag.type}
-                                    onChange={v => this.setValue('type', v.target.value)}
+                                    onChange={v =>
+                                        this.setValue('type', v.target.value)
+                                    }
                                 />
                                 <br />
                                 <TextField
@@ -86,10 +98,14 @@ class AddTagDialogComponent extends Component {
                                     placeholder="Your tag"
                                     value={tag.value}
                                     error={errors.value}
-                                    onChange={v => this.setValue('value', v.target.value)}
+                                    onChange={v =>
+                                        this.setValue('value', v.target.value)
+                                    }
                                 />
                             </section>
-                            {errors.general && <p style={{ color: 'red' }}>{errors.general}</p>}
+                            {errors.general && (
+                                <p style={{ color: 'red' }}>{errors.general}</p>
+                            )}
                         </form>
                     </>
                 </Dialogue>

@@ -44,6 +44,23 @@ test('should get empty getFeatures via admin', t => {
         });
 });
 
+test('should be allowed to reuse deleted toggle name', async t => {
+    t.plan(0);
+    const { request, archiveStore, base } = getSetup();
+    await archiveStore.createFeature({
+        name: 'ts.really.delete',
+        strategies: [{ name: 'default' }],
+    });
+    await request
+        .delete(`${base}/api/admin/archive/ts.really.delete`)
+        .expect(200);
+    return request
+        .post(`${base}/api/admin/features/validate`)
+        .send({ name: 'ts.really.delete' })
+        .set('Content-Type', 'application/json')
+        .expect(409);
+});
+
 test('should get archived toggles via admin', t => {
     t.plan(1);
     const { request, base, archiveStore } = getSetup();

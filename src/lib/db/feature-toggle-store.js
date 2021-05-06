@@ -222,6 +222,12 @@ class FeatureToggleStore {
         }
     }
 
+    async deleteFeature(name) {
+        await this.db(TABLE)
+            .where({ name, archived: 1 }) // Feature toggle must be archived to allow deletion
+            .del();
+    }
+
     async reviveFeature({ name }) {
         try {
             await this.db(TABLE)

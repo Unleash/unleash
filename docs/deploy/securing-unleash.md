@@ -53,7 +53,7 @@ We also have a version of Unleash deployed on Heroku which uses Google OAuth 2.0
 
 ## Securing the Client API
 
-A common way to support client access is to use pre-shared secrets. This can be solved by having clients send a shared key in an HTTP header with every client request to the Unleash API. All official Unleash clients should support this.
+A common way to support client access is to use API tokens. [Create a token](../api/token.md). Then use the token when configuring the client
 
 In the [Java client](https://github.com/Unleash/unleash-client-java#custom-http-headers) this would look like this:
 
@@ -62,7 +62,7 @@ UnleashConfig unleashConfig = UnleashConfig.builder()
   .appName("my-app")
   .instanceId("my-instance-1")
   .unleashAPI(unleashAPI)
-  .customHttpHeader("Authorization", "12312Random")
+  .customHttpHeader("Authorization", "yourtokenhere")
   .build();
 ```
 

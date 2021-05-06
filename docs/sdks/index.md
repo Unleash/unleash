@@ -32,4 +32,5 @@ We have examples for all official client SDKs:
 - [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
 - _...your implementation for your favorite language._
 
-When you get access to your instance – we will provide you with your Client secret and your API url for your instance.
+
+When you get access to your instance – [create a client secret](../api/token.md), and we will provide you with your API url for your instance.

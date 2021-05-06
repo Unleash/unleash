@@ -3,7 +3,7 @@ id: projects
 title: /api/admin/projects
 ---
 
-> The projects feature is only available as part of Unleash Enterprise. In order to access the API programmatically you need to make sure you obtain a API token with admin permissions.
+> The context feature is only available as part of Unleash Enterprise. In order to access the API programmatically you need to make sure you [obtain an API token](../token.md) with admin permissions.
 
 ### List projects in Unleash
 

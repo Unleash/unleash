@@ -106,11 +106,7 @@ docker run -p 4242:4242 \
 
 ## Create an api token for your client
 
-- Click the hamburger menu in the upper left hand corner and select the "Admin" option
-- Then click the `Api Access` tab and click `Create new API key`
-- If you're going to be using this for creating toggles you'll need an API key with `Admin` rights
-- If connecting a client/SDK you should create an API key with `Client` access rights.
-- Create one with `Admin` rights now
+- [API Token creation](../api/token.md)
 
 ## Test your server and create a sample API call
 

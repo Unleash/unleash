@@ -11,14 +11,15 @@
       "user_guide/native_apps",
       "user_guide/single_page_apps"
     ],
-    "Working with the SDK": [
+    "Unleash SDKs": [
       "sdks/index",
       "sdks/java_sdk",
       "sdks/node_sdk",
       "sdks/dot_net_sdk",
       "sdks/go_sdk",
       "sdks/python_sdk",
-      "sdks/ruby_sdk"
+      "sdks/ruby_sdk",
+      "sdks/community"
     ],
     "Addons framework": [
       "addons/index",
@@ -73,9 +74,6 @@
     "Integrations": ["integrations/integrations"]
   },
   "Contribute": {
-    "Contribute to Unleash": [
-      "developer_guide",
-      "client_specification"
-    ]
+    "Contribute to Unleash": ["developer_guide", "client-specification"]
   }
 }

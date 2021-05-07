@@ -80,6 +80,9 @@
       "api/admin/tags": {
         "title": "/api/admin/tags"
       },
+      "api/basic-auth": {
+        "title": "Basic Auth"
+      },
       "api/client/features": {
         "title": "/api/client/features"
       },
@@ -101,20 +104,23 @@
       "api/open_api": {
         "title": "Open API Specification"
       },
+      "api/api_token": {
+        "title": "Create api Token"
+      },
       "client_sdk": {
         "title": "client_sdk"
       },
-      "client_specification": {
+      "client-specification": {
         "title": "Client Specification"
-      },
-      "database_schema": {
-        "title": "Database Schema"
       },
       "deploy/configuring_unleash": {
         "title": "Configuring Unleash"
       },
       "deploy/database_backup": {
         "title": "Database Backup"
+      },
+      "deploy/email": {
+        "title": "Email"
       },
       "deploy/getting_started": {
         "title": "Getting Started"
@@ -134,9 +140,6 @@
       "developer_guide": {
         "title": "Developer guide"
       },
-      "getting_started": {
-        "title": "Getting Started"
-      },
       "guides/feature_updates_to_slack": {
         "title": "Feature Updates To slack"
       },
@@ -145,6 +148,9 @@
       },
       "integrations/integrations": {
         "title": "Integrations and plugins"
+      },
+      "sdks/community": {
+        "title": "Community SDKs..."
       },
       "sdks/dot_net_sdk": {
         "title": ".net SDK"
@@ -221,7 +227,7 @@
     },
     "categories": {
       "Getting started": "Getting started",
-      "Working with the SDK": "Working with the SDK",
+      "Unleash SDKs": "Unleash SDKs",
       "Addons framework": "Addons framework",
       "Advanced": "Advanced",
       "Client": "Client",

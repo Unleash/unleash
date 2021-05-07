@@ -1,5 +1,10 @@
 # Changelog
 
+# 4.0.0-beta.2
+- chore: update changelog
+- chore: update frontend
+- fix: reset-token-service should use unleashUrl
+- chore: expose an endpoint to really delete a toggle (#808)
 # 4.0.0-beta.1
 
 - fix: upgrade unleash-frontend to version 4.0.0-beta.0

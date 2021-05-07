@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import projectApi from '../../store/project/api';
 import PropTypes from 'prop-types';
 import {
     Select,
@@ -32,8 +33,7 @@ function AddUserComponent({ roles, addUserToRole }) {
         if (q.length > 1) {
             setLoading(true);
             // TODO: Do not hard-code fetch here.
-            const response = await fetch(`api/admin/user-admin/search?q=${q}`);
-            const users = await response.json();
+            const users = await projectApi.searchProjectUser(q);
             setOptions([...users]);
         } else {
             setOptions([]);

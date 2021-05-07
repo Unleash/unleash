@@ -66,6 +66,10 @@ function validate(id) {
     }).then(throwIfNotSuccess);
 }
 
+function searchProjectUser(query) {
+    return fetch(`${formatApiPath('api/admin/user-admin/search')}?q=${query}`).then(res => res.json())
+}
+
 export default {
     fetchAll,
     create,
@@ -75,4 +79,5 @@ export default {
     fetchAccess,
     addUserToRole,
     removeUserFromRole,
+    searchProjectUser,
 };

@@ -84,7 +84,7 @@ class TeamsAddon extends Addon {
 
     featureLink(event) {
         const path = event.type === FEATURE_ARCHIVED ? 'archive' : 'features';
-        return `${this.unleashUrl}/#/${path}/strategies/${event.data.name}`;
+        return `${this.unleashUrl}/${path}/strategies/${event.data.name}`;
     }
 
     generateStaleText(event) {

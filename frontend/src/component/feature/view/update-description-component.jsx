@@ -1,7 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Typography, IconButton, FormControl, TextField, Button } from '@material-ui/core';
+import {
+    Typography,
+    IconButton,
+    FormControl,
+    TextField,
+    Button,
+} from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 
@@ -53,7 +59,10 @@ export default class UpdateDescriptionComponent extends React.Component {
                                 aria-label="toggle description edit"
                                 to="#edit"
                                 component={Link}
-                                onClick={this.onEditMode.bind(this, description)}
+                                onClick={this.onEditMode.bind(
+                                    this,
+                                    description
+                                )}
                             >
                                 <CreateIcon />
                             </IconButton>
@@ -79,11 +88,16 @@ export default class UpdateDescriptionComponent extends React.Component {
                     onChange={this.updateValue}
                 />
                 <div style={{ marginTop: '0.5rem' }}>
-                    <Button type="submit" color="primary" variant="contained" onClick={this.onSave}>
+                    <Button
+                        type="submit"
+                        color="primary"
+                        variant="contained"
+                        onClick={this.onSave}
+                    >
                         Save
                     </Button>
                     &nbsp;
-                    <Button type="cancel" raised onClick={this.onCancel}>
+                    <Button type="cancel" onClick={this.onCancel}>
                         Cancel
                     </Button>
                 </div>
@@ -93,6 +107,8 @@ export default class UpdateDescriptionComponent extends React.Component {
 
     render() {
         const { editMode } = this.state;
-        return editMode ? this.renderEdit(this.props) : this.renderRead(this.props);
+        return editMode
+            ? this.renderEdit(this.props)
+            : this.renderRead(this.props);
     }
 }

@@ -30,7 +30,7 @@ const CreateStrategy = ({
             <ConditionallyRender
                 condition={editMode}
                 show={
-                    <Typography variant="p">
+                    <Typography variant="body1">
                         Be careful! Changing a strategy definition might also
                         require changes to the implementation in the clients.
                     </Typography>

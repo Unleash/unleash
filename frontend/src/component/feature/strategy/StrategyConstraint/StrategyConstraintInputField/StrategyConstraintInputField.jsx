@@ -13,7 +13,12 @@ const constraintOperators = [
     { key: 'NOT_IN', label: 'NOT_IN' },
 ];
 
-const StrategyConstraintInputField = ({ constraint, updateConstraint, removeConstraint, contextFields }) => {
+const StrategyConstraintInputField = ({
+    constraint,
+    updateConstraint,
+    removeConstraint,
+    contextFields,
+}) => {
     const [error, setError] = useState();
     const commonStyles = useCommonStyles();
     const styles = useStyles();
@@ -40,10 +45,14 @@ const StrategyConstraintInputField = ({ constraint, updateConstraint, removeCons
         key: f.name,
         label: f.name,
     }));
-    const constraintDef = contextFields.find(c => c.name === constraint.contextName);
+    const constraintDef = contextFields.find(
+        c => c.name === constraint.contextName
+    );
 
     const options =
-        constraintDef && constraintDef.legalValues && constraintDef.legalValues.length > 0
+        constraintDef &&
+        constraintDef.legalValues &&
+        constraintDef.legalValues.length > 0
             ? constraintDef.legalValues.map(l => ({ value: l, label: l }))
             : undefined;
     const values = constraint.values.map(v => ({ value: v, label: v }));
@@ -55,8 +64,10 @@ const StrategyConstraintInputField = ({ constraint, updateConstraint, removeCons
                     name="contextName"
                     label="Context Field"
                     options={constraintContextNames}
-                    value={constraint.contextName}
-                    onChange={evt => updateConstraint(evt.target.value, 'contextName')}
+                    value={constraint.contextName || ''}
+                    onChange={evt =>
+                        updateConstraint(evt.target.value, 'contextName')
+                    }
                     className={styles.contextField}
                 />
             </td>
@@ -66,7 +77,9 @@ const StrategyConstraintInputField = ({ constraint, updateConstraint, removeCons
                     label="Operator"
                     options={constraintOperators}
                     value={constraint.operator}
-                    onChange={evt => updateConstraint(evt.target.value, 'operator')}
+                    onChange={evt =>
+                        updateConstraint(evt.target.value, 'operator')
+                    }
                     className={styles.operator}
                 />
             </td>
@@ -78,13 +91,27 @@ const StrategyConstraintInputField = ({ constraint, updateConstraint, removeCons
                             multiple
                             size="small"
                             options={options}
+                            value={values || []}
                             getOptionLabel={option => option.label}
-                            getOptionSelected={(option, value) => option.value === value.value}
-                            defaultValue={values}
+                            getOptionSelected={(option, value) =>
+                                option.value === value.value
+                            }
                             filterSelectedOptions
-                            filterOptions={options => options.filter(o => !values.some(v => v.value === o.value))}
-                            onChange={(evt, values) => handleChangeValue(values)}
-                            renderInput={params => <TextField {...params} variant="outlined" label="Values" />}
+                            filterOptions={options =>
+                                options.filter(
+                                    o => !values.some(v => v.value === o.value)
+                                )
+                            }
+                            onChange={(evt, values) =>
+                                handleChangeValue(values)
+                            }
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    label="Values"
+                                />
+                            )}
                         />
                     }
                     elseShow={
@@ -94,7 +121,9 @@ const StrategyConstraintInputField = ({ constraint, updateConstraint, removeCons
                             onBlur={onBlur}
                             values={constraint.values}
                             label="Values (v1, v2, v3)"
-                            updateValues={values => updateConstraint(values, 'values')}
+                            updateValues={values =>
+                                updateConstraint(values, 'values')
+                            }
                         />
                     }
                 />

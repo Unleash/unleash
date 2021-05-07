@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -11,7 +11,6 @@ import {
     IconButton,
     Button,
     Tooltip,
-    Typography,
 } from '@material-ui/core';
 import HeaderTitle from '../../common/HeaderTitle';
 import PageContent from '../../common/PageContent/PageContent';
@@ -131,9 +130,7 @@ const TagTypeList = ({ tagTypes, fetchTagTypes, removeTagType }) => {
                 onClose={() => {
                     setDeletion({ open: false });
                 }}
-            >
-                <Typography>Are you sure?</Typography>
-            </Dialogue>
+            />
         </PageContent>
     );
 };

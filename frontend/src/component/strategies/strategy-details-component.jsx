@@ -17,7 +17,7 @@ export default class StrategyDetails extends Component {
         toggles: PropTypes.array,
         applications: PropTypes.array,
         activeTab: PropTypes.string.isRequired,
-        strategy: PropTypes.object.isRequired,
+        strategy: PropTypes.object,
         fetchStrategies: PropTypes.func.isRequired,
         fetchApplications: PropTypes.func.isRequired,
         fetchFeatureToggles: PropTypes.func.isRequired,
@@ -38,6 +38,8 @@ export default class StrategyDetails extends Component {
 
     render() {
         const strategy = this.props.strategy;
+        if (!strategy) return null;
+
         const tabData = [
             {
                 label: 'Details',

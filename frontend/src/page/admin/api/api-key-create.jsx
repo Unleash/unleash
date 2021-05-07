@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Select, TextField, Button, MenuItem, FormControl, InputLabel } from '@material-ui/core';
+import {
+    Select,
+    TextField,
+    Button,
+    MenuItem,
+    FormControl,
+    InputLabel,
+} from '@material-ui/core';
 import Dialogue from '../../../component/common/Dialogue/Dialogue';
 import classnames from 'classnames';
 import { styles as commonStyles } from '../../../component/common';
@@ -43,9 +50,15 @@ function CreateApiKey({ addKey }) {
                 secondaryButtonText="Cancel"
                 title="Add new API key"
             >
-                <form onSubmit={submit} className={classnames(styles.addApiKeyForm, commonStyles.contentSpacing)}>
+                <form
+                    onSubmit={submit}
+                    className={classnames(
+                        styles.addApiKeyForm,
+                        commonStyles.contentSpacing
+                    )}
+                >
                     <TextField
-                        value={username}
+                        value={username || ''}
                         name="username"
                         onChange={e => setUsername(e.target.value)}
                         label="Username"
@@ -55,7 +68,11 @@ function CreateApiKey({ addKey }) {
                         variant="outlined"
                         size="small"
                     />
-                    <FormControl variant="outlined" size="small" style={{ minWidth: '120px' }}>
+                    <FormControl
+                        variant="outlined"
+                        size="small"
+                        style={{ minWidth: '120px' }}
+                    >
                         <InputLabel id="apikey_type" />
                         <Select
                             labelId="apikey_type"
@@ -63,10 +80,18 @@ function CreateApiKey({ addKey }) {
                             value={type}
                             onChange={e => setType(e.target.value)}
                         >
-                            <MenuItem value="CLIENT" key="apikey_client" title="Client">
+                            <MenuItem
+                                value="CLIENT"
+                                key="apikey_client"
+                                title="Client"
+                            >
                                 Client
                             </MenuItem>
-                            <MenuItem value="ADMIN" key="apikey_admin" title="Admin">
+                            <MenuItem
+                                value="ADMIN"
+                                key="apikey_admin"
+                                title="Admin"
+                            >
                                 Admin
                             </MenuItem>
                         </Select>

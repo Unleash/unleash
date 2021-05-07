@@ -240,14 +240,6 @@ function UsersList({ location }) {
 }
 
 UsersList.propTypes = {
-    roles: PropTypes.array.isRequired,
-    users: PropTypes.array.isRequired,
-    fetchUsers: PropTypes.func.isRequired,
-    removeUser: PropTypes.func.isRequired,
-    addUser: PropTypes.func.isRequired,
-    validatePassword: PropTypes.func.isRequired,
-    updateUser: PropTypes.func.isRequired,
-    changePassword: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
 };
 

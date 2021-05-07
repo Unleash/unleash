@@ -6,7 +6,7 @@ import { useStyles } from './StrategyCardConstraints.styles.js';
 import ConditionallyRender from '../../../../../../common/ConditionallyRender/ConditionallyRender';
 import { C } from '../../../../../../common/flags.js';
 
-const StrategyCardConstraints = ({ constraints= [], flags }) => {
+const StrategyCardConstraints = ({ constraints = [], flags }) => {
     const styles = useStyles();
 
     const isEnterprise = () => {
@@ -33,8 +33,9 @@ const StrategyCardConstraints = ({ constraints= [], flags }) => {
     };
 
     const renderConstraints = () => {
+        /* TODO: We need something unique here or we might have weird rendering issues. */
         return constraints.map((constraint, i) => (
-            <div key={`${constraint.contextName}-${constraint.operator}`}>
+            <div key={`${constraint.contextName}-${constraint.operator}-${i}`}>
                 <ConditionallyRender
                     condition={i > 0}
                     show={<span>and</span>}

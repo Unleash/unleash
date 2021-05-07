@@ -17,12 +17,16 @@ function getInitState() {
     return new List(DEFAULT_CONTEXT_FIELDS);
 }
 
-const strategies = (state = getInitState(), action) => {
+const context = (state = getInitState(), action) => {
     switch (action.type) {
         case RECEIVE_CONTEXT:
             return new List(action.value);
         case REMOVE_CONTEXT:
-            return state.remove(state.indexOf(action.context));
+            const index = state.findIndex(
+                item => item.name === action.context.name
+            );
+
+            return state.remove(index);
         case ADD_CONTEXT_FIELD:
             return state.push(action.context);
         case UPDATE_CONTEXT_FIELD: {
@@ -39,4 +43,4 @@ const strategies = (state = getInitState(), action) => {
     }
 };
 
-export default strategies;
+export default context;

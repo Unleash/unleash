@@ -26,6 +26,8 @@ const ContextList = ({ removeContextField, history, contextFields }) => {
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [name, setName] = useState();
 
+    console.log(contextFields);
+
     const styles = useStyles();
     const contextList = () =>
         contextFields.map(field => (

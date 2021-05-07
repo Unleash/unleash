@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import ConditionallyRender from '../ConditionallyRender/ConditionallyRender';
 import { useStyles } from './Dialogue.styles';
 
-const ConfirmDialogue = ({
+const Dialogue = ({
     children,
     open,
     onClick,
@@ -67,10 +67,9 @@ const ConfirmDialogue = ({
     );
 };
 
-ConfirmDialogue.propTypes = {
+Dialogue.propTypes = {
     primaryButtonText: PropTypes.string,
     secondaryButtonText: PropTypes.string,
-    children: PropTypes.object,
     open: PropTypes.bool,
     onClick: PropTypes.func,
     onClose: PropTypes.func,
@@ -80,4 +79,4 @@ ConfirmDialogue.propTypes = {
     fullWidth: PropTypes.bool,
 };
 
-export default ConfirmDialogue;
+export default Dialogue;

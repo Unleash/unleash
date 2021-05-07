@@ -18,7 +18,7 @@ You will need:
 Whichever option you choose to start Unleash, you must specify a database URI (it can be set in the environment variable DATABASE_URL).
 
 ---
---- v4 ---
+### v4.0
 
 If your database server is not set up to support SSL you'll also need to set the environment variable DATABASE_SSL to false
 

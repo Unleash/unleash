@@ -3,7 +3,52 @@ id: configuring_unleash
 title: Configuring Unleash
 ---
 
-In order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting_started#option-two---from-nodejs):
+# Must configure
+
+## Database details
+In order for Unleash server to work, you must setup database connection details.
+
+* If using docker, use environment variables
+  ** DATABASE_HOST - the database hostname - defaults to `localhost`
+  ** DATABASE_PORT - the port the database is listening on - defaults to `5432`
+  ** DATABASE_USERNAME - the user configured for access - defaults to `unleash_user`
+  ** DATABASE_PASSWORD - the password for the user - defaults to `passord`
+  ** DATABASE_NAME - the name of the database - defaults to `unleash`
+  ** DATABASE_SSL - a json object representing SSL configuration or `false` for not using SSL
+  ** DATABASE_SCHEMA - Which schema to use - defaults to `public`
+* We also support `DATABASE_URL` see [libpq's doc](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) for full format explanation. In short: `postgres://USER:PASSWORD@HOST:PORT/DATABASE`
+* If you're using secret files from kubernetes and would like to load a `DATABASE_URL` format from a file, use `DATABASE_URL_FILE` and point it to a path containing a connection URL.
+
+
+# Nice to configure
+
+### Unleash URL
+* Configured with `UNLEASH_URL`
+  ** Should be set to the public discoverable URL of your instance, so if your instance is accessed by your users at `https://unleash.mysite.com` use that.
+  ** If you're deploying this to a subpath, include the subpath in this. So `https://mysite.com/unleash` will also be correct.
+* Used to create
+  ** Reset password URLs
+  ** Welcome link for new users
+  ** Links in events for our Slack, Teams and Datadog addons
+
+### Email server details
+
+Used to send reset-password mails and welcome mails when onboarding new users. <br />
+**NB** If this is not configured, you will not be able to allow your users to reset their own passwords.
+  
+When using docker, use the following environment variables.
+
+* EMAIL_HOST - Your SMTP server address
+* EMAIL_PORT - Your SMTP server port - defaults to 567
+* EMAIL_SECURE - whether to use SMTPS - set to `false` or `true` - defaults to false, 
+* EMAIL_USER - the username to authenticate against your SMTP server
+* EMAIL_PASSWORD - the password for your SMTP user
+* EMAIL_SENDER - which address should reset-password mails and welcome mails be sent from - defaults to `noreply@unleash-hosted.com` which is probably not what you want.
+
+
+# Further customization
+In order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting_started#option-two---from-nodejs) 
+or start the [docker image](./getting_started#option-one---use-docker) with environment variables.
 
 ```js
 const unleash = require('unleash-server');
@@ -122,3 +167,6 @@ The logger interface with its `debug`, `info`, `warn` and `error` methods expect
 
 - Please be aware of the default values of connection pool about idle session handling.
 - If you have a network component which closes idle sessions on tcp layer, please ensure, that the connection pool idleTimeoutMillis setting is lower than the timespan as the network component will close the idle connection.
+
+## Unleash URL
+

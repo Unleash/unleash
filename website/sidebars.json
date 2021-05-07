@@ -62,6 +62,7 @@
       "deploy/getting_started",
       "deploy/configuring_unleash",
       "deploy/securing_unleash",
+      "deploy/email",
       "deploy/google_auth",
       "deploy/database_backup",
       "deploy/migration_guide",
@@ -74,8 +75,7 @@
   "Contribute": {
     "Contribute to Unleash": [
       "developer_guide",
-      "client_specification",
-      "database_schema"
+      "client_specification"
     ]
   }
 }

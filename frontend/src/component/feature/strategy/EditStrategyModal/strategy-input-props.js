@@ -8,4 +8,5 @@ export default {
     parameters: PropTypes.object.isRequired,
     updateParameter: PropTypes.func.isRequired,
     editable: PropTypes.bool.isRequired,
+    context: PropTypes.array.isRequired,
 };

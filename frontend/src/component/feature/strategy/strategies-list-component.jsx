@@ -157,6 +157,7 @@ const StrategiesList = props => {
                         editingStrategy.name
                     )}
                     onCancel={clearAll}
+                    context={props.context}
                 />
             ) : null}
             <ConditionallyRender
@@ -238,6 +239,7 @@ StrategiesList.propTypes = {
     featureToggleName: PropTypes.string.isRequired,
     saveStrategies: PropTypes.func,
     editable: PropTypes.bool,
+    context: PropTypes.array.isRequired,
 };
 
 export default StrategiesList;

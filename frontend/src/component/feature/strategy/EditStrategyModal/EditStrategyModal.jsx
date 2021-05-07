@@ -22,6 +22,7 @@ const EditStrategyModal = ({
     saveStrategy,
     updateStrategy,
     strategyDefinition,
+    context,
 }) => {
     const updateParameters = parameters => {
         const updatedStrategy = { ...strategy, parameters };
@@ -81,6 +82,7 @@ const EditStrategyModal = ({
                     updateParameter={updateParameter}
                     strategyDefinition={strategyDefinition}
                     editable
+                    context={context}
                 />
             </DialogContent>
             <DialogActions>
@@ -105,7 +107,7 @@ EditStrategyModal.propTypes = {
     onCancel: PropTypes.func.isRequired,
     saveStrategy: PropTypes.func.isRequired,
     strategyDefinition: PropTypes.object.isRequired,
-    context: PropTypes.array, // TODO: fix me
+    context: PropTypes.array.isRequired,
 };
 
 export default EditStrategyModal;

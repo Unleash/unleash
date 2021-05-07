@@ -12,7 +12,7 @@ const builtInStickinessOptions = [
     { key: 'random', label: 'random' },
 ];
 
-const FlexibleStrategy = ({ updateParameter, parameters, context = [] }) => {
+const FlexibleStrategy = ({ updateParameter, parameters, context }) => {
     const onUpdate = field => (_, newValue) => {
         updateParameter(field, newValue);
     };
@@ -63,7 +63,7 @@ const FlexibleStrategy = ({ updateParameter, parameters, context = [] }) => {
 FlexibleStrategy.propTypes = {
     parameters: PropTypes.object.isRequired,
     updateParameter: PropTypes.func.isRequired,
-    context: PropTypes.array, // TODO: fix me
+    context: PropTypes.array.isRequired,
 };
 
 export default FlexibleStrategy;

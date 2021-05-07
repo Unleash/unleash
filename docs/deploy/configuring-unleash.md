@@ -27,24 +27,16 @@ In order for Unleash server to work, you must setup database connection details.
   ** Should be set to the public discoverable URL of your instance, so if your instance is accessed by your users at `https://unleash.mysite.com` use that.
   ** If you're deploying this to a subpath, include the subpath in this. So `https://mysite.com/unleash` will also be correct.
 * Used to create
-  ** Reset password URLs
-  ** Welcome link for new users
-  ** Links in events for our Slack, Teams and Datadog addons
+  * Reset password URLs
+  * Welcome link for new users
+  * Links in events for our Slack, Microsoft Teams and Datadog addons
 
 ### Email server details
 
 Used to send reset-password mails and welcome mails when onboarding new users. <br />
-**NB** If this is not configured, you will not be able to allow your users to reset their own passwords.
+**NOTE**  - If this is not configured, you will not be able to allow your users to reset their own passwords.
   
-When using docker, use the following environment variables.
-
-* EMAIL_HOST - Your SMTP server address
-* EMAIL_PORT - Your SMTP server port - defaults to 567
-* EMAIL_SECURE - whether to use SMTPS - set to `false` or `true` - defaults to false, 
-* EMAIL_USER - the username to authenticate against your SMTP server
-* EMAIL_PASSWORD - the password for your SMTP user
-* EMAIL_SENDER - which address should reset-password mails and welcome mails be sent from - defaults to `noreply@unleash-hosted.com` which is probably not what you want.
-
+For [more details, see here](./email.md)
 
 # Further customization
 In order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting_started#option-two---from-nodejs) 
@@ -167,6 +159,3 @@ The logger interface with its `debug`, `info`, `warn` and `error` methods expect
 
 - Please be aware of the default values of connection pool about idle session handling.
 - If you have a network component which closes idle sessions on tcp layer, please ensure, that the connection pool idleTimeoutMillis setting is lower than the timespan as the network component will close the idle connection.
-
-## Unleash URL
-

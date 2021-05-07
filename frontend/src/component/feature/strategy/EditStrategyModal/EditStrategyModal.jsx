@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dialog, DialogContent, DialogTitle, DialogActions } from '@material-ui/core';
+import {
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogActions,
+} from '@material-ui/core';
 
 import FlexibleStrategy from './FlexibleStrategy';
 import DefaultStrategy from './default-strategy';
@@ -10,7 +16,13 @@ import StrategyConstraints from '../StrategyConstraint/StrategyConstraintInput';
 
 import { getHumanReadbleStrategyName } from '../../../../utils/strategy-names';
 
-const EditStrategyModal = ({ onCancel, strategy, saveStrategy, updateStrategy, strategyDefinition }) => {
+const EditStrategyModal = ({
+    onCancel,
+    strategy,
+    saveStrategy,
+    updateStrategy,
+    strategyDefinition,
+}) => {
     const updateParameters = parameters => {
         const updatedStrategy = { ...strategy, parameters };
         updateStrategy(updatedStrategy);
@@ -45,7 +57,12 @@ const EditStrategyModal = ({ onCancel, strategy, saveStrategy, updateStrategy, s
     const { parameters } = strategy;
 
     return (
-        <Dialog open={!!strategy} aria-labelledby="form-dialog-title" fullWidth maxWidth="md">
+        <Dialog
+            open={!!strategy}
+            aria-labelledby="form-dialog-title"
+            fullWidth
+            maxWidth="md"
+        >
             <DialogTitle id="form-dialog-title">
                 Configure {getHumanReadbleStrategyName(strategy.name)} strategy
             </DialogTitle>
@@ -70,7 +87,11 @@ const EditStrategyModal = ({ onCancel, strategy, saveStrategy, updateStrategy, s
                 <Button onClick={onCancel} color="secondary">
                     Cancel
                 </Button>
-                <Button onClick={saveStrategy} color="primary" variant="contained">
+                <Button
+                    onClick={saveStrategy}
+                    color="primary"
+                    variant="contained"
+                >
                     Save
                 </Button>
             </DialogActions>

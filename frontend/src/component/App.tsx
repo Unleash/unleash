@@ -88,7 +88,6 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
         </div>
     );
 };
-
 // Set state to any for now, to avoid typing up entire state object while converting to tsx.
 const mapStateToProps = (state: any) => ({
     user: state.user.toJS(),

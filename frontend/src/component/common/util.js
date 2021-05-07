@@ -109,4 +109,5 @@ export const modalStyles = {
     },
 };
 
-export const updateIndexInArray = (array, index, newValue) => array.map((v, i) => (i === index ? newValue : v));
+export const updateIndexInArray = (array, index, newValue) =>
+    array.map((v, i) => (i === index ? newValue : v));

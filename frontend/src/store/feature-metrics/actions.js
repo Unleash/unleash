@@ -2,7 +2,7 @@ import api from './api';
 
 export const START_FETCH_FEATURE_METRICS = 'START_FETCH_FEATURE_METRICS';
 export const RECEIVE_FEATURE_METRICS = 'RECEIVE_FEATURE_METRICS';
-export const ERROR_FETCH_FEATURE_TOGGLES = 'ERROR_FETCH_FEATURE_TOGGLES';
+export const ERROR_FETCH_FEATURE_METRICS = 'ERROR_FETCH_FEATURE_METRICS';
 
 export const START_FETCH_SEEN_APP = 'START_FETCH_SEEN_APP';
 export const RECEIVE_SEEN_APPS = 'RECEIVE_SEEN_APPS';
@@ -33,22 +33,22 @@ function dispatchAndThrow(dispatch, type) {
 
 export function fetchFeatureMetrics() {
     return dispatch => {
-        dispatch({ type: START_FETCH_SEEN_APP });
+        dispatch({ type: START_FETCH_FEATURE_METRICS });
 
         return api
             .fetchFeatureMetrics()
             .then(json => dispatch(receiveFeatureMetrics(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_SEEN_APP));
+            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_METRICS));
     };
 }
 
 export function fetchSeenApps() {
     return dispatch => {
-        dispatch({ type: START_FETCH_FEATURE_METRICS });
+        dispatch({ type: START_FETCH_SEEN_APP });
 
         return api
             .fetchSeenApps()
             .then(json => dispatch(receiveSeenApps(json)))
-            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_FEATURE_TOGGLES));
+            .catch(dispatchAndThrow(dispatch, ERROR_FETCH_SEEN_APP));
     };
 }

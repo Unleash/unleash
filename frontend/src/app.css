@@ -5,9 +5,9 @@
 html {
     height: 100%;
     overflow: auto;
-
     overflow-y: scroll;
 }
+
 body {
     height: 100%;
 }

@@ -1,3 +1,4 @@
+import './wdyr';
 import 'whatwg-fetch';
 
 import './app.css';

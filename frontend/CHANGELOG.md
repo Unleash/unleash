@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+
+# 4.0.0-beta.1
+- fix: support custom stickiness for flexible strategies
+- fix:  add members to project use correct uri
+- Fix/console warn (#290)
+- Fix/strategy constraints (#289)
+- Set .nvmrc to 14 to reflect new requirement of node
 # 4.0.0-beta.0
 - feat: upgrade to node.js v14
 - fix: tiny margin for feature toggle list item

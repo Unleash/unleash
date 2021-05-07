@@ -59,7 +59,10 @@ test.serial('Should create a reset link', async t => {
         adminUser,
     );
 
-    t.true(url.toString().indexOf('/reset-password') > 0);
+    t.is(
+        url.toString().substring(0, url.toString().indexOf('=')),
+        `${config.server.unleashUrl}/reset-password?token`,
+    );
 });
 
 test.serial('Should create a welcome link', async t => {
@@ -67,7 +70,11 @@ test.serial('Should create a welcome link', async t => {
         userIdToCreateResetFor,
         adminUser.username,
     );
-    t.true(url.toString().indexOf('/new-user') > 0);
+    const urlS = url.toString();
+    t.is(
+        urlS.substring(0, urlS.indexOf('=')),
+        `${config.server.unleashUrl}/new-user?token`,
+    );
 });
 
 test.serial('Tokens should be one-time only', async t => {

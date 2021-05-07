@@ -36,7 +36,7 @@ export default class ResetTokenService {
     ) {
         this.store = stores.resetTokenStore;
         this.logger = getLogger('/services/reset-token-service.ts');
-        this.unleashBase = new URL(server.baseUriPath, server.unleashUrl);
+        this.unleashBase = new URL(server.unleashUrl);
     }
 
     async useAccessToken(token: IResetQuery): Promise<boolean> {
@@ -100,12 +100,12 @@ export default class ResetTokenService {
         forUser: number,
         creator: string,
     ): Promise<URL> {
-        const path = '/#/reset-password';
+        const path = '/reset-password';
         return this.createResetUrl(forUser, creator, path);
     }
 
     async createNewUserUrl(forUser: number, creator: string): Promise<URL> {
-        const path = '/#/new-user';
+        const path = '/new-user';
         return this.createResetUrl(forUser, creator, path);
     }
 

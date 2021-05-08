@@ -1,7 +1,8 @@
 import { throwIfNotSuccess, headers } from '../api-helper';
+import { formatApiPath } from '../../utils/format-path';
 
-const GOOGLE_URI = 'api/admin/auth/google/settings';
-const SAML_URI = 'api/admin/auth/saml/settings';
+const GOOGLE_URI = formatApiPath('api/admin/auth/google/settings');
+const SAML_URI = formatApiPath('api/admin/auth/saml/settings');
 
 function getGoogleConfig() {
     return fetch(GOOGLE_URI, { headers, credentials: 'include' })

@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Button, TextField, Typography, IconButton } from '@material-ui/core';
+import LockRounded from '@material-ui/icons/LockRounded';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
 import { useStyles } from './PasswordAuth.styles';
 import { Link } from 'react-router-dom';
 import useQueryParams from '../../../hooks/useQueryParams';
+import { GoogleSvg } from '../HostedAuth/Icons';
 
 const PasswordAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
@@ -137,8 +139,8 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                         commonStyles.contentSpacingY
                     )}
                 >
-                    <Button color="primary" variant="contained" href={o.path}>
-                        {o.message || o.value}
+                    <Button color="primary" variant="outlined" href={o.path} startIcon={o.type === 'google' ? <GoogleSvg /> : <LockRounded />}>
+                        {o.message}
                     </Button>
                 </div>
             ))}
@@ -146,8 +148,8 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                 condition={showFields}
                 show={renderLoginForm()}
                 elseShow={
-                    <IconButton onClick={onShowOptions}>
-                        {' '}
+                    
+                    <IconButton size="small" onClick={onShowOptions}>
                         Show more options
                     </IconButton>
                 }

@@ -4,11 +4,12 @@ import AdminMenu from '../admin-menu';
 import { Alert } from '@material-ui/lab';
 import GoogleAuth from './google-auth-container';
 import SamlAuth from './saml-auth-container';
+import OidcAuth from './oidc-auth-container';
 import TabNav from '../../../component/common/TabNav/TabNav';
 import PageContent from '../../../component/common/PageContent/PageContent';
 import ConditionallyRender from '../../../component/common/ConditionallyRender/ConditionallyRender';
 
-function AdminAuthPage({ authenticationType, history }) {
+function AdminAuthPage({ authenticationType, history, enableOIDC }) {
     const tabs = [
         {
             label: 'SAML 2.0',
@@ -19,6 +20,13 @@ function AdminAuthPage({ authenticationType, history }) {
             component: <GoogleAuth />,
         },
     ];
+
+    if(enableOIDC) {
+        tabs.unshift( {
+            label: 'OpenID Connect',
+            component: <OidcAuth />,
+        },)
+    }
 
     return (
         <div>
@@ -63,6 +71,7 @@ AdminAuthPage.propTypes = {
     match: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
     authenticationType: PropTypes.string,
+    enableOIDC: PropTypes.bool,
 };
 
 export default AdminAuthPage;

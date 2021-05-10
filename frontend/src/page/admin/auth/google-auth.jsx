@@ -115,10 +115,11 @@ function GoogleAuth({
                             label="Client ID"
                             name="clientId"
                             placeholder=""
-                            value={data.clientId}
+                            value={data.clientId || ''}
                             style={{ width: '400px' }}
                             variant="outlined"
                             size="small"
+                            required
                         />
                     </Grid>
                 </Grid>
@@ -135,11 +136,12 @@ function GoogleAuth({
                             onChange={updateField}
                             label="Client Secret"
                             name="clientSecret"
-                            value={data.clientSecret}
+                            value={data.clientSecret || ''}
                             placeholder=""
                             style={{ width: '400px' }}
                             variant="outlined"
                             size="small"
+                            required
                         />
                     </Grid>
                 </Grid>
@@ -163,7 +165,7 @@ function GoogleAuth({
                             label="Unleash Hostname"
                             name="unleashHostname"
                             placeholder=""
-                            value={data.unleashHostname}
+                            value={data.unleashHostname || ''}
                             style={{ width: '400px' }}
                             variant="outlined"
                             size="small"

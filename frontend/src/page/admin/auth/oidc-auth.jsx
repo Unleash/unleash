@@ -12,18 +12,19 @@ const initialState = {
     unleashHostname: location.hostname,
 };
 
-function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
+function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
     const [data, setData] = useState(initialState);
     const [info, setInfo] = useState();
+    const [error, setError] = useState();
     const { hasAccess } = useContext(AccessContext);
 
     useEffect(() => {
-        getSamlConfig();
+        getOidcConfig();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if (config.entityId) {
+        if (config.discoverUrl) {
             setData(config);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,12 +56,14 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
     const onSubmit = async e => {
         e.preventDefault();
         setInfo('...saving');
+        setError('');
         try {
-            await updateSamlConfig(data);
+            await updateOidcConfig(data);
             setInfo('Settings stored');
             setTimeout(() => setInfo(''), 2000);
         } catch (e) {
-            setInfo(e.message);
+            setInfo('');
+            setError(e.message);
         }
     };
     return (
@@ -76,10 +79,10 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                         >
                             documentation
                         </a>{' '}
-                        to learn how to integrate with specific SAML 2.0
-                        providers (Okta, Keycloak, etc). <br />
+                        to learn how to integrate with specific Open Id Connect
+                        providers (Okta, Keycloak, Google, etc). <br />
                         Callback URL:{' '}
-                        <code>{unleashUrl}/auth/saml/callback</code>
+                        <code>{unleashUrl}/auth/oidc/callback</code>
                     </Alert>
                 </Grid>
             </Grid>
@@ -87,7 +90,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <strong>Enable</strong>
-                        <p>Enable SAML 2.0 Authentication.</p>
+                        <p>Enable Open Id Connect Authentication.</p>
                     </Grid>
                     <Grid item md={6}>
                         <Switch
@@ -102,15 +105,33 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                 </Grid>
                 <Grid container spacing={3}>
                     <Grid item md={5}>
-                        <strong>Entity ID</strong>
-                        <p>(Required) The Entity Identity provider issuer.</p>
+                        <strong>Discover URL</strong>
+                        <p>(Required) Issuer discover metadata URL</p>
                     </Grid>
                     <Grid item md={6}>
                         <TextField
                             onChange={updateField}
-                            label="Entity ID"
-                            name="entityId"
-                            value={data.entityId || ''}
+                            label="Discover URL"
+                            name="discoverUrl"
+                            value={data.discoverUrl || ''}
+                            style={{ width: '400px' }}
+                            variant="outlined"
+                            size="small"
+                            
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3}>
+                    <Grid item md={5}>
+                        <strong>Client ID</strong>
+                        <p>(Required) Client ID of your OpenID application</p>
+                    </Grid>
+                    <Grid item md={6}>
+                        <TextField
+                            onChange={updateField}
+                            label="Client ID"
+                            name="clientId"
+                            value={data.clientId || ''}
                             style={{ width: '400px' }}
                             variant="outlined"
                             size="small"
@@ -120,47 +141,16 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                 </Grid>
                 <Grid container spacing={3}>
                     <Grid item md={5}>
-                        <strong>Single Sign-On URL</strong>
-                        <p>
-                            (Required) The url to redirect the user to for
-                            signing in.
-                        </p>
+                        <strong>Client secret</strong>
+                        <p>(Required) Client secret of your OpenID application. </p>
                     </Grid>
                     <Grid item md={6}>
                         <TextField
                             onChange={updateField}
-                            label="Single Sign-On URL"
-                            name="signOnUrl"
-                            value={data.signOnUrl || ''}
+                            label="Client Secret"
+                            name="secret"
+                            value={data.secret || ''}
                             style={{ width: '400px' }}
-                            variant="outlined"
-                            size="small"
-                            required
-                        />
-                    </Grid>
-                </Grid>
-                <Grid container spacing={3}>
-                    <Grid item md={5}>
-                        <strong>X.509 Certificate</strong>
-                        <p>
-                            (Required) The certificate used to sign the SAML 2.0
-                            request.
-                        </p>
-                    </Grid>
-                    <Grid item md={7}>
-                        <TextField
-                            onChange={updateField}
-                            label="X.509 Certificate"
-                            name="certificate"
-                            value={data.certificate || ''}
-                            style={{
-                                width: '100%',
-                                fontSize: '0.7em',
-                                fontFamily: 'monospace',
-                            }}
-                            multiline
-                            rows={14}
-                            rowsMax={14}
                             variant="outlined"
                             size="small"
                             required
@@ -172,7 +162,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                         <strong>Auto-create users</strong>
                         <p>
                             Enable automatic creation of new users when signing
-                            in with Saml.
+                            in with Open ID connect.
                         </p>
                     </Grid>
                     <Grid item md={6} style={{ padding: '20px' }}>
@@ -208,7 +198,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <Grid item md={5}>
+                    <Grid item md={12}>
                         <Button
                             variant="contained"
                             color="primary"
@@ -217,6 +207,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             Save
                         </Button>{' '}
                         <small>{info}</small>
+                        <small style={{color: 'red'}}>{error}</small>
                     </Grid>
                 </Grid>
             </form>
@@ -224,11 +215,11 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
     );
 }
 
-SamlAuth.propTypes = {
+OidcAuth.propTypes = {
     config: PropTypes.object,
     unleash: PropTypes.string,
-    getSamlConfig: PropTypes.func.isRequired,
-    updateSamlConfig: PropTypes.func.isRequired,
+    getOidcConfig: PropTypes.func.isRequired,
+    updateOidcConfig: PropTypes.func.isRequired,
 };
 
-export default SamlAuth;
+export default OidcAuth;

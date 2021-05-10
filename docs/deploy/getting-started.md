@@ -23,6 +23,8 @@ Once the server has started, you will see the message:
 Unleash started on http://localhost:4242
 ```
 
+To run multiple replicas of Unleash simply point all instances to the same database.
+
 ### Option one - use Docker
 
 **Useful links:**

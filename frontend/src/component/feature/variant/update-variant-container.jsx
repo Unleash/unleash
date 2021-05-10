@@ -6,7 +6,10 @@ import { updateWeight } from '../../common/util';
 
 const mapStateToProps = (state, ownProps) => ({
     variants: ownProps.featureToggle.variants || [],
-    stickinessOptions: ['default', ...state.context.filter(c => c.stickiness).map(c => c.name)],
+    stickinessOptions: [
+        'default',
+        ...state.context.filter(c => c.stickiness).map(c => c.name),
+    ],
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -15,11 +18,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         const currentVariants = featureToggle.variants || [];
         const variants = [...currentVariants, variant];
         updateWeight(variants, 1000);
-        return requestUpdateFeatureToggleVariants(featureToggle, variants)(dispatch);
+        return requestUpdateFeatureToggleVariants(
+            featureToggle,
+            variants
+        )(dispatch);
     },
     removeVariant: index => {
         const { featureToggle } = ownProps;
         const currentVariants = featureToggle.variants || [];
+
         const variants = currentVariants.filter((v, i) => i !== index);
         if (variants.length > 0) {
             updateWeight(variants, 1000);
@@ -29,7 +36,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     updateVariant: (index, variant) => {
         const { featureToggle } = ownProps;
         const currentVariants = featureToggle.variants || [];
-        const variants = currentVariants.map((v, i) => (i === index ? variant : v));
+        const variants = currentVariants.map((v, i) =>
+            i === index ? variant : v
+        );
         updateWeight(variants, 1000);
         requestUpdateFeatureToggleVariants(featureToggle, variants)(dispatch);
     },
@@ -41,4 +50,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UpdateFeatureToggleComponent);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(UpdateFeatureToggleComponent);

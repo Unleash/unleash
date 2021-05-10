@@ -36,6 +36,7 @@ const FeatureToggleList = ({
     updateSetting,
     featureMetrics,
     toggleFeature,
+    archive,
     loading,
 }) => {
     const { hasAccess } = useContext(AccessContext);
@@ -93,11 +94,23 @@ const FeatureToggleList = ({
                     />
                 ))}
                 elseShow={
-                    <ListItem className={styles.emptyStateListItem}>
-                        No features available. Get started by adding a new
-                        feature toggle.
-                        <Link to="/features/create">Add your first toggle</Link>
-                    </ListItem>
+                    <ConditionallyRender
+                        condition={archive}
+                        show={
+                            <ListItem className={styles.emptyStateListItem}>
+                                No archived features.
+                            </ListItem>
+                        }
+                        elseShow={
+                            <ListItem className={styles.emptyStateListItem}>
+                                No features available. Get started by adding a
+                                new feature toggle.
+                                <Link to="/features/create">
+                                    Add your first toggle
+                                </Link>
+                            </ListItem>
+                        }
+                    />
                 }
             />
         );
@@ -134,45 +147,49 @@ const FeatureToggleList = ({
                                         />
                                     }
                                 />
-
                                 <ConditionallyRender
-                                    condition={smallScreen}
+                                    condition={!archive}
                                     show={
-                                        <Tooltip title="Create feature toggle">
-                                            <IconButton
-                                                component={Link}
-                                                to="/features/create"
-                                                data-test="add-feature-btn"
-                                                disabled={
-                                                    !hasAccess(
-                                                        CREATE_FEATURE,
-                                                        currentProjectId
-                                                    )
-                                                }
-                                            >
-                                                <Icon>add</Icon>
-                                            </IconButton>
-                                        </Tooltip>
-                                    }
-                                    elseShow={
-                                        <Button
-                                            to="/features/create"
-                                            data-test="add-feature-btn"
-                                            color="primary"
-                                            variant="contained"
-                                            component={Link}
-                                            disabled={
-                                                !hasAccess(
-                                                    CREATE_FEATURE,
-                                                    currentProjectId
-                                                )
+                                        <ConditionallyRender
+                                            condition={smallScreen}
+                                            show={
+                                                <Tooltip title="Create feature toggle">
+                                                    <IconButton
+                                                        component={Link}
+                                                        to="/features/create"
+                                                        data-test="add-feature-btn"
+                                                        disabled={
+                                                            !hasAccess(
+                                                                CREATE_FEATURE,
+                                                                currentProjectId
+                                                            )
+                                                        }
+                                                    >
+                                                        <Icon>add</Icon>
+                                                    </IconButton>
+                                                </Tooltip>
                                             }
-                                            className={classnames({
-                                                skeleton: loading,
-                                            })}
-                                        >
-                                            Create feature toggle
-                                        </Button>
+                                            elseShow={
+                                                <Button
+                                                    to="/features/create"
+                                                    data-test="add-feature-btn"
+                                                    color="primary"
+                                                    variant="contained"
+                                                    component={Link}
+                                                    disabled={
+                                                        !hasAccess(
+                                                            CREATE_FEATURE,
+                                                            currentProjectId
+                                                        )
+                                                    }
+                                                    className={classnames({
+                                                        skeleton: loading,
+                                                    })}
+                                                >
+                                                    Create feature toggle
+                                                </Button>
+                                            }
+                                        />
                                     }
                                 />
                             </div>

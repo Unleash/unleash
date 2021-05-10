@@ -1,7 +1,9 @@
 const defaultErrorMessage = 'Unexpected exception when talking to unleash-api';
 
 function extractJoiMsg(body) {
-    return body.details.length > 0 ? body.details[0].message : defaultErrorMessage;
+    return body.details.length > 0
+        ? body.details[0].message
+        : defaultErrorMessage;
 }
 function extractLegacyMsg(body) {
     return body && body.length > 0 ? body[0].msg : defaultErrorMessage;
@@ -35,7 +37,9 @@ export class ForbiddenError extends Error {
 
 export class NotFoundError extends Error {
     constructor(statusCode) {
-        super('The requested resource could not be found but may be available in the future');
+        super(
+            'The requested resource could not be found but may be available in the future'
+        );
         this.name = 'NotFoundError';
         this.statusCode = statusCode;
     }
@@ -45,11 +49,19 @@ export function throwIfNotSuccess(response) {
     if (!response.ok) {
         if (response.status === 401) {
             return new Promise((resolve, reject) => {
-                response.json().then(body => reject(new AuthenticationError(response.status, body)));
+                response
+                    .json()
+                    .then(body =>
+                        reject(new AuthenticationError(response.status, body))
+                    );
             });
         } else if (response.status === 403) {
             return new Promise((resolve, reject) => {
-                response.json().then(body => reject(new ForbiddenError(response.status, body)));
+                response
+                    .json()
+                    .then(body =>
+                        reject(new ForbiddenError(response.status, body))
+                    );
             });
         } else if (response.status === 404) {
             return new Promise((resolve, reject) => {
@@ -57,12 +69,18 @@ export function throwIfNotSuccess(response) {
             });
         } else if (response.status > 399 && response.status < 501) {
             return new Promise((resolve, reject) => {
-                response.json().then(body => {
-                    const errorMsg = body && body.isJoi ? extractJoiMsg(body) : extractLegacyMsg(body);
-                    let error = new Error(errorMsg);
-                    error.statusCode = response.status;
-                    reject(error);
-                }).catch(() => reject(new Error(defaultErrorMessage)))
+                response
+                    .json()
+                    .then(body => {
+                        const errorMsg =
+                            body && body.isJoi
+                                ? extractJoiMsg(body)
+                                : extractLegacyMsg(body);
+                        let error = new Error(errorMsg);
+                        error.statusCode = response.status;
+                        reject(error);
+                    })
+                    .catch(() => reject(new Error(defaultErrorMessage)));
             });
         } else {
             return Promise.reject(new ServiceError(response.status));

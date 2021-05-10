@@ -124,6 +124,8 @@ const StrategiesList = props => {
         return strategies.find(s => s.name === strategyName);
     };
 
+    const disableDelete = editableStrategies.length === 1;
+
     const cards = editableStrategies.map((strategy, i) => (
         <StrategyCard
             key={i}
@@ -133,6 +135,7 @@ const StrategiesList = props => {
             moveStrategy={moveStrategy}
             editStrategy={() => setEditStrategyIndex(i)}
             index={i}
+            disableDelete={disableDelete}
             movable
         />
     ));

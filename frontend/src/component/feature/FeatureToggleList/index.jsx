@@ -1,5 +1,8 @@
 import { connect } from 'react-redux';
-import { toggleFeature, fetchFeatureToggles } from '../../../store/feature-toggle/actions';
+import {
+    toggleFeature,
+    fetchFeatureToggles,
+} from '../../../store/feature-toggle/actions';
 import { updateSettingForGroup } from '../../../store/settings/actions';
 import FeatureToggleList from './FeatureToggleList';
 
@@ -11,18 +14,23 @@ function checkConstraints(strategy, regex) {
 }
 
 function resolveCurrentProjectId(settings) {
-    if(!settings.currentProjectId || settings.currentProjectId === '*') {
+    if (!settings.currentProjectId || settings.currentProjectId === '*') {
         return 'default';
-    } return settings.currentProjectId;
+    }
+    return settings.currentProjectId;
 }
 
 export const mapStateToPropsConfigurable = isFeature => state => {
     const featureMetrics = state.featureMetrics.toJS();
     const settings = state.settings.toJS().feature || {};
-    let features = isFeature ? state.features.toJS() : state.archive.get('list').toArray();
+    let features = isFeature
+        ? state.features.toJS()
+        : state.archive.get('list').toArray();
 
     if (settings.currentProjectId && settings.currentProjectId !== '*') {
-        features = features.filter(f => f.project === settings.currentProjectId);
+        features = features.filter(
+            f => f.project === settings.currentProjectId
+        );
     }
 
     if (settings.filter) {
@@ -33,8 +41,11 @@ export const mapStateToPropsConfigurable = isFeature => state => {
                     feature.strategies.some(s => checkConstraints(s, regex)) ||
                     regex.test(feature.name) ||
                     regex.test(feature.description) ||
-                    feature.strategies.some(s => s && s.name && regex.test(s.name)) ||
-                    (settings.filter.length > 1 && regex.test(JSON.stringify(feature)))
+                    feature.strategies.some(
+                        s => s && s.name && regex.test(s.name)
+                    ) ||
+                    (settings.filter.length > 1 &&
+                        regex.test(JSON.stringify(feature)))
             );
         } catch (e) {
             // Invalid filter regex
@@ -56,9 +67,13 @@ export const mapStateToPropsConfigurable = isFeature => state => {
             a.stale === b.stale ? 0 : a.stale ? -1 : 1
         );
     } else if (settings.sort === 'created') {
-        features = features.sort((a, b) => (new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1));
+        features = features.sort((a, b) =>
+            new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1
+        );
     } else if (settings.sort === 'Last seen') {
-        features = features.sort((a, b) => (new Date(a.lastSeenAt) > new Date(b.lastSeenAt) ? -1 : 1));
+        features = features.sort((a, b) =>
+            new Date(a.lastSeenAt) > new Date(b.lastSeenAt) ? -1 : 1
+        );
     } else if (settings.sort === 'name') {
         features = features.sort((a, b) => {
             if (a.name < b.name) {
@@ -70,7 +85,9 @@ export const mapStateToPropsConfigurable = isFeature => state => {
             return 0;
         });
     } else if (settings.sort === 'strategies') {
-        features = features.sort((a, b) => (a.strategies.length > b.strategies.length ? -1 : 1));
+        features = features.sort((a, b) =>
+            a.strategies.length > b.strategies.length ? -1 : 1
+        );
     } else if (settings.sort === 'type') {
         features = features.sort((a, b) => {
             if (a.type < b.type) {
@@ -82,7 +99,9 @@ export const mapStateToPropsConfigurable = isFeature => state => {
             return 0;
         });
     } else if (settings.sort === 'metrics') {
-        const target = settings.showLastHour ? featureMetrics.lastHour : featureMetrics.lastMinute;
+        const target = settings.showLastHour
+            ? featureMetrics.lastHour
+            : featureMetrics.lastMinute;
 
         features = features.sort((a, b) => {
             if (!target[a.name]) {
@@ -102,6 +121,7 @@ export const mapStateToPropsConfigurable = isFeature => state => {
         features,
         currentProjectId: resolveCurrentProjectId(settings),
         featureMetrics,
+        archive: !isFeature,
         settings,
         loading: state.apiCalls.fetchTogglesState.loading,
     };
@@ -113,6 +133,9 @@ const mapDispatchToProps = {
     updateSetting: updateSettingForGroup('feature'),
 };
 
-const FeatureToggleListContainer = connect(mapStateToProps, mapDispatchToProps)(FeatureToggleList);
+const FeatureToggleListContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(FeatureToggleList);
 
 export default FeatureToggleListContainer;

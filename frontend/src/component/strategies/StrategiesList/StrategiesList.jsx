@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link, useHistory } from 'react-router-dom';
@@ -25,6 +25,7 @@ import HeaderTitle from '../../common/HeaderTitle';
 
 import { useStyles } from './styles';
 import AccessContext from '../../../contexts/AccessContext';
+import Dialogue from '../../common/Dialogue';
 
 const StrategiesList = ({
     strategies,
@@ -37,6 +38,7 @@ const StrategiesList = ({
     const styles = useStyles();
     const smallScreen = useMediaQuery('(max-width:700px)');
     const { hasAccess } = useContext(AccessContext);
+    const [dialogueMetaData, setDialogueMetaData] = useState({ show: false });
 
     useEffect(() => {
         fetchStrategies();
@@ -86,7 +88,15 @@ const StrategiesList = ({
 
     const reactivateButton = strategy => (
         <Tooltip title="Reactivate activation strategy">
-            <IconButton onClick={() => reactivateStrategy(strategy)}>
+            <IconButton
+                onClick={() =>
+                    setDialogueMetaData({
+                        show: true,
+                        title: 'Really reactivate strategy?',
+                        onConfirm: () => reactivateStrategy(strategy),
+                    })
+                }
+            >
                 <Icon>visibility</Icon>
             </IconButton>
         </Tooltip>
@@ -107,7 +117,16 @@ const StrategiesList = ({
             elseShow={
                 <Tooltip title="Deprecate activation strategy">
                     <div>
-                        <IconButton onClick={() => deprecateStrategy(strategy)}>
+                        <IconButton
+                            onClick={() =>
+                                setDialogueMetaData({
+                                    show: true,
+                                    title: 'Really deprecate strategy?',
+                                    onConfirm: () =>
+                                        deprecateStrategy(strategy),
+                                })
+                            }
+                        >
                             <Icon>visibility_off</Icon>
                         </IconButton>
                     </div>
@@ -121,7 +140,15 @@ const StrategiesList = ({
             condition={strategy.editable}
             show={
                 <Tooltip title="Delete strategy">
-                    <IconButton onClick={() => removeStrategy(strategy)}>
+                    <IconButton
+                        onClick={() =>
+                            setDialogueMetaData({
+                                show: true,
+                                title: 'Really delete strategy?',
+                                onConfirm: () => removeStrategy(strategy),
+                            })
+                        }
+                    >
                         <Icon>delete</Icon>
                     </IconButton>
                 </Tooltip>
@@ -167,12 +194,25 @@ const StrategiesList = ({
             </ListItem>
         ));
 
+    const onDialogConfirm = () => {
+        dialogueMetaData?.onConfirm();
+        setDialogueMetaData(prev => ({ ...prev, show: false }));
+    };
+
     return (
         <PageContent
             headerContent={
                 <HeaderTitle title="Strategies" actions={headerButton()} />
             }
         >
+            <Dialogue
+                open={dialogueMetaData.show}
+                onClick={onDialogConfirm}
+                title={dialogueMetaData?.title}
+                onClose={() =>
+                    setDialogueMetaData(prev => ({ ...prev, show: false }))
+                }
+            />
             <List>
                 <ConditionallyRender
                     condition={strategies.length > 0}

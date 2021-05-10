@@ -14,6 +14,7 @@ const StrategyCard = ({
     connectDragPreview,
     connectDragSource,
     removeStrategy,
+    disableDelete,
     editStrategy,
     connectDropTarget,
 }) => {
@@ -28,9 +29,13 @@ const StrategyCard = ({
                         connectDragSource={connectDragSource}
                         removeStrategy={removeStrategy}
                         editStrategy={editStrategy}
+                        disableDelete={disableDelete}
                     />
                     <CardContent>
-                        <StrategyCardContent strategy={strategy} strategyDefinition={strategyDefinition} />
+                        <StrategyCardContent
+                            strategy={strategy}
+                            strategyDefinition={strategyDefinition}
+                        />
                     </CardContent>
                 </Card>
             </span>

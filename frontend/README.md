@@ -23,7 +23,6 @@ Now you should be able to review rendering information in the console. If you do
 
 You need to first start the unleash-api on port 4242
 before you can start working on unleash-frontend.
-
 Start webpack-dev-server with hot-reload:
 
 ```bash

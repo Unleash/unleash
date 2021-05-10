@@ -13,6 +13,7 @@ import {
     ERROR_UPDATING_STRATEGY,
     ERROR_CREATING_STRATEGY,
     ERROR_RECEIVE_STRATEGIES,
+    UPDATE_STRATEGY_SUCCESS,
 } from '../strategy/actions';
 
 import {
@@ -79,9 +80,13 @@ const strategies = (state = getInitState(), action) => {
             return state.update('list', list =>
                 list.remove(list.indexOf(action.error))
             );
+        // This reducer controls not only errors, but general information and success
+        // messages. This can be a little misleading, given it's naming. We should
+        // revise how this works in a future update.
         case UPDATE_FEATURE_TOGGLE:
         case UPDATE_FEATURE_TOGGLE_STRATEGIES:
         case UPDATE_APPLICATION_FIELD:
+        case UPDATE_STRATEGY_SUCCESS:
             return addErrorIfNotAlreadyInList(state, action.info);
         default:
             return state;

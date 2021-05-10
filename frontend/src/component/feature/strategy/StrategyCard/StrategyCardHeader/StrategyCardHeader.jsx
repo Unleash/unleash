@@ -11,12 +11,14 @@ import {
 
 import { useStyles } from './StrategyCardHeader.styles.js';
 import { ReactComponent as ReorderIcon } from '../../../../../assets/icons/reorder.svg';
+import ConditionallyRender from '../../../../common/ConditionallyRender/ConditionallyRender';
 
 const StrategyCardHeader = ({
     name,
     connectDragSource,
     removeStrategy,
     editStrategy,
+    disableDelete,
 }) => {
     const styles = useStyles();
 
@@ -51,13 +53,40 @@ const StrategyCardHeader = ({
                                 </Tooltip>
                             </span>
                         )}
-                        <Tooltip title="Delete strategy">
-                            <IconButton onClick={removeStrategy}>
-                                <Icon className={styles.strateyCardHeaderIcon}>
-                                    delete
-                                </Icon>
-                            </IconButton>
-                        </Tooltip>
+                        <ConditionallyRender
+                            condition={disableDelete}
+                            show={
+                                <Tooltip title="One strategy must always be applied. You can not delete this strategy.">
+                                    <span>
+                                        <IconButton
+                                            onClick={removeStrategy}
+                                            disabled={disableDelete}
+                                        >
+                                            <Icon
+                                                className={
+                                                    styles.strateyCardHeaderIcon
+                                                }
+                                            >
+                                                delete
+                                            </Icon>
+                                        </IconButton>
+                                    </span>
+                                </Tooltip>
+                            }
+                            elseShow={
+                                <Tooltip title="Delete strategy">
+                                    <IconButton onClick={removeStrategy}>
+                                        <Icon
+                                            className={
+                                                styles.strateyCardHeaderIcon
+                                            }
+                                        >
+                                            delete
+                                        </Icon>
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                        />
                     </div>
                 </>
             }

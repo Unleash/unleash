@@ -45,6 +45,7 @@ const CreateFeature = ({
                         size="small"
                         variant="outlined"
                         label="Name"
+                        required
                         placeholder="Unique-name"
                         className={styles.nameInput}
                         name="name"

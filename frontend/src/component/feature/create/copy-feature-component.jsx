@@ -16,6 +16,8 @@ import { styles as commonStyles } from '../../common';
 import styles from './copy-feature-component.module.scss';
 
 import { trim } from '../../common/util';
+import ConditionallyRender from '../../common/ConditionallyRender';
+import { Alert } from '@material-ui/lab';
 
 class CopyFeatureComponent extends Component {
     // static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
@@ -62,7 +64,7 @@ class CopyFeatureComponent extends Component {
         }
     };
 
-    onSubmit = evt => {
+    onSubmit = async evt => {
         evt.preventDefault();
 
         const { nameError, newToggleName, replaceGroupId } = this.state;
@@ -82,11 +84,15 @@ class CopyFeatureComponent extends Component {
             });
         }
 
-        this.props
-            .createFeatureToggle(copyToggle)
-            .then(() =>
-                history.push(`/features/strategies/${copyToggle.name}`)
-            );
+        try {
+            this.props
+                .createFeatureToggle(copyToggle)
+                .then(() =>
+                    history.push(`/features/strategies/${copyToggle.name}`)
+                );
+        } catch (e) {
+            this.setState({ apiError: e });
+        }
     };
 
     render() {
@@ -104,7 +110,10 @@ class CopyFeatureComponent extends Component {
                 <div className={styles.header}>
                     <h1>Copy&nbsp;{copyToggle.name}</h1>
                 </div>
-
+                <ConditionallyRender
+                    condition={this.state.apiError}
+                    show={<Alert severity="error">{this.state.apiError}</Alert>}
+                />
                 <section className={styles.content}>
                     <p className={styles.text}>
                         You are about to create a new feature toggle by cloning

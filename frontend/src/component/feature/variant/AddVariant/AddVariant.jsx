@@ -86,10 +86,10 @@ const AddVariant = ({
     };
 
     const submit = async e => {
+        setError({});
         e.preventDefault();
 
         const validationError = validateName(data.name);
-
         if (validationError) {
             setError(validationError);
             return;
@@ -112,8 +112,12 @@ const AddVariant = ({
             clear();
             closeDialog();
         } catch (error) {
-            const msg = error.message || 'Could not add variant';
-            setError({ general: msg });
+            if (error.message.includes('duplicate value')) {
+                setError({ name: 'A variant with that name already exists.' });
+            } else {
+                const msg = error.message || 'Could not add variant';
+                setError({ general: msg });
+            }
         }
     };
 
@@ -188,9 +192,11 @@ const AddVariant = ({
                     name="name"
                     placeholder=""
                     className={commonStyles.fullWidth}
+                    helperText={error.name}
                     value={data.name || ''}
-                    error={error.name}
+                    error={Boolean(error.name)}
                     variant="outlined"
+                    required
                     size="small"
                     type="name"
                     onChange={setVariantValue}
@@ -214,7 +220,7 @@ const AddVariant = ({
                             }}
                             style={{ marginRight: '0.8rem' }}
                             value={data.weight || ''}
-                            error={error.weight}
+                            error={Boolean(error.weight)}
                             type="number"
                             disabled={!isFixWeight}
                             onChange={setVariantValue}

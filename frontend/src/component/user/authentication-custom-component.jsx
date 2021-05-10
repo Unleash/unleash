@@ -14,9 +14,7 @@ class AuthenticationCustomComponent extends React.Component {
                 <p>{authDetails.message}</p>
                 <CardActions style={{ textAlign: 'center' }}>
                     <a href={authDetails.path}>
-                        <Button raised colored>
-                            Sign In
-                        </Button>
+                        <Button>Sign In</Button>
                     </a>
                 </CardActions>
             </div>

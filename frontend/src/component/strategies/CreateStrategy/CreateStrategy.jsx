@@ -88,9 +88,24 @@ const CreateStrategy = ({
                     Add parameter
                 </Button>
 
-                <FormButtons
-                    submitText={editMode ? 'Update' : 'Create'}
-                    onCancel={onCancel}
+                <ConditionallyRender
+                    condition={editMode}
+                    show={
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            style={{ display: 'block' }}
+                        >
+                            Update
+                        </Button>
+                    }
+                    elseShow={
+                        <FormButtons
+                            submitText={'Create'}
+                            onCancel={onCancel}
+                        />
+                    }
                 />
             </form>
         </PageContent>

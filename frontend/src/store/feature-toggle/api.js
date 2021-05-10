@@ -50,14 +50,14 @@ function validate(featureToggle) {
 
 function update(featureToggle) {
     return validateToggle(featureToggle)
-        .then(() =>
-            fetch(`${URI}/${featureToggle.name}`, {
+        .then(() => {
+            return fetch(`${URI}/${featureToggle.name}`, {
                 method: 'PUT',
                 headers,
                 credentials: 'include',
                 body: JSON.stringify(featureToggle),
-            })
-        )
+            });
+        })
         .then(throwIfNotSuccess);
 }
 

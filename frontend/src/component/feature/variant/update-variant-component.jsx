@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
@@ -63,12 +63,16 @@ class UpdateVariantComponent extends Component {
 
     onRemoveVariant = (e, index) => {
         e.preventDefault();
-        this.props.removeVariant(index);
+        try {
+            this.props.removeVariant(index);
+        } catch (e) {
+            console.log('An exception was caught.');
+        }
     };
 
     renderVariant = (variant, index) => (
         <VariantViewComponent
-            key={index}
+            key={variant.name}
             variant={variant}
             editVariant={e => this.openEditVariant(e, index, variant)}
             removeVariant={e => this.onRemoveVariant(e, index)}

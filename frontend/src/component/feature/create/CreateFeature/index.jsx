@@ -50,7 +50,7 @@ class WrapperComponent extends Component {
     };
 
     validateName = async featureToggleName => {
-        const { errors } = {...this.state};
+        const { errors } = { ...this.state };
         try {
             await validateName(featureToggleName);
             errors.name = undefined;
@@ -61,7 +61,7 @@ class WrapperComponent extends Component {
         this.setState({ errors });
     };
 
-    onSubmit = evt => {
+    onSubmit = async evt => {
         evt.preventDefault();
         const { createFeatureToggles, history } = this.props;
         const { featureToggle } = this.state;
@@ -76,10 +76,17 @@ class WrapperComponent extends Component {
             featureToggle.strategies = [defaultStrategy];
         }
 
-
-        createFeatureToggles(featureToggle).then(() =>
-            history.push(`/features/strategies/${featureToggle.name}`)
-        );
+        try {
+            await createFeatureToggles(featureToggle).then(() =>
+                history.push(`/features/strategies/${featureToggle.name}`)
+            );
+        } catch (e) {
+            if (e.toString().includes('not allowed to be empty')) {
+                this.setState({
+                    errors: { name: 'Name is not allowed to be empty' },
+                });
+            }
+        }
     };
 
     onCancel = evt => {

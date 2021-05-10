@@ -17,26 +17,20 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     removeStrategy: strategy => {
-        // eslint-disable-next-line no-alert
-        if (window.confirm('Are you sure you want to remove this strategy?')) {
-            removeStrategy(strategy)(dispatch);
-        }
+        removeStrategy(strategy)(dispatch);
     },
     deprecateStrategy: strategy => {
-        // eslint-disable-next-line no-alert
-        if (window.confirm('Are you sure you want to deprecate this strategy?')) {
-            deprecateStrategy(strategy)(dispatch);
-        }
+        deprecateStrategy(strategy)(dispatch);
     },
     reactivateStrategy: strategy => {
-        // eslint-disable-next-line no-alert
-        if (window.confirm('Are you sure you want to reactivate this strategy?')) {
-            reactivateStrategy(strategy)(dispatch);
-        }
+        reactivateStrategy(strategy)(dispatch);
     },
     fetchStrategies: () => fetchStrategies()(dispatch),
 });
 
-const StrategiesListContainer = connect(mapStateToProps, mapDispatchToProps)(StrategiesList);
+const StrategiesListContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(StrategiesList);
 
 export default StrategiesListContainer;

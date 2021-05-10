@@ -9,13 +9,23 @@ The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
 
+# 4.0.0-beta.2
+
+- Fix: feedback on create (#292)
+- fix: proper error handling for auth-settings being stored (#293)
+- fix: api path for auth-config
+- fix: improve password auth extra options
+
 # 4.0.0-beta.1
+
 - fix: support custom stickiness for flexible strategies
 - fix:  add members to project use correct uri
 - Fix/console warn (#290)
 - Fix/strategy constraints (#289)
 - Set .nvmrc to 14 to reflect new requirement of node
+
 # 4.0.0-beta.0
+
 - feat: upgrade to node.js v14
 - fix: tiny margin for feature toggle list item
 - fix: should be allowed to create toggles without errors
@@ -26,10 +36,12 @@ The latest version of this document is always available in
 - fix: link to docs for empty apps
 
 # 4.0.0-alpha.14
+
 - fix: all global event log requires admin
 - fix: constraints array can be undefined
 
 # 4.0.0-alpha.13
+
 - feat: bootstrap endpoint for initial data (#281)
 - fix: allow permissions to be checked without project being defined (#282)
 - fix/strategy constraints (#283)

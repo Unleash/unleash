@@ -54,7 +54,6 @@ class AuthComponent extends React.Component {
                 <HostedAuth
                     passwordLogin={this.props.passwordLogin}
                     authDetails={authDetails}
-                    loadInitialData={this.props.loadInitialData}
                     history={this.props.history}
                 />
             );

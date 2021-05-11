@@ -30,11 +30,9 @@ class ShowApiDetailsComponent extends Component {
         }
         return (
             <section title="API details">
-                <h4>{`${versionStr}`}</h4>
-                <ConditionallyRender condition={environment} show={<small>`(${environment})`</small>} />
-                <br />
-                <ConditionallyRender condition={updateNotification} show={<small>{updateNotification}`</small>} />
-                <br />
+                <h4>{`${versionStr}`} <ConditionallyRender condition={environment} show={<small>({environment})</small>} /></h4>
+                
+                <ConditionallyRender condition={updateNotification} show={<small>{updateNotification}<br /></small>} />
                 <br />
                 <small>{slogan}</small>
                 <br />

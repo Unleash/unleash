@@ -6,14 +6,13 @@ exports[`renders correctly with empty version 1`] = `
 >
   <h4>
     Unleash 
+     
+    <small>
+      (
+      test
+      )
+    </small>
   </h4>
-  <small>
-    \`($
-    test
-    )\`
-  </small>
-  <br />
-  <br />
   <br />
   <small>
     We are the best!
@@ -28,14 +27,13 @@ exports[`renders correctly with ui-config 1`] = `
 >
   <h4>
     Unleash 1.1.0
+     
+    <small>
+      (
+      test
+      )
+    </small>
   </h4>
-  <small>
-    \`($
-    test
-    )\`
-  </small>
-  <br />
-  <br />
   <br />
   <small>
     We are the best!
@@ -50,9 +48,8 @@ exports[`renders correctly without uiConfig 1`] = `
 >
   <h4>
     Unleash 1.1.0
+     
   </h4>
-  <br />
-  <br />
   <br />
   <small />
   <br />

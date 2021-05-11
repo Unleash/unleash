@@ -158,9 +158,8 @@ exports[`should render DrawerMenu 1`] = `
       >
         <h4>
           undefined undefined
+           
         </h4>
-        <br />
-        <br />
         <br />
         <small />
         <br />
@@ -328,9 +327,8 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       >
         <h4>
           undefined undefined
+           
         </h4>
-        <br />
-        <br />
         <br />
         <small />
         <br />

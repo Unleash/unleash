@@ -33,12 +33,12 @@ export default class UserAdminController extends Controller {
             resetTokenService,
             sessionService,
         }: Pick<
-        IUnleashServices,
-        | 'userService'
-        | 'accessService'
-        | 'emailService'
-        | 'resetTokenService'
-        | 'sessionService'
+            IUnleashServices,
+            | 'userService'
+            | 'accessService'
+            | 'emailService'
+            | 'resetTokenService'
+            | 'sessionService'
         >,
     ) {
         super(config);
@@ -137,13 +137,22 @@ export default class UserAdminController extends Controller {
                 user.email,
             );
 
+            let emailSent = false;
             const emailConfigured = this.emailService.configured();
             if (emailConfigured) {
-                await this.emailService.sendGettingStartedMail(
-                    createdUser.name,
-                    createdUser.email,
-                    inviteLink.toString(),
-                );
+                try {
+                    await this.emailService.sendGettingStartedMail(
+                        createdUser.name,
+                        createdUser.email,
+                        inviteLink.toString(),
+                    );
+                    emailSent = true;
+                } catch (e) {
+                    this.logger.warn(
+                        'email was configured, but sending failed due to: ',
+                        e,
+                    );
+                }
             } else {
                 this.logger.warn(
                     'email was not sent to the user because email configuration is lacking',
@@ -153,7 +162,7 @@ export default class UserAdminController extends Controller {
             res.status(201).send({
                 ...createdUser,
                 inviteLink,
-                emailSent: emailConfigured,
+                emailSent,
                 rootRole,
             });
         } catch (e) {

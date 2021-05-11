@@ -65,6 +65,28 @@ test.serial('Should create a reset link', async t => {
     );
 });
 
+test.serial(
+    'Should create a reset link with unleashUrl with context path',
+    async t => {
+        const localConfig = createTestConfig({
+            server: { unleashUrl: 'http://localhost:4242/my/sub/path' },
+        });
+        const resetToken: ResetTokenService = new ResetTokenService(
+            stores,
+            localConfig,
+        );
+
+        const url = await resetToken.createResetPasswordUrl(
+            userIdToCreateResetFor,
+            adminUser,
+        );
+        t.is(
+            url.toString().substring(0, url.toString().indexOf('=')),
+            `${localConfig.server.unleashUrl}/reset-password?token`,
+        );
+    },
+);
+
 test.serial('Should create a welcome link', async t => {
     const url = await resetTokenService.createNewUserUrl(
         userIdToCreateResetFor,
@@ -108,8 +130,11 @@ test.serial('Creating a new token should expire older tokens', async t => {
 test.serial(
     'Retrieving valid invitation links should retrieve an object with userid key and token value',
     async t => {
-        await resetTokenService.createToken(userIdToCreateResetFor, adminUser);
-
+        const token = await resetTokenService.createToken(
+            userIdToCreateResetFor,
+            adminUser,
+        );
+        t.truthy(token);
         const activeInvitations = await resetTokenService.getActiveInvitations();
         t.true(Object.keys(activeInvitations).length === 1);
         t.true(+Object.keys(activeInvitations)[0] === userIdToCreateResetFor);

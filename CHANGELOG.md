@@ -1,5 +1,11 @@
 # Changelog
 
+# 4.0.0-beta.4
+
+- upgrade unleash-frontend to version 4.0.0-beta.3
+- fix: convert to typescript
+- fix: report email as not sent to fe if it throws (#844)
+
 # 4.0.0-beta.3
 
 - chore: update changelog

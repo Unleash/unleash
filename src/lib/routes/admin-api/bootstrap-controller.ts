@@ -111,7 +111,6 @@ class BootstrapController extends Controller {
         const uiConfig = {
             ...this.config.ui,
             authenticationType,
-            environment: 'test',
             unleashUrl: this.config.server.unleashUrl,
             version,
             baseUriPath: this.config.server.baseUriPath,

@@ -10,8 +10,9 @@ import PageContent from '../common/PageContent/PageContent';
 import AccessContext from '../../contexts/AccessContext';
 import ConditionallyRender from '../common/ConditionallyRender';
 import { CREATE_PROJECT } from '../AccessProvider/permissions';
+import { Link } from 'react-router-dom';
 
-class AddContextComponent extends Component {
+class ProjectFormComponent extends Component {
     static contextType = AccessContext;
 
     constructor(props) {
@@ -97,7 +98,21 @@ class AddContextComponent extends Component {
         const submitText = editMode ? 'Update' : 'Create';
 
         return (
-            <PageContent headerContent={`${submitText} Project`}>
+            <PageContent 
+            headerContent={<div>
+                <span>{submitText} Project</span>
+                <ConditionallyRender
+                    condition={hasAccess(CREATE_PROJECT) && editMode}
+                    show={
+                        <Link
+                        to={`/projects/${project.id}/access`}
+                        style={{float: 'right'}}
+                    >
+                        Manage access
+                    </Link>
+                    }
+                />
+                </div>}>
                 <Typography
                     variant="subtitle1"
                     style={{ marginBottom: '0.5rem' }}
@@ -154,6 +169,9 @@ class AddContextComponent extends Component {
                             this.setValue('description', v.target.value)
                         }
                     />
+                    
+
+
                     <ConditionallyRender
                         condition={hasAccess(CREATE_PROJECT)}
                         show={
@@ -171,7 +189,7 @@ class AddContextComponent extends Component {
     }
 }
 
-AddContextComponent.propTypes = {
+ProjectFormComponent.propTypes = {
     project: PropTypes.object.isRequired,
     validateId: PropTypes.func.isRequired,
     submit: PropTypes.func.isRequired,
@@ -179,4 +197,4 @@ AddContextComponent.propTypes = {
     editMode: PropTypes.bool.isRequired,
 };
 
-export default AddContextComponent;
+export default ProjectFormComponent;

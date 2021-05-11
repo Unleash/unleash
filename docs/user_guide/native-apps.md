@@ -15,8 +15,7 @@ The Unleash-proxy consist of the proxy that exposes a simple API for the client.
 
 ## The Proxy-client
 
-There is a js implementation of the proxy-client available.
-Find it here: [https://github.com/unleash-hosted/unleash-proxy-client-js](https://github.com/unleash-hosted/unleash-proxy-client-js)
+There is a js implementation of the proxy-client available. Find it here: [https://github.com/unleash-hosted/unleash-proxy-client-js](https://github.com/unleash-hosted/unleash-proxy-client-js)
 
 ## The Proxy-API
 
@@ -25,7 +24,9 @@ When accessing the Proxy, [Unleash context fields](unleash_context) from the ses
 ```sh
 https://hostname.com/api/proxy?appName=webapp&userId=123&country=NO
 ```
+
 The Proxy will return a list of all the active feature toggles, including variants, available. See an example below
+
 ```sh
 {
     "toggles": [

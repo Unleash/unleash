@@ -173,6 +173,9 @@
       "sdks/ruby_sdk": {
         "title": "Ruby SDK"
       },
+      "sdks/unleash-proxy": {
+        "title": "sdks/unleash-proxy"
+      },
       "toggle_variants": {
         "title": "toggle_variants"
       },

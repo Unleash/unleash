@@ -41,7 +41,6 @@ const UserListItem = ({
             <TableCell>
                 <Avatar
                     data-loading
-                    variant="rounded"
                     alt={user.name}
                     src={user.imageUrl}
                     title={`${user.name || user.email || user.username} (id: ${

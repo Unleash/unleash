@@ -15,7 +15,13 @@ const ConfirmUserAdded = ({
     inviteLink,
 }: IConfirmUserAddedProps) => {
     if (emailSent) {
-        return <ConfirmUserEmail open={open} closeConfirm={closeConfirm} />;
+        return (
+            <ConfirmUserEmail
+                open={open}
+                closeConfirm={closeConfirm}
+                inviteLink={inviteLink}
+            />
+        );
     }
 
     return (

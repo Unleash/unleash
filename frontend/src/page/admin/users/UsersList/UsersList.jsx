@@ -225,16 +225,20 @@ function UsersList({ location }) {
                 validatePassword={validatePassword}
                 user={pwDialog.user}
             />
-            {delUser && (
-                <DelUser
-                    showDialog={delDialog}
-                    closeDialog={closeDelDialog}
-                    user={delUser}
-                    removeUser={onDeleteUser}
-                    userLoading={userLoading}
-                    userApiErrors={userApiErrors}
-                />
-            )}
+
+            <ConditionallyRender
+                condition={delUser}
+                show={
+                    <DelUser
+                        showDialog={delDialog}
+                        closeDialog={closeDelDialog}
+                        user={delUser}
+                        removeUser={onDeleteUser}
+                        userLoading={userLoading}
+                        userApiErrors={userApiErrors}
+                    />
+                }
+            />
         </div>
     );
 }

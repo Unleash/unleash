@@ -3,13 +3,19 @@ import Dialogue from '../../../../../component/common/Dialogue';
 
 import { ReactComponent as EmailIcon } from '../../../../../assets/icons/email.svg';
 import { useStyles } from './ConfirmUserEmail.styles';
+import UserInviteLink from '../ConfirmUserLink/UserInviteLink/UserInviteLink';
 
 interface IConfirmUserEmailProps {
     open: boolean;
     closeConfirm: () => void;
+    inviteLink: string;
 }
 
-const ConfirmUserEmail = ({ open, closeConfirm }: IConfirmUserEmailProps) => {
+const ConfirmUserEmail = ({
+    open,
+    closeConfirm,
+    inviteLink,
+}: IConfirmUserEmailProps) => {
     const styles = useStyles();
     return (
         <Dialogue
@@ -26,6 +32,13 @@ const ConfirmUserEmail = ({ open, closeConfirm }: IConfirmUserEmailProps) => {
             <div className={styles.iconContainer}>
                 <EmailIcon className={styles.emailIcon} />
             </div>
+            <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
+                In a rush?
+            </Typography>
+            <Typography>
+                You may also copy the invite link and send it to the user.
+            </Typography>
+            <UserInviteLink inviteLink={inviteLink} />
         </Dialogue>
     );
 };

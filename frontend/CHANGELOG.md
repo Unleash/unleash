@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+# 4.0.0-beta.3
+
+- fix: include invite link in email (#294)
+- fix: add link to manage access to edit project
+- fix: hosted auth should not need to load initial data
 
 # 4.0.0-beta.2
 

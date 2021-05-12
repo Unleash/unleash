@@ -21,12 +21,7 @@
       "sdks/ruby_sdk",
       "sdks/community"
     ],
-    "Addons framework": [
-      "addons/index",
-      "addons/webhook",
-      "addons/slack",
-      "addons/jira-commenter"
-    ],
+    "Addons framework": ["addons/index", "addons/webhook", "addons/slack"],
     "Advanced": [
       "advanced/strategy_constraints",
       "advanced/custom_activation_strategy",

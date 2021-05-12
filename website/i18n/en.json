@@ -14,9 +14,6 @@
       "addons/datadog": {
         "title": "Datadog"
       },
-      "addons/jira-commenter": {
-        "title": "Jira commenter"
-      },
       "addons/slack": {
         "title": "Slack"
       },

@@ -3,7 +3,7 @@ import React from 'react';
 import { Typography } from '@material-ui/core';
 
 import { useCommonStyles } from '../../../../../../common.styles';
-import StrategyCardConstraints from '../common/StrategyCardConstraints/StrategyCardConstraints';
+import StrategyCardConstraints from '../common/StrategyCardConstraints';
 
 const StrategyCardContentDefault = ({ strategy }) => {
     const commonStyles = useCommonStyles();

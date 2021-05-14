@@ -110,6 +110,9 @@
       "client-specification": {
         "title": "Client Specification"
       },
+      "contributing/developer-guide": {
+        "title": "contributing/developer-guide"
+      },
       "deploy/configuring_unleash_v3": {
         "title": "Configuring Unleash"
       },
@@ -136,9 +139,6 @@
       },
       "deploy/securing_unleash": {
         "title": "Securing Unleash"
-      },
-      "developer_guide": {
-        "title": "Developer guide"
       },
       "guides/feature_updates_to_slack": {
         "title": "Feature Updates To slack"
@@ -229,7 +229,6 @@
       "Documentation": "Documentation",
       "Deploy and manage": "Deploy and manage",
       "Integrations": "Integrations",
-      "Contribute": "Contribute",
       "API": "API",
       "Enterprise": "Enterprise",
       "Help": "Help"

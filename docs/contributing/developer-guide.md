@@ -1,7 +1,13 @@
----
-id: developer_guide
-title: Developer guide
----
+## Introduction
+
+Before developing on this project you will need two things:
+
+- PostgreSQL 10.x or newer
+- Node.js 14.x or newer
+
+```sh
+npm run start:dev
+```
 
 ## PostgreSQL
 
@@ -36,7 +42,9 @@ export TEST_DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash_
 
 If you don't want to install PostgreSQL locally, you can spin up an Docker instance. We have created a script to ease this process: `scripts/docker-postgres.sh`
 
-## Commands
+## Start the application
+
+In order to start the application you will need Node.js v14.x or newer installed locally.
 
 ```
 // Install dependencies

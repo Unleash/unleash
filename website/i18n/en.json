@@ -217,6 +217,12 @@
       },
       "user_guide/unleash_context": {
         "title": "Unleash Context"
+      },
+      "user_guide/user-management": {
+        "title": "User Management"
+      },
+      "user_guide/v4_whats_new": {
+        "title": "What's new in v4?"
       }
     },
     "links": {

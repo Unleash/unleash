@@ -2,12 +2,14 @@
   "documentation": {
     "Getting started": [
       "user_guide/index",
+      "user_guide/v4_whats_new",
       "user_guide/create_feature_toggle",
       "user_guide/activation_strategy",
       "user_guide/control_rollout",
       "user_guide/projects",
       "user_guide/unleash_context",
       "user_guide/technical_debt",
+      "user_guide/user-management",
       "user_guide/rbac",
       "user_guide/native_apps",
       "user_guide/single_page_apps"

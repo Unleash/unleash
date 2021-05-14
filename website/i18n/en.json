@@ -110,6 +110,9 @@
       "client-specification": {
         "title": "Client Specification"
       },
+      "deploy/configuring_unleash_v3": {
+        "title": "Configuring Unleash"
+      },
       "deploy/configuring_unleash": {
         "title": "Configuring Unleash"
       },
@@ -197,9 +200,6 @@
       "user_guide/create_feature_toggle": {
         "title": "Create a feature toggle"
       },
-      "user_guide/discover_unknown_toggles": {
-        "title": "Discover unknown toggles"
-      },
       "user_guide/index": {
         "title": "Introduction"
       },
@@ -211,9 +211,6 @@
       },
       "user_guide/rbac": {
         "title": "Role-based Access control"
-      },
-      "user_guide/single_page_apps": {
-        "title": "Working with single page apps"
       },
       "user_guide/technical_debt": {
         "title": "Technical Debt"

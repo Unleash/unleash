@@ -11,7 +11,8 @@ Currently Unleash support the following Addons out of the box:
 
 - [Webhook](./webhook) - A generic way to post messages from Unleash to third party services.
 - [Slack](./slack) - Allows Unleash to post updates to Slack.
-- [Jira Commenter](./jira-commenter) - Allows Unleash to post comments to jira issues (beta).
+- [Microsoft Teams](./teams) - Allows Unleash to post updates to Microsoft Teams.
+- [Datadog](./datadog) -allows Unleash to post Updates to Datadog when a feature toggle is updated.
 
 In future releases we plan to support community built addons.
 

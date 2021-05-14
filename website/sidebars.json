@@ -8,6 +8,7 @@
       "user_guide/projects",
       "user_guide/unleash_context",
       "user_guide/technical_debt",
+      "user_guide/rbac",
       "user_guide/native_apps",
       "user_guide/single_page_apps"
     ],
@@ -67,8 +68,5 @@
   },
   "Integrations": {
     "Integrations": ["integrations/integrations"]
-  },
-  "Contribute": {
-    "Contribute to Unleash": ["developer_guide", "client-specification"]
   }
 }

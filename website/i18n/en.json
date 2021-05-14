@@ -206,6 +206,9 @@
       "user_guide/projects": {
         "title": "Projects"
       },
+      "user_guide/rbac": {
+        "title": "Role-based Access control"
+      },
       "user_guide/single_page_apps": {
         "title": "Working with single page apps"
       },
@@ -235,8 +238,7 @@
       "Internal": "Internal",
       "Specification": "Specification",
       "Deploy & configure": "Deploy & configure",
-      "Integrations": "Integrations",
-      "Contribute to Unleash": "Contribute to Unleash"
+      "Integrations": "Integrations"
     }
   },
   "pages-strings": {

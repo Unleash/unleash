@@ -3,9 +3,7 @@ id: projects
 title: Projects
 ---
 
-> **Enterprise**
->
-> Project support is only available in Unleash Enterprise
+> Project support is available as part of Unleash Enterprise.
 
 ## Overview
 

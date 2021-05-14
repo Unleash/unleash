@@ -3,7 +3,7 @@ id: getting_started
 title: Getting Started
 ---
 
-> This section only applies if you plan to self-host Unleash. If you are looking for our hosted solution you should head over to [Unleash-hosted.com](https://www.unleash-hosted.com)
+> This section only applies if you plan to self-host Unleash. If you are looking for our hosted solution you should head over to [www.getunleash.io](https://www.getunleash.io/plans)
 
 ## Requirements
 
@@ -15,19 +15,22 @@ You will need:
 
 ## Start Unleash server
 
-Whichever option you choose to start Unleash, you must specify a database URI (it can be set in the environment variable DATABASE_URL).
+Whichever option you choose to start Unleash, you must specify a database URI (it can be set in the environment variable DATABASE_URL). If your database server is not set up to support SSL you'll also need to set the environment variable `DATABASE_SSL` to `false`
 
 ---
-### v4.0
 
-If your database server is not set up to support SSL you'll also need to set the environment variable DATABASE_SSL to false
-
----
 Once the server has started, you will see the message:
 
 ```sh
 Unleash started on http://localhost:4242
 ```
+
+---
+
+**Unleash v4:** The first time Unleash starts it will create a default user which you can use to sign-in to you Unleash instance and add more users with:
+
+- username: `admin`
+- password: `unleash4all`
 
 ### Option one - use Docker
 
@@ -86,10 +89,10 @@ docker run -p 4242:4242 \
          port: 5432,
          database: 'unleash',
          user: 'unleash_user',
-         password: 'passord'
+         password: 'passord',
        },
-       server: { 
-         port: 4242
+       server: {
+         port: 4242,
        },
      })
      .then(unleash => {

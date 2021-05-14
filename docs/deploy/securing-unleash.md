@@ -3,15 +3,15 @@ id: securing_unleash
 title: Securing Unleash
 ---
 
-> This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with a secure setup and multiple SSO options.
+> This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with multiple SSO options, such as SAML 2.0, OpenId Connect.
 
-The Unleash API is split into two different paths: `/api/client` and `/api/admin`. This makes it easy to have different authentication strategy for the admin interface and the client-api used by the applications integrating with Unleash.
+**If you are still using Unleash v3 you need to follow the [securing-unleash-v3](./securing-unleash-v3)**
 
-## General settings
+Out of the box Unleash Open-Source comes with username/password authentication. It also comes with API token support out of the box, to make it easy to handle access tokens for Client SDKs and programmatic asses to the Unleash APIs.
 
-Unleash uses an encrypted cookie to maintain a user session. This allows users to be logged in across multiple instances of Unleash. To protect this cookie, Unleash will automatically generate a secure token the first time you start Unleash.
+### Implementing Custom Authentication
 
-## Securing the Admin API
+If you do not wish to use the built-in
 
 To secure the Admin API, you have to tell Unleash that you are using a custom admin authentication and implement your authentication logic as a preHook.
 
@@ -24,7 +24,7 @@ unleash
     databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash',
     authentication: {
       type: 'custom',
-      customAuthHandler: myCustomAdminAuth
+      customAuthHandler: myCustomAdminAuth,
     },
   })
   .then(unleash => {

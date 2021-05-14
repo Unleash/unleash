@@ -1,6 +1,6 @@
 ---
-id: securing_unleash
-title: Securing Unleash
+id: securing-unleash-v3
+title: Securing Unleash v3
 ---
 
 > This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with a secure setup and multiple SSO options.

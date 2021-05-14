@@ -137,6 +137,9 @@
       "deploy/migration_guide": {
         "title": "Migration Guide"
       },
+      "deploy/securing-unleash-v3": {
+        "title": "Securing Unleash v3"
+      },
       "deploy/securing_unleash": {
         "title": "Securing Unleash"
       },

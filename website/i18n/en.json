@@ -164,6 +164,9 @@
       "sdks/node_sdk": {
         "title": "Node SDK"
       },
+      "sdks/proxy-javascript": {
+        "title": "JavaScript Proxy SDK"
+      },
       "sdks/python_sdk": {
         "title": "Python SDK"
       },
@@ -171,7 +174,7 @@
         "title": "Ruby SDK"
       },
       "sdks/unleash-proxy": {
-        "title": "sdks/unleash-proxy"
+        "title": "The Unleash Proxy"
       },
       "toggle_variants": {
         "title": "toggle_variants"

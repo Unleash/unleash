@@ -22,6 +22,8 @@
       "sdks/go_sdk",
       "sdks/python_sdk",
       "sdks/ruby_sdk",
+      "sdks/unleash-proxy",
+      "sdks/proxy-javascript",
       "sdks/community"
     ],
     "Addons framework": ["addons/index", "addons/webhook", "addons/slack"],

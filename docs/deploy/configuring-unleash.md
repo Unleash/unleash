@@ -3,19 +3,21 @@ id: configuring_unleash
 title: Configuring Unleash
 ---
 
+> This is the guide on how to configure **Unleash v4 self-hosted**. If you are still using Unleash v3 you should checkout [configuring Unleash v3](./configuring_unleash_v3)
+
 # Must configure
 
 ## Database details
 In order for Unleash server to work, you must setup database connection details.
 
 * If using docker, use environment variables
-  ** DATABASE_HOST - the database hostname - defaults to `localhost`
-  ** DATABASE_PORT - the port the database is listening on - defaults to `5432`
-  ** DATABASE_USERNAME - the user configured for access - defaults to `unleash_user`
-  ** DATABASE_PASSWORD - the password for the user - defaults to `passord`
-  ** DATABASE_NAME - the name of the database - defaults to `unleash`
-  ** DATABASE_SSL - a json object representing SSL configuration or `false` for not using SSL
-  ** DATABASE_SCHEMA - Which schema to use - defaults to `public`
+  - `DATABASE_HOST` - the database hostname - defaults to `localhost`
+  - `DATABASE_PORT` - the port the database is listening on - defaults to `5432`
+  - `DATABASE_USERNAME` - the user configured for access - defaults to `unleash_user`
+  - `DATABASE_PASSWORD` - the password for the user - defaults to `passord`
+  - `DATABASE_NAME` - the name of the database - defaults to `unleash`
+  - `DATABASE_SSL` - a json object representing SSL configuration or `false` for not using SSL
+  - `DATABASE_SCHEMA` - Which schema to use - defaults to `public`
 * We also support `DATABASE_URL` see [libpq's doc](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) for full format explanation. In short: `postgres://USER:PASSWORD@HOST:PORT/DATABASE`
 * If you're using secret files from kubernetes and would like to load a `DATABASE_URL` format from a file, use `DATABASE_URL_FILE` and point it to a path containing a connection URL.
 

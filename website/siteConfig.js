@@ -75,7 +75,6 @@ const siteConfig = {
         { doc: 'user_guide/index', label: 'Documentation' },
         { doc: 'deploy/getting_started', label: 'Deploy and manage' },
         { doc: 'integrations/integrations', label: 'Integrations' },
-        { doc: 'developer_guide', label: 'Contribute' },
         { doc: 'api/client/features', label: 'API' },
         { href: 'https://www.unleash-hosted.com/pricing', label: 'Enterprise' },
         { page: 'help', label: 'Help' },

@@ -24,7 +24,7 @@
       "sdks/proxy-javascript",
       "sdks/community"
     ],
-    "Addons framework": ["addons/index", "addons/webhook", "addons/slack"],
+    "Addons framework": ["addons/index", "addons/webhook", "addons/slack", "addons/teams", "addons/datadog"],
     "Advanced": [
       "advanced/strategy_constraints",
       "advanced/custom_activation_strategy",

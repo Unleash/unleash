@@ -22,7 +22,6 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
         },
     };
     const options = mergeAll<IUnleashOptions>([testConfig, config]);
-    console.log(options);
     return createConfig(options);
 }
 

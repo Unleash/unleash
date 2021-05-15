@@ -141,3 +141,27 @@ test.serial(
         t.truthy(activeInvitations[userIdToCreateResetFor]);
     },
 );
+
+test.serial(
+    'Should create a welcome link with correct baseUriPath',
+    async t => {
+        const localConfig: IUnleashConfig = createTestConfig({
+            server: {
+                baseUriPath: '/hosted',
+            },
+        });
+        const localResetTokenService = new ResetTokenService(
+            stores,
+            localConfig,
+        );
+        const url = await localResetTokenService.createNewUserUrl(
+            userIdToCreateResetFor,
+            adminUser.username,
+        );
+        const urlS = url.toString();
+        t.is(
+            urlS.substring(0, urlS.indexOf('=')),
+            `${localConfig.server.unleashUrl}/hosted/new-user?token`,
+        );
+    },
+);

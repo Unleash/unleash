@@ -3,11 +3,11 @@ id: securing_unleash
 title: Securing Unleash
 ---
 
-> This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with multiple SSO options, such as SAML 2.0, OpenId Connect.
-
 **If you are still using Unleash v3 you need to follow the [securing-unleash-v3](./securing-unleash-v3)**
 
-Out of the box Unleash Open-Source comes with username/password authentication. It also comes with API token support out of the box, to make it easy to handle access tokens for Client SDKs and programmatic asses to the Unleash APIs.
+> This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with multiple SSO options, such as SAML 2.0, OpenId Connect.
+
+Unleash Open-Source v4 comes with username/password authentication out of the box. In addition Unleash v4 also comes with API token support, to make it easy to handle access tokens for Client SDKs and programmatic asses to the Unleash APIs.
 
 ### Implementing Custom Authentication
 
@@ -45,51 +45,6 @@ Additionally, you can trigger the admin interface to prompt the user to sign in 
 
 Examples of custom authentication hooks:
 
-- [google-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/google-auth-hook.js)
-- [basic-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/basic-auth-hook.js)
-- [keycloak-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/keycloak-auth-hook.js)
-
-We also have a version of Unleash deployed on Heroku which uses Google OAuth 2.0: https://secure-unleash.herokuapp.com
-
-## Securing the Client API
-
-A common way to support client access is to use API tokens. [Create a token](../api/token.md). Then use the token when configuring the client
-
-In the [Java client](https://github.com/Unleash/unleash-client-java#custom-http-headers) this would look like this:
-
-```java
-UnleashConfig unleashConfig = UnleashConfig.builder()
-  .appName("my-app")
-  .instanceId("my-instance-1")
-  .unleashAPI(unleashAPI)
-  .customHttpHeader("Authorization", "yourtokenhere")
-  .build();
-```
-
-On the Unleash server side, you need to implement a preRouter hook which verifies that all calls to `/api/client` include this pre-shared key in the defined header. This could look something like this.
-
-```javascript
-const unleash = require('unleash-server');
-const sharedSecret = '12312Random';
-
-unleash
-  .start({
-    databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash',
-    preRouterHook: app => {
-      app.use('/api/client', (req, res, next) => {
-        if (req.header('authorization') !== sharedSecret) {
-          res.sendStatus(401);
-        } else {
-          next();
-        }
-      });
-    },
-  })
-  .then(unleash => {
-    console.log(
-      `Unleash started on http://localhost:${unleash.app.get('port')}`,
-    );
-  });
-```
-
-[client-auth-unleash.js](https://github.com/Unleash/unleash/blob/master/examples/client-auth-unleash.js)
+- [securing-google-auth](https://github.com/Unleash/unleash-examples/tree/main/v4/securing-google-auth)
+- [securing-basic-auth](https://github.com/Unleash/unleash-examples/tree/main/v4/securing-basic-auth)
+- [securing-keycloak-auth](https://github.com/Unleash/unleash-examples/tree/main/v4/securing-keycloak-auth)

@@ -1,7 +1,9 @@
 ---
-id: google_auth
+id: google_auth_v3
 title: Google Auth Hook
 ---
+
+> You can also find the complete [source code for this guide](https://github.com/Unleash/unleash-examples/tree/main/v3/securing-google-auth) in the unleash-examples project.
 
 This part of the tutorial shows how to create a sign-in flow for users and integrate with Unleash server project. The implementation assumes that I am working in `localhost` with `4242` port.
 

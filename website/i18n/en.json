@@ -128,6 +128,9 @@
       "deploy/getting_started": {
         "title": "Getting Started"
       },
+      "deploy/google_auth_v3": {
+        "title": "Google Auth Hook"
+      },
       "deploy/google_auth": {
         "title": "Google Auth Hook"
       },

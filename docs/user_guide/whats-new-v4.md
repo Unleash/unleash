@@ -39,7 +39,7 @@ In version 4 we added support for [OpenID Connect](https://openid.net/connect/) 
 
 ### User Management
 
-In version 4 we improved the User Management and made it available for Unleash Open-Source and Unleash Enterprise. Starting in v4 all users accessing Unleash needs to exist in the Unleash in order to gain access (because they need to have the proper permission from RBAC.)
+In version 4 we improved the User Management and made it available for Unleash Open-Source and Unleash Enterprise. Starting in v4 all users accessing Unleash needs to exist in Unleash in order to gain access (because they need to have the proper permission from RBAC.)
 
 [Read more](./user-management)
 
@@ -51,4 +51,4 @@ In version 4 we improved the API Access and made it available for Unleash Open-S
 
 ### Custom stickiness
 
-In Unleash Enterprise v4 you can configure stickiness when your are doing a gradual rollout with the "flexible rollout" strategy or together with feature toggle variants. This means that you can now have a consistent behavior bases on any field available on the [Unleash context](./unleash_context).
+In Unleash Enterprise v4 you can configure stickiness when you are doing a gradual rollout with the "flexible rollout" strategy or together with feature toggle variants. This means that you can now have consistent behavior based on any field available on the [Unleash context](./unleash_context).

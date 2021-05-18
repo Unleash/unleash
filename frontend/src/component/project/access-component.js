@@ -26,7 +26,7 @@ import AddUserComponent from './access-add-user';
 import projectApi from '../../store/project/api';
 import PageContent from '../common/PageContent';
 import HeaderTitle from '../common/HeaderTitle';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 function AccessComponent({ projectId, project }) {
     const [roles, setRoles] = useState([]);

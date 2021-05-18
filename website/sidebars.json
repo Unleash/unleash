@@ -2,7 +2,7 @@
   "documentation": {
     "Getting started": [
       "user_guide/index",
-      "user_guide/v4_whats_new",
+      "user_guide/v4-whats-new",
       "user_guide/create_feature_toggle",
       "user_guide/activation_strategy",
       "user_guide/control_rollout",
@@ -10,6 +10,7 @@
       "user_guide/unleash_context",
       "user_guide/user-management",
       "user_guide/rbac",
+      "user_guide/api-token",
       "user_guide/technical_debt"
     ],
     "Unleash SDKs": [
@@ -24,7 +25,13 @@
       "sdks/proxy-javascript",
       "sdks/community"
     ],
-    "Addons framework": ["addons/index", "addons/webhook", "addons/slack", "addons/teams", "addons/datadog"],
+    "Addons framework": [
+      "addons/index",
+      "addons/webhook",
+      "addons/slack",
+      "addons/teams",
+      "addons/datadog"
+    ],
     "Advanced": [
       "advanced/strategy_constraints",
       "advanced/custom_activation_strategy",
@@ -53,7 +60,7 @@
       "api/admin/context",
       "api/admin/projects"
     ],
-    "Internal": ["api/internal/internal", "api/internal/health"],
+    "Status": ["api/internal/internal", "api/internal/health"],
     "Specification": ["api/open_api"]
   },
   "Deploy and manage": {

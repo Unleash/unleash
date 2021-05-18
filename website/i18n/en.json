@@ -101,9 +101,6 @@
       "api/open_api": {
         "title": "Open API Specification"
       },
-      "api/api_token": {
-        "title": "Create api Token"
-      },
       "client_sdk": {
         "title": "client_sdk"
       },
@@ -221,13 +218,16 @@
       "user_guide/technical_debt": {
         "title": "Technical Debt"
       },
+      "user_guide/api-token": {
+        "title": "API Tokens"
+      },
       "user_guide/unleash_context": {
         "title": "Unleash Context"
       },
       "user_guide/user-management": {
         "title": "User Management"
       },
-      "user_guide/v4_whats_new": {
+      "user_guide/v4-whats-new": {
         "title": "What's new in v4?"
       }
     },
@@ -246,7 +246,7 @@
       "Advanced": "Advanced",
       "Client": "Client",
       "Admin": "Admin",
-      "Internal": "Internal",
+      "Status": "Status",
       "Specification": "Specification",
       "Deploy & configure": "Deploy & configure",
       "Integrations": "Integrations"

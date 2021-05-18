@@ -1,5 +1,5 @@
 ---
-id: v4_whats_new
+id: v4-whats-new
 title: What's new in v4?
 ---
 
@@ -45,4 +45,10 @@ In version 4 we improved the User Management and made it available for Unleash O
 
 ### API access
 
-In version 4 we improved the API Access and made it available for Unleash Open-Source and Unleash Enterprise. Starting from Unleash v4 we require all SDKs to use an access token in order to connect to Unleash. [Read more](../advanced/api_access)
+In version 4 we improved the API Access and made it available for Unleash Open-Source and Unleash Enterprise. Starting from Unleash v4 we require all SDKs to use an access token in order to connect to Unleash.
+
+[Read more](../advanced/api_access)
+
+### Custom stickiness
+
+In Unleash Enterprise v4 you can configure stickiness when your are doing a gradual rollout with the "flexible rollout" strategy or together with feature toggle variants. This means that you can now have a consistent behavior bases on any field available on the [Unleash context](./unleash_context).

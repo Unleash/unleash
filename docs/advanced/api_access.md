@@ -7,7 +7,7 @@ It is possible to integrate directly with the Admin API. In this guide we will e
 
 ## Step 1: Create API token
 
-Please refer to [Create token](../api/token.md) on how to create an API token. You'll need a token with `Admin` level access for this to work.
+Please refer to [Create token](../user_guide/api-token) on how to create an API token. You'll need a token with `Admin` level access for this to work.
 
 Please note that it may take up to 60 seconds for the new key to propagate to all Unleash-hosted instances.
 
@@ -15,9 +15,9 @@ Please note that it may take up to 60 seconds for the new key to propagate to al
 
 ## Step 2: Use Admin API
 
-Now that you have an access token with admin privileges we can use that to perform changes in our Unleash-hosted instance. 
+Now that you have an access token with admin privileges we can use that to perform changes in our Unleash-hosted instance.
 
-In the example below we will use the [Unleash Admin API](../api/admin/features) to enable the “Demo” feature toggle sing curl. 
+In the example below we will use the [Unleash Admin API](../api/admin/features) to enable the “Demo” feature toggle sing curl.
 
 ```sh
 curl -X POST -H "Authorization: admintoken"
@@ -25,7 +25,7 @@ https://app.unleash-hosted.com/demo/api/admin/features/Demo/toggle/on
 ```
 
 **Great success!** We have now enabled the feature toggle. We can also verify that it was actually changed by the API user by navigating to the history (audit log) for this feature toggle.
-  
+
 ![Create token](../assets/api_access_history.png)
 
 ## API overview

@@ -109,7 +109,7 @@ docker run -p 4242:4242 \
 
 ## Create an api token for your client
 
-- [API Token creation](../api/token.md)
+- [API Token creation](../user_guide/api-token)
 
 ## Test your server and create a sample API call
 

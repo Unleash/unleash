@@ -28,7 +28,7 @@ export default class ResetTokenService {
 
     private logger: Logger;
 
-    private readonly unleashBase: URL;
+    private readonly unleashBase: string;
 
     constructor(
         stores: IStores,
@@ -36,7 +36,7 @@ export default class ResetTokenService {
     ) {
         this.store = stores.resetTokenStore;
         this.logger = getLogger('/services/reset-token-service.ts');
-        this.unleashBase = new URL(server.unleashUrl);
+        this.unleashBase = server.unleashUrl;
     }
 
     async useAccessToken(token: IResetQuery): Promise<boolean> {
@@ -82,7 +82,7 @@ export default class ResetTokenService {
     }
 
     private getExistingInvitationUrl(token: IResetToken) {
-        return new URL(`/#/new-user?token=${token.token}`, this.unleashBase);
+        return new URL(`${this.unleashBase}/new-user?token=${token.token}`);
     }
 
     private async createResetUrl(
@@ -92,7 +92,7 @@ export default class ResetTokenService {
     ): Promise<URL> {
         const token = await this.createToken(forUser, creator);
         return Promise.resolve(
-            new URL(`${path}?token=${token.token}`, this.unleashBase),
+            new URL(`${this.unleashBase}${path}?token=${token.token}`),
         );
     }
 

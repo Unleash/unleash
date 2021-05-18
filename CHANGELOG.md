@@ -1,10 +1,25 @@
 # Changelog
 
-# 4.0.0-beta.2
+# 4.0.0-beta.5
+
+- fix: upgrade to unleash-frontend 4.0.0-beta.4
+- fix: versionInfo as part of ui-config
+- fix: misunderstanding node URL api
+- fix: demo auth type should support api token
+
+# 4.0.0-beta.4
+
+- upgrade unleash-frontend to version 4.0.0-beta.3
+- fix: convert to typescript
+- fix: report email as not sent to fe if it throws (#844)
+
+# 4.0.0-beta.3
+
 - chore: update changelog
-- chore: update frontend
 - fix: reset-token-service should use unleashUrl
 - chore: expose an endpoint to really delete a toggle (#808)
+- fix: upgrade unleash-frontend to version 4.0.0-beta.2
+
 # 4.0.0-beta.1
 
 - fix: upgrade unleash-frontend to version 4.0.0-beta.0

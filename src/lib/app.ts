@@ -88,6 +88,7 @@ export default function getApp(
             break;
         }
         case IAuthType.DEMO: {
+            app.use(baseUriPath, apiTokenMiddleware(config, services));
             demoAuthentication(app, config.server.baseUriPath, services);
             break;
         }

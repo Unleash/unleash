@@ -106,16 +106,19 @@ class BootstrapController extends Controller {
 
         const authenticationType =
             this.config.authentication && this.config.authentication.type;
+        const versionInfo = this.versionService.getVersionInfo();
+
+        const uiConfig = {
+            ...this.config.ui,
+            authenticationType,
+            unleashUrl: this.config.server.unleashUrl,
+            version,
+            baseUriPath: this.config.server.baseUriPath,
+            versionInfo,
+        };
 
         res.json({
-            uiConfig: {
-                ...this.config.ui,
-                authenticationType,
-                unleashUrl: this.config.server.unleashUrl,
-                version,
-                baseUriPath: this.config.server.baseUriPath,
-            },
-            version: this.versionService.getVersionInfo(),
+            uiConfig,
             user: { ...req.user, permissions: userPermissions },
             email: this.emailService.isEnabled(),
             context,

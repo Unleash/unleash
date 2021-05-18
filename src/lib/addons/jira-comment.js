@@ -91,7 +91,7 @@ class JiraAddon extends Addon {
                                     {
                                         type: 'link',
                                         attrs: {
-                                            href: `${this.unleashUrl}/#/features/strategies/${featureName}`,
+                                            href: `${this.unleashUrl}/features/strategies/${featureName}`,
                                             title: 'Visit Unleash Admin UI',
                                         },
                                     },

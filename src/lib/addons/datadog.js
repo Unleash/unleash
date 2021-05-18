@@ -60,7 +60,7 @@ class DatadogAddon extends Addon {
 
     featureLink(event) {
         const path = event.type === FEATURE_ARCHIVED ? 'archive' : 'features';
-        return `${this.unleashUrl}/#/${path}/strategies/${event.data.name}`;
+        return `${this.unleashUrl}/${path}/strategies/${event.data.name}`;
     }
 
     generateStaleText(event) {
@@ -69,7 +69,7 @@ class DatadogAddon extends Addon {
         const feature = `[${data.name}](${this.featureLink(event)})`;
 
         if (isStale) {
-            return `The feature toggle *${feature}* is now *ready to be removed* from the code. 
+            return `The feature toggle *${feature}* is now *ready to be removed* from the code.
 This was changed by ${createdBy}.`;
         }
         return `The feature toggle *${feature}* was *unmarked as stale* by ${createdBy}.`;

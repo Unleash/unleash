@@ -24,7 +24,9 @@ function AddUserComponent({ roles, addUserToRole }) {
 
     useEffect(() => {
         if (roles.length > 0) {
-            const regularRole = roles.find(r => r.name.toLowerCase() === 'regular');
+            const regularRole = roles.find(
+                r => r.name.toLowerCase() === 'regular'
+            );
             setRole(regularRole || roles[0]);
         }
     }, [roles]);
@@ -80,7 +82,9 @@ function AddUserComponent({ roles, addUserToRole }) {
                     filterOptions={o => o}
                     getOptionLabel={option => {
                         if (option) {
-                            return `${option.name || '(Empty name)'} <${option.email || option.username}>`;
+                            return `${option.name || '(Empty name)'} <${
+                                option.email || option.username
+                            }>`;
                         } else return '';
                     }}
                     options={options}
@@ -100,7 +104,12 @@ function AddUserComponent({ roles, addUserToRole }) {
                                 ),
                                 endAdornment: (
                                     <React.Fragment>
-                                        {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                        {loading ? (
+                                            <CircularProgress
+                                                color="inherit"
+                                                size={20}
+                                            />
+                                        ) : null}
                                         {params.InputProps.endAdornment}
                                     </React.Fragment>
                                 ),
@@ -111,7 +120,9 @@ function AddUserComponent({ roles, addUserToRole }) {
             </Grid>
             <Grid item>
                 <FormControl>
-                    <InputLabel id="add-user-select-role-label">Role</InputLabel>
+                    <InputLabel id="add-user-select-role-label">
+                        Role
+                    </InputLabel>
                     <Select
                         labelId="add-user-select-role-label"
                         id="add-user-select-role"
@@ -128,13 +139,19 @@ function AddUserComponent({ roles, addUserToRole }) {
                 </FormControl>
             </Grid>
             <Grid item>
-                <Button variant="contained" color="primary" disabled={!user} onClick={handleSubmit}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={!user}
+                    onClick={handleSubmit}
+                >
                     Add user
                 </Button>
             </Grid>
         </Grid>
     );
 }
+
 AddUserComponent.propTypes = {
     roles: PropTypes.array.isRequired,
     addUserToRole: PropTypes.func.isRequired,

@@ -48,7 +48,7 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
     );
 
     const projectLink = ({ id, name }) => (
-        <Link to={`/projects/edit/${id}`}>
+        <Link to={`/projects/view/${id}`}>
             <strong>{name}</strong>
         </Link>
     );

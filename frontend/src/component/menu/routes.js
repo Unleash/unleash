@@ -18,6 +18,7 @@ import LogoutFeatures from '../../page/user/logout';
 import ListProjects from '../../page/project';
 import CreateProject from '../../page/project/create';
 import EditProject from '../../page/project/edit';
+import ViewProject from '../../page/project/view';
 import EditProjectAccess from '../../page/project/access';
 import ListTagTypes from '../../page/tag-types';
 import CreateTagType from '../../page/tag-types/create';
@@ -194,6 +195,14 @@ export const routes = [
         parent: '/projects',
         title: ':id',
         component: EditProject,
+        type: 'protected',
+        layout: 'main',
+    },
+    {
+        path: '/projects/view/:id',
+        parent: '/projects',
+        title: ':id',
+        component: ViewProject,
         type: 'protected',
         layout: 'main',
     },

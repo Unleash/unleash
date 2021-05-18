@@ -1,5 +1,10 @@
 # Changelog
 
+# 4.0.0-beta.6
+
+- fix: Upgrade unleash-frontend to version 4.0.0-beta.5
+- fix: Update docs to prepare for version 4
+
 # 4.0.0-beta.5
 
 - fix: upgrade to unleash-frontend 4.0.0-beta.4

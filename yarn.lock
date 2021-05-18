@@ -261,34 +261,6 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@passport-next/passport-google-oauth2@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@passport-next/passport-google-oauth2/-/passport-google-oauth2-1.0.0.tgz"
-  integrity sha512-rbAtK0eGgjQhT/MqMSuN7Mxy4XTr1/LINk5rYPVezP3MfkVYuK20V0XW9fg1ikFMvyxSdmfLTyYduud7SfFSqw==
-  dependencies:
-    "@passport-next/passport-oauth2" "1.7.x"
-
-"@passport-next/passport-oauth2@1.7.x":
-  version "1.7.1"
-  resolved "https://registry.npmjs.org/@passport-next/passport-oauth2/-/passport-oauth2-1.7.1.tgz"
-  integrity sha512-rCNznNTnUbMxTyOMCdeM2VcQvHI1CM0F07Hvao4kYDgAx59xk+QxiR6ax6ZIBrCE3glCy+pOaTQfXowXxwb4lg==
-  dependencies:
-    "@passport-next/passport-strategy" "1.1.x"
-    lodash "^4.17.11"
-    oauth "0.9.x"
-
-"@passport-next/passport-strategy@1.1.x", "@passport-next/passport-strategy@1.x.x":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@passport-next/passport-strategy/-/passport-strategy-1.1.0.tgz"
-  integrity sha512-2KhFjtPueJG6xVj2HnqXt9BlANOfYCVLyu+pXYjPGBDT8yk+vQwc/6tsceIj+mayKcoxMau2JimggXRPHgoc8w==
-
-"@passport-next/passport@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.npmjs.org/@passport-next/passport/-/passport-3.1.0.tgz"
-  integrity sha512-CRqxmh9A9StmDhHLm9pc9Z6wP672iyGElIYX66wlUzzDffzH8xLkaVwyqXvIr6j/19CHaRCeG1hNfiVq/4KG1A==
-  dependencies:
-    "@passport-next/passport-strategy" "1.x.x"
-
 "@sideway/address@^4.1.0":
   version "4.1.0"
   resolved "https://registry.npmjs.org/@sideway/address/-/address-4.1.0.tgz"
@@ -983,13 +955,6 @@ base@^0.11.1:
     isobject "^3.0.1"
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
-
-basic-auth@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/basic-auth/-/basic-auth-2.0.1.tgz"
-  integrity sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==
-  dependencies:
-    safe-buffer "5.1.2"
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
@@ -3088,7 +3053,7 @@ googleapis-common@^0.7.0:
     url-template "^2.0.8"
     uuid "^3.2.1"
 
-googleapis@^16.0.0, googleapis@^39.1.0:
+googleapis@^39.1.0:
   version "39.2.0"
   resolved "https://registry.yarnpkg.com/googleapis/-/googleapis-39.2.0.tgz#5c81f721e9da2e80cb0b25821ed60d3bc200c3da"
   integrity sha512-66X8TG1B33zAt177sG1CoKoYHPP/B66tEpnnSANGCqotMuY5gqSQO8G/0gqHZR2jRgc5CHSSNOJCnpI0SuDxMQ==
@@ -4194,7 +4159,7 @@ lodash.sortby@^4.7.0:
   resolved "https://registry.npmjs.org/lodash.sortby/-/lodash.sortby-4.7.0.tgz"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
 
-lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20:
+lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20:
   version "4.17.20"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.20.tgz"
   integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
@@ -4747,11 +4712,6 @@ oauth-sign@~0.9.0:
   resolved "https://registry.npmjs.org/oauth-sign/-/oauth-sign-0.9.0.tgz"
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
 
-oauth@0.9.x:
-  version "0.9.15"
-  resolved "https://registry.npmjs.org/oauth/-/oauth-0.9.15.tgz"
-  integrity sha1-vR/vr2hslrdUda7VGWQS/2DPucE=
-
 object-assign@^4, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
@@ -5087,27 +5047,6 @@ pascalcase@^0.1.1:
   resolved "https://registry.npmjs.org/pascalcase/-/pascalcase-0.1.1.tgz"
   integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
 
-passport-google-auth@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/passport-google-auth/-/passport-google-auth-1.0.2.tgz"
-  integrity sha1-izALWqRC70M94dgy7TESh30LKTg=
-  dependencies:
-    googleapis "^16.0.0"
-    passport-strategy "1.x"
-
-passport-strategy@1.x, passport-strategy@1.x.x:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/passport-strategy/-/passport-strategy-1.0.0.tgz"
-  integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
-
-passport@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.npmjs.org/passport/-/passport-0.4.1.tgz"
-  integrity sha512-IxXgZZs8d7uFSt3eqNjM9NQ3g3uQCW5avD8mRNoXV99Yig50vjuaez6dQK2qC0kVWPRTujxY0dWgGfT09adjYg==
-  dependencies:
-    passport-strategy "1.x.x"
-    pause "0.0.1"
-
 path-exists@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/path-exists/-/path-exists-3.0.0.tgz"
@@ -5185,11 +5124,6 @@ pause-stream@0.0.11:
   integrity sha1-/lo0sMvOErWqaitAPuLnO2AvFEU=
   dependencies:
     through "~2.3"
-
-pause@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.npmjs.org/pause/-/pause-0.0.1.tgz"
-  integrity sha1-HUCLP9t2kjuVQ9lvtMnf1TXZy10=
 
 performance-now@^2.1.0:
   version "2.1.0"
@@ -6781,10 +6715,10 @@ universalify@^0.1.0:
   resolved "https://registry.npmjs.org/universalify/-/universalify-0.1.2.tgz"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unleash-frontend@4.0.0-beta.4:
-  version "4.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.0.0-beta.4.tgz#42f22adc09c6f21e572a65070c58319fc18e4a05"
-  integrity sha512-/jz95QOD74ouqFl4LYt0UWlm25yLwB3IMigUJLshmFzY01mGadfIWcuk/lV1Sc9G+VCtYoiJ9hLm/ethDnUcmA==
+unleash-frontend@4.0.0-beta.5:
+  version "4.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.0.0-beta.5.tgz#da92ae786032cf819689367da7faedefb6325e93"
+  integrity sha512-RD9NjrZqPE2883VZZjmYj1JJn/pGw+DyP01K3Smyd5NQ/mwo2OvBO+OQ554OotdNSYojON9GATWK9Wz63gHgog==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

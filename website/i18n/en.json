@@ -14,9 +14,6 @@
       "addons/datadog": {
         "title": "Datadog"
       },
-      "addons/jira-commenter": {
-        "title": "Jira commenter"
-      },
       "addons/slack": {
         "title": "Slack"
       },
@@ -80,6 +77,9 @@
       "api/admin/tags": {
         "title": "/api/admin/tags"
       },
+      "api/basic-auth": {
+        "title": "Basic Auth"
+      },
       "api/client/features": {
         "title": "/api/client/features"
       },
@@ -104,11 +104,14 @@
       "client_sdk": {
         "title": "client_sdk"
       },
-      "client_specification": {
+      "client-specification": {
         "title": "Client Specification"
       },
-      "database_schema": {
-        "title": "Database Schema"
+      "contributing/developer-guide": {
+        "title": "contributing/developer-guide"
+      },
+      "deploy/configuring_unleash_v3": {
+        "title": "Configuring Unleash"
       },
       "deploy/configuring_unleash": {
         "title": "Configuring Unleash"
@@ -116,8 +119,14 @@
       "deploy/database_backup": {
         "title": "Database Backup"
       },
+      "deploy/email": {
+        "title": "Email"
+      },
       "deploy/getting_started": {
         "title": "Getting Started"
+      },
+      "deploy/google_auth_v3": {
+        "title": "Google Auth Hook"
       },
       "deploy/google_auth": {
         "title": "Google Auth Hook"
@@ -128,14 +137,11 @@
       "deploy/migration_guide": {
         "title": "Migration Guide"
       },
+      "deploy/securing-unleash-v3": {
+        "title": "Securing Unleash v3"
+      },
       "deploy/securing_unleash": {
         "title": "Securing Unleash"
-      },
-      "developer_guide": {
-        "title": "Developer guide"
-      },
-      "getting_started": {
-        "title": "Getting Started"
       },
       "guides/feature_updates_to_slack": {
         "title": "Feature Updates To slack"
@@ -145,6 +151,9 @@
       },
       "integrations/integrations": {
         "title": "Integrations and plugins"
+      },
+      "sdks/community": {
+        "title": "Community SDKs..."
       },
       "sdks/dot_net_sdk": {
         "title": ".net SDK"
@@ -161,11 +170,17 @@
       "sdks/node_sdk": {
         "title": "Node SDK"
       },
+      "sdks/proxy-javascript": {
+        "title": "JavaScript Proxy SDK"
+      },
       "sdks/python_sdk": {
         "title": "Python SDK"
       },
       "sdks/ruby_sdk": {
         "title": "Ruby SDK"
+      },
+      "sdks/unleash-proxy": {
+        "title": "The Unleash Proxy"
       },
       "toggle_variants": {
         "title": "toggle_variants"
@@ -188,9 +203,6 @@
       "user_guide/create_feature_toggle": {
         "title": "Create a feature toggle"
       },
-      "user_guide/discover_unknown_toggles": {
-        "title": "Discover unknown toggles"
-      },
       "user_guide/index": {
         "title": "Introduction"
       },
@@ -200,37 +212,44 @@
       "user_guide/projects": {
         "title": "Projects"
       },
-      "user_guide/single_page_apps": {
-        "title": "Working with single page apps"
+      "user_guide/rbac": {
+        "title": "Role-based Access control"
       },
       "user_guide/technical_debt": {
         "title": "Technical Debt"
       },
+      "user_guide/api-token": {
+        "title": "API Tokens"
+      },
       "user_guide/unleash_context": {
         "title": "Unleash Context"
+      },
+      "user_guide/user-management": {
+        "title": "User Management"
+      },
+      "user_guide/v4-whats-new": {
+        "title": "What's new in v4?"
       }
     },
     "links": {
       "Documentation": "Documentation",
       "Deploy and manage": "Deploy and manage",
       "Integrations": "Integrations",
-      "Contribute": "Contribute",
       "API": "API",
       "Enterprise": "Enterprise",
       "Help": "Help"
     },
     "categories": {
       "Getting started": "Getting started",
-      "Working with the SDK": "Working with the SDK",
+      "Unleash SDKs": "Unleash SDKs",
       "Addons framework": "Addons framework",
       "Advanced": "Advanced",
       "Client": "Client",
       "Admin": "Admin",
-      "Internal": "Internal",
+      "Status": "Status",
       "Specification": "Specification",
       "Deploy & configure": "Deploy & configure",
-      "Integrations": "Integrations",
-      "Contribute to Unleash": "Contribute to Unleash"
+      "Integrations": "Integrations"
     }
   },
   "pages-strings": {

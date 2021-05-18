@@ -34,11 +34,8 @@ class Footer extends React.Component {
           </a>
           <div>
             <h5>Docs</h5>
-            <a href={this.docUrl('getting_started.html')}>
+            <a href={this.docUrl('user_guide/index.html')}>
               Getting Started
-            </a>
-            <a href={this.docUrl('securing_unleash.html')}>
-              Securing Unleash
             </a>
             <a href={this.docUrl('api/client/features.html')}>
               API Reference
@@ -56,8 +53,8 @@ class Footer extends React.Component {
               Slack community
             </a>
             <a
-              href="https://www.unleash-hosted.com/">
-              Unleash-hosted.com
+              href="https://www.getunleash.io">
+              getunleash.io
             </a>
             <a
               href="https://twitter.com/Unleash_hosted"

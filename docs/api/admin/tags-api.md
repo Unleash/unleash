@@ -3,7 +3,7 @@ id: tags
 title: /api/admin/tags
 ---
 
-> In order to access the admin API endpoints you need to identify yourself. If you are using the `insecure` authentication method, you may use [basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) to identify yourself.
+> In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](../token.md) and add an Authorization header using the token.
 
 ### Create a new tag
 

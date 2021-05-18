@@ -8,7 +8,7 @@ In this guide we explain how to use feature toggles in a Node application using 
 > **Required details**
 >
 > - **API URL** – Where you should connect your client SDK
-> - **API Secret** – Your API secret required to connect to your instance.
+> - **API Secret** – [Your API secret required to connect to your instance](../user_guide/api-token).
 >
 > You can find this information in the “Admin” section Unleash management UI.
 

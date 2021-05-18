@@ -7,11 +7,21 @@ Generally, the intention is that `unleash-server` should always provide support 
 
 ## Upgrading from v3.x to v4.x
 
-(**Work In Progress**: Will be finalized when we release the official v4 version).
+Before you upgrade we strongly recommend that you take a full [database backup](/database_backup), to make sure you can downgrade to version 3.
 
-Before you upgrade we strongly recommends that you take a full [database backup](/database_backup), to make sure you can downgrade to version 3.
+You can also read the highlights of **[what's new in v4](../user_guide/v4-whats-new)**.
 
-### 1. Role-based Access Control (RBAC)
+### 1. All API calls now requires token.
+
+If you are upgrading from Unleash Open-Source v3 client SDKs did not need to use an API token in order to connect to Unleash-server. Starting from v4 we have back-ported the API token handling for Enterprise in to the Open-Source version. This means that all client SDKs now need to use a client token in order to connect to Unleash.
+
+Read more in the [API token documentation](../user_guide/api-token).
+
+### 2. Configuring Unleash
+
+We have done a lot of changes to the options you can pass in to Unleash. If you are manually configuring Unleash you should have a look on the updated [configuring Unleash documentation](./configuring_unleash)
+
+### 3. Role-based Access Control (RBAC)
 
 We have implemented RBAC in Unleash v4. This has totally changed the permission system in Unleash.
 
@@ -32,11 +42,19 @@ const user = userService.loginUserWithoutPassword(
 req.session.user = user;
 ```
 
-### 3. Legacy v2 routes removed
+[Read more about RBAC](../user_guide/rbac)
+
+### 4. Legacy v2 routes removed
 
 Only relevant if you use the `enableLegacyRoutes` option.
 
 In v2 you could query feature toggles on `/api/features`. This was deprecated in v4 and we introduced two different endpoints (`/api/admin/features` and `/api/client/features`) to be able to optimize performance and security. In v3 you could still enable the legacy routes via the `enableLegacyRoutes` option. This was removed in v4.
+
+### 5. Unleash CLI has been removed
+
+Unleash no longer ships with a binary that allows you to start Unleash directly from the command line. From v4 you need to either use Unleash via docker or programmatically.
+
+Read more in our [getting started documentation](./getting_started)
 
 ## Upgrading from v2.x to v3.x
 

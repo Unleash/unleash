@@ -37,4 +37,4 @@ The Slack addon also defined the Tag type "slack". You may use this tag to overr
 
 ![Slack Tags](../assets/slack_addon_tags.png)
 
-In the picture you can see we have defined two slack tags for the "Demo" toggle. In this example Unleash will post updates to the **#notifications** and **#random** channel.
+In the picture you can see we have defined two slack tags for the "new-payment-system" toggle. In this example Unleash will post updates to the **#notifications** and **#random** channel.

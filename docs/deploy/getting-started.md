@@ -3,25 +3,34 @@ id: getting_started
 title: Getting Started
 ---
 
-> This section only applies if you plan to self-host Unleash. If you are looking for our hosted solution you should head over to [Unleash-hosted.com](https://www.unleash-hosted.com)
+> This section only applies if you plan to self-host Unleash. If you are looking for our hosted solution you should head over to [www.getunleash.io](https://www.getunleash.io/plans)
 
 ## Requirements
 
 You will need:
 
-- [Node.js](https://nodejs.org/en/download/) (version 12 or later)
+- [Node.js](https://nodejs.org/en/download/) (version 14 or later)
 - [PostgreSQL](https://www.postgresql.org/download/) (version 10 or later)
 - [Create an unleash user and database](/docs/developer_guide).
 
 ## Start Unleash server
 
-Whichever option you choose to start Unleash, you must specify a database URI (it can be set in the environment variable DATABASE_URL).
+Whichever option you choose to start Unleash, you must specify a database URI (it can be set in the environment variable DATABASE_URL). If your database server is not set up to support SSL you'll also need to set the environment variable `DATABASE_SSL` to `false`
+
+---
 
 Once the server has started, you will see the message:
 
 ```sh
 Unleash started on http://localhost:4242
 ```
+
+---
+
+**Unleash v4:** The first time Unleash starts it will create a default user which you can use to sign-in to you Unleash instance and add more users with:
+
+- username: `admin`
+- password: `unleash4all`
 
 ### Option one - use Docker
 
@@ -47,6 +56,7 @@ docker run -e POSTGRES_PASSWORD=some_password \
 docker run -p 4242:4242 \
   -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
   -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=some_password \
+  -e DATABASE_SSL=false \
   --network unleash unleashorg/unleash-server
 ```
 
@@ -73,8 +83,17 @@ docker run -p 4242:4242 \
 
    unleash
      .start({
-       databaseUrl: 'postgres://unleash_user:password@localhost:5432/unleash',
-       port: 4242,
+       db: {
+         ssl: false,
+         host: 'localhost',
+         port: 5432,
+         database: 'unleash',
+         user: 'unleash_user',
+         password: 'passord',
+       },
+       server: {
+         port: 4242,
+       },
      })
      .then(unleash => {
        console.log(
@@ -88,21 +107,16 @@ docker run -p 4242:4242 \
    node server.js
    ```
 
-### Option three - from a terminal/bash shell
+## Create an api token for your client
 
-_(deprecated)_
-
-```sh
-npm install unleash-server -g
-unleash -d postgres://unleash_user:password@localhost:5432/unleash -p 4242
-```
+- [API Token creation](../user_guide/api-token)
 
 ## Test your server and create a sample API call
 
-Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see a list of example feature toggles, try modifying one of them with [curl](https://curl.se/) from a terminal/bash shell:
+Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see an empty list of feature toggles, try creating one with [curl](https://curl.se/) from a terminal/bash shell:
 
 ```
-curl --location --request PUT 'http://localhost:4242/api/admin/features/Feature.A' --header 'Content-Type: application/json' --data-raw '{\
+curl --location -H "Authorization: <apitoken from previous step>" --request POST 'http://localhost:4242/api/admin/features' --header 'Content-Type: application/json' --data-raw '{\
   "name": "Feature.A",\
   "description": "Dolor sit amet.",\
   "type": "release",\

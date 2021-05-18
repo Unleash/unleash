@@ -101,7 +101,7 @@ const LogoSvg = ({style}) => (
 
 const ProjectTitle = () => (
   <h2 className="projectTitle">
-    <img src={imgUrl('unleash-oss-logo-v2.png')} alt="Unleash" />
+    <img src={imgUrl('Logo_DarkBlue_Transparent_Horizontal.png')} alt="Unleash" width="400" />
     <small>{siteConfig.tagline}</small>
   </h2>
 );

@@ -3,8 +3,7 @@ id: features
 title: /api/client/features
 ---
 
-> In order to access the client API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create a CLIENT token](../token.md) and add an Authorization header using the token.
-
+> In order to access the client API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create a CLIENT token](../../user_guide/api-token) and add an Authorization header using the token.
 
 ### Fetching Feature Toggles
 

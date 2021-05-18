@@ -28,7 +28,8 @@ Unleash v4 allows you control access to both "root resources" and individual pro
 Unleash will come with three "root" role out of the box:
 
 - **Admin** - Used to administer the Unleash instance. Is allowed to add/remove users, add them to roles and update role permissions.
-- **Editor** - Represent users with typical read and write access to Unleash. They will typically be allowed to create new projects (for enterprise), create feature toggles on the "default" project, configure context fields etc. They will not be able to add/remove users or roles. -- **Viewer** - Users with this role are only allowed to read resources in Unleash. They might be added as collaborators to specific projects.
+- **Editor** - Represent users with typical read and write access to Unleash. They will typically be allowed to create new projects (for enterprise), create feature toggles on the "default" project, configure context fields etc. They will not be able to add/remove users or roles.
+- **Viewer** - Users with this role are only allowed to read resources in Unleash. They might be added as collaborators to specific projects.
 
 ### Project
 

@@ -3,7 +3,7 @@ id: features
 title: /api/admin/features
 ---
 
-> > In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](../../user_guide/api-token) and add an Authorization header using the token.
+> In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](../../user_guide/api-token) and add an Authorization header using the token.
 
 ### Fetching Feature Toggles
 
@@ -192,12 +192,12 @@ If the tuple (type, value) does not already exist, it will be added to the list 
 }
 ```
 
-## Success
+**Success**
 
     - Returns _201-CREATED_ if the feature was tagged successfully
     - Creates the tag if needed, then connects the tag to the existing feature
 
-## Failures
+**Failures**
 
     - Returns _404-NOT-FOUND_ if the `type` was not found
 
@@ -207,11 +207,11 @@ If the tuple (type, value) does not already exist, it will be added to the list 
 
 Removes the specified tag from the `(type, value)` tuple from the Feature Toggle's list of tags.
 
-## Success
+**Success**
 
     - Returns _200-OK_
 
-## Failures
+**Failures**
 
     - Returns 404 if the tag does not exist
     - Returns 500 if the database could not be reached
@@ -340,52 +340,3 @@ None
   "tags": []
 }
 ```
-
-## Archive
-
-### Fetch archived toggles
-
-`GET http://unleash.host.com/api/admin/archive/features`
-
-Used to fetch list of archived feature toggles
-
-**Example response:**
-
-```json
-{
-  "version": 1,
-  "features": [
-    {
-      "name": "Feature.A",
-      "description": "lorem ipsum",
-      "type": "release",
-      "enabled": false,
-      "stale": false,
-      "strategies": [
-        {
-          "name": "default",
-          "parameters": {}
-        }
-      ],
-      "variants": [],
-      "tags": [],
-      "strategy": "default",
-      "parameters": {}
-    }
-  ]
-}
-```
-
-### Revive feature toggle
-
-`POST http://unleash.host.com/api/admin/archive/revive`
-
-**Body:**
-
-```json
-{
-  "name": "Feature.A"
-}
-```
-
-Used to revive a feature toggle.

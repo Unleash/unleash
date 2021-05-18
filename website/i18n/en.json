@@ -59,6 +59,9 @@
       "api/admin/features": {
         "title": "/api/admin/features"
       },
+      "api/admin/features-archive": {
+        "title": "/api/admin/archive"
+      },
       "api/admin/feature-types": {
         "title": "/api/admin/feature-types"
       },
@@ -76,6 +79,9 @@
       },
       "api/admin/tags": {
         "title": "/api/admin/tags"
+      },
+      "api/admin/user-admin": {
+        "title": "/api/admin/user-admin"
       },
       "api/basic-auth": {
         "title": "Basic Auth"

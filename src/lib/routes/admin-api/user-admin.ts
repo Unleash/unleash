@@ -127,7 +127,7 @@ export default class UserAdminController extends Controller {
                     username,
                     email,
                     name,
-                    rootRole: Number(rootRole),
+                    rootRole,
                 },
                 user,
             );
@@ -184,7 +184,7 @@ export default class UserAdminController extends Controller {
                     id: Number(id),
                     name,
                     email,
-                    rootRole: Number(rootRole),
+                    rootRole,
                 },
                 user,
             );
@@ -204,8 +204,7 @@ export default class UserAdminController extends Controller {
             await this.userService.deleteUser(+id, user);
             res.status(200).send();
         } catch (error) {
-            this.logger.warn(error);
-            res.status(500).send();
+            handleErrors(res, this.logger, error);
         }
     }
 

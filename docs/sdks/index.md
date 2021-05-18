@@ -3,13 +3,11 @@ id: index
 title: Introduction
 ---
 
-In order to connect your application to Unleash you need to use a client SDK (software developer kit) for your programming language. The SDK will handle connecting to the Unleash server instance and retrieve feature toggles based upon your configuration. Both open-source and the Unleash enterprise offering utilize the same set of client SDKs.
+In order to connect your application to Unleash you need to use a client SDK (software developer kit) for your programming language. In addition you will need a [API token](../user_guide/api-token). The SDK will handle connecting to the Unleash server instance and retrieve feature toggles based upon your configuration. Both open-source and the Unleash enterprise offering utilize the same set of client SDKs.
 
-If you are an Unleash customer, our hosted instances will always be a protected instance, you will therefore have to specify a client secret as the authorization header when you are connecting your client SDK, which you will receive from us when you sign up for one of our packages. In the open source version you must generate your own secret.
+On this page you will find examples for connecting your application to the demo instance. If you are connecting to your own private instance you will have to remember to replace the `API token` and the `API url` given in the examples.
 
-On this page you will find examples for connecting your application to the demo instance. If you are connecting to your own private instance you will have to remember to replace the client secret and the API url given in the examples.
-
-We have examples for all official client SDKs:
+We have examples for all _official client SDKs_:
 
 - [Java SDK](./java_sdk)
 - [Node.js SDK](./node_sdk)
@@ -17,7 +15,9 @@ We have examples for all official client SDKs:
 - [Ruby SDK](./ruby_sdk)
 - [Python SDK](./python_sdk)
 - [.Net SDK](./dot_net_sdk)
-- [Javascript SDK](https://github.com/unleash-hosted/unleash-proxy-client-js) (Used by single-page applications)
+- [Javascript SDK](./proxy-javascript) (Used by single-page applications)
+- Android SDK (coming soon)
+- iOS SDK (coming soon)
 
 ### Clients written by awesome enthusiasts:
 
@@ -32,4 +32,4 @@ We have examples for all official client SDKs:
 - [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
 - _...your implementation for your favorite language._
 
-When you get access to your instance – we will provide you with your Client secret and your API url for your instance.
+When you get access to your instance – [create a client secret](../user_guide/api-token), and we will provide you with your API url for your instance.

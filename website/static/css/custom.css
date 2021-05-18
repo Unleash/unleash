@@ -15,6 +15,10 @@
 @media only screen and (min-width: 1500px) {
 }
 
+a {
+    color: #0000ee;
+}
+
 h2.projectTitle {
     color: black;
 }
@@ -69,7 +73,7 @@ h2.projectTitle {
 }
 
 .button.primary {
-    background: #3f51b5;
+    background: #817afe;
     color: #fff;
 }
 

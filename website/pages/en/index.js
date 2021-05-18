@@ -101,7 +101,7 @@ const LogoSvg = ({style}) => (
 
 const ProjectTitle = () => (
   <h2 className="projectTitle">
-    <img src={imgUrl('unleash-oss-logo-v2.png')} alt="Unleash" />
+    <img src={imgUrl('Logo_DarkBlue_Transparent_Horizontal.png')} alt="Unleash" width="400" />
     <small>{siteConfig.tagline}</small>
   </h2>
 );
@@ -138,8 +138,6 @@ class HomeSplash extends React.Component {
             <Button href="#try">Try It Out</Button>
             <Button href={siteConfig.repoUrl}>GitHub</Button>
           </PromoSection>
-          <br />  
-          <SASSOffering />
         </div>
       </SplashContainer>
     );

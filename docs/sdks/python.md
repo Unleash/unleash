@@ -3,12 +3,7 @@ id: python_sdk
 title: Python SDK
 ---
 
-> **Required details**
->
-> - **API URL** – Where you should connect your client SDK
-> - **API Secret** – Your API secret required to connect to your instance.
->
-> You can find this information in the “Admin” section Unleash management UI.
+> You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../user_guide/api-token)
 
 ```python
 from UnleashClient import UnleashClient
@@ -16,7 +11,7 @@ from UnleashClient import UnleashClient
     client = UnleashClient(
         url="<API url>",
         app_name="my-python-app",
-        custom_headers={'Authorization': '<Client secret>'})
+        custom_headers={'Authorization': '<API token>'})
 
     client.initialize_client()
 

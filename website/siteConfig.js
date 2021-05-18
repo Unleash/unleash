@@ -55,7 +55,7 @@ const users = [
 ];
 
 const siteConfig = {
-    title: 'Unleash', // Title for your website.
+    title: '', // Title for your website.
     tagline: 'The enterprise ready feature toggle service',
     url: 'https://docs.getunleash.io', // Your website URL
     baseUrl: '/', // Base URL for your project */
@@ -75,7 +75,6 @@ const siteConfig = {
         { doc: 'user_guide/index', label: 'Documentation' },
         { doc: 'deploy/getting_started', label: 'Deploy and manage' },
         { doc: 'integrations/integrations', label: 'Integrations' },
-        { doc: 'developer_guide', label: 'Contribute' },
         { doc: 'api/client/features', label: 'API' },
         { href: 'https://www.unleash-hosted.com/pricing', label: 'Enterprise' },
         { page: 'help', label: 'Help' },
@@ -86,14 +85,14 @@ const siteConfig = {
     users,
 
     /* path to images for header/footer */
-    headerIcon: 'img/logo-inverted.png',
-    footerIcon: 'img/logo-inverted.png',
+    headerIcon: 'img/Logo_White_Transparent_Horizontal.png',
+    footerIcon: 'img/Logo_White_Transparent_Horizontal.png',
     favicon: 'img/favicon/favicon.ico',
 
     /* Colors for website */
     colors: {
-        primaryColor: '#3f51b5',
-        secondaryColor: '#697ce5',
+        primaryColor: '#39535b',
+        secondaryColor: '#817AFE',
     },
 
     /* Custom fonts for website */

@@ -3,12 +3,7 @@ id: go_sdk
 title: GO SDK
 ---
 
-> **Required details**
->
-> - **API URL** – Where you should connect your client SDK
-> - **API Secret** – Your API secret required to connect to your instance.
->
-> You can find this information in the “Admin” section Unleash management UI.
+> You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../user_guide/api-token)
 
 ### 1. Install unleash-client-go
 
@@ -38,7 +33,7 @@ func init() {
 		unleash.WithListener(&unleash.DebugListener{}),
 		unleash.WithAppName("my-application"),
 		unleash.WithUrl("http://unleash.herokuapp.com/api/"),
-        unleash.WithCustomHeaders(http.Header{"Authorization": {"<Client secret>"}}),
+        unleash.WithCustomHeaders(http.Header{"Authorization": {"<API token>"}}),
 	)
 }
 ```

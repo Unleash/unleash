@@ -138,8 +138,6 @@ class HomeSplash extends React.Component {
             <Button href="#try">Try It Out</Button>
             <Button href={siteConfig.repoUrl}>GitHub</Button>
           </PromoSection>
-          <br />  
-          <SASSOffering />
         </div>
       </SplashContainer>
     );

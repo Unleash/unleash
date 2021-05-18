@@ -42,7 +42,8 @@ const user = userService.loginUserWithoutPassword(
 req.session.user = user;
 ```
 
-[Read more about RBAC](../user_guide/rbac)
+- [Read more about Securing Unleash v4](./securing_unleash)
+- [Read more about RBAC](../user_guide/rbac)
 
 ### 4. Legacy v2 routes removed
 

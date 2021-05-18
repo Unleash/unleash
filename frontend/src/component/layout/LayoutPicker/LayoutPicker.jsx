@@ -1,20 +1,26 @@
 import ConditionallyRender from '../../common/ConditionallyRender';
+import { matchPath } from 'react-router';
 import MainLayout from '../MainLayout';
 
 const LayoutPicker = ({ children, location }) => {
     const standalonePages = () => {
-        const isLoginPage = location.pathname.includes('login');
-        const isNewUserPage = location.pathname.includes('new-user');
-        const isChangePasswordPage = location.pathname.includes(
-            'reset-password'
-        );
-        const isResetPasswordSuccessPage = location.pathname.includes(
-            'reset-password-success'
-        );
-        const isForgottenPasswordPage = location.pathname.includes(
-            'forgotten-password'
-        );
-        const is404 = location.pathname.includes('404');
+        const { pathname } = location;
+        const isLoginPage = matchPath(pathname, { path: '/login' });
+        const isNewUserPage = matchPath(pathname, {
+            path: '/new-user',
+        });
+        const isChangePasswordPage = matchPath(pathname, {
+            path: '/reset-password',
+        });
+        const isResetPasswordSuccessPage = matchPath(pathname, {
+            path: '/reset-password-success',
+        });
+
+        const isForgottenPasswordPage = matchPath(pathname, {
+            path: '/forgotten-password',
+        });
+
+        const is404 = matchPath(pathname, { path: '/404' });
 
         return (
             isLoginPage ||

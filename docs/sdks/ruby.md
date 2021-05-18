@@ -3,12 +3,7 @@ id: ruby_sdk
 title: Ruby SDK
 ---
 
-> **Required details**
->
-> - **API URL** – Where you should connect your client SDK
-> - **API Secret** – [Your API secret required to connect to your instance](../user_guide/api-token).
->
-> You can find this information in the “Admin” section Unleash management UI.
+> You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../user_guide/api-token)
 
 ```sh
     require 'unleash'
@@ -16,7 +11,7 @@ title: Ruby SDK
     @unleash = Unleash::Client.new(
       url: '<API url>',
       app_name: 'simple-test',
-      custom_http_headers = {'Authorization': '<Client secret>'},
+      custom_http_headers = {'Authorization': '<API token>'},
     )
 ```
 

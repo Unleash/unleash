@@ -5,12 +5,7 @@ title: .net SDK
 
 In this guide we explain how to use feature toggles in a .NET application using Unleash-hosted. We will be using the open source Unleash [.net Client SDK](https://github.com/Unleash/unleash-client-dotnet).
 
-> **Required details**
->
-> - **API URL** – Where you should connect your client SDK
-> - **API Secret** – [Your API secret required to connect to your instance](../user_guide/api-token).
->
-> You can find this information in the “Admin” section Unleash management UI.
+> You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../user_guide/api-token)
 
 ## Step 1: Install client SDK
 

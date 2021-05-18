@@ -8,7 +8,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+# 4.0.0-beta.5
+
+- chore(deps): bump hosted-git-info from 2.8.8 to 2.8.9 (#291)
+- fix: remove unused components
+- Fix/customer journey (#297)
+- feat: simple project view (#295)
+- fix: use router match util (#298)
+- fix: typo
+- fix: import correct component container (#296)
+
 # 4.0.0-beta.4
+
 - fix: footer
 
 # 4.0.0-beta.3

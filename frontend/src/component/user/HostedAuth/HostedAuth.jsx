@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Button, Grid, TextField, Typography } from '@material-ui/core';
-import LockRounded from '@material-ui/icons/LockRounded';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
 import { useStyles } from './HostedAuth.styles';
 import { Link } from 'react-router-dom';
-import { GoogleSvg } from './Icons';
 import useQueryParams from '../../../hooks/useQueryParams';
+import AuthOptions from '../common/AuthOptions/AuthOptions';
 
 const PasswordAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
@@ -64,7 +63,6 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
         }
     };
 
- 
     const { usernameError, passwordError, apiError } = errors;
     const { options = [] } = authDetails;
 
@@ -72,19 +70,7 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
         <div>
             <br />
             <div>
-                {options.map(o => (
-                    <div
-                        key={o.type}
-                        className={classnames(
-                            styles.contentContainer,
-                            commonStyles.contentSpacingY
-                        )}
-                    >
-                        <Button color="primary" variant="outlined" href={o.path} startIcon={o.type === 'google' ? <GoogleSvg /> : <LockRounded />}>
-                            {o.message}
-                        </Button>
-                    </div>
-                ))}
+                <AuthOptions options={options} />
             </div>
             <p className={styles.fancyLine}>or</p>
             <form onSubmit={handleSubmit} action={authDetails.path}>
@@ -140,9 +126,12 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                     </Grid>
                     <br />
                     <br />
-                    <Typography variant="body2" align="center">Don't have an account? <br /> <a href="https://www.unleash-hosted.com/pricing">Sign up</a></Typography>
-                   
-                    
+                    <Typography variant="body2" align="center">
+                        Don't have an account? <br />{' '}
+                        <a href="https://www.unleash-hosted.com/pricing">
+                            Sign up
+                        </a>
+                    </Typography>
                 </div>
             </form>
         </div>

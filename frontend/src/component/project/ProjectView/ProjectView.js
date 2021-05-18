@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { Typography, Button, List } from '@material-ui/core';
+import { Typography, Button, List, ListItem } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import AccessContext from '../../../contexts/AccessContext';
 import HeaderTitle from '../../common/HeaderTitle';
@@ -7,8 +7,9 @@ import PageContent from '../../common/PageContent';
 
 import FeatureToggleListItem from '../../feature/FeatureToggleList/FeatureToggleListItem';
 import ConditionallyRender from '../../common/ConditionallyRender';
+import ListPlaceholder from '../../common/ListPlaceholder/ListPlaceholder';
 
-const ViewProject = ({
+const ProjectView = ({
     project,
     features,
     settings,
@@ -81,10 +82,21 @@ const ViewProject = ({
                 <Typography variant="subtitle2">
                     Feature toggles in this project
                 </Typography>
-                <List>{renderProjectFeatures()}</List>
+                <List>
+                    <ConditionallyRender
+                        condition={features.length > 0}
+                        show={renderProjectFeatures()}
+                        elseShow={
+                            <ListPlaceholder
+                                text="No features available. Get started by adding a
+                                new feature toggle."
+                            />
+                        }
+                    />
+                </List>
             </PageContent>
         </div>
     );
 };
 
-export default ViewProject;
+export default ProjectView;

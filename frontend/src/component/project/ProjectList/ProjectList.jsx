@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import {
@@ -15,6 +15,8 @@ import {
     ListItemAvatar,
     ListItemText,
     Tooltip,
+    Button,
+    useMediaQuery,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import ConfirmDialogue from '../../common/Dialogue';
@@ -24,6 +26,7 @@ import AccessContext from '../../../contexts/AccessContext';
 
 const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
     const { hasAccess } = useContext(AccessContext);
+    const smallScreen = useMediaQuery('(max-width:700px)');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [project, setProject] = useState(undefined);
     const styles = useStyles();
@@ -35,14 +38,27 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
         <ConditionallyRender
             condition={hasAccess(CREATE_PROJECT)}
             show={
-                <Tooltip title="Add new project">
-                    <IconButton
-                        aria-label="add-project"
-                        onClick={() => history.push('/projects/create')}
-                    >
-                        <Icon>add</Icon>
-                    </IconButton>
-                </Tooltip>
+                <ConditionallyRender
+                    condition={smallScreen}
+                    show={
+                        <Tooltip title="Add new project">
+                            <IconButton
+                                onClick={() => history.push('/projects/create')}
+                            >
+                                <Icon>add</Icon>
+                            </IconButton>
+                        </Tooltip>
+                    }
+                    elseShow={
+                        <Button
+                            onClick={() => history.push('/projects/create')}
+                            color="primary"
+                            variant="contained"
+                        >
+                            Add new project
+                        </Button>
+                    }
+                />
             }
         />
     );

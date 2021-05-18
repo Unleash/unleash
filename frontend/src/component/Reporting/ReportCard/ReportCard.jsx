@@ -47,9 +47,8 @@ const ReportCard = ({ features }) => {
 
     const total = features.length;
     const activeTogglesArray = getActiveToggles();
-    const potentiallyStaleToggles = getPotentiallyStaleToggles(
-        activeTogglesArray
-    );
+    const potentiallyStaleToggles =
+        getPotentiallyStaleToggles(activeTogglesArray);
 
     const activeTogglesCount = activeTogglesArray.length;
     const staleTogglesCount = features.length - activeTogglesCount;
@@ -95,6 +94,17 @@ const ReportCard = ({ features }) => {
     return (
         <Paper className={styles.card}>
             <div className={styles.reportCardContainer}>
+                <div className={styles.reportCardHealth}>
+                    <h2 className={styles.header}>Health rating</h2>
+                    <div className={styles.reportCardHealthInnerContainer}>
+                        <ConditionallyRender
+                            condition={healthRating > -1}
+                            show={
+                                <p className={healthClasses}>{healthRating}%</p>
+                            }
+                        />
+                    </div>
+                </div>
                 <div className={styles.reportCardListContainer}>
                     <h2 className={styles.header}>Toggle report</h2>
                     <ul className={styles.reportCardList}>
@@ -118,17 +128,7 @@ const ReportCard = ({ features }) => {
                         </li>
                     </ul>
                 </div>
-                <div className={styles.reportCardHealth}>
-                    <h2 className={styles.header}>Health rating</h2>
-                    <div className={styles.reportCardHealthInnerContainer}>
-                        <ConditionallyRender
-                            condition={healthRating > -1}
-                            show={
-                                <p className={healthClasses}>{healthRating}%</p>
-                            }
-                        />
-                    </div>
-                </div>
+
                 <div className={styles.reportCardAction}>
                     <h2 className={styles.header}>Potential actions</h2>
                     <div className={styles.reportCardActionContainer}>

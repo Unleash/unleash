@@ -8,12 +8,27 @@ import CheckIcon from '@material-ui/icons/Check';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 
-import { pluralize, getDates, expired, toggleExpiryByTypeMap, getDiffInDays } from '../../utils';
+import {
+    pluralize,
+    getDates,
+    expired,
+    toggleExpiryByTypeMap,
+    getDiffInDays,
+} from '../../utils';
 import { KILLSWITCH, PERMISSION } from '../../constants';
 
 import styles from '../ReportToggleList.module.scss';
 
-const ReportToggleListItem = ({ name, stale, lastSeenAt, createdAt, type, checked, bulkActionsOn, setFeatures }) => {
+const ReportToggleListItem = ({
+    name,
+    stale,
+    lastSeenAt,
+    createdAt,
+    type,
+    checked,
+    bulkActionsOn,
+    setFeatures,
+}) => {
     const nameMatches = feature => feature.name === name;
     const history = useHistory();
 
@@ -80,17 +95,26 @@ const ReportToggleListItem = ({ name, stale, lastSeenAt, createdAt, type, checke
 
     const formatReportStatus = () => {
         if (type === KILLSWITCH || type === PERMISSION) {
-            return renderStatus(<CheckIcon className={styles.reportIcon} />, 'Active');
+            return renderStatus(
+                <CheckIcon className={styles.reportIcon} />,
+                'Healthy'
+            );
         }
 
         const [date, now] = getDates(createdAt);
         const diff = getDiffInDays(date, now);
 
         if (expired(diff, type)) {
-            return renderStatus(<ReportProblemOutlinedIcon className={styles.reportIcon} />, 'Potentially stale');
+            return renderStatus(
+                <ReportProblemOutlinedIcon className={styles.reportIcon} />,
+                'Potentially stale'
+            );
         }
 
-        return renderStatus(<CheckIcon className={styles.reportIcon} />, 'Active');
+        return renderStatus(
+            <CheckIcon className={styles.reportIcon} />,
+            'Healthy'
+        );
     };
 
     const navigateToFeature = () => {
@@ -102,7 +126,12 @@ const ReportToggleListItem = ({ name, stale, lastSeenAt, createdAt, type, checke
     });
 
     return (
-        <tr role="button" tabIndex={0} onClick={navigateToFeature} className={styles.tableRow}>
+        <tr
+            role="button"
+            tabIndex={0}
+            onClick={navigateToFeature}
+            className={styles.tableRow}
+        >
             <ConditionallyRender
                 condition={bulkActionsOn}
                 show={

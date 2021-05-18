@@ -66,6 +66,12 @@ exports[`renders correctly with one feature 1`] = `
             <div
               className="makeStyles-actions-15"
             >
+              <p
+                className="MuiTypography-root MuiTypography-body2"
+                data-loading={true}
+              >
+                Sorted by:
+              </p>
               <button
                 aria-controls="metric"
                 aria-haspopup="true"
@@ -85,6 +91,11 @@ exports[`renders correctly with one feature 1`] = `
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
+                style={
+                  Object {
+                    "textTransform": "lowercase",
+                  }
+                }
                 tabIndex={0}
                 title="Metric interval"
                 type="button"
@@ -124,6 +135,11 @@ exports[`renders correctly with one feature 1`] = `
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
+                style={
+                  Object {
+                    "textTransform": "lowercase",
+                  }
+                }
                 tabIndex={0}
                 title="Sort by"
                 type="button"
@@ -268,6 +284,12 @@ exports[`renders correctly with one feature without permissions 1`] = `
             <div
               className="makeStyles-actions-15"
             >
+              <p
+                className="MuiTypography-root MuiTypography-body2"
+                data-loading={true}
+              >
+                Sorted by:
+              </p>
               <button
                 aria-controls="metric"
                 aria-haspopup="true"
@@ -287,6 +309,11 @@ exports[`renders correctly with one feature without permissions 1`] = `
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
+                style={
+                  Object {
+                    "textTransform": "lowercase",
+                  }
+                }
                 tabIndex={0}
                 title="Metric interval"
                 type="button"
@@ -329,6 +356,11 @@ exports[`renders correctly with one feature without permissions 1`] = `
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
+                style={
+                  Object {
+                    "textTransform": "lowercase",
+                  }
+                }
                 tabIndex={0}
                 title="Sort by"
                 type="button"

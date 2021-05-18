@@ -2,7 +2,6 @@
 import { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Button,
     Table,
     TableBody,
     TableCell,
@@ -23,7 +22,7 @@ import UserListItem from './UserListItem/UserListItem';
 import loadingData from './loadingData';
 import useLoading from '../../../../hooks/useLoading';
 
-function UsersList({ location }) {
+function UsersList({ location, closeDialog, showDialog }) {
     const { users, roles, refetch, loading } = useUsers();
     const {
         addUser,
@@ -35,7 +34,6 @@ function UsersList({ location }) {
         userApiErrors,
     } = useAdminUsersApi();
     const { hasAccess } = useContext(AccessContext);
-    const [showDialog, setDialog] = useState(false);
     const [pwDialog, setPwDialog] = useState({ open: false });
     const [delDialog, setDelDialog] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -44,15 +42,6 @@ function UsersList({ location }) {
     const [delUser, setDelUser] = useState();
     const [updateDialog, setUpdateDialog] = useState({ open: false });
     const ref = useLoading(loading);
-
-    const openDialog = e => {
-        e.preventDefault();
-        setDialog(true);
-    };
-
-    const closeDialog = () => {
-        setDialog(false);
-    };
 
     const closeDelDialog = () => {
         setDelDialog(false);
@@ -177,19 +166,6 @@ function UsersList({ location }) {
                 <TableBody>{renderUsers()}</TableBody>
             </Table>
             <br />
-            <ConditionallyRender
-                condition={hasAccess(ADMIN)}
-                show={
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={openDialog}
-                    >
-                        Add new user
-                    </Button>
-                }
-                elseShow={<small>PS! Only admins can add/remove users.</small>}
-            />
 
             <ConfirmUserAdded
                 open={showConfirm}

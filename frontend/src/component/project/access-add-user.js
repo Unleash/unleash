@@ -68,7 +68,7 @@ function AddUserComponent({ roles, addUserToRole }) {
     };
 
     return (
-        <Grid container justify="center" spacing={3} alignItems="flex-end">
+        <Grid container justify="left" spacing={3} alignItems="flex-end">
             <Grid item>
                 <Autocomplete
                     id="add-user-component"
@@ -93,6 +93,8 @@ function AddUserComponent({ roles, addUserToRole }) {
                         <TextField
                             {...params}
                             label="User"
+                            variant="outlined"
+                            size="small"
                             name="search"
                             onChange={handleQueryUpdate}
                             InputProps={{
@@ -119,8 +121,15 @@ function AddUserComponent({ roles, addUserToRole }) {
                 />
             </Grid>
             <Grid item>
-                <FormControl>
-                    <InputLabel id="add-user-select-role-label">
+                <FormControl
+                    variant="outlined"
+                    size="small"
+                    style={{ minWidth: '125px' }}
+                >
+                    <InputLabel
+                        style={{ backgroundColor: '#fff' }}
+                        id="add-user-select-role-label"
+                    >
                         Role
                     </InputLabel>
                     <Select

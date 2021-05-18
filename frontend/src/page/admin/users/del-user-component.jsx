@@ -78,7 +78,7 @@ const DelUserComponent = ({
 DelUserComponent.propTypes = {
     showDialog: propTypes.bool.isRequired,
     closeDialog: propTypes.func.isRequired,
-    user: propTypes.object.isRequired,
+    user: propTypes.object,
     removeUser: propTypes.func.isRequired,
 };
 

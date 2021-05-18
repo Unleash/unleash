@@ -13,10 +13,9 @@ import classnames from 'classnames';
 import { styles as commonStyles } from '../../../component/common';
 import { useStyles } from './styles';
 
-function CreateApiKey({ addKey }) {
+function CreateApiKey({ addKey, show, setShow }) {
     const styles = useStyles();
     const [type, setType] = useState('CLIENT');
-    const [show, setShow] = useState(false);
     const [username, setUsername] = useState();
     const [error, setError] = useState();
 
@@ -107,6 +106,9 @@ function CreateApiKey({ addKey }) {
 
 CreateApiKey.propTypes = {
     addKey: PropTypes.func.isRequired,
+    setShow: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired,
+    toggle: PropTypes.func.isRequired,
 };
 
 export default CreateApiKey;

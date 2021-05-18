@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import InputPercentage from './input-percentage';
 import Select from '../../../common/select';
-import { TextField, Typography } from '@material-ui/core';
+import { Icon, TextField, Tooltip, Typography } from '@material-ui/core';
 
 const builtInStickinessOptions = [
     { key: 'default', label: 'default' },
@@ -21,7 +21,9 @@ const FlexibleStrategy = ({ updateParameter, parameters, context }) => {
         builtInStickinessOptions.concat(
             context
                 .filter(c => c.stickiness)
-                .filter(c => !builtInStickinessOptions.find(s => s.key === c.name))
+                .filter(
+                    c => !builtInStickinessOptions.find(s => s.key === c.name)
+                )
                 .map(c => ({ key: c.name, label: c.name }))
         );
 
@@ -33,13 +35,37 @@ const FlexibleStrategy = ({ updateParameter, parameters, context }) => {
 
     return (
         <div>
-            <InputPercentage name="Rollout" value={1 * rollout} onChange={onUpdate('rollout')} />
+            <InputPercentage
+                name="Rollout"
+                value={1 * rollout}
+                onChange={onUpdate('rollout')}
+            />
             <br />
             <div>
-                <Typography variant="subtitle2" gutterBottom>
-                    Stickiness
-                </Typography>
-                <br />
+                <Tooltip
+                    placement="right-start"
+                    title="Stickiness defines what parameter should be used to ensure that your users get consistency in features. By default unleash will use the first value present in the context in the order of userId, sessionId and random."
+                >
+                    <Typography
+                        variant="subtitle2"
+                        style={{
+                            marginBottom: '0.5rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        Stickiness
+                        <Icon
+                            style={{
+                                fontSize: '1rem',
+                                color: 'gray',
+                                marginLeft: '0.2rem',
+                            }}
+                        >
+                            info
+                        </Icon>
+                    </Typography>
+                </Tooltip>
                 <Select
                     name="stickiness"
                     label="Stickiness"
@@ -48,6 +74,32 @@ const FlexibleStrategy = ({ updateParameter, parameters, context }) => {
                     onChange={e => onUpdate('stickiness')(e, e.target.value)}
                 />
                 &nbsp;
+                <br />
+                <br />
+                <Tooltip
+                    placement="right-start"
+                    title="GroupId is used to ensure that different toggles will hash differently for the same user. The groupId defaults to feature toggle name, but you can override it to correlate rollout of multiple feature toggles."
+                >
+                    <Typography
+                        variant="subtitle2"
+                        style={{
+                            marginBottom: '0.5rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        GroupId
+                        <Icon
+                            style={{
+                                fontSize: '1rem',
+                                color: 'gray',
+                                marginLeft: '0.2rem',
+                            }}
+                        >
+                            info
+                        </Icon>
+                    </Typography>
+                </Tooltip>
                 <TextField
                     label="groupId"
                     size="small"

@@ -216,6 +216,32 @@ exports[`renders correctly with one feature 1`] = `
       <AddTagDialog
         featureToggleName="Another"
       />
+      <a
+        aria-disabled={false}
+        className="MuiButtonBase-root MuiButton-root MuiButton-text"
+        href="/features/copy/Another"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        role="button"
+        tabIndex={0}
+        title="Create new feature toggle by cloning configuration"
+      >
+        <span
+          className="MuiButton-label"
+        >
+          Clone
+        </span>
+      </a>
       <button
         aria-controls="feature-stale-dropdown"
         aria-haspopup="true"
@@ -258,32 +284,6 @@ exports[`renders correctly with one feature 1`] = `
           </span>
         </span>
       </button>
-      <a
-        aria-disabled={false}
-        className="MuiButtonBase-root MuiButton-root MuiButton-text"
-        href="/features/copy/Another"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        role="button"
-        tabIndex={0}
-        title="Create new feature toggle by cloning configuration"
-      >
-        <span
-          className="MuiButton-label"
-        >
-          Clone
-        </span>
-      </a>
       <button
         className="MuiButtonBase-root MuiButton-root MuiButton-text"
         disabled={false}

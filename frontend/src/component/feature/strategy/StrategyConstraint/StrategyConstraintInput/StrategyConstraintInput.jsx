@@ -4,12 +4,22 @@ import { Tooltip, Icon, Typography } from '@material-ui/core';
 import StrategyConstraintInputField from '../StrategyConstraintInputField';
 import { useCommonStyles } from '../../../../../common.styles';
 
-const StrategyConstraintInput = ({ constraints, updateConstraints, contextNames, contextFields, enabled }) => {
+const StrategyConstraintInput = ({
+    constraints,
+    updateConstraints,
+    contextNames,
+    contextFields,
+    enabled,
+}) => {
     const commonStyles = useCommonStyles();
     const addConstraint = evt => {
         evt.preventDefault();
         const updatedConstraints = [...constraints];
-        updatedConstraints.push({ contextName: contextNames[0], operator: 'IN', values: [] });
+        updatedConstraints.push({
+            contextName: contextNames[0],
+            operator: 'IN',
+            values: [],
+        });
 
         updateConstraints(updatedConstraints);
     };
@@ -35,12 +45,22 @@ const StrategyConstraintInput = ({ constraints, updateConstraints, contextNames,
 
     return (
         <div className={commonStyles.contentSpacingY}>
-            <Typography variant="subtitle2">
-                {'Constraints '}
-                <Tooltip title={<span>Use context fields to constrain the activation strategy.</span>}>
-                    <Icon style={{ fontSize: '0.9em', color: 'gray' }}>info</Icon>
-                </Tooltip>
-            </Typography>
+            <Tooltip
+                placement="right-start"
+                title={
+                    <span>
+                        Use context fields to constrain the activation strategy.
+                    </span>
+                }
+            >
+                <Typography variant="subtitle2">
+                    {'Constraints '}
+
+                    <Icon style={{ fontSize: '0.9rem', color: 'gray' }}>
+                        info
+                    </Icon>
+                </Typography>
+            </Tooltip>
             <table style={{ margin: 0 }}>
                 <tbody>
                     {constraints.map((c, index) => (
@@ -56,7 +76,11 @@ const StrategyConstraintInput = ({ constraints, updateConstraints, contextNames,
                 </tbody>
             </table>
             <small>
-                <a href="#add-constraint" title="Add constraint" onClick={addConstraint}>
+                <a
+                    href="#add-constraint"
+                    title="Add constraint"
+                    onClick={addConstraint}
+                >
                     Add constraint
                 </a>
             </small>

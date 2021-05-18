@@ -111,17 +111,19 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
                     size="small"
                     type="password"
                     placeholder="Password"
-                    value={password}
+                    value={password || ''}
                     onChange={e => setPassword(e.target.value)}
+                    autoComplete="password"
                     data-loading
                 />
                 <TextField
                     variant="outlined"
                     size="small"
                     type="password"
-                    value={confirmPassword}
+                    value={confirmPassword || ''}
                     placeholder="Confirm password"
                     onChange={e => setConfirmPassword(e.target.value)}
+                    autoComplete="confirm-password"
                     data-loading
                 />
                 <PasswordMatcher

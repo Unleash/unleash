@@ -60,16 +60,6 @@ exports[`it supports editMode 1`] = `
               <span
                 className="MuiButton-label"
               >
-                <span
-                  className="MuiButton-startIcon MuiButton-iconSizeMedium"
-                >
-                  <span
-                    aria-hidden={true}
-                    className="material-icons MuiIcon-root"
-                  >
-                    add
-                  </span>
-                </span>
                 Update
               </span>
             </button>
@@ -166,16 +156,6 @@ exports[`renders correctly for creating 1`] = `
               <span
                 className="MuiButton-label"
               >
-                <span
-                  className="MuiButton-startIcon MuiButton-iconSizeMedium"
-                >
-                  <span
-                    aria-hidden={true}
-                    className="material-icons MuiIcon-root"
-                  >
-                    add
-                  </span>
-                </span>
                 Create
               </span>
             </button>

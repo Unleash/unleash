@@ -3,7 +3,7 @@ import {
     fetchFeatureToggles,
     toggleFeature,
 } from '../../../store/feature-toggle/actions';
-import ViewProject from './ViewProject';
+import ViewProject from './ProjectView';
 
 const mapStateToProps = (state, props) => {
     const projectBase = { id: '', name: '', description: '' };

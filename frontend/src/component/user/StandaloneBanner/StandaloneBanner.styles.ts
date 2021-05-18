@@ -19,7 +19,7 @@ export const useStyles = makeStyles(theme => ({
         },
     },
     switchesContainer: {
-        position: 'fixed',
+        position: 'absolute',
         bottom: '40px',
         display: 'flex',
         flexDirection: 'column',

@@ -23,6 +23,9 @@ export const useStyles = makeStyles(theme => ({
         marginBottom: '0.5rem',
         fontSize: '1.1rem',
     },
+    passwordHeader: {
+        marginTop: '2rem',
+    },
     emailField: {
         minWidth: '300px',
         [theme.breakpoints.down('xs')]: {

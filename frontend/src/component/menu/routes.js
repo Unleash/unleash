@@ -35,7 +35,7 @@ import AdminAuth from '../../page/admin/auth';
 import Reporting from '../../page/reporting';
 import Login from '../user/Login';
 import { P, C } from '../common/flags';
-import NewUser from '../user/NewUser/NewUser';
+import NewUser from '../user/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
 

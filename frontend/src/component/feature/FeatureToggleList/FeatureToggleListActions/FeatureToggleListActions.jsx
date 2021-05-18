@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { MenuItem } from '@material-ui/core';
+import { MenuItem, Typography } from '@material-ui/core';
 import { MenuItemWithIcon } from '../../../common';
 import DropdownMenu from '../../../common/DropdownMenu/DropdownMenu';
 import ProjectSelect from '../../../common/ProjectSelect';
@@ -66,6 +66,9 @@ const FeatureToggleListActions = ({
 
     return (
         <div className={styles.actions} ref={ref}>
+            <Typography variant="body2" data-loading>
+                Sorted by:
+            </Typography>
             <DropdownMenu
                 id={'metric'}
                 label={`Last ${settings.showLastHour ? 'hour' : 'minute'}`}
@@ -73,6 +76,7 @@ const FeatureToggleListActions = ({
                 callback={toggleMetrics}
                 renderOptions={renderMetricsOptions}
                 className=""
+                style={{ textTransform: 'lowercase' }}
                 data-loading
             />
             <DropdownMenu
@@ -82,11 +86,13 @@ const FeatureToggleListActions = ({
                 renderOptions={renderSortingOptions}
                 title="Sort by"
                 className=""
+                style={{ textTransform: 'lowercase' }}
                 data-loading
             />
             <ProjectSelect
                 settings={settings}
                 updateSetting={updateSetting}
+                style={{ textTransform: 'lowercase' }}
                 data-loading
             />
         </div>

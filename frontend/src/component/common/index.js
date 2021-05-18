@@ -84,7 +84,6 @@ export const FormButtons = ({
             type="submit"
             color="primary"
             variant="contained"
-            startIcon={<Icon>add</Icon>}
         >
             {submitText}
         </Button>

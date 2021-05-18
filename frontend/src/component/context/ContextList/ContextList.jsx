@@ -14,6 +14,8 @@ import {
     ListItemIcon,
     ListItemText,
     Tooltip,
+    useMediaQuery,
+    Button,
 } from '@material-ui/core';
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -24,6 +26,7 @@ import AccessContext from '../../../contexts/AccessContext';
 const ContextList = ({ removeContextField, history, contextFields }) => {
     const { hasAccess } = useContext(AccessContext);
     const [showDelDialogue, setShowDelDialogue] = useState(false);
+    const smallScreen = useMediaQuery('(max-width:700px)');
     const [name, setName] = useState();
 
     const styles = useStyles();
@@ -63,11 +66,27 @@ const ContextList = ({ removeContextField, history, contextFields }) => {
         <ConditionallyRender
             condition={hasAccess(CREATE_CONTEXT_FIELD)}
             show={
-                <Tooltip title="Add context type">
-                    <IconButton onClick={() => history.push('/context/create')}>
-                        <Icon>add</Icon>
-                    </IconButton>
-                </Tooltip>
+                <ConditionallyRender
+                    condition={smallScreen}
+                    show={
+                        <Tooltip title="Add context type">
+                            <IconButton
+                                onClick={() => history.push('/context/create')}
+                            >
+                                <Icon>add</Icon>
+                            </IconButton>
+                        </Tooltip>
+                    }
+                    elseShow={
+                        <Button
+                            onClick={() => history.push('/context/create')}
+                            color="primary"
+                            variant="contained"
+                        >
+                            Add new context field
+                        </Button>
+                    }
+                />
             }
         />
     );

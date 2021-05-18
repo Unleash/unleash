@@ -318,10 +318,6 @@ const FeatureView = ({
                             <AddTagDialog
                                 featureToggleName={featureToggle.name}
                             />
-                            <StatusUpdateComponent
-                                stale={featureToggle.stale}
-                                updateStale={updateStale}
-                            />
                             <Button
                                 title="Create new feature toggle by cloning configuration"
                                 component={Link}
@@ -329,6 +325,10 @@ const FeatureView = ({
                             >
                                 Clone
                             </Button>
+                            <StatusUpdateComponent
+                                stale={featureToggle.stale}
+                                updateStale={updateStale}
+                            />
 
                             <Button
                                 disabled={!hasAccess(DELETE_FEATURE, project)}
@@ -368,6 +368,7 @@ const FeatureView = ({
                     setDelDialog(false);
                     removeToggle();
                 }}
+                onClose={() => setDelDialog(false)}
             />
         </Paper>
     );

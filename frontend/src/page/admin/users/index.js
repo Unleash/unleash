@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import UsersList from './UsersList';
 import AdminMenu from '../admin-menu';
@@ -7,17 +7,60 @@ import AccessContext from '../../../contexts/AccessContext';
 import ConditionallyRender from '../../../component/common/ConditionallyRender';
 import { ADMIN } from '../../../component/AccessProvider/permissions';
 import { Alert } from '@material-ui/lab';
+import HeaderTitle from '../../../component/common/HeaderTitle';
+import { Button } from '@material-ui/core';
 
 const UsersAdmin = ({ history }) => {
     const { hasAccess } = useContext(AccessContext);
+    const [showDialog, setDialog] = useState(false);
+
+    const openDialog = e => {
+        e.preventDefault();
+        setDialog(true);
+    };
+
+    const closeDialog = () => {
+        setDialog(false);
+    };
 
     return (
         <div>
             <AdminMenu history={history} />
-            <PageContent headerContent="Users">
+            <PageContent
+                headerContent={
+                    <HeaderTitle
+                        title="Users"
+                        actions={
+                            <ConditionallyRender
+                                condition={hasAccess(ADMIN)}
+                                show={
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={openDialog}
+                                    >
+                                        Add new user
+                                    </Button>
+                                }
+                                elseShow={
+                                    <small>
+                                        PS! Only admins can add/remove users.
+                                    </small>
+                                }
+                            />
+                        }
+                    />
+                }
+            >
                 <ConditionallyRender
                     condition={hasAccess(ADMIN)}
-                    show={<UsersList />}
+                    show={
+                        <UsersList
+                            openDialog={openDialog}
+                            closeDialog={closeDialog}
+                            showDialog={showDialog}
+                        />
+                    }
                     elseShow={
                         <Alert severity="error">
                             You need instance admin to access this section.

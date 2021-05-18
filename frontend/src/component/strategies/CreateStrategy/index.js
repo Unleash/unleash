@@ -56,12 +56,8 @@ class WrapperComponent extends Component {
 
     onSubmit = async evt => {
         evt.preventDefault();
-        const {
-            createStrategy,
-            updateStrategy,
-            history,
-            editMode,
-        } = this.props;
+        const { createStrategy, updateStrategy, history, editMode } =
+            this.props;
         const { strategy } = this.state;
 
         const parameters = (strategy.parameters || [])

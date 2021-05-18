@@ -10,15 +10,16 @@ import useResetPassword from '../../../hooks/useResetPassword';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
+import { IAuthStatus } from '../../../interfaces/user';
+import AuthOptions from '../common/AuthOptions/AuthOptions';
 
-const NewUser = () => {
-    const {
-        token,
-        data,
-        loading,
-        setLoading,
-        invalidToken,
-    } = useResetPassword();
+interface INewUserProps {
+    user: IAuthStatus;
+}
+
+const NewUser = ({ user }: INewUserProps) => {
+    const { token, data, loading, setLoading, invalidToken } =
+        useResetPassword();
     const ref = useLoading(loading);
     const commonStyles = useCommonStyles();
     const styles = useStyles();
@@ -57,7 +58,7 @@ const NewUser = () => {
                             </Typography>
                             <TextField
                                 data-loading
-                                value={data?.email}
+                                value={data?.email || ''}
                                 variant="outlined"
                                 size="small"
                                 className={styles.emailField}
@@ -79,9 +80,46 @@ const NewUser = () => {
                                     className={commonStyles.largeDivider}
                                     data-loading
                                 />
-                                <Typography variant="body1" data-loading>
-                                    Set a password for your account.
-                                </Typography>
+                                <ConditionallyRender
+                                    condition={
+                                        user?.authDetails?.options?.length > 0
+                                    }
+                                    show={
+                                        <>
+                                            <Typography data-loading>
+                                                Login with 3rd party providers
+                                            </Typography>
+                                            <AuthOptions
+                                                options={
+                                                    user?.authDetails?.options
+                                                }
+                                            />
+                                            <div
+                                                className={
+                                                    commonStyles.largeDivider
+                                                }
+                                                data-loading
+                                            />
+                                            <Typography
+                                                className={
+                                                    styles.passwordHeader
+                                                }
+                                                data-loading
+                                            >
+                                                OR set a new password for your
+                                                account
+                                            </Typography>
+                                        </>
+                                    }
+                                    elseShow={
+                                        <Typography
+                                            variant="body1"
+                                            data-loading
+                                        >
+                                            Set a password for your account.
+                                        </Typography>
+                                    }
+                                />
                             </div>
                         </ResetPasswordDetails>
                     }

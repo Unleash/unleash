@@ -14,7 +14,13 @@ interface IAuthDetails {
     type: string;
     path: string;
     message: string;
-    options: string[];
+    options: IAuthOptions[];
+}
+
+export interface IAuthOptions {
+    type: string;
+    message: string;
+    path: string;
 }
 
 export interface IUser {

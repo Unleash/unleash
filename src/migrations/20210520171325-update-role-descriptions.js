@@ -19,3 +19,11 @@ exports.up = function(db, cb) {
         cb,
     );
 };
+
+exports.down = function(db, cb) {
+    db.runSql(
+        `
+    `,
+        cb,
+    );
+};

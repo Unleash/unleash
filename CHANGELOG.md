@@ -1,5 +1,13 @@
 # Changelog
 
+# 4.0.0
+
+- fix: upgrade unleash-frontend to version 4.0.0
+- fix: add migration (#847)
+- fix: Refactor/update email (#848)
+- chore(deps): bump hosted-git-info from 2.8.8 to 2.8.9 in /website (#843)
+- Add explanation of how to run multiple instances of Unleash to the Getting Started doc (#845
+
 # 4.0.0-beta.6
 
 - fix: Upgrade unleash-frontend to version 4.0.0-beta.5

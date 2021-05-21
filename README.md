@@ -77,7 +77,7 @@ if (unleash.isEnabled("AwesomeFeature")) {
 
 ## Run it yourself
 
-Unleash is open source and you are free to run your own instance. Please refer to the [getting-started-guide](https://unleash.github.io/docs/getting_started) to learn how to run the Unleash Service.
+Unleash is open source and you are free to run your own instance. Please refer to the [getting-started-guide](https://docs.getunleash.io/docs/deploy/getting_started) to learn how to run the Unleash Service.
 
 We have made a separate project which runs Unleash inside docker. Please see [unleash-docker](https://github.com/Unleash/unleash-docker) for details
 

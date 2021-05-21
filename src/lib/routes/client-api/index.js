@@ -1,9 +1,9 @@
 'use strict';
 
 const Controller = require('../controller');
-const FeatureController = require('./feature.js');
-const MetricsController = require('./metrics.js');
-const RegisterController = require('./register.js');
+const FeatureController = require('./feature');
+const MetricsController = require('./metrics');
+const RegisterController = require('./register');
 const apiDef = require('./api-def.json');
 
 class ClientApi extends Controller {

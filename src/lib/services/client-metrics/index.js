@@ -2,8 +2,8 @@
 
 'use strict';
 
-const Projection = require('./projection.js');
-const TTLList = require('./ttl-list.js');
+const Projection = require('./projection');
+const TTLList = require('./ttl-list');
 const appSchema = require('./metrics-schema');
 const { clientMetricsSchema } = require('./client-metrics-schema');
 const { clientRegisterSchema } = require('./register-schema');

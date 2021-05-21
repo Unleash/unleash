@@ -3,7 +3,7 @@ id: datadog
 title: Datadog
 ---
 
-> This feature was introduced in \_Unleash v4.0.x.
+> This feature was introduced in _Unleash v4.0.0_.
 
 The Datadog addon allows Unleash to post Updates to Datadog when a feature toggle is updated. To set up this addon, you need to set up a webhook connector for your channel. You can follow [Submitting events to Datadog](https://docs.datadoghq.com/api/latest/events/#post-an-event) on how to do that.
 

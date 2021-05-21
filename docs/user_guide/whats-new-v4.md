@@ -27,7 +27,7 @@ With Role-Based Access Control you can now assign groups to users in order to co
 Addons make it easy to integrate Unleash with other systems. In version 4 we bring two new integrations to Unleash:
 
 - [Microsoft Teams](../addons/teams)
-- [Datadog](../datadog)
+- [Datadog](../addons/datadog)
 
 ### Improved UX
 

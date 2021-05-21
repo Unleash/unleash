@@ -122,7 +122,7 @@
     "faker": "^5.5.3",
     "fetch-mock": "^9.11.0",
     "husky": "^4.2.3",
-    "lint-staged": "^10.0.7",
+    "lint-staged": "^11.0.0",
     "lolex": "^6.0.0",
     "nyc": "^15.1.0",
     "prettier": "^1.19.1",

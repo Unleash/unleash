@@ -17,6 +17,7 @@ export const useStyles = makeStyles(theme => ({
         width: '40%',
         borderRadius: '3px',
         [theme.breakpoints.down('sm')]: {
+            borderRadius: '0',
             width: '100%',
             minHeight: 'auto',
         },
@@ -29,6 +30,7 @@ export const useStyles = makeStyles(theme => ({
         backgroundColor: '#fff',
         position: 'relative',
         [theme.breakpoints.down('sm')]: {
+            borderRadius: '0',
             width: '100%',
             position: 'static',
             minHeight: 'auto',

@@ -129,7 +129,7 @@
         "title": "Database Setup"
       },
       "deploy/email": {
-        "title": "Email"
+        "title": "Email service"
       },
       "deploy/getting_started": {
         "title": "Getting Started"

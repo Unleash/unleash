@@ -50,7 +50,7 @@ setInterval(() => {
 
 Please note that in the above example we put the isEnabled-evaluation inside the setInterval method. This is required in the small example to make sure that the feature toggle is not evaluated, and application exits, before the client SDK have been able to synchronize with the Unleash-hosted API. State is kept in memory by the client SDK (and synchronizes with the Unleash-hosted API in the background). This is done to prefer performance over update speed. You can read more about the [Unleash architecture](https://www.unleash-hosted.com/articles/our-unique-architecture).
 
-It can also be nice to notice that if you use an undefined feature toggle the Unleash SDK will return false instead of crashing your application. The SDK will also report metrics back to Unleash-hosted on feature toggle usage, which makes it [possible to spot toggles not yet defined](../user_guide/discover-unknown-toggles). And this is a very neat way to help you debug if something does not work as expected.
+It can also be nice to notice that if you use an undefined feature toggle the Unleash SDK will return false instead of crashing your application. The SDK will also report metrics back to Unleash-hosted on feature toggle usage, which makes it \_possible to spot toggles not yet defined. And this is a very neat way to help you debug if something does not work as expected.
 
 ## Step 4: Provide the Unleash-context
 

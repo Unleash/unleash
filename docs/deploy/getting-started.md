@@ -11,7 +11,7 @@ You will need:
 
 - [Node.js](https://nodejs.org/en/download/) (version 14 or later)
 - [PostgreSQL](https://www.postgresql.org/download/) (version 10 or later)
-- [Create an unleash user and database](/docs/developer_guide).
+- [Create an unleash user and database](./database-setup).
 
 ## Start Unleash server
 
@@ -24,6 +24,7 @@ Once the server has started, you will see the message:
 ```sh
 Unleash started on http://localhost:4242
 ```
+
 To run multiple replicas of Unleash simply point all instances to the same database.
 
 **Unleash v4:** The first time Unleash starts it will create a default user which you can use to sign-in to you Unleash instance and add more users with:

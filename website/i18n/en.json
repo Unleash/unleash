@@ -125,6 +125,9 @@
       "deploy/database_backup": {
         "title": "Database Backup"
       },
+      "deploy/database-setup": {
+        "title": "Database Setup"
+      },
       "deploy/email": {
         "title": "Email"
       },

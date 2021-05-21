@@ -26,20 +26,20 @@ test.serial('Apps registered should be announced', async t => {
     t.plan(3);
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.random.uuid(),
+        instanceId: faker.datatype.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.random.number(),
+        interval: faker.datatype.number(),
         icon: '',
         description: faker.company.catchPhrase(),
         color: faker.internet.color(),
     };
     const differentClient = {
         appName: faker.lorem.slug(2),
-        instanceId: faker.random.uuid(),
+        instanceId: faker.datatype.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.random.number(),
+        interval: faker.datatype.number(),
         icon: '',
         description: faker.company.catchPhrase(),
         color: faker.internet.color(),

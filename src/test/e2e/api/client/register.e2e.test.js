@@ -77,10 +77,10 @@ test.serial.skip('Should handle a massive bulk registration', async t => {
     while (clients.length < 2000) {
         const clientRegistration = {
             appName: faker.internet.domainName(),
-            instanceId: faker.random.uuid(),
+            instanceId: faker.datatype.uuid(),
             strategies: ['default'],
             started: Date.now(),
-            interval: faker.random.number(),
+            interval: faker.datatype.number(),
             sdkVersion: version,
             icon: '',
             description: faker.company.catchPhrase(),

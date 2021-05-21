@@ -22,10 +22,10 @@ test.afterEach(async () => {
 test.serial("Should be able to keep track of what we've announced", async t => {
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.random.uuid(),
+        instanceId: faker.datatype.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.random.number(),
+        interval: faker.datatype.number(),
         sdkVersion: '3.11.2',
         icon: '',
         description: faker.company.catchPhrase(),
@@ -45,10 +45,10 @@ test.serial(
     async t => {
         const clientRegistration = {
             appName: faker.internet.domainName(),
-            instanceId: faker.random.uuid(),
+            instanceId: faker.datatype.uuid(),
             strategies: ['default'],
             started: Date.now(),
-            interval: faker.random.number(),
+            interval: faker.datatype.number(),
             sdkVersion: '3.11.2',
             icon: '',
             description: faker.company.catchPhrase(),
@@ -73,10 +73,10 @@ test.serial(
         while (clients.length < 10) {
             const clientRegistration = {
                 appName: `${faker.internet.domainName()}_${clients.length}`,
-                instanceId: faker.random.uuid(),
+                instanceId: faker.datatype.uuid(),
                 strategies: ['default'],
                 started: Date.now(),
-                interval: faker.random.number(),
+                interval: faker.datatype.number(),
                 sdkVersion: '3.11.2',
                 icon: '',
                 description: faker.company.catchPhrase(),
@@ -99,10 +99,10 @@ test.serial(
     async t => {
         const clientRegistration = {
             appName: faker.internet.domainName(),
-            instanceId: faker.random.uuid(),
+            instanceId: faker.datatype.uuid(),
             strategies: ['default'],
             started: Date.now(),
-            interval: faker.random.number(),
+            interval: faker.datatype.number(),
             sdkVersion: '3.11.2',
             icon: '',
             description: faker.company.catchPhrase(),
@@ -125,7 +125,7 @@ test.serial(
 test.serial('Merge keeps value for single row in database', async t => {
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.random.uuid(),
+        instanceId: faker.datatype.uuid(),
         strategies: ['default'],
         started: Date.now(),
         icon: faker.internet.color(),
@@ -149,7 +149,7 @@ test.serial('Multi row merge also works', async t => {
     while (clients.length < 10) {
         const clientRegistration = {
             appName: `${faker.internet.domainName()}_${clients.length}`,
-            instanceId: faker.random.uuid(),
+            instanceId: faker.datatype.uuid(),
             strategies: ['default'],
             started: Date.now(),
             icon: faker.internet.color(),

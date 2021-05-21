@@ -38,7 +38,7 @@ Please also pay attention to the “environment” option. Setting this will all
 
 Now that we have initialized the client SDK in our application we can start using feature toggles defined in Unleash in our application. To achieve this we have the “isEnabled” method available, which will allow us to check the value of a feature toggle. This method will return **true** or **false** based on whether the feature should be enabled or disabled for the current request.
 
-```js
+```javascript
 setInterval(() => {
   if (unleash.isEnabled('DemoToggle')) {
     console.log('Toggle enabled');
@@ -60,11 +60,12 @@ An activation strategy is an implementation of rules based on data, which you pr
 
 You provide the Unleash context as part of the second argument to the isEnabled call:
 
-```sh
-    const context = {
-        userId: '123',
-        sessionId: '123123-123-123,
-        remoteAddress: '127.0.0.1',
-    };
-    const enabled = isEnabled('app.demo', context);
+```javascript
+const context = {
+  userId: '123',
+  sessionId: '123123-123-123',
+  remoteAddress: '127.0.0.1',
+};
+
+const enabled = isEnabled('app.demo', context);
 ```

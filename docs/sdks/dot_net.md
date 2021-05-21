@@ -27,7 +27,7 @@ var settings = new UnleashSettings()
   UnleashApi = new Uri("API URL"),
   CustomHttpHeaders = new Dictionary()
   {
-    {"Authorization","API secret" }
+    {"Authorization","API token" }
   }
 };
 
@@ -36,7 +36,7 @@ IUnleash unleash = new DefaultUnleash(settings);
 
 In your app you typically just want one instance of Unleash, and inject that where you need it.
 
-You should change the URL and the Authorization header (API secret) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
+You should change the URL and the Authorization header (API token) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
 
 ## Step 3: Use the feature toggle
 

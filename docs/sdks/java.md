@@ -29,7 +29,7 @@ UnleashConfig unleashConfig = UnleashConfig.builder()
         .instanceId("your-instance-1")
         .environment(System.getenv("APP_ENV"))
         .unleashAPI("API URL")
-        .customHttpHeader("Authorization", "API Secret")
+        .customHttpHeader("Authorization", "API token")
         .build();
 
 Unleash unleash = new DefaultUnleash(config);
@@ -37,7 +37,7 @@ Unleash unleash = new DefaultUnleash(config);
 
 In your app you typically just want one instance of Unleash, and inject that where you need it. You will typically use a dependency injection frameworks such as Spring or Guice to manage this.
 
-You should change the URL and the Authorization header (API secret) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
+You should change the URL and the Authorization header (API token) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
 
 ## Step 3: Use the feature toggle
 

@@ -1679,10 +1679,10 @@ db-migrate-shared@^1.2.0:
   resolved "https://registry.yarnpkg.com/db-migrate-shared/-/db-migrate-shared-1.2.0.tgz#6125be1b3a5e661229fc75d50c85f6c3ffadbede"
   integrity sha512-65k86bVeHaMxb2L0Gw3y5V+CgZSRwhVQMwDMydmw5MvIpHHwD6SmBciqIwHsZfzJ9yzV/yYhdRefRM6FV5/siw==
 
-db-migrate@0.11.11:
-  version "0.11.11"
-  resolved "https://registry.yarnpkg.com/db-migrate/-/db-migrate-0.11.11.tgz#656764ad8c8888f6a2e9378669fa691b28958ea2"
-  integrity sha512-GHZodjB5hXRy+76ZIb9z0OrUn0qSeGfvS0cCfyzPeFCBZ1YU9o9HUBQ8pUT+v/fJ9+a29eRz2xQsLfccXZtf8g==
+db-migrate@0.11.12:
+  version "0.11.12"
+  resolved "https://registry.yarnpkg.com/db-migrate/-/db-migrate-0.11.12.tgz#2798fc46da51fc2589497d462f3c6116802cfb6a"
+  integrity sha512-HUS8T5A3sKGCi+hz9XMKMwAKfU9sqhpDufW9nbVSRc5wxDO695uxA5lDe+If0OdvwwQOVxOnEZqkzAAxgyeFWg==
   dependencies:
     balanced-match "^1.0.0"
     bluebird "^3.1.1"

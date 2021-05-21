@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+# 4.0.0
+
+- feat: update color scheme and logo (#301)
+- feat: Add admin-invoice section (#299)
+- fix: reset border radius on mobile
+- fix: standalone pages (#300)
+
 # 4.0.0-beta.5
 
 - chore(deps): bump hosted-git-info from 2.8.8 to 2.8.9 (#291)

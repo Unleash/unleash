@@ -31,6 +31,7 @@ import AddonsEdit from '../../page/addons/edit';
 import Admin from '../../page/admin';
 import AdminApi from '../../page/admin/api';
 import AdminUsers from '../../page/admin/users';
+import AdminInvoice from '../../page/admin/invoice';
 import AdminAuth from '../../page/admin/auth';
 import Reporting from '../../page/reporting';
 import Login from '../user/Login';
@@ -324,6 +325,15 @@ export const routes = [
         parent: '/admin',
         title: 'Authentication',
         component: AdminAuth,
+        type: 'protected',
+        layout: 'main',
+    },
+    {
+        path: '/admin-invoices',
+        title: 'Invoices',
+        icon: 'money',
+        component: AdminInvoice,
+        hidden: true,
         type: 'protected',
         layout: 'main',
     },

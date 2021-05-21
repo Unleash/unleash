@@ -7,10 +7,10 @@ Object {
   "headerBackground": undefined,
   "links": Array [
     Object {
-      "href": "https://unleash.github.io?source=oss",
+      "href": "https://docs.getunleash.io/docs?source=oss",
       "icon": "library_books",
       "title": "User documentation",
-      "value": "User documentation",
+      "value": "Documentation",
     },
     Object {
       "href": "https://github.com/Unleash",
@@ -32,10 +32,10 @@ Object {
   "headerBackground": "red",
   "links": Array [
     Object {
-      "href": "https://unleash.github.io?source=oss",
+      "href": "https://docs.getunleash.io/docs?source=oss",
       "icon": "library_books",
       "title": "User documentation",
-      "value": "User documentation",
+      "value": "Documentation",
     },
     Object {
       "href": "https://github.com/Unleash",
@@ -57,10 +57,10 @@ Object {
   "headerBackground": "black",
   "links": Array [
     Object {
-      "href": "https://unleash.github.io?source=oss",
+      "href": "https://docs.getunleash.io/docs?source=oss",
       "icon": "library_books",
       "title": "User documentation",
-      "value": "User documentation",
+      "value": "Documentation",
     },
     Object {
       "href": "https://github.com/Unleash",

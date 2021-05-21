@@ -20,9 +20,9 @@ const DEFAULT = new $Map({
     flags: {},
     links: [
         {
-            value: 'User documentation',
+            value: 'Documentation',
             icon: 'library_books',
-            href: 'https://unleash.github.io?source=oss',
+            href: 'https://docs.getunleash.io/docs?source=oss',
             title: 'User documentation',
         },
         {

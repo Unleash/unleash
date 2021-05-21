@@ -26,7 +26,6 @@
   "main": "./dist/lib/server-impl.js",
   "scripts": {
     "start": "node ./dist/server.js",
-    "start:google": "node examples/google-auth-unleash.js",
     "start:dev": "NODE_ENV=development tsc-watch --onSuccess \"node dist/server-dev.js\"",
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
@@ -145,7 +144,6 @@
     "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/nanomatch/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatch/define-property/**/kind-of": "^6.0.3",
-    "googleapis": "^39.1.0",
     "node-forge": "^0.10.0"
   },
   "lint-staged": {

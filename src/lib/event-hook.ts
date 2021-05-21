@@ -1,4 +1,4 @@
-import EventEmitter from 'node:events';
+import EventEmitter from 'events';
 import { EventHook } from './types/option';
 import {
     FEATURE_CREATED,

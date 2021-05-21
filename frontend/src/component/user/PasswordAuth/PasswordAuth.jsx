@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { Button, TextField, Typography, IconButton } from '@material-ui/core';
-import LockRounded from '@material-ui/icons/LockRounded';
+import { Button, TextField, Typography } from '@material-ui/core';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
 import { useStyles } from './PasswordAuth.styles';
-import { Link } from 'react-router-dom';
 import useQueryParams from '../../../hooks/useQueryParams';
-import { GoogleSvg } from '../HostedAuth/Icons';
+import AuthOptions from '../common/AuthOptions/AuthOptions';
+import DividerText from '../../common/DividerText/DividerText';
 
 const PasswordAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
     const styles = useStyles();
     const history = useHistory();
-    const [showFields, setShowFields] = useState(false);
     const params = useQueryParams();
     const [username, setUsername] = useState(params.get('email') || '');
     const [password, setPassword] = useState('');
@@ -23,11 +21,6 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
         usernameError: '',
         passwordError: '',
     });
-
-    const onShowOptions = e => {
-        e.preventDefault();
-        setShowFields(true);
-    };
 
     const handleSubmit = async evt => {
         evt.preventDefault();
@@ -110,17 +103,11 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                         autoComplete="true"
                         size="small"
                     />
-
-                    <Link to="/forgotten-password">
-                        <Typography variant="body2">
-                            Forgot your password?
-                        </Typography>
-                    </Link>
                     <Button
                         variant="contained"
                         color="primary"
                         type="submit"
-                        style={{ maxWidth: '150px' }}
+                        style={{ width: '150px', margin: '1rem auto' }}
                     >
                         Sign in
                     </Button>
@@ -130,44 +117,23 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
     };
 
     const renderWithOptions = options => (
-        <div>
-            {options.map(o => (
-                <div
-                    key={o.type}
-                    className={classnames(
-                        styles.contentContainer,
-                        commonStyles.contentSpacingY
-                    )}
-                >
-                    <Button color="primary" variant="outlined" href={o.path} startIcon={o.type === 'google' ? <GoogleSvg /> : <LockRounded />}>
-                        {o.message}
-                    </Button>
-                </div>
-            ))}
-            <ConditionallyRender
-                condition={showFields}
-                show={renderLoginForm()}
-                elseShow={
-                    
-                    <IconButton size="small" onClick={onShowOptions}>
-                        Show more options
-                    </IconButton>
-                }
-            />
-        </div>
+        <>
+            <AuthOptions options={options} />
+            <DividerText text="Or signin with username" />
+            {renderLoginForm()}
+        </>
     );
 
     const { options = [] } = authDetails;
 
     return (
-        <div>
-            <Typography variant="subtitle1">{authDetails.message}</Typography>
+        <>
             <ConditionallyRender
                 condition={options.length > 0}
                 show={renderWithOptions(options)}
                 elseShow={renderLoginForm()}
             />
-        </div>
+        </>
     );
 };
 

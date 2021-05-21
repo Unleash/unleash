@@ -1,6 +1,13 @@
 import { makeStyles } from '@material-ui/styles';
 
 export const useStyles = makeStyles(theme => ({
+    login: {
+        width: '350px',
+        maxWidth: '350px',
+        [theme.breakpoints.down('xs')]: {
+            width: '100%',
+        },
+    },
     loginContainer: {
         minHeight: '100vh',
         width: '100%',
@@ -25,7 +32,7 @@ export const useStyles = makeStyles(theme => ({
     },
     title: {
         fontSize: theme.fontSizes.mainHeader,
-        marginBottom: '0.5rem',
+        marginBottom: '1rem',
         display: 'flex',
         alignItems: 'center',
     },
@@ -38,7 +45,8 @@ export const useStyles = makeStyles(theme => ({
         fontSize: '1.25rem',
     },
     loginFormContainer: {
-        maxWidth: '500px',
+        display: 'flex',
+        flexDirection: 'column',
     },
     imageContainer: {
         display: 'flex',

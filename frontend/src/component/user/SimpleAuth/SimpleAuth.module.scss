@@ -1,7 +1,20 @@
+.container {
+    width: 350px;
+}
+
 .container > * {
     margin: 0.6rem 0;
+    width: 100%;
 }
 
 .button {
     min-width: 150px;
+    margin: 0 auto;
+    display: block;
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+    }
 }

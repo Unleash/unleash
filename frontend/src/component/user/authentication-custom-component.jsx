@@ -13,8 +13,14 @@ class AuthenticationCustomComponent extends React.Component {
             <div>
                 <p>{authDetails.message}</p>
                 <CardActions style={{ textAlign: 'center' }}>
-                    <a href={authDetails.path}>
-                        <Button>Sign In</Button>
+                    <a href={authDetails.path} style={{ width: '100%' }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ width: '150px', margin: '0 auto' }}
+                        >
+                            Sign In
+                        </Button>
                     </a>
                 </CardActions>
             </div>

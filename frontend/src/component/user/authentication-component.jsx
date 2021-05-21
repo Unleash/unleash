@@ -6,10 +6,13 @@ import PasswordAuth from './PasswordAuth/PasswordAuth';
 import HostedAuth from './HostedAuth/HostedAuth';
 import DemoAuth from './DemoAuth';
 
-const SIMPLE_TYPE = 'unsecure';
-const DEMO_TYPE = 'demo';
-const PASSWORD_TYPE = 'password';
-const HOSTED_TYPE = 'enterprise-hosted';
+import {
+    SIMPLE_TYPE,
+    DEMO_TYPE,
+    PASSWORD_TYPE,
+    HOSTED_TYPE,
+} from '../../constants/authTypes';
+import SecondaryLoginActions from './common/SecondaryLoginActions/SecondaryLoginActions';
 
 class AuthComponent extends React.Component {
     static propTypes = {
@@ -22,16 +25,20 @@ class AuthComponent extends React.Component {
 
     render() {
         const authDetails = this.props.user.authDetails;
+
         if (!authDetails) return null;
 
         let content;
         if (authDetails.type === PASSWORD_TYPE) {
             content = (
-                <PasswordAuth
-                    passwordLogin={this.props.passwordLogin}
-                    authDetails={authDetails}
-                    history={this.props.history}
-                />
+                <>
+                    <PasswordAuth
+                        passwordLogin={this.props.passwordLogin}
+                        authDetails={authDetails}
+                        history={this.props.history}
+                    />
+                    <SecondaryLoginActions />
+                </>
             );
         } else if (authDetails.type === SIMPLE_TYPE) {
             content = (
@@ -51,18 +58,21 @@ class AuthComponent extends React.Component {
             );
         } else if (authDetails.type === HOSTED_TYPE) {
             content = (
-                <HostedAuth
-                    passwordLogin={this.props.passwordLogin}
-                    authDetails={authDetails}
-                    history={this.props.history}
-                />
+                <>
+                    <HostedAuth
+                        passwordLogin={this.props.passwordLogin}
+                        authDetails={authDetails}
+                        history={this.props.history}
+                    />
+                    <SecondaryLoginActions />
+                </>
             );
         } else {
             content = (
                 <AuthenticationCustomComponent authDetails={authDetails} />
             );
         }
-        return <div>{content}</div>;
+        return <>{content}</>;
     }
 }
 

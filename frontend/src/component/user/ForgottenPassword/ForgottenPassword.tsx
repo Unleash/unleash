@@ -2,10 +2,12 @@ import { Button, TextField, Typography } from '@material-ui/core';
 import { AlertTitle, Alert } from '@material-ui/lab';
 import classnames from 'classnames';
 import { SyntheticEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCommonStyles } from '../../../common.styles';
 import useLoading from '../../../hooks/useLoading';
 import { formatApiPath } from '../../../utils/format-path';
 import ConditionallyRender from '../../common/ConditionallyRender';
+import DividerText from '../../common/DividerText/DividerText';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import { useStyles } from './ForgottenPassword.styles';
 
@@ -41,7 +43,8 @@ const ForgottenPassword = () => {
             <div
                 className={classnames(
                     commonStyles.contentSpacingY,
-                    commonStyles.flexColumn
+                    commonStyles.flexColumn,
+                    styles.forgottenPassword
                 )}
                 ref={ref}
             >
@@ -104,6 +107,18 @@ const ForgottenPassword = () => {
                             show={<span>Submit</span>}
                             elseShow={<span>Try again</span>}
                         />
+                    </Button>
+                    <DividerText text="Or log in" />
+                    <Button
+                        type="submit"
+                        data-loading
+                        variant="outlined"
+                        className={styles.button}
+                        disabled={loading}
+                        component={Link}
+                        to="/login"
+                    >
+                        Log in
                     </Button>
                 </form>
             </div>

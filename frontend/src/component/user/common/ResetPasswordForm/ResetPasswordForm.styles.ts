@@ -4,9 +4,11 @@ export const useStyles = makeStyles(theme => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: '300px',
+        position: 'relative',
     },
     button: {
         width: '150px',
+        margin: '1rem auto',
+        display: 'block',
     },
 }));

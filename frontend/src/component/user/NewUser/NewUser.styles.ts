@@ -1,6 +1,22 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
+    newUser: {
+        width: '350px',
+        [theme.breakpoints.down('xs')]: {
+            width: '100%',
+        },
+    },
+    title: {
+        fontSize: theme.fontSizes.mainHeader,
+        marginBottom: '1.25rem',
+        display: 'flex',
+        alignItems: 'center',
+    },
+    inviteText: {
+        marginBottom: '1rem',
+        textAlign: 'center',
+    },
     container: {
         display: 'flex',
     },
@@ -9,7 +25,6 @@ export const useStyles = makeStyles(theme => ({
     },
     innerContainer: {
         width: '60%',
-        minHeight: '100vh',
         padding: '4rem 3rem',
     },
     buttonContainer: {
@@ -20,14 +35,14 @@ export const useStyles = makeStyles(theme => ({
         marginRight: '8px',
     },
     subtitle: {
-        marginBottom: '0.5rem',
-        fontSize: '1.1rem',
+        margin: '0.5rem 0',
     },
     passwordHeader: {
         marginTop: '2rem',
     },
     emailField: {
         minWidth: '300px',
+        width: '100%',
         [theme.breakpoints.down('xs')]: {
             minWidth: '100%',
         },

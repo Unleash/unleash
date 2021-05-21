@@ -5,13 +5,13 @@ import StandaloneBanner from '../StandaloneBanner/StandaloneBanner';
 import ResetPasswordDetails from '../common/ResetPasswordDetails/ResetPasswordDetails';
 
 import { useStyles } from './NewUser.styles';
-import { useCommonStyles } from '../../../common.styles';
 import useResetPassword from '../../../hooks/useResetPassword';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import { IAuthStatus } from '../../../interfaces/user';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
+import DividerText from '../../common/DividerText/DividerText';
 
 interface INewUserProps {
     user: IAuthStatus;
@@ -21,109 +21,97 @@ const NewUser = ({ user }: INewUserProps) => {
     const { token, data, loading, setLoading, invalidToken } =
         useResetPassword();
     const ref = useLoading(loading);
-    const commonStyles = useCommonStyles();
     const styles = useStyles();
 
     return (
         <div ref={ref}>
             <StandaloneLayout
                 showMenu={false}
-                BannerComponent={
-                    <StandaloneBanner showStars title={'Welcome to Unleash'}>
-                        <ConditionallyRender
-                            condition={data?.createdBy}
-                            show={
-                                <Typography variant="body1">
-                                    You have been invited by {data?.createdBy}
-                                </Typography>
-                            }
-                        />
-                    </StandaloneBanner>
-                }
+                BannerComponent={<StandaloneBanner title={'Unleash'} />}
             >
-                <ConditionallyRender
-                    condition={invalidToken}
-                    show={<InvalidToken />}
-                    elseShow={
-                        <ResetPasswordDetails
-                            token={token}
-                            setLoading={setLoading}
-                        >
-                            <Typography
-                                data-loading
-                                variant="subtitle1"
-                                className={styles.subtitle}
+                <div className={styles.newUser}>
+                    <ConditionallyRender
+                        condition={invalidToken}
+                        show={<InvalidToken />}
+                        elseShow={
+                            <ResetPasswordDetails
+                                token={token}
+                                setLoading={setLoading}
                             >
-                                Your username is
-                            </Typography>
-                            <TextField
-                                data-loading
-                                value={data?.email || ''}
-                                variant="outlined"
-                                size="small"
-                                className={styles.emailField}
-                                disabled
-                            />
-                            <div className={styles.roleContainer}>
-                                <Typography
-                                    data-loading
-                                    variant="subtitle1"
-                                    className={styles.subtitle}
-                                >
-                                    In Unleash your role is:{' '}
-                                    <i>{data?.role?.name}</i>
-                                </Typography>
-                                <Typography variant="body1" data-loading>
-                                    {data?.role?.description}
-                                </Typography>
-                                <div
-                                    className={commonStyles.largeDivider}
-                                    data-loading
-                                />
+                                <h2 className={styles.title}>
+                                    Enter your personal details and start your
+                                    journey
+                                </h2>
                                 <ConditionallyRender
-                                    condition={
-                                        user?.authDetails?.options?.length > 0
-                                    }
+                                    condition={data?.createdBy}
                                     show={
-                                        <>
-                                            <Typography data-loading>
-                                                Login with 3rd party providers
-                                            </Typography>
-                                            <AuthOptions
-                                                options={
-                                                    user?.authDetails?.options
-                                                }
-                                            />
-                                            <div
-                                                className={
-                                                    commonStyles.largeDivider
-                                                }
-                                                data-loading
-                                            />
-                                            <Typography
-                                                className={
-                                                    styles.passwordHeader
-                                                }
-                                                data-loading
-                                            >
-                                                OR set a new password for your
-                                                account
-                                            </Typography>
-                                        </>
-                                    }
-                                    elseShow={
                                         <Typography
                                             variant="body1"
                                             data-loading
+                                            className={styles.inviteText}
                                         >
-                                            Set a password for your account.
+                                            {data?.createdBy}
+                                            <br></br> has invited you to join
+                                            Unleash.
                                         </Typography>
                                     }
                                 />
-                            </div>
-                        </ResetPasswordDetails>
-                    }
-                />
+
+                                <Typography
+                                    data-loading
+                                    variant="body1"
+                                    className={styles.subtitle}
+                                >
+                                    Your username is
+                                </Typography>
+
+                                <TextField
+                                    data-loading
+                                    value={data?.email || ''}
+                                    variant="outlined"
+                                    size="small"
+                                    className={styles.emailField}
+                                    disabled
+                                />
+                                <div className={styles.roleContainer}>
+                                    <ConditionallyRender
+                                        condition={
+                                            user?.authDetails?.options?.length >
+                                            0
+                                        }
+                                        show={
+                                            <>
+                                                <DividerText
+                                                    text="sign in with"
+                                                    data-loading
+                                                />
+
+                                                <AuthOptions
+                                                    options={
+                                                        user?.authDetails
+                                                            ?.options
+                                                    }
+                                                />
+                                                <DividerText
+                                                    text="or set a new password for your account"
+                                                    data-loading
+                                                />
+                                            </>
+                                        }
+                                        elseShow={
+                                            <Typography
+                                                variant="body1"
+                                                data-loading
+                                            >
+                                                Set a password for your account.
+                                            </Typography>
+                                        }
+                                    />
+                                </div>
+                            </ResetPasswordDetails>
+                        }
+                    />
+                </div>
             </StandaloneLayout>
         </div>
     );

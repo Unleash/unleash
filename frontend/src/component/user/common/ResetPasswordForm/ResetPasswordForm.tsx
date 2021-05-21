@@ -28,6 +28,7 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
     const commonStyles = useCommonStyles();
     const [apiError, setApiError] = useState(false);
     const [password, setPassword] = useState('');
+    const [showPasswordChecker, setShowPasswordChecker] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
     const [matchingPasswords, setMatchingPasswords] = useState(false);
     const [validOwaspPassword, setValidOwaspPassword] = useState(false);
@@ -102,10 +103,6 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
                     styles.container
                 )}
             >
-                <PasswordChecker
-                    password={password}
-                    callback={setValidOwaspPasswordMemo}
-                />
                 <TextField
                     variant="outlined"
                     size="small"
@@ -113,6 +110,7 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
                     placeholder="Password"
                     value={password || ''}
                     onChange={e => setPassword(e.target.value)}
+                    onFocus={() => setShowPasswordChecker(true)}
                     autoComplete="password"
                     data-loading
                 />
@@ -126,6 +124,17 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
                     autoComplete="confirm-password"
                     data-loading
                 />
+                <ConditionallyRender
+                    condition={showPasswordChecker}
+                    show={
+                        <PasswordChecker
+                            password={password}
+                            callback={setValidOwaspPasswordMemo}
+                            style={{ marginBottom: '1rem' }}
+                        />
+                    }
+                />
+
                 <PasswordMatcher
                     started={started}
                     matchingPasswords={matchingPasswords}

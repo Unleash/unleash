@@ -4,7 +4,7 @@ import { Button, TextField } from '@material-ui/core';
 
 import styles from './DemoAuth.module.scss';
 
-import logoIcon from '../../../assets/img/logo.png';
+import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
 
 const DemoAuth = ({ demoLogin, history, authDetails }) => {
     const [email, setEmail] = useState('');
@@ -24,13 +24,14 @@ const DemoAuth = ({ demoLogin, history, authDetails }) => {
 
     return (
         <form onSubmit={handleSubmit} action={authDetails.path}>
+            <Logo className={styles.logo} />
             <div className={styles.container}>
-                <img alt="Unleash Logo" src={logoIcon} width="70" height="70" />
                 <h2>Access the Unleash demo instance</h2>
                 <p>No further data or Credit Card required</p>
                 <div className={styles.form}>
                     <TextField
                         value={email}
+                        className={styles.emailField}
                         onChange={handleChange}
                         inputProps={{ 'data-test': 'email-input-field' }}
                         size="small"
@@ -40,7 +41,7 @@ const DemoAuth = ({ demoLogin, history, authDetails }) => {
                         required
                         type="email"
                     />
-                    &nbsp;&nbsp;
+
                     <Button
                         type="submit"
                         variant="contained"

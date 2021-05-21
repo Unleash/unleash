@@ -4,6 +4,7 @@ import { useCommonStyles } from '../../../../common.styles';
 import { IAuthOptions } from '../../../../interfaces/user';
 import { ReactComponent as GoogleSvg } from '../../../../assets/icons/google.svg';
 import LockRounded from '@material-ui/icons/LockRounded';
+import ConditionallyRender from '../../../common/ConditionallyRender';
 
 interface IAuthOptionProps {
     options?: IAuthOptions[];
@@ -27,13 +28,27 @@ const AuthOptions = ({ options }: IAuthOptionProps) => {
                         variant="outlined"
                         href={o.path}
                         size="small"
-                        style={{ maxWidth: '300px' }}
+                        style={{ height: '40px', color: '#000' }}
                         startIcon={
-                            o.type === 'google' ? (
-                                <GoogleSvg />
-                            ) : (
-                                <LockRounded />
-                            )
+                            <ConditionallyRender
+                                condition={o.type === 'google'}
+                                show={
+                                    <GoogleSvg
+                                        style={{
+                                            height: '35px',
+                                            width: '35px',
+                                        }}
+                                    />
+                                }
+                                elseShow={
+                                    <LockRounded
+                                        style={{
+                                            height: '25px',
+                                            width: '25px',
+                                        }}
+                                    />
+                                }
+                            />
                         }
                     >
                         {o.message}

@@ -10,6 +10,8 @@ import { formatApiPath } from '../../../../../utils/format-path';
 interface IPasswordCheckerProps {
     password: string;
     callback: Dispatch<SetStateAction<boolean>>;
+    style?: object;
+    hideOnCompletion?: boolean;
 }
 
 interface IErrorResponse {
@@ -30,7 +32,11 @@ const UPPERCASE_ERROR =
 const LOWERCASE_ERROR =
     'The password must contain at least one lowercase letter.';
 
-const PasswordChecker = ({ password, callback }: IPasswordCheckerProps) => {
+const PasswordChecker = ({
+    password,
+    callback,
+    style = {},
+}: IPasswordCheckerProps) => {
     const styles = useStyles();
     const [casingError, setCasingError] = useState(true);
     const [numberError, setNumberError] = useState(true);
@@ -142,7 +148,12 @@ const PasswordChecker = ({ password, callback }: IPasswordCheckerProps) => {
                     <HelpIcon className={styles.helpIcon} />
                 </Typography>
             </Tooltip>
-            <div className={styles.container}>
+            <div
+                className={styles.container}
+                style={{
+                    ...style,
+                }}
+            >
                 <div className={styles.headerContainer}>
                     <div className={styles.checkContainer}>
                         <Typography variant="body2" data-loading>

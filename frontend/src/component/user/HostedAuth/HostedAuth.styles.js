@@ -15,26 +15,10 @@ export const useStyles = makeStyles(theme => ({
     apiError: {
         color: theme.palette.error.main,
     },
-
-    fancyLine: {
-        display: 'flex',
-        width: '100%',
-        margin: '10px 0',
-        justifyContent: 'center',
-        alignItems: 'center',
+    button: {
+        width: '150px',
+        margin: '1rem auto 0 auto',
+        display: 'block',
         textAlign: 'center',
-        color: 'gray',
-        '&::before': {
-            content: '""',
-            borderTop: '1px solid silver',
-            margin: '0 20px 0 0',
-            flex: '1 0 20px',
-        },
-        '&::after': {
-            content: '""',
-            borderTop: '1px solid silver',
-            margin: '0 20px 0 0',
-            flex: '1 0 20px',
-        }
-    }
+    },
 }));

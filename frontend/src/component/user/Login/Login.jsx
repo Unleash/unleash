@@ -7,6 +7,7 @@ import { useStyles } from './Login.styles';
 import useQueryParams from '../../../hooks/useQueryParams';
 import ResetPasswordSuccess from '../common/ResetPasswordSuccess/ResetPasswordSuccess';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
+import { DEMO_TYPE } from '../../../constants/authTypes';
 
 const Login = ({ history, user, fetchUser }) => {
     const styles = useStyles();
@@ -28,15 +29,21 @@ const Login = ({ history, user, fetchUser }) => {
 
     return (
         <StandaloneLayout>
-            <div>
-                <h2 className={styles.title}>Login</h2>
+            <div className={styles.loginFormContainer}>
+                <ConditionallyRender
+                    condition={user?.authDetails?.type !== DEMO_TYPE}
+                    show={
+                        <h2 className={styles.title}>
+                            Login to continue the great work
+                        </h2>
+                    }
+                />
+
                 <ConditionallyRender
                     condition={resetPassword}
                     show={<ResetPasswordSuccess />}
                 />
-                <div className={styles.loginFormContainer}>
-                    <AuthenticationContainer history={history} />
-                </div>
+                <AuthenticationContainer history={history} />
             </div>
         </StandaloneLayout>
     );

@@ -5,11 +5,12 @@ import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
 import { useStyles } from './HostedAuth.styles';
-import { Link } from 'react-router-dom';
 import useQueryParams from '../../../hooks/useQueryParams';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
+import DividerText from '../../common/DividerText/DividerText';
+import ConditionallyRender from '../../common/ConditionallyRender';
 
-const PasswordAuth = ({ authDetails, passwordLogin }) => {
+const HostedAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
     const styles = useStyles();
     const history = useHistory();
@@ -67,12 +68,17 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
     const { options = [] } = authDetails;
 
     return (
-        <div>
-            <br />
-            <div>
-                <AuthOptions options={options} />
-            </div>
-            <p className={styles.fancyLine}>or</p>
+        <>
+            <ConditionallyRender
+                condition={options.length > 0}
+                show={
+                    <>
+                        <AuthOptions options={options} />
+                        <DividerText text="or signin with username" />
+                    </>
+                }
+            />
+
             <form onSubmit={handleSubmit} action={authDetails.path}>
                 <Typography variant="subtitle2" className={styles.apiError}>
                     {apiError}
@@ -105,43 +111,26 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                         variant="outlined"
                         size="small"
                     />
-                    <Grid container spacing={3}>
-                        <Grid item xs={6}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                style={{ maxWidth: '150px' }}
-                            >
-                                Sign in
-                            </Button>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Link to="/forgotten-password">
-                                <Typography variant="body2" align="right">
-                                    Forgot your password?
-                                </Typography>
-                            </Link>
-                        </Grid>
+                    <Grid container>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            className={styles.button}
+                        >
+                            Sign in
+                        </Button>
                     </Grid>
-                    <br />
-                    <br />
-                    <Typography variant="body2" align="center">
-                        Don't have an account? <br />{' '}
-                        <a href="https://www.unleash-hosted.com/pricing">
-                            Sign up
-                        </a>
-                    </Typography>
                 </div>
             </form>
-        </div>
+        </>
     );
 };
 
-PasswordAuth.propTypes = {
+HostedAuth.propTypes = {
     authDetails: PropTypes.object.isRequired,
     passwordLogin: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
 };
 
-export default PasswordAuth;
+export default HostedAuth;

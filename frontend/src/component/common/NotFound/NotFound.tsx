@@ -1,7 +1,7 @@
 import { Button, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router';
 
-import logo from '../../../assets/img/logo.png';
+import { ReactComponent as LogoIcon } from '../../../assets/icons/logo_wbg.svg';
 
 import { useStyles } from './NotFound.styles';
 
@@ -20,7 +20,7 @@ const NotFound = () => {
     return (
         <div className={styles.container}>
             <div>
-                <img src={logo} alt="unleash logo" className={styles.logo} />
+                <LogoIcon className={styles.logo} />
                 <div className={styles.content}>
                     <Typography variant="h1" style={{ fontSize: '2rem' }}>
                         Ooops. That's a page we haven't toggled on yet.

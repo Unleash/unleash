@@ -4,7 +4,6 @@
 }
 
 .drawerTitle {
-    font-size: var(--h1-size);
     display: flex;
     align-items: center;
 }
@@ -13,13 +12,14 @@
     width: var(--drawer-width);
 }
 
-.drawerTitleContainer {
-    padding: var(--drawer-padding);
+.drawerTitleLogo {
+    width: 65px;
+    height: 65px;
 }
 
-.drawerTitleLogo {
-    padding-right: 16px;
-    width: 48px;
+.drawerTitleText {
+    font-size: 1.1rem;
+    margin-left: 0.25rem;
 }
 
 .drawerList {

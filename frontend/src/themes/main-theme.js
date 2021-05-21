@@ -3,12 +3,12 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: '#607d8b',
-            light: '#8eacbb',
-            dark: '#34515e',
+            main: '#1A4049',
+            light: '#B3DAED',
+            dark: '#0A1A1d',
         },
         secondary: {
-            main: '#0b5644',
+            main: '#122D33',
             light: '#40836f',
             dark: '#002c1d',
         },
@@ -59,8 +59,8 @@ const theme = createMuiTheme({
         },
         cards: {
             gradient: {
-                top: '#617D8B',
-                bottom: '#31627C',
+                top: '#265f6d',
+                bottom: '#1A4049',
             },
             container: {
                 bg: '#f1f1f1',

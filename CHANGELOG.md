@@ -1,5 +1,7 @@
 # Changelog
 
+# 4.0.2
+
 # 4.0.1
 
 - fix: create config should allow all options params

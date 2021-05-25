@@ -223,6 +223,12 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         listen = { host: server.host || undefined, port: server.port };
     }
 
+    const secureHeaders =
+        options.secureHeaders || safeBoolean(process.env.SECURE_HEADERS, false);
+
+    const enableOAS =
+        options.enableOAS || safeBoolean(process.env.ENABLE_OAS, false);
+
     return {
         db,
         session,
@@ -235,8 +241,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         import: importSetting,
         experimental: experimental || {},
         email,
-        secureHeaders: safeBoolean(process.env.SECURE_HEADERS, false),
-        enableOAS: safeBoolean(process.env.ENABLE_OAS, false),
+        secureHeaders,
+        enableOAS,
         preHook: options.preHook,
         preRouterHook: options.preRouterHook,
         eventHook: options.eventHook,

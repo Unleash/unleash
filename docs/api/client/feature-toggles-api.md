@@ -28,7 +28,6 @@ This endpoint should never return anything besides a valid _20X or 304-response_
   "features": [
     {
       "name": "Feature.A",
-      "description": "lorem ipsum",
       "type": "release",
       "enabled": false,
       "stale": false,
@@ -44,7 +43,6 @@ This endpoint should never return anything besides a valid _20X or 304-response_
     {
       "name": "Feature.B",
       "type": "killswitch",
-      "description": "lorem ipsum",
       "enabled": true,
       "stale": false,
       "strategies": [
@@ -101,7 +99,6 @@ Used to fetch details about a specific feature toggle. This is mainly provided t
 ```json
 {
   "name": "Feature.A",
-  "description": "lorem ipsum..",
   "type": "release",
   "enabled": false,
   "stale": false,
@@ -130,8 +127,6 @@ In the example `environment` needs to be `production` AND `userId` must be eithe
 
 ```json
 {
-  "createdAt": "2019-08-02T19:25:13.976Z",
-  "description": "Play with strategy constraints",
   "type": "release",
   "enabled": true,
   "stale": false,
@@ -173,7 +168,6 @@ All feature toggles can also take an array of variants. You can read more about 
   "features": [
     {
       "name": "Demo",
-      "description": "Show off fedfdfature toggles!",
       "type": "operational",
       "enabled": true,
       "stale": false,
@@ -204,8 +198,7 @@ All feature toggles can also take an array of variants. You can read more about 
           "overrides": [],
           "weightType": "variable"
         }
-      ],
-      "createdAt": "2020-09-01T07:14:39.438Z"
+      ]
     }
   ]
 }

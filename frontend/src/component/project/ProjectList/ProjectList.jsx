@@ -98,7 +98,7 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
 
     const renderProjectList = () =>
         projects.map(project => (
-            <ListItem key={project.name} classes={{ root: styles.listItem }}>
+            <ListItem key={project.id} classes={{ root: styles.listItem }}>
                 <ListItemAvatar>
                     <Icon>folder_open</Icon>
                 </ListItemAvatar>
@@ -107,11 +107,11 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
                     secondary={project.description}
                 />
                 <ConditionallyRender
-                    condition={hasAccess(UPDATE_PROJECT, project.name)}
+                    condition={hasAccess(UPDATE_PROJECT, project.id)}
                     show={mgmAccessButton(project)}
                 />
                 <ConditionallyRender
-                    condition={hasAccess(DELETE_PROJECT, project.name)}
+                    condition={hasAccess(DELETE_PROJECT, project.id)}
                     show={deleteProjectButton(project)}
                 />
             </ListItem>

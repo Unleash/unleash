@@ -1,5 +1,10 @@
 # Changelog
 
+# 4.0.1
+
+- fix: create config should allow all options params
+- fix: a lot of minor docs improvements
+
 # 4.0.0
 
 - fix: upgrade unleash-frontend to version 4.0.0

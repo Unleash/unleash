@@ -23,5 +23,6 @@ unleash.start(
         versionCheck: {
             enable: false,
         },
+        secureHeaders: true,
     }),
 );

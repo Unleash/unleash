@@ -190,10 +190,10 @@ export default class ProjectService {
             );
         }
 
-        if (role.name === RoleName.ADMIN) {
+        if (role.name === RoleName.OWNER) {
             const users = await this.accessService.getUsersForRole(role.id);
             if (users.length < 2) {
-                throw new Error('A project must have at least one admin');
+                throw new Error('A project must have at least one owner');
             }
         }
 

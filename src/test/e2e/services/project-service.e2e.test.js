@@ -377,3 +377,25 @@ test.serial('should remove user from the project', async t => {
 
     t.is(memberUsers.length, 0);
 });
+
+test.serial('should not remove user from the project', async t => {
+    const project = {
+        id: 'remove-users-not-allowed',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(project, user);
+
+    const roles = await stores.accessStore.getRolesForProject(project.id);
+    const ownerRole = roles.find(r => r.name === RoleName.OWNER);
+
+    await t.throwsAsync(
+        async () => {
+            await projectService.removeUser(project.id, ownerRole.id, user.id);
+        },
+        {
+            instanceOf: Error,
+            message: 'A project must have at least one owner',
+        },
+    );
+});

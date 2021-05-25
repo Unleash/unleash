@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+# 4.0.1
+- fix: Project  actions need to checkAccess based on projectId
+- fix: INLINE_RUNTIME_CHUNK
+
 # 4.0.0
 
 - feat: update color scheme and logo (#301)

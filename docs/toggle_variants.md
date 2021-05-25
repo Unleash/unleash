@@ -1,3 +1,3 @@
-Please see <a href="/docs/advanced/feature_toggle_variants.md">/docs/advanced/feature_toggle_variants</a>
+Please see <a href="/docs/advanced/feature-toggle-variants.md">/docs/advanced/feature-toggle-variants</a>
 
-<meta http-equiv="refresh" content="0; URL=/docs/advanced/feature_toggle_variants">
+<meta http-equiv="refresh" content="0; URL=/docs/advanced/feature-toggle-variants.md">

@@ -36,7 +36,7 @@
     "test": "NODE_ENV=test PORT=4243 jest",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "yarn test --watch",
-    "test:coverage": "jest --coverage | coveralls",
+    "test:coverage": "jest --coverage && cat coverage/lcov.info | coveralls",
     "clean": "rimraf dist/"
   },
   "jest": {

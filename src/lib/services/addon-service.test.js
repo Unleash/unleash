@@ -1,7 +1,5 @@
 'use strict';
 
-const test = require('ava');
-const proxyquire = require('proxyquire').noCallThru();
 const { ValidationError } = require('joi');
 const Addon = require('../addons/addon');
 
@@ -80,9 +78,9 @@ class SimpleAddon extends Addon {
     }
 }
 
-const AddonService = proxyquire.load('./addon-service', {
-    '../addons': new Array(SimpleAddon),
-});
+jest.mock('../addons', () => new Array(SimpleAddon));
+
+const AddonService = require('./addon-service');
 
 function getSetup() {
     const stores = store.createStores();
@@ -98,39 +96,34 @@ function getSetup() {
     };
 }
 
-test('should load addon configurations', async t => {
+test('should load addon configurations', async () => {
     const { addonService } = getSetup();
 
     const configs = await addonService.getAddons();
 
-    t.is(configs.length, 0);
+    expect(configs.length).toBe(0);
 });
 
-test('should load provider definitions', async t => {
+test('should load provider definitions', async () => {
     const { addonService } = getSetup();
 
     const providerDefinitions = await addonService.getProviderDefinition();
 
     const simple = providerDefinitions.find(p => p.name === 'simple');
 
-    t.is(providerDefinitions.length, 1);
-    t.is(simple.name, 'simple');
+    expect(providerDefinitions.length).toBe(1);
+    expect(simple.name).toBe('simple');
 });
 
-test('should not allow addon-config for unknown provider', async t => {
+test('should not allow addon-config for unknown provider', async () => {
     const { addonService } = getSetup();
 
-    const error = await t.throwsAsync(
-        async () => {
-            await addonService.createAddon({ provider: 'unknown' });
-        },
-        { instanceOf: TypeError },
-    );
-
-    t.is(error.message, 'Unknown addon provider unknown');
+    await expect(async () => {
+        await addonService.createAddon({ provider: 'unknown' });
+    }).rejects.toThrow(new TypeError('Unknown addon provider unknown'));
 });
 
-test('should trigger simple-addon eventHandler', async t => {
+test('should trigger simple-addon eventHandler', async () => {
     const { addonService, stores } = getSetup();
 
     const config = {
@@ -159,12 +152,12 @@ test('should trigger simple-addon eventHandler', async t => {
     const simpleProvider = addonService.addonProviders.simple;
     const events = simpleProvider.getEvents();
 
-    t.is(events.length, 1);
-    t.is(events[0].event.type, FEATURE_CREATED);
-    t.is(events[0].event.data.name, 'some-toggle');
+    expect(events.length).toBe(1);
+    expect(events[0].event.type).toBe(FEATURE_CREATED);
+    expect(events[0].event.data.name).toBe('some-toggle');
 });
 
-test('should create simple-addon config', async t => {
+test('should create simple-addon config', async () => {
     const { addonService } = getSetup();
 
     const config = {
@@ -180,11 +173,11 @@ test('should create simple-addon config', async t => {
     await addonService.createAddon(config, 'me@mail.com');
     const addons = await addonService.getAddons();
 
-    t.is(addons.length, 1);
-    t.is(addons[0].provider, 'simple');
+    expect(addons.length).toBe(1);
+    expect(addons[0].provider).toBe('simple');
 });
 
-test('should create tag type for simple-addon', async t => {
+test('should create tag type for simple-addon', async () => {
     const { addonService, tagTypeService } = getSetup();
 
     const config = {
@@ -200,10 +193,10 @@ test('should create tag type for simple-addon', async t => {
     await addonService.createAddon(config, 'me@mail.com');
     const tagType = await tagTypeService.getTagType('me');
 
-    t.is(tagType.name, 'me');
+    expect(tagType.name).toBe('me');
 });
 
-test('should store ADDON_CONFIG_CREATE event', async t => {
+test('should store ADDON_CONFIG_CREATE event', async () => {
     const { addonService, stores } = getSetup();
 
     const config = {
@@ -220,12 +213,12 @@ test('should store ADDON_CONFIG_CREATE event', async t => {
 
     const events = await stores.eventStore.getEvents();
 
-    t.is(events.length, 2); // Also tag-types where created
-    t.is(events[1].type, ADDON_CONFIG_CREATED);
-    t.is(events[1].data.provider, 'simple');
+    expect(events.length).toBe(2); // Also tag-types where created
+    expect(events[1].type).toBe(ADDON_CONFIG_CREATED);
+    expect(events[1].data.provider).toBe('simple');
 });
 
-test('should store ADDON_CONFIG_UPDATE event', async t => {
+test('should store ADDON_CONFIG_UPDATE event', async () => {
     const { addonService, stores } = getSetup();
 
     const config = {
@@ -245,12 +238,12 @@ test('should store ADDON_CONFIG_UPDATE event', async t => {
 
     const events = await stores.eventStore.getEvents();
 
-    t.is(events.length, 3);
-    t.is(events[2].type, ADDON_CONFIG_UPDATED);
-    t.is(events[2].data.provider, 'simple');
+    expect(events.length).toBe(3);
+    expect(events[2].type).toBe(ADDON_CONFIG_UPDATED);
+    expect(events[2].data.provider).toBe('simple');
 });
 
-test('should store ADDON_CONFIG_REMOVE event', async t => {
+test('should store ADDON_CONFIG_REMOVE event', async () => {
     const { addonService, stores } = getSetup();
 
     const config = {
@@ -269,12 +262,12 @@ test('should store ADDON_CONFIG_REMOVE event', async t => {
 
     const events = await stores.eventStore.getEvents();
 
-    t.is(events.length, 3);
-    t.is(events[2].type, ADDON_CONFIG_DELETED);
-    t.is(events[2].data.id, addonConfig.id);
+    expect(events.length).toBe(3);
+    expect(events[2].type).toBe(ADDON_CONFIG_DELETED);
+    expect(events[2].data.id).toBe(addonConfig.id);
 });
 
-test('should hide sensitive fields when fetching', async t => {
+test('should hide sensitive fields when fetching', async () => {
     const { addonService } = getSetup();
 
     const config = {
@@ -292,12 +285,12 @@ test('should hide sensitive fields when fetching', async t => {
     const addons = await addonService.getAddons();
     const addonRetrieved = await addonService.getAddon(createdConfig.id);
 
-    t.is(addons.length, 1);
-    t.is(addons[0].parameters.sensitiveParam, MASKED_VALUE);
-    t.is(addonRetrieved.parameters.sensitiveParam, MASKED_VALUE);
+    expect(addons.length).toBe(1);
+    expect(addons[0].parameters.sensitiveParam).toBe(MASKED_VALUE);
+    expect(addonRetrieved.parameters.sensitiveParam).toBe(MASKED_VALUE);
 });
 
-test('should not overwrite masked values when updating', async t => {
+test('should not overwrite masked values when updating', async () => {
     const { addonService, stores } = getSetup();
 
     const config = {
@@ -320,11 +313,11 @@ test('should not overwrite masked values when updating', async t => {
     await addonService.updateAddon(addonConfig.id, updated, 'me@mail.com');
 
     const updatedConfig = await stores.addonStore.get(addonConfig.id);
-    t.is(updatedConfig.parameters.url, 'http://localhost/wh');
-    t.is(updatedConfig.parameters.var, 'some-new-value');
+    expect(updatedConfig.parameters.url).toBe('http://localhost/wh');
+    expect(updatedConfig.parameters.var).toBe('some-new-value');
 });
 
-test('should reject addon config with missing required parameter when creating', async t => {
+test('should reject addon config with missing required parameter when creating', async () => {
     const { addonService } = getSetup();
 
     const config = {
@@ -336,13 +329,12 @@ test('should reject addon config with missing required parameter when creating',
         events: [FEATURE_CREATED],
     };
 
-    await t.throwsAsync(
-        async () => addonService.createAddon(config, 'me@mail.com'),
-        { instanceOf: ValidationError },
-    );
+    await expect(async () =>
+        addonService.createAddon(config, 'me@mail.com'),
+    ).rejects.toThrow(ValidationError);
 });
 
-test('should reject updating addon config with missing required parameter', async t => {
+test('should reject updating addon config with missing required parameter', async () => {
     const { addonService } = getSetup();
 
     const addonConfig = {
@@ -361,13 +353,12 @@ test('should reject updating addon config with missing required parameter', asyn
         parameters: { var: 'some-new-value' },
         description: 'test',
     };
-    await t.throwsAsync(
-        async () => addonService.updateAddon(config.id, updated, 'me@mail.com'),
-        { instanceOf: ValidationError },
-    );
+    await expect(async () =>
+        addonService.updateAddon(config.id, updated, 'me@mail.com'),
+    ).rejects.toThrow(ValidationError);
 });
 
-test('Should reject addon config if a required parameter is just the empty string', async t => {
+test('Should reject addon config if a required parameter is just the empty string', async () => {
     const { addonService } = getSetup();
 
     const config = {
@@ -380,8 +371,7 @@ test('Should reject addon config if a required parameter is just the empty strin
         events: [FEATURE_CREATED],
     };
 
-    await t.throwsAsync(
-        async () => addonService.createAddon(config, 'me@mail.com'),
-        { instanceOf: ValidationError },
-    );
+    await expect(async () =>
+        addonService.createAddon(config, 'me@mail.com'),
+    ).rejects.toThrow(ValidationError);
 });

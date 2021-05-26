@@ -1,11 +1,10 @@
 'use strict';
 
-import { createServices } from '../services';
-import { createTestConfig } from '../../test/config/test-config';
-
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
+const { createServices } = require('../services');
+const { createTestConfig } = require('../../test/config/test-config');
+
 const store = require('../../test/fixtures/store');
 const getApp = require('../app');
 const User = require('../types/user');
@@ -40,8 +39,8 @@ function getSetup() {
     };
 }
 
-test('should logout and redirect', t => {
-    t.plan(0);
+test('should logout and redirect', () => {
+    expect.assertions(0);
     const { request, base } = getSetup();
 
     return request

@@ -96,6 +96,10 @@ export class ApiTokenStore {
             .del();
     }
 
+    async deleteAll(): Promise<void> {
+        return this.db<ITokenTable>(TABLE).del();
+    }
+
     async setExpiry(secret: string, expiresAt: Date): Promise<IApiToken> {
         const rows = await this.db<ITokenTable>(TABLE)
             .update({ expires_at: expiresAt })

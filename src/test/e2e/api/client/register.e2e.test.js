@@ -1,6 +1,5 @@
 'use strict';
 
-const test = require('ava');
 const sinon = require('sinon');
 const faker = require('faker');
 const { setupApp } = require('../../helpers/test-helper');
@@ -17,17 +16,19 @@ const asyncFilter = async (arr, predicate) => {
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('register_client', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
-test.serial('should register client', async t => {
-    t.plan(0);
+test('should register client', async () => {
+    expect.assertions(0);
     const request = await setupApp(stores);
     return request
         .post('/api/client/register')
@@ -41,8 +42,8 @@ test.serial('should register client', async t => {
         .expect(202);
 });
 
-test.serial('should allow client to register multiple times', async t => {
-    t.plan(2);
+test('should allow client to register multiple times', async () => {
+    expect.assertions(2);
     const clock = sinon.useFakeTimers();
     const { clientInstanceStore, clientApplicationsStore } = stores;
     const request = await setupApp(stores);
@@ -65,12 +66,12 @@ test.serial('should allow client to register multiple times', async t => {
                 .expect(202),
         );
     await clock.tickAsync(6 * 1000);
-    t.assert(clientApplicationsStore.exists(clientRegistration));
-    t.assert(clientInstanceStore.exists(clientRegistration));
+    expect(clientApplicationsStore.exists(clientRegistration)).toBeTruthy();
+    expect(clientInstanceStore.exists(clientRegistration)).toBeTruthy();
     clock.restore();
 });
 
-test.serial.skip('Should handle a massive bulk registration', async t => {
+test.skip('Should handle a massive bulk registration', async () => {
     const { clientInstanceStore, clientApplicationsStore } = stores;
     const request = await setupApp(stores);
     const clients = [];
@@ -93,7 +94,7 @@ test.serial.skip('Should handle a massive bulk registration', async t => {
             .send(clientRegistration)
             .expect(202);
     }
-    t.is(clients.length, 2000);
+    expect(clients.length).toBe(2000);
     await new Promise(res => setTimeout(res, 5500));
 
     // Verify clientInstance
@@ -101,12 +102,12 @@ test.serial.skip('Should handle a massive bulk registration', async t => {
         const exists = await clientInstanceStore.exists(c);
         return !exists;
     });
-    t.is(notSavedInstance.length, 0);
+    expect(notSavedInstance.length).toBe(0);
 
     // Verify application
     const notSavedApp = await asyncFilter(clients, async c => {
         const exists = await clientApplicationsStore.exists(c);
         return !exists;
     });
-    t.is(notSavedApp.length, 0);
+    expect(notSavedApp.length).toBe(0);
 });

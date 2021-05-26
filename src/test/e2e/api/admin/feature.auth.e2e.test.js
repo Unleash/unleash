@@ -1,6 +1,5 @@
 'use strict';
 
-const test = require('ava');
 const { setupAppWithAuth } = require('../../helpers/test-helper');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
@@ -8,17 +7,19 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('feature_api_auth', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
-test.serial('creates new feature toggle with createdBy', async t => {
-    t.plan(1);
+test('creates new feature toggle with createdBy', async () => {
+    expect.assertions(1);
     const request = await setupAppWithAuth(stores);
     // Login
     await request.post('/api/admin/login').send({
@@ -36,12 +37,12 @@ test.serial('creates new feature toggle with createdBy', async t => {
         .expect(201);
 
     await request.get('/api/admin/events/com.test.Username').expect(res => {
-        t.is(res.body.events[0].createdBy, 'user@mail.com');
+        expect(res.body.events[0].createdBy).toBe('user@mail.com');
     });
 });
 
-test.serial('should require authenticated user', async t => {
-    t.plan(0);
+test('should require authenticated user', async () => {
+    expect.assertions(0);
     const request = await setupAppWithAuth(stores);
     return request.get('/api/admin/features').expect(401);
 });

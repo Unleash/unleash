@@ -1,24 +1,22 @@
-const test = require('ava');
-const proxyquire = require('proxyquire').noCallThru();
 const { FEATURE_CREATED, FEATURE_ARCHIVED } = require('../types/events');
 
-const DatadogAddon = proxyquire.load('./datadog', {
-    './addon': class Addon {
-        constructor(definition, { getLogger }) {
-            this.logger = getLogger('addon/test');
-            this.fetchRetryCalls = [];
-        }
+jest.mock('./addon', () => (class Addon {
+    constructor(definition, { getLogger }) {
+        this.logger = getLogger('addon/test');
+        this.fetchRetryCalls = [];
+    }
 
-        async fetchRetry(url, options, retries, backoff) {
-            this.fetchRetryCalls.push({ url, options, retries, backoff });
-            return Promise.resolve({ status: 200 });
-        }
-    },
-});
+    async fetchRetry(url, options, retries, backoff) {
+        this.fetchRetryCalls.push({ url, options, retries, backoff });
+        return Promise.resolve({ status: 200 });
+    }
+}));
+
+const DatadogAddon = require('./datadog');
 
 const noLogger = require('../../test/fixtures/no-logger');
 
-test('Should call datadog webhook', async t => {
+test('Should call datadog webhook', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
@@ -38,12 +36,12 @@ test('Should call datadog webhook', async t => {
     };
 
     await addon.handleEvent(event, parameters);
-    t.is(addon.fetchRetryCalls.length, 1);
-    t.is(addon.fetchRetryCalls[0].url, parameters.url);
-    t.snapshot(addon.fetchRetryCalls[0].options.body);
+    expect(addon.fetchRetryCalls.length).toBe(1);
+    expect(addon.fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(addon.fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
-test('Should call datadog webhook for archived toggle', async t => {
+test('Should call datadog webhook for archived toggle', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
@@ -61,7 +59,7 @@ test('Should call datadog webhook for archived toggle', async t => {
     };
 
     await addon.handleEvent(event, parameters);
-    t.is(addon.fetchRetryCalls.length, 1);
-    t.is(addon.fetchRetryCalls[0].url, parameters.url);
-    t.snapshot(addon.fetchRetryCalls[0].options.body);
+    expect(addon.fetchRetryCalls.length).toBe(1);
+    expect(addon.fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(addon.fetchRetryCalls[0].options.body).toMatchSnapshot();
 });

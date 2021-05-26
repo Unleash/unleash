@@ -1,4 +1,3 @@
-import test from 'ava';
 import sinon from 'sinon';
 import { URL } from 'url';
 import EventEmitter from 'events';
@@ -45,7 +44,7 @@ const getBackendResetUrl = (url: URL): string => {
     return `/auth/reset/validate${params}`;
 };
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('reset_password_api_serial', getLogger);
     stores = db.stores;
     accessService = new AccessService(stores, config);
@@ -77,15 +76,15 @@ test.before(async () => {
     });
 });
 
-test.afterEach.always(async () => {
+afterAll(async () => {
     await stores.resetTokenStore.deleteAll();
 });
 
-test.after(async () => {
+afterAll(async () => {
     await db.destroy();
 });
 
-test.serial('Can validate token for password reset', async t => {
+test('Can validate token for password reset', async () => {
     const request = await setupApp(stores);
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
@@ -97,11 +96,11 @@ test.serial('Can validate token for password reset', async t => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
-            t.is(res.body.email, user.email);
+            expect(res.body.email).toBe(user.email);
         });
 });
 
-test.serial('Can use token to reset password', async t => {
+test('Can use token to reset password', async () => {
     const request = await setupApp(stores);
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
@@ -109,12 +108,9 @@ test.serial('Can use token to reset password', async t => {
     );
     const relative = getBackendResetUrl(url);
     // Can't login before reset
-    await t.throwsAsync<Error>(
-        async () => userService.loginUser(user.email, password),
-        {
-            instanceOf: Error,
-        },
-    );
+    await expect(async () =>
+        userService.loginUser(user.email, password),
+    ).rejects.toThrow(Error);
 
     let token;
     await request
@@ -132,157 +128,142 @@ test.serial('Can use token to reset password', async t => {
         })
         .expect(200);
     const loggedInUser = await userService.loginUser(user.email, password);
-    t.is(user.email, loggedInUser.email);
+    expect(user.email).toBe(loggedInUser.email);
 });
 
-test.serial(
-    'Trying to reset password with same token twice does not work',
-    async t => {
-        const request = await setupApp(stores);
-        const url = await resetTokenService.createResetPasswordUrl(
-            user.id,
-            adminUser.username,
-        );
-        const relative = getBackendResetUrl(url);
-        let token;
-        await request
-            .get(relative)
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .expect(res => {
-                token = res.body.token;
-            });
-        await request
-            .post('/auth/reset/password')
-            .send({
-                email: user.email,
-                token,
-                password,
-            })
-            .expect(200);
-        await request
-            .post('/auth/reset/password')
-            .send({
-                email: user.email,
-                token,
-                password,
-            })
-            .expect(403)
-            .expect(res => {
-                t.truthy(res.body.details[0].message);
-            });
-    },
-);
+test('Trying to reset password with same token twice does not work', async () => {
+    const request = await setupApp(stores);
+    const url = await resetTokenService.createResetPasswordUrl(
+        user.id,
+        adminUser.username,
+    );
+    const relative = getBackendResetUrl(url);
+    let token;
+    await request
+        .get(relative)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+            token = res.body.token;
+        });
+    await request
+        .post('/auth/reset/password')
+        .send({
+            email: user.email,
+            token,
+            password,
+        })
+        .expect(200);
+    await request
+        .post('/auth/reset/password')
+        .send({
+            email: user.email,
+            token,
+            password,
+        })
+        .expect(403)
+        .expect(res => {
+            expect(res.body.details[0].message).toBeTruthy();
+        });
+});
 
-test.serial('Invalid token should yield 401', async t => {
+test('Invalid token should yield 401', async () => {
     const request = await setupApp(stores);
     return request.get('/auth/reset/validate?token=abc123').expect(res => {
-        t.is(res.status, 401);
+        expect(res.status).toBe(401);
     });
 });
 
-test.serial(
-    'Calling validate endpoint with already existing session should destroy session',
-    async t => {
-        t.plan(0);
-        const request = await setupAppWithAuth(stores);
-        await request
-            .post('/api/admin/login')
-            .send({
-                email: 'user@mail.com',
-            })
-            .expect(200);
-        await request.get('/api/admin/features').expect(200);
-        const url = await resetTokenService.createResetPasswordUrl(
-            user.id,
-            adminUser.username,
-        );
-        const relative = getBackendResetUrl(url);
+test('Calling validate endpoint with already existing session should destroy session', async () => {
+    expect.assertions(0);
+    const request = await setupAppWithAuth(stores);
+    await request
+        .post('/api/admin/login')
+        .send({
+            email: 'user@mail.com',
+        })
+        .expect(200);
+    await request.get('/api/admin/features').expect(200);
+    const url = await resetTokenService.createResetPasswordUrl(
+        user.id,
+        adminUser.username,
+    );
+    const relative = getBackendResetUrl(url);
 
-        await request
-            .get(relative)
-            .expect(200)
-            .expect('Content-Type', /json/);
-        await request.get('/api/admin/features').expect(401); // we no longer should have a valid session
-    },
-);
+    await request
+        .get(relative)
+        .expect(200)
+        .expect('Content-Type', /json/);
+    await request.get('/api/admin/features').expect(401); // we no longer should have a valid session
+});
 
-test.serial(
-    'Calling reset endpoint with already existing session should logout/destroy existing session',
-    async t => {
-        t.plan(0);
-        const request = await setupAppWithAuth(stores);
-        const url = await resetTokenService.createResetPasswordUrl(
-            user.id,
-            adminUser.username,
-        );
-        const relative = getBackendResetUrl(url);
-        let token;
-        await request
-            .get(relative)
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .expect(res => {
-                token = res.body.token;
-            });
-        await request
-            .post('/api/admin/login')
-            .send({
-                email: 'user@mail.com',
-            })
-            .expect(200);
-        await request.get('/api/admin/features').expect(200); // If we login we can access features endpoint
-        await request
-            .post('/auth/reset/password')
-            .send({
-                email: user.email,
-                token,
-                password,
-            })
-            .expect(200);
-        await request.get('/api/admin/features').expect(401); // we no longer have a valid session after using the reset password endpoint
-    },
-);
+test('Calling reset endpoint with already existing session should logout/destroy existing session', async () => {
+    expect.assertions(0);
+    const request = await setupAppWithAuth(stores);
+    const url = await resetTokenService.createResetPasswordUrl(
+        user.id,
+        adminUser.username,
+    );
+    const relative = getBackendResetUrl(url);
+    let token;
+    await request
+        .get(relative)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+            token = res.body.token;
+        });
+    await request
+        .post('/api/admin/login')
+        .send({
+            email: 'user@mail.com',
+        })
+        .expect(200);
+    await request.get('/api/admin/features').expect(200); // If we login we can access features endpoint
+    await request
+        .post('/auth/reset/password')
+        .send({
+            email: user.email,
+            token,
+            password,
+        })
+        .expect(200);
+    await request.get('/api/admin/features').expect(401); // we no longer have a valid session after using the reset password endpoint
+});
 
-test.serial(
-    'Trying to change password with an invalid token should yield 401',
-    async t => {
-        const request = await setupApp(stores);
-        return request
-            .post('/auth/reset/password')
-            .send({
-                token: 'abc123',
-                password,
-            })
-            .expect(res => t.is(res.status, 401));
-    },
-);
+test('Trying to change password with an invalid token should yield 401', async () => {
+    const request = await setupApp(stores);
+    return request
+        .post('/auth/reset/password')
+        .send({
+            token: 'abc123',
+            password,
+        })
+        .expect(res => expect(res.status).toBe(401));
+});
 
-test.serial(
-    'Trying to change password to undefined should yield 400 without crashing the server',
-    async t => {
-        t.plan(0);
-        const request = await setupApp(stores);
-        const url = await resetTokenService.createResetPasswordUrl(
-            user.id,
-            adminUser.username,
-        );
-        const relative = getBackendResetUrl(url);
-        let token;
-        await request
-            .get(relative)
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .expect(res => {
-                token = res.body.token;
-            });
-        await request
-            .post('/auth/reset/password')
-            .send({
-                email: user.email,
-                token,
-                password: undefined,
-            })
-            .expect(400);
-    },
-);
+test('Trying to change password to undefined should yield 400 without crashing the server', async () => {
+    expect.assertions(0);
+    const request = await setupApp(stores);
+    const url = await resetTokenService.createResetPasswordUrl(
+        user.id,
+        adminUser.username,
+    );
+    const relative = getBackendResetUrl(url);
+    let token;
+    await request
+        .get(relative)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+            token = res.body.token;
+        });
+    await request
+        .post('/auth/reset/password')
+        .send({
+            email: user.email,
+            token,
+            password: undefined,
+        })
+        .expect(400);
+});

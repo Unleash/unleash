@@ -1,6 +1,5 @@
 'use strict';
 
-const test = require('ava');
 const { setupAppWithCustomAuth } = require('../../helpers/test-helper');
 const AuthenticationRequired = require('../../../../lib/types/authentication-required');
 
@@ -10,17 +9,19 @@ const getLogger = require('../../../fixtures/no-logger');
 let stores;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('feature_api_custom_auth', getLogger);
     stores = db.stores;
 });
 
-test.after.always(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
-test.serial('should require authenticated user', async t => {
-    t.plan(0);
+test('should require authenticated user', async () => {
+    expect.assertions(0);
     const preHook = app => {
         app.use('/api/admin/', (req, res) =>
             res
@@ -39,8 +40,8 @@ test.serial('should require authenticated user', async t => {
     return request.get('/api/admin/features').expect(401);
 });
 
-test.serial('creates new feature toggle with createdBy', async t => {
-    t.plan(1);
+test('creates new feature toggle with createdBy', async () => {
+    expect.assertions(1);
     const email = 'custom-user@mail.com';
 
     const preHook = (app, config, { userService }) => {
@@ -62,6 +63,6 @@ test.serial('creates new feature toggle with createdBy', async t => {
         .expect(201);
 
     await request.get('/api/admin/events/com.test.Username').expect(res => {
-        t.is(res.body.events[0].createdBy, email);
+        expect(res.body.events[0].createdBy).toBe(email);
     });
 });

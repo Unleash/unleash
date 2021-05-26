@@ -1,4 +1,3 @@
-import test, { after, before, beforeEach } from 'ava';
 import noLoggerProvider from '../../fixtures/no-logger';
 import dbInit from '../helpers/database-init';
 import SessionService from '../../../lib/services/session-service';
@@ -49,7 +48,8 @@ const otherSession = {
         },
     },
 };
-before(async () => {
+
+beforeAll(async () => {
     db = await dbInit('session_service_serial', noLoggerProvider);
     stores = db.stores;
     sessionService = new SessionService(stores, {
@@ -61,53 +61,52 @@ beforeEach(async () => {
     await db.stores.sessionStore.deleteAll();
 });
 
-after.always(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
 });
 
-test.serial('should list active sessions', async t => {
+test('should list active sessions', async () => {
     await sessionService.insertSession(newSession);
     await sessionService.insertSession(otherSession);
 
     const sessions = await sessionService.getActiveSessions();
-    t.is(sessions.length, 2);
-    t.deepEqual(sessions[0].sess, otherSession.sess); // Ordered newest first
-    t.deepEqual(sessions[1].sess, newSession.sess);
+    expect(sessions.length).toBe(2);
+    expect(sessions[0].sess).toEqual(otherSession.sess); // Ordered newest first
+    expect(sessions[1].sess).toEqual(newSession.sess);
 });
 
-test.serial('Should list active sessions for user', async t => {
+test('Should list active sessions for user', async () => {
     await sessionService.insertSession(newSession);
     await sessionService.insertSession(otherSession);
 
     const sessions = await sessionService.getSessionsForUser(2); // editor session
-    t.is(sessions.length, 1);
-    t.deepEqual(sessions[0].sess, otherSession.sess);
+    expect(sessions.length).toBe(1);
+    expect(sessions[0].sess).toEqual(otherSession.sess);
 });
 
-test.serial('Can delete sessions by user', async t => {
+test('Can delete sessions by user', async () => {
     await sessionService.insertSession(newSession);
     await sessionService.insertSession(otherSession);
 
     const sessions = await sessionService.getActiveSessions();
-    t.is(sessions.length, 2);
+    expect(sessions.length).toBe(2);
     await sessionService.deleteSessionsForUser(2);
-    await t.throwsAsync(
-        async () => {
-            await sessionService.getSessionsForUser(2);
-        },
-        { instanceOf: NotFoundError },
-    );
+    await expect(async () => {
+        await sessionService.getSessionsForUser(2);
+    }).rejects.toThrow(NotFoundError);
 });
 
-test.serial('Can delete session by sid', async t => {
+test('Can delete session by sid', async () => {
     await sessionService.insertSession(newSession);
     await sessionService.insertSession(otherSession);
 
     const sessions = await sessionService.getActiveSessions();
-    t.is(sessions.length, 2);
+    expect(sessions.length).toBe(2);
 
     await sessionService.deleteSession('abc123');
-    await t.throwsAsync(async () => sessionService.getSession('abc123'), {
-        instanceOf: NotFoundError,
-    });
+    await expect(async () =>
+        sessionService.getSession('abc123'),
+    ).rejects.toThrow(NotFoundError);
 });

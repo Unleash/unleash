@@ -1,12 +1,12 @@
-const test = require('ava');
-const proxyquire = require('proxyquire');
 const lolex = require('lolex');
 const fetchMock = require('fetch-mock').sandbox();
 const noLogger = require('../../test/fixtures/no-logger');
 
-const Addon = proxyquire('./addon', { 'node-fetch': fetchMock });
+jest.mock('node-fetch', () => fetchMock);
 
-test.beforeEach(() => {
+const Addon = require('./addon');
+
+beforeEach(() => {
     fetchMock.restore();
     fetchMock.reset();
 });
@@ -17,7 +17,7 @@ const definition = {
     description: 'hello',
 };
 
-test.serial('Retries if fetch throws', async t => {
+test('Retries if fetch throws', async () => {
     const url = 'https://test.some.com';
     const clock = lolex.install();
     const addon = new Addon(definition, {
@@ -44,10 +44,10 @@ test.serial('Retries if fetch throws', async t => {
         );
     await addon.fetchRetry(url);
     clock.tick(1000);
-    t.true(fetchMock.done());
+    expect(fetchMock.done()).toBe(true);
 });
 
-test.serial('does not crash even if fetch throws', async t => {
+test('does not crash even if fetch throws', async () => {
     const url = 'https://test.some.com';
     const clock = lolex.install();
     const addon = new Addon(definition, {
@@ -65,6 +65,6 @@ test.serial('does not crash even if fetch throws', async t => {
     );
     await addon.fetchRetry(url);
     clock.tick(1000);
-    t.true(fetchMock.done());
-    t.is(fetchMock.calls().length, 2);
+    expect(fetchMock.done()).toBe(true);
+    expect(fetchMock.calls().length).toBe(2);
 });

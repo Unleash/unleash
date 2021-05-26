@@ -1,32 +1,31 @@
 import { formatBaseUri } from './format-base-uri';
-import test from 'ava';
 
-test('formatBaseUri returns the correct path when the path is the right format', t => {
+test('formatBaseUri returns the correct path when the path is the right format', () => {
     const result = formatBaseUri('/hosted');
-    t.true(result === '/hosted');
+    expect(result === '/hosted').toBe(true);
 });
 
-test('formatBaseUri returns the correct path when the path lacking initial slash', t => {
+test('formatBaseUri returns the correct path when the path lacking initial slash', () => {
     const result = formatBaseUri('hosted');
-    t.true(result === '/hosted');
+    expect(result === '/hosted').toBe(true);
 });
 
-test('formatBaseUri returns the correct path when the path has both initial and trailing slash', t => {
+test('formatBaseUri returns the correct path when the path has both initial and trailing slash', () => {
     const result = formatBaseUri('/hosted/');
-    t.true(result === '/hosted');
+    expect(result === '/hosted').toBe(true);
 });
 
-test('formatBaseUri returns the correct path when the path has only trailing slash', t => {
+test('formatBaseUri returns the correct path when the path has only trailing slash', () => {
     const result = formatBaseUri('hosted/');
-    t.true(result === '/hosted');
+    expect(result === '/hosted').toBe(true);
 });
 
-test('formatBaseUri returns empty string when called without input', t => {
+test('formatBaseUri returns empty string when called without input', () => {
     const result = formatBaseUri(undefined);
-    t.true(result === '');
+    expect(result === '').toBe(true);
 });
 
-test('formatBaseUri handles levels of paths', t => {
+test('formatBaseUri handles levels of paths', () => {
     const result = formatBaseUri('hosted/multi/path');
-    t.true(result === '/hosted/multi/path');
+    expect(result === '/hosted/multi/path').toBe(true);
 });

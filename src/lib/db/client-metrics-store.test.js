@@ -52,8 +52,10 @@ test('should start poller even if initial database fetch fails', done => {
     store.on('metrics', m => metrics.push(m));
 
     store.on('ready', () => {
+        jest.useFakeTimers('modern');
         expect(metrics).toHaveLength(0);
         jest.advanceTimersByTime(300);
+        jest.useRealTimers();
         process.nextTick(() => {
             expect(metrics).toHaveLength(3);
             expect(store.highestIdSeen).toBe(4);
@@ -61,9 +63,7 @@ test('should start poller even if initial database fetch fails', done => {
             done();
         });
     });
-    jest.advanceTimersByTime(300);
     getLogger.setMuteError(false);
-    jest.useRealTimers();
 });
 
 test('should poll for updates', done => {
@@ -79,8 +79,10 @@ test('should poll for updates', done => {
     expect(metrics).toHaveLength(0);
     jest.advanceTimersByTime(300);
     store.on('ready', () => {
+        jest.useFakeTimers('modern');
         expect(metrics).toHaveLength(1);
         jest.advanceTimersByTime(300);
+        jest.useRealTimers();
         process.nextTick(() => {
             expect(metrics).toHaveLength(4);
             expect(store.highestIdSeen).toBe(4);
@@ -88,5 +90,4 @@ test('should poll for updates', done => {
             done();
         });
     });
-    jest.useRealTimers();
 });

@@ -33,14 +33,12 @@ function getSetup() {
 
 let stores;
 let request;
-let perms;
 let destroy;
 
 beforeEach(() => {
     const setup = getSetup();
     stores = setup.stores;
     request = setup.request;
-    perms = setup.perms;
     destroy = setup.destroy;
 });
 

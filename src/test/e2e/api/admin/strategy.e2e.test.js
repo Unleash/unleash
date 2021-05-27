@@ -4,24 +4,23 @@ const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
-let stores;
+let app;
 let db;
 
 beforeAll(async () => {
     db = await dbInit('strategy_api_serial', getLogger);
-    stores = db.stores;
+    app = await setupApp(db.stores);
 });
 
 afterAll(async () => {
-    if (db) {
-        await db.destroy();
-    }
+    await app.destroy();
+    await db.destroy();
 });
 
 test('gets all strategies', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
-    return request
+
+    return app.request
         .get('/api/admin/strategies')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -32,8 +31,8 @@ test('gets all strategies', async () => {
 
 test('gets a strategy by name', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+
+    return app.request
         .get('/api/admin/strategies/default')
         .expect('Content-Type', /json/)
         .expect(200);
@@ -41,8 +40,8 @@ test('gets a strategy by name', async () => {
 
 test('cant get a strategy by name that does not exist', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+
+    return app.request
         .get('/api/admin/strategies/mystrategy')
         .expect('Content-Type', /json/)
         .expect(404);
@@ -50,8 +49,8 @@ test('cant get a strategy by name that does not exist', async () => {
 
 test('creates a new strategy', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+
+    return app.request
         .post('/api/admin/strategies')
         .send({
             name: 'myCustomStrategy',
@@ -64,8 +63,8 @@ test('creates a new strategy', async () => {
 
 test('requires new strategies to have a name', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+
+    return app.request
         .post('/api/admin/strategies')
         .send({ name: '' })
         .set('Content-Type', 'application/json')
@@ -74,8 +73,8 @@ test('requires new strategies to have a name', async () => {
 
 test('refuses to create a strategy with an existing name', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+
+    return app.request
         .post('/api/admin/strategies')
         .send({ name: 'default', parameters: [] })
         .set('Content-Type', 'application/json')
@@ -84,20 +83,22 @@ test('refuses to create a strategy with an existing name', async () => {
 
 test('deletes a new strategy', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request.delete('/api/admin/strategies/usersWithEmail').expect(200);
+
+    return app.request
+        .delete('/api/admin/strategies/usersWithEmail')
+        .expect(200);
 });
 
 test("can't delete a strategy that dose not exist", async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request.delete('/api/admin/strategies/unknown').expect(404);
+
+    return app.request.delete('/api/admin/strategies/unknown').expect(404);
 });
 
 test('updates a exiting strategy', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+
+    return app.request
         .put('/api/admin/strategies/default')
         .send({
             name: 'default',
@@ -110,8 +111,8 @@ test('updates a exiting strategy', async () => {
 
 test('cant update a unknown strategy', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+
+    return app.request
         .put('/api/admin/strategies/unknown')
         .send({ name: 'unkown', parameters: [] })
         .set('Content-Type', 'application/json')
@@ -119,19 +120,18 @@ test('cant update a unknown strategy', async () => {
 });
 
 test('deprecating a strategy works', async () => {
-    const request = await setupApp(stores);
     const name = 'deprecate';
-    await request
+    await app.request
         .post('/api/admin/strategies')
         .send({ name, description: 'Should deprecate this', parameters: [] })
         .set('Content-Type', 'application/json')
         .expect(201);
-    await request
+    await app.request
         .post(`/api/admin/strategies/${name}/deprecate`)
         .set('Content-Type', 'application/json')
         .send()
         .expect(200);
-    await request
+    await app.request
         .get(`/api/admin/strategies/${name}`)
         .expect('Content-Type', /json/)
         .expect(200)
@@ -139,29 +139,28 @@ test('deprecating a strategy works', async () => {
 });
 
 test('can reactivate a deprecated strategy', async () => {
-    const request = await setupApp(stores);
     const name = 'reactivate';
-    await request
+    await app.request
         .post('/api/admin/strategies')
         .send({ name, description: 'Should deprecate this', parameters: [] })
         .set('Content-Type', 'application/json')
         .expect(201);
-    await request
+    await app.request
         .post(`/api/admin/strategies/${name}/deprecate`)
         .set('Content-Type', 'application/json')
         .send()
         .expect(200);
-    await request
+    await app.request
         .get(`/api/admin/strategies/${name}`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => expect(res.body.deprecated).toBe(true));
-    await request
+    await app.request
         .post(`/api/admin/strategies/${name}/reactivate`)
         .set('Content-Type', 'application/json')
         .send()
         .expect(200);
-    await request
+    await app.request
         .get(`/api/admin/strategies/${name}`)
         .expect('Content-Type', /json/)
         .expect(200)
@@ -170,8 +169,8 @@ test('can reactivate a deprecated strategy', async () => {
 
 test('cannot deprecate default strategy', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    await request
+
+    await app.request
         .post('/api/admin/strategies/default/deprecate')
         .set('Content-Type', 'application/json')
         .expect(403);
@@ -179,9 +178,8 @@ test('cannot deprecate default strategy', async () => {
 
 test('can update a exiting strategy with deprecated', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
 
-    await request
+    await app.request
         .post('/api/admin/strategies')
         .send({
             name: 'myCustomStrategyDepreacted',
@@ -191,13 +189,13 @@ test('can update a exiting strategy with deprecated', async () => {
         })
         .set('Content-Type', 'application/json');
 
-    const { body: strategy } = await request.get(
+    const { body: strategy } = await app.request.get(
         '/api/admin/strategies/myCustomStrategyDepreacted',
     );
 
     strategy.description = 'A new desc';
 
-    return request
+    return app.request
         .put('/api/admin/strategies/default')
         .send(strategy)
         .set('Content-Type', 'application/json')

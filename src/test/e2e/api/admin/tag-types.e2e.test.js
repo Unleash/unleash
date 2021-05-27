@@ -4,24 +4,23 @@ const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
-let stores;
+let app;
 let db;
 
 beforeAll(async () => {
     db = await dbInit('tag_types_api_serial', getLogger);
-    stores = db.stores;
+    app = await setupApp(db.stores);
 });
 
 afterAll(async () => {
-    if (db) {
-        await db.destroy();
-    }
+    await app.destroy();
+    await db.destroy();
 });
 
 test('returns list of tag-types', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
-    return request
+
+    return app.request
         .get('/api/admin/tag-types')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -32,8 +31,8 @@ test('returns list of tag-types', async () => {
 
 test('gets a tag-type by name', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
-    return request
+
+    return app.request
         .get('/api/admin/tag-types/simple')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -44,20 +43,19 @@ test('gets a tag-type by name', async () => {
 
 test('querying a tag-type that does not exist yields 404', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request.get('/api/admin/tag-types/non-existent').expect(404);
+
+    return app.request.get('/api/admin/tag-types/non-existent').expect(404);
 });
 
 test('Can create a new tag type', async () => {
-    const request = await setupApp(stores);
-    await request.post('/api/admin/tag-types').send({
+    await app.request.post('/api/admin/tag-types').send({
         name: 'slack',
         description:
             'Tag your feature toggles with slack channel to post updates for toggle to',
         icon:
             'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png',
     });
-    return request
+    return app.request
         .get('/api/admin/tag-types/slack')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -69,8 +67,7 @@ test('Can create a new tag type', async () => {
 });
 
 test('Invalid tag types gets rejected', async () => {
-    const request = await setupApp(stores);
-    await request
+    await app.request
         .post('/api/admin/tag-types')
         .send({
             name: 'Something url unsafe',
@@ -87,16 +84,15 @@ test('Invalid tag types gets rejected', async () => {
 });
 
 test('Can update a tag types description and icon', async () => {
-    const request = await setupApp(stores);
-    await request.get('/api/admin/tag-types/simple').expect(200);
-    await request
+    await app.request.get('/api/admin/tag-types/simple').expect(200);
+    await app.request
         .put('/api/admin/tag-types/simple')
         .send({
             description: 'new description',
             icon: '$',
         })
         .expect(200);
-    return request
+    return app.request
         .get('/api/admin/tag-types/simple')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -105,9 +101,8 @@ test('Can update a tag types description and icon', async () => {
         });
 });
 test('Invalid updates gets rejected', async () => {
-    const request = await setupApp(stores);
-    await request.get('/api/admin/tag-types/simple').expect(200);
-    await request
+    await app.request.get('/api/admin/tag-types/simple').expect(200);
+    await app.request
         .put('/api/admin/tag-types/simple')
         .send({
             description: 15125,
@@ -123,8 +118,7 @@ test('Invalid updates gets rejected', async () => {
 });
 
 test('Validation of tag-types returns 200 for valid tag-types', async () => {
-    const request = await setupApp(stores);
-    await request
+    await app.request
         .post('/api/admin/tag-types/validate')
         .send({
             name: 'something',
@@ -138,8 +132,7 @@ test('Validation of tag-types returns 200 for valid tag-types', async () => {
         });
 });
 test('Invalid tag-types get refused by validator', async () => {
-    const request = await setupApp(stores);
-    await request
+    await app.request
         .post('/api/admin/tag-types/validate')
         .send({
             name: 'Something url unsafe',
@@ -157,17 +150,16 @@ test('Invalid tag-types get refused by validator', async () => {
 
 test('Can delete tag type', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    await request
+
+    await app.request
         .delete('/api/admin/tag-types/simple')
         .set('Content-Type', 'application/json')
         .expect(200);
-    return request.get('/api/admin/tag-types/simple').expect(404);
+    return app.request.get('/api/admin/tag-types/simple').expect(404);
 });
 
 test('Non unique tag-types gets rejected', async () => {
-    const request = await setupApp(stores);
-    await request
+    await app.request
         .post('/api/admin/tag-types')
         .send({
             name: 'my-tag-type',
@@ -176,7 +168,7 @@ test('Non unique tag-types gets rejected', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201);
-    return request
+    return app.request
         .post('/api/admin/tag-types')
         .send({
             name: 'my-tag-type',
@@ -190,9 +182,8 @@ test('Non unique tag-types gets rejected', async () => {
 });
 
 test('Only required argument should be name', async () => {
-    const request = await setupApp(stores);
     const name = 'some-tag-type';
-    return request
+    return app.request
         .post('/api/admin/tag-types')
         .send({ name, description: '' })
         .set('Content-Type', 'application/json')

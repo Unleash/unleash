@@ -27,14 +27,15 @@ function createApp(
     });
     const services = createServices(stores, config);
 
-    const destroy = () => {
+    const app = getApp(config, stores, services);
+    const request = supertest.agent(app);
+
+    const destroy = async () => {
         services.versionService.destroy();
         services.clientMetricsService.destroy();
         services.apiTokenService.destroy();
     };
 
-    const app = getApp(config, stores, services);
-    const request = supertest.agent(app);
     // TODO: use create from server-impl instead?
     return { request, destroy };
 }

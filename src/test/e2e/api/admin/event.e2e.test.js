@@ -4,24 +4,22 @@ const { setupApp } = require('../../helpers/test-helper');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
 
-let stores;
+let app;
 let db;
 
 beforeAll(async () => {
     db = await dbInit('event_api_serial', getLogger);
-    stores = db.stores;
+    app = await setupApp(db.stores);
 });
 
 afterAll(async () => {
-    if (db) {
-        await db.destroy();
-    }
+    await app.destroy();
+    await db.destroy();
 });
 
 test('returns events', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .get('/api/admin/events')
         .expect('Content-Type', /json/)
         .expect(200);
@@ -29,8 +27,7 @@ test('returns events', async () => {
 
 test('returns events given a name', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .get('/api/admin/events/myname')
         .expect('Content-Type', /json/)
         .expect(200);

@@ -4,23 +4,21 @@ const { setupAppWithAuth } = require('../../helpers/test-helper');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
 
-let stores;
 let db;
 
 beforeAll(async () => {
     db = await dbInit('feature_api_auth', getLogger);
-    stores = db.stores;
 });
 
 afterAll(async () => {
-    if (db) {
-        await db.destroy();
-    }
+    await db.destroy();
 });
 
 test('creates new feature toggle with createdBy', async () => {
     expect.assertions(1);
-    const request = await setupAppWithAuth(stores);
+
+    const { request, destroy } = await setupAppWithAuth(db.stores);
+
     // Login
     await request.post('/api/admin/login').send({
         email: 'user@mail.com',
@@ -39,10 +37,13 @@ test('creates new feature toggle with createdBy', async () => {
     await request.get('/api/admin/events/com.test.Username').expect(res => {
         expect(res.body.events[0].createdBy).toBe('user@mail.com');
     });
+
+    await destroy();
 });
 
 test('should require authenticated user', async () => {
     expect.assertions(0);
-    const request = await setupAppWithAuth(stores);
-    return request.get('/api/admin/features').expect(401);
+    const { request, destroy } = await setupAppWithAuth(db.stores);
+    await request.get('/api/admin/features').expect(401);
+    await destroy();
 });

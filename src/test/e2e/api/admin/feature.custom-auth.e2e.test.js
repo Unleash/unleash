@@ -36,8 +36,9 @@ test('should require authenticated user', async () => {
                 .end(),
         );
     };
-    const request = await setupAppWithCustomAuth(stores, preHook);
-    return request.get('/api/admin/features').expect(401);
+    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    await request.get('/api/admin/features').expect(401);
+    await destroy();
 });
 
 test('creates new feature toggle with createdBy', async () => {
@@ -50,7 +51,7 @@ test('creates new feature toggle with createdBy', async () => {
             next();
         });
     };
-    const request = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
 
     // create toggle
     await request
@@ -65,4 +66,6 @@ test('creates new feature toggle with createdBy', async () => {
     await request.get('/api/admin/events/com.test.Username').expect(res => {
         expect(res.body.events[0].createdBy).toBe(email);
     });
+
+    await destroy();
 });

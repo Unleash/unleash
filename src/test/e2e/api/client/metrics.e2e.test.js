@@ -5,24 +5,22 @@ const metricsExample = require('../../../examples/client-metrics.json');
 const dbInit = require('../../helpers/database-init');
 const getLogger = require('../../../fixtures/no-logger');
 
-let stores;
+let app;
 let db;
 
 beforeAll(async () => {
     db = await dbInit('metrics_api_client', getLogger);
-    stores = db.stores;
+    app = await setupApp(db.stores);
 });
 
 afterAll(async () => {
-    if (db) {
-        await db.destroy();
-    }
+    await app.destroy();
+    await db.destroy();
 });
 
 test('should be possble to send metrics', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/client/metrics')
         .send(metricsExample)
         .expect(202);
@@ -30,8 +28,7 @@ test('should be possble to send metrics', async () => {
 
 test('should require valid send metrics', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/client/metrics')
         .send({
             appName: 'test',
@@ -41,8 +38,7 @@ test('should require valid send metrics', async () => {
 
 test('should accept client metrics', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/client/metrics')
         .send({
             appName: 'demo',

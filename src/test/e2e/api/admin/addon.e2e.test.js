@@ -6,30 +6,23 @@ const getLogger = require('../../../fixtures/no-logger');
 
 const MASKED_VALUE = '*****';
 
-let stores;
+let app;
 let db;
-let request;
-let destroy;
 
 beforeAll(async () => {
     db = await dbInit('addon_api_serial', getLogger);
-    stores = db.stores;
-    const app = await setupApp(stores);
-    request = app.request;
-    destroy = app.destroy;
+    app = await setupApp(db.stores);
 });
 
 afterAll(async () => {
-    if (db) {
-        await db.destroy();
-    }
-    await destroy();
+    await app.destroy();
+    await db.destroy();
 });
 
 test('gets all addons', async () => {
     expect.assertions(3);
 
-    return request
+    return app.request
         .get('/api/admin/addons')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -42,7 +35,7 @@ test('gets all addons', async () => {
 
 test('should not be able to create invalid addon', async () => {
     expect.assertions(0);
-    return request
+    return app.request
         .post('/api/admin/addons')
         .send({ invalid: 'field' })
         .expect(400);
@@ -61,7 +54,7 @@ test('should create addon configuration', async () => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    return request
+    return app.request
         .post('/api/admin/addons')
         .send(config)
         .expect(201);
@@ -80,13 +73,13 @@ test('should delete addon configuration', async () => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    const res = await request
+    const res = await app.request
         .post('/api/admin/addons')
         .send(config)
         .expect(201);
 
     const { id } = res.body;
-    await request.delete(`/api/admin/addons/${id}`).expect(200);
+    await app.request.delete(`/api/admin/addons/${id}`).expect(200);
 });
 
 test('should update addon configuration', async () => {
@@ -102,7 +95,7 @@ test('should update addon configuration', async () => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    const res = await request
+    const res = await app.request
         .post('/api/admin/addons')
         .send(config)
         .expect(201);
@@ -117,12 +110,12 @@ test('should update addon configuration', async () => {
         ...config,
     };
 
-    await request
+    await app.request
         .put(`/api/admin/addons/${id}`)
         .send(updatedConfig)
         .expect(200);
 
-    return request
+    return app.request
         .get(`/api/admin/addons/${id}`)
         .send(config)
         .expect(200)
@@ -146,7 +139,7 @@ test('should not update with invalid addon configuration', async () => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    await request
+    await app.request
         .put('/api/admin/addons/1')
         .send(config)
         .expect(400);
@@ -165,7 +158,7 @@ test('should not update unknown addon configuration', async () => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    await request
+    await app.request
         .put('/api/admin/addons/123123')
         .send(config)
         .expect(404);
@@ -184,14 +177,14 @@ test('should get addon configuration', async () => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    const res = await request
+    const res = await app.request
         .post('/api/admin/addons')
         .send(config)
         .expect(201);
 
     const { id } = res.body;
 
-    await request
+    await app.request
         .get(`/api/admin/addons/${id}`)
         .expect(200)
         .expect(r => {
@@ -206,11 +199,11 @@ test('should get addon configuration', async () => {
 test('should not get unknown addon configuration', async () => {
     expect.assertions(0);
 
-    await request.get('/api/admin/addons/445').expect(404);
+    await app.request.get('/api/admin/addons/445').expect(404);
 });
 
 test('should not delete unknown addon configuration', async () => {
     expect.assertions(0);
 
-    return request.delete('/api/admin/addons/21231').expect(404);
+    return app.request.delete('/api/admin/addons/21231').expect(404);
 });

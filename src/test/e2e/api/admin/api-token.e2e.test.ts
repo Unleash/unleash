@@ -1,31 +1,30 @@
-import { setupApp, setupAppWithCustomAuth } from '../../helpers/test-helper';
+import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType, IApiToken } from '../../../../lib/db/api-token-store';
-import { RoleName } from '../../../../lib/services/access-service';
+import { ApiTokenType } from '../../../../lib/db/api-token-store';
 
-let stores;
 let db;
+let app;
 
 beforeAll(async () => {
     db = await dbInit('token_api_serial', getLogger);
-    stores = db.stores;
+    app = await setupApp(db.stores);
 });
 
 afterAll(async () => {
     if (db) {
         await db.destroy();
     }
+    await app.destroy();
 });
 
 afterEach(async () => {
-    await stores.apiTokenStore.deleteAll();
+    await db.stores.apiTokenStore.deleteAll();
 });
 
 test('returns empty list of tokens', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -36,8 +35,7 @@ test('returns empty list of tokens', async () => {
 
 test('creates new client token', async () => {
     expect.assertions(4);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/api-tokens')
         .send({
             username: 'default-client',
@@ -55,8 +53,7 @@ test('creates new client token', async () => {
 
 test('creates new admin token', async () => {
     expect.assertions(5);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/api-tokens')
         .send({
             username: 'default-admin',
@@ -75,10 +72,9 @@ test('creates new admin token', async () => {
 
 test('creates new admin token with expiry', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
     const expiresAt = new Date();
     const expiresAtAsISOStr = JSON.parse(JSON.stringify(expiresAt));
-    return request
+    return app.request
         .post('/api/admin/api-tokens')
         .send({
             username: 'default-admin',
@@ -94,17 +90,16 @@ test('creates new admin token with expiry', async () => {
 
 test('update admin token with expiry', async () => {
     expect.assertions(2);
-    const request = await setupApp(stores);
 
     const tokenSecret = 'random-secret-update';
 
-    await stores.apiTokenStore.insert({
+    await db.stores.apiTokenStore.insert({
         username: 'test',
         secret: tokenSecret,
         type: ApiTokenType.CLIENT,
     });
 
-    await request
+    await app.request
         .put(`/api/admin/api-tokens/${tokenSecret}`)
         .send({
             expiresAt: new Date(),
@@ -112,7 +107,7 @@ test('update admin token with expiry', async () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 
-    return request
+    return app.request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -124,13 +119,12 @@ test('update admin token with expiry', async () => {
 
 test('creates a lot of client tokens', async () => {
     expect.assertions(4);
-    const request = await setupApp(stores);
 
     const requests = [];
 
     for (let i = 0; i < 10; i++) {
         requests.push(
-            request
+            app.request
                 .post('/api/admin/api-tokens')
                 .send({
                     username: 'default-client',
@@ -142,7 +136,7 @@ test('creates a lot of client tokens', async () => {
     }
     await Promise.all(requests);
     expect.assertions(2);
-    return request
+    return app.request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -154,122 +148,25 @@ test('creates a lot of client tokens', async () => {
 
 test('removes api token', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
 
     const tokenSecret = 'random-secret';
 
-    await stores.apiTokenStore.insert({
+    await db.stores.apiTokenStore.insert({
         username: 'test',
         secret: tokenSecret,
         type: ApiTokenType.CLIENT,
     });
 
-    await request
+    await app.request
         .delete(`/api/admin/api-tokens/${tokenSecret}`)
         .set('Content-Type', 'application/json')
         .expect(200);
 
-    return request
+    return app.request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
             expect(res.body.tokens.length).toBe(0);
         });
-});
-
-test('none-admins should only get client tokens', async () => {
-    expect.assertions(2);
-
-    const email = 'custom-user@mail.com';
-
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.EDITOR);
-            const user = await userService.createUser({
-                email,
-                rootRole: role.id,
-            });
-            req.user = user;
-            next();
-        });
-    };
-
-    const request = await setupAppWithCustomAuth(stores, preHook);
-
-    await stores.apiTokenStore.insert({
-        username: 'test',
-        secret: '1234',
-        type: ApiTokenType.CLIENT,
-    });
-
-    await stores.apiTokenStore.insert({
-        username: 'test',
-        secret: 'sdfsdf2d',
-        type: ApiTokenType.ADMIN,
-    });
-
-    return request
-        .get('/api/admin/api-tokens')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect(res => {
-            expect(res.body.tokens.length).toBe(1);
-            expect(res.body.tokens[0].type).toBe(ApiTokenType.CLIENT);
-        });
-});
-
-test('Only token-admins should be allowed to create token', async () => {
-    expect.assertions(0);
-
-    const email = 'custom-user2@mail.com';
-
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.EDITOR);
-            req.user = await userService.createUser({
-                email,
-                rootRole: role.id,
-            });
-            next();
-        });
-    };
-
-    const request = await setupAppWithCustomAuth(stores, preHook);
-
-    return request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(403);
-});
-
-test('Token-admin should be allowed to create token', async () => {
-    expect.assertions(0);
-    const email = 'custom-user3@mail.com';
-
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.ADMIN);
-            req.user = await userService.createUser({
-                email,
-                rootRole: role.id,
-            });
-            next();
-        });
-    };
-
-    const request = await setupAppWithCustomAuth(stores, preHook);
-
-    return request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
 });

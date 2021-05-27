@@ -12,24 +12,22 @@ const asyncFilter = async (arr, predicate) => {
     return arr.filter((_v, index) => results[index]);
 };
 
-let stores;
+let app;
 let db;
 
 beforeAll(async () => {
     db = await dbInit('register_client', getLogger);
-    stores = db.stores;
+    app = await setupApp(db.stores);
 });
 
 afterAll(async () => {
-    if (db) {
-        await db.destroy();
-    }
+    await app.destroy();
+    await db.destroy();
 });
 
 test('should register client', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/client/register')
         .send({
             appName: 'demo',
@@ -44,8 +42,8 @@ test('should register client', async () => {
 test('should allow client to register multiple times', async () => {
     expect.assertions(2);
     jest.useFakeTimers('modern');
-    const { clientInstanceStore, clientApplicationsStore } = stores;
-    const request = await setupApp(stores);
+    const { clientInstanceStore, clientApplicationsStore } = db.stores;
+
     const clientRegistration = {
         appName: 'multipleRegistration',
         instanceId: 'test',
@@ -54,16 +52,16 @@ test('should allow client to register multiple times', async () => {
         interval: 10,
     };
 
-    await request
+    await app.request
         .post('/api/client/register')
         .send(clientRegistration)
-        .expect(202)
-        .then(() =>
-            request
-                .post('/api/client/register')
-                .send(clientRegistration)
-                .expect(202),
-        );
+        .expect(202);
+
+    await app.request
+        .post('/api/client/register')
+        .send(clientRegistration)
+        .expect(202);
+
     jest.advanceTimersByTime(6 * 1000);
     expect(clientApplicationsStore.exists(clientRegistration)).toBeTruthy();
     expect(clientInstanceStore.exists(clientRegistration)).toBeTruthy();
@@ -71,8 +69,8 @@ test('should allow client to register multiple times', async () => {
 });
 
 test.skip('Should handle a massive bulk registration', async () => {
-    const { clientInstanceStore, clientApplicationsStore } = stores;
-    const request = await setupApp(stores);
+    const { clientInstanceStore, clientApplicationsStore } = db.stores;
+
     const clients = [];
     while (clients.length < 2000) {
         const clientRegistration = {
@@ -88,7 +86,7 @@ test.skip('Should handle a massive bulk registration', async () => {
         };
         clients.push(clientRegistration);
         // eslint-disable-next-line no-await-in-loop
-        await request
+        await app.request
             .post('/api/client/register')
             .send(clientRegistration)
             .expect(202);

@@ -4,23 +4,21 @@ const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
-let stores;
+let app;
 let db;
 
 beforeAll(async () => {
     db = await dbInit('tag_api_serial', getLogger);
-    stores = db.stores;
+    app = await setupApp(db.stores);
 });
 
 afterAll(async () => {
-    if (db) {
-        await db.destroy();
-    }
+    await app.destroy();
+    await db.destroy();
 });
 
 test('returns list of tags', async () => {
-    const request = await setupApp(stores);
-    request
+    app.request
         .post('/api/admin/tags')
         .send({
             value: 'Tester',
@@ -28,7 +26,7 @@ test('returns list of tags', async () => {
         })
         .set('Content-Type', 'application/json');
 
-    return request
+    return app.request
         .get('/api/admin/tags')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -38,15 +36,14 @@ test('returns list of tags', async () => {
 });
 
 test('gets a tag by type and value', async () => {
-    const request = await setupApp(stores);
-    request
+    app.request
         .post('/api/admin/tags')
         .send({
             value: 'Tester',
             type: 'simple',
         })
         .set('Content-Type', 'application/json');
-    return request
+    return app.request
         .get('/api/admin/tags/simple/Tester')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -57,15 +54,14 @@ test('gets a tag by type and value', async () => {
 
 test('cannot get tag that does not exist', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
-    return request.get('/api/admin/tags/simple/12158091').expect(res => {
+
+    return app.request.get('/api/admin/tags/simple/12158091').expect(res => {
         expect(res.status).toBe(404);
     });
 });
 
-test('Can create a tag', async () => {
-    const request = await setupApp(stores);
-    return request
+test('Can create a tag', async () =>
+    app.request
         .post('/api/admin/tags')
         .send({
             id: 1,
@@ -74,11 +70,9 @@ test('Can create a tag', async () => {
         })
         .expect(res => {
             expect(res.status).toBe(201);
-        });
-});
-test('Can validate a tag', async () => {
-    const request = await setupApp(stores);
-    return request
+        }));
+test('Can validate a tag', async () =>
+    app.request
         .post('/api/admin/tags')
         .send({
             value: 124,
@@ -94,16 +88,14 @@ test('Can validate a tag', async () => {
             expect(res.body.details[1].message).toBe(
                 '"type" must be URL friendly',
             );
-        });
-});
+        }));
 test('Can delete a tag', async () => {
-    const request = await setupApp(stores);
-    await request
+    await app.request
         .delete('/api/admin/tags/simple/Tester')
         .set('Content-Type', 'application/json')
         .expect(200);
     await new Promise(r => setTimeout(r, 50));
-    return request
+    return app.request
         .get('/api/admin/tags')
         .expect('Content-Type', /json/)
         .expect(200)

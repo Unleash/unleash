@@ -4,14 +4,12 @@ const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
-let stores;
+let app;
 let db;
-let reset = () => {};
 
 beforeAll(async () => {
     db = await dbInit('metrics_serial', getLogger);
-    stores = db.stores;
-    reset = db.reset;
+    app = await setupApp(db.stores);
 });
 
 afterAll(async () => {
@@ -21,13 +19,12 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-    await reset();
+    await db.reset();
 });
 
 test('should get application details', async () => {
     expect.assertions(3);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .get('/api/admin/metrics/applications/demo-app-1')
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -39,8 +36,7 @@ test('should get application details', async () => {
 
 test('should get list of applications', async () => {
     expect.assertions(2);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .get('/api/admin/metrics/applications')
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -51,13 +47,12 @@ test('should get list of applications', async () => {
 
 test('should delete application', async () => {
     expect.assertions(2);
-    const request = await setupApp(stores);
-    await request
+    await app.request
         .delete('/api/admin/metrics/applications/deletable-app')
         .expect(res => {
             expect(res.status).toBe(200);
         });
-    return request
+    return app.request
         .get('/api/admin/metrics/applications')
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -67,8 +62,7 @@ test('should delete application', async () => {
 
 test('deleting an application should be idempotent, so expect 200', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .delete('/api/admin/metrics/applications/unknown')
         .expect(res => {
             expect(res.status).toBe(200);

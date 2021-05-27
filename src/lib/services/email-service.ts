@@ -1,4 +1,4 @@
-import { createTransport, SentMessageInfo, Transporter } from 'nodemailer';
+import { createTransport, Transporter } from 'nodemailer';
 import Mustache from 'mustache';
 import path from 'path';
 import { readFileSync, existsSync } from 'fs';

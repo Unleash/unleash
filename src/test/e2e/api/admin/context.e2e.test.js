@@ -4,24 +4,22 @@ const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
-let stores;
 let db;
+let app;
 
 beforeAll(async () => {
     db = await dbInit('context_api_serial', getLogger);
-    stores = db.stores;
+    app = await setupApp(db.stores);
 });
 
 afterAll(async () => {
-    if (db) {
-        await db.destroy();
-    }
+    await app.destroy();
+    await db.destroy();
 });
 
 test('gets all context fields', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .get('/api/admin/context')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -32,8 +30,7 @@ test('gets all context fields', async () => {
 
 test('get the context field', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .get('/api/admin/context/environment')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -44,8 +41,7 @@ test('get the context field', async () => {
 
 test('should create context field', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/context')
         .send({
             name: 'country',
@@ -57,8 +53,7 @@ test('should create context field', async () => {
 
 test('should create context field with legalValues', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/context')
         .send({
             name: 'region',
@@ -71,8 +66,7 @@ test('should create context field with legalValues', async () => {
 
 test('should update context field with legalValues', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .put('/api/admin/context/environment')
         .send({
             name: 'environment',
@@ -85,9 +79,8 @@ test('should update context field with legalValues', async () => {
 
 test('should create context field with stickiness', async () => {
     expect.assertions(1);
-    const request = await setupApp(stores);
     const name = 'with-sticky';
-    await request
+    await app.request
         .post('/api/admin/context')
         .send({
             name,
@@ -96,7 +89,7 @@ test('should create context field with stickiness', async () => {
         })
         .set('Content-Type', 'application/json');
 
-    const res = await request.get(`/api/admin/context/${name}`);
+    const res = await app.request.get(`/api/admin/context/${name}`);
     const contextField = res.body;
 
     expect(contextField.stickiness).toBe(true);
@@ -104,8 +97,7 @@ test('should create context field with stickiness', async () => {
 
 test('should not create context field when name is missing', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/context')
         .send({
             description: 'A Country',
@@ -116,8 +108,7 @@ test('should not create context field when name is missing', async () => {
 
 test('refuses to create a context field with an existing name', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/context')
         .send({ name: 'userId' })
         .set('Content-Type', 'application/json')
@@ -126,14 +117,12 @@ test('refuses to create a context field with an existing name', async () => {
 
 test('should delete context field', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request.delete('/api/admin/context/userId').expect(200);
+    return app.request.delete('/api/admin/context/userId').expect(200);
 });
 
 test('refuses to create a context not url-friendly name', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/context')
         .send({ name: 'not very nice' })
         .set('Content-Type', 'application/json')
@@ -142,8 +131,7 @@ test('refuses to create a context not url-friendly name', async () => {
 
 test('should validate name to ok', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/context/validate')
         .send({ name: 'newField' })
         .set('Content-Type', 'application/json')
@@ -152,8 +140,7 @@ test('should validate name to ok', async () => {
 
 test('should validate name to not ok', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/context/validate')
         .send({ name: 'environment' })
         .set('Content-Type', 'application/json')
@@ -162,8 +149,7 @@ test('should validate name to not ok', async () => {
 
 test('should validate name to not ok for non url-friendly', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/context/validate')
         .send({ name: 'not url friendly' })
         .set('Content-Type', 'application/json')

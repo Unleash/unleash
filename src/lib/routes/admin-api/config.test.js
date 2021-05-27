@@ -22,22 +22,37 @@ function getSetup() {
         ui: uiConfig,
     });
     const stores = store.createStores();
-    const app = getApp(
-        config,
-        stores,
-        createServices(stores, config),
-        eventBus,
-    );
+    const services = createServices(stores, config);
+
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
 
+let request;
+let base;
+let destroy;
+
+beforeEach(() => {
+    const setup = getSetup();
+    request = setup.request;
+    base = setup.base;
+    destroy = setup.destroy;
+});
+
+afterEach(() => {
+    destroy();
+});
 test('should get ui config', () => {
     expect.assertions(2);
-    const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/ui-config`)
         .expect('Content-Type', /json/)

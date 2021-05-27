@@ -11,10 +11,10 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+    await app.destroy();
     if (db != null) {
         await db.destroy();
     }
-    await app.destroy();
 });
 
 test('hitting a baseUri path returns HTML document', async () => {

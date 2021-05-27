@@ -25,12 +25,27 @@ function getSetup() {
     return {
         base,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
 
+let base;
+let request;
+let destroy;
+
+beforeEach(() => {
+    const setup = getSetup();
+    base = setup.base;
+    request = setup.request;
+    destroy = setup.destroy;
+});
+
 test('should get all context definitions', () => {
     expect.assertions(2);
-    const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/context`)
         .expect('Content-Type', /json/)
@@ -44,7 +59,6 @@ test('should get all context definitions', () => {
 
 test('should get context definition', () => {
     expect.assertions(1);
-    const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/context/userId`)
         .expect('Content-Type', /json/)
@@ -56,8 +70,6 @@ test('should get context definition', () => {
 
 test('should be allowed to use new context field name', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
-
     return request
         .post(`${base}/api/admin/context/validate`)
         .send({ name: 'new.name' })
@@ -67,7 +79,6 @@ test('should be allowed to use new context field name', () => {
 
 test('should not be allowed reuse context field name', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/context/validate`)
@@ -78,7 +89,6 @@ test('should not be allowed reuse context field name', () => {
 
 test('should create a context field', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/context`)
@@ -89,8 +99,6 @@ test('should create a context field', () => {
 
 test('should create a context field with legal values', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
-
     return request
         .post(`${base}/api/admin/context`)
         .send({
@@ -104,7 +112,6 @@ test('should create a context field with legal values', () => {
 
 test('should require name when creating a context field', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/context`)
@@ -115,7 +122,6 @@ test('should require name when creating a context field', () => {
 
 test('should not create a context field with existing name', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/context`)
@@ -126,7 +132,6 @@ test('should not create a context field with existing name', () => {
 
 test('should not create a context field with duplicate legal values', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
 
     return request
         .post(`${base}/api/admin/context`)
@@ -141,7 +146,6 @@ test('should not create a context field with duplicate legal values', () => {
 
 test('should update a context field with new legal values', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
 
     return request
         .put(`${base}/api/admin/context/environment`)
@@ -156,7 +160,6 @@ test('should update a context field with new legal values', () => {
 
 test('should not delete a unknown context field', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
 
     return request
         .delete(`${base}/api/admin/context/unknown`)
@@ -166,7 +169,6 @@ test('should not delete a unknown context field', () => {
 
 test('should delete a context field', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
 
     return request
         .delete(`${base}/api/admin/context/appName`)

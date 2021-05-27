@@ -9,31 +9,53 @@ const { createTestConfig } = require('../../../test/config/test-config');
 const { createServices } = require('../../services');
 
 const eventBus = new EventEmitter();
+let base;
+let archiveStore;
+let eventStore;
+let featureToggleService;
+let destroy;
+let request;
 
 function getSetup() {
-    const base = `/random${Math.round(Math.random() * 1000)}`;
+    const randomBase = `/random${Math.round(Math.random() * 1000)}`;
     const stores = store.createStores();
     const perms = permissions();
     const config = createTestConfig({
-        server: { baseUriPath: base },
+        server: { baseUriPath: randomBase },
         preHook: perms.hook,
     });
     const services = createServices(stores, config);
     const app = getApp(config, stores, services, eventBus);
 
     return {
-        base,
+        base: randomBase,
         perms,
         archiveStore: stores.featureToggleStore,
         eventStore: stores.eventStore,
         featureToggleService: services.featureToggleService,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
+beforeEach(() => {
+    const setup = getSetup();
+    base = setup.base;
+    destroy = setup.destroy;
+    request = setup.request;
+    archiveStore = setup.archiveStore;
+    eventStore = setup.eventStore;
+    featureToggleService = setup.featureToggleService;
+});
 
+afterEach(() => {
+    destroy();
+});
 test('should get empty getFeatures via admin', () => {
     expect.assertions(1);
-    const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/archive/features`)
         .expect('Content-Type', /json/)
@@ -45,7 +67,6 @@ test('should get empty getFeatures via admin', () => {
 
 test('should be allowed to reuse deleted toggle name', async () => {
     expect.assertions(0);
-    const { request, archiveStore, base } = getSetup();
     await archiveStore.createFeature({
         name: 'ts.really.delete',
         strategies: [{ name: 'default' }],
@@ -62,7 +83,6 @@ test('should be allowed to reuse deleted toggle name', async () => {
 
 test('should get archived toggles via admin', () => {
     expect.assertions(1);
-    const { request, base, archiveStore } = getSetup();
     archiveStore.addArchivedFeature({
         name: 'test1',
         strategies: [{ name: 'default' }],
@@ -83,7 +103,6 @@ test('should get archived toggles via admin', () => {
 test('should revive toggle', () => {
     expect.assertions(0);
     const name = 'name1';
-    const { request, base, archiveStore } = getSetup();
     archiveStore.addArchivedFeature({
         name,
         strategies: [{ name: 'default' }],
@@ -98,7 +117,6 @@ test('should revive toggle', () => {
 test('should create event when reviving toggle', async () => {
     expect.assertions(6);
     const name = 'name1';
-    const { request, base, featureToggleService, eventStore } = getSetup();
 
     await featureToggleService.addArchivedFeature({
         name,
@@ -129,6 +147,5 @@ test('should create event when reviving toggle', async () => {
 
 test('should require toggle name when reviving', () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
     return request.post(`${base}/api/admin/archive/revive/`).expect(404);
 });

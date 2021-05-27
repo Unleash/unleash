@@ -242,7 +242,6 @@ test('creates new feature toggle without type', async () => {
         enabled: false,
         strategies: [{ name: 'default' }],
     });
-    await new Promise(r => setTimeout(r, 200));
     return app.request
         .get('/api/admin/features/com.test.noType')
         .expect(res => {
@@ -258,7 +257,6 @@ test('creates new feature toggle with type', async () => {
         enabled: false,
         strategies: [{ name: 'default' }],
     });
-    await new Promise(r => setTimeout(r, 200));
     return app.request
         .get('/api/admin/features/com.test.withType')
         .expect(res => {
@@ -281,7 +279,6 @@ test('tags feature with new tag', async () => {
             type: 'simple',
         })
         .set('Content-Type', 'application/json');
-    await new Promise(r => setTimeout(r, 200));
     return app.request
         .get('/api/admin/features/test.feature/tags')
         .expect(res => {
@@ -305,7 +302,6 @@ test('tagging a feature with an already existing tag should be a noop', async ()
         value: 'TeamGreen',
         type: 'simple',
     });
-    await new Promise(r => setTimeout(r, 200));
     return app.request
         .get('/api/admin/features/test.feature/tags')
         .expect('Content-Type', /json/)

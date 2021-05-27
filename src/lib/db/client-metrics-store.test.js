@@ -25,9 +25,12 @@ function getMockDb() {
 }
 
 test('should call database on startup', done => {
+    jest.useFakeTimers('modern');
     const mock = getMockDb();
     const ee = new EventEmitter();
     const store = new ClientMetricStore(mock, ee, getLogger);
+
+    jest.runAllTicks();
 
     expect.assertions(2);
 
@@ -41,12 +44,13 @@ test('should call database on startup', done => {
 });
 
 test('should start poller even if initial database fetch fails', done => {
-    getLogger.setMuteError(true);
     jest.useFakeTimers('modern');
+    getLogger.setMuteError(true);
     const mock = getMockDb();
     mock.getMetricsLastHour = () => Promise.reject(new Error('oops'));
     const ee = new EventEmitter();
     const store = new ClientMetricStore(mock, ee, getLogger, 100);
+    jest.runAllTicks();
 
     const metrics = [];
     store.on('metrics', m => metrics.push(m));
@@ -68,16 +72,16 @@ test('should start poller even if initial database fetch fails', done => {
 
 test('should poll for updates', done => {
     jest.useFakeTimers('modern');
-
     const mock = getMockDb();
     const ee = new EventEmitter();
     const store = new ClientMetricStore(mock, ee, getLogger, 100);
+    jest.runAllTicks();
 
     const metrics = [];
     store.on('metrics', m => metrics.push(m));
 
     expect(metrics).toHaveLength(0);
-    jest.advanceTimersByTime(300);
+
     store.on('ready', () => {
         jest.useFakeTimers('modern');
         expect(metrics).toHaveLength(1);

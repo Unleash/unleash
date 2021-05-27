@@ -20,7 +20,9 @@ class ClientMetricsStore extends EventEmitter {
                 action,
             });
 
-        this._init(pollInterval);
+        process.nextTick(async () => {
+            await this._init(pollInterval);
+        });
     }
 
     async _init(pollInterval) {

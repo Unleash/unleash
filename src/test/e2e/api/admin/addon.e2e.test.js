@@ -8,21 +8,27 @@ const MASKED_VALUE = '*****';
 
 let stores;
 let db;
+let request;
+let destroy;
 
 beforeAll(async () => {
     db = await dbInit('addon_api_serial', getLogger);
     stores = db.stores;
+    const app = await setupApp(stores);
+    request = app.request;
+    destroy = app.destroy;
 });
 
 afterAll(async () => {
     if (db) {
         await db.destroy();
     }
+    await destroy();
 });
 
 test('gets all addons', async () => {
     expect.assertions(3);
-    const request = await setupApp(stores);
+
     return request
         .get('/api/admin/addons')
         .expect('Content-Type', /json/)
@@ -36,7 +42,6 @@ test('gets all addons', async () => {
 
 test('should not be able to create invalid addon', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
     return request
         .post('/api/admin/addons')
         .send({ invalid: 'field' })
@@ -45,7 +50,6 @@ test('should not be able to create invalid addon', async () => {
 
 test('should create addon configuration', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
 
     const config = {
         provider: 'webhook',
@@ -65,7 +69,6 @@ test('should create addon configuration', async () => {
 
 test('should delete addon configuration', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
 
     const config = {
         provider: 'webhook',
@@ -88,7 +91,6 @@ test('should delete addon configuration', async () => {
 
 test('should update addon configuration', async () => {
     expect.assertions(2);
-    const request = await setupApp(stores);
 
     const config = {
         provider: 'webhook',
@@ -134,7 +136,6 @@ test('should update addon configuration', async () => {
 
 test('should not update with invalid addon configuration', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
 
     const config = {
         enabled: true,
@@ -153,7 +154,6 @@ test('should not update with invalid addon configuration', async () => {
 
 test('should not update unknown addon configuration', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
 
     const config = {
         provider: 'webhook',
@@ -173,7 +173,6 @@ test('should not update unknown addon configuration', async () => {
 
 test('should get addon configuration', async () => {
     expect.assertions(3);
-    const request = await setupApp(stores);
 
     const config = {
         provider: 'webhook',
@@ -206,14 +205,12 @@ test('should get addon configuration', async () => {
 
 test('should not get unknown addon configuration', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
 
     await request.get('/api/admin/addons/445').expect(404);
 });
 
 test('should not delete unknown addon configuration', async () => {
     expect.assertions(0);
-    const request = await setupApp(stores);
 
     return request.delete('/api/admin/addons/21231').expect(404);
 });

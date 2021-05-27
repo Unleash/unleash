@@ -197,7 +197,7 @@ test('should handle a lot of toggles', () => {
 });
 
 test('should have correct values for lastMinute', () => {
-    const clock = jest.useFakeTimers('modern');
+    jest.useFakeTimers('modern');
 
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(

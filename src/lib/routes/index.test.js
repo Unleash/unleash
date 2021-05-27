@@ -21,12 +21,30 @@ function getSetup() {
     return {
         base,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
 
+let base;
+let request;
+let destroy;
+beforeEach(() => {
+    const setup = getSetup();
+    base = setup.base;
+    request = setup.request;
+    destroy = setup.destroy;
+});
+
+afterEach(() => {
+    destroy();
+});
+
 test('api defintion', () => {
     expect.assertions(5);
-    const { request, base } = getSetup();
     return request
         .get(`${base}/api/`)
         .expect('Content-Type', /json/)
@@ -47,7 +65,6 @@ test('api defintion', () => {
 
 test('admin api defintion', () => {
     expect.assertions(2);
-    const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin`)
         .expect('Content-Type', /json/)
@@ -62,7 +79,6 @@ test('admin api defintion', () => {
 
 test('client api defintion', () => {
     expect.assertions(2);
-    const { request, base } = getSetup();
     return request
         .get(`${base}/api/client`)
         .expect('Content-Type', /json/)

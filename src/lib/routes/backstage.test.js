@@ -10,21 +10,21 @@ const getApp = require('../app');
 
 const eventBus = new EventEmitter();
 
-test('should use enable prometheus', () => {
+test('should enable prometheus', async () => {
     expect.assertions(0);
     const stores = store.createStores();
     const config = createTestConfig();
-    const app = getApp(
-        config,
-        stores,
-        createServices(stores, config),
-        eventBus,
-    );
+    const services = createServices(stores, config);
+
+    const app = getApp(config, stores, services, eventBus);
 
     const request = supertest(app);
 
-    return request
+    await request
         .get('/internal-backstage/prometheus')
         .expect('Content-Type', /text/)
         .expect(200);
+    services.versionService.destroy();
+    services.clientMetricsService.destroy();
+    services.apiTokenService.destroy();
 });

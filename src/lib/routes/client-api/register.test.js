@@ -19,16 +19,27 @@ function getSetup() {
     return {
         request: supertest(app),
         stores,
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
-
+let request;
+let destroy;
+beforeEach(() => {
+    const setup = getSetup();
+    request = setup.request;
+    destroy = setup.destroy;
+});
 afterEach(() => {
+    destroy();
     getLogger.setMuteError(false);
 });
 
 test('should register client', () => {
     expect.assertions(0);
-    const { request } = getSetup();
     return request
         .post('/api/client/register')
         .send({
@@ -44,7 +55,6 @@ test('should register client', () => {
 
 test('should register client without sdkVersion', () => {
     expect.assertions(0);
-    const { request } = getSetup();
     return request
         .post('/api/client/register')
         .send({
@@ -59,7 +69,6 @@ test('should register client without sdkVersion', () => {
 
 test('should require appName field', () => {
     expect.assertions(0);
-    const { request } = getSetup();
     return request
         .post('/api/client/register')
         .set('Content-Type', 'application/json')
@@ -68,7 +77,6 @@ test('should require appName field', () => {
 
 test('should require strategies field', () => {
     expect.assertions(0);
-    const { request } = getSetup();
     return request
         .post('/api/client/register')
         .send({

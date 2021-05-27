@@ -17,23 +17,41 @@ function getSetup() {
     const config = createTestConfig({
         server: { baseUriPath: base },
     });
-    const app = getApp(
-        config,
-        stores,
-        createServices(stores, config),
-        eventBus,
-    );
+    const services = createServices(stores, config);
+
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,
         featureToggleStore: stores.featureToggleStore,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
 
+let base;
+let featureToggleStore;
+let request;
+let destroy;
+
+beforeEach(() => {
+    const setup = getSetup();
+    base = setup.base;
+    request = setup.request;
+    featureToggleStore = setup.featureToggleStore;
+    destroy = setup.destroy;
+});
+
+afterEach(() => {
+    destroy();
+});
+
 test('should get empty getFeatures via client', () => {
     expect.assertions(1);
-    const { request, base } = getSetup();
     return request
         .get(`${base}/api/client/features`)
         .expect('Content-Type', /json/)
@@ -91,7 +109,6 @@ test('if caching is not enabled all calls goes to service', () => {
 
 test('fetch single feature', () => {
     expect.assertions(1);
-    const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({
         name: 'test_',
         strategies: [{ name: 'default' }],
@@ -108,7 +125,6 @@ test('fetch single feature', () => {
 
 test('support name prefix', () => {
     expect.assertions(2);
-    const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({ name: 'a_test1' });
     featureToggleStore.createFeature({ name: 'a_test2' });
     featureToggleStore.createFeature({ name: 'b_test1' });
@@ -128,7 +144,6 @@ test('support name prefix', () => {
 
 test('support filtering on project', () => {
     expect.assertions(2);
-    const { request, featureToggleStore, base } = getSetup();
     featureToggleStore.createFeature({ name: 'a_test1', project: 'projecta' });
     featureToggleStore.createFeature({ name: 'b_test2', project: 'projectb' });
     return request

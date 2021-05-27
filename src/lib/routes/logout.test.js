@@ -25,26 +25,28 @@ function getSetup() {
             });
         },
     });
-    const app = getApp(
-        config,
-        stores,
-        createServices(stores, config),
-        eventBus,
-    );
+    const services = createServices(stores, config);
+
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,
         strategyStore: stores.strategyStore,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
 
-test('should logout and redirect', () => {
+test('should logout and redirect', async () => {
     expect.assertions(0);
-    const { request, base } = getSetup();
-
-    return request
+    const { base, request, destroy } = getSetup();
+    await request
         .get(`${base}/logout`)
         .expect(302)
         .expect('Location', `${base}/`);
+    destroy();
 });

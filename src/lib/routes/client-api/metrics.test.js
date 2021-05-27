@@ -22,12 +22,31 @@ function getSetup() {
     return {
         request: supertest(app),
         stores,
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
 
+let request;
+let stores;
+let destroy;
+
+beforeEach(() => {
+    const setup = getSetup();
+    request = setup.request;
+    stores = setup.stores;
+    destroy = setup.destroy;
+});
+
+afterEach(() => {
+    destroy();
+});
+
 test('should validate client metrics', () => {
     expect.assertions(0);
-    const { request } = getSetup();
     return request
         .post('/api/client/metrics')
         .send({ random: 'blush' })
@@ -36,7 +55,6 @@ test('should validate client metrics', () => {
 
 test('should accept empty client metrics', () => {
     expect.assertions(0);
-    const { request } = getSetup();
     return request
         .post('/api/client/metrics')
         .send({
@@ -53,7 +71,6 @@ test('should accept empty client metrics', () => {
 
 test('should accept client metrics with yes/no', () => {
     expect.assertions(0);
-    const { request } = getSetup();
     return request
         .post('/api/client/metrics')
         .send({
@@ -75,7 +92,6 @@ test('should accept client metrics with yes/no', () => {
 
 test('should accept client metrics with variants', () => {
     expect.assertions(0);
-    const { request } = getSetup();
     return request
         .post('/api/client/metrics')
         .send({
@@ -101,7 +117,6 @@ test('should accept client metrics with variants', () => {
 
 test('should accept client metrics without yes/no', () => {
     expect.assertions(0);
-    const { request } = getSetup();
     return request
         .post('/api/client/metrics')
         .send({
@@ -155,7 +170,6 @@ test('shema allow yes=<string nbr>', () => {
 
 test('should set lastSeen on toggle', async () => {
     expect.assertions(1);
-    const { request, stores } = getSetup();
     stores.featureToggleStore.createFeature({ name: 'toggleLastSeen' });
     await request
         .post('/api/client/metrics')

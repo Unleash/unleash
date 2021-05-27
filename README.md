@@ -31,7 +31,7 @@ Common activation strategies includes:
 - Active for our beta users
 - Active only for application instances running on host x.
 
-Read more about activation strategies in [docs/activation-strategies.md](./docs/activation-strategies.md)
+Read more about [activation strategies in our docs](https://docs.getunleash.io/docs/user_guide/activation_strategy).
 
 ## Variants
 
@@ -89,7 +89,7 @@ Go to [unleash-hosted.com](https://www.unleash-hosted.com/pricing) to learn more
 
 # Developer Guide
 
-If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. Please read the [unleash developer guide](./docs/developer-guide.md) to learn more on how you can contribute.
+If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. Please read the [unleash developer guide](./docs/contributing/developer-guide.md) to learn more on how you can contribute.
 
 # I Need help
 

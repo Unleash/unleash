@@ -19,6 +19,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+    await clientMetricsService.destroy();
     await db.destroy();
 });
 test('Apps registered should be announced', async () => {

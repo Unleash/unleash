@@ -36,6 +36,8 @@ export default class VersionService {
 
     private isLatest: boolean;
 
+    private timer: NodeJS.Timeout;
+
     constructor(
         { settingStore }: Pick<IUnleashStores, 'settingStore'>,
         {
@@ -62,7 +64,11 @@ export default class VersionService {
     async setup(): Promise<void> {
         await this.setInstanceId();
         await this.checkLatestVersion();
-        setInterval(async () => this.checkLatestVersion(), TWO_DAYS);
+        this.timer = setInterval(
+            async () => this.checkLatestVersion(),
+            TWO_DAYS,
+        );
+        this.timer.unref();
     }
 
     async setInstanceId(): Promise<void> {
@@ -110,6 +116,11 @@ export default class VersionService {
             isLatest: this.isLatest,
             instanceId: this.instanceId,
         };
+    }
+
+    destroy(): void {
+        clearInterval(this.timer);
+        this.timer = null;
     }
 }
 

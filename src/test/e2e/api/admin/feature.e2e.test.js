@@ -338,7 +338,7 @@ test('can untag feature', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.tags.length).toBe(0);
+            expect(res.body.tags).toHaveLength(0);
         });
 });
 

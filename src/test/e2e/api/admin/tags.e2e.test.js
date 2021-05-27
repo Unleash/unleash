@@ -18,7 +18,7 @@ afterAll(async () => {
 });
 
 test('returns list of tags', async () => {
-    app.request
+    await app.request
         .post('/api/admin/tags')
         .send({
             value: 'Tester',
@@ -36,7 +36,7 @@ test('returns list of tags', async () => {
 });
 
 test('gets a tag by type and value', async () => {
-    app.request
+    await app.request
         .post('/api/admin/tags')
         .send({
             value: 'Tester',

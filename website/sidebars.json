@@ -40,7 +40,8 @@
       "advanced/archived_toggles",
       "advanced/audit_log",
       "advanced/api_access",
-      "advanced/tags"
+      "advanced/tags",
+      "advanced/enterprise-authentication"
     ]
   },
   "api": {

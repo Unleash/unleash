@@ -35,6 +35,9 @@
       "advanced/custom_activation_strategy": {
         "title": "Custom Activation Strategy"
       },
+      "advanced/enterprise-authentication": {
+        "title": "Authentication (Single-Sign-On)"
+      },
       "advanced/feature_toggle_types": {
         "title": "Feature Toggle Types"
       },

@@ -1,4 +1,7 @@
-# Unleash
+<a href="https://getunleash.io" title="Unleash - Create with freedom. Release with confidence">
+    <img src="./.github/unleash-logo.svg" width="250">
+</a>
+
 
 ![Build & Tests](https://github.com/Unleash/unleash/workflows/Build%20%26%20Tests/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master) [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash)
 

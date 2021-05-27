@@ -37,7 +37,6 @@
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "yarn test --watch",
     "test:coverage": "jest --coverage --forceExit",
-    "test:coveralls": "yarn test:coverage && cat coverage/lcov.info | coveralls",
     "clean": "rimraf dist/"
   },
   "jest": {

@@ -35,7 +35,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn
       - run: yarn lint
-      - run: yarn run test:coveralls
+      - run: yarn run test:coverage
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres

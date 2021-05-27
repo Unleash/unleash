@@ -1,5 +1,5 @@
 <a href="https://getunleash.io" title="Unleash - Create with freedom. Release with confidence">
-    <img src="./.github/header.svg" width="250">
+    <img src="./.github/unleash-logo.svg" width="250">
 </a>
 
 

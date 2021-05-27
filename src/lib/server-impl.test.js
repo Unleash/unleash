@@ -114,7 +114,7 @@ test('should auto-create server on start()', async () => {
 test('should not create a server using create()', async () => {
     const config = createTestConfig({ server: { port: 0 } });
     const { server } = await serverImpl.create(config);
-    expect(typeof server === 'undefined').toBe(true);
+    expect(typeof server).toBeUndefined();
 });
 
 test('should shutdown the server when calling stop()', async () => {

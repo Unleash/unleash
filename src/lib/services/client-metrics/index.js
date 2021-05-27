@@ -67,8 +67,13 @@ module.exports = class ClientMetricsService {
             });
         });
         this.seenClients = {};
-        setInterval(() => this.bulkAdd(), bulkInterval);
-        setInterval(() => this.announceUnannounced(), appAnnouncementInterval);
+        this.bulkAddTimer = setInterval(() => this.bulkAdd(), bulkInterval);
+        this.bulkAddTimer.unref();
+        this.announceTimer = setInterval(
+            () => this.announceUnannounced(),
+            appAnnouncementInterval,
+        );
+        this.announceTimer.unref();
         clientMetricsStore.on('metrics', m => this.addPayload(m));
     }
 
@@ -315,5 +320,7 @@ module.exports = class ClientMetricsService {
     destroy() {
         this.lastHourList.destroy();
         this.lastMinuteList.destroy();
+        clearInterval(this.announceTimer);
+        clearInterval(this.bulkAddTimer);
     }
 };

@@ -33,8 +33,8 @@ test('should call database on startup', done => {
     expect.assertions(2);
 
     store.on('metrics', metrics => {
-        expect(store.highestIdSeen === 1).toBe(true);
-        expect(metrics.appName === 'test').toBe(true);
+        expect(store.highestIdSeen).toBe(1);
+        expect(metrics.appName).toBe('test');
         store.destroy();
 
         done();

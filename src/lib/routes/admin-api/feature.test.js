@@ -489,7 +489,6 @@ test('Should be able to filter on name prefix', () => {
 
 test('Should be able to filter on project', () => {
     expect.assertions(3);
-    const { request, featureToggleStore, base } = getSetup();
 
     featureToggleStore.createFeature({
         name: 'a_team.toggle',

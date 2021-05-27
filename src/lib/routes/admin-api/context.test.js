@@ -44,6 +44,10 @@ beforeEach(() => {
     destroy = setup.destroy;
 });
 
+afterEach(async () => {
+    await destroy();
+});
+
 test('should get all context definitions', () => {
     expect.assertions(2);
     return request

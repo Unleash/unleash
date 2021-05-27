@@ -1,7 +1,6 @@
 'use strict';
 
 const { EventEmitter } = require('events');
-const lolex = require('lolex');
 const ClientMetricStore = require('./client-metrics-store');
 const getLogger = require('../../test/fixtures/no-logger');
 
@@ -41,9 +40,9 @@ test('should call database on startup', done => {
     });
 });
 
-test('should start poller even if inital database fetch fails', done => {
+test('should start poller even if initial database fetch fails', done => {
     getLogger.setMuteError(true);
-    const clock = lolex.install();
+    jest.useFakeTimers('modern');
     const mock = getMockDb();
     mock.getMetricsLastHour = () => Promise.reject(new Error('oops'));
     const ee = new EventEmitter();
@@ -53,20 +52,22 @@ test('should start poller even if inital database fetch fails', done => {
     store.on('metrics', m => metrics.push(m));
 
     store.on('ready', () => {
-        expect(metrics.length === 0).toBe(true);
-        clock.tick(300);
+        expect(metrics).toHaveLength(0);
+        jest.advanceTimersByTime(300);
         process.nextTick(() => {
-            expect(metrics.length === 3).toBe(true);
-            expect(store.highestIdSeen === 4).toBe(true);
+            expect(metrics).toHaveLength(3);
+            expect(store.highestIdSeen).toBe(4);
             store.destroy();
             done();
         });
     });
+    jest.advanceTimersByTime(300);
     getLogger.setMuteError(false);
+    jest.useRealTimers();
 });
 
 test('should poll for updates', done => {
-    const clock = lolex.install();
+    jest.useFakeTimers('modern');
 
     const mock = getMockDb();
     const ee = new EventEmitter();
@@ -75,16 +76,17 @@ test('should poll for updates', done => {
     const metrics = [];
     store.on('metrics', m => metrics.push(m));
 
-    expect(metrics.length === 0).toBe(true);
-
+    expect(metrics).toHaveLength(0);
+    jest.advanceTimersByTime(300);
     store.on('ready', () => {
-        expect(metrics.length === 1).toBe(true);
-        clock.tick(300);
+        expect(metrics).toHaveLength(1);
+        jest.advanceTimersByTime(300);
         process.nextTick(() => {
-            expect(metrics.length === 4).toBe(true);
-            expect(store.highestIdSeen === 4).toBe(true);
+            expect(metrics).toHaveLength(4);
+            expect(store.highestIdSeen).toBe(4);
             store.destroy();
             done();
         });
     });
+    jest.useRealTimers();
 });

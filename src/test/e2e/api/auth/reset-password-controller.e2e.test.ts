@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import { URL } from 'url';
 import EventEmitter from 'events';
 import dbInit from '../../helpers/database-init';

@@ -1,11 +1,10 @@
 'use strict';
 
 const moment = require('moment');
-const lolex = require('lolex');
 const TTLList = require('./ttl-list');
 
 test('should emit expire', done => {
-    const clock = lolex.install();
+    jest.useFakeTimers('modern');
     const list = new TTLList({
         interval: 20,
         expireAmount: 10,
@@ -14,16 +13,17 @@ test('should emit expire', done => {
 
     list.on('expire', entry => {
         list.destroy();
-        expect(entry.n === 1).toBe(true);
+        expect(entry.n).toBe(1);
         done();
     });
 
     list.add({ n: 1 });
-    clock.tick(21);
+    jest.advanceTimersByTime(21);
+    jest.useRealTimers();
 });
 
 test('should slice off list', () => {
-    const clock = lolex.install();
+    jest.useFakeTimers('modern');
 
     const list = new TTLList({
         interval: 10,
@@ -43,18 +43,18 @@ test('should slice off list', () => {
         expired.push(entry);
     });
 
-    clock.tick(21);
-    expect(expired.length === 1).toBe(true);
+    jest.advanceTimersByTime(21);
+    expect(expired).toHaveLength(1);
 
-    clock.tick(51);
-    expect(expired.length === 2).toBe(true);
+    jest.advanceTimersByTime(51);
+    expect(expired).toHaveLength(2);
 
-    clock.tick(201);
-    expect(expired.length === 3).toBe(true);
+    jest.advanceTimersByTime(201);
+    expect(expired).toHaveLength(3);
 
-    clock.tick(301);
-    expect(expired.length === 4).toBe(true);
+    jest.advanceTimersByTime(301);
+    expect(expired).toHaveLength(4);
 
     list.destroy();
-    clock.uninstall();
+    jest.useRealTimers();
 });

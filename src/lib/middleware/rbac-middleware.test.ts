@@ -1,5 +1,3 @@
-import sinon from 'sinon';
-
 import rbacMiddleware from './rbac-middleware';
 import ffStore from '../../test/fixtures/fake-feature-toggle-store';
 import User from '../types/user';
@@ -18,29 +16,31 @@ beforeEach(() => {
 
 test('should add checkRbac to request', () => {
     const accessService = {
-        hasPermission: sinon.fake(),
+        hasPermission: jest.fn(),
     };
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
 
-    const req = sinon.fake();
+    const req = jest.fn();
 
     func(req, undefined, cb);
 
+    // @ts-ignore
     expect(req.checkRbac).toBeTruthy();
+    // @ts-ignore
     expect(typeof req.checkRbac).toBe('function');
 });
 
 test('should give api-user ADMIN permission', async () => {
     const accessService = {
-        hasPermission: sinon.fake(),
+        hasPermission: jest.fn(),
     };
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
     const req: any = {
         user: new ApiUser({
             username: 'api',
@@ -57,12 +57,12 @@ test('should give api-user ADMIN permission', async () => {
 
 test('should not give api-user ADMIN permission', async () => {
     const accessService = {
-        hasPermission: sinon.fake(),
+        hasPermission: jest.fn(),
     };
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
     const req: any = {
         user: new ApiUser({
             username: 'api',
@@ -75,17 +75,17 @@ test('should not give api-user ADMIN permission', async () => {
     const hasAccess = await req.checkRbac(perms.ADMIN);
 
     expect(hasAccess).toBe(false);
-    expect(accessService.hasPermission.callCount).toBe(0);
+    expect(accessService.hasPermission).toHaveBeenCalledTimes(0);
 });
 
 test('should not allow user to miss userId', async () => {
     const accessService = {
-        hasPermission: sinon.fake(),
+        hasPermission: jest.fn(),
     };
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
     const req: any = {
         user: {
             username: 'user',
@@ -101,12 +101,12 @@ test('should not allow user to miss userId', async () => {
 
 test('should return false for missing user', async () => {
     const accessService = {
-        hasPermission: sinon.fake(),
+        hasPermission: jest.fn(),
     };
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
     const req: any = {};
 
     func(req, undefined, cb);
@@ -114,17 +114,17 @@ test('should return false for missing user', async () => {
     const hasAccess = await req.checkRbac(perms.ADMIN);
 
     expect(hasAccess).toBe(false);
-    expect(accessService.hasPermission.callCount).toBe(0);
+    expect(accessService.hasPermission).toHaveBeenCalledTimes(0);
 });
 
 test('should verify permission for root resource', async () => {
     const accessService = {
-        hasPermission: sinon.fake(),
+        hasPermission: jest.fn(),
     };
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
     const req: any = {
         user: new User({
             username: 'user',
@@ -137,20 +137,22 @@ test('should verify permission for root resource', async () => {
 
     await req.checkRbac(perms.ADMIN);
 
-    expect(accessService.hasPermission.calledOnce).toBe(true);
-    expect(accessService.hasPermission.firstArg).toBe(req.user);
-    expect(accessService.hasPermission.args[0][1]).toBe(perms.ADMIN);
-    expect(accessService.hasPermission.args[0][2]).toBe(undefined);
+    expect(accessService.hasPermission).toHaveBeenCalledTimes(1);
+    expect(accessService.hasPermission).toHaveBeenCalledWith(
+        req.user,
+        perms.ADMIN,
+        undefined,
+    );
 });
 
 test('should lookup projectId from params', async () => {
     const accessService = {
-        hasPermission: sinon.fake(),
+        hasPermission: jest.fn(),
     };
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
     const req: any = {
         user: new User({
             username: 'user',
@@ -165,7 +167,11 @@ test('should lookup projectId from params', async () => {
 
     await req.checkRbac(perms.UPDATE_PROJECT);
 
-    expect(accessService.hasPermission.args[0][2]).toBe(req.params.projectId);
+    expect(accessService.hasPermission).toHaveBeenCalledWith(
+        req.user,
+        perms.UPDATE_PROJECT,
+        req.params.projectId,
+    );
 });
 
 test('should lookup projectId from feature toggle', async () => {
@@ -173,14 +179,14 @@ test('should lookup projectId from feature toggle', async () => {
     const featureName = 'some-feature-toggle';
 
     const accessService = {
-        hasPermission: sinon.fake(),
+        hasPermission: jest.fn(),
     };
 
-    featureToggleStore.getProjectId = sinon.fake.returns(projectId);
+    featureToggleStore.getProjectId = jest.fn().mockReturnValue(projectId);
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
     const req: any = {
         user: new User({
             username: 'user',
@@ -195,8 +201,12 @@ test('should lookup projectId from feature toggle', async () => {
 
     await req.checkRbac(perms.UPDATE_FEATURE);
 
-    expect(accessService.hasPermission.args[0][2]).toBe(projectId);
-    expect(featureToggleStore.getProjectId.firstArg).toBe(featureName);
+    expect(accessService.hasPermission).toHaveBeenCalledWith(
+        req.user,
+        perms.UPDATE_FEATURE,
+        projectId,
+    );
+    expect(featureToggleStore.getProjectId.mock.calls[0][0]).toBe(featureName);
 });
 
 test('should lookup projectId from data', async () => {
@@ -204,12 +214,12 @@ test('should lookup projectId from data', async () => {
     const featureName = 'some-feature-toggle';
 
     const accessService = {
-        hasPermission: sinon.fake(),
+        hasPermission: jest.fn(),
     };
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
 
-    const cb = sinon.fake();
+    const cb = jest.fn();
     const req: any = {
         user: new User({
             username: 'user',
@@ -226,7 +236,11 @@ test('should lookup projectId from data', async () => {
 
     await req.checkRbac(perms.CREATE_FEATURE);
 
-    expect(accessService.hasPermission.args[0][2]).toBe(projectId);
+    expect(accessService.hasPermission).toHaveBeenCalledWith(
+        req.user,
+        perms.CREATE_FEATURE,
+        projectId,
+    );
 });
 
 test('Need access to UPDATE_FEATURE on the project you change to', async () => {
@@ -234,12 +248,12 @@ test('Need access to UPDATE_FEATURE on the project you change to', async () => {
     const newProjectId = 'some-project-35';
     const featureName = 'some-feature-toggle';
     const accessService = {
-        hasPermission: sinon.fake.returns(true),
+        hasPermission: jest.fn().mockReturnValue(true),
     };
-    featureToggleStore.getProjectId = sinon.fake.returns(oldProjectId);
+    featureToggleStore.getProjectId = jest.fn().mockReturnValue(oldProjectId);
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
-    const cb = sinon.fake();
+    const cb = jest.fn();
     const req: any = {
         user: new User({ username: 'user', id: 1 }),
         params: { featureName },
@@ -248,21 +262,31 @@ test('Need access to UPDATE_FEATURE on the project you change to', async () => {
     func(req, undefined, cb);
 
     await req.checkRbac(perms.UPDATE_FEATURE);
-    expect(accessService.hasPermission.callCount).toBe(2);
-    expect(accessService.hasPermission.args[0][2]).toBe(oldProjectId);
-    expect(accessService.hasPermission.args[1][2]).toBe(newProjectId);
+    expect(accessService.hasPermission).toHaveBeenCalledTimes(2);
+    expect(accessService.hasPermission).toHaveBeenNthCalledWith(
+        1,
+        req.user,
+        perms.UPDATE_FEATURE,
+        oldProjectId,
+    );
+    expect(accessService.hasPermission).toHaveBeenNthCalledWith(
+        2,
+        req.user,
+        perms.UPDATE_FEATURE,
+        newProjectId,
+    );
 });
 
 test('Does not double check permission if not changing project when updating toggle', async () => {
     const oldProjectId = 'some-project-34';
     const featureName = 'some-feature-toggle';
     const accessService = {
-        hasPermission: sinon.fake.returns(true),
+        hasPermission: jest.fn().mockReturnValue(true),
     };
-    featureToggleStore.getProjectId = sinon.fake.returns(oldProjectId);
+    featureToggleStore.getProjectId = jest.fn().mockReturnValue(oldProjectId);
 
     const func = rbacMiddleware(config, { featureToggleStore }, accessService);
-    const cb = sinon.fake();
+    const cb = jest.fn();
     const req: any = {
         user: new User({ username: 'user', id: 1 }),
         params: { featureName },
@@ -271,6 +295,10 @@ test('Does not double check permission if not changing project when updating tog
     func(req, undefined, cb);
 
     await req.checkRbac(perms.UPDATE_FEATURE);
-    expect(accessService.hasPermission.callCount).toBe(1);
-    expect(accessService.hasPermission.args[0][2]).toBe(oldProjectId);
+    expect(accessService.hasPermission).toHaveBeenCalledTimes(1);
+    expect(accessService.hasPermission).toHaveBeenCalledWith(
+        req.user,
+        perms.UPDATE_FEATURE,
+        oldProjectId,
+    );
 });

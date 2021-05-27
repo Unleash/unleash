@@ -1,4 +1,3 @@
-const lolex = require('lolex');
 const fetchMock = require('fetch-mock').sandbox();
 const noLogger = require('../../test/fixtures/no-logger');
 
@@ -19,7 +18,7 @@ const definition = {
 
 test('Retries if fetch throws', async () => {
     const url = 'https://test.some.com';
-    const clock = lolex.install();
+    jest.useFakeTimers('modern');
     const addon = new Addon(definition, {
         getLogger: noLogger,
     });
@@ -43,13 +42,14 @@ test('Retries if fetch throws', async () => {
             201,
         );
     await addon.fetchRetry(url);
-    clock.tick(1000);
+    jest.advanceTimersByTime(1000);
     expect(fetchMock.done()).toBe(true);
+    jest.useRealTimers();
 });
 
 test('does not crash even if fetch throws', async () => {
     const url = 'https://test.some.com';
-    const clock = lolex.install();
+    jest.useFakeTimers('modern');
     const addon = new Addon(definition, {
         getLogger: noLogger,
     });
@@ -64,7 +64,8 @@ test('does not crash even if fetch throws', async () => {
         },
     );
     await addon.fetchRetry(url);
-    clock.tick(1000);
+    jest.advanceTimersByTime(1000);
     expect(fetchMock.done()).toBe(true);
-    expect(fetchMock.calls().length).toBe(2);
+    expect(fetchMock.calls()).toHaveLength(2);
+    jest.useRealTimers();
 });

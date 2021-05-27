@@ -1,10 +1,10 @@
 const fetchMock = require('fetch-mock').sandbox();
-const lolex = require('lolex');
 const noLogger = require('../../test/fixtures/no-logger');
 
 jest.mock('node-fetch', () => fetchMock);
 
 const addonMocked = require('./addon');
+
 jest.mock('./addon', () => addonMocked);
 const JiraAddon = require('./jira-comment');
 const { addonDefinitionSchema } = require('./addon-schema');
@@ -19,38 +19,35 @@ test('Addon definition should validate', () => {
     expect(error).toBe(undefined);
 });
 
-test(
-    'An update event should post updated comment with updater and link back to issue',
-    async () => {
-        const jiraIssue = 'TEST-1';
-        const jiraBaseUrl = 'https://test.jira.com';
-        const addon = new JiraAddon({
-            getLogger: noLogger,
-            unleashUrl: 'https://test.unleash.com',
-        });
-        fetchMock.mock(
-            { url: `${jiraBaseUrl}/rest/api/3/issue/${jiraIssue}/comment` },
-            201,
-        );
-        await addon.handleEvent(
-            {
-                createdBy: 'test@test.com',
-                type: 'feature-updated',
-                data: {
-                    name: 'feature.toggle',
-                },
-                tags: [{ type: 'jira', value: jiraIssue }],
+test('An update event should post updated comment with updater and link back to issue', async () => {
+    const jiraIssue = 'TEST-1';
+    const jiraBaseUrl = 'https://test.jira.com';
+    const addon = new JiraAddon({
+        getLogger: noLogger,
+        unleashUrl: 'https://test.unleash.com',
+    });
+    fetchMock.mock(
+        { url: `${jiraBaseUrl}/rest/api/3/issue/${jiraIssue}/comment` },
+        201,
+    );
+    await addon.handleEvent(
+        {
+            createdBy: 'test@test.com',
+            type: 'feature-updated',
+            data: {
+                name: 'feature.toggle',
             },
-            {
-                baseUrl: jiraBaseUrl,
-                user: 'test@test.com',
-                apiKey: 'test',
-            },
-        );
-        expect(fetchMock.calls(true).length).toBe(1);
-        expect(fetchMock.done()).toBe(true);
-    }
-);
+            tags: [{ type: 'jira', value: jiraIssue }],
+        },
+        {
+            baseUrl: jiraBaseUrl,
+            user: 'test@test.com',
+            apiKey: 'test',
+        },
+    );
+    expect(fetchMock.calls(true).length).toBe(1);
+    expect(fetchMock.done()).toBe(true);
+});
 
 test('An event that is tagged with two tags causes two updates', async () => {
     const jiraBaseUrl = 'https://test.jira.com';
@@ -126,7 +123,7 @@ test('An event with no jira tags will be ignored', async () => {
 test('Retries if error code in the 500s', async () => {
     const jiraBaseUrl = 'https://test.jira.com';
     const jiraIssue = 'TEST-1';
-    const clock = lolex.install();
+    jest.useFakeTimers('modern');
     const addon = new JiraAddon({
         getLogger: noLogger,
         unleashUrl: 'https://test.unleash.com',
@@ -163,13 +160,13 @@ test('Retries if error code in the 500s', async () => {
             apiKey: 'test',
         },
     );
-    clock.tick(1000);
+    jest.advanceTimersByTime(1000);
     expect(fetchMock.done()).toBe(true);
 });
 test('Only retries once', async () => {
     const jiraBaseUrl = 'https://test.jira.com';
     const jiraIssue = 'TEST-1';
-    const clock = lolex.install();
+    jest.useFakeTimers('modern');
     const addon = new JiraAddon({
         getLogger: noLogger,
         unleashUrl: 'https://test.unleash.com',
@@ -190,7 +187,7 @@ test('Only retries once', async () => {
             apiKey: 'test',
         },
     );
-    clock.tick(1000);
+    jest.advanceTimersByTime(1000);
     expect(fetchMock.done()).toBe(true);
 });
 

@@ -1,7 +1,6 @@
 'use strict';
 
 const moment = require('moment');
-const sinon = require('sinon');
 
 const { EventEmitter } = require('events');
 const UnleashClientMetrics = require('./index');
@@ -25,7 +24,7 @@ test('should work without state', () => {
 });
 
 test('data should expire', () => {
-    const clock = sinon.useFakeTimers();
+    jest.useFakeTimers('modern');
 
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(
@@ -58,15 +57,15 @@ test('data should expire', () => {
         lastMinExpires++;
     });
 
-    clock.tick(60 * 1000);
+    jest.advanceTimersByTime(60 * 1000);
     expect(lastMinExpires === 1).toBe(true);
     expect(lastHourExpires === 0).toBe(true);
 
-    clock.tick(60 * 60 * 1000);
+    jest.advanceTimersByTime(60 * 60 * 1000);
     expect(lastMinExpires === 1).toBe(true);
     expect(lastHourExpires === 1).toBe(true);
 
-    clock.restore();
+    jest.useRealTimers();
 });
 
 test('should listen to metrics from store', () => {
@@ -158,14 +157,14 @@ test('should build up list of seen toggles when new metrics arrives', () => {
     const appToggles = metrics.getAppsWithToggles();
     const togglesForApp = metrics.getSeenTogglesByAppName(appName);
 
-    expect(appToggles.length === 1).toBeTruthy();
-    expect(appToggles[0].seenToggles.length === 2).toBeTruthy();
-    expect(appToggles[0].seenToggles.includes('toggleX')).toBeTruthy();
-    expect(appToggles[0].seenToggles.includes('toggleY')).toBeTruthy();
+    expect(appToggles).toHaveLength(1);
+    expect(appToggles[0].seenToggles).toHaveLength(2);
+    expect(appToggles[0].seenToggles).toContain('toggleX');
+    expect(appToggles[0].seenToggles).toContain('toggleY');
 
-    expect(togglesForApp.length === 2).toBeTruthy();
-    expect(togglesForApp.includes('toggleX')).toBeTruthy();
-    expect(togglesForApp.includes('toggleY')).toBeTruthy();
+    expect(togglesForApp).toHaveLength(2);
+    expect(togglesForApp).toContain('toggleX');
+    expect(togglesForApp).toContain('toggleY');
     metrics.destroy();
 });
 
@@ -193,12 +192,12 @@ test('should handle a lot of toggles', () => {
 
     const seenToggles = metrics.getSeenTogglesByAppName(appName);
 
-    expect(seenToggles.length === 100).toBeTruthy();
+    expect(seenToggles).toHaveLength(100);
     metrics.destroy();
 });
 
 test('should have correct values for lastMinute', () => {
-    const clock = sinon.useFakeTimers();
+    const clock = jest.useFakeTimers('modern');
 
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(
@@ -260,20 +259,20 @@ test('should have correct values for lastMinute', () => {
     let c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 20, no: 20 });
 
-    clock.tick(10 * 1000);
+    jest.advanceTimersByTime(10 * 1000);
     c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 10, no: 10 });
 
-    clock.tick(20 * 1000);
+    jest.advanceTimersByTime(20 * 1000);
     c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 0, no: 0 });
 
     metrics.destroy();
-    clock.restore();
+    jest.useRealTimers();
 });
 
 test('should have correct values for lastHour', () => {
-    const clock = sinon.useFakeTimers();
+    jest.useFakeTimers('modern');
 
     const clientMetricsStore = new EventEmitter();
     const metrics = new UnleashClientMetrics(
@@ -329,32 +328,32 @@ test('should have correct values for lastHour', () => {
     let c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 41, no: 41 });
 
-    clock.tick(10 * 1000);
+    jest.advanceTimersByTime(10 * 1000);
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 41, no: 41 });
 
     // at 30
-    clock.tick(30 * 60 * 1000);
+    jest.advanceTimersByTime(30 * 60 * 1000);
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 31, no: 31 });
 
     // at 45
-    clock.tick(15 * 60 * 1000);
+    jest.advanceTimersByTime(15 * 60 * 1000);
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 21, no: 21 });
 
     // at 1:15
-    clock.tick(30 * 60 * 1000);
+    jest.advanceTimersByTime(30 * 60 * 1000);
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 11, no: 11 });
 
     // at 2:00
-    clock.tick(45 * 60 * 1000);
+    jest.advanceTimersByTime(45 * 60 * 1000);
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 0, no: 0 });
 
     metrics.destroy();
-    clock.restore();
+    jest.useRealTimers();
 });
 
 test('should not fail when toggle metrics is missing yes/no field', () => {
@@ -403,10 +402,10 @@ test('should not fail when toggle metrics is missing yes/no field', () => {
 });
 
 test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async () => {
-    const clock = sinon.useFakeTimers(); // sinon has superseded lolex
+    jest.useFakeTimers('modern');
     const clientMetricsStore = new EventEmitter();
-    const appStoreSpy = sinon.spy();
-    const bulkSpy = sinon.spy();
+    const appStoreSpy = jest.fn();
+    const bulkSpy = jest.fn();
     const clientApplicationsStore = {
         bulkUpsert: appStoreSpy,
     };
@@ -428,23 +427,22 @@ test('Multiple registrations of same appname and instanceid within same time per
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clock.tickAsync(7 * 1000);
-    expect(appStoreSpy.callCount).toBe(1);
-    expect(bulkSpy.callCount).toBe(1);
-    const registrations = appStoreSpy.firstCall.args[0];
-    expect(registrations.length).toBe(1);
+    jest.advanceTimersByTime(7 * 1000);
+    expect(appStoreSpy).toHaveBeenCalledTimes(1);
+    const registrations = appStoreSpy.mock.calls[0][0];
+    expect(registrations).toHaveLength(1);
     expect(registrations[0].appName).toBe(client1.appName);
     expect(registrations[0].instanceId).toBe(client1.instanceId);
     expect(registrations[0].started).toBe(client1.started);
     expect(registrations[0].interval).toBe(client1.interval);
-    clock.restore();
+    jest.useRealTimers();
 });
 
 test('Multiple unique clients causes multiple registrations', async () => {
-    const clock = sinon.useFakeTimers();
+    jest.useFakeTimers('modern');
     const clientMetricsStore = new EventEmitter();
-    const appStoreSpy = sinon.spy();
-    const bulkSpy = sinon.spy();
+    const appStoreSpy = jest.fn();
+    const bulkSpy = jest.fn();
     const clientApplicationsStore = {
         bulkUpsert: appStoreSpy,
     };
@@ -475,18 +473,17 @@ test('Multiple unique clients causes multiple registrations', async () => {
     await clientMetrics.registerClient(client2, '127.0.0.1');
     await clientMetrics.registerClient(client2, '127.0.0.1');
     await clientMetrics.registerClient(client2, '127.0.0.1');
-    await clock.tickAsync(7 * 1000);
-    expect(appStoreSpy.callCount).toBe(1);
-    expect(bulkSpy.callCount).toBe(1);
-    const registrations = appStoreSpy.firstCall.args[0];
-    expect(registrations.length).toBe(2);
-    clock.restore();
+    jest.advanceTimersByTime(7 * 1000);
+    expect(appStoreSpy).toHaveBeenCalledTimes(1);
+    const registrations = appStoreSpy.mock.calls[0][0];
+    expect(registrations).toHaveLength(2);
+    jest.useRealTimers();
 });
 test('Same client registered outside of dedup interval will be registered twice', async () => {
-    const clock = sinon.useFakeTimers(); // sinon has superseded lolex
+    jest.useFakeTimers('modern');
     const clientMetricsStore = new EventEmitter();
-    const appStoreSpy = sinon.spy();
-    const bulkSpy = sinon.spy();
+    const appStoreSpy = jest.fn();
+    const bulkSpy = jest.fn();
     const clientApplicationsStore = {
         bulkUpsert: appStoreSpy,
     };
@@ -501,34 +498,33 @@ test('Same client registered outside of dedup interval will be registered twice'
     const client1 = {
         appName: 'test_app',
         instanceId: 'client1',
-        strategies: [{ name: 'defaullt' }],
+        strategies: [{ name: 'default' }],
         started: new Date(),
         interval: 10,
     };
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clock.tickAsync(3 * 1000);
+    jest.advanceTimersByTime(3 * 1000);
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clock.tickAsync(3 * 1000);
-    expect(appStoreSpy.callCount).toBe(2);
-    expect(bulkSpy.callCount).toBe(2);
-    const firstRegistrations = appStoreSpy.firstCall.args[0];
-    const secondRegistrations = appStoreSpy.secondCall.args[0];
+    jest.advanceTimersByTime(3 * 1000);
+    expect(appStoreSpy).toHaveBeenCalledTimes(2);
+    const firstRegistrations = appStoreSpy.mock.calls[0][0];
+    const secondRegistrations = appStoreSpy.mock.calls[1][0];
     expect(firstRegistrations[0].appName).toBe(secondRegistrations[0].appName);
     expect(firstRegistrations[0].instanceId).toBe(
         secondRegistrations[0].instanceId,
     );
-    clock.restore();
+    jest.useRealTimers();
 });
 
 test('No registrations during a time period will not call stores', async () => {
-    const clock = sinon.useFakeTimers(); // sinon has superseded lolex
+    jest.useFakeTimers('modern');
     const clientMetricsStore = new EventEmitter();
-    const appStoreSpy = sinon.spy();
-    const bulkSpy = sinon.spy();
+    const appStoreSpy = jest.fn();
+    const bulkSpy = jest.fn();
     const clientApplicationsStore = {
         bulkUpsert: appStoreSpy,
     };
@@ -540,8 +536,8 @@ test('No registrations during a time period will not call stores', async () => {
         { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
         { getLogger },
     );
-    await clock.tickAsync(6 * 1000);
-    expect(appStoreSpy.callCount).toBe(0);
-    expect(bulkSpy.callCount).toBe(0);
-    clock.restore();
+    jest.advanceTimersByTime(6 * 1000);
+    expect(appStoreSpy).toHaveBeenCalledTimes(0);
+    expect(bulkSpy).toHaveBeenCalledTimes(0);
+    jest.useRealTimers();
 });

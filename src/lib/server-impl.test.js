@@ -75,7 +75,7 @@ test('should call preHook', async () => {
         },
     });
     await serverImpl.start(config);
-    expect(called === 1).toBe(true);
+    expect(called).toBe(1);
 });
 
 test('should call preRouterHook', async () => {

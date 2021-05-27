@@ -11,15 +11,19 @@ import {
 } from './types/events';
 import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
+import Timer = NodeJS.Timer;
 
 const THREE_HOURS = 3 * 60 * 60 * 1000;
 const ONE_MINUTE = 60 * 1000;
 
 export default class MetricsMonitor {
-    timer: any;
+    timer?: Timer;
+
+    poolMetricsTimer?: Timer;
 
     constructor() {
         this.timer = null;
+        this.poolMetricsTimer = null;
     }
 
     startMonitoring(
@@ -125,6 +129,7 @@ export default class MetricsMonitor {
 
     stopMonitoring(): void {
         clearInterval(this.timer);
+        clearInterval(this.poolMetricsTimer);
     }
 
     configureDbMetrics(db: Knex, eventBus: EventEmitter): void {
@@ -166,10 +171,11 @@ export default class MetricsMonitor {
             });
 
             this.registerPoolMetrics(db.client.pool, eventBus);
-            setInterval(
+            this.poolMetricsTimer = setInterval(
                 () => this.registerPoolMetrics(db.client.pool, eventBus),
                 ONE_MINUTE,
             );
+            this.poolMetricsTimer.unref();
         }
     }
 

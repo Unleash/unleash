@@ -1,12 +1,10 @@
 'use strict';
 
-import { createServices } from '../../services';
-import { createTestConfig } from '../../../test/config/test-config';
-
-const test = require('ava');
-
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
+const { createServices } = require('../../services');
+const { createTestConfig } = require('../../../test/config/test-config');
+
 const store = require('../../../test/fixtures/store');
 
 const getApp = require('../../app');
@@ -25,14 +23,14 @@ function getSetup() {
     return { base, eventStore: stores.eventStore, request: supertest(app) };
 }
 
-test('should get empty events list via admin', t => {
-    t.plan(1);
+test('should get empty events list via admin', () => {
+    expect.assertions(1);
     const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/events`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.events.length === 0);
+            expect(res.body.events.length === 0).toBe(true);
         });
 });

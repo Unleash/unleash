@@ -1,9 +1,7 @@
 'use strict';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
-const sinon = require('sinon');
 const store = require('../../../test/fixtures/store');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
@@ -19,34 +17,52 @@ function getSetup() {
     const config = createTestConfig({
         server: { baseUriPath: base },
     });
-    const app = getApp(
-        config,
-        stores,
-        createServices(stores, config),
-        eventBus,
-    );
+    const services = createServices(stores, config);
+
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,
         featureToggleStore: stores.featureToggleStore,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
 
-test('should get empty getFeatures via client', t => {
-    t.plan(1);
-    const { request, base } = getSetup();
+let base;
+let featureToggleStore;
+let request;
+let destroy;
+
+beforeEach(() => {
+    const setup = getSetup();
+    base = setup.base;
+    request = setup.request;
+    featureToggleStore = setup.featureToggleStore;
+    destroy = setup.destroy;
+});
+
+afterEach(() => {
+    destroy();
+});
+
+test('should get empty getFeatures via client', () => {
+    expect.assertions(1);
     return request
         .get(`${base}/api/client/features`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.features.length === 0);
+            expect(res.body.features.length === 0).toBe(true);
         });
 });
 
-test('if caching is enabled should memoize', t => {
-    const getFeatures = sinon.fake.returns([]);
+test('if caching is enabled should memoize', () => {
+    const getFeatures = jest.fn().mockReturnValue([]);
 
     const featureToggleService = {
         getFeatures,
@@ -65,11 +81,11 @@ test('if caching is enabled should memoize', t => {
     );
     controller.getAll({ query: {} }, { json: () => {} });
     controller.getAll({ query: {} }, { json: () => {} });
-    t.is(getFeatures.callCount, 1);
+    expect(getFeatures).toHaveBeenCalledTimes(1);
 });
 
-test('if caching is not enabled all calls goes to service', t => {
-    const getFeatures = sinon.fake.returns([]);
+test('if caching is not enabled all calls goes to service', () => {
+    const getFeatures = jest.fn().mockReturnValue([]);
 
     const featureToggleService = {
         getFeatures,
@@ -88,12 +104,11 @@ test('if caching is not enabled all calls goes to service', t => {
     );
     controller.getAll({ query: {} }, { json: () => {} });
     controller.getAll({ query: {} }, { json: () => {} });
-    t.is(getFeatures.callCount, 2);
+    expect(getFeatures).toHaveBeenCalledTimes(2);
 });
 
-test('fetch single feature', t => {
-    t.plan(1);
-    const { request, featureToggleStore, base } = getSetup();
+test('fetch single feature', () => {
+    expect.assertions(1);
     featureToggleStore.createFeature({
         name: 'test_',
         strategies: [{ name: 'default' }],
@@ -104,13 +119,12 @@ test('fetch single feature', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.name === 'test_');
+            expect(res.body.name === 'test_').toBe(true);
         });
 });
 
-test('support name prefix', t => {
-    t.plan(2);
-    const { request, featureToggleStore, base } = getSetup();
+test('support name prefix', () => {
+    expect.assertions(2);
     featureToggleStore.createFeature({ name: 'a_test1' });
     featureToggleStore.createFeature({ name: 'a_test2' });
     featureToggleStore.createFeature({ name: 'b_test1' });
@@ -123,14 +137,13 @@ test('support name prefix', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.features.length, 2);
-            t.is(res.body.features[1].name, 'b_test2');
+            expect(res.body.features.length).toBe(2);
+            expect(res.body.features[1].name).toBe('b_test2');
         });
 });
 
-test('support filtering on project', t => {
-    t.plan(2);
-    const { request, featureToggleStore, base } = getSetup();
+test('support filtering on project', () => {
+    expect.assertions(2);
     featureToggleStore.createFeature({ name: 'a_test1', project: 'projecta' });
     featureToggleStore.createFeature({ name: 'b_test2', project: 'projectb' });
     return request
@@ -138,7 +151,7 @@ test('support filtering on project', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.features.length, 1);
-            t.is(res.body.features[0].name, 'a_test1');
+            expect(res.body.features.length).toBe(1);
+            expect(res.body.features[0].name).toBe('a_test1');
         });
 });

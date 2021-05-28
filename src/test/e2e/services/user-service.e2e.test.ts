@@ -1,10 +1,8 @@
-import test from 'ava';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import UserService from '../../../lib/services/user-service';
 import { AccessService, RoleName } from '../../../lib/services/access-service';
 import UserStore from '../../../lib/db/user-store';
-import User from '../../../lib/types/user';
 import { IRole } from '../../../lib/db/access-store';
 import ResetTokenService from '../../../lib/services/reset-token-service';
 import { EmailService } from '../../../lib/services/email-service';
@@ -19,7 +17,7 @@ let userStore: UserStore;
 let adminRole: IRole;
 let sessionService: SessionService;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
@@ -39,28 +37,32 @@ test.before(async () => {
     adminRole = rootRoles.find(r => r.name === RoleName.ADMIN);
 });
 
-test.after(async () => {
+afterAll(async () => {
     await db.destroy();
 });
 
-test.afterEach(async () => {
+afterEach(async () => {
     await userStore.deleteAll();
 });
 
-test.serial('should create initial admin user', async t => {
+test('should create initial admin user', async () => {
     await userService.initAdminUser();
-    await t.notThrowsAsync(userService.loginUser('admin', 'unleash4all'));
-    await t.throwsAsync(userService.loginUser('admin', 'wrong-password'));
+    await expect(async () =>
+        userService.loginUser('admin', 'wrong-password'),
+    ).rejects.toThrow(Error);
+    await expect(async () =>
+        userService.loginUser('admin', 'unleash4all'),
+    ).toBeTruthy();
 });
 
-test.serial('should not be allowed to create existing user', async t => {
+test('should not be allowed to create existing user', async () => {
     await userStore.insert({ username: 'test', name: 'Hans Mola' });
-    await t.throwsAsync(
+    await expect(async () =>
         userService.createUser({ username: 'test', rootRole: adminRole.id }),
-    );
+    ).rejects.toThrow(Error);
 });
 
-test.serial('should create user with password', async t => {
+test('should create user with password', async () => {
     await userService.createUser({
         username: 'test',
         password: 'A very strange P4ssw0rd_',
@@ -70,10 +72,10 @@ test.serial('should create user with password', async t => {
         'test',
         'A very strange P4ssw0rd_',
     );
-    t.is(user.username, 'test');
+    expect(user.username).toBe('test');
 });
 
-test.serial('should login for user _without_ password', async t => {
+test('should login for user _without_ password', async () => {
     const email = 'some@test.com';
     await userService.createUser({
         email,
@@ -81,10 +83,10 @@ test.serial('should login for user _without_ password', async t => {
         rootRole: adminRole.id,
     });
     const user = await userService.loginUserWithoutPassword(email);
-    t.is(user.email, email);
+    expect(user.email).toBe(email);
 });
 
-test.serial('should get user with root role', async t => {
+test('should get user with root role', async () => {
     const email = 'some@test.com';
     const u = await userService.createUser({
         email,
@@ -92,12 +94,12 @@ test.serial('should get user with root role', async t => {
         rootRole: adminRole.id,
     });
     const user = await userService.getUser(u.id);
-    t.is(user.email, email);
-    t.is(user.id, u.id);
-    t.is(user.rootRole, adminRole.id);
+    expect(user.email).toBe(email);
+    expect(user.id).toBe(u.id);
+    expect(user.rootRole).toBe(adminRole.id);
 });
 
-test.serial('should get user with root role by name', async t => {
+test('should get user with root role by name', async () => {
     const email = 'some2@test.com';
     const u = await userService.createUser({
         email,
@@ -105,12 +107,12 @@ test.serial('should get user with root role by name', async t => {
         rootRole: RoleName.ADMIN,
     });
     const user = await userService.getUser(u.id);
-    t.is(user.email, email);
-    t.is(user.id, u.id);
-    t.is(user.rootRole, adminRole.id);
+    expect(user.email).toBe(email);
+    expect(user.id).toBe(u.id);
+    expect(user.rootRole).toBe(adminRole.id);
 });
 
-test.serial(`deleting a user should delete the user's sessions`, async t => {
+test(`deleting a user should delete the user's sessions`, async () => {
     const email = 'some@test.com';
     const user = await userService.createUser({
         email,
@@ -132,12 +134,9 @@ test.serial(`deleting a user should delete the user's sessions`, async t => {
     };
     await sessionService.insertSession(testComSession);
     const userSessions = await sessionService.getSessionsForUser(user.id);
-    t.is(userSessions.length, 1);
+    expect(userSessions.length).toBe(1);
     await userService.deleteUser(user.id);
-    await t.throwsAsync(
-        async () => sessionService.getSessionsForUser(user.id),
-        {
-            instanceOf: NotFoundError,
-        },
-    );
+    await expect(async () =>
+        sessionService.getSessionsForUser(user.id),
+    ).rejects.toThrow(NotFoundError);
 });

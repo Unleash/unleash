@@ -1,11 +1,10 @@
 'use strict';
 
-import { createServices } from '../../services';
-import { createTestConfig } from '../../../test/config/test-config';
-
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
+const { createServices } = require('../../services');
+const { createTestConfig } = require('../../../test/config/test-config');
+
 const store = require('../../../test/fixtures/store');
 const getApp = require('../../app');
 
@@ -23,28 +22,43 @@ function getSetup() {
         ui: uiConfig,
     });
     const stores = store.createStores();
-    const app = getApp(
-        config,
-        stores,
-        createServices(stores, config),
-        eventBus,
-    );
+    const services = createServices(stores, config);
+
+    const app = getApp(config, stores, services, eventBus);
 
     return {
         base,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
 
-test('should get ui config', t => {
-    t.plan(2);
-    const { request, base } = getSetup();
+let request;
+let base;
+let destroy;
+
+beforeEach(() => {
+    const setup = getSetup();
+    request = setup.request;
+    base = setup.base;
+    destroy = setup.destroy;
+});
+
+afterEach(() => {
+    destroy();
+});
+test('should get ui config', () => {
+    expect.assertions(2);
     return request
         .get(`${base}/api/admin/ui-config`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.slogan === 'hello');
-            t.true(res.body.headerBackground === 'red');
+            expect(res.body.slogan === 'hello').toBe(true);
+            expect(res.body.headerBackground === 'red').toBe(true);
         });
 });

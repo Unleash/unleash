@@ -1,26 +1,27 @@
 'use strict';
 
-import { createTestConfig } from '../test/config/test-config';
-
-const test = require('ava');
 const express = require('express');
-const proxyquire = require('proxyquire');
+const { createTestConfig } = require('../test/config/test-config');
 
-const getApp = proxyquire('./app', {
-    './routes': class Index {
-        router() {
-            return express.Router();
-        }
-    },
-});
+jest.mock(
+    './routes',
+    () =>
+        class Index {
+            router() {
+                return express.Router();
+            }
+        },
+);
 
-test('should not throw when valid config', t => {
+const getApp = require('./app');
+
+test('should not throw when valid config', () => {
     const config = createTestConfig();
     const app = getApp(config, {}, {});
-    t.true(typeof app.listen === 'function');
+    expect(typeof app.listen).toBe('function');
 });
 
-test('should call preHook', t => {
+test('should call preHook', () => {
     let called = 0;
     const config = createTestConfig({
         preHook: () => {
@@ -28,10 +29,10 @@ test('should call preHook', t => {
         },
     });
     getApp(config, {}, {});
-    t.true(called === 1);
+    expect(called).toBe(1);
 });
 
-test('should call preRouterHook', t => {
+test('should call preRouterHook', () => {
     let called = 0;
     const config = createTestConfig({
         preRouterHook: () => {
@@ -39,5 +40,5 @@ test('should call preRouterHook', t => {
         },
     });
     getApp(config, {}, {});
-    t.true(called === 1);
+    expect(called).toBe(1);
 });

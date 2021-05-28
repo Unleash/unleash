@@ -67,8 +67,13 @@ module.exports = class ClientMetricsService {
             });
         });
         this.seenClients = {};
-        setInterval(() => this.bulkAdd(), bulkInterval);
-        setInterval(() => this.announceUnannounced(), appAnnouncementInterval);
+        this.bulkAddTimer = setInterval(() => this.bulkAdd(), bulkInterval);
+        this.bulkAddTimer.unref();
+        this.announceTimer = setInterval(
+            () => this.announceUnannounced(),
+            appAnnouncementInterval,
+        );
+        this.announceTimer.unref();
         clientMetricsStore.on('metrics', m => this.addPayload(m));
     }
 
@@ -86,14 +91,18 @@ module.exports = class ClientMetricsService {
 
     async announceUnannounced() {
         if (this.clientAppStore) {
-            const appsToAnnounce = await this.clientAppStore.setUnannouncedToAnnounced();
-            if (appsToAnnounce.length > 0) {
-                const events = appsToAnnounce.map(app => ({
-                    type: APPLICATION_CREATED,
-                    createdBy: app.createdBy || 'unknown',
-                    data: app,
-                }));
-                await this.eventStore.batchStore(events);
+            try {
+                const appsToAnnounce = await this.clientAppStore.setUnannouncedToAnnounced();
+                if (appsToAnnounce.length > 0) {
+                    const events = appsToAnnounce.map(app => ({
+                        type: APPLICATION_CREATED,
+                        createdBy: app.createdBy || 'unknown',
+                        data: app,
+                    }));
+                    await this.eventStore.batchStore(events);
+                }
+            } catch (e) {
+                this.logger.warn(e);
             }
         }
     }
@@ -315,5 +324,7 @@ module.exports = class ClientMetricsService {
     destroy() {
         this.lastHourList.destroy();
         this.lastMinuteList.destroy();
+        clearInterval(this.announceTimer);
+        clearInterval(this.bulkAddTimer);
     }
 };

@@ -1,12 +1,12 @@
-'use strict';
-
-const { EventEmitter } = require('events');
-const migrator = require('../../../migrator');
-const { createStores } = require('../../../lib/db');
-const { createDb } = require('../../../lib/db/db-pool');
-const dbConfig = require('./database-config');
-const { createTestConfig } = require('../../config/test-config');
-const dbState = require('./database.json');
+import { EventEmitter } from 'events';
+import migrator from '../../../migrator';
+import { createStores } from '../../../lib/db';
+import { createDb } from '../../../lib/db/db-pool';
+import dbConfig from './database-config';
+import { createTestConfig } from '../../config/test-config';
+import dbState from './database.json';
+import { LogProvider } from '../../../lib/logger';
+import noLoggerProvider from '../../fixtures/no-logger';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -82,7 +82,10 @@ async function setupDatabase(stores) {
     await tagFeatures(stores.tagStore, stores.featureToggleStore);
 }
 
-export default async function init(databaseSchema = 'test', getLogger) {
+export default async function init(
+    databaseSchema: String = 'test',
+    getLogger: LogProvider = noLoggerProvider,
+): Promise<any> {
     const config = createTestConfig({
         db: {
             ...dbConfig.getDb(),
@@ -98,6 +101,7 @@ export default async function init(databaseSchema = 'test', getLogger) {
 
     await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
     await db.raw(`CREATE SCHEMA IF NOT EXISTS ${config.db.schema}`);
+    // @ts-ignore
     await migrator({ ...config, databaseSchema: config.db.schema });
     await db.destroy();
     const stores = await createStores(config, eventBus);
@@ -114,7 +118,7 @@ export default async function init(databaseSchema = 'test', getLogger) {
         },
         destroy: async () => {
             const { clientInstanceStore, clientMetricsStore } = stores;
-            return new Promise((resolve, reject) => {
+            return new Promise<void>((resolve, reject) => {
                 clientInstanceStore.destroy();
                 clientMetricsStore.destroy();
                 stores.db.destroy(error => (error ? reject(error) : resolve()));

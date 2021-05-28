@@ -1,10 +1,8 @@
 'use strict';
 
-import { createTestConfig } from '../../../test/config/test-config';
-
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
+const { createTestConfig } = require('../../../test/config/test-config');
 const store = require('../../../test/fixtures/store');
 const { createServices } = require('../../services');
 const permissions = require('../../../test/fixtures/permissions');
@@ -27,39 +25,55 @@ function getSetup() {
     return {
         base,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
 
-test('should get all context definitions', t => {
-    t.plan(2);
-    const { request, base } = getSetup();
+let base;
+let request;
+let destroy;
+
+beforeEach(() => {
+    const setup = getSetup();
+    base = setup.base;
+    request = setup.request;
+    destroy = setup.destroy;
+});
+
+afterEach(async () => {
+    await destroy();
+});
+
+test('should get all context definitions', () => {
+    expect.assertions(2);
     return request
         .get(`${base}/api/admin/context`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.length === 3);
+            expect(res.body.length === 3).toBe(true);
             const envField = res.body.find(c => c.name === 'environment');
-            t.true(envField.name === 'environment');
+            expect(envField.name === 'environment').toBe(true);
         });
 });
 
-test('should get context definition', t => {
-    t.plan(1);
-    const { request, base } = getSetup();
+test('should get context definition', () => {
+    expect.assertions(1);
     return request
         .get(`${base}/api/admin/context/userId`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.name, 'userId');
+            expect(res.body.name).toBe('userId');
         });
 });
 
-test('should be allowed to use new context field name', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
-
+test('should be allowed to use new context field name', () => {
+    expect.assertions(0);
     return request
         .post(`${base}/api/admin/context/validate`)
         .send({ name: 'new.name' })
@@ -67,9 +81,8 @@ test('should be allowed to use new context field name', t => {
         .expect(200);
 });
 
-test('should not be allowed reuse context field name', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
+test('should not be allowed reuse context field name', () => {
+    expect.assertions(0);
 
     return request
         .post(`${base}/api/admin/context/validate`)
@@ -78,9 +91,8 @@ test('should not be allowed reuse context field name', t => {
         .expect(409);
 });
 
-test('should create a context field', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
+test('should create a context field', () => {
+    expect.assertions(0);
 
     return request
         .post(`${base}/api/admin/context`)
@@ -89,10 +101,8 @@ test('should create a context field', t => {
         .expect(201);
 });
 
-test('should create a context field with legal values', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
-
+test('should create a context field with legal values', () => {
+    expect.assertions(0);
     return request
         .post(`${base}/api/admin/context`)
         .send({
@@ -104,9 +114,8 @@ test('should create a context field with legal values', t => {
         .expect(201);
 });
 
-test('should require name when creating a context field', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
+test('should require name when creating a context field', () => {
+    expect.assertions(0);
 
     return request
         .post(`${base}/api/admin/context`)
@@ -115,9 +124,8 @@ test('should require name when creating a context field', t => {
         .expect(400);
 });
 
-test('should not create a context field with existing name', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
+test('should not create a context field with existing name', () => {
+    expect.assertions(0);
 
     return request
         .post(`${base}/api/admin/context`)
@@ -126,9 +134,8 @@ test('should not create a context field with existing name', t => {
         .expect(409);
 });
 
-test('should not create a context field with duplicate legal values', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
+test('should not create a context field with duplicate legal values', () => {
+    expect.assertions(0);
 
     return request
         .post(`${base}/api/admin/context`)
@@ -141,9 +148,8 @@ test('should not create a context field with duplicate legal values', t => {
         .expect(400);
 });
 
-test('should update a context field with new legal values', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
+test('should update a context field with new legal values', () => {
+    expect.assertions(0);
 
     return request
         .put(`${base}/api/admin/context/environment`)
@@ -156,9 +162,8 @@ test('should update a context field with new legal values', t => {
         .expect(200);
 });
 
-test('should not delete a unknown context field', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
+test('should not delete a unknown context field', () => {
+    expect.assertions(0);
 
     return request
         .delete(`${base}/api/admin/context/unknown`)
@@ -166,9 +171,8 @@ test('should not delete a unknown context field', t => {
         .expect(404);
 });
 
-test('should delete a context field', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
+test('should delete a context field', () => {
+    expect.assertions(0);
 
     return request
         .delete(`${base}/api/admin/context/appName`)

@@ -1,8 +1,7 @@
-import test from 'ava';
 import { EmailService, TransporterType } from './email-service';
 import noLoggerProvider from '../../test/fixtures/no-logger';
 
-test('Can send reset email', async t => {
+test('Can send reset email', async () => {
     const emailService = new EmailService(
         {
             host: 'test',
@@ -22,13 +21,13 @@ test('Can send reset email', async t => {
         'test@resetLinkUrl.com',
         resetLinkUrl,
     );
-    t.is(content.from, 'noreply@getunleash.ai');
-    t.is(content.subject, 'Unleash - Reset your password');
-    t.true(content.html.includes(resetLinkUrl));
-    t.true(content.text.includes(resetLinkUrl));
+    expect(content.from).toBe('noreply@getunleash.ai');
+    expect(content.subject).toBe('Unleash - Reset your password');
+    expect(content.html.includes(resetLinkUrl)).toBe(true);
+    expect(content.text.includes(resetLinkUrl)).toBe(true);
 });
 
-test('Can send welcome mail', async t => {
+test('Can send welcome mail', async () => {
     const emailService = new EmailService(
         {
             host: 'test',
@@ -45,6 +44,6 @@ test('Can send welcome mail', async t => {
         'test@test.com',
         'abc123456',
     );
-    t.is(content.from, 'noreply@getunleash.ai');
-    t.is(content.subject, 'Welcome to Unleash');
+    expect(content.from).toBe('noreply@getunleash.ai');
+    expect(content.subject).toBe('Welcome to Unleash');
 });

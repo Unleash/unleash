@@ -1,10 +1,8 @@
 'use strict';
 
-import { createTestConfig } from '../../test/config/test-config';
-
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
+const { createTestConfig } = require('../../test/config/test-config');
 const store = require('../../test/fixtures/store');
 const getApp = require('../app');
 const { createServices } = require('../services');
@@ -23,52 +21,72 @@ function getSetup() {
     return {
         base,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
 
-test('api defintion', t => {
-    t.plan(5);
-    const { request, base } = getSetup();
+let base;
+let request;
+let destroy;
+beforeEach(() => {
+    const setup = getSetup();
+    base = setup.base;
+    request = setup.request;
+    destroy = setup.destroy;
+});
+
+afterEach(() => {
+    destroy();
+});
+
+test('api defintion', () => {
+    expect.assertions(5);
     return request
         .get(`${base}/api/`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.truthy(res.body);
+            expect(res.body).toBeTruthy();
             const { admin, client } = res.body.links;
-            t.true(admin.uri === '/api/admin');
-            t.true(client.uri === '/api/client');
-            t.true(
+            expect(admin.uri === '/api/admin').toBe(true);
+            expect(client.uri === '/api/client').toBe(true);
+            expect(
                 admin.links['feature-toggles'].uri === '/api/admin/features',
+            ).toBe(true);
+            expect(client.links.metrics.uri === '/api/client/metrics').toBe(
+                true,
             );
-            t.true(client.links.metrics.uri === '/api/client/metrics');
         });
 });
 
-test('admin api defintion', t => {
-    t.plan(2);
-    const { request, base } = getSetup();
+test('admin api defintion', () => {
+    expect.assertions(2);
     return request
         .get(`${base}/api/admin`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.truthy(res.body);
-            t.true(
+            expect(res.body).toBeTruthy();
+            expect(
                 res.body.links['feature-toggles'].uri === '/api/admin/features',
-            );
+            ).toBe(true);
         });
 });
 
-test('client api defintion', t => {
-    t.plan(2);
-    const { request, base } = getSetup();
+test('client api defintion', () => {
+    expect.assertions(2);
     return request
         .get(`${base}/api/client`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.truthy(res.body);
-            t.true(res.body.links.metrics.uri === '/api/client/metrics');
+            expect(res.body).toBeTruthy();
+            expect(res.body.links.metrics.uri === '/api/client/metrics').toBe(
+                true,
+            );
         });
 });

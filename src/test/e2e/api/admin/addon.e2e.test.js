@@ -1,51 +1,48 @@
 'use strict';
 
-const test = require('ava');
-
 const dbInit = require('../../helpers/database-init');
 const { setupApp } = require('../../helpers/test-helper');
 const getLogger = require('../../../fixtures/no-logger');
 
 const MASKED_VALUE = '*****';
 
-let stores;
+let app;
 let db;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('addon_api_serial', getLogger);
-    stores = db.stores;
+    app = await setupApp(db.stores);
 });
 
-test.after.always(async () => {
+afterAll(async () => {
+    await app.destroy();
     await db.destroy();
 });
 
-test.serial('gets all addons', async t => {
-    t.plan(3);
-    const request = await setupApp(stores);
-    return request
+test('gets all addons', async () => {
+    expect.assertions(3);
+
+    return app.request
         .get('/api/admin/addons')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.addons.length, 0, 'expected 0 configured addons');
-            t.is(res.body.providers.length, 4, 'expected 4 addon providers');
-            t.is(res.body.providers[0].name, 'webhook');
+            expect(res.body.addons.length).toBe(0);
+            expect(res.body.providers.length).toBe(4);
+            expect(res.body.providers[0].name).toBe('webhook');
         });
 });
 
-test.serial('should not be able to create invalid addon', async t => {
-    t.plan(0);
-    const request = await setupApp(stores);
-    return request
+test('should not be able to create invalid addon', async () => {
+    expect.assertions(0);
+    return app.request
         .post('/api/admin/addons')
         .send({ invalid: 'field' })
         .expect(400);
 });
 
-test.serial('should create addon configuration', async t => {
-    t.plan(0);
-    const request = await setupApp(stores);
+test('should create addon configuration', async () => {
+    expect.assertions(0);
 
     const config = {
         provider: 'webhook',
@@ -57,15 +54,14 @@ test.serial('should create addon configuration', async t => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    return request
+    return app.request
         .post('/api/admin/addons')
         .send(config)
         .expect(201);
 });
 
-test.serial('should delete addon configuration', async t => {
-    t.plan(0);
-    const request = await setupApp(stores);
+test('should delete addon configuration', async () => {
+    expect.assertions(0);
 
     const config = {
         provider: 'webhook',
@@ -77,18 +73,17 @@ test.serial('should delete addon configuration', async t => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    const res = await request
+    const res = await app.request
         .post('/api/admin/addons')
         .send(config)
         .expect(201);
 
     const { id } = res.body;
-    await request.delete(`/api/admin/addons/${id}`).expect(200);
+    await app.request.delete(`/api/admin/addons/${id}`).expect(200);
 });
 
-test.serial('should update addon configuration', async t => {
-    t.plan(2);
-    const request = await setupApp(stores);
+test('should update addon configuration', async () => {
+    expect.assertions(2);
 
     const config = {
         provider: 'webhook',
@@ -100,7 +95,7 @@ test.serial('should update addon configuration', async t => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    const res = await request
+    const res = await app.request
         .post('/api/admin/addons')
         .send(config)
         .expect(201);
@@ -115,27 +110,25 @@ test.serial('should update addon configuration', async t => {
         ...config,
     };
 
-    await request
+    await app.request
         .put(`/api/admin/addons/${id}`)
         .send(updatedConfig)
         .expect(200);
 
-    return request
+    return app.request
         .get(`/api/admin/addons/${id}`)
         .send(config)
         .expect(200)
         .expect(r => {
-            t.is(r.body.parameters.url, MASKED_VALUE);
-            t.is(
-                r.body.parameters.bodyTemplate,
+            expect(r.body.parameters.url).toBe(MASKED_VALUE);
+            expect(r.body.parameters.bodyTemplate).toBe(
                 updatedConfig.parameters.bodyTemplate,
             );
         });
 });
 
-test.serial('should not update with invalid addon configuration', async t => {
-    t.plan(0);
-    const request = await setupApp(stores);
+test('should not update with invalid addon configuration', async () => {
+    expect.assertions(0);
 
     const config = {
         enabled: true,
@@ -146,15 +139,14 @@ test.serial('should not update with invalid addon configuration', async t => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    await request
+    await app.request
         .put('/api/admin/addons/1')
         .send(config)
         .expect(400);
 });
 
-test.serial('should not update unknown addon configuration', async t => {
-    t.plan(0);
-    const request = await setupApp(stores);
+test('should not update unknown addon configuration', async () => {
+    expect.assertions(0);
 
     const config = {
         provider: 'webhook',
@@ -166,15 +158,14 @@ test.serial('should not update unknown addon configuration', async t => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    await request
+    await app.request
         .put('/api/admin/addons/123123')
         .send(config)
         .expect(404);
 });
 
-test.serial('should get addon configuration', async t => {
-    t.plan(3);
-    const request = await setupApp(stores);
+test('should get addon configuration', async () => {
+    expect.assertions(3);
 
     const config = {
         provider: 'webhook',
@@ -186,36 +177,33 @@ test.serial('should get addon configuration', async t => {
         events: ['feature-updated', 'feature-created'],
     };
 
-    const res = await request
+    const res = await app.request
         .post('/api/admin/addons')
         .send(config)
         .expect(201);
 
     const { id } = res.body;
 
-    await request
+    await app.request
         .get(`/api/admin/addons/${id}`)
         .expect(200)
         .expect(r => {
-            t.is(r.body.provider, config.provider);
-            t.is(
-                r.body.parameters.bodyTemplate,
+            expect(r.body.provider).toBe(config.provider);
+            expect(r.body.parameters.bodyTemplate).toBe(
                 config.parameters.bodyTemplate,
             );
-            t.is(r.body.parameters.url, MASKED_VALUE);
+            expect(r.body.parameters.url).toBe(MASKED_VALUE);
         });
 });
 
-test.serial('should not get unknown addon configuration', async t => {
-    t.plan(0);
-    const request = await setupApp(stores);
+test('should not get unknown addon configuration', async () => {
+    expect.assertions(0);
 
-    await request.get('/api/admin/addons/445').expect(404);
+    await app.request.get('/api/admin/addons/445').expect(404);
 });
 
-test.serial('should not delete unknown addon configuration', async t => {
-    t.plan(0);
-    const request = await setupApp(stores);
+test('should not delete unknown addon configuration', async () => {
+    expect.assertions(0);
 
-    return request.delete('/api/admin/addons/21231').expect(404);
+    return app.request.delete('/api/admin/addons/21231').expect(404);
 });

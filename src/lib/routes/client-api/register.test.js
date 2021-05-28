@@ -1,10 +1,8 @@
 'use strict';
 
-import { createTestConfig } from '../../../test/config/test-config';
-
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
+const { createTestConfig } = require('../../../test/config/test-config');
 const store = require('../../../test/fixtures/store');
 const getLogger = require('../../../test/fixtures/no-logger');
 const getApp = require('../../app');
@@ -21,16 +19,27 @@ function getSetup() {
     return {
         request: supertest(app),
         stores,
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
-
-test.afterEach(() => {
+let request;
+let destroy;
+beforeEach(() => {
+    const setup = getSetup();
+    request = setup.request;
+    destroy = setup.destroy;
+});
+afterEach(() => {
+    destroy();
     getLogger.setMuteError(false);
 });
 
-test('should register client', t => {
-    t.plan(0);
-    const { request } = getSetup();
+test('should register client', () => {
+    expect.assertions(0);
     return request
         .post('/api/client/register')
         .send({
@@ -44,9 +53,8 @@ test('should register client', t => {
         .expect(202);
 });
 
-test('should register client without sdkVersion', t => {
-    t.plan(0);
-    const { request } = getSetup();
+test('should register client without sdkVersion', () => {
+    expect.assertions(0);
     return request
         .post('/api/client/register')
         .send({
@@ -59,18 +67,16 @@ test('should register client without sdkVersion', t => {
         .expect(202);
 });
 
-test('should require appName field', t => {
-    t.plan(0);
-    const { request } = getSetup();
+test('should require appName field', () => {
+    expect.assertions(0);
     return request
         .post('/api/client/register')
         .set('Content-Type', 'application/json')
         .expect(400);
 });
 
-test('should require strategies field', t => {
-    t.plan(0);
-    const { request } = getSetup();
+test('should require strategies field', () => {
+    expect.assertions(0);
     return request
         .post('/api/client/register')
         .send({

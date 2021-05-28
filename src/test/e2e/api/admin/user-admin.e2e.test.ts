@@ -1,8 +1,6 @@
-import test from 'ava';
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import User from '../../../../lib/types/user';
 import UserStore from '../../../../lib/db/user-store';
 import { AccessStore, IRole } from '../../../../lib/db/access-store';
 import { RoleName } from '../../../../lib/services/access-service';
@@ -15,6 +13,7 @@ import {
 
 let stores;
 let db;
+let app;
 
 let userStore: UserStore;
 let eventStore: EventStore;
@@ -22,9 +21,11 @@ let accessStore: AccessStore;
 let editorRole: IRole;
 let adminRole: IRole;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('user_admin_api_serial', getLogger);
     stores = db.stores;
+    app = await setupApp(stores);
+
     userStore = stores.userStore;
     accessStore = stores.accessStore;
     eventStore = stores.eventStore;
@@ -33,32 +34,32 @@ test.before(async () => {
     adminRole = roles.find(r => r.name === RoleName.ADMIN);
 });
 
-test.after.always(async () => {
+afterAll(async () => {
+    await app.destroy();
     await db.destroy();
 });
 
-test.afterEach.always(async () => {
+afterEach(async () => {
     await userStore.deleteAll();
 });
 
-test.serial('returns empty list of users', async t => {
-    t.plan(1);
-    const request = await setupApp(stores);
-    return request
+test('returns empty list of users', async () => {
+    expect.assertions(1);
+
+    return app.request
         .get('/api/admin/user-admin')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.users.length, 0);
+            expect(res.body.users.length).toBe(0);
         });
 });
 
-test.serial('creates and returns all users', async t => {
-    t.plan(2);
-    const request = await setupApp(stores);
+test('creates and returns all users', async () => {
+    expect.assertions(2);
 
     const createUserRequests = [...Array(20).keys()].map(i =>
-        request
+        app.request
             .post('/api/admin/user-admin')
             .send({
                 email: `some${i}@getunleash.ai`,
@@ -70,20 +71,20 @@ test.serial('creates and returns all users', async t => {
 
     await Promise.all(createUserRequests);
 
-    return request
+    return app.request
         .get('/api/admin/user-admin')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.users.length, 20);
-            t.is(res.body.users[2].rootRole, editorRole.id);
+            expect(res.body.users.length).toBe(20);
+            expect(res.body.users[2].rootRole).toBe(editorRole.id);
         });
 });
 
-test.serial('creates editor-user without password', async t => {
-    t.plan(3);
-    const request = await setupApp(stores);
-    return request
+test('creates editor-user without password', async () => {
+    expect.assertions(3);
+
+    return app.request
         .post('/api/admin/user-admin')
         .send({
             email: 'some@getunelash.ai',
@@ -93,16 +94,16 @@ test.serial('creates editor-user without password', async t => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            t.is(res.body.email, 'some@getunelash.ai');
-            t.is(res.body.rootRole, editorRole.id);
-            t.truthy(res.body.id);
+            expect(res.body.email).toBe('some@getunelash.ai');
+            expect(res.body.rootRole).toBe(editorRole.id);
+            expect(res.body.id).toBeTruthy();
         });
 });
 
-test.serial('creates admin-user with password', async t => {
-    t.plan(6);
-    const request = await setupApp(stores);
-    const { body } = await request
+test('creates admin-user with password', async () => {
+    expect.assertions(6);
+
+    const { body } = await app.request
         .post('/api/admin/user-admin')
         .send({
             email: 'some@getunelash.ai',
@@ -113,24 +114,24 @@ test.serial('creates admin-user with password', async t => {
         .set('Content-Type', 'application/json')
         .expect(201);
 
-    t.is(body.rootRole, adminRole.id);
+    expect(body.rootRole).toBe(adminRole.id);
 
     const user = await userStore.get({ id: body.id });
-    t.is(user.email, 'some@getunelash.ai');
-    t.is(user.name, 'Some Name');
+    expect(user.email).toBe('some@getunelash.ai');
+    expect(user.name).toBe('Some Name');
 
     const passwordHash = userStore.getPasswordHash(body.id);
-    t.truthy(passwordHash);
+    expect(passwordHash).toBeTruthy();
 
     const roles = await stores.accessStore.getRolesForUserId(body.id);
-    t.is(roles.length, 1);
-    t.is(roles[0].name, RoleName.ADMIN);
+    expect(roles.length).toBe(1);
+    expect(roles[0].name).toBe(RoleName.ADMIN);
 });
 
-test.serial('requires known root role', async t => {
-    t.plan(0);
-    const request = await setupApp(stores);
-    return request
+test('requires known root role', async () => {
+    expect.assertions(0);
+
+    return app.request
         .post('/api/admin/user-admin')
         .send({
             email: 'some@getunelash.ai',
@@ -141,10 +142,10 @@ test.serial('requires known root role', async t => {
         .expect(400);
 });
 
-test.serial('update user name', async t => {
-    t.plan(3);
-    const request = await setupApp(stores);
-    const { body } = await request
+test('update user name', async () => {
+    expect.assertions(3);
+
+    const { body } = await app.request
         .post('/api/admin/user-admin')
         .send({
             email: 'some@getunelash.ai',
@@ -153,7 +154,7 @@ test.serial('update user name', async t => {
         })
         .set('Content-Type', 'application/json');
 
-    return request
+    return app.request
         .put(`/api/admin/user-admin/${body.id}`)
         .send({
             name: 'New name',
@@ -161,100 +162,94 @@ test.serial('update user name', async t => {
         .set('Content-Type', 'application/json')
         .expect(200)
         .expect(res => {
-            t.is(res.body.email, 'some@getunelash.ai');
-            t.is(res.body.name, 'New name');
-            t.is(res.body.id, body.id);
+            expect(res.body.email).toBe('some@getunelash.ai');
+            expect(res.body.name).toBe('New name');
+            expect(res.body.id).toBe(body.id);
         });
 });
 
-test.serial('should delete user', async t => {
-    t.plan(0);
+test('should delete user', async () => {
+    expect.assertions(0);
 
     const user = await userStore.insert({ email: 'some@mail.com' });
 
-    const request = await setupApp(stores);
-    return request.delete(`/api/admin/user-admin/${user.id}`).expect(200);
+    return app.request.delete(`/api/admin/user-admin/${user.id}`).expect(200);
 });
 
-test.serial('validator should require strong password', async t => {
-    t.plan(0);
+test('validator should require strong password', async () => {
+    expect.assertions(0);
 
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/user-admin/validate-password')
         .send({ password: 'simple' })
         .expect(400);
 });
 
-test.serial('validator should accept strong password', async t => {
-    t.plan(0);
+test('validator should accept strong password', async () => {
+    expect.assertions(0);
 
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post('/api/admin/user-admin/validate-password')
         .send({ password: 'simple123-_ASsad' })
         .expect(200);
 });
 
-test.serial('should change password', async t => {
-    t.plan(0);
+test('should change password', async () => {
+    expect.assertions(0);
 
     const user = await userStore.insert({ email: 'some@mail.com' });
 
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .post(`/api/admin/user-admin/${user.id}/change-password`)
         .send({ password: 'simple123-_ASsad' })
         .expect(200);
 });
 
-test.serial('should search for users', async t => {
-    t.plan(2);
+test('should search for users', async () => {
+    expect.assertions(2);
 
     await userStore.insert({ email: 'some@mail.com' });
     await userStore.insert({ email: 'another@mail.com' });
     await userStore.insert({ email: 'another2@mail.com' });
 
-    const request = await setupApp(stores);
-    return request
+    return app.request
         .get('/api/admin/user-admin/search?q=another')
         .expect(200)
         .expect(res => {
-            t.is(res.body.length, 2);
-            t.true(res.body.some(u => u.email === 'another@mail.com'));
+            expect(res.body.length).toBe(2);
+            expect(res.body.some(u => u.email === 'another@mail.com')).toBe(
+                true,
+            );
         });
 });
 
-test.serial(
-    'Creates a user and includes inviteLink and emailConfigured',
-    async t => {
-        t.plan(5);
-        const request = await setupApp(stores);
-        return request
-            .post('/api/admin/user-admin')
-            .send({
-                email: 'some@getunelash.ai',
-                name: 'Some Name',
-                rootRole: editorRole.id,
-            })
-            .set('Content-Type', 'application/json')
-            .expect(201)
-            .expect(res => {
-                t.is(res.body.email, 'some@getunelash.ai');
-                t.is(res.body.rootRole, editorRole.id);
-                t.truthy(res.body.inviteLink);
-                t.falsy(res.body.emailSent);
-                t.truthy(res.body.id);
-            });
-    },
-);
+test('Creates a user and includes inviteLink and emailConfigured', async () => {
+    expect.assertions(5);
 
-test.serial('generates USER_CREATED event', async t => {
-    t.plan(5);
+    return app.request
+        .post('/api/admin/user-admin')
+        .send({
+            email: 'some@getunelash.ai',
+            name: 'Some Name',
+            rootRole: editorRole.id,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect(res => {
+            expect(res.body.email).toBe('some@getunelash.ai');
+            expect(res.body.rootRole).toBe(editorRole.id);
+            expect(res.body.inviteLink).toBeTruthy();
+            expect(res.body.emailSent).toBeFalsy();
+            expect(res.body.id).toBeTruthy();
+        });
+});
+
+test('generates USER_CREATED event', async () => {
+    expect.assertions(5);
     const email = 'some@getunelash.ai';
     const name = 'Some Name';
-    const request = await setupApp(stores);
-    const { body } = await request
+
+    const { body } = await app.request
         .post('/api/admin/user-admin')
         .send({
             email,
@@ -267,30 +262,29 @@ test.serial('generates USER_CREATED event', async t => {
 
     const events = await eventStore.getEvents();
 
-    t.is(events[0].type, USER_CREATED);
-    t.is(events[0].data.email, email);
-    t.is(events[0].data.name, name);
-    t.is(events[0].data.id, body.id);
-    t.falsy(events[0].data.password);
+    expect(events[0].type).toBe(USER_CREATED);
+    expect(events[0].data.email).toBe(email);
+    expect(events[0].data.name).toBe(name);
+    expect(events[0].data.id).toBe(body.id);
+    expect(events[0].data.password).toBeFalsy();
 });
 
-test.serial('generates USER_DELETED event', async t => {
-    t.plan(3);
-    const request = await setupApp(stores);
+test('generates USER_DELETED event', async () => {
+    expect.assertions(3);
 
     const user = await userStore.insert({ email: 'some@mail.com' });
-    await request.delete(`/api/admin/user-admin/${user.id}`);
+    await app.request.delete(`/api/admin/user-admin/${user.id}`);
 
     const events = await eventStore.getEvents();
-    t.is(events[0].type, USER_DELETED);
-    t.is(events[0].data.id, user.id);
-    t.is(events[0].data.email, user.email);
+    expect(events[0].type).toBe(USER_DELETED);
+    expect(events[0].data.id).toBe(user.id);
+    expect(events[0].data.email).toBe(user.email);
 });
 
-test.serial('generates USER_UPDATED event', async t => {
-    t.plan(3);
-    const request = await setupApp(stores);
-    const { body } = await request
+test('generates USER_UPDATED event', async () => {
+    expect.assertions(3);
+
+    const { body } = await app.request
         .post('/api/admin/user-admin')
         .send({
             email: 'some@getunelash.ai',
@@ -299,7 +293,7 @@ test.serial('generates USER_UPDATED event', async t => {
         })
         .set('Content-Type', 'application/json');
 
-    await request
+    await app.request
         .put(`/api/admin/user-admin/${body.id}`)
         .send({
             name: 'New name',
@@ -307,7 +301,7 @@ test.serial('generates USER_UPDATED event', async t => {
         .set('Content-Type', 'application/json');
 
     const events = await eventStore.getEvents();
-    t.is(events[0].type, USER_UPDATED);
-    t.is(events[0].data.id, body.id);
-    t.is(events[0].data.name, 'New name');
+    expect(events[0].type).toBe(USER_UPDATED);
+    expect(events[0].data.id).toBe(body.id);
+    expect(events[0].data.name).toBe('New name');
 });

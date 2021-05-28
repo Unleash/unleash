@@ -26,33 +26,38 @@ function createApp(
         ...customOptions,
     });
     const services = createServices(stores, config);
+
+    const app = getApp(config, stores, services);
+    const request = supertest.agent(app);
+
+    const destroy = async () => {
+        services.versionService.destroy();
+        services.clientMetricsService.destroy();
+        services.apiTokenService.destroy();
+    };
+
     // TODO: use create from server-impl instead?
-    return getApp(config, stores, services);
+    return { request, destroy };
 }
 
 module.exports = {
     async setupApp(stores) {
-        const app = createApp(stores);
-        return supertest.agent(app);
+        return createApp(stores);
     },
 
     async setupAppWithAuth(stores) {
-        const app = createApp(stores, IAuthType.DEMO);
-        return supertest.agent(app);
+        return createApp(stores, IAuthType.DEMO);
     },
 
     async setupAppWithCustomAuth(stores, preHook) {
-        const app = createApp(stores, IAuthType.CUSTOM, preHook);
-        return supertest.agent(app);
+        return createApp(stores, IAuthType.CUSTOM, preHook);
     },
     async setupAppWithBaseUrl(stores) {
-        const app = createApp(stores, undefined, undefined, {
+        return createApp(stores, undefined, undefined, {
             server: {
                 unleashUrl: 'http://localhost:4242',
                 basePathUri: '/hosted',
             },
         });
-
-        return supertest.agent(app);
     },
 };

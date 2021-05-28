@@ -1,4 +1,3 @@
-const test = require('ava');
 const dbInit = require('../helpers/database-init');
 const getLogger = require('../../fixtures/no-logger');
 const ProjectService = require('../../../lib/services/project-service');
@@ -16,7 +15,7 @@ let projectService;
 let accessService;
 let user;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
     user = await stores.userStore.insert({
@@ -28,17 +27,17 @@ test.before(async () => {
     projectService = new ProjectService(stores, config, accessService);
 });
 
-test.after(async () => {
+afterAll(async () => {
     await db.destroy();
 });
 
-test.serial('should have default project', async t => {
+test('should have default project', async () => {
     const project = await projectService.getProject('default');
-    t.assert(project);
-    t.is(project.id, 'default');
+    expect(project).toBeDefined();
+    expect(project.id).toBe('default');
 });
 
-test.serial('should list all projects', async t => {
+test('should list all projects', async () => {
     const project = {
         id: 'test-list',
         name: 'New project',
@@ -47,10 +46,10 @@ test.serial('should list all projects', async t => {
 
     await projectService.createProject(project, user);
     const projects = await projectService.getProjects();
-    t.is(projects.length, 2);
+    expect(projects.length).toBe(2);
 });
 
-test.serial('should create new project', async t => {
+test('should create new project', async () => {
     const project = {
         id: 'test',
         name: 'New project',
@@ -59,13 +58,13 @@ test.serial('should create new project', async t => {
 
     await projectService.createProject(project, user);
     const ret = await projectService.getProject('test');
-    t.deepEqual(project.id, ret.id);
-    t.deepEqual(project.name, ret.name);
-    t.deepEqual(project.description, ret.description);
-    t.truthy(ret.createdAt);
+    expect(project.id).toEqual(ret.id);
+    expect(project.name).toEqual(ret.name);
+    expect(project.description).toEqual(ret.description);
+    expect(ret.createdAt).toBeTruthy();
 });
 
-test.serial('should delete project', async t => {
+test('should delete project', async () => {
     const project = {
         id: 'test-delete',
         name: 'New project',
@@ -78,11 +77,11 @@ test.serial('should delete project', async t => {
     try {
         await projectService.getProject(project.id);
     } catch (err) {
-        t.is(err.message, 'No project found');
+        expect(err.message).toBe('No project found');
     }
 });
 
-test.serial('should not be able to delete project with toggles', async t => {
+test('should not be able to delete project with toggles', async () => {
     const project = {
         id: 'test-delete-with-toggles',
         name: 'New project',
@@ -98,27 +97,26 @@ test.serial('should not be able to delete project with toggles', async t => {
     try {
         await projectService.deleteProject(project.id, user);
     } catch (err) {
-        t.is(
-            err.message,
+        expect(err.message).toBe(
             'You can not delete as project with active feature toggles',
         );
     }
 });
 
-test.serial('should not delete "default" project', async t => {
+test('should not delete "default" project', async () => {
     try {
         await projectService.deleteProject('default', user);
     } catch (err) {
-        t.is(err.message, 'You can not delete the default project!');
+        expect(err.message).toBe('You can not delete the default project!');
     }
 });
 
-test.serial('should validate name, legal', async t => {
+test('should validate name, legal', async () => {
     const result = await projectService.validateId('new_name');
-    t.true(result);
+    expect(result).toBe(true);
 });
 
-test.serial('should not be able to create exiting project', async t => {
+test('should not be able to create exiting project', async () => {
     const project = {
         id: 'test-delete',
         name: 'New project',
@@ -128,27 +126,27 @@ test.serial('should not be able to create exiting project', async t => {
         await projectService.createProject(project, user);
         await projectService.createProject(project, user);
     } catch (err) {
-        t.is(err.message, 'A project with this id already exists.');
+        expect(err.message).toBe('A project with this id already exists.');
     }
 });
 
-test.serial('should require URL friendly ID', async t => {
+test('should require URL friendly ID', async () => {
     try {
         await projectService.validateId('new name øæå');
     } catch (err) {
-        t.is(err.message, '"value" must be URL friendly');
+        expect(err.message).toBe('"value" must be URL friendly');
     }
 });
 
-test.serial('should require unique ID', async t => {
+test('should require unique ID', async () => {
     try {
         await projectService.validateId('default');
     } catch (err) {
-        t.is(err.message, 'A project with this id already exists.');
+        expect(err.message).toBe('A project with this id already exists.');
     }
 });
 
-test.serial('should update project', async t => {
+test('should update project', async () => {
     const project = {
         id: 'test-update',
         name: 'New project',
@@ -166,39 +164,36 @@ test.serial('should update project', async t => {
 
     const readProject = await projectService.getProject(project.id);
 
-    t.is(updatedProject.name, readProject.name);
-    t.is(updatedProject.description, readProject.description);
+    expect(updatedProject.name).toBe(readProject.name);
+    expect(updatedProject.description).toBe(readProject.description);
 });
 
-test.serial('should give error when getting unknown project', async t => {
+test('should give error when getting unknown project', async () => {
     try {
         await projectService.getProject('unknown');
     } catch (err) {
-        t.is(err.message, 'No project found');
+        expect(err.message).toBe('No project found');
     }
 });
 
-test.serial(
-    '(TODO: v4): should create roles for new project if userId is missing',
-    async t => {
-        const project = {
-            id: 'test-roles-no-id',
-            name: 'New project',
-            description: 'Blah',
-        };
-        await projectService.createProject(project, {
-            username: 'random-user',
-        });
-        const roles = await stores.accessStore.getRolesForProject(project.id);
+test('(TODO: v4): should create roles for new project if userId is missing', async () => {
+    const project = {
+        id: 'test-roles-no-id',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(project, {
+        username: 'random-user',
+    });
+    const roles = await stores.accessStore.getRolesForProject(project.id);
 
-        t.is(roles.length, 2);
-        t.false(
-            await accessService.hasPermission(user, UPDATE_PROJECT, project.id),
-        );
-    },
-);
+    expect(roles.length).toBe(2);
+    expect(
+        await accessService.hasPermission(user, UPDATE_PROJECT, project.id),
+    ).toBe(false);
+});
 
-test.serial('should create roles when project is created', async t => {
+test('should create roles when project is created', async () => {
     const project = {
         id: 'test-roles',
         name: 'New project',
@@ -206,11 +201,13 @@ test.serial('should create roles when project is created', async t => {
     };
     await projectService.createProject(project, user);
     const roles = await stores.accessStore.getRolesForProject(project.id);
-    t.is(roles.length, 2);
-    t.true(await accessService.hasPermission(user, UPDATE_PROJECT, project.id));
+    expect(roles.length).toBe(2);
+    expect(
+        await accessService.hasPermission(user, UPDATE_PROJECT, project.id),
+    ).toBe(true);
 });
 
-test.serial('should get list of users with access to project', async t => {
+test('should get list of users with access to project', async () => {
     const project = {
         id: 'test-roles-access',
         name: 'New project',
@@ -225,14 +222,14 @@ test.serial('should get list of users with access to project', async t => {
     const owner = roles.find(role => role.name === RoleName.OWNER);
     const member = roles.find(role => role.name === RoleName.MEMBER);
 
-    t.is(users.length, 1);
-    t.is(users[0].id, user.id);
-    t.is(users[0].name, user.name);
-    t.is(users[0].roleId, owner.id);
-    t.truthy(member);
+    expect(users.length).toBe(1);
+    expect(users[0].id).toBe(user.id);
+    expect(users[0].name).toBe(user.name);
+    expect(users[0].roleId).toBe(owner.id);
+    expect(member).toBeTruthy();
 });
 
-test.serial('should add a member user to the project', async t => {
+test('should add a member user to the project', async () => {
     const project = {
         id: 'add-users',
         name: 'New project',
@@ -258,14 +255,14 @@ test.serial('should add a member user to the project', async t => {
     const { users } = await projectService.getUsersWithAccess(project.id, user);
     const memberUsers = users.filter(u => u.roleId === memberRole.id);
 
-    t.is(memberUsers.length, 2);
-    t.is(memberUsers[0].id, projectMember1.id);
-    t.is(memberUsers[0].name, projectMember1.name);
-    t.is(memberUsers[1].id, projectMember2.id);
-    t.is(memberUsers[1].name, projectMember2.name);
+    expect(memberUsers.length).toBe(2);
+    expect(memberUsers[0].id).toBe(projectMember1.id);
+    expect(memberUsers[0].name).toBe(projectMember1.name);
+    expect(memberUsers[1].id).toBe(projectMember2.id);
+    expect(memberUsers[1].name).toBe(projectMember2.name);
 });
 
-test.serial('should add admin users to the project', async t => {
+test('should add admin users to the project', async () => {
     const project = {
         id: 'add-admin-users',
         name: 'New project',
@@ -294,29 +291,23 @@ test.serial('should add admin users to the project', async t => {
 
     const adminUsers = users.filter(u => u.roleId === ownerRole.id);
 
-    t.is(adminUsers.length, 3);
-    t.is(adminUsers[1].id, projectAdmin1.id);
-    t.is(adminUsers[1].name, projectAdmin1.name);
-    t.is(adminUsers[2].id, projectAdmin2.id);
-    t.is(adminUsers[2].name, projectAdmin2.name);
+    expect(adminUsers.length).toBe(3);
+    expect(adminUsers[1].id).toBe(projectAdmin1.id);
+    expect(adminUsers[1].name).toBe(projectAdmin1.name);
+    expect(adminUsers[2].id).toBe(projectAdmin2.id);
+    expect(adminUsers[2].name).toBe(projectAdmin2.name);
 });
 
-test.serial('add user only accept to add users to project roles', async t => {
+test('add user only accept to add users to project roles', async () => {
     const roles = await accessService.getRoles();
     const memberRole = roles.find(r => r.name === RoleName.MEMBER);
 
-    await t.throwsAsync(
-        async () => {
-            await projectService.addUser('some-id', memberRole.id, user.id);
-        },
-        {
-            instanceOf: NotFoundError,
-            message: /Could not find roleId=\d+ on project=some-id/,
-        },
-    );
+    await expect(async () => {
+        await projectService.addUser('some-id', memberRole.id, user.id);
+    }).rejects.toThrowError(NotFoundError);
 });
 
-test.serial('add user should fail if user already have access', async t => {
+test('add user should fail if user already have access', async () => {
     const project = {
         id: 'add-users-twice',
         name: 'New project',
@@ -334,22 +325,14 @@ test.serial('add user should fail if user already have access', async t => {
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
 
-    await t.throwsAsync(
-        async () => {
-            await projectService.addUser(
-                project.id,
-                memberRole.id,
-                projectMember1.id,
-            );
-        },
-        {
-            instanceOf: Error,
-            message: 'User already have access to project=add-users-twice',
-        },
+    await expect(async () =>
+        projectService.addUser(project.id, memberRole.id, projectMember1.id),
+    ).rejects.toThrow(
+        new Error('User already have access to project=add-users-twice'),
     );
 });
 
-test.serial('should remove user from the project', async t => {
+test('should remove user from the project', async () => {
     const project = {
         id: 'remove-users',
         name: 'New project',
@@ -375,10 +358,10 @@ test.serial('should remove user from the project', async t => {
     const { users } = await projectService.getUsersWithAccess(project.id, user);
     const memberUsers = users.filter(u => u.roleId === memberRole.id);
 
-    t.is(memberUsers.length, 0);
+    expect(memberUsers.length).toBe(0);
 });
 
-test.serial('should not remove user from the project', async t => {
+test('should not remove user from the project', async () => {
     const project = {
         id: 'remove-users-not-allowed',
         name: 'New project',
@@ -389,13 +372,9 @@ test.serial('should not remove user from the project', async t => {
     const roles = await stores.accessStore.getRolesForProject(project.id);
     const ownerRole = roles.find(r => r.name === RoleName.OWNER);
 
-    await t.throwsAsync(
-        async () => {
-            await projectService.removeUser(project.id, ownerRole.id, user.id);
-        },
-        {
-            instanceOf: Error,
-            message: 'A project must have at least one owner',
-        },
+    await expect(async () => {
+        await projectService.removeUser(project.id, ownerRole.id, user.id);
+    }).rejects.toThrowError(
+        new Error('A project must have at least one owner'),
     );
 });

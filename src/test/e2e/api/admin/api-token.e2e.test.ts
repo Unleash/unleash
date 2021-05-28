@@ -1,46 +1,41 @@
-import test from 'ava';
-import { setupApp, setupAppWithCustomAuth } from '../../helpers/test-helper';
+import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType, IApiToken } from '../../../../lib/db/api-token-store';
-import { RoleName } from '../../../../lib/services/access-service';
+import { ApiTokenType } from '../../../../lib/db/api-token-store';
 
-let stores;
 let db;
+let app;
 
-test.before(async () => {
+beforeAll(async () => {
     db = await dbInit('token_api_serial', getLogger);
-    stores = db.stores;
+    app = await setupApp(db.stores);
 });
 
-test.after.always(async () => {
-    await db.destroy();
+afterAll(async () => {
+    if (db) {
+        await db.destroy();
+    }
+    await app.destroy();
 });
 
-test.afterEach.always(async () => {
-    const tokens = await stores.apiTokenStore.getAll();
-    const deleteAll = tokens.map((t: IApiToken) =>
-        stores.apiTokenStore.delete(t.secret),
-    );
-    await Promise.all(deleteAll);
+afterEach(async () => {
+    await db.stores.apiTokenStore.deleteAll();
 });
 
-test.serial('returns empty list of tokens', async t => {
-    t.plan(1);
-    const request = await setupApp(stores);
-    return request
+test('returns empty list of tokens', async () => {
+    expect.assertions(1);
+    return app.request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tokens.length, 0);
+            expect(res.body.tokens.length).toBe(0);
         });
 });
 
-test.serial('creates new client token', async t => {
-    t.plan(4);
-    const request = await setupApp(stores);
-    return request
+test('creates new client token', async () => {
+    expect.assertions(4);
+    return app.request
         .post('/api/admin/api-tokens')
         .send({
             username: 'default-client',
@@ -49,17 +44,16 @@ test.serial('creates new client token', async t => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            t.is(res.body.username, 'default-client');
-            t.is(res.body.type, 'client');
-            t.truthy(res.body.createdAt);
-            t.true(res.body.secret.length > 16);
+            expect(res.body.username).toBe('default-client');
+            expect(res.body.type).toBe('client');
+            expect(res.body.createdAt).toBeTruthy();
+            expect(res.body.secret.length > 16).toBe(true);
         });
 });
 
-test.serial('creates new admin token', async t => {
-    t.plan(5);
-    const request = await setupApp(stores);
-    return request
+test('creates new admin token', async () => {
+    expect.assertions(5);
+    return app.request
         .post('/api/admin/api-tokens')
         .send({
             username: 'default-admin',
@@ -68,20 +62,19 @@ test.serial('creates new admin token', async t => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            t.is(res.body.username, 'default-admin');
-            t.is(res.body.type, 'admin');
-            t.truthy(res.body.createdAt);
-            t.falsy(res.body.expiresAt);
-            t.true(res.body.secret.length > 16);
+            expect(res.body.username).toBe('default-admin');
+            expect(res.body.type).toBe('admin');
+            expect(res.body.createdAt).toBeTruthy();
+            expect(res.body.expiresAt).toBeFalsy();
+            expect(res.body.secret.length > 16).toBe(true);
         });
 });
 
-test.serial('creates new admin token with expiry', async t => {
-    t.plan(1);
-    const request = await setupApp(stores);
+test('creates new admin token with expiry', async () => {
+    expect.assertions(1);
     const expiresAt = new Date();
     const expiresAtAsISOStr = JSON.parse(JSON.stringify(expiresAt));
-    return request
+    return app.request
         .post('/api/admin/api-tokens')
         .send({
             username: 'default-admin',
@@ -91,23 +84,22 @@ test.serial('creates new admin token with expiry', async t => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            t.is(res.body.expiresAt, expiresAtAsISOStr);
+            expect(res.body.expiresAt).toBe(expiresAtAsISOStr);
         });
 });
 
-test.serial('update admin token with expiry', async t => {
-    t.plan(2);
-    const request = await setupApp(stores);
+test('update admin token with expiry', async () => {
+    expect.assertions(2);
 
     const tokenSecret = 'random-secret-update';
 
-    await stores.apiTokenStore.insert({
+    await db.stores.apiTokenStore.insert({
         username: 'test',
         secret: tokenSecret,
         type: ApiTokenType.CLIENT,
     });
 
-    await request
+    await app.request
         .put(`/api/admin/api-tokens/${tokenSecret}`)
         .send({
             expiresAt: new Date(),
@@ -115,25 +107,24 @@ test.serial('update admin token with expiry', async t => {
         .set('Content-Type', 'application/json')
         .expect(200);
 
-    return request
+    return app.request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tokens.length, 1);
-            t.truthy(res.body.tokens[0].expiresAt);
+            expect(res.body.tokens.length).toBe(1);
+            expect(res.body.tokens[0].expiresAt).toBeTruthy();
         });
 });
 
-test.serial('creates a lot of client tokens', async t => {
-    t.plan(4);
-    const request = await setupApp(stores);
+test('creates a lot of client tokens', async () => {
+    expect.assertions(4);
 
     const requests = [];
 
     for (let i = 0; i < 10; i++) {
         requests.push(
-            request
+            app.request
                 .post('/api/admin/api-tokens')
                 .send({
                     username: 'default-client',
@@ -144,135 +135,38 @@ test.serial('creates a lot of client tokens', async t => {
         );
     }
     await Promise.all(requests);
-    t.plan(2);
-    return request
+    expect.assertions(2);
+    return app.request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tokens.length, 10);
-            t.is(res.body.tokens[2].type, 'client');
+            expect(res.body.tokens.length).toBe(10);
+            expect(res.body.tokens[2].type).toBe('client');
         });
 });
 
-test.serial('removes api token', async t => {
-    t.plan(1);
-    const request = await setupApp(stores);
+test('removes api token', async () => {
+    expect.assertions(1);
 
     const tokenSecret = 'random-secret';
 
-    await stores.apiTokenStore.insert({
+    await db.stores.apiTokenStore.insert({
         username: 'test',
         secret: tokenSecret,
         type: ApiTokenType.CLIENT,
     });
 
-    await request
+    await app.request
         .delete(`/api/admin/api-tokens/${tokenSecret}`)
         .set('Content-Type', 'application/json')
         .expect(200);
 
-    return request
+    return app.request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.is(res.body.tokens.length, 0);
+            expect(res.body.tokens.length).toBe(0);
         });
-});
-
-test.serial('none-admins should only get client tokens', async t => {
-    t.plan(2);
-
-    const email = 'custom-user@mail.com';
-
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.EDITOR);
-            const user = await userService.createUser({
-                email,
-                rootRole: role.id,
-            });
-            req.user = user;
-            next();
-        });
-    };
-
-    const request = await setupAppWithCustomAuth(stores, preHook);
-
-    await stores.apiTokenStore.insert({
-        username: 'test',
-        secret: '1234',
-        type: ApiTokenType.CLIENT,
-    });
-
-    await stores.apiTokenStore.insert({
-        username: 'test',
-        secret: 'sdfsdf2d',
-        type: ApiTokenType.ADMIN,
-    });
-
-    return request
-        .get('/api/admin/api-tokens')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect(res => {
-            t.is(res.body.tokens.length, 1);
-            t.is(res.body.tokens[0].type, ApiTokenType.CLIENT);
-        });
-});
-
-test.serial('Only token-admins should be allowed to create token', async t => {
-    t.plan(0);
-
-    const email = 'custom-user2@mail.com';
-
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.EDITOR);
-            req.user = await userService.createUser({
-                email,
-                rootRole: role.id,
-            });
-            next();
-        });
-    };
-
-    const request = await setupAppWithCustomAuth(stores, preHook);
-
-    return request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(403);
-});
-
-test.serial('Token-admin should be allowed to create token', async t => {
-    t.plan(0);
-    const email = 'custom-user3@mail.com';
-
-    const preHook = (app, config, { userService, accessService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            const role = await accessService.getRootRole(RoleName.ADMIN);
-            req.user = await userService.createUser({
-                email,
-                rootRole: role.id,
-            });
-            next();
-        });
-    };
-
-    const request = await setupAppWithCustomAuth(stores, preHook);
-
-    return request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
 });

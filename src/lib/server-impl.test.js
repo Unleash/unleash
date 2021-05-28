@@ -1,18 +1,20 @@
 'use strict';
 
-const test = require('ava');
-const proxyquire = require('proxyquire');
 const { EventEmitter } = require('events');
 const express = require('express');
 const { createTestConfig } = require('../test/config/test-config');
 
-const getApp = proxyquire('./app', {
-    './routes': class Index {
-        router() {
-            return express.Router();
-        }
-    },
-});
+jest.mock(
+    './routes',
+    () =>
+        class Index {
+            router() {
+                return express.Router();
+            }
+        },
+);
+
+const getApp = require('./app');
 
 const noop = () => {};
 
@@ -23,36 +25,48 @@ const settingStore = {
     },
 };
 
-const serverImpl = proxyquire('./server-impl', {
-    './app': getApp,
-    './metrics': {
-        createMetricsMonitor() {
-            return {
-                startMonitoring: noop,
-                stopMonitoring: noop,
-            };
-        },
-    },
-    './db': {
-        createStores() {
-            return {
-                db: { destroy: cb => cb() },
-                clientInstanceStore: { destroy: noop },
-                clientMetricsStore: { destroy: noop, on: noop },
-                eventStore,
-                settingStore,
-            };
-        },
-    },
-    '../migrator': function() {
-        return Promise.resolve();
-    },
-    './util/version': function() {
-        return 'unleash-test-version';
-    },
-});
+jest.mock('./app', () => getApp);
 
-test('should call preHook', async t => {
+jest.mock('./metrics', () => ({
+    createMetricsMonitor() {
+        return {
+            startMonitoring: noop,
+            stopMonitoring: noop,
+        };
+    },
+}));
+
+jest.mock('./db', () => ({
+    createStores() {
+        return {
+            db: { destroy: cb => cb() },
+            clientInstanceStore: { destroy: noop },
+            clientMetricsStore: { destroy: noop, on: noop },
+            eventStore,
+            settingStore,
+        };
+    },
+}));
+
+jest.mock(
+    '../migrator',
+    () =>
+        function() {
+            return Promise.resolve();
+        },
+);
+
+jest.mock(
+    './util/version',
+    () =>
+        function() {
+            return 'unleash-test-version';
+        },
+);
+
+const serverImpl = require('./server-impl');
+
+test('should call preHook', async () => {
     let called = 0;
     const config = createTestConfig({
         server: { port: 0 },
@@ -61,10 +75,10 @@ test('should call preHook', async t => {
         },
     });
     await serverImpl.start(config);
-    t.true(called === 1);
+    expect(called).toBe(1);
 });
 
-test('should call preRouterHook', async t => {
+test('should call preRouterHook', async () => {
     let called = 0;
     await serverImpl.start(
         createTestConfig({
@@ -74,10 +88,10 @@ test('should call preRouterHook', async t => {
             },
         }),
     );
-    t.true(called === 1);
+    expect(called === 1).toBe(true);
 });
 
-test('should call eventHook', async t => {
+test('should call eventHook', async () => {
     let called = 0;
     const config = createTestConfig({
         server: { port: 0 },
@@ -87,26 +101,26 @@ test('should call eventHook', async t => {
     });
     await serverImpl.start(config);
     eventStore.emit('feature-created', {});
-    t.true(called === 1);
+    expect(called === 1).toBe(true);
 });
 
-test('should auto-create server on start()', async t => {
+test('should auto-create server on start()', async () => {
     const { server } = await serverImpl.start(
         createTestConfig({ server: { port: 0 } }),
     );
-    t.false(typeof server === 'undefined');
+    expect(typeof server === 'undefined').toBe(false);
 });
 
-test('should not create a server using create()', async t => {
+test('should not create a server using create()', async () => {
     const config = createTestConfig({ server: { port: 0 } });
     const { server } = await serverImpl.create(config);
-    t.true(typeof server === 'undefined');
+    expect(server).toBeUndefined();
 });
 
-test('should shutdown the server when calling stop()', async t => {
+test('should shutdown the server when calling stop()', async () => {
     const { server, stop } = await serverImpl.start(
         createTestConfig({ server: { port: 0 } }),
     );
     await stop();
-    t.is(server.address(), null);
+    expect(server.address()).toBe(null);
 });

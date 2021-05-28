@@ -1,6 +1,5 @@
 'use strict';
 
-const test = require('ava');
 const supertest = require('supertest');
 const { EventEmitter } = require('events');
 const store = require('../../../test/fixtures/store');
@@ -10,43 +9,64 @@ const { createTestConfig } = require('../../../test/config/test-config');
 const { createServices } = require('../../services');
 
 const eventBus = new EventEmitter();
+let base;
+let archiveStore;
+let eventStore;
+let featureToggleService;
+let destroy;
+let request;
 
 function getSetup() {
-    const base = `/random${Math.round(Math.random() * 1000)}`;
+    const randomBase = `/random${Math.round(Math.random() * 1000)}`;
     const stores = store.createStores();
     const perms = permissions();
     const config = createTestConfig({
-        server: { baseUriPath: base },
+        server: { baseUriPath: randomBase },
         preHook: perms.hook,
     });
     const services = createServices(stores, config);
     const app = getApp(config, stores, services, eventBus);
 
     return {
-        base,
+        base: randomBase,
         perms,
         archiveStore: stores.featureToggleStore,
         eventStore: stores.eventStore,
         featureToggleService: services.featureToggleService,
         request: supertest(app),
+        destroy: () => {
+            services.versionService.destroy();
+            services.clientMetricsService.destroy();
+            services.apiTokenService.destroy();
+        },
     };
 }
+beforeEach(() => {
+    const setup = getSetup();
+    base = setup.base;
+    destroy = setup.destroy;
+    request = setup.request;
+    archiveStore = setup.archiveStore;
+    eventStore = setup.eventStore;
+    featureToggleService = setup.featureToggleService;
+});
 
-test('should get empty getFeatures via admin', t => {
-    t.plan(1);
-    const { request, base } = getSetup();
+afterEach(() => {
+    destroy();
+});
+test('should get empty getFeatures via admin', () => {
+    expect.assertions(1);
     return request
         .get(`${base}/api/admin/archive/features`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.features.length === 0);
+            expect(res.body.features.length === 0).toBe(true);
         });
 });
 
-test('should be allowed to reuse deleted toggle name', async t => {
-    t.plan(0);
-    const { request, archiveStore, base } = getSetup();
+test('should be allowed to reuse deleted toggle name', async () => {
+    expect.assertions(0);
     await archiveStore.createFeature({
         name: 'ts.really.delete',
         strategies: [{ name: 'default' }],
@@ -61,9 +81,8 @@ test('should be allowed to reuse deleted toggle name', async t => {
         .expect(409);
 });
 
-test('should get archived toggles via admin', t => {
-    t.plan(1);
-    const { request, base, archiveStore } = getSetup();
+test('should get archived toggles via admin', () => {
+    expect.assertions(1);
     archiveStore.addArchivedFeature({
         name: 'test1',
         strategies: [{ name: 'default' }],
@@ -77,14 +96,13 @@ test('should get archived toggles via admin', t => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            t.true(res.body.features.length === 2);
+            expect(res.body.features.length === 2).toBe(true);
         });
 });
 
-test('should revive toggle', t => {
-    t.plan(0);
+test('should revive toggle', () => {
+    expect.assertions(0);
     const name = 'name1';
-    const { request, base, archiveStore } = getSetup();
     archiveStore.addArchivedFeature({
         name,
         strategies: [{ name: 'default' }],
@@ -96,10 +114,9 @@ test('should revive toggle', t => {
         .expect(200);
 });
 
-test('should create event when reviving toggle', async t => {
-    t.plan(6);
+test('should create event when reviving toggle', async () => {
+    expect.assertions(6);
     const name = 'name1';
-    const { request, base, featureToggleService, eventStore } = getSetup();
 
     await featureToggleService.addArchivedFeature({
         name,
@@ -120,16 +137,15 @@ test('should create event when reviving toggle', async t => {
         .set('Content-Type', 'application/json');
 
     const events = await eventStore.getEvents();
-    t.is(events.length, 3);
-    t.is(events[2].type, 'feature-revived');
-    t.is(events[2].data.name, name);
-    t.is(events[2].createdBy, 'unknown');
-    t.is(events[2].tags[0].type, 'simple');
-    t.is(events[2].tags[0].value, 'tag');
+    expect(events.length).toBe(3);
+    expect(events[2].type).toBe('feature-revived');
+    expect(events[2].data.name).toBe(name);
+    expect(events[2].createdBy).toBe('unknown');
+    expect(events[2].tags[0].type).toBe('simple');
+    expect(events[2].tags[0].value).toBe('tag');
 });
 
-test('should require toggle name when reviving', t => {
-    t.plan(0);
-    const { request, base } = getSetup();
+test('should require toggle name when reviving', () => {
+    expect.assertions(0);
     return request.post(`${base}/api/admin/archive/revive/`).expect(404);
 });

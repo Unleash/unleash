@@ -1,8 +1,6 @@
 'use strict';
 
-const test = require('ava');
 const { EventEmitter } = require('events');
-const lolex = require('lolex');
 const ClientMetricStore = require('./client-metrics-store');
 const getLogger = require('../../test/fixtures/no-logger');
 
@@ -26,66 +24,74 @@ function getMockDb() {
     };
 }
 
-test.cb('should call database on startup', t => {
+test('should call database on startup', done => {
+    jest.useFakeTimers('modern');
     const mock = getMockDb();
     const ee = new EventEmitter();
     const store = new ClientMetricStore(mock, ee, getLogger);
 
-    t.plan(2);
+    jest.runAllTicks();
+
+    expect.assertions(2);
 
     store.on('metrics', metrics => {
-        t.true(store.highestIdSeen === 1);
-        t.true(metrics.appName === 'test');
+        expect(store.highestIdSeen).toBe(1);
+        expect(metrics.appName).toBe('test');
         store.destroy();
 
-        t.end();
+        done();
     });
 });
 
-test.cb('should start poller even if inital database fetch fails', t => {
+test('should start poller even if initial database fetch fails', done => {
+    jest.useFakeTimers('modern');
     getLogger.setMuteError(true);
-    const clock = lolex.install();
     const mock = getMockDb();
     mock.getMetricsLastHour = () => Promise.reject(new Error('oops'));
     const ee = new EventEmitter();
     const store = new ClientMetricStore(mock, ee, getLogger, 100);
+    jest.runAllTicks();
 
     const metrics = [];
     store.on('metrics', m => metrics.push(m));
 
     store.on('ready', () => {
-        t.true(metrics.length === 0);
-        clock.tick(300);
+        jest.useFakeTimers('modern');
+        expect(metrics).toHaveLength(0);
+        jest.advanceTimersByTime(300);
+        jest.useRealTimers();
         process.nextTick(() => {
-            t.true(metrics.length === 3);
-            t.true(store.highestIdSeen === 4);
+            expect(metrics).toHaveLength(3);
+            expect(store.highestIdSeen).toBe(4);
             store.destroy();
-            t.end();
+            done();
         });
     });
     getLogger.setMuteError(false);
 });
 
-test.cb('should poll for updates', t => {
-    const clock = lolex.install();
-
+test('should poll for updates', done => {
+    jest.useFakeTimers('modern');
     const mock = getMockDb();
     const ee = new EventEmitter();
     const store = new ClientMetricStore(mock, ee, getLogger, 100);
+    jest.runAllTicks();
 
     const metrics = [];
     store.on('metrics', m => metrics.push(m));
 
-    t.true(metrics.length === 0);
+    expect(metrics).toHaveLength(0);
 
     store.on('ready', () => {
-        t.true(metrics.length === 1);
-        clock.tick(300);
+        jest.useFakeTimers('modern');
+        expect(metrics).toHaveLength(1);
+        jest.advanceTimersByTime(300);
+        jest.useRealTimers();
         process.nextTick(() => {
-            t.true(metrics.length === 4);
-            t.true(store.highestIdSeen === 4);
+            expect(metrics).toHaveLength(4);
+            expect(store.highestIdSeen).toBe(4);
             store.destroy();
-            t.end();
+            done();
         });
     });
 });

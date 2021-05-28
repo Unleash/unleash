@@ -109,3 +109,4 @@ If you want to contribute to this project you are encouraged to send issue reque
 - [Blog: Unleash your features gradually!](http://bytes.schibsted.com/unleash-features-gradually/)
 - [Presentation: Unleash your features gradually!](http://ivarconr.github.io/feature-toggles-presentation/sch-dev-lunch-2017/#1)
 - http://martinfowler.com/bliki/FeatureToggle.html
+- [Utviklerpodden, 1 - Feature Flags og Unleash med Fredrik Oseberg](https://pod.space/utviklerpodden/feature-flags-og-unleash-med-fredrik-oseberg)

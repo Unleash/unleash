@@ -10,7 +10,9 @@ module.exports = {
     organizationName: "Unleash", // Usually your GitHub org/user name.
     projectName: "unleash.github.io", // Usually your repo name.
     themeConfig: {
-        respectPrefersColorScheme: true,
+        defaultMode: 'light',
+        disableSwitch: true,
+        respectPrefersColorScheme: false,
         navbar: {
             title: "Unleash",
             logo: {

@@ -15,7 +15,7 @@ Unleash is composed of three parts:
 - **Unleash UI** - The dashboard used to manage feature toggles, define new strategies, look at metrics, etc.
 - **Unleash SDK** - Used by clients to check if a feature is enabled or disabled. The SDK also collects metrics and sends them to the Unleash API. Activation Strategies are also implemented in the SDK. Unleash currently provides official SDKs for Java and Node.js
 
-![system_overview](https://raw.githubusercontent.com/Unleash/unleash/master/docs//img/unleash-diagram.png 'System Overview')
+![system_overview](/img/unleash-diagram.png 'System Overview')
 
 To be super fast, the client SDK caches all feature toggles and their current configuration in memory. The activation strategies are also implemented in the SDK. This makes it really fast to check if a toggle is on or off because it is just a simple function operating on local state, without the need to poll data from the database.
 

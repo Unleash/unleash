@@ -12,7 +12,7 @@ const ResetPasswordDetails: FC<IResetPasswordDetails> = ({
     setLoading,
 }) => {
     return (
-        <div>
+        <div style={{ width: '100%' }}>
             {children}
             <ResetPasswordForm token={token} setLoading={setLoading} />
         </div>

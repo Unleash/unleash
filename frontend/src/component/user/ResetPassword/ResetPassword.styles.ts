@@ -1,6 +1,13 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
+    resetPassword: {
+        width: '350px',
+        maxWidth: '350px',
+        [theme.breakpoints.down('xs')]: {
+            width: '100%',
+        },
+    },
     container: {
         display: 'flex',
     },

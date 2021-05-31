@@ -28,7 +28,7 @@ const NUMBER_ERROR = 'The password must contain at least one number.';
 const SYMBOL_ERROR =
     'The password must contain at least one special character.';
 const UPPERCASE_ERROR =
-    'The password must contain at least one uppercase letter';
+    'The password must contain at least one uppercase letter.';
 const LOWERCASE_ERROR =
     'The password must contain at least one lowercase letter.';
 

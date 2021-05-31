@@ -17,24 +17,26 @@ const ResetPassword = () => {
     return (
         <div ref={ref}>
             <StandaloneLayout>
-                <ConditionallyRender
-                    condition={invalidToken}
-                    show={<InvalidToken />}
-                    elseShow={
-                        <ResetPasswordDetails
-                            token={token}
-                            setLoading={setLoading}
-                        >
-                            <Typography
-                                variant="h2"
-                                className={styles.title}
-                                data-loading
+                <div className={styles.resetPassword}>
+                    <ConditionallyRender
+                        condition={invalidToken}
+                        show={<InvalidToken />}
+                        elseShow={
+                            <ResetPasswordDetails
+                                token={token}
+                                setLoading={setLoading}
                             >
-                                Reset password
-                            </Typography>
-                        </ResetPasswordDetails>
-                    }
-                />
+                                <Typography
+                                    variant="h2"
+                                    className={styles.title}
+                                    data-loading
+                                >
+                                    Reset password
+                                </Typography>
+                            </ResetPasswordDetails>
+                        }
+                    />
+                </div>
             </StandaloneLayout>
         </div>
     );

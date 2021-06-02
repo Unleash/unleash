@@ -13,6 +13,7 @@ import UserStore from '../db/user-store';
 import TagStore from '../db/tag-store';
 import TagTypeStore from '../db/tag-type-store';
 import AddonStore from '../db/addon-store';
+import UserFeedbackStore from '../db/user-feedback-store';
 import { AccessStore } from '../db/access-store';
 import { ApiTokenStore } from '../db/api-token-store';
 import { ResetTokenStore } from '../db/reset-token-store';
@@ -37,5 +38,6 @@ export interface IUnleashStores {
     accessStore: AccessStore;
     apiTokenStore: ApiTokenStore;
     resetTokenStore: ResetTokenStore;
+    userFeedbackStore: UserFeedbackStore;
     db: Knex;
 }

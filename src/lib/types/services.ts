@@ -18,6 +18,7 @@ import EventService from '../services/event-service';
 import HealthService from '../services/health-service';
 import SettingService from '../services/setting-service';
 import SessionService from '../services/session-service';
+import UserFeedbackService from '../services/user-feedback-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -40,4 +41,5 @@ export interface IUnleashServices {
     tagService: TagService;
     userService: UserService;
     versionService: VersionService;
+    userFeedbackService: UserFeedbackService;
 }

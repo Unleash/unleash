@@ -17,7 +17,7 @@ interface IChangeUserRequest {
     confirmPassword: string;
 }
 
-interface UserRequest<PARAM, QUERY, BODY, RESPONSE>
+export interface IUserRequest<PARAM, QUERY, BODY, RESPONSE>
     extends Request<PARAM, QUERY, BODY, RESPONSE> {
     user: User;
 }
@@ -38,8 +38,8 @@ class UserController extends Controller {
             userService,
             sessionService,
         }: Pick<
-        IUnleashServices,
-        'accessService' | 'userService' | 'sessionService'
+            IUnleashServices,
+            'accessService' | 'userService' | 'sessionService'
         >,
     ) {
         super(config);
@@ -70,7 +70,7 @@ class UserController extends Controller {
     }
 
     async updateUserPass(
-        req: UserRequest<any, any, IChangeUserRequest, any>,
+        req: IUserRequest<any, any, IChangeUserRequest, any>,
         res: Response,
     ): Promise<void> {
         const { user } = req;
@@ -93,7 +93,7 @@ class UserController extends Controller {
     }
 
     async mySessions(
-        req: UserRequest<any, any, any, any>,
+        req: IUserRequest<any, any, any, any>,
         res: Response,
     ): Promise<void> {
         const { user } = req;

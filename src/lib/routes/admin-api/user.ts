@@ -11,6 +11,7 @@ import User from '../../types/user';
 import { Logger } from '../../logger';
 import { handleErrors } from './util';
 import SessionService from '../../services/session-service';
+import UserFeedbackService from '../../services/user-feedback-service';
 
 interface IChangeUserRequest {
     password: string;
@@ -27,6 +28,8 @@ class UserController extends Controller {
 
     private userService: UserService;
 
+    private userFeedbackService: UserFeedbackService;
+
     private sessionService: SessionService;
 
     private logger: Logger;
@@ -37,15 +40,20 @@ class UserController extends Controller {
             accessService,
             userService,
             sessionService,
+            userFeedbackService,
         }: Pick<
             IUnleashServices,
-            'accessService' | 'userService' | 'sessionService'
+            | 'accessService'
+            | 'userService'
+            | 'sessionService'
+            | 'userFeedbackService'
         >,
     ) {
         super(config);
         this.accessService = accessService;
         this.userService = userService;
         this.sessionService = sessionService;
+        this.userFeedbackService = userFeedbackService;
         this.logger = config.getLogger('lib/routes/admin-api/user.ts');
 
         this.get('/', this.getUser);
@@ -60,10 +68,14 @@ class UserController extends Controller {
             const permissions = await this.accessService.getPermissionsForUser(
                 user,
             );
+            const feedback = await this.userFeedbackService.getAllUserFeedback(
+                user.id,
+            );
+
             delete user.permissions; // TODO: remove
             return res
                 .status(200)
-                .json({ user, permissions })
+                .json({ user, permissions, feedback })
                 .end();
         }
         return res.status(404).end();

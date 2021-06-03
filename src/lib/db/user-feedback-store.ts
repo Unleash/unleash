@@ -5,7 +5,7 @@ import { EventEmitter } from 'events';
 import { LogProvider, Logger } from '../logger';
 import NotFoundError from '../error/notfound-error';
 
-const COLUMNS = ['feedback_id', 'user_id', 'given', 'nevershow'];
+const COLUMNS = ['given', 'user_id', 'feedback_id', 'nevershow'];
 const TABLE = 'user_feedback';
 
 interface IUserFeedbackTable {
@@ -16,11 +16,29 @@ interface IUserFeedbackTable {
 }
 
 export interface IUserFeedback {
-    nevershow: boolean;
-    feedback_id: string;
+    neverShow: boolean;
+    feedbackId: string;
     given?: Date;
-    user_id: number;
+    userId: number;
 }
+
+const fieldToRow = (fields: IUserFeedback): IUserFeedbackTable => {
+    return {
+        nevershow: fields.neverShow,
+        feedback_id: fields.feedbackId,
+        given: fields.given,
+        user_id: fields.userId,
+    };
+};
+
+const rowToField = (row: IUserFeedbackTable): IUserFeedback => {
+    return {
+        neverShow: row.nevershow,
+        feedbackId: row.feedback_id,
+        given: row.given,
+        userId: row.user_id,
+    };
+};
 
 export default class UserFeedbackStore {
     private db: Knex;
@@ -32,38 +50,37 @@ export default class UserFeedbackStore {
         this.logger = getLogger('user-feedback-store.js');
     }
 
-    async getAllUserFeedback(user_id: number): Promise<IUserFeedback[]> {
+    async getAllUserFeedback(userId: number): Promise<IUserFeedback[]> {
         const userFeedback = await this.db
-            .table<IUserFeedback>(TABLE)
+            .table<IUserFeedbackTable>(TABLE)
             .select()
-            .where({ user_id });
+            .where({ user_id: userId });
 
-        return userFeedback;
+        return userFeedback.map(rowToField);
     }
 
     async getFeedback(
-        user_id: number,
-        feedback_id: string,
+        userId: number,
+        feedbackId: string,
     ): Promise<IUserFeedback> {
         const userFeedback = await this.db
-            .table<IUserFeedback>(TABLE)
+            .table<IUserFeedbackTable>(TABLE)
             .select()
-            .where({ user_id, feedback_id })
+            .where({ user_id: userId, feedback_id: feedbackId })
             .first();
 
-        return userFeedback;
+        return rowToField(userFeedback);
     }
 
     async updateFeedback(feedback: IUserFeedback): Promise<IUserFeedback> {
         const insertedFeedback = await this.db
-            .table<IUserFeedback>(TABLE)
-            .insert(feedback)
+            .table<IUserFeedbackTable>(TABLE)
+            .insert(fieldToRow(feedback))
             .onConflict(['user_id', 'feedback_id'])
             .merge()
-            .returning('*')
-            .first();
+            .returning(COLUMNS);
 
-        return insertedFeedback;
+        return rowToField(insertedFeedback[0]);
     }
 }
 

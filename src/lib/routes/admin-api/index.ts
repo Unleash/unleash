@@ -19,6 +19,7 @@ import AddonController from './addon';
 import ApiTokenController from './api-token-controller';
 import UserAdminController from './user-admin';
 import EmailController from './email';
+import UserFeedbackController from './user-feedback-controller';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -74,6 +75,10 @@ class AdminApi extends Controller {
         this.app.use(
             '/user-admin',
             new UserAdminController(config, services).router,
+        );
+        this.app.use(
+            '/feedback',
+            new UserFeedbackController(config, services).router,
         );
     }
 

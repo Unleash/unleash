@@ -9,8 +9,8 @@ import { IUnleashServices } from '../../types/services';
 import UserFeedbackService from '../../services/user-feedback-service';
 
 interface IFeedbackBody {
-    nevershow?: boolean;
-    feedback_id: string;
+    neverShow?: boolean;
+    feedbackId: string;
     given?: Date;
 }
 
@@ -28,7 +28,6 @@ class UserFeedbackController extends Controller {
         this.userFeedbackService = userFeedbackService;
 
         this.post('/', this.recordFeedback, READ_ROLE);
-        this.get('/:id', this.getFeedback, READ_ROLE);
         this.put('/:id', this.updateFeedbackSettings, READ_ROLE);
     }
 
@@ -37,29 +36,16 @@ class UserFeedbackController extends Controller {
         res: Response,
     ): Promise<void> {
         const { user } = req;
+
         const feedback = {
             ...req.body,
-            user_id: user.id,
-            nevershow: req.body.nevershow || false,
+            userId: user.id,
+            given: new Date(),
+            neverShow: req.body.neverShow || false,
         };
 
         const updated = await this.userFeedbackService.updateFeedback(feedback);
         res.json(updated);
-    }
-
-    private async getFeedback(
-        req: IUserRequest<{ id: string }, any, IFeedbackBody, any>,
-        res: Response,
-    ): Promise<void> {
-        const { id } = req.params;
-        const { user } = req;
-
-        const feedback = await this.userFeedbackService.getFeedback(
-            user.id,
-            id,
-        );
-
-        res.json(feedback);
     }
 
     private async updateFeedbackSettings(
@@ -71,9 +57,9 @@ class UserFeedbackController extends Controller {
 
         const feedback = {
             ...req.body,
-            feedback_id: id,
-            user_id: user.id,
-            nevershow: req.body.nevershow || false,
+            feedbackId: id,
+            userId: user.id,
+            neverShow: req.body.neverShow || false,
         };
 
         const updated = await this.userFeedbackService.updateFeedback(feedback);

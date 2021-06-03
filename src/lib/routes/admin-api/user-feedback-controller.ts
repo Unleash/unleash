@@ -6,6 +6,7 @@ import { IUserRequest } from './user';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import UserFeedbackService from '../../services/user-feedback-service';
+import { handleErrors } from './util';
 
 interface IFeedbackBody {
     neverShow?: boolean;
@@ -43,8 +44,14 @@ class UserFeedbackController extends Controller {
             neverShow: req.body.neverShow || false,
         };
 
-        const updated = await this.userFeedbackService.updateFeedback(feedback);
-        res.json(updated);
+        try {
+            const updated = await this.userFeedbackService.updateFeedback(
+                feedback,
+            );
+            res.json(updated);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     private async updateFeedbackSettings(
@@ -61,8 +68,14 @@ class UserFeedbackController extends Controller {
             neverShow: req.body.neverShow || false,
         };
 
-        const updated = await this.userFeedbackService.updateFeedback(feedback);
-        res.json(updated);
+        try {
+            const updated = await this.userFeedbackService.updateFeedback(
+                feedback,
+            );
+            res.json(updated);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 }
 

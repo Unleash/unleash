@@ -3,7 +3,6 @@
 import { Knex } from 'knex';
 import { EventEmitter } from 'events';
 import { LogProvider, Logger } from '../logger';
-import NotFoundError from '../error/notfound-error';
 
 const COLUMNS = ['given', 'user_id', 'feedback_id', 'nevershow'];
 const TABLE = 'user_feedback';

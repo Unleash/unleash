@@ -1,7 +1,6 @@
 import { Response } from 'express';
 
 import Controller from '../controller';
-import { READ_ROLE } from '../../types/permissions';
 import { Logger } from '../../logger';
 import { IUserRequest } from './user';
 import { IUnleashConfig } from '../../types/option';
@@ -27,8 +26,8 @@ class UserFeedbackController extends Controller {
         this.logger = config.getLogger('feedback-controller.ts');
         this.userFeedbackService = userFeedbackService;
 
-        this.post('/', this.recordFeedback, READ_ROLE);
-        this.put('/:id', this.updateFeedbackSettings, READ_ROLE);
+        this.post('/', this.recordFeedback);
+        this.put('/:id', this.updateFeedbackSettings);
     }
 
     private async recordFeedback(

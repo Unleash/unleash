@@ -14,6 +14,7 @@ const addonStore = require('./fake-addon-store');
 const projectStore = require('./fake-project-store');
 const UserStore = require('./fake-user-store');
 const AccessStore = require('./fake-access-store');
+const userFeedbackStore = require('./fake-user-feedback-store');
 
 module.exports = {
     createStores: (databaseIsUp = true) => {
@@ -39,6 +40,7 @@ module.exports = {
             projectStore: projectStore(databaseIsUp),
             userStore: new UserStore(),
             accessStore: new AccessStore(),
+            userFeedbackStore: userFeedbackStore(databaseIsUp),
         };
     },
 };

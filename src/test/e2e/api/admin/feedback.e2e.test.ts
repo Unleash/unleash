@@ -60,3 +60,17 @@ test('it updates feedback for user', async () => {
             expect(res.body.neverShow).toBe(true);
         });
 });
+
+test('it retrieves feedback for user', async () => {
+    expect.assertions(2);
+
+    return app.request
+        .get('/api/admin/user')
+        .set('Content-Type', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => {
+            expect(res.body.feedback.length).toBe(1);
+            expect(res.body.feedback[0].feedbackId).toBe('pnps');
+        });
+});

@@ -91,7 +91,7 @@ val unleashConfig = UnleashConfig.newBuilder()
 
 # Step 5: Instantiate the client
 
-Having created your `UnleashContext` and your `UnleashConfig` you can now instantiate your client. Make sure you only do this once, and pass the instantiated the client to classes/functions that need it.
+Having created your `UnleashContext` and your `UnleashConfig` you can now instantiate your client. Make sure you only do this once, and pass the instantiated client to classes/functions that need it.
 
 ```kotlin
 import io.getunleash.UnleashClient

@@ -106,7 +106,7 @@ module.exports = {
                 fromExtensions: ['html', 'htm'],
                 redirects: [
                     {
-                        to: '/sdks/index',
+                        to: '/sdks',
                         from: ['/user_guide/client-sdk', '/client-sdk']
                     },
                     {

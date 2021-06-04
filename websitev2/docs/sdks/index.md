@@ -10,16 +10,16 @@ On this page you will find examples for connecting your application to the demo 
 
 **Official Server SDKs**:
 
-- [Java SDK](./java_sdk)
-- [Node.js SDK](./node_sdk)
-- [Go SDK](./go_sdk)
-- [Ruby SDK](./ruby_sdk)
-- [Python SDK](./python_sdk)
-- [.Net SDK](./dot_net_sdk)
+- [Java SDK](/sdks/java_sdk)
+- [Node.js SDK](/sdks/node_sdk)
+- [Go SDK](/sdks/go_sdk)
+- [Ruby SDK](/sdks/ruby_sdk)
+- [Python SDK](/sdks/python_sdk)
+- [.Net SDK](/sdks/dot_net_sdk)
 
 **Official Frontend Proxy SDKs:**
 
-- [Javascript SDK](./proxy-javascript)
+- [Javascript SDK](/sdks/proxy-javascript)
 - Android SDK (coming soon)
 - [iOS Proxy SDK](/sdks/proxy-ios)
 

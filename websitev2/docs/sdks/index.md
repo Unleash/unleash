@@ -1,6 +1,7 @@
 ---
 id: index
 title: Introduction
+slug: /sdks
 ---
 
 In order to connect your application to Unleash you need to use a client SDK (software developer kit) for your programming language. In addition you will need a [API token](../user_guide/api-token). The SDK will handle connecting to the Unleash server instance and retrieve feature toggles based upon your configuration. Both open-source and the Unleash enterprise offering utilize the same set of client SDKs.

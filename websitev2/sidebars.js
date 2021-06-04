@@ -56,12 +56,8 @@ module.exports = {
         ]
     },
     "api": {
-        "Client": [
-            "api/client/features",
-            "api/client/register",
-            "api/client/metrics"
-        ],
-        "Admin": [
+        "Introduction": ["api/index", "api/internal/internal", "api/internal/health","api/open_api"],
+        "Admin API": [
             "api/admin/features",
             "api/admin/features-archive",
             "api/admin/strategies",
@@ -74,8 +70,12 @@ module.exports = {
             "api/admin/projects",
             "api/admin/user-admin"
         ],
-        "Status": ["api/internal/internal", "api/internal/health"],
-        "Specification": ["api/open_api"]
+        "Client SDK API": [
+            "api/client/features",
+            "api/client/register",
+            "api/client/metrics"
+        ],
+
     },
     "Deploy and manage": {
         "Deploy & configure": [

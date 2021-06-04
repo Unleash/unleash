@@ -23,8 +23,14 @@ module.exports = {
                 { to: "/", label: "Documentation" },
                 { to: "deploy/getting_started", label: "Deploy and manage" },
                 { to: "integrations/integrations", label: "Integrations" },
-                { to: "api/client/features", label: "API" },
-                { href: "https://www.getunleash.io/plans", label: "Enterprise" }
+                { to: "/api", label: "API" },
+                { href: "https://www.getunleash.io/plans", label: "Enterprise", position: 'right' },
+                {
+                    href: 'https://github.com/Unleash/unleash',
+                    position: 'right',
+                    className: 'header-github-link',
+                    'aria-label': 'GitHub repository',
+                },
             ]
         },
         footer: {
@@ -106,12 +112,13 @@ module.exports = {
                     {
                         to: '/advanced/toggle_variants',
                         from: '/toggle_variants'
-                    },
-                    {
-                        to: '/',
-                        from: '/docs'
                     }
-                ]
+                ],
+                createRedirects: function (toPath) {
+                    if (toPath.indexOf("/docs/") === -1 && toPath.indexOf("index.html") === -1) {
+                        return `/docs/${toPath}`
+                    }
+                }
             }
         ]
     ]

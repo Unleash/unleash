@@ -35,7 +35,17 @@ class UserFeedbackController extends Controller {
         req: IUserRequest<any, any, IFeedbackBody, any>,
         res: Response,
     ): Promise<void> {
+        const BAD_REQUEST = 400;
         const { user } = req;
+
+        const { feedbackId } = req.body;
+
+        if (!feedbackId) {
+            res.status(BAD_REQUEST).json({
+                error: 'feedbackId must be present.',
+            });
+            return;
+        }
 
         const feedback = {
             ...req.body,

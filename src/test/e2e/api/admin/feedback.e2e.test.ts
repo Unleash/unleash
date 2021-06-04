@@ -47,6 +47,20 @@ test('it creates feedback for user', async () => {
         });
 });
 
+test('it gives 400 when feedback is not present', async () => {
+    expect.assertions(1);
+
+    return app.request
+        .post('/api/admin/feedback')
+        .send({})
+        .set('Content-Type', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(400)
+        .expect(res => {
+            expect(res.body.error).toBeTruthy();
+        });
+});
+
 test('it updates feedback for user', async () => {
     expect.assertions(1);
 

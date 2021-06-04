@@ -20,7 +20,7 @@ module.exports = {
                 src: "img/logo.svg"
             },
             items: [
-                { to: "/", label: "Documentation" },
+                { to: "/", label: "Documentation",  activeBaseRegex: '(user_guide|sdks|addons|advanced)', },
                 { to: "deploy/getting_started", label: "Deploy and manage" },
                 { to: "integrations/integrations", label: "Integrations" },
                 { to: "/api", label: "API" },

@@ -7,7 +7,7 @@ In order to connect your application to Unleash you need to use a client SDK (so
 
 On this page you will find examples for connecting your application to the demo instance. If you are connecting to your own private instance you will have to remember to replace the `API token` and the `API url` given in the examples.
 
-We have examples for all _official client SDKs_:
+**Official Server SDKs**:
 
 - [Java SDK](./java_sdk)
 - [Node.js SDK](./node_sdk)
@@ -15,7 +15,10 @@ We have examples for all _official client SDKs_:
 - [Ruby SDK](./ruby_sdk)
 - [Python SDK](./python_sdk)
 - [.Net SDK](./dot_net_sdk)
-- [Javascript SDK](./proxy-javascript) (Used by single-page applications)
+
+**Official Frontend Proxy SDKs:**
+
+- [Javascript SDK](./proxy-javascript)
 - Android SDK (coming soon)
 - iOS SDK (coming soon)
 

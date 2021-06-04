@@ -8,7 +8,8 @@ New since Unleash v4.0.0 is an email service allowing us to send reset password 
 If the service is not configured you'll see a log line every time you add a new user saying
 
 ```bash
-[2021-05-07T12:59:04.572] [WARN] routes/user-controller.ts - email was not sent to the user because email configuration is lacking
+[2021-05-07T12:59:04.572] [WARN] routes/user-controller.ts - email
+was not sent to the user because email configuration is lacking
 ```
 
 ## Configuring {#configuring}

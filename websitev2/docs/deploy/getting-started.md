@@ -116,7 +116,9 @@ docker run -p 4242:4242 \
 Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see an empty list of feature toggles, try creating one with [curl](https://curl.se/) from a terminal/bash shell:
 
 ```
-curl --location -H "Authorization: <apitoken from previous step>" --request POST 'http://localhost:4242/api/admin/features' --header 'Content-Type: application/json' --data-raw '{\
+curl --location -H "Authorization: <apitoken from previous step>" \
+  --request POST 'http://localhost:4242/api/admin/features' \
+  --header 'Content-Type: application/json' --data-raw '{\
   "name": "Feature.A",\
   "description": "Dolor sit amet.",\
   "type": "release",\

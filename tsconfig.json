@@ -74,6 +74,7 @@
     "src/binver-dev.js",
     "dist",
     "snapshots",
-    "coverage"
+    "coverage",
+    "websitev2"
   ]
 }

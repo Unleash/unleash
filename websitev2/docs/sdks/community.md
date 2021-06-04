@@ -1,6 +1,6 @@
 ---
 id: community
-title: Community SDKs...
+title: Community SDKs ♥
 ---
 
 We from the Unleash teams take care of a handful of official SDKs for all the major programming languages.

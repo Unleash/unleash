@@ -24,7 +24,7 @@ module.exports = {
                 { to: "deploy/getting_started", label: "Deploy and manage" },
                 { to: "integrations/integrations", label: "Integrations" },
                 { to: "/api", label: "API" },
-                { href: "https://www.getunleash.io/plans", label: "Enterprise", position: 'right' },
+                { href: "https://www.getunleash.io/plans", label: "Unleash Enterprise", position: 'right' },
                 {
                     href: 'https://github.com/Unleash/unleash',
                     position: 'right',

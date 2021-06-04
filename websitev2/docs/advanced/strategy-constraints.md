@@ -3,9 +3,7 @@ id: strategy_constraints
 title: Strategy Constraints
 ---
 
-> **Enterprise feature**
->
-> Strategy constraints is only available with the Unleash-hosted offering and is not part of Unleash Open-Source.
+> Strategy constraints is part of Unleash Enterprise.
 
 Strategy constraints allow you to set pre-conditions on activation strategies that needs to be satisfied for the activation strategies to take effect.
 

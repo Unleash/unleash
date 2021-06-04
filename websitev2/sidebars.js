@@ -38,7 +38,7 @@ module.exports = {
             "sdks/proxy-ios",
             "sdks/community"
         ],
-        "Addons framework": [
+        "Addons": [
             "addons/index",
             "addons/webhook",
             "addons/slack",
@@ -89,7 +89,7 @@ module.exports = {
             "deploy/database-setup",
             "deploy/database_backup",
             "deploy/migration_guide",
-            "deploy/import_export"
+            "deploy/import_export",
         ]
     },
     "Integrations": {

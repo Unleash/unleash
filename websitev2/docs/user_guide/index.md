@@ -5,18 +5,18 @@ slug: /
 sidebar_position: 1
 ---
 
-Welcome to the Unleash getting started guides. We know that getting to know a new solution might be tedious. Our goal with this documentation is to guide you through the most essential concepts of Unleash.
+Welcome to the Unleash documentation. We know that getting to know a new solution might be tedious. Our goal with our documentation is to guide you through the most essential concepts of Unleash.
 
-One of the most important aspects of the architecture to understand is that feature toggles are evaluated in a client SDKs which runs as part of your application. This makes toggle evaluations super-fast, but of course it compromises a small update-delay when you change your toggle configurations (in terms of seconds and is configurable).
+One of the most important aspects of the architecture to understand is that feature toggles _are evaluated in a client SDKs_ which runs as part of your application. This makes toggle evaluations super-fast, but of course it compromises a small update-delay when you change your toggle configurations (in terms of seconds and is configurable).
 
-We recommend that you read about [our unique architecture](https://www.unleash-hosted.com/articles/our-unique-architecture) to understand some of the basics of the architecture.
+If you want more details you cam read about [our unique architecture](https://www.unleash-hosted.com/articles/our-unique-architecture).
 
 ## Unleash Server {#unleash-server}
 
-Before you can connect your application to Unleash you need a Unleash server. You have a few options available.
+Before you can connect your application to Unleash you need a Unleash server. You have a few options available:
 
 1. [Unleash Open-source - Self-managed](deploy/getting_started)
-2. [Unleash Enterprise - Cloud-hosted](https://www.getunleash.io)
+2. [Unleash Enterprise - Cloud-hosted](https://www.getunleash.io/plans)
 3. [Unleash Enterprise - Self-hosted](https://www.getunleash.io)
 
 ## System Overview {#system-overview}

@@ -17,7 +17,7 @@ On this page you will find examples for connecting your application to the demo 
 - [Python SDK](/sdks/python_sdk)
 - [.Net SDK](/sdks/dot_net_sdk)
 
-**Official Frontend Proxy SDKs:**
+**Official Frontend Unleash Proxy SDKs:**
 
 - [Javascript SDK](/sdks/proxy-javascript)
 - [Android SDK](/sdks/android_proxy_sdk)

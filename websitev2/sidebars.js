@@ -33,6 +33,7 @@ module.exports = {
             "sdks/python_sdk",
             "sdks/ruby_sdk",
             "sdks/unleash-proxy",
+            "sdks/android_proxy_sdk",
             "sdks/proxy-javascript",
             "sdks/proxy-ios",
             "sdks/community"

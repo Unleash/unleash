@@ -32,19 +32,17 @@ Your project file structure should look something like this
 
 ```
 unleash/
-  docs/
-    doc-1.md
-    doc-2.md
-    doc-3.md
-  website/
-    core/
-    pages/
+  websitev2/
+    /docs
+        doc-1.md
+        doc-2.md
+        doc-3.md
     static/
       css/
       img/
     package.json
     sidebar.json
-    siteConfig.js
+    docusaurus.config.js
 ```
 
 # Editing Content
@@ -81,7 +79,7 @@ title: This Doc Needs To Be Edited
 My new content here..
 ```
 
-1. Refer to that doc's ID in an existing sidebar in `website/sidebar.json`:
+1. Refer to that doc's ID in an existing sidebar in `websitev2/sidebars.json`:
 
 ```javascript
 // Add newly-created-doc to the Getting Started category of docs
@@ -122,26 +120,6 @@ For more information about adding new docs, click [here](https://docusaurus.io/d
 ```
 
 For more information about the navigation bar, click [here](https://docusaurus.io/docs/en/navigation)
-
-## Adding custom pages
-
-1. Docusaurus uses React components to build pages. The components are saved as .js files in `website/pages/en`:
-1. If you want your page to show up in your navigation header, you will need to update `website/siteConfig.js` to add to the `headerLinks` element:
-
-`website/siteConfig.js`
-
-```javascript
-{
-  headerLinks: [
-    ...
-    { page: 'my-new-custom-page', label: 'My New Custom Page' },
-    ...
-  ],
-  ...
-}
-```
-
-For more information about custom pages, click [here](https://docusaurus.io/docs/en/custom-pages).
 
 # Full Documentation
 

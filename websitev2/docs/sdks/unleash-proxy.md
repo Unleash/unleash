@@ -123,7 +123,7 @@ However in some settings you would like a bit more logic around it to make it as
 
 - [JavaScript Proxy SDK](./proxy-javascript)
 - Android Proxy SDK (coming soon)
-- iOS Proxy SDK (coming soon)
+- [iOS Proxy SDK](/sdks/proxy-ios)
 - React SDK (coming soon)
 - React Native SDK (coming soon)
 

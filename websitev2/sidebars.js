@@ -34,6 +34,7 @@ module.exports = {
             "sdks/ruby_sdk",
             "sdks/unleash-proxy",
             "sdks/proxy-javascript",
+            "sdks/proxy-ios",
             "sdks/community"
         ],
         "Addons framework": [

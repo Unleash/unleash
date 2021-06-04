@@ -8,7 +8,7 @@ module.exports = {
     onBrokenMarkdownLinks: "warn",
     favicon: "img/favicon.ico",
     organizationName: "Unleash", // Usually your GitHub org/user name.
-    projectName: "unleash", // Usually your repo name.
+    projectName: "unleash.github.io", // Usually your repo name.
     themeConfig: {
         defaultMode: 'light',
         disableSwitch: true,

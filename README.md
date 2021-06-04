@@ -5,7 +5,7 @@
 
 <a href="https://getunleash.io" title="Unleash - Create with freedom. Release with confidence">
     <img src="./.github/Logo_DarkBlue_Transparent_Portrait.svg" width="250">
-
+</a>
 </div>
 
 Unleash the open-source feature management platform. It provides a great overview over all feature toggles/flags across all your applications and services. Unleash enables software teams all over the world to take full control on how they enabled new functionality to end users.

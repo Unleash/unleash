@@ -122,7 +122,7 @@ The Unleash Proxy takes the heavy lifting of evaluating toggles and only returns
 However in some settings you would like a bit more logic around it to make it as fast as possible, and keep up to date with changes.
 
 - [JavaScript Proxy SDK](./proxy-javascript)
-- Android Proxy SDK (coming soon)
+- [Android Proxy SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)
 - React SDK (coming soon)
 - React Native SDK (coming soon)

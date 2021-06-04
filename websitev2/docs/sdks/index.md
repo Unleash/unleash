@@ -20,7 +20,7 @@ On this page you will find examples for connecting your application to the demo 
 **Official Frontend Proxy SDKs:**
 
 - [Javascript SDK](/sdks/proxy-javascript)
-- Android SDK (coming soon)
+- [Android SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)
 
 ### Clients written by awesome enthusiasts: {#clients-written-by-awesome-enthusiasts}

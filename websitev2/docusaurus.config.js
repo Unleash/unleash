@@ -34,7 +34,7 @@ module.exports = {
             ]
         },
         prism: {
-            additionalLanguages: ['java', 'swift', 'ruby', 'csharp'],
+            additionalLanguages: ['java', 'swift', 'ruby', 'csharp', 'kotlin'],
           },
         footer: {
             style: "dark",

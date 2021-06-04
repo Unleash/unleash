@@ -92,5 +92,27 @@ module.exports = {
                 }
             }
         ]
+    ],
+    plugins: [
+        [
+            '@docusaurus/plugin-client-redirects',
+            {
+                fromExtensions: ['html', 'htm'],
+                redirects: [
+                    {
+                        to: '/sdks/index',
+                        from: ['/user_guide/client-sdk', '/client-sdk']
+                    },
+                    {
+                        to: '/advanced/toggle_variants',
+                        from: '/toggle_variants'
+                    },
+                    {
+                        to: '/',
+                        from: '/docs'
+                    }
+                ]
+            }
+        ]
     ]
 };

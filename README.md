@@ -1,10 +1,13 @@
 <div align="center">
 
-![Build & Tests](https://github.com/Unleash/unleash/workflows/Build%20%26%20Tests/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master) [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash)
+
+![Build & Tests](https://github.com/Unleash/unleash/workflows/Build%20%26%20Tests/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master) [![npm](https://img.shields.io/npm/v/unleash-server)](https://www.npmjs.com/package/unleash-server) [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server)
 
 <a href="https://getunleash.io" title="Unleash - Create with freedom. Release with confidence">
-    <img src="./.github/Logo_DarkBlue_Transparent_Portrait.svg" width="250">
+    <img src="./.github/Logo_DarkBlue_Transparent_Portrait.svg" width="200">
 </a>
+
 </div>
 
 Unleash is the open-source feature management platform. It provides a great overview over all feature toggles/flags across all your applications and services. Unleash enables software teams all over the world to take full control on how they enabled new functionality to end users.
@@ -23,11 +26,13 @@ Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for a
 - Audit logs
 - Addons integrating with other popular tools (Slack, Teams, Datadog, etc.)
 - It is secure (Enable Secure Headers with strict HTTPS only mode)
-- High performance with evaluations on the client side [read more in our docs](https://docs.getunleash.io/)
+- Extremely scalable with evaluations on the client side. Used in enterprises handling more than 10k req/s. [Read more about our architecture](https://docs.getunleash.io/)
 - Dashboard to manage technical debt
 - Admin APIs
+- Flexible architecture and can be hosted anywhere
+- [Docker image available](https://hub.docker.com/r/unleashorg/unleash-serve)
 
-In addition we have built [Unleash Enterprise](https://www.getunleash.io/plans) with additional advanced functionality:
+[Unleash Enterprise](https://www.getunleash.io/plans) builds directly on top of the Open-Source and provides additional advanced functionality:
 
 - Project support
 - Advanced segmentation
@@ -93,28 +98,32 @@ if (unleash.isEnabled("AwesomeFeature")) {
 }
 ```
 
-# Running Unleash Service
+# Running Unleash
 
-## Run it yourself
+The are numbers of ways you can run Unleash.
 
-Unleash is open source and you are free to run your own instance. Please refer to the [getting-started-guide](https://docs.getunleash.io/docs/deploy/getting_started) to learn how to run the Unleash Service.
+## 1. Run it yourself (on prem, self hosted)
 
-## Unleash as a Service (SaaS)
+Unleash is open source and you are free to run your own instance. The [Getting started guide](https://docs.getunleash.io/docs/deploy/getting_started) goes through all the options on how to run Unleash.
+
+## 2. Unleash as a Service
 
 After numerous request we have created a separate company, Unleash-hosted, which offer Unleash as a Service. Unleash-hosted allows you to focus on you core business and have someone else taking care of hosting and maintaining Unleash.
 
 Go to [getunleash.io](https://www.getunleash.io/plans) to learn more about this offering and start using Unleash today. This service also includes official support.
 
-# Developer Guide
+# Contribute to Unleash
 
-If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) to learn more on how you can contribute.
+Unleash has been built with the help of many smart individuals. This ensures that we build a product that solves real problem for people. If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) to learn more on how you can contribute.
 
-# I Need help
+# Help
+
+We know that learning a new tool can be hard and time consuming. We have a growing community which loves to help out. Please don't hesitate about reaching out to get help.
 
 - [Join Unleash on Slack](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTJjYmViYjkwYmE0ODVlNmY1YjcwZGRmZWU5MTU1YTQ1Nzg5ZWQ2YzBlY2U1MjlmZDg5ZDRmZTMzNmQ5YmEyOGE) if you want ask open questions about Unleash, feature toggling or discuss these topics in general.
 - [Create a issue request](https://github.com/Unleash/unleash/issues/new) if you have found a bug or have ideas on how to improve Unleash.
 
-## In the media
+# In the media
 
 - [Utviklerpodden, 1 - Feature Flags og Unleash med Fredrik Oseberg](https://pod.space/utviklerpodden/feature-flags-og-unleash-med-fredrik-oseberg) (Norwegian)
 - [Node Weekly issue 380](https://nodeweekly.com/issues/380)

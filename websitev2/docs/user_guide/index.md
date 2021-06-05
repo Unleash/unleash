@@ -26,7 +26,7 @@ Unleash is composed of the following parts:
 - **Unleash API** - The service holding all feature toggles and their configurations. Configurations declare which activation strategies to use and which parameters they should get.
 - **Unleash UI** - The dashboard used to manage feature toggles, define new strategies, look at metrics, etc.
 - **Unleash SDK** - Used by clients to check if a feature is enabled or disabled. The SDK also collects metrics and sends them to the Unleash API. Activation Strategies are also implemented in the SDK.
-- **Unleash Proxy** - Sits between frontend and native applications and the Unleash API. Ensures high performance and that we don't expose the full feature toggle configuration to end-users. [Read more about Unleash Proxy](/sdks/unleash-proxy)
+- **Unleash Proxy** - Sits between frontend/native applications and the Unleash API. Ensures high performance and that you don't expose the full feature toggle configuration to end-users. [Read more about Unleash Proxy](/sdks/unleash-proxy)
 
 ![system_overview](/img/unleash-diagram.png 'System Overview')
 

@@ -20,6 +20,7 @@ import apiAdmin from './e-api-admin';
 import authAdmin from './e-admin-auth';
 import apiCalls from './api-calls';
 import invoiceAdmin from './e-admin-invoice';
+import feedback from './feedback';
 
 const unleashStore = combineReducers({
     features,
@@ -43,6 +44,7 @@ const unleashStore = combineReducers({
     authAdmin,
     apiCalls,
     invoiceAdmin,
+    feedback,
 });
 
 export default unleashStore;

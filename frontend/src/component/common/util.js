@@ -1,4 +1,5 @@
 import { weightTypes } from '../feature/variant/enums';
+import differenceInDays from 'date-fns/differenceInDays';
 
 const dateTimeOptions = {
     day: '2-digit',
@@ -111,3 +112,29 @@ export const modalStyles = {
 
 export const updateIndexInArray = (array, index, newValue) =>
     array.map((v, i) => (i === index ? newValue : v));
+
+export const showPnpsFeedback = user => {
+    if (!user) return;
+    if (!user.feedback) return;
+    if (user.feedback.length > 0) {
+        const feedback = user.feedback.find(
+            feedback => feedback.feedbackId === 'pnps'
+        );
+
+        if (!feedback) return false;
+
+        if (feedback.neverShow) {
+            return false;
+        }
+
+        if (feedback.given) {
+            const SIX_MONTHS_IN_DAYS = 182;
+            const now = new Date();
+            const difference = differenceInDays(now, new Date(feedback.given));
+
+            return difference > SIX_MONTHS_IN_DAYS;
+        }
+        return false;
+    }
+    return true;
+};

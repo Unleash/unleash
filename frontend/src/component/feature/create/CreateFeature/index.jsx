@@ -6,7 +6,8 @@ import {
     validateName,
 } from '../../../../store/feature-toggle/actions';
 import CreateFeature from './CreateFeature';
-import { loadNameFromHash } from '../../../common/util';
+import { loadNameFromHash, showPnpsFeedback } from '../../../common/util';
+import { showFeedback } from '../../../../store/feedback/actions';
 
 const defaultStrategy = {
     name: 'default',
@@ -62,8 +63,9 @@ class WrapperComponent extends Component {
     };
 
     onSubmit = async evt => {
+        const { user } = this.props;
         evt.preventDefault();
-        const { createFeatureToggles, history } = this.props;
+        const { createFeatureToggles, history, showFeedback } = this.props;
         const { featureToggle } = this.state;
 
         const errors = Object.values(this.state.errors).filter(i => i);
@@ -80,6 +82,11 @@ class WrapperComponent extends Component {
             await createFeatureToggles(featureToggle).then(() =>
                 history.push(`/features/strategies/${featureToggle.name}`)
             );
+
+            if (showPnpsFeedback(user)) {
+                showFeedback();
+            }
+            // Trigger
         } catch (e) {
             if (e.toString().includes('not allowed to be empty')) {
                 this.setState({
@@ -119,6 +126,7 @@ const mapDispatchToProps = dispatch => ({
     validateName: name => validateName(name)(dispatch),
     createFeatureToggles: featureToggle =>
         createFeatureToggles(featureToggle)(dispatch),
+    showFeedback: showFeedback(dispatch),
 });
 
 const mapStateToProps = state => {

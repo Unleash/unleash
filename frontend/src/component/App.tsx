@@ -12,12 +12,14 @@ import styles from './styles.module.scss';
 import IAuthStatus from '../interfaces/user';
 import { useEffect } from 'react';
 import NotFound from './common/NotFound/NotFound';
+import Feedback from './common/Feedback';
 interface IAppProps extends RouteComponentProps {
     user: IAuthStatus;
     fetchUiBootstrap: any;
+    feedback: any;
 }
 
-const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
+const App = ({ location, user, fetchUiBootstrap, feedback }: IAppProps) => {
     useEffect(() => {
         fetchUiBootstrap();
         /* eslint-disable-next-line */
@@ -84,6 +86,10 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
                     <Route path="/404" component={NotFound} />
                     <Redirect to="/404" />
                 </Switch>
+                <Feedback
+                    feedbackId="pnps"
+                    openUrl="https://getunleash.ai/pnps"
+                />
             </LayoutPicker>
         </div>
     );
@@ -91,6 +97,7 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
 // Set state to any for now, to avoid typing up entire state object while converting to tsx.
 const mapStateToProps = (state: any) => ({
     user: state.user.toJS(),
+    feedback: state.feedback,
 });
 
 export default connect(mapStateToProps)(App);

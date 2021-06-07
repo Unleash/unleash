@@ -1,7 +1,7 @@
 'use strict';
 
 // eslint-disable-next-line
-import EventEmitter from "events";
+import EventEmitter from 'events';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 
@@ -25,6 +25,7 @@ import { ApiTokenStore } from './api-token-store';
 import SessionStore from './session-store';
 import { AccessStore } from './access-store';
 import { ResetTokenStore } from './reset-token-store';
+import UserFeedbackStore from './user-feedback-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -59,6 +60,7 @@ export const createStores = (
         apiTokenStore: new ApiTokenStore(db, eventBus, getLogger),
         resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),
         sessionStore: new SessionStore(db, eventBus, getLogger),
+        userFeedbackStore: new UserFeedbackStore(db, eventBus, getLogger),
     };
 };
 

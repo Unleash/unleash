@@ -41,6 +41,10 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
     ]);
 
     useEffect(() => {
+        if (!password) {
+            setValidOwaspPassword(false);
+        }
+
         if (password === confirmPassword) {
             setMatchingPasswords(true);
         } else {

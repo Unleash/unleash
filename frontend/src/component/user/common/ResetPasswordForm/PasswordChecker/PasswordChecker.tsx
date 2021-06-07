@@ -6,6 +6,8 @@ import { useStyles } from './PasswordChecker.styles';
 import HelpIcon from '@material-ui/icons/Help';
 import { useCallback } from 'react';
 import { formatApiPath } from '../../../../../utils/format-path';
+import { Alert } from '@material-ui/lab';
+import ConditionallyRender from '../../../../common/ConditionallyRender';
 
 interface IPasswordCheckerProps {
     password: string;
@@ -31,6 +33,8 @@ const UPPERCASE_ERROR =
     'The password must contain at least one uppercase letter.';
 const LOWERCASE_ERROR =
     'The password must contain at least one lowercase letter.';
+const REPEATING_CHARACTER_ERROR =
+    'The password may not contain sequences of three or more repeated characters.';
 
 const PasswordChecker = ({
     password,
@@ -42,6 +46,7 @@ const PasswordChecker = ({
     const [numberError, setNumberError] = useState(true);
     const [symbolError, setSymbolError] = useState(true);
     const [lengthError, setLengthError] = useState(true);
+    const [repeatingCharError, setRepeatingCharError] = useState(false);
 
     const makeValidatePassReq = useCallback(() => {
         const path = formatApiPath('auth/reset/validate-password');
@@ -54,9 +59,19 @@ const PasswordChecker = ({
         });
     }, [password]);
 
+    const clearCheckerErrors = useCallback(() => {
+        setAllErrors(false);
+    }, []);
+
     const checkPassword = useCallback(async () => {
-        if (!password) return;
-        if (password.length < 3) return;
+        if (!password) {
+            setAllErrors(true);
+            return;
+        }
+        if (password.length < 3) {
+            setLengthError(true);
+            return;
+        }
         try {
             const res = await makeValidatePassReq();
             if (res.status === BAD_REQUEST) {
@@ -66,24 +81,25 @@ const PasswordChecker = ({
             }
 
             if (res.status === OK) {
-                clearErrors();
+                clearCheckerErrors();
+                setRepeatingCharError(false);
                 callback(true);
             }
         } catch (e) {
             // ResetPasswordForm handles errors related to submitting the form.
             console.log('An exception was caught and handled');
         }
-    }, [makeValidatePassReq, callback, password]);
+    }, [makeValidatePassReq, callback, password, clearCheckerErrors]);
 
     useEffect(() => {
         checkPassword();
     }, [password, checkPassword]);
 
-    const clearErrors = () => {
-        setCasingError(false);
-        setNumberError(false);
-        setSymbolError(false);
-        setLengthError(false);
+    const setAllErrors = (flag: boolean) => {
+        setCasingError(flag);
+        setNumberError(flag);
+        setSymbolError(flag);
+        setLengthError(flag);
     };
 
     const handleErrorResponse = (data: IErrorResponse) => {
@@ -114,6 +130,12 @@ const PasswordChecker = ({
             setCasingError(true);
         } else {
             setCasingError(false);
+        }
+
+        if (errors.includes(REPEATING_CHARACTER_ERROR)) {
+            setRepeatingCharError(true);
+        } else {
+            setRepeatingCharError(false);
         }
     };
 
@@ -191,6 +213,17 @@ const PasswordChecker = ({
                         <div className={symbolStatusBarClasses} data-loading />
                     </div>
                 </div>
+                <ConditionallyRender
+                    condition={repeatingCharError}
+                    show={
+                        <Alert
+                            severity="error"
+                            className={styles.repeatingError}
+                        >
+                            You may not repeat three characters in a row.
+                        </Alert>
+                    }
+                />
             </div>
         </>
     );

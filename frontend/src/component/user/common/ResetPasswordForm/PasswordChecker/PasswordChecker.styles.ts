@@ -4,7 +4,7 @@ export const useStyles = makeStyles(theme => ({
     container: {
         border: '1px solid #f1f1f1',
         borderRadius: '3px',
-        right: '100px',
+        position: 'relative',
         maxWidth: '350px',
         color: '#44606e',
     },
@@ -40,5 +40,10 @@ export const useStyles = makeStyles(theme => ({
     },
     helpIcon: {
         height: '17.5px',
+    },
+    repeatingError: {
+        marginTop: '0.5rem',
+        bottom: '0',
+        position: 'absolute',
     },
 }));

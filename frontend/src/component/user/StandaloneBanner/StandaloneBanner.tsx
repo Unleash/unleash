@@ -2,8 +2,8 @@ import { FC } from 'react';
 
 import { Typography, useTheme } from '@material-ui/core';
 import Gradient from '../../common/Gradient/Gradient';
-import { ReactComponent as RightToggleIcon } from '../../../assets/icons/toggleRight.svg';
-import { ReactComponent as LeftToggleIcon } from '../../../assets/icons/toggleLeft.svg';
+
+import { ReactComponent as Logo } from '../../../assets/icons/logo-white-bg.svg';
 
 import { useStyles } from './StandaloneBanner.styles';
 
@@ -21,7 +21,6 @@ const StandaloneBanner: FC<IStandaloneBannerProps> = ({ title, children }) => {
             style={{
                 borderBottomLeftRadius: '3px',
                 borderTopLeftRadius: '3px',
-                overflow: 'hidden',
             }}
         >
             <div className={styles.container}>
@@ -33,10 +32,8 @@ const StandaloneBanner: FC<IStandaloneBannerProps> = ({ title, children }) => {
                 </Typography>
             </div>
 
-            <div className={styles.switchesContainer}>
-                <RightToggleIcon className={styles.switchIcon} />
-                <br></br>
-                <LeftToggleIcon className={styles.switchIcon} />
+            <div className={styles.logoContainer}>
+                <Logo className={styles.logo} />
             </div>
         </Gradient>
     );

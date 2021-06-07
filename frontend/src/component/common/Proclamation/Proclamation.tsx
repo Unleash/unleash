@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert } from '@material-ui/lab';
 import ConditionallyRender from '../ConditionallyRender';
 import { Typography } from '@material-ui/core';
@@ -23,12 +23,17 @@ const renderProclamation = (id: string) => {
             return false;
         }
     }
+    console.log('RETURNING TRUE');
     return true;
 };
 
 const Proclamation = ({ toast }: IProclamationProps) => {
-    const [show, setShow] = useState(renderProclamation(toast?.id || ''));
+    const [show, setShow] = useState(false);
     const styles = useStyles();
+
+    useEffect(() => {
+        setShow(renderProclamation(toast?.id || ''));
+    }, [toast?.id]);
 
     const onClose = () => {
         if (localStorage) {

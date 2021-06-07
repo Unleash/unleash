@@ -10,8 +10,7 @@ export const useStyles = makeStyles(theme => ({
     title: {
         fontSize: theme.fontSizes.mainHeader,
         marginBottom: '1.25rem',
-        display: 'flex',
-        alignItems: 'center',
+        textAlign: 'center',
     },
     inviteText: {
         marginBottom: '1rem',

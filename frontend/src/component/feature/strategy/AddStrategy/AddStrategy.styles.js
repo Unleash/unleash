@@ -11,6 +11,7 @@ export const useStyles = makeStyles(theme => ({
     },
     subTitle: {
         fontWeight: theme.fontWeight.semi,
-        margin: '1rem 0',
+        fontSize: theme.fontSizes.subHeader,
+        margin: '2rem 0 0.5rem 0',
     },
 }));

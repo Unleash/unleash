@@ -50,7 +50,10 @@ const ForgottenPassword = () => {
             >
                 <Typography
                     variant="h2"
-                    className={commonStyles.title}
+                    className={classnames(
+                        commonStyles.title,
+                        commonStyles.textCenter
+                    )}
                     data-loading
                 >
                     Forgotten password
@@ -79,7 +82,11 @@ const ForgottenPassword = () => {
                         styles.container
                     )}
                 >
-                    <Typography variant="body1" data-loading>
+                    <Typography
+                        variant="body1"
+                        data-loading
+                        className={commonStyles.textCenter}
+                    >
                         Please provide your email address. If it exists in the
                         system we'll send a new reset link.
                     </Typography>

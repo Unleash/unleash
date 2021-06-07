@@ -38,9 +38,9 @@ export const useStyles = makeStyles(theme => ({
         fontSize: '2rem',
         fontWeight: '300',
     },
-    switchesContainer: {
+    logoContainer: {
         position: 'absolute',
-        bottom: '15px',
+        bottom: '-50px',
         left: '-50px',
         display: 'flex',
         flexDirection: 'column',
@@ -48,7 +48,8 @@ export const useStyles = makeStyles(theme => ({
             display: 'none',
         },
     },
-    switchIcon: {
-        height: '100px',
+    logo: {
+        width: '240px',
+        height: '240px',
     },
 }));

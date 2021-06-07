@@ -33,8 +33,7 @@ export const useStyles = makeStyles(theme => ({
     title: {
         fontSize: theme.fontSizes.mainHeader,
         marginBottom: '1rem',
-        display: 'flex',
-        alignItems: 'center',
+        textAlign: 'center',
     },
     logo: {
         marginRight: '10px',

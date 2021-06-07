@@ -55,6 +55,15 @@ function AddUserForm({
         });
     };
 
+    const sortRoles = (a, b) => {
+        if (b.name[0] < a.name[0]) {
+            return 1;
+        } else if (a.name[0] < b.name[0]) {
+            return -1;
+        }
+        return 0;
+    };
+
     const apiError =
         userApiErrors[ADD_USER_ERROR] || userApiErrors[UPDATE_USER_ERROR];
     return (
@@ -134,7 +143,7 @@ function AddUserForm({
                             onChange={updateNumberField}
                             data-loading
                         >
-                            {roles.map(role => (
+                            {roles.sort(sortRoles).map(role => (
                                 <FormControlLabel
                                     key={`role-${role.id}`}
                                     labelPlacement="end"

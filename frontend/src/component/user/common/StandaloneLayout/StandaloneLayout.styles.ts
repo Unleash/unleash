@@ -2,8 +2,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     container: {
-        padding: '4rem',
-        background: '#3a5663',
+        padding: '5.5rem',
+        background: '#EFF2F2',
         display: 'flex',
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',

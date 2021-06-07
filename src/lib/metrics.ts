@@ -44,13 +44,13 @@ export default class MetricsMonitor {
             name: 'http_request_duration_milliseconds',
             help: 'App response time',
             labelNames: ['path', 'method', 'status'],
-            percentiles: [0.1, 0.5, 0.9, 0.99],
+            percentiles: [0.1, 0.5, 0.9, 0.95, 0.99],
         });
         const dbDuration = new client.Summary({
             name: 'db_query_duration_seconds',
             help: 'DB query duration time',
             labelNames: ['store', 'action'],
-            percentiles: [0.1, 0.5, 0.9, 0.99],
+            percentiles: [0.1, 0.5, 0.9, 0.95, 0.99],
         });
         const featureToggleUpdateTotal = new client.Counter({
             name: 'feature_toggle_update_total',

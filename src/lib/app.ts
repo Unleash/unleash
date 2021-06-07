@@ -46,6 +46,12 @@ export default function getApp(
     app.set('port', config.server.port);
     app.locals.baseUriPath = baseUriPath;
 
+    if (config.server.serverMetrics && eventBus) {
+        app.use(responseTimeMetrics(eventBus));
+    }
+
+    app.use(requestLogger(config));
+
     if (typeof config.preHook === 'function') {
         config.preHook(app, config, services);
     }
@@ -58,10 +64,6 @@ export default function getApp(
     app.use(cookieParser());
     app.use(express.json({ strict: false }));
     app.use(unleashDbSession(config, stores));
-    if (config.server.serverMetrics && eventBus) {
-        app.use(responseTimeMetrics(eventBus));
-    }
-    app.use(requestLogger(config));
     app.use(secureHeaders(config));
     app.use(express.urlencoded({ extended: true }));
     app.use(favicon(path.join(publicFolder, 'favicon.ico')));

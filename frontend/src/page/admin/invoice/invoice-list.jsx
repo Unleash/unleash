@@ -59,7 +59,7 @@ function InvoiceList({
                                     {item.status}
                                 </TableCell>
                                 <TableCell style={{ textAlign: 'left' }}>
-                                {formatDateWithLocale(
+                                { item.dueDate && formatDateWithLocale(
                                         item.dueDate,
                                         location.locale
                                     )}

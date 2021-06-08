@@ -21,7 +21,12 @@ export default class UserFeedbackService {
         if (user.isAPI) {
             return [];
         }
-        return this.userFeedbackStore.getAllUserFeedback(user.id);
+        try {
+            return await this.userFeedbackStore.getAllUserFeedback(user.id);
+        } catch (err) {
+            this.logger.error(err);
+            return [];
+        }
     }
 
     async getFeedback(

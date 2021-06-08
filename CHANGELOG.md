@@ -1,6 +1,15 @@
 # Changelog
 
+# 4.0.3
+
+- feat: pnps feedback (#862)
+- fix: upgrade unleash-frontend to v4.0.4
+- chore: docs updates
+
 # 4.0.2
+
+- fix: upgrade unleash-frontend to version 4.0.1
+- fix: projects needs at least one owner
 
 # 4.0.1
 

@@ -69,7 +69,7 @@ class UserController extends Controller {
                 user,
             );
             const feedback = await this.userFeedbackService.getAllUserFeedback(
-                user.id,
+                user,
             );
 
             delete user.permissions; // TODO: remove

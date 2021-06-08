@@ -2,6 +2,7 @@ import { Logger } from '../logger';
 import UserFeedbackStore, { IUserFeedback } from '../db/user-feedback-store';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
+import User from '../types/user';
 
 export default class UserFeedbackService {
     private userFeedbackStore: UserFeedbackStore;
@@ -16,8 +17,11 @@ export default class UserFeedbackService {
         this.logger = getLogger('services/user-feedback-service.js');
     }
 
-    async getAllUserFeedback(user_id: number): Promise<IUserFeedback[]> {
-        return this.userFeedbackStore.getAllUserFeedback(user_id);
+    async getAllUserFeedback(user: User): Promise<IUserFeedback[]> {
+        if (user.isAPI) {
+            return [];
+        }
+        return this.userFeedbackStore.getAllUserFeedback(user.id);
     }
 
     async getFeedback(

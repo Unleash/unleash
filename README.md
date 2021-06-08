@@ -36,9 +36,11 @@ Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for a
 - Project support
 - Advanced segmentation
 - Environments (unlimited)
-- Support
 - SSO (SAML 2.0, OpenID Connect, etc)
-- A Hosted offering where the Unleash team host, monitor, scale, upgrades and take full backups for your.
+- Technical Support
+- A cloud offering where the Unleash team host, monitor, scale, patches, upgrades and take full backups for you.
+- Self-hosted on prem available. 
+
 
 ## Client SDKs
 

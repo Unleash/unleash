@@ -14,6 +14,7 @@ Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for a
 
 ## Features
 
+**Open-Source**
 - Boolean feature toggles (on/off)
 - Canary release (Gradual rollout)
 - Targeted release
@@ -30,10 +31,11 @@ Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for a
 - Flexible architecture and can be hosted anywhere
 - [Docker image available](https://hub.docker.com/r/unleashorg/unleash-serve)
 
-[Unleash Enterprise](https://www.getunleash.io/plans) builds directly on top of the Open-Source and provides additional advanced functionality:
+**[Unleash Enterprise](https://www.getunleash.io/plans)** builds directly on top of the Open-Source and provides additional advanced functionality:
 
 - Project support
 - Advanced segmentation
+- Environments (unlimited)
 - Support
 - SSO (SAML 2.0, OpenID Connect, etc)
 - A Hosted offering where the Unleash team host, monitor, scale, upgrades and take full backups for your.
@@ -57,7 +59,7 @@ In order to connect your application to Unleash you need to use a client SDK for
 - [Android SDK](https://docs.getunleash.io/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](https://docs.getunleash.io/sdks/proxy-ios)
 
-In addition there exists a good list of [community developed SDKs](https://docs.getunleash.io/sdks/community), so there might already exist an implementation for your favorite programming language (PHP, Elixir, Dart, Rust, Clojure, NestJS, Kotlin and more.)
+In addition there exists a good list of [community developed SDKs](https://docs.getunleash.io/sdks/community), so there might already exist an implementation for your favorite programming language (e.g. [Rust](https://github.com/cognitedata/unleash-client-rust), [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), [NestJS](https://github.com/pmb0/nestjs-unleash), [Kotlin](https://github.com/silvercar/unleash-client-kotlin), [PHP](https://gitlab.com/minds/unleash-client-php) and more.)
 
 ## What is a feature toggle?
 

@@ -88,7 +88,7 @@ const App = ({ location, user, fetchUiBootstrap, feedback }: IAppProps) => {
                 </Switch>
                 <Feedback
                     feedbackId="pnps"
-                    openUrl="https://getunleash.ai/pnps"
+                    openUrl="http://feedback.unleash.run"
                 />
             </LayoutPicker>
         </div>

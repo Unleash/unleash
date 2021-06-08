@@ -9,13 +9,20 @@ The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
 
+# 4.0.3
+
+- fix: add null check for dueDate
+
 # 4.0.2
+
 - chore/update-changelog
 - feat/pnps
 - fix/customer journey patches (#304)
 - fix: add check for obscure error (#305)
 - fix: passwordchecker
+
 # 4.0.1
+
 - fix: Project  actions need to checkAccess based on projectId
 - fix: INLINE_RUNTIME_CHUNK
 

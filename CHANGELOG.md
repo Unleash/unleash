@@ -1,5 +1,10 @@
 # Changelog
 
+# 4.0.4
+
+- fix: userFeedback should not be allowed to throw
+- fix: make sure routes/user handles api calls
+
 # 4.0.3
 
 - feat: pnps feedback (#862)

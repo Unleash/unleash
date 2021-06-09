@@ -1,6 +1,6 @@
 ---
 id: integrations
-title: Integrations and plugins
+title: External Integrations and plugins
 ---
 
 Available integrations with Unleash

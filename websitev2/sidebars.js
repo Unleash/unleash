@@ -93,6 +93,7 @@ module.exports = {
         ]
     },
     "Integrations": {
-        "Integrations": ["integrations/integrations", "integrations/jira_plugin"]
+        "Integrations": ["integrations/integrations"],
+        "JIRA": ["integrations/jira_plugin_installation", "integrations/jira_plugin_usage"]
     }
 };

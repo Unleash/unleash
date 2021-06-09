@@ -62,9 +62,12 @@ export default function getApp(
 
     app.use(compression());
     app.use(cookieParser());
+    // @ts-ignore
     app.use(express.json({ strict: false }));
     app.use(unleashDbSession(config, stores));
+    // @ts-ignore
     app.use(secureHeaders(config));
+    // @ts-ignore
     app.use(express.urlencoded({ extended: true }));
     app.use(favicon(path.join(publicFolder, 'favicon.ico')));
 

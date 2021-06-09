@@ -8,6 +8,8 @@ indent_style = space
 indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
+ij_javascript_force_quote_style = true
+ij_javascript_use_double_quotes = false
 
 [*.md]
 trim_trailing_whitespace = false

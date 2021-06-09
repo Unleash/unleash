@@ -41,7 +41,7 @@ To use the plugin, you'll need to create an issue or use an existing one. Once t
 
 ![Jira - Issue panel button](/img/jira_issue_panel_button.png)
 
-Clicking this button, adds a section to your issue panel allowing you to connect a feature toggle to the issue. If no feature toggle is connected to the issue, you'll be greeted by an entry form for creating the toggle.
+Clicking this button adds a section to your issue panel allowing you to connect a feature toggle to the issue. If no feature toggle is connected to the issue, you'll be greeted by an entry form for creating the toggle.
 
 ![Jira - Create Feature Toggle entry form](/img/jira_create_feature_toggle.png)
 

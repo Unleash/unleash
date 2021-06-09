@@ -93,6 +93,6 @@ module.exports = {
         ]
     },
     "Integrations": {
-        "Integrations": ["integrations/integrations"]
+        "Integrations": ["integrations/integrations", "integrations/jira_plugin"]
     }
 };

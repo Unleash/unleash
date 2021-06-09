@@ -25,7 +25,7 @@ Click it and you'll get taken to our configuration page
 
 Once on the configuration page. You should enter your installation URL and an API Key with access level `Admin`
 
-- See [the API token doc](/advanced/api_access) for how to configure an Admin token
+- See [the API token doc](/user_guide/api-token) for how to configure an Admin token
 
 ![Jira - Configure unleash app](/img/jira_configure_unleash_app.png)
 

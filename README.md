@@ -29,7 +29,7 @@ Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for a
 - Dashboard to manage technical debt
 - Admin APIs
 - Flexible architecture and can be hosted anywhere
-- [Docker image available](https://hub.docker.com/r/unleashorg/unleash-serve)
+- [Docker image available](https://hub.docker.com/r/unleashorg/unleash-server)
 
 **[Unleash Enterprise](https://www.getunleash.io/plans)** builds directly on top of the Open-Source and provides additional advanced functionality:
 

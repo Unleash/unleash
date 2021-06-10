@@ -113,6 +113,14 @@ module.exports = {
                         from: ['/user_guide/client-sdk', '/client-sdk']
                     },
                     {
+                        to: '/user_guide/api-token',
+                        from: '/deploy/user_guide/api-token'
+                    },
+                    {
+                        to: '/sdks/unleash-proxy',
+                        from: '/user_guide/native_apps/'
+                    },
+                    {
                         to: '/advanced/toggle_variants',
                         from: '/toggle_variants'
                     }

@@ -7,7 +7,7 @@ title: Slack
 
 The Slack addon allows Unleash to post Updates when a feature toggle is updated. To set up Slack, you need to configure an incoming Slack webhook URL. You can follow [Sending messages using Incoming Webhooks](https://api.slack.com/incoming-webhooks) on how to do that. You can also choose to [create a slack app for Unleash](https://api.slack.com/apps), which will provide you with additional functionality to control how Unleash communicates messages on your Slack workspace.
 
-The Slack addon will perform a single retry if the HTTP POST against the Slack Webhook URL fails (either a 50x or network error). Duplicate events may happen,m and you should never assume events always comes in order.
+The Slack addon will perform a single retry if the HTTP POST against the Slack Webhook URL fails (either a 50x or network error). Duplicate events may happen. You should never assume events always comes in order.
 
 ## Configuration {#configuration}
 
@@ -30,6 +30,10 @@ Unleash Slack addon takes the following parameters.
 - **Username** - Used to override the username used to post the update to a Slack channel.
 - **Emoji Icon** - Used to override the emoji icon used to post the update to a Slack channel.
 - Default channel - Where to post the message if the feature toggles has not overridden the channel via the slack tags.
+
+#### Global configuration
+
+- **Unleash URL** - The slack plugin uses the `server.unleashUrl` property to create the link back to Unleash in the posts. This can be set using the **UNLEASH_URL** environment variable or the `server.unleashUrl` property when starting the server from node.
 
 #### Tags {#tags}
 

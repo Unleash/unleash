@@ -15,6 +15,7 @@ Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for a
 ## Features
 
 **Open-Source**
+
 - Boolean feature toggles (on/off)
 - Canary release (Gradual rollout)
 - Targeted release
@@ -31,16 +32,18 @@ Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for a
 - Flexible architecture and can be hosted anywhere
 - [Docker image available](https://hub.docker.com/r/unleashorg/unleash-server)
 
-**[Unleash Enterprise](https://www.getunleash.io/plans)** builds directly on top of the Open-Source and provides additional advanced functionality:
+**Enterprise**
+
+[Unleash Enterprise](https://www.getunleash.io/plans) builds directly on top of the Open-Source (open-core) and provides additional advanced functionality:
 
 - Project support
 - Advanced segmentation
 - Environments (unlimited)
 - SSO (SAML 2.0, OpenID Connect, etc)
-- Technical Support
-- A cloud offering where the Unleash team host, monitor, scale, patches, upgrades and take full backups for you.
-- Self-hosted on prem available. 
-
+- A cloud offering where the Unleash team host, monitor, scale, patches, upgrades and take full backups for you
+- Self-hosted possible
+- SLA guarantees
+- Support
 
 ## Client SDKs
 
@@ -104,15 +107,44 @@ if (unleash.isEnabled("AwesomeFeature")) {
 
 The are numbers of ways you can run Unleash.
 
-## 1. Run it yourself (on prem, self hosted)
+1. Unleash Enterprise - Cloud hosted by the the Unleash Team. [see plans](https://www.getunleash.io/plans)
+2. Unleash Open-Source - Self host with Docker. [Guide](https://docs.getunleash.io/deploy/getting_started#start-unleash-server)
+3. Unleash Open-Source - Self host with Node.js [Guide](https://docs.getunleash.io/deploy/getting_started#start-unleash-server)
+4. Unleash Open-Source - Helm chart [artifacthub.io](https://artifacthub.io/packages/helm/unleash/unleash)
 
-Unleash is open source and you are free to run your own instance. The [Getting started guide](https://docs.getunleash.io/docs/deploy/getting_started) goes through all the options on how to run Unleash.
+### Run from Docker
 
-## 2. Unleash as a Service
+1. Create a network by running docker network create unleash
+2. Start a postgres database:
 
-After numerous request we have created a separate company, Unleash-hosted, which offer Unleash as a Service. Unleash-hosted allows you to focus on you core business and have someone else taking care of hosting and maintaining Unleash.
+```sh
+docker run -e POSTGRES_PASSWORD=some_password \
+  -e POSTGRES_USER=unleash_user -e POSTGRES_DB=unleash \
+  --network unleash --name postgres postgres
+```
 
-Go to [getunleash.io](https://www.getunleash.io/plans) to learn more about this offering and start using Unleash today. This service also includes official support.
+3. Start Unleash via docker:
+
+```sh
+docker run -p 4242:4242 \
+  -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
+  -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=some_password \
+  -e DATABASE_SSL=false \
+  --network unleash unleashorg/unleash-server
+```
+
+The first time Unleash starts it will create a default user which you can use to sign-in to you Unleash instance and add more users with:
+
+- username: `admin`
+- password: `unleash4all`
+
+# Users of Unleash
+
+Unleash is trusted by thousands of companies all over the world (we are tracking more than 90 countries already). Proud Open-Source users:
+
+<a href="https://www.nav.no" title="NAV.no"><img src="./.github/ext-logos/nav.jpg" height="70" style="padding: 5px"></a> <a href="https://www.otovo.com" title="Otovo"><img src="./.github/ext-logos/otovo.png" height="70" style="padding: 5px"></a> <a href="https://www.amedia.no/" title="Amedia"><img src="./.github/ext-logos/amedia-logo.png" height="70" style="padding: 5px"></a> <a href="https://budgets.money" title="Budgets"><img src="./.github/ext-logos/budgets.png" height="70" style="padding: 5px"></a> <a href="https://www.finn.no" title="FINN.no"><img src="./.github/ext-logos/finn.jpg" height="70" style="padding: 5px"></a>
+
+_(PS! feel free to submit your logo!)_
 
 # Contribute to Unleash
 
@@ -127,6 +159,7 @@ We know that learning a new tool can be hard and time consuming. We have a growi
 
 # In the media
 
+- [The Code Kitchen Episode 7: Feature flags with Unleash](https://share.fireside.fm/episode/zD-4e4KI+Pr379KBv) (English)
 - [Utviklerpodden, 1 - Feature Flags og Unleash med Fredrik Oseberg](https://pod.space/utviklerpodden/feature-flags-og-unleash-med-fredrik-oseberg) (Norwegian)
 - [Node Weekly issue 380](https://nodeweekly.com/issues/380)
 - [Console 42 - The open-source newsletter](https://console.substack.com/p/console-42)

@@ -5,7 +5,7 @@ function registerGracefulShutdown(unleash: IUnleash, logger: Logger): void {
     process.on('SIGINT', async () => {
         try {
             logger.info('Graceful shutdown signal (SIGTERM) received.');
-            unleash.stop();
+            await unleash.stop();
             process.exit(0);
         } catch (e) {
             logger.error('Unable to shutdown Unleash. Hard exit!', e);

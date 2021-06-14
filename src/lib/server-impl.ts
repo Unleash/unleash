@@ -84,12 +84,11 @@ async function createApp(
             const server = app.listen(config.listen, () =>
                 logger.info('Unleash has started.', server.address()),
             );
-            const stop = () => {
+            const stop = async () => {
                 logger.info('Shutting down Unleash...');
 
-                return closeServer({ server, metricsMonitor }).then(() =>
-                    destroyDatabase(stores),
-                );
+                await closeServer({ server, metricsMonitor });
+                return destroyDatabase(stores);
             };
 
             server.keepAliveTimeout = config.server.keepAliveTimeout;

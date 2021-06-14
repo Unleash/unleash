@@ -5,9 +5,9 @@ title: Configuring Unleash
 
 > This is the guide on how to configure **Unleash v4 self-hosted**. If you are still using Unleash v3 you should checkout [configuring Unleash v3](./configuring_unleash_v3)
 
-# Must configure
+## Must configure
 
-## Database details {#database-details}
+### Database details {#database-details}
 
 In order for Unleash server to work, you must setup database connection details.
 
@@ -22,7 +22,7 @@ In order for Unleash server to work, you must setup database connection details.
 - We also support `DATABASE_URL` see [libpq's doc](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) for full format explanation. In short: `postgres://USER:PASSWORD@HOST:PORT/DATABASE`
 - If you're using secret files from kubernetes and would like to load a `DATABASE_URL` format from a file, use `DATABASE_URL_FILE` and point it to a path containing a connection URL.
 
-# Nice to configure
+## Nice to configure
 
 ### Unleash URL {#unleash-url}
 
@@ -38,7 +38,7 @@ Used to send reset-password mails and welcome mails when onboarding new users. <
 
 For [more details, see here](./email.md)
 
-# Further customization
+## Further customization
 
 In order to customize "anything" in Unleash you need to use [Unleash from Node.js](./getting_started#option-two---from-nodejs) or start the [docker image](./getting_started#option-one---use-docker) with environment variables.
 
@@ -120,18 +120,44 @@ unleash.start(unleashOptions);
 If you're using Unleash as part of a larger express app, you can disable the automatic server start by calling `server.create`. It takes the same options as `server.start`, but will not begin listening for connections.
 
 ```js
+const unleash = require('express');
 const unleash = require('unleash-server');
-// ... const app = express();
+const app = express();
 
-unleash
-  .create({
+const start = async () => {
+  const instance = await unleash.create({
+    databaseUrl: 'postgres://unleash_user:password@localhost:5432/unleash',
+  });
+  app.use(instance.app);
+  console.log(`Unleash app generated and attached to parent application`);
+};
+
+start();
+```
+
+### Graceful shutdown {#shutdown-unleash}
+
+> PS! Unleash will listen for the `SIGINT` signal and automatically trigger graceful shutdown of Unleash.
+
+If you need to stop Unleash (close database connections, and stop running Unleash tasks) you may use the stop function. Be aware that it is not possible to restart the Unleash instance after stopping it, but you can create a new instance of Unleash.
+
+```js
+const unleash = require('express');
+const unleash = require('unleash-server');
+const app = express();
+
+const start = async () => {
+  const instance = await unleash.start({
     databaseUrl: 'postgres://unleash_user:password@localhost:5432/unleash',
     port: 4242,
-  })
-  .then(result => {
-    app.use(result.app);
-    console.log(`Unleash app generated and attached to parent application`);
   });
+
+  //Sometime later
+  await instance.stop();
+  console.log('Unleash has now stopped');
+};
+
+start();
 ```
 
 ## Securing Unleash {#securing-unleash}

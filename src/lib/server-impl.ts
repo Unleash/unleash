@@ -16,6 +16,7 @@ import * as permissions from './types/permissions';
 import AuthenticationRequired from './types/authentication-required';
 import * as eventType from './types/events';
 import { addEventHook } from './event-hook';
+import registerGracefulShutdown from './util/graceful-shutdown';
 
 async function closeServer(opts): Promise<void> {
     const { server, metricsMonitor } = opts;
@@ -125,7 +126,10 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
         throw err;
     }
 
-    return createApp(config, true);
+    const unleash = await createApp(config, true);
+    logger.info('register graceful shutdown');
+    registerGracefulShutdown(unleash, logger);
+    return unleash;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

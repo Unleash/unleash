@@ -45,7 +45,7 @@ Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for a
 - SLA guarantees
 - Support
 
-## Client SDKs
+## Unleash SDKs
 
 In order to connect your application to Unleash you need to use a client SDK for your programming language.
 
@@ -58,17 +58,27 @@ In order to connect your application to Unleash you need to use a client SDK for
 - [Python SDK](https://docs.getunleash.io/sdks/python_sdk)
 - [.Net SDK](https://docs.getunleash.io/sdks/dot_net_sdk)
 
-**Official Frontend [Unleash Proxy](https://docs.getunleash.io/sdks/unleash-proxy) SDKs:**
+**Official Frontend SDKs:**
+
+The frontend SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/sdks/unleash-proxy) in order to ensure Privacy, scalability and security.
 
 - [Javascript SDK](https://docs.getunleash.io/sdks/proxy-javascript)
 - [Android SDK](https://docs.getunleash.io/sdks/android_proxy_sdk)
-- [iOS Proxy SDK](https://docs.getunleash.io/sdks/proxy-ios)
+- [iOS SDK](https://docs.getunleash.io/sdks/proxy-ios)
+
+**Community SDKs**
 
 In addition there exists a good list of [community developed SDKs](https://docs.getunleash.io/sdks/community), so there might already exist an implementation for your favorite programming language (e.g. [Rust](https://github.com/cognitedata/unleash-client-rust), [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), [NestJS](https://github.com/pmb0/nestjs-unleash), [Kotlin](https://github.com/silvercar/unleash-client-kotlin), [PHP](https://gitlab.com/minds/unleash-client-php) and more.)
 
+## Architecture
+
+<img src="./.github/Unleash_architecture.svg" title="Unleash System Overview" />
+
+[Read more in the Unleash documentation](https://docs.getunleash.io/)
+
 ## What is a feature toggle?
 
-The main motivation for doing feature toggling is to decouple the process for deploying code to production and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable
+The main motivation for doing feature toggling is to decouple the process for deploying code to production and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable, and have full control off how we exposed the new feature for.
 
 > Feature toggles decouple **deployment** of code from **release** of new features
 
@@ -78,9 +88,9 @@ This repo contains the unleash-server, which contains the Unleash Admin UI and t
 
 [Online demo](https://app.unleash-hosted.com/demo)
 
-## Activation strategies
+## Segmentation
 
-It's fine to have a system for turning stuff on and off. But some times we want more granular control, we want to decide who to the toggle should be enabled for. This is where activation strategies comes in to the picture. Activation strategies take arbitrary config and allows us to enable a toggle in various ways.
+It's fine to have a system for turning stuff on and off. But some times we want more granular control, we want to decide who to the toggle should be enabled for. This is where activation strategies comes in to the picture. Activation strategies take arbitrary config and allows us to enable a toggle to specific subset of your users (segment).
 
 Common activation strategies includes:
 
@@ -142,7 +152,7 @@ The first time Unleash starts it will create a default user which you can use to
 
 Unleash is trusted by thousands of companies all over the world (we are tracking more than 90 countries already). Proud Open-Source users:
 
-<a href="https://www.nav.no" title="NAV.no"><img src="./.github/ext-logos/nav.jpg" height="70" style="padding: 5px"></a> <a href="https://www.otovo.com" title="Otovo"><img src="./.github/ext-logos/otovo.png" height="70" style="padding: 5px"></a> <a href="https://www.amedia.no/" title="Amedia"><img src="./.github/ext-logos/amedia-logo.png" height="70" style="padding: 5px"></a> <a href="https://budgets.money" title="Budgets"><img src="./.github/ext-logos/budgets.png" height="70" style="padding: 5px"></a> <a href="https://www.finn.no" title="FINN.no"><img src="./.github/ext-logos/finn.jpg" height="70" style="padding: 5px"></a>
+<a href="https://www.nav.no" title="NAV.no"><img src="./.github/ext-logos/nav.jpg" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://www.otovo.com" title="Otovo"><img src="./.github/ext-logos/otovo.png" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://www.amedia.no/" title="Amedia"><img src="./.github/ext-logos/amedia-logo.png" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://budgets.money" title="Budgets"><img src="./.github/ext-logos/budgets.png" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://www.finn.no" title="FINN.no"><img src="./.github/ext-logos/finn.jpg" height="70" style="padding: 10px; border: 1px solid silver"></a>
 
 _(PS! feel free to submit your logo!)_
 
@@ -150,12 +160,13 @@ _(PS! feel free to submit your logo!)_
 
 Unleash has been built with the help of many smart individuals. This ensures that we build a product that solves real problem for people. If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) to learn more on how you can contribute.
 
-# Help
+# Community and Help
 
 We know that learning a new tool can be hard and time consuming. We have a growing community which loves to help out. Please don't hesitate about reaching out to get help.
 
 - [Join Unleash on Slack](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTJjYmViYjkwYmE0ODVlNmY1YjcwZGRmZWU5MTU1YTQ1Nzg5ZWQ2YzBlY2U1MjlmZDg5ZDRmZTMzNmQ5YmEyOGE) if you want ask open questions about Unleash, feature toggling or discuss these topics in general.
 - [Create a issue request](https://github.com/Unleash/unleash/issues/new) if you have found a bug or have ideas on how to improve Unleash.
+- [Follow Unleash on Twitter](https://twitter.com/getunleash) if you want to stay updated on the latest progress of the Unleash project.
 
 # In the media
 

@@ -14,11 +14,16 @@
     --ifm-color-primary-light: #3f5b64;
     --ifm-color-primary-lighter: #425f69;
     --ifm-color-primary-lightest: #4a6c76;
-    --ifm-code-font-size: 95%;
-    --ifm-font-size-base: 16px;
+    --ifm-code-font-size: 90%;
+    --ifm-font-size-base: 15px;
     --ifm-link-color: #817afe;
     --navbar-link-color: #122d33;
 }
+
+[class^='docTitle'] {
+    font-size: 2.5rem !important;
+}
+
 .docusaurus-highlight-code-line {
     background-color: rgb(72, 77, 91);
     display: block;

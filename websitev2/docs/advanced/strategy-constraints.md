@@ -3,7 +3,10 @@ id: strategy_constraints
 title: Strategy Constraints
 ---
 
-> Strategy constraints is part of Unleash Enterprise.
+<div class="alert alert--info" role="alert">
+  Strategy constraints part of Unleash Pro and Enterprise.
+</div>
+<br />
 
 Strategy constraints allow you to set pre-conditions on activation strategies that needs to be satisfied for the activation strategies to take effect.
 

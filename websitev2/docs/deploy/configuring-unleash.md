@@ -142,7 +142,7 @@ start();
 If you need to stop Unleash (close database connections, and stop running Unleash tasks) you may use the stop function. Be aware that it is not possible to restart the Unleash instance after stopping it, but you can create a new instance of Unleash.
 
 ```js
-const unleash = require('express');
+const express = require('express');
 const unleash = require('unleash-server');
 const app = express();
 

@@ -31,5 +31,8 @@ exports.up = function(db, cb) {
 };
 
 exports.down = function(db, cb) {
-    db.runSql(``, cb);
+    db.runSql(
+        `DELETE FROM feature_strategies; DELETE FROM feature_environments;`,
+        cb,
+    );
 };

@@ -1,10 +1,10 @@
+import { Request, Response } from 'express';
 import Controller from '../controller';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
 import { Logger } from '../../logger';
 import { UPDATE_FEATURE } from '../../types/permissions';
-import { Request, Response } from 'express';
 import { IConstraint, IStrategyConfig } from '../../types/model';
 import { handleErrors } from './util';
 
@@ -34,7 +34,11 @@ export default class ProjectFeaturesController extends Controller {
             this.createFeatureStrategy,
             UPDATE_FEATURE,
         );
-        this.get('/:projectName/features/:featureName/environments/:environment/strategies', this.getFeatureStrategies);
+        this.get(
+            '/:projectName/features/:featureName/environments/:environment/strategies',
+            this.getFeatureStrategies,
+        );
+        this.get('/featuresv2', this.getClientFeatures);
     }
 
     async createFeatureStrategy(
@@ -70,5 +74,13 @@ export default class ProjectFeaturesController extends Controller {
         } catch (e) {
             handleErrors(res, this.logger, e);
         }
+    }
+
+    async getClientFeatures(
+        req: Request<any, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const clientFeatures = await this.featureService.getClientFeatures();
+        res.status(200).json({ version: 2, features: clientFeatures });
     }
 }

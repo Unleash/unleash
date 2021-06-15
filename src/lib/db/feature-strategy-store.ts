@@ -4,7 +4,7 @@ import * as uuid from 'uuid';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
-import { IConstraint } from '../types/model';
+import { IConstraint, IStrategyConfig, IVariant } from '../types/model';
 
 const COLUMNS = [
     'id',
@@ -47,6 +47,15 @@ export interface IFeatureStrategy {
     parameters: object;
     constraints: IConstraint[];
     createdAt?: Date;
+}
+
+export interface FeatureConfigurationClient {
+    name: string;
+    type: string;
+    enabled: boolean;
+    stale: boolean;
+    strategies: IStrategyConfig[];
+    variants: IVariant[];
 }
 
 function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
@@ -152,6 +161,51 @@ class FeatureStrategiesStore {
         });
         stopTimer();
         return rows.map(mapRow);
+    }
+
+    async getFeatureToggles(): Promise<FeatureConfigurationClient[]> {
+        const stopTimer = this.timer('getAllFeatures');
+        const rows = await this.db
+            .select('*')
+            .from('features')
+            .where({ archived: 0 })
+            .fullOuterJoin(
+                'feature_strategies',
+                'feature_strategies.feature_name',
+                `features.name`,
+            )
+            .fullOuterJoin(
+                'feature_environments',
+                'feature_environments.feature_name',
+                `features.name`,
+            );
+        stopTimer();
+        console.log(rows.length);
+        const groupedByFeature = rows.reduce((acc, r) => {
+            if (acc[r.feature_name] !== undefined) {
+                acc[r.feature_name].strategies.push(this.getStrategy(r));
+            } else {
+                acc[r.feature_name] = {
+                    type: r.type,
+                    stale: r.stale,
+                    variants: r.variants,
+                    name: r.feature_name,
+                    enabled: true,
+                    strategies: [this.getStrategy(r)],
+                };
+            }
+            return acc;
+        }, {});
+        return Object.values(groupedByFeature);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    getStrategy(r: any): Omit<IStrategyConfig, 'id'> {
+        return {
+            name: r.strategy_name,
+            constraints: r.constraints,
+            parameters: r.parameters,
+        };
     }
 }
 

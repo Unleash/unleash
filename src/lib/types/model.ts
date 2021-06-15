@@ -10,3 +10,18 @@ export interface IStrategyConfig {
     constraints: IConstraint[];
     parameters: Object;
 }
+
+export interface IVariant {
+    name: string;
+    weight: number;
+    weightType: string;
+    payload: {
+        type: string;
+        value: string;
+    };
+    stickiness: string;
+    overrides: {
+        contextName: string;
+        values: string[];
+    }[];
+}

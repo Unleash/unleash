@@ -2,29 +2,16 @@
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
-import FeatureStrategiesStore from '../db/feature-strategy-store';
+import FeatureStrategiesStore, { FeatureConfigurationClient } from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
-import { IStrategyConfig } from '../types/model';
+import { IStrategyConfig, IVariant } from '../types/model';
 import { IStrategy } from '../db/strategy-store';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
 
 
-interface IVariant {
-    name: string;
-    weight: number;
-    weightType: string;
-    payload: {
-        type: string;
-        value: string;
-    };
-    stickiness: string;
-    overrides: {
-        contextName: string;
-        values: string[];
-    }[];
-}
+
 
 interface IFeatureToggleConfiguration {
     name: string;
@@ -104,9 +91,14 @@ class FeatureToggleServiceV2 {
             constraints: strat.constraints,
             parameters: strat.parameters
         }));
+    }
 
+    async getClientFeatures(): Promise<FeatureConfigurationClient[]> {
+        return this.featureStrategiesStore.getFeatureToggles();
     }
 }
+
+
 
 module.exports = FeatureToggleServiceV2;
 export default FeatureToggleServiceV2;

@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import { number, string } from 'joi';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';

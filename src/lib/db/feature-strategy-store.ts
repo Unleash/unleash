@@ -1,8 +1,10 @@
 import { Knex } from 'knex';
 import EventEmitter from 'events';
+import * as uuid from 'uuid';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
+import { IConstraint } from '../types/model';
 
 const COLUMNS = [
     'id',
@@ -26,40 +28,50 @@ const mapperToColumnNames = {
 const TABLE = 'feature_strategies';
 
 interface IFeatureStrategiesTable {
-    id: number;
+    id: string;
     feature_name: string;
-    project: string;
-    enabled: boolean;
+    project_name: string;
     environment: string;
     strategy_name: string;
-    parameters: JSON;
-    constraints: JSON;
-    created_at: Date;
+    parameters: object;
+    constraints: IConstraint[];
+    created_at?: Date;
 }
 
-export interface IFeatureStrategies {
-    id: number;
+export interface IFeatureStrategy {
+    id: string;
     featureName: string;
-    project: string;
-    enabled: boolean;
+    projectName: string;
     environment: string;
     strategyName: string;
-    parameters: JSON;
-    constraints: JSON;
-    createdAt: Date;
+    parameters: object;
+    constraints: IConstraint[];
+    createdAt?: Date;
 }
 
-function mapRows(row: IFeatureStrategiesTable): IFeatureStrategies {
+function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
     return {
         id: row.id,
         featureName: row.feature_name,
-        project: row.project,
-        enabled: row.enabled,
+        projectName: row.project_name,
         environment: row.environment,
         strategyName: row.strategy_name,
         parameters: row.parameters,
         constraints: row.constraints,
         createdAt: row.created_at,
+    };
+}
+
+function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
+    return {
+        id: input.id,
+        feature_name: input.featureName,
+        project_name: input.projectName,
+        environment: input.environment,
+        strategy_name: input.strategyName,
+        parameters: input.parameters,
+        constraints: input.constraints,
+        created_at: input.createdAt,
     };
 }
 
@@ -80,9 +92,19 @@ class FeatureStrategiesStore {
             });
     }
 
+    async createStrategyConfig(
+        strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
+    ): Promise<IFeatureStrategy> {
+        const strategyRow = mapInput({ ...strategyConfig, id: uuid.v4() });
+        const rows = await this.db<IFeatureStrategiesTable>(TABLE)
+            .insert(strategyRow)
+            .returning('*');
+        return mapRow(rows[0]);
+    }
+
     async getStrategiesForToggle(
         featureName: string,
-    ): Promise<IFeatureStrategies[]> {
+    ): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getAll');
         const rows = await this.db
             .select(COLUMNS)
@@ -90,12 +112,12 @@ class FeatureStrategiesStore {
             .from<IFeatureStrategiesTable>(TABLE);
 
         stopTimer();
-        return rows.map(mapRows);
+        return rows.map(mapRow);
     }
 
     async getStrategiesForEnvironment(
         environment: string,
-    ): Promise<IFeatureStrategies[]> {
+    ): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getAll');
         const rows = await this.db
             .select(COLUMNS)
@@ -103,10 +125,10 @@ class FeatureStrategiesStore {
             .from<IFeatureStrategiesTable>(TABLE);
 
         stopTimer();
-        return rows.map(mapRows);
+        return rows.map(mapRow);
     }
 
-    async getAllEnabledStrategies(): Promise<IFeatureStrategies[]> {
+    async getAllEnabledStrategies(): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getAll');
         const rows = await this.db
             .select(COLUMNS)
@@ -114,7 +136,7 @@ class FeatureStrategiesStore {
             .from<IFeatureStrategiesTable>(TABLE);
 
         stopTimer();
-        return rows.map(mapRows);
+        return rows.map(mapRow);
     }
 }
 

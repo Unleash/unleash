@@ -62,7 +62,11 @@ export const createStores = (
         resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),
         sessionStore: new SessionStore(db, eventBus, getLogger),
         userFeedbackStore: new UserFeedbackStore(db, eventBus, getLogger),
-        featureStrategyStore: new FeatureStrategyStore(db, eventBus, getLogger),
+        featureStrategiesStore: new FeatureStrategyStore(
+            db,
+            eventBus,
+            getLogger,
+        ),
     };
 };
 

@@ -5,6 +5,7 @@ export interface IConstraint {
 }
 
 export interface IStrategyConfig {
+    id: string;
     name: string;
     constraints: IConstraint[];
     parameters: Object;

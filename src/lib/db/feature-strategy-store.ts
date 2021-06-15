@@ -138,6 +138,21 @@ class FeatureStrategiesStore {
         stopTimer();
         return rows.map(mapRow);
     }
+
+    async getStrategiesForFeature(
+        project_name: string,
+        feature_name: string,
+        environment: string,
+    ): Promise<IFeatureStrategy[]> {
+        const stopTimer = this.timer('getForFeature');
+        const rows = await this.db<IFeatureStrategiesTable>(TABLE).where({
+            project_name,
+            feature_name,
+            environment,
+        });
+        stopTimer();
+        return rows.map(mapRow);
+    }
 }
 
 module.exports = FeatureStrategiesStore;

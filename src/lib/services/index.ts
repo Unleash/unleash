@@ -23,6 +23,7 @@ import ResetTokenService from './reset-token-service';
 import SettingService from './setting-service';
 import SessionService from './session-service';
 import UserFeedbackService from './user-feedback-service';
+import FeatureToggleServiceV2 from "./feature-toggle-service-v2";
 
 export const createServices = (
     stores: IUnleashStores,
@@ -54,11 +55,13 @@ export const createServices = (
     const healthService = new HealthService(stores, config);
     const settingService = new SettingService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
+    const featureToggleServiceV2 = new FeatureToggleServiceV2(stores, config);
 
     return {
         accessService,
         addonService,
         featureToggleService,
+        featureToggleServiceV2,
         featureTypeService,
         healthService,
         projectService,

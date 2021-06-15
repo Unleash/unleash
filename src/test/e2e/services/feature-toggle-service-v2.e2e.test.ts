@@ -22,7 +22,7 @@ afterAll(async () => {
 });
 
 test('Should create feature toggle strategy configuration', async () => {
-    const config: IStrategyConfig = {
+    const config: Omit<IStrategyConfig, 'id'> = {
         name: 'default',
         constraints: [],
         parameters: {},
@@ -35,7 +35,6 @@ test('Should create feature toggle strategy configuration', async () => {
 
     const createdConfig = await service.create(config, 'default', 'Demo');
 
-    expect(createdConfig.environment).toEqual(':global:');
-    expect(createdConfig.strategyName).toEqual('default');
-    expect(createdConfig.projectName).toEqual('default');
+    expect(createdConfig.name).toEqual('default');
+    expect(createdConfig.id).toBeDefined();
 });

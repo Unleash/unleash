@@ -21,9 +21,9 @@ exports.up = function(db, cb) {
             constraints   jsonb,
             created_at    timestamp with time zone DEFAULT now()
         );
-        
+
         CREATE TABLE IF NOT EXISTS feature_environments (
-            environment   VARCHAR (100) NOT NULL DEFAULT ':global: REFERENCES environments(name) ON DELETE CASCADE',
+            environment   VARCHAR (100) NOT NULL DEFAULT ':global:' REFERENCES environments(name) ON DELETE CASCADE,
             feature_name  VARCHAR (255) NOT NULL REFERENCES features(name) ON DELETE CASCADE,
             enabled       BOOLEAN NOT NULL
         );
@@ -35,10 +35,10 @@ exports.up = function(db, cb) {
 exports.down = function(db, cb) {
     db.runSql(
         `
-        DROP TABLE environments;
         DROP TABLE feature_strategies;
         DROP TABLE feature_environments;
-    `,
+        DROP TABLE environments;
+        `,
         cb,
     );
 };

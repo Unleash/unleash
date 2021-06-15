@@ -19,6 +19,7 @@ import HealthService from '../services/health-service';
 import SettingService from '../services/setting-service';
 import SessionService from '../services/session-service';
 import UserFeedbackService from '../services/user-feedback-service';
+import FeatureToggleServiceV2 from '../services/feature-toggle-service-v2';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -29,6 +30,7 @@ export interface IUnleashServices {
     emailService: EmailService;
     eventService: EventService;
     featureToggleService: FeatureToggleService;
+    featureToggleServiceV2: FeatureToggleServiceV2;
     featureTypeService: FeatureTypeService;
     healthService: HealthService;
     projectService: ProjectService;

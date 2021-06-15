@@ -2,7 +2,7 @@
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
-import FeatureStrategiesStore, { IFeatureStrategy } from '../db/feature-strategy-store';
+import FeatureStrategiesStore from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
 import { IStrategyConfig } from '../types/model';
 import { IStrategy } from '../db/strategy-store';
@@ -46,20 +46,20 @@ class FeatureToggleServiceV2 {
     constructor(
         {
             featureStrategiesStore,
-            featureToggleStore,
+            featureToggleStore
         }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>
     ) {
         this.logger = getLogger('services/setting-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureToggleStore = featureToggleStore;
     }
-    
+
     /*
         POST /api/admin/projects/:projectName/features/:featureName/environments/:envName/strategies
         {
-                
-            
+
+
             "constraints": [],
             "name": "default",
             "parameters": {}
@@ -67,16 +67,21 @@ class FeatureToggleServiceV2 {
 
     */
 
-    async create(strategyConfig: IStrategyConfig, projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IFeatureStrategy> {
-
-        return this.featureStrategiesStore.createStrategyConfig({
-            strategyName: strategyConfig.name, 
-            constraints: strategyConfig.constraints, 
-            parameters: strategyConfig.parameters, 
-            projectName, 
-            featureName, 
+    async create(strategyConfig: Omit<IStrategyConfig, 'id'>, projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig> {
+        const newFeatureStrategy = await this.featureStrategiesStore.createStrategyConfig({
+            strategyName: strategyConfig.name,
+            constraints: strategyConfig.constraints,
+            parameters: strategyConfig.parameters,
+            projectName,
+            featureName,
             environment
         });
+        return {
+            id: newFeatureStrategy.id,
+            name: newFeatureStrategy.strategyName,
+            constraints: newFeatureStrategy.constraints,
+            parameters: newFeatureStrategy.parameters
+        };
     }
 
     async getFeatureToggleConfiguration(): Promise<IFeatureToggleConfiguration[]> {
@@ -87,8 +92,19 @@ class FeatureToggleServiceV2 {
 
         return toggles.map(t => {
             const toggleStrategies = strategies.filter(s => s.featureName === t.name);
-            return {...t, strategies: toggleStrategies}
+            return { ...t, strategies: toggleStrategies };
         });
+    }
+
+    async getStrategiesForEnvironment(projectName: string, featureName: string, environment: string): Promise<IStrategyConfig[]> {
+        const featureStrategies = await this.featureStrategiesStore.getStrategiesForFeature(projectName, featureName, environment);
+        return featureStrategies.map(strat => ({
+            id: strat.id,
+            name: strat.strategyName,
+            constraints: strat.constraints,
+            parameters: strat.parameters
+        }));
+
     }
 }
 

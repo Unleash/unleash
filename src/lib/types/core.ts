@@ -18,6 +18,6 @@ export interface IUnleash {
     stores: IUnleashStores;
     server?: http.Server | https.Server;
     services: IUnleashServices;
-    stop: () => void;
+    stop: () => Promise<void>;
     version: string;
 }

@@ -39,7 +39,7 @@ jest.mock('./metrics', () => ({
 jest.mock('./db', () => ({
     createStores() {
         return {
-            db: { destroy: cb => cb() },
+            db: { destroy: () => undefined },
             clientInstanceStore: { destroy: noop },
             clientMetricsStore: { destroy: noop, on: noop },
             eventStore,

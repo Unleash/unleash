@@ -13,6 +13,10 @@ module.exports = {
         defaultMode: 'light',
         disableSwitch: true,
         respectPrefersColorScheme: false,
+        algolia: {
+          apiKey: '9772249a7262b377ac876853d32bd760',
+          indexName: 'getunleash',
+        },
         navbar: {
             title: "Unleash",
             logo: {

@@ -86,8 +86,14 @@ class FeatureToggleServiceV2 {
         return this.featureStrategiesStore.getFeatureToggles();
     }
 
-    async getStrategy(strategyId: string): Promise<IFeatureStrategy> {
-        return this.featureStrategiesStore.getStrategyById(strategyId);
+    async getStrategy(strategyId: string): Promise<IStrategyConfig> {
+        const strategy = await this.featureStrategiesStore.getStrategyById(strategyId);
+        return {
+            id: strategy.id,
+            name: strategy.strategyName,
+            constraints: strategy.constraints,
+            parameters: strategy.parameters
+        };
     }
 }
 

@@ -41,7 +41,7 @@ class FeatureController extends Controller {
     ) {
         super(config);
         this.featureService = featureToggleService;
-        this.logger = config.getLogger('/admin-api/feature.js');
+        this.logger = config.getLogger('/admin-api/feature.ts');
 
         this.get('/', this.getAllToggles);
         this.post('/', this.createToggle, CREATE_FEATURE);

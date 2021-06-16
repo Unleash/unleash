@@ -2,25 +2,14 @@
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
-import FeatureStrategiesStore, { FeatureConfigurationClient } from '../db/feature-strategy-store';
+import FeatureStrategiesStore, { FeatureConfigurationClient, IFeatureStrategy } from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
-import { IStrategyConfig, IVariant } from '../types/model';
-import { IStrategy } from '../db/strategy-store';
+import { IStrategyConfig } from '../types/model';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
 
 
-
-
-interface IFeatureToggleConfiguration {
-    name: string;
-    type: string;
-    stale: boolean;
-    enabled: boolean;
-    strategies: IStrategy[];
-    variants: IVariant[];
-}
 
 
 class FeatureToggleServiceV2 {
@@ -71,16 +60,16 @@ class FeatureToggleServiceV2 {
         };
     }
 
-    async getFeatureToggleConfiguration(): Promise<IFeatureToggleConfiguration[]> {
-        const [toggles, strategies] = await Promise.all([
-            this.featureToggleStore.getFeatures({}, ['name', 'type', 'stale', 'variants']),
-            this.featureStrategiesStore.getAllEnabledStrategies()
-        ]);
-
-        return toggles.map(t => {
-            const toggleStrategies = strategies.filter(s => s.featureName === t.name);
-            return { ...t, strategies: toggleStrategies };
-        });
+    /**
+     * PUT /api/admin/projects/:projectName/features/:featureName/strategies/:strategyId ?
+     * {
+     *
+     * }
+     * @param id
+     * @param updates
+     */
+    async updateStrategy(id: string, updates: Partial<IFeatureStrategy>): Promise<IFeatureStrategy> {
+        return this.featureStrategiesStore.updateStrategy(id, updates);
     }
 
     async getStrategiesForEnvironment(projectName: string, featureName: string, environment: string): Promise<IStrategyConfig[]> {
@@ -95,6 +84,10 @@ class FeatureToggleServiceV2 {
 
     async getClientFeatures(): Promise<FeatureConfigurationClient[]> {
         return this.featureStrategiesStore.getFeatureToggles();
+    }
+
+    async getStrategy(strategyId: string): Promise<IFeatureStrategy> {
+        return this.featureStrategiesStore.getStrategyById(strategyId);
     }
 }
 

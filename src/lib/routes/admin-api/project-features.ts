@@ -14,10 +14,20 @@ interface FeatureStrategyParams {
     environment: string;
 }
 
+interface StrategyIdParams extends FeatureStrategyParams {
+    strategyId: string;
+}
+
+interface StrategyUpdateBody {
+    name?: string;
+    constraints?: IConstraint[];
+    parameters?: object;
+}
+
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleServiceV2;
 
-    private logger: Logger;
+    private readonly logger: Logger;
 
     constructor(
         config: IUnleashConfig,
@@ -37,6 +47,14 @@ export default class ProjectFeaturesController extends Controller {
         this.get(
             '/:projectName/features/:featureName/environments/:environment/strategies',
             this.getFeatureStrategies,
+        );
+        this.get(
+            '/:projectName/features/:featureName/environments/:environment/strategies/:strategyId',
+            this.getStrategy,
+        );
+        this.put(
+            '/:projectName/features/:featureName/environments/:environment/strategies/:strategyId',
+            this.updateStrategy,
         );
         this.get('/featuresv2', this.getClientFeatures);
     }
@@ -82,5 +100,36 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const clientFeatures = await this.featureService.getClientFeatures();
         res.status(200).json({ version: 2, features: clientFeatures });
+    }
+
+    async updateStrategy(
+        req: Request<StrategyIdParams, any, StrategyUpdateBody, any>,
+        res: Response,
+    ): Promise<void> {
+        const { strategyId } = req.params;
+        try {
+            const updatedStrategy = await this.featureService.updateStrategy(
+                strategyId,
+                req.body,
+            );
+            res.status(200).json(updatedStrategy);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
+    }
+
+    async getStrategy(
+        req: Request<StrategyIdParams, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        this.logger.info('Getting strategy');
+        const { strategyId } = req.params;
+        this.logger.info(strategyId);
+        try {
+            const strategy = await this.featureService.getStrategy(strategyId);
+            res.status(200).json(strategy);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 }

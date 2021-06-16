@@ -84,6 +84,27 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
     };
 }
 
+interface StrategyUpdate {
+    strategy_name: string;
+    parameters: object;
+    constraints: IConstraint[];
+}
+function mapStrategyUpdate(
+    input: Partial<IStrategyConfig>,
+): Partial<StrategyUpdate> {
+    const update: Partial<StrategyUpdate> = {};
+    if (input.name !== null) {
+        update.strategy_name = input.name;
+    }
+    if (input.parameters !== null) {
+        update.parameters = input.parameters;
+    }
+    if (input.constraints !== null) {
+        update.constraints = input.constraints;
+    }
+    return update;
+}
+
 class FeatureStrategiesStore {
     private db: Knex;
 
@@ -180,7 +201,6 @@ class FeatureStrategiesStore {
                 `features.name`,
             );
         stopTimer();
-        console.log(rows.length);
         const groupedByFeature = rows.reduce((acc, r) => {
             if (acc[r.feature_name] !== undefined) {
                 acc[r.feature_name].strategies.push(this.getStrategy(r));
@@ -199,13 +219,32 @@ class FeatureStrategiesStore {
         return Object.values(groupedByFeature);
     }
 
+    async getStrategyById(id: string): Promise<IFeatureStrategy> {
+        return this.db(TABLE)
+            .where({ id })
+            .first()
+            .then(mapRow);
+    }
+
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    getStrategy(r: any): Omit<IStrategyConfig, 'id'> {
+    private getStrategy(r: any): Omit<IStrategyConfig, 'id'> {
         return {
             name: r.strategy_name,
             constraints: r.constraints,
             parameters: r.parameters,
         };
+    }
+
+    async updateStrategy(
+        id: string,
+        updates: Partial<IFeatureStrategy>,
+    ): Promise<IFeatureStrategy> {
+        const update = mapStrategyUpdate(updates);
+        const row = await this.db<IFeatureStrategiesTable>(TABLE)
+            .where({ id })
+            .update(update)
+            .returning('*');
+        return mapRow(row[0]);
     }
 }
 

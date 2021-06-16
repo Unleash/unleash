@@ -4,7 +4,14 @@ import * as uuid from 'uuid';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
-import { IConstraint, IStrategyConfig, IVariant } from '../types/model';
+import {
+    IConstraint,
+    IEnvironmentOverview,
+    IFeatureOverview,
+    IProjectOverview,
+    IStrategyConfig,
+    IVariant,
+} from '../types/model';
 
 const COLUMNS = [
     'id',
@@ -219,6 +226,50 @@ class FeatureStrategiesStore {
         return Object.values(groupedByFeature);
     }
 
+    async getProjectOverview(projectId: string): Promise<IFeatureOverview[]> {
+        const rows = await this.db('features')
+            .where({ project: projectId })
+            .select(
+                'features.name as feature_name',
+                'features.type as type',
+                'feature_environments.enabled as enabled',
+                'feature_environments.environment as environment',
+                'environments.display_name as display_name',
+            )
+            .fullOuterJoin(
+                'feature_environments',
+                'feature_environments.feature_name',
+                'features.name',
+            )
+            .fullOuterJoin(
+                'environments',
+                'feature_environments.environment',
+                'environments.name',
+            );
+        const overview = rows.reduce((acc, r) => {
+            if (acc[r.feature_name] !== undefined) {
+                acc[r.feature_name].environments.push(this.getEnvironment(r));
+            } else {
+                acc[r.feature_name] = {
+                    type: r.type,
+                    name: r.feature_name,
+                    environments: [this.getEnvironment(r)],
+                };
+            }
+            return acc;
+        }, {});
+        return Object.values(overview);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    getEnvironment(r: any): IEnvironmentOverview {
+        return {
+            name: r.environment,
+            displayName: r.display_name,
+            enabled: r.enabled,
+        };
+    }
+
     async getStrategyById(id: string): Promise<IFeatureStrategy> {
         return this.db(TABLE)
             .where({ id })
@@ -245,6 +296,19 @@ class FeatureStrategiesStore {
             .update(update)
             .returning('*');
         return mapRow(row[0]);
+    }
+
+    async getMembers(projectId: string): Promise<number> {
+        const rolesFromProject = this.db('role_permission')
+            .select('role_id')
+            .where({ project: projectId });
+
+        const numbers = await this.db()
+            .count('user_id as members')
+            .from('role_user')
+            .whereIn('role_id', rolesFromProject)
+            .first();
+        return numbers.members as number;
     }
 }
 

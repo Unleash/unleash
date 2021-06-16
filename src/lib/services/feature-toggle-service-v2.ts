@@ -4,7 +4,7 @@ import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import FeatureStrategiesStore, { FeatureConfigurationClient, IFeatureStrategy } from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
-import { IStrategyConfig } from '../types/model';
+import { IProjectOverview, IStrategyConfig } from '../types/model';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
@@ -94,6 +94,16 @@ class FeatureToggleServiceV2 {
             constraints: strategy.constraints || [],
             parameters: strategy.parameters
         };
+    }
+
+    async getProjectOverview(projectId: string): Promise<IProjectOverview> {
+        const features = await this.featureStrategiesStore.getProjectOverview(projectId);
+        const members = await this.featureStrategiesStore.getMembers(projectId);
+        return {
+            features,
+            members,
+            version: 1
+        }
     }
 }
 

@@ -137,7 +137,6 @@ export default function getApp(
 
         res.send(indexHTML);
     });
-
     return app;
 }
 module.exports = getApp;

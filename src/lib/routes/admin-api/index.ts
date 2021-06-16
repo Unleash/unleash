@@ -21,6 +21,7 @@ import UserAdminController from './user-admin';
 import EmailController from './email';
 import UserFeedbackController from './user-feedback-controller';
 import ProjectFeaturesController from './project-features';
+import { EnvironmentsController } from './environments-controller';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -84,6 +85,10 @@ class AdminApi extends Controller {
         this.app.use(
             '/projects',
             new ProjectFeaturesController(config, services).router,
+        );
+        this.app.use(
+            '/environments',
+            new EnvironmentsController(config, services).router,
         );
     }
 

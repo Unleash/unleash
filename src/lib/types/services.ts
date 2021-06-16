@@ -20,6 +20,7 @@ import SettingService from '../services/setting-service';
 import SessionService from '../services/session-service';
 import UserFeedbackService from '../services/user-feedback-service';
 import FeatureToggleServiceV2 from '../services/feature-toggle-service-v2';
+import EnvironmentService from '../services/environment-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -28,6 +29,7 @@ export interface IUnleashServices {
     clientMetricsService: ClientMetricsService;
     contextService: ContextService;
     emailService: EmailService;
+    environmentService: EnvironmentService;
     eventService: EventService;
     featureToggleService: FeatureToggleService;
     featureToggleServiceV2: FeatureToggleServiceV2;
@@ -39,9 +41,9 @@ export interface IUnleashServices {
     settingService: SettingService;
     stateService: StateService;
     strategyService: StrategyService;
-    tagTypeService: TagTypeService;
     tagService: TagService;
+    tagTypeService: TagTypeService;
+    userFeedbackService: UserFeedbackService;
     userService: UserService;
     versionService: VersionService;
-    userFeedbackService: UserFeedbackService;
 }

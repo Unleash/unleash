@@ -25,3 +25,30 @@ export interface IVariant {
         values: string[];
     }[];
 }
+
+export interface IEnvironment {
+    name: string;
+    displayName: string;
+}
+
+export interface IEnvironmentOverview {
+    name: string;
+    displayName: string;
+    enabled: boolean;
+}
+
+export interface IFeatureOverview {
+    name: string;
+    type: string;
+    environments: IEnvironmentOverview[];
+}
+
+export interface IProjectOverview {
+    features: IFeatureOverview[];
+    members: number;
+    version: number;
+}
+
+export interface IProjectParam {
+    projectId: string;
+}

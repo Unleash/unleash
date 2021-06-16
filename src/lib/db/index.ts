@@ -27,6 +27,7 @@ import { AccessStore } from './access-store';
 import { ResetTokenStore } from './reset-token-store';
 import UserFeedbackStore from './user-feedback-store';
 import FeatureStrategyStore from './feature-strategy-store';
+import EnvironmentStore from './environment-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -67,6 +68,7 @@ export const createStores = (
             eventBus,
             getLogger,
         ),
+        environmentStore: new EnvironmentStore(db, eventBus, getLogger),
     };
 };
 

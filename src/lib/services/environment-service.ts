@@ -33,7 +33,10 @@ export default class EnvironmentService {
         return this.environmentStore.upsert(env);
     }
 
-    async update(name: string, env: IEnvironment): Promise<IEnvironment> {
+    async update(
+        name: string,
+        env: Pick<IEnvironment, 'displayName'>,
+    ): Promise<IEnvironment> {
         return this.environmentStore.upsert({ ...env, name });
     }
 }

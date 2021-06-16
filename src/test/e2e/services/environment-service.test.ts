@@ -48,3 +48,14 @@ test('Can get all', async () => {
     const environments = await service.getAll();
     expect(environments).toHaveLength(2); // the one we created plus ':global:'
 });
+
+test('Can update display name', async () => {
+    await service.create({
+        name: 'testenv',
+        displayName: 'Environment for testing',
+    });
+
+    await service.update('testenv', { displayName: 'Different name' });
+    const updated = await service.get('testenv');
+    expect(updated.displayName).toEqual('Different name');
+});

@@ -91,7 +91,7 @@ class FeatureToggleServiceV2 {
         return {
             id: strategy.id,
             name: strategy.strategyName,
-            constraints: strategy.constraints,
+            constraints: strategy.constraints || [],
             parameters: strategy.parameters
         };
     }

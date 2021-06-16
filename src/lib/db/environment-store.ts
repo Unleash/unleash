@@ -4,6 +4,7 @@ import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { IEnvironment } from '../types/model';
+import NotFoundError from '../error/notfound-error';
 
 interface IEnvironmentsTable {
     name: string;
@@ -45,7 +46,7 @@ export default class EnvironmentStore {
     }
 
     async getAll(): Promise<IEnvironment[]> {
-        const rows = await this.db<IEnvironmentsTable>(TABLE);
+        const rows = await this.db<IEnvironmentsTable>(TABLE).select('*');
         return rows.map(mapRow);
     }
 
@@ -62,13 +63,18 @@ export default class EnvironmentStore {
         const row = await this.db<IEnvironmentsTable>(TABLE)
             .where({ name })
             .first();
+        if (!row) {
+            throw new NotFoundError(
+                `Could not find environment with name ${name}`,
+            );
+        }
         return mapRow(row);
     }
 
     async upsert(env: IEnvironment): Promise<IEnvironment> {
         await this.db<IEnvironmentsTable>(TABLE)
             .insert(mapInput(env))
-            .onConflict()
+            .onConflict('name')
             .merge();
         return env;
     }

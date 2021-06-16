@@ -194,7 +194,16 @@ class FeatureStrategiesStore {
     async getFeatureToggles(): Promise<FeatureConfigurationClient[]> {
         const stopTimer = this.timer('getAllFeatures');
         const rows = await this.db
-            .select('*')
+            .select(
+                'features.name as feature_name',
+                'features.type as type',
+                'features.stale as stale',
+                'features.variants as variants',
+                'feature_strategies.strategy_name as strategy_name',
+                'feature_strategies.parameters as parameters',
+                'feature_strategies.constraints as constraints',
+                'feature_environments.enabled as enabled',
+            )
             .from('features')
             .where({ archived: 0 })
             .fullOuterJoin(

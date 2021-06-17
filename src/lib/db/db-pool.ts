@@ -1,9 +1,5 @@
-'use strict';
-
-import { Knex } from 'knex';
+import { knex, Knex } from 'knex';
 import { IUnleashConfig } from '../types/option';
-
-const knex = require('knex');
 
 export function createDb({
     db,
@@ -19,12 +15,13 @@ export function createDb({
         asyncStackTraces: true,
         log: {
             debug: msg => logger.debug(msg),
-            info: msg => logger.info(msg),
             warn: msg => logger.warn(msg),
             error: msg => logger.error(msg),
         },
     });
 }
+
+// for backward compatibility
 module.exports = {
     createDb,
 };

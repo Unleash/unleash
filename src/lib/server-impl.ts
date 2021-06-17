@@ -7,7 +7,7 @@ import { IUnleashConfig, IUnleashOptions } from './types/option';
 import version from './util/version';
 import migrator from '../migrator';
 import getApp from './app';
-import MetricsMonitor, { createMetricsMonitor } from './metrics';
+import { createMetricsMonitor } from './metrics';
 import { createStores } from './db';
 import { createServices } from './services';
 import { createConfig } from './create-config';
@@ -20,22 +20,11 @@ import { addEventHook } from './event-hook';
 import registerGracefulShutdown from './util/graceful-shutdown';
 import { IUnleashStores } from './types/stores';
 
-async function closeServer(
-    server: Server,
-    metricsMonitor: MetricsMonitor,
-): Promise<void> {
-    metricsMonitor.stopMonitoring();
-
-    return new Promise((resolve, reject) => {
-        server.close(err => (err ? reject(err) : resolve()));
-    });
-}
-
 async function destroyDatabase(stores: IUnleashStores): Promise<void> {
     const { db, clientInstanceStore, clientMetricsStore } = stores;
     clientInstanceStore.destroy();
     clientMetricsStore.destroy();
-    return db.destroy();
+    await db.destroy();
 }
 
 async function createApp(
@@ -48,6 +37,21 @@ async function createApp(
     const eventBus = new EventEmitter();
     const stores = createStores(config, eventBus);
     const services = createServices(stores, config);
+    const metricsMonitor = createMetricsMonitor();
+
+    const stopUnleash = async (server?: Server) => {
+        logger.info('Shutting down Unleash...');
+        await new Promise<void>(resolve => {
+            if (server) {
+                server.close(() => resolve());
+            } else {
+                resolve();
+            }
+        });
+        metricsMonitor.stopMonitoring();
+        await destroyDatabase(stores);
+        logger.info('done shutting down');
+    };
 
     if (!config.server.secret) {
         const secret = await stores.settingStore.get('unleash.secret');
@@ -55,7 +59,7 @@ async function createApp(
         config.server.secret = secret;
     }
     const app = getApp(config, stores, services, eventBus);
-    const metricsMonitor = createMetricsMonitor();
+
     if (typeof config.eventHook === 'function') {
         addEventHook(config.eventHook, stores.eventStore);
     }
@@ -83,27 +87,19 @@ async function createApp(
             const server = app.listen(config.listen, () =>
                 logger.info('Unleash has started.', server.address()),
             );
-            const stop = async () => {
-                logger.info('Shutting down Unleash...');
-
-                await closeServer(server, metricsMonitor);
-                return destroyDatabase(stores);
-            };
 
             server.keepAliveTimeout = config.server.keepAliveTimeout;
             server.headersTimeout = config.server.headersTimeout;
             server.on('listening', () => {
-                resolve({ ...unleash, server, stop });
+                resolve({
+                    ...unleash,
+                    server,
+                    stop: () => stopUnleash(server),
+                });
             });
             server.on('error', reject);
         } else {
-            const stop = async () => {
-                logger.info('Shutting down Unleash...');
-                metricsMonitor.stopMonitoring();
-                return destroyDatabase(stores);
-            };
-
-            resolve({ ...unleash, stop });
+            resolve({ ...unleash, stop: stopUnleash });
         }
     });
 }
@@ -125,8 +121,9 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
     }
 
     const unleash = await createApp(config, true);
-    logger.info('register graceful shutdown');
-    registerGracefulShutdown(unleash, logger);
+    if (config.server.enableGracefulShutdown) {
+        registerGracefulShutdown(unleash, logger);
+    }
     return unleash;
 }
 

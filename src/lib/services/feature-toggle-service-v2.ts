@@ -5,6 +5,7 @@ import { Logger } from '../logger';
 import FeatureStrategiesStore, { FeatureConfigurationClient, IFeatureStrategy } from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
 import { IProjectOverview, IStrategyConfig } from '../types/model';
+import feature from '../routes/admin-api/feature';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
@@ -43,7 +44,7 @@ class FeatureToggleServiceV2 {
 
     */
 
-    async create(strategyConfig: Omit<IStrategyConfig, 'id'>, projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig> {
+    async createStrategy(strategyConfig: Omit<IStrategyConfig, 'id'>, projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig> {
         const newFeatureStrategy = await this.featureStrategiesStore.createStrategyConfig({
             strategyName: strategyConfig.name,
             constraints: strategyConfig.constraints,
@@ -82,8 +83,17 @@ class FeatureToggleServiceV2 {
         }));
     }
 
+    /**
+     * GET /api/admin/projects/:projectName/features/:featureName
+     * @param featureName
+     */
+    async getFeature(featureName: string): Promise<any> {
+        return Promise.resolve();
+        //        return this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
+    }
+
     async getClientFeatures(): Promise<FeatureConfigurationClient[]> {
-        return this.featureStrategiesStore.getFeatureToggles();
+        return this.featureStrategiesStore.getFeatureTogglesClient();
     }
 
     async getStrategy(strategyId: string): Promise<IStrategyConfig> {
@@ -104,6 +114,10 @@ class FeatureToggleServiceV2 {
             members,
             version: 1
         }
+    }
+
+    async getEnvironmentInfo(environment: string, featureName: string): Promise<any> {
+        return this.featureStrategiesStore.getStrategiesAndMetadataForEnvironment(environment, featureName);
     }
 }
 

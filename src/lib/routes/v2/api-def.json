@@ -1,8 +1,0 @@
-{
-  "version": 1,
-  "links": {
-    "projects": {
-      "uri": "/api/v2/projects"
-    }
-  }
-}

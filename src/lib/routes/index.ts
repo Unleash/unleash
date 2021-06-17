@@ -3,7 +3,6 @@ import { BackstageController } from './backstage';
 import ResetPasswordController from './auth/reset-password-controller';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashServices } from '../types/services';
-import V2ApiController from './v2';
 
 const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
@@ -30,10 +29,6 @@ class IndexRouter extends Controller {
         this.get(api.uri, this.index);
         this.use(api.links.admin.uri, new AdminApi(config, services).router);
         this.use(api.links.client.uri, new ClientApi(config, services).router);
-        this.use(
-            api.links.v2.uri,
-            new V2ApiController(config, services).router,
-        );
     }
 
     async index(req: Request, res: Response): Promise<void> {

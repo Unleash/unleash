@@ -5,13 +5,18 @@ import { IUnleashServices } from '../../types/services';
 import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
 import { Logger } from '../../logger';
 import { UPDATE_FEATURE } from '../../types/permissions';
-import { IConstraint, IStrategyConfig } from '../../types/model';
+import { IConstraint, IProjectParam, IStrategyConfig } from '../../types/model';
 import { handleErrors } from './util';
 
 interface FeatureStrategyParams {
-    projectName: string;
+    projectId: string;
     featureName: string;
     environment: string;
+}
+
+interface FeatureParams {
+    projectId: string;
+    featureName: string;
 }
 
 interface StrategyIdParams extends FeatureStrategyParams {
@@ -23,6 +28,8 @@ interface StrategyUpdateBody {
     constraints?: IConstraint[];
     parameters?: object;
 }
+
+const PATH_PREFIX = '/:projectId/features/:featureName';
 
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleServiceV2;
@@ -40,34 +47,83 @@ export default class ProjectFeaturesController extends Controller {
         this.logger = config.getLogger('/admin-api/project-features.ts');
 
         this.post(
-            '/:projectName/features/:featureName/environments/:environment/strategies',
+            `${PATH_PREFIX}/environments/:environment/strategies`,
             this.createFeatureStrategy,
             UPDATE_FEATURE,
         );
         this.get(
-            '/:projectName/features/:featureName/environments/:environment/strategies',
+            `${PATH_PREFIX}/environments/:environment`,
+            this.getEnvironment,
+        );
+        this.get(
+            `${PATH_PREFIX}/environments/:environment/strategies`,
             this.getFeatureStrategies,
         );
         this.get(
-            '/:projectName/features/:featureName/environments/:environment/strategies/:strategyId',
+            `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
             this.getStrategy,
         );
         this.put(
-            '/:projectName/features/:featureName/environments/:environment/strategies/:strategyId',
+            `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
             this.updateStrategy,
         );
-        this.get('/featuresv2', this.getClientFeatures);
+        this.get('/:projectId/features', this.getProjectOverview);
+        this.get(PATH_PREFIX, this.getFeature);
+    }
+
+    async getEnvironment(
+        req: Request<FeatureStrategyParams, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { environment, featureName } = req.params;
+        try {
+            const environmentInfo = await this.featureService.getEnvironmentInfo(
+                environment,
+                featureName,
+            );
+            res.status(200).json(environmentInfo);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
+    }
+
+    async getFeature(
+        req: Request<FeatureParams, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { featureName } = req.params;
+        try {
+            const feature = await this.featureService.getFeature(featureName);
+            res.status(200).json(feature);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
+    }
+
+    async getProjectOverview(
+        req: Request<IProjectParam, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        try {
+            const overview = await this.featureService.getProjectOverview(
+                projectId,
+            );
+            res.json(overview);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async createFeatureStrategy(
         req: Request<FeatureStrategyParams, any, IStrategyConfig, any>,
         res: Response,
     ): Promise<void> {
-        const { projectName, featureName, environment } = req.params;
+        const { projectId, featureName, environment } = req.params;
         try {
-            const featureStrategy = await this.featureService.create(
+            const featureStrategy = await this.featureService.createStrategy(
                 req.body,
-                projectName,
+                projectId,
                 featureName,
                 environment,
             );
@@ -81,10 +137,10 @@ export default class ProjectFeaturesController extends Controller {
         req: Request<FeatureStrategyParams, any, any, any>,
         res: Response,
     ): Promise<void> {
-        const { projectName, featureName, environment } = req.params;
+        const { projectId, featureName, environment } = req.params;
         try {
             const featureStrategies = await this.featureService.getStrategiesForEnvironment(
-                projectName,
+                projectId,
                 featureName,
                 environment,
             );

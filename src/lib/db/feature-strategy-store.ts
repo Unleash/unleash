@@ -8,10 +8,10 @@ import {
     IConstraint,
     IEnvironmentOverview,
     IFeatureOverview,
-    IProjectOverview,
     IStrategyConfig,
     IVariant,
 } from '../types/model';
+import NotFoundError from '../error/notfound-error';
 
 const COLUMNS = [
     'id',
@@ -96,6 +96,7 @@ interface StrategyUpdate {
     parameters: object;
     constraints: IConstraint[];
 }
+
 function mapStrategyUpdate(
     input: Partial<IStrategyConfig>,
 ): Partial<StrategyUpdate> {
@@ -117,7 +118,7 @@ class FeatureStrategiesStore {
 
     private logger: Logger;
 
-    private timer: Function;
+    private readonly timer: Function;
 
     constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
@@ -191,7 +192,7 @@ class FeatureStrategiesStore {
         return rows.map(mapRow);
     }
 
-    async getFeatureToggles(): Promise<FeatureConfigurationClient[]> {
+    async getFeatureTogglesClient(): Promise<FeatureConfigurationClient[]> {
         const stopTimer = this.timer('getAllFeatures');
         const rows = await this.db
             .select(
@@ -219,7 +220,7 @@ class FeatureStrategiesStore {
         stopTimer();
         const groupedByFeature = rows.reduce((acc, r) => {
             if (acc[r.feature_name] !== undefined) {
-                acc[r.feature_name].strategies.push(this.getStrategy(r));
+                acc[r.feature_name].strategies.push(this.getClientStrategy(r));
             } else {
                 acc[r.feature_name] = {
                     type: r.type,
@@ -227,7 +228,7 @@ class FeatureStrategiesStore {
                     variants: r.variants,
                     name: r.feature_name,
                     enabled: true,
-                    strategies: [this.getStrategy(r)],
+                    strategies: [this.getClientStrategy(r)],
                 };
             }
             return acc;
@@ -255,28 +256,24 @@ class FeatureStrategiesStore {
                 'feature_environments.environment',
                 'environments.name',
             );
-        const overview = rows.reduce((acc, r) => {
-            if (acc[r.feature_name] !== undefined) {
-                acc[r.feature_name].environments.push(this.getEnvironment(r));
-            } else {
-                acc[r.feature_name] = {
-                    type: r.type,
-                    name: r.feature_name,
-                    environments: [this.getEnvironment(r)],
-                };
-            }
-            return acc;
-        }, {});
-        return Object.values(overview);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    getEnvironment(r: any): IEnvironmentOverview {
-        return {
-            name: r.environment,
-            displayName: r.display_name,
-            enabled: r.enabled,
-        };
+        if (rows.length > 0) {
+            const overview = rows.reduce((acc, r) => {
+                if (acc[r.feature_name] !== undefined) {
+                    acc[r.feature_name].environments.push(
+                        this.getEnvironment(r),
+                    );
+                } else {
+                    acc[r.feature_name] = {
+                        type: r.type,
+                        name: r.feature_name,
+                        environments: [this.getEnvironment(r)],
+                    };
+                }
+                return acc;
+            }, {});
+            return Object.values(overview);
+        }
+        throw new NotFoundError(`Could not find project with id ${projectId}`);
     }
 
     async getStrategyById(id: string): Promise<IFeatureStrategy> {
@@ -284,15 +281,6 @@ class FeatureStrategiesStore {
             .where({ id })
             .first()
             .then(mapRow);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    private getStrategy(r: any): Omit<IStrategyConfig, 'id'> {
-        return {
-            name: r.strategy_name,
-            constraints: r.constraints,
-            parameters: r.parameters,
-        };
     }
 
     async updateStrategy(
@@ -312,12 +300,67 @@ class FeatureStrategiesStore {
             .select('role_id')
             .where({ project: projectId });
 
-        const numbers = await this.db()
+        const numbers = await this.db('role_user')
             .count('user_id as members')
-            .from('role_user')
             .whereIn('role_id', rolesFromProject)
             .first();
-        return numbers.members as number;
+        const { members } = numbers;
+        if (typeof members === 'string') {
+            return parseInt(members, 10);
+        }
+        return members;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    private getEnvironment(r: any): IEnvironmentOverview {
+        return {
+            name: r.environment,
+            displayName: r.display_name,
+            enabled: r.enabled,
+        };
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    private getClientStrategy(r: any): Omit<IStrategyConfig, 'id'> {
+        return {
+            name: r.strategy_name,
+            constraints: r.constraints,
+            parameters: r.parameters,
+        };
+    }
+
+    private getAdminStrategy(r: any): IStrategyConfig {
+        return {
+            name: r.strategy_name,
+            constraints: r.constraints,
+            parameters: r.parameters,
+            id: r.strategy_id,
+        };
+    }
+
+    async getStrategiesAndMetadataForEnvironment(
+        environment: string,
+        featureName: string,
+    ): Promise<void> {
+        const rows = await this.db('feature_environments')
+            .select()
+            .join(
+                'feature_strategies',
+                'feature_environments.feature_name',
+                'feature_strategies.feature_name',
+            )
+            .where('feature_strategies.feature_name', featureName)
+            .andWhere('feature_environments.environment', environment);
+        return rows.reduce((acc, r) => {
+            if (acc.strategies !== undefined) {
+                acc.strategies.push(this.getAdminStrategy(r));
+            } else {
+                acc.enabled = r.enabled;
+                acc.environment = r.environment;
+                acc.strategies = [this.getAdminStrategy(r)];
+            }
+            return acc;
+        }, {});
     }
 }
 

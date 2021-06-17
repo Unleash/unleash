@@ -33,7 +33,11 @@ test('Should create feature toggle strategy configuration', async () => {
         strategies: [],
     });
 
-    const createdConfig = await service.create(config, 'default', 'Demo');
+    const createdConfig = await service.createStrategy(
+        config,
+        'default',
+        'Demo',
+    );
 
     expect(createdConfig.name).toEqual('default');
     expect(createdConfig.id).toBeDefined();
@@ -51,7 +55,11 @@ test('Should be able to update existing strategy configuration', async () => {
         strategies: [],
     });
 
-    const createdConfig = await service.create(config, 'default', 'Demo');
+    const createdConfig = await service.createStrategy(
+        config,
+        'default',
+        'Demo',
+    );
     expect(createdConfig.name).toEqual('default');
     const updatedConfig = await service.updateStrategy(createdConfig.id, {
         parameters: { b2b: true },
@@ -72,7 +80,11 @@ test('Should be able to get strategy by id', async () => {
         strategies: [],
     });
 
-    const createdConfig = await service.create(config, 'default', 'Demo');
+    const createdConfig = await service.createStrategy(
+        config,
+        'default',
+        'Demo',
+    );
     const fetchedConfig = await service.getStrategy(createdConfig.id);
     expect(fetchedConfig).toEqual(createdConfig);
 });

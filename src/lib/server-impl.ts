@@ -1,7 +1,7 @@
 'use strict';
 
 import EventEmitter from 'events';
-import { Server } from 'http';
+import stoppable, { StoppableServer } from 'stoppable';
 import { IUnleash } from './types/core';
 import { IUnleashConfig, IUnleashOptions } from './types/option';
 import version from './util/version';
@@ -19,6 +19,7 @@ import * as eventType from './types/events';
 import { addEventHook } from './event-hook';
 import registerGracefulShutdown from './util/graceful-shutdown';
 import { IUnleashStores } from './types/stores';
+import { promisify } from 'util';
 
 async function destroyDatabase(stores: IUnleashStores): Promise<void> {
     const { db, clientInstanceStore, clientMetricsStore } = stores;
@@ -39,18 +40,14 @@ async function createApp(
     const services = createServices(stores, config);
     const metricsMonitor = createMetricsMonitor();
 
-    const stopUnleash = async (server?: Server) => {
+    const stopUnleash = async (server?: StoppableServer) => {
         logger.info('Shutting down Unleash...');
-        await new Promise<void>(resolve => {
-            if (server) {
-                server.close(() => resolve());
-            } else {
-                resolve();
-            }
-        });
+        if (server) {
+            const stopServer = promisify(server.stop);
+            await stopServer();
+        }
         metricsMonitor.stopMonitoring();
         await destroyDatabase(stores);
-        logger.info('done shutting down');
     };
 
     if (!config.server.secret) {
@@ -84,8 +81,11 @@ async function createApp(
 
     return new Promise((resolve, reject) => {
         if (startApp) {
-            const server = app.listen(config.listen, () =>
-                logger.info('Unleash has started.', server.address()),
+            const server = stoppable(
+                app.listen(config.listen, () =>
+                    logger.info('Unleash has started.', server.address()),
+                ),
+                config.server.gracefulShutdownTimeout,
             );
 
             server.keepAliveTimeout = config.server.keepAliveTimeout;
@@ -121,7 +121,7 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
     }
 
     const unleash = await createApp(config, true);
-    if (config.server.enableGracefulShutdown) {
+    if (config.server.gracefulShutdownEnable) {
         registerGracefulShutdown(unleash, logger);
     }
     return unleash;

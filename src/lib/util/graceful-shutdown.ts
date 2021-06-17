@@ -9,14 +9,13 @@ function registerGracefulShutdown(unleash: IUnleash, logger: Logger): void {
             logger.info('Unleash has been successfully stopped.');
             process.exit(0);
         } catch (e) {
-            logger.error('Unable to shutdown Unleash. Hard exit!', e);
+            logger.error('Unable to shutdown Unleash. Hard exit!');
             process.exit(1);
         }
     };
 
     logger.info('Registering graceful shutdown');
 
-    process.on('SIGUSR2', () => process.exit(0));
     process.on('SIGINT', unleashCloser('SIGINT'));
     process.on('SIGHUP', unleashCloser('SIGHUP'));
     process.on('SIGTERM', unleashCloser('SIGTERM'));

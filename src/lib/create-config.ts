@@ -90,9 +90,13 @@ const defaultServerOption: IServerOption = {
     keepAliveTimeout: 60 * 1000,
     headersTimeout: 61 * 1000,
     enableRequestLogger: false,
-    enableGracefulShutdown: safeBoolean(
-        process.env.ENABLE_GRACEFUL_SHUTDOWN,
+    gracefulShutdownEnable: safeBoolean(
+        process.env.GRACEFUL_SHUTDOWN_ENABLE,
         true,
+    ),
+    gracefulShutdownTimeout: safeNumber(
+        process.env.GRACEFUL_SHUTDOWN_TIMEOUT,
+        1000,
     ),
     secret: process.env.UNLEASH_SECRET || 'super-secret',
 };

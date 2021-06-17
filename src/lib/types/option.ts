@@ -68,7 +68,8 @@ export interface IServerOption {
     unleashUrl: string;
     serverMetrics: boolean;
     enableRequestLogger: boolean;
-    enableGracefulShutdown: boolean;
+    gracefulShutdownEnable: boolean;
+    gracefulShutdownTimeout: number;
     secret: string;
 }
 

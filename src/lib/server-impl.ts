@@ -2,6 +2,7 @@
 
 import EventEmitter from 'events';
 import stoppable, { StoppableServer } from 'stoppable';
+import { promisify } from 'util';
 import { IUnleash } from './types/core';
 import { IUnleashConfig, IUnleashOptions } from './types/option';
 import version from './util/version';
@@ -19,7 +20,6 @@ import * as eventType from './types/events';
 import { addEventHook } from './event-hook';
 import registerGracefulShutdown from './util/graceful-shutdown';
 import { IUnleashStores } from './types/stores';
-import { promisify } from 'util';
 
 async function destroyDatabase(stores: IUnleashStores): Promise<void> {
     const { db, clientInstanceStore, clientMetricsStore } = stores;

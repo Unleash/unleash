@@ -88,6 +88,8 @@ unleash.start(unleashOptions);
   - _serverMetrics_ (boolean) - use this option to turn on/off prometheus metrics.
   - _baseUriPath_ (string) - use to register a base path for all routes on the application. For example `/my/unleash/base` (note the starting /). Defaults to `/`. Can also be configured through the environment variable `BASE_URI_PATH`.
   - _unleashUrl_ (string) - Used to specify the official URL this instance of Unleash can be accessed at for an end user. Can also be configured through the environment variable `UNLEASH_URL`.
+  - \_gracefulShutdownEnable: (boolean) - Used to control if Unleash should shutdown gracefully (close connections, stop tasks,). `GRACEFUL_SHUTDOWN_ENABLE`
+  - \_gracefulShutdownTimeout: (number) - Used to control the timeout, in milliseconds, for shutdown Unleash gracefully. Will kill all connections regardless if this timeout is exeeded. Defaults to 1000ms `GRACEFUL_SHUTDOWN_TIMEOUT`
 - **preHook** (function) - this is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first argument.
 - **preRouterHook** (function) - use this to register custom express middlewares before the `unleash` specific routers are added.
 - **authentication** - (object) - An object for configuring/implementing custom admin authentication

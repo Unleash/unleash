@@ -1,5 +1,3 @@
-'use strict';
-
 import EventEmitter from 'events';
 import stoppable, { StoppableServer } from 'stoppable';
 import { promisify } from 'util';
@@ -19,14 +17,6 @@ import AuthenticationRequired from './types/authentication-required';
 import * as eventType from './types/events';
 import { addEventHook } from './event-hook';
 import registerGracefulShutdown from './util/graceful-shutdown';
-import { IUnleashStores } from './types/stores';
-
-async function destroyDatabase(stores: IUnleashStores): Promise<void> {
-    const { db, clientInstanceStore, clientMetricsStore } = stores;
-    clientInstanceStore.destroy();
-    clientMetricsStore.destroy();
-    await db.destroy();
-}
 
 async function createApp(
     config: IUnleashConfig,
@@ -47,7 +37,9 @@ async function createApp(
             await stopServer();
         }
         metricsMonitor.stopMonitoring();
-        await destroyDatabase(stores);
+        stores.clientInstanceStore.destroy();
+        stores.clientMetricsStore.destroy();
+        await stores.db.destroy();
     };
 
     if (!config.server.secret) {

@@ -6,6 +6,7 @@ import FeatureStrategiesStore, { FeatureConfigurationClient, IFeatureStrategy } 
 import FeatureToggleStore from '../db/feature-toggle-store';
 import { IProjectOverview, IStrategyConfig } from '../types/model';
 import feature from '../routes/admin-api/feature';
+import ProjectStore from '../db/project-store';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
@@ -20,16 +21,20 @@ class FeatureToggleServiceV2 {
 
     private featureToggleStore: FeatureToggleStore;
 
+    private projectStore: ProjectStore;
+
     constructor(
         {
             featureStrategiesStore,
-            featureToggleStore
-        }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore'>,
+            featureToggleStore,
+            projectStore
+        }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore' | 'projectStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>
     ) {
         this.logger = getLogger('services/setting-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureToggleStore = featureToggleStore;
+        this.projectStore = projectStore;
     }
 
     /*
@@ -108,9 +113,12 @@ class FeatureToggleServiceV2 {
     }
 
     async getProjectOverview(projectId: string): Promise<IProjectOverview> {
+        const project = await this.projectStore.get(projectId);
         const features = await this.featureStrategiesStore.getProjectOverview(projectId);
         const members = await this.featureStrategiesStore.getMembers(projectId);
         return {
+            name: project.name,
+            description: project.description,
             features,
             members,
             version: 1

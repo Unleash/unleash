@@ -1,3 +1,5 @@
+import { IProject } from '../db/project-store';
+
 export interface IConstraint {
     contextName: string;
     operator: string;
@@ -44,6 +46,8 @@ export interface IFeatureOverview {
 }
 
 export interface IProjectOverview {
+    name: string;
+    description: string;
     features: IFeatureOverview[];
     members: number;
     version: number;

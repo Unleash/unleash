@@ -236,6 +236,8 @@ class FeatureStrategiesStore {
         return Object.values(groupedByFeature);
     }
 
+    p;
+
     async getProjectOverview(projectId: string): Promise<IFeatureOverview[]> {
         const rows = await this.db('features')
             .where({ project: projectId })
@@ -281,6 +283,26 @@ class FeatureStrategiesStore {
             .where({ id })
             .first()
             .then(mapRow);
+    }
+
+    async connectEnvironmentAndFeature(
+        feature_name: string,
+        environment: string,
+        enabled: boolean = false,
+    ): Promise<void> {
+        await this.db('feature_environments')
+            .insert({ feature_name, environment, enabled })
+            .onConflict(['environment', 'feature_name'])
+            .merge('enabled');
+    }
+
+    async enableEnvironmentForFeature(
+        feature_name: string,
+        environment: string,
+    ): Promise<void> {
+        await this.db('feature_environments')
+            .update({ enabled: true })
+            .where({ feature_name, environment });
     }
 
     async updateStrategy(

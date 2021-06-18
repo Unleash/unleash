@@ -25,7 +25,9 @@ exports.up = function(db, cb) {
         CREATE TABLE IF NOT EXISTS feature_environments (
             environment   VARCHAR (100) NOT NULL DEFAULT ':global:' REFERENCES environments(name) ON DELETE CASCADE,
             feature_name  VARCHAR (255) NOT NULL REFERENCES features(name) ON DELETE CASCADE,
-            enabled       BOOLEAN NOT NULL
+            enabled       BOOLEAN NOT NULL,
+            PRIMARY KEY (environment, feature_name)
+
         );
   `,
         cb,

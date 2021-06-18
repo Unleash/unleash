@@ -45,6 +45,7 @@ class FeatureToggleServiceV2 {
     */
 
     async createStrategy(strategyConfig: Omit<IStrategyConfig, 'id'>, projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig> {
+        await this.featureStrategiesStore.connectEnvironmentAndFeature(featureName, environment);
         const newFeatureStrategy = await this.featureStrategiesStore.createStrategyConfig({
             strategyName: strategyConfig.name,
             constraints: strategyConfig.constraints,

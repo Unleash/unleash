@@ -1,0 +1,8 @@
+spec:
+  services:
+    - name: unleash
+      git:
+        branch: main
+        repo_clone_url: https://github.com/Unleash/unleash.git
+    databases:
+    - name: unleash-db

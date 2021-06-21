@@ -1,4 +1,5 @@
 spec:
+  name: unleash
   services:
   - name: unleash-server
     git:

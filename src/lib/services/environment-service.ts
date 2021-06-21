@@ -4,6 +4,8 @@ import EnvironmentStore from '../db/environment-store';
 import { Logger } from '../logger';
 import { IEnvironment } from '../types/model';
 import FeatureStrategiesStore from '../db/feature-strategy-store';
+import { UNIQUE_CONSTRAINT_VIOLATION } from '../error/db-error';
+import NameExistsError from '../error/name-exists-error';
 
 export default class EnvironmentService {
     private logger: Logger;
@@ -51,8 +53,16 @@ export default class EnvironmentService {
         environment: string,
         projectId: string,
     ): Promise<void> {
-        await this.environmentStore.connectProject(environment, projectId);
-        await this.environmentStore.connectFeatures(environment, projectId);
+        try {
+            await this.environmentStore.connectProject(environment, projectId);
+            await this.environmentStore.connectFeatures(environment, projectId);
+        } catch (e) {
+            if (e.code === UNIQUE_CONSTRAINT_VIOLATION) {
+                throw new NameExistsError(
+                    `${projectId} already has the environment ${environment} enabled`,
+                );
+            }
+        }
     }
 
     async removeEnvironmentFromProject(

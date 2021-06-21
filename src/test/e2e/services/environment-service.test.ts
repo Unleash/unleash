@@ -3,6 +3,7 @@ import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
 import NotFoundError from '../../../lib/error/notfound-error';
 import { IUnleashStores } from '../../../lib/types/stores';
+import NameExistsError from '../../../lib/error/name-exists-error';
 
 let stores: IUnleashStores;
 let db;
@@ -113,3 +114,26 @@ test('Can remove environment from project', async () => {
         expect(o.environments).toEqual([]);
     });
 });
+
+test('Adding same environment twice should throw a NameExistsError', async () => {
+    await service.create({ name: 'uniqueness-test', displayName: '' });
+    await service.removeEnvironmentFromProject('test-connection', 'default');
+    await service.removeEnvironmentFromProject('removal-test', 'default');
+
+    await service.connectProjectToEnvironment('uniqueness-test', 'default');
+    return expect(async () =>
+        service.connectProjectToEnvironment('uniqueness-test', 'default'),
+    ).rejects.toThrow(
+        new NameExistsError(
+            'default already has the environment uniqueness-test enabled',
+        ),
+    );
+});
+
+test('Removing environment not connected to project should be a noop', async () =>
+    expect(async () =>
+        service.removeEnvironmentFromProject(
+            'some-non-existing-environment',
+            'default',
+        ),
+    ).resolves);

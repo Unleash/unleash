@@ -13,6 +13,7 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
 import FeatureToggleService from '../../services/feature-toggle-service';
+import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
 
 const version = 1;
 const fields = [
@@ -33,14 +34,18 @@ class FeatureController extends Controller {
 
     private featureService: FeatureToggleService;
 
+    private serviceV2: FeatureToggleServiceV2;
+
     constructor(
         config: IUnleashConfig,
         {
             featureToggleService,
-        }: Pick<IUnleashServices, 'featureToggleService'>,
+            featureToggleServiceV2,
+        }: Pick<IUnleashServices, 'featureToggleService' | 'featureToggleServiceV2'>,
     ) {
         super(config);
         this.featureService = featureToggleService;
+        this.serviceV2 = featureToggleServiceV2;
         this.logger = config.getLogger('/admin-api/feature.ts');
 
         this.get('/', this.getAllToggles);

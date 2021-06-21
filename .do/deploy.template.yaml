@@ -5,6 +5,8 @@ spec:
     git:
       branch: master
       repo_clone_url: https://github.com/Unleash/unleash.git
+    build_command: 'yarn build'
+    run_command: 'yarn run'
   envs:
     - key: DATABASE_URL
       scope: RUN_TIME
@@ -12,7 +14,5 @@ spec:
     - key: UNLEASH_URL
       scope: RUN_TIME
       value: ${APP_URL}
-  build_command: 'yarn build'
-  run_command: 'yarn run'
   databases:
   - name: unleash-db

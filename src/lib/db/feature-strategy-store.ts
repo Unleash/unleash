@@ -384,6 +384,15 @@ class FeatureStrategiesStore {
             return acc;
         }, {});
     }
+
+    async deleteConfigurationsForProjectAndEnvironment(
+        projectId: String,
+        environment: String,
+    ): Promise<void> {
+        await this.db('feature_strategies')
+            .where({ project_name: projectId, environment })
+            .del();
+    }
 }
 
 module.exports = FeatureStrategiesStore;

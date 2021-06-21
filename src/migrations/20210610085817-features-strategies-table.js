@@ -19,6 +19,7 @@ exports.up = function(db, cb) {
             strategy_name VARCHAR (255) NOT NULL,
             parameters    jsonb,
             constraints   jsonb,
+            sort_order    integer NOT NULL DEFAULT 9999,
             created_at    timestamp with time zone DEFAULT now()
         );
 

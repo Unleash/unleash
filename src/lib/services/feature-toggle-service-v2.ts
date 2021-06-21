@@ -115,6 +115,11 @@ class FeatureToggleServiceV2 {
     async getEnvironmentInfo(environment: string, featureName: string): Promise<any> {
         return this.featureStrategiesStore.getStrategiesAndMetadataForEnvironment(environment, featureName);
     }
+
+    async deleteEnvironment(projectId: string, environment: string): Promise<void> {
+        await this.featureStrategiesStore.deleteConfigurationsForProjectAndEnvironment(projectId, environment);
+        await this.projectStore.deleteEnvironment(projectId, environment);
+    }
 }
 
 

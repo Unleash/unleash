@@ -20,7 +20,7 @@ import ApiTokenController from './api-token-controller';
 import UserAdminController from './user-admin';
 import EmailController from './email';
 import UserFeedbackController from './user-feedback-controller';
-import ProjectFeaturesController from './project-features';
+import ProjectApi from './project';
 import { EnvironmentsController } from './environments-controller';
 
 class AdminApi extends Controller {
@@ -82,10 +82,7 @@ class AdminApi extends Controller {
             '/feedback',
             new UserFeedbackController(config, services).router,
         );
-        this.app.use(
-            '/projects',
-            new ProjectFeaturesController(config, services).router,
-        );
+        this.app.use('/projects', new ProjectApi(config, services).router);
         this.app.use(
             '/environments',
             new EnvironmentsController(config, services).router,

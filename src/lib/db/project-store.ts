@@ -108,7 +108,7 @@ class ProjectStore {
         await this.db(TABLE).del();
     }
 
-    async delete(id): Promise<void> {
+    async delete(id: string): Promise<void> {
         try {
             await this.db(TABLE)
                 .where({ id })
@@ -116,6 +116,15 @@ class ProjectStore {
         } catch (err) {
             this.logger.error('Could not delete project, error: ', err);
         }
+    }
+
+    async deleteEnvironment(id: string, environment: string): Promise<void> {
+        await this.db('project_environments')
+            .where({
+                project_id: id,
+                environment_name: environment,
+            })
+            .del();
     }
 
     mapRow(row): IProject {

@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
-import Controller from '../controller';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
-import { Logger } from '../../logger';
-import { UPDATE_FEATURE } from '../../types/permissions';
-import { IConstraint, IProjectParam, IStrategyConfig } from '../../types/model';
-import { handleErrors } from './util';
+import Controller from '../../controller';
+import { IUnleashConfig } from '../../../types/option';
+import { IUnleashServices } from '../../../types/services';
+import FeatureToggleServiceV2 from '../../../services/feature-toggle-service-v2';
+import { Logger } from '../../../logger';
+import { UPDATE_FEATURE } from '../../../types/permissions';
+import {
+    IConstraint,
+    IProjectParam,
+    IStrategyConfig,
+} from '../../../types/model';
+import { handleErrors } from '../util';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -14,9 +18,16 @@ interface FeatureStrategyParams {
     environment: string;
 }
 
-interface FeatureParams {
-    projectId: string;
+interface FeatureParams extends ProjectParam {
     featureName: string;
+}
+
+interface ProjectParam {
+    projectId: string;
+}
+
+interface ProjectEnvironment extends ProjectParam {
+    environment: string;
 }
 
 interface StrategyIdParams extends FeatureStrategyParams {
@@ -31,6 +42,8 @@ interface StrategyUpdateBody {
 
 const PATH_PREFIX = '/:projectId/features/:featureName';
 
+type ProjectFeaturesServices = Pick<IUnleashServices, 'featureToggleServiceV2'>;
+
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleServiceV2;
 
@@ -38,14 +51,16 @@ export default class ProjectFeaturesController extends Controller {
 
     constructor(
         config: IUnleashConfig,
-        {
-            featureToggleServiceV2,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2'>,
+        { featureToggleServiceV2 }: ProjectFeaturesServices,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
-        this.logger = config.getLogger('/admin-api/project-features.ts');
+        this.logger = config.getLogger('/admin-api/features.ts');
 
+        this.delete(
+            `/:projectId/environments/:environment`,
+            this.deleteEnvironment,
+        );
         this.post(
             `${PATH_PREFIX}/environments/:environment/strategies`,
             this.createFeatureStrategy,
@@ -95,6 +110,19 @@ export default class ProjectFeaturesController extends Controller {
         try {
             const feature = await this.featureService.getFeature(featureName);
             res.status(200).json(feature);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
+    }
+
+    async deleteEnvironment(
+        req: Request<ProjectEnvironment, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { projectId, environment } = req.params;
+        try {
+            await this.featureService.deleteEnvironment(projectId, environment);
+            res.status(200).end();
         } catch (e) {
             handleErrors(res, this.logger, e);
         }

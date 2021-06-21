@@ -5,5 +5,9 @@ spec:
     git:
       branch: master
       repo_clone_url: https://github.com/Unleash/unleash.git
+  envs:
+    - key: DATABASE_URL
+      scope: RUN_TIME
+      value: ${unleash-db.DATABASE_URL}
   databases:
   - name: unleash-db

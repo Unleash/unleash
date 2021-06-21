@@ -1,8 +1,8 @@
 spec:
   services:
-    - name: unleash-server
-      git:
-        branch: master
-        repo_clone_url: https://github.com/Unleash/unleash.git
-    databases:
-    - name: unleash-db
+  - name: unleash-server
+    git:
+      branch: master
+      repo_clone_url: https://github.com/Unleash/unleash.git
+  databases:
+  - name: unleash-db

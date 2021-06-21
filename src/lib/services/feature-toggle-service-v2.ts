@@ -5,8 +5,9 @@ import { Logger } from '../logger';
 import FeatureStrategiesStore, { FeatureConfigurationClient, IFeatureStrategy } from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
 import { IProjectOverview, IStrategyConfig } from '../types/model';
-import feature from '../routes/admin-api/feature';
 import ProjectStore from '../db/project-store';
+import BadDataError from '../error/bad-data-error';
+import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
@@ -38,20 +39,27 @@ class FeatureToggleServiceV2 {
     }
 
     async createStrategy(strategyConfig: Omit<IStrategyConfig, 'id'>, projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig> {
-        const newFeatureStrategy = await this.featureStrategiesStore.createStrategyConfig({
-            strategyName: strategyConfig.name,
-            constraints: strategyConfig.constraints,
-            parameters: strategyConfig.parameters,
-            projectName,
-            featureName,
-            environment
-        });
-        return {
-            id: newFeatureStrategy.id,
-            name: newFeatureStrategy.strategyName,
-            constraints: newFeatureStrategy.constraints,
-            parameters: newFeatureStrategy.parameters
-        };
+        try {
+            const newFeatureStrategy = await this.featureStrategiesStore.createStrategyConfig({
+                strategyName: strategyConfig.name,
+                constraints: strategyConfig.constraints,
+                parameters: strategyConfig.parameters,
+                projectName,
+                featureName,
+                environment
+            });
+            return {
+                id: newFeatureStrategy.id,
+                name: newFeatureStrategy.strategyName,
+                constraints: newFeatureStrategy.constraints,
+                parameters: newFeatureStrategy.parameters
+            };
+        } catch (e) {
+            if (e.code === FOREIGN_KEY_VIOLATION) {
+                throw new BadDataError("You have not added the current environment to the project");
+            }
+            throw e;
+        }
     }
 
     /**

@@ -57,10 +57,6 @@ export default class ProjectFeaturesController extends Controller {
         this.featureService = featureToggleServiceV2;
         this.logger = config.getLogger('/admin-api/features.ts');
 
-        this.delete(
-            `/:projectId/environments/:environment`,
-            this.deleteEnvironment,
-        );
         this.post(
             `${PATH_PREFIX}/environments/:environment/strategies`,
             this.createFeatureStrategy,
@@ -110,19 +106,6 @@ export default class ProjectFeaturesController extends Controller {
         try {
             const feature = await this.featureService.getFeature(featureName);
             res.status(200).json(feature);
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
-    }
-
-    async deleteEnvironment(
-        req: Request<ProjectEnvironment, any, any, any>,
-        res: Response,
-    ): Promise<void> {
-        const { projectId, environment } = req.params;
-        try {
-            await this.featureService.deleteEnvironment(projectId, environment);
-            res.status(200).end();
         } catch (e) {
             handleErrors(res, this.logger, e);
         }

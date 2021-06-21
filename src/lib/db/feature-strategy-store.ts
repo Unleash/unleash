@@ -273,7 +273,10 @@ class FeatureStrategiesStore {
                 }
                 return acc;
             }, {});
-            return Object.values(overview);
+            return Object.values(overview).map((o: IFeatureOverview) => ({
+                ...o,
+                environments: o.environments.filter(f => f.name),
+            }));
         }
         throw new NotFoundError(`Could not find project with id ${projectId}`);
     }
@@ -303,6 +306,32 @@ class FeatureStrategiesStore {
         await this.db('feature_environments')
             .update({ enabled: true })
             .where({ feature_name, environment });
+    }
+
+    async removeEnvironmentForFeature(
+        feature_name: string,
+        environment: string,
+    ): Promise<void> {
+        await this.db('feature_environments')
+            .where({ feature_name, environment })
+            .del();
+    }
+
+    async disconnectEnvironmentFromProject(
+        environment: string,
+        project: string,
+    ): Promise<void> {
+        const featureSelector = this.db('features')
+            .where({ project })
+            .select('name');
+        await this.db('feature_environments')
+            .where({ environment })
+            .andWhere('feature_name', 'IN', featureSelector)
+            .del();
+        await this.db('feature_strategies').where({
+            environment,
+            project_name: project,
+        });
     }
 
     async updateStrategy(

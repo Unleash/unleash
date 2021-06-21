@@ -2,8 +2,9 @@ import EnvironmentService from '../../../lib/services/environment-service';
 import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
 import NotFoundError from '../../../lib/error/notfound-error';
+import { IUnleashStores } from '../../../lib/types/stores';
 
-let stores;
+let stores: IUnleashStores;
 let db;
 let service: EnvironmentService;
 
@@ -13,7 +14,6 @@ beforeAll(async () => {
     stores = db.stores;
     service = new EnvironmentService(stores, config);
 });
-
 afterAll(async () => {
     await db.destroy();
 });
@@ -58,4 +58,58 @@ test('Can update display name', async () => {
     await service.update('testenv', { displayName: 'Different name' });
     const updated = await service.get('testenv');
     expect(updated.displayName).toEqual('Different name');
+});
+
+test('Can connect environment to project', async () => {
+    await service.create({ name: 'test-connection', displayName: '' });
+    await stores.featureToggleStore.createFeature({
+        name: 'test_feature',
+        project: 'default',
+        strategies: [{ name: 'default' }],
+    });
+    await service.connectProjectToEnvironment('test-connection', 'default');
+    const overview = await stores.featureStrategiesStore.getProjectOverview(
+        'default',
+    );
+    overview.forEach(f => {
+        expect(f.environments).toEqual([
+            {
+                name: 'test-connection',
+                displayName: '',
+                enabled: false,
+            },
+        ]);
+    });
+});
+
+test('Can remove environment from project', async () => {
+    await service.create({ name: 'removal-test', displayName: '' });
+    await stores.featureToggleStore.createFeature({
+        name: 'test_feature',
+        project: 'default',
+        strategies: [{ name: 'default' }],
+    });
+    await service.removeEnvironmentFromProject('test-connection', 'default');
+    await service.connectProjectToEnvironment('removal-test', 'default');
+    let overview = await stores.featureStrategiesStore.getProjectOverview(
+        'default',
+    );
+    expect(overview.length).toBeGreaterThan(0);
+    overview.forEach(f => {
+        expect(f.environments).toEqual([
+            {
+                name: 'removal-test',
+                displayName: '',
+                enabled: false,
+            },
+        ]);
+    });
+    await service.removeEnvironmentFromProject('removal-test', 'default');
+    overview = await stores.featureStrategiesStore.getProjectOverview(
+        'default',
+    );
+    expect(overview.length).toBeGreaterThan(0);
+    overview.forEach(o => {
+        expect(o.environments).toEqual([]);
+    });
 });

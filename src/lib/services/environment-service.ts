@@ -3,18 +3,25 @@ import { IUnleashConfig } from '../types/option';
 import EnvironmentStore from '../db/environment-store';
 import { Logger } from '../logger';
 import { IEnvironment } from '../types/model';
+import FeatureStrategiesStore from '../db/feature-strategy-store';
 
 export default class EnvironmentService {
     private logger: Logger;
 
     private environmentStore: EnvironmentStore;
 
+    private featureStrategiesStore: FeatureStrategiesStore;
+
     constructor(
-        { environmentStore }: Pick<IUnleashStores, 'environmentStore'>,
+        {
+            environmentStore,
+            featureStrategiesStore,
+        }: Pick<IUnleashStores, 'environmentStore' | 'featureStrategiesStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.logger = getLogger('services/environment-service.ts');
         this.environmentStore = environmentStore;
+        this.featureStrategiesStore = featureStrategiesStore;
     }
 
     async getAll(): Promise<IEnvironment[]> {
@@ -38,5 +45,27 @@ export default class EnvironmentService {
         env: Pick<IEnvironment, 'displayName'>,
     ): Promise<IEnvironment> {
         return this.environmentStore.upsert({ ...env, name });
+    }
+
+    async connectProjectToEnvironment(
+        environment: string,
+        projectId: string,
+    ): Promise<void> {
+        await this.environmentStore.connectProject(environment, projectId);
+        await this.environmentStore.connectFeatures(environment, projectId);
+    }
+
+    async removeEnvironmentFromProject(
+        environment: string,
+        projectId: string,
+    ): Promise<void> {
+        await this.environmentStore.disconnectProjectFromEnv(
+            environment,
+            projectId,
+        );
+        await this.featureStrategiesStore.disconnectEnvironmentFromProject(
+            environment,
+            projectId,
+        );
     }
 }

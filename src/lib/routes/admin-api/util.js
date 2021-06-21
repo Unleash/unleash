@@ -47,6 +47,11 @@ const handleErrors = (res, logger, error) => {
                 .status(400)
                 .json(error)
                 .end();
+        case 'BadDataError':
+            return res
+                .status(400)
+                .json(error)
+                .end();
         case 'FeatureHasTagError':
             return res
                 .status(409)

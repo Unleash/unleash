@@ -31,26 +31,13 @@ class FeatureToggleServiceV2 {
         }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore' | 'projectStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>
     ) {
-        this.logger = getLogger('services/setting-service.ts');
+        this.logger = getLogger('services/feature-toggle-service-v2.ts');
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureToggleStore = featureToggleStore;
         this.projectStore = projectStore;
     }
 
-    /*
-        POST /api/admin/projects/:projectName/features/:featureName/environments/:envName/strategies
-        {
-
-
-            "constraints": [],
-            "name": "default",
-            "parameters": {}
-        }
-
-    */
-
     async createStrategy(strategyConfig: Omit<IStrategyConfig, 'id'>, projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig> {
-        await this.featureStrategiesStore.connectEnvironmentAndFeature(featureName, environment);
         const newFeatureStrategy = await this.featureStrategiesStore.createStrategyConfig({
             strategyName: strategyConfig.name,
             constraints: strategyConfig.constraints,

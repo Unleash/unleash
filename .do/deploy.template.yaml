@@ -9,5 +9,10 @@ spec:
     - key: DATABASE_URL
       scope: RUN_TIME
       value: ${unleash-db.DATABASE_URL}
+    - key: UNLEASH_URL
+      scope: RUN_TIME
+      value: ${APP_URL}
+  build_command: 'yarn build'
+  run_command: 'yarn run'
   databases:
   - name: unleash-db

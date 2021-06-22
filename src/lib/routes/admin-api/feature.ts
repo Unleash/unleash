@@ -23,7 +23,6 @@ const fields = [
     'project',
     'enabled',
     'stale',
-    'strategies',
     'variants',
     'createdAt',
     'lastSeenAt',
@@ -34,18 +33,21 @@ class FeatureController extends Controller {
 
     private featureService: FeatureToggleService;
 
-    private serviceV2: FeatureToggleServiceV2;
+    private featureService2: FeatureToggleServiceV2;
 
     constructor(
         config: IUnleashConfig,
         {
             featureToggleService,
             featureToggleServiceV2,
-        }: Pick<IUnleashServices, 'featureToggleService' | 'featureToggleServiceV2'>,
+        }: Pick<
+        IUnleashServices,
+        'featureToggleService' | 'featureToggleServiceV2'
+        >,
     ) {
         super(config);
         this.featureService = featureToggleService;
-        this.serviceV2 = featureToggleServiceV2;
+        this.featureService2 = featureToggleServiceV2;
         this.logger = config.getLogger('/admin-api/feature.ts');
 
         this.get('/', this.getAllToggles);
@@ -70,16 +72,27 @@ class FeatureController extends Controller {
 
     async getAllToggles(req: Request, res: Response): Promise<void> {
         try {
-            const features = await this.featureService.getFeatures(
+            const oldFeatures = await this.featureService.getFeatures(
                 req.query,
                 fields,
             );
+
+            const featureStrategies = await this.featureService2.getAllStrategiesForEnvironmentOld();
+
+            const features = oldFeatures.map(f => ({
+                ...f,
+                strategies: featureStrategies.get(f.name),
+            }));
+
+            console.log(features);
+
             res.json({ version, features });
         } catch (err) {
             handleErrors(res, this.logger, err);
         }
     }
 
+    // TODO
     async getToggle(req: Request, res: Response): Promise<void> {
         try {
             const name = req.params.featureName;
@@ -90,6 +103,7 @@ class FeatureController extends Controller {
         }
     }
 
+    // TODO
     async listTags(req: Request, res: Response): Promise<void> {
         try {
             const tags = await this.featureService.listTags(
@@ -101,6 +115,7 @@ class FeatureController extends Controller {
         }
     }
 
+    // TODO
     async addTag(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUser(req);
@@ -116,6 +131,7 @@ class FeatureController extends Controller {
         }
     }
 
+    // TODO
     async removeTag(req: Request, res: Response): Promise<void> {
         const { featureName, type, value } = req.params;
         const userName = extractUser(req);
@@ -131,6 +147,7 @@ class FeatureController extends Controller {
         }
     }
 
+    // TODO
     async validate(req: Request, res: Response): Promise<void> {
         const { name } = req.body;
 
@@ -144,12 +161,23 @@ class FeatureController extends Controller {
 
     async createToggle(req: Request, res: Response): Promise<void> {
         const userName = extractUser(req);
+        const toggle = req.body;
 
         try {
-            const createdFeature = await this.featureService.createFeatureToggle(
-                req.body,
+            const createdFeature = await this.featureService2.createFeatureToggle(
+                toggle,
                 userName,
             );
+            await Promise.all(
+                toggle.strategies.map(async s => {
+                    await this.featureService2.createStrategy(
+                        s,
+                        toggle.project,
+                        toggle.name,
+                    );
+                }),
+            );
+
             res.status(201).json(createdFeature);
         } catch (error) {
             handleErrors(res, this.logger, error);
@@ -164,13 +192,32 @@ class FeatureController extends Controller {
         updatedFeature.name = featureName;
 
         try {
-            await this.featureService.updateToggle(updatedFeature, userName);
+            await this.featureService2.updateFeatureToggle(
+                updatedFeature,
+                userName,
+            );
+
+            // TODO: remove all strategies then add them.
+            await Promise.all(
+                updatedFeature.strategies.map(async s => {
+                    if (s.id) {
+                        await this.featureService2.updateStrategy(s.id, s);
+                    } else {
+                        await this.featureService2.createStrategy(
+                            s,
+                            updatedFeature.project,
+                            updatedFeature.name,
+                        );
+                    }
+                }),
+            );
             res.status(200).end();
         } catch (error) {
             handleErrors(res, this.logger, error);
         }
     }
 
+    // TODO: remove?
     // Kept to keep backward compatibility
     async toggle(req: Request, res: Response): Promise<void> {
         const userName = extractUser(req);

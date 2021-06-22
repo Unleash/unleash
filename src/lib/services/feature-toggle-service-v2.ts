@@ -4,16 +4,13 @@ import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import FeatureStrategiesStore, { FeatureConfigurationClient, IFeatureStrategy } from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
-import { IProjectOverview, IStrategyConfig } from '../types/model';
+import { IFeatureToggle, IProjectOverview, IStrategyConfig } from '../types/model';
 import ProjectStore from '../db/project-store';
 import BadDataError from '../error/bad-data-error';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
-
-
-
 
 class FeatureToggleServiceV2 {
     private logger: Logger;
@@ -96,6 +93,45 @@ class FeatureToggleServiceV2 {
     async getClientFeatures(): Promise<FeatureConfigurationClient[]> {
         return this.featureStrategiesStore.getFeatureTogglesClient();
     }
+
+    // We might be able to reuse getClientFeatures instead?
+    async getAllStrategiesForEnvironmentOld(environment: string = GLOBAL_ENV): Promise<Map<string, IStrategyConfig[]>> {
+        const featureStrategiesRaw = await this.featureStrategiesStore.getStrategiesForEnv(environment);
+        const featureStrategies = new Map<string,  IStrategyConfig[]>();
+
+        featureStrategiesRaw.forEach(value => {
+            if(featureStrategies.has(value.featureName)) {
+                featureStrategies.get(value.featureName).push({
+                    id: value.id,
+                    name: value.strategyName,
+                    parameters: value.parameters,
+                    constraints: value.constraints || []
+                })
+            } else {
+                featureStrategies.set(value.featureName, [{
+                    id: value.id,
+                    name: value.strategyName,
+                    parameters: value.parameters,
+                    constraints: value.constraints || []
+                }])
+            }
+        });
+
+        return featureStrategies;
+    }
+
+    // TODO: add event etc. 
+    async createFeatureToggle(featureToggle: IFeatureToggle, userName: string): Promise<IFeatureToggle> {
+        this.logger.info(`${userName} creates feature toggle ${featureToggle.name}`);
+        return this.featureToggleStore.createFeature(featureToggle);
+        
+    }
+
+    async updateFeatureToggle(featureToggle: IFeatureToggle, userName: string): Promise<void> {
+        this.logger.info(`${userName} updates feature toggle ${featureToggle.name}`);
+        return this.featureToggleStore.updateFeature(featureToggle);
+    }
+
 
     async getStrategy(strategyId: string): Promise<IStrategyConfig> {
         const strategy = await this.featureStrategiesStore.getStrategyById(strategyId);

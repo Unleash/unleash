@@ -13,6 +13,15 @@ export interface IStrategyConfig {
     parameters: Object;
 }
 
+export interface IFeatureToggle {
+    name: string;
+    description: string;
+    type: string;
+    project: string;
+    stale: boolean;
+    variants: IVariant[];
+}
+
 export interface IVariant {
     name: string;
     weight: number;

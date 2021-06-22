@@ -41,7 +41,7 @@ interface IFeatureStrategiesTable {
     environment: string;
     strategy_name: string;
     parameters: object;
-    constraints: IConstraint[];
+    constraints: string;
     created_at?: Date;
 }
 
@@ -66,6 +66,7 @@ export interface FeatureConfigurationClient {
 }
 
 function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
+    console.log(row.constraints);
     return {
         id: row.id,
         featureName: row.feature_name,
@@ -73,7 +74,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         environment: row.environment,
         strategyName: row.strategy_name,
         parameters: row.parameters,
-        constraints: row.constraints,
+        constraints: (row.constraints as unknown) as IConstraint[],
         createdAt: row.created_at,
     };
 }
@@ -86,7 +87,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         environment: input.environment,
         strategy_name: input.strategyName,
         parameters: input.parameters,
-        constraints: input.constraints,
+        constraints: JSON.stringify(input.constraints),
         created_at: input.createdAt,
     };
 }
@@ -94,7 +95,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
 interface StrategyUpdate {
     strategy_name: string;
     parameters: object;
-    constraints: IConstraint[];
+    constraints: string;
 }
 
 function mapStrategyUpdate(
@@ -107,9 +108,7 @@ function mapStrategyUpdate(
     if (input.parameters !== null) {
         update.parameters = input.parameters;
     }
-    if (input.constraints !== null) {
-        update.constraints = input.constraints;
-    }
+    update.constraints = JSON.stringify(input.constraints || []);
     return update;
 }
 
@@ -192,6 +191,17 @@ class FeatureStrategiesStore {
         return rows.map(mapRow);
     }
 
+    async getStrategiesForEnv(
+        environment: string,
+    ): Promise<IFeatureStrategy[]> {
+        const stopTimer = this.timer('getStrategiesForEnv');
+        const rows = await this.db<IFeatureStrategiesTable>(TABLE).where({
+            environment,
+        });
+        stopTimer();
+        return rows.map(mapRow);
+    }
+
     async getFeatureTogglesClient(): Promise<FeatureConfigurationClient[]> {
         const stopTimer = this.timer('getAllFeatures');
         const rows = await this.db
@@ -235,8 +245,6 @@ class FeatureStrategiesStore {
         }, {});
         return Object.values(groupedByFeature);
     }
-
-    p;
 
     async getProjectOverview(projectId: string): Promise<IFeatureOverview[]> {
         const rows = await this.db('features')
@@ -339,6 +347,7 @@ class FeatureStrategiesStore {
         updates: Partial<IFeatureStrategy>,
     ): Promise<IFeatureStrategy> {
         const update = mapStrategyUpdate(updates);
+        console.log(update);
         const row = await this.db<IFeatureStrategiesTable>(TABLE)
             .where({ id })
             .update(update)

@@ -24,6 +24,7 @@ const constraintSchema = joi.object().keys({
 });
 
 const strategiesSchema = joi.object().keys({
+    id: joi.string().optional(),
     name: nameType,
     constraints: joi
         .array()

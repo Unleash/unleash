@@ -8,6 +8,10 @@ import { IFeatureToggle, IProjectOverview, IStrategyConfig } from '../types/mode
 import ProjectStore from '../db/project-store';
 import BadDataError from '../error/bad-data-error';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
+import NameExistsError from '../error/name-exists-error';
+import { featureSchema, nameSchema } from '../schema/feature-schema';
+import EventStore from '../db/event-store';
+import { FEATURE_CREATED } from '../types/events';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
@@ -21,18 +25,22 @@ class FeatureToggleServiceV2 {
 
     private projectStore: ProjectStore;
 
+    private eventStore: EventStore;
+
     constructor(
         {
             featureStrategiesStore,
             featureToggleStore,
-            projectStore
-        }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore' | 'projectStore'>,
+            projectStore,
+            eventStore,
+        }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore' | 'projectStore' | 'eventStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>
     ) {
         this.logger = getLogger('services/feature-toggle-service-v2.ts');
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureToggleStore = featureToggleStore;
         this.projectStore = projectStore;
+        this.eventStore = eventStore;
     }
 
     async createStrategy(strategyConfig: Omit<IStrategyConfig, 'id'>, projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig> {
@@ -121,9 +129,19 @@ class FeatureToggleServiceV2 {
     }
 
     // TODO: add event etc. 
-    async createFeatureToggle(featureToggle: IFeatureToggle, userName: string): Promise<IFeatureToggle> {
-        this.logger.info(`${userName} creates feature toggle ${featureToggle.name}`);
-        return this.featureToggleStore.createFeature(featureToggle);
+    async createFeatureToggle(value: IFeatureToggle, userName: string): Promise<IFeatureToggle> {
+        this.logger.info(`${userName} creates feature toggle ${value.name}`);
+        await this.validateName(value);
+        const featureData = await featureSchema.validateAsync(value);
+        const createdToggle = this.featureToggleStore.createFeature(featureData);
+        
+        await this.eventStore.store({
+            type: FEATURE_CREATED,
+            createdBy: userName,
+            data: featureData,
+        });
+
+        return createdToggle;
         
     }
 
@@ -164,6 +182,27 @@ class FeatureToggleServiceV2 {
         await this.featureStrategiesStore.deleteConfigurationsForProjectAndEnvironment(projectId, environment);
         await this.projectStore.deleteEnvironment(projectId, environment);
     }
+
+    /** Validations  */
+    async validateName({ name }: IFeatureToggle): Promise<string> {
+        await nameSchema.validateAsync({ name });
+        await this.validateUniqueFeatureName(name);
+        return name;
+    }
+
+    async validateUniqueFeatureName(name: string): Promise<void> {
+        let msg;
+        try {
+            const feature = await this.featureToggleStore.hasFeature(name);
+            msg = feature.archived
+                ? 'An archived toggle with that name already exists'
+                : 'A toggle with that name already exists';
+        } catch (error) {
+            return;
+        }
+        throw new NameExistsError(msg);
+    }
+
 }
 
 

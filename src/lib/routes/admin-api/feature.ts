@@ -172,8 +172,8 @@ class FeatureController extends Controller {
                 toggle.strategies.map(async s => {
                     await this.featureService2.createStrategy(
                         s,
-                        toggle.project,
-                        toggle.name,
+                        createdFeature.project,
+                        createdFeature.name,
                     );
                 }),
             );

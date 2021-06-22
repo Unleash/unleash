@@ -1,5 +1,9 @@
 const { FEATURE_TAGGED, FEATURE_UNTAGGED } = require('../types/events');
-const { featureSchema, nameSchema, querySchema } = require('./feature-schema');
+const {
+    featureSchema,
+    nameSchema,
+    querySchema,
+} = require('../schema/feature-schema');
 const { tagSchema } = require('./tag-schema');
 const NameExistsError = require('../error/name-exists-error');
 const NotFoundError = require('../error/notfound-error');

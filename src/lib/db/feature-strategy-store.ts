@@ -66,7 +66,6 @@ export interface FeatureConfigurationClient {
 }
 
 function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
-    console.log(row.constraints);
     return {
         id: row.id,
         featureName: row.feature_name,

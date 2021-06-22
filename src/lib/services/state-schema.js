@@ -1,5 +1,5 @@
 const joi = require('joi');
-const { featureSchema, featureTagSchema } = require('./feature-schema');
+const { featureSchema, featureTagSchema } = require('../schema/feature-schema');
 const strategySchema = require('./strategy-schema');
 const { tagSchema } = require('./tag-schema');
 const { tagTypeSchema } = require('./tag-type-schema');

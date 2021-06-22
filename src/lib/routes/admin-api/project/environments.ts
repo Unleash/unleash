@@ -32,7 +32,7 @@ export default class EnvironmentsController extends Controller {
         this.environmentService = environmentService;
         this.post(PREFIX, this.addEnvironmentToProject);
         this.delete(
-            '/environments/:environment',
+            `${PREFIX}/:environment`,
             this.removeEnvironmentFromProject,
         );
     }
@@ -52,6 +52,7 @@ export default class EnvironmentsController extends Controller {
                 req.body.environment,
                 projectId,
             );
+            res.status(200).end();
         } catch (e) {
             handleErrors(res, this.logger, e);
         }
@@ -67,6 +68,7 @@ export default class EnvironmentsController extends Controller {
                 environment,
                 projectId,
             );
+            res.status(200).end();
         } catch (e) {
             handleErrors(res, this.logger, e);
         }

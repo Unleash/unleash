@@ -62,6 +62,7 @@ export default class EnvironmentService {
                     `${projectId} already has the environment ${environment} enabled`,
                 );
             }
+            throw e;
         }
     }
 

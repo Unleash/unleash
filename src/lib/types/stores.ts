@@ -20,6 +20,7 @@ import { ResetTokenStore } from '../db/reset-token-store';
 import SessionStore from '../db/session-store';
 import FeatureStrategiesStore from '../db/feature-strategy-store';
 import EnvironmentStore from '../db/environment-store';
+import FeatureTagStore from '../db/feature-tag-store';
 
 export interface IUnleashStores {
     projectStore: ProjectStore;
@@ -43,5 +44,6 @@ export interface IUnleashStores {
     userFeedbackStore: UserFeedbackStore;
     featureStrategiesStore: FeatureStrategiesStore;
     environmentStore: EnvironmentStore;
+    featureTagStore: FeatureTagStore;
     db: Knex;
 }

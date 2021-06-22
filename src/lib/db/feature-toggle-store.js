@@ -3,8 +3,6 @@
 const metricsHelper = require('../util/metrics-helper');
 const { DB_TIME } = require('../metric-events');
 const NotFoundError = require('../error/notfound-error');
-const FeatureHasTagError = require('../error/feature-has-tag-error');
-const { UNIQUE_CONSTRAINT_VIOLATION } = require('../error/db-error');
 
 const FEATURE_COLUMNS = [
     'name',
@@ -24,9 +22,7 @@ const mapperToColumnNames = {
     lastSeenAt: 'last_seen_at',
 };
 const TABLE = 'features';
-const FEATURE_TAG_COLUMNS = ['feature_name', 'tag_type', 'tag_value'];
 const FEATURE_TAG_FILTER_COLUMNS = ['tag_type', 'tag_value'];
-const FEATURE_TAG_TABLE = 'feature_tag';
 
 class FeatureToggleStore {
     constructor(db, eventBus, getLogger) {
@@ -259,120 +255,6 @@ class FeatureToggleStore {
         } catch (err) {
             this.logger.error('Could not drop features, error: ', err);
         }
-    }
-
-    async getAllTagsForFeature(featureName) {
-        const stopTimer = this.timer('getAllForFeature');
-        const rows = await this.db
-            .select(FEATURE_TAG_COLUMNS)
-            .from(FEATURE_TAG_TABLE)
-            .where({ feature_name: featureName });
-        stopTimer();
-        return rows.map(this.featureTagRowToTag);
-    }
-
-    async tagFeature(featureName, tag) {
-        const stopTimer = this.timer('tagFeature');
-        await this.db(FEATURE_TAG_TABLE)
-            .insert(this.featureAndTagToRow(featureName, tag))
-            .catch(err => {
-                if (err.code === UNIQUE_CONSTRAINT_VIOLATION) {
-                    throw new FeatureHasTagError(
-                        `${featureName} already had the tag: [${tag.type}:${tag.value}]`,
-                    );
-                } else {
-                    throw err;
-                }
-            });
-        stopTimer();
-        return tag;
-    }
-
-    async getAllFeatureTags() {
-        const rows = await this.db(FEATURE_TAG_TABLE).select(
-            FEATURE_TAG_COLUMNS,
-        );
-        return rows.map(row => ({
-            featureName: row.feature_name,
-            tagType: row.tag_type,
-            tagValue: row.tag_value,
-        }));
-    }
-
-    async dropFeatureTags() {
-        const stopTimer = this.timer('dropFeatureTags');
-        await this.db(FEATURE_TAG_TABLE).del();
-        stopTimer();
-    }
-
-    async importFeatureTags(featureTags) {
-        const rows = await this.db(FEATURE_TAG_TABLE)
-            .insert(featureTags.map(this.importToRow))
-            .returning(FEATURE_TAG_COLUMNS)
-            .onConflict(FEATURE_TAG_COLUMNS)
-            .ignore();
-        if (rows) {
-            return rows.map(this.rowToFeatureAndTag);
-        }
-        return [];
-    }
-
-    async untagFeature(featureName, tag) {
-        const stopTimer = this.timer('untagFeature');
-        try {
-            await this.db(FEATURE_TAG_TABLE)
-                .where(this.featureAndTagToRow(featureName, tag))
-                .delete();
-        } catch (err) {
-            this.logger.error(err);
-        }
-        stopTimer();
-    }
-
-    rowToTag(row) {
-        if (row) {
-            return {
-                value: row.value,
-                type: row.type,
-            };
-        }
-        return null;
-    }
-
-    featureTagRowToTag(row) {
-        if (row) {
-            return {
-                value: row.tag_value,
-                type: row.tag_type,
-            };
-        }
-        return null;
-    }
-
-    rowToFeatureAndTag(row) {
-        return {
-            featureName: row.feature_name,
-            tag: {
-                type: row.tag_type,
-                value: row.tag_value,
-            },
-        };
-    }
-
-    importToRow({ featureName, tagType, tagValue }) {
-        return {
-            feature_name: featureName,
-            tag_type: tagType,
-            tag_value: tagValue,
-        };
-    }
-
-    featureAndTagToRow(featureName, { type, value }) {
-        return {
-            feature_name: featureName,
-            tag_type: type,
-            tag_value: value,
-        };
     }
 }
 

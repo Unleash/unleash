@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import { Knex } from 'knex';
 import { DROP_FEATURES } from '../types/events';
 import { LogProvider, Logger } from '../logger';
+import { ITag } from '../types/model';
 
 const EVENT_COLUMNS = [
     'id',
@@ -25,7 +26,7 @@ export interface ICreateEvent {
     type: string;
     createdBy: string;
     data?: any;
-    tags?: Array<string>;
+    tags?: ITag[];
 }
 
 export interface IEvent extends ICreateEvent {

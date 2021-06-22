@@ -4,14 +4,15 @@ import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import FeatureStrategiesStore, { FeatureConfigurationClient, IFeatureStrategy } from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
-import { IFeatureToggle, IProjectOverview, IStrategyConfig } from '../types/model';
+import { IFeatureToggle, IFeatureToggleQuery, IProjectOverview, IStrategyConfig } from '../types/model';
 import ProjectStore from '../db/project-store';
 import BadDataError from '../error/bad-data-error';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import NameExistsError from '../error/name-exists-error';
 import { featureSchema, nameSchema } from '../schema/feature-schema';
 import EventStore from '../db/event-store';
-import { FEATURE_CREATED, FEATURE_UPDATED } from '../types/events';
+import { FEATURE_ARCHIVED, FEATURE_CREATED, FEATURE_STALE_OFF, FEATURE_STALE_ON, FEATURE_UPDATED } from '../types/events';
+import FeatureTagStore from '../db/feature-tag-store';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
@@ -23,6 +24,8 @@ class FeatureToggleServiceV2 {
 
     private featureToggleStore: FeatureToggleStore;
 
+    private featureTagStore: FeatureTagStore;
+
     private projectStore: ProjectStore;
 
     private eventStore: EventStore;
@@ -33,12 +36,14 @@ class FeatureToggleServiceV2 {
             featureToggleStore,
             projectStore,
             eventStore,
-        }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore' | 'projectStore' | 'eventStore'>,
+            featureTagStore,
+        }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore' | 'projectStore' | 'eventStore' | 'featureTagStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>
     ) {
         this.logger = getLogger('services/feature-toggle-service-v2.ts');
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureToggleStore = featureToggleStore;
+        this.featureTagStore = featureTagStore;
         this.projectStore = projectStore;
         this.eventStore = eventStore;
     }
@@ -79,7 +84,7 @@ class FeatureToggleServiceV2 {
         return this.featureStrategiesStore.updateStrategy(id, updates);
     }
 
-    async getStrategiesForEnvironment(projectName: string, featureName: string, environment: string): Promise<IStrategyConfig[]> {
+    async getStrategiesForEnvironment(projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig[]> {
         const featureStrategies = await this.featureStrategiesStore.getStrategiesForFeature(projectName, featureName, environment);
         return featureStrategies.map(strat => ({
             id: strat.id,
@@ -93,6 +98,7 @@ class FeatureToggleServiceV2 {
      * GET /api/admin/projects/:projectName/features/:featureName
      * @param featureName
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getFeature(featureName: string): Promise<any> {
         return Promise.resolve();
         //        return this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
@@ -101,6 +107,20 @@ class FeatureToggleServiceV2 {
     async getClientFeatures(): Promise<FeatureConfigurationClient[]> {
         return this.featureStrategiesStore.getFeatureTogglesClient();
     }
+
+    /**
+     * Used to retrieve metadata of all feature toggles defined in Unleash. 
+     * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
+     * @returns 
+     */
+    async getFeatureToggles(query: IFeatureToggleQuery): Promise<IFeatureToggle[]> {
+        return this.featureToggleStore.getFeatures(query);
+    }
+
+    async getFeatureToggle(featureName: string): Promise<IFeatureToggle> {
+        return this.featureToggleStore.getFeature(featureName);
+    }
+
 
     // We might be able to reuse getClientFeatures instead?
     async getAllStrategiesForEnvironmentOld(environment: string = GLOBAL_ENV): Promise<Map<string, IStrategyConfig[]>> {
@@ -131,7 +151,7 @@ class FeatureToggleServiceV2 {
     // TODO: add event etc. 
     async createFeatureToggle(value: IFeatureToggle, userName: string): Promise<IFeatureToggle> {
         this.logger.info(`${userName} creates feature toggle ${value.name}`);
-        await this.validateName(value);
+        await this.validateName(value.name);
         const featureData = await featureSchema.validateAsync(value);
         const createdToggle = this.featureToggleStore.createFeature(featureData);
         
@@ -151,7 +171,7 @@ class FeatureToggleServiceV2 {
         const value = await featureSchema.validateAsync(updatedFeature);
         await this.featureToggleStore.updateFeature(value);
         const tags =
-            (await this.featureToggleStore.getAllTagsForFeature(
+            (await this.featureTagStore.getAllTagsForFeature(
                 updatedFeature.name,
             )) || [];
         await this.eventStore.store({
@@ -200,7 +220,7 @@ class FeatureToggleServiceV2 {
     }
 
     /** Validations  */
-    async validateName({ name }: IFeatureToggle): Promise<string> {
+    async validateName(name: string): Promise<string> {
         await nameSchema.validateAsync({ name });
         await this.validateUniqueFeatureName(name);
         return name;
@@ -217,6 +237,63 @@ class FeatureToggleServiceV2 {
             return;
         }
         throw new NameExistsError(msg);
+    }
+
+    async updateStale(featureName: string, isStale: boolean, userName: string): Promise<any> {
+        const feature = await this.featureToggleStore.getFeature(featureName);
+        feature.stale = isStale;
+        await this.featureToggleStore.updateFeature(feature);
+        const tags =
+            (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
+            [];
+
+        await this.eventStore.store({
+            type: isStale ? FEATURE_STALE_ON : FEATURE_STALE_OFF,
+            createdBy: userName,
+            data: feature,
+            tags,
+        });
+        return feature;
+    }
+
+    async archiveToggle(name: string, userName: string): Promise<void> {
+        await this.featureToggleStore.getFeature(name);
+        await this.featureToggleStore.archiveFeature(name);
+        const tags =
+            (await this.featureTagStore.getAllTagsForFeature(name)) || [];
+        await this.eventStore.store({
+            type: FEATURE_ARCHIVED,
+            createdBy: userName,
+            data: { name },
+            tags,
+        });
+    }
+
+
+    // @deprecated
+    async toggle(featureName: string, userName: string): Promise<any> {
+        const feature = await this.featureToggleStore.getFeature(featureName);
+        const toggle = !feature.enabled;
+        return this.updateField(feature.name, 'enabled', toggle, userName);
+    }
+    
+    // @deprecated
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async updateField(featureName: string, field: string, value: any, userName: string): Promise<any> {
+        const feature = await this.featureToggleStore.getFeature(featureName);
+        feature[field] = value;
+        await this.featureToggleStore.updateFeature(feature);
+        const tags =
+            (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
+            [];
+
+        await this.eventStore.store({
+            type: FEATURE_UPDATED,
+            createdBy: userName,
+            data: feature,
+            tags,
+        });
+        return feature;
     }
 
 }

@@ -21,6 +21,7 @@ import SessionService from '../services/session-service';
 import UserFeedbackService from '../services/user-feedback-service';
 import FeatureToggleServiceV2 from '../services/feature-toggle-service-v2';
 import EnvironmentService from '../services/environment-service';
+import FeatureTagService from '../services/feature-tag-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -46,4 +47,5 @@ export interface IUnleashServices {
     userFeedbackService: UserFeedbackService;
     userService: UserService;
     versionService: VersionService;
+    featureTagService: FeatureTagService;
 }

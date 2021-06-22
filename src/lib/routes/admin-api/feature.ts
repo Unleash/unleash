@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Request, Response } from 'express';
 
 import Controller from '../controller';
@@ -12,41 +13,29 @@ import {
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
-import FeatureToggleService from '../../services/feature-toggle-service';
 import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
+import { querySchema } from '../../schema/feature-schema';
+import { IFeatureToggleQuery } from '../../types/model';
+import FeatureTagService from '../../services/feature-tag-service';
 
 const version = 1;
-const fields = [
-    'name',
-    'description',
-    'type',
-    'project',
-    'enabled',
-    'stale',
-    'variants',
-    'createdAt',
-    'lastSeenAt',
-];
 
 class FeatureController extends Controller {
     private logger: Logger;
 
-    private featureService: FeatureToggleService;
+    private featureTagService: FeatureTagService;
 
     private featureService2: FeatureToggleServiceV2;
 
     constructor(
         config: IUnleashConfig,
         {
-            featureToggleService,
+            featureTagService,
             featureToggleServiceV2,
-        }: Pick<
-        IUnleashServices,
-        'featureToggleService' | 'featureToggleServiceV2'
-        >,
+        }: Pick<IUnleashServices,'featureTagService' | 'featureToggleServiceV2'>,
     ) {
         super(config);
-        this.featureService = featureToggleService;
+        this.featureTagService = featureTagService;
         this.featureService2 = featureToggleServiceV2;
         this.logger = config.getLogger('/admin-api/feature.ts');
 
@@ -70,21 +59,48 @@ class FeatureController extends Controller {
         );
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    paramToArray(param: any) {
+        if (!param) {
+            return param;
+        }
+        return Array.isArray(param) ? param : [param];
+    }
+
+    async prepQuery({
+        tag,
+        project,
+        namePrefix,
+    }: any): Promise<IFeatureToggleQuery> {
+        if (!tag && !project && !namePrefix) {
+            return null;
+        }
+        const tagQuery = this.paramToArray(tag);
+        const projectQuery = this.paramToArray(project);
+        const query = await querySchema.validateAsync({
+            tag: tagQuery,
+            project: projectQuery,
+            namePrefix,
+        });
+        if (query.tag) {
+            query.tag = query.tag.map(q => q.split(':'));
+        }
+        return query;
+    }
+
     async getAllToggles(req: Request, res: Response): Promise<void> {
+        const query = await this.prepQuery(req.query);
         try {
-            const oldFeatures = await this.featureService.getFeatures(
-                req.query,
-                fields,
+            const featureToggles = await this.featureService2.getFeatureToggles(
+                query,
             );
 
-            const featureStrategies = await this.featureService2.getAllStrategiesForEnvironmentOld();
+            const strategies = await this.featureService2.getAllStrategiesForEnvironmentOld();
 
-            const features = oldFeatures.map(f => ({
+            const features = featureToggles.map(f => ({
                 ...f,
-                strategies: featureStrategies.get(f.name),
+                strategies: strategies.get(f.name),
             }));
-
-            console.log(features);
 
             res.json({ version, features });
         } catch (err) {
@@ -92,11 +108,15 @@ class FeatureController extends Controller {
         }
     }
 
-    // TODO
     async getToggle(req: Request, res: Response): Promise<void> {
         try {
             const name = req.params.featureName;
-            const feature = await this.featureService.getFeature(name);
+            const featureMetadata = await this.featureService2.getFeature(name);
+            const strategies = await this.featureService2.getStrategiesForEnvironment(
+                featureMetadata.project,
+                name,
+            );
+            const feature = { ...featureMetadata, strategies };
             res.json(feature).end();
         } catch (err) {
             res.status(404).json({ error: 'Could not find feature' });
@@ -106,7 +126,7 @@ class FeatureController extends Controller {
     // TODO
     async listTags(req: Request, res: Response): Promise<void> {
         try {
-            const tags = await this.featureService.listTags(
+            const tags = await this.featureTagService.listTags(
                 req.params.featureName,
             );
             res.json({ version, tags });
@@ -120,7 +140,7 @@ class FeatureController extends Controller {
         const { featureName } = req.params;
         const userName = extractUser(req);
         try {
-            const tag = await this.featureService.addTag(
+            const tag = await this.featureTagService.addTag(
                 featureName,
                 req.body,
                 userName,
@@ -136,7 +156,7 @@ class FeatureController extends Controller {
         const { featureName, type, value } = req.params;
         const userName = extractUser(req);
         try {
-            await this.featureService.removeTag(
+            await this.featureTagService.removeTag(
                 featureName,
                 { type, value },
                 userName,
@@ -147,12 +167,11 @@ class FeatureController extends Controller {
         }
     }
 
-    // TODO
     async validate(req: Request, res: Response): Promise<void> {
         const { name } = req.body;
 
         try {
-            await this.featureService.validateName({ name });
+            await this.featureService2.validateName(name);
             res.status(200).end();
         } catch (error) {
             handleErrors(res, this.logger, error);
@@ -221,7 +240,7 @@ class FeatureController extends Controller {
         const userName = extractUser(req);
         try {
             const name = req.params.featureName;
-            const feature = await this.featureService.toggle(name, userName);
+            const feature = await this.featureService2.toggle(name, userName);
             res.status(200).json(feature);
         } catch (error) {
             handleErrors(res, this.logger, error);
@@ -240,7 +259,7 @@ class FeatureController extends Controller {
         try {
             const { featureName } = req.params;
             const userName = extractUser(req);
-            const feature = await this.featureService.updateStale(
+            const feature = await this.featureService2.updateStale(
                 featureName,
                 true,
                 userName,
@@ -255,7 +274,7 @@ class FeatureController extends Controller {
         try {
             const { featureName } = req.params;
             const userName = extractUser(req);
-            const feature = await this.featureService.updateStale(
+            const feature = await this.featureService2.updateStale(
                 featureName,
                 false,
                 userName,
@@ -271,7 +290,7 @@ class FeatureController extends Controller {
         const userName = extractUser(req);
 
         try {
-            const feature = await this.featureService.updateField(
+            const feature = await this.featureService2.updateField(
                 featureName,
                 field,
                 value,
@@ -285,9 +304,10 @@ class FeatureController extends Controller {
 
     async archiveToggle(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
+        const userName = extractUser(req);
 
         try {
-            await this.featureService.archiveToggle(featureName);
+            await this.featureService2.archiveToggle(featureName, userName);
             res.status(200).end();
         } catch (error) {
             handleErrors(res, this.logger, error);

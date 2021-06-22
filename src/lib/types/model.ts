@@ -65,3 +65,14 @@ export interface IProjectOverview {
 export interface IProjectParam {
     projectId: string;
 }
+
+export interface IFeatureToggleQuery {
+    tag: string[];
+    project: string[];
+    namePrefix: string;
+}
+
+export interface ITag {
+    value: string;
+    type: string;
+}

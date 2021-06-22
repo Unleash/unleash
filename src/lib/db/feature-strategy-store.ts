@@ -32,7 +32,11 @@ const mapperToColumnNames = {
 };
 */
 
-const TABLE = 'feature_strategies';
+const T = {
+    features: 'features',
+    featureStrategies: 'feature_strategies',
+    featureEnvs: 'feature_environments',
+};
 
 interface IFeatureStrategiesTable {
     id: string;
@@ -132,7 +136,7 @@ class FeatureStrategiesStore {
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
         const strategyRow = mapInput({ ...strategyConfig, id: uuid.v4() });
-        const rows = await this.db<IFeatureStrategiesTable>(TABLE)
+        const rows = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
             .insert(strategyRow)
             .returning('*');
         return mapRow(rows[0]);
@@ -145,7 +149,7 @@ class FeatureStrategiesStore {
         const rows = await this.db
             .select(COLUMNS)
             .where('feature_name', featureName)
-            .from<IFeatureStrategiesTable>(TABLE);
+            .from<IFeatureStrategiesTable>(T.featureStrategies);
 
         stopTimer();
         return rows.map(mapRow);
@@ -158,10 +162,19 @@ class FeatureStrategiesStore {
         const rows = await this.db
             .select(COLUMNS)
             .where({ environment })
-            .from<IFeatureStrategiesTable>(TABLE);
+            .from<IFeatureStrategiesTable>(T.featureStrategies);
 
         stopTimer();
         return rows.map(mapRow);
+    }
+
+    async removeAllStrategiesForEnv(
+        feature_name: string,
+        environment: string,
+    ): Promise<void> {
+        await this.db('feature_strategies')
+            .where({ feature_name, environment })
+            .del();
     }
 
     async getAllEnabledStrategies(): Promise<IFeatureStrategy[]> {
@@ -169,7 +182,7 @@ class FeatureStrategiesStore {
         const rows = await this.db
             .select(COLUMNS)
             .where({ enabled: true })
-            .from<IFeatureStrategiesTable>(TABLE);
+            .from<IFeatureStrategiesTable>(T.featureStrategies);
 
         stopTimer();
         return rows.map(mapRow);
@@ -181,7 +194,9 @@ class FeatureStrategiesStore {
         environment: string,
     ): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getForFeature');
-        const rows = await this.db<IFeatureStrategiesTable>(TABLE).where({
+        const rows = await this.db<IFeatureStrategiesTable>(
+            T.featureStrategies,
+        ).where({
             project_name,
             feature_name,
             environment,
@@ -194,7 +209,9 @@ class FeatureStrategiesStore {
         environment: string,
     ): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getStrategiesForEnv');
-        const rows = await this.db<IFeatureStrategiesTable>(TABLE).where({
+        const rows = await this.db<IFeatureStrategiesTable>(
+            T.featureStrategies,
+        ).where({
             environment,
         });
         stopTimer();
@@ -289,7 +306,7 @@ class FeatureStrategiesStore {
     }
 
     async getStrategyById(id: string): Promise<IFeatureStrategy> {
-        return this.db(TABLE)
+        return this.db(T.featureStrategies)
             .where({ id })
             .first()
             .then(mapRow);
@@ -310,7 +327,7 @@ class FeatureStrategiesStore {
         feature_name: string,
         environment: string,
     ): Promise<void> {
-        await this.db('feature_environments')
+        await this.db(T.featureEnvs)
             .update({ enabled: true })
             .where({ feature_name, environment });
     }
@@ -319,7 +336,7 @@ class FeatureStrategiesStore {
         feature_name: string,
         environment: string,
     ): Promise<void> {
-        await this.db('feature_environments')
+        await this.db(T.featureEnvs)
             .where({ feature_name, environment })
             .del();
     }
@@ -331,7 +348,7 @@ class FeatureStrategiesStore {
         const featureSelector = this.db('features')
             .where({ project })
             .select('name');
-        await this.db('feature_environments')
+        await this.db(T.featureEnvs)
             .where({ environment })
             .andWhere('feature_name', 'IN', featureSelector)
             .del();
@@ -346,8 +363,7 @@ class FeatureStrategiesStore {
         updates: Partial<IFeatureStrategy>,
     ): Promise<IFeatureStrategy> {
         const update = mapStrategyUpdate(updates);
-        console.log(update);
-        const row = await this.db<IFeatureStrategiesTable>(TABLE)
+        const row = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
             .where({ id })
             .update(update)
             .returning('*');
@@ -401,7 +417,7 @@ class FeatureStrategiesStore {
         environment: string,
         featureName: string,
     ): Promise<void> {
-        const rows = await this.db('feature_environments')
+        const rows = await this.db(T.featureEnvs)
             .select()
             .join(
                 'feature_strategies',
@@ -426,7 +442,7 @@ class FeatureStrategiesStore {
         projectId: String,
         environment: String,
     ): Promise<void> {
-        await this.db('feature_strategies')
+        await this.db(T.featureStrategies)
             .where({ project_name: projectId, environment })
             .del();
     }

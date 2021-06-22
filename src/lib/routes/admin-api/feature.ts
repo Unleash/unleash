@@ -192,23 +192,21 @@ class FeatureController extends Controller {
         updatedFeature.name = featureName;
 
         try {
-            await this.featureService2.updateFeatureToggle(
+            const toggle = await this.featureService2.updateFeatureToggle(
                 updatedFeature,
                 userName,
             );
 
+            await this.featureService2.removeAllStrategiesForEnv(featureName);
+
             // TODO: remove all strategies then add them.
             await Promise.all(
                 updatedFeature.strategies.map(async s => {
-                    if (s.id) {
-                        await this.featureService2.updateStrategy(s.id, s);
-                    } else {
-                        await this.featureService2.createStrategy(
-                            s,
-                            updatedFeature.project,
-                            updatedFeature.name,
-                        );
-                    }
+                    await this.featureService2.createStrategy(
+                        s,
+                        toggle.project,
+                        featureName,
+                    );
                 }),
             );
             res.status(200).end();

@@ -11,7 +11,7 @@ import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import NameExistsError from '../error/name-exists-error';
 import { featureSchema, nameSchema } from '../schema/feature-schema';
 import EventStore from '../db/event-store';
-import { FEATURE_CREATED } from '../types/events';
+import { FEATURE_CREATED, FEATURE_UPDATED } from '../types/events';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
@@ -142,14 +142,30 @@ class FeatureToggleServiceV2 {
         });
 
         return createdToggle;
-        
     }
 
-    async updateFeatureToggle(featureToggle: IFeatureToggle, userName: string): Promise<void> {
-        this.logger.info(`${userName} updates feature toggle ${featureToggle.name}`);
-        return this.featureToggleStore.updateFeature(featureToggle);
+    async updateFeatureToggle(updatedFeature: IFeatureToggle, userName: string): Promise<IFeatureToggle> {
+        this.logger.info(`${userName} updates feature toggle ${updatedFeature.name}`);
+
+        await this.featureToggleStore.getFeature(updatedFeature.name);
+        const value = await featureSchema.validateAsync(updatedFeature);
+        await this.featureToggleStore.updateFeature(value);
+        const tags =
+            (await this.featureToggleStore.getAllTagsForFeature(
+                updatedFeature.name,
+            )) || [];
+        await this.eventStore.store({
+            type: FEATURE_UPDATED,
+            createdBy: userName,
+            data: value,
+            tags,
+        });
+        return value;
     }
 
+    async removeAllStrategiesForEnv(toggleName: string, environment: string = GLOBAL_ENV): Promise<void> {
+        await this.featureStrategiesStore.removeAllStrategiesForEnv(toggleName, environment);
+    }
 
     async getStrategy(strategyId: string): Promise<IStrategyConfig> {
         const strategy = await this.featureStrategiesStore.getStrategyById(strategyId);

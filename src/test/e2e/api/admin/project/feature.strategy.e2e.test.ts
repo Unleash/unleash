@@ -6,7 +6,7 @@ let app;
 let db;
 
 beforeAll(async () => {
-    db = await dbInit('feature_api_serial', getLogger);
+    db = await dbInit('feature_strategy_api_serial', getLogger);
     app = await setupApp(db.stores);
 });
 
@@ -52,14 +52,14 @@ test('Can get project overview', async () => {
     await app.request
         .post('/api/admin/features')
         .send({
-            name: 'com.test.feature',
+            name: 'project-overview',
             enabled: false,
             strategies: [{ name: 'default' }],
         })
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            expect(res.body.name).toBe('com.test.feature');
+            expect(res.body.name).toBe('project-overview');
             expect(res.body.enabled).toBe(false);
             expect(res.body.createdAt).toBeTruthy();
         });
@@ -68,7 +68,7 @@ test('Can get project overview', async () => {
         .expect(200)
         .expect(r => {
             expect(r.body.name).toBe('Default');
-            expect(r.body.features).toBeGreaterThan(0);
+            expect(r.body.features.length).toBeGreaterThan(0);
             expect(r.body.members).toBe(0);
         });
 });
@@ -111,33 +111,37 @@ test('Disconnecting environment from project, removes environment from features 
     await app.request
         .post('/api/admin/features')
         .send({
-            name: 'com.test.environment',
+            name: 'com.test.disconnect.environment',
             enabled: false,
             strategies: [{ name: 'default' }],
         })
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect(res => {
-            expect(res.body.name).toBe('com.test.environment');
+            expect(res.body.name).toBe('com.test.disconnect.environment');
             expect(res.body.enabled).toBe(false);
             expect(res.body.createdAt).toBeTruthy();
         });
     await app.request
         .post('/api/admin/environments')
-        .send({ name: 'project-overview', displayName: 'Project Overview' })
+        .send({ name: 'dis-project-overview', displayName: 'Project Overview' })
         .set('Content-Type', 'application/json')
         .expect(201);
     await app.request
         .post('/api/admin/projects/default/environments')
-        .send({ environment: 'project-overview' })
+        .send({ environment: 'dis-project-overview' })
         .expect(200);
     await app.request
-        .delete('/api/admin/projects/default/environments/project-overview')
+        .delete('/api/admin/projects/default/environments/dis-project-overview')
         .expect(200);
     return app.request
         .get('/api/admin/projects/default/features')
         .expect(200)
         .expect(r => {
-            expect(r.body.features[0].environments).toHaveLength(0);
+            expect(
+                r.body.features.some(
+                    e => e.environment === 'dis-project-overview',
+                ),
+            ).toBeFalsy();
         });
 });

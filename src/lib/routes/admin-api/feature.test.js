@@ -476,7 +476,7 @@ test('Should be able to filter on name prefix', () => {
         strategies: [{ name: 'default' }],
     });
 
-    return request
+    request
         .get(`${base}/api/admin/features?namePrefix=a_`)
         .expect(200)
         .expect('Content-Type', /json/)

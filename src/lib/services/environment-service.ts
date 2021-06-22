@@ -70,11 +70,11 @@ export default class EnvironmentService {
         environment: string,
         projectId: string,
     ): Promise<void> {
-        await this.environmentStore.disconnectProjectFromEnv(
+        await this.featureStrategiesStore.disconnectEnvironmentFromProject(
             environment,
             projectId,
         );
-        await this.featureStrategiesStore.disconnectEnvironmentFromProject(
+        await this.environmentStore.disconnectProjectFromEnv(
             environment,
             projectId,
         );

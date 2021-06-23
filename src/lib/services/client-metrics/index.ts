@@ -80,7 +80,7 @@ export interface IMetricsBucket {
     toggles: IMetricCounts;
 }
 
-export class ClientMetricsService {
+export default class ClientMetricsService {
     globalCount = 0;
 
     apps = {};

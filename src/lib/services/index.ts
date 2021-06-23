@@ -8,7 +8,7 @@ import HealthService from './health-service';
 import FeatureToggleService from './feature-toggle-service';
 import ProjectService from './project-service';
 import StateService from './state-service';
-import { ClientMetricsService } from './client-metrics';
+import ClientMetricsService from './client-metrics';
 import TagTypeService from './tag-type-service';
 import TagService from './tag-service';
 import StrategyService from './strategy-service';

@@ -3,31 +3,29 @@
 import EventEmitter from 'events';
 import { ClientMetricsDb, IClientMetric } from './client-metrics-db';
 import { Logger, LogProvider } from '../logger';
-
-const metricsHelper = require('../util/metrics-helper');
-const { DB_TIME } = require('../metric-events');
+import metricsHelper from '../util/metrics-helper';
+import { DB_TIME } from '../metric-events';
 
 const TEN_SECONDS = 10 * 1000;
 
 export class ClientMetricsStore extends EventEmitter {
     private logger: Logger;
 
-    highestIdSeen = 0;
+    private highestIdSeen = 0;
 
-    private startTimer;
+    private startTimer: Function;
 
-    private timer;
+    private timer: NodeJS.Timeout;
 
     constructor(
         private metricsDb: ClientMetricsDb,
-        private eventBus: EventEmitter,
-        private getLogger: LogProvider,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
         pollInterval = TEN_SECONDS,
     ) {
         super();
         this.logger = getLogger('client-metrics-store.js');
         this.metricsDb = metricsDb;
-        this.eventBus = eventBus;
         this.highestIdSeen = 0;
 
         this.startTimer = action =>

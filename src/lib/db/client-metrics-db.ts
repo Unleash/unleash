@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { LogProvider } from '../logger';
+import { Logger, LogProvider } from '../logger';
 
 const METRICS_COLUMNS = ['id', 'created_at', 'metrics'];
 const TABLE = 'client_metrics';
@@ -19,14 +19,14 @@ export interface IClientMetric {
 }
 
 export class ClientMetricsDb {
-    private readonly logger;
+    private readonly logger: Logger;
 
-    private readonly timer;
+    private readonly timer: NodeJS.Timeout;
 
     constructor(private db: Knex, getLogger: LogProvider) {
         this.logger = getLogger('client-metrics-db.js');
 
-        // Clear old metrics regulary
+        // Clear old metrics regularly
         const clearer = () => this.removeMetricsOlderThanOneHour();
         setTimeout(clearer, 10).unref();
         this.timer = setInterval(clearer, ONE_MINUTE).unref();

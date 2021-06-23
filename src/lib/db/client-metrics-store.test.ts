@@ -1,7 +1,7 @@
-import { ClientMetricsStore } from './client-metrics-store';
+import EventEmitter from 'events';
 
-const { EventEmitter } = require('events');
-const getLogger = require('../../test/fixtures/no-logger');
+import { ClientMetricsStore } from './client-metrics-store';
+import getLogger from '../../test/fixtures/no-logger';
 
 function getMockDb() {
     const list = [

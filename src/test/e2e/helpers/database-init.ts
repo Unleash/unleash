@@ -7,6 +7,7 @@ import { createTestConfig } from '../../config/test-config';
 import dbState from './database.json';
 import { LogProvider } from '../../../lib/logger';
 import noLoggerProvider from '../../fixtures/no-logger';
+import EnvironmentStore from '../../../lib/db/environment-store';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -71,7 +72,19 @@ function createTagTypes(store) {
     return dbState.tag_types.map(t => store.createTagType(t));
 }
 
+async function connectProject(store: EnvironmentStore): Promise<void> {
+    await store.connectProject(':global:', 'default');
+}
+
+async function createEnvironment(store: EnvironmentStore) {
+    await store.upsert({
+        name: ':global:',
+        displayName: 'Default environment',
+    });
+}
+
 async function setupDatabase(stores) {
+    await createEnvironment(stores.environmentStore);
     await Promise.all(createStrategies(stores.strategyStore));
     await Promise.all(createContextFields(stores.contextFieldStore));
     await Promise.all(createFeatures(stores.featureToggleStore));
@@ -79,7 +92,8 @@ async function setupDatabase(stores) {
     await Promise.all(createApplications(stores.clientApplicationsStore));
     await Promise.all(createProjects(stores.projectStore));
     await Promise.all(createTagTypes(stores.tagTypeStore));
-    await tagFeatures(stores.tagStore, stores.featureToggleStore);
+    await tagFeatures(stores.tagStore, stores.featureTagStore);
+    await connectProject(stores.environmentStore);
 }
 
 export default async function init(

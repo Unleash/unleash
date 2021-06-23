@@ -24,7 +24,7 @@ test('returns list of feature toggles', async () =>
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length === 4).toBe(true);
+            expect(res.body.features).toHaveLength(4);
         }));
 
 test('gets a feature by name', async () => {
@@ -82,8 +82,9 @@ test('fetch feature toggle with variants', async () => {
     expect.assertions(1);
     return app.request
         .get('/api/admin/features/feature.with.variants')
+        .expect(200)
         .expect(res => {
-            expect(res.body.variants.length === 2).toBe(true);
+            expect(res.body.variants).toHaveLength(2);
         });
 });
 
@@ -259,6 +260,7 @@ test('creates new feature toggle with type', async () => {
     });
     return app.request
         .get('/api/admin/features/com.test.withType')
+        .expect(200)
         .expect(res => {
             expect(res.body.type).toBe('killswitch');
         });
@@ -307,7 +309,7 @@ test('tagging a feature with an already existing tag should be a noop', async ()
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.tags.length).toBe(1);
+            expect(res.body.tags).toHaveLength(1);
         });
 });
 
@@ -368,7 +370,7 @@ test('Can get features tagged by tag', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length).toBe(1);
+            expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe(feature1Name);
         });
 });
@@ -405,7 +407,7 @@ test('Can query for multiple tags using OR', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length).toBe(2);
+            expect(res.body.features).toHaveLength(2);
             expect(res.body.features.some(f => f.name === feature1Name)).toBe(
                 true,
             );
@@ -454,13 +456,13 @@ test('Querying with multiple filters ANDs the filters', async () => {
         .get(`/api/admin/features?tag=${tag.type}:${tag.value}`)
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => expect(res.body.features.length).toBe(2));
+        .expect(res => expect(res.body.features).toHaveLength(2));
     await app.request
         .get(`/api/admin/features?namePrefix=test&tag=${tag.type}:${tag.value}`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length).toBe(1);
+            expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe(feature1Name);
         });
 });

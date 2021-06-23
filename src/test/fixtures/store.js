@@ -41,6 +41,7 @@ module.exports = {
             userStore: new UserStore(),
             accessStore: new AccessStore(),
             userFeedbackStore: userFeedbackStore(databaseIsUp),
+            featureStrategiesStore: featureToggleStore(databaseIsUp),
         };
     },
 };

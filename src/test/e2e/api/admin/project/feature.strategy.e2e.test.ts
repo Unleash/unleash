@@ -101,7 +101,8 @@ test('Project overview includes environment connected to feature', async () => {
         .get('/api/admin/projects/default/features')
         .expect(200)
         .expect(r => {
-            expect(r.body.features[0].environments[0].name).toBe(
+            expect(r.body.features[0].environments[0].name).toBe(':global:');
+            expect(r.body.features[0].environments[1].name).toBe(
                 'project-overview',
             );
         });

@@ -1,9 +1,7 @@
-'use strict';
-
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
-const NotFoundError = require('../error/notfound-error');
+import NotFoundError from '../error/notfound-error';
 
 const STRATEGY_COLUMNS = [
     'name',

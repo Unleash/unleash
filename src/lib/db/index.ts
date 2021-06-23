@@ -1,5 +1,3 @@
-'use strict';
-
 // eslint-disable-next-line
 import EventEmitter from 'events';
 import { IUnleashConfig } from '../types/option';

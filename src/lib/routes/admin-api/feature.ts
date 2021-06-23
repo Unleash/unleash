@@ -32,7 +32,10 @@ class FeatureController extends Controller {
         {
             featureTagService,
             featureToggleServiceV2,
-        }: Pick<IUnleashServices,'featureTagService' | 'featureToggleServiceV2'>,
+        }: Pick<
+        IUnleashServices,
+        'featureTagService' | 'featureToggleServiceV2'
+        >,
     ) {
         super(config);
         this.featureTagService = featureTagService;
@@ -91,16 +94,9 @@ class FeatureController extends Controller {
     async getAllToggles(req: Request, res: Response): Promise<void> {
         const query = await this.prepQuery(req.query);
         try {
-            const featureToggles = await this.featureService2.getFeatureToggles(
+            const features = await this.featureService2.getFeatureToggles(
                 query,
             );
-
-            const strategies = await this.featureService2.getAllStrategiesForEnvironmentOld();
-
-            const features = featureToggles.map(f => ({
-                ...f,
-                strategies: strategies.get(f.name),
-            }));
 
             res.json({ version, features });
         } catch (err) {
@@ -111,12 +107,7 @@ class FeatureController extends Controller {
     async getToggle(req: Request, res: Response): Promise<void> {
         try {
             const name = req.params.featureName;
-            const featureMetadata = await this.featureService2.getFeature(name);
-            const strategies = await this.featureService2.getStrategiesForEnvironment(
-                featureMetadata.project,
-                name,
-            );
-            const feature = { ...featureMetadata, strategies };
+            const feature = await this.featureService2.getFeature(name);
             res.json(feature).end();
         } catch (err) {
             res.status(404).json({ error: 'Could not find feature' });
@@ -199,6 +190,8 @@ class FeatureController extends Controller {
 
             res.status(201).json(createdFeature);
         } catch (error) {
+            this.logger.warn(error);
+            console.log(error);
             handleErrors(res, this.logger, error);
         }
     }

@@ -76,7 +76,7 @@ test('should get one getFeature', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length === 1).toBe(true);
+            expect(res.body.features).toHaveLength(1);
         });
 });
 

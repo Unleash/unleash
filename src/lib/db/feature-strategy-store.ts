@@ -6,8 +6,11 @@ import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
 import {
     IConstraint,
+    IEnvironment,
     IEnvironmentOverview,
     IFeatureOverview,
+    IFeatureToggle,
+    IFeatureToggleQuery,
     IStrategyConfig,
     IVariant,
 } from '../types/model';
@@ -216,6 +219,158 @@ class FeatureStrategiesStore {
         });
         stopTimer();
         return rows.map(mapRow);
+    }
+
+    async getFeatureToggleAdmin(
+        featureName: string,
+        archived: boolean = false,
+    ): Promise<any> {
+        const stopTimer = this.timer('getFeatureAdmin');
+        const rows = await this.db('features')
+            .select(
+                'features.name as name',
+                'features.description as description',
+                'features.type as type',
+                'features.project as project',
+                'features.stale as stale',
+                'features.variants as variants',
+                'features.created_at as created_at',
+                'features.last_seen_at as last_seen_at',
+                'feature_environments.enabled as enabled',
+                'feature_environments.environment as environment',
+                'feature_strategies.id as strategy_id',
+                'feature_strategies.strategy_name as strategy_name',
+                'feature_strategies.parameters as parameters',
+                'feature_strategies.constraints as constraints',
+            )
+            .fullOuterJoin(
+                'feature_environments',
+                'feature_environments.feature_name',
+                'features.name',
+            )
+            .fullOuterJoin(
+                'feature_strategies',
+                'feature_strategies.feature_name',
+                'features.name',
+            )
+            .where({ name: featureName, archived: archived ? 1 : 0 });
+        stopTimer();
+        const featureToggle = rows.reduce((acc, r) => {
+            if (acc.strategies === undefined) {
+                acc.strategies = [];
+            }
+            if (acc.environments === undefined) {
+                acc.environments = [];
+            }
+            acc.name = r.name;
+            acc.stale = r.stale;
+            acc.variants = r.variants;
+            acc.lastSeenAt = r.last_seen_at;
+            acc.type = r.type;
+            if (r.environment) {
+                acc.environments.push(this.getAdminEnvironment(r));
+            }
+            if (r.strategy_name) {
+                acc.strategies.push(this.getAdminStrategy(r));
+            }
+            return acc;
+        }, {});
+        const globalEnabled = featureToggle.environments.find(
+            r => r.environment === ':global:',
+        );
+        if (globalEnabled) {
+            featureToggle.enabled = globalEnabled.enabled;
+        } else {
+            featureToggle.enabled = false;
+        }
+        return featureToggle;
+    }
+
+    async getFeatures(
+        featureQuery?: IFeatureToggleQuery,
+        archived: boolean = false,
+    ): Promise<IFeatureToggle[]> {
+        const stopTimer = this.timer('getFeatureAdmin');
+        let query = this.db('features')
+            .select(
+                'features.name as name',
+                'features.description as description',
+                'features.type as type',
+                'features.project as project',
+                'features.stale as stale',
+                'features.variants as variants',
+                'features.created_at as created_at',
+                'features.last_seen_at as last_seen_at',
+                'feature_environments.enabled as enabled',
+                'feature_environments.environment as environment',
+                'feature_strategies.id as strategy_id',
+                'feature_strategies.strategy_name as strategy_name',
+                'feature_strategies.parameters as parameters',
+                'feature_strategies.constraints as constraints',
+            )
+            .where({ archived: archived ? 1 : 0 })
+            .fullOuterJoin(
+                'feature_environments',
+                'feature_environments.feature_name',
+                'features.name',
+            )
+            .fullOuterJoin(
+                'feature_strategies',
+                'feature_strategies.feature_name',
+                'features.name',
+            );
+        if (featureQuery) {
+            if (featureQuery.tag) {
+                const tagQuery = this.db
+                    .from('feature_tag')
+                    .select('feature_name')
+                    .whereIn(['tag_type', 'tag_value'], featureQuery.tag);
+                query = query.whereIn('name', tagQuery);
+            }
+            if (featureQuery.project) {
+                query = query.whereIn('project', featureQuery.project);
+            }
+            if (featureQuery.namePrefix) {
+                query = query.where(
+                    'name',
+                    'like',
+                    `${featureQuery.namePrefix}%`,
+                );
+            }
+        }
+        const rows = await query;
+        stopTimer();
+        const featureToggles = rows.reduce((acc, r) => {
+            let feature;
+            if (acc[r.name]) {
+                feature = acc[r.name];
+            } else {
+                feature = {};
+            }
+            if (!feature.strategies) {
+                feature.strategies = [];
+            }
+            if (r.strategy_name) {
+                feature.strategies.push(this.getAdminStrategy(r));
+            }
+            if (r.environment === ':global:') {
+                feature.enabled = r.enabled;
+            }
+            feature.name = r.name;
+            feature.stale = r.stale;
+            feature.variants = r.variants;
+            feature.lastSeenAt = r.last_seen_at;
+            acc[r.name] = feature;
+            return acc;
+        }, {});
+        return Object.values(featureToggles);
+    }
+
+    private getAdminEnvironment(r: any): any {
+        return {
+            environment: r.environment,
+            enabled: r.environment ? r.enabled : false,
+        };
     }
 
     async getFeatureTogglesClient(): Promise<FeatureConfigurationClient[]> {

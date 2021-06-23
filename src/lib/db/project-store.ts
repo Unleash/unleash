@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
-const NotFoundError = require('../error/notfound-error');
+import NotFoundError from '../error/notfound-error';
 
 const COLUMNS = ['id', 'name', 'description', 'created_at'];
 const TABLE = 'projects';

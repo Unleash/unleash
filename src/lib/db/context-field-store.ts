@@ -1,5 +1,3 @@
-'use strict';
-
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 

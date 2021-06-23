@@ -5,6 +5,7 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { IEnvironment } from '../types/model';
 import NotFoundError from '../error/notfound-error';
+import feature from '../routes/admin-api/feature';
 
 interface IEnvironmentsTable {
     name: string;
@@ -121,9 +122,33 @@ export default class EnvironmentStore {
             .del();
     }
 
-    async disconnectProjectFromEnv(environment: string, projectId: string) {
+    async disconnectProjectFromEnv(
+        environment: string,
+        projectId: string,
+    ): Promise<void> {
         await this.db('project_environments')
             .where({ environment_name: environment, project_id: projectId })
             .del();
+    }
+
+    async connectFeatureToEnvironmentsForProject(
+        featureName: string,
+        project_id: string,
+    ): Promise<void> {
+        const environmentsToEnable = await this.db('project_environments')
+            .select('environment_name')
+            .where({ project_id });
+        await Promise.all(
+            environmentsToEnable.map(async env => {
+                await this.db('feature_environments')
+                    .insert({
+                        environment: env.environment_name,
+                        feature_name: featureName,
+                        enabled: false,
+                    })
+                    .onConflict(['environment', 'feature_name'])
+                    .ignore();
+            }),
+        );
     }
 }

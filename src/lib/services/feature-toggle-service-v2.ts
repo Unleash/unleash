@@ -13,6 +13,7 @@ import { featureSchema, nameSchema } from '../schema/feature-schema';
 import EventStore from '../db/event-store';
 import { FEATURE_ARCHIVED, FEATURE_CREATED, FEATURE_STALE_OFF, FEATURE_STALE_ON, FEATURE_UPDATED } from '../types/events';
 import FeatureTagStore from '../db/feature-tag-store';
+import EnvironmentStore from '../db/environment-store';
 
 // TODO: move to types
 const GLOBAL_ENV = ':global:';
@@ -28,6 +29,8 @@ class FeatureToggleServiceV2 {
 
     private projectStore: ProjectStore;
 
+    private environmentStore: EnvironmentStore;
+
     private eventStore: EventStore;
 
     constructor(
@@ -37,7 +40,8 @@ class FeatureToggleServiceV2 {
             projectStore,
             eventStore,
             featureTagStore,
-        }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore' | 'projectStore' | 'eventStore' | 'featureTagStore'>,
+            environmentStore
+        }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore' | 'projectStore' | 'eventStore' | 'featureTagStore' | 'environmentStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>
     ) {
         this.logger = getLogger('services/feature-toggle-service-v2.ts');
@@ -46,6 +50,7 @@ class FeatureToggleServiceV2 {
         this.featureTagStore = featureTagStore;
         this.projectStore = projectStore;
         this.eventStore = eventStore;
+        this.environmentStore = environmentStore;
     }
 
     async createStrategy(strategyConfig: Omit<IStrategyConfig, 'id'>, projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig> {
@@ -100,8 +105,7 @@ class FeatureToggleServiceV2 {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getFeature(featureName: string): Promise<any> {
-        return Promise.resolve();
-        //        return this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
+        return this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
     }
 
     async getClientFeatures(): Promise<FeatureConfigurationClient[]> {
@@ -109,12 +113,12 @@ class FeatureToggleServiceV2 {
     }
 
     /**
-     * Used to retrieve metadata of all feature toggles defined in Unleash. 
+     * Used to retrieve metadata of all feature toggles defined in Unleash.
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
-     * @returns 
+     * @returns
      */
     async getFeatureToggles(query: IFeatureToggleQuery): Promise<IFeatureToggle[]> {
-        return this.featureToggleStore.getFeatures(query);
+        return this.featureStrategiesStore.getFeatures(query);
     }
 
     async getFeatureToggle(featureName: string): Promise<IFeatureToggle> {
@@ -148,13 +152,13 @@ class FeatureToggleServiceV2 {
         return featureStrategies;
     }
 
-    // TODO: add event etc. 
+    // TODO: add event etc.
     async createFeatureToggle(value: IFeatureToggle, userName: string): Promise<IFeatureToggle> {
         this.logger.info(`${userName} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
         const featureData = await featureSchema.validateAsync(value);
-        const createdToggle = this.featureToggleStore.createFeature(featureData);
-        
+        const createdToggle = await this.featureToggleStore.createFeature(featureData);
+        await this.environmentStore.connectFeatureToEnvironmentsForProject(value.name, value.project || 'default');
         await this.eventStore.store({
             type: FEATURE_CREATED,
             createdBy: userName,
@@ -276,7 +280,7 @@ class FeatureToggleServiceV2 {
         const toggle = !feature.enabled;
         return this.updateField(feature.name, 'enabled', toggle, userName);
     }
-    
+
     // @deprecated
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async updateField(featureName: string, field: string, value: any, userName: string): Promise<any> {

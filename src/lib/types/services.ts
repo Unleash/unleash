@@ -6,7 +6,7 @@ import StateService from '../services/state-service';
 import StrategyService from '../services/strategy-service';
 import TagTypeService from '../services/tag-type-service';
 import TagService from '../services/tag-service';
-import { ClientMetricsService } from '../services/client-metrics';
+import ClientMetricsService from '../services/client-metrics';
 import ContextService from '../services/context-service';
 import VersionService from '../services/version-service';
 import { ApiTokenService } from '../services/api-token-service';

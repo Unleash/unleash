@@ -1,5 +1,4 @@
-import {
-    ClientMetricsService,
+import ClientMetricsService, {
     IClientApp,
 } from '../../../lib/services/client-metrics';
 

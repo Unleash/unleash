@@ -10,17 +10,13 @@ import { IApplication, applicationSchema } from './metrics-schema';
 import { Projection } from './projection';
 import { clientMetricsSchema } from './client-metrics-schema';
 import { APPLICATION_CREATED } from '../../types/events';
+import { IYesNoCount } from './models';
 
-const TTLList = require('./ttl-list.js');
+const TTLList = require('./ttl-list');
 const { clientRegisterSchema } = require('./register-schema');
 
 const FIVE_SECONDS = 5 * 1000;
 const FIVE_MINUTES = 5 * 60 * 1000;
-
-export interface IYesNoCount {
-    yes: number;
-    no: number;
-}
 
 export interface IAppInstance {
     appName: string;

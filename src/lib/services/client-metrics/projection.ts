@@ -1,4 +1,4 @@
-import { IYesNoCount } from './index';
+import { IYesNoCount } from './models';
 
 export class Projection {
     store: Record<string, IYesNoCount> = {};

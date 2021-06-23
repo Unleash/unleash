@@ -11,7 +11,7 @@ const TEN_SECONDS = 10 * 1000;
 export class ClientMetricsStore extends EventEmitter {
     private logger: Logger;
 
-    private highestIdSeen = 0;
+    highestIdSeen = 0;
 
     private startTimer: Function;
 

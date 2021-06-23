@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import moment from 'moment';
-import { ClientMetricsService, IClientApp } from './index';
+import ClientMetricsService, { IClientApp } from './index';
 import getLogger from '../../../test/fixtures/no-logger';
 
 const appName = 'appName';

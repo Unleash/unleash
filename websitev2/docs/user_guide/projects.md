@@ -3,7 +3,9 @@ id: projects
 title: Projects
 ---
 
-> Project support is available as part of Unleash Enterprise.
+<div class="alert alert--info" role="alert">
+  Strategy constraints part of Unleash Pro and Enterprise.
+</div>
 
 ## Overview {#overview}
 

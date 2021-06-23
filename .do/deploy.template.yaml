@@ -1,0 +1,18 @@
+spec:
+  name: unleash
+  services:
+  - name: unleash-server
+    git:
+      branch: master
+      repo_clone_url: https://github.com/Unleash/unleash.git
+    build_command: 'yarn build'
+    run_command: 'yarn start'
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${unleash-db.DATABASE_URL}
+      - key: UNLEASH_URL
+        scope: RUN_TIME
+        value: ${APP_URL}
+  databases:
+  - name: unleash-db

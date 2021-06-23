@@ -1,7 +1,7 @@
 import { publicFolder } from 'unleash-frontend';
 import fs from 'fs';
 import EventEmitter from 'events';
-import express from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import favicon from 'serve-favicon';
@@ -30,7 +30,7 @@ export default function getApp(
     stores: IUnleashStores,
     services: IUnleashServices,
     eventBus?: EventEmitter,
-): any {
+): Application {
     const app = express();
 
     const baseUriPath = config.server.baseUriPath || '';

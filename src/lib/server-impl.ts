@@ -1,6 +1,6 @@
-'use strict';
-
 import EventEmitter from 'events';
+import stoppable, { StoppableServer } from 'stoppable';
+import { promisify } from 'util';
 import { IUnleash } from './types/core';
 import { IUnleashConfig, IUnleashOptions } from './types/option';
 import version from './util/version';
@@ -16,27 +16,7 @@ import * as permissions from './types/permissions';
 import AuthenticationRequired from './types/authentication-required';
 import * as eventType from './types/events';
 import { addEventHook } from './event-hook';
-
-async function closeServer(opts): Promise<void> {
-    const { server, metricsMonitor } = opts;
-
-    metricsMonitor.stopMonitoring();
-
-    return new Promise((resolve, reject) => {
-        server.close(err => (err ? reject(err) : resolve()));
-    });
-}
-
-async function destroyDatabase(stores): Promise<void> {
-    const { db, clientInstanceStore, clientMetricsStore } = stores;
-
-    return new Promise((resolve, reject) => {
-        clientInstanceStore.destroy();
-        clientMetricsStore.destroy();
-
-        db.destroy(error => (error ? reject(error) : resolve()));
-    });
-}
+import registerGracefulShutdown from './util/graceful-shutdown';
 
 async function createApp(
     config: IUnleashConfig,
@@ -48,6 +28,19 @@ async function createApp(
     const eventBus = new EventEmitter();
     const stores = createStores(config, eventBus);
     const services = createServices(stores, config);
+    const metricsMonitor = createMetricsMonitor();
+
+    const stopUnleash = async (server?: StoppableServer) => {
+        logger.info('Shutting down Unleash...');
+        if (server) {
+            const stopServer = promisify(server.stop);
+            await stopServer();
+        }
+        metricsMonitor.stopMonitoring();
+        stores.clientInstanceStore.destroy();
+        stores.clientMetricsStore.destroy();
+        await stores.db.destroy();
+    };
 
     if (!config.server.secret) {
         const secret = await stores.settingStore.get('unleash.secret');
@@ -55,7 +48,7 @@ async function createApp(
         config.server.secret = secret;
     }
     const app = getApp(config, stores, services, eventBus);
-    const metricsMonitor = createMetricsMonitor();
+
     if (typeof config.eventHook === 'function') {
         addEventHook(config.eventHook, stores.eventStore);
     }
@@ -80,31 +73,25 @@ async function createApp(
 
     return new Promise((resolve, reject) => {
         if (startApp) {
-            const server = app.listen(config.listen, () =>
-                logger.info('Unleash has started.', server.address()),
+            const server = stoppable(
+                app.listen(config.listen, () =>
+                    logger.info('Unleash has started.', server.address()),
+                ),
+                config.server.gracefulShutdownTimeout,
             );
-            const stop = () => {
-                logger.info('Shutting down Unleash...');
-
-                return closeServer({ server, metricsMonitor }).then(() =>
-                    destroyDatabase(stores),
-                );
-            };
 
             server.keepAliveTimeout = config.server.keepAliveTimeout;
             server.headersTimeout = config.server.headersTimeout;
             server.on('listening', () => {
-                resolve({ ...unleash, server, stop });
+                resolve({
+                    ...unleash,
+                    server,
+                    stop: () => stopUnleash(server),
+                });
             });
             server.on('error', reject);
         } else {
-            const stop = () => {
-                logger.info('Shutting down Unleash...');
-                metricsMonitor.stopMonitoring();
-                return destroyDatabase(stores);
-            };
-
-            resolve({ ...unleash, stop });
+            resolve({ ...unleash, stop: stopUnleash });
         }
     });
 }
@@ -125,7 +112,11 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
         throw err;
     }
 
-    return createApp(config, true);
+    const unleash = await createApp(config, true);
+    if (config.server.gracefulShutdownEnable) {
+        registerGracefulShutdown(unleash, logger);
+    }
+    return unleash;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

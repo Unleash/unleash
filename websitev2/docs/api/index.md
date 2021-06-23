@@ -20,7 +20,7 @@ With versions earlier than v4.0.0 and `insecure` authentication no authenticatio
 
 The internal API used by the Admin UI (unleash-frontend). Since v4.0.0 all operations require an [API token](/user_guide/api-token) with `Admin` level access:
 
-With versions earlier than v4.0.0 and `insecure` authentication Basic Auth (with curl `-u myemail@test.com:`) is enough
+With versions earlier than v4.0.0 and `insecure` authentication Basic Auth (with curl `-u myemail@test.com:`) is enough.
 
 - [Feature Toggles API](/api/admin/features)
 - [Strategies API](/api/admin/strategies)
@@ -31,3 +31,11 @@ With versions earlier than v4.0.0 and `insecure` authentication Basic Auth (with
 ## System API's {#system-apis}
 
 - [Internal Backstage API](/api/internal/internal)
+
+### Content-Type {#contenttype}
+
+All endpoints require `application/json` as content type, so if you're using curl remember to add
+
+```bash
+-H "Content-Type: application/json"
+```

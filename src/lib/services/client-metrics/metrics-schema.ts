@@ -1,19 +1,4 @@
 import joi from 'joi';
-import { IAppInstance } from './index';
-
-export interface IApplication {
-    appName: string;
-    sdkVersion?: string;
-    strategies?: string[] | any[];
-    description?: string;
-    url?: string;
-    color?: string;
-    icon?: string;
-    createdAt: Date;
-    instances?: IAppInstance;
-    seenToggles: Record<string, any>;
-    links: Record<string, string>;
-}
 
 export const applicationSchema = joi
     .object()

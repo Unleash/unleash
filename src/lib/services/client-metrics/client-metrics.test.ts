@@ -7,7 +7,17 @@ const appName = 'appName';
 const instanceId = 'instanceId';
 
 const createMetricsService = cms =>
-    new ClientMetricsService(cms, null, null, null, null, null, getLogger);
+    new ClientMetricsService(
+        {
+            clientMetricsStore: cms,
+            strategyStore: null,
+            featureToggleStore: null,
+            clientApplicationsStore: null,
+            clientInstanceStore: null,
+            eventStore: null,
+        },
+        { getLogger },
+    );
 
 test('should work without state', () => {
     const clientMetricsStore = new EventEmitter();
@@ -382,20 +392,22 @@ test('Multiple registrations of same appname and instanceid within same time per
     const clientMetricsStore: any = new EventEmitter();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
-    const clientApplicationsStore = {
+    const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
-    const clientInstanceStore = {
+    const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
     const clientMetrics = new ClientMetricsService(
-        clientMetricsStore,
-        null,
-        null,
-        clientApplicationsStore as any,
-        clientInstanceStore as any,
-        null,
-        getLogger,
+        {
+            clientMetricsStore,
+            strategyStore: null,
+            featureToggleStore: null,
+            clientApplicationsStore,
+            clientInstanceStore,
+            eventStore: null,
+        },
+        { getLogger },
     );
     const client1: IClientApp = {
         appName: 'test_app',
@@ -429,20 +441,22 @@ test('Multiple unique clients causes multiple registrations', async () => {
     const clientMetricsStore: any = new EventEmitter();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
-    const clientApplicationsStore = {
+    const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
-    const clientInstanceStore = {
+    const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
     const clientMetrics = new ClientMetricsService(
-        clientMetricsStore,
-        null,
-        null,
-        clientApplicationsStore as any,
-        clientInstanceStore as any,
-        null,
-        getLogger,
+        {
+            clientMetricsStore,
+            strategyStore: null,
+            featureToggleStore: null,
+            clientApplicationsStore,
+            clientInstanceStore,
+            eventStore: null,
+        },
+        { getLogger },
     );
     const client1 = {
         appName: 'test_app',
@@ -479,21 +493,25 @@ test('Same client registered outside of dedup interval will be registered twice'
     const clientMetricsStore: any = new EventEmitter();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
-    const clientApplicationsStore = {
+    const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
-    const clientInstanceStore = {
+    const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
+
     const bulkInterval = 2000;
+
     const clientMetrics = new ClientMetricsService(
-        clientMetricsStore,
-        null,
-        null,
-        clientApplicationsStore as any,
-        clientInstanceStore as any,
-        null,
-        getLogger,
+        {
+            clientMetricsStore,
+            strategyStore: null,
+            featureToggleStore: null,
+            clientApplicationsStore,
+            clientInstanceStore,
+            eventStore: null,
+        },
+        { getLogger },
         bulkInterval,
     );
     const client1 = {
@@ -527,21 +545,23 @@ test('No registrations during a time period will not call stores', async () => {
     const clientMetricsStore: any = new EventEmitter();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
-    const clientApplicationsStore = {
+    const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
-    const clientInstanceStore = {
+    const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const metrics = new ClientMetricsService(
-        clientMetricsStore,
-        null,
-        null,
-        clientApplicationsStore as any,
-        clientInstanceStore as any,
-        null,
-        getLogger,
+    const clientMetrics = new ClientMetricsService(
+        {
+            clientMetricsStore,
+            strategyStore: null,
+            featureToggleStore: null,
+            clientApplicationsStore,
+            clientInstanceStore,
+            eventStore: null,
+        },
+        { getLogger },
     );
     await jest.advanceTimersByTime(6 * 1000);
     expect(appStoreSpy).toHaveBeenCalledTimes(0);

@@ -15,13 +15,8 @@ beforeAll(async () => {
     db = await dbInit('client_metrics_service_serial', getLogger);
     stores = db.stores;
     clientMetricsService = new ClientMetricsService(
-        stores.clientMetricsStore,
-        stores.strategyStore,
-        stores.featureToggleStore,
-        stores.clientApplicationsStore,
-        stores.clientInstanceStore,
-        stores.eventStore,
-        getLogger,
+        stores,
+        { getLogger },
         500,
         2000,
     );

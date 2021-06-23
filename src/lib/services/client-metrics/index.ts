@@ -6,26 +6,19 @@ import ClientInstanceStore from '../../db/client-instance-store';
 import { ClientMetricsStore } from '../../db/client-metrics-store';
 import FeatureToggleStore from '../../db/feature-toggle-store';
 import { LogProvider } from '../../logger';
-import { IApplication, applicationSchema } from './metrics-schema';
+import { applicationSchema } from './metrics-schema';
 import { Projection } from './projection';
 import { clientMetricsSchema } from './client-metrics-schema';
 import { APPLICATION_CREATED } from '../../types/events';
-import { IYesNoCount } from './models';
+import { IApplication, IYesNoCount } from './models';
+import { IUnleashStores } from '../../types/stores';
+import { IUnleashConfig } from '../../types/option';
 
 const TTLList = require('./ttl-list');
 const { clientRegisterSchema } = require('./register-schema');
 
 const FIVE_SECONDS = 5 * 1000;
 const FIVE_MINUTES = 5 * 60 * 1000;
-
-export interface IAppInstance {
-    appName: string;
-    instanceId: string;
-    sdkVersion: string;
-    clientIp: string;
-    lastSeen: Date;
-    createdAt: Date;
-}
 
 export interface IClientApp {
     appName: string;
@@ -101,17 +94,56 @@ export default class ClientMetricsService {
 
     private timers: NodeJS.Timeout[] = [];
 
+    private clientMetricsStore: ClientMetricsStore;
+
+    private strategyStore: StrategyStore;
+
+    private featureToggleStore: FeatureToggleStore;
+
+    private clientApplicationsStore: ClientApplicationsDb;
+
+    private clientInstanceStore: ClientInstanceStore;
+
+    private eventStore: EventStore;
+
+    private getLogger: LogProvider;
+
+    private bulkInterval: number;
+
+    private announcementInterval: number;
+
     constructor(
-        private clientMetricsStore: ClientMetricsStore,
-        private strategyStore: StrategyStore,
-        private toggleStore: FeatureToggleStore,
-        private clientAppStore: ClientApplicationsDb,
-        private clientInstanceStore: ClientInstanceStore,
-        private eventStore: EventStore,
-        private getLogger: LogProvider,
-        private bulkInterval = FIVE_SECONDS,
-        private announcementInterval = FIVE_MINUTES,
+        {
+            clientMetricsStore,
+            strategyStore,
+            featureToggleStore,
+            clientInstanceStore,
+            clientApplicationsStore,
+            eventStore,
+        }: Pick<IUnleashStores,
+        | 'clientMetricsStore'
+        | 'strategyStore'
+        | 'featureToggleStore'
+        | 'clientApplicationsStore'
+        | 'clientInstanceStore'
+        | 'eventStore'
+        >,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        bulkInterval = FIVE_SECONDS,
+        announcementInterval = FIVE_MINUTES,
     ) {
+        this.clientMetricsStore = clientMetricsStore;
+        this.strategyStore = strategyStore;
+        this.featureToggleStore = featureToggleStore;
+        this.clientApplicationsStore = clientApplicationsStore;
+        this.clientInstanceStore = clientInstanceStore;
+        this.eventStore = eventStore;
+
+        this.logger = getLogger('/services/client-metrics/index.ts');
+
+        this.bulkInterval = bulkInterval;
+        this.announcementInterval = announcementInterval;
+
         this.lastHourList.on('expire', toggles => {
             Object.keys(toggles).forEach(toggleName => {
                 this.lastHourProjection.substract(
@@ -128,8 +160,6 @@ export default class ClientMetricsService {
                 );
             });
         });
-
-        this.logger = this.getLogger('services/client-metrics/index.ts');
 
         this.timers.push(
             setInterval(() => this.bulkAdd(), this.bulkInterval).unref(),
@@ -149,7 +179,7 @@ export default class ClientMetricsService {
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
         const toggleNames = Object.keys(value.bucket.toggles);
-        await this.toggleStore.lastSeenToggles(toggleNames);
+        await this.featureToggleStore.lastSeenToggles(toggleNames);
         await this.clientMetricsStore.insert(value);
         await this.clientInstanceStore.insert({
             appName: value.appName,
@@ -159,8 +189,8 @@ export default class ClientMetricsService {
     }
 
     async announceUnannounced(): Promise<void> {
-        if (this.clientAppStore) {
-            const appsToAnnounce = await this.clientAppStore.setUnannouncedToAnnounced();
+        if (this.clientApplicationsStore) {
+            const appsToAnnounce = await this.clientApplicationsStore.setUnannouncedToAnnounced();
             if (appsToAnnounce.length > 0) {
                 const events = appsToAnnounce.map(app => ({
                     type: APPLICATION_CREATED,
@@ -187,7 +217,7 @@ export default class ClientMetricsService {
         if (
             this &&
             this.seenClients &&
-            this.clientAppStore &&
+            this.clientApplicationsStore &&
             this.clientInstanceStore
         ) {
             const uniqueRegistrations = Object.values(this.seenClients);
@@ -200,7 +230,7 @@ export default class ClientMetricsService {
             this.seenClients = {};
             try {
                 if (uniqueRegistrations.length > 0) {
-                    await this.clientAppStore.bulkUpsert(uniqueApps);
+                    await this.clientApplicationsStore.bulkUpsert(uniqueApps);
                     await this.clientInstanceStore.bulkUpsert(
                         uniqueRegistrations,
                     );
@@ -237,7 +267,7 @@ export default class ClientMetricsService {
 
     async getSeenApps(): Promise<Record<string, IApplication[]>> {
         const seenApps = this.getSeenAppsPerToggle();
-        const applications: IApplication[] = await this.clientAppStore.getApplications();
+        const applications: IApplication[] = await this.clientApplicationsStore.getApplications();
         const metaData = applications.reduce((result, entry) => {
             // eslint-disable-next-line no-param-reassign
             result[entry.appName] = entry;
@@ -258,7 +288,7 @@ export default class ClientMetricsService {
     async getApplications(
         query: IApplicationQuery,
     ): Promise<Record<string, IApplication>> {
-        return this.clientAppStore.getApplications(query);
+        return this.clientApplicationsStore.getApplications(query);
     }
 
     async getApplication(appName: string): Promise<IApplication> {
@@ -269,10 +299,10 @@ export default class ClientMetricsService {
             strategies,
             features,
         ] = await Promise.all([
-            this.clientAppStore.getApplication(appName),
+            this.clientApplicationsStore.getApplication(appName),
             this.clientInstanceStore.getByAppName(appName),
             this.strategyStore.getStrategies(),
-            this.toggleStore.getFeatures(),
+            this.featureToggleStore.getFeatures(),
         ]);
 
         return {
@@ -380,12 +410,12 @@ export default class ClientMetricsService {
 
     async deleteApplication(appName: string): Promise<void> {
         await this.clientInstanceStore.deleteForApplication(appName);
-        await this.clientAppStore.deleteApplication(appName);
+        await this.clientApplicationsStore.deleteApplication(appName);
     }
 
     async createApplication(input: IApplication): Promise<void> {
         const applicationData = await applicationSchema.validateAsync(input);
-        await this.clientAppStore.upsert(applicationData);
+        await this.clientApplicationsStore.upsert(applicationData);
     }
 
     destroy(): void {

@@ -30,15 +30,7 @@ export const createServices = (
 ): IUnleashServices => {
     const accessService = new AccessService(stores, config);
     const apiTokenService = new ApiTokenService(stores, config);
-    const clientMetricsService = new ClientMetricsService(
-        stores.clientMetricsStore,
-        stores.strategyStore,
-        stores.featureToggleStore,
-        stores.clientApplicationsStore,
-        stores.clientInstanceStore,
-        stores.eventStore,
-        config.getLogger,
-    );
+    const clientMetricsService = new ClientMetricsService(stores, config);
     const contextService = new ContextService(stores, config);
     const emailService = new EmailService(config.email, config.getLogger);
     const eventService = new EventService(stores, config);

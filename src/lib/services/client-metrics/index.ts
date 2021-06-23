@@ -103,6 +103,8 @@ export class ClientMetricsService {
 
     seenClients: Record<string, IClientApp> = {};
 
+    private timers: NodeJS.Timeout[] = [];
+
     constructor(
         private clientMetricsStore: ClientMetricsStore,
         private strategyStore: StrategyStore,
@@ -133,10 +135,14 @@ export class ClientMetricsService {
 
         this.logger = this.getLogger('services/client-metrics/index.ts');
 
-        setInterval(() => this.bulkAdd(), this.bulkInterval);
-        setInterval(
-            () => this.announceUnannounced(),
-            this.announcementInterval,
+        this.timers.push(
+            setInterval(() => this.bulkAdd(), this.bulkInterval).unref(),
+        );
+        this.timers.push(
+            setInterval(
+                () => this.announceUnannounced(),
+                this.announcementInterval,
+            ).unref(),
         );
         clientMetricsStore.on('metrics', m => this.addPayload(m));
     }
@@ -389,5 +395,6 @@ export class ClientMetricsService {
     destroy(): void {
         this.lastHourList.destroy();
         this.lastMinuteList.destroy();
+        this.timers.forEach(clearInterval);
     }
 }

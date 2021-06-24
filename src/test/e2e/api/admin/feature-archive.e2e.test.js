@@ -10,6 +10,112 @@ let db;
 beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
     app = await setupApp(db.stores);
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        {
+            name: 'featureX',
+            description: 'the #1 feature',
+            enabled: true,
+            strategies: [
+                {
+                    name: 'default',
+                    parameters: {},
+                },
+            ],
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle({
+        name: 'featureY',
+        description: 'soon to be the #1 feature',
+        enabled: false,
+        strategies: [
+            {
+                name: 'baz',
+                parameters: {
+                    foo: 'bar',
+                },
+            },
+        ],
+    });
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        {
+            name: 'featureZ',
+            description: 'terrible feature',
+            enabled: true,
+            strategies: [
+                {
+                    name: 'baz',
+                    parameters: {
+                        foo: 'rab',
+                    },
+                },
+            ],
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        {
+            name: 'featureArchivedX',
+            description: 'the #1 feature',
+            enabled: true,
+            archived: true,
+            strategies: [
+                {
+                    name: 'default',
+                    parameters: {},
+                },
+            ],
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        {
+            name: 'featureArchivedY',
+            description: 'soon to be the #1 feature',
+            enabled: false,
+            archived: true,
+            strategies: [
+                {
+                    name: 'baz',
+                    parameters: {
+                        foo: 'bar',
+                    },
+                },
+            ],
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        {
+            name: 'featureArchivedZ',
+            description: 'terrible feature',
+            enabled: true,
+            archived: true,
+            strategies: [
+                {
+                    name: 'baz',
+                    parameters: {
+                        foo: 'rab',
+                    },
+                },
+            ],
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        {
+            name: 'feature.with.variants',
+            description: 'A feature toggle with variants',
+            enabled: true,
+            archived: false,
+            strategies: [{ name: 'default' }],
+            variants: [
+                { name: 'control', weight: 50 },
+                { name: 'new', weight: 50 },
+            ],
+        },
+        'test',
+    );
 });
 
 afterAll(async () => {

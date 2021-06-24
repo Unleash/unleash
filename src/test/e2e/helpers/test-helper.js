@@ -37,7 +37,7 @@ function createApp(
     };
 
     // TODO: use create from server-impl instead?
-    return { request, destroy };
+    return { request, destroy, services };
 }
 
 module.exports = {

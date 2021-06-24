@@ -52,6 +52,7 @@ test('should allow weightType=fix', () => {
         project: 'default',
         enabled: false,
         stale: false,
+        archived: false,
         strategies: [{ name: 'default' }],
         variants: [
             {
@@ -73,6 +74,7 @@ test('should disallow weightType=unknown', () => {
         type: 'release',
         enabled: false,
         stale: false,
+        archived: false,
         strategies: [{ name: 'default' }],
         variants: [
             {
@@ -96,6 +98,7 @@ test('should be possible to define variant overrides', () => {
         project: 'some',
         enabled: false,
         stale: false,
+        archived: false,
         strategies: [{ name: 'default' }],
         variants: [
             {
@@ -154,6 +157,7 @@ test('should keep constraints', () => {
         project: 'default',
         enabled: false,
         stale: false,
+        archived: false,
         strategies: [
             {
                 name: 'default',

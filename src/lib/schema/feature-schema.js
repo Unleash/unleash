@@ -69,6 +69,7 @@ const featureSchema = joi
         name: nameType,
         enabled: joi.boolean().default(false),
         stale: joi.boolean().default(false),
+        archived: joi.boolean().default(false),
         type: joi.string().default('release'),
         project: joi.string().default('default'),
         description: joi

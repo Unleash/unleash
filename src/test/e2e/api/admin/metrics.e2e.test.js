@@ -12,6 +12,47 @@ beforeAll(async () => {
     app = await setupApp(db.stores);
 });
 
+beforeEach(async () => {
+    await app.services.clientMetricsService.createApplication({
+        appName: 'demo-app-1',
+        strategies: ['default'],
+        announced: true,
+    });
+    await app.services.clientMetricsService.createApplication({
+        appName: 'demo-app-2',
+        strategies: ['default', 'extra'],
+        description: 'hello',
+        announced: true,
+    });
+    await app.services.clientMetricsService.createApplication({
+        appName: 'deletable-app',
+        strategies: ['default'],
+        description: 'Some desc',
+        announced: true,
+    });
+    await db.stores.clientInstanceStore.insert({
+        appName: 'demo-app-1',
+        instanceId: 'test-1',
+        strategies: ['default'],
+        started: 1516026938494,
+        interval: 10,
+    });
+    await db.stores.clientInstanceStore.insert({
+        appName: 'demo-seed-2',
+        instanceId: 'test-2',
+        strategies: ['default'],
+        started: 1516026938494,
+        interval: 10,
+    });
+    await db.stores.clientInstanceStore.insert({
+        appName: 'deletable-app',
+        instanceId: 'inst-1',
+        strategies: ['default'],
+        started: 1516026938494,
+        interval: 10,
+    });
+});
+
 afterAll(async () => {
     if (db) {
         await db.destroy();
@@ -23,25 +64,25 @@ afterEach(async () => {
 });
 
 test('should get application details', async () => {
-    expect.assertions(3);
+    expect.assertions(2);
     return app.request
         .get('/api/admin/metrics/applications/demo-app-1')
         .expect('Content-Type', /json/)
+        .expect(200)
         .expect(res => {
-            expect(res.status === 200).toBe(true);
-            expect(res.body.appName === 'demo-app-1').toBe(true);
-            expect(res.body.instances.length === 1).toBe(true);
+            expect(res.body.appName).toBe('demo-app-1');
+            expect(res.body.instances).toHaveLength(1);
         });
 });
 
 test('should get list of applications', async () => {
-    expect.assertions(2);
+    expect.assertions(1);
     return app.request
         .get('/api/admin/metrics/applications')
         .expect('Content-Type', /json/)
+        .expect(200)
         .expect(res => {
-            expect(res.status === 200).toBe(true);
-            expect(res.body.applications.length).toBe(3);
+            expect(res.body.applications).toHaveLength(3);
         });
 });
 
@@ -56,7 +97,7 @@ test('should delete application', async () => {
         .get('/api/admin/metrics/applications')
         .expect('Content-Type', /json/)
         .expect(res => {
-            expect(res.body.applications.length).toBe(2);
+            expect(res.body.applications).toHaveLength(2);
         });
 });
 

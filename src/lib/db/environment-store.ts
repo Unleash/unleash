@@ -5,7 +5,6 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { IEnvironment } from '../types/model';
 import NotFoundError from '../error/notfound-error';
-import feature from '../routes/admin-api/feature';
 
 interface IEnvironmentsTable {
     name: string;

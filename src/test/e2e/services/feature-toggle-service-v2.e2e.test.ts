@@ -28,10 +28,13 @@ test('Should create feature toggle strategy configuration', async () => {
         parameters: {},
     };
 
-    await stores.featureToggleStore.createFeature({
-        name: 'Demo',
-        strategies: [],
-    });
+    await service.createFeatureToggle(
+        'default',
+        {
+            name: 'Demo',
+        },
+        'test',
+    );
 
     const createdConfig = await service.createStrategy(
         config,
@@ -50,15 +53,18 @@ test('Should be able to update existing strategy configuration', async () => {
         parameters: {},
     };
 
-    await stores.featureToggleStore.createFeature({
-        name: 'Demo',
-        strategies: [],
-    });
+    await service.createFeatureToggle(
+        'default',
+        {
+            name: 'update-existing-strategy',
+        },
+        'test',
+    );
 
     const createdConfig = await service.createStrategy(
         config,
         'default',
-        'Demo',
+        'update-existing-strategy',
     );
     expect(createdConfig.name).toEqual('default');
     const updatedConfig = await service.updateStrategy(createdConfig.id, {
@@ -75,10 +81,13 @@ test('Should be able to get strategy by id', async () => {
         parameters: {},
     };
 
-    await stores.featureToggleStore.createFeature({
-        name: 'Demo',
-        strategies: [],
-    });
+    await service.createFeatureToggle(
+        'default',
+        {
+            name: 'get-strategy-by-id',
+        },
+        'test',
+    );
 
     const createdConfig = await service.createStrategy(
         config,

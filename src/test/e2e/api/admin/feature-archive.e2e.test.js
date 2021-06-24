@@ -11,104 +11,70 @@ beforeAll(async () => {
     db = await dbInit('archive_serial', getLogger);
     app = await setupApp(db.stores);
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'featureX',
             description: 'the #1 feature',
-            enabled: true,
-            strategies: [
-                {
-                    name: 'default',
-                    parameters: {},
-                },
-            ],
         },
         'test',
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle({
-        name: 'featureY',
-        description: 'soon to be the #1 feature',
-        enabled: false,
-        strategies: [
-            {
-                name: 'baz',
-                parameters: {
-                    foo: 'bar',
-                },
-            },
-        ],
-    });
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'featureY',
+            description: 'soon to be the #1 feature',
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'featureZ',
             description: 'terrible feature',
-            enabled: true,
-            strategies: [
-                {
-                    name: 'baz',
-                    parameters: {
-                        foo: 'rab',
-                    },
-                },
-            ],
         },
         'test',
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'featureArchivedX',
             description: 'the #1 feature',
-            enabled: true,
-            archived: true,
-            strategies: [
-                {
-                    name: 'default',
-                    parameters: {},
-                },
-            ],
         },
         'test',
     );
+    await app.services.featureToggleServiceV2.archiveToggle(
+        'featureArchivedX',
+        'test',
+    );
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'featureArchivedY',
             description: 'soon to be the #1 feature',
-            enabled: false,
-            archived: true,
-            strategies: [
-                {
-                    name: 'baz',
-                    parameters: {
-                        foo: 'bar',
-                    },
-                },
-            ],
         },
         'test',
     );
+    await app.services.featureToggleServiceV2.archiveToggle(
+        'featureArchivedY',
+        'test',
+    );
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'featureArchivedZ',
             description: 'terrible feature',
-            enabled: true,
-            archived: true,
-            strategies: [
-                {
-                    name: 'baz',
-                    parameters: {
-                        foo: 'rab',
-                    },
-                },
-            ],
         },
         'test',
     );
+    await app.services.featureToggleServiceV2.archiveToggle(
+        'featureArchivedZ',
+        'test',
+    );
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'feature.with.variants',
             description: 'A feature toggle with variants',
-            enabled: true,
-            archived: false,
-            strategies: [{ name: 'default' }],
             variants: [
                 { name: 'control', weight: 50 },
                 { name: 'new', weight: 50 },
@@ -157,7 +123,7 @@ test('must set name when reviving toggle', async () => {
 });
 
 test('should be allowed to reuse deleted toggle name', async () => {
-    expect.assertions(3);
+    expect.assertions(2);
     await app.request
         .post('/api/admin/features')
         .send({
@@ -169,7 +135,6 @@ test('should be allowed to reuse deleted toggle name', async () => {
         .expect(201)
         .expect(res => {
             expect(res.body.name).toBe('really.delete.feature');
-            expect(res.body.enabled).toBe(false);
             expect(res.body.createdAt).toBeTruthy();
         });
     await app.request
@@ -185,7 +150,7 @@ test('should be allowed to reuse deleted toggle name', async () => {
         .expect(200);
 });
 test('Deleting an unarchived toggle should not take effect', async () => {
-    expect.assertions(3);
+    expect.assertions(2);
     await app.request
         .post('/api/admin/features')
         .send({
@@ -197,7 +162,6 @@ test('Deleting an unarchived toggle should not take effect', async () => {
         .expect(201)
         .expect(res => {
             expect(res.body.name).toBe('really.delete.feature');
-            expect(res.body.enabled).toBe(false);
             expect(res.body.createdAt).toBeTruthy();
         });
     await app.request

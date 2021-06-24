@@ -103,7 +103,7 @@ export default class ProjectService {
 
         const toggles = await this.featureToggleStore.getFeaturesBy({
             project: id,
-            archived: 0,
+            archived: false,
         });
 
         if (toggles.length > 0) {

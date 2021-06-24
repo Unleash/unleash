@@ -4,19 +4,22 @@ import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import FeatureStrategiesStore, { FeatureConfigurationClient, IFeatureStrategy } from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
-import { IFeatureToggle, IFeatureToggleQuery, IProjectOverview, IStrategyConfig } from '../types/model';
+import {
+    FeatureToggle, FeatureToggleDTO, FeatureToggleWithEnvironment,
+    IFeatureToggleQuery,
+    IProjectOverview,
+    IStrategyConfig
+} from '../types/model';
 import ProjectStore from '../db/project-store';
 import BadDataError from '../error/bad-data-error';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import NameExistsError from '../error/name-exists-error';
-import { featureSchema, nameSchema } from '../schema/feature-schema';
+import { featureMetadataSchema, featureSchema, nameSchema } from '../schema/feature-schema';
 import EventStore from '../db/event-store';
 import { FEATURE_ARCHIVED, FEATURE_CREATED, FEATURE_STALE_OFF, FEATURE_STALE_ON, FEATURE_UPDATED } from '../types/events';
 import FeatureTagStore from '../db/feature-tag-store';
 import EnvironmentStore from '../db/environment-store';
-
-// TODO: move to types
-const GLOBAL_ENV = ':global:';
+import { GLOBAL_ENV } from '../types/environment';
 
 class FeatureToggleServiceV2 {
     private logger: Logger;
@@ -103,8 +106,7 @@ class FeatureToggleServiceV2 {
      * GET /api/admin/projects/:projectName/features/:featureName
      * @param featureName
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async getFeature(featureName: string): Promise<any> {
+    async getFeature(featureName: string): Promise<FeatureToggleWithEnvironment> {
         return this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
     }
 
@@ -117,48 +119,21 @@ class FeatureToggleServiceV2 {
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
      * @returns
      */
-    async getFeatureToggles(query?: IFeatureToggleQuery): Promise<IFeatureToggle[]> {
+    async getFeatureToggles(query?: IFeatureToggleQuery): Promise<FeatureToggle[]> {
         return this.featureStrategiesStore.getFeatures(query);
     }
 
-    async getFeatureToggle(featureName: string): Promise<IFeatureToggle> {
-        return this.featureToggleStore.getFeature(featureName);
+    async getFeatureToggle(featureName: string): Promise<FeatureToggleWithEnvironment> {
+        return this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
     }
 
 
-    // We might be able to reuse getClientFeatures instead?
-    async getAllStrategiesForEnvironmentOld(environment: string = GLOBAL_ENV): Promise<Map<string, IStrategyConfig[]>> {
-        const featureStrategiesRaw = await this.featureStrategiesStore.getStrategiesForEnv(environment);
-        const featureStrategies = new Map<string,  IStrategyConfig[]>();
-
-        featureStrategiesRaw.forEach(value => {
-            if(featureStrategies.has(value.featureName)) {
-                featureStrategies.get(value.featureName).push({
-                    id: value.id,
-                    name: value.strategyName,
-                    parameters: value.parameters,
-                    constraints: value.constraints || []
-                })
-            } else {
-                featureStrategies.set(value.featureName, [{
-                    id: value.id,
-                    name: value.strategyName,
-                    parameters: value.parameters,
-                    constraints: value.constraints || []
-                }])
-            }
-        });
-
-        return featureStrategies;
-    }
-
-    
-    async createFeatureToggle(value: IFeatureToggle, userName: string): Promise<IFeatureToggle> {
+    async createFeatureToggle(projectId: string, value: FeatureToggleDTO, userName: string): Promise<FeatureToggle> {
         this.logger.info(`${userName} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
-        const featureData = await featureSchema.validateAsync(value);
-        const createdToggle = await this.featureToggleStore.createFeature(featureData);
-        await this.environmentStore.connectFeatureToEnvironmentsForProject(value.name, createdToggle.project);
+        const featureData = await featureMetadataSchema.validateAsync(value);
+        const createdToggle = await this.featureToggleStore.createFeature(projectId, featureData);
+        await this.environmentStore.connectFeatureToEnvironmentsForProject(value.name, projectId);
         await this.eventStore.store({
             type: FEATURE_CREATED,
             createdBy: userName,
@@ -168,12 +143,22 @@ class FeatureToggleServiceV2 {
         return createdToggle;
     }
 
-    async updateFeatureToggle(updatedFeature: IFeatureToggle, userName: string): Promise<IFeatureToggle> {
+    /**
+     * @deprecated
+     * @param updatedFeature
+     * @param userName
+     */
+    async updateFeatureToggleLegacy(updatedFeature: FeatureToggleDTO, userName: string): Promise<FeatureToggle> {
+        const projectId = await this.featureToggleStore.getProjectId(updatedFeature.name);
+        return this.updateFeatureToggle(projectId, updatedFeature, userName);
+    }
+
+    async updateFeatureToggle(projectId: string, updatedFeature: FeatureToggleDTO, userName: string): Promise<FeatureToggle> {
         this.logger.info(`${userName} updates feature toggle ${updatedFeature.name}`);
 
-        await this.featureToggleStore.getFeature(updatedFeature.name);
+        await this.featureToggleStore.hasFeature(updatedFeature.name);
         const value = await featureSchema.validateAsync(updatedFeature);
-        await this.featureToggleStore.updateFeature(value);
+        await this.featureToggleStore.updateFeature(projectId, value);
         const tags =
             (await this.featureTagStore.getAllTagsForFeature(
                 updatedFeature.name,
@@ -244,9 +229,9 @@ class FeatureToggleServiceV2 {
     }
 
     async updateStale(featureName: string, isStale: boolean, userName: string): Promise<any> {
-        const feature = await this.featureToggleStore.getFeature(featureName);
+        const feature = await this.featureToggleStore.getFeatureMetadata(featureName);
         feature.stale = isStale;
-        await this.featureToggleStore.updateFeature(feature);
+        await this.featureToggleStore.updateFeature(feature.project, feature);
         const tags =
             (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
             [];
@@ -261,7 +246,7 @@ class FeatureToggleServiceV2 {
     }
 
     async archiveToggle(name: string, userName: string): Promise<void> {
-        await this.featureToggleStore.getFeature(name);
+        await this.featureToggleStore.hasFeature(name);
         await this.featureToggleStore.archiveFeature(name);
         const tags =
             (await this.featureTagStore.getAllTagsForFeature(name)) || [];
@@ -273,20 +258,35 @@ class FeatureToggleServiceV2 {
         });
     }
 
+    async updateEnabled(featureName: string, environment: string, enabled: boolean, userName: string): Promise<FeatureToggle> {
+        const newEnabled = await this.featureStrategiesStore.toggleEnvironmentEnabledStatus(environment, featureName, enabled);
+        const feature = await this.featureToggleStore.getFeatureMetadata(featureName);
+        const tags =
+            (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
+            [];
+        await this.eventStore.store({
+            type: FEATURE_UPDATED,
+            createdBy: userName,
+            data: {...feature, enabled: newEnabled },
+            tags
+        });
+        return feature;
+
+    }
 
     // @deprecated
-    async toggle(featureName: string, userName: string): Promise<any> {
-        const feature = await this.featureToggleStore.getFeature(featureName);
-        const toggle = !feature.enabled;
-        return this.updateField(feature.name, 'enabled', toggle, userName);
+    async toggle(featureName: string, environment: string, userName: string): Promise<FeatureToggle> {
+        await this.featureToggleStore.hasFeature(featureName);
+        const isEnabled = await this.featureStrategiesStore.isEnvironmentEnabled(featureName, environment);
+        return this.updateEnabled(featureName, environment, !isEnabled, userName);
     }
 
     // @deprecated
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async updateField(featureName: string, field: string, value: any, userName: string): Promise<any> {
-        const feature = await this.featureToggleStore.getFeature(featureName);
+        const feature = await this.featureToggleStore.getFeatureMetadata(featureName);
         feature[field] = value;
-        await this.featureToggleStore.updateFeature(feature);
+        await this.featureToggleStore.updateFeature(feature.project, feature);
         const tags =
             (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
             [];

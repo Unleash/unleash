@@ -1,5 +1,3 @@
-import { IProject } from '../db/project-store';
-
 export interface IConstraint {
     contextName: string;
     operator: string;
@@ -12,14 +10,17 @@ export interface IStrategyConfig {
     constraints: IConstraint[];
     parameters: Object;
 }
-
-export interface IFeatureToggle {
+export interface FeatureToggleDTO {
     name: string;
-    description: string;
-    type: string;
+    description?: string;
+    type?: string;
+    stale?: boolean;
+    variants?: IVariant[];
+}
+export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
-    stale: boolean;
-    variants: IVariant[];
+    lastSeenAt?: Date;
+    createdAt?: Date;
 }
 
 export interface IFeatureToggleClient {
@@ -30,6 +31,14 @@ export interface IFeatureToggleClient {
     stale: boolean;
     variants: IVariant[];
     enabled: boolean;
+    strategies: IStrategyConfig[];
+}
+
+export interface FeatureToggleWithEnvironment extends FeatureToggle {
+    environments: IEnvironmentDetail[];
+}
+
+export interface IEnvironmentDetail extends IEnvironmentOverview {
     strategies: IStrategyConfig[];
 }
 

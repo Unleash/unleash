@@ -63,10 +63,12 @@ test('Can update display name', async () => {
 
 test('Can connect environment to project', async () => {
     await service.create({ name: 'test-connection', displayName: '' });
-    await stores.featureToggleStore.createFeature({
+    await stores.featureToggleStore.createFeature('default', {
         name: 'test-connection',
-        project: 'default',
-        strategies: [{ name: 'default' }],
+        type: 'release',
+        description: '',
+        stale: false,
+        variants: [],
     });
     await service.connectProjectToEnvironment('test-connection', 'default');
     const overview = await stores.featureStrategiesStore.getProjectOverview(
@@ -85,10 +87,8 @@ test('Can connect environment to project', async () => {
 
 test('Can remove environment from project', async () => {
     await service.create({ name: 'removal-test', displayName: '' });
-    await stores.featureToggleStore.createFeature({
+    await stores.featureToggleStore.createFeature('default', {
         name: 'removal-test',
-        project: 'default',
-        strategies: [{ name: 'default' }],
     });
     await service.removeEnvironmentFromProject('test-connection', 'default');
     await service.connectProjectToEnvironment('removal-test', 'default');

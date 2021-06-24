@@ -6,14 +6,13 @@ import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
 import {
     IConstraint,
-    IEnvironment,
     IEnvironmentOverview,
     IFeatureOverview,
-    IFeatureToggle,
     IFeatureToggleClient,
     IFeatureToggleQuery,
     IStrategyConfig,
     IVariant,
+    FeatureToggleWithEnvironment,
 } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 
@@ -128,7 +127,7 @@ class FeatureStrategiesStore {
 
     constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('feature-toggle-store.js');
+        this.logger = getLogger('feature-toggle-store.ts');
         this.timer = action =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle-strategies',
@@ -225,7 +224,7 @@ class FeatureStrategiesStore {
     async getFeatureToggleAdmin(
         featureName: string,
         archived: boolean = false,
-    ): Promise<any> {
+    ): Promise<FeatureToggleWithEnvironment> {
         const stopTimer = this.timer('getFeatureAdmin');
         const rows = await this.db('features')
             .select(
@@ -257,33 +256,28 @@ class FeatureStrategiesStore {
             .where({ name: featureName, archived: archived ? 1 : 0 });
         stopTimer();
         const featureToggle = rows.reduce((acc, r) => {
-            if (acc.strategies === undefined) {
-                acc.strategies = [];
-            }
             if (acc.environments === undefined) {
-                acc.environments = [];
+                acc.environments = {};
             }
             acc.name = r.name;
             acc.stale = r.stale;
             acc.variants = r.variants;
             acc.lastSeenAt = r.last_seen_at;
             acc.type = r.type;
-            if (r.environment) {
-                acc.environments.push(this.getAdminEnvironment(r));
+            if (!acc.environments[r.environment]) {
+                acc.environments[r.environment] = {};
             }
-            if (r.strategy_name) {
-                acc.strategies.push(this.getAdminStrategy(r));
+            const env = acc.environments[r.environment];
+            env.enabled = r.enabled;
+            env.environment = r.environment;
+            if (!env.strategies) {
+                env.strategies = [];
             }
+            env.strategies.push(this.getAdminStrategy(r));
+            acc.environments[r.environment] = env;
             return acc;
         }, {});
-        const globalEnabled = featureToggle.environments.find(
-            r => r.environment === ':global:',
-        );
-        if (globalEnabled) {
-            featureToggle.enabled = globalEnabled.enabled;
-        } else {
-            featureToggle.enabled = false;
-        }
+        featureToggle.environments = Object.values(featureToggle.environments);
         return featureToggle;
     }
 
@@ -374,13 +368,6 @@ class FeatureStrategiesStore {
         return Object.values(featureToggles);
     }
 
-    private getAdminEnvironment(r: any): any {
-        return {
-            environment: r.environment,
-            enabled: r.environment ? r.enabled : false,
-        };
-    }
-
     async getProjectOverview(projectId: string): Promise<IFeatureOverview[]> {
         const rows = await this.db('features')
             .where({ project: projectId })
@@ -441,6 +428,8 @@ class FeatureStrategiesStore {
             .onConflict(['environment', 'feature_name'])
             .merge('enabled');
     }
+
+    async;
 
     async enableEnvironmentForFeature(
         feature_name: string,
@@ -564,6 +553,28 @@ class FeatureStrategiesStore {
         await this.db(T.featureStrategies)
             .where({ project_name: projectId, environment })
             .del();
+    }
+
+    async isEnvironmentEnabled(
+        featureName: string,
+        environment: string,
+    ): Promise<boolean> {
+        const row = await this.db(T.featureEnvs)
+            .select('enabled')
+            .where({ feature_name: featureName, environment })
+            .first();
+        return row.enabled;
+    }
+
+    async toggleEnvironmentEnabledStatus(
+        environment: string,
+        featureName: string,
+        enabled: boolean,
+    ): Promise<boolean> {
+        await this.db(T.featureEnvs)
+            .update({ enabled })
+            .where({ environment, feature_name: featureName });
+        return enabled;
     }
 }
 

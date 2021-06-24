@@ -7,6 +7,8 @@ import { IUnleashConfig } from '../../types/option';
 import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { Logger } from '../../logger';
+import { querySchema } from '../../schema/feature-schema';
+import { IFeatureToggleQuery } from '../../types/model';
 
 const version = 1;
 
@@ -32,17 +34,12 @@ export default class FeatureController extends Controller {
 
     constructor(
         {
-            featureToggleService,
             featureToggleServiceV2,
-        }: Pick<
-            IUnleashServices,
-            'featureToggleServiceV2' | 'featureToggleService'
-        >,
+        }: Pick<IUnleashServices, 'featureToggleServiceV2'>,
         config: IUnleashConfig,
     ) {
         super(config);
         const { experimental } = config;
-        this.featureToggleService = featureToggleService;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.logger = config.getLogger('client-api/feature.js');
         this.get('/', this.getAll);
@@ -52,8 +49,7 @@ export default class FeatureController extends Controller {
             // @ts-ignore
             this.cache = experimental.clientFeatureMemoize.enabled;
             this.cachedFeatures = memoizee(
-                (query, fields) =>
-                    this.featureToggleService.getFeatures(query, fields),
+                query => this.featureToggleServiceV2.getFeatureToggles(query),
                 {
                     promise: true,
                     // @ts-ignore
@@ -76,18 +72,47 @@ export default class FeatureController extends Controller {
         }
     }
 
+    async prepQuery({
+        tag,
+        project,
+        namePrefix,
+    }: IFeatureToggleQuery): Promise<IFeatureToggleQuery> {
+        if (!tag && !project && !namePrefix) {
+            return null;
+        }
+        const tagQuery = this.paramToArray(tag);
+        const projectQuery = this.paramToArray(project);
+        const query = await querySchema.validateAsync({
+            tag: tagQuery,
+            project: projectQuery,
+            namePrefix,
+        });
+        if (query.tag) {
+            query.tag = query.tag.map(q => q.split(':'));
+        }
+        return query;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    paramToArray(param: any) {
+        if (!param) {
+            return param;
+        }
+        return Array.isArray(param) ? param : [param];
+    }
+
     async getAll(req: Request, res: Response): Promise<void> {
         try {
+            const query = await this.prepQuery(req.query);
             let features;
             if (this.cache) {
                 features = await this.cachedFeatures(
-                    req.query,
+                    query,
                     FEATURE_COLUMNS_CLIENT,
                 );
             } else {
-                features = await this.featureToggleService.getFeatures(
-                    req.query,
-                    FEATURE_COLUMNS_CLIENT,
+                features = await this.featureToggleServiceV2.getFeatureToggles(
+                    query,
                 );
             }
             res.json({ version, features });
@@ -97,12 +122,12 @@ export default class FeatureController extends Controller {
     }
 
     async getFeatureToggle(
-        req: Request<{ featureName: String }, any, any, any>,
+        req: Request<{ featureName: string }, any, any, any>,
         res: Response,
     ): Promise<void> {
         try {
             const name = req.params.featureName;
-            const featureToggle = await this.featureToggleService.getFeature(
+            const featureToggle = await this.featureToggleServiceV2.getFeature(
                 name,
             );
             res.json(featureToggle).end();

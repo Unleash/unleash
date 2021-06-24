@@ -1,3 +1,4 @@
+import exp from 'constants';
 import dbInit from '../../../helpers/database-init';
 import { setupApp } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
@@ -27,7 +28,6 @@ test('Trying to add a strategy configuration to environment not connected to tog
         .expect(201)
         .expect(res => {
             expect(res.body.name).toBe('com.test.feature');
-            expect(res.body.enabled).toBe(false);
             expect(res.body.createdAt).toBeTruthy();
         });
     return app.request
@@ -60,16 +60,40 @@ test('Can get project overview', async () => {
         .expect(201)
         .expect(res => {
             expect(res.body.name).toBe('project-overview');
-            expect(res.body.enabled).toBe(false);
+            expect(res.body.createdAt).toBeTruthy();
+        });
+    await app.request
+        .get('/api/admin/projects/default')
+        .expect(200)
+        .expect(r => {
+            expect(r.body.name).toBe('Default');
+            expect(r.body.features).toHaveLength(2);
+            expect(r.body.members).toBe(0);
+        });
+});
+
+test('Can get features for project', async () => {
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: 'features-for-project',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect(res => {
+            expect(res.body.name).toBe('features-for-project');
             expect(res.body.createdAt).toBeTruthy();
         });
     await app.request
         .get('/api/admin/projects/default/features')
         .expect(200)
-        .expect(r => {
-            expect(r.body.name).toBe('Default');
-            expect(r.body.features.length).toBeGreaterThan(0);
-            expect(r.body.members).toBe(0);
+        .expect(res => {
+            expect(res.body.version).toBeTruthy();
+            expect(
+                res.body.features.some(
+                    feature => feature.name === 'features-for-project',
+                ),
+            ).toBeTruthy();
         });
 });
 
@@ -85,7 +109,6 @@ test('Project overview includes environment connected to feature', async () => {
         .expect(201)
         .expect(res => {
             expect(res.body.name).toBe('com.test.environment');
-            expect(res.body.enabled).toBe(false);
             expect(res.body.createdAt).toBeTruthy();
         });
     await app.request
@@ -98,7 +121,7 @@ test('Project overview includes environment connected to feature', async () => {
         .send({ environment: 'project-overview' })
         .expect(200);
     return app.request
-        .get('/api/admin/projects/default/features')
+        .get('/api/admin/projects/default')
         .expect(200)
         .expect(r => {
             expect(r.body.features[0].environments[0].name).toBe(':global:');
@@ -120,7 +143,6 @@ test('Disconnecting environment from project, removes environment from features 
         .expect(201)
         .expect(res => {
             expect(res.body.name).toBe('com.test.disconnect.environment');
-            expect(res.body.enabled).toBe(false);
             expect(res.body.createdAt).toBeTruthy();
         });
     await app.request
@@ -136,7 +158,7 @@ test('Disconnecting environment from project, removes environment from features 
         .delete('/api/admin/projects/default/environments/dis-project-overview')
         .expect(200);
     return app.request
-        .get('/api/admin/projects/default/features')
+        .get('/api/admin/projects/default')
         .expect(200)
         .expect(r => {
             expect(

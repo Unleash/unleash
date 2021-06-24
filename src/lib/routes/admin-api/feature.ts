@@ -14,9 +14,10 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
 import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
-import { querySchema } from '../../schema/feature-schema';
+import { featureSchema, querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
 import FeatureTagService from '../../services/feature-tag-service';
+import { GLOBAL_ENV } from '../../types/environment';
 
 const version = 1;
 
@@ -174,8 +175,10 @@ class FeatureController extends Controller {
         const toggle = req.body;
 
         try {
+            const validatedToggle = await featureSchema.validateAsync(toggle);
             const createdFeature = await this.featureService2.createFeatureToggle(
-                toggle,
+                validatedToggle.project,
+                validatedToggle,
                 userName,
             );
             await Promise.all(
@@ -204,14 +207,13 @@ class FeatureController extends Controller {
         updatedFeature.name = featureName;
 
         try {
-            const toggle = await this.featureService2.updateFeatureToggle(
+            const toggle = await this.featureService2.updateFeatureToggleLegacy(
                 updatedFeature,
                 userName,
             );
 
             await this.featureService2.removeAllStrategiesForEnv(featureName);
 
-            // TODO: remove all strategies then add them.
             await Promise.all(
                 updatedFeature.strategies.map(async s => {
                     await this.featureService2.createStrategy(
@@ -220,6 +222,12 @@ class FeatureController extends Controller {
                         featureName,
                     );
                 }),
+            );
+            await this.featureService2.updateEnabled(
+                updatedFeature.name,
+                GLOBAL_ENV,
+                updatedFeature.enabled,
+                userName,
             );
             res.status(200).end();
         } catch (error) {
@@ -233,7 +241,11 @@ class FeatureController extends Controller {
         const userName = extractUser(req);
         try {
             const name = req.params.featureName;
-            const feature = await this.featureService2.toggle(name, userName);
+            const feature = await this.featureService2.toggle(
+                name,
+                GLOBAL_ENV,
+                userName,
+            );
             res.status(200).json(feature);
         } catch (error) {
             handleErrors(res, this.logger, error);

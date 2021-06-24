@@ -9,8 +9,10 @@ import {
     IConstraint,
     IProjectParam,
     IStrategyConfig,
+    FeatureToggleDTO,
 } from '../../../types/model';
 import { handleErrors } from '../util';
+import extractUsername from '../../../extract-user';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -24,10 +26,6 @@ interface FeatureParams extends ProjectParam {
 
 interface ProjectParam {
     projectId: string;
-}
-
-interface ProjectEnvironment extends ProjectParam {
-    environment: string;
 }
 
 interface StrategyIdParams extends FeatureStrategyParams {
@@ -78,8 +76,43 @@ export default class ProjectFeaturesController extends Controller {
             `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
             this.updateStrategy,
         );
-        this.get('/:projectId/features', this.getProjectOverview);
+        this.get('/:projectId', this.getProjectOverview);
+        this.post('/:projectId/features', this.createFeatureToggle);
+        this.get('/:projectId/features', this.getFeaturesForProject);
         this.get(PATH_PREFIX, this.getFeature);
+    }
+
+    async getFeaturesForProject(
+        req: Request<ProjectParam, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        try {
+            const features = await this.featureService.getFeatureToggles({
+                project: [projectId],
+            });
+            res.json({ version: 1, features });
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
+    }
+
+    async createFeatureToggle(
+        req: Request<ProjectParam, any, FeatureToggleDTO, any>,
+        res: Response,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        try {
+            const userName = extractUsername(req);
+            const created = await this.featureService.createFeatureToggle(
+                projectId,
+                req.body,
+                userName,
+            );
+            res.status(201).json(created);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async getEnvironment(

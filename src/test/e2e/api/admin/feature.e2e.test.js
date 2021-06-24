@@ -12,10 +12,10 @@ beforeAll(async () => {
     db = await dbInit('feature_api_serial', getLogger);
     app = await setupApp(db.stores);
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'featureX',
             description: 'the #1 feature',
-            enabled: true,
             strategies: [
                 {
                     name: 'default',
@@ -25,24 +25,27 @@ beforeAll(async () => {
         },
         'test',
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle({
-        name: 'featureY',
-        description: 'soon to be the #1 feature',
-        enabled: false,
-        strategies: [
-            {
-                name: 'baz',
-                parameters: {
-                    foo: 'bar',
-                },
-            },
-        ],
-    });
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'featureY',
+            description: 'soon to be the #1 feature',
+            strategies: [
+                {
+                    name: 'baz',
+                    parameters: {
+                        foo: 'bar',
+                    },
+                },
+            ],
+        },
+        'userName',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'featureZ',
             description: 'terrible feature',
-            enabled: true,
             strategies: [
                 {
                     name: 'baz',
@@ -55,11 +58,10 @@ beforeAll(async () => {
         'test',
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'featureArchivedX',
             description: 'the #1 feature',
-            enabled: true,
-            archived: true,
             strategies: [
                 {
                     name: 'default',
@@ -69,12 +71,15 @@ beforeAll(async () => {
         },
         'test',
     );
+    await app.services.featureToggleServiceV2.archiveToggle(
+        'featureArchivedX',
+        'test',
+    );
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'featureArchivedY',
             description: 'soon to be the #1 feature',
-            enabled: false,
-            archived: true,
             strategies: [
                 {
                     name: 'baz',
@@ -86,12 +91,15 @@ beforeAll(async () => {
         },
         'test',
     );
+    await app.services.featureToggleServiceV2.archiveToggle(
+        'featureArchivedY',
+        'test',
+    );
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'featureArchivedZ',
             description: 'terrible feature',
-            enabled: true,
-            archived: true,
             strategies: [
                 {
                     name: 'baz',
@@ -103,12 +111,16 @@ beforeAll(async () => {
         },
         'test',
     );
+    await app.services.featureToggleServiceV2.archiveToggle(
+        'featureArchivedZ',
+        'test',
+    );
     await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
         {
             name: 'feature.with.variants',
             description: 'A feature toggle with variants',
             enabled: true,
-            archived: false,
             strategies: [{ name: 'default' }],
             variants: [
                 { name: 'control', weight: 50 },
@@ -150,7 +162,7 @@ test('cant get feature that dose not exist', async () => {
 });
 
 test('creates new feature toggle', async () => {
-    expect.assertions(3);
+    expect.assertions(2);
     return app.request
         .post('/api/admin/features')
         .send({
@@ -162,7 +174,6 @@ test('creates new feature toggle', async () => {
         .expect(201)
         .expect(res => {
             expect(res.body.name).toBe('com.test.feature');
-            expect(res.body.enabled).toBe(false);
             expect(res.body.createdAt).toBeTruthy();
         });
 });
@@ -250,8 +261,15 @@ test('can not toggle of feature that does not exist', async () => {
 
 test('can toggle a feature that does exist', async () => {
     expect.assertions(0);
+    const feature = await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'existing.feature',
+        },
+        'test',
+    );
     return app.request
-        .post('/api/admin/features/featureY/toggle')
+        .post(`/api/admin/features/${feature.name}/toggle`)
         .set('Content-Type', 'application/json')
         .expect(200);
 });

@@ -1,14 +1,12 @@
-'use strict';
+import joi from 'joi';
+import { nameType } from '../routes/admin-api/util';
 
-const joi = require('joi');
-const { nameType } = require('../routes/admin-api/util');
-
-const nameSchema = joi
+export const nameSchema = joi
     .object()
     .keys({ name: nameType })
     .options({ stripUnknown: true, allowUnknown: false, abortEarly: false });
 
-const constraintSchema = joi.object().keys({
+export const constraintSchema = joi.object().keys({
     contextName: joi.string(),
     operator: joi.string(),
     values: joi
@@ -23,7 +21,7 @@ const constraintSchema = joi.object().keys({
         .optional(),
 });
 
-const strategiesSchema = joi.object().keys({
+export const strategiesSchema = joi.object().keys({
     id: joi.string().optional(),
     name: nameType,
     constraints: joi
@@ -33,7 +31,7 @@ const strategiesSchema = joi.object().keys({
     parameters: joi.object(),
 });
 
-const variantsSchema = joi.object().keys({
+export const variantsSchema = joi.object().keys({
     name: nameType,
     weight: joi
         .number()
@@ -63,7 +61,28 @@ const variantsSchema = joi.object().keys({
     ),
 });
 
-const featureSchema = joi
+export const featureMetadataSchema = joi
+    .object()
+    .keys({
+        name: nameType,
+        stale: joi.boolean().default(false),
+        archived: joi.boolean().default(false),
+        type: joi.string().default('release'),
+        description: joi
+            .string()
+            .allow('')
+            .allow(null)
+            .optional(),
+        variants: joi
+            .array()
+            .allow(null)
+            .unique((a, b) => a.name === b.name)
+            .optional()
+            .items(variantsSchema),
+    })
+    .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
+
+export const featureSchema = joi
     .object()
     .keys({
         name: nameType,
@@ -79,8 +98,9 @@ const featureSchema = joi
             .optional(),
         strategies: joi
             .array()
-            .required()
-            .min(1)
+            .min(0)
+            .allow(null)
+            .optional()
             .items(strategiesSchema),
         variants: joi
             .array()
@@ -91,7 +111,7 @@ const featureSchema = joi
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
 
-const querySchema = joi
+export const querySchema = joi
     .object()
     .keys({
         tag: joi
@@ -108,18 +128,15 @@ const querySchema = joi
             .string()
             .allow(null)
             .optional(),
+        environment: joi
+            .string()
+            .allow(null)
+            .optional(),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
 
-const featureTagSchema = joi.object().keys({
+export const featureTagSchema = joi.object().keys({
     featureName: nameType,
     tagType: nameType,
     tagValue: joi.string(),
 });
-module.exports = {
-    featureSchema,
-    strategiesSchema,
-    nameSchema,
-    querySchema,
-    featureTagSchema,
-};

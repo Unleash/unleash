@@ -5,7 +5,7 @@ import FeatureTypeStore from '../db/feature-type-store';
 import StrategyStore from '../db/strategy-store';
 import ClientApplicationsDb from '../db/client-applications-store';
 import ClientInstanceStore from '../db/client-instance-store';
-import ClientMetricsStore from '../db/client-metrics-store';
+import { ClientMetricsStore } from '../db/client-metrics-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
 import ContextFieldStore from '../db/context-field-store';
 import SettingStore from '../db/setting-store';

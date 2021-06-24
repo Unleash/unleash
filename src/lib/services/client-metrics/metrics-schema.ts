@@ -1,8 +1,6 @@
-'use strict';
+import joi from 'joi';
 
-const joi = require('joi');
-
-const applicationSchema = joi
+export const applicationSchema = joi
     .object()
     .options({ stripUnknown: false })
     .keys({
@@ -29,5 +27,3 @@ const applicationSchema = joi
             .allow('')
             .optional(),
     });
-
-module.exports = applicationSchema;

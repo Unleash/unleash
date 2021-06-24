@@ -1,8 +1,7 @@
-'use strict';
+import EventEmitter from 'events';
 
-const { EventEmitter } = require('events');
-const ClientMetricStore = require('./client-metrics-store');
-const getLogger = require('../../test/fixtures/no-logger');
+import { ClientMetricsStore } from './client-metrics-store';
+import getLogger from '../../test/fixtures/no-logger';
 
 function getMockDb() {
     const list = [
@@ -28,7 +27,7 @@ test('should call database on startup', done => {
     jest.useFakeTimers('modern');
     const mock = getMockDb();
     const ee = new EventEmitter();
-    const store = new ClientMetricStore(mock, ee, getLogger);
+    const store = new ClientMetricsStore(mock as any, ee, getLogger);
 
     jest.runAllTicks();
 
@@ -49,7 +48,7 @@ test('should start poller even if initial database fetch fails', done => {
     const mock = getMockDb();
     mock.getMetricsLastHour = () => Promise.reject(new Error('oops'));
     const ee = new EventEmitter();
-    const store = new ClientMetricStore(mock, ee, getLogger, 100);
+    const store = new ClientMetricsStore(mock as any, ee, getLogger, 100);
     jest.runAllTicks();
 
     const metrics = [];
@@ -74,7 +73,7 @@ test('should poll for updates', done => {
     jest.useFakeTimers('modern');
     const mock = getMockDb();
     const ee = new EventEmitter();
-    const store = new ClientMetricStore(mock, ee, getLogger, 100);
+    const store = new ClientMetricsStore(mock as any, ee, getLogger, 100);
     jest.runAllTicks();
 
     const metrics = [];

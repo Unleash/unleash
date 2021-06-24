@@ -1,21 +1,27 @@
-'use strict';
-
-const moment = require('moment');
-
-const { EventEmitter } = require('events');
-const UnleashClientMetrics = require('./index');
+import EventEmitter from 'events';
+import moment from 'moment';
+import ClientMetricsService, { IClientApp } from './index';
+import getLogger from '../../../test/fixtures/no-logger';
 
 const appName = 'appName';
 const instanceId = 'instanceId';
 
-const getLogger = require('../../../test/fixtures/no-logger');
+const createMetricsService = cms =>
+    new ClientMetricsService(
+        {
+            clientMetricsStore: cms,
+            strategyStore: null,
+            featureToggleStore: null,
+            clientApplicationsStore: null,
+            clientInstanceStore: null,
+            eventStore: null,
+        },
+        { getLogger },
+    );
 
 test('should work without state', () => {
     const clientMetricsStore = new EventEmitter();
-    const metrics = new UnleashClientMetrics(
-        { clientMetricsStore },
-        { getLogger },
-    );
+    const metrics = createMetricsService(clientMetricsStore);
 
     expect(metrics.getAppsWithToggles()).toBeTruthy();
     expect(metrics.getTogglesMetrics()).toBeTruthy();
@@ -27,10 +33,7 @@ test('data should expire', () => {
     jest.useFakeTimers('modern');
 
     const clientMetricsStore = new EventEmitter();
-    const metrics = new UnleashClientMetrics(
-        { clientMetricsStore },
-        { getLogger },
-    );
+    const metrics = createMetricsService(clientMetricsStore);
 
     metrics.addPayload({
         appName,
@@ -58,22 +61,20 @@ test('data should expire', () => {
     });
 
     jest.advanceTimersByTime(60 * 1000);
-    expect(lastMinExpires === 1).toBe(true);
-    expect(lastHourExpires === 0).toBe(true);
+    expect(lastMinExpires).toBe(1);
+    expect(lastHourExpires).toBe(0);
 
     jest.advanceTimersByTime(60 * 60 * 1000);
-    expect(lastMinExpires === 1).toBe(true);
-    expect(lastHourExpires === 1).toBe(true);
+    expect(lastMinExpires).toBe(1);
+    expect(lastHourExpires).toBe(1);
 
     jest.useRealTimers();
+    metrics.destroy();
 });
 
 test('should listen to metrics from store', () => {
     const clientMetricsStore = new EventEmitter();
-    const metrics = new UnleashClientMetrics(
-        { clientMetricsStore },
-        { getLogger },
-    );
+    const metrics = createMetricsService(clientMetricsStore);
     clientMetricsStore.emit('metrics', {
         appName,
         instanceId,
@@ -89,8 +90,8 @@ test('should listen to metrics from store', () => {
         },
     });
 
-    expect(metrics.apps[appName].count === 123).toBeTruthy();
-    expect(metrics.globalCount === 123).toBeTruthy();
+    expect(metrics.apps[appName].count).toBe(123);
+    expect(metrics.globalCount).toBe(123);
 
     expect(metrics.getTogglesMetrics().lastHour.toggleX).toEqual({
         yes: 123,
@@ -116,7 +117,7 @@ test('should listen to metrics from store', () => {
         },
     });
 
-    expect(metrics.globalCount === 143).toBeTruthy();
+    expect(metrics.globalCount).toBe(143);
     expect(metrics.getTogglesMetrics().lastHour.toggleX).toEqual({
         yes: 133,
         no: 10,
@@ -131,10 +132,7 @@ test('should listen to metrics from store', () => {
 
 test('should build up list of seen toggles when new metrics arrives', () => {
     const clientMetricsStore = new EventEmitter();
-    const metrics = new UnleashClientMetrics(
-        { clientMetricsStore },
-        { getLogger },
-    );
+    const metrics = createMetricsService(clientMetricsStore);
     clientMetricsStore.emit('metrics', {
         appName,
         instanceId,
@@ -157,12 +155,12 @@ test('should build up list of seen toggles when new metrics arrives', () => {
     const appToggles = metrics.getAppsWithToggles();
     const togglesForApp = metrics.getSeenTogglesByAppName(appName);
 
-    expect(appToggles).toHaveLength(1);
-    expect(appToggles[0].seenToggles).toHaveLength(2);
+    expect(appToggles.length).toBe(1);
+    expect(appToggles[0].seenToggles.length).toBe(2);
     expect(appToggles[0].seenToggles).toContain('toggleX');
     expect(appToggles[0].seenToggles).toContain('toggleY');
 
-    expect(togglesForApp).toHaveLength(2);
+    expect(togglesForApp.length === 2);
     expect(togglesForApp).toContain('toggleX');
     expect(togglesForApp).toContain('toggleY');
     metrics.destroy();
@@ -170,10 +168,7 @@ test('should build up list of seen toggles when new metrics arrives', () => {
 
 test('should handle a lot of toggles', () => {
     const clientMetricsStore = new EventEmitter();
-    const metrics = new UnleashClientMetrics(
-        { clientMetricsStore },
-        { getLogger },
-    );
+    const metrics = createMetricsService(clientMetricsStore);
 
     const toggleCounts = {};
     for (let i = 0; i < 100; i++) {
@@ -192,7 +187,7 @@ test('should handle a lot of toggles', () => {
 
     const seenToggles = metrics.getSeenTogglesByAppName(appName);
 
-    expect(seenToggles).toHaveLength(100);
+    expect(seenToggles.length).toBe(100);
     metrics.destroy();
 });
 
@@ -200,10 +195,7 @@ test('should have correct values for lastMinute', () => {
     jest.useFakeTimers('modern');
 
     const clientMetricsStore = new EventEmitter();
-    const metrics = new UnleashClientMetrics(
-        { clientMetricsStore },
-        { getLogger },
-    );
+    const metrics = createMetricsService(clientMetricsStore);
 
     const now = new Date();
     const input = [
@@ -253,7 +245,7 @@ test('should have correct values for lastMinute', () => {
     });
 
     const seenToggles = metrics.getSeenTogglesByAppName(appName);
-    expect(seenToggles.length === 1).toBeTruthy();
+    expect(seenToggles.length).toBe(1);
 
     // metrics.se
     let c = metrics.getTogglesMetrics();
@@ -275,10 +267,7 @@ test('should have correct values for lastHour', () => {
     jest.useFakeTimers('modern');
 
     const clientMetricsStore = new EventEmitter();
-    const metrics = new UnleashClientMetrics(
-        { clientMetricsStore },
-        { getLogger },
-    );
+    const metrics = createMetricsService(clientMetricsStore);
 
     const now = new Date();
     const input = [
@@ -322,7 +311,7 @@ test('should have correct values for lastHour', () => {
 
     const seenToggles = metrics.getSeenTogglesByAppName(appName);
 
-    expect(seenToggles.length === 1).toBeTruthy();
+    expect(seenToggles.length).toBe(1);
 
     // metrics.se
     let c = metrics.getTogglesMetrics();
@@ -358,10 +347,7 @@ test('should have correct values for lastHour', () => {
 
 test('should not fail when toggle metrics is missing yes/no field', () => {
     const clientMetricsStore = new EventEmitter();
-    const metrics = new UnleashClientMetrics(
-        { clientMetricsStore },
-        { getLogger },
-    );
+    const metrics = createMetricsService(clientMetricsStore);
     clientMetricsStore.emit('metrics', {
         appName,
         instanceId,
@@ -403,20 +389,27 @@ test('should not fail when toggle metrics is missing yes/no field', () => {
 
 test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async () => {
     jest.useFakeTimers('modern');
-    const clientMetricsStore = new EventEmitter();
+    const clientMetricsStore: any = new EventEmitter();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
-    const clientApplicationsStore = {
+    const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
-    const clientInstanceStore = {
+    const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
-    const clientMetrics = new UnleashClientMetrics(
-        { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
+    const clientMetrics = new ClientMetricsService(
+        {
+            clientMetricsStore,
+            strategyStore: null,
+            featureToggleStore: null,
+            clientApplicationsStore,
+            clientInstanceStore,
+            eventStore: null,
+        },
         { getLogger },
     );
-    const client1 = {
+    const client1: IClientApp = {
         appName: 'test_app',
         instanceId: 'ava',
         strategies: [{ name: 'defaullt' }],
@@ -427,30 +420,42 @@ test('Multiple registrations of same appname and instanceid within same time per
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    jest.advanceTimersByTime(7 * 1000);
+    await jest.advanceTimersByTime(7 * 1000);
+
     expect(appStoreSpy).toHaveBeenCalledTimes(1);
+    expect(bulkSpy).toHaveBeenCalledTimes(1);
+
     const registrations = appStoreSpy.mock.calls[0][0];
-    expect(registrations).toHaveLength(1);
+
+    expect(registrations.length).toBe(1);
     expect(registrations[0].appName).toBe(client1.appName);
     expect(registrations[0].instanceId).toBe(client1.instanceId);
     expect(registrations[0].started).toBe(client1.started);
     expect(registrations[0].interval).toBe(client1.interval);
+
     jest.useRealTimers();
 });
 
 test('Multiple unique clients causes multiple registrations', async () => {
     jest.useFakeTimers('modern');
-    const clientMetricsStore = new EventEmitter();
+    const clientMetricsStore: any = new EventEmitter();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
-    const clientApplicationsStore = {
+    const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
-    const clientInstanceStore = {
+    const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
-    const clientMetrics = new UnleashClientMetrics(
-        { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
+    const clientMetrics = new ClientMetricsService(
+        {
+            clientMetricsStore,
+            strategyStore: null,
+            featureToggleStore: null,
+            clientApplicationsStore,
+            clientInstanceStore,
+            eventStore: null,
+        },
         { getLogger },
     );
     const client1 = {
@@ -473,70 +478,92 @@ test('Multiple unique clients causes multiple registrations', async () => {
     await clientMetrics.registerClient(client2, '127.0.0.1');
     await clientMetrics.registerClient(client2, '127.0.0.1');
     await clientMetrics.registerClient(client2, '127.0.0.1');
-    jest.advanceTimersByTime(7 * 1000);
+    await jest.advanceTimersByTime(7 * 1000);
+
     expect(appStoreSpy).toHaveBeenCalledTimes(1);
+    expect(bulkSpy).toHaveBeenCalledTimes(1);
+
     const registrations = appStoreSpy.mock.calls[0][0];
-    expect(registrations).toHaveLength(2);
+
+    expect(registrations.length).toBe(2);
     jest.useRealTimers();
 });
 test('Same client registered outside of dedup interval will be registered twice', async () => {
     jest.useFakeTimers('modern');
-    const clientMetricsStore = new EventEmitter();
+    const clientMetricsStore: any = new EventEmitter();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
-    const clientApplicationsStore = {
+    const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
-    const clientInstanceStore = {
+    const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
+
     const bulkInterval = 2000;
-    const clientMetrics = new UnleashClientMetrics(
-        { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
-        { getLogger, bulkInterval },
+
+    const clientMetrics = new ClientMetricsService(
+        {
+            clientMetricsStore,
+            strategyStore: null,
+            featureToggleStore: null,
+            clientApplicationsStore,
+            clientInstanceStore,
+            eventStore: null,
+        },
+        { getLogger },
+        bulkInterval,
     );
     const client1 = {
         appName: 'test_app',
         instanceId: 'client1',
-        strategies: [{ name: 'default' }],
+        strategies: [{ name: 'defaullt' }],
         started: new Date(),
         interval: 10,
     };
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    jest.advanceTimersByTime(3 * 1000);
+    await jest.advanceTimersByTime(3 * 1000);
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    jest.advanceTimersByTime(3 * 1000);
+    await jest.advanceTimersByTime(3 * 1000);
     expect(appStoreSpy).toHaveBeenCalledTimes(2);
-    const firstRegistrations = appStoreSpy.mock.calls[0][0];
-    const secondRegistrations = appStoreSpy.mock.calls[1][0];
-    expect(firstRegistrations[0].appName).toBe(secondRegistrations[0].appName);
-    expect(firstRegistrations[0].instanceId).toBe(
-        secondRegistrations[0].instanceId,
-    );
+    expect(bulkSpy).toHaveBeenCalledTimes(2);
+
+    const firstRegistrations = appStoreSpy.mock.calls[0][0][0];
+    const secondRegistrations = appStoreSpy.mock.calls[1][0][0];
+
+    expect(firstRegistrations.appName).toBe(secondRegistrations.appName);
+    expect(firstRegistrations.instanceId).toBe(secondRegistrations.instanceId);
     jest.useRealTimers();
 });
 
 test('No registrations during a time period will not call stores', async () => {
     jest.useFakeTimers('modern');
-    const clientMetricsStore = new EventEmitter();
+    const clientMetricsStore: any = new EventEmitter();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
-    const clientApplicationsStore = {
+    const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
-    const clientInstanceStore = {
+    const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const metrics = new UnleashClientMetrics(
-        { clientMetricsStore, clientApplicationsStore, clientInstanceStore },
+    const clientMetrics = new ClientMetricsService(
+        {
+            clientMetricsStore,
+            strategyStore: null,
+            featureToggleStore: null,
+            clientApplicationsStore,
+            clientInstanceStore,
+            eventStore: null,
+        },
         { getLogger },
     );
-    jest.advanceTimersByTime(6 * 1000);
+    await jest.advanceTimersByTime(6 * 1000);
     expect(appStoreSpy).toHaveBeenCalledTimes(0);
     expect(bulkSpy).toHaveBeenCalledTimes(0);
     jest.useRealTimers();

@@ -1,6 +1,4 @@
-'use strict';
-
-const joi = require('joi');
+import joi from 'joi';
 
 const countSchema = joi
     .object()
@@ -19,7 +17,7 @@ const countSchema = joi
         variants: joi.object().pattern(joi.string(), joi.number().min(0)),
     });
 
-const clientMetricsSchema = joi
+export const clientMetricsSchema = joi
     .object()
     .options({ stripUnknown: true })
     .keys({
@@ -34,5 +32,3 @@ const clientMetricsSchema = joi
                 toggles: joi.object().pattern(/.*/, countSchema),
             }),
     });
-
-module.exports = { clientMetricsSchema };

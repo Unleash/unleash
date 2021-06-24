@@ -106,7 +106,10 @@ class MetricsController extends Controller {
 
     async getApplications(req: Request, res: Response): Promise<void> {
         try {
-            const applications = await this.metrics.getApplications(req.query);
+            const query = req.query.strategyName
+                ? { strategyName: req.query.strategyName as string }
+                : {};
+            const applications = await this.metrics.getApplications(query);
             res.json({ applications });
         } catch (err) {
             handleErrors(res, this.logger, err);

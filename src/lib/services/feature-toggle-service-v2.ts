@@ -108,8 +108,8 @@ class FeatureToggleServiceV2 {
         return this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
     }
 
-    async getClientFeatures(): Promise<FeatureConfigurationClient[]> {
-        return this.featureStrategiesStore.getFeatureTogglesClient();
+    async getClientFeatures(query?: IFeatureToggleQuery): Promise<FeatureConfigurationClient[]> {
+        return this.featureStrategiesStore.getFeatures(query);
     }
 
     /**
@@ -117,7 +117,7 @@ class FeatureToggleServiceV2 {
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
      * @returns
      */
-    async getFeatureToggles(query: IFeatureToggleQuery): Promise<IFeatureToggle[]> {
+    async getFeatureToggles(query?: IFeatureToggleQuery): Promise<IFeatureToggle[]> {
         return this.featureStrategiesStore.getFeatures(query);
     }
 
@@ -152,7 +152,7 @@ class FeatureToggleServiceV2 {
         return featureStrategies;
     }
 
-    // TODO: add event etc.
+    
     async createFeatureToggle(value: IFeatureToggle, userName: string): Promise<IFeatureToggle> {
         this.logger.info(`${userName} creates feature toggle ${value.name}`);
         await this.validateName(value.name);

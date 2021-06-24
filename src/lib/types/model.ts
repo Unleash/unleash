@@ -22,6 +22,17 @@ export interface IFeatureToggle {
     variants: IVariant[];
 }
 
+export interface IFeatureToggleClient {
+    name: string;
+    description: string;
+    type: string;
+    project: string;
+    stale: boolean;
+    variants: IVariant[];
+    enabled: boolean;
+    strategies: IStrategyConfig[];
+}
+
 export interface IVariant {
     name: string;
     weight: number;
@@ -73,6 +84,7 @@ export interface IFeatureToggleQuery {
     tag?: string[][];
     project?: string[];
     namePrefix?: string;
+    environment?: string;
 }
 
 export interface ITag {

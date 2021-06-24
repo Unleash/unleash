@@ -10,6 +10,7 @@ import {
     IEnvironmentOverview,
     IFeatureOverview,
     IFeatureToggle,
+    IFeatureToggleClient,
     IFeatureToggleQuery,
     IStrategyConfig,
     IVariant,
@@ -289,7 +290,11 @@ class FeatureStrategiesStore {
     async getFeatures(
         featureQuery?: IFeatureToggleQuery,
         archived: boolean = false,
-    ): Promise<IFeatureToggle[]> {
+    ): Promise<IFeatureToggleClient[]> {
+        const environments = [':global:'];
+        if (featureQuery?.environment) {
+            environments.push(featureQuery.environment);
+        }
         const stopTimer = this.timer('getFeatureAdmin');
         let query = this.db('features')
             .select(
@@ -309,6 +314,7 @@ class FeatureStrategiesStore {
                 'feature_strategies.constraints as constraints',
             )
             .where({ archived: archived ? 1 : 0 })
+            .whereIn('feature_environments.environment', environments)
             .fullOuterJoin(
                 'feature_environments',
                 'feature_environments.feature_name',
@@ -353,8 +359,10 @@ class FeatureStrategiesStore {
             if (r.strategy_name) {
                 feature.strategies.push(this.getAdminStrategy(r));
             }
-            if (r.environment === ':global:') {
+            if (feature.enabled === undefined) {
                 feature.enabled = r.enabled;
+            } else {
+                feature.enabled = feature.enabled && r.enabled;
             }
             feature.name = r.name;
             feature.stale = r.stale;
@@ -371,50 +379,6 @@ class FeatureStrategiesStore {
             environment: r.environment,
             enabled: r.environment ? r.enabled : false,
         };
-    }
-
-    async getFeatureTogglesClient(): Promise<FeatureConfigurationClient[]> {
-        const stopTimer = this.timer('getAllFeatures');
-        const rows = await this.db
-            .select(
-                'features.name as feature_name',
-                'features.type as type',
-                'features.stale as stale',
-                'features.variants as variants',
-                'feature_strategies.strategy_name as strategy_name',
-                'feature_strategies.parameters as parameters',
-                'feature_strategies.constraints as constraints',
-                'feature_environments.enabled as enabled',
-            )
-            .from('features')
-            .where({ archived: 0 })
-            .fullOuterJoin(
-                'feature_strategies',
-                'feature_strategies.feature_name',
-                `features.name`,
-            )
-            .fullOuterJoin(
-                'feature_environments',
-                'feature_environments.feature_name',
-                `features.name`,
-            );
-        stopTimer();
-        const groupedByFeature = rows.reduce((acc, r) => {
-            if (acc[r.feature_name] !== undefined) {
-                acc[r.feature_name].strategies.push(this.getClientStrategy(r));
-            } else {
-                acc[r.feature_name] = {
-                    type: r.type,
-                    stale: r.stale,
-                    variants: r.variants,
-                    name: r.feature_name,
-                    enabled: true,
-                    strategies: [this.getClientStrategy(r)],
-                };
-            }
-            return acc;
-        }, {});
-        return Object.values(groupedByFeature);
     }
 
     async getProjectOverview(projectId: string): Promise<IFeatureOverview[]> {

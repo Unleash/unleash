@@ -19,6 +19,7 @@ process.setMaxListeners(0);
 
 async function resetDatabase(knex) {
     return Promise.all([
+        knex.table('environments').del(),
         knex.table('strategies').del(),
         knex.table('features').del(),
         knex.table('client_applications').del(),

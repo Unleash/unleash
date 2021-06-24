@@ -158,7 +158,7 @@ class FeatureToggleServiceV2 {
         await this.validateName(value.name);
         const featureData = await featureSchema.validateAsync(value);
         const createdToggle = await this.featureToggleStore.createFeature(featureData);
-        await this.environmentStore.connectFeatureToEnvironmentsForProject(value.name, value.project || 'default');
+        await this.environmentStore.connectFeatureToEnvironmentsForProject(value.name, createdToggle.project);
         await this.eventStore.store({
             type: FEATURE_CREATED,
             createdBy: userName,

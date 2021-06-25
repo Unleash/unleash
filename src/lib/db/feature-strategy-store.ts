@@ -516,7 +516,7 @@ class FeatureStrategiesStore {
     private getAdminStrategy(r: any): IStrategyConfig {
         return {
             name: r.strategy_name,
-            constraints: r.constraints,
+            constraints: r.constraints || [],
             parameters: r.parameters,
             id: r.strategy_id,
         };

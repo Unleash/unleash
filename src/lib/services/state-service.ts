@@ -1,34 +1,67 @@
-const { stateSchema } = require('./state-schema');
-const {
-    FEATURE_IMPORT,
-    DROP_FEATURES,
-    STRATEGY_IMPORT,
-    DROP_STRATEGIES,
-    TAG_IMPORT,
-    DROP_TAGS,
-    FEATURE_TAG_IMPORT,
+import { stateSchema } from './state-schema';
+import {
     DROP_FEATURE_TAGS,
-    TAG_TYPE_IMPORT,
-    DROP_TAG_TYPES,
-    PROJECT_IMPORT,
+    DROP_FEATURES,
     DROP_PROJECTS,
-} = require('../types/events');
+    DROP_STRATEGIES,
+    DROP_TAG_TYPES,
+    DROP_TAGS,
+    FEATURE_IMPORT,
+    FEATURE_TAG_IMPORT,
+    PROJECT_IMPORT,
+    STRATEGY_IMPORT,
+    TAG_IMPORT,
+    TAG_TYPE_IMPORT,
+} from '../types/events';
 
-const {
-    readFile,
-    parseFile,
-    filterExisting,
-    filterEqual,
-} = require('./state-util');
+import { filterEqual, filterExisting, parseFile, readFile } from './state-util';
+import FeatureToggleStore from '../db/feature-toggle-store';
+import TagTypeStore, { ITagType } from '../db/tag-type-store';
+import FeatureTagStore, { IFeatureTag } from '../db/feature-tag-store';
+import ProjectStore, { IProject } from '../db/project-store';
+import TagStore from '../db/tag-store';
+import StrategyStore, { IStrategy } from '../db/strategy-store';
+import { Logger } from '../logger';
+import { IUnleashStores } from '../types/stores';
+import { IUnleashConfig } from '../types/option';
+import EventStore from '../db/event-store';
+import { FeatureToggle, ITag } from '../types/model';
 
-class StateService {
-    constructor(stores, { getLogger }) {
+export interface IBackupOption {
+    includeFeatureToggles: boolean;
+    includeStrategies: boolean;
+    includeProjects: boolean;
+    includeTags: boolean;
+}
+
+export default class StateService {
+    private logger: Logger;
+
+    private toggleStore: FeatureToggleStore;
+
+    private strategyStore: StrategyStore;
+
+    private eventStore: EventStore;
+
+    private tagStore: TagStore;
+
+    private tagTypeStore: TagTypeStore;
+
+    private projectStore: ProjectStore;
+
+    private featureTagStore: FeatureTagStore;
+
+    constructor(
+        stores: IUnleashStores,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+    ) {
         this.eventStore = stores.eventStore;
         this.toggleStore = stores.featureToggleStore;
         this.strategyStore = stores.strategyStore;
         this.tagStore = stores.tagStore;
         this.tagTypeStore = stores.tagTypeStore;
         this.projectStore = stores.projectStore;
+        this.featureTagStore = stores.featureTagStore;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -86,7 +119,7 @@ class StateService {
         userName,
         dropBeforeImport,
         keepExisting,
-    }) {
+    }): Promise<void> {
         this.logger.info(`Importing ${features.length} feature toggles`);
         const oldToggles = dropBeforeImport
             ? []
@@ -106,7 +139,8 @@ class StateService {
             features
                 .filter(filterExisting(keepExisting, oldToggles))
                 .filter(filterEqual(oldToggles))
-                .map(feature =>
+                .map(feature => Promise.resolve()),
+            /*
                     this.toggleStore.importFeature(feature).then(() =>
                         this.eventStore.store({
                             type: FEATURE_IMPORT,
@@ -114,7 +148,7 @@ class StateService {
                             data: feature,
                         }),
                     ),
-                ),
+*/
         );
     }
 
@@ -123,7 +157,7 @@ class StateService {
         userName,
         dropBeforeImport,
         keepExisting,
-    }) {
+    }): Promise<void> {
         this.logger.info(`Importing ${strategies.length} strategies`);
         const oldStrategies = dropBeforeImport
             ? []
@@ -160,7 +194,7 @@ class StateService {
         userName,
         dropBeforeImport,
         keepExisting,
-    }) {
+    }): Promise<void> {
         this.logger.info(`Import ${projects.length} projects`);
         const oldProjects = dropBeforeImport
             ? []
@@ -199,7 +233,7 @@ class StateService {
         userName,
         dropBeforeImport,
         keepExisting,
-    }) {
+    }): Promise<void> {
         this.logger.info(
             `Importing ${tagTypes.length} tagtypes, ${tags.length} tags and ${featureTags.length} feature tags`,
         );
@@ -209,12 +243,12 @@ class StateService {
         const oldTags = dropBeforeImport ? [] : await this.tagStore.getAll();
         const oldFeatureTags = dropBeforeImport
             ? []
-            : await this.toggleStore.getAllFeatureTags();
+            : await this.featureTagStore.getAllFeatureTags();
         if (dropBeforeImport) {
             this.logger.info(
                 'Dropping all existing featuretags, tags and tagtypes',
             );
-            await this.toggleStore.dropFeatureTags();
+            await this.featureTagStore.dropFeatureTags();
             await this.tagStore.dropTags();
             await this.tagTypeStore.dropTagTypes();
             await this.eventStore.batchStore([
@@ -250,23 +284,27 @@ class StateService {
         );
     }
 
-    compareFeatureTags = (old, tag) =>
+    compareFeatureTags: (old: IFeatureTag, tag: IFeatureTag) => boolean = (
+        old,
+        tag,
+    ) =>
         old.featureName === tag.featureName &&
         old.tagValue === tag.tagValue &&
         old.tagType === tag.tagType;
 
     async importFeatureTags(
-        featureTags,
-        keepExisting,
-        oldFeatureTags,
-        userName,
-    ) {
+        featureTags: IFeatureTag[],
+        keepExisting: boolean,
+        oldFeatureTags: IFeatureTag[],
+        userName: string,
+    ): Promise<void> {
         const featureTagsToInsert = featureTags.filter(tag =>
             keepExisting
                 ? !oldFeatureTags.some(old => this.compareFeatureTags(old, tag))
                 : true,
         );
         if (featureTagsToInsert.length > 0) {
+            /*
             const importedFeatureTags = await this.toggleStore.importFeatureTags(
                 featureTagsToInsert,
             );
@@ -276,13 +314,19 @@ class StateService {
                 data: tag,
             }));
             await this.eventStore.batchStore(importedFeatureTagEvents);
+*/
         }
     }
 
-    compareTags = (old, tag) =>
+    compareTags = (old: ITag, tag: ITag): boolean =>
         old.type === tag.type && old.value === tag.value;
 
-    async importTags(tags, keepExisting, oldTags, userName) {
+    async importTags(
+        tags: ITag[],
+        keepExisting: boolean,
+        oldTags: ITag[],
+        userName: string,
+    ): Promise<void> {
         const tagsToInsert = tags.filter(tag =>
             keepExisting
                 ? !oldTags.some(old => this.compareTags(old, tag))
@@ -299,7 +343,12 @@ class StateService {
         }
     }
 
-    async importTagTypes(tagTypes, keepExisting, oldTagTypes = [], userName) {
+    async importTagTypes(
+        tagTypes: ITagType[],
+        keepExisting: boolean,
+        oldTagTypes: ITagType[] = [],
+        userName: string,
+    ): Promise<void> {
         const tagTypesToInsert = tagTypes.filter(tagType =>
             keepExisting
                 ? !oldTagTypes.some(t => t.name === tagType.name)
@@ -323,22 +372,30 @@ class StateService {
         includeStrategies = true,
         includeProjects = true,
         includeTags = true,
-    }) {
+    }): Promise<{
+        features: FeatureToggle[];
+        strategies: IStrategy[];
+        version: number;
+        projects: IProject[];
+        tagTypes: ITagType[];
+        tags: ITag[];
+        featureTags: IFeatureTag[];
+    }> {
         return Promise.all([
             includeFeatureToggles
                 ? this.toggleStore.getFeatures()
-                : Promise.resolve(),
+                : Promise.resolve([]),
             includeStrategies
                 ? this.strategyStore.getEditableStrategies()
-                : Promise.resolve(),
+                : Promise.resolve([]),
             this.projectStore && includeProjects
                 ? this.projectStore.getAll()
-                : Promise.resolve(),
-            includeTags ? this.tagTypeStore.getAll() : Promise.resolve(),
-            includeTags ? this.tagStore.getAll() : Promise.resolve(),
+                : Promise.resolve([]),
+            includeTags ? this.tagTypeStore.getAll() : Promise.resolve([]),
+            includeTags ? this.tagStore.getAll() : Promise.resolve([]),
             includeTags
-                ? this.toggleStore.getAllFeatureTags()
-                : Promise.resolve(),
+                ? this.featureTagStore.getAllFeatureTags()
+                : Promise.resolve([]),
         ]).then(
             ([
                 features,

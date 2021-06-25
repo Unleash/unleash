@@ -265,11 +265,12 @@ class FeatureStrategiesStore {
             acc.lastSeenAt = r.last_seen_at;
             acc.type = r.type;
             if (!acc.environments[r.environment]) {
-                acc.environments[r.environment] = {};
+                acc.environments[r.environment] = {
+                    name: r.environment,
+                };
             }
             const env = acc.environments[r.environment];
             env.enabled = r.enabled;
-            env.environment = r.environment;
             if (!env.strategies) {
                 env.strategies = [];
             }

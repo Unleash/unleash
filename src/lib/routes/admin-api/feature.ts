@@ -108,10 +108,16 @@ class FeatureController extends Controller {
     async getToggle(req: Request, res: Response): Promise<void> {
         try {
             const name = req.params.featureName;
-            const feature = await this.featureService2.getFeature(name);
-            res.json(feature).end();
+            const feature = await this.featureService2.getFeatureToggle(name);
+            const strategies =
+                feature.environments.find(e => e.name === GLOBAL_ENV)
+                    ?.strategies || [];
+            res.json({
+                ...feature,
+                strategies,
+            }).end();
         } catch (err) {
-            res.status(404).json({ error: 'Could not find feature' });
+            handleErrors(res, this.logger, err);
         }
     }
 

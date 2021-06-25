@@ -197,7 +197,10 @@ class FeatureController extends Controller {
                 }),
             );
 
-            res.status(201).json(createdFeature);
+            res.status(201).json({
+                createdFeature,
+                strategies: toggle.strategies,
+            });
         } catch (error) {
             this.logger.warn(error);
             console.log(error);

@@ -145,20 +145,19 @@ class FeatureToggleServiceV2 {
 
     /**
      * @deprecated
-     * @param updatedFeature
-     * @param userName
+     * @param featureName 
+     * @returns 
      */
-    async updateFeatureToggleLegacy(updatedFeature: FeatureToggleDTO, userName: string): Promise<FeatureToggle> {
-        const projectId = await this.featureToggleStore.getProjectId(updatedFeature.name);
-        return this.updateFeatureToggle(projectId, updatedFeature, userName);
+    async getProjectId(featureName: string): Promise<string> {
+        return this.featureToggleStore.getProjectId(featureName);
     }
 
     async updateFeatureToggle(projectId: string, updatedFeature: FeatureToggleDTO, userName: string): Promise<FeatureToggle> {
         this.logger.info(`${userName} updates feature toggle ${updatedFeature.name}`);
 
         await this.featureToggleStore.hasFeature(updatedFeature.name);
-        const value = await featureSchema.validateAsync(updatedFeature);
-        await this.featureToggleStore.updateFeature(projectId, value);
+        
+        const featureToggle = await this.featureToggleStore.updateFeature(projectId, updatedFeature);
         const tags =
             (await this.featureTagStore.getAllTagsForFeature(
                 updatedFeature.name,
@@ -166,10 +165,10 @@ class FeatureToggleServiceV2 {
         await this.eventStore.store({
             type: FEATURE_UPDATED,
             createdBy: userName,
-            data: value,
+            data: featureToggle,
             tags,
         });
-        return value;
+        return featureToggle;
     }
 
     async removeAllStrategiesForEnv(toggleName: string, environment: string = GLOBAL_ENV): Promise<void> {

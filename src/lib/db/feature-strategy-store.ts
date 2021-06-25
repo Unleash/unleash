@@ -93,7 +93,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         environment: input.environment,
         strategy_name: input.strategyName,
         parameters: input.parameters,
-        constraints: JSON.stringify(input.constraints),
+        constraints: JSON.stringify(input.constraints || []),
         created_at: input.createdAt,
     };
 }
@@ -260,6 +260,7 @@ class FeatureStrategiesStore {
                 acc.environments = {};
             }
             acc.name = r.name;
+            acc.description = r.description;
             acc.stale = r.stale;
             acc.variants = r.variants;
             acc.lastSeenAt = r.last_seen_at;
@@ -360,7 +361,9 @@ class FeatureStrategiesStore {
                 feature.enabled = feature.enabled && r.enabled;
             }
             feature.name = r.name;
+            feature.description = r.description;
             feature.stale = r.stale;
+            feature.type = r.type;
             feature.variants = r.variants;
             feature.lastSeenAt = r.last_seen_at;
             acc[r.name] = feature;
@@ -501,15 +504,6 @@ class FeatureStrategiesStore {
             name: r.environment,
             displayName: r.display_name,
             enabled: r.enabled,
-        };
-    }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    private getClientStrategy(r: any): Omit<IStrategyConfig, 'id'> {
-        return {
-            name: r.strategy_name,
-            constraints: r.constraints,
-            parameters: r.parameters,
         };
     }
 

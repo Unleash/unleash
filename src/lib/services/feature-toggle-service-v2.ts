@@ -200,6 +200,7 @@ class FeatureToggleServiceV2 {
         return {
             name: project.name,
             description: project.description,
+            health: project.health,
             features,
             members,
             version: 1

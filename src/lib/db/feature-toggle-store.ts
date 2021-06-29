@@ -152,14 +152,19 @@ export default class FeatureToggleStore {
     }
 
     dtoToRow(project: string, data: FeatureToggleDTO): FeaturesTable {
-        return {
+        const row = {
             name: data.name,
             description: data.description,
             type: data.type,
             project,
             stale: data.stale,
             variants: data.variants ? JSON.stringify(data.variants) : null,
+            created_at: data.createdAt,
         };
+        if (!row.created_at) {
+            delete row.created_at;
+        }
+        return row;
     }
 
     async createFeature(
@@ -220,6 +225,15 @@ export default class FeatureToggleStore {
     }
 
     async getFeaturesBy(params: {
+        archived?: boolean;
+        project?: string;
+        stale?: boolean;
+    }): Promise<FeatureToggle[]> {
+        const rows = await this.db(TABLE).where(params);
+        return rows.map(this.rowToFeature);
+    }
+
+    async getFeaturesByInternal(params: {
         archived?: boolean;
         project?: string;
         stale?: boolean;

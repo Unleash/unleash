@@ -16,6 +16,7 @@ export interface FeatureToggleDTO {
     type?: string;
     stale?: boolean;
     variants?: IVariant[];
+    createdAt?: Date;
 }
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
@@ -86,6 +87,7 @@ export interface IProjectOverview {
     features: IFeatureOverview[];
     members: number;
     version: number;
+    health: number;
 }
 
 export interface IProjectParam {

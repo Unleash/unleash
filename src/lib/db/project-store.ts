@@ -3,13 +3,14 @@ import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
 
-const COLUMNS = ['id', 'name', 'description', 'created_at'];
+const COLUMNS = ['id', 'name', 'description', 'created_at', 'health'];
 const TABLE = 'projects';
 
 export interface IProject {
     id: string;
     name: string;
     description: string;
+    health: number;
     createdAt: Date;
 }
 
@@ -22,6 +23,11 @@ interface IProjectInsert {
 interface IProjectArchived {
     id: string;
     archived: boolean;
+}
+
+interface IProjectHealthUpdate {
+    id: string;
+    health: number;
 }
 
 class ProjectStore {
@@ -73,6 +79,12 @@ class ProjectStore {
                     archived: row.archived === 1,
                 };
             });
+    }
+
+    async updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void> {
+        await this.db(TABLE)
+            .where({ id: healthUpdate.id })
+            .update({ health: healthUpdate.health });
     }
 
     async create(project): Promise<IProject> {
@@ -137,6 +149,7 @@ class ProjectStore {
             name: row.name,
             description: row.description,
             createdAt: row.created_at,
+            health: row.health || 100,
         };
     }
 }

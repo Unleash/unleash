@@ -1,3 +1,4 @@
+import moment from 'moment';
 import User from '../types/user';
 import { AccessService, IUserWithRole, RoleName } from './access-service';
 import ProjectStore, { IProject } from '../db/project-store';
@@ -16,10 +17,15 @@ import {
 } from '../types/events';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
-import { features } from 'process';
 import FeatureTypeStore from '../db/feature-type-store';
+import { FeatureToggle } from '../types/model';
+import Timer = NodeJS.Timer;
 
 const getCreatedBy = (user: User) => user.email || user.username;
+
+const MILLISECONDS_IN_DAY = 86400000;
+
+const ONE_HOUR = 3600000;
 
 const DEFAULT_PROJECT = 'default';
 
@@ -40,6 +46,8 @@ export default class ProjectService {
     private featureTypeStore: FeatureTypeStore;
 
     private logger: any;
+
+    private timers: Timer[] = [];
 
     constructor(
         {
@@ -63,17 +71,30 @@ export default class ProjectService {
         this.featureToggleStore = featureToggleStore;
         this.featureTypeStore = featureTypeStore;
         this.logger = config.getLogger('services/project-service.js');
+        this.timers.push(
+            setInterval(() => this.setHealthRating(), ONE_HOUR).unref(),
+        );
+        process.nextTick(() => this.setHealthRating());
     }
 
-    async setHealthRating() {
+    async setHealthRating(): Promise<void> {
         const projects = await this.getProjects();
 
-        projects.forEach(project => {
-            this.calculateHealthRating(project);
-        });
+        await Promise.all(
+            projects.map(async project => {
+                const newHealth = await this.calculateHealthRating(project);
+                await this.projectStore.updateHealth({
+                    id: project.id,
+                    health: newHealth,
+                });
+            }),
+        );
     }
 
-    private async getPotentiallyStaleToggles(activeToggles) {
+    private async getPotentiallyStaleToggles(
+        activeToggles,
+    ): Promise<FeatureToggle[]> {
+        const today = new Date().valueOf();
         const featureTypes = await this.featureTypeStore.getAll();
 
         const featureTypeMap = featureTypes.reduce((acc, current) => {
@@ -82,55 +103,41 @@ export default class ProjectService {
             return acc;
         }, {});
 
-        const result = activeToggles.filter(
-            feature => isFeatureExpired(feature) && !feature.stale,
-        );
-
-        return result;
+        return activeToggles.filter(feature => {
+            const diff = today - feature.createdAt.valueOf();
+            return diff > featureTypeMap[feature.type] * MILLISECONDS_IN_DAY;
+        });
     }
 
-    async calculateHealthRating(project: IProject) {
+    private getHealthRating(
+        toggleCount: number,
+        staleToggleCount: number,
+        potentiallyStaleCount: number,
+    ): number {
+        const startPercentage = 100;
+        const stalePercentage = (staleToggleCount / toggleCount) * 100 || 0;
+        const potentiallyStalePercentage =
+            (potentiallyStaleCount / toggleCount) * 100 || 0;
+        const rating = Math.round(
+            startPercentage - stalePercentage - potentiallyStalePercentage,
+        );
+        return rating;
+    }
+
+    async calculateHealthRating(project: IProject): Promise<number> {
         const toggles = await this.featureToggleStore.getFeaturesBy({
             project: project.id,
         });
 
         const activeToggles = toggles.filter(feature => !feature.stale);
         const staleToggles = toggles.length - activeToggles.length;
-        const potentiallyStaleToggles = this.getPotentiallyStaleToggles(
+        const potentiallyStaleToggles = await this.getPotentiallyStaleToggles(
             activeToggles,
         );
-
-        const getHealthRating = (
-            total,
-            staleTogglesCount,
-            potentiallyStaleTogglesCount,
-        ) => {
-            const startPercentage = 100;
-
-            const stalePercentage = (staleTogglesCount / total) * 100;
-
-            const potentiallyStalePercentage =
-                (potentiallyStaleTogglesCount / total) * 100;
-
-            return Math.round(
-                startPercentage - stalePercentage - potentiallyStalePercentage,
-            );
-        };
-
-        const total = features.length;
-        const activeTogglesArray = getActiveToggles();
-        const potentiallyStaleToggles = getPotentiallyStaleToggles(
-            activeTogglesArray,
-        );
-
-        const activeTogglesCount = activeTogglesArray.length;
-        const staleTogglesCount = features.length - activeTogglesCount;
-        const potentiallyStaleTogglesCount = potentiallyStaleToggles.length;
-
-        const healthRating = getHealthRating(
-            total,
-            staleTogglesCount,
-            potentiallyStaleTogglesCount,
+        return this.getHealthRating(
+            toggles.length,
+            staleToggles,
+            potentiallyStaleToggles.length,
         );
     }
 
@@ -186,7 +193,7 @@ export default class ProjectService {
 
         if (toggles.length > 0) {
             throw new InvalidOperationError(
-                'You can not delete as project with active feature toggles',
+                'You can not delete a project with active feature toggles',
             );
         }
 

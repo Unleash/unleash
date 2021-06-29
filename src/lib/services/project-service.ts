@@ -16,6 +16,8 @@ import {
 } from '../types/events';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
+import { features } from 'process';
+import FeatureTypeStore from '../db/feature-type-store';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -35,6 +37,8 @@ export default class ProjectService {
 
     private featureToggleStore: FeatureToggleStore;
 
+    private featureTypeStore: FeatureTypeStore;
+
     private logger: any;
 
     constructor(
@@ -42,9 +46,13 @@ export default class ProjectService {
             projectStore,
             eventStore,
             featureToggleStore,
+            featureTypeStore,
         }: Pick<
-        IUnleashStores,
-        'projectStore' | 'eventStore' | 'featureToggleStore'
+            IUnleashStores,
+            | 'projectStore'
+            | 'eventStore'
+            | 'featureToggleStore'
+            | 'featureTypeStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -53,7 +61,77 @@ export default class ProjectService {
         this.accessService = accessService;
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
+        this.featureTypeStore = featureTypeStore;
         this.logger = config.getLogger('services/project-service.js');
+    }
+
+    async setHealthRating() {
+        const projects = await this.getProjects();
+
+        projects.forEach(project => {
+            this.calculateHealthRating(project);
+        });
+    }
+
+    private async getPotentiallyStaleToggles(activeToggles) {
+        const featureTypes = await this.featureTypeStore.getAll();
+
+        const featureTypeMap = featureTypes.reduce((acc, current) => {
+            acc[current.id] = current.lifetimeDays;
+
+            return acc;
+        }, {});
+
+        const result = activeToggles.filter(
+            feature => isFeatureExpired(feature) && !feature.stale,
+        );
+
+        return result;
+    }
+
+    async calculateHealthRating(project: IProject) {
+        const toggles = await this.featureToggleStore.getFeaturesBy({
+            project: project.id,
+        });
+
+        const activeToggles = toggles.filter(feature => !feature.stale);
+        const staleToggles = toggles.length - activeToggles.length;
+        const potentiallyStaleToggles = this.getPotentiallyStaleToggles(
+            activeToggles,
+        );
+
+        const getHealthRating = (
+            total,
+            staleTogglesCount,
+            potentiallyStaleTogglesCount,
+        ) => {
+            const startPercentage = 100;
+
+            const stalePercentage = (staleTogglesCount / total) * 100;
+
+            const potentiallyStalePercentage =
+                (potentiallyStaleTogglesCount / total) * 100;
+
+            return Math.round(
+                startPercentage - stalePercentage - potentiallyStalePercentage,
+            );
+        };
+
+        const total = features.length;
+        const activeTogglesArray = getActiveToggles();
+        const potentiallyStaleToggles = getPotentiallyStaleToggles(
+            activeTogglesArray,
+        );
+
+        const activeTogglesCount = activeTogglesArray.length;
+        const staleTogglesCount = features.length - activeTogglesCount;
+        const potentiallyStaleTogglesCount = potentiallyStaleToggles.length;
+
+        const healthRating = getHealthRating(
+            total,
+            staleTogglesCount,
+            potentiallyStaleTogglesCount,
+        );
     }
 
     async getProjects(): Promise<IProject[]> {

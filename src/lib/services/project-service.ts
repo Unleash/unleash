@@ -47,7 +47,7 @@ export default class ProjectService {
 
     private logger: any;
 
-    private timers: Timer[] = [];
+    private healthRatingTimer: Timer;
 
     constructor(
         {
@@ -71,9 +71,10 @@ export default class ProjectService {
         this.featureToggleStore = featureToggleStore;
         this.featureTypeStore = featureTypeStore;
         this.logger = config.getLogger('services/project-service.js');
-        this.timers.push(
-            setInterval(() => this.setHealthRating(), ONE_HOUR).unref(),
-        );
+        this.healthRatingTimer = setInterval(
+            () => this.setHealthRating(),
+            ONE_HOUR,
+        ).unref();
         process.nextTick(() => this.setHealthRating());
     }
 
@@ -283,6 +284,10 @@ export default class ProjectService {
         }
 
         await this.accessService.removeUserFromRole(userId, role.id);
+    }
+
+    destroy(): void {
+        clearInterval(this.healthRatingTimer);
     }
 }
 

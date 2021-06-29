@@ -377,6 +377,7 @@ class FeatureStrategiesStore {
             }
             feature.name = r.name;
             feature.description = r.description;
+            feature.project = r.project;
             feature.stale = r.stale;
             feature.type = r.type;
             feature.variants = r.variants;

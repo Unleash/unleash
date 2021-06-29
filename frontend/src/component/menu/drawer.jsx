@@ -1,7 +1,9 @@
-import { Divider, Drawer, List, Icon } from '@material-ui/core';
+import { Divider, Drawer, List } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import GitHubIcon from '@material-ui/icons/GitHub';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
 import styles from './drawer.module.scss';
 
@@ -18,17 +20,9 @@ const filterByFlags = flags => r => {
 
 function getIcon(IconComponent) {
     if (IconComponent === 'c_github') {
-        return (
-            <i
-                className={classnames(
-                    'material-icons',
-                    styles.navigationIcon,
-                    styles.iconGitHub
-                )}
-            />
-        );
+        return <GitHubIcon className={classnames(styles.navigationIcon)} />;
     } else if (IconComponent === 'library_books') {
-        return <Icon className={styles.navigationIcon}>library_books</Icon>;
+        return <LibraryBooksIcon className={styles.navigationIcon} />;
     } else {
         return <IconComponent className={styles.navigationIcon} />;
     }

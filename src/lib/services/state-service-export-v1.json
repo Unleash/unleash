@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "features": [
+    {
+      "name": "this-is-fun",
+      "description": "",
+      "type": "release",
+      "project": "default",
+      "enabled": true,
+      "stale": false,
+      "strategies": [
+        {
+          "name": "default",
+          "parameters": {}
+        }
+      ],
+      "variants": [],
+      "createdAt": "2021-03-08T11:39:39.780Z",
+      "lastSeenAt": null
+    },
+    {
+      "name": "this-is-not-fun",
+      "description": "",
+      "type": "operational",
+      "project": "default",
+      "enabled": true,
+      "stale": false,
+      "strategies": [
+        {
+          "name": "default",
+          "parameters": {}
+        }
+      ],
+      "variants": [],
+      "createdAt": "2021-03-08T11:40:10.537Z",
+      "lastSeenAt": null
+    }
+  ],
+  "strategies": [],
+  "projects": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default project",
+      "createdAt": "2021-03-08T12:26:23.690Z"
+    }
+  ],
+  "tagTypes": [
+    {
+      "name": "simple",
+      "description": "Used to simplify filtering of features",
+      "icon": "#"
+    }
+  ],
+  "tags": [
+    {
+      "type": "simple",
+      "value": "hello"
+    },
+    {
+      "type": "simple",
+      "value": "goodbye"
+    },
+    {
+      "type": "simple",
+      "value": "something"
+    },
+    {
+      "type": "simple",
+      "value": "yesterday"
+    }
+  ],
+  "featureTags": [
+    {
+      "featureName": "this-is-fun",
+      "type": "simple",
+      "value": "hello"
+    },
+    {
+      "featureName": "this-is-fun",
+      "type": "simple",
+      "value": "goodbye"
+    },
+    {
+      "featureName": "this-is-not-fun",
+      "type": "simple",
+      "value": "something"
+    },
+    {
+      "featureName": "this-is-not-fun",
+      "type": "simple",
+      "value": "yesterday"
+    }
+  ]
+}

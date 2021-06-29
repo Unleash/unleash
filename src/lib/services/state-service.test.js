@@ -16,6 +16,8 @@ const {
     PROJECT_IMPORT,
 } = require('../types/events');
 
+const oldExportExample = require('./state-service-export-v1.json');
+
 function getSetup() {
     const stores = store.createStores();
     return {
@@ -569,4 +571,24 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
         dropBeforeImport: true,
     });
     expect(await stores.featureStrategiesStore.getAll()).toHaveLength(0);
+});
+
+test('Import v1 and exporting v2 should work', async () => {
+    const { stateService } = getSetup();
+    await stateService.import({
+        data: oldExportExample,
+        dropBeforeImport: true,
+        userName: 'testing',
+    });
+    const exported = await stateService.export({});
+    const strategiesCount = oldExportExample.features.reduce(
+        (acc, f) => acc + f.strategies.length,
+        0,
+    );
+    expect(
+        exported.features.every(f =>
+            oldExportExample.features.some(old => old.name === f.name),
+        ),
+    ).toBeTruthy();
+    expect(exported.featureStrategies).toHaveLength(strategiesCount);
 });

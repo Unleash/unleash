@@ -254,7 +254,7 @@ class FeatureController extends Controller {
                 updatedFeature.enabled,
                 userName,
             );
-            res.status(201).json({
+            res.status(200).json({
                 ...updatedToggle,
                 enabled,
                 strategies,

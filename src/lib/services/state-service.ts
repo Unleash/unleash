@@ -28,7 +28,6 @@ import EventStore from '../db/event-store';
 import {
     FeatureToggle,
     IEnvironment,
-    IEnvironmentDetail,
     IFeatureEnvironment,
     ITag,
 } from '../types/model';
@@ -109,24 +108,6 @@ export default class StateService {
     }): Promise<void> {
         const importData = await stateSchema.validateAsync(data);
 
-        if (importData.strategies) {
-            await this.importStrategies({
-                strategies: data.strategies,
-                userName,
-                dropBeforeImport,
-                keepExisting,
-            });
-        }
-
-        if (importData.projects) {
-            await this.importProjects({
-                projects: data.projects,
-                userName,
-                dropBeforeImport,
-                keepExisting,
-            });
-        }
-
         if (importData.features) {
             let projectData;
             if (!importData.version || importData.version === 1) {
@@ -157,11 +138,34 @@ export default class StateService {
             });
         }
 
+        if (importData.strategies) {
+            await this.importStrategies({
+                strategies: data.strategies,
+                userName,
+                dropBeforeImport,
+                keepExisting,
+            });
+        }
+
+        if (importData.projects) {
+            await this.importProjects({
+                projects: data.projects,
+                userName,
+                dropBeforeImport,
+                keepExisting,
+            });
+        }
+
         if (importData.tagTypes && importData.tags) {
             await this.importTagData({
                 tagTypes: data.tagTypes,
                 tags: data.tags,
-                featureTags: data.featureTags || [],
+                featureTags:
+                    data.featureTags.map(t => ({
+                        featureName: t.featureName,
+                        tagValue: t.tagValue || t.value,
+                        tagType: t.tagType || t.type,
+                    })) || [],
                 userName,
                 dropBeforeImport,
                 keepExisting,

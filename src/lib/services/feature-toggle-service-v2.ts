@@ -5,7 +5,9 @@ import { Logger } from '../logger';
 import FeatureStrategiesStore, { FeatureConfigurationClient, IFeatureStrategy } from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
 import {
-    FeatureToggle, FeatureToggleDTO, FeatureToggleWithEnvironment,
+    FeatureToggle,
+    FeatureToggleDTO,
+    FeatureToggleWithEnvironment,
     IFeatureToggleQuery,
     IProjectOverview,
     IStrategyConfig
@@ -14,13 +16,18 @@ import ProjectStore from '../db/project-store';
 import BadDataError from '../error/bad-data-error';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import NameExistsError from '../error/name-exists-error';
-import { featureMetadataSchema, featureSchema, nameSchema } from '../schema/feature-schema';
+import { featureMetadataSchema, nameSchema } from '../schema/feature-schema';
 import EventStore from '../db/event-store';
-import { FEATURE_ARCHIVED, FEATURE_CREATED, FEATURE_STALE_OFF, FEATURE_STALE_ON, FEATURE_UPDATED } from '../types/events';
+import {
+    FEATURE_ARCHIVED,
+    FEATURE_CREATED,
+    FEATURE_STALE_OFF,
+    FEATURE_STALE_ON,
+    FEATURE_UPDATED
+} from '../types/events';
 import FeatureTagStore from '../db/feature-tag-store';
 import EnvironmentStore from '../db/environment-store';
 import { GLOBAL_ENV } from '../types/environment';
-import NotFoundError from '../error/notfound-error';
 
 class FeatureToggleServiceV2 {
     private logger: Logger;

@@ -474,7 +474,7 @@ test('exporting to new format works', async () => {
         value: 'Test',
     });
     const exported = await stateService.export({});
-    expect(exported.featureStrategies).hasLength(1);
+    expect(exported.featureStrategies).toHaveLength(1);
 });
 
 test('featureStrategies can keep existing', async () => {

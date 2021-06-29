@@ -153,12 +153,9 @@ test('gets a feature by name', async () => {
         .expect(200);
 });
 
-test('cant get feature that dose not exist', async () => {
+test('cant get feature that does not exist', async () => {
     expect.assertions(0);
-    return app.request
-        .get('/api/admin/features/myfeature')
-        .expect('Content-Type', /json/)
-        .expect(404);
+    return app.request.get('/api/admin/features/myfeature').expect(404);
 });
 
 test('creates new feature toggle', async () => {

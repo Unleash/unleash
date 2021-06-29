@@ -20,6 +20,7 @@ import { FEATURE_ARCHIVED, FEATURE_CREATED, FEATURE_STALE_OFF, FEATURE_STALE_ON,
 import FeatureTagStore from '../db/feature-tag-store';
 import EnvironmentStore from '../db/environment-store';
 import { GLOBAL_ENV } from '../types/environment';
+import NotFoundError from '../error/notfound-error';
 
 class FeatureToggleServiceV2 {
     private logger: Logger;
@@ -145,8 +146,8 @@ class FeatureToggleServiceV2 {
 
     /**
      * @deprecated
-     * @param featureName 
-     * @returns 
+     * @param featureName
+     * @returns
      */
     async getProjectId(featureName: string): Promise<string> {
         return this.featureToggleStore.getProjectId(featureName);
@@ -156,7 +157,7 @@ class FeatureToggleServiceV2 {
         this.logger.info(`${userName} updates feature toggle ${updatedFeature.name}`);
 
         await this.featureToggleStore.hasFeature(updatedFeature.name);
-        
+
         const featureToggle = await this.featureToggleStore.updateFeature(projectId, updatedFeature);
         const tags =
             (await this.featureTagStore.getAllTagsForFeature(

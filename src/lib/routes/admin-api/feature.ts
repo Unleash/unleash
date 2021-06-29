@@ -105,7 +105,10 @@ class FeatureController extends Controller {
         }
     }
 
-    async getToggle(req: Request, res: Response): Promise<void> {
+    async getToggle(
+        req: Request<{ featureName: string }, any, any, any>,
+        res: Response,
+    ): Promise<void> {
         try {
             const name = req.params.featureName;
             const feature = await this.featureService2.getFeatureToggle(name);

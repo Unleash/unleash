@@ -78,7 +78,7 @@ test('should be allowed to reuse deleted toggle name', async () => {
         .post(`${base}/api/admin/features/validate`)
         .send({ name: 'ts.really.delete' })
         .set('Content-Type', 'application/json')
-        .expect(409);
+        .expect(200);
 });
 
 test('should get archived toggles via admin', () => {

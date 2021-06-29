@@ -152,7 +152,7 @@ test('shema allow empty strings', () => {
     expect(value.bucket.toggles.Demo2.no).toBe(0);
 });
 
-test('shema allow yes=<string nbr>', () => {
+test('schema allow yes=<string nbr>', () => {
     const data = {
         appName: 'java-test',
         instanceId: 'instance y',
@@ -170,7 +170,9 @@ test('shema allow yes=<string nbr>', () => {
 
 test('should set lastSeen on toggle', async () => {
     expect.assertions(1);
-    stores.featureToggleStore.createFeature({ name: 'toggleLastSeen' });
+    stores.featureToggleStore.createFeature('default', {
+        name: 'toggleLastSeen',
+    });
     await request
         .post('/api/client/metrics')
         .send({

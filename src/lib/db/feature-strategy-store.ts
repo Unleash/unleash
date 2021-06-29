@@ -263,32 +263,39 @@ class FeatureStrategiesStore {
             )
             .where({ name: featureName, archived: archived ? 1 : 0 });
         stopTimer();
-        const featureToggle = rows.reduce((acc, r) => {
-            if (acc.environments === undefined) {
-                acc.environments = {};
-            }
-            acc.name = r.name;
-            acc.description = r.description;
-            acc.stale = r.stale;
-            acc.variants = r.variants;
-            acc.lastSeenAt = r.last_seen_at;
-            acc.type = r.type;
-            if (!acc.environments[r.environment]) {
-                acc.environments[r.environment] = {
-                    name: r.environment,
-                };
-            }
-            const env = acc.environments[r.environment];
-            env.enabled = r.enabled;
-            if (!env.strategies) {
-                env.strategies = [];
-            }
-            env.strategies.push(this.getAdminStrategy(r));
-            acc.environments[r.environment] = env;
-            return acc;
-        }, {});
-        featureToggle.environments = Object.values(featureToggle.environments);
-        return featureToggle;
+        if (rows.length > 0) {
+            const featureToggle = rows.reduce((acc, r) => {
+                if (acc.environments === undefined) {
+                    acc.environments = {};
+                }
+                acc.name = r.name;
+                acc.description = r.description;
+                acc.stale = r.stale;
+                acc.variants = r.variants;
+                acc.lastSeenAt = r.last_seen_at;
+                acc.type = r.type;
+                if (!acc.environments[r.environment]) {
+                    acc.environments[r.environment] = {
+                        name: r.environment,
+                    };
+                }
+                const env = acc.environments[r.environment];
+                env.enabled = r.enabled;
+                if (!env.strategies) {
+                    env.strategies = [];
+                }
+                env.strategies.push(this.getAdminStrategy(r));
+                acc.environments[r.environment] = env;
+                return acc;
+            }, {});
+            featureToggle.environments = Object.values(
+                featureToggle.environments,
+            );
+            return featureToggle;
+        }
+        throw new NotFoundError(
+            `Could not find feature toggle with name ${featureName}`,
+        );
     }
 
     async getFeatures(

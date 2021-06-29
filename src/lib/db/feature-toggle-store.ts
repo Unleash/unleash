@@ -47,11 +47,17 @@ export default class FeatureToggleStore {
             });
     }
 
-    async count(): Promise<number> {
+    async count(
+        query: {
+            archived?: boolean;
+            project?: string;
+            stale?: boolean;
+        } = { archived: false },
+    ): Promise<number> {
         return this.db
             .count('*')
             .from(TABLE)
-            .where({ archived: 0 })
+            .where(query)
             .then(res => Number(res[0].count));
     }
 

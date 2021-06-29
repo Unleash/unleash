@@ -179,6 +179,10 @@ class FeatureToggleServiceV2 {
         return featureToggle;
     }
 
+    async getFeatureCountForProject(projectId: string): Promise<number> {
+        return this.featureToggleStore.count({ archived: false, project: projectId });
+    }
+
     async removeAllStrategiesForEnv(toggleName: string, environment: string = GLOBAL_ENV): Promise<void> {
         await this.featureStrategiesStore.removeAllStrategiesForEnv(toggleName, environment);
     }
@@ -205,6 +209,10 @@ class FeatureToggleServiceV2 {
             members,
             version: 1
         }
+    }
+
+    async getMembers(projectId: string): Promise<number> {
+        return this.featureStrategiesStore.getMembers(projectId);
     }
 
     async getEnvironmentInfo(environment: string, featureName: string): Promise<any> {

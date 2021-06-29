@@ -238,16 +238,18 @@ class FeatureController extends Controller {
             );
 
             await this.featureService2.removeAllStrategiesForEnv(featureName);
-
-            const strategies = await Promise.all(
-                updatedFeature.strategies.map(async s =>
-                    this.featureService2.createStrategy(
-                        s,
-                        projectId,
-                        featureName,
+            let strategies;
+            if (updatedFeature.strategies) {
+                strategies = await Promise.all(
+                    updatedFeature.strategies.map(async s =>
+                        this.featureService2.createStrategy(
+                            s,
+                            projectId,
+                            featureName,
+                        ),
                     ),
-                ),
-            );
+                );
+            }
             await this.featureService2.updateEnabled(
                 updatedFeature.name,
                 GLOBAL_ENV,
@@ -257,7 +259,7 @@ class FeatureController extends Controller {
             res.status(200).json({
                 ...updatedToggle,
                 enabled,
-                strategies,
+                strategies: strategies || [],
             });
         } catch (error) {
             handleErrors(res, this.logger, error);

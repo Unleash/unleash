@@ -75,7 +75,6 @@ export default class ProjectService {
             () => this.setHealthRating(),
             ONE_HOUR,
         ).unref();
-        process.nextTick(() => this.setHealthRating());
     }
 
     async setHealthRating(): Promise<void> {

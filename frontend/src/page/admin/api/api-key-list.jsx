@@ -2,7 +2,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Icon,
     Table,
     TableHead,
     TableBody,
@@ -10,6 +9,7 @@ import {
     TableCell,
     IconButton,
 } from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { formatFullDateTimeWithLocale } from '../../../component/common/util';
 import CreateApiKey from './api-key-create';
@@ -132,7 +132,7 @@ function ApiKeyList({
                                                     setShowDelete(true);
                                                 }}
                                             >
-                                                <Icon>delete</Icon>
+                                                <Delete />
                                             </IconButton>
                                         </TableCell>
                                     }

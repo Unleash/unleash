@@ -9,7 +9,6 @@ import {
     DialogContentText,
     DialogTitle,
     InputLabel,
-    Icon,
     IconButton,
     List,
     ListItem,
@@ -20,6 +19,7 @@ import {
     Select,
     FormControl,
 } from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
 
 import AddUserComponent from './access-add-user';
 
@@ -197,7 +197,7 @@ function AccessComponent({ projectId, project }) {
                                     title="Remove access"
                                     onClick={removeAccess(user.id, user.roleId)}
                                 >
-                                    <Icon>delete</Icon>
+                                    <Delete />
                                 </IconButton>
                             </ListItemSecondaryAction>
                         </ListItem>

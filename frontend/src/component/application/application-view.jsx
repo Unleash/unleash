@@ -8,9 +8,10 @@ import {
     ListItemText,
     ListItemAvatar,
     Switch,
-    Icon,
     Typography,
 } from '@material-ui/core';
+import { Report, Extension, Timeline } from '@material-ui/icons';
+
 import { shorten } from '../common';
 import { CREATE_FEATURE, CREATE_STRATEGY } from '../AccessProvider/permissions';
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
@@ -29,7 +30,7 @@ function ApplicationView({
             show={
                 <ListItem key={`not_found_${name}`}>
                     <ListItemAvatar>
-                        <Icon>report</Icon>
+                        <Report />
                     </ListItemAvatar>
                     <ListItemText
                         primary={
@@ -42,7 +43,7 @@ function ApplicationView({
             elseShow={
                 <ListItem key={`not_found_${name}`}>
                     <ListItemAvatar>
-                        <Icon>report</Icon>
+                        <Report />
                     </ListItemAvatar>
                     <ListItemText
                         primary={name}
@@ -68,7 +69,7 @@ function ApplicationView({
                     key={`conditional_avatar_${name}`}
                     condition={showSwitch}
                     show={<Switch disabled value={!!enabled} />}
-                    elseShow={<Icon>extension</Icon>}
+                    elseShow={<Extension />}
                 />
             </ListItemAvatar>
             <ListItemText
@@ -149,7 +150,7 @@ function ApplicationView({
                         ({ instanceId, clientIp, lastSeen, sdkVersion }) => (
                             <ListItem key={`${instanceId}`}>
                                 <ListItemAvatar>
-                                    <Icon>timeline</Icon>
+                                    <Timeline />
                                 </ListItemAvatar>
                                 <ListItemText
                                     primary={

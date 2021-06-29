@@ -1,13 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-    CardHeader,
-    Typography,
-    IconButton,
-    Icon,
-    Tooltip,
-} from '@material-ui/core';
+import { CardHeader, Typography, IconButton, Tooltip } from '@material-ui/core';
+import { Edit, Delete } from '@material-ui/icons';
 
 import { useStyles } from './StrategyCardHeader.styles.js';
 import { ReactComponent as ReorderIcon } from '../../../../../assets/icons/reorder.svg';
@@ -39,9 +34,9 @@ const StrategyCardHeader = ({
                     <div className={styles.strategyCardHeaderActions}>
                         <Tooltip title="Edit strategy">
                             <IconButton onClick={editStrategy}>
-                                <Icon className={styles.strateyCardHeaderIcon}>
-                                    edit
-                                </Icon>
+                                <Edit
+                                    className={styles.strateyCardHeaderIcon}
+                                />
                             </IconButton>
                         </Tooltip>
                         {connectDragSource(
@@ -62,13 +57,11 @@ const StrategyCardHeader = ({
                                             onClick={removeStrategy}
                                             disabled={disableDelete}
                                         >
-                                            <Icon
+                                            <Delete
                                                 className={
                                                     styles.strateyCardHeaderIcon
                                                 }
-                                            >
-                                                delete
-                                            </Icon>
+                                            />
                                         </IconButton>
                                     </span>
                                 </Tooltip>
@@ -76,13 +69,11 @@ const StrategyCardHeader = ({
                             elseShow={
                                 <Tooltip title="Delete strategy">
                                     <IconButton onClick={removeStrategy}>
-                                        <Icon
+                                        <Delete
                                             className={
                                                 styles.strateyCardHeaderIcon
                                             }
-                                        >
-                                            delete
-                                        </Icon>
+                                        />
                                     </IconButton>
                                 </Tooltip>
                             }

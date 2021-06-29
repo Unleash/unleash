@@ -4,12 +4,12 @@ import {
     FormControl,
     FormControlLabel,
     Grid,
-    Icon,
     Switch,
     TextField,
     InputAdornment,
     Button,
 } from '@material-ui/core';
+import { Info } from '@material-ui/icons';
 import Dialog from '../../../common/Dialogue';
 import MySelect from '../../../common/select';
 import { modalStyles, trim } from '../../../common/util';
@@ -243,10 +243,7 @@ const AddVariant = ({
                 </Grid>
                 <p style={{ marginBottom: '1rem' }}>
                     <strong>Payload </strong>
-                    <Icon
-                        name="info"
-                        title="Passed to the variant object. Can be anything (json, value, csv)"
-                    />
+                    <Info title="Passed to the variant object. Can be anything (json, value, csv)" />
                 </p>
                 <Grid container>
                     <Grid item md={3}>
@@ -277,10 +274,7 @@ const AddVariant = ({
                     show={
                         <p style={{ marginBottom: '.5rem' }}>
                             <strong>Overrides </strong>
-                            <Icon
-                                name="info"
-                                title="Here you can specify which users should get this variant."
-                            />
+                            <Info title="Here you can specify which users should get this variant." />
                         </p>
                     }
                 />

@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 
 import {
     Button,
-    Icon,
     TextField,
     Switch,
     Paper,
     FormControlLabel,
 } from '@material-ui/core';
+import { FileCopy } from '@material-ui/icons';
 
 import { styles as commonStyles } from '../../common';
 import styles from './copy-feature-component.module.scss';
@@ -154,7 +154,7 @@ class CopyFeatureComponent extends Component {
                             color="primary"
                             variant="contained"
                         >
-                            <Icon>file_copy</Icon>
+                            <FileCopy />
                             &nbsp;&nbsp;&nbsp; Create from copy
                         </Button>
                     </form>

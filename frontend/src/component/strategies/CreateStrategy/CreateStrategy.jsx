@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
-import { Typography, TextField, Button, Icon } from '@material-ui/core';
+import { Typography, TextField, Button } from '@material-ui/core';
+import { Add } from '@material-ui/icons';
 
 import PageContent from '../../common/PageContent/PageContent';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
@@ -83,7 +84,7 @@ const CreateStrategy = ({
                         e.preventDefault();
                         appParameter();
                     }}
-                    startIcon={<Icon>add</Icon>}
+                    startIcon={<Add />}
                 >
                     Add parameter
                 </Button>

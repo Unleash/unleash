@@ -2,15 +2,9 @@ import { useContext, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import {
-    Button,
-    List,
-    Tooltip,
-    IconButton,
-    Icon,
-    ListItem,
-} from '@material-ui/core';
+import { Button, List, Tooltip, IconButton, ListItem } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Add } from '@material-ui/icons';
 
 import FeatureToggleListItem from './FeatureToggleListItem';
 import SearchField from '../../common/SearchField/SearchField';
@@ -165,7 +159,7 @@ const FeatureToggleList = ({
                                                             )
                                                         }
                                                     >
-                                                        <Icon>add</Icon>
+                                                        <Add />
                                                     </IconButton>
                                                 </Tooltip>
                                             }

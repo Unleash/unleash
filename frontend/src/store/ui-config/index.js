@@ -1,14 +1,15 @@
 import { Map as $Map } from 'immutable';
+import { LibraryBooks } from '@material-ui/icons';
 import { RECEIVE_CONFIG } from './actions';
 
-import { getBasePath } from '../../utils/format-path';
+import { getBasePath } from '../../utils/format-path';
 
 const localStorage = window.localStorage || {
     setItem: () => {},
     getItem: () => {},
 };
 
-const basePath =  getBasePath();
+const basePath = getBasePath();
 const UI_CONFIG = `${basePath}:ui_config`;
 
 const DEFAULT = new $Map({
@@ -21,7 +22,7 @@ const DEFAULT = new $Map({
     links: [
         {
             value: 'Documentation',
-            icon: 'library_books',
+            icon: LibraryBooks,
             href: 'https://docs.getunleash.io/docs?source=oss',
             title: 'User documentation',
         },

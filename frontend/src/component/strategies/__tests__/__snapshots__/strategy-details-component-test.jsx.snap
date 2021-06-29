@@ -70,12 +70,16 @@ exports[`renders correctly with one strategy 1`] = `
                         onTouchStart={[Function]}
                         title="Required"
                       >
-                        <span
+                        <svg
                           aria-hidden={true}
-                          className="material-icons MuiIcon-root"
+                          className="MuiSvgIcon-root"
+                          focusable="false"
+                          viewBox="0 0 24 24"
                         >
-                          add
-                        </span>
+                          <path
+                            d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                          />
+                        </svg>
                       </div>
                       <div
                         className="MuiListItemText-root MuiListItemText-multiline"
@@ -122,12 +126,16 @@ exports[`renders correctly with one strategy 1`] = `
                         <div
                           className="MuiAvatar-root MuiAvatar-circle MuiAvatar-colorDefault"
                         >
-                          <span
+                          <svg
                             aria-hidden={true}
-                            className="material-icons MuiIcon-root"
+                            className="MuiSvgIcon-root"
+                            focusable="false"
+                            viewBox="0 0 24 24"
                           >
-                            apps
-                          </span>
+                            <path
+                              d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"
+                            />
+                          </svg>
                         </div>
                       </div>
                       <div
@@ -183,12 +191,16 @@ exports[`renders correctly with one strategy 1`] = `
                         onTouchStart={[Function]}
                         title="Disabled"
                       >
-                        <span
+                        <svg
                           aria-hidden={true}
-                          className="material-icons MuiIcon-root"
+                          className="MuiSvgIcon-root"
+                          focusable="false"
+                          viewBox="0 0 24 24"
                         >
-                          pause
-                        </span>
+                          <path
+                            d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"
+                          />
+                        </svg>
                       </div>
                       <div
                         className="MuiListItemText-root MuiListItemText-multiline"

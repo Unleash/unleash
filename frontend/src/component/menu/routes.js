@@ -40,6 +40,22 @@ import NewUser from '../user/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
 
+import {
+    List,
+    Extension,
+    History,
+    Archive as ArchiveIcon,
+    Apps,
+    Label,
+    DeviceHub,
+    Album,
+    ExitToApp,
+    FolderOpen,
+    Report,
+    Money,
+    Person,
+} from '@material-ui/icons';
+
 export const routes = [
     // Features
     {
@@ -69,7 +85,7 @@ export const routes = [
     {
         path: '/features',
         title: 'Feature Toggles',
-        icon: 'list',
+        icon: List,
         component: Features,
         type: 'protected',
         layout: 'main',
@@ -95,7 +111,7 @@ export const routes = [
     {
         path: '/strategies',
         title: 'Strategies',
-        icon: 'extension',
+        icon: Extension,
         component: Strategies,
         type: 'protected',
         layout: 'main',
@@ -113,7 +129,7 @@ export const routes = [
     {
         path: '/history',
         title: 'Event History',
-        icon: 'history',
+        icon: History,
         component: HistoryPage,
         type: 'protected',
         layout: 'main',
@@ -131,7 +147,7 @@ export const routes = [
     {
         path: '/archive',
         title: 'Archived Toggles',
-        icon: 'archive',
+        icon: ArchiveIcon,
         component: Archive,
         type: 'protected',
         layout: 'main',
@@ -149,7 +165,7 @@ export const routes = [
     {
         path: '/applications',
         title: 'Applications',
-        icon: 'apps',
+        icon: Apps,
         component: Applications,
         type: 'protected',
         layout: 'main',
@@ -175,7 +191,7 @@ export const routes = [
     {
         path: '/context',
         title: 'Context Fields',
-        icon: 'album',
+        icon: Album,
         component: ContextFields,
         type: 'protected',
         flag: C,
@@ -219,7 +235,7 @@ export const routes = [
     {
         path: '/projects',
         title: 'Projects',
-        icon: 'folder_open',
+        icon: FolderOpen,
         component: ListProjects,
         flag: P,
         type: 'protected',
@@ -245,7 +261,7 @@ export const routes = [
     {
         path: '/tag-types',
         title: 'Tag types',
-        icon: 'label',
+        icon: Label,
         component: ListTagTypes,
         type: 'protected',
         layout: 'main',
@@ -262,7 +278,7 @@ export const routes = [
     {
         path: '/tags',
         title: 'Tags',
-        icon: 'label',
+        icon: Label,
         component: ListTags,
         hidden: true,
         type: 'protected',
@@ -289,7 +305,7 @@ export const routes = [
     {
         path: '/addons',
         title: 'Addons',
-        icon: 'device_hub',
+        icon: DeviceHub,
         component: Addons,
         hidden: false,
         type: 'protected',
@@ -298,7 +314,7 @@ export const routes = [
     {
         path: '/reporting',
         title: 'Reporting',
-        icon: 'report',
+        icon: Report,
         component: Reporting,
         type: 'protected',
         layout: 'main',
@@ -331,7 +347,7 @@ export const routes = [
     {
         path: '/admin-invoices',
         title: 'Invoices',
-        icon: 'money',
+        icon: Money,
         component: AdminInvoice,
         hidden: true,
         type: 'protected',
@@ -340,7 +356,7 @@ export const routes = [
     {
         path: '/admin',
         title: 'Admin',
-        icon: 'album',
+        icon: Album,
         component: Admin,
         hidden: false,
         type: 'protected',
@@ -349,7 +365,7 @@ export const routes = [
     {
         path: '/logout',
         title: 'Sign out',
-        icon: 'exit_to_app',
+        icon: ExitToApp,
         component: LogoutFeatures,
         type: 'unprotected',
         layout: 'main',
@@ -357,7 +373,7 @@ export const routes = [
     {
         path: '/login',
         title: 'Log in',
-        icon: 'user',
+        icon: Person,
         component: Login,
         type: 'unprotected',
         hidden: true,

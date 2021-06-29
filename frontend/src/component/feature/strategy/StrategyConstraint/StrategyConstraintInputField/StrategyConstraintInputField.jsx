@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, IconButton, TextField } from '@material-ui/core';
+import { IconButton, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
+import { Delete } from '@material-ui/icons';
+
 import MySelect from '../../../../common/select';
 import InputListField from '../../../../common/input-list-field';
 import ConditionallyRender from '../../../../common/ConditionallyRender/ConditionallyRender';
@@ -130,7 +132,7 @@ const StrategyConstraintInputField = ({
             </td>
             <td>
                 <IconButton onClick={removeConstraint}>
-                    <Icon>delete</Icon>
+                    <Delete />
                 </IconButton>
             </td>
         </tr>

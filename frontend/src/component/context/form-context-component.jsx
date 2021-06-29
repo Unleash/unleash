@@ -1,13 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-    Button,
-    Chip,
-    TextField,
-    Switch,
-    Icon,
-    Typography,
-} from '@material-ui/core';
+import { Button, Chip, TextField, Switch, Typography } from '@material-ui/core';
 import styles from './Context.module.scss';
 import classnames from 'classnames';
 import { FormButtons, styles as commonStyles } from '../common';
@@ -15,6 +8,7 @@ import { trim } from '../common/util';
 import PageContent from '../common/PageContent/PageContent';
 import ConditionallyRender from '../common/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
+import { Add } from '@material-ui/icons';
 
 const sortIgnoreCase = (a, b) => {
     a = a.toLowerCase();
@@ -244,7 +238,7 @@ class AddContextComponent extends Component {
                             />
                             <Button
                                 className={styles.legalValueButton}
-                                startIcon={<Icon>add</Icon>}
+                                startIcon={<Add />}
                                 onClick={this.addLegalValue}
                                 variant="contained"
                                 color="primary"

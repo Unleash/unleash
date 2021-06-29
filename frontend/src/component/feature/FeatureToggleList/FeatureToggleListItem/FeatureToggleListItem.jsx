@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import { Link } from 'react-router-dom';
-import { Switch, Icon, IconButton, ListItem } from '@material-ui/core';
+import { Switch, IconButton, ListItem } from '@material-ui/core';
+import { Undo } from '@material-ui/icons';
+
 import TimeAgo from 'react-timeago';
 import Progress from '../../ProgressWheel';
 import Status from '../../status-component';
@@ -27,15 +29,8 @@ const FeatureToggleListItem = ({
 }) => {
     const styles = useStyles();
 
-    const {
-        name,
-        description,
-        enabled,
-        type,
-        stale,
-        createdAt,
-        project,
-    } = feature;
+    const { name, description, enabled, type, stale, createdAt, project } =
+        feature;
     const { showLastHour = false } = settings;
     const isStale = showLastHour
         ? metricsLastHour.isFallback
@@ -126,7 +121,7 @@ const FeatureToggleListItem = ({
                 condition={revive && hasAccess(UPDATE_FEATURE, project)}
                 show={
                     <IconButton onClick={() => revive(feature.name)}>
-                        <Icon>undo</Icon>
+                        <Undo />
                     </IconButton>
                 }
                 elseShow={<span />}

@@ -7,7 +7,6 @@ import {
     DELETE_CONTEXT_FIELD,
 } from '../../AccessProvider/permissions';
 import {
-    Icon,
     IconButton,
     List,
     ListItem,
@@ -17,6 +16,8 @@ import {
     useMediaQuery,
     Button,
 } from '@material-ui/core';
+import { Add, Album, Delete } from '@material-ui/icons';
+
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStyles } from './styles';
@@ -34,7 +35,7 @@ const ContextList = ({ removeContextField, history, contextFields }) => {
         contextFields.map(field => (
             <ListItem key={field.name} classes={{ root: styles.listItem }}>
                 <ListItemIcon>
-                    <Icon>album</Icon>
+                    <Album />
                 </ListItemIcon>
                 <ListItemText
                     primary={
@@ -55,7 +56,7 @@ const ContextList = ({ removeContextField, history, contextFields }) => {
                                     setShowDelDialogue(true);
                                 }}
                             >
-                                <Icon>delete</Icon>
+                                <Delete />
                             </IconButton>
                         </Tooltip>
                     }
@@ -73,7 +74,7 @@ const ContextList = ({ removeContextField, history, contextFields }) => {
                             <IconButton
                                 onClick={() => history.push('/context/create')}
                             >
-                                <Icon>add</Icon>
+                                <Add />
                             </IconButton>
                         </Tooltip>
                     }

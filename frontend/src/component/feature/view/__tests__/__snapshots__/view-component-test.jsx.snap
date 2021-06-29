@@ -279,7 +279,16 @@ exports[`renders correctly with one feature 1`] = `
               aria-hidden={true}
               className="material-icons MuiIcon-root"
             >
-              arrow_drop_down
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+              </svg>
             </span>
           </span>
         </span>

@@ -6,12 +6,13 @@ import {
     List,
     ListItem,
     ListItemIcon,
-    Icon,
     ListItemText,
     IconButton,
     Button,
     Tooltip,
 } from '@material-ui/core';
+import { Add, Delete, Label } from '@material-ui/icons';
+
 import HeaderTitle from '../../common/HeaderTitle';
 import PageContent from '../../common/PageContent/PageContent';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
@@ -53,7 +54,7 @@ const TagTypeList = ({ tagTypes, fetchTagTypes, removeTagType }) => {
                                             history.push('/tag-types/create')
                                         }
                                     >
-                                        <Icon>add</Icon>
+                                        <Add />
                                     </IconButton>
                                 </Tooltip>
                             }
@@ -91,7 +92,7 @@ const TagTypeList = ({ tagTypes, fetchTagTypes, removeTagType }) => {
                         })
                     }
                 >
-                    <Icon>delete</Icon>
+                    <Delete />
                 </IconButton>
             </Tooltip>
         );
@@ -101,7 +102,7 @@ const TagTypeList = ({ tagTypes, fetchTagTypes, removeTagType }) => {
                 classes={{ root: styles.tagListItem }}
             >
                 <ListItemIcon>
-                    <Icon>label</Icon>
+                    <Label />
                 </ListItemIcon>
                 <ListItemText primary={link} secondary={tagType.description} />
                 <ConditionallyRender

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu } from '@material-ui/core';
+import { ArrowDropDown } from '@material-ui/icons';
+
 import { DropdownButton } from '..';
 
 import styles from '../common.module.scss';
@@ -10,7 +12,7 @@ const DropdownMenu = ({
     id,
     title,
     callback,
-    icon = 'arrow_drop_down',
+    icon = <ArrowDropDown />,
     label,
     startIcon,
     ...rest
@@ -58,7 +60,7 @@ DropdownMenu.propTypes = {
     id: PropTypes.string,
     title: PropTypes.string,
     callback: PropTypes.func,
-    icon: PropTypes.string,
+    icon: PropTypes.object,
     label: PropTypes.string,
     startIcon: PropTypes.object,
 };

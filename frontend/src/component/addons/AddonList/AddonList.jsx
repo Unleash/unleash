@@ -2,7 +2,9 @@ import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ConfiguredAddons from './ConfiguredAddons';
 import AvailableAddons from './AvailableAddons';
-import { Avatar, Icon } from '@material-ui/core';
+import { Avatar } from '@material-ui/core';
+import { DeviceHub } from '@material-ui/icons';
+
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import AccessContext from '../../../contexts/AccessContext';
 
@@ -65,7 +67,7 @@ const getIcon = name => {
         default:
             return (
                 <Avatar>
-                    <Icon>device_hub</Icon>
+                    <DeviceHub />
                 </Avatar>
             );
     }

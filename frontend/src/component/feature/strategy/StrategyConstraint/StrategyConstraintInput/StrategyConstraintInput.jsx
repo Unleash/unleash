@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tooltip, Icon, Typography } from '@material-ui/core';
+import { Tooltip, Typography } from '@material-ui/core';
+import { Info } from '@material-ui/icons';
+
 import StrategyConstraintInputField from '../StrategyConstraintInputField';
 import { useCommonStyles } from '../../../../../common.styles';
 
@@ -56,9 +58,7 @@ const StrategyConstraintInput = ({
                 <Typography variant="subtitle2">
                     {'Constraints '}
 
-                    <Icon style={{ fontSize: '0.9rem', color: 'gray' }}>
-                        info
-                    </Icon>
+                    <Info style={{ fontSize: '0.9rem', color: 'gray' }} />
                 </Typography>
             </Tooltip>
             <table style={{ margin: 0 }}>

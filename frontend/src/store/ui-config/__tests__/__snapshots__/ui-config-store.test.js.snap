@@ -8,7 +8,14 @@ Object {
   "links": Array [
     Object {
       "href": "https://docs.getunleash.io/docs?source=oss",
-      "icon": "library_books",
+      "icon": Object {
+        "$$typeof": Symbol(react.memo),
+        "compare": null,
+        "type": Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "render": [Function],
+        },
+      },
       "title": "User documentation",
       "value": "Documentation",
     },
@@ -33,7 +40,14 @@ Object {
   "links": Array [
     Object {
       "href": "https://docs.getunleash.io/docs?source=oss",
-      "icon": "library_books",
+      "icon": Object {
+        "$$typeof": Symbol(react.memo),
+        "compare": null,
+        "type": Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "render": [Function],
+        },
+      },
       "title": "User documentation",
       "value": "Documentation",
     },
@@ -58,7 +72,14 @@ Object {
   "links": Array [
     Object {
       "href": "https://docs.getunleash.io/docs?source=oss",
-      "icon": "library_books",
+      "icon": Object {
+        "$$typeof": Symbol(react.memo),
+        "compare": null,
+        "type": Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "render": [Function],
+        },
+      },
       "title": "User documentation",
       "value": "Documentation",
     },

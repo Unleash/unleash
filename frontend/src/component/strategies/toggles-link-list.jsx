@@ -1,4 +1,12 @@
-import { Icon, List, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@material-ui/core';
+import {
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+    Tooltip,
+} from '@material-ui/core';
+import { PlayArrow, Pause } from '@material-ui/icons';
+
 import styles from '../common/common.module.scss';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -9,11 +17,11 @@ export const TogglesLinkList = ({ toggles }) => (
     <List style={{ textAlign: 'left' }} className={styles.truncate}>
         <ConditionallyRender
             condition={toggles.length > 0}
-            show={toggles.map(({ name, description = '-', enabled, icon = enabled ? 'play_arrow' : 'pause' }) => (
+            show={toggles.map(({ name, description = '-', enabled }) => (
                 <ListItem key={name}>
                     <Tooltip title={enabled ? 'Enabled' : 'Disabled'}>
                         <ListItemAvatar>
-                            <Icon>{icon}</Icon>
+                            {enabled ? <PlayArrow /> : <Pause />}
                         </ListItemAvatar>
                     </Tooltip>
                     <ListItemText

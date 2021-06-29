@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    Icon,
     IconButton,
     List,
     ListItem,
@@ -8,6 +7,8 @@ import {
     ListItemSecondaryAction,
     ListItemText,
 } from '@material-ui/core';
+import { Visibility, VisibilityOff, Delete } from '@material-ui/icons';
+
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 import {
     DELETE_ADDON,
@@ -62,11 +63,11 @@ const ConfiguredAddons = ({
                             }
                             onClick={() => toggleAddon(addon)}
                         >
-                            <Icon>
-                                {addon.enabled
-                                    ? 'visibility'
-                                    : 'visibility_off'}
-                            </Icon>
+                            <ConditionallyRender
+                                condition={addon.enabled}
+                                show={<Visibility />}
+                                elseShow={<VisibilityOff />}
+                            />
                         </IconButton>
                     }
                 />
@@ -78,7 +79,7 @@ const ConfiguredAddons = ({
                             title="Remove addon"
                             onClick={onRemoveAddon(addon)}
                         >
-                            <Icon>delete</Icon>
+                            <Delete />
                         </IconButton>
                     }
                 />

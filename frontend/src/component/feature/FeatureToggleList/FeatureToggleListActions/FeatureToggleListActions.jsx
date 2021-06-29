@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { MenuItem, Typography } from '@material-ui/core';
+import { HourglassEmpty, HourglassFull } from '@material-ui/icons';
+
 import { MenuItemWithIcon } from '../../../common';
 import DropdownMenu from '../../../common/DropdownMenu/DropdownMenu';
 import ProjectSelect from '../../../common/ProjectSelect';
@@ -49,14 +51,14 @@ const FeatureToggleListActions = ({
 
     const renderMetricsOptions = () => [
         <MenuItemWithIcon
-            icon="hourglass_empty"
+            icon={HourglassEmpty}
             disabled={!settings.showLastHour}
             data-target="minute"
             label="Last minute"
             key={1}
         />,
         <MenuItemWithIcon
-            icon="hourglass_full"
+            icon={HourglassFull}
             disabled={settings.showLastHour}
             data-target="hour"
             label="Last hour"

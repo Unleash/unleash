@@ -11,6 +11,8 @@ import {
     LinearProgress,
     Typography,
 } from '@material-ui/core';
+import { Link as LinkIcon } from '@material-ui/icons';
+
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
 import {
     formatFullDateTimeWithLocale,
@@ -24,7 +26,6 @@ import Dialogue from '../common/Dialogue';
 import PageContent from '../common/PageContent';
 import HeaderTitle from '../common/HeaderTitle';
 import AccessContext from '../../contexts/AccessContext';
-
 class ClientApplications extends PureComponent {
     static contextType = AccessContext;
 
@@ -149,7 +150,7 @@ class ClientApplications extends PureComponent {
                                     condition={url}
                                     show={
                                         <IconButton component={Link} href={url}>
-                                            <Icon>link</Icon>
+                                            <LinkIcon />
                                         </IconButton>
                                     }
                                 />

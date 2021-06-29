@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import InputPercentage from './input-percentage';
 import Select from '../../../common/select';
-import { Icon, TextField, Tooltip, Typography } from '@material-ui/core';
+import { TextField, Tooltip, Typography } from '@material-ui/core';
+import { Info } from '@material-ui/icons';
 
 const builtInStickinessOptions = [
     { key: 'default', label: 'default' },
@@ -55,15 +56,13 @@ const FlexibleStrategy = ({ updateParameter, parameters, context }) => {
                         }}
                     >
                         Stickiness
-                        <Icon
+                        <Info
                             style={{
                                 fontSize: '1rem',
                                 color: 'gray',
                                 marginLeft: '0.2rem',
                             }}
-                        >
-                            info
-                        </Icon>
+                        />
                     </Typography>
                 </Tooltip>
                 <Select
@@ -89,15 +88,13 @@ const FlexibleStrategy = ({ updateParameter, parameters, context }) => {
                         }}
                     >
                         GroupId
-                        <Icon
+                        <Info
                             style={{
                                 fontSize: '1rem',
                                 color: 'gray',
                                 marginLeft: '0.2rem',
                             }}
-                        >
-                            info
-                        </Icon>
+                        />
                     </Typography>
                 </Tooltip>
                 <TextField

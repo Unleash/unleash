@@ -9,11 +9,18 @@ import {
     ListItem,
     ListItemAvatar,
     IconButton,
-    Icon,
     ListItemText,
     Button,
     Tooltip,
 } from '@material-ui/core';
+import {
+    Add,
+    Visibility,
+    VisibilityOff,
+    Delete,
+    Extension,
+} from '@material-ui/icons';
+
 import {
     CREATE_STRATEGY,
     DELETE_STRATEGY,
@@ -58,7 +65,7 @@ const StrategiesList = ({
                                     history.push('/strategies/create')
                                 }
                             >
-                                <Icon>add</Icon>
+                                <Add />
                             </IconButton>
                         </Tooltip>
                     }
@@ -97,7 +104,7 @@ const StrategiesList = ({
                     })
                 }
             >
-                <Icon>visibility</Icon>
+                <Visibility />
             </IconButton>
         </Tooltip>
     );
@@ -109,7 +116,7 @@ const StrategiesList = ({
                 <Tooltip title="You cannot deprecate the default strategy">
                     <div>
                         <IconButton disabled>
-                            <Icon>visibility_off</Icon>
+                            <VisibilityOff />
                         </IconButton>
                     </div>
                 </Tooltip>
@@ -127,7 +134,7 @@ const StrategiesList = ({
                                 })
                             }
                         >
-                            <Icon>visibility_off</Icon>
+                            <VisibilityOff />
                         </IconButton>
                     </div>
                 </Tooltip>
@@ -149,7 +156,7 @@ const StrategiesList = ({
                             })
                         }
                     >
-                        <Icon>delete</Icon>
+                        <Delete />
                     </IconButton>
                 </Tooltip>
             }
@@ -157,7 +164,7 @@ const StrategiesList = ({
                 <Tooltip title="You cannot delete a built-in strategy">
                     <div>
                         <IconButton disabled>
-                            <Icon>delete</Icon>
+                            <Delete />
                         </IconButton>
                     </div>
                 </Tooltip>
@@ -176,7 +183,7 @@ const StrategiesList = ({
                 }}
             >
                 <ListItemAvatar>
-                    <Icon style={{ color: '#0000008a' }}>extension</Icon>
+                    <Extension style={{ color: '#0000008a' }} />
                 </ListItemAvatar>
                 <ListItemText
                     primary={strategyLink(strategy)}

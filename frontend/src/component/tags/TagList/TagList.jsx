@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 
 import {
     Button,
-    Icon,
     IconButton,
     List,
     ListItem,
@@ -13,6 +12,8 @@ import {
     ListItemText,
     Tooltip,
 } from '@material-ui/core';
+import { Add, Label, Delete } from '@material-ui/icons';
+
 import { CREATE_TAG, DELETE_TAG } from '../../AccessProvider/permissions';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import HeaderTitle from '../../common/HeaderTitle';
@@ -43,7 +44,7 @@ const TagList = ({ tags, fetchTags, removeTag }) => {
             className={styles.tagListItem}
         >
             <ListItemIcon>
-                <Icon>label</Icon>
+                <Label />
             </ListItemIcon>
             <ListItemText primary={tag.value} secondary={tag.type} />
             <ConditionallyRender
@@ -58,7 +59,7 @@ const TagList = ({ tags, fetchTags, removeTag }) => {
             <IconButton
                 onClick={e => remove({ type: tagType, value: tagValue }, e)}
             >
-                <Icon>delete</Icon>
+                <Delete />
             </IconButton>
         </Tooltip>
     );
@@ -79,14 +80,14 @@ const TagList = ({ tags, fetchTags, removeTag }) => {
                             aria-label="add tag"
                             onClick={() => history.push('/tags/create')}
                         >
-                            <Icon>add</Icon>
+                            <Add />
                         </IconButton>
                     }
                     elseShow={
                         <Tooltip title="Add new tag">
                             <Button
                                 color="primary"
-                                startIcon={<Icon>add</Icon>}
+                                startIcon={<Add />}
                                 onClick={() => history.push('/tags/create')}
                                 variant="contained"
                             >

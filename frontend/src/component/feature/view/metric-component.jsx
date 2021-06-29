@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Chip, Grid } from '@material-ui/core';
-import LinkIcon from '@material-ui/icons/Link';
+import { Chip, Grid } from '@material-ui/core';
+import { ReportProblem, Link as LinkIcon } from '@material-ui/icons';
 
 import { Link } from 'react-router-dom';
 import { AppsLinkList, calc } from '../../common';
@@ -123,12 +123,10 @@ export default class MetricComponent extends React.Component {
                             }
                             elseShow={
                                 <div>
-                                    <Icon
+                                    <ReportProblem
                                         className={styles.problemIcon}
                                         title="Not used in an app in the last hour"
-                                    >
-                                        report problem
-                                    </Icon>
+                                    />
                                     <div>
                                         <small>
                                             <strong>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Chip } from '@material-ui/core';
+import { Chip } from '@material-ui/core';
+import { Label } from '@material-ui/icons';
+
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
 import Dialogue from '../common/Dialogue';
 
@@ -55,7 +57,7 @@ function FeatureTagComponent({
                         />
                     );
                 default:
-                    return <Icon>label</Icon>;
+                    return <Label />;
             }
         } else {
             return <span>{typeName[0].toUpperCase()}</span>;

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Snackbar, Icon, IconButton } from '@material-ui/core';
+import { Snackbar, IconButton } from '@material-ui/core';
+import { Close, QuestionAnswer } from '@material-ui/icons';
 
 const ErrorComponent = ({ errors, muteError }) => {
     const showError = errors.length > 0;
@@ -11,7 +12,7 @@ const ErrorComponent = ({ errors, muteError }) => {
             action={
                 <React.Fragment>
                     <IconButton size="small" aria-label="close" color="inherit">
-                        <Icon>close</Icon>
+                        <Close />
                     </IconButton>
                 </React.Fragment>
             }
@@ -20,7 +21,7 @@ const ErrorComponent = ({ errors, muteError }) => {
             autoHideDuration={10000}
             message={
                 <div key={error}>
-                    <Icon>question_answer</Icon>
+                    <QuestionAnswer />
                     {error}
                 </div>
             }

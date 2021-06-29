@@ -324,7 +324,7 @@ class FeatureStrategiesStore {
                 'feature_strategies.parameters as parameters',
                 'feature_strategies.constraints as constraints',
             )
-            .where({ archived: archived ? 1 : 0 })
+            .where({ archived })
             .whereIn('feature_environments.environment', environments)
             .fullOuterJoin(
                 'feature_environments',

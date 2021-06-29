@@ -13,14 +13,14 @@ import {
     IStrategyConfig,
     IVariant,
     FeatureToggleWithEnvironment,
+    IFeatureEnvironment,
 } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 
 const COLUMNS = [
     'id',
     'feature_name',
-    'project',
-    'enabled',
+    'project_name',
     'environment',
     'strategy_name',
     'parameters',
@@ -80,7 +80,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         environment: row.environment,
         strategyName: row.strategy_name,
         parameters: row.parameters,
-        constraints: (row.constraints as unknown) as IConstraint[],
+        constraints: ((row.constraints as unknown) as IConstraint[]) || [],
         createdAt: row.created_at,
     };
 }
@@ -158,6 +158,15 @@ class FeatureStrategiesStore {
         return rows.map(mapRow);
     }
 
+    async getAllFeatureStrategies(): Promise<IFeatureStrategy[]> {
+        const rows = await this.db(T.featureStrategies).select(COLUMNS);
+        return rows.map(mapRow);
+    }
+
+    async deleteFeatureStrategies(): Promise<void> {
+        await this.db(T.featureStrategies).delete();
+    }
+
     async getStrategiesForEnvironment(
         environment: string,
     ): Promise<IFeatureStrategy[]> {
@@ -180,11 +189,10 @@ class FeatureStrategiesStore {
             .del();
     }
 
-    async getAllEnabledStrategies(): Promise<IFeatureStrategy[]> {
+    async getAll(): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getAll');
         const rows = await this.db
             .select(COLUMNS)
-            .where({ enabled: true })
             .from<IFeatureStrategiesTable>(T.featureStrategies);
 
         stopTimer();
@@ -570,6 +578,15 @@ class FeatureStrategiesStore {
             .update({ enabled })
             .where({ environment, feature_name: featureName });
         return enabled;
+    }
+
+    async getAllFeatureEnvironments(): Promise<IFeatureEnvironment[]> {
+        const rows = await this.db(T.featureEnvs);
+        return rows.map(r => ({
+            environment: r.environment,
+            featureName: r.feature_name,
+            enabled: r.enabled,
+        }));
     }
 }
 

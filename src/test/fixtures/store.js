@@ -1,5 +1,6 @@
 'use strict';
 
+const FakeFeatureStrategiesStore = require('./fake-feature-strategies-store');
 const ClientMetricsStore = require('./fake-metrics-store');
 const clientInstanceStore = require('./fake-client-instance-store');
 const clientApplicationsStore = require('./fake-client-applications-store');
@@ -15,6 +16,8 @@ const projectStore = require('./fake-project-store');
 const UserStore = require('./fake-user-store');
 const AccessStore = require('./fake-access-store');
 const userFeedbackStore = require('./fake-user-feedback-store');
+const FakeFeatureTagStore = require('./fake-feature-tag-store');
+const FakeEnvironmentStore = require('./fake-environment-store');
 
 module.exports = {
     createStores: (databaseIsUp = true) => {
@@ -41,7 +44,9 @@ module.exports = {
             userStore: new UserStore(),
             accessStore: new AccessStore(),
             userFeedbackStore: userFeedbackStore(databaseIsUp),
-            featureStrategiesStore: featureToggleStore(databaseIsUp),
+            featureStrategiesStore: new FakeFeatureStrategiesStore(),
+            featureTagStore: new FakeFeatureTagStore(),
+            environmentStore: new FakeEnvironmentStore(),
         };
     },
 };

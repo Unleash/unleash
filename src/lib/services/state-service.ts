@@ -25,7 +25,18 @@ import { Logger } from '../logger';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import EventStore from '../db/event-store';
-import { FeatureToggle, ITag } from '../types/model';
+import {
+    FeatureToggle,
+    IEnvironment,
+    IEnvironmentDetail,
+    IFeatureEnvironment,
+    ITag,
+} from '../types/model';
+import FeatureStrategiesStore, {
+    IFeatureStrategy,
+} from '../db/feature-strategy-store';
+import EnvironmentStore from '../db/environment-store';
+import { GLOBAL_ENV } from '../types/environment';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -34,10 +45,18 @@ export interface IBackupOption {
     includeTags: boolean;
 }
 
+interface IImportOption {
+    keepExising: boolean;
+    dropBeforeImport: boolean;
+    userName: string;
+}
+
 export default class StateService {
     private logger: Logger;
 
     private toggleStore: FeatureToggleStore;
+
+    private featureStrategiesStore: FeatureStrategiesStore;
 
     private strategyStore: StrategyStore;
 
@@ -51,6 +70,8 @@ export default class StateService {
 
     private featureTagStore: FeatureTagStore;
 
+    private environmentStore: EnvironmentStore;
+
     constructor(
         stores: IUnleashStores,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
@@ -59,13 +80,20 @@ export default class StateService {
         this.toggleStore = stores.featureToggleStore;
         this.strategyStore = stores.strategyStore;
         this.tagStore = stores.tagStore;
+        this.featureStrategiesStore = stores.featureStrategiesStore;
         this.tagTypeStore = stores.tagTypeStore;
         this.projectStore = stores.projectStore;
         this.featureTagStore = stores.featureTagStore;
+        this.environmentStore = stores.environmentStore;
         this.logger = getLogger('services/state-service.js');
     }
 
-    importFile({ file, dropBeforeImport, userName, keepExisting }) {
+    async importFile({
+        file,
+        dropBeforeImport,
+        userName,
+        keepExisting,
+    }): Promise<void> {
         return readFile(file)
             .then(data => parseFile(file, data))
             .then(data =>
@@ -73,21 +101,56 @@ export default class StateService {
             );
     }
 
-    async import({ data, userName, dropBeforeImport, keepExisting }) {
+    async import({
+        data,
+        userName,
+        dropBeforeImport,
+        keepExisting,
+    }): Promise<void> {
         const importData = await stateSchema.validateAsync(data);
 
-        if (importData.features) {
-            await this.importFeatures({
-                features: data.features,
+        if (importData.strategies) {
+            await this.importStrategies({
+                strategies: data.strategies,
                 userName,
                 dropBeforeImport,
                 keepExisting,
             });
         }
 
-        if (importData.strategies) {
-            await this.importStrategies({
-                strategies: data.strategies,
+        if (importData.projects) {
+            await this.importProjects({
+                projects: data.projects,
+                userName,
+                dropBeforeImport,
+                keepExisting,
+            });
+        }
+
+        if (importData.features) {
+            let projectData;
+            if (!importData.version || importData.version === 1) {
+                projectData = await this.convertLegacyFeatures(importData);
+            } else {
+                projectData = importData;
+            }
+            const {
+                features,
+                featureStrategies,
+                featureEnvironments,
+            } = projectData;
+
+            await this.importFeatures({
+                features,
+                userName,
+                dropBeforeImport,
+                keepExisting,
+            });
+            await this.importFeatureEnvironments({
+                featureEnvironments,
+            });
+            await this.importFeatureStrategies({
+                featureStrategies,
                 userName,
                 dropBeforeImport,
                 keepExisting,
@@ -104,14 +167,73 @@ export default class StateService {
                 keepExisting,
             });
         }
-        if (importData.projects) {
-            await this.importProjects({
-                projects: data.projects,
-                userName,
-                dropBeforeImport,
-                keepExisting,
-            });
+    }
+
+    async importFeatureEnvironments({ featureEnvironments }): Promise<void> {
+        await Promise.all(
+            featureEnvironments.map(env =>
+                this.featureStrategiesStore.connectEnvironmentAndFeature(
+                    env.featureName,
+                    env.environment,
+                    env.enabled,
+                ),
+            ),
+        );
+    }
+
+    async importFeatureStrategies({
+        featureStrategies,
+        userName,
+        dropBeforeImport,
+        keepExisting,
+    }): Promise<void> {
+        const oldFeatureStrategies = dropBeforeImport
+            ? []
+            : await this.featureStrategiesStore.getAllFeatureStrategies();
+        if (dropBeforeImport) {
+            this.logger.info(
+                'Dropping existing strategies for feature toggles',
+            );
+            await this.featureStrategiesStore.deleteFeatureStrategies();
         }
+        const strategiesToImport = keepExisting
+            ? featureStrategies.filter(
+                  s => !oldFeatureStrategies.some(o => o.id === s.id),
+            )
+            : featureStrategies;
+        await Promise.all(
+            strategiesToImport.map(featureStrategy =>
+                this.featureStrategiesStore.createStrategyConfig(
+                    featureStrategy,
+                ),
+            ),
+        );
+    }
+
+    async convertLegacyFeatures({
+        features,
+    }): Promise<{ features; featureStrategies; featureEnvironments }> {
+        const strategies = features.flatMap(f =>
+            f.strategies.map(strategy => ({
+                featureName: f.name,
+                projectName: f.project,
+                constraints: strategy.constraints || [],
+                parameters: strategy.parameters || {},
+                environment: GLOBAL_ENV,
+                strategyName: strategy.name,
+            })),
+        );
+        const newFeatures = features;
+        const featureEnvironments = features.map(feature => ({
+            featureName: feature.name,
+            environment: GLOBAL_ENV,
+            enabled: feature.enabled,
+        }));
+        return {
+            features: newFeatures,
+            featureStrategies: strategies,
+            featureEnvironments,
+        };
     }
 
     async importFeatures({
@@ -139,16 +261,17 @@ export default class StateService {
             features
                 .filter(filterExisting(keepExisting, oldToggles))
                 .filter(filterEqual(oldToggles))
-                .map(feature => Promise.resolve()),
-            /*
-                    this.toggleStore.importFeature(feature).then(() =>
-                        this.eventStore.store({
-                            type: FEATURE_IMPORT,
-                            createdBy: userName,
-                            data: feature,
+                .map(feature =>
+                    this.toggleStore
+                        .createFeature(feature.project, feature)
+                        .then(() => {
+                            this.eventStore.store({
+                                type: FEATURE_IMPORT,
+                                createdBy: userName,
+                                data: feature,
+                            });
                         }),
-                    ),
-*/
+                ),
         );
     }
 
@@ -304,8 +427,7 @@ export default class StateService {
                 : true,
         );
         if (featureTagsToInsert.length > 0) {
-            /*
-            const importedFeatureTags = await this.toggleStore.importFeatureTags(
+            const importedFeatureTags = await this.featureTagStore.importFeatureTags(
                 featureTagsToInsert,
             );
             const importedFeatureTagEvents = importedFeatureTags.map(tag => ({
@@ -314,7 +436,6 @@ export default class StateService {
                 data: tag,
             }));
             await this.eventStore.batchStore(importedFeatureTagEvents);
-*/
         }
     }
 
@@ -372,15 +493,19 @@ export default class StateService {
         includeStrategies = true,
         includeProjects = true,
         includeTags = true,
+        includeEnvironments = true,
     }): Promise<{
-        features: FeatureToggle[];
-        strategies: IStrategy[];
-        version: number;
-        projects: IProject[];
-        tagTypes: ITagType[];
-        tags: ITag[];
-        featureTags: IFeatureTag[];
-    }> {
+            features: FeatureToggle[];
+            strategies: IStrategy[];
+            version: number;
+            projects: IProject[];
+            tagTypes: ITagType[];
+            tags: ITag[];
+            featureTags: IFeatureTag[];
+            featureStrategies: IFeatureStrategy[];
+            environments: IEnvironment[];
+            featureEnvironments: IFeatureEnvironment[];
+        }> {
         return Promise.all([
             includeFeatureToggles
                 ? this.toggleStore.getFeatures()
@@ -396,6 +521,15 @@ export default class StateService {
             includeTags
                 ? this.featureTagStore.getAllFeatureTags()
                 : Promise.resolve([]),
+            includeFeatureToggles
+                ? this.featureStrategiesStore.getAll()
+                : Promise.resolve([]),
+            includeEnvironments
+                ? this.environmentStore.getAll()
+                : Promise.resolve([]),
+            includeFeatureToggles
+                ? this.featureStrategiesStore.getAllFeatureEnvironments()
+                : Promise.resolve([]),
         ]).then(
             ([
                 features,
@@ -404,14 +538,20 @@ export default class StateService {
                 tagTypes,
                 tags,
                 featureTags,
+                featureStrategies,
+                environments,
+                featureEnvironments,
             ]) => ({
-                version: 1,
+                version: 2,
                 features,
                 strategies,
                 projects,
                 tagTypes,
                 tags,
                 featureTags,
+                featureStrategies,
+                environments,
+                featureEnvironments,
             }),
         );
     }

@@ -42,6 +42,12 @@ export interface IEnvironmentDetail extends IEnvironmentOverview {
     strategies: IStrategyConfig[];
 }
 
+export interface IFeatureEnvironment {
+    environment: string;
+    featureName: string;
+    enabled: boolean;
+}
+
 export interface IVariant {
     name: string;
     weight: number;

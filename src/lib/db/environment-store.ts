@@ -109,10 +109,12 @@ export default class EnvironmentStore {
             feature_name: f.name,
             enabled: false,
         }));
-        await this.db<IFeatureEnvironmentRow>('feature_environments')
-            .insert(rows)
-            .onConflict(['environment', 'feature_name'])
-            .ignore();
+        if (rows.length > 0) {
+            await this.db<IFeatureEnvironmentRow>('feature_environments')
+                .insert(rows)
+                .onConflict(['environment', 'feature_name'])
+                .ignore();
+        }
     }
 
     async delete(name: string): Promise<void> {

@@ -64,6 +64,15 @@ export default class ProjectFeaturesController extends Controller {
             `${PATH_PREFIX}/environments/:environment`,
             this.getEnvironment,
         );
+        this.post(
+            `${PATH_PREFIX}/environments/:environment/on`,
+            this.toggleEnvironmentOn,
+        );
+
+        this.post(
+            `${PATH_PREFIX}/environments/:environment/off`,
+            this.toggleEnvironmentOff,
+        );
         this.get(
             `${PATH_PREFIX}/environments/:environment/strategies`,
             this.getFeatureStrategies,
@@ -139,6 +148,42 @@ export default class ProjectFeaturesController extends Controller {
         try {
             const feature = await this.featureService.getFeature(featureName);
             res.status(200).json(feature);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
+    }
+
+    async toggleEnvironmentOn(
+        req: Request<FeatureStrategyParams, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { featureName, environment } = req.params;
+        try {
+            await this.featureService.updateEnabled(
+                featureName,
+                environment,
+                true,
+                extractUsername(req),
+            );
+            res.status(200).end();
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
+    }
+
+    async toggleEnvironmentOff(
+        req: Request<FeatureStrategyParams, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { featureName, environment } = req.params;
+        try {
+            await this.featureService.updateEnabled(
+                featureName,
+                environment,
+                false,
+                extractUsername(req),
+            );
+            res.status(200).end();
         } catch (e) {
             handleErrors(res, this.logger, e);
         }

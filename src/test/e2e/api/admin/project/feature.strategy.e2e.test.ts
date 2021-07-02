@@ -1,4 +1,3 @@
-import exp from 'constants';
 import dbInit from '../../../helpers/database-init';
 import { setupApp } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
@@ -166,5 +165,74 @@ test('Disconnecting environment from project, removes environment from features 
                     e => e.environment === 'dis-project-overview',
                 ),
             ).toBeFalsy();
+        });
+});
+
+test('Can enable/disable environment for feature', async () => {
+    const envName = 'enable-feature-environment';
+    // Create environment
+    await app.request
+        .post('/api/admin/environments')
+        .send({
+            name: envName,
+            displayName: 'Enable feature for environment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+
+    // Create feature
+    await app.request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.enable.environment',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect(res => {
+            expect(res.body.name).toBe('com.test.enable.environment');
+            expect(res.body.createdAt).toBeTruthy();
+        });
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/com.test.enable.environment/environments/enable-feature-environment/on`,
+        )
+        .send({})
+        .expect(200);
+    await app.request
+        .get('/api/admin/projects/default/features/com.test.enable.environment')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+            const enabledFeatureEnv = res.body.environments.find(
+                e => e.name === 'enable-feature-environment',
+            );
+            expect(enabledFeatureEnv).toBeTruthy();
+            expect(enabledFeatureEnv.enabled).toBe(true);
+        });
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/com.test.enable.environment/environments/enable-feature-environment/off`,
+        )
+        .send({})
+        .expect(200);
+    await app.request
+        .get('/api/admin/projects/default/features/com.test.enable.environment')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+            const disabledFeatureEnv = res.body.environments.find(
+                e => e.name === 'enable-feature-environment',
+            );
+            expect(disabledFeatureEnv).toBeTruthy();
+            expect(disabledFeatureEnv.enabled).toBe(false);
         });
 });

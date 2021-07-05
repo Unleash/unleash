@@ -7,7 +7,7 @@ import FeatureToggleStore from '../db/feature-toggle-store';
 import {
     FeatureToggle,
     FeatureToggleDTO,
-    FeatureToggleWithEnvironment,
+    FeatureToggleWithEnvironment, IFeatureEnvironment, IFeatureEnvironmentInfo,
     IFeatureToggleQuery,
     IProjectOverview,
     IStrategyConfig
@@ -28,6 +28,7 @@ import {
 import FeatureTagStore from '../db/feature-tag-store';
 import EnvironmentStore from '../db/environment-store';
 import { GLOBAL_ENV } from '../types/environment';
+import NotFoundError from '../error/notfound-error';
 
 class FeatureToggleServiceV2 {
     private logger: Logger;
@@ -97,17 +98,26 @@ class FeatureToggleServiceV2 {
      * @param updates
      */
     async updateStrategy(id: string, updates: Partial<IFeatureStrategy>): Promise<IFeatureStrategy> {
-        return this.featureStrategiesStore.updateStrategy(id, updates);
+        const exists = await this.featureStrategiesStore.hasStrategy(id);
+        if (exists) {
+            return this.featureStrategiesStore.updateStrategy(id, updates);
+        }
+        throw new NotFoundError(`Could not find strategy with id ${id}`);
     }
 
     async getStrategiesForEnvironment(projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig[]> {
-        const featureStrategies = await this.featureStrategiesStore.getStrategiesForFeature(projectName, featureName, environment);
-        return featureStrategies.map(strat => ({
-            id: strat.id,
-            name: strat.strategyName,
-            constraints: strat.constraints,
-            parameters: strat.parameters
-        }));
+        const hasEnv = await this.featureStrategiesStore.featureHasEnvironment(environment, featureName);
+        if (hasEnv) {
+            const featureStrategies = await this.featureStrategiesStore.getStrategiesForFeature(projectName, featureName, environment);
+            return featureStrategies.map(strat => ({
+                id: strat.id,
+                name: strat.strategyName,
+                constraints: strat.constraints,
+                parameters: strat.parameters
+            }));
+        }
+        throw new NotFoundError(`Feature ${featureName} does not have environment ${environment}`);
+
     }
 
     /**
@@ -139,6 +149,7 @@ class FeatureToggleServiceV2 {
     async createFeatureToggle(projectId: string, value: FeatureToggleDTO, userName: string): Promise<FeatureToggle> {
         this.logger.info(`${userName} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
+        await this.projectStore.hasProject(projectId);
         const featureData = await featureMetadataSchema.validateAsync(value);
         const createdToggle = await this.featureToggleStore.createFeature(projectId, featureData);
         await this.environmentStore.connectFeatureToEnvironmentsForProject(featureData.name, projectId);
@@ -217,8 +228,15 @@ class FeatureToggleServiceV2 {
         return this.featureStrategiesStore.getMembers(projectId);
     }
 
-    async getEnvironmentInfo(environment: string, featureName: string): Promise<any> {
-        return this.featureStrategiesStore.getStrategiesAndMetadataForEnvironment(environment, featureName);
+    async getEnvironmentInfo(project: string, environment: string, featureName: string): Promise<IFeatureEnvironmentInfo> {
+        const envMetadata = await this.featureStrategiesStore.getEnvironmentMetaData(environment, featureName);
+        const strategies = await this.featureStrategiesStore.getStrategiesForFeature(project, featureName, environment);
+        return ({
+            name: featureName,
+            environment,
+            enabled: envMetadata.enabled,
+            strategies
+        })
     }
 
     async deleteEnvironment(projectId: string, environment: string): Promise<void> {
@@ -281,19 +299,22 @@ class FeatureToggleServiceV2 {
     }
 
     async updateEnabled(featureName: string, environment: string, enabled: boolean, userName: string): Promise<FeatureToggle> {
-        const newEnabled = await this.featureStrategiesStore.toggleEnvironmentEnabledStatus(environment, featureName, enabled);
-        const feature = await this.featureToggleStore.getFeatureMetadata(featureName);
-        const tags =
-            (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
-            [];
-        await this.eventStore.store({
-            type: FEATURE_UPDATED,
-            createdBy: userName,
-            data: {...feature, enabled: newEnabled },
-            tags
-        });
-        return feature;
-
+        const hasEnvironment = await this.featureStrategiesStore.featureHasEnvironment(environment, featureName);
+        if (hasEnvironment) {
+            const newEnabled = await this.featureStrategiesStore.toggleEnvironmentEnabledStatus(environment, featureName, enabled);
+            const feature = await this.featureToggleStore.getFeatureMetadata(featureName);
+            const tags =
+                (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
+                [];
+            await this.eventStore.store({
+                type: FEATURE_UPDATED,
+                createdBy: userName,
+                data: { ...feature, enabled: newEnabled },
+                tags
+            });
+            return feature;
+        }
+        throw new NotFoundError(`Could not find environment ${environment} for feature: ${featureName}`);
     }
 
     // @deprecated

@@ -1,6 +1,5 @@
 import { AccessService } from '../services/access-service';
 import AddonService from '../services/addon-service';
-import FeatureToggleService from '../services/feature-toggle-service';
 import ProjectService from '../services/project-service';
 import StateService from '../services/state-service';
 import StrategyService from '../services/strategy-service';
@@ -22,6 +21,7 @@ import UserFeedbackService from '../services/user-feedback-service';
 import FeatureToggleServiceV2 from '../services/feature-toggle-service-v2';
 import EnvironmentService from '../services/environment-service';
 import FeatureTagService from '../services/feature-tag-service';
+import FeatureToggleService from '../services/feature-toggle-service';
 
 export interface IUnleashServices {
     accessService: AccessService;

@@ -6,6 +6,8 @@ import { IEnvironment } from '../types/model';
 import FeatureStrategiesStore from '../db/feature-strategy-store';
 import { UNIQUE_CONSTRAINT_VIOLATION } from '../error/db-error';
 import NameExistsError from '../error/name-exists-error';
+import { environmentSchema } from './state-schema';
+import NotFoundError from '../error/notfound-error';
 
 export default class EnvironmentService {
     private logger: Logger;
@@ -39,6 +41,7 @@ export default class EnvironmentService {
     }
 
     async create(env: IEnvironment): Promise<IEnvironment> {
+        await environmentSchema.validateAsync(env);
         return this.environmentStore.upsert(env);
     }
 
@@ -46,7 +49,11 @@ export default class EnvironmentService {
         name: string,
         env: Pick<IEnvironment, 'displayName'>,
     ): Promise<IEnvironment> {
-        return this.environmentStore.upsert({ ...env, name });
+        const exists = await this.environmentStore.exists(name);
+        if (exists) {
+            return this.environmentStore.upsert({ ...env, name });
+        }
+        throw new NotFoundError(`Could not find environment ${name}`);
     }
 
     async connectProjectToEnvironment(

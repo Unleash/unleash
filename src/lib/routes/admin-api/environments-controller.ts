@@ -84,7 +84,7 @@ export class EnvironmentsController extends Controller {
         const { name } = req.params;
         try {
             await this.service.delete(name);
-            res.status(200);
+            res.status(200).end();
         } catch (e) {
             handleErrors(res, this.logger, e);
         }

@@ -128,9 +128,10 @@ export default class ProjectFeaturesController extends Controller {
         req: Request<FeatureStrategyParams, any, any, any>,
         res: Response,
     ): Promise<void> {
-        const { environment, featureName } = req.params;
+        const { environment, featureName, projectId } = req.params;
         try {
             const environmentInfo = await this.featureService.getEnvironmentInfo(
+                projectId,
                 environment,
                 featureName,
             );
@@ -237,14 +238,6 @@ export default class ProjectFeaturesController extends Controller {
         } catch (e) {
             handleErrors(res, this.logger, e);
         }
-    }
-
-    async getClientFeatures(
-        req: Request<any, any, any, any>,
-        res: Response,
-    ): Promise<void> {
-        const clientFeatures = await this.featureService.getClientFeatures();
-        res.status(200).json({ version: 2, features: clientFeatures });
     }
 
     async updateStrategy(

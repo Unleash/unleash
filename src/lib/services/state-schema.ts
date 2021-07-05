@@ -4,6 +4,7 @@ import strategySchema from './strategy-schema';
 import { tagSchema } from './tag-schema';
 import { tagTypeSchema } from './tag-type-schema';
 import projectSchema from './project-schema';
+import { nameType } from '../routes/admin-api/util';
 
 export const featureStrategySchema = joi
     .object()
@@ -25,7 +26,7 @@ export const featureEnvironmentsSchema = joi.object().keys({
 });
 
 export const environmentSchema = joi.object().keys({
-    name: joi.string(),
+    name: nameType,
     displayName: joi
         .string()
         .optional()

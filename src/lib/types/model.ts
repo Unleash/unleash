@@ -1,3 +1,5 @@
+import { IFeatureStrategy } from '../db/feature-strategy-store';
+
 export interface IConstraint {
     contextName: string;
     operator: string;
@@ -33,6 +35,13 @@ export interface IFeatureToggleClient {
     variants: IVariant[];
     enabled: boolean;
     strategies: IStrategyConfig[];
+}
+
+export interface IFeatureEnvironmentInfo {
+    name: string;
+    environment: string;
+    enabled: boolean;
+    strategies: IFeatureStrategy[];
 }
 
 export interface FeatureToggleWithEnvironment extends FeatureToggle {

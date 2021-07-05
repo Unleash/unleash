@@ -35,7 +35,6 @@ function getSetup() {
 }
 
 let base;
-let featureToggleStore;
 let request;
 let destroy;
 let featureStrategiesStore;
@@ -44,7 +43,6 @@ beforeEach(() => {
     const setup = getSetup();
     base = setup.base;
     request = setup.request;
-    featureToggleStore = setup.featureToggleStore;
     featureStrategiesStore = setup.featureStrategiesStore;
     destroy = setup.destroy;
 });
@@ -147,11 +145,11 @@ test('support name prefix', async () => {
 
 test('support filtering on project', async () => {
     expect.assertions(2);
-    await featureToggleStore.createFeature({
+    await featureStrategiesStore.createFeature({
         name: 'a_test1',
         project: 'projecta',
     });
-    await featureToggleStore.createFeature({
+    await featureStrategiesStore.createFeature({
         name: 'b_test2',
         project: 'projectb',
     });
@@ -160,7 +158,7 @@ test('support filtering on project', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length).toBe(1);
+            expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe('a_test1');
         });
 });

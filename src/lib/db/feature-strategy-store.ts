@@ -433,10 +433,13 @@ class FeatureStrategiesStore {
     }
 
     async getStrategyById(id: string): Promise<IFeatureStrategy> {
-        return this.db(T.featureStrategies)
+        const strat = await this.db(T.featureStrategies)
             .where({ id })
-            .first()
-            .then(mapRow);
+            .first();
+        if (strat) {
+            return mapRow(strat);
+        }
+        throw new NotFoundError(`Could not find strategy with id: ${id}`);
     }
 
     async connectEnvironmentAndFeature(
@@ -533,19 +536,39 @@ class FeatureStrategiesStore {
         };
     }
 
+    async getEnvironmentMetaData(
+        environment: string,
+        featureName: string,
+    ): Promise<IFeatureEnvironment> {
+        const md = await this.db(T.featureEnvs)
+            .where('feature_name', featureName)
+            .andWhere('environment', environment)
+            .first();
+        if (md) {
+            return {
+                enabled: md.enabled,
+                featureName,
+                environment,
+            };
+        }
+        throw new NotFoundError(
+            `Could not find ${featureName} in ${environment}`,
+        );
+    }
+
     async getStrategiesAndMetadataForEnvironment(
         environment: string,
         featureName: string,
     ): Promise<void> {
         const rows = await this.db(T.featureEnvs)
-            .select()
-            .join(
-                'feature_strategies',
-                'feature_environments.feature_name',
-                'feature_strategies.feature_name',
+            .select('*')
+            .fullOuterJoin(
+                T.featureStrategies,
+                `${T.featureEnvs}.feature_name`,
+                `${T.featureStrategies}.feature_name`,
             )
-            .where('feature_strategies.feature_name', featureName)
-            .andWhere('feature_environments.environment', environment);
+            .where(`${T.featureStrategies}.feature_name`, featureName)
+            .andWhere(`${T.featureEnvs}.environment`, environment);
         return rows.reduce((acc, r) => {
             if (acc.strategies !== undefined) {
                 acc.strategies.push(this.getAdminStrategy(r));
@@ -596,6 +619,27 @@ class FeatureStrategiesStore {
             featureName: r.feature_name,
             enabled: r.enabled,
         }));
+    }
+
+    async featureHasEnvironment(
+        environment: string,
+        featureName: string,
+    ): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${T.featureEnvs} WHERE feature_name = ? AND environment = ?)  AS present`,
+            [featureName, environment],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async hasStrategy(id: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${T.featureStrategies} WHERE id = ?)  AS present`,
+            [id],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 }
 

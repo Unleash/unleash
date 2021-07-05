@@ -225,44 +225,58 @@ class FeatureController extends Controller {
 
         updatedFeature.name = featureName;
 
-        try {
-            const projectId = await this.featureService2.getProjectId(
-                updatedFeature.name,
-            );
-            const value = await featureSchema.validateAsync(updatedFeature);
-            const { enabled } = value;
-            const updatedToggle = this.featureService2.updateFeatureToggle(
-                projectId,
-                value,
-                userName,
-            );
-
-            await this.featureService2.removeAllStrategiesForEnv(featureName);
-            let strategies;
-            if (updatedFeature.strategies) {
-                strategies = await Promise.all(
-                    updatedFeature.strategies.map(async s =>
-                        this.featureService2.createStrategy(
-                            s,
-                            projectId,
-                            featureName,
-                        ),
-                    ),
+        const featureToggleExists = await this.featureService2.hasFeature(
+            featureName,
+        );
+        if (featureToggleExists) {
+            try {
+                await this.featureService2.getFeature(featureName);
+                const projectId = await this.featureService2.getProjectId(
+                    updatedFeature.name,
                 );
+                const value = await featureSchema.validateAsync(updatedFeature);
+                const { enabled } = value;
+                const updatedToggle = this.featureService2.updateFeatureToggle(
+                    projectId,
+                    value,
+                    userName,
+                );
+
+                await this.featureService2.removeAllStrategiesForEnv(
+                    featureName,
+                );
+                let strategies;
+                if (updatedFeature.strategies) {
+                    strategies = await Promise.all(
+                        updatedFeature.strategies.map(async s =>
+                            this.featureService2.createStrategy(
+                                s,
+                                projectId,
+                                featureName,
+                            ),
+                        ),
+                    );
+                }
+                await this.featureService2.updateEnabled(
+                    updatedFeature.name,
+                    GLOBAL_ENV,
+                    updatedFeature.enabled,
+                    userName,
+                );
+                res.status(200).json({
+                    ...updatedToggle,
+                    enabled,
+                    strategies: strategies || [],
+                });
+            } catch (error) {
+                handleErrors(res, this.logger, error);
             }
-            await this.featureService2.updateEnabled(
-                updatedFeature.name,
-                GLOBAL_ENV,
-                updatedFeature.enabled,
-                userName,
-            );
-            res.status(200).json({
-                ...updatedToggle,
-                enabled,
-                strategies: strategies || [],
-            });
-        } catch (error) {
-            handleErrors(res, this.logger, error);
+        } else {
+            res.status(404)
+                .json({
+                    error: `Feature with name ${featureName} does not exist`,
+                })
+                .end();
         }
     }
 

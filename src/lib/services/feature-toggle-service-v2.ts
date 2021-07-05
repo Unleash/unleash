@@ -211,6 +211,8 @@ class FeatureToggleServiceV2 {
         }
     }
 
+
+
     async getMembers(projectId: string): Promise<number> {
         return this.featureStrategiesStore.getMembers(projectId);
     }
@@ -242,6 +244,10 @@ class FeatureToggleServiceV2 {
             return;
         }
         throw new NameExistsError(msg);
+    }
+
+    async hasFeature(name: string): Promise<boolean> {
+        return this.featureToggleStore.exists(name)
     }
 
     async updateStale(featureName: string, isStale: boolean, userName: string): Promise<any> {

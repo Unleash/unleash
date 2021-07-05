@@ -114,6 +114,15 @@ export default class FeatureToggleStore {
             });
     }
 
+    async exists(name: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM features WHERE name = ?) AS present`,
+            [name],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
     async getArchivedFeatures(): Promise<FeatureToggle[]> {
         const rows = await this.db
             .select(FEATURE_COLUMNS)

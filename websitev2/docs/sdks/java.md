@@ -78,9 +78,8 @@ This is a bit more advanced approach, where you configure a unleash-context prov
 
 The provider typically binds the context to the same thread as the request. If you are using Spring the UnleashContextProvider will typically be a ‘request scoped’ bean.
 
-UnleashContextProvider contextProvider = new MyAwesomeContextProvider();
-
 ```java
+UnleashContextProvider contextProvider = new MyAwesomeContextProvider();
 UnleashConfig config = new UnleashConfig.Builder()
             .appName("java-test")
             .instanceId("instance x")

@@ -7,7 +7,7 @@ We from the Unleash teams take care of a handful of official SDKs for all the ma
 
 We ♥ love ♥ our contributors, and your effort make it easier to use Unleash everywhere.
 
-Community developed Client SDKs we already now about:
+Community developed Client SDKs we already know about:
 
 - [cognitedata/unleash-client-rust](https://github.com/cognitedata/unleash-client-rust) (Rust)
 - [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)

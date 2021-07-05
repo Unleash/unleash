@@ -102,6 +102,10 @@ export interface IProjectOverview {
 export interface IProjectParam {
     projectId: string;
 }
+
+export interface IArchivedQuery {
+    archived: boolean;
+}
 export interface ITagQuery {
     tagType: string;
     tagValue: string;

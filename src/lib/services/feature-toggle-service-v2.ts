@@ -2,15 +2,20 @@
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
-import FeatureStrategiesStore, { FeatureConfigurationClient, IFeatureStrategy } from '../db/feature-strategy-store';
+import FeatureStrategiesStore, {
+    FeatureConfigurationClient,
+    IFeatureStrategy,
+} from '../db/feature-strategy-store';
 import FeatureToggleStore from '../db/feature-toggle-store';
 import {
     FeatureToggle,
     FeatureToggleDTO,
-    FeatureToggleWithEnvironment, IFeatureEnvironment, IFeatureEnvironmentInfo,
+    FeatureToggleWithEnvironment,
+    IFeatureEnvironment,
+    IFeatureEnvironmentInfo,
     IFeatureToggleQuery,
     IProjectOverview,
-    IStrategyConfig
+    IStrategyConfig,
 } from '../types/model';
 import ProjectStore from '../db/project-store';
 import BadDataError from '../error/bad-data-error';
@@ -23,7 +28,7 @@ import {
     FEATURE_CREATED,
     FEATURE_STALE_OFF,
     FEATURE_STALE_ON,
-    FEATURE_UPDATED
+    FEATURE_UPDATED,
 } from '../types/events';
 import FeatureTagStore from '../db/feature-tag-store';
 import EnvironmentStore from '../db/environment-store';
@@ -52,9 +57,17 @@ class FeatureToggleServiceV2 {
             projectStore,
             eventStore,
             featureTagStore,
-            environmentStore
-        }: Pick<IUnleashStores, 'featureStrategiesStore' | 'featureToggleStore' | 'projectStore' | 'eventStore' | 'featureTagStore' | 'environmentStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>
+            environmentStore,
+        }: Pick<
+            IUnleashStores,
+            | 'featureStrategiesStore'
+            | 'featureToggleStore'
+            | 'projectStore'
+            | 'eventStore'
+            | 'featureTagStore'
+            | 'environmentStore'
+        >,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.logger = getLogger('services/feature-toggle-service-v2.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -65,25 +78,34 @@ class FeatureToggleServiceV2 {
         this.environmentStore = environmentStore;
     }
 
-    async createStrategy(strategyConfig: Omit<IStrategyConfig, 'id'>, projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig> {
+    async createStrategy(
+        strategyConfig: Omit<IStrategyConfig, 'id'>,
+        projectName: string,
+        featureName: string,
+        environment: string = GLOBAL_ENV,
+    ): Promise<IStrategyConfig> {
         try {
-            const newFeatureStrategy = await this.featureStrategiesStore.createStrategyConfig({
-                strategyName: strategyConfig.name,
-                constraints: strategyConfig.constraints,
-                parameters: strategyConfig.parameters,
-                projectName,
-                featureName,
-                environment
-            });
+            const newFeatureStrategy = await this.featureStrategiesStore.createStrategyConfig(
+                {
+                    strategyName: strategyConfig.name,
+                    constraints: strategyConfig.constraints,
+                    parameters: strategyConfig.parameters,
+                    projectName,
+                    featureName,
+                    environment,
+                },
+            );
             return {
                 id: newFeatureStrategy.id,
                 name: newFeatureStrategy.strategyName,
                 constraints: newFeatureStrategy.constraints,
-                parameters: newFeatureStrategy.parameters
+                parameters: newFeatureStrategy.parameters,
             };
         } catch (e) {
             if (e.code === FOREIGN_KEY_VIOLATION) {
-                throw new BadDataError("You have not added the current environment to the project");
+                throw new BadDataError(
+                    'You have not added the current environment to the project',
+                );
             }
             throw e;
         }
@@ -97,7 +119,10 @@ class FeatureToggleServiceV2 {
      * @param id
      * @param updates
      */
-    async updateStrategy(id: string, updates: Partial<IFeatureStrategy>): Promise<IFeatureStrategy> {
+    async updateStrategy(
+        id: string,
+        updates: Partial<IFeatureStrategy>,
+    ): Promise<IFeatureStrategy> {
         const exists = await this.featureStrategiesStore.hasStrategy(id);
         if (exists) {
             return this.featureStrategiesStore.updateStrategy(id, updates);
@@ -105,30 +130,46 @@ class FeatureToggleServiceV2 {
         throw new NotFoundError(`Could not find strategy with id ${id}`);
     }
 
-    async getStrategiesForEnvironment(projectName: string, featureName: string, environment: string = GLOBAL_ENV): Promise<IStrategyConfig[]> {
-        const hasEnv = await this.featureStrategiesStore.featureHasEnvironment(environment, featureName);
+    async getStrategiesForEnvironment(
+        projectName: string,
+        featureName: string,
+        environment: string = GLOBAL_ENV,
+    ): Promise<IStrategyConfig[]> {
+        const hasEnv = await this.featureStrategiesStore.featureHasEnvironment(
+            environment,
+            featureName,
+        );
         if (hasEnv) {
-            const featureStrategies = await this.featureStrategiesStore.getStrategiesForFeature(projectName, featureName, environment);
+            const featureStrategies = await this.featureStrategiesStore.getStrategiesForFeature(
+                projectName,
+                featureName,
+                environment,
+            );
             return featureStrategies.map(strat => ({
                 id: strat.id,
                 name: strat.strategyName,
                 constraints: strat.constraints,
-                parameters: strat.parameters
+                parameters: strat.parameters,
             }));
         }
-        throw new NotFoundError(`Feature ${featureName} does not have environment ${environment}`);
-
+        throw new NotFoundError(
+            `Feature ${featureName} does not have environment ${environment}`,
+        );
     }
 
     /**
      * GET /api/admin/projects/:projectName/features/:featureName
      * @param featureName
      */
-    async getFeature(featureName: string): Promise<FeatureToggleWithEnvironment> {
+    async getFeature(
+        featureName: string,
+    ): Promise<FeatureToggleWithEnvironment> {
         return this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
     }
 
-    async getClientFeatures(query?: IFeatureToggleQuery): Promise<FeatureConfigurationClient[]> {
+    async getClientFeatures(
+        query?: IFeatureToggleQuery,
+    ): Promise<FeatureConfigurationClient[]> {
         return this.featureStrategiesStore.getFeatures(query);
     }
 
@@ -137,22 +178,35 @@ class FeatureToggleServiceV2 {
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
      * @returns
      */
-    async getFeatureToggles(query?: IFeatureToggleQuery): Promise<FeatureToggle[]> {
+    async getFeatureToggles(
+        query?: IFeatureToggleQuery,
+    ): Promise<FeatureToggle[]> {
         return this.featureStrategiesStore.getFeatures(query);
     }
 
-    async getFeatureToggle(featureName: string): Promise<FeatureToggleWithEnvironment> {
+    async getFeatureToggle(
+        featureName: string,
+    ): Promise<FeatureToggleWithEnvironment> {
         return this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
     }
 
-
-    async createFeatureToggle(projectId: string, value: FeatureToggleDTO, userName: string): Promise<FeatureToggle> {
+    async createFeatureToggle(
+        projectId: string,
+        value: FeatureToggleDTO,
+        userName: string,
+    ): Promise<FeatureToggle> {
         this.logger.info(`${userName} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
         await this.projectStore.hasProject(projectId);
         const featureData = await featureMetadataSchema.validateAsync(value);
-        const createdToggle = await this.featureToggleStore.createFeature(projectId, featureData);
-        await this.environmentStore.connectFeatureToEnvironmentsForProject(featureData.name, projectId);
+        const createdToggle = await this.featureToggleStore.createFeature(
+            projectId,
+            featureData,
+        );
+        await this.environmentStore.connectFeatureToEnvironmentsForProject(
+            featureData.name,
+            projectId,
+        );
         await this.eventStore.store({
             type: FEATURE_CREATED,
             createdBy: userName,
@@ -171,12 +225,21 @@ class FeatureToggleServiceV2 {
         return this.featureToggleStore.getProjectId(featureName);
     }
 
-    async updateFeatureToggle(projectId: string, updatedFeature: FeatureToggleDTO, userName: string): Promise<FeatureToggle> {
-        this.logger.info(`${userName} updates feature toggle ${updatedFeature.name}`);
+    async updateFeatureToggle(
+        projectId: string,
+        updatedFeature: FeatureToggleDTO,
+        userName: string,
+    ): Promise<FeatureToggle> {
+        this.logger.info(
+            `${userName} updates feature toggle ${updatedFeature.name}`,
+        );
 
         await this.featureToggleStore.hasFeature(updatedFeature.name);
 
-        const featureToggle = await this.featureToggleStore.updateFeature(projectId, updatedFeature);
+        const featureToggle = await this.featureToggleStore.updateFeature(
+            projectId,
+            updatedFeature,
+        );
         const tags =
             (await this.featureTagStore.getAllTagsForFeature(
                 updatedFeature.name,
@@ -191,26 +254,43 @@ class FeatureToggleServiceV2 {
     }
 
     async getFeatureCountForProject(projectId: string): Promise<number> {
-        return this.featureToggleStore.count({ archived: false, project: projectId });
+        return this.featureToggleStore.count({
+            archived: false,
+            project: projectId,
+        });
     }
 
-    async removeAllStrategiesForEnv(toggleName: string, environment: string = GLOBAL_ENV): Promise<void> {
-        await this.featureStrategiesStore.removeAllStrategiesForEnv(toggleName, environment);
+    async removeAllStrategiesForEnv(
+        toggleName: string,
+        environment: string = GLOBAL_ENV,
+    ): Promise<void> {
+        await this.featureStrategiesStore.removeAllStrategiesForEnv(
+            toggleName,
+            environment,
+        );
     }
 
     async getStrategy(strategyId: string): Promise<IStrategyConfig> {
-        const strategy = await this.featureStrategiesStore.getStrategyById(strategyId);
+        const strategy = await this.featureStrategiesStore.getStrategyById(
+            strategyId,
+        );
         return {
             id: strategy.id,
             name: strategy.strategyName,
             constraints: strategy.constraints || [],
-            parameters: strategy.parameters
+            parameters: strategy.parameters,
         };
     }
 
-    async getProjectOverview(projectId: string): Promise<IProjectOverview> {
+    async getProjectOverview(
+        projectId: string,
+        archived: boolean = false,
+    ): Promise<IProjectOverview> {
         const project = await this.projectStore.get(projectId);
-        const features = await this.featureStrategiesStore.getProjectOverview(projectId);
+        const features = await this.featureStrategiesStore.getProjectOverview(
+            projectId,
+            archived,
+        );
         const members = await this.featureStrategiesStore.getMembers(projectId);
         return {
             name: project.name,
@@ -218,29 +298,44 @@ class FeatureToggleServiceV2 {
             health: project.health,
             features,
             members,
-            version: 1
-        }
+            version: 1,
+        };
     }
-
-
 
     async getMembers(projectId: string): Promise<number> {
         return this.featureStrategiesStore.getMembers(projectId);
     }
 
-    async getEnvironmentInfo(project: string, environment: string, featureName: string): Promise<IFeatureEnvironmentInfo> {
-        const envMetadata = await this.featureStrategiesStore.getEnvironmentMetaData(environment, featureName);
-        const strategies = await this.featureStrategiesStore.getStrategiesForFeature(project, featureName, environment);
-        return ({
+    async getEnvironmentInfo(
+        project: string,
+        environment: string,
+        featureName: string,
+    ): Promise<IFeatureEnvironmentInfo> {
+        const envMetadata = await this.featureStrategiesStore.getEnvironmentMetaData(
+            environment,
+            featureName,
+        );
+        const strategies = await this.featureStrategiesStore.getStrategiesForFeature(
+            project,
+            featureName,
+            environment,
+        );
+        return {
             name: featureName,
             environment,
             enabled: envMetadata.enabled,
-            strategies
-        })
+            strategies,
+        };
     }
 
-    async deleteEnvironment(projectId: string, environment: string): Promise<void> {
-        await this.featureStrategiesStore.deleteConfigurationsForProjectAndEnvironment(projectId, environment);
+    async deleteEnvironment(
+        projectId: string,
+        environment: string,
+    ): Promise<void> {
+        await this.featureStrategiesStore.deleteConfigurationsForProjectAndEnvironment(
+            projectId,
+            environment,
+        );
         await this.projectStore.deleteEnvironment(projectId, environment);
     }
 
@@ -265,11 +360,17 @@ class FeatureToggleServiceV2 {
     }
 
     async hasFeature(name: string): Promise<boolean> {
-        return this.featureToggleStore.exists(name)
+        return this.featureToggleStore.exists(name);
     }
 
-    async updateStale(featureName: string, isStale: boolean, userName: string): Promise<any> {
-        const feature = await this.featureToggleStore.getFeatureMetadata(featureName);
+    async updateStale(
+        featureName: string,
+        isStale: boolean,
+        userName: string,
+    ): Promise<any> {
+        const feature = await this.featureToggleStore.getFeatureMetadata(
+            featureName,
+        );
         feature.stale = isStale;
         await this.featureToggleStore.updateFeature(feature.project, feature);
         const tags =
@@ -298,36 +399,72 @@ class FeatureToggleServiceV2 {
         });
     }
 
-    async updateEnabled(featureName: string, environment: string, enabled: boolean, userName: string): Promise<FeatureToggle> {
-        const hasEnvironment = await this.featureStrategiesStore.featureHasEnvironment(environment, featureName);
+    async updateEnabled(
+        featureName: string,
+        environment: string,
+        enabled: boolean,
+        userName: string,
+    ): Promise<FeatureToggle> {
+        const hasEnvironment = await this.featureStrategiesStore.featureHasEnvironment(
+            environment,
+            featureName,
+        );
         if (hasEnvironment) {
-            const newEnabled = await this.featureStrategiesStore.toggleEnvironmentEnabledStatus(environment, featureName, enabled);
-            const feature = await this.featureToggleStore.getFeatureMetadata(featureName);
+            const newEnabled = await this.featureStrategiesStore.toggleEnvironmentEnabledStatus(
+                environment,
+                featureName,
+                enabled,
+            );
+            const feature = await this.featureToggleStore.getFeatureMetadata(
+                featureName,
+            );
             const tags =
-                (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
-                [];
+                (await this.featureTagStore.getAllTagsForFeature(
+                    featureName,
+                )) || [];
             await this.eventStore.store({
                 type: FEATURE_UPDATED,
                 createdBy: userName,
                 data: { ...feature, enabled: newEnabled },
-                tags
+                tags,
             });
             return feature;
         }
-        throw new NotFoundError(`Could not find environment ${environment} for feature: ${featureName}`);
+        throw new NotFoundError(
+            `Could not find environment ${environment} for feature: ${featureName}`,
+        );
     }
 
     // @deprecated
-    async toggle(featureName: string, environment: string, userName: string): Promise<FeatureToggle> {
+    async toggle(
+        featureName: string,
+        environment: string,
+        userName: string,
+    ): Promise<FeatureToggle> {
         await this.featureToggleStore.hasFeature(featureName);
-        const isEnabled = await this.featureStrategiesStore.isEnvironmentEnabled(featureName, environment);
-        return this.updateEnabled(featureName, environment, !isEnabled, userName);
+        const isEnabled = await this.featureStrategiesStore.isEnvironmentEnabled(
+            featureName,
+            environment,
+        );
+        return this.updateEnabled(
+            featureName,
+            environment,
+            !isEnabled,
+            userName,
+        );
     }
 
     // @deprecated
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async updateField(featureName: string, field: string, value: any, userName: string): Promise<any> {
-        const feature = await this.featureToggleStore.getFeatureMetadata(featureName);
+    async updateField(
+        featureName: string,
+        field: string,
+        value: any,
+        userName: string,
+    ): Promise<any> {
+        const feature = await this.featureToggleStore.getFeatureMetadata(
+            featureName,
+        );
         feature[field] = value;
         await this.featureToggleStore.updateFeature(feature.project, feature);
         const tags =
@@ -342,10 +479,7 @@ class FeatureToggleServiceV2 {
         });
         return feature;
     }
-
 }
-
-
 
 module.exports = FeatureToggleServiceV2;
 export default FeatureToggleServiceV2;

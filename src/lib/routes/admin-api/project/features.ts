@@ -10,6 +10,7 @@ import {
     IProjectParam,
     IStrategyConfig,
     FeatureToggleDTO,
+    IArchivedQuery,
 } from '../../../types/model';
 import { handleErrors } from '../util';
 import extractUsername from '../../../extract-user';
@@ -191,13 +192,15 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getProjectOverview(
-        req: Request<IProjectParam, any, any, any>,
+        req: Request<IProjectParam, any, any, IArchivedQuery>,
         res: Response,
     ): Promise<void> {
         const { projectId } = req.params;
+        const { archived } = req.query;
         try {
             const overview = await this.featureService.getProjectOverview(
                 projectId,
+                archived,
             );
             res.json(overview);
         } catch (e) {

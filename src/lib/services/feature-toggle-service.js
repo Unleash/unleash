@@ -18,8 +18,12 @@ const {
 } = require('../types/events');
 
 class FeatureToggleService {
-    constructor({ featureToggleStore, tagStore, eventStore }, { getLogger }) {
+    constructor(
+        { featureToggleStore, featureTagStore, tagStore, eventStore },
+        { getLogger },
+    ) {
         this.featureToggleStore = featureToggleStore;
+        this.featureTagStore = featureTagStore;
         this.tagStore = tagStore;
         this.eventStore = eventStore;
         this.logger = getLogger('services/feature-toggle-service.js');
@@ -89,7 +93,7 @@ class FeatureToggleService {
         const value = await featureSchema.validateAsync(updatedFeature);
         await this.featureToggleStore.updateFeature(value);
         const tags =
-            (await this.featureToggleStore.getAllTagsForFeature(
+            (await this.featureTagStore.getAllTagsForFeature(
                 updatedFeature.name,
             )) || [];
         await this.eventStore.store({
@@ -104,7 +108,7 @@ class FeatureToggleService {
         await this.featureToggleStore.getFeature(name);
         await this.featureToggleStore.archiveFeature(name);
         const tags =
-            (await this.featureToggleStore.getAllTagsForFeature(name)) || [];
+            (await this.featureTagStore.getAllTagsForFeature(name)) || [];
         await this.eventStore.store({
             type: FEATURE_ARCHIVED,
             createdBy: userName,
@@ -114,9 +118,9 @@ class FeatureToggleService {
     }
 
     async reviveToggle(name, userName) {
-        await this.featureToggleStore.reviveFeature({ name });
+        await this.featureToggleStore.reviveFeature(name);
         const tags =
-            (await this.featureToggleStore.getAllTagsForFeature(name)) || [];
+            (await this.featureTagStore.getAllTagsForFeature(name)) || [];
 
         await this.eventStore.store({
             type: FEATURE_REVIVED,
@@ -134,7 +138,7 @@ class FeatureToggleService {
 
     /** Tag related  */
     async listTags(featureName) {
-        return this.featureToggleStore.getAllTagsForFeature(featureName);
+        return this.featureTagStore.getAllTagsForFeature(featureName);
     }
 
     async addTag(featureName, tag, userName) {
@@ -207,7 +211,7 @@ class FeatureToggleService {
         feature[field] = value;
         await this.featureToggleStore.updateFeature(feature);
         const tags =
-            (await this.featureToggleStore.getAllTagsForFeature(featureName)) ||
+            (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
             [];
 
         await this.eventStore.store({
@@ -224,7 +228,7 @@ class FeatureToggleService {
         feature.stale = isStale;
         await this.featureToggleStore.updateFeature(feature);
         const tags =
-            (await this.featureToggleStore.getAllTagsForFeature(featureName)) ||
+            (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
             [];
 
         await this.eventStore.store({

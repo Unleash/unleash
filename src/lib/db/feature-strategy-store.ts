@@ -389,9 +389,12 @@ class FeatureStrategiesStore {
         return Object.values(featureToggles);
     }
 
-    async getProjectOverview(projectId: string): Promise<IFeatureOverview[]> {
+    async getProjectOverview(
+        projectId: string,
+        archived: boolean = false,
+    ): Promise<IFeatureOverview[]> {
         const rows = await this.db('features')
-            .where({ project: projectId })
+            .where({ project: projectId, archived })
             .select(
                 'features.name as feature_name',
                 'features.type as type',

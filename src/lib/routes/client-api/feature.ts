@@ -5,7 +5,6 @@ import Controller from '../controller';
 import { IUnleashServices } from '../../types/services';
 import { IUnleashConfig } from '../../types/option';
 import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
-import FeatureToggleService from '../../services/feature-toggle-service';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
@@ -23,8 +22,6 @@ const FEATURE_COLUMNS_CLIENT = [
 
 export default class FeatureController extends Controller {
     private readonly logger: Logger;
-
-    private featureToggleService: FeatureToggleService;
 
     private featureToggleServiceV2: FeatureToggleServiceV2;
 

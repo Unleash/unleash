@@ -7,23 +7,23 @@ import { Logger } from '../../logger';
 import Controller from '../controller';
 
 import extractUser from '../../extract-user';
-import { UPDATE_FEATURE, DELETE_FEATURE } from '../../types/permissions';
-import FeatureToggleService from '../../services/feature-toggle-service';
+import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions';
+import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
 
-    private featureService: FeatureToggleService;
+    private featureService: FeatureToggleServiceV2;
 
     constructor(
         config: IUnleashConfig,
         {
-            featureToggleService,
-        }: Pick<IUnleashServices, 'featureToggleService'>,
+            featureToggleServiceV2,
+        }: Pick<IUnleashServices, 'featureToggleServiceV2'>,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/archive.js');
-        this.featureService = featureToggleService;
+        this.featureService = featureToggleServiceV2;
 
         this.get('/features', this.getArchivedFeatures);
         this.delete('/:featureName', this.deleteFeature, DELETE_FEATURE);
@@ -37,8 +37,10 @@ export default class ArchiveController extends Controller {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async getArchivedFeatures(req, res): Promise<void> {
         try {
-            const features = await this.featureService.getArchivedFeatures();
-            res.json({ features });
+            const features = await this.featureService.getMetadataForAllFeatures(
+                true,
+            );
+            res.json({ version: 2, features });
         } catch (err) {
             handleErrors(res, this.logger, err);
         }
@@ -49,8 +51,9 @@ export default class ArchiveController extends Controller {
         res: Response,
     ): Promise<void> {
         const { featureName } = req.params;
+        const user = extractUser(req);
         try {
-            await this.featureService.deleteFeature(featureName);
+            await this.featureService.deleteFeature(featureName, user);
             res.status(200).end();
         } catch (error) {
             handleErrors(res, this.logger, error);
@@ -64,10 +67,9 @@ export default class ArchiveController extends Controller {
 
         try {
             await this.featureService.reviveToggle(featureName, userName);
-            return res.status(200).end();
+            res.status(200).end();
         } catch (error) {
-            this.logger.error('Server failed executing request', error);
-            return res.status(500).end();
+            handleErrors(res, this.logger, error);
         }
     }
 }

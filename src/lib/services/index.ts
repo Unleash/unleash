@@ -5,7 +5,6 @@ import FeatureTypeService from './feature-type-service';
 import EventService from './event-service';
 import HealthService from './health-service';
 
-import FeatureToggleService from './feature-toggle-service';
 import ProjectService from './project-service';
 import StateService from './state-service';
 import ClientMetricsService from './client-metrics';
@@ -37,7 +36,6 @@ export const createServices = (
     const contextService = new ContextService(stores, config);
     const emailService = new EmailService(config.email, config.getLogger);
     const eventService = new EventService(stores, config);
-    const featureToggleService = new FeatureToggleService(stores, config);
     const featureTypeService = new FeatureTypeService(stores, config);
     const projectService = new ProjectService(stores, config, accessService);
     const resetTokenService = new ResetTokenService(stores, config);
@@ -64,7 +62,6 @@ export const createServices = (
     return {
         accessService,
         addonService,
-        featureToggleService,
         featureToggleServiceV2,
         featureTypeService,
         healthService,

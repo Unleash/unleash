@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { arch } from 'os';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
@@ -25,15 +26,16 @@ import { featureMetadataSchema, nameSchema } from '../schema/feature-schema';
 import EventStore from '../db/event-store';
 import {
     FEATURE_ARCHIVED,
-    FEATURE_CREATED,
+    FEATURE_CREATED, FEATURE_DELETED, FEATURE_REVIVED,
     FEATURE_STALE_OFF,
     FEATURE_STALE_ON,
-    FEATURE_UPDATED,
+    FEATURE_UPDATED
 } from '../types/events';
 import FeatureTagStore from '../db/feature-tag-store';
 import EnvironmentStore from '../db/environment-store';
 import { GLOBAL_ENV } from '../types/environment';
 import NotFoundError from '../error/notfound-error';
+import user from '../routes/admin-api/user';
 
 class FeatureToggleServiceV2 {
     private logger: Logger;
@@ -59,13 +61,13 @@ class FeatureToggleServiceV2 {
             featureTagStore,
             environmentStore,
         }: Pick<
-            IUnleashStores,
-            | 'featureStrategiesStore'
-            | 'featureToggleStore'
-            | 'projectStore'
-            | 'eventStore'
-            | 'featureTagStore'
-            | 'environmentStore'
+        IUnleashStores,
+        | 'featureStrategiesStore'
+        | 'featureToggleStore'
+        | 'projectStore'
+        | 'eventStore'
+        | 'featureTagStore'
+        | 'environmentStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
@@ -160,11 +162,13 @@ class FeatureToggleServiceV2 {
     /**
      * GET /api/admin/projects/:projectName/features/:featureName
      * @param featureName
+     * @param archived - return archived or non archived toggles
      */
     async getFeature(
         featureName: string,
+        archived: boolean = false
     ): Promise<FeatureToggleWithEnvironment> {
-        return this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
+        return this.featureStrategiesStore.getFeatureToggleAdmin(featureName, archived);
     }
 
     async getClientFeatures(
@@ -180,8 +184,9 @@ class FeatureToggleServiceV2 {
      */
     async getFeatureToggles(
         query?: IFeatureToggleQuery,
+        archived: boolean = false
     ): Promise<FeatureToggle[]> {
-        return this.featureStrategiesStore.getFeatures(query);
+        return this.featureStrategiesStore.getFeatures(query, archived);
     }
 
     async getFeatureToggle(
@@ -478,6 +483,37 @@ class FeatureToggleServiceV2 {
             tags,
         });
         return feature;
+    }
+
+    async getArchivedFeatures(): Promise<FeatureToggle[]> {
+        return this.getFeatureToggles({}, true);
+    }
+
+    async deleteFeature(featureName: string, userName: string): Promise<void> {
+        await this.featureToggleStore.deleteFeature(featureName);
+        await this.eventStore.store({
+            type: FEATURE_DELETED,
+            createdBy: userName,
+            data: {
+                featureName
+            },
+        })
+    }
+
+    async reviveToggle(featureName: string, userName: string): Promise<void> {
+        const data = await this.featureToggleStore.reviveFeature(featureName);
+        const tags = await this.featureTagStore.getAllTagsForFeature(featureName);
+        await this.eventStore.store({
+            type: FEATURE_REVIVED,
+            createdBy: userName,
+            data,
+            tags
+        });
+
+    }
+
+    async getMetadataForAllFeatures(archived: boolean): Promise<FeatureToggle[]> {
+        return this.featureToggleStore.getFeatures(archived);
     }
 }
 

@@ -21,7 +21,6 @@ import UserFeedbackService from '../services/user-feedback-service';
 import FeatureToggleServiceV2 from '../services/feature-toggle-service-v2';
 import EnvironmentService from '../services/environment-service';
 import FeatureTagService from '../services/feature-tag-service';
-import FeatureToggleService from '../services/feature-toggle-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -32,7 +31,6 @@ export interface IUnleashServices {
     emailService: EmailService;
     environmentService: EnvironmentService;
     eventService: EventService;
-    featureToggleService: FeatureToggleService;
     featureToggleServiceV2: FeatureToggleServiceV2;
     featureTypeService: FeatureTypeService;
     healthService: HealthService;

@@ -69,11 +69,11 @@ export default class FeatureToggleStore {
             .then(this.rowToFeature);
     }
 
-    async getFeatures(): Promise<FeatureToggle[]> {
+    async getFeatures(archived: boolean = false): Promise<FeatureToggle[]> {
         const rows = await this.db
             .select(FEATURE_COLUMNS)
             .from(TABLE)
-            .where({ archived: false });
+            .where({ archived });
         return rows.map(this.rowToFeature);
     }
 
@@ -172,6 +172,7 @@ export default class FeatureToggleStore {
             description: data.description,
             type: data.type,
             project,
+            archived: data.archived || false,
             stale: data.stale,
             variants: data.variants ? JSON.stringify(data.variants) : null,
             created_at: data.createdAt,

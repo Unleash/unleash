@@ -402,6 +402,9 @@ class FeatureStrategiesStore {
             .select(
                 'features.name as feature_name',
                 'features.type as type',
+                'features.created_at as created_at',
+                'features.last_seen_at as last_seen_at',
+                'features.stale as stale',
                 'feature_environments.enabled as enabled',
                 'feature_environments.environment as environment',
                 'environments.display_name as display_name',
@@ -426,6 +429,9 @@ class FeatureStrategiesStore {
                     acc[r.feature_name] = {
                         type: r.type,
                         name: r.feature_name,
+                        createdAt: r.created_at,
+                        lastSeenAt: r.last_seen_at,
+                        stale: r.stale,
                         environments: [this.getEnvironment(r)],
                     };
                 }

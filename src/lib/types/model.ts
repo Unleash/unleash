@@ -89,6 +89,9 @@ export interface IEnvironmentOverview {
 export interface IFeatureOverview {
     name: string;
     type: string;
+    stale: boolean;
+    createdAt: Date;
+    lastSeenAt: Date;
     environments: IEnvironmentOverview[];
 }
 
@@ -99,6 +102,12 @@ export interface IProjectOverview {
     members: number;
     version: number;
     health: number;
+}
+
+export interface IProjectHealthReport extends IProjectOverview {
+    staleCount: number;
+    potentiallyStaleCount: number;
+    activeCount: number;
 }
 
 export interface IProjectParam {

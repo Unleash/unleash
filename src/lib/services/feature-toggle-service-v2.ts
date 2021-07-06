@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import { arch } from 'os';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
@@ -12,11 +11,10 @@ import {
     FeatureToggle,
     FeatureToggleDTO,
     FeatureToggleWithEnvironment,
-    IFeatureEnvironment,
-    IFeatureEnvironmentInfo,
-    IFeatureToggleQuery,
+    IFeatureEnvironmentInfo, IFeatureOverview,
+    IFeatureToggleQuery, IProjectHealthReport,
     IProjectOverview,
-    IStrategyConfig,
+    IStrategyConfig
 } from '../types/model';
 import ProjectStore from '../db/project-store';
 import BadDataError from '../error/bad-data-error';
@@ -35,8 +33,8 @@ import FeatureTagStore from '../db/feature-tag-store';
 import EnvironmentStore from '../db/environment-store';
 import { GLOBAL_ENV } from '../types/environment';
 import NotFoundError from '../error/notfound-error';
-import user from '../routes/admin-api/user';
-import feature from '../routes/admin-api/feature';
+import FeatureTypeStore from '../db/feature-type-store';
+import { MILLISECONDS_IN_DAY } from '../util/constants';
 
 class FeatureToggleServiceV2 {
     private logger: Logger;
@@ -53,6 +51,8 @@ class FeatureToggleServiceV2 {
 
     private eventStore: EventStore;
 
+    private featureTypeStore: FeatureTypeStore;
+
     constructor(
         {
             featureStrategiesStore,
@@ -61,6 +61,7 @@ class FeatureToggleServiceV2 {
             eventStore,
             featureTagStore,
             environmentStore,
+            featureTypeStore,
         }: Pick<
         IUnleashStores,
         | 'featureStrategiesStore'
@@ -69,6 +70,7 @@ class FeatureToggleServiceV2 {
         | 'eventStore'
         | 'featureTagStore'
         | 'environmentStore'
+        | 'featureTypeStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
@@ -79,6 +81,7 @@ class FeatureToggleServiceV2 {
         this.projectStore = projectStore;
         this.eventStore = eventStore;
         this.environmentStore = environmentStore;
+        this.featureTypeStore = featureTypeStore;
     }
 
     async createStrategy(
@@ -518,6 +521,39 @@ class FeatureToggleServiceV2 {
 
     async getMetadataForAllFeatures(archived: boolean): Promise<FeatureToggle[]> {
         return this.featureToggleStore.getFeatures(archived);
+    }
+
+    async getProjectHealthReport(projectId: string): Promise<IProjectHealthReport> {
+        const overview = await this.getProjectOverview(projectId, false);
+        return {
+            ...overview,
+            potentiallyStaleCount: await this.potentiallyStaleCount(overview.features),
+            activeCount: this.activeCount(overview.features),
+            staleCount: this.staleCount(overview.features)
+        }
+    }
+
+    private async potentiallyStaleCount(features: IFeatureOverview[]): Promise<number> {
+        const today = new Date().valueOf();
+        const featureTypes = await this.featureTypeStore.getAll();
+        const featureTypeMap = featureTypes.reduce((acc, current) => {
+            acc[current.id] = current.lifetimeDays;
+
+            return acc;
+        }, {});
+
+        return features.filter(feature => {
+            const diff = today - feature.createdAt.valueOf();
+            return !feature.stale && diff > featureTypeMap[feature.type] * MILLISECONDS_IN_DAY;
+        }).length;
+    }
+
+    private activeCount(features: IFeatureOverview[]): number {
+        return features.filter(f => !f.stale).length;
+    }
+
+    private staleCount(features: IFeatureOverview[]): number {
+        return features.filter(f => f.stale).length;
     }
 }
 

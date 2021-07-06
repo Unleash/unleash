@@ -87,9 +87,28 @@ export default class ProjectFeaturesController extends Controller {
             this.updateStrategy,
         );
         this.get('/:projectId', this.getProjectOverview);
+        this.get('/:projectId/health-report', this.getProjectHealthReport);
         this.post('/:projectId/features', this.createFeatureToggle);
         this.get('/:projectId/features', this.getFeaturesForProject);
         this.get(PATH_PREFIX, this.getFeature);
+    }
+
+    async getProjectHealthReport(
+        req: Request<ProjectParam, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        try {
+            const overview = await this.featureService.getProjectHealthReport(
+                projectId,
+            );
+            res.json({
+                version: 2,
+                ...overview,
+            });
+        } catch (e) {
+            handleErrors(res, this.logger, e);
+        }
     }
 
     async getFeaturesForProject(

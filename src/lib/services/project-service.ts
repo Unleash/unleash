@@ -1,4 +1,3 @@
-import moment from 'moment';
 import User from '../types/user';
 import { AccessService, IUserWithRole, RoleName } from './access-service';
 import ProjectStore, { IProject } from '../db/project-store';
@@ -20,12 +19,12 @@ import { IUnleashConfig } from '../types/option';
 import FeatureTypeStore from '../db/feature-type-store';
 import { FeatureToggle } from '../types/model';
 import Timer = NodeJS.Timer;
+import {
+    MILLISECONDS_IN_DAY,
+    MILLISECONDS_IN_ONE_HOUR,
+} from '../util/constants';
 
 const getCreatedBy = (user: User) => user.email || user.username;
-
-const MILLISECONDS_IN_DAY = 86400000;
-
-const ONE_HOUR = 3600000;
 
 const DEFAULT_PROJECT = 'default';
 
@@ -73,7 +72,7 @@ export default class ProjectService {
         this.logger = config.getLogger('services/project-service.js');
         this.healthRatingTimer = setInterval(
             () => this.setHealthRating(),
-            ONE_HOUR,
+            MILLISECONDS_IN_ONE_HOUR,
         ).unref();
     }
 

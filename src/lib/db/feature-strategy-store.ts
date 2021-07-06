@@ -515,6 +515,7 @@ class FeatureStrategiesStore {
             .where({ project: projectId });
 
         const numbers = await this.db('role_user')
+            .distinct()
             .count('user_id as members')
             .whereIn('role_id', rolesFromProject)
             .first();

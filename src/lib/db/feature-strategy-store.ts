@@ -511,6 +511,7 @@ class FeatureStrategiesStore {
     async getMembers(projectId: string): Promise<number> {
         const rolesFromProject = this.db('role_permission')
             .select('role_id')
+            .distinct()
             .where({ project: projectId });
 
         const numbers = await this.db('role_user')

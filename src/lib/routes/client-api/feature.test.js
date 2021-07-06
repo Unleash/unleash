@@ -63,10 +63,10 @@ test('should get empty getFeatures via client', () => {
 });
 
 test('if caching is enabled should memoize', async () => {
-    const getFeatureToggles = jest.fn().mockReturnValue([]);
+    const getClientFeatures = jest.fn().mockReturnValue([]);
 
     const featureToggleServiceV2 = {
-        getFeatureToggles,
+        getClientFeatures,
     };
     const controller = new FeatureController(
         { featureToggleServiceV2 },
@@ -82,14 +82,14 @@ test('if caching is enabled should memoize', async () => {
     );
     await controller.getAll({ query: {} }, { json: () => {} });
     await controller.getAll({ query: {} }, { json: () => {} });
-    expect(getFeatureToggles).toHaveBeenCalledTimes(1);
+    expect(getClientFeatures).toHaveBeenCalledTimes(1);
 });
 
 test('if caching is not enabled all calls goes to service', async () => {
-    const getFeatureToggles = jest.fn().mockReturnValue([]);
+    const getClientFeatures = jest.fn().mockReturnValue([]);
 
     const featureToggleServiceV2 = {
-        getFeatureToggles,
+        getClientFeatures,
     };
     const controller = new FeatureController(
         { featureToggleServiceV2 },
@@ -105,7 +105,7 @@ test('if caching is not enabled all calls goes to service', async () => {
     );
     await controller.getAll({ query: {} }, { json: () => {} });
     await controller.getAll({ query: {} }, { json: () => {} });
-    expect(getFeatureToggles).toHaveBeenCalledTimes(2);
+    expect(getClientFeatures).toHaveBeenCalledTimes(2);
 });
 
 test('fetch single feature', async () => {

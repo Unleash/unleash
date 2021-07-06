@@ -39,7 +39,7 @@ export default class FeatureController extends Controller {
         const { experimental } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.logger = config.getLogger('client-api/feature.js');
-        this.get('/', this.getAllV2);
+        this.get('/', this.getAll);
         this.get('/:featureName', this.getFeatureToggle);
         if (experimental && experimental.clientFeatureMemoize) {
             // @ts-ignore
@@ -59,7 +59,7 @@ export default class FeatureController extends Controller {
         }
     }
 
-    async getAllV2(req: Request, res: Response): Promise<void> {
+    async getAll(req: Request, res: Response): Promise<void> {
         try {
             const query = await this.prepQuery(req.query);
             let features;
@@ -70,7 +70,7 @@ export default class FeatureController extends Controller {
                     query,
                 );
             }
-            res.status(200).json({ version: 2, features });
+            res.json({ version: 2, features });
         } catch (e) {
             handleErrors(res, this.logger, e);
         }

@@ -36,6 +36,7 @@ import EnvironmentStore from '../db/environment-store';
 import { GLOBAL_ENV } from '../types/environment';
 import NotFoundError from '../error/notfound-error';
 import user from '../routes/admin-api/user';
+import feature from '../routes/admin-api/feature';
 
 class FeatureToggleServiceV2 {
     private logger: Logger;
@@ -173,20 +174,23 @@ class FeatureToggleServiceV2 {
 
     async getClientFeatures(
         query?: IFeatureToggleQuery,
+        archived: boolean = false,
     ): Promise<FeatureConfigurationClient[]> {
-        return this.featureStrategiesStore.getFeatures(query);
+        return this.featureStrategiesStore.getFeatures(query, archived, false);
     }
 
     /**
      * Used to retrieve metadata of all feature toggles defined in Unleash.
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
+     * @param archived - Return archived or active toggles
+     * @param includeStrategyId - Include id for strategies
      * @returns
      */
     async getFeatureToggles(
         query?: IFeatureToggleQuery,
         archived: boolean = false
     ): Promise<FeatureToggle[]> {
-        return this.featureStrategiesStore.getFeatures(query, archived);
+        return this.featureStrategiesStore.getFeatures(query, archived, true);
     }
 
     async getFeatureToggle(

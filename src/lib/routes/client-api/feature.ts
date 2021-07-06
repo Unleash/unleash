@@ -39,14 +39,13 @@ export default class FeatureController extends Controller {
         const { experimental } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.logger = config.getLogger('client-api/feature.js');
-        this.get('/', this.getAll);
-        this.get('/v2', this.getAllV2);
+        this.get('/', this.getAllV2);
         this.get('/:featureName', this.getFeatureToggle);
         if (experimental && experimental.clientFeatureMemoize) {
             // @ts-ignore
             this.cache = experimental.clientFeatureMemoize.enabled;
             this.cachedFeatures = memoizee(
-                query => this.featureToggleServiceV2.getFeatureToggles(query),
+                query => this.featureToggleServiceV2.getClientFeatures(query),
                 {
                     promise: true,
                     // @ts-ignore
@@ -62,7 +61,15 @@ export default class FeatureController extends Controller {
 
     async getAllV2(req: Request, res: Response): Promise<void> {
         try {
-            const features = await this.featureToggleServiceV2.getClientFeatures();
+            const query = await this.prepQuery(req.query);
+            let features;
+            if (this.cache) {
+                features = await this.cachedFeatures(query);
+            } else {
+                features = await this.featureToggleServiceV2.getClientFeatures(
+                    query,
+                );
+            }
             res.status(200).json({ version: 2, features });
         } catch (e) {
             handleErrors(res, this.logger, e);
@@ -96,26 +103,6 @@ export default class FeatureController extends Controller {
             return param;
         }
         return Array.isArray(param) ? param : [param];
-    }
-
-    async getAll(req: Request, res: Response): Promise<void> {
-        try {
-            const query = await this.prepQuery(req.query);
-            let features;
-            if (this.cache) {
-                features = await this.cachedFeatures(
-                    query,
-                    FEATURE_COLUMNS_CLIENT,
-                );
-            } else {
-                features = await this.featureToggleServiceV2.getFeatureToggles(
-                    query,
-                );
-            }
-            res.json({ version, features });
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
     }
 
     async getFeatureToggle(

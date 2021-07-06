@@ -301,6 +301,7 @@ class FeatureStrategiesStore {
     async getFeatures(
         featureQuery?: IFeatureToggleQuery,
         archived: boolean = false,
+        includeStrategyId: boolean = true,
     ): Promise<IFeatureToggleClient[]> {
         const environments = [':global:'];
         if (featureQuery?.environment) {
@@ -368,7 +369,9 @@ class FeatureStrategiesStore {
                 feature.strategies = [];
             }
             if (r.strategy_name) {
-                feature.strategies.push(this.getAdminStrategy(r));
+                feature.strategies.push(
+                    this.getAdminStrategy(r, includeStrategyId),
+                );
             }
             if (feature.enabled === undefined) {
                 feature.enabled = r.enabled;
@@ -530,13 +533,20 @@ class FeatureStrategiesStore {
         };
     }
 
-    private getAdminStrategy(r: any): IStrategyConfig {
-        return {
+    private getAdminStrategy(
+        r: any,
+        includeId: boolean = true,
+    ): IStrategyConfig {
+        const strategy = {
             name: r.strategy_name,
             constraints: r.constraints || [],
             parameters: r.parameters,
             id: r.strategy_id,
         };
+        if (!includeId) {
+            delete strategy.id;
+        }
+        return strategy;
     }
 
     async getEnvironmentMetaData(

@@ -7,11 +7,12 @@ export interface IConstraint {
 }
 
 export interface IStrategyConfig {
-    id: string;
+    id?: string;
     name: string;
     constraints: IConstraint[];
     parameters: Object;
 }
+
 export interface FeatureToggleDTO {
     name: string;
     description?: string;

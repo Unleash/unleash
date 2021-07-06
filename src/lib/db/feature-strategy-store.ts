@@ -386,6 +386,7 @@ class FeatureStrategiesStore {
             feature.variants = r.variants;
             feature.lastSeenAt = r.last_seen_at;
             feature.project = r.project;
+            feature.createdAt = r.created_at;
             acc[r.name] = feature;
             return acc;
         }, {});

@@ -6,14 +6,15 @@ import FeatureToggleServiceV2 from '../../../services/feature-toggle-service-v2'
 import { Logger } from '../../../logger';
 import { UPDATE_FEATURE } from '../../../types/permissions';
 import {
+    FeatureToggleDTO,
+    IArchivedQuery,
     IConstraint,
     IProjectParam,
     IStrategyConfig,
-    FeatureToggleDTO,
-    IArchivedQuery,
 } from '../../../types/model';
 import { handleErrors } from '../util';
 import extractUsername from '../../../extract-user';
+import ProjectHealthService from '../../../services/project-health-service';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -41,20 +42,29 @@ interface StrategyUpdateBody {
 
 const PATH_PREFIX = '/:projectId/features/:featureName';
 
-type ProjectFeaturesServices = Pick<IUnleashServices, 'featureToggleServiceV2'>;
+type ProjectFeaturesServices = Pick<
+IUnleashServices,
+    'featureToggleServiceV2' | 'projectHealthService'
+>;
 
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleServiceV2;
+
+    private projectHealthService: ProjectHealthService;
 
     private readonly logger: Logger;
 
     constructor(
         config: IUnleashConfig,
-        { featureToggleServiceV2 }: ProjectFeaturesServices,
+        {
+            featureToggleServiceV2,
+            projectHealthService,
+        }: ProjectFeaturesServices,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
-        this.logger = config.getLogger('/admin-api/features.ts');
+        this.projectHealthService = projectHealthService;
+        this.logger = config.getLogger('/admin-api/project/features.ts');
 
         this.post(
             `${PATH_PREFIX}/environments/:environment/strategies`,
@@ -86,29 +96,9 @@ export default class ProjectFeaturesController extends Controller {
             `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
             this.updateStrategy,
         );
-        this.get('/:projectId', this.getProjectOverview);
-        this.get('/:projectId/health-report', this.getProjectHealthReport);
         this.post('/:projectId/features', this.createFeatureToggle);
         this.get('/:projectId/features', this.getFeaturesForProject);
         this.get(PATH_PREFIX, this.getFeature);
-    }
-
-    async getProjectHealthReport(
-        req: Request<ProjectParam, any, any, any>,
-        res: Response,
-    ): Promise<void> {
-        const { projectId } = req.params;
-        try {
-            const overview = await this.featureService.getProjectHealthReport(
-                projectId,
-            );
-            res.json({
-                version: 2,
-                ...overview,
-            });
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
     }
 
     async getFeaturesForProject(
@@ -205,23 +195,6 @@ export default class ProjectFeaturesController extends Controller {
                 extractUsername(req),
             );
             res.status(200).end();
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
-    }
-
-    async getProjectOverview(
-        req: Request<IProjectParam, any, any, IArchivedQuery>,
-        res: Response,
-    ): Promise<void> {
-        const { projectId } = req.params;
-        const { archived } = req.query;
-        try {
-            const overview = await this.featureService.getProjectOverview(
-                projectId,
-                archived,
-            );
-            res.json(overview);
         } catch (e) {
             handleErrors(res, this.logger, e);
         }

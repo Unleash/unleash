@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
+import { IEnvironmentOverview, IFeatureOverview } from '../types/model';
 
 const COLUMNS = ['id', 'name', 'description', 'created_at', 'health'];
 const TABLE = 'projects';
@@ -137,6 +138,84 @@ class ProjectStore {
                 environment_name: environment,
             })
             .del();
+    }
+
+    async getMembers(projectId: string): Promise<number> {
+        const rolesFromProject = this.db('role_permission')
+            .select('role_id')
+            .distinct()
+            .where({ project: projectId });
+
+        const numbers = await this.db('role_user')
+            .countDistinct('user_id as members')
+            .whereIn('role_id', rolesFromProject)
+            .first();
+        const { members } = numbers;
+        if (typeof members === 'string') {
+            return parseInt(members, 10);
+        }
+        return members;
+    }
+
+    async getProjectOverview(
+        projectId: string,
+        archived: boolean = false,
+    ): Promise<IFeatureOverview[]> {
+        const rows = await this.db('features')
+            .where({ project: projectId, archived })
+            .select(
+                'features.name as feature_name',
+                'features.type as type',
+                'features.created_at as created_at',
+                'features.last_seen_at as last_seen_at',
+                'features.stale as stale',
+                'feature_environments.enabled as enabled',
+                'feature_environments.environment as environment',
+                'environments.display_name as display_name',
+            )
+            .fullOuterJoin(
+                'feature_environments',
+                'feature_environments.feature_name',
+                'features.name',
+            )
+            .fullOuterJoin(
+                'environments',
+                'feature_environments.environment',
+                'environments.name',
+            );
+        if (rows.length > 0) {
+            const overview = rows.reduce((acc, r) => {
+                if (acc[r.feature_name] !== undefined) {
+                    acc[r.feature_name].environments.push(
+                        this.getEnvironment(r),
+                    );
+                } else {
+                    acc[r.feature_name] = {
+                        type: r.type,
+                        name: r.feature_name,
+                        createdAt: r.created_at,
+                        lastSeenAt: r.last_seen_at,
+                        stale: r.stale,
+                        environments: [this.getEnvironment(r)],
+                    };
+                }
+                return acc;
+            }, {});
+            return Object.values(overview).map((o: IFeatureOverview) => ({
+                ...o,
+                environments: o.environments.filter(f => f.name),
+            }));
+        }
+        throw new NotFoundError(`Could not find project with id ${projectId}`);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    private getEnvironment(r: any): IEnvironmentOverview {
+        return {
+            name: r.environment,
+            displayName: r.display_name,
+            enabled: r.enabled,
+        };
     }
 
     mapRow(row): IProject {

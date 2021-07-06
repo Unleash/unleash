@@ -294,29 +294,9 @@ class FeatureToggleServiceV2 {
         };
     }
 
-    async getProjectOverview(
-        projectId: string,
-        archived: boolean = false,
-    ): Promise<IProjectOverview> {
-        const project = await this.projectStore.get(projectId);
-        const features = await this.featureStrategiesStore.getProjectOverview(
-            projectId,
-            archived,
-        );
-        const members = await this.featureStrategiesStore.getMembers(projectId);
-        return {
-            name: project.name,
-            description: project.description,
-            health: project.health,
-            features,
-            members,
-            version: 1,
-        };
-    }
 
-    async getMembers(projectId: string): Promise<number> {
-        return this.featureStrategiesStore.getMembers(projectId);
-    }
+
+
 
     async getEnvironmentInfo(
         project: string,
@@ -523,38 +503,9 @@ class FeatureToggleServiceV2 {
         return this.featureToggleStore.getFeatures(archived);
     }
 
-    async getProjectHealthReport(projectId: string): Promise<IProjectHealthReport> {
-        const overview = await this.getProjectOverview(projectId, false);
-        return {
-            ...overview,
-            potentiallyStaleCount: await this.potentiallyStaleCount(overview.features),
-            activeCount: this.activeCount(overview.features),
-            staleCount: this.staleCount(overview.features)
-        }
-    }
 
-    private async potentiallyStaleCount(features: IFeatureOverview[]): Promise<number> {
-        const today = new Date().valueOf();
-        const featureTypes = await this.featureTypeStore.getAll();
-        const featureTypeMap = featureTypes.reduce((acc, current) => {
-            acc[current.id] = current.lifetimeDays;
 
-            return acc;
-        }, {});
 
-        return features.filter(feature => {
-            const diff = today - feature.createdAt.valueOf();
-            return !feature.stale && diff > featureTypeMap[feature.type] * MILLISECONDS_IN_DAY;
-        }).length;
-    }
-
-    private activeCount(features: IFeatureOverview[]): number {
-        return features.filter(f => !f.stale).length;
-    }
-
-    private staleCount(features: IFeatureOverview[]): number {
-        return features.filter(f => f.stale).length;
-    }
 }
 
 module.exports = FeatureToggleServiceV2;

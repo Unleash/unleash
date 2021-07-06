@@ -25,6 +25,7 @@ import UserFeedbackService from './user-feedback-service';
 import FeatureToggleServiceV2 from './feature-toggle-service-v2';
 import EnvironmentService from './environment-service';
 import FeatureTagService from './feature-tag-service';
+import ProjectHealthService from './project-health-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -58,6 +59,7 @@ export const createServices = (
     const featureToggleServiceV2 = new FeatureToggleServiceV2(stores, config);
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
+    const projectHealthService = new ProjectHealthService(stores, config);
 
     return {
         accessService,
@@ -83,6 +85,7 @@ export const createServices = (
         sessionService,
         userFeedbackService,
         featureTagService,
+        projectHealthService,
     };
 };
 

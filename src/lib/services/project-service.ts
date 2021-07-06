@@ -17,7 +17,11 @@ import {
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import FeatureTypeStore from '../db/feature-type-store';
-import { FeatureToggle } from '../types/model';
+import {
+    FeatureToggle,
+    IProjectHealthReport,
+    IProjectOverview,
+} from '../types/model';
 import Timer = NodeJS.Timer;
 import {
     MILLISECONDS_IN_DAY,
@@ -282,6 +286,30 @@ export default class ProjectService {
         }
 
         await this.accessService.removeUserFromRole(userId, role.id);
+    }
+
+    async getMembers(projectId: string): Promise<number> {
+        return this.projectStore.getMembers(projectId);
+    }
+
+    async getProjectOverview(
+        projectId: string,
+        archived: boolean = false,
+    ): Promise<IProjectOverview> {
+        const project = await this.projectStore.get(projectId);
+        const features = await this.projectStore.getProjectOverview(
+            projectId,
+            archived,
+        );
+        const members = await this.projectStore.getMembers(projectId);
+        return {
+            name: project.name,
+            description: project.description,
+            health: project.health,
+            features,
+            members,
+            version: 1,
+        };
     }
 
     destroy(): void {

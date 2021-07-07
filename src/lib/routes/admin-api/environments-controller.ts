@@ -6,6 +6,7 @@ import { IEnvironment } from '../../types/model';
 import EnvironmentService from '../../services/environment-service';
 import { Logger } from '../../logger';
 import { handleErrors } from './util';
+import { ADMIN } from '../../types/permissions';
 
 interface EnvironmentParam {
     name: string;
@@ -24,10 +25,10 @@ export class EnvironmentsController extends Controller {
         this.logger = config.getLogger('admin-api/environments-controller.ts');
         this.service = environmentService;
         this.get('/', this.getAll);
-        this.post('/', this.createEnv);
+        this.post('/', this.createEnv, ADMIN);
         this.get('/:name', this.getEnv);
-        this.put('/:name', this.updateEnv);
-        this.delete('/:name', this.deleteEnv);
+        this.put('/:name', this.updateEnv, ADMIN);
+        this.delete('/:name', this.deleteEnv, ADMIN);
     }
 
     async getAll(req: Request, res: Response): Promise<void> {

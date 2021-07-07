@@ -18,7 +18,7 @@ import useLoading from '../../../../../hooks/useLoading';
 import {
     ADD_USER_ERROR,
     UPDATE_USER_ERROR,
-} from '../../../../../hooks/useAdminUsersApi';
+} from '../../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { Alert } from '@material-ui/lab';
 
 function AddUserForm({

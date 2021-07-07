@@ -7,6 +7,7 @@ interface IAnimateOnMountProps {
     start: string;
     leave: string;
     container?: string;
+    style?: Object;
 }
 
 const AnimateOnMount: FC<IAnimateOnMountProps> = ({
@@ -16,6 +17,7 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
     leave,
     container,
     children,
+    style,
 }) => {
     const [show, setShow] = useState(mounted);
     const [styles, setStyles] = useState('');
@@ -49,6 +51,7 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
                         container ? container : ''
                     }`}
                     onTransitionEnd={onTransitionEnd}
+                    style={{ ...style }}
                 >
                     {children}
                 </div>

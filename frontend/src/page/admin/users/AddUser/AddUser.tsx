@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Dialogue from '../../../../component/common/Dialogue';
 
-import { IUserApiErrors } from '../../../../hooks/useAdminUsersApi';
+import { IUserApiErrors } from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import IRole from '../../../../interfaces/role';
 import AddUserForm from './AddUserForm/AddUserForm';
 

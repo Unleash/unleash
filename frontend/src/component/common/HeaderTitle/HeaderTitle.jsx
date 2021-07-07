@@ -7,20 +7,33 @@ import ConditionallyRender from '../ConditionallyRender/ConditionallyRender';
 
 import { useStyles } from './styles';
 
-const HeaderTitle = ({ title, actions, subtitle, variant, loading }) => {
+const HeaderTitle = ({
+    title,
+    actions,
+    subtitle,
+    variant,
+    loading,
+    className,
+}) => {
     const styles = useStyles();
     const headerClasses = classnames({ skeleton: loading });
 
     return (
         <div className={styles.headerTitleContainer}>
-            <div className={headerClasses}>
-                <Typography variant={variant || 'h2'} className={styles.headerTitle}>
+            <div className={headerClasses} data-loading>
+                <Typography
+                    variant={variant || 'h2'}
+                    className={classnames(styles.headerTitle, className)}
+                >
                     {title}
                 </Typography>
                 {subtitle && <small>{subtitle}</small>}
             </div>
 
-            <ConditionallyRender condition={actions} show={<div className={styles.headerActions}>{actions}</div>} />
+            <ConditionallyRender
+                condition={actions}
+                show={<div className={styles.headerActions}>{actions}</div>}
+            />
         </div>
     );
 };

@@ -497,10 +497,10 @@ exports[`renders correctly with with variants 1`] = `
           </svg>
           <fieldset
             aria-hidden={true}
-            className="PrivateNotchedOutline-root-18 MuiOutlinedInput-notchedOutline"
+            className="PrivateNotchedOutline-root-21 MuiOutlinedInput-notchedOutline"
           >
             <legend
-              className="PrivateNotchedOutline-legendLabelled-20 PrivateNotchedOutline-legendNotched-21"
+              className="PrivateNotchedOutline-legendLabelled-23 PrivateNotchedOutline-legendNotched-24"
             >
               <span>
                 Stickiness

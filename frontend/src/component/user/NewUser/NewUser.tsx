@@ -5,7 +5,7 @@ import StandaloneBanner from '../StandaloneBanner/StandaloneBanner';
 import ResetPasswordDetails from '../common/ResetPasswordDetails/ResetPasswordDetails';
 
 import { useStyles } from './NewUser.styles';
-import useResetPassword from '../../../hooks/useResetPassword';
+import useResetPassword from '../../../hooks/api/getters/useResetPassword/useResetPassword';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import InvalidToken from '../common/InvalidToken/InvalidToken';

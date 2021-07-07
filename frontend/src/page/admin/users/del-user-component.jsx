@@ -2,7 +2,7 @@ import React from 'react';
 import Dialogue from '../../../component/common/Dialogue/Dialogue';
 import ConditionallyRender from '../../../component/common/ConditionallyRender/ConditionallyRender';
 import propTypes from 'prop-types';
-import { REMOVE_USER_ERROR } from '../../../hooks/useAdminUsersApi';
+import { REMOVE_USER_ERROR } from '../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { Alert } from '@material-ui/lab';
 import useLoading from '../../../hooks/useLoading';
 import { Avatar, Typography } from '@material-ui/core';

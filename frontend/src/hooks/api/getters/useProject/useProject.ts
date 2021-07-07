@@ -1,0 +1,38 @@
+import useSWR, { mutate } from 'swr';
+import { useState, useEffect } from 'react';
+import { getProjectFetcher } from './getProjectFetcher';
+import { IProject } from '../../../../interfaces/project';
+import { fallbackProject } from './fallbackProject';
+import useSort from '../../../useSort';
+
+const useProject = (id: string) => {
+    const { KEY, fetcher } = getProjectFetcher(id);
+    const [sort] = useSort();
+
+    const { data, error } = useSWR<IProject>(KEY, fetcher);
+    const [loading, setLoading] = useState(!error && !data);
+
+    const refetch = () => {
+        mutate(KEY);
+    };
+
+    useEffect(() => {
+        setLoading(!error && !data);
+    }, [data, error]);
+
+    const sortedData = (data: IProject | undefined): IProject => {
+        if (data) {
+            return { ...data, features: sort(data.features || []) };
+        }
+        return fallbackProject;
+    };
+
+    return {
+        project: sortedData(data),
+        error,
+        loading,
+        refetch,
+    };
+};
+
+export default useProject;

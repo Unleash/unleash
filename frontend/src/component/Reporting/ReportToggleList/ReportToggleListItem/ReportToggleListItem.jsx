@@ -15,7 +15,10 @@ import {
     toggleExpiryByTypeMap,
     getDiffInDays,
 } from '../../utils';
-import { KILLSWITCH, PERMISSION } from '../../constants';
+import {
+    KILLSWITCH,
+    PERMISSION,
+} from '../../../../constants/featureToggleTypes';
 
 import styles from '../ReportToggleList.module.scss';
 

@@ -35,11 +35,15 @@ function AccessComponent({ projectId, project }) {
     const history = useHistory();
 
     const fetchAccess = async () => {
-        const access = await projectApi.fetchAccess(projectId);
-        setRoles(access.roles);
-        setUsers(
-            access.users.map(u => ({ ...u, name: u.name || '(No name)' }))
-        );
+        try {
+            const access = await projectApi.fetchAccess(projectId);
+            setRoles(access.roles);
+            setUsers(
+                access.users.map(u => ({ ...u, name: u.name || '(No name)' }))
+            );
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     useEffect(() => {

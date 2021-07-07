@@ -1,7 +1,7 @@
 import useSWR from 'swr';
-import useQueryParams from './useQueryParams';
+import useQueryParams from '../../../useQueryParams';
 import { useState, useEffect } from 'react';
-import { formatApiPath } from '../utils/format-path';
+import { formatApiPath } from '../../../../utils/format-path';
 
 const getFetcher = (token: string) => () => {
     const path = formatApiPath(`auth/reset/validate?token=${token}`);

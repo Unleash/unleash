@@ -10,9 +10,16 @@ import {
     sortFeaturesByExpiredAtDescending,
     sortFeaturesByStatusAscending,
     sortFeaturesByStatusDescending,
-} from './utils';
+} from '../component/Reporting/utils';
 
-import { LAST_SEEN, NAME, CREATED, EXPIRED, STATUS, REPORT } from './constants';
+import {
+    LAST_SEEN,
+    NAME,
+    CREATED,
+    EXPIRED,
+    STATUS,
+    REPORT,
+} from '../component/Reporting/constants';
 
 const useSort = () => {
     const [sortData, setSortData] = useState({

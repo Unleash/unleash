@@ -33,6 +33,7 @@ exports[`renders correctly with permissions 1`] = `
     >
       <div
         className=""
+        data-loading={true}
       >
         <h2
           className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
@@ -551,6 +552,7 @@ exports[`renders correctly without permission 1`] = `
     >
       <div
         className=""
+        data-loading={true}
       >
         <h2
           className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"

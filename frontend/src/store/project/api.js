@@ -67,7 +67,9 @@ function validate(id) {
 }
 
 function searchProjectUser(query) {
-    return fetch(`${formatApiPath('api/admin/user-admin/search')}?q=${query}`).then(res => res.json())
+    return fetch(
+        `${formatApiPath('api/admin/user-admin/search')}?q=${query}`
+    ).then(res => res.json());
 }
 
 export default {

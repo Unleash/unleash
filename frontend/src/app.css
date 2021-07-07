@@ -46,6 +46,7 @@ body {
     background-color: #e2e8f0;
     z-index: 9999;
     box-shadow: none;
+    fill: none;
 }
 
 .skeleton::before {

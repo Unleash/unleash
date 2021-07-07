@@ -12,6 +12,7 @@ exports[`it supports editMode 1`] = `
     >
       <div
         className=""
+        data-loading={true}
       >
         <h2
           className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
@@ -108,6 +109,7 @@ exports[`renders correctly for creating 1`] = `
     >
       <div
         className=""
+        data-loading={true}
       >
         <h2
           className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
@@ -204,6 +206,7 @@ exports[`renders correctly for creating without permissions 1`] = `
     >
       <div
         className=""
+        data-loading={true}
       >
         <h2
           className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"

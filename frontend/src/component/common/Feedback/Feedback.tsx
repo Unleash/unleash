@@ -82,9 +82,9 @@ const Feedback = ({
     return (
         <AnimateOnMount
             mounted={show}
-            enter={styles.feedbackEnter}
-            start={styles.feedbackStart}
-            leave={styles.feedbackLeave}
+            start={commonStyles.fadeInBottomStart}
+            enter={commonStyles.fadeInBottomEnter}
+            leave={commonStyles.fadeInBottomLeave}
             container={styles.animateContainer}
         >
             <div className={styles.feedback}>

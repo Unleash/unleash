@@ -7,61 +7,16 @@ import CheckIcon from '@material-ui/icons/Check';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 
-import { isFeatureExpired } from '../utils';
-
 import styles from './ReportCard.module.scss';
 
-const ReportCard = ({ features }) => {
-    const getActiveToggles = () => {
-        const result = features.filter(feature => !feature.stale);
-
-        if (result === 0) return 0;
-
-        return result;
-    };
-
-    const getPotentiallyStaleToggles = activeToggles => {
-        const result = activeToggles.filter(
-            feature => isFeatureExpired(feature) && !feature.stale
-        );
-
-        return result;
-    };
-
-    const getHealthRating = (
-        total,
-        staleTogglesCount,
-        potentiallyStaleTogglesCount
-    ) => {
-        const startPercentage = 100;
-
-        const stalePercentage = (staleTogglesCount / total) * 100;
-
-        const potentiallyStalePercentage =
-            (potentiallyStaleTogglesCount / total) * 100;
-
-        return Math.round(
-            startPercentage - stalePercentage - potentiallyStalePercentage
-        );
-    };
-
-    const total = features.length;
-    const activeTogglesArray = getActiveToggles();
-    const potentiallyStaleToggles =
-        getPotentiallyStaleToggles(activeTogglesArray);
-
-    const activeTogglesCount = activeTogglesArray.length;
-    const staleTogglesCount = features.length - activeTogglesCount;
-    const potentiallyStaleTogglesCount = potentiallyStaleToggles.length;
-
-    const healthRating = getHealthRating(
-        total,
-        staleTogglesCount,
-        potentiallyStaleTogglesCount
-    );
-
-    const healthLessThan50 = healthRating < 50;
-    const healthLessThan75 = healthRating < 75;
+const ReportCard = ({
+    health,
+    activeCount,
+    staleCount,
+    potentiallyStaleCount,
+}) => {
+    const healthLessThan50 = health < 50;
+    const healthLessThan75 = health < 75;
 
     const healthClasses = classnames(styles.reportCardHealthRating, {
         [styles.healthWarning]: healthLessThan75,
@@ -71,23 +26,21 @@ const ReportCard = ({ features }) => {
     const renderActiveToggles = () => (
         <>
             <CheckIcon className={styles.check} />
-            <span>{activeTogglesCount} active toggles</span>
+            <span>{activeCount} active toggles</span>
         </>
     );
 
     const renderStaleToggles = () => (
         <>
             <ReportProblemOutlinedIcon className={styles.danger} />
-            <span>{staleTogglesCount} stale toggles</span>
+            <span>{staleCount} stale toggles</span>
         </>
     );
 
     const renderPotentiallyStaleToggles = () => (
         <>
             <ReportProblemOutlinedIcon className={styles.danger} />
-            <span>
-                {potentiallyStaleTogglesCount} potentially stale toggles
-            </span>
+            <span>{potentiallyStaleCount} potentially stale toggles</span>
         </>
     );
 
@@ -98,10 +51,8 @@ const ReportCard = ({ features }) => {
                     <h2 className={styles.header}>Health rating</h2>
                     <div className={styles.reportCardHealthInnerContainer}>
                         <ConditionallyRender
-                            condition={healthRating > -1}
-                            show={
-                                <p className={healthClasses}>{healthRating}%</p>
-                            }
+                            condition={health > -1}
+                            show={<p className={healthClasses}>{health}%</p>}
                         />
                     </div>
                 </div>
@@ -110,19 +61,19 @@ const ReportCard = ({ features }) => {
                     <ul className={styles.reportCardList}>
                         <li>
                             <ConditionallyRender
-                                condition={activeTogglesCount}
+                                condition={activeCount}
                                 show={renderActiveToggles}
                             />
                         </li>
                         <li>
                             <ConditionallyRender
-                                condition={staleTogglesCount}
+                                condition={staleCount}
                                 show={renderStaleToggles}
                             />
                         </li>
                         <li>
                             <ConditionallyRender
-                                condition={potentiallyStaleTogglesCount}
+                                condition={potentiallyStaleCount}
                                 show={renderPotentiallyStaleToggles}
                             />
                         </li>

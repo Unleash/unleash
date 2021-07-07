@@ -12,6 +12,7 @@ exports[`renders correctly with one strategy 1`] = `
     >
       <div
         className=""
+        data-loading={true}
       >
         <h2
           className="MuiTypography-root makeStyles-headerTitle-8 MuiTypography-h2"
@@ -140,6 +141,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
     >
       <div
         className=""
+        data-loading={true}
       >
         <h2
           className="MuiTypography-root makeStyles-headerTitle-8 MuiTypography-h2"

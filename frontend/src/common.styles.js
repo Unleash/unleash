@@ -62,4 +62,21 @@ export const useCommonStyles = makeStyles(theme => ({
         fontWeight: 'bold',
         marginBottom: '0.5rem',
     },
+    fadeInBottomStart: {
+        opacity: '0',
+        position: 'fixed',
+        right: '40px',
+        bottom: '40px',
+        transform: 'translateY(400px)',
+    },
+    fadeInBottomEnter: {
+        transform: 'translateY(0)',
+        opacity: '1',
+        transition: 'transform 0.6s ease, opacity 1s ease',
+    },
+    fadeInBottomLeave: {
+        transform: 'translateY(400px)',
+        opacity: '0',
+        transition: 'transform 1.25s ease, opacity 1s ease',
+    },
 }));

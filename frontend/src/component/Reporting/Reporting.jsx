@@ -12,15 +12,17 @@ import { formatProjectOptions } from './utils';
 import { REPORTING_SELECT_ID } from '../../testIds';
 
 import styles from './Reporting.module.scss';
+import useHealthReport from '../../hooks/api/getters/useHealthReport/useHealthReport';
+import ApiError from '../common/ApiError/ApiError';
 
-const Reporting = ({ fetchFeatureToggles, projects }) => {
+const Reporting = ({ projects }) => {
     const [projectOptions, setProjectOptions] = useState([
         { key: 'default', label: 'Default' },
     ]);
     const [selectedProject, setSelectedProject] = useState('default');
+    const { project, error, refetch } = useHealthReport(selectedProject);
 
     useEffect(() => {
-        fetchFeatureToggles();
         setSelectedProject(projects[0].id);
         /* eslint-disable-next-line */
     }, []);
@@ -62,8 +64,28 @@ const Reporting = ({ fetchFeatureToggles, projects }) => {
                 show={renderSelect}
             />
 
-            <ReportCardContainer selectedProject={selectedProject} />
-            <ReportToggleListContainer selectedProject={selectedProject} />
+            <ConditionallyRender
+                condition={error}
+                show={
+                    <ApiError
+                        data-loading
+                        style={{ maxWidth: '500px', marginTop: '1rem' }}
+                        onClick={refetch}
+                        text={`Could not fetch health rating for ${selectedProject}`}
+                    />
+                }
+            />
+            <ReportCardContainer
+                health={project?.health}
+                staleCount={project?.staleCount}
+                activeCount={project?.activeCount}
+                potentiallyStaleCount={project?.potentiallyStaleCount}
+                selectedProject={selectedProject}
+            />
+            <ReportToggleListContainer
+                features={project.features}
+                selectedProject={selectedProject}
+            />
         </React.Fragment>
     );
 };

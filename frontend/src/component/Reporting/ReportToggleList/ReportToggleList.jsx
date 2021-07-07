@@ -13,7 +13,7 @@ import {
     applyCheckedToFeatures,
 } from '../utils';
 
-import useSort from '../useSort';
+import useSort from '../../../hooks/useSort';
 
 import styles from './ReportToggleList.module.scss';
 

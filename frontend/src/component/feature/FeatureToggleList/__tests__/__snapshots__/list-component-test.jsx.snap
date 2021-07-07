@@ -50,6 +50,7 @@ exports[`renders correctly with one feature 1`] = `
       >
         <div
           className=""
+          data-loading={true}
         >
           <h2
             className="MuiTypography-root makeStyles-headerTitle-13 MuiTypography-h2"
@@ -286,6 +287,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
       >
         <div
           className=""
+          data-loading={true}
         >
           <h2
             className="MuiTypography-root makeStyles-headerTitle-13 MuiTypography-h2"

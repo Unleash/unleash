@@ -14,8 +14,6 @@ import {
     ListItemAvatar,
     ListItemText,
     Tooltip,
-    Button,
-    useMediaQuery,
 } from '@material-ui/core';
 import {
     Add,
@@ -29,10 +27,10 @@ import ConfirmDialogue from '../../common/Dialogue';
 import PageContent from '../../common/PageContent/PageContent';
 import { useStyles } from './styles';
 import AccessContext from '../../../contexts/AccessContext';
+import ResponsiveButton from '../../common/ResponsiveButton/ResponsiveButton';
 
 const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
     const { hasAccess } = useContext(AccessContext);
-    const smallScreen = useMediaQuery('(max-width:700px)');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [project, setProject] = useState(undefined);
     const styles = useStyles();
@@ -44,26 +42,11 @@ const ProjectList = ({ projects, fetchProjects, removeProject, history }) => {
         <ConditionallyRender
             condition={hasAccess(CREATE_PROJECT)}
             show={
-                <ConditionallyRender
-                    condition={smallScreen}
-                    show={
-                        <Tooltip title="Add new project">
-                            <IconButton
-                                onClick={() => history.push('/projects/create')}
-                            >
-                                <Add />
-                            </IconButton>
-                        </Tooltip>
-                    }
-                    elseShow={
-                        <Button
-                            onClick={() => history.push('/projects/create')}
-                            color="primary"
-                            variant="contained"
-                        >
-                            Add new project
-                        </Button>
-                    }
+                <ResponsiveButton
+                    Icon={Add}
+                    onClick={() => history.push('/projects/create')}
+                    maxWidth="700px"
+                    tooltip="Add new project"
                 />
             }
         />

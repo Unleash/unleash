@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+# 4.0.5-beta.1
+- Feat/group by projects 
+- fix: add missing icons
+- Offline mode
+
 # 4.0.4
 
 - fix: update feedback url

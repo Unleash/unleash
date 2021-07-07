@@ -18,6 +18,7 @@ export const useStyles = makeStyles(theme => ({
         cursor: 'pointer',
         backgroundColor: 'efefef',
         margin: '0 0.2rem',
+        width: '31px',
         borderRadius: '3px',
         padding: '0.25rem 0.5rem',
     },
@@ -33,6 +34,16 @@ export const useStyles = makeStyles(theme => ({
         position: 'absolute',
         height: '23px',
         cursor: 'pointer',
+    },
+    doubleArrowBtnLeft: {
+        left: '-55px',
+    },
+    doubleArrowBtnRight: {
+        right: '-55px',
+    },
+    arrowIcon: { height: '15px', width: '15px' },
+    arrowIconLeft: {
+        transform: 'rotate(180deg)',
     },
     idxBtnIcon: {
         height: '15px',

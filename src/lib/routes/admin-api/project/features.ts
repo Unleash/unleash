@@ -4,7 +4,7 @@ import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
 import FeatureToggleServiceV2 from '../../../services/feature-toggle-service-v2';
 import { Logger } from '../../../logger';
-import { UPDATE_FEATURE } from '../../../types/permissions';
+import { CREATE_FEATURE, UPDATE_FEATURE } from '../../../types/permissions';
 import {
     FeatureToggleDTO,
     IArchivedQuery,
@@ -78,11 +78,13 @@ export default class ProjectFeaturesController extends Controller {
         this.post(
             `${PATH_PREFIX}/environments/:environment/on`,
             this.toggleEnvironmentOn,
+            UPDATE_FEATURE,
         );
 
         this.post(
             `${PATH_PREFIX}/environments/:environment/off`,
             this.toggleEnvironmentOff,
+            UPDATE_FEATURE,
         );
         this.get(
             `${PATH_PREFIX}/environments/:environment/strategies`,
@@ -95,8 +97,13 @@ export default class ProjectFeaturesController extends Controller {
         this.put(
             `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
             this.updateStrategy,
+            UPDATE_FEATURE,
         );
-        this.post('/:projectId/features', this.createFeatureToggle);
+        this.post(
+            '/:projectId/features',
+            this.createFeatureToggle,
+            CREATE_FEATURE,
+        );
         this.get('/:projectId/features', this.getFeaturesForProject);
         this.get(PATH_PREFIX, this.getFeature);
     }

@@ -5,6 +5,7 @@ import { IUnleashServices } from '../../../types/services';
 import { Logger } from '../../../logger';
 import EnvironmentService from '../../../services/environment-service';
 import { handleErrors } from '../util';
+import { UPDATE_FEATURE, UPDATE_PROJECT } from '../../../types/permissions';
 
 const PREFIX = '/:projectId/environments';
 
@@ -30,10 +31,11 @@ export default class EnvironmentsController extends Controller {
 
         this.logger = config.getLogger('admin-api/project/environments.ts');
         this.environmentService = environmentService;
-        this.post(PREFIX, this.addEnvironmentToProject);
+        this.post(PREFIX, this.addEnvironmentToProject, UPDATE_PROJECT);
         this.delete(
             `${PREFIX}/:environment`,
             this.removeEnvironmentFromProject,
+            UPDATE_PROJECT,
         );
     }
 

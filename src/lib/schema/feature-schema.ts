@@ -79,6 +79,10 @@ export const featureMetadataSchema = joi
             .unique((a, b) => a.name === b.name)
             .optional()
             .items(variantsSchema),
+        createdAt: joi
+            .date()
+            .optional()
+            .allow(null),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
 

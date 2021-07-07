@@ -1,14 +1,20 @@
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
-import ProjectStore from '../db/project-store';
+import ProjectStore, { IProject } from '../db/project-store';
 import { Logger } from '../logger';
 import {
+    FeatureToggle,
     IFeatureOverview,
     IProjectHealthReport,
     IProjectOverview,
 } from '../types/model';
-import { MILLISECONDS_IN_DAY } from '../util/constants';
+import {
+    MILLISECONDS_IN_DAY,
+    MILLISECONDS_IN_ONE_HOUR,
+} from '../util/constants';
 import FeatureTypeStore from '../db/feature-type-store';
+import Timer = NodeJS.Timer;
+import FeatureToggleStore from '../db/feature-toggle-store';
 
 export default class ProjectHealthService {
     private logger: Logger;
@@ -17,16 +23,32 @@ export default class ProjectHealthService {
 
     private featureTypeStore: FeatureTypeStore;
 
+    private featureToggleStore: FeatureToggleStore;
+
+    private featureTypes: Map<string, number>;
+
+    private healthRatingTimer: Timer;
+
     constructor(
         {
             projectStore,
             featureTypeStore,
-        }: Pick<IUnleashStores, 'projectStore' | 'featureTypeStore'>,
+            featureToggleStore,
+        }: Pick<
+        IUnleashStores,
+        'projectStore' | 'featureTypeStore' | 'featureToggleStore'
+        >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.logger = getLogger('services/project-health-service.ts');
         this.projectStore = projectStore;
         this.featureTypeStore = featureTypeStore;
+        this.featureToggleStore = featureToggleStore;
+        this.featureTypes = new Map();
+        this.healthRatingTimer = setInterval(
+            () => this.setHealthRating(),
+            MILLISECONDS_IN_ONE_HOUR,
+        ).unref();
     }
 
     async getProjectOverview(
@@ -64,21 +86,26 @@ export default class ProjectHealthService {
     }
 
     private async potentiallyStaleCount(
-        features: IFeatureOverview[],
+        features: Pick<FeatureToggle, 'createdAt' | 'stale' | 'type'>[],
     ): Promise<number> {
         const today = new Date().valueOf();
-        const featureTypes = await this.featureTypeStore.getAll();
-        const featureTypeMap = featureTypes.reduce((acc, current) => {
-            acc[current.id] = current.lifetimeDays;
-
-            return acc;
-        }, {});
-
+        if (this.featureTypes.size === 0) {
+            const types = await this.featureTypeStore.getAll();
+            types.forEach(type => {
+                this.featureTypes.set(
+                    type.name.toLowerCase(),
+                    type.lifetimeDays,
+                );
+            });
+        }
         return features.filter(feature => {
             const diff = today - feature.createdAt.valueOf();
+            const featureTypeExpectedLifetime = this.featureTypes.get(
+                feature.type,
+            );
             return (
                 !feature.stale &&
-                diff > featureTypeMap[feature.type] * MILLISECONDS_IN_DAY
+                diff >= featureTypeExpectedLifetime * MILLISECONDS_IN_DAY
             );
         }).length;
     }
@@ -89,5 +116,55 @@ export default class ProjectHealthService {
 
     private staleCount(features: IFeatureOverview[]): number {
         return features.filter(f => f.stale).length;
+    }
+
+    async calculateHealthRating(project: IProject): Promise<number> {
+        const toggles = await this.featureToggleStore.getFeaturesBy({
+            project: project.id,
+        });
+
+        const activeToggles = toggles.filter(feature => !feature.stale);
+        const staleToggles = toggles.length - activeToggles.length;
+        const potentiallyStaleToggles = await this.potentiallyStaleCount(
+            activeToggles,
+        );
+        return this.getHealthRating(
+            toggles.length,
+            staleToggles,
+            potentiallyStaleToggles,
+        );
+    }
+
+    private getHealthRating(
+        toggleCount: number,
+        staleToggleCount: number,
+        potentiallyStaleCount: number,
+    ): number {
+        const startPercentage = 100;
+        const stalePercentage = (staleToggleCount / toggleCount) * 100 || 0;
+        const potentiallyStalePercentage =
+            (potentiallyStaleCount / toggleCount) * 100 || 0;
+        const rating = Math.round(
+            startPercentage - stalePercentage - potentiallyStalePercentage,
+        );
+        return rating;
+    }
+
+    async setHealthRating(): Promise<void> {
+        const projects = await this.projectStore.getAll();
+
+        await Promise.all(
+            projects.map(async project => {
+                const newHealth = await this.calculateHealthRating(project);
+                await this.projectStore.updateHealth({
+                    id: project.id,
+                    health: newHealth,
+                });
+            }),
+        );
+    }
+
+    destroy(): void {
+        clearInterval(this.healthRatingTimer);
     }
 }

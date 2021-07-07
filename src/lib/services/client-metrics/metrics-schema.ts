@@ -26,4 +26,8 @@ export const applicationSchema = joi
             .string()
             .allow('')
             .optional(),
+        announced: joi
+            .boolean()
+            .optional()
+            .default(false),
     });

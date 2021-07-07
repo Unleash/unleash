@@ -25,7 +25,7 @@ class ContextController extends Controller {
         { contextService }: Pick<IUnleashServices, 'contextService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/feature.js');
+        this.logger = config.getLogger('/admin-api/context.ts');
         this.contextService = contextService;
 
         this.get('/', this.getContextFields);

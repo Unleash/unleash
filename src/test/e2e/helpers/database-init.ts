@@ -7,6 +7,8 @@ import { createTestConfig } from '../../config/test-config';
 import dbState from './database.json';
 import { LogProvider } from '../../../lib/logger';
 import noLoggerProvider from '../../fixtures/no-logger';
+import EnvironmentStore from '../../../lib/db/environment-store';
+import { IEnvironment } from '../../../lib/types/model';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -18,6 +20,7 @@ process.setMaxListeners(0);
 
 async function resetDatabase(knex) {
     return Promise.all([
+        knex.table('environments').del(),
         knex.table('strategies').del(),
         knex.table('features').del(),
         knex.table('client_applications').del(),
@@ -41,45 +44,29 @@ function createContextFields(store) {
     return dbState.contextFields.map(c => store.create(c));
 }
 
-function createApplications(store) {
-    return dbState.applications.map(a => store.upsert(a));
-}
-
-function createClientInstance(store) {
-    return dbState.clientInstances.map(i => store.insert(i));
-}
-
 function createProjects(store) {
     return dbState.projects.map(i => store.create(i));
-}
-
-function createFeatures(store) {
-    return dbState.features.map(f => store.createFeature(f));
-}
-
-async function tagFeatures(tagStore, store) {
-    await tagStore.createTag({ value: 'Tester', type: 'simple' });
-    return dbState.features.map(f =>
-        store.tagFeature(f.name, {
-            value: 'Tester',
-            type: 'simple',
-        }),
-    );
 }
 
 function createTagTypes(store) {
     return dbState.tag_types.map(t => store.createTagType(t));
 }
 
+async function connectProject(store: EnvironmentStore): Promise<void> {
+    await store.connectProject(':global:', 'default');
+}
+
+async function createEnvironments(store: EnvironmentStore): Promise<void> {
+    await Promise.all(dbState.environments.map(async e => store.upsert(e)));
+}
+
 async function setupDatabase(stores) {
+    await createEnvironments(stores.environmentStore);
     await Promise.all(createStrategies(stores.strategyStore));
     await Promise.all(createContextFields(stores.contextFieldStore));
-    await Promise.all(createFeatures(stores.featureToggleStore));
-    await Promise.all(createClientInstance(stores.clientInstanceStore));
-    await Promise.all(createApplications(stores.clientApplicationsStore));
     await Promise.all(createProjects(stores.projectStore));
     await Promise.all(createTagTypes(stores.tagTypeStore));
-    await tagFeatures(stores.tagStore, stores.featureToggleStore);
+    await connectProject(stores.environmentStore);
 }
 
 export default async function init(

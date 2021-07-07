@@ -16,6 +16,8 @@ const {
     PROJECT_IMPORT,
 } = require('../types/events');
 
+const oldExportExample = require('./state-service-export-v1.json');
+
 function getSetup() {
     const stores = store.createStores();
     return {
@@ -40,7 +42,7 @@ test('should import a feature', async () => {
     await stateService.import({ data });
 
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(1);
+    expect(events).toHaveLength(1);
     expect(events[0].type).toBe(FEATURE_IMPORT);
     expect(events[0].data.name).toBe('new-feature');
 });
@@ -58,12 +60,12 @@ test('should not import an existing feature', async () => {
         ],
     };
 
-    await stores.featureToggleStore.createFeature(data.features[0]);
+    await stores.featureToggleStore.createFeature('default', data.features[0]);
 
     await stateService.import({ data, keepExisting: true });
 
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(0);
+    expect(events).toHaveLength(0);
 });
 
 test('should not keep existing feature if drop-before-import', async () => {
@@ -79,7 +81,7 @@ test('should not keep existing feature if drop-before-import', async () => {
         ],
     };
 
-    await stores.featureToggleStore.createFeature(data.features[0]);
+    await stores.featureToggleStore.createFeature('default', data.features[0]);
 
     await stateService.import({
         data,
@@ -88,7 +90,7 @@ test('should not keep existing feature if drop-before-import', async () => {
     });
 
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(2);
+    expect(events).toHaveLength(2);
     expect(events[0].type).toBe(DROP_FEATURES);
     expect(events[1].type).toBe(FEATURE_IMPORT);
 });
@@ -109,7 +111,7 @@ test('should drop feature before import if specified', async () => {
     await stateService.import({ data, dropBeforeImport: true });
 
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(2);
+    expect(events).toHaveLength(2);
     expect(events[0].type).toBe(DROP_FEATURES);
     expect(events[1].type).toBe(FEATURE_IMPORT);
     expect(events[1].data.name).toBe('new-feature');
@@ -130,7 +132,7 @@ test('should import a strategy', async () => {
     await stateService.import({ data });
 
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(1);
+    expect(events).toHaveLength(1);
     expect(events[0].type).toBe(STRATEGY_IMPORT);
     expect(events[0].data.name).toBe('new-strategy');
 });
@@ -152,7 +154,7 @@ test('should not import an existing strategy', async () => {
     await stateService.import({ data, keepExisting: true });
 
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(0);
+    expect(events).toHaveLength(0);
 });
 
 test('should drop strategies before import if specified', async () => {
@@ -170,7 +172,7 @@ test('should drop strategies before import if specified', async () => {
     await stateService.import({ data, dropBeforeImport: true });
 
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(2);
+    expect(events).toHaveLength(2);
     expect(events[0].type).toBe(DROP_STRATEGIES);
     expect(events[1].type).toBe(STRATEGY_IMPORT);
     expect(events[1].data.name).toBe('new-strategy');
@@ -184,7 +186,7 @@ test('should drop neither features nor strategies when neither is imported', asy
     await stateService.import({ data, dropBeforeImport: true });
 
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(0);
+    expect(events).toHaveLength(0);
 });
 
 test('should not accept gibberish', async () => {
@@ -208,11 +210,11 @@ test('should not accept gibberish', async () => {
 test('should export featureToggles', async () => {
     const { stateService, stores } = getSetup();
 
-    stores.featureToggleStore.createFeature({ name: 'a-feature' });
+    stores.featureToggleStore.createFeature('default', { name: 'a-feature' });
 
     const data = await stateService.export({ includeFeatureToggles: true });
 
-    expect(data.features.length).toBe(1);
+    expect(data.features).toHaveLength(1);
     expect(data.features[0].name).toBe('a-feature');
 });
 
@@ -223,7 +225,7 @@ test('should export strategies', async () => {
 
     const data = await stateService.export({ includeStrategies: true });
 
-    expect(data.strategies.length).toBe(1);
+    expect(data.strategies).toHaveLength(1);
     expect(data.strategies[0].name).toBe('a-strategy');
 });
 
@@ -244,7 +246,7 @@ test('should import a tag and tag type', async () => {
     };
     await stateService.import({ data });
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(3);
+    expect(events).toHaveLength(3);
     expect(events[0].type).toBe(TAG_TYPE_IMPORT);
     expect(events[0].data.name).toBe('simple');
     expect(events[1].type).toBe(TAG_IMPORT);
@@ -270,16 +272,13 @@ test('Should not import an existing tag', async () => {
     };
     await stores.tagTypeStore.createTagType(data.tagTypes[0]);
     await stores.tagStore.createTag(data.tags[0]);
-    await stores.featureToggleStore.tagFeature(
-        data.featureTags[0].featureName,
-        {
-            type: data.featureTags[0].tagType,
-            value: data.featureTags[0].tagValue,
-        },
-    );
+    await stores.featureTagStore.tagFeature(data.featureTags[0].featureName, {
+        type: data.featureTags[0].tagType,
+        value: data.featureTags[0].tagValue,
+    });
     await stateService.import({ data, keepExisting: true });
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(0);
+    expect(events).toHaveLength(0);
 });
 
 test('Should not keep existing tags if drop-before-import', async () => {
@@ -312,7 +311,7 @@ test('Should not keep existing tags if drop-before-import', async () => {
     };
     await stateService.import({ data, dropBeforeImport: true });
     const tagTypes = await stores.tagTypeStore.getAll();
-    expect(tagTypes.length).toBe(1);
+    expect(tagTypes).toHaveLength(1);
 });
 
 test('should export tag, tagtypes and feature tags', async () => {
@@ -333,13 +332,10 @@ test('should export tag, tagtypes and feature tags', async () => {
     };
     await stores.tagTypeStore.createTagType(data.tagTypes[0]);
     await stores.tagStore.createTag(data.tags[0]);
-    await stores.featureToggleStore.tagFeature(
-        data.featureTags[0].featureName,
-        {
-            type: data.featureTags[0].tagType,
-            value: data.featureTags[0].tagValue,
-        },
-    );
+    await stores.featureTagStore.tagFeature(data.featureTags[0].featureName, {
+        type: data.featureTags[0].tagType,
+        value: data.featureTags[0].tagValue,
+    });
 
     const exported = await stateService.export({
         includeFeatureToggles: false,
@@ -347,12 +343,12 @@ test('should export tag, tagtypes and feature tags', async () => {
         includeTags: true,
         includeProjects: false,
     });
-    expect(exported.tags.length).toBe(1);
+    expect(exported.tags).toHaveLength(1);
     expect(exported.tags[0].type).toBe(data.tags[0].type);
     expect(exported.tags[0].value).toBe(data.tags[0].value);
-    expect(exported.tagTypes.length).toBe(1);
+    expect(exported.tagTypes).toHaveLength(1);
     expect(exported.tagTypes[0].name).toBe(data.tagTypes[0].name);
-    expect(exported.featureTags.length).toBe(1);
+    expect(exported.featureTags).toHaveLength(1);
     expect(exported.featureTags[0].featureName).toBe(
         data.featureTags[0].featureName,
     );
@@ -376,7 +372,7 @@ test('should import a project', async () => {
     await stateService.import({ data });
 
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(1);
+    expect(events).toHaveLength(1);
     expect(events[0].type).toBe(PROJECT_IMPORT);
     expect(events[0].data.name).toBe('default');
 });
@@ -397,7 +393,7 @@ test('Should not import an existing project', async () => {
 
     await stateService.import({ data, keepExisting: true });
     const events = await stores.eventStore.getEvents();
-    expect(events.length).toBe(0);
+    expect(events).toHaveLength(0);
 
     await stateService.import({ data });
 });
@@ -441,4 +437,158 @@ test('Should export projects', async () => {
     expect(exported.projects[0].id).toBe('fancy');
     expect(exported.projects[0].name).toBe('extra');
     expect(exported.projects[0].description).toBe('No surprises here');
+});
+
+test('exporting to new format works', async () => {
+    const { stateService, stores } = getSetup();
+    await stores.projectStore.create({
+        id: 'fancy',
+        name: 'extra',
+        description: 'No surprises here',
+    });
+    await stores.environmentStore.upsert({
+        name: 'dev',
+        displayName: 'Development',
+    });
+    await stores.environmentStore.upsert({
+        name: 'prod',
+        displayName: 'Production',
+    });
+    await stores.featureToggleStore.createFeature('fancy', {
+        name: 'Some-feature',
+    });
+    await stores.strategyStore.createStrategy({ name: 'format' });
+    await stores.featureStrategiesStore.connectEnvironmentAndFeature(
+        'Some-feature',
+        'dev',
+        true,
+    );
+    await stores.featureStrategiesStore.createStrategyConfig({
+        featureName: 'Some-feature',
+        projectName: 'fancy',
+        strategyName: 'format',
+        environment: 'dev',
+        parameters: {},
+        constraints: [],
+    });
+    await stores.featureTagStore.tagFeature('Some-feature', {
+        type: 'simple',
+        value: 'Test',
+    });
+    const exported = await stateService.export({});
+    expect(exported.featureStrategies).toHaveLength(1);
+});
+
+test('featureStrategies can keep existing', async () => {
+    const { stateService, stores } = getSetup();
+    await stores.projectStore.create({
+        id: 'fancy',
+        name: 'extra',
+        description: 'No surprises here',
+    });
+    await stores.environmentStore.upsert({
+        name: 'dev',
+        displayName: 'Development',
+    });
+    await stores.environmentStore.upsert({
+        name: 'prod',
+        displayName: 'Production',
+    });
+    await stores.featureToggleStore.createFeature('fancy', {
+        name: 'Some-feature',
+    });
+    await stores.strategyStore.createStrategy({ name: 'format' });
+    await stores.featureStrategiesStore.connectEnvironmentAndFeature(
+        'Some-feature',
+        'dev',
+        true,
+    );
+    await stores.featureStrategiesStore.createStrategyConfig({
+        featureName: 'Some-feature',
+        projectName: 'fancy',
+        strategyName: 'format',
+        environment: 'dev',
+        parameters: {},
+        constraints: [],
+    });
+    await stores.featureTagStore.tagFeature('Some-feature', {
+        type: 'simple',
+        value: 'Test',
+    });
+
+    const exported = await stateService.export({});
+    await stateService.import({
+        data: exported,
+        userName: 'testing',
+        keepExisting: true,
+    });
+    expect(await stores.featureStrategiesStore.getAll()).toHaveLength(1);
+});
+
+test('featureStrategies should not keep existing if dropBeforeImport', async () => {
+    const { stateService, stores } = getSetup();
+    await stores.projectStore.create({
+        id: 'fancy',
+        name: 'extra',
+        description: 'No surprises here',
+    });
+    await stores.environmentStore.upsert({
+        name: 'dev',
+        displayName: 'Development',
+    });
+    await stores.environmentStore.upsert({
+        name: 'prod',
+        displayName: 'Production',
+    });
+    await stores.featureToggleStore.createFeature('fancy', {
+        name: 'Some-feature',
+    });
+    await stores.strategyStore.createStrategy({ name: 'format' });
+    await stores.featureStrategiesStore.connectEnvironmentAndFeature(
+        'Some-feature',
+        'dev',
+        true,
+    );
+    await stores.featureStrategiesStore.createStrategyConfig({
+        featureName: 'Some-feature',
+        projectName: 'fancy',
+        strategyName: 'format',
+        environment: 'dev',
+        parameters: {},
+        constraints: [],
+    });
+    await stores.featureTagStore.tagFeature('Some-feature', {
+        type: 'simple',
+        value: 'Test',
+    });
+
+    const exported = await stateService.export({});
+    exported.featureStrategies = [];
+    await stateService.import({
+        data: exported,
+        userName: 'testing',
+        keepExisting: true,
+        dropBeforeImport: true,
+    });
+    expect(await stores.featureStrategiesStore.getAll()).toHaveLength(0);
+});
+
+test('Import v1 and exporting v2 should work', async () => {
+    const { stateService } = getSetup();
+    await stateService.import({
+        data: oldExportExample,
+        dropBeforeImport: true,
+        userName: 'testing',
+    });
+    const exported = await stateService.export({});
+    const strategiesCount = oldExportExample.features.reduce(
+        (acc, f) => acc + f.strategies.length,
+        0,
+    );
+    expect(
+        exported.features.every(f =>
+            oldExportExample.features.some(old => old.name === f.name),
+        ),
+    ).toBeTruthy();
+    expect(exported.featureStrategies).toHaveLength(strategiesCount);
 });

@@ -1,5 +1,3 @@
-'use strict';
-
 import { Knex } from 'knex';
 import { EventEmitter } from 'events';
 import { LogProvider, Logger } from '../logger';
@@ -21,23 +19,19 @@ export interface IUserFeedback {
     userId: number;
 }
 
-const fieldToRow = (fields: IUserFeedback): IUserFeedbackTable => {
-    return {
-        nevershow: fields.neverShow,
-        feedback_id: fields.feedbackId,
-        given: fields.given,
-        user_id: fields.userId,
-    };
-};
+const fieldToRow = (fields: IUserFeedback): IUserFeedbackTable => ({
+    nevershow: fields.neverShow,
+    feedback_id: fields.feedbackId,
+    given: fields.given,
+    user_id: fields.userId,
+});
 
-const rowToField = (row: IUserFeedbackTable): IUserFeedback => {
-    return {
-        neverShow: row.nevershow,
-        feedbackId: row.feedback_id,
-        given: row.given,
-        userId: row.user_id,
-    };
-};
+const rowToField = (row: IUserFeedbackTable): IUserFeedback => ({
+    neverShow: row.nevershow,
+    feedbackId: row.feedback_id,
+    given: row.given,
+    userId: row.user_id,
+});
 
 export default class UserFeedbackStore {
     private db: Knex;

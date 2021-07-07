@@ -16,6 +16,17 @@ import {
 } from '../types/events';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
+import FeatureTypeStore from '../db/feature-type-store';
+import {
+    FeatureToggle,
+    IProjectHealthReport,
+    IProjectOverview,
+} from '../types/model';
+import Timer = NodeJS.Timer;
+import {
+    MILLISECONDS_IN_DAY,
+    MILLISECONDS_IN_ONE_HOUR,
+} from '../util/constants';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -35,6 +46,8 @@ export default class ProjectService {
 
     private featureToggleStore: FeatureToggleStore;
 
+    private featureTypeStore: FeatureTypeStore;
+
     private logger: any;
 
     constructor(
@@ -42,9 +55,13 @@ export default class ProjectService {
             projectStore,
             eventStore,
             featureToggleStore,
+            featureTypeStore,
         }: Pick<
-        IUnleashStores,
-        'projectStore' | 'eventStore' | 'featureToggleStore'
+            IUnleashStores,
+            | 'projectStore'
+            | 'eventStore'
+            | 'featureToggleStore'
+            | 'featureTypeStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -53,6 +70,7 @@ export default class ProjectService {
         this.accessService = accessService;
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
+        this.featureTypeStore = featureTypeStore;
         this.logger = config.getLogger('services/project-service.js');
     }
 
@@ -103,12 +121,12 @@ export default class ProjectService {
 
         const toggles = await this.featureToggleStore.getFeaturesBy({
             project: id,
-            archived: 0,
+            archived: false,
         });
 
         if (toggles.length > 0) {
             throw new InvalidOperationError(
-                'You can not delete as project with active feature toggles',
+                'You can not delete a project with active feature toggles',
             );
         }
 
@@ -198,6 +216,30 @@ export default class ProjectService {
         }
 
         await this.accessService.removeUserFromRole(userId, role.id);
+    }
+
+    async getMembers(projectId: string): Promise<number> {
+        return this.projectStore.getMembers(projectId);
+    }
+
+    async getProjectOverview(
+        projectId: string,
+        archived: boolean = false,
+    ): Promise<IProjectOverview> {
+        const project = await this.projectStore.get(projectId);
+        const features = await this.projectStore.getProjectOverview(
+            projectId,
+            archived,
+        );
+        const members = await this.projectStore.getMembers(projectId);
+        return {
+            name: project.name,
+            description: project.description,
+            health: project.health,
+            features,
+            members,
+            version: 1,
+        };
     }
 }
 

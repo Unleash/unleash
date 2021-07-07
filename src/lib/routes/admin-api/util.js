@@ -35,7 +35,10 @@ const handleErrors = (res, logger, error) => {
                 .json(error)
                 .end();
         case 'NotFoundError':
-            return res.status(404).end();
+            return res
+                .status(404)
+                .json(error)
+                .end();
         case 'InvalidOperationError':
         case 'NameExistsError':
             return res
@@ -43,6 +46,11 @@ const handleErrors = (res, logger, error) => {
                 .json(error)
                 .end();
         case 'ValidationError':
+            return res
+                .status(400)
+                .json(error)
+                .end();
+        case 'BadDataError':
             return res
                 .status(400)
                 .json(error)

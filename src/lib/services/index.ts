@@ -5,7 +5,6 @@ import FeatureTypeService from './feature-type-service';
 import EventService from './event-service';
 import HealthService from './health-service';
 
-import FeatureToggleService from './feature-toggle-service';
 import ProjectService from './project-service';
 import StateService from './state-service';
 import ClientMetricsService from './client-metrics';
@@ -23,6 +22,10 @@ import ResetTokenService from './reset-token-service';
 import SettingService from './setting-service';
 import SessionService from './session-service';
 import UserFeedbackService from './user-feedback-service';
+import FeatureToggleServiceV2 from './feature-toggle-service-v2';
+import EnvironmentService from './environment-service';
+import FeatureTagService from './feature-tag-service';
+import ProjectHealthService from './project-health-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -34,7 +37,6 @@ export const createServices = (
     const contextService = new ContextService(stores, config);
     const emailService = new EmailService(config.email, config.getLogger);
     const eventService = new EventService(stores, config);
-    const featureToggleService = new FeatureToggleService(stores, config);
     const featureTypeService = new FeatureTypeService(stores, config);
     const projectService = new ProjectService(stores, config, accessService);
     const resetTokenService = new ResetTokenService(stores, config);
@@ -54,11 +56,15 @@ export const createServices = (
     const healthService = new HealthService(stores, config);
     const settingService = new SettingService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
+    const featureToggleServiceV2 = new FeatureToggleServiceV2(stores, config);
+    const environmentService = new EnvironmentService(stores, config);
+    const featureTagService = new FeatureTagService(stores, config);
+    const projectHealthService = new ProjectHealthService(stores, config);
 
     return {
         accessService,
         addonService,
-        featureToggleService,
+        featureToggleServiceV2,
         featureTypeService,
         healthService,
         projectService,
@@ -74,9 +80,12 @@ export const createServices = (
         userService,
         resetTokenService,
         eventService,
+        environmentService,
         settingService,
         sessionService,
         userFeedbackService,
+        featureTagService,
+        projectHealthService,
     };
 };
 

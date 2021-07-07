@@ -1,6 +1,5 @@
 import { AccessService } from '../services/access-service';
 import AddonService from '../services/addon-service';
-import FeatureToggleService from '../services/feature-toggle-service';
 import ProjectService from '../services/project-service';
 import StateService from '../services/state-service';
 import StrategyService from '../services/strategy-service';
@@ -19,6 +18,10 @@ import HealthService from '../services/health-service';
 import SettingService from '../services/setting-service';
 import SessionService from '../services/session-service';
 import UserFeedbackService from '../services/user-feedback-service';
+import FeatureToggleServiceV2 from '../services/feature-toggle-service-v2';
+import EnvironmentService from '../services/environment-service';
+import FeatureTagService from '../services/feature-tag-service';
+import ProjectHealthService from '../services/project-health-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -27,8 +30,9 @@ export interface IUnleashServices {
     clientMetricsService: ClientMetricsService;
     contextService: ContextService;
     emailService: EmailService;
+    environmentService: EnvironmentService;
     eventService: EventService;
-    featureToggleService: FeatureToggleService;
+    featureToggleServiceV2: FeatureToggleServiceV2;
     featureTypeService: FeatureTypeService;
     healthService: HealthService;
     projectService: ProjectService;
@@ -37,9 +41,11 @@ export interface IUnleashServices {
     settingService: SettingService;
     stateService: StateService;
     strategyService: StrategyService;
-    tagTypeService: TagTypeService;
     tagService: TagService;
+    tagTypeService: TagTypeService;
+    userFeedbackService: UserFeedbackService;
     userService: UserService;
     versionService: VersionService;
-    userFeedbackService: UserFeedbackService;
+    featureTagService: FeatureTagService;
+    projectHealthService: ProjectHealthService;
 }

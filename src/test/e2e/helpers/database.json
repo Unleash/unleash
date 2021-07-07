@@ -21,142 +21,16 @@
     { "name": "userId" },
     { "name": "appNam" }
   ],
-  "applications": [
-    {
-      "appName": "demo-app-1",
-      "strategies": ["default"],
-      "announced": true
-    },
-    {
-      "appName": "demo-app-2",
-      "strategies": ["default", "extra"],
-      "description": "hello",
-      "announced": true
-    },
-    {
-      "appName": "deletable-app",
-      "strategies": ["default"],
-      "description": "Some desc",
-      "announced": true
-    }
-  ],
-  "clientInstances": [
-    {
-      "appName": "demo-app-1",
-      "instanceId": "test-1",
-      "strategies": ["default"],
-      "started": 1516026938494,
-      "interval": 10
-    },
-    {
-      "appName": "demo-seed-2",
-      "instanceId": "test-2",
-      "strategies": ["default"],
-      "started": 1516026938494,
-      "interval": 10
-    },
-    {
-      "appName": "deletable-app",
-      "instanceId": "inst-1",
-      "strategies": ["default"],
-      "started": 1516026938494,
-      "interval": 10
-    }
-  ],
-  "features": [
-    {
-      "name": "featureX",
-      "description": "the #1 feature",
-      "enabled": true,
-      "strategies": [
-        {
-          "name": "default",
-          "parameters": {}
-        }
-      ]
-    },
-    {
-      "name": "featureY",
-      "description": "soon to be the #1 feature",
-      "enabled": false,
-      "strategies": [
-        {
-          "name": "baz",
-          "parameters": {
-            "foo": "bar"
-          }
-        }
-      ]
-    },
-    {
-      "name": "featureZ",
-      "description": "terrible feature",
-      "enabled": true,
-      "strategies": [
-        {
-          "name": "baz",
-          "parameters": {
-            "foo": "rab"
-          }
-        }
-      ]
-    },
-    {
-      "name": "featureArchivedX",
-      "description": "the #1 feature",
-      "enabled": true,
-      "archived": true,
-      "strategies": [
-        {
-          "name": "default",
-          "parameters": {}
-        }
-      ]
-    },
-    {
-      "name": "featureArchivedY",
-      "description": "soon to be the #1 feature",
-      "enabled": false,
-      "archived": true,
-      "strategies": [
-        {
-          "name": "baz",
-          "parameters": {
-            "foo": "bar"
-          }
-        }
-      ]
-    },
-    {
-      "name": "featureArchivedZ",
-      "description": "terrible feature",
-      "enabled": true,
-      "archived": true,
-      "strategies": [
-        {
-          "name": "baz",
-          "parameters": {
-            "foo": "rab"
-          }
-        }
-      ]
-    },
-    {
-      "name": "feature.with.variants",
-      "description": "A feature toggle with watiants",
-      "enabled": true,
-      "archived": false,
-      "strategies": [{ "name": "default" }],
-      "variants": [
-        { "name": "control", "weight": 50 },
-        { "name": "new", "weight": 50 }
-      ]
-    }
-  ],
   "projects": [
     {
       "id": "default",
       "name": "Default"
+    }
+  ],
+  "environments": [
+    {
+      "name": ":global:",
+      "displayName": "Across all environments"
     }
   ],
   "tag_types": [

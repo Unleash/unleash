@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Request, Response } from 'express';
 
 import Controller from '../controller';
@@ -12,36 +13,35 @@ import {
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
-import FeatureToggleService from '../../services/feature-toggle-service';
+import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
+import { featureSchema, querySchema } from '../../schema/feature-schema';
+import { IFeatureToggleQuery } from '../../types/model';
+import FeatureTagService from '../../services/feature-tag-service';
+import { GLOBAL_ENV } from '../../types/environment';
 
 const version = 1;
-const fields = [
-    'name',
-    'description',
-    'type',
-    'project',
-    'enabled',
-    'stale',
-    'strategies',
-    'variants',
-    'createdAt',
-    'lastSeenAt',
-];
 
 class FeatureController extends Controller {
     private logger: Logger;
 
-    private featureService: FeatureToggleService;
+    private featureTagService: FeatureTagService;
+
+    private featureService2: FeatureToggleServiceV2;
 
     constructor(
         config: IUnleashConfig,
         {
-            featureToggleService,
-        }: Pick<IUnleashServices, 'featureToggleService'>,
+            featureTagService,
+            featureToggleServiceV2,
+        }: Pick<
+        IUnleashServices,
+        'featureTagService' | 'featureToggleServiceV2'
+        >,
     ) {
         super(config);
-        this.featureService = featureToggleService;
-        this.logger = config.getLogger('/admin-api/feature.js');
+        this.featureTagService = featureTagService;
+        this.featureService2 = featureToggleServiceV2;
+        this.logger = config.getLogger('/admin-api/feature.ts');
 
         this.get('/', this.getAllToggles);
         this.post('/', this.createToggle, CREATE_FEATURE);
@@ -63,31 +63,71 @@ class FeatureController extends Controller {
         );
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    paramToArray(param: any) {
+        if (!param) {
+            return param;
+        }
+        return Array.isArray(param) ? param : [param];
+    }
+
+    async prepQuery({
+        tag,
+        project,
+        namePrefix,
+    }: any): Promise<IFeatureToggleQuery> {
+        if (!tag && !project && !namePrefix) {
+            return null;
+        }
+        const tagQuery = this.paramToArray(tag);
+        const projectQuery = this.paramToArray(project);
+        const query = await querySchema.validateAsync({
+            tag: tagQuery,
+            project: projectQuery,
+            namePrefix,
+        });
+        if (query.tag) {
+            query.tag = query.tag.map(q => q.split(':'));
+        }
+        return query;
+    }
+
     async getAllToggles(req: Request, res: Response): Promise<void> {
+        const query = await this.prepQuery(req.query);
         try {
-            const features = await this.featureService.getFeatures(
-                req.query,
-                fields,
+            const features = await this.featureService2.getFeatureToggles(
+                query,
             );
+
             res.json({ version, features });
         } catch (err) {
             handleErrors(res, this.logger, err);
         }
     }
 
-    async getToggle(req: Request, res: Response): Promise<void> {
+    async getToggle(
+        req: Request<{ featureName: string }, any, any, any>,
+        res: Response,
+    ): Promise<void> {
         try {
             const name = req.params.featureName;
-            const feature = await this.featureService.getFeature(name);
-            res.json(feature).end();
+            const feature = await this.featureService2.getFeatureToggle(name);
+            const strategies =
+                feature.environments.find(e => e.name === GLOBAL_ENV)
+                    ?.strategies || [];
+            res.json({
+                ...feature,
+                strategies,
+            }).end();
         } catch (err) {
-            res.status(404).json({ error: 'Could not find feature' });
+            handleErrors(res, this.logger, err);
         }
     }
 
+    // TODO
     async listTags(req: Request, res: Response): Promise<void> {
         try {
-            const tags = await this.featureService.listTags(
+            const tags = await this.featureTagService.listTags(
                 req.params.featureName,
             );
             res.json({ version, tags });
@@ -96,11 +136,12 @@ class FeatureController extends Controller {
         }
     }
 
+    // TODO
     async addTag(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUser(req);
         try {
-            const tag = await this.featureService.addTag(
+            const tag = await this.featureTagService.addTag(
                 featureName,
                 req.body,
                 userName,
@@ -111,11 +152,12 @@ class FeatureController extends Controller {
         }
     }
 
+    // TODO
     async removeTag(req: Request, res: Response): Promise<void> {
         const { featureName, type, value } = req.params;
         const userName = extractUser(req);
         try {
-            await this.featureService.removeTag(
+            await this.featureTagService.removeTag(
                 featureName,
                 { type, value },
                 userName,
@@ -130,7 +172,7 @@ class FeatureController extends Controller {
         const { name } = req.body;
 
         try {
-            await this.featureService.validateName({ name });
+            await this.featureService2.validateName(name);
             res.status(200).end();
         } catch (error) {
             handleErrors(res, this.logger, error);
@@ -139,14 +181,39 @@ class FeatureController extends Controller {
 
     async createToggle(req: Request, res: Response): Promise<void> {
         const userName = extractUser(req);
+        const toggle = req.body;
 
         try {
-            const createdFeature = await this.featureService.createFeatureToggle(
-                req.body,
+            const validatedToggle = await featureSchema.validateAsync(toggle);
+            const { enabled } = validatedToggle;
+            const createdFeature = await this.featureService2.createFeatureToggle(
+                validatedToggle.project,
+                validatedToggle,
                 userName,
             );
-            res.status(201).json(createdFeature);
+            const strategies = await Promise.all(
+                toggle.strategies.map(async s =>
+                    this.featureService2.createStrategy(
+                        s,
+                        createdFeature.project,
+                        createdFeature.name,
+                    ),
+                ),
+            );
+            await this.featureService2.updateEnabled(
+                validatedToggle.name,
+                GLOBAL_ENV,
+                enabled,
+                userName,
+            );
+
+            res.status(201).json({
+                ...createdFeature,
+                enabled,
+                strategies,
+            });
         } catch (error) {
+            this.logger.warn(error);
             handleErrors(res, this.logger, error);
         }
     }
@@ -158,20 +225,72 @@ class FeatureController extends Controller {
 
         updatedFeature.name = featureName;
 
-        try {
-            await this.featureService.updateToggle(updatedFeature, userName);
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
+        const featureToggleExists = await this.featureService2.hasFeature(
+            featureName,
+        );
+        if (featureToggleExists) {
+            try {
+                await this.featureService2.getFeature(featureName);
+                const projectId = await this.featureService2.getProjectId(
+                    updatedFeature.name,
+                );
+                const value = await featureSchema.validateAsync(updatedFeature);
+                const { enabled } = value;
+                const updatedToggle = this.featureService2.updateFeatureToggle(
+                    projectId,
+                    value,
+                    userName,
+                );
+
+                await this.featureService2.removeAllStrategiesForEnv(
+                    featureName,
+                );
+                let strategies;
+                if (updatedFeature.strategies) {
+                    strategies = await Promise.all(
+                        updatedFeature.strategies.map(async s =>
+                            this.featureService2.createStrategy(
+                                s,
+                                projectId,
+                                featureName,
+                            ),
+                        ),
+                    );
+                }
+                await this.featureService2.updateEnabled(
+                    updatedFeature.name,
+                    GLOBAL_ENV,
+                    updatedFeature.enabled,
+                    userName,
+                );
+                res.status(200).json({
+                    ...updatedToggle,
+                    enabled,
+                    strategies: strategies || [],
+                });
+            } catch (error) {
+                handleErrors(res, this.logger, error);
+            }
+        } else {
+            res.status(404)
+                .json({
+                    error: `Feature with name ${featureName} does not exist`,
+                })
+                .end();
         }
     }
 
+    // TODO: remove?
     // Kept to keep backward compatibility
     async toggle(req: Request, res: Response): Promise<void> {
         const userName = extractUser(req);
         try {
             const name = req.params.featureName;
-            const feature = await this.featureService.toggle(name, userName);
+            const feature = await this.featureService2.toggle(
+                name,
+                GLOBAL_ENV,
+                userName,
+            );
             res.status(200).json(feature);
         } catch (error) {
             handleErrors(res, this.logger, error);
@@ -179,18 +298,42 @@ class FeatureController extends Controller {
     }
 
     async toggleOn(req: Request, res: Response): Promise<void> {
-        await this._updateField('enabled', true, req, res);
+        const { featureName } = req.params;
+        const userName = extractUser(req);
+        try {
+            const feature = await this.featureService2.updateEnabled(
+                featureName,
+                GLOBAL_ENV,
+                true,
+                userName,
+            );
+            res.json(feature);
+        } catch (error) {
+            handleErrors(res, this.logger, error);
+        }
     }
 
     async toggleOff(req: Request, res: Response): Promise<void> {
-        await this._updateField('enabled', false, req, res);
+        const { featureName } = req.params;
+        const userName = extractUser(req);
+        try {
+            const feature = await this.featureService2.updateEnabled(
+                featureName,
+                GLOBAL_ENV,
+                false,
+                userName,
+            );
+            res.json(feature);
+        } catch (error) {
+            handleErrors(res, this.logger, error);
+        }
     }
 
     async staleOn(req: Request, res: Response): Promise<void> {
         try {
             const { featureName } = req.params;
             const userName = extractUser(req);
-            const feature = await this.featureService.updateStale(
+            const feature = await this.featureService2.updateStale(
                 featureName,
                 true,
                 userName,
@@ -205,7 +348,7 @@ class FeatureController extends Controller {
         try {
             const { featureName } = req.params;
             const userName = extractUser(req);
-            const feature = await this.featureService.updateStale(
+            const feature = await this.featureService2.updateStale(
                 featureName,
                 false,
                 userName,
@@ -216,28 +359,12 @@ class FeatureController extends Controller {
         }
     }
 
-    async _updateField(field, value, req, res) {
+    async archiveToggle(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUser(req);
 
         try {
-            const feature = await this.featureService.updateField(
-                featureName,
-                field,
-                value,
-                userName,
-            );
-            res.json(feature).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
-    }
-
-    async archiveToggle(req: Request, res: Response): Promise<void> {
-        const { featureName } = req.params;
-
-        try {
-            await this.featureService.archiveToggle(featureName);
+            await this.featureService2.archiveToggle(featureName, userName);
             res.status(200).end();
         } catch (error) {
             handleErrors(res, this.logger, error);

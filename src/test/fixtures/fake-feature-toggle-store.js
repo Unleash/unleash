@@ -41,7 +41,10 @@ module.exports = (databaseIsUp = true) => {
             );
             _archive.push(feature);
         },
-        createFeature: feature => _features.push(feature),
+        createFeature: async (project, feature) => {
+            _features.push(feature);
+            return Promise.resolve(feature);
+        },
         getArchivedFeatures: () => Promise.resolve(_archive),
         addArchivedFeature: feature => _archive.push(feature),
         reviveFeature: feature => {

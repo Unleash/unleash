@@ -88,7 +88,7 @@ test('should not be able to delete project with toggles', async () => {
         description: 'Blah',
     };
     await projectService.createProject(project, user);
-    await stores.featureToggleStore.createFeature({
+    await stores.featureToggleStore.createFeature(project.id, {
         name: 'test-project-delete',
         project: project.id,
         enabled: false,
@@ -98,7 +98,7 @@ test('should not be able to delete project with toggles', async () => {
         await projectService.deleteProject(project.id, user);
     } catch (err) {
         expect(err.message).toBe(
-            'You can not delete as project with active feature toggles',
+            'You can not delete a project with active feature toggles',
         );
     }
 });

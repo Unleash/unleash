@@ -24,6 +24,7 @@ function getSetup() {
     return {
         base,
         featureToggleStore: stores.featureToggleStore,
+        featureStrategiesStore: stores.featureStrategiesStore,
         request: supertest(app),
         destroy: () => {
             services.versionService.destroy();
@@ -34,15 +35,15 @@ function getSetup() {
 }
 
 let base;
-let featureToggleStore;
 let request;
 let destroy;
+let featureStrategiesStore;
 
 beforeEach(() => {
     const setup = getSetup();
     base = setup.base;
     request = setup.request;
-    featureToggleStore = setup.featureToggleStore;
+    featureStrategiesStore = setup.featureStrategiesStore;
     destroy = setup.destroy;
 });
 
@@ -61,14 +62,14 @@ test('should get empty getFeatures via client', () => {
         });
 });
 
-test('if caching is enabled should memoize', () => {
-    const getFeatures = jest.fn().mockReturnValue([]);
+test('if caching is enabled should memoize', async () => {
+    const getClientFeatures = jest.fn().mockReturnValue([]);
 
-    const featureToggleService = {
-        getFeatures,
+    const featureToggleServiceV2 = {
+        getClientFeatures,
     };
     const controller = new FeatureController(
-        { featureToggleService },
+        { featureToggleServiceV2 },
         {
             getLogger,
             experimental: {
@@ -79,19 +80,19 @@ test('if caching is enabled should memoize', () => {
             },
         },
     );
-    controller.getAll({ query: {} }, { json: () => {} });
-    controller.getAll({ query: {} }, { json: () => {} });
-    expect(getFeatures).toHaveBeenCalledTimes(1);
+    await controller.getAll({ query: {} }, { json: () => {} });
+    await controller.getAll({ query: {} }, { json: () => {} });
+    expect(getClientFeatures).toHaveBeenCalledTimes(1);
 });
 
-test('if caching is not enabled all calls goes to service', () => {
-    const getFeatures = jest.fn().mockReturnValue([]);
+test('if caching is not enabled all calls goes to service', async () => {
+    const getClientFeatures = jest.fn().mockReturnValue([]);
 
-    const featureToggleService = {
-        getFeatures,
+    const featureToggleServiceV2 = {
+        getClientFeatures,
     };
     const controller = new FeatureController(
-        { featureToggleService },
+        { featureToggleServiceV2 },
         {
             getLogger,
             experimental: {
@@ -102,14 +103,14 @@ test('if caching is not enabled all calls goes to service', () => {
             },
         },
     );
-    controller.getAll({ query: {} }, { json: () => {} });
-    controller.getAll({ query: {} }, { json: () => {} });
-    expect(getFeatures).toHaveBeenCalledTimes(2);
+    await controller.getAll({ query: {} }, { json: () => {} });
+    await controller.getAll({ query: {} }, { json: () => {} });
+    expect(getClientFeatures).toHaveBeenCalledTimes(2);
 });
 
-test('fetch single feature', () => {
+test('fetch single feature', async () => {
     expect.assertions(1);
-    featureToggleStore.createFeature({
+    await featureStrategiesStore.createFeature({
         name: 'test_',
         strategies: [{ name: 'default' }],
     });
@@ -123,12 +124,12 @@ test('fetch single feature', () => {
         });
 });
 
-test('support name prefix', () => {
+test('support name prefix', async () => {
     expect.assertions(2);
-    featureToggleStore.createFeature({ name: 'a_test1' });
-    featureToggleStore.createFeature({ name: 'a_test2' });
-    featureToggleStore.createFeature({ name: 'b_test1' });
-    featureToggleStore.createFeature({ name: 'b_test2' });
+    await featureStrategiesStore.createFeature({ name: 'a_test1' });
+    await featureStrategiesStore.createFeature({ name: 'a_test2' });
+    await featureStrategiesStore.createFeature({ name: 'b_test1' });
+    await featureStrategiesStore.createFeature({ name: 'b_test2' });
 
     const namePrefix = 'b_';
 
@@ -142,16 +143,22 @@ test('support name prefix', () => {
         });
 });
 
-test('support filtering on project', () => {
+test('support filtering on project', async () => {
     expect.assertions(2);
-    featureToggleStore.createFeature({ name: 'a_test1', project: 'projecta' });
-    featureToggleStore.createFeature({ name: 'b_test2', project: 'projectb' });
+    await featureStrategiesStore.createFeature({
+        name: 'a_test1',
+        project: 'projecta',
+    });
+    await featureStrategiesStore.createFeature({
+        name: 'b_test2',
+        project: 'projectb',
+    });
     return request
         .get(`${base}/api/client/features?project=projecta`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length).toBe(1);
+            expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe('a_test1');
         });
 });

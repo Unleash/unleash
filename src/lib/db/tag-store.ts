@@ -1,5 +1,3 @@
-'use strict';
-
 import { Knex } from 'knex';
 import { EventEmitter } from 'events';
 import { DB_TIME } from '../metric-events';

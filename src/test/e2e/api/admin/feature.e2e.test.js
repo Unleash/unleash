@@ -11,6 +11,124 @@ let db;
 beforeAll(async () => {
     db = await dbInit('feature_api_serial', getLogger);
     app = await setupApp(db.stores);
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'featureX',
+            description: 'the #1 feature',
+            strategies: [
+                {
+                    name: 'default',
+                    parameters: {},
+                },
+            ],
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'featureY',
+            description: 'soon to be the #1 feature',
+            strategies: [
+                {
+                    name: 'baz',
+                    parameters: {
+                        foo: 'bar',
+                    },
+                },
+            ],
+        },
+        'userName',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'featureZ',
+            description: 'terrible feature',
+            strategies: [
+                {
+                    name: 'baz',
+                    parameters: {
+                        foo: 'rab',
+                    },
+                },
+            ],
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'featureArchivedX',
+            description: 'the #1 feature',
+            strategies: [
+                {
+                    name: 'default',
+                    parameters: {},
+                },
+            ],
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.archiveToggle(
+        'featureArchivedX',
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'featureArchivedY',
+            description: 'soon to be the #1 feature',
+            strategies: [
+                {
+                    name: 'baz',
+                    parameters: {
+                        foo: 'bar',
+                    },
+                },
+            ],
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.archiveToggle(
+        'featureArchivedY',
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'featureArchivedZ',
+            description: 'terrible feature',
+            strategies: [
+                {
+                    name: 'baz',
+                    parameters: {
+                        foo: 'rab',
+                    },
+                },
+            ],
+        },
+        'test',
+    );
+    await app.services.featureToggleServiceV2.archiveToggle(
+        'featureArchivedZ',
+        'test',
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'feature.with.variants',
+            description: 'A feature toggle with variants',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+            variants: [
+                { name: 'control', weight: 50 },
+                { name: 'new', weight: 50 },
+            ],
+        },
+        'test',
+    );
 });
 
 afterAll(async () => {
@@ -24,7 +142,7 @@ test('returns list of feature toggles', async () =>
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length === 4).toBe(true);
+            expect(res.body.features).toHaveLength(4);
         }));
 
 test('gets a feature by name', async () => {
@@ -35,16 +153,13 @@ test('gets a feature by name', async () => {
         .expect(200);
 });
 
-test('cant get feature that dose not exist', async () => {
+test('cant get feature that does not exist', async () => {
     expect.assertions(0);
-    return app.request
-        .get('/api/admin/features/myfeature')
-        .expect('Content-Type', /json/)
-        .expect(404);
+    return app.request.get('/api/admin/features/myfeature').expect(404);
 });
 
 test('creates new feature toggle', async () => {
-    expect.assertions(3);
+    expect.assertions(2);
     return app.request
         .post('/api/admin/features')
         .send({
@@ -56,7 +171,6 @@ test('creates new feature toggle', async () => {
         .expect(201)
         .expect(res => {
             expect(res.body.name).toBe('com.test.feature');
-            expect(res.body.enabled).toBe(false);
             expect(res.body.createdAt).toBeTruthy();
         });
 });
@@ -82,8 +196,9 @@ test('fetch feature toggle with variants', async () => {
     expect.assertions(1);
     return app.request
         .get('/api/admin/features/feature.with.variants')
+        .expect(200)
         .expect(res => {
-            expect(res.body.variants.length === 2).toBe(true);
+            expect(res.body.variants).toHaveLength(2);
         });
 });
 
@@ -143,8 +258,15 @@ test('can not toggle of feature that does not exist', async () => {
 
 test('can toggle a feature that does exist', async () => {
     expect.assertions(0);
+    const feature = await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'existing.feature',
+        },
+        'test',
+    );
     return app.request
-        .post('/api/admin/features/featureY/toggle')
+        .post(`/api/admin/features/${feature.name}/toggle`)
         .set('Content-Type', 'application/json')
         .expect(200);
 });
@@ -259,6 +381,7 @@ test('creates new feature toggle with type', async () => {
     });
     return app.request
         .get('/api/admin/features/com.test.withType')
+        .expect(200)
         .expect(res => {
             expect(res.body.type).toBe('killswitch');
         });
@@ -307,7 +430,7 @@ test('tagging a feature with an already existing tag should be a noop', async ()
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.tags.length).toBe(1);
+            expect(res.body.tags).toHaveLength(1);
         });
 });
 
@@ -368,7 +491,7 @@ test('Can get features tagged by tag', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length).toBe(1);
+            expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe(feature1Name);
         });
 });
@@ -405,7 +528,7 @@ test('Can query for multiple tags using OR', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length).toBe(2);
+            expect(res.body.features).toHaveLength(2);
             expect(res.body.features.some(f => f.name === feature1Name)).toBe(
                 true,
             );
@@ -454,13 +577,13 @@ test('Querying with multiple filters ANDs the filters', async () => {
         .get(`/api/admin/features?tag=${tag.type}:${tag.value}`)
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => expect(res.body.features.length).toBe(2));
+        .expect(res => expect(res.body.features).toHaveLength(2));
     await app.request
         .get(`/api/admin/features?namePrefix=test&tag=${tag.type}:${tag.value}`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(res => {
-            expect(res.body.features.length).toBe(1);
+            expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe(feature1Name);
         });
 });

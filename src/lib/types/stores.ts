@@ -18,6 +18,9 @@ import { AccessStore } from '../db/access-store';
 import { ApiTokenStore } from '../db/api-token-store';
 import { ResetTokenStore } from '../db/reset-token-store';
 import SessionStore from '../db/session-store';
+import FeatureStrategiesStore from '../db/feature-strategy-store';
+import EnvironmentStore from '../db/environment-store';
+import FeatureTagStore from '../db/feature-tag-store';
 
 export interface IUnleashStores {
     projectStore: ProjectStore;
@@ -39,5 +42,8 @@ export interface IUnleashStores {
     apiTokenStore: ApiTokenStore;
     resetTokenStore: ResetTokenStore;
     userFeedbackStore: UserFeedbackStore;
+    featureStrategiesStore: FeatureStrategiesStore;
+    environmentStore: EnvironmentStore;
+    featureTagStore: FeatureTagStore;
     db: Knex;
 }

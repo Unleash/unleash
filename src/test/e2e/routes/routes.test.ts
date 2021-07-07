@@ -6,7 +6,7 @@ let db;
 let app;
 
 beforeAll(async () => {
-    db = await dbInit('custom_auth_serial');
+    db = await dbInit('routes_test_serial');
     app = await setupAppWithBaseUrl(db.stores);
 });
 

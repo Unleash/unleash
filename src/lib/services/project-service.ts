@@ -27,6 +27,8 @@ import {
     MILLISECONDS_IN_DAY,
     MILLISECONDS_IN_ONE_HOUR,
 } from '../util/constants';
+import EnvironmentStore from '../db/environment-store';
+import { GLOBAL_ENV } from '../types/environment';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -48,6 +50,8 @@ export default class ProjectService {
 
     private featureTypeStore: FeatureTypeStore;
 
+    private environmentStore: EnvironmentStore;
+
     private logger: any;
 
     constructor(
@@ -56,17 +60,20 @@ export default class ProjectService {
             eventStore,
             featureToggleStore,
             featureTypeStore,
+            environmentStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
             | 'eventStore'
             | 'featureToggleStore'
             | 'featureTypeStore'
+            | 'environmentStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
     ) {
         this.projectStore = projectStore;
+        this.environmentStore = environmentStore;
         this.accessService = accessService;
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
@@ -87,6 +94,8 @@ export default class ProjectService {
         await this.validateUniqueId(data.id);
 
         await this.projectStore.create(data);
+
+        await this.environmentStore.connectProject(GLOBAL_ENV, data.id);
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 

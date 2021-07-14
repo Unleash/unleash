@@ -206,7 +206,7 @@ class ProjectStore {
                 environments: o.environments.filter(f => f.name),
             }));
         }
-        throw new NotFoundError(`Could not find project with id ${projectId}`);
+        return [];
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

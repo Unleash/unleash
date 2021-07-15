@@ -86,7 +86,7 @@ Expected output would be something like:
 The proxy will try to synchronize with the Unleash API at startup, until it has successfully done that the proxy will return `HTTP 503 - Not Read?` for all request. You can use the health endpoint to validate that the proxy is ready to recieve requests:
 
 ```bash
-curl curl http://localhost:3000/proxy/health -I
+curl http://localhost:3000/proxy/health -I
 ```
 
 ```bash

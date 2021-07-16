@@ -130,7 +130,7 @@ curl --location -H "Authorization: <apitoken from previous step>" \
       "parameters": {}\
     }\
   ]\
-}'\
+}'
 ```
 
 ## Version check {#version-check}

@@ -11,7 +11,14 @@ import cloneDeep from 'lodash.clonedeep';
 import styles from './form-addon-component.module.scss';
 import PageContent from '../common/PageContent/PageContent';
 
-const AddonFormComponent = ({ editMode, provider, addon, fetch, cancel, submit }) => {
+const AddonFormComponent = ({
+    editMode,
+    provider,
+    addon,
+    fetch,
+    cancel,
+    submit,
+}) => {
     const [config, setConfig] = useState(addon);
     const [errors, setErrors] = useState({
         parameters: {},
@@ -25,8 +32,10 @@ const AddonFormComponent = ({ editMode, provider, addon, fetch, cancel, submit }
     }, [fetch, provider]); // empty array => fetch only first time
 
     useEffect(() => {
+        console.log(addon);
         setConfig({ ...addon });
-    }, [addon]);
+        /* eslint-disable-next-line */
+    }, [addon.description, addon.provider]);
 
     useEffect(() => {
         if (provider && !config.provider) {
@@ -98,7 +107,11 @@ const AddonFormComponent = ({ editMode, provider, addon, fetch, cancel, submit }
         }
     };
 
-    const { name, description, documentationUrl = 'https://unleash.github.io/docs/addons' } = provider ? provider : {};
+    const {
+        name,
+        description,
+        documentationUrl = 'https://unleash.github.io/docs/addons',
+    } = provider ? provider : {};
 
     return (
         <PageContent headerContent={`Configure ${name} addon`}>
@@ -121,7 +134,12 @@ const AddonFormComponent = ({ editMode, provider, addon, fetch, cancel, submit }
                         className={styles.nameInput}
                     />
                     <FormControlLabel
-                        control={<Switch checked={config.enabled} onChange={onEnabled} />}
+                        control={
+                            <Switch
+                                checked={config.enabled}
+                                onChange={onEnabled}
+                            />
+                        }
                         label={config.enabled ? 'Enabled' : 'Disabled'}
                     />
                 </section>

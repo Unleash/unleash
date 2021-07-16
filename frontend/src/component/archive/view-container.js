@@ -11,6 +11,7 @@ export default connect(
             .toArray()
             .find(toggle => toggle.name === props.featureToggleName),
         tagTypes: state.tagTypes.toJS(),
+        user: state.user.toJS(),
         featureTags: state.featureTags.toJS(),
         activeTab: props.activeTab,
     }),

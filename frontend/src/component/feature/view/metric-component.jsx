@@ -166,7 +166,7 @@ export default class MetricComponent extends React.Component {
                     </Grid>
                 </Grid>
                 <hr />
-                <StrategiesList strategies={featureToggle.strategies} />
+                <StrategiesList strategies={featureToggle.strategies || []} />
             </div>
         );
     }

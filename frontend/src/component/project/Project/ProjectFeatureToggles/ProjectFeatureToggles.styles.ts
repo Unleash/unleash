@@ -6,6 +6,10 @@ export const useStyles = makeStyles(theme => ({
         marginLeft: '2rem',
         width: '100%',
         position: 'relative',
+        [theme.breakpoints.down('sm')]: {
+            marginLeft: '0',
+            paddingBottom: '4rem',
+        },
     },
     header: {
         padding: '1rem',
@@ -21,5 +25,11 @@ export const useStyles = makeStyles(theme => ({
         color: '#000',
         height: '30px',
         width: '30px',
+    },
+    noTogglesFound: {
+        marginBottom: '0.5rem',
+    },
+    link: {
+        textDecoration: 'none',
     },
 }));

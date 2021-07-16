@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, Typography } from '@material-ui/core';
+import { TextField, Typography, Button } from '@material-ui/core';
 
 import styles from './Project.module.scss';
 import classnames from 'classnames';
@@ -10,7 +10,7 @@ import PageContent from '../common/PageContent/PageContent';
 import AccessContext from '../../contexts/AccessContext';
 import ConditionallyRender from '../common/ConditionallyRender';
 import { CREATE_PROJECT } from '../AccessProvider/permissions';
-import { Link } from 'react-router-dom';
+import HeaderTitle from '../common/HeaderTitle';
 
 class ProjectFormComponent extends Component {
     static contextType = AccessContext;
@@ -75,15 +75,10 @@ class ProjectFormComponent extends Component {
     };
 
     onCancel = evt => {
-        const { editMode } = this.props;
         const { project } = this.state;
-
         evt.preventDefault();
-        if (editMode) {
-            this.props.history.push(`/projects/view/${project.id}`);
-        } else {
-            this.props.history.push('/projects');
-        }
+
+        this.props.history.push(`/projects/${project.id}`);
     };
 
     onSubmit = async evt => {
@@ -93,8 +88,10 @@ class ProjectFormComponent extends Component {
         const valid = await this.validate(project.id);
 
         if (valid) {
+            const { editMode } = this.props;
+            const query = editMode ? 'edited=true' : 'created=true';
             await this.props.submit(project);
-            this.props.history.push(`/projects/view/${project.id}`);
+            this.props.history.push(`/projects/${project.id}?${query}`);
         }
     };
 
@@ -107,20 +104,28 @@ class ProjectFormComponent extends Component {
         return (
             <PageContent
                 headerContent={
-                    <div>
-                        <span>{submitText} Project</span>
-                        <ConditionallyRender
-                            condition={hasAccess(CREATE_PROJECT) && editMode}
-                            show={
-                                <Link
-                                    to={`/projects/${project.id}/access`}
-                                    style={{ float: 'right' }}
-                                >
-                                    Manage access
-                                </Link>
-                            }
-                        />
-                    </div>
+                    <HeaderTitle
+                        title={`${submitText} Project`}
+                        actions={
+                            <ConditionallyRender
+                                condition={
+                                    hasAccess(CREATE_PROJECT) && editMode
+                                }
+                                show={
+                                    <Button
+                                        color="primary"
+                                        onClick={() =>
+                                            this.props.history.push(
+                                                `/projects/${project.id}/access`
+                                            )
+                                        }
+                                    >
+                                        Manage access
+                                    </Button>
+                                }
+                            />
+                        }
+                    />
                 }
             >
                 <Typography

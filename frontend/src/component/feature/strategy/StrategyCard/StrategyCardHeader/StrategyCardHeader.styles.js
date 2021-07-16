@@ -9,7 +9,7 @@ export const useStyles = makeStyles(theme => ({
     },
     strategyCardHeader: {
         display: 'flex',
-        background: `linear-gradient(${theme.palette.cards.gradient.top}, ${theme.palette.cards.gradient.bottom})`,
+        background: theme.palette.primary.dark,
         color: '#fff',
         textAlign: 'left',
     },

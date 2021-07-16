@@ -5,7 +5,7 @@ export const defaultValue = {
     version: '3.x',
     environment: '',
     slogan: 'The enterprise ready feature toggle service.',
-    flags: {},
+    flags: { P: false, C: false },
     links: [
         {
             value: 'Documentation',

@@ -62,7 +62,6 @@ const UserProfile = ({
                         styles.button
                     )}
                     onClick={() => setShowProfile(prev => !prev)}
-                    tabIndex="1"
                     role="button"
                     disableRipple
                 >

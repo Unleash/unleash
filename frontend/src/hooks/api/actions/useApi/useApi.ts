@@ -153,6 +153,20 @@ const useAPI = ({
                 throw new ForbiddenError(res.status);
             }
         }
+
+        if (res.status > 399) {
+            const response = await res.json();
+            if (response?.details?.length > 0) {
+                const error = response.details[0];
+                if (propagateErrors) {
+                    throw new Error(error.message);
+                }
+                return error;
+            }
+            if (propagateErrors) {
+                throw new Error('Action could not be performed');
+            }
+        }
     };
 
     return {

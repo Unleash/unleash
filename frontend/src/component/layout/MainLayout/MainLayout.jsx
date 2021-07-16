@@ -6,14 +6,23 @@ import { Grid } from '@material-ui/core';
 
 import styles from '../../styles.module.scss';
 import ErrorContainer from '../../error/error-container';
-import Header from '../../menu/Header';
+import Header from '../../menu/Header/Header';
 import Footer from '../../menu/Footer/Footer';
 import Proclamation from '../../common/Proclamation/Proclamation';
+import BreadcrumbNav from '../../common/BreadcrumbNav/BreadcrumbNav';
 
 const useStyles = makeStyles(theme => ({
     container: {
         height: '100%',
         justifyContent: 'space-between',
+    },
+    contentContainer: {
+        height: '100%',
+        padding: '3.25rem 0',
+        position: 'relative',
+        [theme.breakpoints.down('sm')]: {
+            padding: '3.25rem 0.75rem',
+        },
     },
 }));
 
@@ -26,7 +35,8 @@ const MainLayout = ({ children, location, uiConfig }) => {
             <Grid container className={muiStyles.container}>
                 <div className={classnames(styles.contentWrapper)}>
                     <Grid item className={styles.content} xs={12} sm={12}>
-                        <div className={styles.contentContainer}>
+                        <div className={muiStyles.contentContainer}>
+                            <BreadcrumbNav />
                             <Proclamation toast={uiConfig.toast} />
                             {children}
                         </div>

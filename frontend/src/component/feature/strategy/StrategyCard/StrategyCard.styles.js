@@ -4,9 +4,7 @@ export const useStyles = makeStyles(theme => ({
     strategyCard: {
         width: '337px',
         height: '100%',
-        [theme.breakpoints.down('xs')]: {
-            width: '100%',
-        },
+
         [theme.breakpoints.down('1250')]: {
             width: '300px',
         },
@@ -15,6 +13,9 @@ export const useStyles = makeStyles(theme => ({
         },
         [theme.breakpoints.down('860')]: {
             width: '380px',
+        },
+        [theme.breakpoints.down('xs')]: {
+            width: '100%',
         },
     },
 }));

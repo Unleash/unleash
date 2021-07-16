@@ -16,6 +16,13 @@ const dateOptions = {
     year: 'numeric',
 };
 
+export const filterByFlags = flags => r => {
+    if (r.flag && !flags[r.flag]) {
+        return false;
+    }
+    return true;
+};
+
 export const scrollToTop = () => {
     window.scrollTo(0, 0);
 };

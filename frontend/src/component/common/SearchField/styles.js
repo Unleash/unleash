@@ -5,7 +5,7 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         backgroundColor: theme.palette.searchField.main,
-        borderRadius: theme.borders.radius.main,
+        borderRadius: '25px',
         padding: '0.25rem 0.5rem',
         maxWidth: '450px',
         [theme.breakpoints.down('sm')]: {

@@ -41,7 +41,11 @@ const PageContent = ({
     const paperProps = disableBorder ? { elevation: 0 } : {};
 
     return (
-        <Paper {...rest} {...paperProps}>
+        <Paper
+            {...rest}
+            {...paperProps}
+            style={{ borderRadius: '10px', boxShadow: 'none' }}
+        >
             {header}
             <div className={bodyClasses}>{children}</div>
         </Paper>

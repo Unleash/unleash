@@ -1,11 +1,18 @@
-import { useRef, useState } from 'react';
-import { Switch, TableCell, TableRow } from '@material-ui/core';
+import { useRef } from 'react';
+import {
+    Switch,
+    TableCell,
+    TableRow,
+    useMediaQuery,
+    useTheme,
+} from '@material-ui/core';
 import { useHistory } from 'react-router';
 import { getFeatureTypeIcons } from '../../../../utils/get-feature-type-icons';
 import { useStyles } from '../FeatureToggleListNew.styles';
 import useToggleFeatureByEnv from '../../../../hooks/api/actions/useToggleFeatureByEnv/useToggleFeatureByEnv';
 import { IEnvironments } from '../../../../interfaces/featureToggle';
-import Toast from '../../../common/Toast/Toast';
+import ConditionallyRender from '../../../common/ConditionallyRender';
+import useToast from '../../../../hooks/useToast';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -20,15 +27,14 @@ const FeatureToggleListNewItem = ({
     environments,
     projectId,
 }: IFeatureToggleListNewItemProps) => {
+    const theme = useTheme();
+    const { toast, setToastData } = useToast();
+    const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { toggleFeatureByEnvironment } = useToggleFeatureByEnv(
         projectId,
         name
     );
-    const [snackbarData, setSnackbardata] = useState({
-        show: false,
-        type: 'success',
-        text: '',
-    });
+
     const styles = useStyles();
     const history = useHistory();
     const ref = useRef(null);
@@ -42,23 +48,19 @@ const FeatureToggleListNewItem = ({
     const handleToggle = (env: IEnvironments) => {
         toggleFeatureByEnvironment(env.name, env.enabled)
             .then(() => {
-                setSnackbardata({
+                setToastData({
                     show: true,
                     type: 'success',
                     text: 'Successfully updated toggle status.',
                 });
             })
             .catch(e => {
-                setSnackbardata({
+                setToastData({
                     show: true,
                     type: 'error',
                     text: e.toString(),
                 });
             });
-    };
-
-    const hideSnackbar = () => {
-        setSnackbardata(prev => ({ ...prev, show: false }));
     };
 
     const IconComponent = getFeatureTypeIcons(type);
@@ -69,12 +71,21 @@ const FeatureToggleListNewItem = ({
                 <TableCell className={styles.tableCell} align="left">
                     <span data-loading>{name}</span>
                 </TableCell>
-                <TableCell className={styles.tableCell} align="left">
-                    <div className={styles.tableCellType}>
-                        <IconComponent data-loading className={styles.icon} />{' '}
-                        <span data-loading>{type}</span>
-                    </div>
-                </TableCell>
+                <ConditionallyRender
+                    condition={!smallScreen}
+                    show={
+                        <TableCell className={styles.tableCell} align="left">
+                            <div className={styles.tableCellType}>
+                                <IconComponent
+                                    data-loading
+                                    className={styles.icon}
+                                />{' '}
+                                <span data-loading>{type}</span>
+                            </div>
+                        </TableCell>
+                    }
+                />
+
                 {environments.map((env: IEnvironments) => {
                     return (
                         <TableCell
@@ -93,12 +104,7 @@ const FeatureToggleListNewItem = ({
                     );
                 })}
             </TableRow>
-            <Toast
-                show={snackbarData.show}
-                onClose={hideSnackbar}
-                text={snackbarData.text}
-                type={snackbarData.type}
-            />
+            {toast}
         </>
     );
 };

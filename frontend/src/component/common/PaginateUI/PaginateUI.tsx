@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ConditionallyRender from '../ConditionallyRender';
 import classnames from 'classnames';
 import { useStyles } from './PaginationUI.styles';
@@ -7,6 +7,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
+import { useMediaQuery, useTheme } from '@material-ui/core';
 
 interface IPaginateUIProps {
     pages: any[];
@@ -24,9 +25,17 @@ const PaginateUI = ({
     nextPage,
 }: IPaginateUIProps) => {
     const STARTLIMIT = 6;
+    const theme = useTheme();
     const styles = useStyles();
     const [limit, setLimit] = useState(STARTLIMIT);
     const [start, setStart] = useState(0);
+    const matches = useMediaQuery(theme.breakpoints.down('sm'));
+
+    useEffect(() => {
+        if (matches) {
+            setLimit(4);
+        }
+    }, [matches]);
 
     return (
         <ConditionallyRender

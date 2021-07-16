@@ -3,6 +3,12 @@
 exports[`renders correctly with one strategy 1`] = `
 <div
   className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
+  style={
+    Object {
+      "borderRadius": "10px",
+      "boxShadow": "none",
+    }
+  }
 >
   <div
     className="makeStyles-headerContainer-3"
@@ -132,6 +138,12 @@ exports[`renders correctly with one strategy 1`] = `
 exports[`renders correctly with one strategy without permissions 1`] = `
 <div
   className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
+  style={
+    Object {
+      "borderRadius": "10px",
+      "boxShadow": "none",
+    }
+  }
 >
   <div
     className="makeStyles-headerContainer-3"

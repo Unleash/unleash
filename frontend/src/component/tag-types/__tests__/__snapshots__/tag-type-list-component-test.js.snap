@@ -3,6 +3,12 @@
 exports[`renders a list with elements correctly 1`] = `
 <div
   className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
+  style={
+    Object {
+      "borderRadius": "10px",
+      "boxShadow": "none",
+    }
+  }
 >
   <div
     className="makeStyles-headerContainer-1"
@@ -146,6 +152,12 @@ exports[`renders a list with elements correctly 1`] = `
 exports[`renders an empty list correctly 1`] = `
 <div
   className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
+  style={
+    Object {
+      "borderRadius": "10px",
+      "boxShadow": "none",
+    }
+  }
 >
   <div
     className="makeStyles-headerContainer-1"

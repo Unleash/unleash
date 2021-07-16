@@ -11,6 +11,9 @@ export const useStyles = makeStyles(theme => ({
         margin: '0.5rem',
         boxShadow: 'none',
         border: '1px solid #efefef',
+        [theme.breakpoints.down('xs')]: {
+            justifyContent: 'center',
+        },
     },
     header: {
         display: 'flex',
@@ -37,5 +40,12 @@ export const useStyles = makeStyles(theme => ({
     infoStats: {
         color: '#4A4599',
         fontWeight: 'bold',
+    },
+    actionsBtn: {
+        transform: 'translateX(15px)',
+    },
+    icon: {
+        color: theme.palette.grey[700],
+        marginRight: '0.5rem',
     },
 }));

@@ -1,4 +1,5 @@
 export const ADMIN = 'ADMIN';
+export const EDITOR = 'EDITOR';
 export const CREATE_FEATURE = 'CREATE_FEATURE';
 export const UPDATE_FEATURE = 'UPDATE_FEATURE';
 export const DELETE_FEATURE = 'DELETE_FEATURE';

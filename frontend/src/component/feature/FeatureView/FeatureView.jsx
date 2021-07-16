@@ -222,7 +222,11 @@ const FeatureView = ({
     return (
         <Paper
             className={commonStyles.fullwidth}
-            style={{ overflow: 'visible' }}
+            style={{
+                overflow: 'visible',
+                borderRadius: '10px',
+                boxShadow: 'none',
+            }}
         >
             <div>
                 <div className={styles.header}>

@@ -32,7 +32,6 @@ const AddonFormComponent = ({
     }, [fetch, provider]); // empty array => fetch only first time
 
     useEffect(() => {
-        console.log(addon);
         setConfig({ ...addon });
         /* eslint-disable-next-line */
     }, [addon.description, addon.provider]);

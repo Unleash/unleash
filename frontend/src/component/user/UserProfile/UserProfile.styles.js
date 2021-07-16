@@ -8,7 +8,7 @@ export const useStyles = makeStyles({
         position: 'relative',
     },
     button: {
-        color: '#fff',
+        color: 'inherit',
         padding: '0.2rem 1rem',
     },
 });

@@ -1,17 +1,30 @@
-import { Card, IconButton } from '@material-ui/core';
+import { Card, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Dispatch, SetStateAction } from 'react';
 import { useStyles } from './ProjectCard.styles';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { ReactComponent as ProjectIcon } from '../../../assets/icons/projectIcon.svg';
 import ConditionallyRender from '../../common/ConditionallyRender';
-import { PROJECTCARDACTIONS } from '../../common/flags';
-
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import Dialogue from '../../common/Dialogue';
+import useProjectApi from '../../../hooks/api/actions/useProjectApi/useProjectApi';
+import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
+import { Delete, Edit } from '@material-ui/icons';
 interface IProjectCardProps {
     name: string;
     featureCount: number;
     health: number;
     memberCount: number;
+    id: string;
     onHover: () => void;
+    setToastData: Dispatch<
+        SetStateAction<{
+            show: boolean;
+            type: string;
+            text: string;
+        }>
+    >;
 }
 
 const ProjectCard = ({
@@ -20,20 +33,66 @@ const ProjectCard = ({
     health,
     memberCount,
     onHover,
+    id,
+    setToastData,
 }: IProjectCardProps) => {
     const styles = useStyles();
+    const { refetch: refetchProjectOverview } = useProjects();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [showDelDialog, setShowDelDialog] = useState(false);
+    const { deleteProject } = useProjectApi();
+    const history = useHistory();
+
+    const handleClick = e => {
+        e.preventDefault();
+        setAnchorEl(e.currentTarget);
+    };
+
     return (
         <Card className={styles.projectCard} onMouseEnter={onHover}>
             <div className={styles.header} data-loading>
                 <h2 className={styles.title}>{name}</h2>
                 <ConditionallyRender
-                    condition={PROJECTCARDACTIONS}
+                    condition={true}
                     show={
-                        <IconButton data-loading>
+                        <IconButton
+                            className={styles.actionsBtn}
+                            data-loading
+                            onClick={handleClick}
+                        >
                             <MoreVertIcon />
                         </IconButton>
                     }
                 />
+                <Menu
+                    id="project-card-menu"
+                    open={Boolean(anchorEl)}
+                    anchorEl={anchorEl}
+                    style={{ top: '40px', left: '-60px' }}
+                    onClose={e => {
+                        e.preventDefault();
+                        setAnchorEl(null);
+                    }}
+                >
+                    <MenuItem
+                        onClick={e => {
+                            e.preventDefault();
+                            history.push(`/projects/edit/${id}`);
+                        }}
+                    >
+                        <Edit className={styles.icon} />
+                        Edit project
+                    </MenuItem>
+                    <MenuItem
+                        onClick={e => {
+                            e.preventDefault();
+                            setShowDelDialog(true);
+                        }}
+                    >
+                        <Delete className={styles.icon} />
+                        Delete project
+                    </MenuItem>
+                </Menu>
             </div>
             <div data-loading>
                 <ProjectIcon className={styles.projectIcon} />
@@ -59,6 +118,38 @@ const ProjectCard = ({
                     <p data-loading>members</p>
                 </div>
             </div>
+            <Dialogue
+                open={showDelDialog}
+                onClick={e => {
+                    e.preventDefault();
+                    deleteProject(id)
+                        .then(() => {
+                            setToastData({
+                                show: true,
+                                type: 'success',
+                                text: 'Successfully deleted project',
+                            });
+                            refetchProjectOverview();
+                        })
+                        .catch(e => {
+                            setToastData({
+                                show: true,
+                                type: 'error',
+                                text: e.toString(),
+                            });
+                        })
+                        .finally(() => {
+                            setShowDelDialog(false);
+                            setAnchorEl(null);
+                        });
+                }}
+                onClose={e => {
+                    e.preventDefault();
+                    setAnchorEl(null);
+                    setShowDelDialog(false);
+                }}
+                title="Really delete project"
+            />
         </Card>
     );
 };

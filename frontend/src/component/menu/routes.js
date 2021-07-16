@@ -15,7 +15,6 @@ import ContextFields from '../../page/context';
 import CreateContextField from '../../page/context/create';
 import EditContextField from '../../page/context/edit';
 import LogoutFeatures from '../../page/user/logout';
-import ListProjects from '../../page/project';
 import CreateProject from '../../page/project/create';
 import EditProject from '../../page/project/edit';
 import ViewProject from '../../page/project/view';
@@ -39,24 +38,8 @@ import { P, C } from '../common/flags';
 import NewUser from '../user/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
-import ProjectListNew from '../project/ProjectListNew/ProjectListNew';
+import ProjectListNew from '../project/ProjectList/ProjectList';
 import Project from '../project/Project/Project';
-
-import {
-    List,
-    Extension,
-    History,
-    Archive as ArchiveIcon,
-    Apps,
-    Label,
-    DeviceHub,
-    Album,
-    ExitToApp,
-    FolderOpen,
-    Report,
-    Money,
-    Person,
-} from '@material-ui/icons';
 
 export const routes = [
     // Features
@@ -87,7 +70,6 @@ export const routes = [
     {
         path: '/features',
         title: 'Feature Toggles',
-        icon: List,
         component: Features,
         type: 'protected',
         layout: 'main',
@@ -113,7 +95,6 @@ export const routes = [
     {
         path: '/strategies',
         title: 'Strategies',
-        icon: Extension,
         component: Strategies,
         type: 'protected',
         layout: 'main',
@@ -131,7 +112,6 @@ export const routes = [
     {
         path: '/history',
         title: 'Event History',
-        icon: History,
         component: HistoryPage,
         type: 'protected',
         layout: 'main',
@@ -149,7 +129,6 @@ export const routes = [
     {
         path: '/archive',
         title: 'Archived Toggles',
-        icon: ArchiveIcon,
         component: Archive,
         type: 'protected',
         layout: 'main',
@@ -167,7 +146,6 @@ export const routes = [
     {
         path: '/applications',
         title: 'Applications',
-        icon: Apps,
         component: Applications,
         type: 'protected',
         layout: 'main',
@@ -193,7 +171,6 @@ export const routes = [
     {
         path: '/context',
         title: 'Context Fields',
-        icon: Album,
         component: ContextFields,
         type: 'protected',
         flag: C,
@@ -245,20 +222,9 @@ export const routes = [
     {
         path: '/projects',
         title: 'Projects',
-        icon: FolderOpen,
-        component: ListProjects,
-        flag: P,
-        type: 'protected',
-        layout: 'main',
-    },
-    {
-        path: '/projects-new',
-        title: 'Projects new',
-        icon: 'folder_open',
         component: ProjectListNew,
         flag: P,
         type: 'protected',
-        hidden: true,
         layout: 'main',
     },
 
@@ -281,7 +247,6 @@ export const routes = [
     {
         path: '/tag-types',
         title: 'Tag types',
-        icon: Label,
         component: ListTagTypes,
         type: 'protected',
         layout: 'main',
@@ -298,7 +263,6 @@ export const routes = [
     {
         path: '/tags',
         title: 'Tags',
-        icon: Label,
         component: ListTags,
         hidden: true,
         type: 'protected',
@@ -325,7 +289,6 @@ export const routes = [
     {
         path: '/addons',
         title: 'Addons',
-        icon: DeviceHub,
         component: Addons,
         hidden: false,
         type: 'protected',
@@ -334,7 +297,6 @@ export const routes = [
     {
         path: '/reporting',
         title: 'Reporting',
-        icon: Report,
         component: Reporting,
         type: 'protected',
         layout: 'main',
@@ -367,7 +329,6 @@ export const routes = [
     {
         path: '/admin-invoices',
         title: 'Invoices',
-        icon: Money,
         component: AdminInvoice,
         hidden: true,
         type: 'protected',
@@ -376,7 +337,6 @@ export const routes = [
     {
         path: '/admin',
         title: 'Admin',
-        icon: Album,
         component: Admin,
         hidden: false,
         type: 'protected',
@@ -385,7 +345,6 @@ export const routes = [
     {
         path: '/logout',
         title: 'Sign out',
-        icon: ExitToApp,
         component: LogoutFeatures,
         type: 'unprotected',
         layout: 'main',
@@ -393,7 +352,6 @@ export const routes = [
     {
         path: '/login',
         title: 'Log in',
-        icon: Person,
         component: Login,
         type: 'unprotected',
         hidden: true,
@@ -430,3 +388,28 @@ export const getRoute = path => routes.find(route => route.path === path);
 export const baseRoutes = routes
     .filter(route => !route.hidden)
     .filter(route => !route.parent);
+
+const computeRoutes = () => {
+    const computedRoutes = {
+        mainNavRoutes:
+            baseRoutes.filter(
+                route =>
+                    route.path !== '/admin' &&
+                    route.path !== '/logout' &&
+                    route.path !== '/history'
+            ) || [],
+        adminRoutes:
+            routes.filter(
+                route =>
+                    (route.path.startsWith('/admin') &&
+                        route.path !== '/admin-invoices' &&
+                        route.path !== '/admin') ||
+                    route.path === '/history'
+            ) || [],
+    };
+    return () => {
+        return computedRoutes;
+    };
+};
+
+export const getRoutes = computeRoutes();

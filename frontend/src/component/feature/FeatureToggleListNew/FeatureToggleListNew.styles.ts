@@ -11,6 +11,11 @@ export const useStyles = makeStyles(theme => ({
     tableCellHeader: {
         paddingBottom: '0.5rem',
     },
+    typeHeader: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
+    },
     tableCellName: {
         width: '250px',
     },
@@ -20,6 +25,9 @@ export const useStyles = makeStyles(theme => ({
     tableCellType: {
         display: 'flex',
         alignItems: 'center',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
     },
     icon: {
         marginRight: '0.3rem',

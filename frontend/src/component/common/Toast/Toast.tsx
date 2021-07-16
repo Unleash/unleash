@@ -24,7 +24,7 @@ const Toast = ({
         <Portal>
             <AnimateOnMount
                 mounted={show}
-                start={styles.fadeInBottomStart}
+                start={styles.fadeInBottomStartWithoutFixed}
                 enter={styles.fadeInBottomEnter}
                 leave={styles.fadeInBottomLeave}
                 container={styles.fullWidth}
@@ -33,6 +33,7 @@ const Toast = ({
                     open={show}
                     onClose={onClose}
                     autoHideDuration={autoHideDuration}
+                    style={{ bottom: '40px' }}
                 >
                     <Alert variant="filled" severity={type} onClose={onClose}>
                         {text}

@@ -69,6 +69,12 @@ export const useCommonStyles = makeStyles(theme => ({
         bottom: '40px',
         transform: 'translateY(400px)',
     },
+    fadeInBottomStartWithoutFixed: {
+        opacity: '0',
+        right: '40px',
+        bottom: '40px',
+        transform: 'translateY(400px)',
+    },
     fadeInBottomEnter: {
         transform: 'translateY(0)',
         opacity: '1',

@@ -22,10 +22,19 @@
     margin-left: 0.25rem;
 }
 
-.drawerList {
+.drawerList,
+.iconLinkList {
     display: flex;
     flex-direction: column;
     align-items: centre;
+    padding: 0.5rem;
+}
+
+.iconLink {
+    display: flex;
+    padding: 0.8rem;
+    text-decoration: none;
+    color: inherit;
 }
 
 .navigationLink {
@@ -44,6 +53,7 @@
 
 .navigationIcon {
     margin-right: 16px;
+    fill: #635dc5;
 }
 
 .iconGitHub {

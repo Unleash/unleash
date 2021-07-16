@@ -5,6 +5,8 @@ exports[`renders correctly with one feature 1`] = `
   className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
   style={
     Object {
+      "borderRadius": "10px",
+      "boxShadow": "none",
       "overflow": "visible",
     }
   }
@@ -140,10 +142,10 @@ exports[`renders correctly with one feature 1`] = `
             </svg>
             <fieldset
               aria-hidden={true}
-              className="PrivateNotchedOutline-root-19 MuiOutlinedInput-notchedOutline"
+              className="PrivateNotchedOutline-root-20 MuiOutlinedInput-notchedOutline"
             >
               <legend
-                className="PrivateNotchedOutline-legendLabelled-21"
+                className="PrivateNotchedOutline-legendLabelled-22"
               >
                 <span>
                   Project
@@ -175,7 +177,7 @@ exports[`renders correctly with one feature 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-23 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-24 MuiSwitch-switchBase MuiSwitch-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -194,7 +196,7 @@ exports[`renders correctly with one feature 1`] = `
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-26 MuiSwitch-input"
+              className="PrivateSwitchBase-input-27 MuiSwitch-input"
               disabled={false}
               onChange={[Function]}
               type="checkbox"
@@ -327,7 +329,7 @@ exports[`renders correctly with one feature 1`] = `
   </div>
   <hr />
   <div
-    className="MuiPaper-root makeStyles-tabNav-27 MuiPaper-elevation1 MuiPaper-rounded"
+    className="MuiPaper-root makeStyles-tabNav-28 MuiPaper-elevation1 MuiPaper-rounded"
   >
     <div
       className="MuiTabs-root"
@@ -375,7 +377,7 @@ exports[`renders correctly with one feature 1`] = `
               Activation
             </span>
             <span
-              className="PrivateTabIndicator-root-28 PrivateTabIndicator-colorPrimary-29 MuiTabs-indicator"
+              className="PrivateTabIndicator-root-29 PrivateTabIndicator-colorPrimary-30 MuiTabs-indicator"
               style={Object {}}
             />
           </button>

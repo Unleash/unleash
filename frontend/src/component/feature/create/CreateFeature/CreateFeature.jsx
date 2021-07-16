@@ -18,6 +18,8 @@ import {
 } from '../../../../testIds';
 import { CREATE_FEATURE } from '../../../AccessProvider/permissions';
 import { projectFilterGenerator } from '../../../../utils/project-filter-generator';
+import { useHistory } from 'react-router-dom';
+import useQueryParams from '../../../../hooks/useQueryParams';
 
 const CreateFeature = ({
     input,
@@ -25,9 +27,19 @@ const CreateFeature = ({
     setValue,
     validateName,
     onSubmit,
-    onCancel,
     user,
 }) => {
+    const params = useQueryParams();
+    const project = params.get('project');
+    const history = useHistory();
+
+    useEffect(() => {
+        if (project) {
+            setValue('project', project);
+        }
+        /* eslint-disable-next-line */
+    }, []);
+
     useEffect(() => {
         window.onbeforeunload = () =>
             'Data will be lost if you leave the page, are you sure?';
@@ -36,6 +48,8 @@ const CreateFeature = ({
             window.onbeforeunload = false;
         };
     }, []);
+
+    const onCancel = () => history.goBack();
 
     return (
         <PageContent headerContent="Create new feature toggle">
@@ -73,7 +87,7 @@ const CreateFeature = ({
                 </div>
                 <section className={styles.formContainer}>
                     <ProjectSelect
-                        value={input.project}
+                        value={project || input.project}
                         onChange={v => setValue('project', v.target.value)}
                         filter={projectFilterGenerator(user, CREATE_FEATURE)}
                     />

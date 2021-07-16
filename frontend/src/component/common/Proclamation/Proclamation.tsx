@@ -23,7 +23,6 @@ const renderProclamation = (id: string) => {
             return false;
         }
     }
-    console.log('RETURNING TRUE');
     return true;
 };
 

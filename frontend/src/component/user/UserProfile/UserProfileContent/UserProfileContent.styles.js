@@ -26,4 +26,10 @@ export const useStyles = makeStyles(theme => ({
     editingEmail: {
         transform: 'translateX(10px) translateY(-60px)',
     },
+    link: {
+        color: theme.palette.primary.main,
+        textDecoration: 'none',
+        textAlign: 'left',
+        width: '100%',
+    },
 }));

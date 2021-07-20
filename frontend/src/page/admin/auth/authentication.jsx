@@ -9,8 +9,12 @@ import TabNav from '../../../component/common/TabNav/TabNav';
 import PageContent from '../../../component/common/PageContent/PageContent';
 import ConditionallyRender from '../../../component/common/ConditionallyRender/ConditionallyRender';
 
-function AdminAuthPage({ authenticationType, history, enableOIDC }) {
+function AdminAuthPage({ authenticationType, history }) {
     const tabs = [
+        {
+            label: 'OpenID Connect',
+            component: <OidcAuth />,
+        },
         {
             label: 'SAML 2.0',
             component: <SamlAuth />,
@@ -20,13 +24,6 @@ function AdminAuthPage({ authenticationType, history, enableOIDC }) {
             component: <GoogleAuth />,
         },
     ];
-
-    if(enableOIDC) {
-        tabs.unshift( {
-            label: 'OpenID Connect',
-            component: <OidcAuth />,
-        },)
-    }
 
     return (
         <div>
@@ -71,7 +68,6 @@ AdminAuthPage.propTypes = {
     match: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
     authenticationType: PropTypes.string,
-    enableOIDC: PropTypes.bool,
 };
 
 export default AdminAuthPage;

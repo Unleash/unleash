@@ -14,7 +14,6 @@ const UserProfile = ({
     location,
     fetchUser,
     updateSettingLocation,
-    logoutUser,
 }) => {
     const [showProfile, setShowProfile] = useState(false);
     const [currentLocale, setCurrentLocale] = useState([]);
@@ -74,7 +73,6 @@ const UserProfile = ({
                     profile={profile}
                     updateSettingLocation={updateSettingLocation}
                     possibleLocales={possibleLocales}
-                    logoutUser={logoutUser}
                     location={location}
                     setCurrentLocale={setCurrentLocale}
                     currentLocale={currentLocale}

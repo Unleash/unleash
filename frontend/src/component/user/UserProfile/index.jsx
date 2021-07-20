@@ -1,11 +1,10 @@
 import { connect } from 'react-redux';
 import UserProfile from './UserProfile';
-import { fetchUser, logoutUser } from '../../../store/user/actions';
+import { fetchUser } from '../../../store/user/actions';
 import { updateSettingForGroup } from '../../../store/settings/actions';
 
 const mapDispatchToProps = {
     fetchUser,
-    logoutUser,
     updateSettingLocation: updateSettingForGroup('location'),
 };
 

@@ -1,13 +1,16 @@
+import React from 'react';
 import { Divider, Drawer, List } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 
 import styles from './drawer.module.scss';
 
 import { ReactComponent as LogoIcon } from '../../assets/icons/logo_wbg.svg';
 import NavigationLink from './Header/NavigationLink/NavigationLink';
 import ConditionallyRender from '../common/ConditionallyRender';
+import { getBasePath } from '../../utils/format-path';
 
 export const DrawerMenu = ({
     links = [],
@@ -88,7 +91,13 @@ export const DrawerMenu = ({
                     }
                 />
                 <Divider />
-                <div className={styles.iconLinkList}>{renderLinks()}</div>
+                <div className={styles.iconLinkList}>
+                    {renderLinks()}
+                    <a className={styles.navigationLink} href={`${getBasePath()}/logout`}>
+                        <ExitToApp className={styles.navigationIcon} />
+                        Sign out
+                    </a>
+                </div>
             </div>
         </Drawer>
     );

@@ -14,7 +14,6 @@ import ApplicationView from '../../page/applications/view';
 import ContextFields from '../../page/context';
 import CreateContextField from '../../page/context/create';
 import EditContextField from '../../page/context/edit';
-import LogoutFeatures from '../../page/user/logout';
 import CreateProject from '../../page/project/create';
 import EditProject from '../../page/project/edit';
 import ViewProject from '../../page/project/view';
@@ -340,13 +339,6 @@ export const routes = [
         component: Admin,
         hidden: false,
         type: 'protected',
-        layout: 'main',
-    },
-    {
-        path: '/logout',
-        title: 'Sign out',
-        component: LogoutFeatures,
-        type: 'unprotected',
         layout: 'main',
     },
     {

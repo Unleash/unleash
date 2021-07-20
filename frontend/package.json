@@ -56,6 +56,7 @@
     "enzyme-adapter-react-16": "^1.15.6",
     "enzyme-to-json": "^3.6.1",
     "fetch-mock": "^9.11.0",
+    "http-proxy-middleware": "^2.0.1",
     "immutable": "^4.0.0-rc.12",
     "lodash.clonedeep": "^4.5.0",
     "lodash.flow": "^3.5.0",
@@ -109,6 +110,5 @@
       "no-useless-computed-key": "off",
       "import/no-anonymous-default-export": "off"
     }
-  },
-  "proxy": "http://localhost:4242"
+  }
 }

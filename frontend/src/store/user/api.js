@@ -3,13 +3,6 @@ import { throwIfNotSuccess, headers } from '../api-helper';
 
 const URI = formatApiPath('api/admin/user');
 
-function logoutUser() {
-    return fetch(formatApiPath('logout'), {
-        method: 'GET',
-        credentials: 'include',
-    }).then(throwIfNotSuccess);
-}
-
 function fetchUser() {
     return fetch(URI, { credentials: 'include' })
         .then(throwIfNotSuccess)
@@ -53,7 +46,6 @@ const api = {
     fetchUser,
     insecureLogin,
     demoLogin,
-    logoutUser,
     passwordLogin,
 };
 

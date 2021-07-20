@@ -17,6 +17,7 @@ import { Alert } from '@material-ui/lab';
 import EditProfile from '../EditProfile/EditProfile';
 import legacyStyles from '../../user.module.scss';
 import usePermissions from '../../../../hooks/usePermissions';
+import { getBasePath } from '../../../../utils/format-path';
 
 const UserProfileContent = ({
     showProfile,
@@ -26,7 +27,6 @@ const UserProfileContent = ({
     imageUrl,
     currentLocale,
     setCurrentLocale,
-    logoutUser,
 }) => {
     const commonStyles = useCommonStyles();
     const [updatedPassword, setUpdatedPassword] = useState(false);
@@ -155,7 +155,7 @@ const UserProfileContent = ({
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={logoutUser}
+                                    href={`${getBasePath()}/logout`}
                                 >
                                     Logout
                                 </Button>

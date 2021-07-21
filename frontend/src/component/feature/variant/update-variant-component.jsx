@@ -129,9 +129,8 @@ class UpdateVariantComponent extends Component {
                     you want to be used in order to ensure consistent traffic
                     allocation across variants.{' '}
                     <a
-                        href="https://unleash.github.io/docs/toggle_variants"
-                        target="_blank"
-                        rel="noreferrer"
+                        href="https://docs.getunleash.io/advanced/toggle_variants"
+                        target="_blank" rel="noreferrer"
                     >
                         Read more
                     </a>

@@ -522,7 +522,7 @@ exports[`renders correctly with with variants 1`] = `
         By overriding the stickiness you can control which parameter you want to be used in order to ensure consistent traffic allocation across variants.
          
         <a
-          href="https://unleash.github.io/docs/toggle_variants"
+          href="https://docs.getunleash.io/advanced/toggle_variants"
           rel="noreferrer"
           target="_blank"
         >

@@ -46,6 +46,7 @@ const AddVariant = ({
                 name: editVariant.name,
                 weight: editVariant.weight / 10,
                 weightType: editVariant.weightType || weightTypes.VARIABLE,
+                stickiness: editVariant.stickiness
             });
             if (editVariant.payload) {
                 setPayload(editVariant.payload);
@@ -100,6 +101,7 @@ const AddVariant = ({
                 name: data.name,
                 weight: data.weight * 10,
                 weightType: data.weightType,
+                stickiness: data.stickiness,
                 payload: payload.value ? payload : undefined,
                 overrides: overrides
                     .map(o => ({

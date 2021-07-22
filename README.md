@@ -80,7 +80,7 @@ In addition there exists a good list of [community developed SDKs](https://docs.
 
 ## What is a feature toggle?
 
-The main motivation for doing feature toggling is to decouple the process for deploying code to production and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable, and have full control off how we exposed the new feature for.
+The main motivation for doing feature toggling is to decouple the process for deploying code to production and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable, and have full control of how we exposed the new feature for.
 
 > Feature toggles decouple **deployment** of code from **release** of new features
 

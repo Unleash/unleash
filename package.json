@@ -100,7 +100,7 @@
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",
-    "unleash-frontend": "4.0.5-beta.2",
+    "unleash-frontend": "4.0.9",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

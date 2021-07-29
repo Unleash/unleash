@@ -3,7 +3,7 @@ id: projects
 title: /api/admin/projects
 ---
 
-> The context feature is only available as part of Unleash Enterprise. In order to access the API programmatically you need to make sure you [obtain an API token](../../user_guide/api-token) with admin permissions.
+> The context feature is only available as part of Unleash Enterprise. In order to access the API programmatically you need to make sure you [obtain an API token](/user_guide/api-token) with admin permissions.
 
 ### List projects in Unleash {#list-projects-in-unleash}
 

@@ -3,7 +3,7 @@ id: context
 title: /api/admin/context
 ---
 
-> The context feature is only available as part of Unleash Enterprise. In order to access the API programmatically you need to make sure you [obtain a API token](../../user_guide/api-token) with admin permissions.
+> The context feature is only available as part of Unleash Enterprise. In order to access the API programmatically you need to make sure you [obtain a API token](/user_guide/api-token) with admin permissions.
 
 ### List context fields defined in Unleash {#list-context-fields-defined-in-unleash}
 

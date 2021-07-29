@@ -3,7 +3,7 @@ id: register
 title: /api/client/register
 ---
 
-> In order to access the client API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create a CLIENT token](../../user_guide/api-token) and add an Authorization header using the token.
+> In order to access the client API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create a CLIENT token](/user_guide/api-token) and add an Authorization header using the token.
 
 ### Client registration {#client-registration}
 

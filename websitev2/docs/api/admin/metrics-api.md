@@ -3,7 +3,7 @@ id: metrics
 title: /api/admin/metrics
 ---
 
-> In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](../../user_guide/api-token) and add an Authorization header using the token.
+> In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/user_guide/api-token) and add an Authorization header using the token.
 
 # This document describes the metrics endpoint for admin ui
 

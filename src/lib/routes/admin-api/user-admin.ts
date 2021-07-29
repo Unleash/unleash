@@ -65,10 +65,8 @@ export default class UserAdminController extends Controller {
         const { user } = req;
         try {
             const receiver = req.body.id;
-            const resetPasswordUrl = await this.userService.createResetPasswordEmail(
-                receiver,
-                user,
-            );
+            const resetPasswordUrl =
+                await this.userService.createResetPasswordEmail(receiver, user);
             res.json({ resetPasswordUrl });
         } catch (e) {
             handleErrors(res, this.logger, e);
@@ -80,9 +78,10 @@ export default class UserAdminController extends Controller {
         try {
             const users = await this.userService.getAll();
             const rootRoles = await this.accessService.getRootRoles();
-            const inviteLinks = await this.resetTokenService.getActiveInvitations();
+            const inviteLinks =
+                await this.resetTokenService.getActiveInvitations();
 
-            const usersWithInviteLinks = users.map(user => {
+            const usersWithInviteLinks = users.map((user) => {
                 const inviteLink = inviteLinks[user.id] || '';
                 return { ...user, inviteLink };
             });

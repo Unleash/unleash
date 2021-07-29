@@ -5,6 +5,7 @@ import { DB_TIME } from '../metric-events';
 import NotFoundError from '../error/notfound-error';
 import { Logger, LogProvider } from '../logger';
 import { FeatureToggleDTO, FeatureToggle, IVariant } from '../types/model';
+import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 
 const FEATURE_COLUMNS = [
     'name',
@@ -30,7 +31,7 @@ export interface FeaturesTable {
 
 const TABLE = 'features';
 
-export default class FeatureToggleStore {
+export default class FeatureToggleStore implements IFeatureToggleStore {
     private db: Knex;
 
     private logger: Logger;
@@ -40,7 +41,7 @@ export default class FeatureToggleStore {
     constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
-        this.timer = action =>
+        this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',
                 action,
@@ -58,7 +59,7 @@ export default class FeatureToggleStore {
             .count('*')
             .from(TABLE)
             .where(query)
-            .then(res => Number(res[0].count));
+            .then((res) => Number(res[0].count));
     }
 
     async getFeatureMetadata(name: string): Promise<FeatureToggle> {
@@ -69,7 +70,29 @@ export default class FeatureToggleStore {
             .then(this.rowToFeature);
     }
 
-    async getFeatures(archived: boolean = false): Promise<FeatureToggle[]> {
+    async deleteAll(): Promise<void> {
+        await this.db(TABLE).del();
+    }
+
+    destroy(): void {}
+
+    async get(name: string): Promise<FeatureToggle> {
+        return this.db
+            .first(FEATURE_COLUMNS)
+            .from(TABLE)
+            .where({ name, archived: 0 })
+            .then(this.rowToFeature);
+    }
+
+    async getAll(): Promise<FeatureToggle[]> {
+        const rows = await this.db
+            .select(FEATURE_COLUMNS)
+            .from(TABLE)
+            .where({ archived: false });
+        return rows.map(this.rowToFeature);
+    }
+
+    async getFeatures(archived: boolean): Promise<FeatureToggle[]> {
         const rows = await this.db
             .select(FEATURE_COLUMNS)
             .from(TABLE)
@@ -87,8 +110,8 @@ export default class FeatureToggleStore {
             .first(['project'])
             .from(TABLE)
             .where({ name })
-            .then(r => (r ? r.project : undefined))
-            .catch(e => {
+            .then((r) => (r ? r.project : undefined))
+            .catch((e) => {
                 this.logger.error(e);
                 return undefined;
             });
@@ -103,7 +126,7 @@ export default class FeatureToggleStore {
             .first('name', 'archived')
             .from(TABLE)
             .where({ name })
-            .then(row => {
+            .then((row) => {
                 if (!row) {
                     throw new NotFoundError('No feature toggle found');
                 }
@@ -116,7 +139,7 @@ export default class FeatureToggleStore {
 
     async exists(name: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM features WHERE name = ?) AS present`,
+            'SELECT EXISTS (SELECT 1 FROM features WHERE name = ?) AS present',
             [name],
         );
         const { present } = result.rows[0];
@@ -132,7 +155,7 @@ export default class FeatureToggleStore {
         return rows.map(this.rowToFeature);
     }
 
-    async lastSeenToggles(toggleNames: string[]): Promise<void> {
+    async updateLastSeenForToggles(toggleNames: string[]): Promise<void> {
         const now = new Date();
         try {
             await this.db(TABLE)
@@ -160,7 +183,7 @@ export default class FeatureToggleStore {
             type: row.type,
             project: row.project,
             stale: row.stale,
-            variants: (row.variants as unknown) as IVariant[],
+            variants: row.variants as unknown as IVariant[],
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
         };
@@ -218,7 +241,7 @@ export default class FeatureToggleStore {
         return this.rowToFeature(row[0]);
     }
 
-    async deleteFeature(name: string): Promise<void> {
+    async delete(name: string): Promise<void> {
         await this.db(TABLE)
             .where({ name, archived: true }) // Feature toggle must be archived to allow deletion
             .del();
@@ -230,14 +253,6 @@ export default class FeatureToggleStore {
             .update({ archived: false })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
-    }
-
-    async dropFeatures(): Promise<void> {
-        try {
-            await this.db(TABLE).delete();
-        } catch (err) {
-            this.logger.error('Could not drop features, error: ', err);
-        }
     }
 
     async getFeaturesBy(params: {

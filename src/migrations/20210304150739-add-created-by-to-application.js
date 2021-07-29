@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE client_applications ADD COLUMN created_by TEXT;
@@ -9,7 +9,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql('ALTER TABLE client_applications DROP COLUMN created_by;', cb);
 };
 

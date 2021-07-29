@@ -6,11 +6,7 @@ const projectSchema = joi
     .keys({
         id: nameType,
         name: joi.string().required(),
-        description: joi
-            .string()
-            .allow(null)
-            .allow('')
-            .optional(),
+        description: joi.string().allow(null).allow('').optional(),
     })
     .options({ allowUnknown: false, stripUnknown: true });
 

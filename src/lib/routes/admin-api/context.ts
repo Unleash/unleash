@@ -47,9 +47,7 @@ class ContextController extends Controller {
     async getContextFields(req: Request, res: Response): Promise<void> {
         try {
             const fields = await this.contextService.getAll();
-            res.status(200)
-                .json(fields)
-                .end();
+            res.status(200).json(fields).end();
         } catch (e) {
             handleErrors(res, this.logger, e);
         }

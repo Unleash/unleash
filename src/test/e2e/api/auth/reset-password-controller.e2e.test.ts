@@ -1,21 +1,18 @@
 import { URL } from 'url';
 import EventEmitter from 'events';
+import { createTestConfig } from '../../../config/test-config';
+import { IUnleashConfig } from '../../../../lib/types/option';
+import UserService from '../../../../lib/services/user-service';
+import { AccessService } from '../../../../lib/services/access-service';
+import ResetTokenService from '../../../../lib/services/reset-token-service';
+import { IUser } from '../../../../lib/types/user';
+import { setupApp, setupAppWithAuth } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-
-import {
-    AccessService,
-    RoleName,
-} from '../../../../lib/services/access-service';
-import ResetTokenService from '../../../../lib/services/reset-token-service';
-import UserService from '../../../../lib/services/user-service';
-import { setupApp, setupAppWithAuth } from '../../helpers/test-helper';
 import { EmailService } from '../../../../lib/services/email-service';
-import User from '../../../../lib/types/user';
-import { IUnleashConfig } from '../../../../lib/types/option';
-import { createTestConfig } from '../../../config/test-config';
 import SessionStore from '../../../../lib/db/session-store';
 import SessionService from '../../../../lib/services/session-service';
+import { RoleName } from '../../../../lib/types/model';
 
 let app;
 let stores;
@@ -34,8 +31,8 @@ const password = 'DtUYwi&l5I1KX4@Le';
 let userService: UserService;
 let accessService: AccessService;
 let resetTokenService: ResetTokenService;
-let adminUser: User;
-let user: User;
+let adminUser: IUser;
+let user: IUser;
 
 const getBackendResetUrl = (url: URL): string => {
     const urlString = url.toString();
@@ -96,7 +93,7 @@ test('Can validate token for password reset', async () => {
         .get(relative)
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.email).toBe(user.email);
         });
 });
@@ -117,7 +114,7 @@ test('Can use token to reset password', async () => {
         .get(relative)
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             token = res.body.token;
         });
     await app.request
@@ -142,7 +139,7 @@ test('Trying to reset password with same token twice does not work', async () =>
         .get(relative)
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             token = res.body.token;
         });
     await app.request
@@ -161,13 +158,13 @@ test('Trying to reset password with same token twice does not work', async () =>
             password,
         })
         .expect(403)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.details[0].message).toBeTruthy();
         });
 });
 
 test('Invalid token should yield 401', async () =>
-    app.request.get('/auth/reset/validate?token=abc123').expect(res => {
+    app.request.get('/auth/reset/validate?token=abc123').expect((res) => {
         expect(res.status).toBe(401);
     }));
 
@@ -187,10 +184,7 @@ test('Calling validate endpoint with already existing session should destroy ses
     );
     const relative = getBackendResetUrl(url);
 
-    await request
-        .get(relative)
-        .expect(200)
-        .expect('Content-Type', /json/);
+    await request.get(relative).expect(200).expect('Content-Type', /json/);
     await request.get('/api/admin/features').expect(401); // we no longer should have a valid session
     await destroy();
 });
@@ -208,7 +202,7 @@ test('Calling reset endpoint with already existing session should logout/destroy
         .get(relative)
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             token = res.body.token;
         });
     await request
@@ -237,7 +231,7 @@ test('Trying to change password with an invalid token should yield 401', async (
             token: 'abc123',
             password,
         })
-        .expect(res => expect(res.status).toBe(401)));
+        .expect((res) => expect(res.status).toBe(401)));
 
 test('Trying to change password to undefined should yield 400 without crashing the server', async () => {
     expect.assertions(0);
@@ -252,7 +246,7 @@ test('Trying to change password to undefined should yield 400 without crashing t
         .get(relative)
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             token = res.body.token;
         });
     await app.request

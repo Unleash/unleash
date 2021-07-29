@@ -2,7 +2,7 @@
 
 'use strict';
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     return db.createTable(
         'users',
         {
@@ -26,6 +26,6 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     return db.dropTable('users', cb);
 };

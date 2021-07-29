@@ -4,11 +4,10 @@ import owasp from 'owasp-password-strength-test';
 import Joi from 'joi';
 
 import { URL } from 'url';
-import UserStore, { IUserSearch } from '../db/user-store';
 import { Logger } from '../logger';
 import User, { IUser } from '../types/user';
 import isEmail from '../util/is-email';
-import { AccessService, RoleName } from './access-service';
+import { AccessService } from './access-service';
 import ResetTokenService from './reset-token-service';
 import InvalidTokenError from '../error/invalid-token-error';
 import NotFoundError from '../error/notfound-error';
@@ -16,11 +15,12 @@ import OwaspValidationError from '../error/owasp-validation-error';
 import { EmailService } from './email-service';
 import { IUnleashConfig } from '../types/option';
 import SessionService from './session-service';
-import { IUnleashServices } from '../types/services';
 import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
-import EventStore from '../db/event-store';
 import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../types/events';
+import { IEventStore } from '../types/stores/event-store';
+import { IUserSearch, IUserStore } from '../types/stores/user-store';
+import { RoleName } from '../types/model';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -58,9 +58,9 @@ const saltRounds = 10;
 class UserService {
     private logger: Logger;
 
-    private store: UserStore;
+    private store: IUserStore;
 
-    private eventStore: EventStore;
+    private eventStore: IEventStore;
 
     private accessService: AccessService;
 
@@ -76,26 +76,20 @@ class UserService {
             getLogger,
             authentication,
         }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
-        {
-            accessService,
-            resetTokenService,
-            emailService,
-            sessionService,
-        }: Pick<
-        IUnleashServices,
-            | 'accessService'
-            | 'resetTokenService'
-            | 'emailService'
-            | 'sessionService'
-        >,
+        services: {
+            accessService: AccessService;
+            resetTokenService: ResetTokenService;
+            emailService: EmailService;
+            sessionService: SessionService;
+        },
     ) {
         this.logger = getLogger('service/user-service.js');
         this.store = stores.userStore;
         this.eventStore = stores.eventStore;
-        this.accessService = accessService;
-        this.resetTokenService = resetTokenService;
-        this.emailService = emailService;
-        this.sessionService = sessionService;
+        this.accessService = services.accessService;
+        this.resetTokenService = services.resetTokenService;
+        this.emailService = services.emailService;
+        this.sessionService = services.sessionService;
         if (authentication && authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
@@ -128,7 +122,10 @@ class UserService {
                 const passwordHash = await bcrypt.hash(pwd, saltRounds);
                 await this.store.setPasswordHash(user.id, passwordHash);
 
-                await this.accessService.setUserRootRole(user.id, RoleName.ADMIN);
+                await this.accessService.setUserRootRole(
+                    user.id,
+                    RoleName.ADMIN,
+                );
             } catch (e) {
                 this.logger.error('Unable to create default user "admin"');
             }
@@ -141,8 +138,8 @@ class UserService {
             RoleName.VIEWER,
         );
         const userRoles = await this.accessService.getRootRoleForAllUsers();
-        const usersWithRootRole = users.map(u => {
-            const rootRole = userRoles.find(r => r.userId === u.id);
+        const usersWithRootRole = users.map((u) => {
+            const rootRole = userRoles.find((r) => r.userId === u.id);
             const roleId = rootRole ? rootRole.roleId : defaultRole.id;
             return { ...u, rootRole: roleId };
         });
@@ -155,22 +152,22 @@ class UserService {
             RoleName.VIEWER,
         );
         const roleId = roles.length > 0 ? roles[0].id : defaultRole.id;
-        const user = await this.store.get({ id });
+        const user = await this.store.get(id);
         return { ...user, rootRole: roleId };
     }
 
-    async search(query: IUserSearch): Promise<User[]> {
+    async search(query: IUserSearch): Promise<IUser[]> {
         return this.store.search(query);
     }
 
-    async getByEmail(email: string): Promise<User> {
-        return this.store.get({ email });
+    async getByEmail(email: string): Promise<IUser> {
+        return this.store.getByQuery({ email });
     }
 
     async createUser(
         { username, email, name, password, rootRole }: ICreateUser,
         updatedBy?: User,
-    ): Promise<User> {
+    ): Promise<IUser> {
         assert.ok(username || email, 'You must specify username or email');
 
         if (email) {
@@ -202,7 +199,7 @@ class UserService {
 
     private async updateChangeLog(
         type: string,
-        user: User,
+        user: IUser,
         updatedBy: User = systemUser,
     ): Promise<void> {
         await this.eventStore.store({
@@ -220,7 +217,7 @@ class UserService {
     async updateUser(
         { id, name, email, rootRole }: IUpdateUser,
         updatedBy?: User,
-    ): Promise<User> {
+    ): Promise<IUser> {
         if (email) {
             Joi.assert(email, Joi.string().email(), 'Email');
         }
@@ -236,11 +233,11 @@ class UserService {
         return user;
     }
 
-    async loginUser(usernameOrEmail: string, password: string): Promise<User> {
+    async loginUser(usernameOrEmail: string, password: string): Promise<IUser> {
         const idQuery = isEmail(usernameOrEmail)
             ? { email: usernameOrEmail }
             : { username: usernameOrEmail };
-        const user = await this.store.get(idQuery);
+        const user = await this.store.getByQuery(idQuery);
         const passwordHash = await this.store.getPasswordHash(user.id);
 
         const match = await bcrypt.compare(password, passwordHash);
@@ -262,11 +259,11 @@ class UserService {
     async loginUserWithoutPassword(
         email: string,
         autoCreateUser: boolean = false,
-    ): Promise<User> {
-        let user: User;
+    ): Promise<IUser> {
+        let user: IUser;
 
         try {
-            user = await this.store.get({ email });
+            user = await this.store.getByQuery({ email });
         } catch (e) {
             if (autoCreateUser) {
                 const defaultRole = await this.accessService.getRootRole(
@@ -291,10 +288,10 @@ class UserService {
     }
 
     async deleteUser(userId: number, updatedBy?: User): Promise<void> {
-        const user = await this.store.get({ id: userId });
+        const user = await this.store.get(userId);
         const roles = await this.accessService.getRolesForUser(userId);
         await Promise.all(
-            roles.map(role =>
+            roles.map((role) =>
                 this.accessService.removeUserFromRole(userId, role.id),
             ),
         );

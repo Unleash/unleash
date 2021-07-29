@@ -3,7 +3,7 @@ import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import version from '../util/version';
 import { Logger } from '../logger';
-import SettingStore from '../db/setting-store';
+import { ISettingStore } from '../types/stores/settings-store';
 
 const TWO_DAYS = 48 * 60 * 60 * 1000;
 
@@ -22,7 +22,7 @@ export interface IVersionHolder {
 export default class VersionService {
     private logger: Logger;
 
-    private settingStore: SettingStore;
+    private settingStore: ISettingStore;
 
     private current: IVersionInfo;
 
@@ -45,8 +45,8 @@ export default class VersionService {
             versionCheck,
             enterpriseVersion,
         }: Pick<
-        IUnleashConfig,
-        'getLogger' | 'versionCheck' | 'enterpriseVersion'
+            IUnleashConfig,
+            'getLogger' | 'versionCheck' | 'enterpriseVersion'
         >,
     ) {
         this.logger = getLogger('lib/services/version-service.js');

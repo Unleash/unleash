@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(db, callback) {
+exports.up = function (db, callback) {
     db.runSql(
         `
 CREATE TABLE strategies (
@@ -29,7 +29,7 @@ CREATE TABLE events (
     );
 };
 
-exports.down = function(db, callback) {
+exports.down = function (db, callback) {
     db.runSql(
         `
 DROP TABLE events;

@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
+import { ISession, ISessionStore } from '../types/stores/session-store';
 
 const TABLE = 'unleash_session';
 
@@ -12,14 +13,7 @@ interface ISessionRow {
     expired?: Date;
 }
 
-export interface ISession {
-    sid: string;
-    sess: any;
-    createdAt: Date;
-    expired?: Date;
-}
-
-export default class SessionStore {
+export default class SessionStore implements ISessionStore {
     private logger: Logger;
 
     private eventBus: EventEmitter;
@@ -41,9 +35,10 @@ export default class SessionStore {
     }
 
     async getSessionsForUser(userId: number): Promise<ISession[]> {
-        const rows = await this.db<ISessionRow>(
-            TABLE,
-        ).whereRaw(`(sess -> 'user' ->> 'id')::int = ?`, [userId]);
+        const rows = await this.db<ISessionRow>(TABLE).whereRaw(
+            "(sess -> 'user' ->> 'id')::int = ?",
+            [userId],
+        );
         if (rows && rows.length > 0) {
             return rows.map(this.rowToSession);
         }
@@ -52,7 +47,7 @@ export default class SessionStore {
         );
     }
 
-    async getSession(sid: string): Promise<ISession> {
+    async get(sid: string): Promise<ISession> {
         const row = await this.db<ISessionRow>(TABLE)
             .where('sid', '=', sid)
             .first();
@@ -64,14 +59,12 @@ export default class SessionStore {
 
     async deleteSessionsForUser(userId: number): Promise<void> {
         await this.db<ISessionRow>(TABLE)
-            .whereRaw(`(sess -> 'user' ->> 'id')::int = ?`, [userId])
+            .whereRaw("(sess -> 'user' ->> 'id')::int = ?", [userId])
             .del();
     }
 
-    async deleteSession(sid: string): Promise<void> {
-        await this.db<ISessionRow>(TABLE)
-            .where('sid', '=', sid)
-            .del();
+    async delete(sid: string): Promise<void> {
+        await this.db<ISessionRow>(TABLE).where('sid', '=', sid).del();
     }
 
     async insertSession(data: Omit<ISession, 'createdAt'>): Promise<ISession> {
@@ -90,6 +83,22 @@ export default class SessionStore {
 
     async deleteAll(): Promise<void> {
         await this.db(TABLE).del();
+    }
+
+    destroy(): void {}
+
+    async exists(sid: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE sid = ?) AS present`,
+            [sid],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async getAll(): Promise<ISession[]> {
+        const rows = await this.db<ISessionRow>(TABLE);
+        return rows.map(this.rowToSession);
     }
 
     private rowToSession(row: ISessionRow): ISession {

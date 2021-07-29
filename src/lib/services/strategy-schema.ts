@@ -9,11 +9,7 @@ const strategySchema = joi
         name: nameType,
         editable: joi.boolean().default(true),
         deprecated: joi.boolean().default(false),
-        description: joi
-            .string()
-            .allow(null)
-            .allow('')
-            .optional(),
+        description: joi.string().allow(null).allow('').optional(),
         parameters: joi
             .array()
             .required()
@@ -21,11 +17,7 @@ const strategySchema = joi
                 joi.object().keys({
                     name: joi.string().required(),
                     type: joi.string().required(),
-                    description: joi
-                        .string()
-                        .allow(null)
-                        .allow('')
-                        .optional(),
+                    description: joi.string().allow(null).allow('').optional(),
                     required: joi.boolean(),
                 }),
             ),

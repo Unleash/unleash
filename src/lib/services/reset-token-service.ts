@@ -1,40 +1,35 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import { URL } from 'url';
-import {
-    ResetTokenStore,
-    IResetToken,
-    IResetQuery,
-} from '../db/reset-token-store';
 import { Logger } from '../logger';
-import UserStore from '../db/user-store';
 import UsedTokenError from '../error/used-token-error';
 import InvalidTokenError from '../error/invalid-token-error';
 import { IUnleashConfig } from '../types/option';
+import { IUnleashStores } from '../types/stores';
+import {
+    IResetQuery,
+    IResetToken,
+    IResetTokenStore,
+} from '../types/stores/reset-token-store';
 
 const ONE_DAY = 86_400_000;
-
-interface IStores {
-    resetTokenStore: ResetTokenStore;
-    userStore: UserStore;
-}
 
 interface IInviteLinks {
     [key: string]: string;
 }
 
 export default class ResetTokenService {
-    private store: ResetTokenStore;
+    private store: IResetTokenStore;
 
     private logger: Logger;
 
     private readonly unleashBase: string;
 
     constructor(
-        stores: IStores,
+        { resetTokenStore }: Pick<IUnleashStores, 'resetTokenStore'>,
         { getLogger, server }: Pick<IUnleashConfig, 'getLogger' | 'server'>,
     ) {
-        this.store = stores.resetTokenStore;
+        this.store = resetTokenStore;
         this.logger = getLogger('/services/reset-token-service.ts');
         this.unleashBase = server.unleashUrl;
     }
@@ -53,9 +48,8 @@ export default class ResetTokenService {
         try {
             const tokens = await this.store.getActiveTokens();
             const links = tokens.reduce((acc, token) => {
-                const inviteLink = this.getExistingInvitationUrl(
-                    token,
-                ).toString();
+                const inviteLink =
+                    this.getExistingInvitationUrl(token).toString();
 
                 acc[token.userId] = inviteLink;
 

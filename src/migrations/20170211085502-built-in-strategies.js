@@ -2,7 +2,7 @@
 
 const async = require('async');
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     async.series(
         [
             db.addColumn.bind(db, 'strategies', 'built_in', {
@@ -18,6 +18,6 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     return db.removeColumn('strategies', 'built_in', cb);
 };

@@ -1,12 +1,12 @@
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
-import SettingStore from '../db/setting-store';
+import { ISettingStore } from '../types/stores/settings-store';
 
 export default class SettingService {
     private logger: Logger;
 
-    private settingStore: SettingStore;
+    private settingStore: ISettingStore;
 
     constructor(
         { settingStore }: Pick<IUnleashStores, 'settingStore'>,

@@ -92,17 +92,17 @@ test.skip('Should handle a massive bulk registration', async () => {
             .expect(202);
     }
     expect(clients.length).toBe(2000);
-    await new Promise(res => setTimeout(res, 5500));
+    await new Promise((res) => setTimeout(res, 5500));
 
     // Verify clientInstance
-    const notSavedInstance = await asyncFilter(clients, async c => {
+    const notSavedInstance = await asyncFilter(clients, async (c) => {
         const exists = await clientInstanceStore.exists(c);
         return !exists;
     });
     expect(notSavedInstance.length).toBe(0);
 
     // Verify application
-    const notSavedApp = await asyncFilter(clients, async c => {
+    const notSavedApp = await asyncFilter(clients, async (c) => {
         const exists = await clientApplicationsStore.exists(c);
         return !exists;
     });

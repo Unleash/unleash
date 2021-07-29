@@ -1,23 +1,23 @@
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import UserStore from '../../../../lib/db/user-store';
-import { AccessStore, IRole } from '../../../../lib/db/access-store';
-import { RoleName } from '../../../../lib/services/access-service';
-import EventStore from '../../../../lib/db/event-store';
 import {
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
 } from '../../../../lib/types/events';
+import { IAccessStore, IRole } from '../../../../lib/types/stores/access-store';
+import { IEventStore } from '../../../../lib/types/stores/event-store';
+import { IUserStore } from '../../../../lib/types/stores/user-store';
+import { RoleName } from '../../../../lib/types/model';
 
 let stores;
 let db;
 let app;
 
-let userStore: UserStore;
-let eventStore: EventStore;
-let accessStore: AccessStore;
+let userStore: IUserStore;
+let eventStore: IEventStore;
+let accessStore: IAccessStore;
 let editorRole: IRole;
 let adminRole: IRole;
 
@@ -30,8 +30,8 @@ beforeAll(async () => {
     accessStore = stores.accessStore;
     eventStore = stores.eventStore;
     const roles = await accessStore.getRootRoles();
-    editorRole = roles.find(r => r.name === RoleName.EDITOR);
-    adminRole = roles.find(r => r.name === RoleName.ADMIN);
+    editorRole = roles.find((r) => r.name === RoleName.EDITOR);
+    adminRole = roles.find((r) => r.name === RoleName.ADMIN);
 });
 
 afterAll(async () => {
@@ -50,7 +50,7 @@ test('returns empty list of users', async () => {
         .get('/api/admin/user-admin')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.users.length).toBe(0);
         });
 });
@@ -58,7 +58,7 @@ test('returns empty list of users', async () => {
 test('creates and returns all users', async () => {
     expect.assertions(2);
 
-    const createUserRequests = [...Array(20).keys()].map(i =>
+    const createUserRequests = [...Array(20).keys()].map((i) =>
         app.request
             .post('/api/admin/user-admin')
             .send({
@@ -75,7 +75,7 @@ test('creates and returns all users', async () => {
         .get('/api/admin/user-admin')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.users.length).toBe(20);
             expect(res.body.users[2].rootRole).toBe(editorRole.id);
         });
@@ -93,7 +93,7 @@ test('creates editor-user without password', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.email).toBe('some@getunelash.ai');
             expect(res.body.rootRole).toBe(editorRole.id);
             expect(res.body.id).toBeTruthy();
@@ -116,7 +116,7 @@ test('creates admin-user with password', async () => {
 
     expect(body.rootRole).toBe(adminRole.id);
 
-    const user = await userStore.get({ id: body.id });
+    const user = await userStore.getByQuery({ id: body.id });
     expect(user.email).toBe('some@getunelash.ai');
     expect(user.name).toBe('Some Name');
 
@@ -161,7 +161,7 @@ test('update user name', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.email).toBe('some@getunelash.ai');
             expect(res.body.name).toBe('New name');
             expect(res.body.id).toBe(body.id);
@@ -215,9 +215,9 @@ test('should search for users', async () => {
     return app.request
         .get('/api/admin/user-admin/search?q=another')
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.length).toBe(2);
-            expect(res.body.some(u => u.email === 'another@mail.com')).toBe(
+            expect(res.body.some((u) => u.email === 'another@mail.com')).toBe(
                 true,
             );
         });
@@ -235,7 +235,7 @@ test('Creates a user and includes inviteLink and emailConfigured', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.email).toBe('some@getunelash.ai');
             expect(res.body.rootRole).toBe(editorRole.id);
             expect(res.body.inviteLink).toBeTruthy();

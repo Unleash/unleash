@@ -17,7 +17,6 @@ interface IChangePasswordBody {
 
 interface SessionRequest<PARAMS, QUERY, BODY, K>
     extends Request<PARAMS, QUERY, BODY, K> {
-    session?;
     user?;
 }
 
@@ -90,7 +89,7 @@ class ResetPasswordController extends Controller {
 
     private async logout(req: SessionRequest<any, any, any, any>) {
         if (req.session) {
-            req.session.destroy();
+            req.session.destroy(() => {});
         }
     }
 }

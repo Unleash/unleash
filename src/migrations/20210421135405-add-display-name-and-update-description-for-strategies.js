@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE strategies ADD COLUMN display_name text;
@@ -14,6 +14,6 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
-    db.runSql(`ALTER TABLE strategies DROP COLUMN display_name;`, cb);
+exports.down = function (db, cb) {
+    db.runSql('ALTER TABLE strategies DROP COLUMN display_name;', cb);
 };

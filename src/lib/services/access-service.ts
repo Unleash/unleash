@@ -1,19 +1,28 @@
+import * as permissions from '../types/permissions';
+import User, { IUser } from '../types/user';
 import {
-    AccessStore,
+    IAccessStore,
     IRole,
     IUserPermission,
     IUserRole,
-} from '../db/access-store';
-import * as permissions from '../types/permissions';
-import User from '../types/user';
+} from '../types/stores/access-store';
+import { IUserStore } from '../types/stores/user-store';
+import { Logger } from '../logger';
+import { IUnleashStores } from '../types/stores';
+import {
+    IPermission,
+    IRoleData,
+    IUserWithRole,
+    PermissionType,
+    RoleName,
+    RoleType,
+} from '../types/model';
 
 export const ALL_PROJECTS = '*';
 
 const PROJECT_DESCRIPTION = {
-    OWNER:
-        'Users with this role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
-    MEMBER:
-        'Users with this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
+    OWNER: 'Users with this role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
+    MEMBER: 'Users with this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
 };
 
 const { ADMIN } = permissions;
@@ -32,76 +41,28 @@ const PROJECT_REGULAR = [
     permissions.DELETE_FEATURE,
 ];
 
-const isProjectPermission = permission => PROJECT_ADMIN.includes(permission);
-
-interface IStores {
-    accessStore: AccessStore;
-    userStore: any;
-}
-
-export interface IUserWithRole {
-    id: number;
-    roleId: number;
-    name?: string;
-    username?: string;
-    email?: string;
-    imageUrl?: string;
-}
-
-export interface IRoleData {
-    role: IRole;
-    users: User[];
-    permissions: IUserPermission[];
-}
-
-export interface IPermission {
-    name: string;
-    type: PermissionType;
-}
-
-enum PermissionType {
-    root = 'root',
-    project = 'project',
-}
-
-export enum RoleName {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    ADMIN = 'Admin',
-    EDITOR = 'Editor',
-    VIEWER = 'Viewer',
-    OWNER = 'Owner',
-    MEMBER = 'Member',
-}
-
-export enum RoleType {
-    ROOT = 'root',
-    PROJECT = 'project',
-}
-
-export interface IRoleIdentifier {
-    roleId?: number;
-    roleName?: RoleName;
-}
+const isProjectPermission = (permission) => PROJECT_ADMIN.includes(permission);
 
 export class AccessService {
-    public RoleName = RoleName;
+    private store: IAccessStore;
 
-    private store: AccessStore;
+    private userStore: IUserStore;
 
-    private userStore: any;
-
-    private logger: any;
+    private logger: Logger;
 
     private permissions: IPermission[];
 
     constructor(
-        { accessStore, userStore }: IStores,
+        {
+            accessStore,
+            userStore,
+        }: Pick<IUnleashStores, 'accessStore' | 'userStore'>,
         { getLogger }: { getLogger: Function },
     ) {
         this.store = accessStore;
         this.userStore = userStore;
         this.logger = getLogger('/services/access-service.ts');
-        this.permissions = Object.values(permissions).map(p => ({
+        this.permissions = Object.values(permissions).map((p) => ({
             name: p,
             type: isProjectPermission(p)
                 ? PermissionType.project
@@ -130,13 +91,14 @@ export class AccessService {
 
             return userP
                 .filter(
-                    p =>
+                    (p) =>
                         !p.project ||
                         p.project === projectId ||
                         p.project === ALL_PROJECTS,
                 )
                 .some(
-                    p => p.permission === permission || p.permission === ADMIN,
+                    (p) =>
+                        p.permission === permission || p.permission === ADMIN,
                 );
         } catch (e) {
             this.logger.error(
@@ -187,7 +149,7 @@ export class AccessService {
 
     async getUserRootRoles(userId: number): Promise<IRole[]> {
         const userRoles = await this.store.getRolesForUserId(userId);
-        return userRoles.filter(r => r.type === RoleType.ROOT);
+        return userRoles.filter((r) => r.type === RoleType.ROOT);
     }
 
     async removeUserFromRole(userId: number, roleId: number): Promise<void> {
@@ -230,7 +192,7 @@ export class AccessService {
 
     async getRole(roleId: number): Promise<IRoleData> {
         const [role, rolePerms, users] = await Promise.all([
-            this.store.getRoleWithId(roleId),
+            this.store.get(roleId),
             this.store.getPermissionsForRole(roleId),
             this.getUsersForRole(roleId),
         ]);
@@ -245,9 +207,12 @@ export class AccessService {
         return this.store.getRolesForUserId(userId);
     }
 
-    async getUsersForRole(roleId: number): Promise<User[]> {
+    async getUsersForRole(roleId: number): Promise<IUser[]> {
         const userIdList = await this.store.getUserIdsForRole(roleId);
-        return this.userStore.getAllWithId(userIdList);
+        if (userIdList.length > 0) {
+            return this.userStore.getAllWithId(userIdList);
+        }
+        return [];
     }
 
     // Move to project-service?
@@ -257,9 +222,9 @@ export class AccessService {
         const roles = await this.store.getRolesForProject(projectId);
 
         const users = await Promise.all(
-            roles.map(async role => {
+            roles.map(async (role) => {
                 const usrs = await this.getUsersForRole(role.id);
-                return usrs.map(u => ({ ...u, roleId: role.id }));
+                return usrs.map((u) => ({ ...u, roleId: role.id }));
             }),
         );
         return [roles, users.flat()];
@@ -325,15 +290,15 @@ export class AccessService {
         const rootRoles = await this.getRootRoles();
         let role: IRole;
         if (typeof rootRole === 'number') {
-            role = rootRoles.find(r => r.id === rootRole);
+            role = rootRoles.find((r) => r.id === rootRole);
         } else {
-            role = rootRoles.find(r => r.name === rootRole);
+            role = rootRoles.find((r) => r.name === rootRole);
         }
         return role;
     }
 
     async getRootRole(roleName: RoleName): Promise<IRole> {
         const roles = await this.store.getRootRoles();
-        return roles.find(r => r.name === roleName);
+        return roles.find((r) => r.name === roleName);
     }
 }

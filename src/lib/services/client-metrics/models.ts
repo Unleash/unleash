@@ -1,3 +1,5 @@
+import { IClientInstance } from '../../types/stores/client-instance-store';
+
 export interface IYesNoCount {
     yes: number;
     no: number;
@@ -21,7 +23,7 @@ export interface IApplication {
     color?: string;
     icon?: string;
     createdAt: Date;
-    instances?: IAppInstance;
+    instances?: IClientInstance[];
     seenToggles: Record<string, any>;
     links: Record<string, string>;
 }

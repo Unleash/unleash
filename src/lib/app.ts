@@ -1,7 +1,7 @@
 import { publicFolder } from 'unleash-frontend';
 import fs from 'fs';
 import EventEmitter from 'events';
-import express, { Application } from 'express';
+import express, { Application, RequestHandler } from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import favicon from 'serve-favicon';
@@ -14,7 +14,6 @@ import apiTokenMiddleware from './middleware/api-token-middleware';
 import { IUnleashServices } from './types/services';
 import { IAuthType, IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
-import unleashDbSession from './middleware/session-db';
 
 import IndexRouter from './routes';
 
@@ -23,6 +22,7 @@ import demoAuthentication from './middleware/demo-authentication';
 import ossAuthentication from './middleware/oss-authentication';
 import noAuthentication from './middleware/no-authentication';
 import secureHeaders from './middleware/secure-headers';
+
 import { rewriteHTML } from './util/rewriteHTML';
 
 export default function getApp(
@@ -30,6 +30,7 @@ export default function getApp(
     stores: IUnleashStores,
     services: IUnleashServices,
     eventBus?: EventEmitter,
+    unleashSession?: RequestHandler,
 ): Application {
     const app = express();
 
@@ -63,7 +64,9 @@ export default function getApp(
     app.use(compression());
     app.use(cookieParser());
     app.use(express.json({ strict: false }));
-    app.use(unleashDbSession(config, stores));
+    if (unleashSession) {
+        app.use(unleashSession);
+    }
     app.use(secureHeaders(config));
     app.use(express.urlencoded({ extended: true }));
     app.use(favicon(path.join(publicFolder, 'favicon.ico')));
@@ -76,7 +79,7 @@ export default function getApp(
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            ossAuthentication(app, config);
+            ossAuthentication(app, config.server.baseUriPath);
             break;
         }
         case IAuthType.ENTERPRISE: {

@@ -1,31 +1,41 @@
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
-import EnvironmentStore from '../db/environment-store';
 import { Logger } from '../logger';
 import { IEnvironment } from '../types/model';
-import FeatureStrategiesStore from '../db/feature-strategy-store';
 import { UNIQUE_CONSTRAINT_VIOLATION } from '../error/db-error';
 import NameExistsError from '../error/name-exists-error';
 import { environmentSchema } from './state-schema';
 import NotFoundError from '../error/notfound-error';
+import { IEnvironmentStore } from '../types/stores/environment-store';
+import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
+import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 
 export default class EnvironmentService {
     private logger: Logger;
 
-    private environmentStore: EnvironmentStore;
+    private environmentStore: IEnvironmentStore;
 
-    private featureStrategiesStore: FeatureStrategiesStore;
+    private featureStrategiesStore: IFeatureStrategiesStore;
+
+    private featureEnvironmentStore: IFeatureEnvironmentStore;
 
     constructor(
         {
             environmentStore,
             featureStrategiesStore,
-        }: Pick<IUnleashStores, 'environmentStore' | 'featureStrategiesStore'>,
+            featureEnvironmentStore,
+        }: Pick<
+            IUnleashStores,
+            | 'environmentStore'
+            | 'featureStrategiesStore'
+            | 'featureEnvironmentStore'
+        >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.logger = getLogger('services/environment-service.ts');
         this.environmentStore = environmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
+        this.featureEnvironmentStore = featureEnvironmentStore;
     }
 
     async getAll(): Promise<IEnvironment[]> {
@@ -33,7 +43,7 @@ export default class EnvironmentService {
     }
 
     async get(name: string): Promise<IEnvironment> {
-        return this.environmentStore.getByName(name);
+        return this.environmentStore.get(name);
     }
 
     async delete(name: string): Promise<void> {
@@ -77,7 +87,7 @@ export default class EnvironmentService {
         environment: string,
         projectId: string,
     ): Promise<void> {
-        await this.featureStrategiesStore.disconnectEnvironmentFromProject(
+        await this.featureEnvironmentStore.disconnectEnvironmentFromProject(
             environment,
             projectId,
         );

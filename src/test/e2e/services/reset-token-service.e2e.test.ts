@@ -3,20 +3,19 @@ import getLogger from '../../fixtures/no-logger';
 import ResetTokenService from '../../../lib/services/reset-token-service';
 import UserService from '../../../lib/services/user-service';
 import { AccessService } from '../../../lib/services/access-service';
-import NotFoundError from '../../../lib/error/notfound-error';
 import { EmailService } from '../../../lib/services/email-service';
-import User from '../../../lib/types/user';
 import { IUnleashConfig } from '../../../lib/types/option';
 import { createTestConfig } from '../../config/test-config';
 import SessionService from '../../../lib/services/session-service';
 import InvalidTokenError from '../../../lib/error/invalid-token-error';
+import { IUser } from '../../../lib/types/user';
 
 const config: IUnleashConfig = createTestConfig();
 
 let stores;
 let db;
 let adminUser;
-let userToCreateResetFor: User;
+let userToCreateResetFor: IUser;
 let userIdToCreateResetFor: number;
 let accessService: AccessService;
 let userService: UserService;

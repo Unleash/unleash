@@ -1,4 +1,4 @@
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `CREATE TABLE IF NOT EXISTS addons
        (
@@ -15,6 +15,6 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql('DROP TABLE addons;', cb);
 };

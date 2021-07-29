@@ -48,9 +48,10 @@ export default class ProjectHealthReport extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         try {
-            const overview = await this.projectHealthService.getProjectHealthReport(
-                projectId,
-            );
+            const overview =
+                await this.projectHealthService.getProjectHealthReport(
+                    projectId,
+                );
             res.json({
                 version: 2,
                 ...overview,

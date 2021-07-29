@@ -12,13 +12,13 @@ function resolveRoleName(permissions) {
     return 'Editor';
 }
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
-        `SELECT id, permissions from users WHERE id NOT IN (select user_id from role_user);`,
+        'SELECT id, permissions from users WHERE id NOT IN (select user_id from role_user);',
         (err, results) => {
             if (results.rowCount > 0) {
                 const users = results.rows;
-                const insertRootRole = users.map(u => {
+                const insertRootRole = users.map((u) => {
                     const roleName = resolveRoleName(u.permissions);
                     return db.runSql.bind(
                         db,
@@ -36,7 +36,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     // We can't just remove roles for users as we don't know if there has been any manual additions.
     cb();
 };

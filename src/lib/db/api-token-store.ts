@@ -4,6 +4,12 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
+import {
+    ApiTokenType,
+    IApiToken,
+    IApiTokenCreate,
+    IApiTokenStore,
+} from '../types/stores/api-token-store';
 
 const TABLE = 'api_tokens';
 
@@ -15,23 +21,6 @@ interface ITokenTable {
     expires_at?: Date;
     created_at: Date;
     seen_at?: Date;
-}
-
-export enum ApiTokenType {
-    CLIENT = 'client',
-    ADMIN = 'admin',
-}
-
-export interface IApiTokenCreate {
-    secret: string;
-    username: string;
-    type: ApiTokenType;
-    expiresAt?: Date;
-}
-
-export interface IApiToken extends IApiTokenCreate {
-    createdAt: Date;
-    seenAt?: Date;
 }
 
 const toRow = (newToken: IApiTokenCreate) => ({
@@ -49,7 +38,7 @@ const toToken = (row: ITokenTable): IApiToken => ({
     createdAt: row.created_at,
 });
 
-export class ApiTokenStore {
+export class ApiTokenStore implements IApiTokenStore {
     private logger: Logger;
 
     private timer: Function;
@@ -90,10 +79,24 @@ export class ApiTokenStore {
         return { ...newToken, createdAt: row.created_at };
     }
 
+    destroy(): void {}
+
+    async exists(secret: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE secret = ?) AS present`,
+            [secret],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async get(key: string): Promise<IApiToken> {
+        const row = await this.db(TABLE).where('secret', key).first();
+        return toToken(row);
+    }
+
     async delete(secret: string): Promise<void> {
-        return this.db<ITokenTable>(TABLE)
-            .where({ secret })
-            .del();
+        return this.db<ITokenTable>(TABLE).where({ secret }).del();
     }
 
     async deleteAll(): Promise<void> {

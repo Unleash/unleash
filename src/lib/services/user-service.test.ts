@@ -2,7 +2,6 @@ import UserService from './user-service';
 import UserStoreMock from '../../test/fixtures/fake-user-store';
 import EventStoreMock from '../../test/fixtures/fake-event-store';
 import AccessServiceMock from '../../test/fixtures/access-service-mock';
-import { ResetTokenStoreMock } from '../../test/fixtures/fake-reset-token-store';
 import ResetTokenService from './reset-token-service';
 import { EmailService } from './email-service';
 import OwaspValidationError from '../error/owasp-validation-error';
@@ -11,6 +10,7 @@ import { createTestConfig } from '../../test/config/test-config';
 import SessionService from './session-service';
 import FakeSessionStore from '../../test/fixtures/fake-session-store';
 import User from '../types/user';
+import FakeResetTokenStore from '../../test/fixtures/fake-reset-token-store';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -20,9 +20,9 @@ test('Should create new user', async () => {
     const userStore = new UserStoreMock();
     const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
-        { userStore, resetTokenStore },
+        { resetTokenStore },
         config,
     );
     const sessionStore = new FakeSessionStore();
@@ -42,7 +42,7 @@ test('Should create new user', async () => {
         },
         systemUser,
     );
-    const storedUser = await userStore.get(user);
+    const storedUser = await userStore.get(user.id);
     const allUsers = await userStore.getAll();
 
     expect(user.id).toBeTruthy();
@@ -55,9 +55,9 @@ test('Should create default user', async () => {
     const userStore = new UserStoreMock();
     const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
-        { userStore, resetTokenStore },
+        { resetTokenStore },
         config,
     );
     const emailService = new EmailService(config.email, config.getLogger);
@@ -81,9 +81,9 @@ test('Should be a valid password', async () => {
     const userStore = new UserStoreMock();
     const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
-        { userStore, resetTokenStore },
+        { resetTokenStore },
         config,
     );
 
@@ -107,9 +107,9 @@ test('Password must be at least 10 chars', async () => {
     const userStore = new UserStoreMock();
     const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
-        { userStore, resetTokenStore },
+        { resetTokenStore },
         config,
     );
     const emailService = new EmailService(config.email, config.getLogger);
@@ -134,9 +134,9 @@ test('The password must contain at least one uppercase letter.', async () => {
     const userStore = new UserStoreMock();
     const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
-        { userStore, resetTokenStore },
+        { resetTokenStore },
         config,
     );
     const emailService = new EmailService(config.email, config.getLogger);
@@ -162,9 +162,9 @@ test('The password must contain at least one number', async () => {
     const userStore = new UserStoreMock();
     const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
-        { userStore, resetTokenStore },
+        { resetTokenStore },
         config,
     );
 
@@ -191,9 +191,9 @@ test('The password must contain at least one special character', async () => {
     const userStore = new UserStoreMock();
     const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
-        { userStore, resetTokenStore },
+        { resetTokenStore },
         config,
     );
     const emailService = new EmailService(config.email, config.getLogger);
@@ -219,9 +219,9 @@ test('Should be a valid password with special chars', async () => {
     const userStore = new UserStoreMock();
     const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
-    const resetTokenStore = new ResetTokenStoreMock();
+    const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
-        { userStore, resetTokenStore },
+        { resetTokenStore },
         config,
     );
     const emailService = new EmailService(config.email, config.getLogger);

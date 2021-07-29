@@ -5,6 +5,7 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { IEnvironment } from '../types/model';
 import NotFoundError from '../error/notfound-error';
+import { IEnvironmentStore } from '../types/stores/environment-store';
 
 interface IEnvironmentsTable {
     name: string;
@@ -34,7 +35,7 @@ function mapInput(input: IEnvironment): IEnvironmentsTable {
 
 const TABLE = 'environments';
 
-export default class EnvironmentStore {
+export default class EnvironmentStore implements IEnvironmentStore {
     private logger: Logger;
 
     private db: Knex;
@@ -44,11 +45,25 @@ export default class EnvironmentStore {
     constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('db/environment-store.ts');
-        this.timer = action =>
+        this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'environment',
                 action,
             });
+    }
+
+    async deleteAll(): Promise<void> {
+        await this.db(TABLE).del();
+    }
+
+    async get(key: string): Promise<IEnvironment> {
+        const row = await this.db<IEnvironmentsTable>(TABLE)
+            .where({ name: key })
+            .first();
+        if (row) {
+            return mapRow(row);
+        }
+        throw new NotFoundError(`Could not find environment with name: ${key}`);
     }
 
     async getAll(): Promise<IEnvironment[]> {
@@ -56,7 +71,7 @@ export default class EnvironmentStore {
         return rows.map(mapRow);
     }
 
-    async exists(name: string): Promise<Boolean> {
+    async exists(name: string): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE name = ?) AS present`,
             [name],
@@ -104,7 +119,7 @@ export default class EnvironmentStore {
             .where({
                 project: projectId,
             });
-        const rows: IFeatureEnvironmentRow[] = featuresToEnable.map(f => ({
+        const rows: IFeatureEnvironmentRow[] = featuresToEnable.map((f) => ({
             environment,
             feature_name: f.name,
             enabled: false,
@@ -118,9 +133,7 @@ export default class EnvironmentStore {
     }
 
     async delete(name: string): Promise<void> {
-        await this.db(TABLE)
-            .where({ name })
-            .del();
+        await this.db(TABLE).where({ name }).del();
     }
 
     async disconnectProjectFromEnv(
@@ -140,7 +153,7 @@ export default class EnvironmentStore {
             .select('environment_name')
             .where({ project_id });
         await Promise.all(
-            environmentsToEnable.map(async env => {
+            environmentsToEnable.map(async (env) => {
                 await this.db('feature_environments')
                     .insert({
                         environment: env.environment_name,
@@ -152,4 +165,6 @@ export default class EnvironmentStore {
             }),
         );
     }
+
+    destroy(): void {}
 }

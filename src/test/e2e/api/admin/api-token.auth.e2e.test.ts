@@ -1,8 +1,8 @@
 import { setupAppWithCustomAuth } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/db/api-token-store';
-import { RoleName } from '../../../../lib/services/access-service';
+import { ApiTokenType } from '../../../../lib/types/stores/api-token-store';
+import { RoleName } from '../../../../lib/types/model';
 
 let stores;
 let db;
@@ -57,7 +57,7 @@ test('none-admins should only get client tokens', async () => {
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.tokens.length).toBe(1);
             expect(res.body.tokens[0].type).toBe(ApiTokenType.CLIENT);
         });

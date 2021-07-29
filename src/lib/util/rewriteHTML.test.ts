@@ -29,30 +29,42 @@ const input = `<!DOCTYPE html>
 
 test('rewriteHTML substitutes meta tag with existing rewrite value', () => {
     const result = rewriteHTML(input, '/hosted');
-    expect(result.includes(`<meta name="baseUriPath" content="/hosted" />`)).toBe(true);
+    expect(
+        result.includes('<meta name="baseUriPath" content="/hosted" />'),
+    ).toBe(true);
 });
 
 test('rewriteHTML substitutes meta tag with empty value', () => {
     const result = rewriteHTML(input, '');
-    expect(result.includes(`<meta name="baseUriPath" content="" />`)).toBe(true);
+    expect(result.includes('<meta name="baseUriPath" content="" />')).toBe(
+        true,
+    );
 });
 
 test('rewriteHTML substitutes asset paths correctly with baseUriPath', () => {
     const result = rewriteHTML(input, '/hosted');
-    expect(result.includes(
-        `<script src="/hosted/static/js/2.5ff09a33.chunk.js"></script>`,
-    )).toBe(true);
-    expect(result.includes(
-        ` <script src="/hosted/static/js/main.6bcf6c41.chunk.js"></script>`,
-    )).toBe(true);
+    expect(
+        result.includes(
+            '<script src="/hosted/static/js/2.5ff09a33.chunk.js"></script>',
+        ),
+    ).toBe(true);
+    expect(
+        result.includes(
+            ' <script src="/hosted/static/js/main.6bcf6c41.chunk.js"></script>',
+        ),
+    ).toBe(true);
 });
 
 test('rewriteHTML substitutes asset paths correctly without baseUriPath', () => {
     const result = rewriteHTML(input, '');
-    expect(result.includes(
-        `<script src="/static/js/2.5ff09a33.chunk.js"></script>`,
-    )).toBe(true);
-    expect(result.includes(
-        ` <script src="/static/js/main.6bcf6c41.chunk.js"></script>`,
-    )).toBe(true);
+    expect(
+        result.includes(
+            '<script src="/static/js/2.5ff09a33.chunk.js"></script>',
+        ),
+    ).toBe(true);
+    expect(
+        result.includes(
+            ' <script src="/static/js/main.6bcf6c41.chunk.js"></script>',
+        ),
+    ).toBe(true);
 });

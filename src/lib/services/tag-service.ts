@@ -1,18 +1,27 @@
 import { tagSchema } from './tag-schema';
-import TagStore, { ITag } from '../db/tag-store';
-import EventStore from '../db/event-store';
 import NameExistsError from '../error/name-exists-error';
 import { TAG_CREATED, TAG_DELETED } from '../types/events';
 import { Logger } from '../logger';
+import { IUnleashStores } from '../types/stores';
+import { IUnleashConfig } from '../types/option';
+import { ITagStore } from '../types/stores/tag-store';
+import { IEventStore } from '../types/stores/event-store';
+import { ITag } from '../types/model';
 
 export default class TagService {
-    private tagStore: TagStore;
+    private tagStore: ITagStore;
 
-    private eventStore: EventStore;
+    private eventStore: IEventStore;
 
     private logger: Logger;
 
-    constructor({ tagStore, eventStore }, { getLogger }) {
+    constructor(
+        {
+            tagStore,
+            eventStore,
+        }: Pick<IUnleashStores, 'tagStore' | 'eventStore'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+    ) {
         this.tagStore = tagStore;
         this.eventStore = eventStore;
         this.logger = getLogger('services/tag-service.js');
@@ -54,7 +63,7 @@ export default class TagService {
     }
 
     async deleteTag(tag: ITag, userName: string): Promise<void> {
-        await this.tagStore.deleteTag(tag);
+        await this.tagStore.delete(tag);
         await this.eventStore.store({
             type: TAG_DELETED,
             createdBy: userName,

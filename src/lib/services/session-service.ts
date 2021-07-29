@@ -1,12 +1,12 @@
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { Logger } from '../logger';
-import SessionStore, { ISession } from '../db/session-store';
+import { ISession, ISessionStore } from '../types/stores/session-store';
 
 export default class SessionService {
     private logger: Logger;
 
-    private sessionStore: SessionStore;
+    private sessionStore: ISessionStore;
 
     constructor(
         { sessionStore }: Pick<IUnleashStores, 'sessionStore'>,
@@ -25,7 +25,7 @@ export default class SessionService {
     }
 
     async getSession(sid: string): Promise<ISession> {
-        return this.sessionStore.getSession(sid);
+        return this.sessionStore.get(sid);
     }
 
     async deleteSessionsForUser(userId: number): Promise<void> {
@@ -33,7 +33,7 @@ export default class SessionService {
     }
 
     async deleteSession(sid: string): Promise<void> {
-        return this.sessionStore.deleteSession(sid);
+        return this.sessionStore.delete(sid);
     }
 
     async insertSession({

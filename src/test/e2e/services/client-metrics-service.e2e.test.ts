@@ -1,6 +1,5 @@
-import ClientMetricsService, {
-    IClientApp,
-} from '../../../lib/services/client-metrics';
+import ClientMetricsService from '../../../lib/services/client-metrics';
+import { IClientApp } from '../../../lib/types/model';
 
 const faker = require('faker');
 const dbInit = require('../helpers/database-init');
@@ -50,14 +49,16 @@ test('Apps registered should be announced', async () => {
     };
     await clientMetricsService.registerClient(clientRegistration, '127.0.0.1');
     await clientMetricsService.registerClient(differentClient, '127.0.0.1');
-    await new Promise(res => setTimeout(res, 1200));
+    await new Promise((res) => setTimeout(res, 1200));
     const first = await stores.clientApplicationsStore.getUnannounced();
     expect(first.length).toBe(2);
     await clientMetricsService.registerClient(clientRegistration, '127.0.0.1');
-    await new Promise(res => setTimeout(res, 2000));
+    await new Promise((res) => setTimeout(res, 2000));
     const second = await stores.clientApplicationsStore.getUnannounced();
     expect(second.length).toBe(0);
     const events = await stores.eventStore.getEvents();
-    const appCreatedEvents = events.filter(e => e.type === APPLICATION_CREATED);
+    const appCreatedEvents = events.filter(
+        (e) => e.type === APPLICATION_CREATED,
+    );
     expect(appCreatedEvents.length).toBe(2);
 });

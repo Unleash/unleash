@@ -3,50 +3,44 @@ import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
 import { IEnvironmentOverview, IFeatureOverview } from '../types/model';
+import {
+    IProject,
+    IProjectHealthUpdate,
+    IProjectInsert,
+    IProjectStore,
+} from '../types/stores/project-store';
 
 const COLUMNS = ['id', 'name', 'description', 'created_at', 'health'];
 const TABLE = 'projects';
 
-export interface IProject {
-    id: string;
-    name: string;
-    description: string;
-    health: number;
-    createdAt: Date;
-}
-
-interface IProjectInsert {
-    id: string;
-    name: string;
-    description: string;
-}
-
-interface IProjectArchived {
-    id: string;
-    archived: boolean;
-}
-
-interface IProjectHealthUpdate {
-    id: string;
-    health: number;
-}
-
-class ProjectStore {
+class ProjectStore implements IProjectStore {
     private db: Knex;
 
     private logger: Logger;
 
     constructor(db: Knex, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('project-store.js');
+        this.logger = getLogger('project-store.ts');
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     fieldToRow(data): IProjectInsert {
         return {
             id: data.id,
             name: data.name,
             description: data.description,
         };
+    }
+
+    destroy(): void {}
+
+    async exists(id: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            [id],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 
     async getAll(): Promise<IProject[]> {
@@ -66,20 +60,13 @@ class ProjectStore {
             .then(this.mapRow);
     }
 
-    async hasProject(id: string): Promise<IProjectArchived> {
-        return this.db
-            .first('id')
-            .from(TABLE)
-            .where({ id })
-            .then(row => {
-                if (!row) {
-                    throw new NotFoundError(`No project with id=${id} found`);
-                }
-                return {
-                    id: row.id,
-                    archived: row.archived === 1,
-                };
-            });
+    async hasProject(id: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            [id],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 
     async updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void> {
@@ -88,13 +75,14 @@ class ProjectStore {
             .update({ health: healthUpdate.health });
     }
 
-    async create(project): Promise<IProject> {
-        const [id] = await this.db(TABLE)
+    async create(project: IProjectInsert): Promise<IProject> {
+        const row = await this.db(TABLE)
             .insert(this.fieldToRow(project))
-            .returning('id');
-        return { ...project, id };
+            .returning('*');
+        return this.mapRow(row);
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async update(data): Promise<void> {
         try {
             await this.db(TABLE)
@@ -105,7 +93,7 @@ class ProjectStore {
         }
     }
 
-    async importProjects(projects): Promise<IProject[]> {
+    async importProjects(projects: IProjectInsert[]): Promise<IProject[]> {
         const rows = await this.db(TABLE)
             .insert(projects.map(this.fieldToRow))
             .returning(COLUMNS)
@@ -118,8 +106,8 @@ class ProjectStore {
         return [];
     }
 
-    async addGlobalEnvironment(projects): Promise<void> {
-        const environments = projects.map(p => ({
+    async addGlobalEnvironment(projects: any[]): Promise<void> {
+        const environments = projects.map((p) => ({
             project_id: p.id,
             environment_name: ':global:',
         }));
@@ -129,27 +117,38 @@ class ProjectStore {
             .ignore();
     }
 
-    async dropProjects(): Promise<void> {
+    async deleteAll(): Promise<void> {
         await this.db(TABLE).del();
     }
 
     async delete(id: string): Promise<void> {
         try {
-            await this.db(TABLE)
-                .where({ id })
-                .del();
+            await this.db(TABLE).where({ id }).del();
         } catch (err) {
             this.logger.error('Could not delete project, error: ', err);
         }
     }
 
-    async deleteEnvironment(id: string, environment: string): Promise<void> {
+    async deleteEnvironmentForProject(
+        id: string,
+        environment: string,
+    ): Promise<void> {
         await this.db('project_environments')
             .where({
                 project_id: id,
                 environment_name: environment,
             })
             .del();
+    }
+
+    async addEnvironmentToProject(
+        id: string,
+        environment: string,
+    ): Promise<void> {
+        await this.db('project_environments')
+            .insert({ project_id: id, environment_name: environment })
+            .onConflict(['project_id', 'environment_name'])
+            .ignore();
     }
 
     async getMembers(projectId: string): Promise<number> {
@@ -215,7 +214,7 @@ class ProjectStore {
             }, {});
             return Object.values(overview).map((o: IFeatureOverview) => ({
                 ...o,
-                environments: o.environments.filter(f => f.name),
+                environments: o.environments.filter((f) => f.name),
             }));
         }
         return [];
@@ -230,6 +229,7 @@ class ProjectStore {
         };
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     mapRow(row): IProject {
         if (!row) {
             throw new NotFoundError('No project found');

@@ -9,16 +9,7 @@ import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
 
-const version = 1;
-
-const FEATURE_COLUMNS_CLIENT = [
-    'name',
-    'type',
-    'enabled',
-    'stale',
-    'strategies',
-    'variants',
-];
+const version = 2;
 
 export default class FeatureController extends Controller {
     private readonly logger: Logger;
@@ -45,7 +36,7 @@ export default class FeatureController extends Controller {
             // @ts-ignore
             this.cache = experimental.clientFeatureMemoize.enabled;
             this.cachedFeatures = memoizee(
-                query => this.featureToggleServiceV2.getClientFeatures(query),
+                (query) => this.featureToggleServiceV2.getClientFeatures(query),
                 {
                     promise: true,
                     // @ts-ignore
@@ -70,7 +61,7 @@ export default class FeatureController extends Controller {
                     query,
                 );
             }
-            res.json({ version: 2, features });
+            res.json({ version, features });
         } catch (e) {
             handleErrors(res, this.logger, e);
         }
@@ -92,7 +83,7 @@ export default class FeatureController extends Controller {
             namePrefix,
         });
         if (query.tag) {
-            query.tag = query.tag.map(q => q.split(':'));
+            query.tag = query.tag.map((q) => q.split(':'));
         }
         return query;
     }

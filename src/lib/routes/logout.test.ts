@@ -26,7 +26,7 @@ test('should redirect to "/basePath" after logout when baseUriPath is set', asyn
     const request = supertest(app);
     expect.assertions(0);
     await request
-        .get(`/logout`)
+        .get('/logout')
         .expect(302)
         .expect('Location', `${baseUriPath}/`);
 });
@@ -76,7 +76,7 @@ test('should redirect to alternative logoutUrl', async () => {
     app.use('/logout', new LogoutController(config).router);
     const request = supertest(app);
     await request
-        .get(`/logout`)
+        .get('/logout')
         .expect(302)
         .expect('Location', '/some-other-path');
 });

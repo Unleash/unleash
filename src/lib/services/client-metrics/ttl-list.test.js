@@ -3,7 +3,7 @@
 const moment = require('moment');
 const TTLList = require('./ttl-list');
 
-test('should emit expire', done => {
+test('should emit expire', (done) => {
     jest.useFakeTimers('modern');
     const list = new TTLList({
         interval: 20,
@@ -11,7 +11,7 @@ test('should emit expire', done => {
         expireType: 'milliseconds',
     });
 
-    list.on('expire', entry => {
+    list.on('expire', (entry) => {
         list.destroy();
         expect(entry.n).toBe(1);
         done();
@@ -38,7 +38,7 @@ test('should slice off list', () => {
 
     const expired = [];
 
-    list.on('expire', entry => {
+    list.on('expire', (entry) => {
         // console.timeEnd(entry.n);
         expired.push(entry);
     });

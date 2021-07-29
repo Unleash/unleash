@@ -15,27 +15,33 @@ import {
 } from '../types/events';
 
 import { filterEqual, filterExisting, parseFile, readFile } from './state-util';
-import FeatureToggleStore from '../db/feature-toggle-store';
-import TagTypeStore, { ITagType } from '../db/tag-type-store';
-import FeatureTagStore, { IFeatureTag } from '../db/feature-tag-store';
-import ProjectStore, { IProject } from '../db/project-store';
-import TagStore from '../db/tag-store';
-import StrategyStore, { IStrategy } from '../db/strategy-store';
-import { Logger } from '../logger';
-import { IUnleashStores } from '../types/stores';
+
 import { IUnleashConfig } from '../types/option';
-import EventStore from '../db/event-store';
 import {
     FeatureToggle,
     IEnvironment,
+    IImportFile,
     IFeatureEnvironment,
-    ITag,
-} from '../types/model';
-import FeatureStrategiesStore, {
     IFeatureStrategy,
-} from '../db/feature-strategy-store';
-import EnvironmentStore from '../db/environment-store';
+    ITag,
+    IImportData,
+} from '../types/model';
 import { GLOBAL_ENV } from '../types/environment';
+import { Logger } from '../logger';
+import {
+    IFeatureTag,
+    IFeatureTagStore,
+} from '../types/stores/feature-tag-store';
+import { IProject, IProjectStore } from '../types/stores/project-store';
+import { ITagType, ITagTypeStore } from '../types/stores/tag-type-store';
+import { ITagStore } from '../types/stores/tag-store';
+import { IEventStore } from '../types/stores/event-store';
+import { IStrategy, IStrategyStore } from '../types/stores/strategy-store';
+import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
+import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
+import { IEnvironmentStore } from '../types/stores/environment-store';
+import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
+import { IUnleashStores } from '../types/stores';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -44,32 +50,36 @@ export interface IBackupOption {
     includeTags: boolean;
 }
 
-interface IImportOption {
-    keepExising: boolean;
-    dropBeforeImport: boolean;
-    userName: string;
+interface IExportIncludeOptions {
+    includeFeatureToggles?: boolean;
+    includeStrategies?: boolean;
+    includeProjects?: boolean;
+    includeTags?: boolean;
+    includeEnvironments?: boolean;
 }
 
 export default class StateService {
     private logger: Logger;
 
-    private toggleStore: FeatureToggleStore;
+    private toggleStore: IFeatureToggleStore;
 
-    private featureStrategiesStore: FeatureStrategiesStore;
+    private featureStrategiesStore: IFeatureStrategiesStore;
 
-    private strategyStore: StrategyStore;
+    private strategyStore: IStrategyStore;
 
-    private eventStore: EventStore;
+    private eventStore: IEventStore;
 
-    private tagStore: TagStore;
+    private tagStore: ITagStore;
 
-    private tagTypeStore: TagTypeStore;
+    private tagTypeStore: ITagTypeStore;
 
-    private projectStore: ProjectStore;
+    private projectStore: IProjectStore;
 
-    private featureTagStore: FeatureTagStore;
+    private featureEnvironmentStore: IFeatureEnvironmentStore;
 
-    private environmentStore: EnvironmentStore;
+    private featureTagStore: IFeatureTagStore;
+
+    private environmentStore: IEnvironmentStore;
 
     constructor(
         stores: IUnleashStores,
@@ -80,6 +90,7 @@ export default class StateService {
         this.strategyStore = stores.strategyStore;
         this.tagStore = stores.tagStore;
         this.featureStrategiesStore = stores.featureStrategiesStore;
+        this.featureEnvironmentStore = stores.featureEnvironmentStore;
         this.tagTypeStore = stores.tagTypeStore;
         this.projectStore = stores.projectStore;
         this.featureTagStore = stores.featureTagStore;
@@ -89,23 +100,28 @@ export default class StateService {
 
     async importFile({
         file,
-        dropBeforeImport,
-        userName,
-        keepExisting,
-    }): Promise<void> {
+        dropBeforeImport = false,
+        userName = 'import-user',
+        keepExisting = true,
+    }: IImportFile): Promise<void> {
         return readFile(file)
-            .then(data => parseFile(file, data))
-            .then(data =>
-                this.import({ data, userName, dropBeforeImport, keepExisting }),
+            .then((data) => parseFile(file, data))
+            .then((data) =>
+                this.import({
+                    data,
+                    userName,
+                    dropBeforeImport,
+                    keepExisting,
+                }),
             );
     }
 
     async import({
         data,
-        userName,
-        dropBeforeImport,
-        keepExisting,
-    }): Promise<void> {
+        userName = 'importUser',
+        dropBeforeImport = false,
+        keepExisting = true,
+    }: IImportData): Promise<void> {
         const importData = await stateSchema.validateAsync(data);
 
         if (importData.features) {
@@ -115,11 +131,8 @@ export default class StateService {
             } else {
                 projectData = importData;
             }
-            const {
-                features,
-                featureStrategies,
-                featureEnvironments,
-            } = projectData;
+            const { features, featureStrategies, featureEnvironments } =
+                projectData;
 
             await this.importFeatures({
                 features,
@@ -132,7 +145,6 @@ export default class StateService {
             });
             await this.importFeatureStrategies({
                 featureStrategies,
-                userName,
                 dropBeforeImport,
                 keepExisting,
             });
@@ -167,7 +179,7 @@ export default class StateService {
                                 f => f.name === t.featureName,
                             ),
                         )
-                        .map(t => ({
+                        .map((t) => ({
                             featureName: t.featureName,
                             tagValue: t.tagValue || t.value,
                             tagType: t.tagType || t.type,
@@ -179,10 +191,11 @@ export default class StateService {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importFeatureEnvironments({ featureEnvironments }): Promise<void> {
         await Promise.all(
-            featureEnvironments.map(env =>
-                this.featureStrategiesStore.connectEnvironmentAndFeature(
+            featureEnvironments.map((env) =>
+                this.featureEnvironmentStore.connectEnvironmentAndFeature(
                     env.featureName,
                     env.environment,
                     env.enabled,
@@ -191,9 +204,9 @@ export default class StateService {
         );
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importFeatureStrategies({
         featureStrategies,
-        userName,
         dropBeforeImport,
         keepExisting,
     }): Promise<void> {
@@ -204,15 +217,15 @@ export default class StateService {
             this.logger.info(
                 'Dropping existing strategies for feature toggles',
             );
-            await this.featureStrategiesStore.deleteFeatureStrategies();
+            await this.featureStrategiesStore.deleteAll();
         }
         const strategiesToImport = keepExisting
             ? featureStrategies.filter(
-                  s => !oldFeatureStrategies.some(o => o.id === s.id),
-            )
+                  (s) => !oldFeatureStrategies.some((o) => o.id === s.id),
+              )
             : featureStrategies;
         await Promise.all(
-            strategiesToImport.map(featureStrategy =>
+            strategiesToImport.map((featureStrategy) =>
                 this.featureStrategiesStore.createStrategyConfig(
                     featureStrategy,
                 ),
@@ -220,11 +233,12 @@ export default class StateService {
         );
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async convertLegacyFeatures({
         features,
     }): Promise<{ features; featureStrategies; featureEnvironments }> {
-        const strategies = features.flatMap(f =>
-            f.strategies.map(strategy => ({
+        const strategies = features.flatMap((f) =>
+            f.strategies.map((strategy) => ({
                 featureName: f.name,
                 projectName: f.project,
                 constraints: strategy.constraints || [],
@@ -234,7 +248,7 @@ export default class StateService {
             })),
         );
         const newFeatures = features;
-        const featureEnvironments = features.map(feature => ({
+        const featureEnvironments = features.map((feature) => ({
             featureName: feature.name,
             environment: GLOBAL_ENV,
             enabled: feature.enabled,
@@ -246,6 +260,7 @@ export default class StateService {
         };
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importFeatures({
         features,
         userName,
@@ -255,11 +270,11 @@ export default class StateService {
         this.logger.info(`Importing ${features.length} feature toggles`);
         const oldToggles = dropBeforeImport
             ? []
-            : await this.toggleStore.getFeatures();
+            : await this.toggleStore.getAll();
 
         if (dropBeforeImport) {
             this.logger.info('Dropping existing feature toggles');
-            await this.toggleStore.dropFeatures();
+            await this.toggleStore.deleteAll();
             await this.eventStore.store({
                 type: DROP_FEATURES,
                 createdBy: userName,
@@ -271,7 +286,7 @@ export default class StateService {
             features
                 .filter(filterExisting(keepExisting, oldToggles))
                 .filter(filterEqual(oldToggles))
-                .map(feature =>
+                .map((feature) =>
                     this.toggleStore
                         .createFeature(feature.project, feature)
                         .then(() => {
@@ -285,6 +300,7 @@ export default class StateService {
         );
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importStrategies({
         strategies,
         userName,
@@ -294,11 +310,11 @@ export default class StateService {
         this.logger.info(`Importing ${strategies.length} strategies`);
         const oldStrategies = dropBeforeImport
             ? []
-            : await this.strategyStore.getStrategies();
+            : await this.strategyStore.getAll();
 
         if (dropBeforeImport) {
             this.logger.info('Dropping existing strategies');
-            await this.strategyStore.dropStrategies();
+            await this.strategyStore.deleteAll();
             await this.eventStore.store({
                 type: DROP_STRATEGIES,
                 createdBy: userName,
@@ -310,7 +326,7 @@ export default class StateService {
             strategies
                 .filter(filterExisting(keepExisting, oldStrategies))
                 .filter(filterEqual(oldStrategies))
-                .map(strategy =>
+                .map((strategy) =>
                     this.strategyStore.importStrategy(strategy).then(() => {
                         this.eventStore.store({
                             type: STRATEGY_IMPORT,
@@ -322,6 +338,7 @@ export default class StateService {
         );
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importProjects({
         projects,
         userName,
@@ -334,23 +351,23 @@ export default class StateService {
             : await this.projectStore.getAll();
         if (dropBeforeImport) {
             this.logger.info('Dropping existing projects');
-            await this.projectStore.dropProjects();
+            await this.projectStore.deleteAll();
             await this.eventStore.store({
                 type: DROP_PROJECTS,
                 createdBy: userName,
                 data: { name: 'all-projects' },
             });
         }
-        const projectsToImport = projects.filter(project =>
+        const projectsToImport = projects.filter((project) =>
             keepExisting
-                ? !oldProjects.some(old => old.id === project.id)
+                ? !oldProjects.some((old) => old.id === project.id)
                 : true,
         );
         if (projectsToImport.length > 0) {
             const importedProjects = await this.projectStore.importProjects(
                 projectsToImport,
             );
-            const importedProjectEvents = importedProjects.map(project => ({
+            const importedProjectEvents = importedProjects.map((project) => ({
                 type: PROJECT_IMPORT,
                 createdBy: userName,
                 data: project,
@@ -359,6 +376,7 @@ export default class StateService {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importTagData({
         tagTypes,
         tags,
@@ -376,14 +394,14 @@ export default class StateService {
         const oldTags = dropBeforeImport ? [] : await this.tagStore.getAll();
         const oldFeatureTags = dropBeforeImport
             ? []
-            : await this.featureTagStore.getAllFeatureTags();
+            : await this.featureTagStore.getAll();
         if (dropBeforeImport) {
             this.logger.info(
                 'Dropping all existing featuretags, tags and tagtypes',
             );
-            await this.featureTagStore.dropFeatureTags();
-            await this.tagStore.dropTags();
-            await this.tagTypeStore.dropTagTypes();
+            await this.featureTagStore.deleteAll();
+            await this.tagStore.deleteAll();
+            await this.tagTypeStore.deleteAll();
             await this.eventStore.batchStore([
                 {
                     type: DROP_FEATURE_TAGS,
@@ -431,16 +449,19 @@ export default class StateService {
         oldFeatureTags: IFeatureTag[],
         userName: string,
     ): Promise<void> {
-        const featureTagsToInsert = featureTags.filter(tag =>
+        const featureTagsToInsert = featureTags.filter((tag) =>
             keepExisting
-                ? !oldFeatureTags.some(old => this.compareFeatureTags(old, tag))
+                ? !oldFeatureTags.some((old) =>
+                      this.compareFeatureTags(old, tag),
+                  )
                 : true,
         );
         if (featureTagsToInsert.length > 0) {
-            const importedFeatureTags = await this.featureTagStore.importFeatureTags(
-                featureTagsToInsert,
-            );
-            const importedFeatureTagEvents = importedFeatureTags.map(tag => ({
+            const importedFeatureTags =
+                await this.featureTagStore.importFeatureTags(
+                    featureTagsToInsert,
+                );
+            const importedFeatureTagEvents = importedFeatureTags.map((tag) => ({
                 type: FEATURE_TAG_IMPORT,
                 createdBy: userName,
                 data: tag,
@@ -458,14 +479,14 @@ export default class StateService {
         oldTags: ITag[],
         userName: string,
     ): Promise<void> {
-        const tagsToInsert = tags.filter(tag =>
+        const tagsToInsert = tags.filter((tag) =>
             keepExisting
-                ? !oldTags.some(old => this.compareTags(old, tag))
+                ? !oldTags.some((old) => this.compareTags(old, tag))
                 : true,
         );
         if (tagsToInsert.length > 0) {
             const importedTags = await this.tagStore.bulkImport(tagsToInsert);
-            const importedTagEvents = importedTags.map(tag => ({
+            const importedTagEvents = importedTags.map((tag) => ({
                 type: TAG_IMPORT,
                 createdBy: userName,
                 data: tag,
@@ -480,16 +501,16 @@ export default class StateService {
         oldTagTypes: ITagType[] = [],
         userName: string,
     ): Promise<void> {
-        const tagTypesToInsert = tagTypes.filter(tagType =>
+        const tagTypesToInsert = tagTypes.filter((tagType) =>
             keepExisting
-                ? !oldTagTypes.some(t => t.name === tagType.name)
+                ? !oldTagTypes.some((t) => t.name === tagType.name)
                 : true,
         );
         if (tagTypesToInsert.length > 0) {
             const importedTagTypes = await this.tagTypeStore.bulkImport(
                 tagTypesToInsert,
             );
-            const importedTagTypeEvents = importedTagTypes.map(tagType => ({
+            const importedTagTypeEvents = importedTagTypes.map((tagType) => ({
                 type: TAG_TYPE_IMPORT,
                 createdBy: userName,
                 data: tagType,
@@ -498,27 +519,28 @@ export default class StateService {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async export({
         includeFeatureToggles = true,
         includeStrategies = true,
         includeProjects = true,
         includeTags = true,
         includeEnvironments = true,
-    }): Promise<{
-            features: FeatureToggle[];
-            strategies: IStrategy[];
-            version: number;
-            projects: IProject[];
-            tagTypes: ITagType[];
-            tags: ITag[];
-            featureTags: IFeatureTag[];
-            featureStrategies: IFeatureStrategy[];
-            environments: IEnvironment[];
-            featureEnvironments: IFeatureEnvironment[];
-        }> {
+    }: IExportIncludeOptions): Promise<{
+        features: FeatureToggle[];
+        strategies: IStrategy[];
+        version: number;
+        projects: IProject[];
+        tagTypes: ITagType[];
+        tags: ITag[];
+        featureTags: IFeatureTag[];
+        featureStrategies: IFeatureStrategy[];
+        environments: IEnvironment[];
+        featureEnvironments: IFeatureEnvironment[];
+    }> {
         return Promise.all([
             includeFeatureToggles
-                ? this.toggleStore.getFeatures()
+                ? this.toggleStore.getAll()
                 : Promise.resolve([]),
             includeStrategies
                 ? this.strategyStore.getEditableStrategies()
@@ -529,7 +551,7 @@ export default class StateService {
             includeTags ? this.tagTypeStore.getAll() : Promise.resolve([]),
             includeTags ? this.tagStore.getAll() : Promise.resolve([]),
             includeTags && includeFeatureToggles
-                ? this.featureTagStore.getAllFeatureTags()
+                ? this.featureTagStore.getAll()
                 : Promise.resolve([]),
             includeFeatureToggles
                 ? this.featureStrategiesStore.getAll()
@@ -538,7 +560,7 @@ export default class StateService {
                 ? this.environmentStore.getAll()
                 : Promise.resolve([]),
             includeFeatureToggles
-                ? this.featureStrategiesStore.getAllFeatureEnvironments()
+                ? this.featureEnvironmentStore.getAll()
                 : Promise.resolve([]),
         ]).then(
             ([

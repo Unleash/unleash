@@ -73,10 +73,7 @@ class UserController extends Controller {
             );
 
             delete user.permissions; // TODO: remove
-            return res
-                .status(200)
-                .json({ user, permissions, feedback })
-                .end();
+            return res.status(200).json({ user, permissions, feedback }).end();
         }
         return res.status(404).end();
     }

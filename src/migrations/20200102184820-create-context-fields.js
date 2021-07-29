@@ -4,7 +4,7 @@
 
 const async = require('async');
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     async.series(
         [
             db.createTable.bind(db, 'context_fields', {
@@ -33,6 +33,6 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     return db.dropTable('context_fields', cb);
 };

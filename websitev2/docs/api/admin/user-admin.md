@@ -195,11 +195,23 @@ Possible return values:
 Return values:
 
 - `200 OK`: Password was changed.
-- `400 Bad Request`: Password was not changed. Unleash requires a strong password. Please see in the response body on how to improve the password.
+- `400 Bad Request`: Password was not changed. Unleash requires a strong password.
+  - This means
+    - minimum 10 characters long
+    - contains at least one uppercase letter
+    - contains at least one number
+    - contains at least one special character (symbol)
+- Please see in the response body on how to improve the password.
 
 ### Validate password for a user {#validate-password-for-a-user}
 
-You can use this endpoint to validate the strength of a given password.
+You can use this endpoint to validate the strength of a given password. Unleash requires a strong password.
+
+- This means
+  - minimum 10 characters long
+  - contains at least one uppercase letter
+  - contains at least one number
+  - contains at least one special character (symbol)
 
 `http POST http://localhost:4242/api/admin/user-admin/validate-password`
 

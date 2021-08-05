@@ -14,7 +14,7 @@ export class ClientMetricsStore
 {
     private logger: Logger;
 
-    private highestIdSeen = 0;
+    highestIdSeen = 0;
 
     private startTimer: Function;
 

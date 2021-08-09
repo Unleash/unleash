@@ -54,22 +54,33 @@ export default class ProjectHealthService {
         projectId: string,
     ): Promise<IProjectHealthReport> {
         //const overview = await this.getProjectOverview(projectId, false);
-        const features = await this.featureToggleStore.getFeatures({
-            projectId,
+        const features = await this.featureToggleStore.getFeaturesBy({
+            project: projectId,
         });
+
         const overview = {
             name: 'test',
             description: '',
             features: features,
             members: 1,
         };
+        const staleCount = this.staleCount(overview.features);
+        const activeCount = this.activeCount(overview.features);
+        const potentiallyStaleCount = await this.potentiallyStaleCount(
+            overview.features,
+        );
+        const health = this.getHealthRating(
+            overview.features.length,
+            staleCount,
+            potentiallyStaleCount,
+        );
         return {
             ...overview,
-            potentiallyStaleCount: await this.potentiallyStaleCount(
-                overview.features,
-            ),
-            activeCount: this.activeCount(overview.features),
-            staleCount: this.staleCount(overview.features),
+            health,
+            version: 1,
+            potentiallyStaleCount,
+            activeCount,
+            staleCount,
         };
     }
 

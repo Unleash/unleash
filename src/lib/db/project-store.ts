@@ -51,6 +51,12 @@ class ProjectStore {
         return rows.map(this.mapRow);
     }
 
+    async updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void> {
+        await this.db(TABLE)
+            .where({ id: healthUpdate.id })
+            .update({ health: healthUpdate.health });
+    }
+
     async get(id: string): Promise<IProject> {
         return this.db
             .first(COLUMNS)

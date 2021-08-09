@@ -81,7 +81,7 @@ class AdminApi extends Controller {
             '/feedback',
             new UserFeedbackController(config, services).router,
         );
-        this.app.use('/project', new ProjectApi(config, services).router);
+        this.app.use('/projects', new ProjectApi(config, services).router);
     }
 
     index(req, res) {

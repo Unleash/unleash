@@ -13,6 +13,11 @@ export interface IProject {
     createdAt: Date;
 }
 
+interface IProjectHealthUpdate {
+    id: string;
+    health: number;
+}
+
 interface IProjectInsert {
     id: string;
     name: string;

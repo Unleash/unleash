@@ -19,6 +19,7 @@ import HealthService from '../services/health-service';
 import SettingService from '../services/setting-service';
 import SessionService from '../services/session-service';
 import UserFeedbackService from '../services/user-feedback-service';
+import ProjectHealthService from '../services/project-health-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -42,4 +43,5 @@ export interface IUnleashServices {
     userService: UserService;
     versionService: VersionService;
     userFeedbackService: UserFeedbackService;
+    projectHealthService: ProjectHealthService;
 }

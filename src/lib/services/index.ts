@@ -23,6 +23,7 @@ import ResetTokenService from './reset-token-service';
 import SettingService from './setting-service';
 import SessionService from './session-service';
 import UserFeedbackService from './user-feedback-service';
+import ProjectHealthService from './project-health-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -54,6 +55,7 @@ export const createServices = (
     const healthService = new HealthService(stores, config);
     const settingService = new SettingService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
+    const projectHealthService = new ProjectHealthService(stores, config);
 
     return {
         accessService,
@@ -77,6 +79,7 @@ export const createServices = (
         settingService,
         sessionService,
         userFeedbackService,
+        projectHealthService,
     };
 };
 

@@ -6,7 +6,6 @@ import {
     FeatureToggle,
     IFeatureOverview,
     IProjectHealthReport,
-    IProjectOverview,
 } from '../types/model';
 import {
     MILLISECONDS_IN_DAY,
@@ -55,12 +54,22 @@ export default class ProjectHealthService {
         projectId: string,
     ): Promise<IProjectHealthReport> {
         //const overview = await this.getProjectOverview(projectId, false);
-        const features = await this.featureToggleStore.getFeatures();
+        const features = await this.featureToggleStore.getFeatures({
+            projectId,
+        });
+        const overview = {
+            name: 'test',
+            description: '',
+            features: features,
+            members: 1,
+        };
         return {
-            // ...overview,
-            potentiallyStaleCount: await this.potentiallyStaleCount(features),
-            activeCount: this.activeCount(features),
-            staleCount: this.staleCount(features),
+            ...overview,
+            potentiallyStaleCount: await this.potentiallyStaleCount(
+                overview.features,
+            ),
+            activeCount: this.activeCount(overview.features),
+            staleCount: this.staleCount(overview.features),
         };
     }
 

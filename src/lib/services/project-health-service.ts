@@ -26,8 +26,6 @@ export default class ProjectHealthService {
 
     private featureTypes: Map<string, number>;
 
-    private healthRatingTimer: Timer;
-
     constructor(
         {
             projectStore,
@@ -44,10 +42,6 @@ export default class ProjectHealthService {
         this.featureTypeStore = featureTypeStore;
         this.featureToggleStore = featureToggleStore;
         this.featureTypes = new Map();
-        this.healthRatingTimer = setInterval(
-            () => this.setHealthRating(),
-            MILLISECONDS_IN_ONE_HOUR,
-        ).unref();
     }
 
     async getProjectHealthReport(
@@ -147,23 +141,5 @@ export default class ProjectHealthService {
             startPercentage - stalePercentage - potentiallyStalePercentage,
         );
         return rating;
-    }
-
-    async setHealthRating(): Promise<void> {
-        const projects = await this.projectStore.getAll();
-
-        await Promise.all(
-            projects.map(async project => {
-                const newHealth = await this.calculateHealthRating(project);
-                await this.projectStore.updateHealth({
-                    id: project.id,
-                    health: newHealth,
-                });
-            }),
-        );
-    }
-
-    destroy(): void {
-        clearInterval(this.healthRatingTimer);
     }
 }

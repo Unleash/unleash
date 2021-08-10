@@ -3,7 +3,7 @@ id: user-admin
 title: /api/admin/user-admin
 ---
 
-> In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](../../user_guide/api-token) and add an Authorization header using the token.
+> In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/user_guide/api-token) and add an Authorization header using the token.
 
 ### List all users {#list-all-users}
 
@@ -195,11 +195,23 @@ Possible return values:
 Return values:
 
 - `200 OK`: Password was changed.
-- `400 Bad Request`: Password was not changed. Unleash requires a strong password. Please see in the response body on how to improve the password.
+- `400 Bad Request`: Password was not changed. Unleash requires a strong password.
+  - This means
+    - minimum 10 characters long
+    - contains at least one uppercase letter
+    - contains at least one number
+    - contains at least one special character (symbol)
+- Please see in the response body on how to improve the password.
 
 ### Validate password for a user {#validate-password-for-a-user}
 
-You can use this endpoint to validate the strength of a given password.
+You can use this endpoint to validate the strength of a given password. Unleash requires a strong password.
+
+- This means
+  - minimum 10 characters long
+  - contains at least one uppercase letter
+  - contains at least one number
+  - contains at least one special character (symbol)
 
 `http POST http://localhost:4242/api/admin/user-admin/validate-password`
 

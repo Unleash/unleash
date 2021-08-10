@@ -161,11 +161,17 @@ export default class StateService {
                 tagTypes: data.tagTypes,
                 tags: data.tags,
                 featureTags:
-                    data.featureTags.map(t => ({
-                        featureName: t.featureName,
-                        tagValue: t.tagValue || t.value,
-                        tagType: t.tagType || t.type,
-                    })) || [],
+                    (data.featureTags || [])
+                        .filter(t =>
+                            (data.features || []).some(
+                                f => f.name === t.featureName,
+                            ),
+                        )
+                        .map(t => ({
+                            featureName: t.featureName,
+                            tagValue: t.tagValue || t.value,
+                            tagType: t.tagType || t.type,
+                        })) || [],
                 userName,
                 dropBeforeImport,
                 keepExisting,
@@ -522,7 +528,7 @@ export default class StateService {
                 : Promise.resolve([]),
             includeTags ? this.tagTypeStore.getAll() : Promise.resolve([]),
             includeTags ? this.tagStore.getAll() : Promise.resolve([]),
-            includeTags
+            includeTags && includeFeatureToggles
                 ? this.featureTagStore.getAllFeatureTags()
                 : Promise.resolve([]),
             includeFeatureToggles

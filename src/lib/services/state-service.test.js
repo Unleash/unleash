@@ -12,7 +12,6 @@ const {
     DROP_STRATEGIES,
     TAG_TYPE_IMPORT,
     TAG_IMPORT,
-    FEATURE_TAG_IMPORT,
     PROJECT_IMPORT,
 } = require('../types/events');
 
@@ -236,23 +235,16 @@ test('should import a tag and tag type', async () => {
             { name: 'simple', description: 'some description', icon: '#' },
         ],
         tags: [{ type: 'simple', value: 'test' }],
-        featureTags: [
-            {
-                featureName: 'demo-feature',
-                tagType: 'simple',
-                tagValue: 'test',
-            },
-        ],
     };
+
     await stateService.import({ data });
+
     const events = await stores.eventStore.getEvents();
-    expect(events).toHaveLength(3);
+    expect(events).toHaveLength(2);
     expect(events[0].type).toBe(TAG_TYPE_IMPORT);
     expect(events[0].data.name).toBe('simple');
     expect(events[1].type).toBe(TAG_IMPORT);
     expect(events[1].data.value).toBe('test');
-    expect(events[2].type).toBe(FEATURE_TAG_IMPORT);
-    expect(events[2].data.featureName).toBe('demo-feature');
 });
 
 test('Should not import an existing tag', async () => {
@@ -314,7 +306,7 @@ test('Should not keep existing tags if drop-before-import', async () => {
     expect(tagTypes).toHaveLength(1);
 });
 
-test('should export tag, tagtypes and feature tags', async () => {
+test('should export tag, tagtypes', async () => {
     const { stateService, stores } = getSetup();
 
     const data = {
@@ -343,12 +335,52 @@ test('should export tag, tagtypes and feature tags', async () => {
         includeTags: true,
         includeProjects: false,
     });
+
+    expect(exported.tags).toHaveLength(1);
+    expect(exported.tags[0].type).toBe(data.tags[0].type);
+    expect(exported.tags[0].value).toBe(data.tags[0].value);
+    expect(exported.tagTypes).toHaveLength(1);
+    expect(exported.tagTypes[0].name).toBe(data.tagTypes[0].name);
+    expect(exported.featureTags).toHaveLength(0);
+});
+
+test('should export tag, tagtypes, featureTags and features', async () => {
+    const { stateService, stores } = getSetup();
+
+    const data = {
+        tagTypes: [
+            { name: 'simple', description: 'some description', icon: '#' },
+        ],
+        tags: [{ type: 'simple', value: 'test' }],
+        featureTags: [
+            {
+                featureName: 'demo-feature',
+                tagType: 'simple',
+                tagValue: 'test',
+            },
+        ],
+    };
+    await stores.tagTypeStore.createTagType(data.tagTypes[0]);
+    await stores.tagStore.createTag(data.tags[0]);
+    await stores.featureTagStore.tagFeature(data.featureTags[0].featureName, {
+        type: data.featureTags[0].tagType,
+        value: data.featureTags[0].tagValue,
+    });
+
+    const exported = await stateService.export({
+        includeFeatureToggles: true,
+        includeStrategies: false,
+        includeTags: true,
+        includeProjects: false,
+    });
+
     expect(exported.tags).toHaveLength(1);
     expect(exported.tags[0].type).toBe(data.tags[0].type);
     expect(exported.tags[0].value).toBe(data.tags[0].value);
     expect(exported.tagTypes).toHaveLength(1);
     expect(exported.tagTypes[0].name).toBe(data.tagTypes[0].name);
     expect(exported.featureTags).toHaveLength(1);
+
     expect(exported.featureTags[0].featureName).toBe(
         data.featureTags[0].featureName,
     );

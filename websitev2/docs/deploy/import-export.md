@@ -32,7 +32,7 @@ await stateService.importFile({file: 'exported-data.yml', userName: 'import', dr
 
 If you want the database to be cleaned before import (all strategies and features will be removed), set the `dropBeforeImport` parameter.
 
-It is also possible to not override exiting feature toggles (and strategies) by using the `keepExisting` parameter.
+It is also possible to not override existing feature toggles (and strategies) by using the `keepExisting` parameter.
 
 ### API Export {#api-export}
 
@@ -67,7 +67,14 @@ curl -X GET -H "Content-Type: application/json" \
 You can import feature-toggles and strategies by POSTing to the `/api/admin/state/import` endpoint (keep in mind this will require authentication).\
 You can either send the data as JSON in the POST-body or send a `file` parameter with `multipart/form-data` (YAML files are also accepted here).
 
-If you want the database to be cleaned before import (all strategies and features will be removed), specify a `drop` query parameter.
+You can customize the import with query parameters:
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| drop | `false` | If the database should be cleaned before import (see comment below) |
+| keep | `true` | If true, the existing feature toggles and strategies will not be override |
+
+If you want the database to be cleaned before import (**all strategies and features will be removed**), specify a `drop` query parameter.
 
 > You should never use this in production environments.
 

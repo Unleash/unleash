@@ -71,8 +71,18 @@ class FeatureTagStore {
         return tag;
     }
 
+    /**
+     * Only gets tags for active feature toggles.
+     */
     async getAllFeatureTags(): Promise<IFeatureTag[]> {
-        const rows = await this.db(TABLE).select(COLUMNS);
+        const rows = await this.db(TABLE)
+            .select(COLUMNS)
+            .whereIn(
+                'feature_name',
+                this.db('features')
+                    .where({ archived: false })
+                    .select(['name']),
+            );
         return rows.map(row => ({
             featureName: row.feature_name,
             tagType: row.tag_type,

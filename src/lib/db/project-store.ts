@@ -112,9 +112,21 @@ class ProjectStore {
             .onConflict('id')
             .ignore();
         if (rows.length > 0) {
+            await this.addGlobalEnvironment(rows);
             return rows.map(this.mapRow);
         }
         return [];
+    }
+
+    async addGlobalEnvironment(projects): Promise<void> {
+        const environments = projects.map(p => ({
+            project_id: p.id,
+            environment_name: ':global:',
+        }));
+        await this.db('project_environments')
+            .insert(environments)
+            .onConflict(['project_id', 'environment_name'])
+            .ignore();
     }
 
     async dropProjects(): Promise<void> {

@@ -161,9 +161,11 @@ export default class StateService {
                 tagTypes: data.tagTypes,
                 tags: data.tags,
                 featureTags:
-                    data.featureTags
+                    (data.featureTags || [])
                         .filter(t =>
-                            data.features.some(f => f.name === t.featureName),
+                            (data.features || []).some(
+                                f => f.name === t.featureName,
+                            ),
                         )
                         .map(t => ({
                             featureName: t.featureName,

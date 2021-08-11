@@ -11,7 +11,7 @@ const eventBus = new EventEmitter();
 
 const currentUser = new User({ id: 1337, email: 'test@mail.com' });
 
-async function getSetup() {
+async function getSetup(user = currentUser) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();
     await stores.userStore.insert(currentUser);
@@ -19,7 +19,7 @@ async function getSetup() {
     const config = createTestConfig({
         preHook: (a) => {
             a.use((req, res, next) => {
-                req.user = currentUser;
+                req.user = user;
                 next();
             });
         },

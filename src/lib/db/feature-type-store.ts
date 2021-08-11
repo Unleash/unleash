@@ -30,7 +30,7 @@ class FeatureTypeStore implements IFeatureTypeStore {
         return rows.map(this.rowToFeatureType);
     }
 
-    rowToFeatureType(row: IFeatureTypeRow): IFeatureType {
+    private rowToFeatureType(row: IFeatureTypeRow): IFeatureType {
         return {
             id: row.id,
             name: row.name,

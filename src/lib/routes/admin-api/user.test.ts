@@ -1,5 +1,3 @@
-'use strict';
-
 import supertest from 'supertest';
 import { EventEmitter } from 'events';
 import { createServices } from '../../services';

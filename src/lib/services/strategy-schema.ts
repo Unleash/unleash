@@ -1,5 +1,3 @@
-'use strict';
-
 const joi = require('joi');
 const { nameType } = require('../routes/admin-api/util');
 

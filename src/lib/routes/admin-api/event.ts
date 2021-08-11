@@ -1,5 +1,3 @@
-'use strict';
-
 import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';

@@ -1,5 +1,3 @@
-'use strict';
-
 // export module version
 require('pkginfo')(module, 'version');
 

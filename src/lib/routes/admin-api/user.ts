@@ -1,5 +1,3 @@
-'use strict';
-
 import { Request, Response } from 'express';
 import { IAuthRequest } from '../unleash-types';
 import Controller from '../controller';

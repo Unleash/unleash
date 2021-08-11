@@ -1,5 +1,3 @@
-'use strict';
-
 import * as mime from 'mime';
 import YAML from 'js-yaml';
 import moment from 'moment';

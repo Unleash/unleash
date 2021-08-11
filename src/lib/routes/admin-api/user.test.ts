@@ -11,7 +11,7 @@ const eventBus = new EventEmitter();
 
 const currentUser = new User({ id: 1337, email: 'test@mail.com' });
 
-async function getSetup(user = currentUser) {
+async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();
     await stores.userStore.insert(currentUser);
@@ -19,7 +19,7 @@ async function getSetup(user = currentUser) {
     const config = createTestConfig({
         preHook: (a) => {
             a.use((req, res, next) => {
-                req.user = user;
+                req.user = currentUser;
                 next();
             });
         },
@@ -30,6 +30,7 @@ async function getSetup(user = currentUser) {
     return {
         base,
         userStore: stores.userStore,
+        sessionStore: stores.sessionStore,
         request: supertest(app),
     };
 }
@@ -61,6 +62,25 @@ test('should allow user to change password', async () => {
     const updated = await userStore.get(currentUser.id);
     // @ts-ignore
     expect(updated.passwordHash).toBeTruthy();
+});
+
+test('should get my sessions', async () => {
+    const { request, base, sessionStore } = await getSetup();
+
+    sessionStore.insertSession({
+        sid: '123',
+        sess: { user: currentUser },
+    });
+
+    await request
+        .get(`${base}/api/admin/user/my-sessions`)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.length).toBe(1);
+            expect(res.body[0].sid).toBe('123');
+            expect(res.body[0].sess.user.id).toBe(currentUser.id);
+            expect(res.body[0].sess.user.email).toBe(currentUser.email);
+        });
 });
 
 test('should deny if password and confirmPassword are not equal', async () => {

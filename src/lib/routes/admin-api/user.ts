@@ -62,18 +62,17 @@ class UserController extends Controller {
     async getUser(req: IAuthRequest, res: Response): Promise<void> {
         res.setHeader('cache-control', 'no-store');
         const { user } = req;
-        if (user) {
-            const permissions = await this.accessService.getPermissionsForUser(
-                user,
-            );
-            const feedback = await this.userFeedbackService.getAllUserFeedback(
-                user,
-            );
+        const permissions = await this.accessService.getPermissionsForUser(
+            user,
+        );
+        const feedback = await this.userFeedbackService.getAllUserFeedback(
+            user,
+        );
 
-            delete user.permissions; // TODO: remove
-            return res.status(200).json({ user, permissions, feedback }).end();
-        }
-        return res.status(404).end();
+        // TODO: remove this line after we remove it from db.
+        delete user.permissions;
+
+        return res.status(200).json({ user, permissions, feedback }).end();
     }
 
     async updateUserPass(
@@ -81,40 +80,29 @@ class UserController extends Controller {
         res: Response,
     ): Promise<void> {
         const { user } = req;
-        if (user) {
-            const { password, confirmPassword } = req.body;
-            try {
-                if (password === confirmPassword) {
-                    this.userService.validatePassword(password);
-                    await this.userService.changePassword(user.id, password);
-                    res.status(200).end();
-                } else {
-                    res.status(400).end();
-                }
-            } catch (e) {
-                handleErrors(res, this.logger, e);
+        const { password, confirmPassword } = req.body;
+        try {
+            if (password === confirmPassword) {
+                this.userService.validatePassword(password);
+                await this.userService.changePassword(user.id, password);
+                res.status(200).end();
+            } else {
+                res.status(400).end();
             }
-        } else {
-            res.status(401).end();
+        } catch (e) {
+            handleErrors(res, this.logger, e);
         }
     }
 
-    async mySessions(
-        req: IUserRequest<any, any, any, any>,
-        res: Response,
-    ): Promise<void> {
+    async mySessions(req: IAuthRequest, res: Response): Promise<void> {
         const { user } = req;
-        if (user) {
-            try {
-                const sessions = await this.sessionService.getSessionsForUser(
-                    user.id,
-                );
-                res.json(sessions);
-            } catch (e) {
-                handleErrors(res, this.logger, e);
-            }
-        } else {
-            res.status(401).end();
+        try {
+            const sessions = await this.sessionService.getSessionsForUser(
+                user.id,
+            );
+            res.json(sessions);
+        } catch (e) {
+            handleErrors(res, this.logger, e);
         }
     }
 }

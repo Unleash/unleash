@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {
-    TextField,
     DialogContent,
-    RadioGroup,
-    Radio,
     FormControl,
     FormControlLabel,
+    Radio,
+    RadioGroup,
+    Switch,
+    TextField,
     Typography,
 } from '@material-ui/core';
 
@@ -45,6 +46,13 @@ function AddUserForm({
         setData({
             ...data,
             [e.target.name]: trim(e.target.value),
+        });
+    };
+
+    const toggleBooleanField = e => {
+        setData({
+            ...data,
+            [e.target.name]: !data[e.target.name],
         });
     };
 
@@ -167,6 +175,29 @@ function AddUserForm({
                             ))}
                         </RadioGroup>
                     </FormControl>
+                    <br />
+                    <br />
+                    <div className={commonStyles.flexRow}>
+                        <FormControl>
+                            <Typography
+                                variant="subtitle1"
+                                className={styles.roleSubtitle}
+                                data-loading
+                            >
+                                Should we send an email to your new team member
+                            </Typography>
+                            <div className={commonStyles.flexRow}>
+                                <Switch
+                                    name="sendEmail"
+                                    onChange={toggleBooleanField}
+                                    checked={data.sendEmail}
+                                />
+                                <Typography>
+                                    {data.sendEmail ? 'Yes' : 'No'}
+                                </Typography>
+                            </div>
+                        </FormControl>
+                    </div>
                 </DialogContent>
             </form>
         </div>

@@ -19,11 +19,12 @@ interface IAddUserFormData {
     name: string;
     email: string;
     rootRole: number;
+    sendEmail: boolean;
 }
 
 const EDITOR_ROLE_ID = 2;
 
-const initialData = { email: '', name: '', rootRole: EDITOR_ROLE_ID };
+const initialData = { email: '', name: '', rootRole: EDITOR_ROLE_ID, sendEmail: true };
 
 const AddUser = ({
     showDialog,

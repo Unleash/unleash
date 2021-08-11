@@ -44,11 +44,19 @@ module.exports = {
             style: "dark",
             links: [
                 {
-                    title: "Docs",
+                    title: "Product",
                     items: [
                         {
                             label: "Docs",
                             to: "/"
+                        },
+                        {
+                            label: "Open-Source",
+                            href: "https://github.com/Unleash/unleash"
+                        },
+                        {
+                            label: "Roadmap",
+                            href: "https://github.com/orgs/Unleash/projects/5"
                         }
                     ]
                 },
@@ -66,15 +74,6 @@ module.exports = {
                         {
                             label: "Twitter",
                             href: "https://twitter.com/getunleash"
-                        }
-                    ]
-                },
-                {
-                    title: "More",
-                    items: [
-                        {
-                            label: "GitHub",
-                            href: "https://github.com/Unleash/unleash"
                         }
                     ]
                 }

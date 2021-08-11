@@ -9,7 +9,7 @@ import {
 } from '../../../store/strategy/actions';
 
 import CreateStrategy from './CreateStrategy';
-import { loadNameFromHash } from '../../common/util';
+import { loadNameFromUrl } from '../../common/util';
 
 const STRATEGY_EXIST_ERROR = 'Error: Strategy with name';
 
@@ -141,7 +141,7 @@ const mapStateToProps = (state, props) => {
     return {
         strategy: strategy
             ? strategy
-            : { name: loadNameFromHash(), description: '', parameters: [] },
+            : { name: loadNameFromUrl(), description: '', parameters: [] },
         editMode,
     };
 };

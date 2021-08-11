@@ -6,7 +6,7 @@ import {
     validateName,
 } from '../../../../store/feature-toggle/actions';
 import CreateFeature from './CreateFeature';
-import { loadNameFromHash, showPnpsFeedback } from '../../../common/util';
+import { loadNameFromUrl, showPnpsFeedback } from '../../../common/util';
 import { showFeedback } from '../../../../store/feedback/actions';
 
 const defaultStrategy = {
@@ -27,7 +27,7 @@ function resolveCurrentProjectId(settings) {
 class WrapperComponent extends Component {
     constructor(props) {
         super();
-        const name = loadNameFromHash();
+        const name = loadNameFromUrl();
         this.state = {
             featureToggle: {
                 name,

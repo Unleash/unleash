@@ -85,14 +85,9 @@ export function updateWeight(variants, totalWeight) {
     });
 }
 
-export function loadNameFromHash() {
-    let field = '';
-    try {
-        [, field] = document.location.hash.match(/name=([a-z0-9-_.]+)/i);
-    } catch (e) {
-        // nothing
-    }
-    return field;
+export function loadNameFromUrl() {
+    const params = new URLSearchParams(document.location.search);
+    return params.get('name') || '';
 }
 
 export const modalStyles = {

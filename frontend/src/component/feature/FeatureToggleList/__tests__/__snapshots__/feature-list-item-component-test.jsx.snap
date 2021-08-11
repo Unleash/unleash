@@ -77,7 +77,7 @@ exports[`renders correctly with one feature 1`] = `
           dateTime="2018-02-04T20:27:52.127Z"
           title="2018-02-04T20:27:52.127Z"
         >
-          3 years ago
+          4 years ago
         </time>
       </small>
       <div>
@@ -178,7 +178,7 @@ exports[`renders correctly with one feature without permission 1`] = `
           dateTime="2018-02-04T20:27:52.127Z"
           title="2018-02-04T20:27:52.127Z"
         >
-          3 years ago
+          4 years ago
         </time>
       </small>
       <div>

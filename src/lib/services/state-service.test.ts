@@ -233,13 +233,6 @@ test('should export strategies', async () => {
 test('should import a tag and tag type', async () => {
     const { stateService, stores } = getSetup();
     const data = {
-        features: [
-            {
-                name: 'demo-feature',
-                enabled: true,
-                strategies: [{ name: 'default' }],
-            },
-        ],
         tagTypes: [
             { name: 'simple', description: 'some description', icon: '#' },
         ],

@@ -23,14 +23,7 @@ export const projectFilterGenerator = (
         },
         {}
     );
-    return (project: string) => {
-        if (admin) {
-            return true;
-        }
-
-        if (permissionMap[project]) {
-            return true;
-        }
-        return false;
+    return (projectId: string) => {
+        return admin || permissionMap[projectId]
     };
 };

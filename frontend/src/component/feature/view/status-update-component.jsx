@@ -31,7 +31,7 @@ export default function StatusUpdateComponent({ stale, updateStale }) {
             renderOptions={renderOptions}
             id="feature-stale-dropdown"
             label={stale ? 'STALE' : 'ACTIVE'}
-            style={{ fontWeight: '500' }}
+            style={{ fontWeight: 'bold' }}
         />
     );
 }

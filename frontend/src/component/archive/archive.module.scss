@@ -3,7 +3,6 @@
     color: rgba(0, 0, 0, 0.54);
     align-items: center;
     padding: 0 16px 0 18px;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
 .listItemToggle {
@@ -16,7 +15,7 @@
     flex-shrink: 0;
     margin-right: 2px;
 }
-.listItemRevive{
+.listItemRevive {
     width: 5%;
     flex-shrink: 0;
     margin-right: 10%;
@@ -36,5 +35,3 @@
     float: right;
     margin-left: 8px !important;
 }
-
-

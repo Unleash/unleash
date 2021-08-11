@@ -36,7 +36,7 @@ export const useStyles = makeStyles(theme => ({
             display: 'none',
         },
         fontSize: '2rem',
-        fontWeight: '300',
+        fontWeight: 'normal',
     },
     logoContainer: {
         position: 'absolute',

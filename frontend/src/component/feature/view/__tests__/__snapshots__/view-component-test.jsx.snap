@@ -264,7 +264,7 @@ exports[`renders correctly with one feature 1`] = `
         onTouchStart={[Function]}
         style={
           Object {
-            "fontWeight": "500",
+            "fontWeight": "bold",
           }
         }
         tabIndex={0}

@@ -3,6 +3,8 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const theme = createMuiTheme({
     typography: {
         fontFamily: ['Sen', 'Roboto, sans-serif'],
+        fontWeightBold: '700',
+        fontWeightMedium: '700',
     },
     palette: {
         primary: {
@@ -108,8 +110,8 @@ const theme = createMuiTheme({
     fontWeight: {
         thin: '300',
         medium: '400',
-        semi: '500',
-        bold: '600',
+        semi: '700',
+        bold: '700',
     },
 });
 

@@ -9,7 +9,7 @@ export const useStyles = makeStyles(theme => ({
     },
     headerTitle: {
         fontSize: theme.fontSizes.mainHeader,
-        fontWeight: 500,
+        fontWeight: 'normal',
     },
     headerActions: {
         position: 'absolute',

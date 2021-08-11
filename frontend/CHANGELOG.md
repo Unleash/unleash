@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+# 4.1.0-beta.1
+- Feat/new navigation (#314)
+
 # 4.0.5 fix: run use effect when value changes, not object (#315)
 - fix: run use effect when value changes, not object (#315)
 - fix: add flex wrap

@@ -29,7 +29,7 @@ class ProjectSelectComponent extends Component {
         if (filter) {
             options = projects
                 .filter(project => {
-                    return filter(project);
+                    return filter(project.id);
                 })
                 .map(formatOption);
         } else {

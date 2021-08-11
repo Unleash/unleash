@@ -1,45 +1,3 @@
-@font-face {
-    font-family: 'Roboto';
-    font-weight: 300;
-    src: url('./assets/fonts/Roboto-300.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-weight: 400;
-    src: url('./assets/fonts/Roboto-400.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-weight: 500;
-    src: url('./assets/fonts/Roboto-500.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    font-weight: 700;
-    src: url('./assets/fonts/Roboto-700.ttf');
-}
-
-@font-face {
-    font-family: 'Sen';
-    font-weight: 400;
-    src: url('./assets/fonts/Sen-Regular.ttf');
-}
-
-@font-face {
-    font-family: 'Sen';
-    font-weight: 500;
-    src: url('./assets/fonts/Sen-Bold.ttf');
-}
-
-@font-face {
-    font-family: 'Sen';
-    font-weight: 700;
-    src: url('./assets/fonts/Sen-ExtraBold.ttf');
-}
-
 * {
     box-sizing: border-box;
 }
@@ -52,7 +10,7 @@ html {
 
 body {
     height: 100%;
-    /* font-family: 'Sen'; */
+    font-family: 'Sen', sans-serif;
 }
 
 .MuiButton-root {

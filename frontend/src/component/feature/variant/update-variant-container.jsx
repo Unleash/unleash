@@ -16,9 +16,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     addVariant: variant => {
         const { featureToggle } = ownProps;
         const currentVariants = featureToggle.variants || [];
-        const stickiness = currentVariants[0].stickiness || 'default';
+        let stickiness;
+        if (currentVariants.length > 0) {
+            stickiness = currentVariants[0].stickiness || 'default';
+        } else {
+            stickiness = 'default'
+        }
         variant.stickiness = stickiness;
-        
+
         const variants = [...currentVariants, variant];
         updateWeight(variants, 1000);
         return requestUpdateFeatureToggleVariants(

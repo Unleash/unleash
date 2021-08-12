@@ -99,14 +99,15 @@ export default class UserFeedbackStore implements IUserFeedbackStore {
         userId,
         feedbackId,
     }: IUserFeedbackKey): Promise<IUserFeedback> {
-        const row = await this.db(TABLE)
-            .where({ user_id: userId, feedback_id: feedbackId })
-            .first();
-        return rowToField(row);
+        return this.getFeedback(userId, feedbackId);
     }
 
     async getAll(): Promise<IUserFeedback[]> {
-        return Promise.resolve([]);
+        const userFeedbacks = await this.db
+            .table<IUserFeedbackTable>(TABLE)
+            .select();
+
+        return userFeedbacks.map(rowToField);
     }
 }
 

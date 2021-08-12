@@ -8,6 +8,10 @@ import { IFeatureOverview } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeProjectStore implements IProjectStore {
+    getEnvironmentsForProject(): Promise<string[]> {
+        throw new Error('Method not implemented.');
+    }
+
     projects: IProject[] = [];
 
     projectEnvironment: Map<string, Set<string>> = new Map();

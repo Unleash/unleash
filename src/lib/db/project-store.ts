@@ -151,6 +151,14 @@ class ProjectStore implements IProjectStore {
             .ignore();
     }
 
+    async getEnvironmentsForProject(id: string): Promise<string[]> {
+        return this.db('project_environments')
+            .where({
+                project_id: id,
+            })
+            .returning('environment_name');
+    }
+
     async getMembers(projectId: string): Promise<number> {
         const rolesFromProject = this.db('role_permission')
             .select('role_id')

@@ -137,7 +137,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "faker": "^5.5.3",
     "fetch-mock": "^9.11.0",
-    "husky": "^4.2.3",
+    "husky": "^7.0.1",
     "jest": "^27.0.6",
     "jest-fetch-mock": "^3.0.3",
     "lint-staged": "^11.0.0",

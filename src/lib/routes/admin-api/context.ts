@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 
 import Controller from '../controller';
 
-import { handleErrors } from '../util';
 import extractUser from '../../extract-user';
 
 import {
@@ -45,12 +44,8 @@ class ContextController extends Controller {
     }
 
     async getContextFields(req: Request, res: Response): Promise<void> {
-        try {
-            const fields = await this.contextService.getAll();
-            res.status(200).json(fields).end();
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        const fields = await this.contextService.getAll();
+        res.status(200).json(fields).end();
     }
 
     async getContextField(req: Request, res: Response): Promise<void> {
@@ -69,12 +64,8 @@ class ContextController extends Controller {
         const value = req.body;
         const userName = extractUser(req);
 
-        try {
-            await this.contextService.createContextField(value, userName);
-            res.status(201).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.contextService.createContextField(value, userName);
+        res.status(201).end();
     }
 
     async updateContextField(req: Request, res: Response): Promise<void> {
@@ -84,38 +75,23 @@ class ContextController extends Controller {
 
         contextField.name = name;
 
-        try {
-            await this.contextService.updateContextField(
-                contextField,
-                userName,
-            );
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.contextService.updateContextField(contextField, userName);
+        res.status(200).end();
     }
 
     async deleteContextField(req: Request, res: Response): Promise<void> {
         const name = req.params.contextField;
         const userName = extractUser(req);
 
-        try {
-            await this.contextService.deleteContextField(name, userName);
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.contextService.deleteContextField(name, userName);
+        res.status(200).end();
     }
 
     async validate(req: Request, res: Response): Promise<void> {
         const { name } = req.body;
 
-        try {
-            await this.contextService.validateName(name);
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.contextService.validateName(name);
+        res.status(200).end();
     }
 }
 export default ContextController;

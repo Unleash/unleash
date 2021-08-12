@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import Controller from '../controller';
 import UserService from '../../services/user-service';
 import { Logger } from '../../logger';
-import { handleErrors } from '../util';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 
@@ -40,23 +39,15 @@ class ResetPasswordController extends Controller {
     async sendResetPasswordEmail(req: Request, res: Response): Promise<void> {
         const { email } = req.body;
 
-        try {
-            await this.userService.createResetPasswordEmail(email);
-            res.status(200).end();
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        await this.userService.createResetPasswordEmail(email);
+        res.status(200).end();
     }
 
     async validatePassword(req: Request, res: Response): Promise<void> {
         const { password } = req.body;
 
-        try {
-            this.userService.validatePassword(password);
-            res.status(200).end();
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        this.userService.validatePassword(password);
+        res.status(200).end();
     }
 
     async validateToken(
@@ -64,13 +55,9 @@ class ResetPasswordController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.query;
-        try {
-            const user = await this.userService.getUserForToken(token);
-            await this.logout(req);
-            res.status(200).json(user);
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        const user = await this.userService.getUserForToken(token);
+        await this.logout(req);
+        res.status(200).json(user);
     }
 
     async changePassword(
@@ -79,12 +66,8 @@ class ResetPasswordController extends Controller {
     ): Promise<void> {
         await this.logout(req);
         const { token, password } = req.body;
-        try {
-            await this.userService.resetPassword(token, password);
-            res.status(200).end();
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        await this.userService.resetPassword(token, password);
+        res.status(200).end();
     }
 
     private async logout(req: SessionRequest<any, any, any, any>) {

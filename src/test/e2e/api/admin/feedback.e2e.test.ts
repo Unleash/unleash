@@ -1,3 +1,4 @@
+import { Application, NextFunction, Request, Response } from 'express';
 import { setupAppWithCustomAuth } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
@@ -15,14 +16,21 @@ beforeAll(async () => {
     const email = 'custom-user@mail.com';
 
     const preHook = (
-        app: any,
+        application: Application,
         config: IUnleashConfig,
         { userService }: IUnleashServices,
     ) => {
-        app.use('/api/admin/', async (req, res, next) => {
-            req.user = await userService.loginUserWithoutPassword(email, true);
-            next();
-        });
+        application.use(
+            '/api/admin/',
+            async (req: Request, res: Response, next: NextFunction) => {
+                // @ts-ignore
+                req.user = await userService.loginUserWithoutPassword(
+                    email,
+                    true,
+                );
+                next();
+            },
+        );
     };
 
     app = await setupAppWithCustomAuth(stores, preHook);
@@ -42,7 +50,7 @@ test('it creates feedback for user', async () => {
         .set('Content-Type', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.feedbackId).toBe('pnps');
         });
 });
@@ -56,7 +64,7 @@ test('it gives 400 when feedback is not present', async () => {
         .set('Content-Type', 'application/json')
         .expect('Content-Type', /json/)
         .expect(400)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.error).toBeTruthy();
         });
 });
@@ -70,7 +78,7 @@ test('it updates feedback for user', async () => {
         .set('Content-Type', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.neverShow).toBe(true);
         });
 });
@@ -83,7 +91,7 @@ test('it retrieves feedback for user', async () => {
         .set('Content-Type', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.feedback.length).toBe(1);
             expect(res.body.feedback[0].feedbackId).toBe('pnps');
         });

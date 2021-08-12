@@ -1,22 +1,17 @@
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
+import { IClientMetric } from '../types/stores/client-metrics-db';
 
 const METRICS_COLUMNS = ['id', 'created_at', 'metrics'];
 const TABLE = 'client_metrics';
 
 const ONE_MINUTE = 60 * 1000;
 
-const mapRow = row => ({
+const mapRow = (row) => ({
     id: row.id,
     createdAt: row.created_at,
     metrics: row.metrics,
 });
-
-export interface IClientMetric {
-    id: number;
-    createdAt: Date;
-    metrics: any;
-}
 
 export class ClientMetricsDb {
     private readonly logger: Logger;
@@ -45,6 +40,14 @@ export class ClientMetricsDb {
         }
     }
 
+    async delete(id: number): Promise<void> {
+        await this.db(TABLE).where({ id }).del();
+    }
+
+    async deleteAll(): Promise<void> {
+        await this.db(TABLE).del();
+    }
+
     // Insert new client metrics
     async insert(metrics: IClientMetric): Promise<void> {
         return this.db(TABLE).insert({ metrics });
@@ -64,6 +67,24 @@ export class ClientMetricsDb {
             this.logger.warn(`error when getting metrics last hour ${e}`);
         }
         return [];
+    }
+
+    async get(id: number): Promise<IClientMetric> {
+        const result = await this.db
+            .select(METRICS_COLUMNS)
+            .from(TABLE)
+            .where({ id })
+            .first();
+        return mapRow(result);
+    }
+
+    async exists(id: number): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            [id],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 
     // Used to poll for new metrics

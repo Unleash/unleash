@@ -109,7 +109,7 @@ export class EmailService {
                         this.logger.info(
                             'Successfully sent reset-password email',
                         ),
-                    e =>
+                    (e) =>
                         this.logger.warn(
                             'Failed to send reset-password email',
                             e,
@@ -118,7 +118,7 @@ export class EmailService {
             });
             return Promise.resolve(email);
         }
-        return new Promise(res => {
+        return new Promise((res) => {
             this.logger.warn(
                 'No mailer is configured. Please read the docs on how to configure an emailservice',
             );
@@ -163,7 +163,7 @@ export class EmailService {
                         this.logger.info(
                             'Successfully sent getting started email',
                         ),
-                    e =>
+                    (e) =>
                         this.logger.warn(
                             'Failed to send getting started email',
                             e,
@@ -172,7 +172,7 @@ export class EmailService {
             });
             return Promise.resolve(email);
         }
-        return new Promise(res => {
+        return new Promise((res) => {
             this.logger.warn(
                 'No mailer is configured. Please read the docs on how to configure an EmailService',
             );

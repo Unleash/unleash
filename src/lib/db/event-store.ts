@@ -2,7 +2,8 @@ import { EventEmitter } from 'events';
 import { Knex } from 'knex';
 import { DROP_FEATURES } from '../types/events';
 import { LogProvider, Logger } from '../logger';
-import { ITag } from '../types/model';
+import { IEventStore } from '../types/stores/event-store';
+import { ICreateEvent, IEvent } from '../types/model';
 
 const EVENT_COLUMNS = [
     'id',
@@ -13,7 +14,7 @@ const EVENT_COLUMNS = [
     'tags',
 ];
 
-interface IEventTable {
+export interface IEventTable {
     id: number;
     type: string;
     created_by: string;
@@ -22,21 +23,9 @@ interface IEventTable {
     tags: [];
 }
 
-export interface ICreateEvent {
-    type: string;
-    createdBy: string;
-    data?: any;
-    tags?: ITag[];
-}
-
-export interface IEvent extends ICreateEvent {
-    id: number;
-    createdAt: Date;
-}
-
 const TABLE = 'events';
 
-class EventStore extends EventEmitter {
+class EventStore extends EventEmitter implements IEventStore {
     private db: Knex;
 
     private logger: Logger;
@@ -44,7 +33,7 @@ class EventStore extends EventEmitter {
     constructor(db: Knex, getLogger: LogProvider) {
         super();
         this.db = db;
-        this.logger = getLogger('lib/db/event-store.js');
+        this.logger = getLogger('lib/db/event-store.ts');
     }
 
     async store(event: ICreateEvent): Promise<void> {
@@ -66,11 +55,39 @@ class EventStore extends EventEmitter {
                 .returning(EVENT_COLUMNS);
             const savedEvents = savedRows.map(this.rowToEvent);
             process.nextTick(() =>
-                savedEvents.forEach(e => this.emit(e.type, e)),
+                savedEvents.forEach((e) => this.emit(e.type, e)),
             );
         } catch (e) {
             this.logger.warn('Failed to store events');
         }
+    }
+
+    async delete(key: number): Promise<void> {
+        await this.db(TABLE).where({ id: key }).del();
+    }
+
+    async deleteAll(): Promise<void> {
+        await this.db(TABLE).del();
+    }
+
+    destroy(): void {}
+
+    async exists(key: number): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            [key],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async get(key: number): Promise<IEvent> {
+        const row = await this.db(TABLE).where({ id: key }).first();
+        return this.rowToEvent(row);
+    }
+
+    async getAll(): Promise<IEvent[]> {
+        return this.getEvents();
     }
 
     async getEvents(): Promise<IEvent[]> {
@@ -87,7 +104,7 @@ class EventStore extends EventEmitter {
         }
     }
 
-    async getEventsFilterByName(name: string): Promise<IEvent[]> {
+    async getEventsFilterByType(name: string): Promise<IEvent[]> {
         try {
             const rows = await this.db
                 .select(EVENT_COLUMNS)
@@ -116,7 +133,7 @@ class EventStore extends EventEmitter {
             createdBy: row.created_by,
             createdAt: row.created_at,
             data: row.data,
-            tags: row.tags,
+            tags: row.tags || [],
         };
     }
 

@@ -4,15 +4,15 @@
 
 const async = require('async');
 
-exports.up = function(db, callback) {
-    const populateNewData = cb => {
+exports.up = function (db, callback) {
+    const populateNewData = (cb) => {
         db.all(
             'select name, parameters_template from strategies',
             (err, results) => {
                 const updateSQL = results
                     .map(({ name, parameters_template }) => {
                         const parameters = [];
-                        Object.keys(parameters_template || {}).forEach(p => {
+                        Object.keys(parameters_template || {}).forEach((p) => {
                             parameters.push({
                                 name: p,
                                 type: parameters_template[p],
@@ -23,7 +23,7 @@ exports.up = function(db, callback) {
                         return { name, parameters };
                     })
                     .map(
-                        strategy => `
+                        (strategy) => `
                 UPDATE strategies 
                 SET parameters='${JSON.stringify(strategy.parameters)}'
                 WHERE name='${strategy.name}';`,
@@ -45,20 +45,20 @@ exports.up = function(db, callback) {
     );
 };
 
-exports.down = function(db, callback) {
-    const populateOldData = cb => {
+exports.down = function (db, callback) {
+    const populateOldData = (cb) => {
         db.all('select name, parameters from strategies', (err, results) => {
             const updateSQL = results
                 .map(({ name, parameters }) => {
                     const parameters_template = {};
-                    parameters.forEach(p => {
+                    parameters.forEach((p) => {
                         parameters_template[p.name] = p.type;
                     });
 
                     return { name, parameters_template };
                 })
                 .map(
-                    strategy => `
+                    (strategy) => `
                 UPDATE strategies 
                 SET parameters_template='${JSON.stringify(
                     strategy.parameters_template,

@@ -14,7 +14,7 @@ const wrapTimer: (EventEmitter, string, object) => (any) => any = (
     args = {},
 ) => {
     const t = timer.new();
-    return data => {
+    return (data) => {
         args.time = t();
         eventBus.emit(event, args);
         return data;

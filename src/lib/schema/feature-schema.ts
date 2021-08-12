@@ -9,39 +9,20 @@ export const nameSchema = joi
 export const constraintSchema = joi.object().keys({
     contextName: joi.string(),
     operator: joi.string(),
-    values: joi
-        .array()
-        .items(
-            joi
-                .string()
-                .min(1)
-                .max(100),
-        )
-        .min(1)
-        .optional(),
+    values: joi.array().items(joi.string().min(1).max(100)).min(1).optional(),
 });
 
 export const strategiesSchema = joi.object().keys({
     id: joi.string().optional(),
     name: nameType,
-    constraints: joi
-        .array()
-        .allow(null)
-        .items(constraintSchema),
+    constraints: joi.array().allow(null).items(constraintSchema),
     parameters: joi.object(),
 });
 
 export const variantsSchema = joi.object().keys({
     name: nameType,
-    weight: joi
-        .number()
-        .min(0)
-        .max(1000)
-        .required(),
-    weightType: joi
-        .string()
-        .valid('variable', 'fix')
-        .default('variable'),
+    weight: joi.number().min(0).max(1000).required(),
+    weightType: joi.string().valid('variable', 'fix').default('variable'),
     payload: joi
         .object()
         .keys({
@@ -68,21 +49,14 @@ export const featureMetadataSchema = joi
         stale: joi.boolean().default(false),
         archived: joi.boolean().default(false),
         type: joi.string().default('release'),
-        description: joi
-            .string()
-            .allow('')
-            .allow(null)
-            .optional(),
+        description: joi.string().allow('').allow(null).optional(),
         variants: joi
             .array()
             .allow(null)
             .unique((a, b) => a.name === b.name)
             .optional()
             .items(variantsSchema),
-        createdAt: joi
-            .date()
-            .optional()
-            .allow(null),
+        createdAt: joi.date().optional().allow(null),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
 
@@ -95,11 +69,7 @@ export const featureSchema = joi
         archived: joi.boolean().default(false),
         type: joi.string().default('release'),
         project: joi.string().default('default'),
-        description: joi
-            .string()
-            .allow('')
-            .allow(null)
-            .optional(),
+        description: joi.string().allow('').allow(null).optional(),
         strategies: joi
             .array()
             .min(0)
@@ -123,19 +93,9 @@ export const querySchema = joi
             .allow(null)
             .items(joi.string().pattern(/\w+:.+/, { name: 'tag' }))
             .optional(),
-        project: joi
-            .array()
-            .allow(null)
-            .items(nameType)
-            .optional(),
-        namePrefix: joi
-            .string()
-            .allow(null)
-            .optional(),
-        environment: joi
-            .string()
-            .allow(null)
-            .optional(),
+        project: joi.array().allow(null).items(nameType).optional(),
+        namePrefix: joi.string().allow(null).optional(),
+        environment: joi.string().allow(null).optional(),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
 

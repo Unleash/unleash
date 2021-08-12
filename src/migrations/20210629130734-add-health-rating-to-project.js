@@ -1,4 +1,4 @@
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE projects ADD COLUMN health integer DEFAULT 100;
@@ -7,7 +7,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE projects DROP COLUMN health;

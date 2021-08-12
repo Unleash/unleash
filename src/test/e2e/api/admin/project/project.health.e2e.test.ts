@@ -47,7 +47,7 @@ test('Project with no stale toggles should have 100% health rating', async () =>
         .get('/api/admin/projects/fresh')
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.health).toBe(100);
         });
 });
@@ -88,7 +88,7 @@ test('Health rating endpoint yields stale, potentially stale and active count on
         .get(`/api/admin/projects/${project.id}/health-report`)
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.health).toBe(67);
             expect(res.body.activeCount).toBe(2);
             expect(res.body.staleCount).toBe(1);
@@ -140,7 +140,7 @@ test('Health rating endpoint correctly handles potentially stale toggles', async
         .get(`/api/admin/projects/${project.id}/health-report`)
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.health).toBe(50);
             expect(res.body.activeCount).toBe(3);
             expect(res.body.staleCount).toBe(1);

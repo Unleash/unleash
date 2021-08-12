@@ -1,7 +1,7 @@
 import timer from './timer';
 
 function timeout(fn, ms): Promise<void> {
-    return new Promise(resolve =>
+    return new Promise((resolve) =>
         setTimeout(() => {
             fn();
             resolve();

@@ -2,23 +2,32 @@ import NameExistsError from '../error/name-exists-error';
 
 import { tagTypeSchema } from './tag-type-schema';
 
+import { IUnleashStores } from '../types/stores';
 import {
     TAG_TYPE_CREATED,
     TAG_TYPE_DELETED,
     TAG_TYPE_UPDATED,
 } from '../types/events';
-import EventStore from '../db/event-store';
+
 import { Logger } from '../logger';
-import TagTypeStore, { ITagType } from '../db/tag-type-store';
+import { ITagType, ITagTypeStore } from '../types/stores/tag-type-store';
+import { IEventStore } from '../types/stores/event-store';
+import { IUnleashConfig } from '../types/option';
 
 export default class TagTypeService {
-    private tagTypeStore: TagTypeStore;
+    private tagTypeStore: ITagTypeStore;
 
-    private eventStore: EventStore;
+    private eventStore: IEventStore;
 
     private logger: Logger;
 
-    constructor({ tagTypeStore, eventStore }, { getLogger }) {
+    constructor(
+        {
+            tagTypeStore,
+            eventStore,
+        }: Pick<IUnleashStores, 'tagTypeStore' | 'eventStore'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+    ) {
         this.tagTypeStore = tagTypeStore;
         this.eventStore = eventStore;
         this.logger = getLogger('services/tag-type-service.js');
@@ -29,7 +38,7 @@ export default class TagTypeService {
     }
 
     async getTagType(name: string): Promise<ITagType> {
-        return this.tagTypeStore.getTagType(name);
+        return this.tagTypeStore.get(name);
     }
 
     async createTagType(
@@ -65,7 +74,7 @@ export default class TagTypeService {
     }
 
     async deleteTagType(name: string, userName: string): Promise<void> {
-        await this.tagTypeStore.deleteTagType(name);
+        await this.tagTypeStore.delete(name);
         await this.eventStore.store({
             type: TAG_TYPE_DELETED,
             createdBy: userName || 'unleash-system',

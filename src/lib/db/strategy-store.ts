@@ -2,6 +2,12 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
+import {
+    IEditableStrategy,
+    IMinimalStrategyRow,
+    IStrategy,
+    IStrategyStore,
+} from '../types/stores/strategy-store';
 
 const STRATEGY_COLUMNS = [
     'name',
@@ -13,47 +19,25 @@ const STRATEGY_COLUMNS = [
 ];
 const TABLE = 'strategies';
 
-export interface IStrategy {
-    name: string;
-    editable: boolean;
-    description: string;
-    parameters: object;
-    deprecated: boolean;
-    displayName: string;
-}
-
-export interface IEditableStrategy {
-    name: string;
-    description: string;
-    parameters: object;
-    deprecated: boolean;
-}
-
-export interface IMinimalStrategy {
-    name: string;
-    description: string;
-    parameters: string;
-}
-
 interface IStrategyRow {
     name: string;
     built_in: number;
     description: string;
-    parameters: object;
+    parameters: object[];
     deprecated: boolean;
     display_name: string;
 }
-export default class StrategyStore {
+export default class StrategyStore implements IStrategyStore {
     private db: Knex;
 
     private logger: Logger;
 
     constructor(db: Knex, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('strategy-store.js');
+        this.logger = getLogger('strategy-store.ts');
     }
 
-    async getStrategies(): Promise<IStrategy[]> {
+    async getAll(): Promise<IStrategy[]> {
         const rows = await this.db
             .select(STRATEGY_COLUMNS)
             .from(TABLE)
@@ -80,6 +64,30 @@ export default class StrategyStore {
             .from(TABLE)
             .where({ name })
             .then(this.rowToStrategy);
+    }
+
+    async delete(name: string): Promise<void> {
+        await this.db(TABLE).where({ name }).del();
+    }
+
+    async deleteAll(): Promise<void> {
+        await this.db(TABLE).del();
+    }
+
+    destroy(): void {}
+
+    async exists(name: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE name = ?) AS present`,
+            [name],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async get(name: string): Promise<IStrategy> {
+        const row = await this.db(TABLE).where({ name }).first();
+        return this.rowToStrategy(row);
     }
 
     rowToStrategy(row: IStrategyRow): IStrategy {
@@ -109,7 +117,7 @@ export default class StrategyStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    eventDataToRow(data): IMinimalStrategy {
+    eventDataToRow(data): IMinimalStrategyRow {
         return {
             name: data.name,
             description: data.description,
@@ -119,67 +127,39 @@ export default class StrategyStore {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async createStrategy(data): Promise<void> {
-        this.db(TABLE)
-            .insert(this.eventDataToRow(data))
-            .catch(err =>
-                this.logger.error('Could not insert strategy, error: ', err),
-            );
+        await this.db(TABLE).insert(this.eventDataToRow(data));
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async updateStrategy(data): Promise<void> {
-        this.db(TABLE)
+        await this.db(TABLE)
             .where({ name: data.name })
-            .update(this.eventDataToRow(data))
-            .catch(err =>
-                this.logger.error('Could not update strategy, error: ', err),
-            );
+            .update(this.eventDataToRow(data));
     }
 
     async deprecateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void> {
-        this.db(TABLE)
-            .where({ name })
-            .update({ deprecated: true })
-            .catch(err =>
-                this.logger.error('Could not deprecate strategy, error: ', err),
-            );
+        await this.db(TABLE).where({ name }).update({ deprecated: true });
     }
 
     async reactivateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void> {
-        this.db(TABLE)
-            .where({ name })
-            .update({ deprecated: false })
-            .catch(err =>
-                this.logger.error(
-                    'Could not reactivate strategy, error: ',
-                    err,
-                ),
-            );
+        await this.db(TABLE).where({ name }).update({ deprecated: false });
     }
 
     async deleteStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void> {
-        await this.db(TABLE)
-            .where({ name })
-            .del()
-            .catch(err => {
-                this.logger.error('Could not delete strategy, error: ', err);
-            });
+        await this.db(TABLE).where({ name }).del();
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importStrategy(data): Promise<void> {
         const rowData = this.eventDataToRow(data);
-        await this.db(TABLE)
-            .insert(rowData)
-            .onConflict(['name'])
-            .merge();
+        await this.db(TABLE).insert(rowData).onConflict(['name']).merge();
     }
 
     async dropStrategies(): Promise<void> {
         await this.db(TABLE)
             .where({ built_in: 0 }) // eslint-disable-line
             .delete()
-            .catch(err =>
+            .catch((err) =>
                 this.logger.error('Could not drop strategies, error: ', err),
             );
     }

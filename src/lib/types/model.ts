@@ -1,4 +1,7 @@
-import { IFeatureStrategy } from '../db/feature-strategy-store';
+import { ITagType } from './stores/tag-type-store';
+import { LogProvider } from '../logger';
+import { IRole, IUserPermission } from './stores/access-store';
+import { IUser } from './user';
 
 export interface IConstraint {
     contextName: string;
@@ -11,6 +14,16 @@ export interface IStrategyConfig {
     name: string;
     constraints: IConstraint[];
     parameters: Object;
+}
+export interface IFeatureStrategy {
+    id: string;
+    featureName: string;
+    projectName: string;
+    environment: string;
+    strategyName: string;
+    parameters: object;
+    constraints: IConstraint[];
+    createdAt?: Date;
 }
 
 export interface FeatureToggleDTO {
@@ -131,4 +144,144 @@ export interface IFeatureToggleQuery {
 export interface ITag {
     value: string;
     type: string;
+}
+
+export interface IParameterDefinition {
+    name: string;
+    displayName: string;
+    type: string;
+    description?: string;
+    placeholder?: string;
+    required: boolean;
+    sensitive: boolean;
+}
+
+export interface IAddonDefinition {
+    name: string;
+    displayName: string;
+    documentationUrl: string;
+    description: string;
+    parameters?: IParameterDefinition[];
+    events?: string[];
+    tagTypes?: ITagType[];
+}
+
+export interface IAddonConfig {
+    getLogger: LogProvider;
+    unleashUrl: string;
+}
+
+export interface ICreateEvent {
+    type: string;
+    createdBy: string;
+    data?: any;
+    tags?: ITag[];
+}
+
+export interface IEvent extends ICreateEvent {
+    id: number;
+    createdAt: Date;
+}
+
+export interface IUserWithRole {
+    id: number;
+    roleId: number;
+    name?: string;
+    username?: string;
+    email?: string;
+    imageUrl?: string;
+}
+
+export interface IRoleData {
+    role: IRole;
+    users: IUser[];
+    permissions: IUserPermission[];
+}
+
+export interface IPermission {
+    name: string;
+    type: PermissionType;
+}
+
+export enum PermissionType {
+    root = 'root',
+    project = 'project',
+}
+
+export enum RoleName {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    ADMIN = 'Admin',
+    EDITOR = 'Editor',
+    VIEWER = 'Viewer',
+    OWNER = 'Owner',
+    MEMBER = 'Member',
+}
+
+export enum RoleType {
+    ROOT = 'root',
+    PROJECT = 'project',
+}
+
+export interface IRoleIdentifier {
+    roleId?: number;
+    roleName?: RoleName;
+}
+
+export interface IClientApp {
+    appName: string;
+    instanceId: string;
+    clientIp?: string;
+    seenToggles?: string[];
+    metricsCount?: number;
+    strategies?: string[] | Record<string, string>[];
+    bucket?: any;
+    count?: number;
+    started?: number | Date;
+    interval?: number;
+    icon?: string;
+    description?: string;
+    color?: string;
+}
+
+export interface IAppFeature {
+    name: string;
+    description: string;
+    type: string;
+    project: string;
+    enabled: boolean;
+    stale: boolean;
+    strategies: any;
+    variants: any[];
+    createdAt: Date;
+    lastSeenAt: Date;
+}
+
+export interface IAppName {
+    appName: string;
+}
+
+export interface IMetricCounts {
+    yes?: number;
+    no?: number;
+    variants?: Record<string, number>;
+}
+
+export interface IMetricsBucket {
+    start: Date;
+    stop: Date;
+    toggles: IMetricCounts;
+}
+
+export interface IImportFile extends ImportCommon {
+    file: string;
+}
+
+interface ImportCommon {
+    dropBeforeImport?: boolean;
+    keepExisting?: boolean;
+    userName?: string;
+}
+
+export interface IImportData extends ImportCommon {
+    data: any;
 }

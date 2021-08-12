@@ -1,5 +1,3 @@
-'use strict';
-
 import * as mime from 'mime';
 import YAML from 'js-yaml';
 import moment from 'moment';
@@ -84,6 +82,7 @@ class StateController extends Controller {
         );
         const includeProjects = paramToBool(req.query.projects, true);
         const includeTags = paramToBool(req.query.tags, true);
+        const includeEnvironments = paramToBool(req.query.environments, true);
 
         try {
             const data = await this.stateService.export({
@@ -91,6 +90,7 @@ class StateController extends Controller {
                 includeFeatureToggles,
                 includeProjects,
                 includeTags,
+                includeEnvironments,
             });
             const timestamp = moment().format('YYYY-MM-DD_HH-mm-ss');
             if (format === 'yaml') {

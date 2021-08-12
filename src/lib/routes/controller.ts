@@ -5,17 +5,14 @@ const { Router } = require('express');
 const NoAccessError = require('../error/no-access-error');
 const requireContentType = require('../middleware/content_type_checker');
 
-const checkPermission = permission => async (req, res, next) => {
+const checkPermission = (permission) => async (req, res, next) => {
     if (!permission) {
         return next();
     }
     if (req.checkRbac && (await req.checkRbac(permission))) {
         return next();
     }
-    return res
-        .status(403)
-        .json(new NoAccessError(permission))
-        .end();
+    return res.status(403).json(new NoAccessError(permission)).end();
 };
 
 /**

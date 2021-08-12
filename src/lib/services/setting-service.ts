@@ -1,12 +1,12 @@
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
-import SettingStore from '../db/setting-store';
+import { ISettingStore } from '../types/stores/settings-store';
 
 export default class SettingService {
     private logger: Logger;
 
-    private settingStore: SettingStore;
+    private settingStore: ISettingStore;
 
     constructor(
         { settingStore }: Pick<IUnleashStores, 'settingStore'>,
@@ -22,6 +22,10 @@ export default class SettingService {
 
     async insert(id: string, value: object): Promise<void> {
         return this.settingStore.insert(id, value);
+    }
+
+    async delete(id: string): Promise<void> {
+        return this.settingStore.delete(id);
     }
 }
 

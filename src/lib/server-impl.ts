@@ -17,6 +17,8 @@ import AuthenticationRequired from './types/authentication-required';
 import * as eventType from './types/events';
 import { addEventHook } from './event-hook';
 import registerGracefulShutdown from './util/graceful-shutdown';
+import { createDb } from './db/db-pool';
+import sessionDb from './middleware/session-db';
 
 async function createApp(
     config: IUnleashConfig,
@@ -26,9 +28,11 @@ async function createApp(
     const logger = config.getLogger('server-impl.js');
     const serverVersion = version;
     const eventBus = new EventEmitter();
-    const stores = createStores(config, eventBus);
+    const db = createDb(config);
+    const stores = createStores(config, eventBus, db);
     const services = createServices(stores, config);
     const metricsMonitor = createMetricsMonitor();
+    const unleashSession = sessionDb(config, db);
 
     const stopUnleash = async (server?: StoppableServer) => {
         logger.info('Shutting down Unleash...');
@@ -39,7 +43,7 @@ async function createApp(
         metricsMonitor.stopMonitoring();
         stores.clientInstanceStore.destroy();
         stores.clientMetricsStore.destroy();
-        await stores.db.destroy();
+        await db.destroy();
     };
 
     if (!config.server.secret) {
@@ -47,12 +51,12 @@ async function createApp(
         // eslint-disable-next-line no-param-reassign
         config.server.secret = secret;
     }
-    const app = getApp(config, stores, services, eventBus);
+    const app = getApp(config, stores, services, eventBus, unleashSession);
 
     if (typeof config.eventHook === 'function') {
         addEventHook(config.eventHook, stores.eventStore);
     }
-    metricsMonitor.startMonitoring(config, stores, serverVersion, eventBus);
+    metricsMonitor.startMonitoring(config, stores, serverVersion, eventBus, db);
     const unleash: Omit<IUnleash, 'stop'> = {
         stores,
         eventBus,

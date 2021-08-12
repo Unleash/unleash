@@ -1,19 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { IRole } from '../../lib/db/access-store';
-import {
-    AccessService,
-    IUserWithRole,
-    RoleName,
-    IPermission,
-    IRoleData,
-} from '../../lib/services/access-service';
+import { AccessService } from '../../lib/services/access-service';
 import User from '../../lib/types/user';
 import noLoggerProvider from './no-logger';
+import { IRole } from '../../lib/types/stores/access-store';
+import { IPermission, IRoleData, IUserWithRole } from '../../lib/types/model';
 
 class AccessServiceMock extends AccessService {
-    public roleName: RoleName;
-
     constructor() {
         super(
             { accessStore: undefined, userStore: undefined },

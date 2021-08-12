@@ -37,9 +37,8 @@ export default class ArchiveController extends Controller {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async getArchivedFeatures(req, res): Promise<void> {
         try {
-            const features = await this.featureService.getMetadataForAllFeatures(
-                true,
-            );
+            const features =
+                await this.featureService.getMetadataForAllFeatures(true);
             res.json({ version: 2, features });
         } catch (err) {
             handleErrors(res, this.logger, err);

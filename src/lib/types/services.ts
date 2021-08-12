@@ -32,9 +32,11 @@ export interface IUnleashServices {
     emailService: EmailService;
     environmentService: EnvironmentService;
     eventService: EventService;
+    featureTagService: FeatureTagService;
     featureToggleServiceV2: FeatureToggleServiceV2;
     featureTypeService: FeatureTypeService;
     healthService: HealthService;
+    projectHealthService: ProjectHealthService;
     projectService: ProjectService;
     resetTokenService: ResetTokenService;
     sessionService: SessionService;
@@ -46,6 +48,4 @@ export interface IUnleashServices {
     userFeedbackService: UserFeedbackService;
     userService: UserService;
     versionService: VersionService;
-    featureTagService: FeatureTagService;
-    projectHealthService: ProjectHealthService;
 }

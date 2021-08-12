@@ -1,7 +1,7 @@
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/db/api-token-store';
+import { ApiTokenType } from '../../../../lib/types/stores/api-token-store';
 
 let db;
 let app;
@@ -28,7 +28,7 @@ test('returns empty list of tokens', async () => {
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.tokens.length).toBe(0);
         });
 });
@@ -43,7 +43,7 @@ test('creates new client token', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.username).toBe('default-client');
             expect(res.body.type).toBe('client');
             expect(res.body.createdAt).toBeTruthy();
@@ -61,7 +61,7 @@ test('creates new admin token', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.username).toBe('default-admin');
             expect(res.body.type).toBe('admin');
             expect(res.body.createdAt).toBeTruthy();
@@ -83,7 +83,7 @@ test('creates new admin token with expiry', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.expiresAt).toBe(expiresAtAsISOStr);
         });
 });
@@ -111,7 +111,7 @@ test('update admin token with expiry', async () => {
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.tokens.length).toBe(1);
             expect(res.body.tokens[0].expiresAt).toBeTruthy();
         });
@@ -140,7 +140,7 @@ test('creates a lot of client tokens', async () => {
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.tokens.length).toBe(10);
             expect(res.body.tokens[2].type).toBe('client');
         });
@@ -166,7 +166,7 @@ test('removes api token', async () => {
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.tokens.length).toBe(0);
         });
 });

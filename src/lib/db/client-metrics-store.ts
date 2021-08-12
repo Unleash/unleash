@@ -1,14 +1,17 @@
-'use strict';
-
 import EventEmitter from 'events';
-import { ClientMetricsDb, IClientMetric } from './client-metrics-db';
 import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
+import { ClientMetricsDb } from './client-metrics-db';
+import { IClientMetric } from '../types/stores/client-metrics-db';
+import { IClientMetricsStore } from '../types/stores/client-metrics-store';
 
 const TEN_SECONDS = 10 * 1000;
 
-export class ClientMetricsStore extends EventEmitter {
+export class ClientMetricsStore
+    extends EventEmitter
+    implements IClientMetricsStore
+{
     private logger: Logger;
 
     highestIdSeen = 0;
@@ -24,11 +27,11 @@ export class ClientMetricsStore extends EventEmitter {
         pollInterval = TEN_SECONDS,
     ) {
         super();
-        this.logger = getLogger('client-metrics-store.js');
+        this.logger = getLogger('client-metrics-store.ts.js');
         this.metricsDb = metricsDb;
         this.highestIdSeen = 0;
 
-        this.startTimer = action =>
+        this.startTimer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'metrics',
                 action,
@@ -58,13 +61,13 @@ export class ClientMetricsStore extends EventEmitter {
     _fetchNewAndEmit(): void {
         this.metricsDb
             .getNewMetrics(this.highestIdSeen)
-            .then(metrics => this._emitMetrics(metrics));
+            .then((metrics) => this._emitMetrics(metrics));
     }
 
     _emitMetrics(metrics: IClientMetric[]): void {
         if (metrics && metrics.length > 0) {
             this.highestIdSeen = metrics[metrics.length - 1].id;
-            metrics.forEach(m => this.emit('metrics', m.metrics));
+            metrics.forEach((m) => this.emit('metrics', m.metrics));
         }
     }
 
@@ -80,5 +83,25 @@ export class ClientMetricsStore extends EventEmitter {
     destroy(): void {
         clearInterval(this.timer);
         this.metricsDb.destroy();
+    }
+
+    async delete(key: number): Promise<void> {
+        await this.metricsDb.delete(key);
+    }
+
+    async deleteAll(): Promise<void> {
+        await this.metricsDb.deleteAll();
+    }
+
+    async exists(key: number): Promise<boolean> {
+        return this.metricsDb.exists(key);
+    }
+
+    async get(key: number): Promise<IClientMetric> {
+        return this.metricsDb.get(key);
+    }
+
+    async getAll(): Promise<IClientMetric[]> {
+        return this.metricsDb.getMetricsLastHour();
     }
 }

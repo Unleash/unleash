@@ -1,10 +1,14 @@
 import crypto from 'crypto';
-import { ApiTokenStore, IApiToken, ApiTokenType } from '../db/api-token-store';
 import { Logger } from '../logger';
 import { ADMIN, CLIENT } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
+import {
+    ApiTokenType,
+    IApiToken,
+    IApiTokenStore,
+} from '../types/stores/api-token-store';
 
 const ONE_MINUTE = 60_000;
 
@@ -15,7 +19,7 @@ interface CreateTokenRequest {
 }
 
 export class ApiTokenService {
-    private store: ApiTokenStore;
+    private store: IApiTokenStore;
 
     private logger: Logger;
 
@@ -24,10 +28,10 @@ export class ApiTokenService {
     private activeTokens: IApiToken[] = [];
 
     constructor(
-        stores: Pick<IUnleashStores, 'apiTokenStore'>,
+        { apiTokenStore }: Pick<IUnleashStores, 'apiTokenStore'>,
         config: Pick<IUnleashConfig, 'getLogger'>,
     ) {
-        this.store = stores.apiTokenStore;
+        this.store = apiTokenStore;
         this.logger = config.getLogger('/services/api-token-service.ts');
         this.fetchActiveTokens();
         this.timer = setInterval(
@@ -54,7 +58,7 @@ export class ApiTokenService {
     }
 
     public getUserForToken(secret: string): ApiUser | undefined {
-        const token = this.activeTokens.find(t => t.secret === secret);
+        const token = this.activeTokens.find((t) => t.secret === secret);
         if (token) {
             const permissions =
                 token.type === ApiTokenType.ADMIN ? [ADMIN] : [CLIENT];

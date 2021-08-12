@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE strategies ADD COLUMN deprecated boolean default false
@@ -9,7 +9,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql('ALTER TABLE strategies DROP COLUMN deprecated', cb);
 };
 

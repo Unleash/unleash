@@ -1,4 +1,4 @@
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `CREATE TABLE IF NOT EXISTS tag_types
          (
@@ -30,7 +30,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `DROP TABLE feature_tag;
         DROP TABLE tags;

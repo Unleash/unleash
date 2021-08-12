@@ -1,10 +1,3 @@
-/* eslint-disable no-param-reassign */
-import EventStore, { ICreateEvent } from '../../db/event-store';
-import StrategyStore from '../../db/strategy-store';
-import ClientApplicationsDb from '../../db/client-applications-store';
-import ClientInstanceStore from '../../db/client-instance-store';
-import { ClientMetricsStore } from '../../db/client-metrics-store';
-import FeatureToggleStore from '../../db/feature-toggle-store';
 import { LogProvider } from '../../logger';
 import { applicationSchema } from './metrics-schema';
 import { Projection } from './projection';
@@ -13,61 +6,28 @@ import { APPLICATION_CREATED } from '../../types/events';
 import { IApplication, IYesNoCount } from './models';
 import { IUnleashStores } from '../../types/stores';
 import { IUnleashConfig } from '../../types/option';
+import { IEventStore } from '../../types/stores/event-store';
+import {
+    IClientApplication,
+    IClientApplicationsStore,
+} from '../../types/stores/client-applications-store';
+import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { IStrategyStore } from '../../types/stores/strategy-store';
+import { IClientMetricsStore } from '../../types/stores/client-metrics-store';
+import { IClientInstanceStore } from '../../types/stores/client-instance-store';
+import { IApplicationQuery } from '../../types/query';
+import {
+    IClientApp,
+    ICreateEvent,
+    IMetricCounts,
+    IMetricsBucket,
+} from '../../types/model';
 
-const TTLList = require('./ttl-list');
-const { clientRegisterSchema } = require('./register-schema');
+import TTLList = require('./ttl-list');
+import { clientRegisterSchema } from './register-schema';
 
 const FIVE_SECONDS = 5 * 1000;
 const FIVE_MINUTES = 5 * 60 * 1000;
-
-export interface IClientApp {
-    appName: string;
-    instanceId: string;
-    clientIp?: string;
-    seenToggles?: string[];
-    metricsCount?: number;
-    strategies?: string[] | Record<string, string>[];
-    bucket?: any;
-    count?: number;
-    started?: number | Date;
-    interval?: number;
-    icon?: string;
-    description?: string;
-    color?: string;
-}
-
-export interface IAppFeature {
-    name: string;
-    description: string;
-    type: string;
-    project: string;
-    enabled: boolean;
-    stale: boolean;
-    strategies: any;
-    variants: any[];
-    createdAt: Date;
-    lastSeenAt: Date;
-}
-
-export interface IApplicationQuery {
-    strategyName?: string;
-}
-
-export interface IAppName {
-    appName: string;
-}
-
-export interface IMetricCounts {
-    yes?: number;
-    no?: number;
-    variants?: Record<string, number>;
-}
-
-export interface IMetricsBucket {
-    start: Date;
-    stop: Date;
-    toggles: IMetricCounts;
-}
 
 export default class ClientMetricsService {
     globalCount = 0;
@@ -94,17 +54,17 @@ export default class ClientMetricsService {
 
     private timers: NodeJS.Timeout[] = [];
 
-    private clientMetricsStore: ClientMetricsStore;
+    private clientMetricsStore: IClientMetricsStore;
 
-    private strategyStore: StrategyStore;
+    private strategyStore: IStrategyStore;
 
-    private featureToggleStore: FeatureToggleStore;
+    private featureToggleStore: IFeatureToggleStore;
 
-    private clientApplicationsStore: ClientApplicationsDb;
+    private clientApplicationsStore: IClientApplicationsStore;
 
-    private clientInstanceStore: ClientInstanceStore;
+    private clientInstanceStore: IClientInstanceStore;
 
-    private eventStore: EventStore;
+    private eventStore: IEventStore;
 
     private getLogger: LogProvider;
 
@@ -120,13 +80,14 @@ export default class ClientMetricsService {
             clientInstanceStore,
             clientApplicationsStore,
             eventStore,
-        }: Pick<IUnleashStores,
-        | 'clientMetricsStore'
-        | 'strategyStore'
-        | 'featureToggleStore'
-        | 'clientApplicationsStore'
-        | 'clientInstanceStore'
-        | 'eventStore'
+        }: Pick<
+            IUnleashStores,
+            | 'clientMetricsStore'
+            | 'strategyStore'
+            | 'featureToggleStore'
+            | 'clientApplicationsStore'
+            | 'clientInstanceStore'
+            | 'eventStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         bulkInterval = FIVE_SECONDS,
@@ -144,16 +105,16 @@ export default class ClientMetricsService {
         this.bulkInterval = bulkInterval;
         this.announcementInterval = announcementInterval;
 
-        this.lastHourList.on('expire', toggles => {
-            Object.keys(toggles).forEach(toggleName => {
+        this.lastHourList.on('expire', (toggles) => {
+            Object.keys(toggles).forEach((toggleName) => {
                 this.lastHourProjection.substract(
                     toggleName,
                     this.createCountObject(toggles[toggleName]),
                 );
             });
         });
-        this.lastMinuteList.on('expire', toggles => {
-            Object.keys(toggles).forEach(toggleName => {
+        this.lastMinuteList.on('expire', (toggles) => {
+            Object.keys(toggles).forEach((toggleName) => {
                 this.lastMinuteProjection.substract(
                     toggleName,
                     this.createCountObject(toggles[toggleName]),
@@ -170,7 +131,7 @@ export default class ClientMetricsService {
                 this.announcementInterval,
             ).unref(),
         );
-        clientMetricsStore.on('metrics', m => this.addPayload(m));
+        clientMetricsStore.on('metrics', (m) => this.addPayload(m));
     }
 
     async registerClientMetrics(
@@ -179,7 +140,7 @@ export default class ClientMetricsService {
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
         const toggleNames = Object.keys(value.bucket.toggles);
-        await this.featureToggleStore.lastSeenToggles(toggleNames);
+        await this.featureToggleStore.updateLastSeenForToggles(toggleNames);
         await this.clientMetricsStore.insert(value);
         await this.clientInstanceStore.insert({
             appName: value.appName,
@@ -190,9 +151,10 @@ export default class ClientMetricsService {
 
     async announceUnannounced(): Promise<void> {
         if (this.clientApplicationsStore) {
-            const appsToAnnounce = await this.clientApplicationsStore.setUnannouncedToAnnounced();
+            const appsToAnnounce =
+                await this.clientApplicationsStore.setUnannouncedToAnnounced();
             if (appsToAnnounce.length > 0) {
-                const events = appsToAnnounce.map(app => ({
+                const events = appsToAnnounce.map((app) => ({
                     type: APPLICATION_CREATED,
                     createdBy: app.createdBy || 'unknown',
                     data: app,
@@ -223,6 +185,7 @@ export default class ClientMetricsService {
             const uniqueRegistrations = Object.values(this.seenClients);
             const uniqueApps = Object.values(
                 uniqueRegistrations.reduce((soFar, reg) => {
+                    // eslint-disable-next-line no-param-reassign
                     soFar[reg.appName] = reg;
                     return soFar;
                 }, {}),
@@ -251,7 +214,7 @@ export default class ClientMetricsService {
 
     getAppsWithToggles(): IClientApp[] {
         const apps = [];
-        Object.keys(this.apps).forEach(appName => {
+        Object.keys(this.apps).forEach((appName) => {
             const seenToggles = Object.keys(this.apps[appName].seenToggles);
             const metricsCount = this.apps[appName].count;
             apps.push({ appName, seenToggles, metricsCount });
@@ -267,15 +230,16 @@ export default class ClientMetricsService {
 
     async getSeenApps(): Promise<Record<string, IApplication[]>> {
         const seenApps = this.getSeenAppsPerToggle();
-        const applications: IApplication[] = await this.clientApplicationsStore.getApplications();
+        const applications: IClientApplication[] =
+            await this.clientApplicationsStore.getAll();
         const metaData = applications.reduce((result, entry) => {
             // eslint-disable-next-line no-param-reassign
             result[entry.appName] = entry;
             return result;
         }, {});
 
-        Object.keys(seenApps).forEach(key => {
-            seenApps[key] = seenApps[key].map(entry => {
+        Object.keys(seenApps).forEach((key) => {
+            seenApps[key] = seenApps[key].map((entry) => {
                 if (metaData[entry.appName]) {
                     return { ...entry, ...metaData[entry.appName] };
                 }
@@ -287,23 +251,19 @@ export default class ClientMetricsService {
 
     async getApplications(
         query: IApplicationQuery,
-    ): Promise<Record<string, IApplication>> {
-        return this.clientApplicationsStore.getApplications(query);
+    ): Promise<IClientApplication[]> {
+        return this.clientApplicationsStore.getAppsForStrategy(query);
     }
 
     async getApplication(appName: string): Promise<IApplication> {
         const seenToggles = this.getSeenTogglesByAppName(appName);
-        const [
-            application,
-            instances,
-            strategies,
-            features,
-        ] = await Promise.all([
-            this.clientApplicationsStore.getApplication(appName),
-            this.clientInstanceStore.getByAppName(appName),
-            this.strategyStore.getStrategies(),
-            this.featureToggleStore.getFeatures(),
-        ]);
+        const [application, instances, strategies, features] =
+            await Promise.all([
+                this.clientApplicationsStore.get(appName),
+                this.clientInstanceStore.getByAppName(appName),
+                this.strategyStore.getAll(),
+                this.featureToggleStore.getFeatures(false),
+            ]);
 
         return {
             appName: application.appName,
@@ -312,13 +272,13 @@ export default class ClientMetricsService {
             url: application.url,
             color: application.color,
             icon: application.icon,
-            strategies: application.strategies.map(name => {
-                const found = strategies.find(f => f.name === name);
+            strategies: application.strategies.map((name) => {
+                const found = strategies.find((f) => f.name === name);
                 return found || { name, notFound: true };
             }),
             instances,
-            seenToggles: seenToggles.map(name => {
-                const found = features.find(f => f.name === name);
+            seenToggles: seenToggles.map((name) => {
+                const found = features.find((f) => f.name === name);
                 return found || { name, notFound: true };
             }),
             links: {
@@ -329,9 +289,9 @@ export default class ClientMetricsService {
 
     getSeenAppsPerToggle(): Record<string, IApplication[]> {
         const toggles = {};
-        Object.keys(this.apps).forEach(appName => {
+        Object.keys(this.apps).forEach((appName) => {
             Object.keys(this.apps[appName].seenToggles).forEach(
-                seenToggleName => {
+                (seenToggleName) => {
                     if (!toggles[seenToggleName]) {
                         toggles[seenToggleName] = [];
                     }
@@ -387,7 +347,7 @@ export default class ClientMetricsService {
 
         const toggleNames = Object.keys(toggles);
 
-        toggleNames.forEach(n => {
+        toggleNames.forEach((n) => {
             const countObj = this.createCountObject(toggles[n]);
             this.lastHourProjection.add(n, countObj);
             this.lastMinuteProjection.add(n, countObj);
@@ -398,19 +358,21 @@ export default class ClientMetricsService {
         this.lastMinuteList.add(toggles, stop);
 
         this.globalCount += count;
+        // eslint-disable-next-line no-param-reassign
         app.count += count;
         this.addSeenToggles(app, toggleNames);
     }
 
     addSeenToggles(app: IClientApp, toggleNames: string[]): void {
-        toggleNames.forEach(t => {
+        toggleNames.forEach((t) => {
+            // eslint-disable-next-line no-param-reassign
             app.seenToggles[t] = true;
         });
     }
 
     async deleteApplication(appName: string): Promise<void> {
         await this.clientInstanceStore.deleteForApplication(appName);
-        await this.clientApplicationsStore.deleteApplication(appName);
+        await this.clientApplicationsStore.delete(appName);
     }
 
     async createApplication(input: IApplication): Promise<void> {

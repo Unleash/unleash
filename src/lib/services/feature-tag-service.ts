@@ -1,6 +1,3 @@
-import EventStore from '../db/event-store';
-import FeatureTagStore from '../db/feature-tag-store';
-import TagStore, { ITag } from '../db/tag-store';
 import NotFoundError from '../error/notfound-error';
 import { Logger } from '../logger';
 import { nameSchema } from '../schema/feature-schema';
@@ -8,13 +5,17 @@ import { FEATURE_TAGGED, FEATURE_UNTAGGED, TAG_CREATED } from '../types/events';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { tagSchema } from './tag-schema';
+import { IFeatureTagStore } from '../types/stores/feature-tag-store';
+import { IEventStore } from '../types/stores/event-store';
+import { ITagStore } from '../types/stores/tag-store';
+import { ITag } from '../types/model';
 
 class FeatureTagService {
-    private tagStore: TagStore;
+    private tagStore: ITagStore;
 
-    private featureTagStore: FeatureTagStore;
+    private featureTagStore: IFeatureTagStore;
 
-    private eventStore: EventStore;
+    private eventStore: IEventStore;
 
     private logger: Logger;
 

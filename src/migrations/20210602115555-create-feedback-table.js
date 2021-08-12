@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
       CREATE TABLE IF NOT EXISTS user_feedback 
@@ -15,7 +15,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         DROP INDEX user_feedback_user_id_idx;

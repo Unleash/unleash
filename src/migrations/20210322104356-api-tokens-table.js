@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `CREATE TABLE IF NOT EXISTS api_tokens
           (
@@ -16,6 +16,6 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql('DROP TABLE IF EXISTS api_tokens;', cb);
 };

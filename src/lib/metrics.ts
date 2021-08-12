@@ -31,6 +31,7 @@ export default class MetricsMonitor {
         stores: IUnleashStores,
         version: string,
         eventBus: EventEmitter,
+        db: Knex,
     ): Promise<void> {
         if (!config.server.serverMetrics) {
             return;
@@ -72,7 +73,9 @@ export default class MetricsMonitor {
             featureTogglesTotal.reset();
             let togglesCount;
             try {
-                togglesCount = await featureToggleStore.count();
+                togglesCount = await featureToggleStore.count({
+                    archived: false,
+                });
                 // eslint-disable-next-line no-empty
             } catch (e) {}
 
@@ -110,7 +113,7 @@ export default class MetricsMonitor {
             featureToggleUpdateTotal.labels(data.name).inc();
         });
 
-        clientMetricsStore.on('metrics', m => {
+        clientMetricsStore.on('metrics', (m) => {
             // eslint-disable-next-line no-restricted-syntax
             for (const entry of Object.entries(m.bucket.toggles)) {
                 featureToggleUsageTotal
@@ -124,7 +127,7 @@ export default class MetricsMonitor {
             }
         });
 
-        this.configureDbMetrics(stores.db, eventBus);
+        this.configureDbMetrics(db, eventBus);
     }
 
     stopMonitoring(): void {
@@ -154,16 +157,14 @@ export default class MetricsMonitor {
             });
             const dbPoolPendingCreates = new client.Gauge({
                 name: 'db_pool_pending_creates',
-                help:
-                    'how many asynchronous create calls are running in DB pool',
+                help: 'how many asynchronous create calls are running in DB pool',
             });
             const dbPoolPendingAcquires = new client.Gauge({
                 name: 'db_pool_pending_acquires',
-                help:
-                    'how many acquires are waiting for a resource to be released in DB pool',
+                help: 'how many acquires are waiting for a resource to be released in DB pool',
             });
 
-            eventBus.on(DB_POOL_UPDATE, data => {
+            eventBus.on(DB_POOL_UPDATE, (data) => {
                 dbPoolFree.set(data.free);
                 dbPoolUsed.set(data.used);
                 dbPoolPendingCreates.set(data.pendingCreates);

@@ -19,7 +19,7 @@ class MetricsController extends Controller {
         }: Pick<IUnleashServices, 'clientMetricsService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/metrics.js');
+        this.logger = config.getLogger('/admin-api/metrics.ts');
 
         this.metrics = clientMetricsService;
 

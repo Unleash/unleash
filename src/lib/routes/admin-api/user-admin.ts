@@ -10,6 +10,7 @@ import { EmailService } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
 import { IUnleashServices } from '../../types/services';
 import SessionService from '../../services/session-service';
+import { IAuthRequest } from '../unleash-types';
 
 export default class UserAdminController extends Controller {
     private userService: UserService;
@@ -65,10 +66,8 @@ export default class UserAdminController extends Controller {
         const { user } = req;
         try {
             const receiver = req.body.id;
-            const resetPasswordUrl = await this.userService.createResetPasswordEmail(
-                receiver,
-                user,
-            );
+            const resetPasswordUrl =
+                await this.userService.createResetPasswordEmail(receiver, user);
             res.json({ resetPasswordUrl });
         } catch (e) {
             handleErrors(res, this.logger, e);
@@ -76,13 +75,14 @@ export default class UserAdminController extends Controller {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async getUsers(req, res): Promise<void> {
+    async getUsers(req: Request, res: Response): Promise<void> {
         try {
             const users = await this.userService.getAll();
             const rootRoles = await this.accessService.getRootRoles();
-            const inviteLinks = await this.resetTokenService.getActiveInvitations();
+            const inviteLinks =
+                await this.resetTokenService.getActiveInvitations();
 
-            const usersWithInviteLinks = users.map(user => {
+            const usersWithInviteLinks = users.map((user) => {
                 const inviteLink = inviteLinks[user.id] || '';
                 return { ...user, inviteLink };
             });
@@ -104,8 +104,8 @@ export default class UserAdminController extends Controller {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async search(req, res): Promise<void> {
-        const { q } = req.query;
+    async search(req: Request, res: Response): Promise<void> {
+        const { q } = req.query as any;
         try {
             const users =
                 q && q.length > 1 ? await this.userService.search(q) : [];
@@ -117,7 +117,7 @@ export default class UserAdminController extends Controller {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async createUser(req, res): Promise<void> {
+    async createUser(req: IAuthRequest, res: Response): Promise<void> {
         const { username, email, name, rootRole } = req.body;
         const { user } = req;
 
@@ -171,8 +171,7 @@ export default class UserAdminController extends Controller {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async updateUser(req, res): Promise<void> {
+    async updateUser(req: IAuthRequest, res: Response): Promise<void> {
         const { user, params, body } = req;
 
         const { id } = params;
@@ -195,8 +194,7 @@ export default class UserAdminController extends Controller {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async deleteUser(req, res): Promise<void> {
+    async deleteUser(req: IAuthRequest, res: Response): Promise<void> {
         const { user, params } = req;
         const { id } = params;
 
@@ -208,8 +206,7 @@ export default class UserAdminController extends Controller {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async validatePassword(req, res): Promise<void> {
+    async validatePassword(req: IAuthRequest, res: Response): Promise<void> {
         const { password } = req.body;
 
         try {
@@ -220,8 +217,7 @@ export default class UserAdminController extends Controller {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async changePassword(req, res): Promise<void> {
+    async changePassword(req: IAuthRequest, res: Response): Promise<void> {
         const { id } = req.params;
         const { password } = req.body;
 

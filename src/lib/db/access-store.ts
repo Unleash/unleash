@@ -2,6 +2,13 @@ import { EventEmitter } from 'events';
 import { Knex } from 'knex';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
+import { Logger } from '../logger';
+import {
+    IAccessStore,
+    IRole,
+    IUserPermission,
+    IUserRole,
+} from '../types/stores/access-store';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -9,26 +16,8 @@ const T = {
     ROLE_PERMISSION: 'role_permission',
 };
 
-export interface IUserPermission {
-    project?: string;
-    permission: string;
-}
-
-export interface IRole {
-    id: number;
-    name: string;
-    description?: string;
-    type: string;
-    project?: string;
-}
-
-export interface IUserRole {
-    roleId: number;
-    userId: number;
-}
-
-export class AccessStore {
-    private logger: Function;
+export class AccessStore implements IAccessStore {
+    private logger: Logger;
 
     private timer: Function;
 
@@ -36,12 +25,43 @@ export class AccessStore {
 
     constructor(db: Knex, eventBus: EventEmitter, getLogger: Function) {
         this.db = db;
-        this.logger = getLogger('access-store.js');
+        this.logger = getLogger('access-store.ts');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'access-store',
                 action,
             });
+    }
+
+    async delete(key: number): Promise<void> {
+        await this.db(T.ROLES).where({ id: key }).del();
+    }
+
+    async deleteAll(): Promise<void> {
+        await this.db(T.ROLES).del();
+    }
+
+    destroy(): void {}
+
+    async exists(key: number): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${T.ROLES} WHERE id = ?) AS present`,
+            [key],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async get(key: number): Promise<IRole> {
+        return this.db
+            .select(['id', 'name', 'type', 'description'])
+            .where('id', key)
+            .first()
+            .from<IRole>(T.ROLES);
+    }
+
+    async getAll(): Promise<IRole[]> {
+        return Promise.resolve([]);
     }
 
     async getPermissionsForUser(userId: number): Promise<IUserPermission[]> {
@@ -110,12 +130,12 @@ export class AccessStore {
             .where('ru.user_id', '=', userId);
     }
 
-    async getUserIdsForRole(roleId: number): Promise<IRole[]> {
+    async getUserIdsForRole(roleId: number): Promise<number[]> {
         const rows = await this.db
             .select(['user_id'])
             .from<IRole>(T.ROLE_USER)
             .where('role_id', roleId);
-        return rows.map(r => r.user_id);
+        return rows.map((r) => r.user_id);
     }
 
     async addUserToRole(userId: number, roleId: number): Promise<void> {
@@ -155,9 +175,20 @@ export class AccessStore {
         description?: string,
     ): Promise<IRole> {
         const [id] = await this.db(T.ROLES)
-            .insert({ name, description, type, project })
+            .insert({
+                name,
+                description,
+                type,
+                project,
+            })
             .returning('id');
-        return { id, name, description, type, project };
+        return {
+            id,
+            name,
+            description,
+            type,
+            project,
+        };
     }
 
     async addPermissionsToRole(
@@ -165,7 +196,7 @@ export class AccessStore {
         permissions: string[],
         projectId?: string,
     ): Promise<void> {
-        const rows = permissions.map(permission => ({
+        const rows = permissions.map((permission) => ({
             role_id,
             project: projectId,
             permission,
@@ -195,7 +226,7 @@ export class AccessStore {
             .leftJoin(`${T.ROLE_USER} AS ru`, 'r.id', 'ru.role_id')
             .where('r.type', '=', 'root');
 
-        return rows.map(row => ({
+        return rows.map((row) => ({
             roleId: +row.id,
             userId: +row.user_id,
         }));

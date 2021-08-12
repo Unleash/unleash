@@ -5,18 +5,17 @@
     },
     "extends": [
         "airbnb-typescript/base",
-        "prettier"
+        "plugin:prettier/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2019,
         "project": "./tsconfig.json"
     },
-    "plugins": ["prettier","@typescript-eslint"],
+    "plugins": ["@typescript-eslint","prettier"],
     "root": true,
     "rules": {
         "@typescript-eslint/no-var-requires": 0,
-        "@typescript-eslint/indent": ["error", 4],
         "@typescript-eslint/naming-convention": 0,
         "@typescript-eslint/space-before-function-paren": 0,
         "import/prefer-default-export": 0,
@@ -46,9 +45,14 @@
             "files": ["*.ts", "*.tsx"],
             "rules": {
                 "@typescript-eslint/explicit-module-boundary-types": ["error"],
-                "@typescript-eslint/indent": ["error"],
                 "@typescript-eslint/naming-convention": ["error"],
                 "@typescript-eslint/space-before-function-paren": ["error"]
+            }
+        },
+        {
+            "files": ["src/test/e2e/helpers/test-helper.ts"],
+            "rules": {
+                "import/no-extraneous-dependencies": "off"
             }
         }
     ],

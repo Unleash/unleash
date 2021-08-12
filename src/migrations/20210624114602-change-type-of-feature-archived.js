@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE features ALTER COLUMN archived DROP DEFAULT;
@@ -11,7 +11,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE features ALTER COLUMN archived DROP DEFAULT;

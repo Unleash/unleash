@@ -7,12 +7,12 @@ title: Google Auth Hook
 
 This part of the tutorial shows how to create a sign-in flow for users and integrate with Unleash server project. The implementation assumes that I am working in `localhost` with `4242` port.
 
-This is a simple `index.js` server file.
+This is a simple `index.ts` server file.
 
 ```javascript
 const unleash = require('unleash-server');
 
-unleash.start(options).then(unleash => {
+unleash.start(options).then((unleash) => {
   console.log(`Unleash started on http://localhost:${unleash.app.get('port')}`);
 });
 ```
@@ -41,13 +41,13 @@ http://localhost:4242/api/auth/callback
 
 ### Add dependencies {#add-dependencies}
 
-Add two dependencies [`@passport-next/passport`](https://www.npmjs.com/package/@passport-next/passport) and [`@passport-next/passport-google-oauth2`](https://www.npmjs.com/package/@passport-next/passport-google-oauth2) inside `index.js` file
+Add two dependencies [`@passport-next/passport`](https://www.npmjs.com/package/@passport-next/passport) and [`@passport-next/passport-google-oauth2`](https://www.npmjs.com/package/@passport-next/passport-google-oauth2) inside `index.ts` file
 
 ```js
 const unleash = require('unleash-server');
 const passport = require('@passport-next/passport');
-const GoogleOAuth2Strategy = require('@passport-next/passport-google-oauth2')
-  .Strategy;
+const GoogleOAuth2Strategy =
+  require('@passport-next/passport-google-oauth2').Strategy;
 ```
 
 ### Configure the Google strategy for use by Passport.js {#configure-the-google-strategy-for-use-by-passportjs}
@@ -66,7 +66,7 @@ passport.use(
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: GOOGLE_CALLBACK_URL,
     },
-    function(accessToken, refreshToken, profile, cb) {
+    function (accessToken, refreshToken, profile, cb) {
       // Extract the minimal profile information we need from the profile object
       // and connect with Unleash to get name and email.
       cb(
@@ -91,7 +91,7 @@ let options = {
   preRouterHook: googleAdminAuth,
 };
 
-unleash.start(options).then(instance => {
+unleash.start(options).then((instance) => {
   console.log(
     `Unleash started on http://localhost:${instance.app.get('port')}`,
   );
@@ -172,7 +172,7 @@ function googleAdminAuth(app) {
 
 ### The complete code {#the-complete-code}
 
-The `index.js` server file.
+The `index.ts` server file.
 
 ```js
 'use strict';
@@ -247,7 +247,7 @@ const options = {
   preRouterHook: googleAdminAuth,
 };
 
-unleash.start(options).then(instance => {
+unleash.start(options).then((instance) => {
   console.log(
     `Unleash started on http://localhost:${instance.app.get('port')}`,
   );

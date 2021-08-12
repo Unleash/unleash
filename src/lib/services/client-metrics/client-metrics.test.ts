@@ -1,12 +1,13 @@
 import EventEmitter from 'events';
 import moment from 'moment';
-import ClientMetricsService, { IClientApp } from './index';
+import ClientMetricsService from './index';
 import getLogger from '../../../test/fixtures/no-logger';
+import { IClientApp } from '../../types/model';
 
 const appName = 'appName';
 const instanceId = 'instanceId';
 
-const createMetricsService = cms =>
+const createMetricsService = (cms) =>
     new ClientMetricsService(
         {
             clientMetricsStore: cms,
@@ -236,7 +237,7 @@ test('should have correct values for lastMinute', () => {
         },
     ];
 
-    input.forEach(bucket => {
+    input.forEach((bucket) => {
         clientMetricsStore.emit('metrics', {
             appName,
             instanceId,
@@ -301,7 +302,7 @@ test('should have correct values for lastHour', () => {
         },
     ];
 
-    input.forEach(bucket => {
+    input.forEach((bucket) => {
         clientMetricsStore.emit('metrics', {
             appName,
             instanceId,

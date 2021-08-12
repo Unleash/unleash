@@ -1,9 +1,8 @@
-// eslint-disable-next-line
 import EventEmitter from 'events';
+import { Knex } from 'knex';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 
-import { createDb } from './db-pool';
 import EventStore from './event-store';
 import FeatureToggleStore from './feature-toggle-store';
 import FeatureTypeStore from './feature-type-store';
@@ -27,23 +26,27 @@ import UserFeedbackStore from './user-feedback-store';
 import FeatureStrategyStore from './feature-strategy-store';
 import EnvironmentStore from './environment-store';
 import FeatureTagStore from './feature-tag-store';
+import { FeatureEnvironmentStore } from './feature-environment-store';
 
 export const createStores = (
     config: IUnleashConfig,
     eventBus: EventEmitter,
+    db: Knex,
 ): IUnleashStores => {
     const { getLogger } = config;
-    const db = createDb(config);
     const eventStore = new EventStore(db, getLogger);
     const clientMetricsDb = new ClientMetricsDb(db, getLogger);
 
     return {
-        db,
         eventStore,
         featureToggleStore: new FeatureToggleStore(db, eventBus, getLogger),
         featureTypeStore: new FeatureTypeStore(db, getLogger),
         strategyStore: new StrategyStore(db, getLogger),
-        clientApplicationsStore: new ClientApplicationsStore(db, eventBus),
+        clientApplicationsStore: new ClientApplicationsStore(
+            db,
+            eventBus,
+            getLogger,
+        ),
         clientInstanceStore: new ClientInstanceStore(db, eventBus, getLogger),
         clientMetricsStore: new ClientMetricsStore(
             clientMetricsDb,
@@ -69,6 +72,11 @@ export const createStores = (
         ),
         environmentStore: new EnvironmentStore(db, eventBus, getLogger),
         featureTagStore: new FeatureTagStore(db, eventBus, getLogger),
+        featureEnvironmentStore: new FeatureEnvironmentStore(
+            db,
+            eventBus,
+            getLogger,
+        ),
     };
 };
 

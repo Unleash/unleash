@@ -1,8 +1,11 @@
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { ApiTokenService } from '../../../lib/services/api-token-service';
-import { ApiTokenType, IApiToken } from '../../../lib/db/api-token-store';
 import { createTestConfig } from '../../config/test-config';
+import {
+    ApiTokenType,
+    IApiToken,
+} from '../../../lib/types/stores/api-token-store';
 
 let db;
 let stores;

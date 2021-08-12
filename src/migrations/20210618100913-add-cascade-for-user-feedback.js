@@ -1,4 +1,4 @@
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE user_feedback DROP CONSTRAINT user_feedback_user_id_fkey;
@@ -11,6 +11,6 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
-    db.runSql(``, cb);
+exports.down = function (db, cb) {
+    db.runSql('', cb);
 };

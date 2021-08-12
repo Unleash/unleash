@@ -1,4 +1,4 @@
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         CREATE TABLE project_environments (
@@ -11,8 +11,8 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
-    db.runSql(`DROP TABLE project_environments`, cb);
+exports.down = function (db, cb) {
+    db.runSql('DROP TABLE project_environments', cb);
 };
 
 exports._meta = {

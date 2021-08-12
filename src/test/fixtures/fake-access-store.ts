@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-    AccessStore,
-    IRole,
-    IUserRole,
-    IUserPermission,
-} from '../../lib/db/access-store';
 import noLoggerProvider from './no-logger';
+import {
+    IAccessStore,
+    IRole,
+    IUserPermission,
+    IUserRole,
+} from '../../lib/types/stores/access-store';
 
-class AccessStoreMock extends AccessStore {
-    constructor() {
-        super(undefined, undefined, noLoggerProvider);
-    }
+class AccessStoreMock implements IAccessStore {
+    userPermissions: IUserPermission[] = [];
+
+    roles: IRole[] = [];
 
     getPermissionsForUser(userId: Number): Promise<IUserPermission[]> {
         return Promise.resolve([]);
@@ -40,7 +40,7 @@ class AccessStoreMock extends AccessStore {
         return Promise.resolve([]);
     }
 
-    getUserIdsForRole(roleId: number): Promise<IRole[]> {
+    getUserIdsForRole(roleId: number): Promise<number[]> {
         throw new Error('Method not implemented.');
     }
 
@@ -79,6 +79,36 @@ class AccessStoreMock extends AccessStore {
 
     getRootRoleForAllUsers(): Promise<IUserRole[]> {
         throw new Error('Method not implemented.');
+    }
+
+    delete(key: number): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
+    deleteAll(): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
+    destroy(): void {}
+
+    exists(key: number): Promise<boolean> {
+        return Promise.resolve(false);
+    }
+
+    get(key: number): Promise<IRole> {
+        return Promise.resolve(undefined);
+    }
+
+    getAll(): Promise<IRole[]> {
+        return Promise.resolve([]);
+    }
+
+    getRootRoles(): Promise<IRole[]> {
+        return Promise.resolve([]);
+    }
+
+    removeRolesOfTypeForUser(userId: number, roleType: string): Promise<void> {
+        return Promise.resolve(undefined);
     }
 }
 

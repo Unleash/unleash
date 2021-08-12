@@ -46,7 +46,7 @@ test('Can list all existing environments', async () => {
         .get('/api/admin/environments')
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.version).toBe(1);
             expect(res.body.environments[0]).toStrictEqual({
                 displayName: 'Across all environments',
@@ -87,9 +87,11 @@ test('Can update environment', async () => {
         .put(`/api/admin/environments/${envName}`)
         .send({ displayName: 'Update this' })
         .expect(200);
-    await app.request.get(`/api/admin/environments/${envName}`).expect(res => {
-        expect(res.body.displayName).toBe('Update this');
-    });
+    await app.request
+        .get(`/api/admin/environments/${envName}`)
+        .expect((res) => {
+            expect(res.body.displayName).toBe('Update this');
+        });
 });
 
 test('Updating a non existing environment yields 404', async () => {

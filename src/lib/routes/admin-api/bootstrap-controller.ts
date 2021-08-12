@@ -3,15 +3,9 @@ import Controller from '../controller';
 import { AuthedRequest } from '../../types/core';
 import { Logger } from '../../logger';
 import ContextService from '../../services/context-service';
-import FeatureTypeStore, { IFeatureType } from '../../db/feature-type-store';
 import TagTypeService from '../../services/tag-type-service';
 import StrategyService from '../../services/strategy-service';
 import ProjectService from '../../services/project-service';
-import { IContextField } from '../../db/context-field-store';
-import { ITagType } from '../../db/tag-type-store';
-import { IProject } from '../../db/project-store';
-import { IStrategy } from '../../db/strategy-store';
-import { IUserPermission } from '../../db/access-store';
 import { AccessService } from '../../services/access-service';
 import { EmailService } from '../../services/email-service';
 import { IUnleashConfig } from '../../types/option';
@@ -19,6 +13,12 @@ import { IUnleashServices } from '../../types/services';
 import VersionService from '../../services/version-service';
 import FeatureTypeService from '../../services/feature-type-service';
 import version from '../../util/version';
+import { IContextField } from '../../types/stores/context-field-store';
+import { IFeatureType } from '../../types/stores/feature-type-store';
+import { ITagType } from '../../types/stores/tag-type-store';
+import { IStrategy } from '../../types/stores/strategy-store';
+import { IProject } from '../../types/stores/project-store';
+import { IUserPermission } from '../../types/stores/access-store';
 
 class BootstrapController extends Controller {
     private logger: Logger;

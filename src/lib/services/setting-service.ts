@@ -23,6 +23,10 @@ export default class SettingService {
     async insert(id: string, value: object): Promise<void> {
         return this.settingStore.insert(id, value);
     }
+
+    async delete(id: string): Promise<void> {
+        return this.settingStore.delete(id);
+    }
 }
 
 module.exports = SettingService;

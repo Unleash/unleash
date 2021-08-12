@@ -2,6 +2,7 @@ import { createTransport, Transporter } from 'nodemailer';
 import Mustache from 'mustache';
 import path from 'path';
 import { readFileSync, existsSync } from 'fs';
+import { escape } from 'querystring';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import { IEmailOption } from '../types/option';
@@ -57,7 +58,9 @@ export class EmailService {
             if (email.host === 'test') {
                 this.mailer = createTransport({ jsonTransport: true });
             } else {
-                const connectionString = `${email.smtpuser}:${email.smtppass}@${email.host}:${email.port}`;
+                const connectionString = escape(
+                    `${email.smtpuser}:${email.smtppass}@${email.host}:${email.port}`,
+                );
                 this.mailer = email.secure
                     ? createTransport(`smtps://${connectionString}`)
                     : createTransport(`smtp://${connectionString}`);

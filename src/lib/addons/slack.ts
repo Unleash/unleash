@@ -123,7 +123,7 @@ This was changed by ${createdBy}.`;
         const stale = data.stale ? '("stale")' : '';
         const typeStr = `*Type*: ${data.type}`;
         const project = `*Project*: ${data.project}`;
-        const strategies = `*Activation strategies*: \`\`\`${YAML.dump(
+        const strategies = `*Activation strategies*: \`\`\`${YAML.safeDump(
             data.strategies,
             { skipInvalid: true },
         )}\`\`\``;

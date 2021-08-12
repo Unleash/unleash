@@ -9,7 +9,7 @@ import getLogger from '../fixtures/no-logger';
 import { createConfig } from '../../lib/create-config';
 
 function mergeAll<T>(objects: Partial<T>[]): T {
-    return merge.all<T>(objects.filter(i => i));
+    return merge.all<T>(objects.filter((i) => i));
 }
 
 export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {

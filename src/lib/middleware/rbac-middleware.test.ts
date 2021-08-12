@@ -1,16 +1,17 @@
 import rbacMiddleware from './rbac-middleware';
-import ffStore from '../../test/fixtures/fake-feature-toggle-store';
 import User from '../types/user';
 import * as perms from '../types/permissions';
 import { IUnleashConfig } from '../types/option';
 import { createTestConfig } from '../../test/config/test-config';
 import ApiUser from '../types/api-user';
+import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
+import FakeFeatureToggleStore from '../../test/fixtures/fake-feature-toggle-store';
 
 let config: IUnleashConfig;
-let featureToggleStore: any;
+let featureToggleStore: IFeatureToggleStore;
 
 beforeEach(() => {
-    featureToggleStore = ffStore();
+    featureToggleStore = new FakeFeatureToggleStore();
     config = createTestConfig();
 });
 
@@ -206,7 +207,6 @@ test('should lookup projectId from feature toggle', async () => {
         perms.UPDATE_FEATURE,
         projectId,
     );
-    expect(featureToggleStore.getProjectId.mock.calls[0][0]).toBe(featureName);
 });
 
 test('should lookup projectId from data', async () => {

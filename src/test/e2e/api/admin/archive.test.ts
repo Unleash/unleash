@@ -20,7 +20,7 @@ test('Should get empty features via admin', async () => {
         .get('/api/admin/archive/features')
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.features).toHaveLength(0);
         });
 });
@@ -63,7 +63,7 @@ test('Should get archived toggles via admin', async () => {
         .get('/api/admin/archive/features')
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.features).toHaveLength(2);
         });
 });

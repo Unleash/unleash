@@ -1,4 +1,4 @@
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         CREATE TABLE unleash_session (
@@ -13,7 +13,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         DROP INDEX idx_unleash_session_expired;

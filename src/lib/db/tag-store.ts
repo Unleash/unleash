@@ -4,6 +4,8 @@ import { DB_TIME } from '../metric-events';
 import metricsHelper from '../util/metrics-helper';
 import { LogProvider, Logger } from '../logger';
 import NotFoundError from '../error/notfound-error';
+import { ITag } from '../types/model';
+import { ITagStore } from '../types/stores/tag-store';
 
 const COLUMNS = ['type', 'value'];
 const TABLE = 'tags';
@@ -13,12 +15,7 @@ interface ITagTable {
     value: string;
 }
 
-export interface ITag {
-    type: string;
-    value: string;
-}
-
-export default class TagStore {
+export default class TagStore implements ITagStore {
     private db: Knex;
 
     private logger: Logger;
@@ -27,8 +24,8 @@ export default class TagStore {
 
     constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('tag-store.js');
-        this.timer = action =>
+        this.logger = getLogger('tag-store.ts');
+        this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'tag',
                 action,
@@ -37,10 +34,7 @@ export default class TagStore {
 
     async getTagsByType(type: string): Promise<ITag[]> {
         const stopTimer = this.timer('getTagByType');
-        const rows = await this.db
-            .select(COLUMNS)
-            .from(TABLE)
-            .where({ type });
+        const rows = await this.db.select(COLUMNS).from(TABLE).where({ type });
         stopTimer();
         return rows.map(this.rowToTag);
     }
@@ -84,16 +78,14 @@ export default class TagStore {
         stopTimer();
     }
 
-    async deleteTag(tag: ITag): Promise<void> {
+    async delete(tag: ITag): Promise<void> {
         const stopTimer = this.timer('deleteTag');
-        await this.db(TABLE)
-            .where(tag)
-            .del();
+        await this.db(TABLE).where(tag).del();
         stopTimer();
     }
 
-    async dropTags(): Promise<void> {
-        const stopTimer = this.timer('dropTags');
+    async deleteAll(): Promise<void> {
+        const stopTimer = this.timer('deleteAll');
         await this.db(TABLE).del();
         stopTimer();
     }
@@ -104,6 +96,23 @@ export default class TagStore {
             .returning(COLUMNS)
             .onConflict(['type', 'value'])
             .ignore();
+    }
+
+    destroy(): void {}
+
+    async get({ type, value }: ITag): Promise<ITag> {
+        const stopTimer = this.timer('getTag');
+        const tag = await this.db
+            .first(COLUMNS)
+            .from(TABLE)
+            .where({ type, value });
+        stopTimer();
+        if (!tag) {
+            throw new NotFoundError(
+                `No tag with type: [${type}] and value [${value}]`,
+            );
+        }
+        return tag;
     }
 
     rowToTag(row: ITagTable): ITag {

@@ -25,7 +25,7 @@ test('Trying to add a strategy configuration to environment not connected to tog
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.name).toBe('com.test.feature');
             expect(res.body.createdAt).toBeTruthy();
         });
@@ -40,7 +40,7 @@ test('Trying to add a strategy configuration to environment not connected to tog
             },
         })
         .expect(400)
-        .expect(r => {
+        .expect((r) => {
             expect(r.body.details[0].message).toBe(
                 'You have not added the current environment to the project',
             );
@@ -57,14 +57,14 @@ test('Can get project overview', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.name).toBe('project-overview');
             expect(res.body.createdAt).toBeTruthy();
         });
     await app.request
         .get('/api/admin/projects/default')
         .expect(200)
-        .expect(r => {
+        .expect((r) => {
             expect(r.body.name).toBe('Default');
             expect(r.body.features).toHaveLength(2);
             expect(r.body.members).toBe(0);
@@ -79,18 +79,18 @@ test('Can get features for project', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.name).toBe('features-for-project');
             expect(res.body.createdAt).toBeTruthy();
         });
     await app.request
         .get('/api/admin/projects/default/features')
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.version).toBeTruthy();
             expect(
                 res.body.features.some(
-                    feature => feature.name === 'features-for-project',
+                    (feature) => feature.name === 'features-for-project',
                 ),
             ).toBeTruthy();
         });
@@ -106,7 +106,7 @@ test('Project overview includes environment connected to feature', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.name).toBe('com.test.environment');
             expect(res.body.createdAt).toBeTruthy();
         });
@@ -122,7 +122,7 @@ test('Project overview includes environment connected to feature', async () => {
     return app.request
         .get('/api/admin/projects/default')
         .expect(200)
-        .expect(r => {
+        .expect((r) => {
             expect(r.body.features[0].environments[0].name).toBe(':global:');
             expect(r.body.features[0].environments[1].name).toBe(
                 'project-overview',
@@ -140,7 +140,7 @@ test('Disconnecting environment from project, removes environment from features 
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.name).toBe('com.test.disconnect.environment');
             expect(res.body.createdAt).toBeTruthy();
         });
@@ -159,10 +159,10 @@ test('Disconnecting environment from project, removes environment from features 
     return app.request
         .get('/api/admin/projects/default')
         .expect(200)
-        .expect(r => {
+        .expect((r) => {
             expect(
                 r.body.features.some(
-                    e => e.environment === 'dis-project-overview',
+                    (e) => e.environment === 'dis-project-overview',
                 ),
             ).toBeFalsy();
         });
@@ -196,13 +196,13 @@ test('Can enable/disable environment for feature', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.name).toBe('com.test.enable.environment');
             expect(res.body.createdAt).toBeTruthy();
         });
     await app.request
         .post(
-            `/api/admin/projects/default/features/com.test.enable.environment/environments/enable-feature-environment/on`,
+            '/api/admin/projects/default/features/com.test.enable.environment/environments/enable-feature-environment/on',
         )
         .send({})
         .expect(200);
@@ -210,16 +210,16 @@ test('Can enable/disable environment for feature', async () => {
         .get('/api/admin/projects/default/features/com.test.enable.environment')
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             const enabledFeatureEnv = res.body.environments.find(
-                e => e.name === 'enable-feature-environment',
+                (e) => e.name === 'enable-feature-environment',
             );
             expect(enabledFeatureEnv).toBeTruthy();
             expect(enabledFeatureEnv.enabled).toBe(true);
         });
     await app.request
         .post(
-            `/api/admin/projects/default/features/com.test.enable.environment/environments/enable-feature-environment/off`,
+            '/api/admin/projects/default/features/com.test.enable.environment/environments/enable-feature-environment/off',
         )
         .send({})
         .expect(200);
@@ -227,16 +227,16 @@ test('Can enable/disable environment for feature', async () => {
         .get('/api/admin/projects/default/features/com.test.enable.environment')
         .expect(200)
         .expect('Content-Type', /json/)
-        .expect(res => {
+        .expect((res) => {
             const disabledFeatureEnv = res.body.environments.find(
-                e => e.name === 'enable-feature-environment',
+                (e) => e.name === 'enable-feature-environment',
             );
             expect(disabledFeatureEnv).toBeTruthy();
             expect(disabledFeatureEnv.enabled).toBe(false);
         });
 });
 
-test(`Trying to get a project that doesn't exist yields 404`, async () => {
+test("Trying to get a project that doesn't exist yields 404", async () => {
     await app.request.get('/api/admin/projects/nonexisting').expect(404);
 });
 
@@ -244,7 +244,7 @@ test('Trying to get features for non-existing project also yields 404', async ()
     await app.request
         .get('/api/admin/projects/nonexisting/features')
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.features).toHaveLength(0);
         });
 });
@@ -256,7 +256,7 @@ test('Can use new project feature toggle endpoint to create feature toggle witho
             name: 'new.toggle.without.strategy',
         })
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.project).toBe('default');
         });
 });
@@ -277,7 +277,7 @@ test('Trying to create toggle that already exists yield 409 error', async () => 
             name: 'already.exists.test',
         })
         .expect(201)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.project).toBe('default');
         });
     await app.request
@@ -290,7 +290,7 @@ test('Trying to create toggle that already exists yield 409 error', async () => 
 
 test('Trying to create toggle under project that does not exist should fail', async () => {
     await app.request
-        .post('/api/admin/projects/non-existing/features')
+        .post('/api/admin/projects/non-existing-secondary/features')
         .send({
             name: 'project.does.not.exist',
         })
@@ -325,7 +325,7 @@ test('Can get environment info for feature toggle', async () => {
             `/api/admin/projects/default/features/environment.info/environments/${envName}`,
         )
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.enabled).toBe(false);
             expect(res.body.environment).toBe(envName);
             expect(res.body.strategies).toHaveLength(0);
@@ -339,7 +339,7 @@ test('Getting environment info for environment that does not exist yields 404', 
         .expect(201);
     await app.request
         .get(
-            `/api/admin/projects/default/features/non.existing.env/environments/non.existing.environment`,
+            '/api/admin/projects/default/features/non.existing.env/environments/non.existing.environment',
         )
         .expect(404);
 });
@@ -351,13 +351,13 @@ test('Trying to toggle environment that does not exist yields 404', async () => 
         .expect(201);
     await app.request
         .post(
-            `/api/admin/projects/default/features/toggle.env/environments/does-not-exist/on`,
+            '/api/admin/projects/default/features/toggle.env/environments/does-not-exist/on',
         )
         .send({})
         .expect(404);
     await app.request
         .post(
-            `/api/admin/projects/default/features/toggle.env/environments/does-not-exist/off`,
+            '/api/admin/projects/default/features/toggle.env/environments/does-not-exist/off',
         )
         .send({})
         .expect(404);
@@ -365,7 +365,7 @@ test('Trying to toggle environment that does not exist yields 404', async () => 
 
 test('Getting feature that does not exist should yield 404', async () => {
     await app.request
-        .get(`/api/admin/projects/default/features/non.existing.feature`)
+        .get('/api/admin/projects/default/features/non.existing.feature')
         .expect(404);
 });
 
@@ -405,7 +405,7 @@ test('Can add strategy to feature toggle', async () => {
         .expect(200);
     await app.request
         .get(`/api/admin/projects/default/features/${featureName}`)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.environments[0].strategies).toHaveLength(1);
         });
 });
@@ -449,7 +449,7 @@ test('Can get strategies for feature and environment', async () => {
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
         )
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body).toHaveLength(1);
             expect(res.body[0].parameters.userId).toBe('string');
         });
@@ -503,7 +503,7 @@ test('Can update a strategy based on id', async () => {
             },
         })
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             strategy = res.body;
         });
 
@@ -518,7 +518,7 @@ test('Can update a strategy based on id', async () => {
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
         )
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
             expect(res.body.parameters.companyId).toBeTruthy();
             expect(res.body.parameters.userId).toBeTruthy();
         });

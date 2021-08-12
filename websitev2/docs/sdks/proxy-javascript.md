@@ -3,7 +3,7 @@ id: proxy-javascript
 title: JavaScript Proxy SDK
 ---
 
-In this guide we explain how to use feature toggles in a Single Page App via [The Unleash Proxy](/sdks/unleash-proxy). You can also checkout the source code for the [JavaScript Proxy SDK](https://github.com/unleash-hosted/unleash-proxy-client-js).
+In this guide we explain how to use feature toggles in a Single Page App via [The Unleash Proxy](/sdks/unleash-proxy). You can also checkout the source code for the [JavaScript Proxy SDK](https://github.com/unleash/unleash-proxy-client-js).
 
 ### Introduction {#introduction}
 

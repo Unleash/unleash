@@ -1,5 +1,3 @@
-'use strict';
-
 class NameExistsError extends Error {
     constructor(message: string) {
         super();

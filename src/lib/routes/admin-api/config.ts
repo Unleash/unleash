@@ -1,5 +1,3 @@
-'use strict';
-
 import { Request, Response } from 'express';
 import { IUnleashServices } from '../../types/services';
 import { IUnleashConfig } from '../../types/option';

@@ -1,9 +1,13 @@
-'use strict';
-
-import ContextFieldStore from '../db/context-field-store';
-import EventStore from '../db/event-store';
-import ProjectStore from '../db/project-store';
 import { Logger } from '../logger';
+import {
+    IContextField,
+    IContextFieldDto,
+    IContextFieldStore,
+} from '../types/stores/context-field-store';
+import { IEventStore } from '../types/stores/event-store';
+import { IProjectStore } from '../types/stores/project-store';
+import { IUnleashStores } from '../types/stores';
+import { IUnleashConfig } from '../types/option';
 
 const { contextSchema, nameSchema } = require('./context-schema');
 const NameExistsError = require('../error/name-exists-error');
@@ -15,17 +19,24 @@ const {
 } = require('../types/events');
 
 class ContextService {
-    private projectStore: ProjectStore;
+    private projectStore: IProjectStore;
 
-    private eventStore: EventStore;
+    private eventStore: IEventStore;
 
-    private contextFieldStore: ContextFieldStore;
+    private contextFieldStore: IContextFieldStore;
 
     private logger: Logger;
 
     constructor(
-        { projectStore, eventStore, contextFieldStore },
-        { getLogger },
+        {
+            projectStore,
+            eventStore,
+            contextFieldStore,
+        }: Pick<
+            IUnleashStores,
+            'projectStore' | 'eventStore' | 'contextFieldStore'
+        >,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.projectStore = projectStore;
         this.eventStore = eventStore;
@@ -33,15 +44,18 @@ class ContextService {
         this.logger = getLogger('services/context-service.js');
     }
 
-    async getAll() {
+    async getAll(): Promise<IContextField[]> {
         return this.contextFieldStore.getAll();
     }
 
-    async getContextField(name) {
+    async getContextField(name: string): Promise<IContextField> {
         return this.contextFieldStore.get(name);
     }
 
-    async createContextField(value, userName) {
+    async createContextField(
+        value: IContextFieldDto,
+        userName: string,
+    ): Promise<void> {
         // validations
         await this.validateUniqueName(value);
         const contextField = await contextSchema.validateAsync(value);
@@ -55,7 +69,10 @@ class ContextService {
         });
     }
 
-    async updateContextField(updatedContextField, userName) {
+    async updateContextField(
+        updatedContextField: IContextFieldDto,
+        userName: string,
+    ): Promise<void> {
         // validations
         await this.contextFieldStore.get(updatedContextField.name);
         const value = await contextSchema.validateAsync(updatedContextField);
@@ -69,7 +86,7 @@ class ContextService {
         });
     }
 
-    async deleteContextField(name, userName) {
+    async deleteContextField(name: string, userName: string): Promise<void> {
         // validate existence
         await this.contextFieldStore.get(name);
 
@@ -82,7 +99,9 @@ class ContextService {
         });
     }
 
-    async validateUniqueName({ name }) {
+    async validateUniqueName({
+        name,
+    }: Pick<IContextFieldDto, 'name'>): Promise<void> {
         let msg;
         try {
             await this.contextFieldStore.get(name);
@@ -96,7 +115,7 @@ class ContextService {
         throw new NameExistsError(msg);
     }
 
-    async validateName(name) {
+    async validateName(name: string): Promise<void> {
         await nameSchema.validateAsync({ name });
         await this.validateUniqueName({ name });
     }

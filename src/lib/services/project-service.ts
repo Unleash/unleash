@@ -1,14 +1,10 @@
 import User from '../types/user';
-import { AccessService, IUserWithRole, RoleName } from './access-service';
-import ProjectStore, { IProject } from '../db/project-store';
-import EventStore from '../db/event-store';
+import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
 import { nameType } from '../routes/admin-api/util';
 import schema from './project-schema';
 import NotFoundError from '../error/notfound-error';
-import FeatureToggleStore from '../db/feature-toggle-store';
-import { IRole } from '../db/access-store';
 import {
     PROJECT_CREATED,
     PROJECT_DELETED,
@@ -16,19 +12,14 @@ import {
 } from '../types/events';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
-import FeatureTypeStore from '../db/feature-type-store';
-import {
-    FeatureToggle,
-    IProjectHealthReport,
-    IProjectOverview,
-} from '../types/model';
-import Timer = NodeJS.Timer;
-import {
-    MILLISECONDS_IN_DAY,
-    MILLISECONDS_IN_ONE_HOUR,
-} from '../util/constants';
-import EnvironmentStore from '../db/environment-store';
+import { IProjectOverview, IUserWithRole, RoleName } from '../types/model';
 import { GLOBAL_ENV } from '../types/environment';
+import { IEnvironmentStore } from '../types/stores/environment-store';
+import { IFeatureTypeStore } from '../types/stores/feature-type-store';
+import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
+import { IProject, IProjectStore } from '../types/stores/project-store';
+import { IRole } from '../types/stores/access-store';
+import { IEventStore } from '../types/stores/event-store';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -40,17 +31,17 @@ export interface UsersWithRoles {
 }
 
 export default class ProjectService {
-    private projectStore: ProjectStore;
+    private projectStore: IProjectStore;
 
     private accessService: AccessService;
 
-    private eventStore: EventStore;
+    private eventStore: IEventStore;
 
-    private featureToggleStore: FeatureToggleStore;
+    private featureToggleStore: IFeatureToggleStore;
 
-    private featureTypeStore: FeatureTypeStore;
+    private featureTypeStore: IFeatureTypeStore;
 
-    private environmentStore: EnvironmentStore;
+    private environmentStore: IEnvironmentStore;
 
     private logger: any;
 
@@ -157,15 +148,10 @@ export default class ProjectService {
     }
 
     async validateUniqueId(id: string): Promise<void> {
-        try {
-            await this.projectStore.hasProject(id);
-        } catch (error) {
-            // No conflict, everything ok!
-            return;
+        const exists = await this.projectStore.hasProject(id);
+        if (exists) {
+            throw new NameExistsError('A project with this id already exists.');
         }
-
-        // Intentional throw here!
-        throw new NameExistsError('A project with this id already exists.');
     }
 
     // RBAC methods
@@ -189,14 +175,14 @@ export default class ProjectService {
             projectId,
         );
 
-        const role = roles.find(r => r.id === roleId);
+        const role = roles.find((r) => r.id === roleId);
         if (!role) {
             throw new NotFoundError(
                 `Could not find roleId=${roleId} on project=${projectId}`,
             );
         }
 
-        const alreadyHasAccess = users.some(u => u.id === userId);
+        const alreadyHasAccess = users.some((u) => u.id === userId);
         if (alreadyHasAccess) {
             throw new Error(`User already have access to project=${projectId}`);
         }
@@ -210,7 +196,7 @@ export default class ProjectService {
         userId: number,
     ): Promise<void> {
         const roles = await this.accessService.getRolesForProject(projectId);
-        const role = roles.find(r => r.id === roleId);
+        const role = roles.find((r) => r.id === roleId);
         if (!role) {
             throw new NotFoundError(
                 `Couldn't find roleId=${roleId} on project=${projectId}`,

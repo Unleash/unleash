@@ -4,6 +4,13 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
+import {
+    IResetQuery,
+    IResetToken,
+    IResetTokenCreate,
+    IResetTokenQuery,
+    IResetTokenStore,
+} from '../types/stores/reset-token-store';
 
 const TABLE = 'reset_tokens';
 
@@ -16,44 +23,16 @@ interface IResetTokenTable {
     used_at: Date;
 }
 
-export interface IResetTokenCreate {
-    reset_token: string;
-    user_id: number;
-    expires_at: Date;
-    created_by?: string;
-}
+const rowToResetToken = (row: IResetTokenTable): IResetToken => ({
+    userId: row.user_id,
+    token: row.reset_token,
+    expiresAt: row.expires_at,
+    createdAt: row.created_at,
+    createdBy: row.created_by,
+    usedAt: row.used_at,
+});
 
-export interface IResetToken {
-    userId: number;
-    token: string;
-    createdBy: string;
-    expiresAt: Date;
-    createdAt: Date;
-    usedAt?: Date;
-}
-
-export interface IResetQuery {
-    userId: number;
-    token: string;
-}
-
-export interface IResetTokenQuery {
-    user_id: number;
-    reset_token: string;
-}
-
-const rowToResetToken = (row: IResetTokenTable): IResetToken => {
-    return {
-        userId: row.user_id,
-        token: row.reset_token,
-        expiresAt: row.expires_at,
-        createdAt: row.created_at,
-        createdBy: row.created_by,
-        usedAt: row.used_at,
-    };
-};
-
-export class ResetTokenStore {
+export class ResetTokenStore implements IResetTokenStore {
     private logger: Logger;
 
     private timer: Function;
@@ -62,7 +41,7 @@ export class ResetTokenStore {
 
     constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('db/reset-token-store.js');
+        this.logger = getLogger('db/reset-token-store.ts');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'reset-tokens',
@@ -113,10 +92,8 @@ export class ResetTokenStore {
         }
     }
 
-    async delete({ reset_token }: IResetTokenQuery): Promise<void> {
-        return this.db(TABLE)
-            .where(reset_token)
-            .del();
+    async deleteFromQuery({ reset_token }: IResetTokenQuery): Promise<void> {
+        return this.db(TABLE).where(reset_token).del();
     }
 
     async deleteAll(): Promise<void> {
@@ -124,16 +101,37 @@ export class ResetTokenStore {
     }
 
     async deleteExpired(): Promise<void> {
-        return this.db(TABLE)
-            .where('expires_at', '<', new Date())
-            .del();
+        return this.db(TABLE).where('expires_at', '<', new Date()).del();
     }
 
     async expireExistingTokensForUser(user_id: number): Promise<void> {
-        await this.db<IResetTokenTable>(TABLE)
-            .where({ user_id })
-            .update({
-                expires_at: new Date(),
-            });
+        await this.db<IResetTokenTable>(TABLE).where({ user_id }).update({
+            expires_at: new Date(),
+        });
+    }
+
+    async delete(reset_token: string): Promise<void> {
+        await this.db(TABLE).where({ reset_token }).del();
+    }
+
+    destroy(): void {}
+
+    async exists(reset_token: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE reset_token = ?) AS present`,
+            [reset_token],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async get(key: string): Promise<IResetToken> {
+        const row = await this.db(TABLE).where({ reset_token: key }).first();
+        return rowToResetToken(row);
+    }
+
+    async getAll(): Promise<IResetToken[]> {
+        const rows = await this.db(TABLE).select();
+        return rows.map(rowToResetToken);
     }
 }

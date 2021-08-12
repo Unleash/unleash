@@ -1,5 +1,9 @@
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
+import {
+    IContextField,
+    IContextFieldStore,
+} from '../types/stores/context-field-store';
 
 const COLUMNS = [
     'name',
@@ -11,7 +15,7 @@ const COLUMNS = [
 ];
 const TABLE = 'context_fields';
 
-const mapRow: (IContextRow) => IContextField = row => ({
+const mapRow: (IContextRow) => IContextField = (row) => ({
     name: row.name,
     description: row.description,
     stickiness: row.stickiness,
@@ -20,7 +24,7 @@ const mapRow: (IContextRow) => IContextField = row => ({
     createdAt: row.created_at,
 });
 
-export interface ICreateContextField {
+interface ICreateContextField {
     name: string;
     description: string;
     stickiness: boolean;
@@ -29,23 +33,14 @@ export interface ICreateContextField {
     updated_at: Date;
 }
 
-export interface IContextField {
-    name: string;
-    description: string;
-    stickiness: boolean;
-    sortOrder: number;
-    legalValues?: string[];
-    createdAt: Date;
-}
-
-class ContextFieldStore {
+class ContextFieldStore implements IContextFieldStore {
     private db: Knex;
 
     private logger: Logger;
 
     constructor(db: Knex, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('context-field-store.js');
+        this.logger = getLogger('context-field-store.ts');
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -69,30 +64,48 @@ class ContextFieldStore {
         return rows.map(mapRow);
     }
 
-    async get(name: string): Promise<IContextField> {
+    async get(key: string): Promise<IContextField> {
         return this.db
             .first(COLUMNS)
             .from(TABLE)
-            .where({ name })
+            .where({ name: key })
             .then(mapRow);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async create(contextField): Promise<void> {
-        return this.db(TABLE).insert(this.fieldToRow(contextField));
+    async deleteAll(): Promise<void> {
+        await this.db(TABLE).del();
+    }
+
+    destroy(): void {}
+
+    async exists(key: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE name = ?) AS present`,
+            [key],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async update(data): Promise<void> {
-        return this.db(TABLE)
+    async create(contextField): Promise<IContextField> {
+        const row = await this.db(TABLE)
+            .insert(this.fieldToRow(contextField))
+            .returning('*');
+        return mapRow(row);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async update(data): Promise<IContextField> {
+        const row = this.db(TABLE)
             .where({ name: data.name })
-            .update(this.fieldToRow(data));
+            .update(this.fieldToRow(data))
+            .returning('*');
+        return mapRow(row);
     }
 
     async delete(name: string): Promise<void> {
-        return this.db(TABLE)
-            .where({ name })
-            .del();
+        return this.db(TABLE).where({ name }).del();
     }
 }
 export default ContextFieldStore;

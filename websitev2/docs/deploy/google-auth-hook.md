@@ -9,12 +9,12 @@ This part of the tutorial shows how to create a sign-in flow for users and integ
 
 **If you are still using Unleash v3 you need to follow the [google-auth-hook-v3](/deploy/google_auth_v3)**
 
-This is a simple `index.js` server file.
+This is a simple `index.ts` server file.
 
 ```javascript
 const unleash = require('unleash-server');
 
-unleash.start(options).then(unleash => {
+unleash.start(options).then((unleash) => {
   console.log(`Unleash started on http://localhost:${unleash.app.get('port')}`);
 });
 ```
@@ -43,13 +43,13 @@ http://localhost:4242/api/auth/callback
 
 ### Add dependencies {#add-dependencies}
 
-Add two dependencies [`@passport-next/passport`](https://www.npmjs.com/package/@passport-next/passport) and [`@passport-next/passport-google-oauth2`](https://www.npmjs.com/package/@passport-next/passport-google-oauth2) inside `index.js` file
+Add two dependencies [`@passport-next/passport`](https://www.npmjs.com/package/@passport-next/passport) and [`@passport-next/passport-google-oauth2`](https://www.npmjs.com/package/@passport-next/passport-google-oauth2) inside `index.ts` file
 
 ```js
 const unleash = require('unleash-server');
 const passport = require('@passport-next/passport');
-const GoogleOAuth2Strategy = require('@passport-next/passport-google-oauth2')
-  .Strategy;
+const GoogleOAuth2Strategy =
+  require('@passport-next/passport-google-oauth2').Strategy;
 ```
 
 Add `googleAdminAuth()` function and other options. Make sure to also accept the services argument to get access to the `userService`.
@@ -67,7 +67,7 @@ let options = {
   },
 };
 
-unleash.start(options).then(instance => {
+unleash.start(options).then((instance) => {
   console.log(
     `Unleash started on http://localhost:${instance.app.get('port')}`,
   );
@@ -94,7 +94,7 @@ function googleAdminAuth(app, config, services) {
         clientSecret: GOOGLE_CLIENT_SECRET,
         callbackURL: GOOGLE_CALLBACK_URL,
       },
-      async function(accessToken, refreshToken, profile, cb) {
+      async function (accessToken, refreshToken, profile, cb) {
         // Extract the minimal profile information we need from the profile object
         // and connect with Unleash
         const email = profile.emails[0].value;
@@ -183,7 +183,7 @@ function googleAdminAuth(app, config, services) {
 
 > You can also find the complete [source code for this guide](https://github.com/Unleash/unleash-examples/tree/main/v4/securing-google-auth) in the unleash-examples project.
 
-The `index.js` server file.
+The `index.ts` server file.
 
 ```js
 'use strict';

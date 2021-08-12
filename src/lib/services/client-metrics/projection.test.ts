@@ -1,6 +1,5 @@
 import { Projection } from './projection';
 
-
 test('should return set empty if missing', () => {
     const projection = new Projection();
 

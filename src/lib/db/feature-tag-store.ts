@@ -6,6 +6,11 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { UNIQUE_CONSTRAINT_VIOLATION } from '../error/db-error';
 import FeatureHasTagError from '../error/feature-has-tag-error';
+import {
+    IFeatureAndTag,
+    IFeatureTag,
+    IFeatureTagStore,
+} from '../types/stores/feature-tag-store';
 
 const COLUMNS = ['feature_name', 'tag_type', 'tag_value'];
 const TABLE = 'feature_tag';
@@ -16,18 +21,7 @@ interface FeatureTagTable {
     tag_value: string;
 }
 
-export interface IFeatureTag {
-    featureName: string;
-    tagType: string;
-    tagValue: string;
-}
-
-export interface IFeatureAndTag {
-    featureName: string;
-    tag: ITag;
-}
-
-class FeatureTagStore {
+class FeatureTagStore implements IFeatureTagStore {
     private db: Knex;
 
     private logger: Logger;
@@ -36,12 +30,69 @@ class FeatureTagStore {
 
     constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('feature-tag-store.js');
-        this.timer = action =>
+        this.logger = getLogger('feature-tag-store.ts');
+        this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',
                 action,
             });
+    }
+
+    async delete({
+        featureName,
+        tagType,
+        tagValue,
+    }: IFeatureTag): Promise<void> {
+        await this.db(TABLE)
+            .where({
+                feature_name: featureName,
+                tag_type: tagType,
+                tag_value: tagValue,
+            })
+            .del();
+    }
+
+    destroy(): void {}
+
+    async exists({
+        featureName,
+        tagType,
+        tagValue,
+    }: IFeatureTag): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE feature_name = ? AND tag_type = ? AND tag_value = ?) AS present`,
+            [featureName, tagType, tagValue],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async get({
+        featureName,
+        tagType,
+        tagValue,
+    }: IFeatureTag): Promise<IFeatureTag> {
+        const row = await this.db(TABLE)
+            .where({
+                feature_name: featureName,
+                tag_type: tagType,
+                tag_value: tagValue,
+            })
+            .first();
+        return {
+            featureName: row.feature_name,
+            tagType: row.tag_type,
+            tagValue: row.tag_value,
+        };
+    }
+
+    async getAll(): Promise<IFeatureTag[]> {
+        const rows = await this.db(TABLE).select(COLUMNS);
+        return rows.map((row) => ({
+            featureName: row.feature_name,
+            tagType: row.tag_type,
+            tagValue: row.tag_value,
+        }));
     }
 
     async getAllTagsForFeature(featureName: string): Promise<ITag[]> {
@@ -58,7 +109,7 @@ class FeatureTagStore {
         const stopTimer = this.timer('tagFeature');
         await this.db<FeatureTagTable>(TABLE)
             .insert(this.featureAndTagToRow(featureName, tag))
-            .catch(err => {
+            .catch((err) => {
                 if (err.code === UNIQUE_CONSTRAINT_VIOLATION) {
                     throw new FeatureHasTagError(
                         `${featureName} already had the tag: [${tag.type}:${tag.value}]`,
@@ -79,19 +130,17 @@ class FeatureTagStore {
             .select(COLUMNS)
             .whereIn(
                 'feature_name',
-                this.db('features')
-                    .where({ archived: false })
-                    .select(['name']),
+                this.db('features').where({ archived: false }).select(['name']),
             );
-        return rows.map(row => ({
+        return rows.map((row) => ({
             featureName: row.feature_name,
             tagType: row.tag_type,
             tagValue: row.tag_value,
         }));
     }
 
-    async dropFeatureTags(): Promise<void> {
-        const stopTimer = this.timer('dropFeatureTags');
+    async deleteAll(): Promise<void> {
+        const stopTimer = this.timer('deleteAll');
         await this.db(TABLE).del();
         stopTimer();
     }

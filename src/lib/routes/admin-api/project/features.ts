@@ -7,9 +7,7 @@ import { Logger } from '../../../logger';
 import { CREATE_FEATURE, UPDATE_FEATURE } from '../../../types/permissions';
 import {
     FeatureToggleDTO,
-    IArchivedQuery,
     IConstraint,
-    IProjectParam,
     IStrategyConfig,
 } from '../../../types/model';
 import { handleErrors } from '../util';
@@ -43,7 +41,7 @@ interface StrategyUpdateBody {
 const PATH_PREFIX = '/:projectId/features/:featureName';
 
 type ProjectFeaturesServices = Pick<
-IUnleashServices,
+    IUnleashServices,
     'featureToggleServiceV2' | 'projectHealthService'
 >;
 
@@ -147,11 +145,12 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { environment, featureName, projectId } = req.params;
         try {
-            const environmentInfo = await this.featureService.getEnvironmentInfo(
-                projectId,
-                environment,
-                featureName,
-            );
+            const environmentInfo =
+                await this.featureService.getEnvironmentInfo(
+                    projectId,
+                    environment,
+                    featureName,
+                );
             res.status(200).json(environmentInfo);
         } catch (e) {
             handleErrors(res, this.logger, e);
@@ -231,11 +230,12 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
         try {
-            const featureStrategies = await this.featureService.getStrategiesForEnvironment(
-                projectId,
-                featureName,
-                environment,
-            );
+            const featureStrategies =
+                await this.featureService.getStrategiesForEnvironment(
+                    projectId,
+                    featureName,
+                    environment,
+                );
             res.status(200).json(featureStrategies);
         } catch (e) {
             handleErrors(res, this.logger, e);

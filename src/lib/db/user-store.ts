@@ -5,6 +5,13 @@ import { Logger, LogProvider } from '../logger';
 import User from '../types/user';
 
 import NotFoundError from '../error/notfound-error';
+import {
+    ICreateUser,
+    IUserLookup,
+    IUserSearch,
+    IUserStore,
+    IUserUpdateFields,
+} from '../types/stores/user-store';
 
 const TABLE = 'users';
 
@@ -21,7 +28,7 @@ const USER_COLUMNS = [
 
 const USER_COLUMNS_PUBLIC = ['id', 'name', 'username', 'email', 'image_url'];
 
-const emptify = value => {
+const emptify = (value) => {
     if (!value) {
         return undefined;
     }
@@ -37,14 +44,7 @@ const mapUserToColumns = (user: ICreateUser) => ({
     image_url: user.imageUrl,
 });
 
-interface ICreateUser {
-    name?: string;
-    username?: string;
-    email?: string;
-    imageUrl?: string;
-}
-
-const rowToUser = row => {
+const rowToUser = (row) => {
     if (!row) {
         throw new NotFoundError('No user found');
     }
@@ -60,38 +60,19 @@ const rowToUser = row => {
     });
 };
 
-export interface IUserLookup {
-    id?: number;
-    username?: string;
-    email?: string;
-}
-
-export interface IUserSearch {
-    name?: string;
-    username?: string;
-    email: string;
-}
-
-export interface IUserUpdateFields {
-    name?: string;
-    email?: string;
-}
-
-class UserStore {
+class UserStore implements IUserStore {
     private db: Knex;
 
     private logger: Logger;
 
     constructor(db: Knex, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('user-store.js');
+        this.logger = getLogger('user-store.ts');
     }
 
     async update(id: number, fields: IUserUpdateFields): Promise<User> {
-        await this.db(TABLE)
-            .where('id', id)
-            .update(mapUserToColumns(fields));
-        return this.get({ id });
+        await this.db(TABLE).where('id', id).update(mapUserToColumns(fields));
+        return this.get(id);
     }
 
     async insert(user: ICreateUser): Promise<User> {
@@ -153,15 +134,13 @@ class UserStore {
         return users.map(rowToUser);
     }
 
-    async get(idQuery: IUserLookup): Promise<User> {
+    async getByQuery(idQuery: IUserLookup): Promise<User> {
         const row = await this.buildSelectUser(idQuery).first(USER_COLUMNS);
         return rowToUser(row);
     }
 
     async delete(id: number): Promise<void> {
-        return this.db(TABLE)
-            .where({ id })
-            .del();
+        return this.db(TABLE).where({ id }).del();
     }
 
     async getPasswordHash(userId: number): Promise<string> {
@@ -177,11 +156,9 @@ class UserStore {
     }
 
     async setPasswordHash(userId: number, passwordHash: string): Promise<void> {
-        return this.db(TABLE)
-            .where('id', userId)
-            .update({
-                password_hash: passwordHash,
-            });
+        return this.db(TABLE).where('id', userId).update({
+            password_hash: passwordHash,
+        });
     }
 
     async incLoginAttempts(user: User): Promise<void> {
@@ -197,6 +174,22 @@ class UserStore {
 
     async deleteAll(): Promise<void> {
         await this.db(TABLE).del();
+    }
+
+    destroy(): void {}
+
+    async exists(id: number): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            [id],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async get(id: number): Promise<User> {
+        const row = await this.db(TABLE).where({ id }).first();
+        return rowToUser(row);
     }
 }
 

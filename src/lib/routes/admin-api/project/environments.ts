@@ -5,7 +5,7 @@ import { IUnleashServices } from '../../../types/services';
 import { Logger } from '../../../logger';
 import EnvironmentService from '../../../services/environment-service';
 import { handleErrors } from '../util';
-import { UPDATE_FEATURE, UPDATE_PROJECT } from '../../../types/permissions';
+import { UPDATE_PROJECT } from '../../../types/permissions';
 
 const PREFIX = '/:projectId/environments';
 
@@ -41,10 +41,10 @@ export default class EnvironmentsController extends Controller {
 
     async addEnvironmentToProject(
         req: Request<
-        Omit<IProjectEnvironmentParams, 'environment'>,
-        any,
-        EnvironmentBody,
-        any
+            Omit<IProjectEnvironmentParams, 'environment'>,
+            any,
+            EnvironmentBody,
+            any
         >,
         res: Response,
     ): Promise<void> {

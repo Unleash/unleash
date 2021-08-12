@@ -1,14 +1,15 @@
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import UserService from '../../../lib/services/user-service';
-import { AccessService, RoleName } from '../../../lib/services/access-service';
+import { AccessService } from '../../../lib/services/access-service';
 import UserStore from '../../../lib/db/user-store';
-import { IRole } from '../../../lib/db/access-store';
 import ResetTokenService from '../../../lib/services/reset-token-service';
 import { EmailService } from '../../../lib/services/email-service';
 import { createTestConfig } from '../../config/test-config';
 import SessionService from '../../../lib/services/session-service';
 import NotFoundError from '../../../lib/error/notfound-error';
+import { IRole } from '../../../lib/types/stores/access-store';
+import { RoleName } from '../../../lib/types/model';
 
 let db;
 let stores;
@@ -34,7 +35,7 @@ beforeAll(async () => {
     });
     userStore = stores.userStore;
     const rootRoles = await accessService.getRootRoles();
-    adminRole = rootRoles.find(r => r.name === RoleName.ADMIN);
+    adminRole = rootRoles.find((r) => r.name === RoleName.ADMIN);
 });
 
 afterAll(async () => {
@@ -112,7 +113,7 @@ test('should get user with root role by name', async () => {
     expect(user.rootRole).toBe(adminRole.id);
 });
 
-test(`deleting a user should delete the user's sessions`, async () => {
+test("deleting a user should delete the user's sessions", async () => {
     const email = 'some@test.com';
     const user = await userService.createUser({
         email,

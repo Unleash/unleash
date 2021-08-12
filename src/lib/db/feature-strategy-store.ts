@@ -4,18 +4,16 @@ import * as uuid from 'uuid';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
+import NotFoundError from '../error/notfound-error';
 import {
+    FeatureToggleWithEnvironment,
     IConstraint,
-    IEnvironmentOverview,
-    IFeatureOverview,
+    IFeatureStrategy,
     IFeatureToggleClient,
     IFeatureToggleQuery,
     IStrategyConfig,
-    IVariant,
-    FeatureToggleWithEnvironment,
-    IFeatureEnvironment,
 } from '../types/model';
-import NotFoundError from '../error/notfound-error';
+import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 
 const COLUMNS = [
     'id',
@@ -52,26 +50,6 @@ interface IFeatureStrategiesTable {
     created_at?: Date;
 }
 
-export interface IFeatureStrategy {
-    id: string;
-    featureName: string;
-    projectName: string;
-    environment: string;
-    strategyName: string;
-    parameters: object;
-    constraints: IConstraint[];
-    createdAt?: Date;
-}
-
-export interface FeatureConfigurationClient {
-    name: string;
-    type: string;
-    enabled: boolean;
-    stale: boolean;
-    strategies: IStrategyConfig[];
-    variants: IVariant[];
-}
-
 function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
     return {
         id: row.id,
@@ -80,7 +58,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         environment: row.environment,
         strategyName: row.strategy_name,
         parameters: row.parameters,
-        constraints: ((row.constraints as unknown) as IConstraint[]) || [],
+        constraints: (row.constraints as unknown as IConstraint[]) || [],
         createdAt: row.created_at,
     };
 }
@@ -118,7 +96,7 @@ function mapStrategyUpdate(
     return update;
 }
 
-class FeatureStrategiesStore {
+class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private db: Knex;
 
     private logger: Logger;
@@ -128,11 +106,37 @@ class FeatureStrategiesStore {
     constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
-        this.timer = action =>
+        this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle-strategies',
                 action,
             });
+    }
+
+    async delete(key: string): Promise<void> {
+        await this.db(T.featureStrategies).where({ id: key }).del();
+    }
+
+    async deleteAll(): Promise<void> {
+        await this.db(T.featureStrategies).delete();
+    }
+
+    destroy(): void {}
+
+    async exists(key: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${T.featureStrategies} WHERE id = ?) AS present`,
+            [key],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async get(key: string): Promise<IFeatureStrategy> {
+        const row = await this.db(T.featureStrategies)
+            .where({ id: key })
+            .first();
+        return mapRow(row);
     }
 
     async createStrategyConfig(
@@ -161,10 +165,6 @@ class FeatureStrategiesStore {
     async getAllFeatureStrategies(): Promise<IFeatureStrategy[]> {
         const rows = await this.db(T.featureStrategies).select(COLUMNS);
         return rows.map(mapRow);
-    }
-
-    async deleteFeatureStrategies(): Promise<void> {
-        await this.db(T.featureStrategies).delete();
     }
 
     async getStrategiesForEnvironment(
@@ -394,59 +394,11 @@ class FeatureStrategiesStore {
     }
 
     async getStrategyById(id: string): Promise<IFeatureStrategy> {
-        const strat = await this.db(T.featureStrategies)
-            .where({ id })
-            .first();
+        const strat = await this.db(T.featureStrategies).where({ id }).first();
         if (strat) {
             return mapRow(strat);
         }
         throw new NotFoundError(`Could not find strategy with id: ${id}`);
-    }
-
-    async connectEnvironmentAndFeature(
-        feature_name: string,
-        environment: string,
-        enabled: boolean = false,
-    ): Promise<void> {
-        await this.db('feature_environments')
-            .insert({ feature_name, environment, enabled })
-            .onConflict(['environment', 'feature_name'])
-            .merge('enabled');
-    }
-
-    async enableEnvironmentForFeature(
-        feature_name: string,
-        environment: string,
-    ): Promise<void> {
-        await this.db(T.featureEnvs)
-            .update({ enabled: true })
-            .where({ feature_name, environment });
-    }
-
-    async removeEnvironmentForFeature(
-        feature_name: string,
-        environment: string,
-    ): Promise<void> {
-        await this.db(T.featureEnvs)
-            .where({ feature_name, environment })
-            .del();
-    }
-
-    async disconnectEnvironmentFromProject(
-        environment: string,
-        project: string,
-    ): Promise<void> {
-        const featureSelector = this.db('features')
-            .where({ project })
-            .select('name');
-        await this.db(T.featureEnvs)
-            .where({ environment })
-            .andWhere('feature_name', 'IN', featureSelector)
-            .del();
-        await this.db('feature_strategies').where({
-            environment,
-            project_name: project,
-        });
     }
 
     async updateStrategy(
@@ -475,26 +427,6 @@ class FeatureStrategiesStore {
             delete strategy.id;
         }
         return strategy;
-    }
-
-    async getEnvironmentMetaData(
-        environment: string,
-        featureName: string,
-    ): Promise<IFeatureEnvironment> {
-        const md = await this.db(T.featureEnvs)
-            .where('feature_name', featureName)
-            .andWhere('environment', environment)
-            .first();
-        if (md) {
-            return {
-                enabled: md.enabled,
-                featureName,
-                environment,
-            };
-        }
-        throw new NotFoundError(
-            `Could not find ${featureName} in ${environment}`,
-        );
     }
 
     async getStrategiesAndMetadataForEnvironment(
@@ -529,58 +461,6 @@ class FeatureStrategiesStore {
         await this.db(T.featureStrategies)
             .where({ project_name: projectId, environment })
             .del();
-    }
-
-    async isEnvironmentEnabled(
-        featureName: string,
-        environment: string,
-    ): Promise<boolean> {
-        const row = await this.db(T.featureEnvs)
-            .select('enabled')
-            .where({ feature_name: featureName, environment })
-            .first();
-        return row.enabled;
-    }
-
-    async toggleEnvironmentEnabledStatus(
-        environment: string,
-        featureName: string,
-        enabled: boolean,
-    ): Promise<boolean> {
-        await this.db(T.featureEnvs)
-            .update({ enabled })
-            .where({ environment, feature_name: featureName });
-        return enabled;
-    }
-
-    async getAllFeatureEnvironments(): Promise<IFeatureEnvironment[]> {
-        const rows = await this.db(T.featureEnvs);
-        return rows.map(r => ({
-            environment: r.environment,
-            featureName: r.feature_name,
-            enabled: r.enabled,
-        }));
-    }
-
-    async featureHasEnvironment(
-        environment: string,
-        featureName: string,
-    ): Promise<boolean> {
-        const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.featureEnvs} WHERE feature_name = ? AND environment = ?)  AS present`,
-            [featureName, environment],
-        );
-        const { present } = result.rows[0];
-        return present;
-    }
-
-    async hasStrategy(id: string): Promise<boolean> {
-        const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.featureStrategies} WHERE id = ?)  AS present`,
-            [id],
-        );
-        const { present } = result.rows[0];
-        return present;
     }
 }
 

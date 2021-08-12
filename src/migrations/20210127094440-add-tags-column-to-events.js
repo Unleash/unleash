@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE events ADD COLUMN IF NOT EXISTS tags json DEFAULT '[]'
@@ -8,7 +8,7 @@ exports.up = function(db, cb) {
         cb,
     );
 };
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
         ALTER TABLE events DROP COLUMN IF EXISTS tags;

@@ -1,4 +1,4 @@
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
             CREATE TABLE IF NOT EXISTS reset_tokens
@@ -17,7 +17,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql('DROP TABLE reset_tokens;', cb);
 };
 

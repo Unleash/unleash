@@ -8,7 +8,6 @@ import dbState from './database.json';
 import { LogProvider } from '../../../lib/logger';
 import noLoggerProvider from '../../fixtures/no-logger';
 import EnvironmentStore from '../../../lib/db/environment-store';
-import { IEnvironment } from '../../../lib/types/model';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -37,19 +36,19 @@ async function resetDatabase(knex) {
 }
 
 function createStrategies(store) {
-    return dbState.strategies.map(s => store.createStrategy(s));
+    return dbState.strategies.map((s) => store.createStrategy(s));
 }
 
 function createContextFields(store) {
-    return dbState.contextFields.map(c => store.create(c));
+    return dbState.contextFields.map((c) => store.create(c));
 }
 
 function createProjects(store) {
-    return dbState.projects.map(i => store.create(i));
+    return dbState.projects.map((i) => store.create(i));
 }
 
 function createTagTypes(store) {
-    return dbState.tag_types.map(t => store.createTagType(t));
+    return dbState.tag_types.map((t) => store.createTagType(t));
 }
 
 async function connectProject(store: EnvironmentStore): Promise<void> {
@@ -57,7 +56,7 @@ async function connectProject(store: EnvironmentStore): Promise<void> {
 }
 
 async function createEnvironments(store: EnvironmentStore): Promise<void> {
-    await Promise.all(dbState.environments.map(async e => store.upsert(e)));
+    await Promise.all(dbState.environments.map(async (e) => store.upsert(e)));
 }
 
 async function setupDatabase(stores) {
@@ -91,16 +90,17 @@ export default async function init(
     // @ts-ignore
     await migrator({ ...config, databaseSchema: config.db.schema });
     await db.destroy();
-    const stores = await createStores(config, eventBus);
+    const testDb = createDb(config);
+    const stores = await createStores(config, eventBus, testDb);
     stores.clientMetricsStore.setMaxListeners(0);
     stores.eventStore.setMaxListeners(0);
-    await resetDatabase(stores.db);
+    await resetDatabase(testDb);
     await setupDatabase(stores);
 
     return {
         stores,
         reset: async () => {
-            await resetDatabase(stores.db);
+            await resetDatabase(testDb);
             await setupDatabase(stores);
         },
         destroy: async () => {
@@ -108,7 +108,7 @@ export default async function init(
             return new Promise<void>((resolve, reject) => {
                 clientInstanceStore.destroy();
                 clientMetricsStore.destroy();
-                stores.db.destroy(error => (error ? reject(error) : resolve()));
+                testDb.destroy((error) => (error ? reject(error) : resolve()));
             });
         },
     };

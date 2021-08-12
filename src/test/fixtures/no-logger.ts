@@ -15,7 +15,7 @@ function noLoggerProvider(): Logger {
     };
 }
 
-noLoggerProvider.setMuteError = mute => {
+noLoggerProvider.setMuteError = (mute) => {
     muteError = mute;
 };
 

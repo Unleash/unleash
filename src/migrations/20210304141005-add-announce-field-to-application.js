@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function(db, cb) {
+exports.up = function (db, cb) {
     db.runSql(
         `
     ALTER TABLE client_applications ADD COLUMN announced boolean DEFAULT false;
@@ -10,7 +10,7 @@ exports.up = function(db, cb) {
     );
 };
 
-exports.down = function(db, cb) {
+exports.down = function (db, cb) {
     db.runSql(
         `
             ALTER TABLE client_applications DROP COLUMN announced;

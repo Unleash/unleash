@@ -43,7 +43,7 @@ function removeStrategySQL(strategy) {
         WHERE name = '${strategy.name}' AND built_in = 1`;
 }
 
-exports.up = function(db, callback) {
+exports.up = function (db, callback) {
     async.series(
         [
             db.runSql.bind(db, insertEventsSQL(flexibleRollout)),
@@ -53,7 +53,7 @@ exports.up = function(db, callback) {
     );
 };
 
-exports.down = function(db, callback) {
+exports.down = function (db, callback) {
     async.series(
         [
             db.runSql.bind(db, removeEventsSQL(flexibleRollout)),

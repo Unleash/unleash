@@ -48,7 +48,7 @@ function safeBoolean(envVar, defaultVal) {
 }
 
 function mergeAll<T>(objects: Partial<T>[]): T {
-    return merge.all<T>(objects.filter(i => i));
+    return merge.all<T>(objects.filter((i) => i));
 }
 
 const defaultDbOptions: IDBOption = {

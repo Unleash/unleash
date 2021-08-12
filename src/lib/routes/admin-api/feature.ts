@@ -34,8 +34,8 @@ class FeatureController extends Controller {
             featureTagService,
             featureToggleServiceV2,
         }: Pick<
-        IUnleashServices,
-        'featureTagService' | 'featureToggleServiceV2'
+            IUnleashServices,
+            'featureTagService' | 'featureToggleServiceV2'
         >,
     ) {
         super(config);
@@ -87,7 +87,7 @@ class FeatureController extends Controller {
             namePrefix,
         });
         if (query.tag) {
-            query.tag = query.tag.map(q => q.split(':'));
+            query.tag = query.tag.map((q) => q.split(':'));
         }
         return query;
     }
@@ -113,7 +113,7 @@ class FeatureController extends Controller {
             const name = req.params.featureName;
             const feature = await this.featureService2.getFeatureToggle(name);
             const strategies =
-                feature.environments.find(e => e.name === GLOBAL_ENV)
+                feature.environments.find((e) => e.name === GLOBAL_ENV)
                     ?.strategies || [];
             res.json({
                 ...feature,
@@ -186,13 +186,14 @@ class FeatureController extends Controller {
         try {
             const validatedToggle = await featureSchema.validateAsync(toggle);
             const { enabled } = validatedToggle;
-            const createdFeature = await this.featureService2.createFeatureToggle(
-                validatedToggle.project,
-                validatedToggle,
-                userName,
-            );
+            const createdFeature =
+                await this.featureService2.createFeatureToggle(
+                    validatedToggle.project,
+                    validatedToggle,
+                    userName,
+                );
             const strategies = await Promise.all(
-                toggle.strategies.map(async s =>
+                toggle.strategies.map(async (s) =>
                     this.featureService2.createStrategy(
                         s,
                         createdFeature.project,
@@ -248,7 +249,7 @@ class FeatureController extends Controller {
                 let strategies;
                 if (updatedFeature.strategies) {
                     strategies = await Promise.all(
-                        updatedFeature.strategies.map(async s =>
+                        updatedFeature.strategies.map(async (s) =>
                             this.featureService2.createStrategy(
                                 s,
                                 projectId,

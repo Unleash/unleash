@@ -16,7 +16,7 @@ test('Trying to get events by name if db fails should yield empty list', async (
         client: 'pg',
     });
     const store = new EventStore(db, getLogger);
-    const events = await store.getEventsFilterByName('application-created');
+    const events = await store.getEventsFilterByType('application-created');
     expect(events).toBeTruthy();
     expect(events.length).toBe(0);
 });

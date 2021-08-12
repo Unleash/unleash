@@ -1,5 +1,3 @@
-'use strict';
-
 class InvalidOperationError extends Error {
     constructor(message: string) {
         super();

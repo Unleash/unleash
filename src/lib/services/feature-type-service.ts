@@ -1,10 +1,13 @@
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
-import FeatureTypeStore, { IFeatureType } from '../db/feature-type-store';
 import { Logger } from '../logger';
+import {
+    IFeatureType,
+    IFeatureTypeStore,
+} from '../types/stores/feature-type-store';
 
 export default class FeatureTypeService {
-    private featureTypeStore: FeatureTypeStore;
+    private featureTypeStore: IFeatureTypeStore;
 
     private logger: Logger;
 

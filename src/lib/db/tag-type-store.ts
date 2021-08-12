@@ -4,6 +4,7 @@ import { LogProvider, Logger } from '../logger';
 import { DB_TIME } from '../metric-events';
 import metricsHelper from '../util/metrics-helper';
 import NotFoundError from '../error/notfound-error';
+import { ITagType, ITagTypeStore } from '../types/stores/tag-type-store';
 
 const COLUMNS = ['name', 'description', 'icon'];
 const TABLE = 'tag_types';
@@ -14,13 +15,7 @@ interface ITagTypeTable {
     icon?: string;
 }
 
-export interface ITagType {
-    name: string;
-    description?: string;
-    icon?: string;
-}
-
-export default class TagTypeStore {
+export default class TagTypeStore implements ITagTypeStore {
     private db: Knex;
 
     private logger: Logger;
@@ -29,8 +24,8 @@ export default class TagTypeStore {
 
     constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('tag-type-store.js');
-        this.timer = action =>
+        this.logger = getLogger('tag-type-store.ts');
+        this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'tag-type',
                 action,
@@ -44,13 +39,13 @@ export default class TagTypeStore {
         return rows.map(this.rowToTagType);
     }
 
-    async getTagType(name: string): Promise<ITagType> {
+    async get(name: string): Promise<ITagType> {
         const stopTimer = this.timer('getTagTypeByName');
         return this.db
             .first(COLUMNS)
             .from(TABLE)
             .where({ name })
-            .then(row => {
+            .then((row) => {
                 stopTimer();
                 if (!row) {
                     throw new NotFoundError('Could not find tag-type');
@@ -60,7 +55,7 @@ export default class TagTypeStore {
             });
     }
 
-    async exists(name: string): Promise<Boolean> {
+    async exists(name: string): Promise<boolean> {
         const stopTimer = this.timer('exists');
         const result = await this.db.raw(
             `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE name = ?) AS present`,
@@ -77,16 +72,14 @@ export default class TagTypeStore {
         stopTimer();
     }
 
-    async deleteTagType(name: string): Promise<void> {
+    async delete(name: string): Promise<void> {
         const stopTimer = this.timer('deleteTagType');
-        await this.db(TABLE)
-            .where({ name })
-            .del();
+        await this.db(TABLE).where({ name }).del();
         stopTimer();
     }
 
-    async dropTagTypes(): Promise<void> {
-        const stopTimer = this.timer('dropTagTypes');
+    async deleteAll(): Promise<void> {
+        const stopTimer = this.timer('deleteAll');
         await this.db(TABLE).del();
         stopTimer();
     }
@@ -105,11 +98,11 @@ export default class TagTypeStore {
 
     async updateTagType({ name, description, icon }: ITagType): Promise<void> {
         const stopTimer = this.timer('updateTagType');
-        await this.db(TABLE)
-            .where({ name })
-            .update({ description, icon });
+        await this.db(TABLE).where({ name }).update({ description, icon });
         stopTimer();
     }
+
+    destroy(): void {}
 
     rowToTagType(row: ITagTypeTable): ITagType {
         return {

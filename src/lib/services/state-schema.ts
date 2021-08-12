@@ -21,54 +21,27 @@ export const featureStrategySchema = joi
 
 export const featureEnvironmentsSchema = joi.object().keys({
     environment: joi.string(),
-    feature_name: joi.string(),
+    featureName: joi.string(),
     enabled: joi.boolean(),
 });
 
 export const environmentSchema = joi.object().keys({
     name: nameType,
-    displayName: joi
-        .string()
-        .optional()
-        .allow(''),
+    displayName: joi.string().optional().allow(''),
 });
 
 export const stateSchema = joi.object().keys({
     version: joi.number(),
-    features: joi
-        .array()
-        .optional()
-        .items(featureSchema),
-    strategies: joi
-        .array()
-        .optional()
-        .items(strategySchema),
-    tags: joi
-        .array()
-        .optional()
-        .items(tagSchema),
-    tagTypes: joi
-        .array()
-        .optional()
-        .items(tagTypeSchema),
-    featureTags: joi
-        .array()
-        .optional()
-        .items(featureTagSchema),
-    projects: joi
-        .array()
-        .optional()
-        .items(projectSchema),
-    featureStrategies: joi
-        .array()
-        .optional()
-        .items(featureStrategySchema),
+    features: joi.array().optional().items(featureSchema),
+    strategies: joi.array().optional().items(strategySchema),
+    tags: joi.array().optional().items(tagSchema),
+    tagTypes: joi.array().optional().items(tagTypeSchema),
+    featureTags: joi.array().optional().items(featureTagSchema),
+    projects: joi.array().optional().items(projectSchema),
+    featureStrategies: joi.array().optional().items(featureStrategySchema),
     featureEnvironments: joi
         .array()
         .optional()
         .items(featureEnvironmentsSchema),
-    environments: joi
-        .array()
-        .optional()
-        .items(environmentSchema),
+    environments: joi.array().optional().items(environmentSchema),
 });

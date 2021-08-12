@@ -11,7 +11,7 @@ The Unleash-proxy consist of the proxy that exposes a simple API for the client.
 
 ## The Proxy-client {#the-proxy-client}
 
-There is a js implementation of the proxy-client available. Find it here: [https://github.com/unleash-hosted/unleash-proxy-client-js](https://github.com/unleash-hosted/unleash-proxy-client-js)
+There is a js implementation of the proxy-client available. Find it here: [https://github.com/unleash/unleash-proxy-client-js](https://github.com/unleash/unleash-proxy-client-js)
 
 ## The Proxy-API {#the-proxy-api}
 

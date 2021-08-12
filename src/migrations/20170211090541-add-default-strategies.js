@@ -43,8 +43,8 @@ function removeStrategySQL(strategy) {
         WHERE name = '${strategy.name}' AND built_in = 1`;
 }
 
-exports.up = function(db, callback) {
-    const insertStrategies = strategies.map(s => cb => {
+exports.up = function (db, callback) {
+    const insertStrategies = strategies.map((s) => (cb) => {
         async.series(
             [
                 db.runSql.bind(db, insertEventsSQL(s)),
@@ -56,10 +56,10 @@ exports.up = function(db, callback) {
     async.series(insertStrategies, callback);
 };
 
-exports.down = function(db, callback) {
+exports.down = function (db, callback) {
     const removeStrategies = strategies
-        .filter(s => s.name !== 'default')
-        .map(s => cb => {
+        .filter((s) => s.name !== 'default')
+        .map((s) => (cb) => {
             async.series(
                 [
                     db.runSql.bind(db, removeEventsSQL(s)),

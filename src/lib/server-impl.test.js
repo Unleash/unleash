@@ -51,7 +51,7 @@ jest.mock('./db', () => ({
 jest.mock(
     '../migrator',
     () =>
-        function() {
+        function () {
             return Promise.resolve();
         },
 );
@@ -59,7 +59,7 @@ jest.mock(
 jest.mock(
     './util/version',
     () =>
-        function() {
+        function () {
             return 'unleash-test-version';
         },
 );

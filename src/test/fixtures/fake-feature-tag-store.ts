@@ -1,25 +1,42 @@
-import FeatureTagStore, {
+import { ITag } from '../../lib/types/model';
+import {
     IFeatureAndTag,
     IFeatureTag,
-} from '../../lib/db/feature-tag-store';
-import noLoggerProvider from './no-logger';
-import { ITag } from '../../lib/types/model';
+    IFeatureTagStore,
+} from '../../lib/types/stores/feature-tag-store';
 
-export default class FakeFeatureTagStore extends FeatureTagStore {
+export default class FakeFeatureTagStore implements IFeatureTagStore {
     private featureTags: IFeatureTag[] = [];
-
-    constructor() {
-        super(undefined, undefined, noLoggerProvider);
-    }
 
     async getAllTagsForFeature(featureName: string): Promise<ITag[]> {
         const tags = this.featureTags
-            .filter(f => f.featureName === featureName)
-            .map(f => ({
+            .filter((f) => f.featureName === featureName)
+            .map((f) => ({
                 type: f.tagType,
                 value: f.tagValue,
             }));
         return Promise.resolve(tags);
+    }
+
+    async delete(key: IFeatureTag): Promise<void> {
+        this.featureTags.splice(
+            this.featureTags.findIndex((t) => t === key),
+            1,
+        );
+    }
+
+    destroy(): void {}
+
+    async exists(key: IFeatureTag): Promise<boolean> {
+        return this.featureTags.some((t) => t === key);
+    }
+
+    async get(key: IFeatureTag): Promise<IFeatureTag> {
+        return this.featureTags.find((t) => t === key);
+    }
+
+    async getAll(): Promise<IFeatureTag[]> {
+        return this.featureTags;
     }
 
     async tagFeature(featureName: string, tag: ITag): Promise<ITag> {
@@ -35,7 +52,7 @@ export default class FakeFeatureTagStore extends FeatureTagStore {
         return Promise.resolve(this.featureTags);
     }
 
-    async dropFeatureTags(): Promise<void> {
+    async deleteAll(): Promise<void> {
         this.featureTags = [];
         return Promise.resolve();
     }
@@ -44,7 +61,7 @@ export default class FakeFeatureTagStore extends FeatureTagStore {
         featureTags: IFeatureTag[],
     ): Promise<IFeatureAndTag[]> {
         return Promise.all(
-            featureTags.map(async fT => {
+            featureTags.map(async (fT) => {
                 const saved = await this.tagFeature(fT.featureName, {
                     value: fT.tagValue,
                     type: fT.tagType,
@@ -58,7 +75,7 @@ export default class FakeFeatureTagStore extends FeatureTagStore {
     }
 
     async untagFeature(featureName: string, tag: ITag): Promise<void> {
-        this.featureTags = this.featureTags.filter(fT => {
+        this.featureTags = this.featureTags.filter((fT) => {
             if (fT.featureName === featureName) {
                 return !(fT.tagType === tag.type && fT.tagValue === tag.value);
             }

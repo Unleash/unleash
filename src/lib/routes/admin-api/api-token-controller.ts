@@ -9,11 +9,11 @@ import {
 } from '../../types/permissions';
 import { ApiTokenService } from '../../services/api-token-service';
 import { Logger } from '../../logger';
-import { ApiTokenType } from '../../db/api-token-store';
 import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
 import User from '../../types/user';
 import { IUnleashConfig } from '../../types/option';
+import { ApiTokenType } from '../../types/stores/api-token-store';
 
 interface IServices {
     apiTokenService: ApiTokenService;
@@ -57,7 +57,7 @@ class ApiTokenController extends Controller {
             res.json({ tokens });
         } else {
             const filteredTokens = tokens.filter(
-                t => !(t.type === ApiTokenType.ADMIN),
+                (t) => !(t.type === ApiTokenType.ADMIN),
             );
             res.json({ tokens: filteredTokens });
         }

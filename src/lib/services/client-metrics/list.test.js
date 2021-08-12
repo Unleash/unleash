@@ -17,7 +17,7 @@ function getList() {
 test('should emit "evicted" events for objects leaving list', () => {
     const list = getList();
     const evictedList = [];
-    list.on('evicted', value => {
+    list.on('evicted', (value) => {
         evictedList.push(value);
     });
 

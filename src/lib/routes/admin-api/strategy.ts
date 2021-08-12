@@ -1,5 +1,3 @@
-'use strict';
-
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import StrategyService from '../../services/strategy-service';

@@ -1,11 +1,14 @@
 import { Logger } from '../logger';
-import UserFeedbackStore, { IUserFeedback } from '../db/user-feedback-store';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import User from '../types/user';
+import {
+    IUserFeedback,
+    IUserFeedbackStore,
+} from '../types/stores/user-feedback-store';
 
 export default class UserFeedbackService {
-    private userFeedbackStore: UserFeedbackStore;
+    private userFeedbackStore: IUserFeedbackStore;
 
     private logger: Logger;
 

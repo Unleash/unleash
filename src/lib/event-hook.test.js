@@ -22,7 +22,7 @@ beforeAll(() => {
 });
 
 [FEATURE_CREATED, FEATURE_UPDATED, FEATURE_ARCHIVED, FEATURE_REVIVED].forEach(
-    feature => {
+    (feature) => {
         test(`should invoke hook on ${feature}`, () => {
             const data = { dataKey: feature };
             eventStore.emit(feature, data);

@@ -97,9 +97,7 @@ class StateController extends Controller {
                 if (downloadFile) {
                     res.attachment(`export-${timestamp}.yml`);
                 }
-                res.type('yaml').send(
-                    YAML.safeDump(data, { skipInvalid: true }),
-                );
+                res.type('yaml').send(YAML.dump(data, { skipInvalid: true }));
             } else {
                 if (downloadFile) {
                     res.attachment(`export-${timestamp}.json`);

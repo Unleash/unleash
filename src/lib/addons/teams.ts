@@ -109,7 +109,7 @@ export default class TeamsAddon extends Addon {
         const { data } = event;
         const typeStr = `*Type*: ${data.type}`;
         const project = `*Project*: ${data.project}`;
-        const strategies = `*Activation strategies*: \n${YAML.safeDump(
+        const strategies = `*Activation strategies*: \n${YAML.dump(
             data.strategies,
             { skipInvalid: true },
         )}`;

@@ -67,16 +67,11 @@ export default class StrategyStore implements IStrategyStore {
     }
 
     async delete(name: string): Promise<void> {
-        await this.db(TABLE)
-            .where({ name })
-            .del()
-            .catch((err) => {
-                this.logger.error('Could not delete strategy, error: ', err);
-            });
+        await this.db(TABLE).where({ name }).del();
     }
 
     async deleteAll(): Promise<void> {
-        return this.db(TABLE).del();
+        await this.db(TABLE).del();
     }
 
     destroy(): void {}
@@ -132,51 +127,26 @@ export default class StrategyStore implements IStrategyStore {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async createStrategy(data): Promise<void> {
-        this.db(TABLE)
-            .insert(this.eventDataToRow(data))
-            .catch((err) =>
-                this.logger.error('Could not insert strategy, error: ', err),
-            );
+        await this.db(TABLE).insert(this.eventDataToRow(data));
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async updateStrategy(data): Promise<void> {
-        this.db(TABLE)
+        await this.db(TABLE)
             .where({ name: data.name })
-            .update(this.eventDataToRow(data))
-            .catch((err) =>
-                this.logger.error('Could not update strategy, error: ', err),
-            );
+            .update(this.eventDataToRow(data));
     }
 
     async deprecateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void> {
-        this.db(TABLE)
-            .where({ name })
-            .update({ deprecated: true })
-            .catch((err) =>
-                this.logger.error('Could not deprecate strategy, error: ', err),
-            );
+        await this.db(TABLE).where({ name }).update({ deprecated: true });
     }
 
     async reactivateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void> {
-        this.db(TABLE)
-            .where({ name })
-            .update({ deprecated: false })
-            .catch((err) =>
-                this.logger.error(
-                    'Could not reactivate strategy, error: ',
-                    err,
-                ),
-            );
+        await this.db(TABLE).where({ name }).update({ deprecated: false });
     }
 
     async deleteStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void> {
-        await this.db(TABLE)
-            .where({ name })
-            .del()
-            .catch((err) => {
-                this.logger.error('Could not delete strategy, error: ', err);
-            });
+        await this.db(TABLE).where({ name }).del();
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

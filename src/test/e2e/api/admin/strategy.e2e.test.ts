@@ -175,26 +175,25 @@ test('cannot deprecate default strategy', async () => {
 });
 
 test('can update a exiting strategy with deprecated', async () => {
-    expect.assertions(0);
-
     await app.request
         .post('/api/admin/strategies')
         .send({
-            name: 'myCustomStrategyDepreacted',
+            name: 'myCustomStrategyDeprecated',
             description: 'Best strategy ever.',
             parameters: [],
             deprecated: true,
         })
-        .set('Content-Type', 'application/json');
+        .set('Content-Type', 'application/json')
+        .expect(201);
 
     const { body: strategy } = await app.request.get(
-        '/api/admin/strategies/myCustomStrategyDepreacted',
+        '/api/admin/strategies/myCustomStrategyDeprecated',
     );
 
     strategy.description = 'A new desc';
 
     return app.request
-        .put('/api/admin/strategies/default')
+        .put('/api/admin/strategies/myCustomStrategyDeprecated')
         .send(strategy)
         .set('Content-Type', 'application/json')
         .expect(200);

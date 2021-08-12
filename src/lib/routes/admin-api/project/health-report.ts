@@ -5,7 +5,7 @@ import { IUnleashConfig } from '../../../types/option';
 import ProjectHealthService from '../../../services/project-health-service';
 import { Logger } from '../../../logger';
 import { IArchivedQuery, IProjectParam } from '../../../types/model';
-import { handleErrors } from '../util';
+import { handleErrors } from '../../util';
 
 export default class ProjectHealthReport extends Controller {
     private projectHealthService: ProjectHealthService;

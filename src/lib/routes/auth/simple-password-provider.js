@@ -1,9 +1,9 @@
 const Controller = require('../controller');
 
 class PasswordProvider extends Controller {
-    constructor({ getLogger }, { userService }) {
-        super();
-        this.logger = getLogger('/auth/password-provider.js');
+    constructor(config, { userService }) {
+        super(config);
+        this.logger = config.getLogger('/auth/password-provider.js');
         this.userService = userService;
 
         this.post('/login', this.login);

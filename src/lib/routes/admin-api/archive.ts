@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
@@ -36,13 +35,10 @@ export default class ArchiveController extends Controller {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async getArchivedFeatures(req, res): Promise<void> {
-        try {
-            const features =
-                await this.featureService.getMetadataForAllFeatures(true);
-            res.json({ version: 2, features });
-        } catch (err) {
-            handleErrors(res, this.logger, err);
-        }
+        const features = await this.featureService.getMetadataForAllFeatures(
+            true,
+        );
+        res.json({ version: 2, features });
     }
 
     async deleteFeature(
@@ -51,25 +47,16 @@ export default class ArchiveController extends Controller {
     ): Promise<void> {
         const { featureName } = req.params;
         const user = extractUser(req);
-        try {
-            await this.featureService.deleteFeature(featureName, user);
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.featureService.deleteFeature(featureName, user);
+        res.status(200).end();
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async reviveFeatureToggle(req, res): Promise<void> {
         const userName = extractUser(req);
         const { featureName } = req.params;
-
-        try {
-            await this.featureService.reviveToggle(featureName, userName);
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.featureService.reviveToggle(featureName, userName);
+        res.status(200).end();
     }
 }
 

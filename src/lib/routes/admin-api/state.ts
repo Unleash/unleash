@@ -6,7 +6,7 @@ import { Request, Response } from 'express';
 import Controller from '../controller';
 import { ADMIN } from '../../types/permissions';
 import extractUser from '../../extract-user';
-import { handleErrors } from './util';
+import { handleErrors } from '../util';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';

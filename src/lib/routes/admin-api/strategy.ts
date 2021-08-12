@@ -6,7 +6,7 @@ import { Logger } from '../../logger';
 const Controller = require('../controller');
 
 const extractUser = require('../../extract-user');
-const { handleErrors } = require('./util');
+const { handleErrors } = require('../util');
 const {
     DELETE_STRATEGY,
     CREATE_STRATEGY,

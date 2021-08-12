@@ -1,9 +1,23 @@
-import { IRouter } from 'express';
+import { IRouter, Request, Response } from 'express';
+import { Logger } from 'lib/logger';
 import { IUnleashConfig } from '../types/option';
+import { handleErrors } from './util';
 
 const { Router } = require('express');
 const NoAccessError = require('../error/no-access-error');
 const requireContentType = require('../middleware/content_type_checker');
+
+interface IRequestHandler<
+    P = any,
+    ResBody = any,
+    ReqBody = any,
+    ReqQuery = any,
+> {
+    (
+        req: Request<P, ResBody, ReqBody, ReqQuery>,
+        res: Response<ResBody>,
+    ): Promise<void> | void;
+}
 
 const checkPermission = (permission) => async (req, res, next) => {
     if (!permission) {
@@ -19,22 +33,41 @@ const checkPermission = (permission) => async (req, res, next) => {
  * Base class for Controllers to standardize binding to express Router.
  */
 export default class Controller {
+    private ownLogger: Logger;
+
     app: IRouter;
 
     config: IUnleashConfig;
 
     constructor(config: IUnleashConfig) {
+        this.ownLogger = config.getLogger(
+            `controller/${this.constructor.name}`,
+        );
         this.app = Router();
         this.config = config;
     }
 
-    get(path: string, handler: Function, permission?: string): void {
-        this.app.get(path, checkPermission(permission), handler.bind(this));
+    wrap(handler: IRequestHandler): IRequestHandler {
+        return async (req: Request, res: Response) => {
+            try {
+                await handler(req, res);
+            } catch (error) {
+                handleErrors(res, this.ownLogger, error);
+            }
+        };
+    }
+
+    get(path: string, handler: IRequestHandler, permission?: string): void {
+        this.app.get(
+            path,
+            checkPermission(permission),
+            this.wrap(handler.bind(this)),
+        );
     }
 
     post(
         path: string,
-        handler: Function,
+        handler: IRequestHandler,
         permission?: string,
         ...acceptedContentTypes: string[]
     ): void {
@@ -42,13 +75,13 @@ export default class Controller {
             path,
             checkPermission(permission),
             requireContentType(...acceptedContentTypes),
-            handler.bind(this),
+            this.wrap(handler.bind(this)),
         );
     }
 
     put(
         path: string,
-        handler: Function,
+        handler: IRequestHandler,
         permission?: string,
         ...acceptedContentTypes: string[]
     ): void {
@@ -56,17 +89,21 @@ export default class Controller {
             path,
             checkPermission(permission),
             requireContentType(...acceptedContentTypes),
-            handler.bind(this),
+            this.wrap(handler.bind(this)),
         );
     }
 
-    delete(path: string, handler: Function, permission?: string): void {
-        this.app.delete(path, checkPermission(permission), handler.bind(this));
+    delete(path: string, handler: IRequestHandler, permission?: string): void {
+        this.app.delete(
+            path,
+            checkPermission(permission),
+            this.wrap(handler.bind(this)),
+        );
     }
 
     fileupload(
         path: string,
-        filehandler: Function,
+        filehandler: IRequestHandler,
         handler: Function,
         permission?: string,
     ): void {
@@ -74,7 +111,7 @@ export default class Controller {
             path,
             checkPermission(permission),
             filehandler.bind(this),
-            handler.bind(this),
+            this.wrap(handler.bind(this)),
         );
     }
 

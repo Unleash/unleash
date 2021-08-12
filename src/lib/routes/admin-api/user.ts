@@ -1,24 +1,16 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { IAuthRequest } from '../unleash-types';
 import Controller from '../controller';
 import { AccessService } from '../../services/access-service';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import UserService from '../../services/user-service';
-import User from '../../types/user';
-import { Logger } from '../../logger';
-import { handleErrors } from './util';
 import SessionService from '../../services/session-service';
 import UserFeedbackService from '../../services/user-feedback-service';
 
 interface IChangeUserRequest {
     password: string;
     confirmPassword: string;
-}
-
-export interface IUserRequest<PARAM, QUERY, BODY, RESPONSE>
-    extends Request<PARAM, QUERY, BODY, RESPONSE> {
-    user: User;
 }
 
 class UserController extends Controller {
@@ -29,8 +21,6 @@ class UserController extends Controller {
     private userFeedbackService: UserFeedbackService;
 
     private sessionService: SessionService;
-
-    private logger: Logger;
 
     constructor(
         config: IUnleashConfig,
@@ -52,7 +42,6 @@ class UserController extends Controller {
         this.userService = userService;
         this.sessionService = sessionService;
         this.userFeedbackService = userFeedbackService;
-        this.logger = config.getLogger('lib/routes/admin-api/user.ts');
 
         this.get('/', this.getUser);
         this.post('/change-password', this.updateUserPass);
@@ -76,34 +65,24 @@ class UserController extends Controller {
     }
 
     async updateUserPass(
-        req: IUserRequest<any, any, IChangeUserRequest, any>,
+        req: IAuthRequest<any, any, IChangeUserRequest, any>,
         res: Response,
     ): Promise<void> {
         const { user } = req;
         const { password, confirmPassword } = req.body;
-        try {
-            if (password === confirmPassword) {
-                this.userService.validatePassword(password);
-                await this.userService.changePassword(user.id, password);
-                res.status(200).end();
-            } else {
-                res.status(400).end();
-            }
-        } catch (e) {
-            handleErrors(res, this.logger, e);
+        if (password === confirmPassword) {
+            this.userService.validatePassword(password);
+            await this.userService.changePassword(user.id, password);
+            res.status(200).end();
+        } else {
+            res.status(400).end();
         }
     }
 
     async mySessions(req: IAuthRequest, res: Response): Promise<void> {
         const { user } = req;
-        try {
-            const sessions = await this.sessionService.getSessionsForUser(
-                user.id,
-            );
-            res.json(sessions);
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        const sessions = await this.sessionService.getSessionsForUser(user.id);
+        res.json(sessions);
     }
 }
 

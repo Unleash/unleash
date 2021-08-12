@@ -2,11 +2,11 @@ import { Response } from 'express';
 
 import Controller from '../controller';
 import { Logger } from '../../logger';
-import { IUserRequest } from './user';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import UserFeedbackService from '../../services/user-feedback-service';
-import { handleErrors } from './util';
+import { handleErrors } from '../util';
+import { IAuthRequest } from '../unleash-types';
 
 interface IFeedbackBody {
     neverShow?: boolean;
@@ -32,7 +32,7 @@ class UserFeedbackController extends Controller {
     }
 
     private async recordFeedback(
-        req: IUserRequest<any, any, IFeedbackBody, any>,
+        req: IAuthRequest<any, any, IFeedbackBody, any>,
         res: Response,
     ): Promise<void> {
         const BAD_REQUEST = 400;
@@ -65,7 +65,7 @@ class UserFeedbackController extends Controller {
     }
 
     private async updateFeedbackSettings(
-        req: IUserRequest<any, any, IFeedbackBody, any>,
+        req: IAuthRequest<any, any, IFeedbackBody, any>,
         res: Response,
     ): Promise<void> {
         const { user } = req;

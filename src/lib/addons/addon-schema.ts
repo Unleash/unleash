@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { nameType } from '../routes/admin-api/util';
+import { nameType } from '../routes/util';
 import { tagTypeSchema } from '../services/tag-type-schema';
 
 export const addonDefinitionSchema = joi.object().keys({

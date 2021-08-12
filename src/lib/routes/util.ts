@@ -1,6 +1,6 @@
 import joi from 'joi';
 import { Response } from 'express';
-import { Logger } from '../../logger';
+import { Logger } from '../logger';
 
 export const customJoi = joi.extend((j) => ({
     type: 'isUrlFriendly',

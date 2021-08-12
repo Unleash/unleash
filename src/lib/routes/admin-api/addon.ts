@@ -6,7 +6,6 @@ import { Logger } from '../../logger';
 import AddonService from '../../services/addon-service';
 
 import extractUser from '../../extract-user';
-import { handleErrors } from './util';
 import {
     CREATE_ADDON,
     UPDATE_ADDON,
@@ -34,13 +33,9 @@ class AddonController extends Controller {
     }
 
     async getAddons(req: Request, res: Response): Promise<void> {
-        try {
-            const addons = await this.addonService.getAddons();
-            const providers = this.addonService.getProviderDefinitions();
-            res.json({ addons, providers });
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        const addons = await this.addonService.getAddons();
+        const providers = this.addonService.getProviderDefinitions();
+        res.json({ addons, providers });
     }
 
     async getAddon(
@@ -48,12 +43,8 @@ class AddonController extends Controller {
         res: Response,
     ): Promise<void> {
         const { id } = req.params;
-        try {
-            const addon = await this.addonService.getAddon(id);
-            res.json(addon);
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        const addon = await this.addonService.getAddon(id);
+        res.json(addon);
     }
 
     async updateAddon(
@@ -64,27 +55,15 @@ class AddonController extends Controller {
         const createdBy = extractUser(req);
         const data = req.body;
 
-        try {
-            const addon = await this.addonService.updateAddon(
-                id,
-                data,
-                createdBy,
-            );
-            res.status(200).json(addon);
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        const addon = await this.addonService.updateAddon(id, data, createdBy);
+        res.status(200).json(addon);
     }
 
     async createAddon(req: Request, res: Response): Promise<void> {
         const createdBy = extractUser(req);
         const data = req.body;
-        try {
-            const addon = await this.addonService.createAddon(data, createdBy);
-            res.status(201).json(addon);
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        const addon = await this.addonService.createAddon(data, createdBy);
+        res.status(201).json(addon);
     }
 
     async deleteAddon(
@@ -93,12 +72,8 @@ class AddonController extends Controller {
     ): Promise<void> {
         const { id } = req.params;
         const username = extractUser(req);
-        try {
-            await this.addonService.removeAddon(id, username);
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.addonService.removeAddon(id, username);
+        res.status(200).end();
     }
 }
 export default AddonController;

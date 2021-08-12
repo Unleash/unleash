@@ -4,7 +4,7 @@ import { ADMIN } from '../../types/permissions';
 import UserService from '../../services/user-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
-import { handleErrors } from './util';
+import { handleErrors } from '../util';
 import { IUnleashConfig } from '../../types/option';
 import { EmailService } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';

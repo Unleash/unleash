@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import Controller from '../controller';
 import UserService from '../../services/user-service';
 import { Logger } from '../../logger';
-import { handleErrors } from '../admin-api/util';
+import { handleErrors } from '../util';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 

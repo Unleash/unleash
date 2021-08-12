@@ -7,7 +7,7 @@ import { Logger } from '../../logger';
 import Controller from '../controller';
 
 import { UPDATE_FEATURE } from '../../types/permissions';
-import { handleErrors } from './util';
+import { handleErrors } from '../util';
 import extractUsername from '../../extract-user';
 
 const version = 1;

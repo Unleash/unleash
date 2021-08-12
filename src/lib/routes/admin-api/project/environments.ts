@@ -4,7 +4,7 @@ import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
 import { Logger } from '../../../logger';
 import EnvironmentService from '../../../services/environment-service';
-import { handleErrors } from '../util';
+import { handleErrors } from '../../util';
 import { UPDATE_PROJECT } from '../../../types/permissions';
 
 const PREFIX = '/:projectId/environments';

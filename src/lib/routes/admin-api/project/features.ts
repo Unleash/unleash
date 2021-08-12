@@ -10,7 +10,7 @@ import {
     IConstraint,
     IStrategyConfig,
 } from '../../../types/model';
-import { handleErrors } from '../util';
+import { handleErrors } from '../../util';
 import extractUsername from '../../../extract-user';
 import ProjectHealthService from '../../../services/project-health-service';
 

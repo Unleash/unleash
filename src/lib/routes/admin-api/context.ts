@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import Controller from '../controller';
 
-import { handleErrors } from './util';
+import { handleErrors } from '../util';
 import extractUser from '../../extract-user';
 
 import {

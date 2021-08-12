@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { handleErrors } from './util';
+import { handleErrors } from '../util';
 import { IUnleashServices } from '../../types/services';
 import FeatureTypeService from '../../services/feature-type-service';
 import { Logger } from '../../logger';

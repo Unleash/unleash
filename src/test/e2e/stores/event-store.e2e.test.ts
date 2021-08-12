@@ -110,3 +110,71 @@ test('Should be able to store multiple events at once', async () => {
     });
     jest.useRealTimers();
 });
+
+test('Should get all stored events', async () => {
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'me@mail.com',
+        data: {
+            name: 'someName',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        },
+    };
+    await eventStore.store(event);
+    const events = await eventStore.getAll();
+    const lastEvent = events[0];
+
+    expect(lastEvent.type).toBe(event.type);
+    expect(lastEvent.createdBy).toBe(event.createdBy);
+});
+
+test('Should delete stored event', async () => {
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'me@mail.com',
+        data: {
+            name: 'someName',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        },
+    };
+    await eventStore.store(event);
+    const events = await eventStore.getAll();
+    const lastEvent = events[0];
+    await eventStore.delete(lastEvent.id);
+
+    const eventsAfterDelete = await eventStore.getAll();
+    const lastEventAfterDelete = eventsAfterDelete[0];
+
+    expect(events.length - eventsAfterDelete.length).toBe(1);
+    expect(lastEventAfterDelete.id).not.toBe(lastEvent.id);
+});
+
+test('Should get stored event by id', async () => {
+    const event = {
+        type: FEATURE_CREATED,
+        createdBy: 'me@mail.com',
+        data: {
+            name: 'someName',
+            enabled: true,
+            strategies: [{ name: 'default' }],
+        },
+    };
+    await eventStore.store(event);
+    const events = await eventStore.getAll();
+    const lastEvent = events[0];
+    const exists = await eventStore.exists(lastEvent.id);
+    const byId = await eventStore.get(lastEvent.id);
+
+    expect(lastEvent).toStrictEqual(byId);
+    expect(exists).toBe(true);
+});
+
+test('Should delete all stored events', async () => {
+    await eventStore.deleteAll();
+
+    const events = await eventStore.getAll();
+
+    expect(events).toHaveLength(0);
+});

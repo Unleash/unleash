@@ -1,4 +1,4 @@
-import { setupApp } from '../../helpers/test-helper';
+import { setupApp, setupAppWithCustomConfig } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import {
@@ -242,6 +242,44 @@ test('Creates a user and includes inviteLink and emailConfigured', async () => {
             expect(res.body.emailSent).toBeFalsy();
             expect(res.body.id).toBeTruthy();
         });
+});
+
+test('Creates a user but does not send email if sendEmail is set to false', async () => {
+    const myAppConfig = await setupAppWithCustomConfig(stores, {
+        email: {
+            host: 'smtp.ethereal.email',
+            smtpuser: 'rafaela.pouros@ethereal.email',
+            smtppass: 'CuVPBSvUFBPuqXMFEe',
+        },
+    });
+
+    await myAppConfig.request
+        .post('/api/admin/user-admin')
+        .send({
+            email: 'some@getunelash.ai',
+            name: 'Some Name',
+            rootRole: editorRole.id,
+            sendEmail: false,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.emailSent).toBeFalsy();
+        });
+    await myAppConfig.request
+        .post('/api/admin/user-admin')
+        .send({
+            email: 'some2@getunelash.ai',
+            name: 'Some2 Name',
+            rootRole: editorRole.id,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.emailSent).toBeTruthy();
+        });
+
+    await myAppConfig.destroy();
 });
 
 test('generates USER_CREATED event', async () => {

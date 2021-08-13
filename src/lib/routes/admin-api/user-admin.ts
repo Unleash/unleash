@@ -12,6 +12,14 @@ import { IUnleashServices } from '../../types/services';
 import SessionService from '../../services/session-service';
 import { IAuthRequest } from '../unleash-types';
 
+interface ICreateUserBody {
+    username: string;
+    email: string;
+    name: string;
+    rootRole: number;
+    sendEmail: boolean;
+}
+
 export default class UserAdminController extends Controller {
     private userService: UserService;
 
@@ -117,8 +125,11 @@ export default class UserAdminController extends Controller {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async createUser(req: IAuthRequest, res: Response): Promise<void> {
-        const { username, email, name, rootRole } = req.body;
+    async createUser(
+        req: IAuthRequest<any, any, ICreateUserBody, any>,
+        res: Response,
+    ): Promise<void> {
+        const { username, email, name, rootRole, sendEmail } = req.body;
         const { user } = req;
 
         try {
@@ -131,7 +142,6 @@ export default class UserAdminController extends Controller {
                 },
                 user,
             );
-
             const inviteLink = await this.resetTokenService.createNewUserUrl(
                 createdUser.id,
                 user.email,
@@ -139,7 +149,9 @@ export default class UserAdminController extends Controller {
 
             let emailSent = false;
             const emailConfigured = this.emailService.configured();
-            if (emailConfigured) {
+            const reallySendEmail =
+                emailConfigured && (sendEmail !== undefined ? sendEmail : true);
+            if (reallySendEmail) {
                 try {
                     await this.emailService.sendGettingStartedMail(
                         createdUser.name,

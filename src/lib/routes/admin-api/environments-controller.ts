@@ -5,7 +5,7 @@ import { IUnleashConfig } from '../../types/option';
 import { IEnvironment } from '../../types/model';
 import EnvironmentService from '../../services/environment-service';
 import { Logger } from '../../logger';
-import { handleErrors } from './util';
+import { handleErrors } from '../util';
 import { ADMIN } from '../../types/permissions';
 
 interface EnvironmentParam {

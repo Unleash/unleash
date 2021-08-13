@@ -1,4 +1,3 @@
-import { handleErrors } from './util';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import EventService from '../../services/event-service';
@@ -25,31 +24,21 @@ export default class EventController extends Controller {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async getEvents(req, res): Promise<void> {
-        try {
-            const events = await this.eventService.getEvents();
-            eventDiffer.addDiffs(events);
-            res.json({ version, events });
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        const events = await this.eventService.getEvents();
+        eventDiffer.addDiffs(events);
+        res.json({ version, events });
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async getEventsForToggle(req, res): Promise<void> {
         const toggleName = req.params.name;
-        try {
-            const events = await this.eventService.getEventsForToggle(
-                toggleName,
-            );
+        const events = await this.eventService.getEventsForToggle(toggleName);
 
-            if (events) {
-                eventDiffer.addDiffs(events);
-                res.json({ toggleName, events });
-            } else {
-                res.status(404).json({ error: 'Could not find events' });
-            }
-        } catch (e) {
-            handleErrors(res, this.logger, e);
+        if (events) {
+            eventDiffer.addDiffs(events);
+            res.json({ toggleName, events });
+        } else {
+            res.status(404).json({ error: 'Could not find events' });
         }
     }
 }

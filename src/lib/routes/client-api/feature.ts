@@ -1,6 +1,6 @@
 import memoizee from 'memoizee';
 import { Request, Response } from 'express';
-import { handleErrors } from '../admin-api/util';
+import { handleErrors } from '../util';
 import Controller from '../controller';
 import { IUnleashServices } from '../../types/services';
 import { IUnleashConfig } from '../../types/option';

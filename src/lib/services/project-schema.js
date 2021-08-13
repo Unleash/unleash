@@ -1,5 +1,5 @@
 const joi = require('joi');
-const { nameType } = require('../routes/admin-api/util');
+const { nameType } = require('../routes/util');
 
 const projectSchema = joi
     .object()

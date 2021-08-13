@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { customJoi } from '../routes/admin-api/util';
+import { customJoi } from '../routes/util';
 
 export const tagSchema = Joi.object()
     .keys({

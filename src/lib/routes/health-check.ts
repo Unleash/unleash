@@ -15,7 +15,7 @@ class HealthCheckController extends Controller {
         config: IUnleashConfig,
         { healthService }: Pick<IUnleashServices, 'healthService'>,
     ) {
-        super();
+        super(config);
         this.logger = config.getLogger('health-check.js');
         this.healthService = healthService;
         this.get('/', (req, res) => this.index(req, res));

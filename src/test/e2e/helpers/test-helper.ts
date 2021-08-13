@@ -60,6 +60,14 @@ export async function setupApp(stores: IUnleashStores): Promise<IUnleashTest> {
     return createApp(stores);
 }
 
+export async function setupAppWithCustomConfig(
+    stores: IUnleashStores,
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    customOptions: any,
+): Promise<IUnleashTest> {
+    return createApp(stores, undefined, undefined, customOptions);
+}
+
 export async function setupAppWithAuth(
     stores: IUnleashStores,
 ): Promise<IUnleashTest> {

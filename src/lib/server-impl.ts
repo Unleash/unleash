@@ -14,6 +14,7 @@ import User from './types/user';
 
 import * as permissions from './types/permissions';
 import AuthenticationRequired from './types/authentication-required';
+import Controller from './routes/controller';
 import * as eventType from './types/events';
 import { addEventHook } from './event-hook';
 import registerGracefulShutdown from './util/graceful-shutdown';
@@ -145,6 +146,7 @@ const serverImpl = {
     create,
     User,
     AuthenticationRequired,
+    Controller,
     permissions,
     eventType,
 };

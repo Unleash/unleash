@@ -75,7 +75,6 @@ export default class User implements IUser {
         this.seenAt = seenAt;
         this.loginAttempts = loginAttempts;
         this.createdAt = createdAt;
-        this.imageUrl = this.generateImageUrl();
     }
 
     generateImageUrl(): string {

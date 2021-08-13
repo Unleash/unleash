@@ -1,10 +1,10 @@
-import unleash from './lib/server-impl';
+import { start } from './lib/server-impl';
 import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
 
 process.nextTick(async () => {
     try {
-        await unleash.start(
+        await start(
             createConfig({
                 db: {
                     user: 'unleash_user',

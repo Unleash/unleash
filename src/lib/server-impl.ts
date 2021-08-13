@@ -11,6 +11,7 @@ import { createStores } from './db';
 import { createServices } from './services';
 import { createConfig } from './create-config';
 import User from './types/user';
+import { Logger } from './logger';
 
 import * as permissions from './types/permissions';
 import AuthenticationRequired from './types/authentication-required';
@@ -152,3 +153,5 @@ const serverImpl = {
 };
 export default serverImpl;
 module.exports = serverImpl;
+
+export type { Controller, AuthenticationRequired, User, Logger };

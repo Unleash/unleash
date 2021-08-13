@@ -14,6 +14,7 @@ module.exports = {
         'Getting started': [
             'user_guide/index',
             'user_guide/quickstart',
+            'user_guide/important-concepts',
             'user_guide/v4-whats-new',
             'user_guide/create_feature_toggle',
             'user_guide/activation_strategy',
@@ -36,6 +37,7 @@ module.exports = {
             'sdks/unleash-proxy',
             'sdks/android_proxy_sdk',
             'sdks/proxy-javascript',
+            'sdks/proxy-react',
             'sdks/proxy-ios',
             'sdks/community',
         ],

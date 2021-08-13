@@ -13,7 +13,7 @@ NOTE: This is a demo instance set up with the enterprise version. Some of the fu
 
 ### I want to test toggles in a client side environment
 
-In order to use feature toggles on the client side you need to connect through [the unleash proxy](../sdks/unleash_proxy). The unleash proxy will provide a security and performance layer between your client application and the unleash instance. For now, you can use the proxy we have set up on the demo instance.
+In order to use feature toggles on the client side you need to connect through [the unleash proxy](../sdks/unleash-proxy). The unleash proxy will provide a security and performance layer between your client application and the unleash instance. For now, you can use the proxy we have set up on the demo instance.
 
 #### Create your first toggle
 
@@ -33,7 +33,7 @@ Now you can open your application code and connect through one of the proxy SDKs
 - [Javascript Proxy SDK](../sdks/proxy-javascript)
 - [iOS Proxy SDK](../sdks/proxy-ios)
 - [Android Proxy SDK](../sdks/android_proxy_sdk)
-- React
+- [React](../sdks/proxy-react)
 
 Here is a connection example using the javascript proxy SDK:
 

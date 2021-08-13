@@ -46,3 +46,15 @@ When you're done making changes and you'd like to propose them for review by ope
 Congratulations! The whole Unleash community thanks you. :sparkles:
 
 Once your PR is merged, you will be proudly listed as a contributor in the [contributor chart](https://github.com/unleash/Unleash/graphs/contributors).
+
+## Nice to know
+
+### Controllers
+
+In order to handle HTTP requests we have an abstraction called [Controller](https://github.com/Unleash/unleash/blob/master/src/lib/routes/controller.ts). If you want to introduce a new route handler for a specific path (and sub pats) you should implement a controller class which extends the base Controller. An example to follow is the [routes/admin-api/feature.ts](https://github.com/Unleash/unleash/blob/master/src/lib/routes/admin-api/feature.ts) implementation. 
+
+The controller takes care of the following:
+- try/catch RequestHandler method
+- error handling with proper response code if they fail
+- `await` the RequestHandler method if it returns a promise (so you don't have to)
+- access control so that you can just list the required permission for a RequestHandler and the base Controller will make sure the user have these permissions. 

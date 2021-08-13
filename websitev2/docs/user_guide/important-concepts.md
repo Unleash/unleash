@@ -13,6 +13,8 @@ Activation strategies compound, and every single strategy will be evaluated. If 
 
 > Unless you add activation strategies on toggle creation, the toggle will be created with the default strategy. The default strategy says that the toggle is either 100% off or 100% on for all users. This means that any other strategies you add will have no effect. If you want to use strategies to control rollout you need to remove the default strategy.
 
+Unleash comes with a set of built in strategies. [But you can also build your own custom strategies.](../advanced/custom_activation_strategy)
+
 [You can read more about activation strategies here.](./activation_strategy)
 
 ## Local evaluation

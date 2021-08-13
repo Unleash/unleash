@@ -9,7 +9,7 @@ Welcome to the Unleash documentation. Our goal with our documentation is to guid
 
 One of the most important aspects of the architecture to understand is that feature toggles _are evaluated in a client SDKs_ which runs as part of your application. This makes toggle evaluations super-fast (_we talk nano-seconds_), scalable and resilient against network disturbances. In order to achieve this Unleash compromises a small update-delay when you change your toggle configurations until it is fully propagated to your application (in terms of seconds and is configurable).
 
-If you want more details you cam read about [our unique architecture](https://www.getunleash.io/blog/our-unique-architecture).
+If you want more details you can read about [our unique architecture](https://www.getunleash.io/blog/our-unique-architecture).
 
 ### Unleash Server {#unleash-server}
 
@@ -21,7 +21,7 @@ Before you can connect your application to Unleash you need a Unleash server. Yo
    - [Click-to-deploy on Heroku](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash)
 2. **Unleash Enterprise**
    - [Hosted Plans](https://www.getunleash.io/plans)
-   - [Self-hosted](https://www.unleash-hosted.com/articles/self-host-your-feature-toggle-system/)
+   - [Self-hosted](https://www.getunleash.io/blog/self-host-your-feature-toggle-system)
 
 ### System Overview {#system-overview}
 

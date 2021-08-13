@@ -28,7 +28,7 @@ The easies way to run Unleash is via Docker. We have published a [docker image o
 **Step 1: Pull**
 
 ```bash
-docker pull docker pull unleashorg/unleash-proxy
+docker pull unleashorg/unleash-proxy
 ```
 
 **Step 2: Start**

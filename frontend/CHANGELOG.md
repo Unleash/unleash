@@ -7,10 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
-
-# 4.1.0-beta.1
-- Feat/new navigation (#314)
-
+# 4.1.0-beta.2
+- Fix/frontend projects changes 
+- chore(deps): bump path-parse from 1.0.6 to 1.0.7 
+- Add switch for deciding whether to send email.
+- Fix/make sure stickiness exists 
+- Load name from url 
+- chore(deps): bump dns-packet from 1.3.1 to 1.3.4 
+- chore(deps): bump ws from 6.2.1 to 6.2.2 
+- chore(deps): bump tar from 6.1.0 to 6.1.5 
+- fix: variant stickiness should not revert to default when updating 
+- fix: add logout as an explicit call 
+- Feat/new navigation 
 # 4.0.5 fix: run use effect when value changes, not object (#315)
 - fix: run use effect when value changes, not object (#315)
 - fix: add flex wrap

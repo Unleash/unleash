@@ -131,11 +131,37 @@ password: unleash4all
 
 In order to create a toggle through the UI, [you can follow this guide](./create_feature_toggle). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
+If you'd like to create your feature toggles with code, you can hit the create feature endpoint with the following command:
+
+> CRUD operations require an admin API key. For security reasons we have split the admin and client API into separate APIs. You can view how to create API keys in the next section of this guide. Make sure you create client keys for use in SDKs and restrict Admin api key usage.
+
+```curl
+curl -H "Content-Type: application/json" \
+     -H "Authorization: MY-ADMIN-API-KEY" \
+     -X POST \
+     -d '{
+  "name": "my-unique-feature-name",
+  "description": "lorem ipsum..",
+  "type": "release",
+  "enabled": false,
+  "stale": false,
+  "strategies": [
+    {
+      "name": "default",
+      "parameters": {}
+    }
+  ],
+  "variants": [],
+  "tags": []
+}' \
+http://CHANGEME/api/admin/features
+```
+
 ### Connect your SDK
 
-Now you're logged in as an admin. Next, find the navigation, open up the Admin panel and find the API Access tab. Click "Add new api key" and create a client key. This key can be used to connect to the instance with our [SDKs](../sdks).
+Next, find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](../sdks).
 
-You can find more [information about API keys here.](./api-token).
+You can find more [information about API keys here](./api-token).
 
 Now that you have your API key created, you have what you need to connect to the SDK (NodeJS example):
 
@@ -187,6 +213,62 @@ password: unleash4all
 ### Create your first toggle
 
 In order to create a toggle through the UI, [you can follow this guide](./create_feature_toggle). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+
+If you'd like to create your feature toggles with code, you can hit the create feature endpoint with the following command:
+
+> CRUD operations require an admin API key. For security reasons we have split the admin and client API into separate APIs. You can view how to create API keys in the next section of this guide. Make sure you create client keys for use in SDKs and restrict Admin api key usage.
+
+```curl
+curl -H "Content-Type: application/json" \
+     -H "Authorization: MY-ADMIN-API-KEY" \
+     -X POST \
+     -d '{
+  "name": "my-unique-feature-name",
+  "description": "lorem ipsum..",
+  "type": "release",
+  "enabled": false,
+  "stale": false,
+  "strategies": [
+    {
+      "name": "default",
+      "parameters": {}
+    }
+  ],
+  "variants": [],
+  "tags": []
+}' \
+http://CHANGEME/api/admin/features
+```
+
+### Connect your SDK
+
+Find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](../sdks).
+
+You can find more [information about API keys here](./api-token).
+
+Now that you have your API key created, you have what you need to connect to the SDK (NodeJS example):
+
+```javascript
+const { initialize } = require('unleash-client');
+const unleash = initialize({
+  url: 'https://localhost:4242/api/',
+  appName: 'my-app-name',
+  instanceId: 'my-unique-instance-id',
+  customHeaders: {
+    Authorization: 'YOUR_API_KEY_HERE',
+  },
+});
+
+unleash.on('synchronized', () => {
+  // Unleash is ready to serve updated feature toggles.
+
+  // Check a feature flag
+  const isEnabled = unleash.isEnabled('some-toggle');
+
+  // Check the variant
+  const variant = unleash.getVariant('app.ToggleY');
+});
+```
 
 ## I want to set up a production ready instance
 

@@ -382,14 +382,19 @@ export const baseRoutes = routes
     .filter(route => !route.parent);
 
 const computeRoutes = () => {
+    const apiAccess = routes.find(route => route.path === '/admin/api');
+    const mainNavRoutes =
+        baseRoutes.filter(
+            route =>
+                route.path !== '/admin' &&
+                route.path !== '/logout' &&
+                route.path !== '/history'
+        ) || [];
+
+    mainNavRoutes.push(apiAccess);
+
     const computedRoutes = {
-        mainNavRoutes:
-            baseRoutes.filter(
-                route =>
-                    route.path !== '/admin' &&
-                    route.path !== '/logout' &&
-                    route.path !== '/history'
-            ) || [],
+        mainNavRoutes,
         adminRoutes:
             routes.filter(
                 route =>

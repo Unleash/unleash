@@ -38,6 +38,7 @@ export const useStyles = makeStyles(theme => ({
         fontFamily: theme.typography.fontFamily,
         alignItems: 'center',
         color: 'inherit',
+        cursor: 'pointer',
     },
     headerTitle: {
         fontSize: '1.4rem',

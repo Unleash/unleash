@@ -78,7 +78,13 @@ class ProjectFormComponent extends Component {
         const { project } = this.state;
         evt.preventDefault();
 
-        this.props.history.push(`/projects/${project.id}`);
+        const { editMode } = this.props;
+
+        if (editMode) {
+            this.props.history.push(`/projects/${project.id}`);
+            return;
+        }
+        this.props.history.goBack();
     };
 
     onSubmit = async evt => {

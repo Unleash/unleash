@@ -8,6 +8,7 @@ import {
     TextField,
     InputAdornment,
     Button,
+    Tooltip,
 } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 import Dialog from '../../../common/Dialogue';
@@ -46,7 +47,7 @@ const AddVariant = ({
                 name: editVariant.name,
                 weight: editVariant.weight / 10,
                 weightType: editVariant.weightType || weightTypes.VARIABLE,
-                stickiness: editVariant.stickiness
+                stickiness: editVariant.stickiness,
             });
             if (editVariant.payload) {
                 setPayload(editVariant.payload);
@@ -245,7 +246,12 @@ const AddVariant = ({
                 </Grid>
                 <p style={{ marginBottom: '1rem' }}>
                     <strong>Payload </strong>
-                    <Info title="Passed to the variant object. Can be anything (json, value, csv)" />
+                    <Tooltip
+                        title="Passed to the variant object. Can be anything
+                        (json, value, csv)"
+                    >
+                        <Info style={{ width: '18.5px', height: '18.5px' }} />
+                    </Tooltip>
                 </p>
                 <Grid container>
                     <Grid item md={3}>
@@ -256,6 +262,7 @@ const AddVariant = ({
                             value={payload.type}
                             options={payloadOptions}
                             onChange={onPayload}
+                            style={{ minWidth: '100px' }}
                         />
                     </Grid>
                     <Grid item md={9}>
@@ -276,7 +283,14 @@ const AddVariant = ({
                     show={
                         <p style={{ marginBottom: '.5rem' }}>
                             <strong>Overrides </strong>
-                            <Info title="Here you can specify which users should get this variant." />
+                            <Tooltip title="Here you can specify which users should get this variant.">
+                                <Info
+                                    style={{
+                                        width: '18.5px',
+                                        height: '18.5px',
+                                    }}
+                                />
+                            </Tooltip>
                         </p>
                     }
                 />

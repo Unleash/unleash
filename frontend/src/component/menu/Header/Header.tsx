@@ -100,9 +100,6 @@ const Header = () => {
                                     onClick={e =>
                                         setAnchorElAdvanced(e.currentTarget)
                                     }
-                                    onMouseEnter={e =>
-                                        setAnchorElAdvanced(e.currentTarget)
-                                    }
                                 >
                                     Navigate
                                     <KeyboardArrowDown />
@@ -138,9 +135,6 @@ const Header = () => {
                                         show={
                                             <IconButton
                                                 onClick={e =>
-                                                    setAnchorEl(e.currentTarget)
-                                                }
-                                                onMouseEnter={e =>
                                                     setAnchorEl(e.currentTarget)
                                                 }
                                             >

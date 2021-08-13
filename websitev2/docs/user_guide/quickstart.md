@@ -269,7 +269,3 @@ unleash.on('synchronized', () => {
   const variant = unleash.getVariant('app.ToggleY');
 });
 ```
-
-## I want to set up a production ready instance
-
-Coming soon.

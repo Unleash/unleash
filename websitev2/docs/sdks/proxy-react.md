@@ -1,6 +1,6 @@
 ---
 id: proxy-react
-title: React proxy client
+title: React proxy SDK
 ---
 
 > This library is meant to be used with the [unleash-proxy](https://github.com/Unleash/unleash-proxy). The proxy application layer will sit between your unleash instance and your client applications, and provides performance and security benefits. DO NOT TRY to connect this library directly to the unleash instance, as the datasets follow different formats because the proxy only returns evaluated toggle information.

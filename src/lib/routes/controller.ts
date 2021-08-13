@@ -31,6 +31,11 @@ const checkPermission = (permission) => async (req, res, next) => {
 
 /**
  * Base class for Controllers to standardize binding to express Router.
+ *
+ * This class will take care of the following:
+ * - try/catch inside RequestHandler
+ * - await if the RequestHandler returns a promise.
+ * - access control
  */
 export default class Controller {
     private ownLogger: Logger;
@@ -115,7 +120,6 @@ export default class Controller {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     use(path: string, router: IRouter): void {
         this.app.use(path, router);
     }

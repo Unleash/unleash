@@ -19,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/unleash/unleash/issues"
   },
-  "types": "./dist/lib/types/index.d.js",
+  "types": "./dist/lib/server-impl.d.ts",
   "engines": {
     "node": ">=14"
   },

@@ -153,5 +153,3 @@ const serverImpl = {
 };
 export default serverImpl;
 module.exports = serverImpl;
-
-export type { Controller, AuthenticationRequired, User, Logger };

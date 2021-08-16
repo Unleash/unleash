@@ -9,7 +9,7 @@ In this section we will attempt to guide you in order to get started with Unleas
 
 Usually, you'll need to set up an Unleash instance in order to work with Unleash. However, for testing purposes we have set up a demo instance that you can use in order to test out different use-cases before setting up your own instance. You can find the demo instance admin panel here: https://app.unleash-hosted.com/demo/
 
-NOTE: This is a demo instance set up with the enterprise version. Some of the functionality may be enterprise specific, but everything we cover here is also available in open source.
+NOTE: This is a demo instance set up with the Enterprise version. Some of the functionality may be enterprise specific, but everything we cover here is also available in open source.
 
 ### I want to test toggles in a client side environment
 

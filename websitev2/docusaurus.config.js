@@ -113,7 +113,7 @@ module.exports = {
                 redirects: [
                     {
                         to: '/sdks',
-                        from: ['/user_guide/client-sdk', '/client-sdk']
+                        from: ['/user_guide/client-sdk', '/client-sdk', '/user_guide/connect_sdk']
                     },
                     {
                         to: '/user_guide/api-token',

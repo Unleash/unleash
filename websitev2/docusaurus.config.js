@@ -125,11 +125,11 @@ module.exports = {
                 redirects: [
                     {
                         to: '/sdks',
-<<<<<<< HEAD
-                        from: ['/user_guide/client-sdk', '/client-sdk', '/user_guide/connect_sdk']
-=======
-                        from: ['/user_guide/client-sdk', '/client-sdk'],
->>>>>>> 014f5003 (fix: remove trailing slashes)
+                        from: [
+                            '/user_guide/client-sdk',
+                            '/client-sdk',
+                            '/user_guide/connect_sdk',
+                        ],
                     },
                     {
                         to: '/user_guide/api-token',

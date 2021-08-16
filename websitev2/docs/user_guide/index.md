@@ -28,8 +28,8 @@ Before you can connect your application to Unleash you need a Unleash server. Yo
 ![system_overview](/img/Unleash_architecture.svg 'System Overview')
 
 - **Unleash API** - The service holding all feature toggles and their configurations. Configurations declare which activation strategies to use and which parameters they should get. [API documentation](/api)
-- **Unleash Admin UI** - The dashboard used to manage feature toggles, define new strategies, look at metrics, etc. [Create your first feature toggle](./user_guide/create_feature_toggle)
-- **Unleash SDK** - Used by clients to check if a feature is enabled or disabled. The SDK also collects metrics and sends them to the Unleash API. [See all our SDKs](/sdks)
-- **Unleash Proxy** - Sits between frontend/native applications and the Unleash API. Ensures high performance and that you don't expose the full feature toggle configuration to end-users. [Read more about Unleash Proxy](/sdks/unleash-proxy)
+- **Unleash Admin UI** - The dashboard used to manage feature toggles, define new strategies, look at metrics, etc. [Create your first feature toggle](user_guide/create-feature-toggle.md)
+- **Unleash SDK** - Used by clients to check if a feature is enabled or disabled. The SDK also collects metrics and sends them to the Unleash API. [See all our SDKs](sdks/index.md)
+- **Unleash Proxy** - Sits between frontend/native applications and the Unleash API. Ensures high performance and that you don't expose the full feature toggle configuration to end-users. [Read more about Unleash Proxy](sdks/unleash-proxy.md)
 
-To be super fast (_we talk nano-seconds_), the [client SDK](/sdks/index.md) caches all feature toggles and their current configuration in memory. The activation strategies are also implemented in the SDK. This makes it really fast to check if a toggle is on or off because it is just a simple function operating on local state, without the need to poll data from the database.
+To be super fast (_we talk nano-seconds_), the [client SDK](sdks/index.md) caches all feature toggles and their current configuration in memory. The activation strategies are also implemented in the SDK. This makes it really fast to check if a toggle is on or off because it is just a simple function operating on local state, without the need to poll data from the database.

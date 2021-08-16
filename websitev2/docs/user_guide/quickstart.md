@@ -102,9 +102,9 @@ Now you can fetch the feature toggle you created and try turning it on / off in 
 
 ## I want to setup my own instance for testing purposes
 
-If you want to set up your own instance for testing purposes you can easily do so by using one of our premade setup kits for Heroku or digitalocean.
+If you want to set up your own instance for testing purposes you can easily do so by using one of our premade setup kits for Heroku or DigitalOcean.
 
-> The Heroku instance setup is FREE, and includes a DB to save your state but it will eventually go to sleep when not used. The digitalocean setup utilises droplets and will cost you around 10$/month to run, but in turn it will not go to sleep. NOTE: If you use the DigitalOcean link below and are a new user, you will receive 100$ in FREE credits.
+> The Heroku instance setup is FREE, and includes a DB to save your state but it will eventually go to sleep when not used. The DigitalOcean setup utilises droplets and will cost you around 10$/month to run, but in turn it will not go to sleep. NOTE: If you use the DigitalOcean link below and are a new user, you will receive 100$ in FREE credits.
 
 ### Deploy a free version of Unleash to Heroku
 

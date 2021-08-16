@@ -74,6 +74,13 @@ Api URL: https://app.unleash-hosted.com/demo/api/
 Secret key: 56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d
 ```
 
+Curl command test credentials and retrieve feature toggles:
+
+```
+curl https://app.unleash-hosted.com/demo/api/client/features \
+-H "Authorization: 56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d";
+```
+
 Now you can open up your application code and create a connection to Unleash using one of our [SDKs](sdks/index.md). Here's an example using the NodeJS SDK:
 
 ```javascript

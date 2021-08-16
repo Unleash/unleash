@@ -13,11 +13,11 @@ NOTE: This is a demo instance set up with the enterprise version. Some of the fu
 
 ### I want to test toggles in a client side environment
 
-In order to use feature toggles on the client side you need to connect through [the unleash proxy](../sdks/unleash-proxy). The unleash proxy will provide a security and performance layer between your client application and the unleash instance. For now, you can use the proxy we have set up on the demo instance.
+In order to use feature toggles on the client side you need to connect through [the unleash proxy](sdks/unleash-proxy.md). The unleash proxy will provide a security and performance layer between your client application and the unleash instance. For now, you can use the proxy we have set up on the demo instance.
 
 #### Create your first toggle
 
-In order to create a toggle through the UI, [you can follow this guide](./create_feature_toggle). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a toggle through the UI, [you can follow this guide](create-feature-toggle.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
 #### Connecting to the unleash proxy from your app
 
@@ -30,10 +30,10 @@ Secret key: proxy-123 (edited)
 
 Now you can open your application code and connect through one of the proxy SDKs:
 
-- [Javascript Proxy SDK](../sdks/proxy-javascript)
-- [iOS Proxy SDK](../sdks/proxy-ios)
-- [Android Proxy SDK](../sdks/android_proxy_sdk)
-- [React](../sdks/proxy-react)
+- [Javascript Proxy SDK](sdks/proxy-javascript.md)
+- [iOS Proxy SDK](sdks/proxy-ios.md)
+- [Android Proxy SDK](sdks/android-proxy.md)
+- [React](sdks/proxy-react.md)
 
 Here is a connection example using the javascript proxy SDK:
 
@@ -63,7 +63,7 @@ Now you are ready to use the feature toggle you created in your client side appl
 
 #### Create your first toggle
 
-In order to create a toggle through the UI, [you can follow this guide](./create_feature_toggle). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a toggle through the UI, [you can follow this guide](create-feature-toggle.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
 #### Connecting to the unleash instance from your app
 
@@ -74,7 +74,7 @@ Api URL: https://app.unleash-hosted.com/demo/api/
 Secret key: 56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d
 ```
 
-Now you can open up your application code and create a connection to unleash using one of our [SDKs](../sdks). Here's an example using the NodeJS SDK:
+Now you can open up your application code and create a connection to unleash using one of our [SDKs](sdks/index.md). Here's an example using the NodeJS SDK:
 
 ```javascript
 const { initialize } = require('unleash-client');
@@ -129,7 +129,7 @@ password: unleash4all
 
 ### Create your first toggle
 
-In order to create a toggle through the UI, [you can follow this guide](./create_feature_toggle). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a toggle through the UI, [you can follow this guide](create-feature-toggle.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
 If you'd like to create your feature toggles with code, you can hit the create feature endpoint with the following command:
 
@@ -159,9 +159,9 @@ http://CHANGEME/api/admin/features
 
 ### Connect your SDK
 
-Next, find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](../sdks).
+Next, find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](sdks/index.md).
 
-You can find more [information about API keys here](./api-token).
+You can find more [information about API keys here](token.md).
 
 Now that you have your API key created, you have what you need to connect to the SDK (NodeJS example):
 
@@ -199,7 +199,7 @@ The easiest way to run unleash locally is using [docker](https://www.docker.com/
 
 Unleash should now be available on `http://localhost:4242`
 
-[Click here to see all options to get started locally.](../deploy/getting_started)
+[Click here to see all options to get started locally.](deploy/getting-started.md)
 
 ### Accessing your new instance
 
@@ -212,7 +212,7 @@ password: unleash4all
 
 ### Create your first toggle
 
-In order to create a toggle through the UI, [you can follow this guide](./create_feature_toggle). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a toggle through the UI, [you can follow this guide](create-feature-toggle.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
 If you'd like to create your feature toggles with code, you can hit the create feature endpoint with the following command:
 
@@ -242,9 +242,9 @@ http://CHANGEME/api/admin/features
 
 ### Connect your SDK
 
-Find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](../sdks).
+Find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](sdks/index.md).
 
-You can find more [information about API keys here](./api-token).
+You can find more [information about API keys here](token.md).
 
 Now that you have your API key created, you have what you need to connect to the SDK (NodeJS example):
 

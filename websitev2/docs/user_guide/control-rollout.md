@@ -45,4 +45,4 @@ In the example above we have to configure two activation strategies, **userWithI
 
 You use activation strategies to control who the feature toggle will be enabled for. You can configure multiple strategies for a feature toggle, and they are considered in an OR fashion, meaning if one of them evaluates to true the toggle will be enabled.
 
-If you need to limit the exposure (AND) you should look in to [strategy constraints](/advanced/strategy_constraints), which is the building block for that.
+If you need to limit the exposure (AND) you should look in to [strategy constraints](advanced/strategy-constraints.md), which is the building block for that.

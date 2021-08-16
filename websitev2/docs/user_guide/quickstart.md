@@ -3,23 +3,23 @@ id: quickstart
 title: Quickstart
 ---
 
-In this section we will attempt to guide you in order to get started with Unleash easily. There are multiple options to get started with unleash, browse the headings to find the method that works best for you.
+In this section we will attempt to guide you in order to get started with Unleash easily. There are multiple options to get started with Unleash, browse the headings to find the method that works best for you.
 
 ## I just want to get started creating toggles without much setup
 
-Usually, you'll need to set up an unleash instance in order to work with unleash. However, for testing purposes we have set up a demo instance that you can use in order to test out different use-cases before setting up your own instance. You can find the demo instance admin panel here: https://app.unleash-hosted.com/demo/
+Usually, you'll need to set up an Unleash instance in order to work with Unleash. However, for testing purposes we have set up a demo instance that you can use in order to test out different use-cases before setting up your own instance. You can find the demo instance admin panel here: https://app.unleash-hosted.com/demo/
 
 NOTE: This is a demo instance set up with the enterprise version. Some of the functionality may be enterprise specific, but everything we cover here is also available in open source.
 
 ### I want to test toggles in a client side environment
 
-In order to use feature toggles on the client side you need to connect through [the unleash proxy](sdks/unleash-proxy.md). The unleash proxy will provide a security and performance layer between your client application and the unleash instance. For now, you can use the proxy we have set up on the demo instance.
+In order to use feature toggles on the client side you need to connect through [the Unleash proxy](sdks/unleash-proxy.md). The Unleash proxy will provide a security and performance layer between your client application and the Unleash instance. For now, you can use the proxy we have set up on the demo instance.
 
 #### Create your first toggle
 
 In order to create a toggle through the UI, [you can follow this guide](create-feature-toggle.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
-#### Connecting to the unleash proxy from your app
+#### Connecting to the Unleash proxy from your app
 
 Connection details:
 
@@ -65,7 +65,7 @@ Now you are ready to use the feature toggle you created in your client side appl
 
 In order to create a toggle through the UI, [you can follow this guide](create-feature-toggle.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
 
-#### Connecting to the unleash instance from your app
+#### Connecting to the Unleash instance from your app
 
 Connection details:
 
@@ -74,7 +74,7 @@ Api URL: https://app.unleash-hosted.com/demo/api/
 Secret key: 56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d
 ```
 
-Now you can open up your application code and create a connection to unleash using one of our [SDKs](sdks/index.md). Here's an example using the NodeJS SDK:
+Now you can open up your application code and create a connection to Unleash using one of our [SDKs](sdks/index.md). Here's an example using the NodeJS SDK:
 
 ```javascript
 const { initialize } = require('unleash-client');
@@ -102,15 +102,15 @@ Now you can fetch the feature toggle you created and try turning it on / off in 
 
 ## I want to setup my own instance for testing purposes
 
-If you want to set up your own instance for testing purposes you can easily do so by using one of our premade setup kits for heroku or digitalocean.
+If you want to set up your own instance for testing purposes you can easily do so by using one of our premade setup kits for Heroku or digitalocean.
 
-> The heroku instance setup is FREE, and includes a DB to save your state but it will eventually go to sleep when not used. The digitalocean setup utilises droplets and will cost you around 10$/month to run, but in turn it will not go to sleep. NOTE: If you use the DigitalOcean link below and are a new user, you will receive 100$ in FREE credits.
+> The Heroku instance setup is FREE, and includes a DB to save your state but it will eventually go to sleep when not used. The digitalocean setup utilises droplets and will cost you around 10$/month to run, but in turn it will not go to sleep. NOTE: If you use the DigitalOcean link below and are a new user, you will receive 100$ in FREE credits.
 
-### Deploy a free version of unleash to Heroku
+### Deploy a free version of Unleash to Heroku
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash)
 
-### Deploy a paid version of unleash to DigitalOcean
+### Deploy a paid version of Unleash to DigitalOcean
 
 > You'll receive 100\$ in free credits if you are a new DigitalOcean user using this link.
 
@@ -187,7 +187,7 @@ unleash.on('synchronized', () => {
 });
 ```
 
-## I want to run unleash locally
+## I want to run Unleash locally
 
 ### Run Unleash with docker-compose
 

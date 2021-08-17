@@ -8,15 +8,15 @@ title: React proxy SDK
 # Installation
 
 ```
-npm install @unleash/unleash-proxy-react
+npm install @unleash/proxy-client-react
 // or
-yarn add @unleash/unleash-proxy-react
+yarn add @unleash/proxy-client-react
 ```
 
 Import the provider like this in your entrypoint file (typically index.js/ts):
 
 ```
-import FlagProvider from '@unleash/unleash-proxy-react';
+import FlagProvider from '@unleash/proxy-client-react';
 
 const config = {
   url: 'https://HOSTNAME/api/proxy',
@@ -39,7 +39,7 @@ ReactDOM.render(
 To check if a feature is enabled:
 
 ```
-import { useFlag } from '@unleash/unleash-proxy-react';
+import { useFlag } from '@unleash/proxy-client-react';
 
 const TestComponent = () => {
   const enabled = useFlag('travel.landing');
@@ -56,7 +56,7 @@ export default TestComponent;
 To check variants:
 
 ```
-import { useVariant } from '@unleash/unleash-proxy-react';
+import { useVariant } from '@unleash/proxy-client-react';
 
 const TestComponent = () => {
   const variant = useVariant('travel.landing');
@@ -77,7 +77,7 @@ export default TestComponent;
 Follow the following steps in order to update the unleash context:
 
 ```
-import { useUnleashContext, useFlag } from '@unleash/unleash-proxy-react'
+import { useUnleashContext, useFlag } from '@unleash/proxy-client-react'
 
 const MyComponent = ({ userId }) => {
   const variant = useFlag("my-toggle");

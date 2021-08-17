@@ -196,15 +196,28 @@ unleash.on('synchronized', () => {
 
 ## I want to run Unleash locally
 
-### Run Unleash with docker-compose
+### Run Unleash with Docker
 
-The easiest way to run unleash locally is using [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
+The easiest way to run unleash locally is using [docker](https://www.docker.com/).
 
-1. Clone the [unleash-docker](https://github.com/Unleash/unleash-docker) repository.
-2. Run `docker-compose build` in repository root folder.
-3. Run `docker-compose up` in repository root folder.
+1. Create a network by running `docker network create unleash`
+2. Start a postgres database:
 
-Unleash should now be available on `http://localhost:4242`
+```sh
+docker run -e POSTGRES_PASSWORD=some_password \
+  -e POSTGRES_USER=unleash_user -e POSTGRES_DB=unleash \
+  --network unleash --name postgres postgres
+```
+
+3. Start Unleash via docker:
+
+```sh
+docker run -p 4242:4242 \
+  -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
+  -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=some_password \
+  -e DATABASE_SSL=false \
+  --network unleash unleashorg/unleash-server
+```
 
 [Click here to see all options to get started locally.](deploy/getting-started.md)
 

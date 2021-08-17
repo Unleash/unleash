@@ -10,7 +10,7 @@
 
 </div>
 
-Unleash is the open-source feature management platform. It provides a great overview over all feature toggles/flags across all your applications and services. Unleash enables software teams all over the world to take full control on how they enabled new functionality to end users.
+Unleash is an open-source feature management platform. It provides a great overview of all feature toggles/flags across all your applications and services. Unleash enables software teams all over the world to take full control of how they enabled new functionality to end-users.
 
 Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for all the popular languages.
 
@@ -28,7 +28,7 @@ Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for a
 - Audit logs
 - Addons integrating with other popular tools (Slack, Teams, Datadog, etc.)
 - It is secure (Enable Secure Headers with strict HTTPS only mode)
-- Extremely scalable with evaluations on the client side. Used in enterprises handling more than 10k req/s. [Read more about our architecture](https://docs.getunleash.io/)
+- Extremely scalable with evaluations on the client-side. Used in enterprises handling more than 10k req/s. [Read more about our architecture](https://docs.getunleash.io/)
 - Dashboard to manage technical debt
 - Admin APIs
 - Flexible architecture and can be hosted anywhere
@@ -84,7 +84,7 @@ The main motivation for doing feature toggling is to decouple the process for de
 
 > Feature toggles decouple **deployment** of code from **release** of new features
 
-This repo contains the unleash-server, which contains the Unleash Admin UI and the Unleash API. In order to make use of unleash you will also need a client SDK.
+This repo contains the unleash-server, which contains the Unleash Admin UI and the Unleash API. To make use of unleash you will also need a client SDK.
 
 <img src="./.github/dashboard.png" alt="Unleash Admin UI" />
 
@@ -92,7 +92,7 @@ This repo contains the unleash-server, which contains the Unleash Admin UI and t
 
 ## Segmentation
 
-It's fine to have a system for turning stuff on and off. But some times we want more granular control, we want to decide who to the toggle should be enabled for. This is where activation strategies comes in to the picture. Activation strategies take arbitrary config and allows us to enable a toggle to specific subset of your users (segment).
+It's fine to have a system for turning stuff on and off. But sometimes we want more granular control, we want to decide who the toggle should be enabled for. This is where activation strategies come into the picture. Activation strategies take arbitrary config and allow us to enable a toggle to a specific subset of your users (segment).
 
 Common activation strategies includes:
 
@@ -119,7 +119,7 @@ if (unleash.isEnabled("AwesomeFeature")) {
 
 The are numbers of ways you can run Unleash.
 
-1. Unleash Enterprise - Cloud hosted by the the Unleash Team. [see plans](https://www.getunleash.io/plans)
+1. Unleash Enterprise - Cloud hosted by the Unleash Team. [see plans](https://www.getunleash.io/plans)
 2. Unleash Open-Source - Self host with Docker. [Guide](https://docs.getunleash.io/deploy/getting_started#start-unleash-server)
 3. Unleash Open-Source - Self host with Node.js [Guide](https://docs.getunleash.io/deploy/getting_started#start-unleash-server)
 4. Unleash Open-Source - Helm chart [artifacthub.io](https://artifacthub.io/packages/helm/unleash/unleash)
@@ -145,7 +145,7 @@ docker run -p 4242:4242 \
   --network unleash unleashorg/unleash-server
 ```
 
-The first time Unleash starts it will create a default user which you can use to sign-in to you Unleash instance and add more users with:
+The first time Unleash starts it will create a default user which you can use to sign-in to your Unleash instance and add more users with:
 
 - username: `admin`
 - password: `unleash4all`
@@ -160,11 +160,11 @@ _(PS! feel free to submit your logo!)_
 
 # Contribute to Unleash
 
-Unleash has been built with the help of many smart individuals. This ensures that we build a product that solves real problem for people. If you want to contribute to this project you are encouraged to send issue request, or provide pull-requests. Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) to learn more on how you can contribute.
+Unleash has been built with the help of many smart individuals. This ensures that we build a product that solves real problems for people. If you want to contribute to this project you are encouraged to send issue requests, or provide pull-requests. Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) to learn more on how you can contribute.
 
 # Community and Help
 
-We know that learning a new tool can be hard and time consuming. We have a growing community which loves to help out. Please don't hesitate about reaching out to get help.
+We know that learning a new tool can be hard and time-consuming. We have a growing community that loves to help out. Please don't hesitate about reaching out to get help.
 
 - [Join Unleash on Slack](https://join.slack.com/t/unleash-community/shared_invite/enQtNjUxMjU2MDc0MTAxLTJjYmViYjkwYmE0ODVlNmY1YjcwZGRmZWU5MTU1YTQ1Nzg5ZWQ2YzBlY2U1MjlmZDg5ZDRmZTMzNmQ5YmEyOGE) if you want ask open questions about Unleash, feature toggling or discuss these topics in general.
 - [Create a issue request](https://github.com/Unleash/unleash/issues/new) if you have found a bug or have ideas on how to improve Unleash.

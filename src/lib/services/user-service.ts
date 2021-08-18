@@ -267,25 +267,7 @@ class UserService {
         email: string,
         autoCreateUser: boolean = false,
     ): Promise<IUser> {
-        let user: IUser;
-
-        try {
-            user = await this.store.getByQuery({ email });
-        } catch (e) {
-            if (autoCreateUser) {
-                const defaultRole = await this.accessService.getRootRole(
-                    RoleName.EDITOR,
-                );
-                user = await this.createUser({
-                    email,
-                    rootRole: defaultRole.id,
-                });
-            } else {
-                throw e;
-            }
-        }
-        this.store.successfullyLogin(user);
-        return user;
+        return this.loginUserSSO({ email, autoCreate: autoCreateUser });
     }
 
     async loginUserSSO({

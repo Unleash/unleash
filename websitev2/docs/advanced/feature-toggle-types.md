@@ -7,7 +7,7 @@ title: Feature Toggle Types
 
 Starting with version `3.5.0` Unleash introduces the concept of feature toggle types. The toggle types are heavily inspired by [Pete Hodgson's article on feature toggles](https://martinfowler.com/articles/feature-toggles.html).
 
-The idea is to make it easier for teams to manage their feature toggles, if they can more clearly classify them. The classification will also help us understand the [expected feature toggle lifetime](https://www.unleash-hosted.com/articles/feature-toggle-life-time-best-practices). Some feature toggles are meant to live for a few weeks, while we work on the new functionality, while others are of a more permanent nature.
+The idea is to make it easier for teams to manage their feature toggles, if they can more clearly classify them. The classification will also help us understand the [expected feature toggle lifetime](https://www.getunleash.io/blog/feature-toggle-life-time-best-practices). Some feature toggles are meant to live for a few weeks, while we work on the new functionality, while others are of a more permanent nature.
 
 Feature toggle types currently supported by Unleash:
 

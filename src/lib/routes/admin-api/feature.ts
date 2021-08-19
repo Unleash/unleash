@@ -202,9 +202,9 @@ class FeatureController extends Controller {
         );
         if (featureToggleExists) {
             await this.featureService2.getFeature(featureName);
-            const projectId = await this.featureService2.getProjectId(
-                updatedFeature.name,
-            );
+
+            const projectId = updatedFeature.project;
+
             const value = await featureSchema.validateAsync(updatedFeature);
             const { enabled } = value;
             const updatedToggle = this.featureService2.updateFeatureToggle(

@@ -34,6 +34,7 @@ module.exports = {
             'sdks/go_sdk',
             'sdks/python_sdk',
             'sdks/ruby_sdk',
+            'sdks/php_sdk',
             'sdks/unleash-proxy',
             'sdks/android_proxy_sdk',
             'sdks/proxy-javascript',

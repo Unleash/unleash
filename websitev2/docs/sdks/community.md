@@ -17,7 +17,6 @@ Community developed Client SDKs we already know about:
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 - [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
 - [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
-- [rikudou/unleash-sdk](https://github.com/RikudouSage/UnleashSDK) (PHP)
 - _...your implementation for your favorite language._
 
 ### Implement your own SDK? {#implement-your-own-sdk}

@@ -285,3 +285,16 @@ interface ImportCommon {
 export interface IImportData extends ImportCommon {
     data: any;
 }
+
+export interface IProject {
+    id: string;
+    name: string;
+    description: string;
+    health: number;
+    createdAt: Date;
+}
+
+export interface IProjectWithCount extends IProject {
+    featureCount: number;
+    memberCount: number;
+}

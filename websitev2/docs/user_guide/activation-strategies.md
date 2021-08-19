@@ -7,7 +7,7 @@ It is powerful to be able to turn a feature on and off instantaneously, without 
 
 The definition of an activation strategy lives in the Unleash API and can be created via the Unleash UI. The implementation of activation strategies lives in various client implementations.
 
-Unleash comes with a few common activation strategies. Some of them require the client to provide the [unleash-context](./unleash-context.md), which gives the necessary context for Unleash.
+Unleash comes with a few common activation strategies. Some of them require the client to provide the [unleash-context](unleash-context.md), which gives the necessary context for Unleash.
 
 ## Standard {#standard}
 

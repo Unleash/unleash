@@ -25,7 +25,7 @@ All users are able to see tokens with CLIENT level access, but only instance adm
 
 ![Tab Menu](/img/admin_tab_menu.png)
 
-**3. Click `Add new API key` at the bottom of the page**
+**3. Click `Add new API key` at the top right of the page**
 
 **Client keys**
 

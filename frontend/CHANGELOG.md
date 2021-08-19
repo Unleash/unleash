@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
+
+# 4.1.0-beta.3
+- Fix/routing
 # 4.1.0-beta.2
 - Fix/frontend projects changes 
 - chore(deps): bump path-parse from 1.0.6 to 1.0.7 

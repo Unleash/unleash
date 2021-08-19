@@ -59,6 +59,7 @@ In order to connect your application to Unleash you need to use a client SDK for
 - [Ruby SDK](https://docs.getunleash.io/sdks/ruby_sdk)
 - [Python SDK](https://docs.getunleash.io/sdks/python_sdk)
 - [.Net SDK](https://docs.getunleash.io/sdks/dot_net_sdk)
+- [PHP SDK](https://docs.getunleash.io/sdks/php_sdk)
 
 **Official Frontend SDKs:**
 

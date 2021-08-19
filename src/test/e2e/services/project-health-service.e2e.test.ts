@@ -1,6 +1,6 @@
-import FeatureToggleServiceV2 from 'lib/services/feature-toggle-service-v2';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
+import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service-v2';
 import { AccessService } from '../../../lib/services/access-service';
 import ProjectService from '../../../lib/services/project-service';
 import ProjectHealthService from '../../../lib/services/project-health-service';

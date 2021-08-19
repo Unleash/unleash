@@ -1,6 +1,6 @@
-import FeatureToggleServiceV2 from 'lib/services/feature-toggle-service-v2';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
+import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service-v2';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { UPDATE_PROJECT } from '../../../lib/types/permissions';
@@ -58,6 +58,7 @@ test('should list all projects', async () => {
     await projectService.createProject(project, user);
     const projects = await projectService.getProjects();
     expect(projects).toHaveLength(2);
+    expect(projects.find((p) => p.name === project.name)?.memberCount).toBe(1);
 });
 
 test('should create new project', async () => {

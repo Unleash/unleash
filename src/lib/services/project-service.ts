@@ -38,7 +38,7 @@ export interface UsersWithRoles {
 }
 
 export default class ProjectService {
-    private projectStore: IProjectStore;
+    private store: IProjectStore;
 
     private accessService: AccessService;
 
@@ -73,7 +73,7 @@ export default class ProjectService {
         accessService: AccessService,
         featureToggleService: FeatureToggleServiceV2,
     ) {
-        this.projectStore = projectStore;
+        this.store = projectStore;
         this.environmentStore = environmentStore;
         this.accessService = accessService;
         this.eventStore = eventStore;
@@ -84,7 +84,7 @@ export default class ProjectService {
     }
 
     async getProjects(): Promise<IProjectWithCount[]> {
-        const projects = await this.getProjects();
+        const projects = await this.store.getAll();
         const projectsWithCount = await Promise.all(
             projects.map(async (p) => {
                 let featureCount = 0;
@@ -105,14 +105,14 @@ export default class ProjectService {
     }
 
     async getProject(id: string): Promise<IProject> {
-        return this.projectStore.get(id);
+        return this.store.get(id);
     }
 
     async createProject(newProject: IProject, user: User): Promise<IProject> {
         const data = await schema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
 
-        await this.projectStore.create(data);
+        await this.store.create(data);
 
         await this.environmentStore.connectProject(GLOBAL_ENV, data.id);
 
@@ -128,10 +128,10 @@ export default class ProjectService {
     }
 
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
-        await this.projectStore.get(updatedProject.id);
+        await this.store.get(updatedProject.id);
         const project = await schema.validateAsync(updatedProject);
 
-        await this.projectStore.update(project);
+        await this.store.update(project);
 
         await this.eventStore.store({
             type: PROJECT_UPDATED,
@@ -158,7 +158,7 @@ export default class ProjectService {
             );
         }
 
-        await this.projectStore.delete(id);
+        await this.store.delete(id);
 
         await this.eventStore.store({
             type: PROJECT_DELETED,
@@ -176,7 +176,7 @@ export default class ProjectService {
     }
 
     async validateUniqueId(id: string): Promise<void> {
-        const exists = await this.projectStore.hasProject(id);
+        const exists = await this.store.hasProject(id);
         if (exists) {
             throw new NameExistsError('A project with this id already exists.');
         }
@@ -242,19 +242,19 @@ export default class ProjectService {
     }
 
     async getMembers(projectId: string): Promise<number> {
-        return this.projectStore.getMembers(projectId);
+        return this.store.getMembers(projectId);
     }
 
     async getProjectOverview(
         projectId: string,
         archived: boolean = false,
     ): Promise<IProjectOverview> {
-        const project = await this.projectStore.get(projectId);
-        const features = await this.projectStore.getProjectOverview(
+        const project = await this.store.get(projectId);
+        const features = await this.store.getProjectOverview(
             projectId,
             archived,
         );
-        const members = await this.projectStore.getMembers(projectId);
+        const members = await this.store.getMembers(projectId);
         return {
             name: project.name,
             description: project.description,

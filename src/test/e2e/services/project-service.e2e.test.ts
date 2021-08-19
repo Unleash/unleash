@@ -1,3 +1,4 @@
+import FeatureToggleServiceV2 from 'lib/services/feature-toggle-service-v2';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import ProjectService from '../../../lib/services/project-service';
@@ -12,6 +13,7 @@ let db;
 
 let projectService;
 let accessService;
+let featureToggleService;
 let user;
 
 beforeAll(async () => {
@@ -27,7 +29,13 @@ beforeAll(async () => {
         experimental: { rbac: true },
     });
     accessService = new AccessService(stores, config);
-    projectService = new ProjectService(stores, config, accessService);
+    featureToggleService = new FeatureToggleServiceV2(stores, config);
+    projectService = new ProjectService(
+        stores,
+        config,
+        accessService,
+        featureToggleService,
+    );
 });
 
 afterAll(async () => {

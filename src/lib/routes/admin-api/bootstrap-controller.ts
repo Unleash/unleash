@@ -17,7 +17,7 @@ import { IContextField } from '../../types/stores/context-field-store';
 import { IFeatureType } from '../../types/stores/feature-type-store';
 import { ITagType } from '../../types/stores/tag-type-store';
 import { IStrategy } from '../../types/stores/strategy-store';
-import { IProject } from '../../types/stores/project-store';
+import { IProject } from '../../types/model';
 import { IUserPermission } from '../../types/stores/access-store';
 
 class BootstrapController extends Controller {

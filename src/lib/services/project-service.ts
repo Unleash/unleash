@@ -12,14 +12,21 @@ import {
 } from '../types/events';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
-import { IProjectOverview, IUserWithRole, RoleName } from '../types/model';
+import {
+    IProject,
+    IProjectOverview,
+    IProjectWithCount,
+    IUserWithRole,
+    RoleName,
+} from '../types/model';
 import { GLOBAL_ENV } from '../types/environment';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
-import { IProject, IProjectStore } from '../types/stores/project-store';
+import { IProjectStore } from '../types/stores/project-store';
 import { IRole } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
+import FeatureToggleServiceV2 from './feature-toggle-service-v2';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -45,6 +52,8 @@ export default class ProjectService {
 
     private logger: any;
 
+    private featureToggleService: FeatureToggleServiceV2;
+
     constructor(
         {
             projectStore,
@@ -62,6 +71,7 @@ export default class ProjectService {
         >,
         config: IUnleashConfig,
         accessService: AccessService,
+        featureToggleService: FeatureToggleServiceV2,
     ) {
         this.projectStore = projectStore;
         this.environmentStore = environmentStore;
@@ -69,11 +79,29 @@ export default class ProjectService {
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
         this.featureTypeStore = featureTypeStore;
+        this.featureToggleService = featureToggleService;
         this.logger = config.getLogger('services/project-service.js');
     }
 
-    async getProjects(): Promise<IProject[]> {
-        return this.projectStore.getAll();
+    async getProjects(): Promise<IProjectWithCount[]> {
+        const projects = await this.getProjects();
+        const projectsWithCount = await Promise.all(
+            projects.map(async (p) => {
+                let featureCount = 0;
+                let memberCount = 0;
+                try {
+                    featureCount =
+                        await this.featureToggleService.getFeatureCountForProject(
+                            p.id,
+                        );
+                    memberCount = await this.getMembers(p.id);
+                } catch (e) {
+                    this.logger.warn('Error fetching project counts', e);
+                }
+                return { ...p, featureCount, memberCount };
+            }),
+        );
+        return projectsWithCount;
     }
 
     async getProject(id: string): Promise<IProject> {

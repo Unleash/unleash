@@ -4,6 +4,7 @@ import { Logger } from '../logger';
 import {
     FeatureToggle,
     IFeatureOverview,
+    IProject,
     IProjectHealthReport,
     IProjectOverview,
 } from '../types/model';
@@ -13,7 +14,7 @@ import {
 } from '../util/constants';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
-import { IProject, IProjectStore } from '../types/stores/project-store';
+import { IProjectStore } from '../types/stores/project-store';
 import Timer = NodeJS.Timer;
 
 export default class ProjectHealthService {

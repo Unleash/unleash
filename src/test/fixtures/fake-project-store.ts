@@ -1,10 +1,9 @@
 import {
-    IProject,
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectStore,
 } from '../../lib/types/stores/project-store';
-import { IFeatureOverview } from '../../lib/types/model';
+import { IFeatureOverview, IProject } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeProjectStore implements IProjectStore {

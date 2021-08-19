@@ -1,13 +1,6 @@
-import { IFeatureOverview } from '../model';
+import { IFeatureOverview, IProject } from '../model';
 import { Store } from './store';
 
-export interface IProject {
-    id: string;
-    name: string;
-    description: string;
-    health: number;
-    createdAt: Date;
-}
 export interface IProjectInsert {
     id: string;
     name: string;

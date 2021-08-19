@@ -5,6 +5,7 @@ Array [
   Object {
     "component": [Function],
     "layout": "main",
+    "menu": Object {},
     "path": "/features",
     "title": "Feature Toggles",
     "type": "protected",
@@ -12,6 +13,9 @@ Array [
   Object {
     "component": [Function],
     "layout": "main",
+    "menu": Object {
+      "advanced": true,
+    },
     "path": "/strategies",
     "title": "Strategies",
     "type": "protected",
@@ -19,6 +23,9 @@ Array [
   Object {
     "component": [Function],
     "layout": "main",
+    "menu": Object {
+      "adminSettings": true,
+    },
     "path": "/history",
     "title": "Event History",
     "type": "protected",
@@ -26,6 +33,7 @@ Array [
   Object {
     "component": [Function],
     "layout": "main",
+    "menu": Object {},
     "path": "/archive",
     "title": "Archived Toggles",
     "type": "protected",
@@ -33,6 +41,9 @@ Array [
   Object {
     "component": [Function],
     "layout": "main",
+    "menu": Object {
+      "advanced": true,
+    },
     "path": "/applications",
     "title": "Applications",
     "type": "protected",
@@ -41,6 +52,9 @@ Array [
     "component": [Function],
     "flag": "C",
     "layout": "main",
+    "menu": Object {
+      "advanced": true,
+    },
     "path": "/context",
     "title": "Context Fields",
     "type": "protected",
@@ -49,6 +63,7 @@ Array [
     "component": [Function],
     "flag": "P",
     "layout": "main",
+    "menu": Object {},
     "path": "/projects",
     "title": "Projects",
     "type": "protected",
@@ -56,6 +71,9 @@ Array [
   Object {
     "component": [Function],
     "layout": "main",
+    "menu": Object {
+      "advanced": true,
+    },
     "path": "/tag-types",
     "title": "Tag types",
     "type": "protected",
@@ -64,6 +82,9 @@ Array [
     "component": [Function],
     "hidden": false,
     "layout": "main",
+    "menu": Object {
+      "advanced": true,
+    },
     "path": "/addons",
     "title": "Addons",
     "type": "protected",
@@ -71,6 +92,9 @@ Array [
   Object {
     "component": [Function],
     "layout": "main",
+    "menu": Object {
+      "advanced": true,
+    },
     "path": "/reporting",
     "title": "Reporting",
     "type": "protected",
@@ -79,6 +103,7 @@ Array [
     "component": [Function],
     "hidden": false,
     "layout": "main",
+    "menu": Object {},
     "path": "/admin",
     "title": "Admin",
     "type": "protected",

@@ -10,6 +10,18 @@ export const useStyles = makeStyles(theme => ({
     },
     searchBarContainer: {
         marginBottom: '2rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        [theme.breakpoints.down('xs')]: {
+            display: 'block',
+        },
+    },
+    searchBar: {
+        minWidth: '450px',
+        [theme.breakpoints.down('xs')]: {
+            minWidth: '100%',
+        },
     },
     emptyStateListItem: {
         border: `2px dashed ${theme.palette.borders.main}`,

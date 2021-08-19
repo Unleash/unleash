@@ -25,12 +25,14 @@ const StrategyCardHeader = ({
             }}
             title={
                 <>
-                    <Typography
-                        variant="subtitle1"
-                        className={styles.strategyCardHeaderTitle}
-                    >
-                        {name}
-                    </Typography>
+                    <Tooltip title={name}>
+                        <Typography
+                            variant="subtitle1"
+                            className={styles.strategyCardHeaderTitle}
+                        >
+                            {name}
+                        </Typography>
+                    </Tooltip>
                     <div className={styles.strategyCardHeaderActions}>
                         <Tooltip title="Edit strategy">
                             <IconButton onClick={editStrategy}>

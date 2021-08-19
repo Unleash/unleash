@@ -7,11 +7,11 @@ exports[`renders correctly with one feature 1`] = `
   >
     <div>
       <div
-        className="makeStyles-search-5"
+        className="makeStyles-search-6 makeStyles-searchBar-4"
       >
         <svg
           aria-hidden={true}
-          className="MuiSvgIcon-root makeStyles-searchIcon-6"
+          className="MuiSvgIcon-root makeStyles-searchIcon-7"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -20,7 +20,7 @@ exports[`renders correctly with one feature 1`] = `
           />
         </svg>
         <div
-          className="MuiInputBase-root makeStyles-inputRoot-7"
+          className="MuiInputBase-root makeStyles-inputRoot-8"
           onClick={[Function]}
           onKeyPress={[Function]}
         >
@@ -38,6 +38,12 @@ exports[`renders correctly with one feature 1`] = `
         </div>
       </div>
     </div>
+    <a
+      href="/archive"
+      onClick={[Function]}
+    >
+      Archive
+    </a>
   </div>
   <div
     className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
@@ -49,29 +55,29 @@ exports[`renders correctly with one feature 1`] = `
     }
   >
     <div
-      className="makeStyles-headerContainer-8"
+      className="makeStyles-headerContainer-9"
     >
       <div
-        className="makeStyles-headerTitleContainer-12"
+        className="makeStyles-headerTitleContainer-13"
       >
         <div
           className=""
           data-loading={true}
         >
           <h2
-            className="MuiTypography-root makeStyles-headerTitle-13 MuiTypography-h2"
+            className="MuiTypography-root makeStyles-headerTitle-14 MuiTypography-h2"
           >
             Feature toggles
           </h2>
         </div>
         <div
-          className="makeStyles-headerActions-14"
+          className="makeStyles-headerActions-15"
         >
           <div
             className="makeStyles-actionsContainer-1"
           >
             <div
-              className="makeStyles-actions-15"
+              className="makeStyles-actions-16"
             >
               <p
                 className="MuiTypography-root MuiTypography-body2"
@@ -217,7 +223,7 @@ exports[`renders correctly with one feature 1`] = `
       </div>
     </div>
     <div
-      className="makeStyles-bodyContainer-9"
+      className="makeStyles-bodyContainer-10"
     >
       <ul
         className="MuiList-root MuiList-padding"
@@ -250,11 +256,11 @@ exports[`renders correctly with one feature without permissions 1`] = `
   >
     <div>
       <div
-        className="makeStyles-search-5"
+        className="makeStyles-search-6 makeStyles-searchBar-4"
       >
         <svg
           aria-hidden={true}
-          className="MuiSvgIcon-root makeStyles-searchIcon-6"
+          className="MuiSvgIcon-root makeStyles-searchIcon-7"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -263,7 +269,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
           />
         </svg>
         <div
-          className="MuiInputBase-root makeStyles-inputRoot-7"
+          className="MuiInputBase-root makeStyles-inputRoot-8"
           onClick={[Function]}
           onKeyPress={[Function]}
         >
@@ -281,6 +287,12 @@ exports[`renders correctly with one feature without permissions 1`] = `
         </div>
       </div>
     </div>
+    <a
+      href="/archive"
+      onClick={[Function]}
+    >
+      Archive
+    </a>
   </div>
   <div
     className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
@@ -292,29 +304,29 @@ exports[`renders correctly with one feature without permissions 1`] = `
     }
   >
     <div
-      className="makeStyles-headerContainer-8"
+      className="makeStyles-headerContainer-9"
     >
       <div
-        className="makeStyles-headerTitleContainer-12"
+        className="makeStyles-headerTitleContainer-13"
       >
         <div
           className=""
           data-loading={true}
         >
           <h2
-            className="MuiTypography-root makeStyles-headerTitle-13 MuiTypography-h2"
+            className="MuiTypography-root makeStyles-headerTitle-14 MuiTypography-h2"
           >
             Feature toggles
           </h2>
         </div>
         <div
-          className="makeStyles-headerActions-14"
+          className="makeStyles-headerActions-15"
         >
           <div
             className="makeStyles-actionsContainer-1"
           >
             <div
-              className="makeStyles-actions-15"
+              className="makeStyles-actions-16"
             >
               <p
                 className="MuiTypography-root MuiTypography-body2"
@@ -466,7 +478,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
       </div>
     </div>
     <div
-      className="makeStyles-bodyContainer-9"
+      className="makeStyles-bodyContainer-10"
     >
       <ul
         className="MuiList-root MuiList-padding"

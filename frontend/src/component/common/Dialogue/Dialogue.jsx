@@ -58,7 +58,7 @@ const Dialogue = ({
                     condition={onClose}
                     show={
                         <Button onClick={onClose}>
-                            {secondaryButtonText || 'No take me back.'}{' '}
+                            {secondaryButtonText || 'No take me back'}{' '}
                         </Button>
                     }
                 />

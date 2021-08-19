@@ -40,6 +40,7 @@ const BreadcrumbNav = () => {
                                 if (lastItem) {
                                     return (
                                         <p
+                                            key={path}
                                             className={
                                                 styles.breadcrumbNavParagraph
                                             }
@@ -50,6 +51,7 @@ const BreadcrumbNav = () => {
                                 }
                                 return (
                                     <Link
+                                        key={path}
                                         className={styles.breadcrumbLink}
                                         to={`/${path}`}
                                     >

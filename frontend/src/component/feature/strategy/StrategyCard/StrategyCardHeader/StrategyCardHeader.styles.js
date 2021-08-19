@@ -15,6 +15,10 @@ export const useStyles = makeStyles(theme => ({
     },
     strategyCardHeaderTitle: {
         fontSize: theme.fontSizes.subHeader,
+        maxWidth: '70%',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
     },
     strategyCardHeaderActions: {
         display: 'flex',

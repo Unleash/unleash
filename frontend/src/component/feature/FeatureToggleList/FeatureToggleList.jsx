@@ -37,6 +37,7 @@ const FeatureToggleList = ({
     const { hasAccess } = useContext(AccessContext);
     const styles = useStyles();
     const smallScreen = useMediaQuery('(max-width:800px)');
+    const mobileView = useMediaQuery('(max-width:600px)');
 
     useLayoutEffect(() => {
         fetcher();
@@ -119,6 +120,10 @@ const FeatureToggleList = ({
                     className={classnames(styles.searchBar, {
                         skeleton: loading,
                     })}
+                />
+                <ConditionallyRender
+                    condition={!mobileView}
+                    show={<Link to="/archive">Archive</Link>}
                 />
             </div>
 

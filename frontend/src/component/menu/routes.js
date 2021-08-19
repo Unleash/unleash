@@ -49,6 +49,7 @@ export const routes = [
         component: CreateFeatureToggle,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/features/copy/:copyToggle',
@@ -57,6 +58,7 @@ export const routes = [
         component: CopyFeatureToggle,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/features/:activeTab/:name',
@@ -65,6 +67,7 @@ export const routes = [
         component: ViewFeatureToggle,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/features',
@@ -72,6 +75,7 @@ export const routes = [
         component: Features,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
 
     // Strategies
@@ -82,6 +86,7 @@ export const routes = [
         component: CreateStrategies,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/strategies/:activeTab/:strategyName',
@@ -90,6 +95,7 @@ export const routes = [
         component: StrategyView,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/strategies',
@@ -97,6 +103,7 @@ export const routes = [
         component: Strategies,
         type: 'protected',
         layout: 'main',
+        menu: { advanced: true },
     },
 
     // History
@@ -107,6 +114,7 @@ export const routes = [
         component: HistoryTogglePage,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/history',
@@ -114,6 +122,7 @@ export const routes = [
         component: HistoryPage,
         type: 'protected',
         layout: 'main',
+        menu: { adminSettings: true },
     },
 
     // Archive
@@ -124,6 +133,7 @@ export const routes = [
         component: ShowArchive,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/archive',
@@ -131,6 +141,7 @@ export const routes = [
         component: Archive,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
 
     // Applications
@@ -141,6 +152,7 @@ export const routes = [
         component: ApplicationView,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/applications',
@@ -148,6 +160,7 @@ export const routes = [
         component: Applications,
         type: 'protected',
         layout: 'main',
+        menu: { advanced: true },
     },
 
     // Context
@@ -158,6 +171,7 @@ export const routes = [
         component: CreateContextField,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/context/edit/:name',
@@ -166,6 +180,7 @@ export const routes = [
         component: EditContextField,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/context',
@@ -174,6 +189,7 @@ export const routes = [
         type: 'protected',
         flag: C,
         layout: 'main',
+        menu: { advanced: true },
     },
 
     // Project
@@ -184,6 +200,7 @@ export const routes = [
         component: CreateProject,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/projects/edit/:id',
@@ -192,6 +209,7 @@ export const routes = [
         component: EditProject,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/projects/view/:id',
@@ -200,6 +218,7 @@ export const routes = [
         component: ViewProject,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/projects/:id/access',
@@ -208,6 +227,7 @@ export const routes = [
         component: EditProjectAccess,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/projects/:id',
@@ -217,6 +237,7 @@ export const routes = [
         flag: P,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/projects',
@@ -225,6 +246,7 @@ export const routes = [
         flag: P,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
 
     {
@@ -234,6 +256,7 @@ export const routes = [
         component: CreateTagType,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/tag-types/edit/:name',
@@ -242,6 +265,7 @@ export const routes = [
         component: EditTagType,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/tag-types',
@@ -249,6 +273,7 @@ export const routes = [
         component: ListTagTypes,
         type: 'protected',
         layout: 'main',
+        menu: { advanced: true },
     },
 
     {
@@ -258,6 +283,7 @@ export const routes = [
         component: CreateTag,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/tags',
@@ -266,6 +292,7 @@ export const routes = [
         hidden: true,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
 
     // Addons
@@ -276,6 +303,7 @@ export const routes = [
         component: AddonsCreate,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/addons/edit/:id',
@@ -284,6 +312,7 @@ export const routes = [
         component: AddonsEdit,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/addons',
@@ -292,6 +321,7 @@ export const routes = [
         hidden: false,
         type: 'protected',
         layout: 'main',
+        menu: { advanced: true },
     },
     {
         path: '/reporting',
@@ -299,6 +329,7 @@ export const routes = [
         component: Reporting,
         type: 'protected',
         layout: 'main',
+        menu: { advanced: true },
     },
     // Admin
     {
@@ -308,6 +339,7 @@ export const routes = [
         component: AdminApi,
         type: 'protected',
         layout: 'main',
+        menu: { advanced: true, adminSettings: true },
     },
     {
         path: '/admin/users',
@@ -316,6 +348,7 @@ export const routes = [
         component: AdminUsers,
         type: 'protected',
         layout: 'main',
+        menu: { adminSettings: true },
     },
     {
         path: '/admin/auth',
@@ -324,6 +357,7 @@ export const routes = [
         component: AdminAuth,
         type: 'protected',
         layout: 'main',
+        menu: { adminSettings: true },
     },
     {
         path: '/admin-invoices',
@@ -332,6 +366,7 @@ export const routes = [
         hidden: true,
         type: 'protected',
         layout: 'main',
+        menu: { adminSettings: true },
     },
     {
         path: '/admin',
@@ -340,6 +375,7 @@ export const routes = [
         hidden: false,
         type: 'protected',
         layout: 'main',
+        menu: {},
     },
     {
         path: '/login',
@@ -348,6 +384,7 @@ export const routes = [
         type: 'unprotected',
         hidden: true,
         layout: 'standalone',
+        menu: {},
     },
     {
         path: '/new-user',
@@ -356,6 +393,7 @@ export const routes = [
         component: NewUser,
         type: 'unprotected',
         layout: 'standalone',
+        menu: {},
     },
     {
         path: '/reset-password',
@@ -364,6 +402,7 @@ export const routes = [
         component: ResetPassword,
         type: 'unprotected',
         layout: 'standalone',
+        menu: {},
     },
     {
         path: '/forgotten-password',
@@ -372,6 +411,7 @@ export const routes = [
         component: ForgottenPassword,
         type: 'unprotected',
         layout: 'standalone',
+        menu: {},
     },
 ];
 
@@ -382,27 +422,12 @@ export const baseRoutes = routes
     .filter(route => !route.parent);
 
 const computeRoutes = () => {
-    const apiAccess = routes.find(route => route.path === '/admin/api');
-    const mainNavRoutes =
-        baseRoutes.filter(
-            route =>
-                route.path !== '/admin' &&
-                route.path !== '/logout' &&
-                route.path !== '/history'
-        ) || [];
-
-    mainNavRoutes.push(apiAccess);
+    const mainNavRoutes = baseRoutes.filter(route => route.menu.advanced);
+    const adminRoutes = routes.filter(route => route.menu.adminSettings);
 
     const computedRoutes = {
         mainNavRoutes,
-        adminRoutes:
-            routes.filter(
-                route =>
-                    (route.path.startsWith('/admin') &&
-                        route.path !== '/admin-invoices' &&
-                        route.path !== '/admin') ||
-                    route.path === '/history'
-            ) || [],
+        adminRoutes,
     };
     return () => {
         return computedRoutes;

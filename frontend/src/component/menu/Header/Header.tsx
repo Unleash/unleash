@@ -94,6 +94,7 @@ const Header = () => {
                                     condition={flags?.P}
                                     show={<Link to="/projects">Projects</Link>}
                                 />
+                                <Link to="/features">Feature toggles</Link>
 
                                 <button
                                     className={styles.advancedNavButton}
@@ -101,7 +102,7 @@ const Header = () => {
                                         setAnchorElAdvanced(e.currentTarget)
                                     }
                                 >
-                                    Navigate
+                                    Advanced
                                     <KeyboardArrowDown />
                                 </button>
                                 <NavigationMenu
@@ -109,6 +110,7 @@ const Header = () => {
                                     options={filteredMainRoutes.mainNavRoutes}
                                     anchorEl={anchorElAdvanced}
                                     handleClose={handleCloseAdvanced}
+                                    style={{ top: '30px', left: '-55px' }}
                                 />
                             </div>
                         }
@@ -150,6 +152,7 @@ const Header = () => {
                                         options={routes.adminRoutes}
                                         anchorEl={anchorEl}
                                         handleClose={handleClose}
+                                        style={{ top: '40px', left: '-125px' }}
                                     />
                                 </>
                             }

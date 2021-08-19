@@ -3,17 +3,20 @@ import { makeStyles } from '@material-ui/styles';
 export const useCommonStyles = makeStyles(theme => ({
     contentSpacingY: {
         '& > *': {
-            margin: '0.5rem 0',
+            marginTop: '0.5rem !important',
+            marginBottom: '0.5rem !important',
         },
     },
     contentSpacingYLarge: {
         '& > *': {
-            margin: '1.5rem 0',
+            marginTop: '1.5rem !important',
+            marginBottom: '1.5rem !important',
         },
     },
     contentSpacingX: {
         '& > *': {
-            margin: '0 0.8rem',
+            marginRight: '0.8rem !important',
+            marginLeft: '0.8rem !important',
         },
     },
     divider: {

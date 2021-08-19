@@ -6,6 +6,7 @@ interface INavigationMenuProps {
     id: string;
     anchorEl: any;
     handleClose: () => void;
+    style: Object;
 }
 
 const NavigationMenu = ({
@@ -13,6 +14,7 @@ const NavigationMenu = ({
     id,
     handleClose,
     anchorEl,
+    style,
 }: INavigationMenuProps) => {
     return (
         <Popover
@@ -21,7 +23,7 @@ const NavigationMenu = ({
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onMouseLeave={handleClose}
-            style={{ top: '30px', left: '-90px' }}
+            style={style}
         >
             <List>
                 {options.map(option => {

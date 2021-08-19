@@ -14,5 +14,6 @@ export const useStyles = makeStyles(theme => ({
     },
     apiError: {
         color: theme.palette.error.main,
+        marginBottom: '0.5rem',
     },
 }));

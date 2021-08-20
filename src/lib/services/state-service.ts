@@ -25,6 +25,7 @@ import {
     IFeatureStrategy,
     ITag,
     IImportData,
+    IProject,
 } from '../types/model';
 import { GLOBAL_ENV } from '../types/environment';
 import { Logger } from '../logger';
@@ -32,7 +33,7 @@ import {
     IFeatureTag,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
-import { IProject, IProjectStore } from '../types/stores/project-store';
+import { IProjectStore } from '../types/stores/project-store';
 import { ITagType, ITagTypeStore } from '../types/stores/tag-type-store';
 import { ITagStore } from '../types/stores/tag-store';
 import { IEventStore } from '../types/stores/event-store';

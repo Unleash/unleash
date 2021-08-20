@@ -103,14 +103,20 @@ class FeatureController extends Controller {
         res: Response,
     ): Promise<void> {
         const name = req.params.featureName;
+        const feature = await this.getLegacyFeatureToggle(name);
+        res.json(feature).end();
+    }
+
+    private async getLegacyFeatureToggle(name: string): Promise<any> {
         const feature = await this.featureService2.getFeatureToggle(name);
-        const strategies =
-            feature.environments.find((e) => e.name === GLOBAL_ENV)
-                ?.strategies || [];
-        res.json({
-            ...feature,
-            strategies,
-        }).end();
+        const globalEnv = feature.environments.find(
+            (e) => e.name === GLOBAL_ENV,
+        );
+        const strategies = globalEnv?.strategies || [];
+        const enabled = globalEnv?.enabled || false;
+        delete feature.environments;
+
+        return { ...feature, enabled, strategies };
     }
 
     async listTags(req: Request, res: Response): Promise<void> {
@@ -280,22 +286,16 @@ class FeatureController extends Controller {
     async staleOn(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUser(req);
-        const feature = await this.featureService2.updateStale(
-            featureName,
-            true,
-            userName,
-        );
+        await this.featureService2.updateStale(featureName, true, userName);
+        const feature = await this.getLegacyFeatureToggle(featureName);
         res.json(feature).end();
     }
 
     async staleOff(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUser(req);
-        const feature = await this.featureService2.updateStale(
-            featureName,
-            false,
-            userName,
-        );
+        await this.featureService2.updateStale(featureName, false, userName);
+        const feature = await this.getLegacyFeatureToggle(featureName);
         res.json(feature).end();
     }
 

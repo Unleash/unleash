@@ -272,6 +272,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.description = r.description;
                 acc.stale = r.stale;
                 acc.variants = r.variants;
+                acc.createdAt = r.created_at;
                 acc.lastSeenAt = r.last_seen_at;
                 acc.type = r.type;
                 if (!acc.environments[r.environment]) {

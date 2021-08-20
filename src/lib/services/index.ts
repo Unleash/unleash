@@ -38,7 +38,6 @@ export const createServices = (
     const emailService = new EmailService(config.email, config.getLogger);
     const eventService = new EventService(stores, config);
     const featureTypeService = new FeatureTypeService(stores, config);
-    const projectService = new ProjectService(stores, config, accessService);
     const resetTokenService = new ResetTokenService(stores, config);
     const stateService = new StateService(stores, config);
     const strategyService = new StrategyService(stores, config);
@@ -60,6 +59,12 @@ export const createServices = (
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
     const projectHealthService = new ProjectHealthService(stores, config);
+    const projectService = new ProjectService(
+        stores,
+        config,
+        accessService,
+        featureToggleServiceV2,
+    );
 
     return {
         accessService,

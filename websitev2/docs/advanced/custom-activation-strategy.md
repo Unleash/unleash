@@ -40,7 +40,7 @@ class TimeStampStrategy extends Strategy {
   }
 
   isEnabled(parameters, context) {
-    Date.parse(parameters.enableAfter) < Date.now();
+    return Date.parse(parameters.enableAfter) < Date.now();
   }
 }
 ```

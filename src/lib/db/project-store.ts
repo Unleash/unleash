@@ -2,9 +2,12 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
-import { IEnvironmentOverview, IFeatureOverview } from '../types/model';
 import {
+    IEnvironmentOverview,
+    IFeatureOverview,
     IProject,
+} from '../types/model';
+import {
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectStore,

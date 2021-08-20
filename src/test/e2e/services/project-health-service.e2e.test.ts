@@ -1,5 +1,6 @@
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
+import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service-v2';
 import { AccessService } from '../../../lib/services/access-service';
 import ProjectService from '../../../lib/services/project-service';
 import ProjectHealthService from '../../../lib/services/project-health-service';
@@ -10,6 +11,7 @@ let db;
 let projectService;
 let accessService;
 let projectHealthService;
+let featureToggleService;
 let user;
 
 beforeAll(async () => {
@@ -21,7 +23,13 @@ beforeAll(async () => {
         email: 'test@getunleash.io',
     });
     accessService = new AccessService(stores, config);
-    projectService = new ProjectService(stores, config, accessService);
+    featureToggleService = new FeatureToggleServiceV2(stores, config);
+    projectService = new ProjectService(
+        stores,
+        config,
+        accessService,
+        featureToggleService,
+    );
     projectHealthService = new ProjectHealthService(stores, config);
 });
 

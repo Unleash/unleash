@@ -122,7 +122,7 @@ unleash.start(unleashOptions);
 If you're using Unleash as part of a larger express app, you can disable the automatic server start by calling `server.create`. It takes the same options as `server.start`, but will not begin listening for connections.
 
 ```js
-const unleash = require('express');
+const express = require('express');
 const unleash = require('unleash-server');
 const app = express();
 

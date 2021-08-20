@@ -16,6 +16,7 @@ On this page you will find examples for connecting your application to the demo 
 - [Ruby SDK](/sdks/ruby_sdk)
 - [Python SDK](/sdks/python_sdk)
 - [.Net SDK](/sdks/dot_net_sdk)
+- [PHP SDK](/sdks/php_sdk)
 
 **Official Frontend Unleash Proxy SDKs:**
 

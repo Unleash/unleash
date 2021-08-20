@@ -175,7 +175,7 @@ test('should throw if rootRole is wrong via SSO', async () => {
     }
 });
 
-test('should update user via SSO', async () => {
+test('should update user name when signing in via SSO', async () => {
     const email = 'some@test.com';
     const originalUser = await userService.createUser({
         email,
@@ -194,10 +194,10 @@ test('should update user via SSO', async () => {
 
     expect(actualUser.email).toBe(email);
     expect(actualUser.name).toBe('New name!');
-    expect(actualUser.rootRole).toBe(adminRole.id);
+    expect(actualUser.rootRole).toBe(viewerRole.id);
 });
 
-test('should not update user via SSO', async () => {
+test('should update name if it is different via SSO', async () => {
     const email = 'some@test.com';
     const originalUser = await userService.createUser({
         email,
@@ -215,7 +215,7 @@ test('should not update user via SSO', async () => {
     const actualUser = await userService.getUser(originalUser.id);
 
     expect(actualUser.email).toBe(email);
-    expect(actualUser.name).toBe('some');
+    expect(actualUser.name).toBe('New name!');
     expect(actualUser.rootRole).toBe(viewerRole.id);
 });
 

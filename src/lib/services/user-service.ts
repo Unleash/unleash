@@ -281,13 +281,8 @@ class UserService {
         try {
             user = await this.store.getByQuery({ email });
             // Update user if autCreate is enabled.
-            if (autoCreate) {
-                if (rootRole) {
-                    await this.accessService.setUserRootRole(user.id, rootRole);
-                }
-                if (name) {
-                    user = await this.store.update(user.id, { name, email });
-                }
+            if (user.name !== name) {
+                user = await this.store.update(user.id, { name, email });
             }
         } catch (e) {
             // User does not exists. Create if "autoCreate" is enabled

@@ -56,7 +56,7 @@ function AdminMenu({ history }) {
                             activeStyle={activeNavLinkStyle}
                             style={navLinkStyle}
                         >
-                            Authentication
+                             Single Sign-On
                         </NavLink>
                     }
                 ></Tab>

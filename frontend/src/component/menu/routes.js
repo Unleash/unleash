@@ -353,7 +353,7 @@ export const routes = [
     {
         path: '/admin/auth',
         parent: '/admin',
-        title: 'Authentication',
+        title: 'Single Sign-On',
         component: AdminAuth,
         type: 'protected',
         layout: 'main',

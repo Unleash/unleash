@@ -28,7 +28,7 @@ function AdminAuthPage({ authenticationType, history }) {
     return (
         <div>
             <AdminMenu history={history} />
-            <PageContent headerContent="Authentication">
+            <PageContent headerContent="Single Sign-On">
                 <ConditionallyRender condition={authenticationType === 'enterprise'}
                     show={
                         <TabNav tabData={tabs} />

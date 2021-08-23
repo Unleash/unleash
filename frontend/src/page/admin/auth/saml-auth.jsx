@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Grid, Switch, TextField } from '@material-ui/core';
+import { Button, FormControlLabel, Grid, Switch, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import PageContent from '../../../component/common/PageContent/PageContent';
 import AccessContext from '../../../contexts/AccessContext';
 import { ADMIN } from '../../../component/AccessProvider/permissions';
+import AutoCreateForm from './AutoCreateForm/AutoCreateForm';
 
 const initialState = {
     enabled: false,
@@ -38,19 +39,19 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
     }
 
     const updateField = e => {
-        setData({
-            ...data,
-            [e.target.name]: e.target.value,
-        });
+        setValue(e.target.name, e.target.value);
     };
 
     const updateEnabled = () => {
         setData({ ...data, enabled: !data.enabled });
     };
 
-    const updateAutoCreate = () => {
-        setData({ ...data, autoCreate: !data.autoCreate });
-    };
+    const setValue = (field, value) => {
+        setData({
+            ...data,
+            [field]: value,
+        });
+    }
 
     const onSubmit = async e => {
         e.preventDefault();
@@ -90,14 +91,15 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                         <p>Enable SAML 2.0 Authentication.</p>
                     </Grid>
                     <Grid item md={6}>
-                        <Switch
-                            onChange={updateEnabled}
-                            value={data.enabled}
-                            name="enabled"
-                            checked={data.enabled}
-                        >
-                            {data.enabled ? 'Enabled' : 'Disabled'}
-                        </Switch>
+                        <FormControlLabel
+                            control={ <Switch
+                                onChange={updateEnabled}
+                                value={data.enabled}
+                                name="enabled"
+                                checked={data.enabled}
+                            />}
+                            label={data.enabled ? 'Enabled' : 'Disabled'}
+                        />
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
@@ -111,6 +113,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             label="Entity ID"
                             name="entityId"
                             value={data.entityId || ''}
+                            disabled={!data.enabled}
                             style={{ width: '400px' }}
                             variant="outlined"
                             size="small"
@@ -132,6 +135,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             label="Single Sign-On URL"
                             name="signOnUrl"
                             value={data.signOnUrl || ''}
+                            disabled={!data.enabled}
                             style={{ width: '400px'}}
                             variant="outlined"
                             size="small"
@@ -153,6 +157,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             label="X.509 Certificate"
                             name="certificate"
                             value={data.certificate || ''}
+                            disabled={!data.enabled}
                             style={{width: '100%'}}
                             InputProps={{
                                 style: {
@@ -173,7 +178,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                     <Grid item md={5}>
                         <strong>Single Sign-out URL</strong>
                         <p>
-                            (optional) The url to redirect the user to for
+                            (Optional) The url to redirect the user to for
                             signing out of the IDP.
                         </p>
                     </Grid>
@@ -183,6 +188,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             label="Single Sign-out URL"
                             name="signOutUrl"
                             value={data.signOutUrl || ''}
+                            disabled={!data.enabled}
                             style={{ width: '400px'}}
                             variant="outlined"
                             size="small"
@@ -203,6 +209,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             label="X.509 Certificate"
                             name="spCertificate"
                             value={data.spCertificate || ''}
+                            disabled={!data.enabled}
                             style={{width: '100%'}}
                             InputProps={{
                                 style: {
@@ -217,46 +224,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3}>
-                    <Grid item md={5}>
-                        <strong>Auto-create users</strong>
-                        <p>
-                            Enable automatic creation of new users when signing
-                            in with Saml.
-                        </p>
-                    </Grid>
-                    <Grid item md={6} style={{ padding: '20px' }}>
-                        <Switch
-                            onChange={updateAutoCreate}
-                            name="enabled"
-                            checked={data.autoCreate}
-                        >
-                            Auto-create users
-                        </Switch>
-                    </Grid>
-                </Grid>
-                <Grid container spacing={3}>
-                    <Grid item md={5}>
-                        <strong>Email domains</strong>
-                        <p>
-                            (Optional) Comma separated list of email domains
-                            that should be allowed to sign in.
-                        </p>
-                    </Grid>
-                    <Grid item md={6}>
-                        <TextField
-                            onChange={updateField}
-                            label="Email domains"
-                            name="emailDomains"
-                            value={data.emailDomains || ''}
-                            placeholder="@company.com, @anotherCompany.com"
-                            style={{ width: '400px' }}
-                            rows={2}
-                            variant="outlined"
-                            size="small"
-                        />
-                    </Grid>
-                </Grid>
+                <AutoCreateForm data={data} setValue={setValue} />
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <Button

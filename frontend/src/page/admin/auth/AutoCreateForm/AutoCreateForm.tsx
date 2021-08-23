@@ -61,7 +61,7 @@ return (
                     labelId="defaultRootRole-label"
                     id="defaultRootRole"
                     name="defaultRootRole"
-                    disabled={!data.autoCreate}
+                    disabled={!data.autoCreate || !data.enabled}
                     value={data.defaultRootRole || 'Editor'}
                     onChange={updateDefaultRootRole}
                     >
@@ -86,7 +86,7 @@ return (
                     onChange={updateField}
                     label="Email domains"
                     name="emailDomains"
-                    disabled={!data.autoCreate}
+                    disabled={!data.autoCreate || !data.enabled}
                     required={!!data.autoCreate}
                     value={data.emailDomains || ''}
                     placeholder="@company.com, @anotherCompany.com"

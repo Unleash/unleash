@@ -9,6 +9,7 @@ import AutoCreateForm from './AutoCreateForm/AutoCreateForm';
 
 const initialState = {
     enabled: false,
+    enableSingleSignOut: false,
     autoCreate: false,
     unleashHostname: location.hostname,
 };
@@ -45,6 +46,10 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
 
     const updateEnabled = () => {
         setData({ ...data, enabled: !data.enabled });
+    };
+
+    const updateSingleSignOut = () => {
+        setData({ ...data, enableSingleSignOut: !data.enableSingleSignOut });
     };
 
     const setValue = (field, value) => {
@@ -93,7 +98,7 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
                         <strong>Enable</strong>
                         <p>Enable Open Id Connect Authentication.</p>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item md={6} style={{ padding: '20px' }}>
                         <FormControlLabel
                             control={ <Switch
                                 onChange={updateEnabled}
@@ -159,6 +164,25 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
                             variant="outlined"
                             size="small"
                             required
+                        />
+                    </Grid>
+                </Grid>
+                <h3>Optional Configuration</h3>
+                <Grid container spacing={3}>
+                    <Grid item md={5}>
+                        <strong>(Optional) Enable Single Sign-Out</strong>
+                        <p>If you enable Single Sign-Out Unleash will redirect the user to the IDP as part of the Sign-out process.</p>
+                    </Grid>
+                    <Grid item md={6} style={{ padding: '20px' }}>
+                        <FormControlLabel
+                            control={ <Switch
+                                onChange={updateSingleSignOut}
+                                value={data.enableSingleSignOut}
+                                disabled={!data.enabled}
+                                name="enableSingleSignOut"
+                                checked={data.enableSingleSignOut}
+                            />}
+                            label={data.enableSingleSignOut ? 'Enabled' : 'Disabled'}
                         />
                     </Grid>
                 </Grid>

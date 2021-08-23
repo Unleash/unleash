@@ -23,6 +23,7 @@ import Controller from './routes/controller';
 import { IAuthRequest } from './routes/unleash-types';
 import * as permissions from './types/permissions';
 import * as eventType from './types/events';
+import { RoleName } from './types/model';
 
 async function createApp(
     config: IUnleashConfig,
@@ -155,6 +156,7 @@ export {
     AuthenticationRequired,
     User,
     LogLevel,
+    RoleName,
 };
 
 export default {

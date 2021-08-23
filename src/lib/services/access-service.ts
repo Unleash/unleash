@@ -286,7 +286,7 @@ export class AccessService {
         return this.store.getRootRoles();
     }
 
-    private async resolveRootRole(rootRole: number | RoleName): Promise<IRole> {
+    public async resolveRootRole(rootRole: number | RoleName): Promise<IRole> {
         const rootRoles = await this.getRootRoles();
         let role: IRole;
         if (typeof rootRole === 'number') {

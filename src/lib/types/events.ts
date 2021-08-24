@@ -2,6 +2,7 @@ export const APPLICATION_CREATED = 'application-created';
 export const FEATURE_CREATED = 'feature-created';
 export const FEATURE_DELETED = 'feature-deleted';
 export const FEATURE_UPDATED = 'feature-updated';
+export const FEATURE_PROJECT_CHANGE = 'feature-project-change';
 export const FEATURE_ARCHIVED = 'feature-archived';
 export const FEATURE_REVIVED = 'feature-revived';
 export const FEATURE_IMPORT = 'feature-import';

@@ -6,6 +6,7 @@ import { nameType } from '../routes/util';
 import schema from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
+    FEATURE_PROJECT_CHANGE,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
@@ -148,10 +149,6 @@ export default class ProjectService {
         user: User,
         currentProjectId: string,
     ): Promise<void> {
-        // Check if project exists
-        // Check permission for user for projectId to change to.
-        // Check if projectId from URL matches projectId on feature toggle.
-
         const feature = await this.featureToggleStore.get(featureName);
 
         if (feature.project !== currentProjectId) {
@@ -174,7 +171,15 @@ export default class ProjectService {
             throw new NoAccessError(CREATE_FEATURE);
         }
 
-        // Update toggle
+        const updatedFeature = await this.featureToggleService.updateField(
+            featureName,
+            'project',
+            projectId,
+            user.username,
+            FEATURE_PROJECT_CHANGE,
+        );
+
+        return updatedFeature;
     }
 
     async deleteProject(id: string, user: User): Promise<void> {

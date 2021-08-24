@@ -27,6 +27,8 @@ import { IProjectStore } from '../types/stores/project-store';
 import { IRole } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleServiceV2 from './feature-toggle-service-v2';
+import { CREATE_FEATURE, UPDATE_FEATURE } from 'lib/types/permissions';
+import NoAccessError from 'lib/error/no-access-error';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -138,6 +140,41 @@ export default class ProjectService {
             createdBy: getCreatedBy(user),
             data: project,
         });
+    }
+
+    async changeProject(
+        projectId: string,
+        featureName: string,
+        user: User,
+        currentProjectId: string,
+    ): Promise<void> {
+        // Check if project exists
+        // Check permission for user for projectId to change to.
+        // Check if projectId from URL matches projectId on feature toggle.
+
+        const feature = await this.featureToggleStore.get(featureName);
+
+        if (feature.project !== currentProjectId) {
+            throw new NoAccessError(UPDATE_FEATURE);
+        }
+
+        const project = await this.getProject(projectId);
+
+        if (!project) {
+            throw new NotFoundError(`Project ${projectId} not found`);
+        }
+
+        const authorized = await this.accessService.hasPermission(
+            user,
+            CREATE_FEATURE,
+            projectId,
+        );
+
+        if (!authorized) {
+            throw new NoAccessError(CREATE_FEATURE);
+        }
+
+        // Update toggle
     }
 
     async deleteProject(id: string, user: User): Promise<void> {

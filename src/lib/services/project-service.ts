@@ -28,8 +28,8 @@ import { IProjectStore } from '../types/stores/project-store';
 import { IRole } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleServiceV2 from './feature-toggle-service-v2';
-import { CREATE_FEATURE, UPDATE_FEATURE } from 'lib/types/permissions';
-import NoAccessError from 'lib/error/no-access-error';
+import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
+import NoAccessError from '../error/no-access-error';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 

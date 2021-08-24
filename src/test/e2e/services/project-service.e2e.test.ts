@@ -3,7 +3,11 @@ import getLogger from '../../fixtures/no-logger';
 import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service-v2';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
-import { UPDATE_PROJECT } from '../../../lib/types/permissions';
+import {
+    CREATE_FEATURE,
+    UPDATE_FEATURE,
+    UPDATE_PROJECT,
+} from '../../../lib/types/permissions';
 import NotFoundError from '../../../lib/error/notfound-error';
 import { createTestConfig } from '../../config/test-config';
 import { RoleName } from '../../../lib/types/model';
@@ -389,4 +393,120 @@ test('should not remove user from the project', async () => {
     }).rejects.toThrowError(
         new Error('A project must have at least one owner'),
     );
+});
+
+test('should not change project if feature toggle project does not match current project id', async () => {
+    const project = {
+        id: 'test-change-project',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    const toggle = { name: 'test-toggle' };
+
+    await projectService.createProject(project, user);
+    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+
+    try {
+        await projectService.changeProject(
+            'newProject',
+            toggle.name,
+            user,
+            'wrong-project-id',
+        );
+    } catch (err) {
+        expect(err.message).toBe(
+            `You need permission=${UPDATE_FEATURE} to perform this action`,
+        );
+    }
+});
+
+test('should return 404 if no project is found with the project id', async () => {
+    const project = {
+        id: 'test-change-project-2',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    const toggle = { name: 'test-toggle-2' };
+
+    await projectService.createProject(project, user);
+    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+
+    try {
+        await projectService.changeProject(
+            'newProject',
+            toggle.name,
+            user,
+            project.id,
+        );
+    } catch (err) {
+        expect(err.message).toBe(`No project found`);
+    }
+});
+
+test('should fail if user is not authorized', async () => {
+    const project = {
+        id: 'test-change-project-3',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    const projectDestination = {
+        id: 'test-change-project-dest',
+        name: 'New project 2',
+        description: 'Blah',
+    };
+
+    const toggle = { name: 'test-toggle-3' };
+    const projectAdmin1 = await stores.userStore.insert({
+        name: 'test-change-project-creator',
+        email: 'admin-change-project@getunleash.io',
+    });
+
+    await projectService.createProject(project, user);
+    await projectService.createProject(projectDestination, projectAdmin1);
+    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+
+    try {
+        await projectService.changeProject(
+            projectDestination.id,
+            toggle.name,
+            user,
+            project.id,
+        );
+    } catch (err) {
+        expect(err.message).toBe(
+            `You need permission=${CREATE_FEATURE} to perform this action`,
+        );
+    }
+});
+
+test('should change project when checks pass', async () => {
+    const project = {
+        id: 'test-change-project-4',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    const projectDestination = {
+        id: 'test-change-project-dest-2',
+        name: 'New project 2',
+        description: 'Blah',
+    };
+
+    const toggle = { name: 'test-toggle-4' };
+
+    await projectService.createProject(project, user);
+    await projectService.createProject(projectDestination, user);
+    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+
+    const updatedFeature = await projectService.changeProject(
+        projectDestination.id,
+        toggle.name,
+        user,
+        project.id,
+    );
+
+    expect(updatedFeature.project).toBe(projectDestination.id);
 });

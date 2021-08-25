@@ -281,7 +281,7 @@ class UserService {
         try {
             user = await this.store.getByQuery({ email });
             // Update user if autCreate is enabled.
-            if (user.name !== name) {
+            if (name && user.name !== name) {
                 user = await this.store.update(user.id, { name, email });
             }
         } catch (e) {

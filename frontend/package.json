@@ -29,7 +29,7 @@
     "start": "react-scripts start",
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
     "test": "react-scripts test",
-    "prepublish": "yarn run build"
+    "prepare": "yarn run build"
   },
   "devDependencies": {
     "@material-ui/core": "^4.11.3",

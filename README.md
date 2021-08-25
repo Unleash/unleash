@@ -173,7 +173,7 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 - [Follow Unleash on Twitter](https://twitter.com/getunleash) if you want to stay updated on the latest progress of the Unleash project.
 
 # In the media
-
+- [Feature toggling transient errors in load tests](https://nrkbeta.no/2021/08/23/feature-toggling-transient-errors-in-load-tests/) (English)
 - [The Code Kitchen Episode 7: Feature flags with Unleash](https://share.fireside.fm/episode/zD-4e4KI+Pr379KBv) (English)
 - [Utviklerpodden, 1 - Feature Flags og Unleash med Fredrik Oseberg](https://pod.space/utviklerpodden/feature-flags-og-unleash-med-fredrik-oseberg) (Norwegian)
 - [Node Weekly issue 380](https://nodeweekly.com/issues/380)

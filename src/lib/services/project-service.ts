@@ -6,6 +6,7 @@ import { nameType } from '../routes/util';
 import schema from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
+    FEATURE_PROJECT_CHANGE,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
@@ -27,6 +28,8 @@ import { IProjectStore } from '../types/stores/project-store';
 import { IRole } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleServiceV2 from './feature-toggle-service-v2';
+import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
+import NoAccessError from '../error/no-access-error';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -138,6 +141,45 @@ export default class ProjectService {
             createdBy: getCreatedBy(user),
             data: project,
         });
+    }
+
+    async changeProject(
+        newProjectId: string,
+        featureName: string,
+        user: User,
+        currentProjectId: string,
+    ): Promise<any> {
+        const feature = await this.featureToggleStore.get(featureName);
+
+        if (feature.project !== currentProjectId) {
+            throw new NoAccessError(UPDATE_FEATURE);
+        }
+
+        const project = await this.getProject(newProjectId);
+
+        if (!project) {
+            throw new NotFoundError(`Project ${newProjectId} not found`);
+        }
+
+        const authorized = await this.accessService.hasPermission(
+            user,
+            CREATE_FEATURE,
+            newProjectId,
+        );
+
+        if (!authorized) {
+            throw new NoAccessError(CREATE_FEATURE);
+        }
+
+        const updatedFeature = await this.featureToggleService.updateField(
+            featureName,
+            'project',
+            newProjectId,
+            user.username,
+            FEATURE_PROJECT_CHANGE,
+        );
+
+        return updatedFeature;
     }
 
     async deleteProject(id: string, user: User): Promise<void> {

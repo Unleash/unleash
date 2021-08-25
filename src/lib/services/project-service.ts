@@ -144,27 +144,27 @@ export default class ProjectService {
     }
 
     async changeProject(
-        projectId: string,
+        newProjectId: string,
         featureName: string,
         user: User,
         currentProjectId: string,
-    ): Promise<void> {
+    ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
 
         if (feature.project !== currentProjectId) {
             throw new NoAccessError(UPDATE_FEATURE);
         }
 
-        const project = await this.getProject(projectId);
+        const project = await this.getProject(newProjectId);
 
         if (!project) {
-            throw new NotFoundError(`Project ${projectId} not found`);
+            throw new NotFoundError(`Project ${newProjectId} not found`);
         }
 
         const authorized = await this.accessService.hasPermission(
             user,
             CREATE_FEATURE,
-            projectId,
+            newProjectId,
         );
 
         if (!authorized) {
@@ -174,7 +174,7 @@ export default class ProjectService {
         const updatedFeature = await this.featureToggleService.updateField(
             featureName,
             'project',
-            projectId,
+            newProjectId,
             user.username,
             FEATURE_PROJECT_CHANGE,
         );

@@ -16,7 +16,6 @@ import CreateContextField from '../../page/context/create';
 import EditContextField from '../../page/context/edit';
 import CreateProject from '../../page/project/create';
 import EditProject from '../../page/project/edit';
-import ViewProject from '../../page/project/view';
 import EditProjectAccess from '../../page/project/access';
 import ListTagTypes from '../../page/tag-types';
 import CreateTagType from '../../page/tag-types/create';
@@ -39,32 +38,16 @@ import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
 import ProjectListNew from '../project/ProjectList/ProjectList';
 import Project from '../project/Project/Project';
+import RedirectFeatureViewPage from '../../page/features/redirect';
+import RedirectArchive from '../feature/RedirectArchive/RedirectArchive';
 
 export const routes = [
     // Features
     {
-        path: '/features/create',
-        parent: '/features',
-        title: 'Create',
-        component: CreateFeatureToggle,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/features/copy/:copyToggle',
-        parent: '/features',
-        title: 'Copy',
-        component: CopyFeatureToggle,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
         path: '/features/:activeTab/:name',
         parent: '/features',
         title: ':name',
-        component: ViewFeatureToggle,
+        component: RedirectFeatureViewPage,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -127,7 +110,7 @@ export const routes = [
 
     // Archive
     {
-        path: '/archive/:activeTab/:name',
+        path: '/projects/:id/archived/:name/:activeTab',
         title: ':name',
         parent: '/archive',
         component: ShowArchive,
@@ -203,19 +186,10 @@ export const routes = [
         menu: {},
     },
     {
-        path: '/projects/edit/:id',
+        path: '/projects/:id/edit',
         parent: '/projects',
         title: ':id',
         component: EditProject,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/projects/view/:id',
-        parent: '/projects',
-        title: ':id',
-        component: ViewProject,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -225,6 +199,42 @@ export const routes = [
         parent: '/projects',
         title: ':id',
         component: EditProjectAccess,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/projects/:id/archived',
+        title: ':name',
+        parent: '/archive',
+        component: RedirectArchive,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/projects/:id/features/:name/:activeTab/copy',
+        parent: '/projects/:id/features/:name/:activeTab',
+        title: 'Copy',
+        component: CopyFeatureToggle,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/projects/:id/features/:name/:activeTab',
+        parent: '/projects',
+        title: ':name',
+        component: ViewFeatureToggle,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/projects/:id/create-toggle',
+        parent: '/projects',
+        title: 'Create',
+        component: CreateFeatureToggle,
         type: 'protected',
         layout: 'main',
         menu: {},

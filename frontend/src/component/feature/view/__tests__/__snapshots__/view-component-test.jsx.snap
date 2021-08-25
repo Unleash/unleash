@@ -77,6 +77,9 @@ exports[`renders correctly with one feature 1`] = `
                 />
               </svg>
             </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
           </a>
         </p>
       </div>
@@ -94,8 +97,8 @@ exports[`renders correctly with one feature 1`] = `
           className="MuiFormControl-root"
         >
           <label
-            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-marginDense MuiInputLabel-outlined"
-            data-shrink={false}
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-marginDense MuiInputLabel-outlined MuiFormLabel-filled"
+            data-shrink={true}
           >
             Project
           </label>
@@ -114,13 +117,7 @@ exports[`renders correctly with one feature 1`] = `
               role="button"
               tabIndex={0}
             >
-              <span
-                dangerouslySetInnerHTML={
-                  Object {
-                    "__html": "&#8203;",
-                  }
-                }
-              />
+              default
             </div>
             <input
               aria-hidden={true}
@@ -129,6 +126,7 @@ exports[`renders correctly with one feature 1`] = `
               onChange={[Function]}
               required={false}
               tabIndex={-1}
+              value="default"
             />
             <svg
               aria-hidden={true}
@@ -145,7 +143,7 @@ exports[`renders correctly with one feature 1`] = `
               className="PrivateNotchedOutline-root-20 MuiOutlinedInput-notchedOutline"
             >
               <legend
-                className="PrivateNotchedOutline-legendLabelled-22"
+                className="PrivateNotchedOutline-legendLabelled-22 PrivateNotchedOutline-legendNotched-23"
               >
                 <span>
                   Project
@@ -205,6 +203,9 @@ exports[`renders correctly with one feature 1`] = `
               className="MuiSwitch-thumb"
             />
           </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
         </span>
         <span
           className="MuiSwitch-track"
@@ -221,7 +222,7 @@ exports[`renders correctly with one feature 1`] = `
       <a
         aria-disabled={false}
         className="MuiButtonBase-root MuiButton-root MuiButton-text"
-        href="/features/copy/Another"
+        href="/projects/default/features/Another/strategies/copy"
         onBlur={[Function]}
         onClick={[Function]}
         onDragLeave={[Function]}
@@ -243,6 +244,9 @@ exports[`renders correctly with one feature 1`] = `
         >
           Clone
         </span>
+        <span
+          className="MuiTouchRipple-root"
+        />
       </a>
       <button
         aria-controls="feature-stale-dropdown"
@@ -294,6 +298,9 @@ exports[`renders correctly with one feature 1`] = `
             </span>
           </span>
         </span>
+        <span
+          className="MuiTouchRipple-root"
+        />
       </button>
       <button
         className="MuiButtonBase-root MuiButton-root MuiButton-text"
@@ -324,6 +331,9 @@ exports[`renders correctly with one feature 1`] = `
         >
           Archive
         </span>
+        <span
+          className="MuiTouchRipple-root"
+        />
       </button>
     </div>
   </div>
@@ -377,8 +387,7 @@ exports[`renders correctly with one feature 1`] = `
               Activation
             </span>
             <span
-              className="PrivateTabIndicator-root-29 PrivateTabIndicator-colorPrimary-30 MuiTabs-indicator"
-              style={Object {}}
+              className="MuiTouchRipple-root"
             />
           </button>
           <button
@@ -408,6 +417,9 @@ exports[`renders correctly with one feature 1`] = `
             >
               Metrics
             </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
           </button>
           <button
             aria-controls="tabpanel-2"
@@ -436,6 +448,9 @@ exports[`renders correctly with one feature 1`] = `
             >
               Variants
             </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
           </button>
           <button
             aria-controls="tabpanel-3"
@@ -464,8 +479,20 @@ exports[`renders correctly with one feature 1`] = `
             >
               Log
             </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
           </button>
         </div>
+        <span
+          className="PrivateTabIndicator-root-29 PrivateTabIndicator-colorPrimary-30 MuiTabs-indicator"
+          style={
+            Object {
+              "left": 0,
+              "width": 0,
+            }
+          }
+        />
       </div>
     </div>
   </div>
@@ -486,6 +513,7 @@ exports[`renders correctly with one feature 1`] = `
             "description": "another's description",
             "enabled": false,
             "name": "Another",
+            "project": "default",
             "stale": false,
             "strategies": Array [
               Object {
@@ -505,6 +533,7 @@ exports[`renders correctly with one feature 1`] = `
               "description": "another's description",
               "enabled": false,
               "name": "Another",
+              "project": "default",
               "stale": false,
               "strategies": Array [
                 Object {

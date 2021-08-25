@@ -11,6 +11,7 @@ export const useStyles = makeStyles(theme => ({
             paddingBottom: '4rem',
         },
     },
+    bodyClass: { padding: '0.5rem 2rem' },
     header: {
         padding: '1rem',
     },

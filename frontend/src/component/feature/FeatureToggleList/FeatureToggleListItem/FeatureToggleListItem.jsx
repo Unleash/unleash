@@ -16,6 +16,7 @@ import { UPDATE_FEATURE } from '../../../AccessProvider/permissions';
 import { calc, styles as commonStyles } from '../../../common';
 
 import { useStyles } from './styles';
+import { getTogglePath } from '../../../../utils/route-path-helpers';
 
 const FeatureToggleListItem = ({
     feature,
@@ -50,8 +51,8 @@ const FeatureToggleListItem = ({
               ));
     const featureUrl =
         toggleFeature === undefined
-            ? `/archive/strategies/${name}`
-            : `/features/strategies/${name}`;
+            ? `/projects/${feature.project}/archived/${name}/metrics`
+            : getTogglePath(feature.project, name);
 
     return (
         <ListItem
@@ -118,13 +119,18 @@ const FeatureToggleListItem = ({
                 <FeatureToggleListItemChip type={type} />
             </span>
             <ConditionallyRender
-                condition={revive && hasAccess(UPDATE_FEATURE, project)}
+                condition={revive}
                 show={
-                    <IconButton onClick={() => revive(feature.name)}>
-                        <Undo />
-                    </IconButton>
+                    <ConditionallyRender
+                        condition={hasAccess(UPDATE_FEATURE, project)}
+                        show={
+                            <IconButton onClick={() => revive(feature.name)}>
+                                <Undo />
+                            </IconButton>
+                        }
+                        elseShow={<span style={{ width: '48px ' }} />}
+                    />
                 }
-                elseShow={<span />}
             />
         </ListItem>
     );

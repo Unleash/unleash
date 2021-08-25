@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import Select from '../common/select';
 import ReportCardContainer from './ReportCard/ReportCardContainer';
-import ReportToggleListContainer from './ReportToggleList/ReportToggleListContainer';
+import ReportToggleList from './ReportToggleList/ReportToggleList';
 
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
 
@@ -14,6 +14,7 @@ import { REPORTING_SELECT_ID } from '../../testIds';
 import styles from './Reporting.module.scss';
 import useHealthReport from '../../hooks/api/getters/useHealthReport/useHealthReport';
 import ApiError from '../common/ApiError/ApiError';
+import useQueryParams from '../../hooks/useQueryParams';
 
 const Reporting = ({ projects }) => {
     const [projectOptions, setProjectOptions] = useState([
@@ -22,8 +23,15 @@ const Reporting = ({ projects }) => {
     const [selectedProject, setSelectedProject] = useState('default');
     const { project, error, refetch } = useHealthReport(selectedProject);
 
+    const params = useQueryParams();
+    const projectId = params.get('project');
+
     useEffect(() => {
+        if (projectId) {
+            return setSelectedProject(projectId);
+        }
         setSelectedProject(projects[0].id);
+
         /* eslint-disable-next-line */
     }, []);
 
@@ -82,7 +90,7 @@ const Reporting = ({ projects }) => {
                 potentiallyStaleCount={project?.potentiallyStaleCount}
                 selectedProject={selectedProject}
             />
-            <ReportToggleListContainer
+            <ReportToggleList
                 features={project.features}
                 selectedProject={selectedProject}
             />

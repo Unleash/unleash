@@ -21,12 +21,14 @@ import {
 } from '../../../../constants/featureToggleTypes';
 
 import styles from '../ReportToggleList.module.scss';
+import { getTogglePath } from '../../../../utils/route-path-helpers';
 
 const ReportToggleListItem = ({
     name,
     stale,
     lastSeenAt,
     createdAt,
+    project,
     type,
     checked,
     bulkActionsOn,
@@ -121,7 +123,7 @@ const ReportToggleListItem = ({
     };
 
     const navigateToFeature = () => {
-        history.push(`/features/strategies/${name}`);
+        history.push(getTogglePath(project, name));
     };
 
     const statusClasses = classnames(styles.active, {

@@ -15,7 +15,7 @@ import { Report, Extension, Timeline } from '@material-ui/icons';
 import { shorten } from '../common';
 import { CREATE_FEATURE, CREATE_STRATEGY } from '../AccessProvider/permissions';
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
-
+import { getTogglePath } from '../../utils/route-path-helpers';
 function ApplicationView({
     seenToggles,
     hasAccess,
@@ -89,18 +89,21 @@ function ApplicationView({
                 <hr />
                 <List>
                     {seenToggles.map(
-                        ({ name, description, enabled, notFound }, i) => (
+                        (
+                            { name, description, enabled, notFound, project },
+                            i
+                        ) => (
                             <ConditionallyRender
                                 key={`toggle_conditional_${name}`}
                                 condition={notFound}
                                 show={notFoundListItem({
-                                    createUrl: '/features/create',
+                                    createUrl: `/projects/${project}/create-toggle?name=${name}`,
                                     name,
                                     permission: CREATE_FEATURE,
                                     i,
                                 })}
                                 elseShow={foundListItem({
-                                    viewUrl: '/features/strategies',
+                                    viewUrl: getTogglePath(project, name),
                                     name,
                                     showSwitch: true,
                                     enabled,

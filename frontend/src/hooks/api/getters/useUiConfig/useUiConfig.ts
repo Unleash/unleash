@@ -23,6 +23,13 @@ const useUiConfig = () => {
         mutate(REQUEST_KEY);
     };
 
+    const isOss = () => {
+        if (data?.versionInfo?.current?.enterprise) {
+            return false;
+        }
+        return true;
+    };
+
     useEffect(() => {
         setLoading(!error && !data);
     }, [data, error]);
@@ -32,6 +39,7 @@ const useUiConfig = () => {
         error,
         loading,
         refetch,
+        isOss,
     };
 };
 

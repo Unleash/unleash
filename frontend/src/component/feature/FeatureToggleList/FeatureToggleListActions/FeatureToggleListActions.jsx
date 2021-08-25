@@ -41,6 +41,7 @@ const FeatureToggleListActions = ({
     const renderSortingOptions = () =>
         sortingOptions.map(option => (
             <MenuItem
+                style={{ fontSize: '14px' }}
                 key={option.type}
                 disabled={isDisabled(option.type)}
                 data-target={option.type}
@@ -51,6 +52,7 @@ const FeatureToggleListActions = ({
 
     const renderMetricsOptions = () => [
         <MenuItemWithIcon
+            style={{ fontSize: '14px' }}
             icon={HourglassEmpty}
             disabled={!settings.showLastHour}
             data-target="minute"
@@ -58,6 +60,7 @@ const FeatureToggleListActions = ({
             key={1}
         />,
         <MenuItemWithIcon
+            style={{ fontSize: '14px' }}
             icon={HourglassFull}
             disabled={settings.showLastHour}
             data-target="hour"
@@ -78,7 +81,7 @@ const FeatureToggleListActions = ({
                 callback={toggleMetrics}
                 renderOptions={renderMetricsOptions}
                 className=""
-                style={{ textTransform: 'lowercase' }}
+                style={{ textTransform: 'lowercase', fontWeight: 'normal' }}
                 data-loading
             />
             <DropdownMenu
@@ -88,13 +91,16 @@ const FeatureToggleListActions = ({
                 renderOptions={renderSortingOptions}
                 title="Sort by"
                 className=""
-                style={{ textTransform: 'lowercase' }}
+                style={{ textTransform: 'lowercase', fontWeight: 'normal' }}
                 data-loading
             />
             <ProjectSelect
                 settings={settings}
                 updateSetting={updateSetting}
-                style={{ textTransform: 'lowercase' }}
+                style={{
+                    textTransform: 'lowercase',
+                    fontWeight: 'normal',
+                }}
                 data-loading
             />
         </div>

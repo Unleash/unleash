@@ -34,6 +34,7 @@ test('renders correctly with one feature', () => {
         enabled: false,
         stale: false,
         type: 'release',
+        project: 'default',
         strategies: [
             {
                 name: 'gradualRolloutRandom',

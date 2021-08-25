@@ -101,6 +101,7 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                         variant="outlined"
                         autoComplete="true"
                         size="small"
+                        data-test="LI_EMAIL_ID"
                     />
                     <TextField
                         label="Password"
@@ -113,12 +114,14 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                         variant="outlined"
                         autoComplete="true"
                         size="small"
+                        data-test="LI_PASSWORD_ID"
                     />
                     <Button
                         variant="contained"
                         color="primary"
                         type="submit"
                         style={{ width: '150px', margin: '1rem auto' }}
+                        data-test="LI_BTN"
                     >
                         Sign in
                     </Button>

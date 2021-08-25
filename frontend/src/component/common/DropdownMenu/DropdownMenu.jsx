@@ -14,6 +14,7 @@ const DropdownMenu = ({
     callback,
     icon = <ArrowDropDown />,
     label,
+    style,
     startIcon,
     ...rest
 }) => {
@@ -37,6 +38,7 @@ const DropdownMenu = ({
                 title={title}
                 startIcon={startIcon}
                 onClick={handleOpen}
+                style={style}
                 aria-controls={id}
                 aria-haspopup="true"
                 icon={icon}

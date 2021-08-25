@@ -56,6 +56,7 @@ const ReportToggleList = ({ features, selectedProject }) => {
             <ReportToggleListItem
                 key={feature.name}
                 {...feature}
+                project={selectedProject}
                 bulkActionsOn={BULK_ACTIONS_ON}
             />
         ));

@@ -11,6 +11,7 @@ const PageContent = ({
     headerContent,
     disablePadding,
     disableBorder,
+    bodyClass,
     ...rest
 }) => {
     const styles = useStyles();
@@ -23,6 +24,7 @@ const PageContent = ({
     const bodyClasses = classnames(styles.bodyContainer, {
         [styles.paddingDisabled]: disablePadding,
         [styles.borderDisabled]: disableBorder,
+        [bodyClass]: bodyClass,
     });
 
     let header = null;

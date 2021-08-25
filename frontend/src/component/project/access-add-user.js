@@ -67,7 +67,7 @@ function AddUserComponent({ roles, addUserToRole }) {
     };
 
     return (
-        <Grid container justify="left" spacing={3} alignItems="flex-end">
+        <Grid container spacing={3} alignItems="flex-end">
             <Grid item>
                 <Autocomplete
                     id="add-user-component"

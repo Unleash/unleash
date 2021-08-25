@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import useToast from '../../../hooks/useToast';
 import useQueryParams from '../../../hooks/useQueryParams';
 import { useEffect } from 'react';
+import { getProjectEditPath } from '../../../utils/route-path-helpers';
 
 const Project = () => {
     const { id } = useParams<{ id: string }>();
@@ -43,7 +44,7 @@ const Project = () => {
         <div ref={ref}>
             <h1 data-loading className={commonStyles.title}>
                 {project?.name}{' '}
-                <IconButton component={Link} to={`/projects/edit/${id}`}>
+                <IconButton component={Link} to={getProjectEditPath(id)}>
                     <Edit />
                 </IconButton>
             </h1>

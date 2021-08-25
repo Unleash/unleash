@@ -63,7 +63,7 @@ exports[`renders correctly with one feature 1`] = `
   >
     <a
       className="listLink truncate"
-      href="/features/strategies/Another"
+      href="/projects/default/features/Another/strategies"
       onClick={[Function]}
     >
       <span
@@ -94,7 +94,6 @@ exports[`renders correctly with one feature 1`] = `
   <span
     className="makeStyles-listItemStrategies-5 hideLt920"
   />
-  <span />
 </li>
 `;
 
@@ -164,7 +163,7 @@ exports[`renders correctly with one feature without permission 1`] = `
   >
     <a
       className="listLink truncate"
-      href="/features/strategies/Another"
+      href="/projects/undefined/features/Another/strategies"
       onClick={[Function]}
     >
       <span
@@ -195,6 +194,5 @@ exports[`renders correctly with one feature without permission 1`] = `
   <span
     className="makeStyles-listItemStrategies-5 hideLt920"
   />
-  <span />
 </li>
 `;

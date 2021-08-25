@@ -13,6 +13,7 @@ import useToggleFeatureByEnv from '../../../../hooks/api/actions/useToggleFeatur
 import { IEnvironments } from '../../../../interfaces/featureToggle';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import useToast from '../../../../hooks/useToast';
+import { getTogglePath } from '../../../../utils/route-path-helpers';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -41,7 +42,7 @@ const FeatureToggleListNewItem = ({
 
     const onClick = (e: Event) => {
         if (!ref.current?.contains(e.target)) {
-            history.push(`/features/strategies/${name}`);
+            history.push(getTogglePath(projectId, name));
         }
     };
 

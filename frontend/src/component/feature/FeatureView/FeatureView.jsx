@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -37,6 +37,9 @@ import ConfirmDialogue from '../../common/Dialogue';
 import { useCommonStyles } from '../../../common.styles';
 import AccessContext from '../../../contexts/AccessContext';
 import { projectFilterGenerator } from '../../../utils/project-filter-generator';
+import { getToggleCopyPath } from '../../../utils/route-path-helpers';
+import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
+import useToast from '../../../hooks/useToast';
 
 const FeatureView = ({
     activeTab,
@@ -62,6 +65,9 @@ const FeatureView = ({
     const commonStyles = useCommonStyles();
     const { hasAccess } = useContext(AccessContext);
     const { project } = featureToggle || {};
+    const { changeFeatureProject } = useFeatureApi();
+    const { toast, setToastData } = useToast();
+    const archive = !Boolean(isFeatureView);
 
     useEffect(() => {
         scrollToTop();
@@ -112,31 +118,56 @@ const FeatureView = ({
     };
 
     const getTabData = () => {
-        const path = !!isFeatureView ? 'features' : 'archive';
+        const path = !!isFeatureView
+            ? `projects/${project}/features`
+            : `projects/${project}/archived`;
+
+        if (archive) {
+            return [
+                {
+                    label: 'Metrics',
+                    component: getTabComponent('metrics'),
+                    name: 'metrics',
+                    path: `/${path}/${featureToggleName}/metrics`,
+                },
+                {
+                    label: 'Variants',
+                    component: getTabComponent('variants'),
+                    name: 'variants',
+                    path: `/${path}/${featureToggleName}/variants`,
+                },
+                {
+                    label: 'Log',
+                    component: getTabComponent('log'),
+                    name: 'logs',
+                    path: `/${path}/${featureToggleName}/logs`,
+                },
+            ];
+        }
         return [
             {
                 label: 'Activation',
                 component: getTabComponent('activation'),
                 name: 'strategies',
-                path: `/${path}/strategies/${featureToggleName}`,
+                path: `/${path}/${featureToggleName}/strategies`,
             },
             {
                 label: 'Metrics',
                 component: getTabComponent('metrics'),
                 name: 'metrics',
-                path: `/${path}/metrics/${featureToggleName}`,
+                path: `/${path}/${featureToggleName}/metrics`,
             },
             {
                 label: 'Variants',
                 component: getTabComponent('variants'),
                 name: 'variants',
-                path: `/${path}/variants/${featureToggleName}`,
+                path: `/${path}/${featureToggleName}/variants`,
             },
             {
                 label: 'Log',
                 component: getTabComponent('log'),
                 name: 'logs',
-                path: `/${path}/logs/${featureToggleName}`,
+                path: `/${path}/${featureToggleName}/logs`,
             },
         ];
     };
@@ -153,7 +184,7 @@ const FeatureView = ({
                     show={
                         <Link
                             to={{
-                                pathname: '/features/create',
+                                pathname: `/projects/${project}/toggles`,
                                 query: { name: featureToggleName },
                             }}
                         >
@@ -168,11 +199,11 @@ const FeatureView = ({
 
     const removeToggle = () => {
         removeFeatureToggle(featureToggle.name);
-        history.push('/features');
+        history.push(`/projects/${featureToggle.project}`);
     };
     const reviveToggle = () => {
         revive(featureToggle.name);
-        history.push('/features');
+        history.push(`/projects/${featureToggle.project}`);
     };
     const updateDescription = description => {
         let feature = { ...featureToggle, description };
@@ -198,16 +229,25 @@ const FeatureView = ({
     };
 
     const updateProject = evt => {
-        evt.preventDefault();
-        const project = evt.target.value;
-        let feature = { ...featureToggle, project };
-        if (Array.isArray(feature.strategies)) {
-            feature.strategies.forEach(s => {
-                delete s.id;
-            });
-        }
+        const { project, name } = featureToggle;
+        const newProjectId = evt.target.value;
 
-        editFeatureToggle(feature);
+        changeFeatureProject(project, name, newProjectId)
+            .then(() => {
+                fetchFeatureToggles();
+                setToastData({
+                    show: true,
+                    type: 'success',
+                    text: 'Successfully updated toggle project.',
+                });
+            })
+            .catch(e => {
+                setToastData({
+                    show: true,
+                    type: 'error',
+                    text: e.toString(),
+                });
+            });
     };
 
     const updateStale = stale => {
@@ -233,7 +273,13 @@ const FeatureView = ({
                     <Typography variant="h1" className={styles.heading}>
                         {featureToggle.name}
                     </Typography>
-                    <StatusComponent stale={featureToggle.stale} />
+                    <ConditionallyRender
+                        condition={archive}
+                        show={<span>Archived</span>}
+                        elseShow={
+                            <StatusComponent stale={featureToggle.stale} />
+                        }
+                    />
                 </div>
                 <div
                     className={classnames(
@@ -325,7 +371,10 @@ const FeatureView = ({
                             <Button
                                 title="Create new feature toggle by cloning configuration"
                                 component={Link}
-                                to={`/features/copy/${featureToggle.name}`}
+                                to={getToggleCopyPath(
+                                    featureToggle.project,
+                                    featureToggle.name
+                                )}
                             >
                                 Clone
                             </Button>
@@ -348,7 +397,7 @@ const FeatureView = ({
                     }
                     elseShow={
                         <Button
-                            disabled={!hasAccess(UPDATE_FEATURE, hasAccess)}
+                            disabled={!hasAccess(UPDATE_FEATURE, project)}
                             onClick={reviveToggle}
                             style={{ flexShrink: 0 }}
                         >
@@ -374,6 +423,7 @@ const FeatureView = ({
                 }}
                 onClose={() => setDelDialog(false)}
             />
+            {toast}
         </Paper>
     );
 };

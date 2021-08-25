@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import FeatureView from '../../component/feature/FeatureView';
+import RedirectFeatureView from '../../component/feature/RedirectFeatureView';
 
-export default class Features extends PureComponent {
+export default class RedirectFeatureViewPage extends PureComponent {
     static propTypes = {
         match: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired,
@@ -14,7 +14,7 @@ export default class Features extends PureComponent {
             history,
         } = this.props;
         return (
-            <FeatureView
+            <RedirectFeatureView
                 featureToggleName={params.name}
                 activeTab={params.activeTab}
                 history={history}

@@ -21,7 +21,9 @@ const BreadcrumbNav = () => {
                 item !== 'variants' &&
                 item !== 'logs' &&
                 item !== 'metrics' &&
-                item !== 'copy'
+                item !== 'copy' &&
+                item !== 'strategies' &&
+                item !== 'features'
         );
 
     return (
@@ -49,11 +51,22 @@ const BreadcrumbNav = () => {
                                         </p>
                                     );
                                 }
+
+                                let link = '/';
+
+                                paths.forEach((path, i) => {
+                                    if (i !== index && i < index) {
+                                        link += path + '/';
+                                    } else if (i === index) {
+                                        link += path;
+                                    }
+                                });
+
                                 return (
                                     <Link
                                         key={path}
                                         className={styles.breadcrumbLink}
-                                        to={`/${path}`}
+                                        to={link}
                                     >
                                         {path}
                                     </Link>

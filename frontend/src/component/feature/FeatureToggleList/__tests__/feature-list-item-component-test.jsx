@@ -15,6 +15,7 @@ test('renders correctly with one feature', () => {
         description: "another's description",
         enabled: false,
         stale: false,
+        project: 'default',
         strategies: [
             {
                 name: 'gradualRolloutRandom',

@@ -109,7 +109,7 @@ const FeatureToggleListNew = ({
                                 >
                                     <span data-loading>
                                         {env.name === ':global:'
-                                            ? 'global'
+                                            ? 'status'
                                             : env.name}
                                     </span>
                                 </TableCell>

@@ -32,6 +32,7 @@ const ProjectSelect = ({
             disabled={selectedId === item.id}
             data-target={item.id}
             key={item.id}
+            style={{ fontSize: '14px' }}
         >
             {item.name}
         </MenuItem>
@@ -43,6 +44,7 @@ const ProjectSelect = ({
                 disabled={curentProject === ALL_PROJECTS}
                 data-target={ALL_PROJECTS.id}
                 key={ALL_PROJECTS.id}
+                style={{ fontSize: '14px' }}
             >
                 {ALL_PROJECTS.name}
             </MenuItem>,

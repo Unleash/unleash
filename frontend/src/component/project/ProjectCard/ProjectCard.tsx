@@ -11,6 +11,7 @@ import Dialogue from '../../common/Dialogue';
 import useProjectApi from '../../../hooks/api/actions/useProjectApi/useProjectApi';
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 import { Delete, Edit } from '@material-ui/icons';
+import { getProjectEditPath } from '../../../utils/route-path-helpers';
 interface IProjectCardProps {
     name: string;
     featureCount: number;
@@ -77,7 +78,8 @@ const ProjectCard = ({
                     <MenuItem
                         onClick={e => {
                             e.preventDefault();
-                            history.push(`/projects/edit/${id}`);
+
+                            history.push(getProjectEditPath(id));
                         }}
                     >
                         <Edit className={styles.icon} />

@@ -270,6 +270,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
                 acc.name = r.name;
                 acc.description = r.description;
+                acc.project = r.project;
                 acc.stale = r.stale;
                 acc.variants = r.variants;
                 acc.createdAt = r.created_at;

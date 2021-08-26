@@ -148,11 +148,15 @@ function eachConsecutiveEvent(events, callback) {
     });
 }
 
+const ignoredProps = ['createdAt', 'lastSeenAt'];
+
+const filterProps = (path, key) => ignoredProps.includes(key);
+
 function addDiffs(events) {
     // TODO: no-param-reassign
     eachConsecutiveEvent(events, (left, right) => {
         if (right) {
-            left.diffs = diff(right.data, left.data);
+            left.diffs = diff(right.data, left.data, filterProps);
             left.diffs = left.diffs || [];
         } else {
             left.diffs = null;

@@ -62,7 +62,7 @@ export const DrawerMenu = ({
                 </div>
                 <Divider />
                 <List className={styles.drawerList}>
-                    {routes.mainNavRoutes.map(item => (
+                    {routes.mobileRoutes.map(item => (
                         <NavigationLink
                             handleClose={() => toggleDrawer()}
                             path={item.path}
@@ -93,7 +93,10 @@ export const DrawerMenu = ({
                 <Divider />
                 <div className={styles.iconLinkList}>
                     {renderLinks()}
-                    <a className={styles.navigationLink} href={`${getBasePath()}/logout`}>
+                    <a
+                        className={styles.iconLink}
+                        href={`${getBasePath()}/logout`}
+                    >
                         <ExitToApp className={styles.navigationIcon} />
                         Sign out
                     </a>

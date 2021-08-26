@@ -114,6 +114,8 @@ const FeatureToggleList = ({
         );
     };
 
+    const headerTitle = archive ? 'Archived Features' : 'Features';
+
     return (
         <div className={styles.featureContainer}>
             <div className={styles.searchBarContainer}>
@@ -125,7 +127,7 @@ const FeatureToggleList = ({
                     })}
                 />
                 <ConditionallyRender
-                    condition={!mobileView}
+                    condition={!mobileView && !archive}
                     show={<Link to="/archive">Archive</Link>}
                 />
             </div>
@@ -134,7 +136,7 @@ const FeatureToggleList = ({
                 headerContent={
                     <HeaderTitle
                         loading={loading}
-                        title="Feature toggles"
+                        title={headerTitle}
                         actions={
                             <div className={styles.actionsContainer}>
                                 <ConditionallyRender

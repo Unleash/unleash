@@ -53,6 +53,7 @@ const Header = () => {
 
     const filteredMainRoutes = {
         mainNavRoutes: routes.mainNavRoutes.filter(filterByFlags(flags)),
+        mobileRoutes: routes.mobileRoutes.filter(filterByFlags(flags)),
         adminRoutes: routes.adminRoutes,
     };
 

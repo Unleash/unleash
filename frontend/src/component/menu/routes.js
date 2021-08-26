@@ -58,7 +58,7 @@ export const routes = [
         component: Features,
         type: 'protected',
         layout: 'main',
-        menu: {},
+        menu: { mobile: true },
     },
 
     // Strategies
@@ -86,7 +86,7 @@ export const routes = [
         component: Strategies,
         type: 'protected',
         layout: 'main',
-        menu: { advanced: true },
+        menu: { mobile: true, advanced: true },
     },
 
     // History
@@ -143,7 +143,7 @@ export const routes = [
         component: Applications,
         type: 'protected',
         layout: 'main',
-        menu: { advanced: true },
+        menu: { mobile: true, advanced: true },
     },
 
     // Context
@@ -172,7 +172,7 @@ export const routes = [
         type: 'protected',
         flag: C,
         layout: 'main',
-        menu: { advanced: true },
+        menu: { mobile: true, advanced: true },
     },
 
     // Project
@@ -256,7 +256,7 @@ export const routes = [
         flag: P,
         type: 'protected',
         layout: 'main',
-        menu: {},
+        menu: { mobile: true },
     },
 
     {
@@ -283,7 +283,7 @@ export const routes = [
         component: ListTagTypes,
         type: 'protected',
         layout: 'main',
-        menu: { advanced: true },
+        menu: { mobile: true, advanced: true },
     },
 
     {
@@ -331,7 +331,7 @@ export const routes = [
         hidden: false,
         type: 'protected',
         layout: 'main',
-        menu: { advanced: true },
+        menu: { mobile: true, advanced: true },
     },
     {
         path: '/reporting',
@@ -339,7 +339,7 @@ export const routes = [
         component: Reporting,
         type: 'protected',
         layout: 'main',
-        menu: { advanced: true },
+        menu: { mobile: true, advanced: true },
     },
     // Admin
     {
@@ -349,7 +349,7 @@ export const routes = [
         component: AdminApi,
         type: 'protected',
         layout: 'main',
-        menu: { advanced: true, adminSettings: true },
+        menu: { mobile: true, advanced: true, adminSettings: true },
     },
     {
         path: '/admin/users',
@@ -434,10 +434,12 @@ export const baseRoutes = routes
 const computeRoutes = () => {
     const mainNavRoutes = baseRoutes.filter(route => route.menu.advanced);
     const adminRoutes = routes.filter(route => route.menu.adminSettings);
+    const mobileRoutes = routes.filter(route => route.menu.mobile);
 
     const computedRoutes = {
         mainNavRoutes,
         adminRoutes,
+        mobileRoutes,
     };
     return () => {
         return computedRoutes;

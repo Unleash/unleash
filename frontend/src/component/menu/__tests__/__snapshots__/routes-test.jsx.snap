@@ -5,7 +5,9 @@ Array [
   Object {
     "component": [Function],
     "layout": "main",
-    "menu": Object {},
+    "menu": Object {
+      "mobile": true,
+    },
     "path": "/features",
     "title": "Feature Toggles",
     "type": "protected",
@@ -15,6 +17,7 @@ Array [
     "layout": "main",
     "menu": Object {
       "advanced": true,
+      "mobile": true,
     },
     "path": "/strategies",
     "title": "Strategies",
@@ -43,6 +46,7 @@ Array [
     "layout": "main",
     "menu": Object {
       "advanced": true,
+      "mobile": true,
     },
     "path": "/applications",
     "title": "Applications",
@@ -54,6 +58,7 @@ Array [
     "layout": "main",
     "menu": Object {
       "advanced": true,
+      "mobile": true,
     },
     "path": "/context",
     "title": "Context Fields",
@@ -63,7 +68,9 @@ Array [
     "component": [Function],
     "flag": "P",
     "layout": "main",
-    "menu": Object {},
+    "menu": Object {
+      "mobile": true,
+    },
     "path": "/projects",
     "title": "Projects",
     "type": "protected",
@@ -73,6 +80,7 @@ Array [
     "layout": "main",
     "menu": Object {
       "advanced": true,
+      "mobile": true,
     },
     "path": "/tag-types",
     "title": "Tag types",
@@ -84,6 +92,7 @@ Array [
     "layout": "main",
     "menu": Object {
       "advanced": true,
+      "mobile": true,
     },
     "path": "/addons",
     "title": "Addons",
@@ -94,6 +103,7 @@ Array [
     "layout": "main",
     "menu": Object {
       "advanced": true,
+      "mobile": true,
     },
     "path": "/reporting",
     "title": "Reporting",

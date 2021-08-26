@@ -29,7 +29,9 @@ const AddStrategy = ({
         .filter(strategy => strategy.editable !== true)
         .filter(strategy => !strategy.deprecated);
 
-    const customStrategies = strategies.filter(strategy => strategy.editable);
+    const customStrategies = strategies
+        .filter(strategy => !strategy.deprecated)
+        .filter(strategy => strategy.editable);
 
     const setStrategyByName = strategyName => {
         const selectedStrategy = strategies.find(s => s.name === strategyName);

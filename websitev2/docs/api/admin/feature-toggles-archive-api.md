@@ -21,14 +21,7 @@ Used to fetch list of archived feature toggles
       "name": "Feature.A",
       "description": "lorem ipsum",
       "type": "release",
-      "enabled": false,
       "stale": false,
-      "strategies": [
-        {
-          "name": "default",
-          "parameters": {}
-        }
-      ],
       "variants": [],
       "tags": [],
       "strategy": "default",
@@ -40,14 +33,12 @@ Used to fetch list of archived feature toggles
 
 ### Revive feature toggle {#revive-feature-toggle}
 
-`POST http://unleash.host.com/api/admin/archive/revive`
+`POST http://unleash.host.com/api/admin/archive/revive/:featureName`
 
-**Body:**
+Response: **200 OK** - When feature toggle was successfully revived. 
 
-```json
-{
-  "name": "Feature.A"
-}
-```
+### Delete an archivied feature toggle
 
-Used to revive a feature toggle.
+`POST http://unleash.host.com/api/admin/archive/revive/:featureName`
+
+Will fully remove the feature toggle and associated configuration. Impossible to restore after this action. 

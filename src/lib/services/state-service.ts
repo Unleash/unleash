@@ -315,7 +315,7 @@ export default class StateService {
 
         if (dropBeforeImport) {
             this.logger.info('Dropping existing strategies');
-            await this.strategyStore.deleteAll();
+            await this.strategyStore.dropCustomStrategies();
             await this.eventStore.store({
                 type: DROP_STRATEGIES,
                 createdBy: userName,

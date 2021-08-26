@@ -64,10 +64,6 @@ export default class FakeStrategiesStore implements IStrategyStore {
 
     destroy(): void {}
 
-    async dropStrategies(): Promise<void> {
-        return this.deleteAll();
-    }
-
     async exists(key: string): Promise<boolean> {
         return this.strategies.some((s) => s.name === key && !s.deprecated);
     }
@@ -118,5 +114,9 @@ export default class FakeStrategiesStore implements IStrategyStore {
     async updateStrategy(update: IMinimalStrategy): Promise<void> {
         await this.delete(update.name);
         return this.createStrategy(update);
+    }
+
+    async dropCustomStrategies(): Promise<void> {
+        return this.deleteAll();
     }
 }

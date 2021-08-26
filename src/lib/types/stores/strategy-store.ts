@@ -37,4 +37,5 @@ export interface IStrategyStore extends Store<IStrategy, string> {
     deprecateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void>;
     reactivateStrategy({ name }: Pick<IStrategy, 'name'>): Promise<void>;
     importStrategy(data: IMinimalStrategy): Promise<void>;
+    dropCustomStrategies(): Promise<void>;
 }

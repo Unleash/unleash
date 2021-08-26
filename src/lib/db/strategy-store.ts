@@ -155,13 +155,10 @@ export default class StrategyStore implements IStrategyStore {
         await this.db(TABLE).insert(rowData).onConflict(['name']).merge();
     }
 
-    async dropStrategies(): Promise<void> {
+    async dropCustomStrategies(): Promise<void> {
         await this.db(TABLE)
             .where({ built_in: 0 }) // eslint-disable-line
-            .delete()
-            .catch((err) =>
-                this.logger.error('Could not drop strategies, error: ', err),
-            );
+            .delete();
     }
 }
 

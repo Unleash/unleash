@@ -429,7 +429,6 @@ export const getRoute = path => routes.find(route => route.path === path);
 
 export const baseRoutes = routes
     .filter(route => !route.hidden)
-    .filter(route => !route.parent);
 
 const computeRoutes = () => {
     const mainNavRoutes = baseRoutes.filter(route => route.menu.advanced);

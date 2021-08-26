@@ -14,6 +14,7 @@ import {
     FEATURE_STALE_OFF,
     FEATURE_STALE_ON,
     FEATURE_UPDATED,
+    FEATURE_METADATA_UPDATED,
 } from '../types/events';
 import { GLOBAL_ENV } from '../types/environment';
 import NotFoundError from '../error/notfound-error';
@@ -272,12 +273,10 @@ class FeatureToggleServiceV2 {
         const tags =await this.featureTagStore.getAllTagsForFeature(
             featureName);
 
-        const data = await this.getFeatureToggleLegacy(featureName);
-
         await this.eventStore.store({
-            type: FEATURE_UPDATED,
+            type: FEATURE_METADATA_UPDATED,
             createdBy: userName,
-            data,
+            data: featureToggle,
             tags,
         });
         return featureToggle;

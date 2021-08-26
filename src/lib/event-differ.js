@@ -13,6 +13,7 @@ const {
     DROP_STRATEGIES,
     FEATURE_CREATED,
     FEATURE_UPDATED,
+    FEATURE_METADATA_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
     FEATURE_IMPORT,
@@ -148,11 +149,13 @@ function eachConsecutiveEvent(events, callback) {
     });
 }
 
-const ignoredProps = ['createdAt', 'lastSeenAt'];
+const ignoredProps = ['createdAt', 'lastSeenAt', 'environments', 'id'];
 
-const filterProps = (path, key) => ignoredProps.includes(key);
+const filterProps = (path, key) => {
+    return ignoredProps.includes(key);
+};
 
-function addDiffs(events) {
+function addDiffs(events = []) {
     // TODO: no-param-reassign
     eachConsecutiveEvent(events, (left, right) => {
         if (right) {

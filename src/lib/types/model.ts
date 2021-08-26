@@ -63,6 +63,13 @@ export interface FeatureToggleWithEnvironment extends FeatureToggle {
     environments: IEnvironmentDetail[];
 }
 
+// @deprecated
+export interface FeatureToggleWithEnvironmentLegacy
+    extends FeatureToggleWithEnvironment {
+    strategies: IStrategyConfig[];
+    enabled: boolean;
+}
+
 export interface IEnvironmentDetail extends IEnvironmentOverview {
     strategies: IStrategyConfig[];
 }

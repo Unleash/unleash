@@ -293,6 +293,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             featureToggle.environments = Object.values(
                 featureToggle.environments,
             );
+            featureToggle.archived = archived;
             return featureToggle;
         }
         throw new NotFoundError(

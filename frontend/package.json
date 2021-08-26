@@ -28,6 +28,7 @@
     "lint": "eslint src",
     "start": "react-scripts start",
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
+    "start:ea": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
     "test": "react-scripts test",
     "prepare": "yarn run build"
   },

@@ -23,7 +23,7 @@ On this page you will find examples for connecting your application to the demo 
 - [Javascript SDK](/sdks/proxy-javascript)
 - [Android SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)
-- React SDK - coming soon [help needed](https://github.com/Unleash/unleash-react-proxy-sdk)
+- [React Proxy SDK](/sdks/proxy-react)
 
 ### Clients written by awesome enthusiasts: {#clients-written-by-awesome-enthusiasts}
 

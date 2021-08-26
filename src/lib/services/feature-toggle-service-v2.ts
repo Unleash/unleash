@@ -264,14 +264,11 @@ class FeatureToggleServiceV2 {
             `${userName} updates feature toggle ${featureName}`,
         );
 
-        await this.featureToggleStore.hasFeature(featureName);
-
         const featureToggle = await this.featureToggleStore.updateFeature(
             projectId,
             updatedFeature,
         );
-        const tags =await this.featureTagStore.getAllTagsForFeature(
-            featureName);
+        const tags = await this.featureTagStore.getAllTagsForFeature(featureName);
 
         await this.eventStore.store({
             type: FEATURE_METADATA_UPDATED,

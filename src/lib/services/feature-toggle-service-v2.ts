@@ -92,6 +92,12 @@ class FeatureToggleServiceV2 {
         this.featureEnvironmentStore = featureEnvironmentStore;
     }
 
+    /*
+    TODO after 4.1.0 release:
+    - add FEATURE_STRATEGY_ADD event
+    - add FEATURE_STRATEGY_REMOVE event
+    - add FEATURE_STRATEGY_UPDATE event
+    */
     async createStrategy(
         strategyConfig: Omit<IStrategyConfig, 'id'>,
         projectName: string,

@@ -5,6 +5,7 @@ export const useStyles = makeStyles(theme => ({
         background: theme.palette.footer.background,
         padding: '2rem 4rem',
         width: '100%',
+        flexGrow: 1,
     },
     list: {
         padding: 0,

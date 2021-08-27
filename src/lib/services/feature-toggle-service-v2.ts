@@ -244,7 +244,7 @@ class FeatureToggleServiceV2 {
                 projectId,
             );
 
-            const data = { featureData, projectId };
+            const data = { ...featureData, projectId };
 
             await this.eventStore.store({
                 type: FEATURE_CREATED,

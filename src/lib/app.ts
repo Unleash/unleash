@@ -74,7 +74,8 @@ export default function getApp(
     app.use(baseUriPath, express.static(publicFolder, { index: false }));
 
     if (config.enableOAS) {
-        app.use(`${baseUriPath}/oas`, express.static('docs/api/oas'));
+        const oasPath = path.resolve(__dirname, '../docs/api/oas');
+        app.use(`${baseUriPath}/oas`, express.static(oasPath));
     }
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {

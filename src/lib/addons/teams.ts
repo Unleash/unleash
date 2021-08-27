@@ -113,7 +113,9 @@ export default class TeamsAddon extends Addon {
             data.strategies,
             { skipInvalid: true },
         )}`;
-        return `Feature toggle ${data.name} | ${typeStr} | ${project} <br /> ${strategies}`;
+        return `Feature toggle ${data.name} | ${typeStr} | ${project} <br /> ${
+            data.strategies ? strategies : ''
+        }`;
     }
 
     getAction(type: string): string {

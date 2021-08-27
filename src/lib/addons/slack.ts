@@ -129,7 +129,7 @@ This was changed by ${createdBy}.`;
         )}\`\`\``;
         return `${createdBy} ${action} feature toggle ${feature}
 ${enabled}${stale} | ${typeStr} | ${project}
-${strategies}`;
+${data.strategies ? strategies : ''}`;
     }
 
     getAction(type: string): string {

@@ -1,19 +1,12 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    DialogActions,
-    Typography,
-} from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 
 import CreateStrategyCard from './AddStrategyCard/AddStrategyCard';
 import { useStyles } from './AddStrategy.styles';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import { resolveDefaultParamValue } from './utils';
 import { getHumanReadbleStrategy } from '../../../../utils/strategy-names';
+import Dialogue from '../../../common/Dialogue';
 
 const AddStrategy = ({
     strategies,
@@ -98,49 +91,39 @@ const AddStrategy = ({
         ));
 
     return (
-        <Dialog
+        <Dialogue
             open={showCreateStrategy}
+            title="Add a new strategy"
             aria-labelledby="form-dialog-title"
-            fullWidth
+            onClose={() => setShowCreateStrategy(false)}
+            secondaryButtonText="Cancel"
             maxWidth="md"
+            fullWidth
         >
-            <DialogTitle id="form-dialog-title">Add a new strategy</DialogTitle>
+            <Typography variant="subtitle1" className={styles.subTitle}>
+                Built in strategies
+            </Typography>
+            <div className={styles.createStrategyCardContainer}>
+                {renderBuiltInStrategies()}
+            </div>
 
-            <DialogContent>
-                <Typography variant="subtitle1" className={styles.subTitle}>
-                    Built in strategies
-                </Typography>
-                <div className={styles.createStrategyCardContainer}>
-                    {renderBuiltInStrategies()}
-                </div>
-
-                <ConditionallyRender
-                    condition={customStrategies.length > 0}
-                    show={
-                        <>
-                            <Typography
-                                variant="subtitle1"
-                                className={styles.subTitle}
-                            >
-                                Custom strategies
-                            </Typography>
-                            <div className={styles.createStrategyCardContainer}>
-                                {renderCustomStrategies()}
-                            </div>
-                        </>
-                    }
-                />
-            </DialogContent>
-
-            <DialogActions>
-                <Button
-                    color="secondary"
-                    onClick={() => setShowCreateStrategy(false)}
-                >
-                    Cancel
-                </Button>
-            </DialogActions>
-        </Dialog>
+            <ConditionallyRender
+                condition={customStrategies.length > 0}
+                show={
+                    <>
+                        <Typography
+                            variant="subtitle1"
+                            className={styles.subTitle}
+                        >
+                            Custom strategies
+                        </Typography>
+                        <div className={styles.createStrategyCardContainer}>
+                            {renderCustomStrategies()}
+                        </div>
+                    </>
+                }
+            />
+        </Dialogue>
     );
 };
 

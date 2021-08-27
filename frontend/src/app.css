@@ -16,6 +16,7 @@ body {
 .MuiButton-root {
     border-radius: 3px;
     text-transform: none;
+    font-size: 16px;
 }
 
 .skeleton {

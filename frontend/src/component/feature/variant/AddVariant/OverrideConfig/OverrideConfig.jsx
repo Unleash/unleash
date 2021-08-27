@@ -41,7 +41,13 @@ const OverrideConfig = ({
 
         return (
             <Grid container key={`override=${i}`} alignItems="center">
-                <Grid item md={3} className={styles.contextFieldSelect}>
+                <Grid
+                    item
+                    md={3}
+                    sm={3}
+                    xs={3}
+                    className={styles.contextFieldSelect}
+                >
                     <MySelect
                         name="contextName"
                         label="Context Field"
@@ -53,7 +59,7 @@ const OverrideConfig = ({
                         onChange={updateOverrideType(i)}
                     />
                 </Grid>
-                <Grid md={7} item>
+                <Grid md={7} sm={7} xs={6} item>
                     <ConditionallyRender
                         condition={legalValues && legalValues.length > 0}
                         show={
@@ -68,6 +74,7 @@ const OverrideConfig = ({
                                 getOptionLabel={option => option}
                                 defaultValue={o.values}
                                 value={o.values}
+                                style={{ width: '100%' }}
                                 filterSelectedOptions
                                 size="small"
                                 renderInput={params => (
@@ -75,6 +82,7 @@ const OverrideConfig = ({
                                         {...params}
                                         variant="outlined"
                                         label="Legal values"
+                                        style={{ width: '100%' }}
                                     />
                                 )}
                             />

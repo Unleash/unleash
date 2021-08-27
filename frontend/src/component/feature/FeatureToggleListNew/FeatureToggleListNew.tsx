@@ -84,7 +84,7 @@ const FeatureToggleListNew = ({
                             )}
                             align="left"
                         >
-                            <span data-loading>name</span>
+                            <span data-loading>Name</span>
                         </TableCell>
                         <TableCell
                             className={classnames(
@@ -94,7 +94,7 @@ const FeatureToggleListNew = ({
                             )}
                             align="left"
                         >
-                            <span data-loading>type</span>
+                            <span data-loading>Type</span>
                         </TableCell>
                         {getEnvironments().map((env: any) => {
                             return (
@@ -109,7 +109,7 @@ const FeatureToggleListNew = ({
                                 >
                                     <span data-loading>
                                         {env.name === ':global:'
-                                            ? 'status'
+                                            ? 'Status'
                                             : env.name}
                                     </span>
                                 </TableCell>

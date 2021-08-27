@@ -199,7 +199,6 @@ exports[`should render DrawerMenu 1`] = `
         </div>
         <div
           className="MuiGrid-root MuiGrid-item"
-          justifyContent="center"
         >
           <section
             title="Unleash SDK"
@@ -602,7 +601,6 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         </div>
         <div
           className="MuiGrid-root MuiGrid-item"
-          justifyContent="center"
         >
           <section
             title="Unleash SDK"

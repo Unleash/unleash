@@ -187,6 +187,8 @@ const AddVariant = ({
             primaryButtonText="Save"
             secondaryButtonText="Cancel"
             title={title}
+            fullWidth
+            maxWidth="md"
         >
             <form onSubmit={submit} className={commonStyles.contentSpacingY}>
                 <p style={{ color: 'red' }}>{error.general}</p>
@@ -195,6 +197,7 @@ const AddVariant = ({
                     name="name"
                     placeholder=""
                     className={commonStyles.fullWidth}
+                    style={{ maxWidth: '350px' }}
                     helperText={error.name}
                     value={data.name || ''}
                     error={Boolean(error.name)}
@@ -250,11 +253,17 @@ const AddVariant = ({
                         title="Passed to the variant object. Can be anything
                         (json, value, csv)"
                     >
-                        <Info style={{ width: '18.5px', height: '18.5px' }} />
+                        <Info
+                            style={{
+                                width: '18.5px',
+                                height: '18.5px',
+                                color: 'grey',
+                            }}
+                        />
                     </Tooltip>
                 </p>
                 <Grid container>
-                    <Grid item md={3}>
+                    <Grid item md={2} sm={2} xs={4}>
                         <MySelect
                             name="type"
                             label="Type"
@@ -262,10 +271,10 @@ const AddVariant = ({
                             value={payload.type}
                             options={payloadOptions}
                             onChange={onPayload}
-                            style={{ minWidth: '100px' }}
+                            style={{ minWidth: '100px', width: '100%' }}
                         />
                     </Grid>
-                    <Grid item md={9}>
+                    <Grid item md={8} sm={8} xs={6}>
                         <TextField
                             rows={1}
                             label="Value"
@@ -281,13 +290,14 @@ const AddVariant = ({
                 <ConditionallyRender
                     condition={overrides.length > 0}
                     show={
-                        <p style={{ marginBottom: '.5rem' }}>
+                        <p style={{ marginBottom: '1rem' }}>
                             <strong>Overrides </strong>
                             <Tooltip title="Here you can specify which users should get this variant.">
                                 <Info
                                     style={{
                                         width: '18.5px',
                                         height: '18.5px',
+                                        color: 'grey',
                                     }}
                                 />
                             </Tooltip>
@@ -301,7 +311,13 @@ const AddVariant = ({
                     updateOverrideValues={updateOverrideValues}
                     updateValues={updateOverrideValues}
                 />
-                <Button onClick={onAddOverride}>Add override</Button>{' '}
+                <Button
+                    onClick={onAddOverride}
+                    variant="contained"
+                    color="primary"
+                >
+                    Add override
+                </Button>{' '}
             </form>
         </Dialog>
     );

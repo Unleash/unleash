@@ -1,12 +1,5 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    DialogActions,
-} from '@material-ui/core';
 
 import FlexibleStrategy from './FlexibleStrategy';
 import DefaultStrategy from './default-strategy';
@@ -15,6 +8,7 @@ import GeneralStrategy from './general-strategy';
 import StrategyConstraints from '../StrategyConstraint/StrategyConstraintInput';
 
 import { getHumanReadbleStrategyName } from '../../../../utils/strategy-names';
+import Dialogue from '../../../common/Dialogue';
 
 const EditStrategyModal = ({
     onCancel,
@@ -24,6 +18,8 @@ const EditStrategyModal = ({
     strategyDefinition,
     context,
 }) => {
+    const [constraintError, setConstraintError] = useState({});
+
     const updateParameters = parameters => {
         const updatedStrategy = { ...strategy, parameters };
         updateStrategy(updatedStrategy);
@@ -57,47 +53,66 @@ const EditStrategyModal = ({
 
     const { parameters } = strategy;
 
+    const disabledPrimaryButton = Object.keys(constraintError).some(key => {
+        return constraintError[key];
+    });
+
+    const save = () => {
+        const { constraints } = strategy;
+        let valid = true;
+
+        constraints.forEach((constraint, index) => {
+            const { values } = constraint;
+
+            if (values.length === 0) {
+                setConstraintError(prev => ({
+                    ...prev,
+                    [`${constraint.contextName}-${index}`]:
+                        'You need to specify at least one value',
+                }));
+                valid = false;
+            }
+        });
+
+        if (valid) {
+            saveStrategy();
+        }
+    };
+
     return (
-        <Dialog
+        <Dialogue
             open={!!strategy}
             aria-labelledby="form-dialog-title"
             fullWidth
+            onClose={onCancel}
+            onClick={save}
+            title={`Configure ${getHumanReadbleStrategyName(
+                strategy.name
+            )} strategy`}
+            primaryButtonText="Save"
+            secondaryButtonText="Cancel"
             maxWidth="md"
+            disabledPrimaryButton={disabledPrimaryButton}
         >
-            <DialogTitle id="form-dialog-title">
-                Configure {getHumanReadbleStrategyName(strategy.name)} strategy
-            </DialogTitle>
-            <DialogContent>
-                <div>
-                    <StrategyConstraints
-                        updateConstraints={updateConstraints}
-                        constraints={strategy.constraints || []}
-                    />
-                </div>
-
-                <br />
-                <br />
-                <Type
-                    parameters={parameters}
-                    updateParameter={updateParameter}
-                    strategyDefinition={strategyDefinition}
-                    editable
-                    context={context}
+            <div>
+                <StrategyConstraints
+                    updateConstraints={updateConstraints}
+                    constraints={strategy.constraints || []}
+                    constraintError={constraintError}
+                    setConstraintError={setConstraintError}
                 />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onCancel} color="secondary">
-                    Cancel
-                </Button>
-                <Button
-                    onClick={saveStrategy}
-                    color="primary"
-                    variant="contained"
-                >
-                    Save
-                </Button>
-            </DialogActions>
-        </Dialog>
+            </div>
+
+            <br />
+            <br />
+            <Type
+                parameters={parameters}
+                updateParameter={updateParameter}
+                strategyDefinition={strategyDefinition}
+                editable
+                context={context}
+            />
+        </Dialogue>
     );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
@@ -20,27 +20,47 @@ const StrategyConstraintInputField = ({
     updateConstraint,
     removeConstraint,
     contextFields,
+    id,
+    constraintError,
+    setConstraintError,
 }) => {
-    const [error, setError] = useState();
-    const commonStyles = useCommonStyles();
-    const styles = useStyles();
-    const onBlur = evt => {
-        evt.preventDefault();
+    useEffect(() => {
+        return () => {
+            resetError();
+        };
+        /*eslint-disable-next-line */
+    }, []);
+
+    const checkError = () => {
         const values = constraint.values;
         const filtered = values.filter(v => v).map(v => v.trim());
         if (filtered.length !== values.length) {
             updateConstraint(filtered, 'values');
         }
         if (filtered.length === 0) {
-            setError('You need to specify at least one value');
+            setConstraintError(prev => ({
+                ...prev,
+                [id]: 'You need to specify at least one value',
+            }));
         } else {
-            setError(undefined);
+            resetError();
         }
+    };
+
+    const resetError = () =>
+        setConstraintError(prev => ({ ...prev, [id]: undefined }));
+
+    const commonStyles = useCommonStyles();
+    const styles = useStyles();
+    const onBlur = evt => {
+        evt.preventDefault();
+        checkError();
     };
 
     const handleChangeValue = selectedOptions => {
         const values = selectedOptions ? selectedOptions.map(o => o.value) : [];
         updateConstraint(values, 'values');
+        checkError();
     };
 
     const constraintContextNames = contextFields.map(f => ({
@@ -59,9 +79,11 @@ const StrategyConstraintInputField = ({
             : undefined;
     const values = constraint.values.map(v => ({ value: v, label: v }));
 
+    const error = constraintError[id];
+
     return (
         <tr className={commonStyles.contentSpacingY}>
-            <td>
+            <td className={styles.tableCell}>
                 <MySelect
                     name="contextName"
                     label="Context Field"
@@ -73,7 +95,7 @@ const StrategyConstraintInputField = ({
                     className={styles.contextField}
                 />
             </td>
-            <td>
+            <td className={styles.tableCell}>
                 <MySelect
                     name="operator"
                     label="Operator"
@@ -85,52 +107,74 @@ const StrategyConstraintInputField = ({
                     className={styles.operator}
                 />
             </td>
-            <td style={{ width: '100%' }}>
+            <td className={styles.tableCell} style={{ width: '100%' }}>
                 <ConditionallyRender
                     condition={options}
                     show={
-                        <Autocomplete
-                            multiple
-                            size="small"
-                            options={options}
-                            value={values || []}
-                            getOptionLabel={option => option.label}
-                            getOptionSelected={(option, value) =>
-                                option.value === value.value
-                            }
-                            filterSelectedOptions
-                            filterOptions={options =>
-                                options.filter(
-                                    o => !values.some(v => v.value === o.value)
-                                )
-                            }
-                            onChange={(evt, values) =>
-                                handleChangeValue(values)
-                            }
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    variant="outlined"
-                                    label="Values"
-                                />
-                            )}
-                        />
+                        <div className={styles.inputContainer}>
+                            <Autocomplete
+                                multiple
+                                size="small"
+                                options={options}
+                                value={values || []}
+                                getOptionLabel={option => option.label}
+                                onBlur={onBlur}
+                                onFocus={() => resetError()}
+                                getOptionSelected={(option, value) =>
+                                    option.value === value.value
+                                }
+                                filterSelectedOptions
+                                filterOptions={options =>
+                                    options.filter(
+                                        o =>
+                                            !values.some(
+                                                v => v.value === o.value
+                                            )
+                                    )
+                                }
+                                onChange={(evt, values) =>
+                                    handleChangeValue(values)
+                                }
+                                renderInput={params => (
+                                    <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        label={'Values'}
+                                        error={Boolean(error)}
+                                        helperText={error}
+                                        FormHelperTextProps={{
+                                            classes: {
+                                                root: styles.helperText,
+                                            },
+                                        }}
+                                    />
+                                )}
+                            />
+                        </div>
                     }
                     elseShow={
-                        <InputListField
-                            name="values"
-                            error={error}
-                            onBlur={onBlur}
-                            values={constraint.values}
-                            label="Values (v1, v2, v3)"
-                            updateValues={values =>
-                                updateConstraint(values, 'values')
-                            }
-                        />
+                        <div className={styles.inputContainer}>
+                            <InputListField
+                                name="values"
+                                error={Boolean(error)}
+                                onBlur={onBlur}
+                                values={constraint.values}
+                                label="Values (v1, v2, v3)"
+                                updateValues={values =>
+                                    updateConstraint(values, 'values')
+                                }
+                                helperText={error}
+                                FormHelperTextProps={{
+                                    classes: {
+                                        root: styles.helperText,
+                                    },
+                                }}
+                            />
+                        </div>
                     }
                 />
             </td>
-            <td>
+            <td className={styles.tableCell}>
                 <IconButton onClick={removeConstraint}>
                     <Delete />
                 </IconButton>

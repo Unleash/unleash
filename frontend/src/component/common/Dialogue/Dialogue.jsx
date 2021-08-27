@@ -16,8 +16,11 @@ const Dialogue = ({
     onClick,
     onClose,
     title,
+    style,
     primaryButtonText,
+    disabledPrimaryButton = false,
     secondaryButtonText,
+    maxWidth = 'sm',
     fullWidth = false,
 }) => {
     const styles = useStyles();
@@ -28,6 +31,7 @@ const Dialogue = ({
             fullWidth={fullWidth}
             aria-labelledby={'simple-modal-title'}
             aria-describedby={'simple-modal-description'}
+            maxWidth={maxWidth}
         >
             <DialogTitle className={styles.dialogTitle}>{title}</DialogTitle>
             <ConditionallyRender
@@ -48,6 +52,7 @@ const Dialogue = ({
                             variant="contained"
                             onClick={onClick}
                             autoFocus
+                            disabled={disabledPrimaryButton}
                         >
                             {primaryButtonText || "Yes, I'm sure"}
                         </Button>

@@ -31,4 +31,5 @@ export interface IProjectStore extends Store<IProject, string> {
         projectId: string,
         archived: boolean,
     ): Promise<IFeatureOverview[]>;
+    count(): Promise<number>;
 }

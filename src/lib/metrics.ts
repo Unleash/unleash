@@ -13,7 +13,7 @@ import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
 import Timer = NodeJS.Timer;
 
-const THREE_HOURS = 3 * 60 * 60 * 1000;
+const TWO_HOURS = 2 * 60 * 60 * 1000;
 const ONE_MINUTE = 60 * 1000;
 
 export default class MetricsMonitor {
@@ -37,7 +37,13 @@ export default class MetricsMonitor {
             return;
         }
 
-        const { eventStore, clientMetricsStore, featureToggleStore } = stores;
+        const {
+            eventStore,
+            clientMetricsStore,
+            featureToggleStore,
+            userStore,
+            projectStore,
+        } = stores;
 
         client.collectDefaultMetrics();
 
@@ -68,25 +74,44 @@ export default class MetricsMonitor {
             help: 'Number of feature toggles',
             labelNames: ['version'],
         });
+        const usersTotal = new client.Gauge({
+            name: 'users_total',
+            help: 'Number of users',
+        });
+        const projectsTotal = new client.Gauge({
+            name: 'projects_total',
+            help: 'Number of projects',
+        });
 
-        async function collectFeatureToggleMetrics() {
-            featureTogglesTotal.reset();
-            let togglesCount;
+        async function collectStaticCounters() {
+            let togglesCount: number = 0;
+            let usersCount: number;
+            let projectsCount: number;
             try {
                 togglesCount = await featureToggleStore.count({
                     archived: false,
                 });
+                usersCount = await userStore.count();
+                projectsCount = await projectStore.count();
                 // eslint-disable-next-line no-empty
             } catch (e) {}
 
-            togglesCount = togglesCount || 0;
+            featureTogglesTotal.reset();
             featureTogglesTotal.labels(version).set(togglesCount);
+            if (usersCount) {
+                usersTotal.reset();
+                usersTotal.set(usersCount);
+            }
+            if (projectsCount) {
+                projectsTotal.reset();
+                projectsTotal.set(usersCount);
+            }
         }
 
-        collectFeatureToggleMetrics();
+        collectStaticCounters();
         this.timer = setInterval(
-            () => collectFeatureToggleMetrics(),
-            THREE_HOURS,
+            () => collectStaticCounters(),
+            TWO_HOURS,
         ).unref();
 
         eventBus.on(

@@ -64,6 +64,10 @@ export default class FakeProjectStore implements IProjectStore {
 
     destroy(): void {}
 
+    async count(): Promise<number> {
+        return this.projects.length;
+    }
+
     async exists(key: string): Promise<boolean> {
         return this.projects.some((p) => p.id === key);
     }

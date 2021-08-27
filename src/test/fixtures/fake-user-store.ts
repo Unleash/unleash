@@ -38,6 +38,10 @@ class UserStoreMock implements IUserStore {
         return this.data.some((u) => u.id === key);
     }
 
+    async count(): Promise<number> {
+        return this.data.length;
+    }
+
     async get(key: number): Promise<IUser> {
         return this.data.find((u) => u.id === key);
     }

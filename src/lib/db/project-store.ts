@@ -231,6 +231,13 @@ class ProjectStore implements IProjectStore {
         return [];
     }
 
+    async count(): Promise<number> {
+        return this.db
+            .count('*')
+            .from(TABLE)
+            .then((res) => Number(res[0].count));
+    }
+
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     private getEnvironment(r: any): IEnvironmentOverview {
         return {

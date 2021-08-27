@@ -176,6 +176,13 @@ class UserStore implements IUserStore {
         await this.db(TABLE).del();
     }
 
+    async count(): Promise<number> {
+        return this.db
+            .count('*')
+            .from(TABLE)
+            .then((res) => Number(res[0].count));
+    }
+
     destroy(): void {}
 
     async exists(id: number): Promise<boolean> {

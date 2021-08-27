@@ -37,4 +37,5 @@ export interface IUserStore extends Store<IUser, number> {
     setPasswordHash(userId: number, passwordHash: string): Promise<void>;
     incLoginAttempts(user: IUser): Promise<void>;
     successfullyLogin(user: IUser): Promise<void>;
+    count(): Promise<number>;
 }

@@ -9,10 +9,12 @@ import { ADMIN } from '../../../component/AccessProvider/permissions';
 import { Alert } from '@material-ui/lab';
 import HeaderTitle from '../../../component/common/HeaderTitle';
 import { Button } from '@material-ui/core';
+import { useStyles } from './index.styles';
 
 const UsersAdmin = ({ history }) => {
     const { hasAccess } = useContext(AccessContext);
     const [showDialog, setDialog] = useState(false);
+    const styles = useStyles();
 
     const openDialog = e => {
         e.preventDefault();
@@ -27,6 +29,7 @@ const UsersAdmin = ({ history }) => {
         <div>
             <AdminMenu history={history} />
             <PageContent
+                bodyClass={styles.userListBody}
                 headerContent={
                     <HeaderTitle
                         title="Users"

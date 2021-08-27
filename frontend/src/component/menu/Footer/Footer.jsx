@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-no-target-blank */
-import React from 'react';
 
 import { List, ListItem, ListItemText, Grid } from '@material-ui/core';
 

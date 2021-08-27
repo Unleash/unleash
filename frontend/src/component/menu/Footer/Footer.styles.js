@@ -3,9 +3,10 @@ import { makeStyles } from '@material-ui/styles';
 export const useStyles = makeStyles(theme => ({
     footer: {
         background: theme.palette.footer.background,
-        padding: '2rem 4rem',
+        padding: '2.5rem 4rem',
         width: '100%',
         flexGrow: 1,
+        zIndex: 100,
     },
     list: {
         padding: 0,

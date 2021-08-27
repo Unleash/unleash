@@ -10,6 +10,7 @@ import Header from '../../menu/Header/Header';
 import Footer from '../../menu/Footer/Footer';
 import Proclamation from '../../common/Proclamation/Proclamation';
 import BreadcrumbNav from '../../common/BreadcrumbNav/BreadcrumbNav';
+import { ReactComponent as Texture } from '../../../assets/img/texture.svg';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -35,13 +36,28 @@ const MainLayout = ({ children, location, uiConfig }) => {
             <Grid container className={muiStyles.container}>
                 <div className={classnames(styles.contentWrapper)}>
                     <Grid item className={styles.content} xs={12} sm={12}>
-                        <div className={muiStyles.contentContainer}>
+                        <div
+                            className={muiStyles.contentContainer}
+                            style={{ zIndex: '100' }}
+                        >
                             <BreadcrumbNav />
                             <Proclamation toast={uiConfig.toast} />
                             {children}
                         </div>
                         <ErrorContainer />
                     </Grid>
+                    <div style={{ overflow: 'hidden' }}>
+                        <div
+                            style={{
+                                position: 'fixed',
+                                right: '0',
+                                bottom: '-4px',
+                                zIndex: '1',
+                            }}
+                        >
+                            <Texture />
+                        </div>
+                    </div>
                 </div>
                 <Footer />
             </Grid>

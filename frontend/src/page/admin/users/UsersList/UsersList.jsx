@@ -21,6 +21,8 @@ import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/use
 import UserListItem from './UserListItem/UserListItem';
 import loadingData from './loadingData';
 import useLoading from '../../../../hooks/useLoading';
+import usePagination from '../../../../hooks/usePagination';
+import PaginateUI from '../../../../component/common/PaginateUI/PaginateUI';
 
 function UsersList({ location, closeDialog, showDialog }) {
     const { users, roles, refetch, loading } = useUsers();
@@ -42,6 +44,8 @@ function UsersList({ location, closeDialog, showDialog }) {
     const [delUser, setDelUser] = useState();
     const [updateDialog, setUpdateDialog] = useState({ open: false });
     const ref = useLoading(loading);
+    const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
+        usePagination(users, 50);
 
     const closeDelDialog = () => {
         setDelDialog(false);
@@ -131,7 +135,7 @@ function UsersList({ location, closeDialog, showDialog }) {
             ));
         }
 
-        return users.map(user => {
+        return page.map(user => {
             return (
                 <UserListItem
                     key={user.id}
@@ -164,6 +168,13 @@ function UsersList({ location, closeDialog, showDialog }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>{renderUsers()}</TableBody>
+                <PaginateUI
+                    pages={pages}
+                    pageIndex={pageIndex}
+                    setPageIndex={setPageIndex}
+                    nextPage={nextPage}
+                    prevPage={prevPage}
+                />
             </Table>
             <br />
 

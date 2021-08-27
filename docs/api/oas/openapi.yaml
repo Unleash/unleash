@@ -20,14 +20,12 @@ servers:
 #  - description: Windows server
 #    url: 'http://192.168.178.108:4242/api'
 tags:
-  - name: Archive
-    description: Handling Feature Toggle archiving and un-archiving
-  - name: Client
-    description: Client application aspects of the Unleash API
-  - name: Events
-    description: Identifying events on the Unleash server
   - name: Feature toggles
     description: Accessing feature toggles
+  - name: Archive
+    description: Handling Feature Toggle archiving and un-archiving
+  - name: Events
+    description: Identifying events on the Unleash server
   - name: Feature types
     description: Details of the five Unleash Feature Toggle types
   - name: Import and export
@@ -36,6 +34,8 @@ tags:
     description: Determining usage of feature toggles and applications
   - name: Strategies
     description: Accessing and updating strategies
+  - name: Client
+    description: Client application aspects of the Unleash API
 info:
   title: Unleash API
   description: |-
@@ -60,7 +60,7 @@ info:
     Alternatively, you can test the API in [Postman](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
 
     [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
-  version: 3.7.0
+  version: 4.0.13
   contact:
     name: The Unleash team
     url: 'https://unleash.github.io/'

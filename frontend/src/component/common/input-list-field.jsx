@@ -2,7 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 
-function InputListField({ label, values = [], error, name, updateValues, placeholder = '', onBlur = () => {} }) {
+function InputListField({
+    label,
+    values = [],
+    error,
+    errorText,
+    name,
+    updateValues,
+    placeholder = '',
+    onBlur = () => {},
+    FormHelperTextProps,
+}) {
     const handleChange = evt => {
         const values = evt.target.value.split(/,\s?/);
         const trimmedValues = values.map(v => v.trim());
@@ -23,8 +33,8 @@ function InputListField({ label, values = [], error, name, updateValues, placeho
     return (
         <TextField
             name={name}
-            error={error !== undefined}
-            helperText={error}
+            error={error}
+            helperText={errorText}
             placeholder={placeholder}
             value={values ? values.join(', ') : ''}
             onKeyDown={handleKeyDown}
@@ -34,6 +44,7 @@ function InputListField({ label, values = [], error, name, updateValues, placeho
             style={{ width: '100%' }}
             variant="outlined"
             size="small"
+            FormHelperTextProps={FormHelperTextProps}
         />
     );
 }

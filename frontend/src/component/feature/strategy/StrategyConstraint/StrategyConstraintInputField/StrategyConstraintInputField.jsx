@@ -157,6 +157,7 @@ const StrategyConstraintInputField = ({
                             <InputListField
                                 name="values"
                                 error={Boolean(error)}
+                                errorText={error}
                                 onBlur={onBlur}
                                 values={constraint.values}
                                 label="Values (v1, v2, v3)"

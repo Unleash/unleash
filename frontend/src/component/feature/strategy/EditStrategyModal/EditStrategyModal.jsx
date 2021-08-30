@@ -61,6 +61,11 @@ const EditStrategyModal = ({
         const { constraints } = strategy;
         let valid = true;
 
+        if (!constraints) {
+            saveStrategy();
+            return;
+        }
+
         constraints.forEach((constraint, index) => {
             const { values } = constraint;
 

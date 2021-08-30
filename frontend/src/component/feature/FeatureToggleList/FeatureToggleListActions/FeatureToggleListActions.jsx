@@ -9,6 +9,8 @@ import DropdownMenu from '../../../common/DropdownMenu/DropdownMenu';
 import ProjectSelect from '../../../common/ProjectSelect';
 import { useStyles } from './styles';
 import useLoading from '../../../../hooks/useLoading';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import ConditionallyRender from '../../../common/ConditionallyRender';
 
 const sortingOptions = [
     { type: 'name', displayName: 'Name' },
@@ -29,6 +31,7 @@ const FeatureToggleListActions = ({
     loading,
 }) => {
     const styles = useStyles();
+    const { uiConfig } = useUiConfig();
     const ref = useLoading(loading);
 
     const handleSort = e => {
@@ -94,14 +97,19 @@ const FeatureToggleListActions = ({
                 style={{ textTransform: 'lowercase', fontWeight: 'normal' }}
                 data-loading
             />
-            <ProjectSelect
-                settings={settings}
-                updateSetting={updateSetting}
-                style={{
-                    textTransform: 'lowercase',
-                    fontWeight: 'normal',
-                }}
-                data-loading
+            <ConditionallyRender
+                condition={uiConfig.flags.P}
+                show={
+                    <ProjectSelect
+                        settings={settings}
+                        updateSetting={updateSetting}
+                        style={{
+                            textTransform: 'lowercase',
+                            fontWeight: 'normal',
+                        }}
+                        data-loading
+                    />
+                }
             />
         </div>
     );

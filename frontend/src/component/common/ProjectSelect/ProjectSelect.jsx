@@ -1,16 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MenuItem } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
+import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 
 const ALL_PROJECTS = { id: '*', name: '> All projects' };
 
-const ProjectSelect = ({
-    projects,
-    currentProjectId,
-    updateCurrentProject,
-    ...rest
-}) => {
+const ProjectSelect = ({ currentProjectId, updateCurrentProject, ...rest }) => {
+    const { projects } = useProjects();
+
+    useEffect(() => {
+        let currentProject = projects.find(i => i.id === currentProjectId);
+
+        if (currentProject) {
+            setProject(currentProject.id);
+            return;
+        }
+
+        setProject('*');
+        /* eslint-disable-next-line */
+    }, []);
+
     const setProject = v => {
         const id = typeof v === 'string' ? v.trim() : '';
         updateCurrentProject(id);

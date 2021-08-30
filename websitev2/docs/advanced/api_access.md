@@ -9,13 +9,13 @@ It is possible to integrate directly with the Admin API. In this guide we will e
 
 Please refer to [Create token](../user_guide/api-token) on how to create an API token. You'll need a token with `Admin` level access for this to work.
 
-Please note that it may take up to 60 seconds for the new key to propagate to all Unleash-hosted instances.
+Please note that it may take up to 60 seconds for the new key to propagate to all Unleash instances due to eager caching.
 
 > If you need an API token to use in a client SDK you should create a "client token" as these have less access.
 
 ## Step 2: Use Admin API {#step-2-use-admin-api}
 
-Now that you have an access token with admin privileges we can use that to perform changes in our Unleash-hosted instance.
+Now that you have an access token with admin privileges we can use that to perform changes in our Unleash instance.
 
 In the example below we will use the [Unleash Admin API](../api/admin/features) to enable the “Demo” feature toggle sing curl.
 

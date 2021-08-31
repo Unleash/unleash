@@ -3,27 +3,39 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import { IEnvironment } from '../types/model';
+import { IEnvironment, IEnvironmentCreate } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import { IEnvironmentStore } from '../types/stores/environment-store';
+import { snakeCaseKeys } from '../util/snakeCase';
 
 interface IEnvironmentsTable {
     name: string;
     display_name: string;
     created_at?: Date;
+    type: string;
+    sort_order: number;
+    enabled: boolean;
+    protected: boolean;
 }
+
+const COLUMNS = [
+    'type',
+    'display_name',
+    'name',
+    'created_at',
+    'sort_order',
+    'enabled',
+    'protected',
+];
 
 function mapRow(row: IEnvironmentsTable): IEnvironment {
     return {
         name: row.name,
         displayName: row.display_name,
-    };
-}
-
-function mapInput(input: IEnvironment): IEnvironmentsTable {
-    return {
-        name: input.name,
-        display_name: input.displayName,
+        type: row.type,
+        sortOrder: row.sort_order,
+        enabled: row.enabled,
+        protected: row.protected,
     };
 }
 
@@ -61,7 +73,9 @@ export default class EnvironmentStore implements IEnvironmentStore {
     }
 
     async getAll(): Promise<IEnvironment[]> {
-        const rows = await this.db<IEnvironmentsTable>(TABLE).select('*');
+        const rows = await this.db<IEnvironmentsTable>(TABLE)
+            .select('*')
+            .orderBy('sort_order', 'created_at');
         return rows.map(mapRow);
     }
 
@@ -86,16 +100,48 @@ export default class EnvironmentStore implements IEnvironmentStore {
         return mapRow(row);
     }
 
-    async upsert(env: IEnvironment): Promise<IEnvironment> {
+    async updateProperty(
+        id: string,
+        field: string,
+        value: string | number,
+    ): Promise<void> {
         await this.db<IEnvironmentsTable>(TABLE)
-            .insert(mapInput(env))
-            .onConflict('name')
-            .merge();
-        return env;
+            .update({
+                [field]: value,
+            })
+            .where({ name: id, protected: false });
+    }
+
+    async updateSortOrder(id: string, value: number): Promise<void> {
+        await this.db<IEnvironmentsTable>(TABLE)
+            .update({
+                sort_order: value,
+            })
+            .where({ name: id });
+    }
+
+    async update(
+        env: Pick<IEnvironment, 'displayName' | 'type' | 'protected'>,
+        name: string,
+    ): Promise<IEnvironment> {
+        const updatedEnv = await this.db<IEnvironmentsTable>(TABLE)
+            .update(snakeCaseKeys(env))
+            .where({ name, protected: false })
+            .returning<IEnvironmentsTable>(COLUMNS);
+
+        return mapRow(updatedEnv[0]);
+    }
+
+    async create(env: IEnvironmentCreate): Promise<IEnvironment> {
+        const row = await this.db<IEnvironmentsTable>(TABLE)
+            .insert(snakeCaseKeys(env))
+            .returning<IEnvironmentsTable>(COLUMNS);
+
+        return mapRow(row[0]);
     }
 
     async delete(name: string): Promise<void> {
-        await this.db(TABLE).where({ name }).del();
+        await this.db(TABLE).where({ name, protected: false }).del();
     }
 
     destroy(): void {}

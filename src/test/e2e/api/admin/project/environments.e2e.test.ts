@@ -32,11 +32,12 @@ afterAll(async () => {
 });
 
 test('Should add environment to project', async () => {
-    await app.request
-        .post('/api/admin/environments')
-        .send({ name: 'test', displayName: 'Test Env' })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    // Endpoint to create env does not exists anymore
+    await db.stores.environmentStore.create({
+        name: 'test',
+        displayName: 'Test Env',
+        type: 'test',
+    });
     await app.request
         .post('/api/admin/projects/default/environments')
         .send({ environment: 'test' })
@@ -59,13 +60,17 @@ test('Should validate environment', async () => {
         .expect(400);
 });
 
-test('Should remove environment to project', async () => {
+test('Should remove environment from project', async () => {
     const name = 'test-delete';
-    await app.request
-        .post('/api/admin/environments')
-        .send({ name, displayName: 'Test Env' })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    // Endpoint to create env does not exists anymore
+
+    await db.stores.environmentStore.create({
+        name,
+        displayName: 'Test Env',
+        type: 'test',
+    });
+
+    // Endpoint to delete project does not exist anymore
     await app.request
         .post('/api/admin/projects/default/environments')
         .send({ environment: name })

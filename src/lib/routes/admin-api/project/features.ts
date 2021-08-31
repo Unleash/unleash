@@ -65,7 +65,7 @@ export default class ProjectFeaturesController extends Controller {
 
         this.post(
             `${PATH_PREFIX}/environments/:environment/strategies`,
-            this.createFeatureStrategy,
+            this.addFeatureStrategy,
             UPDATE_FEATURE,
         );
         this.get(
@@ -180,7 +180,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).end();
     }
 
-    async createFeatureStrategy(
+    async addFeatureStrategy(
         req: Request<FeatureStrategyParams, any, IStrategyConfig, any>,
         res: Response,
     ): Promise<void> {

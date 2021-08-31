@@ -8,6 +8,7 @@ import dbState from './database.json';
 import { LogProvider } from '../../../lib/logger';
 import noLoggerProvider from '../../fixtures/no-logger';
 import EnvironmentStore from '../../../lib/db/environment-store';
+import { IUnleashStores } from '../../../lib/types';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -68,10 +69,16 @@ async function setupDatabase(stores) {
     await connectProject(stores.environmentStore);
 }
 
+export interface ITestDb {
+    stores: IUnleashStores;
+    reset: () => Promise<void>;
+    destroy: () => Promise<void>;
+}
+
 export default async function init(
     databaseSchema: String = 'test',
     getLogger: LogProvider = noLoggerProvider,
-): Promise<any> {
+): Promise<ITestDb> {
     const config = createTestConfig({
         db: {
             ...dbConfig.getDb(),

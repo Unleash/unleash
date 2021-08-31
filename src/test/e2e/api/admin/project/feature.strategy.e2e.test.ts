@@ -1,13 +1,29 @@
-import dbInit from '../../../helpers/database-init';
-import { setupApp } from '../../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../../helpers/database-init';
+import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_strategy_api_serial', getLogger);
     app = await setupApp(db.stores);
+});
+
+afterEach(async () => {
+    const all = await db.stores.projectStore.getEnvironmentsForProject(
+        'default',
+    );
+    await Promise.all(
+        all
+            .filter((env) => env !== ':global:')
+            .map(async (env) =>
+                db.stores.projectStore.deleteEnvironmentForProject(
+                    'default',
+                    env,
+                ),
+            ),
+    );
 });
 
 afterAll(async () => {
@@ -259,6 +275,18 @@ test('Can use new project feature toggle endpoint to create feature toggle witho
         .expect((res) => {
             expect(res.body.project).toBe('default');
         });
+});
+
+test('Can create feature toggle without strategies', async () => {
+    const name = 'new.toggle.without.strategy.2';
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name });
+    const { body: toggle } = await app.request.get(
+        `/api/admin/projects/default/features/${name}`,
+    );
+    expect(toggle.environments).toHaveLength(1);
+    expect(toggle.environments[0].strategies).toHaveLength(0);
 });
 
 test('Still validates feature toggle input when creating', async () => {

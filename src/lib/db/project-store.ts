@@ -159,7 +159,7 @@ class ProjectStore implements IProjectStore {
             .where({
                 project_id: id,
             })
-            .returning('environment_name');
+            .pluck('environment_name');
     }
 
     async getMembers(projectId: string): Promise<number> {

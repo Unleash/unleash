@@ -286,7 +286,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 if (!env.strategies) {
                     env.strategies = [];
                 }
-                env.strategies.push(this.getAdminStrategy(r));
+                if (r.strategy_id) {
+                    env.strategies.push(this.getAdminStrategy(r));
+                }
                 acc.environments[r.environment] = env;
                 return acc;
             }, {});

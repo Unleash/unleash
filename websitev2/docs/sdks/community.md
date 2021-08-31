@@ -14,6 +14,7 @@ Community developed Client SDKs we already know about:
 - [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
 - [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
+- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (PHP - Laravel)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 - [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
 - [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)

@@ -104,7 +104,7 @@ export default class MetricsMonitor {
             }
             if (projectsCount) {
                 projectsTotal.reset();
-                projectsTotal.set(usersCount);
+                projectsTotal.set(projectsCount);
             }
         }
 

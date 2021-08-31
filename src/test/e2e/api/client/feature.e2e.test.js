@@ -184,3 +184,21 @@ test('Can use multiple filters', async () => {
             expect(res.body.features[0].name).toBe('test.feature');
         });
 });
+
+test('feature toggle with empty strategies list should be considered disabled', async () => {
+    const name = 'new.toggle.without.strategy.3';
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name });
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${name}/environments/:global:/on`,
+        )
+        .set('Content-Type', 'application/json')
+        .expect(200);
+    const { body } = await app.request.get('/api/client/features');
+    const { features } = body;
+    const featureToggle = features.find((t) => t.name === name);
+    expect(featureToggle.strategies).toHaveLength(0);
+    expect(featureToggle.enabled).toBe(false);
+});

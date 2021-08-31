@@ -197,7 +197,15 @@ class FeatureToggleServiceV2 {
         query?: IFeatureToggleQuery,
         archived: boolean = false,
     ): Promise<FeatureConfigurationClient[]> {
-        return this.featureStrategiesStore.getFeatures(query, archived, false);
+        const toggles = await this.featureStrategiesStore.getFeatures(query, archived, false);
+        
+        // empty list of feature toggles does mean disabled for clients. 
+        return toggles.map((f: FeatureConfigurationClient) => {
+            if (!f.strategies || f.strategies.length === 0) {
+                return { ...f, enabled: false };
+            }
+            return f;
+        });
     }
 
     /**

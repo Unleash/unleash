@@ -1,0 +1,130 @@
+---
+id: sso-saml
+title: SSO - SAML 2.0
+---
+
+> This guide only applies to customers on the Enterprise subscription. Check out the [Unleash subscription plans](https://www.getunleash.io/plans) for details.
+
+## Introduction {#introduction}
+
+In this guide we will do a deep dive on the Single-Sign-On (SSO) integration with SAML 2.0 and connect it with Okta as IdP. Unleash support other identity providers and protocols, have a look at all [SSO options](./sso.md)
+
+## Basic configuration
+
+### Step 1: Sign-in to Unleash {#step-1-sign-in}
+
+In order to configure SSO you will need to log in to the Unleash instance with a user that have "Admin" role. If you are self-hosting Unleash then a default user will be automatically created the first time you start Unleash:
+
+- username: `admin`
+- password: `unleash4all`
+
+### Step 2: Navigate to SSO configuration {#step-2-navigate-to-configuration}
+
+In order to configure SSO with SAML with your Unleash enterprise you should navigate to the Single-Sign-On configuration section and choose the "SAML 2.0" tab.
+
+![sso-config](/img/sso-configure-saml.png)
+
+### Step 3: Create an application in Okta {#step-3-okta-application}
+
+If you are using Okta as your identify provider you start by signing in to your Okta account and create a new Application for Unleash.
+
+**a) Navigate to “Admin/Applications” and click the “Add Apps” button.**
+
+![Okta: Add Apps](/img/okta_add_application-768x345.png)
+
+**b) Click “Create Application” and choose a new “SAML 2.0” application and _click create_**
+
+![Okta: Create Application](/img/okta_create_new_application-768x467.png)
+
+**c) Configure SAML 2.0**
+
+Unleash expect email to be sent from the SSO provider so make sure Name ID format is set to email. Also you must give the IdP Initiated SSO URL Name, we have chosen to call it “unleash-enterprise”. This gives us the Sign-on URL we will need in our Unleash configuration later.
+
+In addition you may provide the following attributes:
+- firstName
+- lastName
+
+![Okta: Configure SAML](/img/okta_configure_saml2.0-768x832.png)
+
+> Please make sure to replace URLs with the public URL for your Unleash instance. This will require correct region prefix and the instance name. The example above uses region="us" and instance-name="ushosted".
+>
+> The correct format is: https://**[region]**.app.unleash-hosted.com/**[instanceName]**/auth/saml/callback
+
+**d) Get the Okta Setup Instructions**
+
+Click the “view Setup Instructions” to get the necessary configuration required for Unleash.
+
+![Okta: Setup Instructions](/img/okta_setup-instructions-768x731.png)
+
+### Step 4: Configure SAML 2.0 provider in Unleash
+
+Open Unleash Admin Dashboard and navigate to `Admin Menu -> Single-Sign-On -> SAML`. Fill in the values captured in the “Get Setup Instructions” step.
+
+You may also choose to “auto create users”. This will make Unleash automatically create new users on the fly first time they sign-in to Unleash with the given SSO provider. If you decide to automatically create users in Unleash you must also provide a list of valid email domains, shown in the example below.
+
+![Unleash: SAML 2.0](/img/saml-2.0-unleash.png)
+
+### Step 5: Validate
+
+You have now successfully configured Unleash to use SAML 2.0 together with Okta as an IdP. Please note that you also must assign users to the application defined in Okta to actually be able to log-in to Unleash.
+
+Try signing out of Unleash. If everything is configured correctly you should be presented with the option to sign in with SAML 2.0.
+
+## Single-Sign-Out
+
+> Available sense Unleash Enterprise 4.1.0
+
+You may also configure Unleash to to perform Single-Sign-Out. By enabling single-sign-out you Unleash will redirect the user back to IdP as part of the sign-out process. You may optionally also sign the sign-out request (required by multiple IdP's such as Okta). 
+
+### Step 1: Generate private key & public certificate
+(This step is only required if you intend to sign the sign-out requests). 
+
+Before you can configure single-sign-out support with Okta you are required to generate a Private Key together with a public certificate for that key. We recommend to use SHA256 certificates. 
+
+To create a public certificate and private key pair, use the proceeding commands. They work in Linux® and Mac® terminals.
+
+```sh
+openssl genrsa -out private.pem 2048
+openssl req -new -x509 -sha256 -key private.pem -out cert.pem -days 1095
+```
+
+Answer the promoted questions, and when you complete all the steps you should end up with two files:
+- private.pem - Private certificate, required by Unleash in order to sign requests.
+- cert.pem - Public certificate, required by the IdP in order to validate requests from Unleash.
+
+
+### Step 2: Configure sign-out url in Okta
+
+Login in to Okta and navigate to your Applications. Select the "Unleash" application you created, click on "General" and "Edit" SAML settings. 
+
+![SAML 2.0 Okta edit](/img/sso-saml-okta-edit.png)
+
+<br /><br />
+
+**Next, navigate to "Configure SAML" and click "show Advanced Settings" and check the `Enable Single Logout` option. **
+
+<br /><br />
+
+![SAML 2.0 Okta sing-out config](/img/sso-saml-okta-signout.png)
+
+<br /><br />
+
+> Please make sure to replace URLs with the public URL for your Unleash instance. This will require correct region prefix and the instance name. The example above uses region="us" and instance-name="ushosted".
+>
+> The correct format is: https://**[region]**.app.unleash-hosted.com/**[instanceName]**/auth/saml/logout/done
+
+
+You need to fill out the following options:
+
+* Single Logout Url: https://**[region]**.app.unleash-hosted.com/**[instanceName]**/auth/saml/logout/done
+* SP Issuer: https://**[region]**.app.unleash-hosted.com/**[instanceName]**
+
+Next upload the Certificate you generated in the previous step and save the Okta SAML settings. Upon completion of this step you should be provided with the ability to view setup instructions and now you should be provided with a "Identity Provider Single Logout URL"
+
+![SAML 2.0 Okta sing-out url](/img/sso-saml-okta-signout-url.png)
+
+
+### Step 3: Configure single-sign-out in Unlash
+
+
+

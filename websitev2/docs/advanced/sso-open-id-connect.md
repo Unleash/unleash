@@ -1,6 +1,7 @@
 ---
-id: enterprise-authentication
-title: Authentication (Single-Sign-On)
+id: sso-open-id-connect
+title: SSO - OpenId Connect
+
 ---
 
 > This guide only applies to customers on the Enterprise subscription. Check out the [Unleash subscription plans](https://www.getunleash.io/plans) for details.

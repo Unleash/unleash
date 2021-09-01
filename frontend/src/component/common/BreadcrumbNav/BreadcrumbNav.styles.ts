@@ -5,9 +5,8 @@ export const useStyles = makeStyles(theme => ({
         position: 'absolute',
         top: '4px',
     },
-    breadcrumbNavParagraph: { textTransform: 'capitalize', color: 'inherit' },
+    breadcrumbNavParagraph: { color: 'inherit' },
     breadcrumbLink: {
-        textTransform: 'capitalize',
         textDecoration: 'none',
     },
 }));

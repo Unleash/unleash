@@ -76,12 +76,10 @@ const FeatureView = ({
     }, []);
 
     useLayoutEffect(() => {
-        if (features.length === 0) {
-            if (isFeatureView) {
-                fetchFeatureToggles();
-            } else {
-                fetchArchive();
-            }
+        if (isFeatureView) {
+            fetchFeatureToggles();
+        } else {
+            fetchArchive();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

@@ -32,12 +32,19 @@ export const mapStateToPropsConfigurable = isFeature => state => {
             f => f.project === settings.currentProjectId
         );
     }
-
     if (settings.filter) {
         try {
             const regex = new RegExp(settings.filter, 'i');
-            features = features.filter(
-                feature =>
+            features = features.filter(feature => {
+                if (!isFeature) {
+                    return (
+                        regex.test(feature.name) ||
+                        regex.test(feature.description) ||
+                        (settings.filter.length > 1 &&
+                            regex.test(JSON.stringify(feature)))
+                    );
+                }
+                return (
                     feature.strategies.some(s => checkConstraints(s, regex)) ||
                     regex.test(feature.name) ||
                     regex.test(feature.description) ||
@@ -46,7 +53,8 @@ export const mapStateToPropsConfigurable = isFeature => state => {
                     ) ||
                     (settings.filter.length > 1 &&
                         regex.test(JSON.stringify(feature)))
-            );
+                );
+            });
         } catch (e) {
             // Invalid filter regex
         }

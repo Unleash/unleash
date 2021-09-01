@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+# 4.1.0
+- fix: sync (#334)
+- Fix/create feature (#332)
+- Fix/texture (#330)
+- fix: update constraint text field
+- Fix/minor 41 bugs (#329)
+- fix: clean up footer a bit
+- fix: content-wrapper should not take 100%
+- fix: should not show deprecated strategies
+- fix: do not filter parent routes for main nav
+- fix: add feature toggles and projects to mobile navigation (#328)
+- fix: change prepublish to prepare
 # 4.1.0-beta.4
 - Feat/feature routes
 - add enableSingleSignOut for OIDC

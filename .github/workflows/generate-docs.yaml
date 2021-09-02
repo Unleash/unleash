@@ -24,3 +24,4 @@ jobs:
         GH_NAME: 'ivarconr'
         GH_EMAIL: 'ivarconr@gmail.com'
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        DEPLOYMENT_BRANCH: 'master'

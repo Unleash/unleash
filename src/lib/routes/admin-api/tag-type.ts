@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import Controller from '../controller';
 
 import { UPDATE_FEATURE } from '../../types/permissions';
-import { handleErrors } from '../util';
 import extractUsername from '../../extract-user';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
@@ -32,70 +31,48 @@ class TagTypeController extends Controller {
     }
 
     async getTagTypes(req: Request, res: Response): Promise<void> {
-        try {
-            const tagTypes = await this.tagTypeService.getAll();
-            res.json({ version, tagTypes });
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        const tagTypes = await this.tagTypeService.getAll();
+        res.json({ version, tagTypes });
     }
 
     async validate(req: Request, res: Response): Promise<void> {
-        try {
-            await this.tagTypeService.validate(req.body);
-            res.status(200).json({ valid: true, tagType: req.body });
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.tagTypeService.validate(req.body);
+        res.status(200).json({ valid: true, tagType: req.body });
     }
 
     async createTagType(req: Request, res: Response): Promise<void> {
         const userName = extractUsername(req);
-        try {
-            const tagType = await this.tagTypeService.createTagType(
-                req.body,
-                userName,
-            );
-            res.status(201).json(tagType);
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        const tagType = await this.tagTypeService.createTagType(
+            req.body,
+            userName,
+        );
+        res.status(201).json(tagType);
     }
 
     async updateTagType(req: Request, res: Response): Promise<void> {
         const { description, icon } = req.body;
         const { name } = req.params;
         const userName = extractUsername(req);
-        try {
-            await this.tagTypeService.updateTagType(
-                { name, description, icon },
-                userName,
-            );
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+
+        await this.tagTypeService.updateTagType(
+            { name, description, icon },
+            userName,
+        );
+        res.status(200).end();
     }
 
     async getTagType(req: Request, res: Response): Promise<void> {
         const { name } = req.params;
-        try {
-            const tagType = await this.tagTypeService.getTagType(name);
-            res.json({ version, tagType });
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+
+        const tagType = await this.tagTypeService.getTagType(name);
+        res.json({ version, tagType });
     }
 
     async deleteTagType(req: Request, res: Response): Promise<void> {
         const { name } = req.params;
         const userName = extractUsername(req);
-        try {
-            await this.tagTypeService.deleteTagType(name, userName);
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.tagTypeService.deleteTagType(name, userName);
+        res.status(200).end();
     }
 }
 export default TagTypeController;

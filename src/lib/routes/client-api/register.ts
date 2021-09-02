@@ -24,18 +24,8 @@ export default class RegisterController extends Controller {
 
     async handleRegister(req: Request, res: Response): Promise<void> {
         const data = req.body;
-        try {
-            const clientIp = req.ip;
-            await this.metrics.registerClient(data, clientIp);
-            return res.status(202).end();
-        } catch (err) {
-            this.logger.warn('failed to register client', err);
-            switch (err.name) {
-                case 'ValidationError':
-                    return res.status(400).end();
-                default:
-                    return res.status(500).end();
-            }
-        }
+        const clientIp = req.ip;
+        await this.metrics.registerClient(data, clientIp);
+        return res.status(202).end();
     }
 }

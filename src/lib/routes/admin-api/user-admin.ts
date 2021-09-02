@@ -4,7 +4,6 @@ import { ADMIN } from '../../types/permissions';
 import UserService from '../../services/user-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
-import { handleErrors } from '../util';
 import { IUnleashConfig } from '../../types/option';
 import { EmailService } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
@@ -72,14 +71,10 @@ export default class UserAdminController extends Controller {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async resetPassword(req, res): Promise<void> {
         const { user } = req;
-        try {
-            const receiver = req.body.id;
-            const resetPasswordUrl =
-                await this.userService.createResetPasswordEmail(receiver, user);
-            res.json({ resetPasswordUrl });
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        const receiver = req.body.id;
+        const resetPasswordUrl =
+            await this.userService.createResetPasswordEmail(receiver, user);
+        res.json({ resetPasswordUrl });
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -103,12 +98,8 @@ export default class UserAdminController extends Controller {
     }
 
     async getActiveSessions(req: Request, res: Response): Promise<void> {
-        try {
-            const sessions = await this.sessionService.getActiveSessions();
-            res.json(sessions);
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        const sessions = await this.sessionService.getActiveSessions();
+        res.json(sessions);
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -210,35 +201,23 @@ export default class UserAdminController extends Controller {
         const { user, params } = req;
         const { id } = params;
 
-        try {
-            await this.userService.deleteUser(+id, user);
-            res.status(200).send();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.userService.deleteUser(+id, user);
+        res.status(200).send();
     }
 
     async validatePassword(req: IAuthRequest, res: Response): Promise<void> {
         const { password } = req.body;
 
-        try {
-            this.userService.validatePassword(password);
-            res.status(200).send();
-        } catch (e) {
-            res.status(400).send([{ msg: e.message }]);
-        }
+        this.userService.validatePassword(password);
+        res.status(200).send();
     }
 
     async changePassword(req: IAuthRequest, res: Response): Promise<void> {
         const { id } = req.params;
         const { password } = req.body;
 
-        try {
-            await this.userService.changePassword(+id, password);
-            res.status(200).send();
-        } catch (e) {
-            res.status(400).send([{ msg: e.message }]);
-        }
+        await this.userService.changePassword(+id, password);
+        res.status(200).send();
     }
 }
 

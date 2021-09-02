@@ -30,18 +30,8 @@ export default class ClientMetricsController extends Controller {
         const data = req.body;
         const clientIp = req.ip;
 
-        try {
-            await this.metrics.registerClientMetrics(data, clientIp);
-            return res.status(202).end();
-        } catch (e) {
-            this.logger.warn('Failed to store metrics', e);
-            switch (e.name) {
-                case 'ValidationError':
-                    return res.status(400).end();
-                default:
-                    return res.status(500).end();
-            }
-        }
+        await this.metrics.registerClientMetrics(data, clientIp);
+        return res.status(202).end();
     }
 }
 

@@ -1,13 +1,13 @@
 ---
 id: sso-saml-keycloak
-title: SSO - SAML 2.0
+title: SSO - SAML 2.0 Keycloak
 ---
 
 > The **Single-Sign-On capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.
 
 ## Introduction {#introduction}
 
-In this guide we will do a deep dive on the Single-Sign-On (SSO) integration with SAML 2.0 and connect it with Okta as IdP. Unleash support other identity providers and protocols, have a look at all [all Single-Sign-On options](./sso.md)
+In this guide we will do a deep dive on the Single-Sign-On (SSO) integration with SAML 2.0 and connect it with Keycloak as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](./sso.md)
 
 ## Basic configuration
 
@@ -20,10 +20,9 @@ In order to configure SSO you will need to log in to the Unleash instance with a
 
 ### Step 2: Navigate to SSO configuration {#step-2}
 
-In order to configure SSO with SAML with your Unleash enterprise you should navigate to the Single-Sign-On configuration section and choose the "SAML 2.0" tab. 
+In order to configure SSO with SAML with your Unleash enterprise you should navigate to the Single-Sign-On configuration section and choose the "SAML 2.0" tab.
 
 ![sso-config](/img/sso-configure-saml.png)
-
 
 ### Step 3: Keycloak with SAML 2.0 {#step-3}
 
@@ -35,7 +34,7 @@ https://<unleash.hostname.com>/auth/saml/callback
 
 ![Keycloak: Add client](/img/keykloak_step1-768x347.png)
 
-**a) Change “Name ID format to “email”** Unleash expect email to be sent from the SSO provider so make sure Name ID format is set to email, see a). also you must give the IDP Initiated SSO URL Name, we have chosen to call it “unleash”, see 2). This gives us the Sign-on URL we will need in our Unleash configuration later.
+**a) Change “Name ID format to “email”** Unleash expects an email to be sent from the SSO provider so make sure Name ID format is set to email, see a). also you must give the IDP Initiated SSO URL Name, we have chosen to call it “unleash”, see 2). This gives us the Sign-on URL we will need in our Unleash configuration later.
 
 ![Keycloak: step 2](/img/keykloak_step2b-768x242.png)
 
@@ -57,9 +56,8 @@ You may also choose to “auto create users”. This will make Unleash automatic
 
 ![Keycloak: step 4](/img/keykloak_step4-768x644.png)
 
-
 ### Step 5: Validate {#step-5}
 
-You have now successfully configured Unleash to use SAML 2.0 together with Okta as an IdP. Please note that you also must assign users to the application defined in Okta to actually be able to log-in to Unleash.
+You have now successfully configured Unleash to use SAML 2.0 together with Keycloak as an IdP. Please note that you also must assign users to the application defined in Keycloak to actually be able to log-in to Unleash.
 
 Try signing out of Unleash. If everything is configured correctly you should be presented with the option to sign in with SAML 2.0.

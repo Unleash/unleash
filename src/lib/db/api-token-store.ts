@@ -65,8 +65,8 @@ export class ApiTokenStore implements IApiTokenStore {
     async getAllActive(): Promise<IApiToken[]> {
         const stopTimer = this.timer('getAllActive');
         const rows = await this.db<ITokenTable>(TABLE)
-            .where('expires_at', '>', new Date())
-            .orWhere('expires_at', 'IS', null);
+            .where('expires_at', 'IS', null)
+            .orWhere('expires_at', '>', 'now()');
         stopTimer();
         return rows.map(toToken);
     }

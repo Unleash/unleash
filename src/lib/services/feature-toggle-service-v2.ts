@@ -1,10 +1,12 @@
 /* eslint-disable prettier/prettier */
+
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
-import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import NameExistsError from '../error/name-exists-error';
+import InvalidOperationError from '../error/invalid-operation-error';
+import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import { featureMetadataSchema, nameSchema } from '../schema/feature-schema';
 import {
     FEATURE_ARCHIVED,
@@ -101,7 +103,7 @@ class FeatureToggleServiceV2 {
     */
     async createStrategy(
         strategyConfig: Omit<IStrategyConfig, 'id'>,
-        projectName: string,
+        projectId: string,
         featureName: string,
         environment: string = GLOBAL_ENV,
     ): Promise<IStrategyConfig> {
@@ -111,7 +113,7 @@ class FeatureToggleServiceV2 {
                     strategyName: strategyConfig.name,
                     constraints: strategyConfig.constraints,
                     parameters: strategyConfig.parameters,
-                    projectName,
+                    projectId,
                     featureName,
                     environment,
                 });
@@ -132,7 +134,7 @@ class FeatureToggleServiceV2 {
     }
 
     /**
-     * PUT /api/admin/projects/:projectName/features/:featureName/strategies/:strategyId ?
+     * PUT /api/admin/projects/:projectId/features/:featureName/strategies/:strategyId ?
      * {
      *
      * }
@@ -151,7 +153,7 @@ class FeatureToggleServiceV2 {
     }
 
     async getStrategiesForEnvironment(
-        projectName: string,
+        project: string,
         featureName: string,
         environment: string = GLOBAL_ENV,
     ): Promise<IStrategyConfig[]> {
@@ -162,7 +164,7 @@ class FeatureToggleServiceV2 {
         if (hasEnv) {
             const featureStrategies =
                 await this.featureStrategiesStore.getStrategiesForFeature(
-                    projectName,
+                    project,
                     featureName,
                     environment,
                 );
@@ -179,7 +181,7 @@ class FeatureToggleServiceV2 {
     }
 
     /**
-     * GET /api/admin/projects/:projectName/features/:featureName
+     * GET /api/admin/projects/:project/features/:featureName
      * @param featureName
      * @param archived - return archived or non archived toggles
      */
@@ -409,6 +411,7 @@ class FeatureToggleServiceV2 {
     }
 
     async updateEnabled(
+        projectId: string,
         featureName: string,
         environment: string,
         enabled: boolean,
@@ -419,7 +422,14 @@ class FeatureToggleServiceV2 {
                 environment,
                 featureName,
             );
+        
         if (hasEnvironment) {
+            if(enabled) {
+                const strategies = await this.getStrategiesForEnvironment(projectId, featureName, environment);
+                if(strategies.length === 0) {
+                    throw new InvalidOperationError('You can not enable the environment before it has strategies');
+                }
+            }
             await this.featureEnvironmentStore.toggleEnvironmentEnabledStatus(
                     environment,
                     featureName,
@@ -446,6 +456,7 @@ class FeatureToggleServiceV2 {
 
     // @deprecated
     async toggle(
+        projectId: string,
         featureName: string,
         environment: string,
         userName: string,
@@ -457,6 +468,7 @@ class FeatureToggleServiceV2 {
                 environment,
             );
         return this.updateEnabled(
+            projectId,
             featureName,
             environment,
             !isEnabled,

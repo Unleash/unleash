@@ -1,132 +1,148 @@
 import faker from 'faker';
-import dbInit from '../../helpers/database-init';
-import { setupApp } from '../../helpers/test-helper';
+import { FeatureToggleDTO, IStrategyConfig } from 'lib/types/model';
+import dbInit, { ITestDb } from '../../helpers/database-init';
+import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
+
+const defaultStrategy = {
+    name: 'default',
+    parameters: {},
+    constraints: [],
+};
 
 beforeAll(async () => {
     db = await dbInit('feature_api_serial', getLogger);
     app = await setupApp(db.stores);
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
-        {
-            name: 'featureX',
-            description: 'the #1 feature',
-            strategies: [
-                {
-                    name: 'default',
-                    parameters: {},
-                },
-            ],
-        },
-        'test',
-    );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
+
+    const createToggle = async (
+        toggle: FeatureToggleDTO,
+        strategy: Omit<IStrategyConfig, 'id'> = defaultStrategy,
+        projectId: string = 'default',
+        username: string = 'test',
+    ) => {
+        await app.services.featureToggleServiceV2.createFeatureToggle(
+            projectId,
+            toggle,
+            username,
+        );
+        await app.services.featureToggleServiceV2.createStrategy(
+            strategy,
+            projectId,
+            toggle.name,
+        );
+    };
+
+    await createToggle({
+        name: 'featureX',
+        description: 'the #1 feature',
+    });
+
+    await createToggle(
         {
             name: 'featureY',
             description: 'soon to be the #1 feature',
-            strategies: [
-                {
-                    name: 'baz',
-                    parameters: {
-                        foo: 'bar',
-                    },
-                },
-            ],
         },
-        'userName',
+        {
+            name: 'baz',
+            constraints: [],
+            parameters: {
+                foo: 'bar',
+            },
+        },
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
+
+    await createToggle(
         {
             name: 'featureZ',
             description: 'terrible feature',
-            strategies: [
-                {
-                    name: 'baz',
-                    parameters: {
-                        foo: 'rab',
-                    },
-                },
-            ],
         },
-        'test',
+        {
+            name: 'baz',
+            constraints: [],
+            parameters: {
+                foo: 'rab',
+            },
+        },
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
+
+    await createToggle(
         {
             name: 'featureArchivedX',
             description: 'the #1 feature',
-            strategies: [
-                {
-                    name: 'default',
-                    parameters: {},
-                },
-            ],
         },
-        'test',
+        {
+            name: 'default',
+            constraints: [],
+            parameters: {},
+        },
     );
+
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedX',
         'test',
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
+
+    await createToggle(
         {
             name: 'featureArchivedY',
             description: 'soon to be the #1 feature',
-            strategies: [
-                {
-                    name: 'baz',
-                    parameters: {
-                        foo: 'bar',
-                    },
-                },
-            ],
         },
-        'test',
+        {
+            name: 'baz',
+            constraints: [],
+            parameters: {
+                foo: 'bar',
+            },
+        },
     );
+
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedY',
         'test',
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
+
+    await createToggle(
         {
             name: 'featureArchivedZ',
             description: 'terrible feature',
-            strategies: [
-                {
-                    name: 'baz',
-                    parameters: {
-                        foo: 'rab',
-                    },
-                },
-            ],
         },
-        'test',
+        {
+            name: 'baz',
+            constraints: [],
+            parameters: {
+                foo: 'rab',
+            },
+        },
     );
+
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedZ',
         'test',
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
-        {
-            name: 'feature.with.variants',
-            description: 'A feature toggle with variants',
-            enabled: true,
-            strategies: [{ name: 'default' }],
-            variants: [
-                { name: 'control', weight: 50 },
-                { name: 'new', weight: 50 },
-            ],
-        },
-        'test',
-    );
+
+    await createToggle({
+        name: 'feature.with.variants',
+        description: 'A feature toggle with variants',
+        variants: [
+            {
+                name: 'control',
+                weight: 50,
+                weightType: 'variable',
+                overrides: [],
+                stickiness: 'default',
+            },
+            {
+                name: 'new',
+                weight: 50,
+                weightType: 'variable',
+                overrides: [],
+                stickiness: 'default',
+            },
+        ],
+    });
 });
 
 afterAll(async () => {
@@ -256,14 +272,20 @@ test('can not toggle of feature that does not exist', async () => {
 
 test('can toggle a feature that does exist', async () => {
     expect.assertions(0);
+    const featureName = 'existing.feature';
     const feature =
         await app.services.featureToggleServiceV2.createFeatureToggle(
             'default',
             {
-                name: 'existing.feature',
+                name: featureName,
             },
             'test',
         );
+    await app.services.featureToggleServiceV2.createStrategy(
+        defaultStrategy,
+        'default',
+        featureName,
+    );
     return app.request
         .post(`/api/admin/features/${feature.name}/toggle`)
         .set('Content-Type', 'application/json')

@@ -97,7 +97,13 @@ test('Should include legacy props in event log when updating strategy configurat
     );
 
     await service.createStrategy(config, 'default', featureName);
-    await service.updateEnabled(featureName, GLOBAL_ENV, true, userName);
+    await service.updateEnabled(
+        'default',
+        featureName,
+        GLOBAL_ENV,
+        true,
+        userName,
+    );
 
     const events = await eventService.getEventsForToggle(featureName);
     expect(events[0].type).toBe(FEATURE_UPDATED);

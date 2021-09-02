@@ -26,6 +26,7 @@ import {
     ITag,
     IImportData,
     IProject,
+    IStrategyConfig,
 } from '../types/model';
 import { GLOBAL_ENV } from '../types/environment';
 import { Logger } from '../logger';
@@ -239,9 +240,9 @@ export default class StateService {
         features,
     }): Promise<{ features; featureStrategies; featureEnvironments }> {
         const strategies = features.flatMap((f) =>
-            f.strategies.map((strategy) => ({
+            f.strategies.map((strategy: IStrategyConfig) => ({
                 featureName: f.name,
-                projectName: f.project,
+                projectId: f.project,
                 constraints: strategy.constraints || [],
                 parameters: strategy.parameters || {},
                 environment: GLOBAL_ENV,

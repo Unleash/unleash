@@ -54,7 +54,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
     return {
         id: row.id,
         featureName: row.feature_name,
-        projectName: row.project_name,
+        projectId: row.project_name,
         environment: row.environment,
         strategyName: row.strategy_name,
         parameters: row.parameters,
@@ -67,7 +67,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
     return {
         id: input.id,
         feature_name: input.featureName,
-        project_name: input.projectName,
+        project_name: input.projectId,
         environment: input.environment,
         strategy_name: input.strategyName,
         parameters: input.parameters,

@@ -18,7 +18,7 @@ export interface IStrategyConfig {
 export interface IFeatureStrategy {
     id: string;
     featureName: string;
-    projectName: string;
+    projectId: string;
     environment: string;
     strategyName: string;
     parameters: object;
@@ -84,7 +84,7 @@ export interface IVariant {
     name: string;
     weight: number;
     weightType: string;
-    payload: {
+    payload?: {
         type: string;
         value: string;
     };

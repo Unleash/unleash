@@ -184,8 +184,9 @@ test('Disconnecting environment from project, removes environment from features 
         });
 });
 
-test('Can enable/disable environment for feature', async () => {
+test('Can enable/disable environment for feature with strategies', async () => {
     const envName = 'enable-feature-environment';
+    const featureName = 'com.test.enable.environment';
     // Create environment
     await app.request
         .post('/api/admin/environments')
@@ -207,23 +208,35 @@ test('Can enable/disable environment for feature', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
-            name: 'com.test.enable.environment',
-            strategies: [{ name: 'default' }],
+            name: featureName,
         })
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
-            expect(res.body.name).toBe('com.test.enable.environment');
+            expect(res.body.name).toBe(featureName);
             expect(res.body.createdAt).toBeTruthy();
         });
+
+    // Add strategy to it
     await app.request
         .post(
-            '/api/admin/projects/default/features/com.test.enable.environment/environments/enable-feature-environment/on',
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
         )
-        .send({})
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
         .expect(200);
     await app.request
-        .get('/api/admin/projects/default/features/com.test.enable.environment')
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/on`,
+        )
+        .set('Content-Type', 'application/json')
+        .expect(200);
+    await app.request
+        .get(`/api/admin/projects/default/features/${featureName}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
@@ -235,12 +248,12 @@ test('Can enable/disable environment for feature', async () => {
         });
     await app.request
         .post(
-            '/api/admin/projects/default/features/com.test.enable.environment/environments/enable-feature-environment/off',
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/off`,
         )
         .send({})
         .expect(200);
     await app.request
-        .get('/api/admin/projects/default/features/com.test.enable.environment')
+        .get(`/api/admin/projects/default/features/${featureName}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
@@ -611,4 +624,49 @@ test('Trying to get a non existing feature strategy should yield 404', async () 
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/some-non-existing-id`,
         )
         .expect(404);
+});
+
+test('Can not enable environment for feature without strategies', async () => {
+    const environment = 'some-env';
+    const featureName = 'com.test.enable.environment.disabled';
+
+    // Create environment
+    await app.request
+        .post('/api/admin/environments')
+        .send({
+            name: environment,
+            displayName: 'Enable feature for environment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ environment })
+        .expect(200);
+
+    // Create feature
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: featureName,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/on`,
+        )
+        .set('Content-Type', 'application/json')
+        .expect(409);
+    await app.request
+        .get('/api/admin/projects/default/features/com.test.enable.environment')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            const enabledFeatureEnv = res.body.environments.find(
+                (e) => e.name === environment,
+            );
+            expect(enabledFeatureEnv.enabled).toBe(false);
+        });
 });

@@ -129,7 +129,7 @@ export default class FakeFeatureStrategiesStore
     ): Promise<IFeatureStrategy[]> {
         const rows = this.featureStrategies.filter(
             (fS) =>
-                fS.projectName === project_name &&
+                fS.projectId === project_name &&
                 fS.featureName === feature_name &&
                 fS.environment === environment,
         );

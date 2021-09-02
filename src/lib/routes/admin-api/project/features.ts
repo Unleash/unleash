@@ -156,8 +156,9 @@ export default class ProjectFeaturesController extends Controller {
         req: Request<FeatureStrategyParams, any, any, any>,
         res: Response,
     ): Promise<void> {
-        const { featureName, environment } = req.params;
+        const { featureName, environment, projectId } = req.params;
         await this.featureService.updateEnabled(
+            projectId,
             featureName,
             environment,
             true,
@@ -170,8 +171,9 @@ export default class ProjectFeaturesController extends Controller {
         req: Request<FeatureStrategyParams, any, any, any>,
         res: Response,
     ): Promise<void> {
-        const { featureName, environment } = req.params;
+        const { featureName, environment, projectId } = req.params;
         await this.featureService.updateEnabled(
+            projectId,
             featureName,
             environment,
             false,

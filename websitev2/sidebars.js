@@ -59,6 +59,10 @@ module.exports = {
             'advanced/api_access',
             'advanced/tags',
             'advanced/enterprise-authentication',
+            'advanced/sso-saml-keycloak',
+            'advanced/sso-saml',
+            'advanced/sso-open-id-connect',
+            'advanced/sso-google',
         ],
     },
     api: {

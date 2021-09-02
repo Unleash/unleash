@@ -71,10 +71,13 @@ export default class AddonService {
         }
 
         // Memoized private function
-        this.fetchAddonConfigs = memoizee(async () => addonStore.getAll(), {
-            promise: true,
-            maxAge: ADDONS_CACHE_TIME,
-        });
+        this.fetchAddonConfigs = memoizee(
+            async () => addonStore.getAll({ enabled: true }),
+            {
+                promise: true,
+                maxAge: ADDONS_CACHE_TIME,
+            },
+        );
     }
 
     loadSensitiveParams(addonProviders: IAddonProviders): ISensitiveParams {
@@ -159,7 +162,6 @@ export default class AddonService {
                         providerName,
                     );
                 } catch (err) {
-                    this.logger.error(err);
                     if (!(err instanceof NameExistsError)) {
                         this.logger.error(err);
                     }

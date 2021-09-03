@@ -63,6 +63,7 @@ const defaultDbOptions: IDBOption = {
             : { rejectUnauthorized: false },
     driver: 'postgres',
     version: process.env.DATABASE_VERSION,
+    acquireConnectionTimeout: 30000,
     pool: {
         min: safeNumber(process.env.DATABASE_POOL_MIN, 0),
         max: safeNumber(process.env.DATABASE_POOL_MAX, 4),
@@ -70,6 +71,7 @@ const defaultDbOptions: IDBOption = {
             process.env.DATABASE_POOL_IDLE_TIMEOUT_MS,
             30000,
         ),
+        propagateCreateError: false,
     },
     schema: process.env.DATABASE_SCHEMA || 'public',
     disableMigration: false,

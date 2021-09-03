@@ -18,10 +18,12 @@ export interface IDBOption {
     ssl?: ISSLOption | boolean;
     driver: 'postgres';
     version?: string;
+    acquireConnectionTimeout?: number;
     pool?: {
         min?: number;
         max?: number;
         idleTimeoutMillis?: number;
+        propagateCreateError?: boolean;
     };
     schema: string;
     disableMigration: boolean;

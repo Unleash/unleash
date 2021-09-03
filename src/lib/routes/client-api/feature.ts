@@ -67,6 +67,7 @@ export default class FeatureController extends Controller {
         tag,
         project,
         namePrefix,
+        environment,
     }: IFeatureToggleQuery): Promise<IFeatureToggleQuery> {
         if (!tag && !project && !namePrefix) {
             return null;
@@ -77,6 +78,7 @@ export default class FeatureController extends Controller {
             tag: tagQuery,
             project: projectQuery,
             namePrefix,
+            environment,
         });
         if (query.tag) {
             query.tag = query.tag.map((q) => q.split(':'));

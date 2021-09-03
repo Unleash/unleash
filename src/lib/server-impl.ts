@@ -36,6 +36,7 @@ async function createApp(
     const db = createDb(config);
     const stores = createStores(config, eventBus, db);
     const services = createServices(stores, config);
+
     const metricsMonitor = createMetricsMonitor();
     const unleashSession = sessionDb(config, db);
 
@@ -112,9 +113,11 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
 
     try {
         if (config.db.disableMigration) {
-            logger.info('DB migrations disabled');
+            logger.info('DB migration: disabled');
         } else {
+            logger.info('DB migration: start');
             await migrator(config);
+            logger.info('DB migration: end');
         }
     } catch (err) {
         logger.error('Failed to migrate db', err);

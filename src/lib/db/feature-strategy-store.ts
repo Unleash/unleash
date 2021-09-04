@@ -258,10 +258,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             )
             .fullOuterJoin(
                 'feature_strategies',
-                'feature_strategies.feature_name',
-                'features.name',
+                'feature_strategies.environment',
+                'feature_environments.environment',
             )
-            .where({ name: featureName, archived: archived ? 1 : 0 });
+            .where({ name: featureName, archived: archived ? 1 : 0 })
+            .andWhere({ 'feature_strategies.feature_name': featureName });
         stopTimer();
         if (rows.length > 0) {
             const featureToggle = rows.reduce((acc, r) => {
@@ -331,17 +332,22 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_strategies.constraints as constraints',
             )
             .where({ archived })
-            .whereIn('feature_environments.environment', environments)
+            .whereIn('feature_strategies.environment', environments)
+            // .whereIn('feature_environments.environment', environments)
             .fullOuterJoin(
                 'feature_environments',
                 'feature_environments.feature_name',
                 'features.name',
             )
-            .fullOuterJoin(
-                'feature_strategies',
-                'feature_strategies.feature_name',
-                'features.name',
-            );
+            .fullOuterJoin('feature_strategies', function () {
+                this.on(
+                    'feature_strategies.feature_name',
+                    'features.name',
+                ).andOn(
+                    'feature_strategies.environment',
+                    'feature_environments.environment',
+                );
+            });
         if (featureQuery) {
             if (featureQuery.tag) {
                 const tagQuery = this.db

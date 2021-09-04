@@ -69,7 +69,7 @@ export default class FeatureController extends Controller {
         namePrefix,
         environment,
     }: IFeatureToggleQuery): Promise<IFeatureToggleQuery> {
-        if (!tag && !project && !namePrefix) {
+        if (!tag && !project && !namePrefix && !environment) {
             return null;
         }
         const tagQuery = this.paramToArray(tag);

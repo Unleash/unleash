@@ -6,6 +6,8 @@ export const useStyles = makeStyles(theme => ({
         color: '#000',
         padding: '0.5rem',
         boxShadow: 'none',
+        position: 'relative',
+        zIndex: '200',
     },
     links: {
         display: 'flex',

@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+# 4.1.1
+- fix: header zindex
 # 4.1.0
 - fix: sync (#334)
 - Fix/create feature (#332)

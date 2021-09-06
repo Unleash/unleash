@@ -3,6 +3,7 @@ import {
     FeatureToggle,
     FeatureToggleWithEnvironment,
     IFeatureEnvironment,
+    IFeatureOverview,
     IFeatureStrategy,
     IFeatureToggleClient,
     IFeatureToggleQuery,
@@ -157,6 +158,15 @@ export default class FakeFeatureStrategiesStore
         throw new NotFoundError(
             `Could not find feature with name ${featureName}`,
         );
+    }
+
+    async getFeatureOverview(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        archived: boolean,
+    ): Promise<IFeatureOverview[]> {
+        return Promise.resolve([]);
     }
 
     async getFeatures(

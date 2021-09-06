@@ -292,7 +292,7 @@ export default class ProjectService {
         archived: boolean = false,
     ): Promise<IProjectOverview> {
         const project = await this.store.get(projectId);
-        const features = await this.store.getProjectOverview(
+        const features = await this.featureToggleService.getFeatureOverview(
             projectId,
             archived,
         );

@@ -36,6 +36,7 @@ import {
     FeatureToggleWithEnvironment,
     FeatureToggleWithEnvironmentLegacy,
     IFeatureEnvironmentInfo,
+    IFeatureOverview,
     IFeatureStrategy,
     IFeatureToggleQuery,
     IStrategyConfig,
@@ -152,6 +153,20 @@ class FeatureToggleServiceV2 {
         throw new NotFoundError(`Could not find strategy with id ${id}`);
     }
 
+    /**
+     * DELETE /api/admin/projects/:projectId/features/:featureName/strategies/:strategyId ?
+     * {
+     *
+     * }
+     * @param id
+     * @param updates
+     */
+         async deleteStrategy(
+            id: string,
+        ): Promise<void> {
+            return this.featureStrategiesStore.delete(id);
+        }
+
     async getStrategiesForEnvironment(
         project: string,
         featureName: string,
@@ -203,6 +218,10 @@ class FeatureToggleServiceV2 {
     }
 
     /**
+     * 
+     * Warn: Legacy!
+     * 
+     * 
      * Used to retrieve metadata of all feature toggles defined in Unleash.
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
      * @param archived - Return archived or active toggles
@@ -214,6 +233,13 @@ class FeatureToggleServiceV2 {
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
         return this.featureStrategiesStore.getFeatures(query, archived, true);
+    }
+
+    async getFeatureOverview(
+        projectId: string,
+        archived: boolean = false
+    ): Promise<IFeatureOverview[]> {
+        return this.featureStrategiesStore.getFeatureOverview(projectId, archived);
     }
 
     async getFeatureToggle(

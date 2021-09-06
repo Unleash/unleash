@@ -8,6 +8,8 @@ import NotFoundError from '../error/notfound-error';
 import {
     FeatureToggleWithEnvironment,
     IConstraint,
+    IEnvironmentOverview,
+    IFeatureOverview,
     IFeatureStrategy,
     IFeatureToggleClient,
     IFeatureToggleQuery,
@@ -256,13 +258,18 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_environments.feature_name',
                 'features.name',
             )
-            .fullOuterJoin(
-                'feature_strategies',
-                'feature_strategies.environment',
-                'feature_environments.environment',
-            )
-            .where({ name: featureName, archived: archived ? 1 : 0 })
-            .andWhere({ 'feature_strategies.feature_name': featureName });
+            .fullOuterJoin('feature_strategies', function () {
+                this.on(
+                    'feature_strategies.feature_name',
+                    '=',
+                    'feature_environments.feature_name',
+                ).andOn(
+                    'feature_strategies.environment',
+                    '=',
+                    'feature_environments.environment',
+                );
+            })
+            .where({ name: featureName, archived: archived ? 1 : 0 });
         stopTimer();
         if (rows.length > 0) {
             const featureToggle = rows.reduce((acc, r) => {
@@ -304,6 +311,69 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         );
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    private getEnvironment(r: any): IEnvironmentOverview {
+        return {
+            name: r.environment,
+            displayName: r.display_name,
+            enabled: r.enabled,
+        };
+    }
+
+    async getFeatureOverview(
+        projectId: string,
+        archived: boolean = false,
+    ): Promise<IFeatureOverview[]> {
+        const rows = await this.db('features')
+            .where({ project: projectId, archived })
+            .select(
+                'features.name as feature_name',
+                'features.type as type',
+                'features.created_at as created_at',
+                'features.last_seen_at as last_seen_at',
+                'features.stale as stale',
+                'feature_environments.enabled as enabled',
+                'feature_environments.environment as environment',
+                'environments.display_name as display_name',
+            )
+            .fullOuterJoin(
+                'feature_environments',
+                'feature_environments.feature_name',
+                'features.name',
+            )
+            .fullOuterJoin(
+                'environments',
+                'feature_environments.environment',
+                'environments.name',
+            );
+        if (rows.length > 0) {
+            const overview = rows.reduce((acc, r) => {
+                if (acc[r.feature_name] !== undefined) {
+                    acc[r.feature_name].environments.push(
+                        this.getEnvironment(r),
+                    );
+                } else {
+                    acc[r.feature_name] = {
+                        type: r.type,
+                        name: r.feature_name,
+                        createdAt: r.created_at,
+                        lastSeenAt: r.last_seen_at,
+                        stale: r.stale,
+                        environments: [this.getEnvironment(r)],
+                    };
+                }
+                return acc;
+            }, {});
+            return Object.values(overview).map((o: IFeatureOverview) => ({
+                ...o,
+                environments: o.environments.filter((f) => f.name),
+            }));
+        }
+        return [];
+    }
+
+    // Legacy where you strategies as one array!
+    // TODO: Rename!
     async getFeatures(
         featureQuery?: IFeatureToggleQuery,
         archived: boolean = false,
@@ -333,7 +403,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             )
             .where({ archived })
             .whereIn('feature_strategies.environment', environments)
-            // .whereIn('feature_environments.environment', environments)
             .fullOuterJoin(
                 'feature_environments',
                 'feature_environments.feature_name',

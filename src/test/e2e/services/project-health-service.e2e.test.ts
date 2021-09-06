@@ -30,7 +30,11 @@ beforeAll(async () => {
         accessService,
         featureToggleService,
     );
-    projectHealthService = new ProjectHealthService(stores, config);
+    projectHealthService = new ProjectHealthService(
+        stores,
+        config,
+        featureToggleService,
+    );
 });
 
 afterAll(async () => {

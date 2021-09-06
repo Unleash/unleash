@@ -58,7 +58,11 @@ export const createServices = (
     const featureToggleServiceV2 = new FeatureToggleServiceV2(stores, config);
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
-    const projectHealthService = new ProjectHealthService(stores, config);
+    const projectHealthService = new ProjectHealthService(
+        stores,
+        config,
+        featureToggleServiceV2,
+    );
     const projectService = new ProjectService(
         stores,
         config,

@@ -11,7 +11,6 @@ import {
     IStrategyConfig,
 } from '../../../types/model';
 import extractUsername from '../../../extract-user';
-import ProjectHealthService from '../../../services/project-health-service';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -47,20 +46,14 @@ type ProjectFeaturesServices = Pick<
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleServiceV2;
 
-    private projectHealthService: ProjectHealthService;
-
     private readonly logger: Logger;
 
     constructor(
         config: IUnleashConfig,
-        {
-            featureToggleServiceV2,
-            projectHealthService,
-        }: ProjectFeaturesServices,
+        { featureToggleServiceV2 }: ProjectFeaturesServices,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
-        this.projectHealthService = projectHealthService;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
         this.post(
@@ -96,6 +89,11 @@ export default class ProjectFeaturesController extends Controller {
             this.updateStrategy,
             UPDATE_FEATURE,
         );
+        this.delete(
+            `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
+            this.deleteStrategy,
+            UPDATE_FEATURE,
+        );
         this.post(
             '/:projectId/features',
             this.createFeatureToggle,
@@ -110,9 +108,9 @@ export default class ProjectFeaturesController extends Controller {
         res: Response,
     ): Promise<void> {
         const { projectId } = req.params;
-        const features = await this.featureService.getFeatureToggles({
-            project: [projectId],
-        });
+        const features = await this.featureService.getFeatureOverview(
+            projectId,
+        );
         res.json({ version: 1, features });
     }
 
@@ -230,6 +228,17 @@ export default class ProjectFeaturesController extends Controller {
         const { strategyId } = req.params;
         this.logger.info(strategyId);
         const strategy = await this.featureService.getStrategy(strategyId);
+        res.status(200).json(strategy);
+    }
+
+    async deleteStrategy(
+        req: Request<StrategyIdParams, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        this.logger.info('Deleting strategy');
+        const { strategyId } = req.params;
+        this.logger.info(strategyId);
+        const strategy = await this.featureService.deleteStrategy(strategyId);
         res.status(200).json(strategy);
     }
 }

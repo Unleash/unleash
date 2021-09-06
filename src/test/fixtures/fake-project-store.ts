@@ -3,7 +3,7 @@ import {
     IProjectInsert,
     IProjectStore,
 } from '../../lib/types/stores/project-store';
-import { IFeatureOverview, IProject } from '../../lib/types/model';
+import { IProject } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeProjectStore implements IProjectStore {
@@ -87,15 +87,6 @@ export default class FakeProjectStore implements IProjectStore {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getMembers(projectId: string): Promise<number> {
         return Promise.resolve(0);
-    }
-
-    async getProjectOverview(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        archived: boolean,
-    ): Promise<IFeatureOverview[]> {
-        return Promise.resolve([]);
     }
 
     async hasProject(id: string): Promise<boolean> {

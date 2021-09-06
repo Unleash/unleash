@@ -670,3 +670,50 @@ test('Can not enable environment for feature without strategies', async () => {
             expect(enabledFeatureEnv.enabled).toBe(false);
         });
 });
+
+test('Can delete strategy from feature toggle', async () => {
+    const envName = 'del-strategy';
+    const featureName = 'feature.strategy.toggle.delete.strategy';
+    // Create environment
+    await app.request
+        .post('/api/admin/environments')
+        .send({
+            name: envName,
+            displayName: 'Enable feature for environment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+    const { body } = await app.request.get(
+        `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+    );
+    const strategies = body;
+    const strategyId = strategies[0].id;
+    await app.request
+        .delete(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/${strategyId}`,
+        )
+        .expect(200);
+});

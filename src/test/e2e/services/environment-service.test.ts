@@ -71,7 +71,7 @@ test('Can connect environment to project', async () => {
         variants: [],
     });
     await service.connectProjectToEnvironment('test-connection', 'default');
-    const overview = await stores.projectStore.getProjectOverview(
+    const overview = await stores.featureStrategiesStore.getFeatureOverview(
         'default',
         false,
     );
@@ -93,7 +93,7 @@ test('Can remove environment from project', async () => {
     });
     await service.removeEnvironmentFromProject('test-connection', 'default');
     await service.connectProjectToEnvironment('removal-test', 'default');
-    let overview = await stores.projectStore.getProjectOverview(
+    let overview = await stores.featureStrategiesStore.getFeatureOverview(
         'default',
         false,
     );
@@ -108,7 +108,10 @@ test('Can remove environment from project', async () => {
         ]);
     });
     await service.removeEnvironmentFromProject('removal-test', 'default');
-    overview = await stores.projectStore.getProjectOverview('default', false);
+    overview = await stores.featureStrategiesStore.getFeatureOverview(
+        'default',
+        false,
+    );
     expect(overview.length).toBeGreaterThan(0);
     overview.forEach((o) => {
         expect(o.environments).toEqual([]);

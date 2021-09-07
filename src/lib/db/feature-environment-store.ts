@@ -97,6 +97,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             .merge('enabled');
     }
 
+    // TODO: move to project store.
     async disconnectEnvironmentFromProject(
         environment: string,
         project: string,

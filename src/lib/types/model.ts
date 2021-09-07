@@ -89,7 +89,7 @@ export interface IVariant {
         value: string;
     };
     stickiness: string;
-    overrides: {
+    overrides?: {
         contextName: string;
         values: string[];
     }[];

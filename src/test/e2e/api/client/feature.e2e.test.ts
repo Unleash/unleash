@@ -1,11 +1,9 @@
-'use strict';
+import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
+import getLogger from '../../../fixtures/no-logger';
 
-const { setupApp } = require('../../helpers/test-helper');
-const dbInit = require('../../helpers/database-init');
-const getLogger = require('../../../fixtures/no-logger');
-
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_api_client', getLogger);
@@ -18,10 +16,14 @@ beforeAll(async () => {
         },
         'test',
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle('default', {
-        name: 'featureY',
-        description: 'soon to be the #1 feature',
-    });
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        'default',
+        {
+            name: 'featureY',
+            description: 'soon to be the #1 feature',
+        },
+        'test',
+    );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {
@@ -75,8 +77,18 @@ beforeAll(async () => {
             name: 'feature.with.variants',
             description: 'A feature toggle with variants',
             variants: [
-                { name: 'control', weight: 50 },
-                { name: 'new', weight: 50 },
+                {
+                    name: 'control',
+                    weight: 50,
+                    weightType: 'fix',
+                    stickiness: 'default',
+                },
+                {
+                    name: 'new',
+                    weight: 50,
+                    weightType: 'fix',
+                    stickiness: 'default',
+                },
             ],
         },
         'test',
@@ -136,6 +148,59 @@ test('Can filter features by namePrefix', async () => {
         .expect((res) => {
             expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe('feature.with.variants');
+        });
+});
+
+test('Can get strategies for specific environment', async () => {
+    const featureName = 'test.feature.with.env';
+
+    // Create feature toggle
+    await app.request.post('/api/admin/projects/default/features').send({
+        name: featureName,
+        type: 'killswitch',
+    });
+
+    // Add global strategy
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/:global:/strategies`,
+        )
+        .send({
+            name: 'default',
+        })
+        .expect(200);
+
+    // create new env
+
+    await db.stores.environmentStore.upsert({
+        name: 'testing',
+        displayName: 'simple test',
+    });
+
+    await app.services.environmentService.connectProjectToEnvironment(
+        'testing',
+        'default',
+    );
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/testing/strategies`,
+        )
+        .send({
+            name: 'custom1',
+        })
+        .expect(200);
+
+    await app.request
+        .get(`/api/client/features/${featureName}?environment=testing`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.name).toBe(featureName);
+            expect(res.body.strategies).toHaveLength(2);
+            expect(
+                res.body.strategies.find((s) => s.name === 'custom1'),
+            ).toBeDefined();
         });
 });
 

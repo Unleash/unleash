@@ -95,14 +95,20 @@ export default class FeatureController extends Controller {
     }
 
     async getFeatureToggle(
-        req: Request<{ featureName: string }, any, any, any>,
+        req: Request<
+            { featureName: string },
+            any,
+            any,
+            { environment?: string }
+        >,
         res: Response,
     ): Promise<void> {
         const name = req.params.featureName;
-        const query = { namePrefix: name };
-        const toggles = await this.featureToggleServiceV2.getClientFeatures(
-            query,
-        );
+        const { environment } = req.query;
+        const toggles = await this.featureToggleServiceV2.getClientFeatures({
+            namePrefix: name,
+            environment,
+        });
         const toggle = toggles.find((t) => t.name === name);
         if (!toggle) {
             throw new NotFoundError(`Could not find feature toggle ${name}`);

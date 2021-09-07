@@ -4,7 +4,11 @@ import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
 import FeatureToggleServiceV2 from '../../../services/feature-toggle-service-v2';
 import { Logger } from '../../../logger';
-import { CREATE_FEATURE, UPDATE_FEATURE } from '../../../types/permissions';
+import {
+    CREATE_FEATURE,
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from '../../../types/permissions';
 import {
     FeatureToggleDTO,
     IConstraint,
@@ -92,7 +96,7 @@ export default class ProjectFeaturesController extends Controller {
         this.delete(
             `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
             this.deleteStrategy,
-            UPDATE_FEATURE,
+            DELETE_FEATURE,
         );
         this.post(
             '/:projectId/features',

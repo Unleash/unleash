@@ -401,7 +401,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_strategies.parameters as parameters',
                 'feature_strategies.constraints as constraints',
             )
-            .where({ archived })
             .fullOuterJoin(
                 'feature_environments',
                 'feature_environments.feature_name',
@@ -415,7 +414,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'feature_strategies.environment',
                     'feature_environments.environment',
                 );
-            });
+            })
+            .whereIn('feature_environments.environment', environments)
+            .where({ archived });
         if (featureQuery) {
             if (featureQuery.tag) {
                 const tagQuery = this.db

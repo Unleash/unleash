@@ -38,6 +38,7 @@ beforeAll(async () => {
         },
         'test',
     );
+
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedX',
         'test',
@@ -51,6 +52,7 @@ beforeAll(async () => {
         },
         'test',
     );
+
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedY',
         'test',
@@ -86,15 +88,15 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('returns four feature toggles', async () =>
+test('returns four feature toggles', async () => {
     app.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            console.log(res.body);
-            expect(res.body.features.length).toBe(4);
-        }));
+            expect(res.body.features).toHaveLength(4);
+        });
+});
 
 test('returns four feature toggles without createdAt', async () =>
     app.request
@@ -102,6 +104,7 @@ test('returns four feature toggles without createdAt', async () =>
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
+            expect(res.body.features).toHaveLength(4);
             expect(res.body.features[0].createdAt).toBeFalsy();
         }));
 
@@ -131,7 +134,7 @@ test('Can filter features by namePrefix', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.features.length).toBe(1);
+            expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe('feature.with.variants');
         });
 });
@@ -175,13 +178,13 @@ test('Can use multiple filters', async () => {
         .get('/api/client/features?tag=simple:Crazy')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect((res) => expect(res.body.features.length).toBe(2));
+        .expect((res) => expect(res.body.features).toHaveLength(2));
     await app.request
         .get('/api/client/features?namePrefix=test&tag=simple:Crazy')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.features.length).toBe(1);
+            expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe('test.feature');
         });
 });

@@ -402,7 +402,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_strategies.constraints as constraints',
             )
             .where({ archived })
-            .whereIn('feature_strategies.environment', environments)
             .fullOuterJoin(
                 'feature_environments',
                 'feature_environments.feature_name',

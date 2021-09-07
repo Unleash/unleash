@@ -142,13 +142,21 @@ class FeatureToggleServiceV2 {
      * @param id
      * @param updates
      */
+
+    // TODO: validate we are not changing projectId or featureName!
     async updateStrategy(
         id: string,
         updates: Partial<IFeatureStrategy>,
-    ): Promise<IFeatureStrategy> {
-        const exists = await this.featureStrategiesStore.exists(id);
-        if (exists) {
-            return this.featureStrategiesStore.updateStrategy(id, updates);
+    ): Promise<IStrategyConfig> {
+        const existingStrategy = await this.featureStrategiesStore.get(id);
+        if (existingStrategy.id === id) {
+            const strategy = await this.featureStrategiesStore.updateStrategy(id, updates);
+            return {
+                id: strategy.id,
+                name: strategy.strategyName,
+                constraints: strategy.constraints || [],
+                parameters: strategy.parameters,
+            };
         }
         throw new NotFoundError(`Could not find strategy with id ${id}`);
     }

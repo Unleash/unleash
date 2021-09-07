@@ -1,4 +1,4 @@
-import { IFeatureOverview, IProject } from '../model';
+import { IProject } from '../model';
 import { Store } from './store';
 
 export interface IProjectInsert {

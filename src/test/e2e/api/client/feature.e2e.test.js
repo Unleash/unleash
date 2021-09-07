@@ -92,6 +92,7 @@ test('returns four feature toggles', async () =>
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
+            console.log(res.body);
             expect(res.body.features.length).toBe(4);
         }));
 

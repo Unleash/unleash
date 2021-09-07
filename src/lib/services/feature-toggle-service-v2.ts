@@ -267,7 +267,7 @@ class FeatureToggleServiceV2 {
                 projectId,
                 featureData,
             );
-            await this.environmentStore.connectFeatureToEnvironmentsForProject(
+            await this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
                 featureData.name,
                 projectId,
             );

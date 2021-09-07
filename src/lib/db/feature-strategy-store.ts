@@ -372,8 +372,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return [];
     }
 
-    // Legacy where you strategies as one array!
-    // TODO: Rename!
+    // TODO: move to separate features-client-store.ts
     async getFeatures(
         featureQuery?: IFeatureToggleQuery,
         archived: boolean = false,

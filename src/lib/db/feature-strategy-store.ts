@@ -138,6 +138,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const row = await this.db(T.featureStrategies)
             .where({ id: key })
             .first();
+
+        if (!row) {
+            throw new NotFoundError(`Could not find strategy with id=${key}`);
+        }
+
         return mapRow(row);
     }
 

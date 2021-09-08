@@ -56,7 +56,7 @@ test('should not import an existing feature', async () => {
         ],
     };
 
-    await stores.featureToggleStore.createFeature('default', data.features[0]);
+    await stores.featureToggleStore.create('default', data.features[0]);
 
     await stateService.import({ data, keepExisting: true });
 
@@ -77,7 +77,7 @@ test('should not keep existing feature if drop-before-import', async () => {
         ],
     };
 
-    await stores.featureToggleStore.createFeature('default', data.features[0]);
+    await stores.featureToggleStore.create('default', data.features[0]);
 
     await stateService.import({
         data,
@@ -206,7 +206,7 @@ test('should not accept gibberish', async () => {
 test('should export featureToggles', async () => {
     const { stateService, stores } = getSetup();
 
-    await stores.featureToggleStore.createFeature('default', {
+    await stores.featureToggleStore.create('default', {
         name: 'a-feature',
     });
 
@@ -487,7 +487,7 @@ test('exporting to new format works', async () => {
         name: 'prod',
         displayName: 'Production',
     });
-    await stores.featureToggleStore.createFeature('fancy', {
+    await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
     });
     await stores.strategyStore.createStrategy({ name: 'format' });
@@ -527,7 +527,7 @@ test('featureStrategies can keep existing', async () => {
         name: 'prod',
         displayName: 'Production',
     });
-    await stores.featureToggleStore.createFeature('fancy', {
+    await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
     });
     await stores.strategyStore.createStrategy({ name: 'format' });
@@ -573,7 +573,7 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
         name: 'prod',
         displayName: 'Production',
     });
-    await stores.featureToggleStore.createFeature('fancy', {
+    await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
     });
     await stores.strategyStore.createStrategy({ name: 'format' });

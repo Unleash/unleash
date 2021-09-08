@@ -231,7 +231,7 @@ export class AccessService {
     }
 
     async createDefaultProjectRoles(
-        owner: User,
+        owner: IUser,
         projectId: string,
     ): Promise<void> {
         if (!projectId) {

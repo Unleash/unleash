@@ -297,8 +297,8 @@ export interface IProject {
     id: string;
     name: string;
     description: string;
-    health: number;
-    createdAt: Date;
+    health?: number;
+    createdAt?: Date;
 }
 
 export interface IProjectWithCount extends IProject {

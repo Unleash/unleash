@@ -140,7 +140,7 @@ export default class ClientMetricsService {
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
         const toggleNames = Object.keys(value.bucket.toggles);
-        await this.featureToggleStore.updateLastSeenForToggles(toggleNames);
+        await this.featureToggleStore.setLastSeen(toggleNames);
         await this.clientMetricsStore.insert(value);
         await this.clientInstanceStore.insert({
             appName: value.appName,
@@ -262,7 +262,7 @@ export default class ClientMetricsService {
                 this.clientApplicationsStore.get(appName),
                 this.clientInstanceStore.getByAppName(appName),
                 this.strategyStore.getAll(),
-                this.featureToggleStore.getFeatures(false),
+                this.featureToggleStore.getAll(),
             ]);
 
         return {

@@ -17,7 +17,7 @@ beforeAll(async () => {
     featureTagStore = stores.featureTagStore;
     featureToggleStore = stores.featureToggleStore;
     await stores.tagStore.createTag(tag);
-    await featureToggleStore.createFeature('default', { name: featureName });
+    await featureToggleStore.create('default', { name: featureName });
 });
 
 afterAll(async () => {
@@ -83,7 +83,7 @@ test('should throw if feature have tag', async () => {
 
 test('get all feature tags', async () => {
     await featureTagStore.tagFeature(featureName, tag);
-    await featureToggleStore.createFeature('default', {
+    await featureToggleStore.create('default', {
         name: 'some-other-toggle',
     });
     await featureTagStore.tagFeature('some-other-toggle', tag);
@@ -92,7 +92,7 @@ test('get all feature tags', async () => {
 });
 
 test('should import feature tags', async () => {
-    await featureToggleStore.createFeature('default', {
+    await featureToggleStore.create('default', {
         name: 'some-other-toggle-import',
     });
     await featureTagStore.importFeatureTags([

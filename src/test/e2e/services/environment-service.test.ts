@@ -63,7 +63,7 @@ test('Can update display name', async () => {
 
 test('Can connect environment to project', async () => {
     await service.create({ name: 'test-connection', displayName: '' });
-    await stores.featureToggleStore.createFeature('default', {
+    await stores.featureToggleStore.create('default', {
         name: 'test-connection',
         type: 'release',
         description: '',
@@ -88,7 +88,7 @@ test('Can connect environment to project', async () => {
 
 test('Can remove environment from project', async () => {
     await service.create({ name: 'removal-test', displayName: '' });
-    await stores.featureToggleStore.createFeature('default', {
+    await stores.featureToggleStore.create('default', {
         name: 'removal-test',
     });
     await service.removeEnvironmentFromProject('test-connection', 'default');

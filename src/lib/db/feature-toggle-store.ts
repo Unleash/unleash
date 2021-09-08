@@ -62,14 +62,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .then((res) => Number(res[0].count));
     }
 
-    async getFeatureMetadata(name: string): Promise<FeatureToggle> {
-        return this.db
-            .first(FEATURE_COLUMNS)
-            .from(TABLE)
-            .where({ name, archived: 0 })
-            .then(this.rowToFeature);
-    }
-
     async deleteAll(): Promise<void> {
         await this.db(TABLE).del();
     }
@@ -80,7 +72,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.db
             .first(FEATURE_COLUMNS)
             .from(TABLE)
-            .where({ name, archived: 0 })
+            .where({ name })
             .then(this.rowToFeature);
     }
 
@@ -117,26 +109,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             });
     }
 
-    /**
-     * TODO: Should really be a Promise<boolean> rather than returning a { featureName, archived } object
-     * @param name
-     */
-    async hasFeature(name: string): Promise<any> {
-        return this.db
-            .first('name', 'archived')
-            .from(TABLE)
-            .where({ name })
-            .then((row) => {
-                if (!row) {
-                    throw new NotFoundError('No feature toggle found');
-                }
-                return {
-                    name: row.name,
-                    archived: row.archived,
-                };
-            });
-    }
-
     async exists(name: string): Promise<boolean> {
         const result = await this.db.raw(
             'SELECT EXISTS (SELECT 1 FROM features WHERE name = ?) AS present',
@@ -150,12 +122,12 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const rows = await this.db
             .select(FEATURE_COLUMNS)
             .from(TABLE)
-            .where({ archived: 1 })
+            .where({ archived: true })
             .orderBy('name', 'asc');
         return rows.map(this.rowToFeature);
     }
 
-    async updateLastSeenForToggles(toggleNames: string[]): Promise<void> {
+    async setLastSeen(toggleNames: string[]): Promise<void> {
         const now = new Date();
         try {
             await this.db(TABLE)
@@ -206,7 +178,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return row;
     }
 
-    async createFeature(
+    async create(
         project: string,
         data: FeatureToggleDTO,
     ): Promise<FeatureToggle> {
@@ -222,7 +194,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return undefined;
     }
 
-    async updateFeature(
+    async update(
         project: string,
         data: FeatureToggleDTO,
     ): Promise<FeatureToggle> {
@@ -233,7 +205,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.rowToFeature(row[0]);
     }
 
-    async archiveFeature(name: string): Promise<FeatureToggle> {
+    async archive(name: string): Promise<FeatureToggle> {
         const row = await this.db(TABLE)
             .where({ name })
             .update({ archived: true })
@@ -247,7 +219,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .del();
     }
 
-    async reviveFeature(name: string): Promise<FeatureToggle> {
+    async revive(name: string): Promise<FeatureToggle> {
         const row = await this.db(TABLE)
             .where({ name })
             .update({ archived: false })
@@ -255,21 +227,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.rowToFeature(row[0]);
     }
 
-    async getFeaturesBy(params: {
+    async getBy(params: {
         archived?: boolean;
         project?: string;
         stale?: boolean;
     }): Promise<FeatureToggle[]> {
         const rows = await this.db(TABLE).where(params);
         return rows.map(this.rowToFeature);
-    }
-
-    async getFeaturesByInternal(params: {
-        archived?: boolean;
-        project?: string;
-        stale?: boolean;
-    }): Promise<FeatureToggle[]> {
-        return this.db(TABLE).where(params);
     }
 }
 

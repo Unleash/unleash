@@ -126,7 +126,7 @@ export default class ProjectHealthService {
     }
 
     async calculateHealthRating(project: IProject): Promise<number> {
-        const toggles = await this.featureToggleStore.getFeaturesBy({
+        const toggles = await this.featureToggleStore.getBy({
             project: project.id,
         });
 

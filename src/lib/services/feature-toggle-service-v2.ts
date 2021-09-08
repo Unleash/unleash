@@ -291,7 +291,7 @@ class FeatureToggleServiceV2 {
             const featureData = await featureMetadataSchema.validateAsync(
                 value,
             );
-            const createdToggle = await this.featureToggleStore.createFeature(
+            const createdToggle = await this.featureToggleStore.create(
                 projectId,
                 featureData,
             );
@@ -323,7 +323,7 @@ class FeatureToggleServiceV2 {
             `${userName} updates feature toggle ${featureName}`,
         );
 
-        const featureToggle = await this.featureToggleStore.updateFeature(
+        const featureToggle = await this.featureToggleStore.update(
             projectId,
             updatedFeature,
         );
@@ -415,7 +415,7 @@ class FeatureToggleServiceV2 {
     async validateUniqueFeatureName(name: string): Promise<void> {
         let msg;
         try {
-            const feature = await this.featureToggleStore.hasFeature(name);
+            const feature = await this.featureToggleStore.get(name);
             msg = feature.archived
                 ? 'An archived toggle with that name already exists'
                 : 'A toggle with that name already exists';
@@ -434,11 +434,11 @@ class FeatureToggleServiceV2 {
         isStale: boolean,
         userName: string,
     ): Promise<any> {
-        const feature = await this.featureToggleStore.getFeatureMetadata(
+        const feature = await this.featureToggleStore.get(
             featureName,
         );
         feature.stale = isStale;
-        await this.featureToggleStore.updateFeature(feature.project, feature);
+        await this.featureToggleStore.update(feature.project, feature);
         const tags = await this.featureTagStore.getAllTagsForFeature(featureName);
         const data = await this.getFeatureToggleLegacy(featureName);
 
@@ -452,8 +452,8 @@ class FeatureToggleServiceV2 {
     }
 
     async archiveToggle(name: string, userName: string): Promise<void> {
-        await this.featureToggleStore.hasFeature(name);
-        await this.featureToggleStore.archiveFeature(name);
+        await this.featureToggleStore.get(name);
+        await this.featureToggleStore.archive(name);
         const tags =
             (await this.featureTagStore.getAllTagsForFeature(name)) || [];
         await this.eventStore.store({
@@ -489,7 +489,7 @@ class FeatureToggleServiceV2 {
                     featureName,
                     enabled,
                 );
-            const feature = await this.featureToggleStore.getFeatureMetadata(
+            const feature = await this.featureToggleStore.get(
                 featureName,
             );
             const tags = await this.featureTagStore.getAllTagsForFeature(featureName);
@@ -515,7 +515,7 @@ class FeatureToggleServiceV2 {
         environment: string,
         userName: string,
     ): Promise<FeatureToggle> {
-        await this.featureToggleStore.hasFeature(featureName);
+        await this.featureToggleStore.get(featureName);
         const isEnabled =
             await this.featureEnvironmentStore.isEnvironmentEnabled(
                 featureName,
@@ -548,11 +548,11 @@ class FeatureToggleServiceV2 {
         userName: string,
         event?: string,
     ): Promise<any> {
-        const feature = await this.featureToggleStore.getFeatureMetadata(
+        const feature = await this.featureToggleStore.get(
             featureName,
         );
         feature[field] = value;
-        await this.featureToggleStore.updateFeature(feature.project, feature);
+        await this.featureToggleStore.update(feature.project, feature);
         const tags = await this.featureTagStore.getAllTagsForFeature(featureName);
 
         
@@ -584,7 +584,7 @@ class FeatureToggleServiceV2 {
     }
 
     async reviveToggle(featureName: string, userName: string): Promise<void> {
-        const data = await this.featureToggleStore.reviveFeature(featureName);
+        const data = await this.featureToggleStore.revive(featureName);
         const tags = await this.featureTagStore.getAllTagsForFeature(
             featureName,
         );
@@ -599,14 +599,11 @@ class FeatureToggleServiceV2 {
     async getMetadataForAllFeatures(
         archived: boolean,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleStore.getFeatures(archived);
+        return this.featureToggleStore.getBy({archived});
     }
 
     async getProjectId(name: string): Promise<string> {
-        const { project } = await this.featureToggleStore.getFeatureMetadata(
-            name,
-        );
-        return project;
+        return this.featureToggleStore.getProjectId(name)
     }
 }
 

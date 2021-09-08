@@ -290,7 +290,7 @@ export default class StateService {
                 .filter(filterEqual(oldToggles))
                 .map((feature) =>
                     this.toggleStore
-                        .createFeature(feature.project, feature)
+                        .create(feature.project, feature)
                         .then(() => {
                             this.eventStore.store({
                                 type: FEATURE_IMPORT,

@@ -26,7 +26,7 @@ export default class FakeFeatureStrategiesStore
 
     featureToggles: FeatureToggle[] = [];
 
-    async createStrategyConfig(
+    async createStrategyFeatureEnv(
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
         const newStrat = { ...strategyConfig, id: randomUUID() };
@@ -77,7 +77,7 @@ export default class FakeFeatureStrategiesStore
         throw new Error('Method not implemented.');
     }
 
-    async removeAllStrategiesForEnv(
+    async removeAllStrategiesForFeatureEnv(
         feature_name: string,
         environment: string,
     ): Promise<void> {
@@ -101,7 +101,7 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(this.featureStrategies);
     }
 
-    async getStrategiesForFeature(
+    async getStrategiesForFeatureEnv(
         project_name: string,
         feature_name: string,
         environment: string,
@@ -113,14 +113,6 @@ export default class FakeFeatureStrategiesStore
                 fS.environment === environment,
         );
         return Promise.resolve(rows);
-    }
-
-    async getStrategiesForEnv(
-        environment: string,
-    ): Promise<IFeatureStrategy[]> {
-        return this.featureStrategies.filter(
-            (fS) => fS.environment === environment,
-        );
     }
 
     async getFeatureToggleAdmin(

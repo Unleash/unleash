@@ -228,7 +228,7 @@ export default class StateService {
             : featureStrategies;
         await Promise.all(
             strategiesToImport.map((featureStrategy) =>
-                this.featureStrategiesStore.createStrategyConfig(
+                this.featureStrategiesStore.createStrategyFeatureEnv(
                     featureStrategy,
                 ),
             ),

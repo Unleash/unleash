@@ -146,7 +146,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return mapRow(row);
     }
 
-    async createStrategyConfig(
+    async createStrategyFeatureEnv(
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
         const strategyRow = mapInput({ ...strategyConfig, id: uuid.v4() });
@@ -156,7 +156,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return mapRow(rows[0]);
     }
 
-    async removeAllStrategiesForEnv(
+    async removeAllStrategiesForFeatureEnv(
         featureName: string,
         environment: string,
     ): Promise<void> {
@@ -175,7 +175,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.map(mapRow);
     }
 
-    async getStrategiesForFeature(
+    async getStrategiesForFeatureEnv(
         projectId: string,
         featureName: string,
         environment: string,
@@ -186,19 +186,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         ).where({
             project_name: projectId,
             feature_name: featureName,
-            environment,
-        });
-        stopTimer();
-        return rows.map(mapRow);
-    }
-
-    async getStrategiesForEnv(
-        environment: string,
-    ): Promise<IFeatureStrategy[]> {
-        const stopTimer = this.timer('getStrategiesForEnv');
-        const rows = await this.db<IFeatureStrategiesTable>(
-            T.featureStrategies,
-        ).where({
             environment,
         });
         stopTimer();

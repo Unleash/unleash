@@ -19,19 +19,18 @@ export interface FeatureConfigurationClient {
 }
 export interface IFeatureStrategiesStore
     extends Store<IFeatureStrategy, string> {
-    createStrategyConfig(
+    createStrategyFeatureEnv(
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy>;
-    removeAllStrategiesForEnv(
+    removeAllStrategiesForFeatureEnv(
         featureName: string,
         environment: string,
     ): Promise<void>;
-    getStrategiesForFeature(
+    getStrategiesForFeatureEnv(
         projectId: string,
         featureName: string,
         environment: string,
     ): Promise<IFeatureStrategy[]>;
-    getStrategiesForEnv(environment: string): Promise<IFeatureStrategy[]>;
     getFeatureToggleAdmin(
         featureName: string,
         archived?: boolean,

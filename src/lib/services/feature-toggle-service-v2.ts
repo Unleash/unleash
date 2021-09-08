@@ -110,7 +110,7 @@ class FeatureToggleServiceV2 {
     ): Promise<IStrategyConfig> {
         try {
             const newFeatureStrategy =
-                await this.featureStrategiesStore.createStrategyConfig({
+                await this.featureStrategiesStore.createStrategyFeatureEnv({
                     strategyName: strategyConfig.name,
                     constraints: strategyConfig.constraints,
                     parameters: strategyConfig.parameters,
@@ -206,7 +206,7 @@ class FeatureToggleServiceV2 {
         );
         if (hasEnv) {
             const featureStrategies =
-                await this.featureStrategiesStore.getStrategiesForFeature(
+                await this.featureStrategiesStore.getStrategiesForFeatureEnv(
                     project,
                     featureName,
                     environment,
@@ -359,7 +359,7 @@ class FeatureToggleServiceV2 {
         toggleName: string,
         environment: string = GLOBAL_ENV,
     ): Promise<void> {
-        await this.featureStrategiesStore.removeAllStrategiesForEnv(
+        await this.featureStrategiesStore.removeAllStrategiesForFeatureEnv(
             toggleName,
             environment,
         );
@@ -388,7 +388,7 @@ class FeatureToggleServiceV2 {
                 featureName,
             );
         const strategies =
-            await this.featureStrategiesStore.getStrategiesForFeature(
+            await this.featureStrategiesStore.getStrategiesForFeatureEnv(
                 project,
                 featureName,
                 environment,

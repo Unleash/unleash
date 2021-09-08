@@ -496,7 +496,7 @@ test('exporting to new format works', async () => {
         'dev',
         true,
     );
-    await stores.featureStrategiesStore.createStrategyConfig({
+    await stores.featureStrategiesStore.createStrategyFeatureEnv({
         featureName: 'Some-feature',
         projectId: 'fancy',
         strategyName: 'format',
@@ -536,7 +536,7 @@ test('featureStrategies can keep existing', async () => {
         'dev',
         true,
     );
-    await stores.featureStrategiesStore.createStrategyConfig({
+    await stores.featureStrategiesStore.createStrategyFeatureEnv({
         featureName: 'Some-feature',
         projectId: 'fancy',
         strategyName: 'format',
@@ -582,7 +582,7 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
         'dev',
         true,
     );
-    await stores.featureStrategiesStore.createStrategyConfig({
+    await stores.featureStrategiesStore.createStrategyFeatureEnv({
         featureName: 'Some-feature',
         projectId: 'fancy',
         strategyName: 'format',

@@ -21,6 +21,7 @@ import { IUserFeedbackStore } from './stores/user-feedback-store';
 import { IFeatureEnvironmentStore } from './stores/feature-environment-store';
 import { IFeatureStrategiesStore } from './stores/feature-strategies-store';
 import { IEnvironmentStore } from './stores/environment-store';
+import { IFeatureToggleClientStore } from './stores/feature-toggle-client-store';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -36,6 +37,7 @@ export interface IUnleashStores {
     featureStrategiesStore: IFeatureStrategiesStore;
     featureTagStore: IFeatureTagStore;
     featureToggleStore: IFeatureToggleStore;
+    featureToggleClientStore: IFeatureToggleClientStore;
     featureTypeStore: IFeatureTypeStore;
     projectStore: IProjectStore;
     resetTokenStore: IResetTokenStore;

@@ -2,8 +2,6 @@ import {
     FeatureToggleWithEnvironment,
     IFeatureOverview,
     IFeatureStrategy,
-    IFeatureToggleClient,
-    IFeatureToggleQuery,
     IStrategyConfig,
     IVariant,
 } from '../model';
@@ -35,11 +33,6 @@ export interface IFeatureStrategiesStore
         featureName: string,
         archived?: boolean,
     ): Promise<FeatureToggleWithEnvironment>;
-    getFeatures(
-        featureQuery: Partial<IFeatureToggleQuery>,
-        archived: boolean,
-        isAdmin: boolean,
-    ): Promise<IFeatureToggleClient[]>;
     getFeatureOverview(
         projectId: string,
         archived: boolean,

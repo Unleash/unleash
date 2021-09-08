@@ -22,7 +22,7 @@ function getSetup() {
     return {
         base,
         featureToggleStore: stores.featureToggleStore,
-        featureStrategiesStore: stores.featureStrategiesStore,
+        featureToggleClientStore: stores.featureToggleClientStore,
         request: supertest(app),
         destroy: () => {
             services.versionService.destroy();
@@ -35,13 +35,13 @@ function getSetup() {
 let base;
 let request;
 let destroy;
-let featureStrategiesStore;
+let featureToggleClientStore;
 
 beforeEach(() => {
     const setup = getSetup();
     base = setup.base;
     request = setup.request;
-    featureStrategiesStore = setup.featureStrategiesStore;
+    featureToggleClientStore = setup.featureToggleClientStore;
     destroy = setup.destroy;
 });
 
@@ -114,7 +114,7 @@ test('if caching is not enabled all calls goes to service', async () => {
 
 test('fetch single feature', async () => {
     expect.assertions(1);
-    await featureStrategiesStore.createFeature({
+    await featureToggleClientStore.createFeature({
         name: 'test_',
         strategies: [{ name: 'default' }],
     });
@@ -130,10 +130,10 @@ test('fetch single feature', async () => {
 
 test('support name prefix', async () => {
     expect.assertions(2);
-    await featureStrategiesStore.createFeature({ name: 'a_test1' });
-    await featureStrategiesStore.createFeature({ name: 'a_test2' });
-    await featureStrategiesStore.createFeature({ name: 'b_test1' });
-    await featureStrategiesStore.createFeature({ name: 'b_test2' });
+    await featureToggleClientStore.createFeature({ name: 'a_test1' });
+    await featureToggleClientStore.createFeature({ name: 'a_test2' });
+    await featureToggleClientStore.createFeature({ name: 'b_test1' });
+    await featureToggleClientStore.createFeature({ name: 'b_test2' });
 
     const namePrefix = 'b_';
 
@@ -149,11 +149,11 @@ test('support name prefix', async () => {
 
 test('support filtering on project', async () => {
     expect.assertions(2);
-    await featureStrategiesStore.createFeature({
+    await featureToggleClientStore.createFeature({
         name: 'a_test1',
         project: 'projecta',
     });
-    await featureStrategiesStore.createFeature({
+    await featureToggleClientStore.createFeature({
         name: 'b_test2',
         project: 'projectb',
     });

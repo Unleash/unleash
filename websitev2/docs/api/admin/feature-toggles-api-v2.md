@@ -265,7 +265,7 @@ This endpoint will allow you to add a new strategy to a feature toggle in a give
 }
 ```
 
-### Update strategy to Feature Toggle {#update-strategy}
+### Update strategy configuration {#update-strategy}
 
 **Example Query**
 
@@ -284,6 +284,30 @@ http PUT http://localhost:4242/api/admin/projects/default/features/demo/environm
     "parameters": {
         "groupId": "demo",
         "rollout": 20,
+        "stickiness": "default"
+    }
+}
+```
+
+## Patch strategy configuration {#patch-strategy}
+
+**Example Query**
+
+```sh
+echo '[{"op": "replace", "path": "/parameters/rollout", "value": 50}]' | \
+http PATCH http://localhost:4242/api/admin/projects/default/features/demo/environments/production/strategies/ea5404e5-0c0d-488c-93b2-0a2200534827 Authorization:$KEY
+```
+
+**Example response:**
+
+```json
+{
+    "constraints": [],
+    "id": "ea5404e5-0c0d-488c-93b2-0a2200534827",
+    "name": "flexibleRollout",
+    "parameters": {
+        "groupId": "demo",
+        "rollout": 50,
         "stickiness": "default"
     }
 }

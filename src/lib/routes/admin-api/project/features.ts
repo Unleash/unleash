@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { applyPatch, Operation } from 'fast-json-patch';
 import Controller from '../../controller';
 import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
@@ -91,6 +92,11 @@ export default class ProjectFeaturesController extends Controller {
         this.put(
             `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
             this.updateStrategy,
+            UPDATE_FEATURE,
+        );
+        this.patch(
+            `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
+            this.patchStrategy,
             UPDATE_FEATURE,
         );
         this.delete(
@@ -224,6 +230,21 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).json(updatedStrategy);
     }
 
+    async patchStrategy(
+        req: Request<StrategyIdParams, any, Operation[], any>,
+        res: Response,
+    ): Promise<void> {
+        const { strategyId } = req.params;
+        const patch = req.body;
+        const strategy = await this.featureService.getStrategy(strategyId);
+        const { newDocument } = applyPatch(strategy, patch);
+        const updatedStrategy = await this.featureService.updateStrategy(
+            strategyId,
+            newDocument,
+        );
+        res.status(200).json(updatedStrategy);
+    }
+
     async getStrategy(
         req: Request<StrategyIdParams, any, any, any>,
         res: Response,
@@ -244,5 +265,36 @@ export default class ProjectFeaturesController extends Controller {
         this.logger.info(strategyId);
         const strategy = await this.featureService.deleteStrategy(strategyId);
         res.status(200).json(strategy);
+    }
+
+    async updateStrategyParameter(
+        req: Request<
+            StrategyIdParams,
+            any,
+            { name: string; value: string | number },
+            any
+        >,
+        res: Response,
+    ): Promise<void> {
+        const { strategyId } = req.params;
+        const { name, value } = req.body;
+
+        const updatedStrategy =
+            await this.featureService.updateStrategyParameter(
+                strategyId,
+                name,
+                value,
+            );
+        res.status(200).json(updatedStrategy);
+    }
+
+    async getStrategyParameters(
+        req: Request<StrategyIdParams, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        this.logger.info('Getting strategy parameters');
+        const { strategyId } = req.params;
+        const strategy = await this.featureService.getStrategy(strategyId);
+        res.status(200).json(strategy.parameters);
     }
 }

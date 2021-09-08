@@ -596,6 +596,65 @@ test('Trying to update a non existing feature strategy should yield 404', async 
         .expect(404);
 });
 
+test('Can patch a strategy based on id', async () => {
+    const BASE_URI = '/api/admin/projects/default';
+    const envName = 'feature.patch.strategies';
+    const featureName = 'feature.patch.strategies';
+
+    // Create environment
+    await app.request
+        .post('/api/admin/environments')
+        .send({
+            name: envName,
+            displayName: 'Enable feature for environment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    // Connect environment to project
+    await app.request
+        .post(`${BASE_URI}/environments`)
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+    await app.request
+        .post(`${BASE_URI}/features`)
+        .send({ name: featureName })
+        .expect(201);
+    let strategy;
+    await app.request
+        .post(
+            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            parameters: {
+                groupId: 'demo',
+                rollout: 20,
+                stickiness: 'default',
+            },
+        })
+        .expect(200)
+        .expect((res) => {
+            strategy = res.body;
+        });
+
+    await app.request
+        .patch(
+            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
+        )
+        .send([{ op: 'replace', path: '/parameters/rollout', value: 42 }])
+        .expect(200);
+    await app.request
+        .get(
+            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.parameters.rollout).toBe(42);
+        });
+});
+
 test('Trying to get a non existing feature strategy should yield 404', async () => {
     const envName = 'feature.non.existing.strategy.get';
     // Create environment

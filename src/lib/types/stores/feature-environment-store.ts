@@ -26,10 +26,7 @@ export interface IFeatureEnvironmentStore
         environment: string,
         featureName: string,
     ): Promise<IFeatureEnvironment>;
-    disconnectFeatures(
-        environment: string,
-        project: string,
-    ): Promise<void>;
+    disconnectFeatures(environment: string, project: string): Promise<void>;
     removeEnvironmentForFeature(
         feature_name: string,
         environment: string,
@@ -50,8 +47,5 @@ export interface IFeatureEnvironmentStore
     ): Promise<void>;
 
     connectProject(environment: string, projectId: string): Promise<void>;
-    disconnectProject(
-        environment: string,
-        projectId: string,
-    ): Promise<void>;
+    disconnectProject(environment: string, projectId: string): Promise<void>;
 }

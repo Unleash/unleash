@@ -41,7 +41,11 @@ interface StrategyUpdateBody {
     parameters?: object;
 }
 
-const PATH_PREFIX = '/:projectId/features/:featureName';
+const PATH = '/:projectId/features';
+const PATH_FEATURE = `${PATH}/:featureName`;
+const PATH_ENV = `${PATH_FEATURE}/environments/:environment`;
+const PATH_STRATEGIES = `${PATH_ENV}/strategies`;
+const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
@@ -61,59 +65,28 @@ export default class ProjectFeaturesController extends Controller {
         this.featureService = featureToggleServiceV2;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
-        this.post(
-            `${PATH_PREFIX}/environments/:environment/strategies`,
-            this.addFeatureStrategy,
-            UPDATE_FEATURE,
-        );
-        this.get(
-            `${PATH_PREFIX}/environments/:environment`,
-            this.getEnvironment,
-        );
-        this.post(
-            `${PATH_PREFIX}/environments/:environment/on`,
-            this.toggleEnvironmentOn,
-            UPDATE_FEATURE,
-        );
+        this.get(`${PATH_ENV}`, this.getEnvironment);
+        this.post(`${PATH_ENV}/on`, this.toggleEnvironmentOn, UPDATE_FEATURE);
+        this.post(`${PATH_ENV}/off`, this.toggleEnvironmentOff, UPDATE_FEATURE);
 
-        this.post(
-            `${PATH_PREFIX}/environments/:environment/off`,
-            this.toggleEnvironmentOff,
-            UPDATE_FEATURE,
-        );
-        this.get(
-            `${PATH_PREFIX}/environments/:environment/strategies`,
-            this.getFeatureStrategies,
-        );
-        this.get(
-            `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
-            this.getStrategy,
-        );
-        this.put(
-            `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
-            this.updateStrategy,
-            UPDATE_FEATURE,
-        );
-        this.patch(
-            `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
-            this.patchStrategy,
-            UPDATE_FEATURE,
-        );
-        this.delete(
-            `${PATH_PREFIX}/environments/:environment/strategies/:strategyId`,
-            this.deleteStrategy,
-            DELETE_FEATURE,
-        );
-        this.post(
-            '/:projectId/features',
-            this.createFeatureToggle,
-            CREATE_FEATURE,
-        );
-        this.get('/:projectId/features', this.getFeaturesForProject);
-        this.get(PATH_PREFIX, this.getFeature);
+        this.get(`${PATH_STRATEGIES}`, this.getStrategies);
+        this.post(`${PATH_STRATEGIES}`, this.addStrategy, UPDATE_FEATURE);
+
+        this.get(`${PATH_STRATEGY}`, this.getStrategy);
+        this.put(`${PATH_STRATEGY}`, this.updateStrategy, UPDATE_FEATURE);
+        this.patch(`${PATH_STRATEGY}`, this.patchStrategy, UPDATE_FEATURE);
+        this.delete(`${PATH_STRATEGY}`, this.deleteStrategy, DELETE_FEATURE);
+
+        this.get(PATH, this.getFeatures);
+        this.post(PATH, this.createFeature, CREATE_FEATURE);
+
+        this.get(PATH_FEATURE, this.getFeature);
+        this.put(PATH_FEATURE, this.updateFeature);
+        this.patch(PATH_FEATURE, this.patchFeature);
+        this.delete(PATH_FEATURE, this.archiveFeature);
     }
 
-    async getFeaturesForProject(
+    async getFeatures(
         req: Request<ProjectParam, any, any, any>,
         res: Response,
     ): Promise<void> {
@@ -124,7 +97,7 @@ export default class ProjectFeaturesController extends Controller {
         res.json({ version: 1, features });
     }
 
-    async createFeatureToggle(
+    async createFeature(
         req: Request<ProjectParam, any, FeatureToggleDTO, any>,
         res: Response,
     ): Promise<void> {
@@ -138,6 +111,64 @@ export default class ProjectFeaturesController extends Controller {
         res.status(201).json(created);
     }
 
+    async getFeature(
+        req: Request<FeatureParams, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { featureName } = req.params;
+        const feature = await this.featureService.getFeature(featureName);
+        res.status(200).json(feature);
+    }
+
+    async updateFeature(
+        req: Request<ProjectParam, any, FeatureToggleDTO, any>,
+        res: Response,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        const data = req.body;
+        const userName = extractUsername(req);
+        const created = await this.featureService.updateFeatureToggle(
+            projectId,
+            data,
+            userName,
+        );
+        res.status(200).json(created);
+    }
+
+    async patchFeature(
+        req: Request<
+            { projectId: string; featureName: string },
+            any,
+            Operation[],
+            any
+        >,
+        res: Response,
+    ): Promise<void> {
+        const { projectId, featureName } = req.params;
+        const featureToggle = await this.featureService.getFeatureMetadata(
+            featureName,
+        );
+        const { newDocument } = applyPatch(featureToggle, req.body);
+        const userName = extractUsername(req);
+        const updated = await this.featureService.updateFeatureToggle(
+            projectId,
+            newDocument,
+            userName,
+        );
+        res.status(200).json(updated);
+    }
+
+    // TODO: validate projectId
+    async archiveFeature(
+        req: Request<{ projectId: string; featureName: string }, any, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { featureName } = req.params;
+        const userName = extractUsername(req);
+        await this.featureService.archiveToggle(featureName, userName);
+        res.status(202).send();
+    }
+
     async getEnvironment(
         req: Request<FeatureStrategyParams, any, any, any>,
         res: Response,
@@ -149,15 +180,6 @@ export default class ProjectFeaturesController extends Controller {
             featureName,
         );
         res.status(200).json(environmentInfo);
-    }
-
-    async getFeature(
-        req: Request<FeatureParams, any, any, any>,
-        res: Response,
-    ): Promise<void> {
-        const { featureName } = req.params;
-        const feature = await this.featureService.getFeature(featureName);
-        res.status(200).json(feature);
     }
 
     async toggleEnvironmentOn(
@@ -190,7 +212,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).end();
     }
 
-    async addFeatureStrategy(
+    async addStrategy(
         req: Request<FeatureStrategyParams, any, IStrategyConfig, any>,
         res: Response,
     ): Promise<void> {
@@ -204,7 +226,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).json(featureStrategy);
     }
 
-    async getFeatureStrategies(
+    async getStrategies(
         req: Request<FeatureStrategyParams, any, any, any>,
         res: Response,
     ): Promise<void> {

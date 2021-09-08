@@ -410,6 +410,100 @@ test('Getting feature that does not exist should yield 404', async () => {
         .expect(404);
 });
 
+test('Should update feature toggle', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.update';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    await app.request
+        .put(`${url}/${name}`)
+        .send({ name, description: 'updated', type: 'kill-switch' })
+        .expect(200);
+
+    const { body: toggle } = await app.request.get(`${url}/${name}`);
+
+    expect(toggle.name).toBe(name);
+    expect(toggle.description).toBe('updated');
+    expect(toggle.type).toBe('kill-switch');
+    expect(toggle.archived).toBeFalsy();
+});
+
+test('Should not change name of feature toggle', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.update.2';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    await app.request
+        .put(`${url}/${name}`)
+        .send({ name: 'new name', description: 'updated', type: 'kill-switch' })
+        .expect(400);
+});
+
+test('Should not change project of feature toggle even if it is part of body', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.update.3';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    const { body } = await app.request
+        .put(`${url}/${name}`)
+        .send({
+            name,
+            description: 'updated',
+            type: 'kill-switch',
+            project: 'new',
+        })
+        .expect(200);
+
+    expect(body.project).toBe('default');
+});
+
+test('Should patch feature toggle', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.patch';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    await app.request
+        .patch(`${url}/${name}`)
+        .send([
+            { op: 'replace', path: '/description', value: 'New desc' },
+            { op: 'replace', path: '/type', value: 'kill-switch' },
+        ])
+        .expect(200);
+
+    const { body: toggle } = await app.request.get(`${url}/${name}`);
+
+    expect(toggle.name).toBe(name);
+    expect(toggle.description).toBe('New desc');
+    expect(toggle.type).toBe('kill-switch');
+    expect(toggle.archived).toBeFalsy();
+});
+
+test('Should archive feature toggle', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.archive';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    await app.request.delete(`${url}/${name}`);
+
+    await app.request.get(`${url}/${name}`).expect(404);
+    const { body } = await app.request
+        .get(`/api/admin/archive/features`)
+        .expect(200);
+
+    const toggle = body.features.find((f) => f.name === name);
+    expect(toggle).toBeDefined();
+});
+
 test('Can add strategy to feature toggle', async () => {
     const envName = 'add-strategy';
     // Create environment
@@ -717,7 +811,7 @@ test('Can not enable environment for feature without strategies', async () => {
             `/api/admin/projects/default/features/${featureName}/environments/${environment}/on`,
         )
         .set('Content-Type', 'application/json')
-        .expect(409);
+        .expect(403);
     await app.request
         .get('/api/admin/projects/default/features/com.test.enable.environment')
         .expect(200)

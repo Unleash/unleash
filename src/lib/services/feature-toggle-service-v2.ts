@@ -238,6 +238,12 @@ class FeatureToggleServiceV2 {
         );
     }
 
+    async getFeatureMetadata(featureName: string): Promise<FeatureToggle> {
+        return this.featureToggleStore.get(
+            featureName,
+        );
+    }
+
     async getClientFeatures(
         query?: IFeatureToggleQuery,
         archived: boolean = false,
@@ -323,9 +329,13 @@ class FeatureToggleServiceV2 {
             `${userName} updates feature toggle ${featureName}`,
         );
 
+        const featureData = await featureMetadataSchema.validateAsync(
+            updatedFeature,
+        );
+
         const featureToggle = await this.featureToggleStore.update(
             projectId,
-            updatedFeature,
+            featureData,
         );
         const tags = await this.featureTagStore.getAllTagsForFeature(featureName);
 

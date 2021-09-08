@@ -185,6 +185,7 @@ Possible Errors:
 - _409 Conflict_ - A toggle with that name already exists
 
 
+
 ### Get Feature Toggle {#get-toggle}
 
 `http://localhost:4242/api/admin/projects/:projectId/features/:featureName`
@@ -235,6 +236,102 @@ http GET http://localhost:4242/api/admin/projects/default/features/demo Authoriz
 Possible Errors:
 
 - _404 Not Found_ - Could not find feature toggle with the provided name.
+
+### Update Feature Toggle {#update-toggle}
+
+`http://localhost:4242/api/admin/projects/:projectId/features/:featureName`
+
+This endpoint will accept HTTP PUT request to update the feature toggle metadata.
+
+**Example Query**
+
+```sh
+echo '{"name": "demo", "description": "An update feature toggle", "type": "kill-switch"}' | http PUT http://localhost:4242/api/admin/projects/default/features/demo Authorization:$KEY`
+```
+
+
+**Example response:**
+
+```json
+{
+    "createdAt": "2021-09-07T20:16:02.614Z",
+    "description": "An update feature toggle",
+    "lastSeenAt": null,
+    "name": "demo",
+    "project": "default",
+    "stale": false,
+    "type": "kill-switch",
+    "variants": null
+}
+```
+
+Some fields is not possible to change via this endpoint:
+
+- name
+- project
+- createdAt
+- lastSeen
+
+## Patch Feature Toggle {#patch-toggle}
+
+`http://localhost:4242/api/admin/projects/:projectId/features/:featureName`
+
+This endpoint will accept HTTP PATCH request to update the feature toggle metadata.
+
+**Example Query**
+
+```sh
+echo '[{"op": "replace", "path": "/description", "value": "patched desc"}]' | http PATCH http://localhost:4242/api/admin/projects/default/features/demo Authorization:$KEY`
+```
+
+
+**Example response:**
+
+```json
+{
+    "createdAt": "2021-09-07T20:16:02.614Z",
+    "description": "patched desc",
+    "lastSeenAt": null,
+    "name": "demo",
+    "project": "default",
+    "stale": false,
+    "type": "release",
+    "variants": null
+}
+```
+
+Some fields is not possible to change via this endpoint:
+
+- name
+- project
+- createdAt
+- lastSeen
+
+
+### Archive Feature Toggle {#archive-toggle}
+
+`http://localhost:4242/api/admin/projects/:projectId/features/:featureName`
+
+This endpoint will accept HTTP PUT request to update the feature toggle metadata.
+
+**Example Query**
+
+```sh
+http DELETE http://localhost:4242/api/admin/projects/default/features/demo Authorization:$KEY`
+```
+
+
+**Example response:**
+
+```sh
+HTTP/1.1 202 Accepted
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Date: Wed, 08 Sep 2021 20:09:21 GMT
+Keep-Alive: timeout=60
+Transfer-Encoding: chunked
+
+```
 
 
 ### Add strategy to Feature Toggle {#add-strategy}

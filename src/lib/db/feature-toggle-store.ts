@@ -76,11 +76,17 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .then(this.rowToFeature);
     }
 
-    async getAll(): Promise<FeatureToggle[]> {
+    async getAll(
+        query: {
+            archived?: boolean;
+            project?: string;
+            stale?: boolean;
+        } = { archived: false },
+    ): Promise<FeatureToggle[]> {
         const rows = await this.db
             .select(FEATURE_COLUMNS)
             .from(TABLE)
-            .where({ archived: false });
+            .where(query);
         return rows.map(this.rowToFeature);
     }
 
@@ -225,15 +231,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .update({ archived: false })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
-    }
-
-    async getBy(params: {
-        archived?: boolean;
-        project?: string;
-        stale?: boolean;
-    }): Promise<FeatureToggle[]> {
-        const rows = await this.db(TABLE).where(params);
-        return rows.map(this.rowToFeature);
     }
 }
 

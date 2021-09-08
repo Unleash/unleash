@@ -195,7 +195,7 @@ export default class ProjectService {
             );
         }
 
-        const toggles = await this.featureToggleStore.getBy({
+        const toggles = await this.featureToggleStore.getAll({
             project: id,
             archived: false,
         });

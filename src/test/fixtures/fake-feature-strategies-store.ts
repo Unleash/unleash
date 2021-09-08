@@ -115,7 +115,7 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(rows);
     }
 
-    async getFeatureToggleAdmin(
+    async getFeatureToggleWithEnvs(
         featureName: string,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {

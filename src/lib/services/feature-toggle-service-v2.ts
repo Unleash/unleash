@@ -232,7 +232,7 @@ class FeatureToggleServiceV2 {
         featureName: string,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {
-        return this.featureStrategiesStore.getFeatureToggleAdmin(
+        return this.featureStrategiesStore.getFeatureToggleWithEnvs(
             featureName,
             archived,
         );
@@ -279,7 +279,7 @@ class FeatureToggleServiceV2 {
     async getFeatureToggle(
         featureName: string,
     ): Promise<FeatureToggleWithEnvironment> {
-        return this.featureStrategiesStore.getFeatureToggleAdmin(
+        return this.featureStrategiesStore.getFeatureToggleWithEnvs(
             featureName,
             false,
         );
@@ -541,7 +541,7 @@ class FeatureToggleServiceV2 {
     }
 
     async getFeatureToggleLegacy(featureName: string): Promise<FeatureToggleWithEnvironmentLegacy> {
-        const feature = await this.featureStrategiesStore.getFeatureToggleAdmin(featureName);
+        const feature = await this.featureStrategiesStore.getFeatureToggleWithEnvs(featureName);
         const globalEnv = feature.environments.find(e => e.name === GLOBAL_ENV);
         const strategies = globalEnv?.strategies || [];
         const enabled = globalEnv?.enabled || false;

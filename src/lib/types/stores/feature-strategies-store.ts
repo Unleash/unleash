@@ -31,7 +31,7 @@ export interface IFeatureStrategiesStore
         featureName: string,
         environment: string,
     ): Promise<IFeatureStrategy[]>;
-    getFeatureToggleAdmin(
+    getFeatureToggleWithEnvs(
         featureName: string,
         archived?: boolean,
     ): Promise<FeatureToggleWithEnvironment>;

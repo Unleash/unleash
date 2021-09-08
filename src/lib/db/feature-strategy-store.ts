@@ -192,7 +192,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.map(mapRow);
     }
 
-    async getFeatureToggleAdmin(
+    async getFeatureToggleWithEnvs(
         featureName: string,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {

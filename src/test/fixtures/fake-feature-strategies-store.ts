@@ -296,10 +296,6 @@ export default class FakeFeatureStrategiesStore
     ): Promise<boolean> {
         return Promise.resolve(enabled);
     }
-
-    async getAllFeatureEnvironments(): Promise<IFeatureEnvironment[]> {
-        return Promise.resolve([]);
-    }
 }
 
 module.exports = FakeFeatureStrategiesStore;

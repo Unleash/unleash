@@ -10,7 +10,7 @@ export default class FakeFeatureEnvironmentStore
 {
     featureEnvironments: IFeatureEnvironment[] = [];
 
-    async connectEnvironmentAndFeature(
+    async addEnvironmentToFeature(
         featureName: string,
         environment: string,
         enabled: boolean,
@@ -77,10 +77,6 @@ export default class FakeFeatureEnvironmentStore
         return this.featureEnvironments;
     }
 
-    async getAllFeatureEnvironments(): Promise<IFeatureEnvironment[]> {
-        return this.getAll();
-    }
-
     getEnvironmentMetaData(
         environment: string,
         featureName: string,
@@ -107,7 +103,7 @@ export default class FakeFeatureEnvironmentStore
         return this.delete({ featureName, environment });
     }
 
-    async toggleEnvironmentEnabledStatus(
+    async setEnvironmentEnabledStatus(
         environment: string,
         featureName: string,
         enabled: boolean,

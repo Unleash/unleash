@@ -8,7 +8,6 @@ export interface FeatureEnvironmentKey {
 
 export interface IFeatureEnvironmentStore
     extends Store<IFeatureEnvironment, FeatureEnvironmentKey> {
-    getAllFeatureEnvironments(): Promise<IFeatureEnvironment[]>;
     featureHasEnvironment(
         environment: string,
         featureName: string,
@@ -17,7 +16,7 @@ export interface IFeatureEnvironmentStore
         featureName: string,
         environment: string,
     ): Promise<boolean>;
-    toggleEnvironmentEnabledStatus(
+    setEnvironmentEnabledStatus(
         environment: string,
         featureName: string,
         enabled: boolean,
@@ -27,16 +26,18 @@ export interface IFeatureEnvironmentStore
         featureName: string,
     ): Promise<IFeatureEnvironment>;
     removeEnvironmentForFeature(
-        feature_name: string,
+        featureName: string,
         environment: string,
     ): Promise<void>;
-    connectEnvironmentAndFeature(
-        feature_name: string,
+    addEnvironmentToFeature(
+        featureName: string,
         environment: string,
         enabled: boolean,
     ): Promise<void>;
+
     disconnectFeatures(environment: string, project: string): Promise<void>;
     connectFeatures(environment: string, projectId: string): Promise<void>;
+
     connectFeatureToEnvironmentsForProject(
         featureName: string,
         projectId: string,

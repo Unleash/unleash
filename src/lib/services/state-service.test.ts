@@ -491,7 +491,7 @@ test('exporting to new format works', async () => {
         name: 'Some-feature',
     });
     await stores.strategyStore.createStrategy({ name: 'format' });
-    await stores.featureEnvironmentStore.connectEnvironmentAndFeature(
+    await stores.featureEnvironmentStore.addEnvironmentToFeature(
         'Some-feature',
         'dev',
         true,
@@ -531,7 +531,7 @@ test('featureStrategies can keep existing', async () => {
         name: 'Some-feature',
     });
     await stores.strategyStore.createStrategy({ name: 'format' });
-    await stores.featureEnvironmentStore.connectEnvironmentAndFeature(
+    await stores.featureEnvironmentStore.addEnvironmentToFeature(
         'Some-feature',
         'dev',
         true,
@@ -577,7 +577,7 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
         name: 'Some-feature',
     });
     await stores.strategyStore.createStrategy({ name: 'format' });
-    await stores.featureEnvironmentStore.connectEnvironmentAndFeature(
+    await stores.featureEnvironmentStore.addEnvironmentToFeature(
         'Some-feature',
         'dev',
         true,

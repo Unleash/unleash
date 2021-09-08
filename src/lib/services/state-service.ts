@@ -197,7 +197,7 @@ export default class StateService {
     async importFeatureEnvironments({ featureEnvironments }): Promise<void> {
         await Promise.all(
             featureEnvironments.map((env) =>
-                this.featureEnvironmentStore.connectEnvironmentAndFeature(
+                this.featureEnvironmentStore.addEnvironmentToFeature(
                     env.featureName,
                     env.environment,
                     env.enabled,

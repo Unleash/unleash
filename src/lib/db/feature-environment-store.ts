@@ -92,13 +92,13 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         }));
     }
 
-    async connectEnvironmentAndFeature(
-        feature_name: string,
+    async addEnvironmentToFeature(
+        featureName: string,
         environment: string,
         enabled: boolean = false,
     ): Promise<void> {
         await this.db('feature_environments')
-            .insert({ feature_name, environment, enabled })
+            .insert({ feature_name: featureName, environment, enabled })
             .onConflict(['environment', 'feature_name'])
             .merge('enabled');
     }
@@ -133,15 +133,6 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         return present;
     }
 
-    async getAllFeatureEnvironments(): Promise<IFeatureEnvironment[]> {
-        const rows = await this.db(T.featureEnvs);
-        return rows.map((r) => ({
-            environment: r.environment,
-            featureName: r.feature_name,
-            enabled: r.enabled,
-        }));
-    }
-
     async getEnvironmentMetaData(
         environment: string,
         featureName: string,
@@ -174,13 +165,15 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     }
 
     async removeEnvironmentForFeature(
-        feature_name: string,
+        featureName: string,
         environment: string,
     ): Promise<void> {
-        await this.db(T.featureEnvs).where({ feature_name, environment }).del();
+        await this.db(T.featureEnvs)
+            .where({ feature_name: featureName, environment })
+            .del();
     }
 
-    async toggleEnvironmentEnabledStatus(
+    async setEnvironmentEnabledStatus(
         environment: string,
         featureName: string,
         enabled: boolean,

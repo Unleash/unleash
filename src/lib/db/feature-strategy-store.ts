@@ -156,25 +156,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return mapRow(rows[0]);
     }
 
-    async getStrategiesForToggle(
-        featureName: string,
-    ): Promise<IFeatureStrategy[]> {
-        const stopTimer = this.timer('getAll');
-        const rows = await this.db
-            .select(COLUMNS)
-            .where('feature_name', featureName)
-            .from<IFeatureStrategiesTable>(T.featureStrategies);
-
-        stopTimer();
-        return rows.map(mapRow);
-    }
-
     async removeAllStrategiesForEnv(
-        feature_name: string,
+        featureName: string,
         environment: string,
     ): Promise<void> {
         await this.db('feature_strategies')
-            .where({ feature_name, environment })
+            .where({ feature_name: featureName, environment })
             .del();
     }
 
@@ -189,16 +176,16 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     }
 
     async getStrategiesForFeature(
-        project_name: string,
-        feature_name: string,
+        projectId: string,
+        featureName: string,
         environment: string,
     ): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getForFeature');
         const rows = await this.db<IFeatureStrategiesTable>(
             T.featureStrategies,
         ).where({
-            project_name,
-            feature_name,
+            project_name: projectId,
+            feature_name: featureName,
             environment,
         });
         stopTimer();

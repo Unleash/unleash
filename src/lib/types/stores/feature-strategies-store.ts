@@ -22,15 +22,13 @@ export interface IFeatureStrategiesStore
     createStrategyConfig(
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy>;
-    getStrategiesForToggle(featureName: string): Promise<IFeatureStrategy[]>;
     removeAllStrategiesForEnv(
-        feature_name: string,
+        featureName: string,
         environment: string,
     ): Promise<void>;
-    getAll(): Promise<IFeatureStrategy[]>;
     getStrategiesForFeature(
-        project_name: string,
-        feature_name: string,
+        projectId: string,
+        featureName: string,
         environment: string,
     ): Promise<IFeatureStrategy[]>;
     getStrategiesForEnv(environment: string): Promise<IFeatureStrategy[]>;

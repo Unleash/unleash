@@ -34,14 +34,6 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(newStrat);
     }
 
-    async getStrategiesForToggle(
-        featureName: string,
-    ): Promise<IFeatureStrategy[]> {
-        return this.featureStrategies.filter(
-            (fS) => fS.featureName === featureName,
-        );
-    }
-
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async createFeature(feature: any): Promise<void> {
         this.featureToggles.push({

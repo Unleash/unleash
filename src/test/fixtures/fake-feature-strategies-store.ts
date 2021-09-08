@@ -2,7 +2,6 @@ import { randomUUID } from 'crypto';
 import {
     FeatureToggle,
     FeatureToggleWithEnvironment,
-    IFeatureEnvironment,
     IFeatureOverview,
     IFeatureStrategy,
     IFeatureToggleClient,
@@ -54,22 +53,9 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve();
     }
 
-    async getAllFeatureStrategies(): Promise<IFeatureStrategy[]> {
-        return this.featureStrategies;
-    }
-
     async deleteFeatureStrategies(): Promise<void> {
         this.featureStrategies = [];
         return Promise.resolve();
-    }
-
-    async getStrategiesForEnvironment(
-        environment: string,
-    ): Promise<IFeatureStrategy[]> {
-        const stratEnvs = this.featureStrategies.filter(
-            (fS) => fS.environment === environment,
-        );
-        return Promise.resolve(stratEnvs);
     }
 
     async hasStrategy(id: string): Promise<boolean> {

@@ -23,10 +23,6 @@ export interface IFeatureStrategiesStore
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy>;
     getStrategiesForToggle(featureName: string): Promise<IFeatureStrategy[]>;
-    getAllFeatureStrategies(): Promise<IFeatureStrategy[]>;
-    getStrategiesForEnvironment(
-        environment: string,
-    ): Promise<IFeatureStrategy[]>;
     removeAllStrategiesForEnv(
         feature_name: string,
         environment: string,

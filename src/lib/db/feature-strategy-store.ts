@@ -169,24 +169,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.map(mapRow);
     }
 
-    async getAllFeatureStrategies(): Promise<IFeatureStrategy[]> {
-        const rows = await this.db(T.featureStrategies).select(COLUMNS);
-        return rows.map(mapRow);
-    }
-
-    async getStrategiesForEnvironment(
-        environment: string,
-    ): Promise<IFeatureStrategy[]> {
-        const stopTimer = this.timer('getAll');
-        const rows = await this.db
-            .select(COLUMNS)
-            .where({ environment })
-            .from<IFeatureStrategiesTable>(T.featureStrategies);
-
-        stopTimer();
-        return rows.map(mapRow);
-    }
-
     async removeAllStrategiesForEnv(
         feature_name: string,
         environment: string,

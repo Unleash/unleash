@@ -214,7 +214,7 @@ export default class StateService {
     }): Promise<void> {
         const oldFeatureStrategies = dropBeforeImport
             ? []
-            : await this.featureStrategiesStore.getAllFeatureStrategies();
+            : await this.featureStrategiesStore.getAll();
         if (dropBeforeImport) {
             this.logger.info(
                 'Dropping existing strategies for feature toggles',

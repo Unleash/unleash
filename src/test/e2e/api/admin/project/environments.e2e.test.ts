@@ -51,3 +51,33 @@ test('Should add environment to project', async () => {
     expect(environment).toBeDefined();
     expect(envs).toHaveLength(2);
 });
+
+test('Should validate environment', async () => {
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ name: 'test' })
+        .expect(400);
+});
+
+test('Should remove environment to project', async () => {
+    const name = 'test-delete';
+    await app.request
+        .post('/api/admin/environments')
+        .send({ name, displayName: 'Test Env' })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ environment: name })
+        .expect(200);
+
+    await app.request
+        .delete(`/api/admin/projects/default/environments/${name}`)
+        .expect(200);
+
+    const envs = await db.stores.projectStore.getEnvironmentsForProject(
+        'default',
+    );
+
+    expect(envs).toHaveLength(1);
+});

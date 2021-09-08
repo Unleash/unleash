@@ -5,6 +5,7 @@ import { IUnleashServices } from '../../../types/services';
 import { Logger } from '../../../logger';
 import EnvironmentService from '../../../services/environment-service';
 import { UPDATE_PROJECT } from '../../../types/permissions';
+import { addEnvironment } from '../../../schema/project-schema';
 
 const PREFIX = '/:projectId/environments';
 
@@ -48,8 +49,11 @@ export default class EnvironmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const { projectId } = req.params;
-        await this.environmentService.connectProjectToEnvironment(
-            req.body.environment,
+
+        const { environment } = await addEnvironment.validateAsync(req.body);
+
+        await this.environmentService.addEnvironmentToProject(
+            environment,
             projectId,
         );
         res.status(200).end();

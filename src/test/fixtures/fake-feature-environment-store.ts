@@ -35,7 +35,7 @@ export default class FakeFeatureEnvironmentStore
 
     destroy(): void {}
 
-    async disconnectFeaturesFromEnvironment(
+    async disconnectFeatures(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -143,7 +143,7 @@ export default class FakeFeatureEnvironmentStore
         return Promise.reject(new Error('Not implemented'));
     }
 
-    async disconnectProjectFromEnv(
+    async disconnectProject(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

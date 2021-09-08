@@ -70,7 +70,7 @@ test('Can connect environment to project', async () => {
         stale: false,
         variants: [],
     });
-    await service.connectProjectToEnvironment('test-connection', 'default');
+    await service.addEnvironmentToProject('test-connection', 'default');
     const overview = await stores.featureStrategiesStore.getFeatureOverview(
         'default',
         false,
@@ -92,7 +92,7 @@ test('Can remove environment from project', async () => {
         name: 'removal-test',
     });
     await service.removeEnvironmentFromProject('test-connection', 'default');
-    await service.connectProjectToEnvironment('removal-test', 'default');
+    await service.addEnvironmentToProject('removal-test', 'default');
     let overview = await stores.featureStrategiesStore.getFeatureOverview(
         'default',
         false,
@@ -123,9 +123,9 @@ test('Adding same environment twice should throw a NameExistsError', async () =>
     await service.removeEnvironmentFromProject('test-connection', 'default');
     await service.removeEnvironmentFromProject('removal-test', 'default');
 
-    await service.connectProjectToEnvironment('uniqueness-test', 'default');
+    await service.addEnvironmentToProject('uniqueness-test', 'default');
     return expect(async () =>
-        service.connectProjectToEnvironment('uniqueness-test', 'default'),
+        service.addEnvironmentToProject('uniqueness-test', 'default'),
     ).rejects.toThrow(
         new NameExistsError(
             'default already has the environment uniqueness-test enabled',

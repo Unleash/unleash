@@ -177,7 +177,7 @@ test('Can get strategies for specific environment', async () => {
         displayName: 'simple test',
     });
 
-    await app.services.environmentService.connectProjectToEnvironment(
+    await app.services.environmentService.addEnvironmentToProject(
         'testing',
         'default',
     );

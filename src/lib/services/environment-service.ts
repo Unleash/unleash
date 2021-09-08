@@ -66,7 +66,7 @@ export default class EnvironmentService {
         throw new NotFoundError(`Could not find environment ${name}`);
     }
 
-    async connectProjectToEnvironment(
+    async addEnvironmentToProject(
         environment: string,
         projectId: string,
     ): Promise<void> {
@@ -93,11 +93,11 @@ export default class EnvironmentService {
         environment: string,
         projectId: string,
     ): Promise<void> {
-        await this.featureEnvironmentStore.disconnectFeaturesFromEnvironment(
+        await this.featureEnvironmentStore.disconnectFeatures(
             environment,
             projectId,
         );
-        await this.featureEnvironmentStore.disconnectProjectFromEnv(
+        await this.featureEnvironmentStore.disconnectProject(
             environment,
             projectId,
         );

@@ -104,7 +104,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     }
 
     // TODO: move to project store.
-    async disconnectFeaturesFromEnvironment(
+    async disconnectFeatures(
         environment: string,
         project: string,
     ): Promise<void> {
@@ -232,7 +232,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         }
     }
 
-    async disconnectProjectFromEnv(
+    async disconnectProject(
         environment: string,
         projectId: string,
     ): Promise<void> {

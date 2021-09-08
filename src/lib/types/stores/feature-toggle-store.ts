@@ -7,11 +7,6 @@ export interface IFeatureToggleQuery {
     stale: boolean;
 }
 
-export interface IHasFeature {
-    name: string;
-    archived: boolean;
-}
-
 export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     count(query?: Partial<IFeatureToggleQuery>): Promise<number>;
     setLastSeen(toggleNames: string[]): Promise<void>;

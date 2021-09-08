@@ -1,0 +1,52 @@
+name: dbcritic
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - src/migrations/**
+  pull_request:
+    paths:
+      - src/migrations/**
+
+jobs:
+  dbcritic:
+    runs-on: ubuntu-latest
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Install deps
+        run: yarn install
+      - name: Run db migration
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+        run: yarn db-migrate up
+      - name: Run dbcritic
+        uses: chriswk/dbcritic@v3
+        env:
+          PGPASS: postgres
+          PGPORT: 5432
+          PGHOST: localhost
+          PGUSER: postgres
+          PGDATABASE: postgres

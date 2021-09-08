@@ -121,15 +121,6 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         });
     }
 
-    async enableEnvironmentForFeature(
-        feature_name: string,
-        environment: string,
-    ): Promise<void> {
-        await this.db(T.featureEnvs)
-            .update({ enabled: true })
-            .where({ feature_name, environment });
-    }
-
     async featureHasEnvironment(
         environment: string,
         featureName: string,

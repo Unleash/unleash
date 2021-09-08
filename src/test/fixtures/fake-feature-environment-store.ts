@@ -44,14 +44,6 @@ export default class FakeFeatureEnvironmentStore
         return Promise.resolve(undefined);
     }
 
-    async enableEnvironmentForFeature(
-        featureName: string,
-        environment: string,
-    ): Promise<void> {
-        const fE = await this.get({ featureName, environment });
-        fE.enabled = true;
-    }
-
     async exists(key: FeatureEnvironmentKey): Promise<boolean> {
         return this.featureEnvironments.some(
             (fE) =>

@@ -224,31 +224,6 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve();
     }
 
-    async enableEnvironmentForFeature(
-        feature_name: string,
-        environment: string,
-    ): Promise<void> {
-        if (!this.environmentAndFeature.has(environment)) {
-            this.environmentAndFeature.set(environment, [
-                {
-                    featureName: feature_name,
-                    enabled: true,
-                },
-            ]);
-        }
-        const features = this.environmentAndFeature
-            .get(environment)
-            .map((f) => {
-                if (f.featureName === feature_name) {
-                    // eslint-disable-next-line no-param-reassign
-                    f.enabled = true;
-                }
-                return f;
-            });
-        this.environmentAndFeature.set(environment, features);
-        return Promise.resolve();
-    }
-
     async removeEnvironmentForFeature(
         feature_name: string,
         environment: string,

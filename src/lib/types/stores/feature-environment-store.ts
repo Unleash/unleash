@@ -36,10 +36,6 @@ export interface IFeatureEnvironmentStore
         environment: string,
         enabled: boolean,
     ): Promise<void>;
-    enableEnvironmentForFeature(
-        feature_name: string,
-        environment: string,
-    ): Promise<void>;
     connectFeatures(environment: string, projectId: string): Promise<void>;
     connectFeatureToEnvironmentsForProject(
         featureName: string,

@@ -513,31 +513,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return strategy;
     }
 
-    async getStrategiesAndMetadataForEnvironment(
-        environment: string,
-        featureName: string,
-    ): Promise<void> {
-        const rows = await this.db(T.featureEnvs)
-            .select('*')
-            .fullOuterJoin(
-                T.featureStrategies,
-                `${T.featureEnvs}.feature_name`,
-                `${T.featureStrategies}.feature_name`,
-            )
-            .where(`${T.featureStrategies}.feature_name`, featureName)
-            .andWhere(`${T.featureEnvs}.environment`, environment);
-        return rows.reduce((acc, r) => {
-            if (acc.strategies !== undefined) {
-                acc.strategies.push(this.getAdminStrategy(r));
-            } else {
-                acc.enabled = r.enabled;
-                acc.environment = r.environment;
-                acc.strategies = [this.getAdminStrategy(r)];
-            }
-            return acc;
-        }, {});
-    }
-
     async deleteConfigurationsForProjectAndEnvironment(
         projectId: String,
         environment: String,

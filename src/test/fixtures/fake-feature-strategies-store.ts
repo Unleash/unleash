@@ -260,15 +260,6 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(this.featureStrategies.find((f) => f.id === id));
     }
 
-    async getStrategiesAndMetadataForEnvironment(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        featureName: string,
-    ): Promise<void> {
-        return Promise.resolve();
-    }
-
     async deleteConfigurationsForProjectAndEnvironment(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: String,
@@ -289,7 +280,7 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(enabled);
     }
 
-    async toggleEnvironmentEnabledStatus(
+    async setEnvironmentEnabledStatus(
         environment: string,
         featureName: string,
         enabled: boolean,

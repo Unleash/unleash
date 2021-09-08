@@ -494,7 +494,7 @@ class FeatureToggleServiceV2 {
                     throw new InvalidOperationError('You can not enable the environment before it has strategies');
                 }
             }
-            await this.featureEnvironmentStore.toggleEnvironmentEnabledStatus(
+            await this.featureEnvironmentStore.setEnvironmentEnabledStatus(
                     environment,
                     featureName,
                     enabled,

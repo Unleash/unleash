@@ -56,10 +56,6 @@ export interface IFeatureStrategiesStore
         id: string,
         updates: Partial<IFeatureStrategy>,
     ): Promise<IFeatureStrategy>;
-    getStrategiesAndMetadataForEnvironment(
-        environment: string,
-        featureName: string,
-    ): Promise<void>;
     deleteConfigurationsForProjectAndEnvironment(
         projectId: String,
         environment: String,

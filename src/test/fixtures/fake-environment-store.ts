@@ -36,7 +36,6 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
         return Promise.resolve();
     }
 
-
     async deleteAll(): Promise<void> {
         this.environments = [];
     }

@@ -124,7 +124,7 @@ const defaultImport: IImportOption = {
 const defaultEmail: IEmailOption = {
     host: process.env.EMAIL_HOST,
     secure: safeBoolean(process.env.EMAIL_SECURE, false),
-    port: safeNumber(process.env.EMAIL_PORT, 567),
+    port: safeNumber(process.env.EMAIL_PORT, 587),
     sender: process.env.EMAIL_SENDER || 'noreply@unleash-hosted.com',
     smtpuser: process.env.EMAIL_USER,
     smtppass: process.env.EMAIL_PASSWORD,

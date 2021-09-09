@@ -122,9 +122,8 @@ The Unleash Proxy takes the heavy lifting of evaluating toggles and only returns
 However in some settings you would like a bit more logic around it to make it as fast as possible, and keep up to date with changes.
 
 - [JavaScript Proxy SDK](/sdks/proxy-javascript)
+- - [Ract Proxy SDK](/sdks/proxy-react)
 - [Android Proxy SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)
-- React SDK (coming soon)
-- React Native SDK (coming soon)
 
 The proxy is also ideal fit for serverless functions such as AWS Lambda. In that scenario the proxy can run on a small container near the serverless function, preferably in the same VPC, giving the lambda extremely fast access to feature flags, at a predictable cost.

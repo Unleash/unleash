@@ -2,7 +2,8 @@
 
 ![Build & Tests](https://github.com/Unleash/unleash/workflows/Build%20%26%20Tests/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master)](https://coveralls.io/github/Unleash/unleash?branch=master) [![npm](https://img.shields.io/npm/v/unleash-server)](https://www.npmjs.com/package/unleash-server) [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server)
 
-[![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/master&refcode=0e1d75187044)
+[![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/master&refcode=0e1d75187044) [![Twitter Follow](https://img.shields.io/twitter/follow/getunleash)](https://twitter.com/intent/follow?screen_name=getunleash)
+    
 
 <a href="https://getunleash.io" title="Unleash - Create with freedom. Release with confidence">
     <img src="./.github/Logo_DarkBlue_Transparent_Portrait.svg" width="200">

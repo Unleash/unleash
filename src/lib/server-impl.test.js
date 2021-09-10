@@ -48,13 +48,9 @@ jest.mock('./db', () => ({
     },
 }));
 
-jest.mock(
-    '../migrator',
-    () =>
-        function () {
-            return Promise.resolve();
-        },
-);
+jest.mock('../migrator', () => ({
+    migrateDb: () => Promise.resolve(),
+}));
 
 jest.mock(
     './util/version',

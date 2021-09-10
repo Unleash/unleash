@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import migrator from '../../../migrator';
+import { migrateDb } from '../../../migrator';
 import { createStores } from '../../../lib/db';
 import { createDb } from '../../../lib/db/db-pool';
 import dbConfig from './database-config';
@@ -88,7 +88,7 @@ export default async function init(
     await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
     await db.raw(`CREATE SCHEMA IF NOT EXISTS ${config.db.schema}`);
     // @ts-ignore
-    await migrator({ ...config, databaseSchema: config.db.schema });
+    await migrateDb({ ...config, databaseSchema: config.db.schema });
     await db.destroy();
     const testDb = createDb(config);
     const stores = await createStores(config, eventBus, testDb);

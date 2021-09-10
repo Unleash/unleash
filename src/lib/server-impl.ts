@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import stoppable, { StoppableServer } from 'stoppable';
 import { promisify } from 'util';
 import version from './util/version';
-import migrator from '../migrator';
+import { migrateDb } from '../migrator';
 import getApp from './app';
 import { createMetricsMonitor } from './metrics';
 import { createStores } from './db';
@@ -116,7 +116,7 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
             logger.info('DB migration: disabled');
         } else {
             logger.info('DB migration: start');
-            await migrator(config);
+            await migrateDb(config);
             logger.info('DB migration: end');
         }
     } catch (err) {
@@ -140,7 +140,7 @@ async function create(opts: IUnleashOptions): Promise<IUnleash> {
         if (config.db.disableMigration) {
             logger.info('DB migrations disabled');
         } else {
-            await migrator(config);
+            await migrateDb(config);
         }
     } catch (err) {
         logger.error('Failed to migrate db', err);

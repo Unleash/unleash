@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import EventEmitter from 'events';
-import * as uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
@@ -142,7 +142,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     async createStrategyConfig(
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
-        const strategyRow = mapInput({ ...strategyConfig, id: uuid.v4() });
+        const strategyRow = mapInput({ ...strategyConfig, id: uuidv4() });
         const rows = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
             .insert(strategyRow)
             .returning('*');

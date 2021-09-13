@@ -504,8 +504,9 @@ test('Should archive feature toggle', async () => {
     expect(toggle).toBeDefined();
 });
 
-test('Can add strategy to feature toggle', async () => {
-    const envName = 'add-strategy';
+test('Can add strategy to feature toggle to default env', async () => {
+    const envName = 'default';
+    const featureName = 'feature.strategy.toggle';
     // Create environment
     await app.request
         .post('/api/admin/environments')
@@ -522,7 +523,7 @@ test('Can add strategy to feature toggle', async () => {
             environment: envName,
         })
         .expect(200);
-    const featureName = 'feature.strategy.toggle';
+
     await app.request
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
@@ -541,7 +542,8 @@ test('Can add strategy to feature toggle', async () => {
     await app.request
         .get(`/api/admin/projects/default/features/${featureName}`)
         .expect((res) => {
-            expect(res.body.environments[0].strategies).toHaveLength(1);
+            const env = res.body.environments.find((e) => e.name === envName);
+            expect(env.strategies).toHaveLength(1);
         });
 });
 

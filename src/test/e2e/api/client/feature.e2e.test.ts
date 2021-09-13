@@ -172,9 +172,10 @@ test('Can get strategies for specific environment', async () => {
 
     // create new env
 
-    await db.stores.environmentStore.upsert({
+    await db.stores.environmentStore.create({
         name: 'testing',
         displayName: 'simple test',
+        type: 'test',
     });
 
     await app.services.environmentService.addEnvironmentToProject(

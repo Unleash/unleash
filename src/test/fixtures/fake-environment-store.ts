@@ -23,12 +23,66 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
         );
     }
 
-    async upsert(env: IEnvironment): Promise<IEnvironment> {
+    async create(env: IEnvironment): Promise<IEnvironment> {
         this.environments = this.environments.filter(
             (e) => e.name !== env.name,
         );
         this.environments.push(env);
         return Promise.resolve(env);
+    }
+
+    async update(
+        env: Pick<IEnvironment, 'displayName' | 'type' | 'protected'>,
+        name: string,
+    ): Promise<IEnvironment> {
+        const found = this.environments.find(
+            (en: IEnvironment) => en.name === name,
+        );
+        const idx = this.environments.findIndex(
+            (en: IEnvironment) => en.name === name,
+        );
+        const updated = { ...found, env };
+
+        this.environments[idx] = updated;
+        return Promise.resolve(updated);
+    }
+
+    async updateSortOrder(id: string, value: number): Promise<void> {
+        const environment = this.environments.find(
+            (env: IEnvironment) => env.name === id,
+        );
+        environment.sortOrder = value;
+        return Promise.resolve();
+    }
+
+    async updateProperty(
+        id: string,
+        field: string,
+        value: string | number,
+    ): Promise<void> {
+        const environment = this.environments.find(
+            (env: IEnvironment) => env.name === id,
+        );
+        environment[field] = value;
+        return Promise.resolve();
+    }
+
+    async connectProject(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+    ): Promise<void> {
+        return Promise.reject(new Error('Not implemented'));
+    }
+
+    async connectFeatures(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+    ): Promise<void> {
+        return Promise.reject(new Error('Not implemented'));
     }
 
     async delete(name: string): Promise<void> {

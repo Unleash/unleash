@@ -1,10 +1,10 @@
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { Logger } from '../logger';
-import { IEnvironment } from '../types/model';
+import { IEnvironment, ISortOrder } from '../types/model';
 import { UNIQUE_CONSTRAINT_VIOLATION } from '../error/db-error';
 import NameExistsError from '../error/name-exists-error';
-import { environmentSchema } from './state-schema';
+import { sortOrderSchema } from './state-schema';
 import NotFoundError from '../error/notfound-error';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
@@ -46,22 +46,20 @@ export default class EnvironmentService {
         return this.environmentStore.get(name);
     }
 
-    async delete(name: string): Promise<void> {
-        return this.environmentStore.delete(name);
+    async updateSortOrder(sortOrder: ISortOrder): Promise<void> {
+        await sortOrderSchema.validateAsync(sortOrder);
+        await Promise.all(
+            Object.keys(sortOrder).map((key) => {
+                const value = sortOrder[key];
+                return this.environmentStore.updateSortOrder(key, value);
+            }),
+        );
     }
 
-    async create(env: IEnvironment): Promise<IEnvironment> {
-        await environmentSchema.validateAsync(env);
-        return this.environmentStore.upsert(env);
-    }
-
-    async update(
-        name: string,
-        env: Pick<IEnvironment, 'displayName'>,
-    ): Promise<IEnvironment> {
+    async toggleEnvironment(name: string, value: boolean): Promise<void> {
         const exists = await this.environmentStore.exists(name);
         if (exists) {
-            return this.environmentStore.upsert({ ...env, name });
+            return this.environmentStore.updateProperty(name, 'enabled', value);
         }
         throw new NotFoundError(`Could not find environment ${name}`);
     }

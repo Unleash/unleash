@@ -14,7 +14,7 @@ import { createDb } from './db/db-pool';
 import sessionDb from './middleware/session-db';
 // Types
 import { IUnleash } from './types/core';
-import { IUnleashConfig, IUnleashOptions } from './types/option';
+import { IUnleashConfig, IUnleashOptions, IAuthType } from './types/option';
 import { IUnleashServices } from './types/services';
 import User, { IUser } from './types/user';
 import { Logger, LogLevel } from './logger';
@@ -160,6 +160,7 @@ export {
     User,
     LogLevel,
     RoleName,
+    IAuthType,
 };
 
 export default {

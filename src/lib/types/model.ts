@@ -74,6 +74,10 @@ export interface IEnvironmentDetail extends IEnvironmentOverview {
     strategies: IStrategyConfig[];
 }
 
+export interface ISortOrder {
+    [index: string]: number;
+}
+
 export interface IFeatureEnvironment {
     environment: string;
     featureName: string;
@@ -98,6 +102,16 @@ export interface IVariant {
 export interface IEnvironment {
     name: string;
     displayName: string;
+    type: string;
+    sortOrder: number;
+    enabled: boolean;
+    protected: boolean;
+}
+
+export interface IEnvironmentCreate {
+    name: string;
+    displayName: string;
+    type: string;
 }
 
 export interface IEnvironmentOverview {

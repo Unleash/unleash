@@ -1,9 +1,9 @@
-import dbInit from '../../helpers/database-init';
+import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { setupApp } from '../../helpers/test-helper';
+import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('environment_api_serial', getLogger);
@@ -13,32 +13,6 @@ beforeAll(async () => {
 afterAll(async () => {
     await app.destroy();
     await db.destroy();
-});
-
-test('Should be able to create an environment', async () => {
-    const envName = 'environment-info';
-    // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
-});
-
-test('Environment names must be URL safe', async () => {
-    const envName = 'Something not url safe **/ */21312';
-    // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(400);
 });
 
 test('Can list all existing environments', async () => {
@@ -51,53 +25,123 @@ test('Can list all existing environments', async () => {
             expect(res.body.environments[0]).toStrictEqual({
                 displayName: 'Across all environments',
                 name: ':global:',
+                enabled: true,
+                sortOrder: 1,
+                type: 'production',
+                protected: true,
             });
         });
 });
 
-test('Can delete environment', async () => {
-    const envName = 'deletable-info';
-    // Create environment
+test('Can update sort order', async () => {
+    const envName = 'update-sort-order';
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+    });
     await app.request
-        .post('/api/admin/environments')
+        .put('/api/admin/environments/sort-order')
         .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
+            ':global:': 2,
+            [envName]: 1,
         })
-        .set('Content-Type', 'application/json')
-        .expect(201);
-    await app.request.get(`/api/admin/environments/${envName}`).expect(200);
-    await app.request.delete(`/api/admin/environments/${envName}`).expect(200);
-    await app.request.get(`/api/admin/environments/${envName}`).expect(404);
-});
-
-test('Can update environment', async () => {
-    const envName = 'update-env';
-    // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
-    await app.request.get(`/api/admin/environments/${envName}`).expect(200);
-    await app.request
-        .put(`/api/admin/environments/${envName}`)
-        .send({ displayName: 'Update this' })
         .expect(200);
+
     await app.request
-        .get(`/api/admin/environments/${envName}`)
+        .get('/api/admin/environments')
+        .expect(200)
+        .expect('Content-Type', /json/)
         .expect((res) => {
-            expect(res.body.displayName).toBe('Update this');
+            const updatedSort = res.body.environments.find(
+                (t) => t.name === envName,
+            );
+            const global = res.body.environments.find(
+                (t) => t.name === ':global:',
+            );
+            expect(updatedSort.sortOrder).toBe(1);
+            expect(global.sortOrder).toBe(2);
         });
 });
 
-test('Updating a non existing environment yields 404', async () => {
-    const envName = 'non-existing-env';
+test('Sort order will fail on wrong data format', async () => {
+    const envName = 'sort-order-env';
+
     await app.request
-        .put(`/api/admin/environments/${envName}`)
-        .send({ displayName: 'Update this' })
+        .put('/api/admin/environments/sort-order')
+        .send({
+            ':global:': 'test',
+            [envName]: 1,
+        })
+        .expect(400);
+});
+
+test('Can update environment enabled status', async () => {
+    const envName = 'enable-environment';
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+    });
+    await app.request
+        .post(`/api/admin/environments/${envName}/on`)
+        .set('Content-Type', 'application/json')
+        .expect(204);
+});
+
+test('Can update environment disabled status', async () => {
+    const envName = 'disable-environment';
+
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+    });
+
+    await app.request
+        .post(`/api/admin/environments/${envName}/off`)
+        .set('Content-Type', 'application/json')
+        .expect(204);
+});
+
+test('Can not update non-existing environment enabled status', async () => {
+    const envName = 'non-existing-env';
+
+    await app.request
+        .post(`/api/admin/environments/${envName}/on`)
+        .set('Content-Type', 'application/json')
+        .expect(404);
+});
+
+test('Can not update non-existing environment disabled status', async () => {
+    const envName = 'non-existing-env';
+
+    await app.request
+        .post(`/api/admin/environments/${envName}/off`)
+        .set('Content-Type', 'application/json')
+        .expect(404);
+});
+
+test('Can get specific environment', async () => {
+    const envName = 'get-specific';
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'production',
+        displayName: 'Fun!',
+    });
+    await app.request
+        .get(`/api/admin/environments/${envName}`)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            const { body } = res;
+            expect(body.name).toBe(envName);
+            expect(body.type).toBe('production');
+        });
+});
+
+test('Getting a non existing environment yields 404', async () => {
+    await app.request
+        .get('/api/admin/environments/this-does-not-exist')
         .expect(404);
 });

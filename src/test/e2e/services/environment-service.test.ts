@@ -19,50 +19,34 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('Can create and get environment', async () => {
-    const created = await service.create({
+test('Can get environment', async () => {
+    const created = await db.stores.environmentStore.create({
         name: 'testenv',
         displayName: 'Environment for testing',
+        type: 'production',
     });
 
     const retrieved = await service.get('testenv');
     expect(retrieved).toEqual(created);
 });
 
-test('Can delete environment', async () => {
-    await service.create({
-        name: 'testenv',
-        displayName: 'Environment for testing',
-    });
-    await service.delete('testenv');
-    return expect(async () => service.get('testenv')).rejects.toThrow(
-        NotFoundError,
-    );
-});
-
 test('Can get all', async () => {
-    await service.create({
-        name: 'testenv',
+    await db.stores.environmentStore.create({
+        name: 'testenv2',
         displayName: 'Environment for testing',
+        type: 'production',
     });
 
     const environments = await service.getAll();
-    expect(environments).toHaveLength(2); // the one we created plus ':global:'
-});
-
-test('Can update display name', async () => {
-    await service.create({
-        name: 'testenv',
-        displayName: 'Environment for testing',
-    });
-
-    await service.update('testenv', { displayName: 'Different name' });
-    const updated = await service.get('testenv');
-    expect(updated.displayName).toEqual('Different name');
+    expect(environments).toHaveLength(3); // the one we created plus ':global:'
 });
 
 test('Can connect environment to project', async () => {
-    await service.create({ name: 'test-connection', displayName: '' });
+    await db.stores.environmentStore.create({
+        name: 'test-connection',
+        displayName: '',
+        type: 'production',
+    });
     await stores.featureToggleStore.create('default', {
         name: 'test-connection',
         type: 'release',
@@ -87,7 +71,11 @@ test('Can connect environment to project', async () => {
 });
 
 test('Can remove environment from project', async () => {
-    await service.create({ name: 'removal-test', displayName: '' });
+    await db.stores.environmentStore.create({
+        name: 'removal-test',
+        displayName: '',
+        type: 'production',
+    });
     await stores.featureToggleStore.create('default', {
         name: 'removal-test',
     });
@@ -119,7 +107,11 @@ test('Can remove environment from project', async () => {
 });
 
 test('Adding same environment twice should throw a NameExistsError', async () => {
-    await service.create({ name: 'uniqueness-test', displayName: '' });
+    await db.stores.environmentStore.create({
+        name: 'uniqueness-test',
+        displayName: '',
+        type: 'production',
+    });
     await service.removeEnvironmentFromProject('test-connection', 'default');
     await service.removeEnvironmentFromProject('removal-test', 'default');
 
@@ -140,3 +132,10 @@ test('Removing environment not connected to project should be a noop', async () 
             'default',
         ),
     ).resolves);
+
+test('Trying to get an environment that does not exist throws NotFoundError', async () => {
+    const envName = 'this-should-not-exist';
+    await expect(async () => service.get(envName)).rejects.toThrow(
+        new NotFoundError(`Could not find environment with name: ${envName}`),
+    );
+});

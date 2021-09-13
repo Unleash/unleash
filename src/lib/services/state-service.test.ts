@@ -479,13 +479,15 @@ test('exporting to new format works', async () => {
         name: 'extra',
         description: 'No surprises here',
     });
-    await stores.environmentStore.upsert({
+    await stores.environmentStore.create({
         name: 'dev',
         displayName: 'Development',
+        type: 'development',
     });
-    await stores.environmentStore.upsert({
+    await stores.environmentStore.create({
         name: 'prod',
         displayName: 'Production',
+        type: 'production',
     });
     await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
@@ -519,13 +521,15 @@ test('featureStrategies can keep existing', async () => {
         name: 'extra',
         description: 'No surprises here',
     });
-    await stores.environmentStore.upsert({
+    await stores.environmentStore.create({
         name: 'dev',
         displayName: 'Development',
+        type: 'development',
     });
-    await stores.environmentStore.upsert({
+    await stores.environmentStore.create({
         name: 'prod',
         displayName: 'Production',
+        type: 'production',
     });
     await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
@@ -565,13 +569,15 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
         name: 'extra',
         description: 'No surprises here',
     });
-    await stores.environmentStore.upsert({
+    await stores.environmentStore.create({
         name: 'dev',
         displayName: 'Development',
+        type: 'development',
     });
-    await stores.environmentStore.upsert({
+    await stores.environmentStore.create({
         name: 'prod',
         displayName: 'Production',
+        type: 'production',
     });
     await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',

@@ -121,7 +121,11 @@ test('should add environment to project', async () => {
         description: 'Blah',
     };
 
-    await environmentStore.upsert({ name: 'test', displayName: 'Test Env' });
+    await environmentStore.create({
+        name: 'test',
+        displayName: 'Test Env',
+        type: 'production',
+    });
 
     await projectStore.create(project);
     await projectStore.addEnvironmentToProject(project.id, 'test');

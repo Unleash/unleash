@@ -28,7 +28,16 @@ export const featureEnvironmentsSchema = joi.object().keys({
 export const environmentSchema = joi.object().keys({
     name: nameType.allow(':global:'),
     displayName: joi.string().optional().allow(''),
+    type: joi.string().required(),
 });
+
+export const updateEnvironmentSchema = joi.object().keys({
+    displayName: joi.string().optional().allow(''),
+    type: joi.string().optional(),
+    sortOrder: joi.number().optional(),
+});
+
+export const sortOrderSchema = joi.object().pattern(/^/, joi.number());
 
 export const stateSchema = joi.object().keys({
     version: joi.number(),

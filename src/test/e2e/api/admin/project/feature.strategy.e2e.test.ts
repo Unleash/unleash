@@ -126,11 +126,11 @@ test('Project overview includes environment connected to feature', async () => {
             expect(res.body.name).toBe('com.test.environment');
             expect(res.body.createdAt).toBeTruthy();
         });
-    await app.request
-        .post('/api/admin/environments')
-        .send({ name: 'project-overview', displayName: 'Project Overview' })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: 'project-overview',
+        displayName: 'Project Overview',
+        type: 'production',
+    });
     await app.request
         .post('/api/admin/projects/default/environments')
         .send({ environment: 'project-overview' })
@@ -160,11 +160,11 @@ test('Disconnecting environment from project, removes environment from features 
             expect(res.body.name).toBe('com.test.disconnect.environment');
             expect(res.body.createdAt).toBeTruthy();
         });
-    await app.request
-        .post('/api/admin/environments')
-        .send({ name: 'dis-project-overview', displayName: 'Project Overview' })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: 'dis-project-overview',
+        displayName: 'Project Overview',
+        type: 'production',
+    });
     await app.request
         .post('/api/admin/projects/default/environments')
         .send({ environment: 'dis-project-overview' })
@@ -188,14 +188,11 @@ test('Can enable/disable environment for feature with strategies', async () => {
     const envName = 'enable-feature-environment';
     const featureName = 'com.test.enable.environment';
     // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+    });
     // Connect environment to project
     await app.request
         .post('/api/admin/projects/default/environments')
@@ -341,14 +338,11 @@ test('Trying to create toggle under project that does not exist should fail', as
 test('Can get environment info for feature toggle', async () => {
     const envName = 'environment-info';
     // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+    });
     // Connect environment to project
     await app.request
         .post('/api/admin/projects/default/environments')
@@ -508,14 +502,11 @@ test('Can add strategy to feature toggle to default env', async () => {
     const envName = 'default';
     const featureName = 'feature.strategy.toggle';
     // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+    });
     // Connect environment to project
     await app.request
         .post('/api/admin/projects/default/environments')
@@ -550,14 +541,11 @@ test('Can add strategy to feature toggle to default env', async () => {
 test('Can get strategies for feature and environment', async () => {
     const envName = 'get-strategy';
     // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+    });
     // Connect environment to project
     await app.request
         .post('/api/admin/projects/default/environments')
@@ -608,14 +596,11 @@ test('Getting strategies for environment that does not exist yields 404', async 
 test('Can update a strategy based on id', async () => {
     const envName = 'feature.update.strategies';
     // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+    });
     // Connect environment to project
     await app.request
         .post('/api/admin/projects/default/environments')
@@ -664,14 +649,11 @@ test('Can update a strategy based on id', async () => {
 test('Trying to update a non existing feature strategy should yield 404', async () => {
     const envName = 'feature.non.existing.strategy';
     // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+    });
     // Connect environment to project
     await app.request
         .post('/api/admin/projects/default/environments')
@@ -698,14 +680,11 @@ test('Can patch a strategy based on id', async () => {
     const featureName = 'feature.patch.strategies';
 
     // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'test',
+    });
     // Connect environment to project
     await app.request
         .post(`${BASE_URI}/environments`)
@@ -754,14 +733,11 @@ test('Can patch a strategy based on id', async () => {
 test('Trying to get a non existing feature strategy should yield 404', async () => {
     const envName = 'feature.non.existing.strategy.get';
     // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+    });
     // Connect environment to project
     await app.request
         .post('/api/admin/projects/default/environments')
@@ -786,14 +762,11 @@ test('Can not enable environment for feature without strategies', async () => {
     const featureName = 'com.test.enable.environment.disabled';
 
     // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: environment,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: environment,
+        displayName: 'Enable feature for environment',
+        type: 'test',
+    });
     // Connect environment to project
     await app.request
         .post('/api/admin/projects/default/environments')
@@ -830,14 +803,11 @@ test('Can delete strategy from feature toggle', async () => {
     const envName = 'del-strategy';
     const featureName = 'feature.strategy.toggle.delete.strategy';
     // Create environment
-    await app.request
-        .post('/api/admin/environments')
-        .send({
-            name: envName,
-            displayName: 'Enable feature for environment',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201);
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'test',
+    });
     // Connect environment to project
     await app.request
         .post('/api/admin/projects/default/environments')

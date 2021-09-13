@@ -24,6 +24,7 @@ import { GLOBAL_ENV } from '../types/environment';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
+import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IProjectStore } from '../types/stores/project-store';
 import { IRole } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
@@ -51,6 +52,8 @@ export default class ProjectService {
 
     private featureTypeStore: IFeatureTypeStore;
 
+    private featureEnvironmentStore: IFeatureEnvironmentStore;
+
     private environmentStore: IEnvironmentStore;
 
     private logger: any;
@@ -64,6 +67,7 @@ export default class ProjectService {
             featureToggleStore,
             featureTypeStore,
             environmentStore,
+            featureEnvironmentStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -71,6 +75,7 @@ export default class ProjectService {
             | 'featureToggleStore'
             | 'featureTypeStore'
             | 'environmentStore'
+            | 'featureEnvironmentStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -78,6 +83,7 @@ export default class ProjectService {
     ) {
         this.store = projectStore;
         this.environmentStore = environmentStore;
+        this.featureEnvironmentStore = featureEnvironmentStore;
         this.accessService = accessService;
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
@@ -117,7 +123,7 @@ export default class ProjectService {
 
         await this.store.create(data);
 
-        await this.environmentStore.connectProject(GLOBAL_ENV, data.id);
+        await this.featureEnvironmentStore.connectProject(GLOBAL_ENV, data.id);
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 
@@ -189,7 +195,7 @@ export default class ProjectService {
             );
         }
 
-        const toggles = await this.featureToggleStore.getFeaturesBy({
+        const toggles = await this.featureToggleStore.getAll({
             project: id,
             archived: false,
         });
@@ -292,7 +298,7 @@ export default class ProjectService {
         archived: boolean = false,
     ): Promise<IProjectOverview> {
         const project = await this.store.get(projectId);
-        const features = await this.store.getProjectOverview(
+        const features = await this.featureToggleService.getFeatureOverview(
             projectId,
             archived,
         );

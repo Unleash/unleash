@@ -22,6 +22,7 @@ import FakeFeatureEnvironmentStore from './fake-feature-environment-store';
 import FakeApiTokenStore from './fake-api-token-store';
 import FakeFeatureTypeStore from './fake-feature-type-store';
 import FakeResetTokenStore from './fake-reset-token-store';
+import FakeFeatureToggleClientStore from './fake-feature-toggle-client-store';
 
 const createStores: () => IUnleashStores = () => {
     const db = {
@@ -36,6 +37,7 @@ const createStores: () => IUnleashStores = () => {
         clientMetricsStore: new FakeClientMetricsStore(),
         clientInstanceStore: new FakeClientInstanceStore(),
         featureToggleStore: new FakeFeatureToggleStore(),
+        featureToggleClientStore: new FakeFeatureToggleClientStore(),
         tagStore: new FakeTagStore(),
         tagTypeStore: new FakeTagTypeStore(),
         eventStore: new FakeEventStore(),

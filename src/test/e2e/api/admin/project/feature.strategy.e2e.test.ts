@@ -1,13 +1,29 @@
-import dbInit from '../../../helpers/database-init';
-import { setupApp } from '../../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../../helpers/database-init';
+import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_strategy_api_serial', getLogger);
     app = await setupApp(db.stores);
+});
+
+afterEach(async () => {
+    const all = await db.stores.projectStore.getEnvironmentsForProject(
+        'default',
+    );
+    await Promise.all(
+        all
+            .filter((env) => env !== ':global:')
+            .map(async (env) =>
+                db.stores.projectStore.deleteEnvironmentForProject(
+                    'default',
+                    env,
+                ),
+            ),
+    );
 });
 
 afterAll(async () => {
@@ -168,8 +184,9 @@ test('Disconnecting environment from project, removes environment from features 
         });
 });
 
-test('Can enable/disable environment for feature', async () => {
+test('Can enable/disable environment for feature with strategies', async () => {
     const envName = 'enable-feature-environment';
+    const featureName = 'com.test.enable.environment';
     // Create environment
     await app.request
         .post('/api/admin/environments')
@@ -191,23 +208,35 @@ test('Can enable/disable environment for feature', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
-            name: 'com.test.enable.environment',
-            strategies: [{ name: 'default' }],
+            name: featureName,
         })
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
-            expect(res.body.name).toBe('com.test.enable.environment');
+            expect(res.body.name).toBe(featureName);
             expect(res.body.createdAt).toBeTruthy();
         });
+
+    // Add strategy to it
     await app.request
         .post(
-            '/api/admin/projects/default/features/com.test.enable.environment/environments/enable-feature-environment/on',
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
         )
-        .send({})
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
         .expect(200);
     await app.request
-        .get('/api/admin/projects/default/features/com.test.enable.environment')
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/on`,
+        )
+        .set('Content-Type', 'application/json')
+        .expect(200);
+    await app.request
+        .get(`/api/admin/projects/default/features/${featureName}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
@@ -219,12 +248,12 @@ test('Can enable/disable environment for feature', async () => {
         });
     await app.request
         .post(
-            '/api/admin/projects/default/features/com.test.enable.environment/environments/enable-feature-environment/off',
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/off`,
         )
         .send({})
         .expect(200);
     await app.request
-        .get('/api/admin/projects/default/features/com.test.enable.environment')
+        .get(`/api/admin/projects/default/features/${featureName}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
@@ -259,6 +288,18 @@ test('Can use new project feature toggle endpoint to create feature toggle witho
         .expect((res) => {
             expect(res.body.project).toBe('default');
         });
+});
+
+test('Can create feature toggle without strategies', async () => {
+    const name = 'new.toggle.without.strategy.2';
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name });
+    const { body: toggle } = await app.request.get(
+        `/api/admin/projects/default/features/${name}`,
+    );
+    expect(toggle.environments).toHaveLength(1);
+    expect(toggle.environments[0].strategies).toHaveLength(0);
 });
 
 test('Still validates feature toggle input when creating', async () => {
@@ -367,6 +408,100 @@ test('Getting feature that does not exist should yield 404', async () => {
     await app.request
         .get('/api/admin/projects/default/features/non.existing.feature')
         .expect(404);
+});
+
+test('Should update feature toggle', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.update';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    await app.request
+        .put(`${url}/${name}`)
+        .send({ name, description: 'updated', type: 'kill-switch' })
+        .expect(200);
+
+    const { body: toggle } = await app.request.get(`${url}/${name}`);
+
+    expect(toggle.name).toBe(name);
+    expect(toggle.description).toBe('updated');
+    expect(toggle.type).toBe('kill-switch');
+    expect(toggle.archived).toBeFalsy();
+});
+
+test('Should not change name of feature toggle', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.update.2';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    await app.request
+        .put(`${url}/${name}`)
+        .send({ name: 'new name', description: 'updated', type: 'kill-switch' })
+        .expect(400);
+});
+
+test('Should not change project of feature toggle even if it is part of body', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.update.3';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    const { body } = await app.request
+        .put(`${url}/${name}`)
+        .send({
+            name,
+            description: 'updated',
+            type: 'kill-switch',
+            project: 'new',
+        })
+        .expect(200);
+
+    expect(body.project).toBe('default');
+});
+
+test('Should patch feature toggle', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.patch';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    await app.request
+        .patch(`${url}/${name}`)
+        .send([
+            { op: 'replace', path: '/description', value: 'New desc' },
+            { op: 'replace', path: '/type', value: 'kill-switch' },
+        ])
+        .expect(200);
+
+    const { body: toggle } = await app.request.get(`${url}/${name}`);
+
+    expect(toggle.name).toBe(name);
+    expect(toggle.description).toBe('New desc');
+    expect(toggle.type).toBe('kill-switch');
+    expect(toggle.archived).toBeFalsy();
+});
+
+test('Should archive feature toggle', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.archive';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    await app.request.delete(`${url}/${name}`);
+
+    await app.request.get(`${url}/${name}`).expect(404);
+    const { body } = await app.request
+        .get(`/api/admin/archive/features`)
+        .expect(200);
+
+    const toggle = body.features.find((f) => f.name === name);
+    expect(toggle).toBeDefined();
 });
 
 test('Can add strategy to feature toggle', async () => {
@@ -555,6 +690,65 @@ test('Trying to update a non existing feature strategy should yield 404', async 
         .expect(404);
 });
 
+test('Can patch a strategy based on id', async () => {
+    const BASE_URI = '/api/admin/projects/default';
+    const envName = 'feature.patch.strategies';
+    const featureName = 'feature.patch.strategies';
+
+    // Create environment
+    await app.request
+        .post('/api/admin/environments')
+        .send({
+            name: envName,
+            displayName: 'Enable feature for environment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    // Connect environment to project
+    await app.request
+        .post(`${BASE_URI}/environments`)
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+    await app.request
+        .post(`${BASE_URI}/features`)
+        .send({ name: featureName })
+        .expect(201);
+    let strategy;
+    await app.request
+        .post(
+            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            parameters: {
+                groupId: 'demo',
+                rollout: 20,
+                stickiness: 'default',
+            },
+        })
+        .expect(200)
+        .expect((res) => {
+            strategy = res.body;
+        });
+
+    await app.request
+        .patch(
+            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
+        )
+        .send([{ op: 'replace', path: '/parameters/rollout', value: 42 }])
+        .expect(200);
+    await app.request
+        .get(
+            `${BASE_URI}/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.parameters.rollout).toBe(42);
+        });
+});
+
 test('Trying to get a non existing feature strategy should yield 404', async () => {
     const envName = 'feature.non.existing.strategy.get';
     // Create environment
@@ -583,4 +777,96 @@ test('Trying to get a non existing feature strategy should yield 404', async () 
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/some-non-existing-id`,
         )
         .expect(404);
+});
+
+test('Can not enable environment for feature without strategies', async () => {
+    const environment = 'some-env';
+    const featureName = 'com.test.enable.environment.disabled';
+
+    // Create environment
+    await app.request
+        .post('/api/admin/environments')
+        .send({
+            name: environment,
+            displayName: 'Enable feature for environment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ environment })
+        .expect(200);
+
+    // Create feature
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: featureName,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/on`,
+        )
+        .set('Content-Type', 'application/json')
+        .expect(403);
+    await app.request
+        .get('/api/admin/projects/default/features/com.test.enable.environment')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            const enabledFeatureEnv = res.body.environments.find(
+                (e) => e.name === environment,
+            );
+            expect(enabledFeatureEnv.enabled).toBe(false);
+        });
+});
+
+test('Can delete strategy from feature toggle', async () => {
+    const envName = 'del-strategy';
+    const featureName = 'feature.strategy.toggle.delete.strategy';
+    // Create environment
+    await app.request
+        .post('/api/admin/environments')
+        .send({
+            name: envName,
+            displayName: 'Enable feature for environment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+    const { body } = await app.request.get(
+        `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+    );
+    const strategies = body;
+    const strategyId = strategies[0].id;
+    await app.request
+        .delete(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/${strategyId}`,
+        )
+        .expect(200);
 });

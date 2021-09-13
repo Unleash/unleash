@@ -24,6 +24,7 @@ import { AccessStore } from './access-store';
 import { ResetTokenStore } from './reset-token-store';
 import UserFeedbackStore from './user-feedback-store';
 import FeatureStrategyStore from './feature-strategy-store';
+import FeatureToggleClientStore from './feature-toggle-client-store';
 import EnvironmentStore from './environment-store';
 import FeatureTagStore from './feature-tag-store';
 import { FeatureEnvironmentStore } from './feature-environment-store';
@@ -66,6 +67,11 @@ export const createStores = (
         sessionStore: new SessionStore(db, eventBus, getLogger),
         userFeedbackStore: new UserFeedbackStore(db, eventBus, getLogger),
         featureStrategiesStore: new FeatureStrategyStore(
+            db,
+            eventBus,
+            getLogger,
+        ),
+        featureToggleClientStore: new FeatureToggleClientStore(
             db,
             eventBus,
             getLogger,

@@ -1,4 +1,4 @@
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service-v2';
 import ProjectService from '../../../lib/services/project-service';
@@ -13,7 +13,7 @@ import { createTestConfig } from '../../config/test-config';
 import { RoleName } from '../../../lib/types/model';
 
 let stores;
-let db;
+let db: ITestDb;
 
 let projectService;
 let accessService;
@@ -104,7 +104,7 @@ test('should not be able to delete project with toggles', async () => {
         description: 'Blah',
     };
     await projectService.createProject(project, user);
-    await stores.featureToggleStore.createFeature(project.id, {
+    await stores.featureToggleStore.create(project.id, {
         name: 'test-project-delete',
         project: project.id,
         enabled: false,

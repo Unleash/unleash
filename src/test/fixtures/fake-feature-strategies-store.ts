@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import {
     FeatureToggle,
     FeatureToggleWithEnvironment,
-    IFeatureEnvironment,
+    IFeatureOverview,
     IFeatureStrategy,
     IFeatureToggleClient,
     IFeatureToggleQuery,
@@ -26,20 +26,12 @@ export default class FakeFeatureStrategiesStore
 
     featureToggles: FeatureToggle[] = [];
 
-    async createStrategyConfig(
+    async createStrategyFeatureEnv(
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
         const newStrat = { ...strategyConfig, id: randomUUID() };
         this.featureStrategies.push(newStrat);
         return Promise.resolve(newStrat);
-    }
-
-    async getStrategiesForToggle(
-        featureName: string,
-    ): Promise<IFeatureStrategy[]> {
-        return this.featureStrategies.filter(
-            (fS) => fS.featureName === featureName,
-        );
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -53,22 +45,9 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve();
     }
 
-    async getAllFeatureStrategies(): Promise<IFeatureStrategy[]> {
-        return this.featureStrategies;
-    }
-
     async deleteFeatureStrategies(): Promise<void> {
         this.featureStrategies = [];
         return Promise.resolve();
-    }
-
-    async getStrategiesForEnvironment(
-        environment: string,
-    ): Promise<IFeatureStrategy[]> {
-        const stratEnvs = this.featureStrategies.filter(
-            (fS) => fS.environment === environment,
-        );
-        return Promise.resolve(stratEnvs);
     }
 
     async hasStrategy(id: string): Promise<boolean> {
@@ -98,7 +77,7 @@ export default class FakeFeatureStrategiesStore
         throw new Error('Method not implemented.');
     }
 
-    async removeAllStrategiesForEnv(
+    async removeAllStrategiesForFeatureEnv(
         feature_name: string,
         environment: string,
     ): Promise<void> {
@@ -122,29 +101,21 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(this.featureStrategies);
     }
 
-    async getStrategiesForFeature(
+    async getStrategiesForFeatureEnv(
         project_name: string,
         feature_name: string,
         environment: string,
     ): Promise<IFeatureStrategy[]> {
         const rows = this.featureStrategies.filter(
             (fS) =>
-                fS.projectName === project_name &&
+                fS.projectId === project_name &&
                 fS.featureName === feature_name &&
                 fS.environment === environment,
         );
         return Promise.resolve(rows);
     }
 
-    async getStrategiesForEnv(
-        environment: string,
-    ): Promise<IFeatureStrategy[]> {
-        return this.featureStrategies.filter(
-            (fS) => fS.environment === environment,
-        );
-    }
-
-    async getFeatureToggleAdmin(
+    async getFeatureToggleWithEnvs(
         featureName: string,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {
@@ -157,6 +128,15 @@ export default class FakeFeatureStrategiesStore
         throw new NotFoundError(
             `Could not find feature with name ${featureName}`,
         );
+    }
+
+    async getFeatureOverview(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        archived: boolean,
+    ): Promise<IFeatureOverview[]> {
+        return Promise.resolve([]);
     }
 
     async getFeatures(
@@ -214,31 +194,6 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve();
     }
 
-    async enableEnvironmentForFeature(
-        feature_name: string,
-        environment: string,
-    ): Promise<void> {
-        if (!this.environmentAndFeature.has(environment)) {
-            this.environmentAndFeature.set(environment, [
-                {
-                    featureName: feature_name,
-                    enabled: true,
-                },
-            ]);
-        }
-        const features = this.environmentAndFeature
-            .get(environment)
-            .map((f) => {
-                if (f.featureName === feature_name) {
-                    // eslint-disable-next-line no-param-reassign
-                    f.enabled = true;
-                }
-                return f;
-            });
-        this.environmentAndFeature.set(environment, features);
-        return Promise.resolve();
-    }
-
     async removeEnvironmentForFeature(
         feature_name: string,
         environment: string,
@@ -275,15 +230,6 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(this.featureStrategies.find((f) => f.id === id));
     }
 
-    async getStrategiesAndMetadataForEnvironment(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        featureName: string,
-    ): Promise<void> {
-        return Promise.resolve();
-    }
-
     async deleteConfigurationsForProjectAndEnvironment(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: String,
@@ -304,16 +250,12 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(enabled);
     }
 
-    async toggleEnvironmentEnabledStatus(
+    async setEnvironmentEnabledStatus(
         environment: string,
         featureName: string,
         enabled: boolean,
     ): Promise<boolean> {
         return Promise.resolve(enabled);
-    }
-
-    async getAllFeatureEnvironments(): Promise<IFeatureEnvironment[]> {
-        return Promise.resolve([]);
     }
 }
 

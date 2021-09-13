@@ -8,9 +8,9 @@ import NotFoundError from '../error/notfound-error';
 import {
     FeatureToggleWithEnvironment,
     IConstraint,
+    IEnvironmentOverview,
+    IFeatureOverview,
     IFeatureStrategy,
-    IFeatureToggleClient,
-    IFeatureToggleQuery,
     IStrategyConfig,
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
@@ -54,7 +54,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
     return {
         id: row.id,
         featureName: row.feature_name,
-        projectName: row.project_name,
+        projectId: row.project_name,
         environment: row.environment,
         strategyName: row.strategy_name,
         parameters: row.parameters,
@@ -67,7 +67,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
     return {
         id: input.id,
         feature_name: input.featureName,
-        project_name: input.projectName,
+        project_name: input.projectId,
         environment: input.environment,
         strategy_name: input.strategyName,
         parameters: input.parameters,
@@ -136,10 +136,15 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const row = await this.db(T.featureStrategies)
             .where({ id: key })
             .first();
+
+        if (!row) {
+            throw new NotFoundError(`Could not find strategy with id=${key}`);
+        }
+
         return mapRow(row);
     }
 
-    async createStrategyConfig(
+    async createStrategyFeatureEnv(
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
         const strategyRow = mapInput({ ...strategyConfig, id: uuidv4() });
@@ -149,43 +154,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return mapRow(rows[0]);
     }
 
-    async getStrategiesForToggle(
+    async removeAllStrategiesForFeatureEnv(
         featureName: string,
-    ): Promise<IFeatureStrategy[]> {
-        const stopTimer = this.timer('getAll');
-        const rows = await this.db
-            .select(COLUMNS)
-            .where('feature_name', featureName)
-            .from<IFeatureStrategiesTable>(T.featureStrategies);
-
-        stopTimer();
-        return rows.map(mapRow);
-    }
-
-    async getAllFeatureStrategies(): Promise<IFeatureStrategy[]> {
-        const rows = await this.db(T.featureStrategies).select(COLUMNS);
-        return rows.map(mapRow);
-    }
-
-    async getStrategiesForEnvironment(
-        environment: string,
-    ): Promise<IFeatureStrategy[]> {
-        const stopTimer = this.timer('getAll');
-        const rows = await this.db
-            .select(COLUMNS)
-            .where({ environment })
-            .from<IFeatureStrategiesTable>(T.featureStrategies);
-
-        stopTimer();
-        return rows.map(mapRow);
-    }
-
-    async removeAllStrategiesForEnv(
-        feature_name: string,
         environment: string,
     ): Promise<void> {
         await this.db('feature_strategies')
-            .where({ feature_name, environment })
+            .where({ feature_name: featureName, environment })
             .del();
     }
 
@@ -199,37 +173,24 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.map(mapRow);
     }
 
-    async getStrategiesForFeature(
-        project_name: string,
-        feature_name: string,
+    async getStrategiesForFeatureEnv(
+        projectId: string,
+        featureName: string,
         environment: string,
     ): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getForFeature');
         const rows = await this.db<IFeatureStrategiesTable>(
             T.featureStrategies,
         ).where({
-            project_name,
-            feature_name,
+            project_name: projectId,
+            feature_name: featureName,
             environment,
         });
         stopTimer();
         return rows.map(mapRow);
     }
 
-    async getStrategiesForEnv(
-        environment: string,
-    ): Promise<IFeatureStrategy[]> {
-        const stopTimer = this.timer('getStrategiesForEnv');
-        const rows = await this.db<IFeatureStrategiesTable>(
-            T.featureStrategies,
-        ).where({
-            environment,
-        });
-        stopTimer();
-        return rows.map(mapRow);
-    }
-
-    async getFeatureToggleAdmin(
+    async getFeatureToggleWithEnvs(
         featureName: string,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {
@@ -256,11 +217,17 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_environments.feature_name',
                 'features.name',
             )
-            .fullOuterJoin(
-                'feature_strategies',
-                'feature_strategies.feature_name',
-                'features.name',
-            )
+            .fullOuterJoin('feature_strategies', function () {
+                this.on(
+                    'feature_strategies.feature_name',
+                    '=',
+                    'feature_environments.feature_name',
+                ).andOn(
+                    'feature_strategies.environment',
+                    '=',
+                    'feature_environments.environment',
+                );
+            })
             .where({ name: featureName, archived: archived ? 1 : 0 });
         stopTimer();
         if (rows.length > 0) {
@@ -286,7 +253,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 if (!env.strategies) {
                     env.strategies = [];
                 }
-                env.strategies.push(this.getAdminStrategy(r));
+                if (r.strategy_id) {
+                    env.strategies.push(this.getAdminStrategy(r));
+                }
                 acc.environments[r.environment] = env;
                 return acc;
             }, {});
@@ -301,99 +270,65 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         );
     }
 
-    async getFeatures(
-        featureQuery?: IFeatureToggleQuery,
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    private getEnvironment(r: any): IEnvironmentOverview {
+        return {
+            name: r.environment,
+            displayName: r.display_name,
+            enabled: r.enabled,
+        };
+    }
+
+    async getFeatureOverview(
+        projectId: string,
         archived: boolean = false,
-        isAdmin: boolean = true,
-    ): Promise<IFeatureToggleClient[]> {
-        const environments = [':global:'];
-        if (featureQuery?.environment) {
-            environments.push(featureQuery.environment);
-        }
-        const stopTimer = this.timer('getFeatureAdmin');
-        let query = this.db('features')
+    ): Promise<IFeatureOverview[]> {
+        const rows = await this.db('features')
+            .where({ project: projectId, archived })
             .select(
-                'features.name as name',
-                'features.description as description',
+                'features.name as feature_name',
                 'features.type as type',
-                'features.project as project',
-                'features.stale as stale',
-                'features.variants as variants',
                 'features.created_at as created_at',
                 'features.last_seen_at as last_seen_at',
+                'features.stale as stale',
                 'feature_environments.enabled as enabled',
                 'feature_environments.environment as environment',
-                'feature_strategies.id as strategy_id',
-                'feature_strategies.strategy_name as strategy_name',
-                'feature_strategies.parameters as parameters',
-                'feature_strategies.constraints as constraints',
+                'environments.display_name as display_name',
             )
-            .where({ archived })
-            .whereIn('feature_environments.environment', environments)
             .fullOuterJoin(
                 'feature_environments',
                 'feature_environments.feature_name',
                 'features.name',
             )
             .fullOuterJoin(
-                'feature_strategies',
-                'feature_strategies.feature_name',
-                'features.name',
+                'environments',
+                'feature_environments.environment',
+                'environments.name',
             );
-        if (featureQuery) {
-            if (featureQuery.tag) {
-                const tagQuery = this.db
-                    .from('feature_tag')
-                    .select('feature_name')
-                    .whereIn(['tag_type', 'tag_value'], featureQuery.tag);
-                query = query.whereIn('name', tagQuery);
-            }
-            if (featureQuery.project) {
-                query = query.whereIn('project', featureQuery.project);
-            }
-            if (featureQuery.namePrefix) {
-                query = query.where(
-                    'name',
-                    'like',
-                    `${featureQuery.namePrefix}%`,
-                );
-            }
+        if (rows.length > 0) {
+            const overview = rows.reduce((acc, r) => {
+                if (acc[r.feature_name] !== undefined) {
+                    acc[r.feature_name].environments.push(
+                        this.getEnvironment(r),
+                    );
+                } else {
+                    acc[r.feature_name] = {
+                        type: r.type,
+                        name: r.feature_name,
+                        createdAt: r.created_at,
+                        lastSeenAt: r.last_seen_at,
+                        stale: r.stale,
+                        environments: [this.getEnvironment(r)],
+                    };
+                }
+                return acc;
+            }, {});
+            return Object.values(overview).map((o: IFeatureOverview) => ({
+                ...o,
+                environments: o.environments.filter((f) => f.name),
+            }));
         }
-        const rows = await query;
-        stopTimer();
-        const featureToggles = rows.reduce((acc, r) => {
-            let feature;
-            if (acc[r.name]) {
-                feature = acc[r.name];
-            } else {
-                feature = {};
-            }
-            if (!feature.strategies) {
-                feature.strategies = [];
-            }
-            if (r.strategy_name) {
-                feature.strategies.push(this.getAdminStrategy(r, isAdmin));
-            }
-            if (feature.enabled === undefined) {
-                feature.enabled = r.enabled;
-            } else {
-                feature.enabled = feature.enabled && r.enabled;
-            }
-            feature.name = r.name;
-            feature.description = r.description;
-            feature.project = r.project;
-            feature.stale = r.stale;
-            feature.type = r.type;
-            feature.variants = r.variants;
-            feature.project = r.project;
-            if (isAdmin) {
-                feature.lastSeenAt = r.last_seen_at;
-                feature.createdAt = r.created_at;
-            }
-            acc[r.name] = feature;
-            return acc;
-        }, {});
-        return Object.values(featureToggles);
+        return [];
     }
 
     async getStrategyById(id: string): Promise<IFeatureStrategy> {
@@ -430,31 +365,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             delete strategy.id;
         }
         return strategy;
-    }
-
-    async getStrategiesAndMetadataForEnvironment(
-        environment: string,
-        featureName: string,
-    ): Promise<void> {
-        const rows = await this.db(T.featureEnvs)
-            .select('*')
-            .fullOuterJoin(
-                T.featureStrategies,
-                `${T.featureEnvs}.feature_name`,
-                `${T.featureStrategies}.feature_name`,
-            )
-            .where(`${T.featureStrategies}.feature_name`, featureName)
-            .andWhere(`${T.featureEnvs}.environment`, environment);
-        return rows.reduce((acc, r) => {
-            if (acc.strategies !== undefined) {
-                acc.strategies.push(this.getAdminStrategy(r));
-            } else {
-                acc.enabled = r.enabled;
-                acc.environment = r.environment;
-                acc.strategies = [this.getAdminStrategy(r)];
-            }
-            return acc;
-        }, {});
     }
 
     async deleteConfigurationsForProjectAndEnvironment(

@@ -12,6 +12,12 @@ import NotFoundError from '../error/notfound-error';
 
 const T = { featureEnvs: 'feature_environments' };
 
+interface IFeatureEnvironmentRow {
+    environment: string;
+    feature_name: string;
+    enabled: boolean;
+}
+
 export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     private db: Knex;
 
@@ -86,18 +92,19 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         }));
     }
 
-    async connectEnvironmentAndFeature(
-        feature_name: string,
+    async addEnvironmentToFeature(
+        featureName: string,
         environment: string,
         enabled: boolean = false,
     ): Promise<void> {
         await this.db('feature_environments')
-            .insert({ feature_name, environment, enabled })
+            .insert({ feature_name: featureName, environment, enabled })
             .onConflict(['environment', 'feature_name'])
             .merge('enabled');
     }
 
-    async disconnectEnvironmentFromProject(
+    // TODO: move to project store.
+    async disconnectFeatures(
         environment: string,
         project: string,
     ): Promise<void> {
@@ -114,15 +121,6 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         });
     }
 
-    async enableEnvironmentForFeature(
-        feature_name: string,
-        environment: string,
-    ): Promise<void> {
-        await this.db(T.featureEnvs)
-            .update({ enabled: true })
-            .where({ feature_name, environment });
-    }
-
     async featureHasEnvironment(
         environment: string,
         featureName: string,
@@ -133,15 +131,6 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         );
         const { present } = result.rows[0];
         return present;
-    }
-
-    async getAllFeatureEnvironments(): Promise<IFeatureEnvironment[]> {
-        const rows = await this.db(T.featureEnvs);
-        return rows.map((r) => ({
-            environment: r.environment,
-            featureName: r.feature_name,
-            enabled: r.enabled,
-        }));
     }
 
     async getEnvironmentMetaData(
@@ -176,13 +165,15 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     }
 
     async removeEnvironmentForFeature(
-        feature_name: string,
+        featureName: string,
         environment: string,
     ): Promise<void> {
-        await this.db(T.featureEnvs).where({ feature_name, environment }).del();
+        await this.db(T.featureEnvs)
+            .where({ feature_name: featureName, environment })
+            .del();
     }
 
-    async toggleEnvironmentEnabledStatus(
+    async setEnvironmentEnabledStatus(
         environment: string,
         featureName: string,
         enabled: boolean,
@@ -191,5 +182,67 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             .update({ enabled })
             .where({ environment, feature_name: featureName });
         return enabled;
+    }
+
+    async connectProject(
+        environment: string,
+        projectId: string,
+    ): Promise<void> {
+        await this.db('project_environments').insert({
+            environment_name: environment,
+            project_id: projectId,
+        });
+    }
+
+    async connectFeatures(
+        environment: string,
+        projectId: string,
+    ): Promise<void> {
+        const featuresToEnable = await this.db('features')
+            .select('name')
+            .where({
+                project: projectId,
+            });
+        const rows: IFeatureEnvironmentRow[] = featuresToEnable.map((f) => ({
+            environment,
+            feature_name: f.name,
+            enabled: false,
+        }));
+        if (rows.length > 0) {
+            await this.db<IFeatureEnvironmentRow>('feature_environments')
+                .insert(rows)
+                .onConflict(['environment', 'feature_name'])
+                .ignore();
+        }
+    }
+
+    async disconnectProject(
+        environment: string,
+        projectId: string,
+    ): Promise<void> {
+        await this.db('project_environments')
+            .where({ environment_name: environment, project_id: projectId })
+            .del();
+    }
+
+    async connectFeatureToEnvironmentsForProject(
+        featureName: string,
+        projectId: string,
+    ): Promise<void> {
+        const environmentsToEnable = await this.db('project_environments')
+            .select('environment_name')
+            .where({ project_id: projectId });
+        await Promise.all(
+            environmentsToEnable.map(async (env) => {
+                await this.db('feature_environments')
+                    .insert({
+                        environment: env.environment_name,
+                        feature_name: featureName,
+                        enabled: false,
+                    })
+                    .onConflict(['environment', 'feature_name'])
+                    .ignore();
+            }),
+        );
     }
 }

@@ -26,6 +26,7 @@ import {
     ITag,
     IImportData,
     IProject,
+    IStrategyConfig,
 } from '../types/model';
 import { GLOBAL_ENV } from '../types/environment';
 import { Logger } from '../logger';
@@ -196,7 +197,7 @@ export default class StateService {
     async importFeatureEnvironments({ featureEnvironments }): Promise<void> {
         await Promise.all(
             featureEnvironments.map((env) =>
-                this.featureEnvironmentStore.connectEnvironmentAndFeature(
+                this.featureEnvironmentStore.addEnvironmentToFeature(
                     env.featureName,
                     env.environment,
                     env.enabled,
@@ -213,7 +214,7 @@ export default class StateService {
     }): Promise<void> {
         const oldFeatureStrategies = dropBeforeImport
             ? []
-            : await this.featureStrategiesStore.getAllFeatureStrategies();
+            : await this.featureStrategiesStore.getAll();
         if (dropBeforeImport) {
             this.logger.info(
                 'Dropping existing strategies for feature toggles',
@@ -227,7 +228,7 @@ export default class StateService {
             : featureStrategies;
         await Promise.all(
             strategiesToImport.map((featureStrategy) =>
-                this.featureStrategiesStore.createStrategyConfig(
+                this.featureStrategiesStore.createStrategyFeatureEnv(
                     featureStrategy,
                 ),
             ),
@@ -239,9 +240,9 @@ export default class StateService {
         features,
     }): Promise<{ features; featureStrategies; featureEnvironments }> {
         const strategies = features.flatMap((f) =>
-            f.strategies.map((strategy) => ({
+            f.strategies.map((strategy: IStrategyConfig) => ({
                 featureName: f.name,
-                projectName: f.project,
+                projectId: f.project,
                 constraints: strategy.constraints || [],
                 parameters: strategy.parameters || {},
                 environment: GLOBAL_ENV,
@@ -289,7 +290,7 @@ export default class StateService {
                 .filter(filterEqual(oldToggles))
                 .map((feature) =>
                     this.toggleStore
-                        .createFeature(feature.project, feature)
+                        .create(feature.project, feature)
                         .then(() => {
                             this.eventStore.store({
                                 type: FEATURE_IMPORT,

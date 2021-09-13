@@ -10,7 +10,7 @@ export default class FakeFeatureEnvironmentStore
 {
     featureEnvironments: IFeatureEnvironment[] = [];
 
-    async connectEnvironmentAndFeature(
+    async addEnvironmentToFeature(
         featureName: string,
         environment: string,
         enabled: boolean,
@@ -35,21 +35,13 @@ export default class FakeFeatureEnvironmentStore
 
     destroy(): void {}
 
-    async disconnectEnvironmentFromProject(
+    async disconnectFeatures(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         project: string,
     ): Promise<void> {
         return Promise.resolve(undefined);
-    }
-
-    async enableEnvironmentForFeature(
-        featureName: string,
-        environment: string,
-    ): Promise<void> {
-        const fE = await this.get({ featureName, environment });
-        fE.enabled = true;
     }
 
     async exists(key: FeatureEnvironmentKey): Promise<boolean> {
@@ -85,10 +77,6 @@ export default class FakeFeatureEnvironmentStore
         return this.featureEnvironments;
     }
 
-    async getAllFeatureEnvironments(): Promise<IFeatureEnvironment[]> {
-        return this.getAll();
-    }
-
     getEnvironmentMetaData(
         environment: string,
         featureName: string,
@@ -115,7 +103,7 @@ export default class FakeFeatureEnvironmentStore
         return this.delete({ featureName, environment });
     }
 
-    async toggleEnvironmentEnabledStatus(
+    async setEnvironmentEnabledStatus(
         environment: string,
         featureName: string,
         enabled: boolean,
@@ -123,5 +111,41 @@ export default class FakeFeatureEnvironmentStore
         const fE = await this.get({ environment, featureName });
         fE.enabled = enabled;
         return enabled;
+    }
+
+    async connectProject(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+    ): Promise<void> {
+        return Promise.reject(new Error('Not implemented'));
+    }
+
+    async connectFeatures(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+    ): Promise<void> {
+        return Promise.reject(new Error('Not implemented'));
+    }
+
+    async disconnectProject(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+    ): Promise<void> {
+        return Promise.reject(new Error('Not implemented'));
+    }
+
+    async connectFeatureToEnvironmentsForProject(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        featureName: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+    ): Promise<void> {
+        return Promise.reject(new Error('Not implemented'));
     }
 }

@@ -1,8 +1,7 @@
 import {
     FeatureToggleWithEnvironment,
+    IFeatureOverview,
     IFeatureStrategy,
-    IFeatureToggleClient,
-    IFeatureToggleQuery,
     IStrategyConfig,
     IVariant,
 } from '../model';
@@ -18,43 +17,31 @@ export interface FeatureConfigurationClient {
 }
 export interface IFeatureStrategiesStore
     extends Store<IFeatureStrategy, string> {
-    createStrategyConfig(
+    createStrategyFeatureEnv(
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy>;
-    getStrategiesForToggle(featureName: string): Promise<IFeatureStrategy[]>;
-    getAllFeatureStrategies(): Promise<IFeatureStrategy[]>;
-    getStrategiesForEnvironment(
-        environment: string,
-    ): Promise<IFeatureStrategy[]>;
-    removeAllStrategiesForEnv(
-        feature_name: string,
+    removeAllStrategiesForFeatureEnv(
+        featureName: string,
         environment: string,
     ): Promise<void>;
-    getAll(): Promise<IFeatureStrategy[]>;
-    getStrategiesForFeature(
-        project_name: string,
-        feature_name: string,
+    getStrategiesForFeatureEnv(
+        projectId: string,
+        featureName: string,
         environment: string,
     ): Promise<IFeatureStrategy[]>;
-    getStrategiesForEnv(environment: string): Promise<IFeatureStrategy[]>;
-    getFeatureToggleAdmin(
+    getFeatureToggleWithEnvs(
         featureName: string,
         archived?: boolean,
     ): Promise<FeatureToggleWithEnvironment>;
-    getFeatures(
-        featureQuery: Partial<IFeatureToggleQuery>,
+    getFeatureOverview(
+        projectId: string,
         archived: boolean,
-        isAdmin: boolean,
-    ): Promise<IFeatureToggleClient[]>;
+    ): Promise<IFeatureOverview[]>;
     getStrategyById(id: string): Promise<IFeatureStrategy>;
     updateStrategy(
         id: string,
         updates: Partial<IFeatureStrategy>,
     ): Promise<IFeatureStrategy>;
-    getStrategiesAndMetadataForEnvironment(
-        environment: string,
-        featureName: string,
-    ): Promise<void>;
     deleteConfigurationsForProjectAndEnvironment(
         projectId: String,
         environment: String,

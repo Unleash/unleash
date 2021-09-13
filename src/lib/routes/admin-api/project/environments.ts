@@ -4,8 +4,8 @@ import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
 import { Logger } from '../../../logger';
 import EnvironmentService from '../../../services/environment-service';
-import { handleErrors } from '../../util';
 import { UPDATE_PROJECT } from '../../../types/permissions';
+import { addEnvironment } from '../../../schema/project-schema';
 
 const PREFIX = '/:projectId/environments';
 
@@ -49,15 +49,14 @@ export default class EnvironmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const { projectId } = req.params;
-        try {
-            await this.environmentService.connectProjectToEnvironment(
-                req.body.environment,
-                projectId,
-            );
-            res.status(200).end();
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+
+        const { environment } = await addEnvironment.validateAsync(req.body);
+
+        await this.environmentService.addEnvironmentToProject(
+            environment,
+            projectId,
+        );
+        res.status(200).end();
     }
 
     async removeEnvironmentFromProject(
@@ -65,14 +64,10 @@ export default class EnvironmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const { projectId, environment } = req.params;
-        try {
-            await this.environmentService.removeEnvironmentFromProject(
-                environment,
-                projectId,
-            );
-            res.status(200).end();
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        await this.environmentService.removeEnvironmentFromProject(
+            environment,
+            projectId,
+        );
+        res.status(200).end();
     }
 }

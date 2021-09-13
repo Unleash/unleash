@@ -35,6 +35,7 @@ export const handleErrors: (
         case 'NotFoundError':
             return res.status(404).json(error).end();
         case 'InvalidOperationError':
+            return res.status(403).json(error).end();
         case 'NameExistsError':
             return res.status(409).json(error).end();
         case 'ValidationError':

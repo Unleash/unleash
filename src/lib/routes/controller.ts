@@ -98,6 +98,20 @@ export default class Controller {
         );
     }
 
+    patch(
+        path: string,
+        handler: IRequestHandler,
+        permission?: string,
+        ...acceptedContentTypes: string[]
+    ): void {
+        this.app.patch(
+            path,
+            checkPermission(permission),
+            requireContentType(...acceptedContentTypes),
+            this.wrap(handler.bind(this)),
+        );
+    }
+
     delete(path: string, handler: IRequestHandler, permission?: string): void {
         this.app.delete(
             path,

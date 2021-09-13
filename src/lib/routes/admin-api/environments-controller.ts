@@ -5,7 +5,6 @@ import { IUnleashConfig } from '../../types/option';
 import { IEnvironment } from '../../types/model';
 import EnvironmentService from '../../services/environment-service';
 import { Logger } from '../../logger';
-import { handleErrors } from '../util';
 import { ADMIN } from '../../types/permissions';
 
 interface EnvironmentParam {
@@ -32,24 +31,16 @@ export class EnvironmentsController extends Controller {
     }
 
     async getAll(req: Request, res: Response): Promise<void> {
-        try {
-            const environments = await this.service.getAll();
-            res.status(200).json({ version: 1, environments });
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        const environments = await this.service.getAll();
+        res.status(200).json({ version: 1, environments });
     }
 
     async createEnv(
         req: Request<any, any, IEnvironment, any>,
         res: Response,
     ): Promise<void> {
-        try {
-            const environment = await this.service.create(req.body);
-            res.status(201).json(environment);
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        const environment = await this.service.create(req.body);
+        res.status(201).json(environment);
     }
 
     async getEnv(
@@ -57,12 +48,8 @@ export class EnvironmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const { name } = req.params;
-        try {
-            const env = await this.service.get(name);
-            res.status(200).json(env);
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        const env = await this.service.get(name);
+        res.status(200).json(env);
     }
 
     async updateEnv(
@@ -70,12 +57,8 @@ export class EnvironmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const { name } = req.params;
-        try {
-            const env = await this.service.update(name, req.body);
-            res.status(200).json(env);
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        const env = await this.service.update(name, req.body);
+        res.status(200).json(env);
     }
 
     async deleteEnv(
@@ -83,11 +66,7 @@ export class EnvironmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const { name } = req.params;
-        try {
-            await this.service.delete(name);
-            res.status(200).end();
-        } catch (e) {
-            handleErrors(res, this.logger, e);
-        }
+        await this.service.delete(name);
+        res.status(200).end();
     }
 }

@@ -177,7 +177,8 @@ class FeatureController extends Controller {
             ),
         );
         await this.featureService2.updateEnabled(
-            validatedToggle.name,
+            createdFeature.project,
+            createdFeature.name,
             GLOBAL_ENV,
             enabled,
             userName,
@@ -222,6 +223,7 @@ class FeatureController extends Controller {
             );
         }
         await this.featureService2.updateEnabled(
+            projectId,
             updatedFeature.name,
             GLOBAL_ENV,
             updatedFeature.enabled,
@@ -236,9 +238,11 @@ class FeatureController extends Controller {
     // Kept to keep backward compatibility
     async toggle(req: Request, res: Response): Promise<void> {
         const userName = extractUser(req);
-        const name = req.params.featureName;
+        const { featureName } = req.params;
+        const projectId = await this.featureService2.getProjectId(featureName);
         const feature = await this.featureService2.toggle(
-            name,
+            projectId,
+            featureName,
             GLOBAL_ENV,
             userName,
         );
@@ -248,7 +252,9 @@ class FeatureController extends Controller {
     async toggleOn(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUser(req);
+        const projectId = await this.featureService2.getProjectId(featureName);
         const feature = await this.featureService2.updateEnabled(
+            projectId,
             featureName,
             GLOBAL_ENV,
             true,
@@ -260,7 +266,9 @@ class FeatureController extends Controller {
     async toggleOff(req: Request, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUser(req);
+        const projectId = await this.featureService2.getProjectId(featureName);
         const feature = await this.featureService2.updateEnabled(
+            projectId,
             featureName,
             GLOBAL_ENV,
             false,

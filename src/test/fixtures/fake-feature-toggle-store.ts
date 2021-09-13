@@ -1,7 +1,6 @@
 import {
     IFeatureToggleQuery,
     IFeatureToggleStore,
-    IHasFeature,
 } from '../../lib/types/stores/feature-toggle-store';
 import { FeatureToggle, FeatureToggleDTO } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
@@ -9,7 +8,7 @@ import NotFoundError from '../../lib/error/notfound-error';
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     features: FeatureToggle[] = [];
 
-    async archiveFeature(featureName: string): Promise<FeatureToggle> {
+    async archive(featureName: string): Promise<FeatureToggle> {
         const feature = this.features.find((f) => f.name === featureName);
         if (feature) {
             feature.archived = true;
@@ -46,7 +45,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         };
     }
 
-    async createFeature(
+    async create(
         project: string,
         data: FeatureToggleDTO,
     ): Promise<FeatureToggle> {
@@ -88,30 +87,19 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return this.get(name);
     }
 
-    async getFeatures(archived: boolean): Promise<FeatureToggle[]> {
-        return this.features.filter((f) => f.archived === archived);
-    }
-
-    async getFeaturesBy(
-        query: Partial<IFeatureToggleQuery>,
-    ): Promise<FeatureToggle[]> {
+    async getBy(query: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]> {
         return this.features.filter(this.getFilterQuery(query));
     }
 
-    async hasFeature(featureName: string): Promise<IHasFeature> {
-        const { name, archived } = await this.get(featureName);
-        return { name, archived };
-    }
-
-    async reviveFeature(featureName: string): Promise<FeatureToggle> {
+    async revive(featureName: string): Promise<FeatureToggle> {
         const revive = this.features.find((f) => f.name === featureName);
         if (revive) {
             revive.archived = false;
         }
-        return this.updateFeature(revive.project, revive);
+        return this.update(revive.project, revive);
     }
 
-    async updateFeature(
+    async update(
         project: string,
         data: FeatureToggleDTO,
     ): Promise<FeatureToggle> {
@@ -127,7 +115,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         throw new NotFoundError('Could not find feature to update');
     }
 
-    async updateLastSeenForToggles(toggleNames: string[]): Promise<void> {
+    async setLastSeen(toggleNames: string[]): Promise<void> {
         toggleNames.forEach((t) => {
             const toUpdate = this.features.find((f) => f.name === t);
             if (toUpdate) {

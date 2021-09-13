@@ -66,13 +66,19 @@ export default class EnvironmentService {
         throw new NotFoundError(`Could not find environment ${name}`);
     }
 
-    async connectProjectToEnvironment(
+    async addEnvironmentToProject(
         environment: string,
         projectId: string,
     ): Promise<void> {
         try {
-            await this.environmentStore.connectProject(environment, projectId);
-            await this.environmentStore.connectFeatures(environment, projectId);
+            await this.featureEnvironmentStore.connectProject(
+                environment,
+                projectId,
+            );
+            await this.featureEnvironmentStore.connectFeatures(
+                environment,
+                projectId,
+            );
         } catch (e) {
             if (e.code === UNIQUE_CONSTRAINT_VIOLATION) {
                 throw new NameExistsError(
@@ -87,11 +93,11 @@ export default class EnvironmentService {
         environment: string,
         projectId: string,
     ): Promise<void> {
-        await this.featureEnvironmentStore.disconnectEnvironmentFromProject(
+        await this.featureEnvironmentStore.disconnectFeatures(
             environment,
             projectId,
         );
-        await this.environmentStore.disconnectProjectFromEnv(
+        await this.featureEnvironmentStore.disconnectProject(
             environment,
             projectId,
         );

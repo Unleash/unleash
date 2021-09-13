@@ -16,6 +16,7 @@ import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IProjectStore } from '../types/stores/project-store';
 import Timer = NodeJS.Timer;
+import FeatureToggleServiceV2 from './feature-toggle-service-v2';
 
 export default class ProjectHealthService {
     private logger: Logger;
@@ -30,6 +31,8 @@ export default class ProjectHealthService {
 
     private healthRatingTimer: Timer;
 
+    private featureToggleService: FeatureToggleServiceV2;
+
     constructor(
         {
             projectStore,
@@ -40,6 +43,7 @@ export default class ProjectHealthService {
             'projectStore' | 'featureTypeStore' | 'featureToggleStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        featureToggleService: FeatureToggleServiceV2,
     ) {
         this.logger = getLogger('services/project-health-service.ts');
         this.projectStore = projectStore;
@@ -50,14 +54,16 @@ export default class ProjectHealthService {
             () => this.setHealthRating(),
             MILLISECONDS_IN_ONE_HOUR,
         ).unref();
+        this.featureToggleService = featureToggleService;
     }
 
+    // TODO: duplicate from project-service.
     async getProjectOverview(
         projectId: string,
         archived: boolean = false,
     ): Promise<IProjectOverview> {
         const project = await this.projectStore.get(projectId);
-        const features = await this.projectStore.getProjectOverview(
+        const features = await this.featureToggleService.getFeatureOverview(
             projectId,
             archived,
         );
@@ -120,7 +126,7 @@ export default class ProjectHealthService {
     }
 
     async calculateHealthRating(project: IProject): Promise<number> {
-        const toggles = await this.featureToggleStore.getFeaturesBy({
+        const toggles = await this.featureToggleStore.getAll({
             project: project.id,
         });
 

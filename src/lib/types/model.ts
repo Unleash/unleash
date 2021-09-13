@@ -18,7 +18,7 @@ export interface IStrategyConfig {
 export interface IFeatureStrategy {
     id: string;
     featureName: string;
-    projectName: string;
+    projectId: string;
     environment: string;
     strategyName: string;
     parameters: object;
@@ -84,12 +84,12 @@ export interface IVariant {
     name: string;
     weight: number;
     weightType: string;
-    payload: {
+    payload?: {
         type: string;
         value: string;
     };
     stickiness: string;
-    overrides: {
+    overrides?: {
         contextName: string;
         values: string[];
     }[];
@@ -297,8 +297,8 @@ export interface IProject {
     id: string;
     name: string;
     description: string;
-    health: number;
-    createdAt: Date;
+    health?: number;
+    createdAt?: Date;
 }
 
 export interface IProjectWithCount extends IProject {

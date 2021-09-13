@@ -8,6 +8,8 @@ import dbState from './database.json';
 import { LogProvider } from '../../../lib/logger';
 import noLoggerProvider from '../../fixtures/no-logger';
 import EnvironmentStore from '../../../lib/db/environment-store';
+import { IUnleashStores } from '../../../lib/types';
+import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -51,7 +53,7 @@ function createTagTypes(store) {
     return dbState.tag_types.map((t) => store.createTagType(t));
 }
 
-async function connectProject(store: EnvironmentStore): Promise<void> {
+async function connectProject(store: IFeatureEnvironmentStore): Promise<void> {
     await store.connectProject(':global:', 'default');
 }
 
@@ -65,13 +67,19 @@ async function setupDatabase(stores) {
     await Promise.all(createContextFields(stores.contextFieldStore));
     await Promise.all(createProjects(stores.projectStore));
     await Promise.all(createTagTypes(stores.tagTypeStore));
-    await connectProject(stores.environmentStore);
+    await connectProject(stores.featureEnvironmentStore);
+}
+
+export interface ITestDb {
+    stores: IUnleashStores;
+    reset: () => Promise<void>;
+    destroy: () => Promise<void>;
 }
 
 export default async function init(
     databaseSchema: String = 'test',
     getLogger: LogProvider = noLoggerProvider,
-): Promise<any> {
+): Promise<ITestDb> {
     const config = createTestConfig({
         db: {
             ...dbConfig.getDb(),

@@ -1,6 +1,5 @@
 import memoizee from 'memoizee';
 import { Request, Response } from 'express';
-import { handleErrors } from '../util';
 import Controller from '../controller';
 import { IUnleashServices } from '../../types/services';
 import { IUnleashConfig } from '../../types/option';
@@ -8,6 +7,7 @@ import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
+import NotFoundError from '../../error/notfound-error';
 
 const version = 2;
 
@@ -51,28 +51,25 @@ export default class FeatureController extends Controller {
     }
 
     async getAll(req: Request, res: Response): Promise<void> {
-        try {
-            const query = await this.prepQuery(req.query);
-            let features;
-            if (this.cache) {
-                features = await this.cachedFeatures(query);
-            } else {
-                features = await this.featureToggleServiceV2.getClientFeatures(
-                    query,
-                );
-            }
-            res.json({ version, features });
-        } catch (e) {
-            handleErrors(res, this.logger, e);
+        const query = await this.prepQuery(req.query);
+        let features;
+        if (this.cache) {
+            features = await this.cachedFeatures(query);
+        } else {
+            features = await this.featureToggleServiceV2.getClientFeatures(
+                query,
+            );
         }
+        res.json({ version, features });
     }
 
     async prepQuery({
         tag,
         project,
         namePrefix,
+        environment,
     }: IFeatureToggleQuery): Promise<IFeatureToggleQuery> {
-        if (!tag && !project && !namePrefix) {
+        if (!tag && !project && !namePrefix && !environment) {
             return null;
         }
         const tagQuery = this.paramToArray(tag);
@@ -81,6 +78,7 @@ export default class FeatureController extends Controller {
             tag: tagQuery,
             project: projectQuery,
             namePrefix,
+            environment,
         });
         if (query.tag) {
             query.tag = query.tag.map((q) => q.split(':'));
@@ -97,18 +95,25 @@ export default class FeatureController extends Controller {
     }
 
     async getFeatureToggle(
-        req: Request<{ featureName: string }, any, any, any>,
+        req: Request<
+            { featureName: string },
+            any,
+            any,
+            { environment?: string }
+        >,
         res: Response,
     ): Promise<void> {
-        try {
-            const name = req.params.featureName;
-            const featureToggle = await this.featureToggleServiceV2.getFeature(
-                name,
-            );
-            res.json(featureToggle).end();
-        } catch (err) {
-            res.status(404).json({ error: 'Could not find feature' });
+        const name = req.params.featureName;
+        const { environment } = req.query;
+        const toggles = await this.featureToggleServiceV2.getClientFeatures({
+            namePrefix: name,
+            environment,
+        });
+        const toggle = toggles.find((t) => t.name === name);
+        if (!toggle) {
+            throw new NotFoundError(`Could not find feature toggle ${name}`);
         }
+        res.json(toggle).end();
     }
 }
 

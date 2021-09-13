@@ -5,6 +5,7 @@ import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/client-metrics-schema';
 import { createServices } from '../../services';
+import { IUnleashStores } from '../../types';
 
 const eventBus = new EventEmitter();
 
@@ -27,7 +28,7 @@ function getSetup() {
 }
 
 let request;
-let stores;
+let stores: IUnleashStores;
 let destroy;
 
 beforeEach(() => {
@@ -166,7 +167,7 @@ test('schema allow yes=<string nbr>', () => {
 
 test('should set lastSeen on toggle', async () => {
     expect.assertions(1);
-    stores.featureToggleStore.createFeature('default', {
+    stores.featureToggleStore.create('default', {
         name: 'toggleLastSeen',
     });
     await request

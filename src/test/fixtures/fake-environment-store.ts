@@ -31,45 +31,9 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
         return Promise.resolve(env);
     }
 
-    async connectProject(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
-    ): Promise<void> {
-        return Promise.reject(new Error('Not implemented'));
-    }
-
-    async connectFeatures(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
-    ): Promise<void> {
-        return Promise.reject(new Error('Not implemented'));
-    }
-
     async delete(name: string): Promise<void> {
         this.environments = this.environments.filter((e) => e.name !== name);
         return Promise.resolve();
-    }
-
-    async disconnectProjectFromEnv(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
-    ): Promise<void> {
-        return Promise.reject(new Error('Not implemented'));
-    }
-
-    async connectFeatureToEnvironmentsForProject(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        featureName: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        project_id: string,
-    ): Promise<void> {
-        return Promise.reject(new Error('Not implemented'));
     }
 
     async deleteAll(): Promise<void> {

@@ -1,12 +1,11 @@
 import { Request } from 'express';
-import * as core from 'express-serve-static-core';
 import User from '../types/user';
 
 export interface IAuthRequest<
-    PARAM = core.ParamsDictionary,
+    PARAM = any,
     ResBody = any,
     ReqBody = any,
-    ReqQuery = core.Query,
+    ReqQuery = any,
 > extends Request<PARAM, ResBody, ReqBody, ReqQuery> {
     user: User;
     logout: () => void;

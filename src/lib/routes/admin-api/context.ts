@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import Controller from '../controller';
 
-import extractUser from '../../extract-user';
+import { extractUsername } from '../../util/extract-user';
 
 import {
     CREATE_CONTEXT_FIELD,
@@ -13,6 +13,7 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import ContextService from '../../services/context-service';
 import { Logger } from '../../logger';
+import { IAuthRequest } from '../unleash-types';
 
 class ContextController extends Controller {
     private logger: Logger;
@@ -60,17 +61,17 @@ class ContextController extends Controller {
         }
     }
 
-    async createContextField(req: Request, res: Response): Promise<void> {
+    async createContextField(req: IAuthRequest, res: Response): Promise<void> {
         const value = req.body;
-        const userName = extractUser(req);
+        const userName = extractUsername(req);
 
         await this.contextService.createContextField(value, userName);
         res.status(201).end();
     }
 
-    async updateContextField(req: Request, res: Response): Promise<void> {
+    async updateContextField(req: IAuthRequest, res: Response): Promise<void> {
         const name = req.params.contextField;
-        const userName = extractUser(req);
+        const userName = extractUsername(req);
         const contextField = req.body;
 
         contextField.name = name;
@@ -79,9 +80,9 @@ class ContextController extends Controller {
         res.status(200).end();
     }
 
-    async deleteContextField(req: Request, res: Response): Promise<void> {
+    async deleteContextField(req: IAuthRequest, res: Response): Promise<void> {
         const name = req.params.contextField;
-        const userName = extractUser(req);
+        const userName = extractUsername(req);
 
         await this.contextService.deleteContextField(name, userName);
         res.status(200).end();

@@ -15,7 +15,8 @@ import {
     IConstraint,
     IStrategyConfig,
 } from '../../../types/model';
-import extractUsername from '../../../extract-user';
+import { extractUsername } from '../../../util/extract-user';
+import { IAuthRequest } from '../../unleash-types';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -98,7 +99,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async createFeature(
-        req: Request<ProjectParam, any, FeatureToggleDTO, any>,
+        req: IAuthRequest<ProjectParam, any, FeatureToggleDTO, any>,
         res: Response,
     ): Promise<void> {
         const { projectId } = req.params;
@@ -121,7 +122,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async updateFeature(
-        req: Request<ProjectParam, any, FeatureToggleDTO, any>,
+        req: IAuthRequest<ProjectParam, any, FeatureToggleDTO, any>,
         res: Response,
     ): Promise<void> {
         const { projectId } = req.params;
@@ -136,7 +137,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async patchFeature(
-        req: Request<
+        req: IAuthRequest<
             { projectId: string; featureName: string },
             any,
             Operation[],
@@ -160,7 +161,12 @@ export default class ProjectFeaturesController extends Controller {
 
     // TODO: validate projectId
     async archiveFeature(
-        req: Request<{ projectId: string; featureName: string }, any, any, any>,
+        req: IAuthRequest<
+            { projectId: string; featureName: string },
+            any,
+            any,
+            any
+        >,
         res: Response,
     ): Promise<void> {
         const { featureName } = req.params;
@@ -183,7 +189,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async toggleEnvironmentOn(
-        req: Request<FeatureStrategyParams, any, any, any>,
+        req: IAuthRequest<FeatureStrategyParams, any, any, any>,
         res: Response,
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;
@@ -198,7 +204,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async toggleEnvironmentOff(
-        req: Request<FeatureStrategyParams, any, any, any>,
+        req: IAuthRequest<FeatureStrategyParams, any, any, any>,
         res: Response,
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;

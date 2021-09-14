@@ -7,7 +7,8 @@ import { Logger } from '../../logger';
 import Controller from '../controller';
 
 import { UPDATE_FEATURE } from '../../types/permissions';
-import extractUsername from '../../extract-user';
+import { extractUsername } from '../../util/extract-user';
+import { IAuthRequest } from '../unleash-types';
 
 const version = 1;
 
@@ -47,13 +48,13 @@ class TagController extends Controller {
         res.json({ version, tag });
     }
 
-    async createTag(req: Request, res: Response): Promise<void> {
+    async createTag(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         await this.tagService.createTag(req.body, userName);
         res.status(201).end();
     }
 
-    async deleteTag(req: Request, res: Response): Promise<void> {
+    async deleteTag(req: IAuthRequest, res: Response): Promise<void> {
         const { type, value } = req.params;
         const userName = extractUsername(req);
         await this.tagService.deleteTag({ type, value }, userName);
@@ -61,4 +62,3 @@ class TagController extends Controller {
     }
 }
 export default TagController;
-module.exports = TagController;

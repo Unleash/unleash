@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import Controller from '../controller';
 
 import { UPDATE_FEATURE } from '../../types/permissions';
-import extractUsername from '../../extract-user';
+import { extractUsername } from '../../util/extract-user';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import TagTypeService from '../../services/tag-type-service';
 import { Logger } from '../../logger';
+import { IAuthRequest } from '../unleash-types';
 
 const version = 1;
 
@@ -40,7 +41,7 @@ class TagTypeController extends Controller {
         res.status(200).json({ valid: true, tagType: req.body });
     }
 
-    async createTagType(req: Request, res: Response): Promise<void> {
+    async createTagType(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         const tagType = await this.tagTypeService.createTagType(
             req.body,
@@ -49,7 +50,7 @@ class TagTypeController extends Controller {
         res.status(201).json(tagType);
     }
 
-    async updateTagType(req: Request, res: Response): Promise<void> {
+    async updateTagType(req: IAuthRequest, res: Response): Promise<void> {
         const { description, icon } = req.body;
         const { name } = req.params;
         const userName = extractUsername(req);
@@ -68,7 +69,7 @@ class TagTypeController extends Controller {
         res.json({ version, tagType });
     }
 
-    async deleteTagType(req: Request, res: Response): Promise<void> {
+    async deleteTagType(req: IAuthRequest, res: Response): Promise<void> {
         const { name } = req.params;
         const userName = extractUsername(req);
         await this.tagTypeService.deleteTagType(name, userName);

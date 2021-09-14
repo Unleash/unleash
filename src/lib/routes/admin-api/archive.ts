@@ -1,13 +1,14 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
 
 import Controller from '../controller';
 
-import extractUser from '../../extract-user';
+import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions';
 import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
+import { IAuthRequest } from '../unleash-types';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -42,18 +43,18 @@ export default class ArchiveController extends Controller {
     }
 
     async deleteFeature(
-        req: Request<any, { featureName: string }, any, any>,
+        req: IAuthRequest<any, { featureName: string }, any, any>,
         res: Response,
     ): Promise<void> {
         const { featureName } = req.params;
-        const user = extractUser(req);
+        const user = extractUsername(req);
         await this.featureService.deleteFeature(featureName, user);
         res.status(200).end();
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async reviveFeatureToggle(req, res): Promise<void> {
-        const userName = extractUser(req);
+    async reviveFeatureToggle(req: IAuthRequest, res: Response): Promise<void> {
+        const userName = extractUsername(req);
         const { featureName } = req.params;
         await this.featureService.reviveToggle(featureName, userName);
         res.status(200).end();

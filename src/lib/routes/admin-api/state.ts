@@ -5,11 +5,12 @@ import multer from 'multer';
 import { Request, Response } from 'express';
 import Controller from '../controller';
 import { ADMIN } from '../../types/permissions';
-import extractUser from '../../extract-user';
+import { extractUsername } from '../../util/extract-user';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
 import StateService from '../../services/state-service';
+import { IAuthRequest } from '../unleash-types';
 
 const upload = multer({ limits: { fileSize: 5242880 } });
 const paramToBool = (param, def) => {
@@ -38,8 +39,8 @@ class StateController extends Controller {
         this.get('/export', this.export, ADMIN);
     }
 
-    async import(req: Request, res: Response): Promise<void> {
-        const userName = extractUser(req);
+    async import(req: IAuthRequest, res: Response): Promise<void> {
+        const userName = extractUsername(req);
         const { drop, keep } = req.query;
         // TODO: Should override request type so file is a type on request
         let data;

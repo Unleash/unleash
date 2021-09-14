@@ -1,6 +1,4 @@
-'use strict';
-
-const { featureSchema, querySchema } = require('./feature-schema');
+import { featureSchema, querySchema } from './feature-schema';
 
 test('should require URL firendly name', () => {
     const toggle = {

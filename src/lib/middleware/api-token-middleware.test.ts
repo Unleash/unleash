@@ -3,6 +3,7 @@ import getLogger from '../../test/fixtures/no-logger';
 import { CLIENT } from '../types/permissions';
 import { createTestConfig } from '../../test/config/test-config';
 import ApiUser from '../types/api-user';
+import { ALL } from '../types/models/api-token';
 
 let config: any;
 
@@ -59,8 +60,8 @@ test('should add user if unknown token', async () => {
     const apiUser = new ApiUser({
         username: 'default',
         permissions: [CLIENT],
-        project: '*',
-        environment: '*',
+        project: ALL,
+        environment: ALL,
     });
     const apiTokenService = {
         getUserForToken: jest.fn().mockReturnValue(apiUser),
@@ -86,8 +87,8 @@ test('should not add user if disabled', async () => {
     const apiUser = new ApiUser({
         username: 'default',
         permissions: [CLIENT],
-        project: '*',
-        environment: '*',
+        project: ALL,
+        environment: ALL,
     });
     const apiTokenService = {
         getUserForToken: jest.fn().mockReturnValue(apiUser),

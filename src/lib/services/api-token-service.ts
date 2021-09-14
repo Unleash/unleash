@@ -4,7 +4,11 @@ import { ADMIN, CLIENT } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
-import { ApiTokenType, IApiToken, IApiTokenCreate } from '../types/models/api-token';
+import {
+    ApiTokenType,
+    IApiToken,
+    IApiTokenCreate,
+} from '../types/models/api-token';
 import { IApiTokenStore } from '../types/stores/api-token-store';
 
 const ONE_MINUTE = 60_000;

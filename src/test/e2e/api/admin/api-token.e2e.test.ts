@@ -1,7 +1,7 @@
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token';
 
 let db;
 let app;
@@ -58,6 +58,25 @@ test('creates new admin token', async () => {
         .send({
             username: 'default-admin',
             type: 'admin',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.username).toBe('default-admin');
+            expect(res.body.type).toBe('admin');
+            expect(res.body.createdAt).toBeTruthy();
+            expect(res.body.expiresAt).toBeFalsy();
+            expect(res.body.secret.length > 16).toBe(true);
+        });
+});
+
+test('creates new ADMIN token should fix casing', async () => {
+    expect.assertions(5);
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'ADMIN',
         })
         .set('Content-Type', 'application/json')
         .expect(201)
@@ -183,8 +202,8 @@ test('creates new client token: project & environment defaults to "*"', async ()
         .expect((res) => {
             expect(res.body.type).toBe('client');
             expect(res.body.secret.length > 16).toBe(true);
-            expect(res.body.environment).toBe('*');
-            expect(res.body.project).toBe('*');
+            expect(res.body.environment).toBe(ALL);
+            expect(res.body.project).toBe(ALL);
         });
 });
 

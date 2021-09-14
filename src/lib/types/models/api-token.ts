@@ -1,3 +1,5 @@
+export const ALL = '*';
+
 export enum ApiTokenType {
     CLIENT = 'client',
     ADMIN = 'admin',

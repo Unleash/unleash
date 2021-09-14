@@ -1,9 +1,7 @@
-'use strict';
-
-const { setupApp } = require('../../helpers/test-helper');
-const metricsExample = require('../../../examples/client-metrics.json');
-const dbInit = require('../../helpers/database-init');
-const getLogger = require('../../../fixtures/no-logger');
+import { setupApp } from '../../helpers/test-helper';
+import metricsExample from '../../../examples/client-metrics.json';
+import dbInit from '../../helpers/database-init';
+import getLogger from '../../../fixtures/no-logger';
 
 let app;
 let db;

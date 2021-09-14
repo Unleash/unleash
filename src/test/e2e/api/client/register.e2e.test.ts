@@ -1,10 +1,8 @@
-'use strict';
-
-const faker = require('faker');
-const { setupApp } = require('../../helpers/test-helper');
-const dbInit = require('../../helpers/database-init');
-const getLogger = require('../../../fixtures/no-logger');
-const version = require('../../../../lib/util/version');
+import faker from 'faker';
+import { setupApp } from '../../helpers/test-helper';
+import dbInit from '../../helpers/database-init';
+import getLogger from '../../../fixtures/no-logger';
+import version from '../../../../lib/util/version';
 
 const asyncFilter = async (arr, predicate) => {
     const results = await Promise.all(arr.map(predicate));

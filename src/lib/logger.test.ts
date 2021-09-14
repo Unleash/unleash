@@ -1,6 +1,4 @@
-'use strict';
-
-const logger = require('./logger');
+import * as logger from './logger';
 
 test('should require custom logger to implement info', () => {
     const loggerImpl = {
@@ -10,7 +8,8 @@ test('should require custom logger to implement info', () => {
     };
     const provider = () => loggerImpl;
     expect(() => {
-        logger.validateLogProvider(provider)();
+        // @ts-ignore:next-line
+        return logger.validateLogProvider(provider);
     }).toThrowError(new TypeError('Logger must implement info'));
 });
 
@@ -22,6 +21,7 @@ test('should require custom logger to implement error', () => {
     };
     const provider = () => loggerImpl;
     expect(() => {
-        logger.validateLogProvider(provider)();
+        // @ts-ignore:next-line
+        return logger.validateLogProvider(provider);
     }).toThrowError(new TypeError('Logger must implement error'));
 });

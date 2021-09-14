@@ -1,8 +1,7 @@
-'use strict';
-
-const { EventEmitter } = require('events');
-const express = require('express');
-const { createTestConfig } = require('../test/config/test-config');
+import { EventEmitter } from 'events';
+import express from 'express';
+import { createTestConfig } from '../test/config/test-config';
+import { start, create } from './server-impl';
 
 jest.mock(
     './routes',
@@ -14,8 +13,6 @@ jest.mock(
         },
 );
 
-const getApp = require('./app');
-
 const noop = () => {};
 
 const eventStore = new EventEmitter();
@@ -24,8 +21,6 @@ const settingStore = {
         Promise.resolve('secret');
     },
 };
-
-jest.mock('./app', () => getApp);
 
 jest.mock('./metrics', () => ({
     createMetricsMonitor() {
@@ -60,8 +55,6 @@ jest.mock(
         },
 );
 
-const serverImpl = require('./server-impl');
-
 test('should call preHook', async () => {
     let called = 0;
     const config = createTestConfig({
@@ -70,13 +63,14 @@ test('should call preHook', async () => {
             called++;
         },
     });
-    await serverImpl.start(config);
+    const { stop } = await start(config);
     expect(called).toBe(1);
+    await stop();
 });
 
 test('should call preRouterHook', async () => {
     let called = 0;
-    await serverImpl.start(
+    const { stop } = await start(
         createTestConfig({
             server: { port: 0 },
             preRouterHook: () => {
@@ -85,6 +79,7 @@ test('should call preRouterHook', async () => {
         }),
     );
     expect(called === 1).toBe(true);
+    await stop();
 });
 
 test('should call eventHook', async () => {
@@ -95,26 +90,29 @@ test('should call eventHook', async () => {
             called++;
         },
     });
-    await serverImpl.start(config);
+    const { stop } = await start(config);
     eventStore.emit('feature-created', {});
     expect(called === 1).toBe(true);
+    await stop();
 });
 
 test('should auto-create server on start()', async () => {
-    const { server } = await serverImpl.start(
+    const { server, stop } = await start(
         createTestConfig({ server: { port: 0 } }),
     );
     expect(typeof server === 'undefined').toBe(false);
+    await stop();
 });
 
 test('should not create a server using create()', async () => {
     const config = createTestConfig({ server: { port: 0 } });
-    const { server } = await serverImpl.create(config);
+    const { server, stop } = await create(config);
     expect(server).toBeUndefined();
+    await stop();
 });
 
 test('should shutdown the server when calling stop()', async () => {
-    const { server, stop } = await serverImpl.start(
+    const { server, stop } = await start(
         createTestConfig({ server: { port: 0 } }),
     );
     await stop();

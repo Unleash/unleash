@@ -101,6 +101,7 @@ const theme = createMuiTheme({
     fontSizes: {
         mainHeader: '1.2rem',
         subHeader: '1.1rem',
+        bodySize: '1rem',
     },
     boxShadows: {
         chip: {

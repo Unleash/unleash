@@ -13,7 +13,7 @@ const HeaderTitle = ({
     subtitle,
     variant,
     loading,
-    className,
+    className = '',
 }) => {
     const styles = useStyles();
     const headerClasses = classnames({ skeleton: loading });

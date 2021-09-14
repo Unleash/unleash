@@ -38,7 +38,7 @@ const MainLayout = ({ children, location, uiConfig }) => {
                     <Grid item className={styles.content} xs={12} sm={12}>
                         <div
                             className={muiStyles.contentContainer}
-                            style={{ zIndex: '100' }}
+                            style={{ zIndex: '200' }}
                         >
                             <BreadcrumbNav />
                             <Proclamation toast={uiConfig.toast} />

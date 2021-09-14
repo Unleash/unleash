@@ -32,7 +32,7 @@ import AdminInvoice from '../../page/admin/invoice';
 import AdminAuth from '../../page/admin/auth';
 import Reporting from '../../page/reporting';
 import Login from '../user/Login';
-import { P, C } from '../common/flags';
+import { P, C, E } from '../common/flags';
 import NewUser from '../user/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
@@ -40,6 +40,9 @@ import ProjectListNew from '../project/ProjectList/ProjectList';
 import Project from '../project/Project/Project';
 import RedirectFeatureViewPage from '../../page/features/redirect';
 import RedirectArchive from '../feature/RedirectArchive/RedirectArchive';
+import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
+import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
+import FeatureView2 from '../feature/FeatureView2/FeatureView2';
 
 export const routes = [
     // Features
@@ -86,6 +89,24 @@ export const routes = [
         component: Strategies,
         type: 'protected',
         layout: 'main',
+        menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/environments/create',
+        title: 'Environments',
+        component: CreateEnvironment,
+        parent: '/environments',
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/environments',
+        title: 'Environments',
+        component: EnvironmentList,
+        type: 'protected',
+        layout: 'main',
+        flag: E,
         menu: { mobile: true, advanced: true },
     },
 
@@ -222,6 +243,16 @@ export const routes = [
         menu: {},
     },
     {
+        path: '/projects/:projectId/features2/:featureId',
+        parent: '/projects',
+        title: 'FeatureView2',
+        component: FeatureView2,
+        type: 'protected',
+        layout: 'main',
+        flags: E,
+        menu: {},
+    },
+    {
         path: '/projects/:id/features/:name/:activeTab',
         parent: '/projects',
         title: ':name',
@@ -339,7 +370,7 @@ export const routes = [
         component: Reporting,
         type: 'protected',
         layout: 'main',
-        menu: { mobile: true, advanced: true },
+        menu: { mobile: true },
     },
     // Admin
     {
@@ -427,8 +458,7 @@ export const routes = [
 
 export const getRoute = path => routes.find(route => route.path === path);
 
-export const baseRoutes = routes
-    .filter(route => !route.hidden)
+export const baseRoutes = routes.filter(route => !route.hidden);
 
 const computeRoutes = () => {
     const mainNavRoutes = baseRoutes.filter(route => route.menu.advanced);

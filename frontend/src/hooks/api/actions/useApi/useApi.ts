@@ -55,9 +55,12 @@ const useAPI = ({
 
     const makeRequest = async (
         apiCaller: any,
-        requestId?: string
+        requestId?: string,
+        loading: boolean = true
     ): Promise<Response> => {
-        setLoading(true);
+        if (loading) {
+            setLoading(true);
+        }
         try {
             const res = await apiCaller();
             setLoading(false);

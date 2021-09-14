@@ -3,7 +3,7 @@ import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
 import { nameType } from '../routes/util';
-import { projectSchema} from './project-schema';
+import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
     FEATURE_PROJECT_CHANGE,

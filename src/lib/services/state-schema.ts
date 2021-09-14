@@ -3,7 +3,7 @@ import { featureSchema, featureTagSchema } from '../schema/feature-schema';
 import strategySchema from './strategy-schema';
 import { tagSchema } from './tag-schema';
 import { tagTypeSchema } from './tag-type-schema';
-import projectSchema from './project-schema';
+import { projectSchema } from './project-schema';
 import { nameType } from '../routes/util';
 
 export const featureStrategySchema = joi

@@ -1,11 +1,9 @@
-'use strict';
+import joi from 'joi';
+import { nameType } from '../routes/util';
 
-const joi = require('joi');
-const { nameType } = require('../routes/util');
+export const nameSchema = joi.object().keys({ name: nameType });
 
-const nameSchema = joi.object().keys({ name: nameType });
-
-const contextSchema = joi
+export const contextSchema = joi
     .object()
     .keys({
         name: nameType,
@@ -19,5 +17,3 @@ const contextSchema = joi
         stickiness: joi.boolean().optional().default(false),
     })
     .options({ allowUnknown: false, stripUnknown: true });
-
-module.exports = { contextSchema, nameSchema };

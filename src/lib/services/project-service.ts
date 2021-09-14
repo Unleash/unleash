@@ -3,7 +3,7 @@ import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
 import { nameType } from '../routes/util';
-import schema from './project-schema';
+import { projectSchema} from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
     FEATURE_PROJECT_CHANGE,
@@ -118,7 +118,7 @@ export default class ProjectService {
     }
 
     async createProject(newProject: IProject, user: User): Promise<IProject> {
-        const data = await schema.validateAsync(newProject);
+        const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
 
         await this.store.create(data);
@@ -138,7 +138,7 @@ export default class ProjectService {
 
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
         await this.store.get(updatedProject.id);
-        const project = await schema.validateAsync(updatedProject);
+        const project = await projectSchema.validateAsync(updatedProject);
 
         await this.store.update(project);
 

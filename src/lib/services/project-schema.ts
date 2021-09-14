@@ -1,7 +1,7 @@
-const joi = require('joi');
-const { nameType } = require('../routes/util');
+import joi from 'joi';
+import { nameType } from '../routes/util';
 
-const projectSchema = joi
+export const projectSchema = joi
     .object()
     .keys({
         id: nameType,
@@ -9,5 +9,3 @@ const projectSchema = joi
         description: joi.string().allow(null).allow('').optional(),
     })
     .options({ allowUnknown: false, stripUnknown: true });
-
-module.exports = projectSchema;

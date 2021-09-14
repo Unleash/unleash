@@ -1,16 +1,13 @@
-'use strict';
-
-const { EventEmitter } = require('events');
-
-const eventStore = new EventEmitter();
-const { addEventHook } = require('./event-hook');
-const {
+import { EventEmitter } from 'events';
+import { addEventHook } from './event-hook';
+import {
     FEATURE_CREATED,
     FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
-} = require('./types/events');
+} from './types/events';
 
+const eventStore = new EventEmitter();
 const o = {};
 
 function testHook(feature, data) {

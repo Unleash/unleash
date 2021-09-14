@@ -3,13 +3,13 @@ import { BackstageController } from './backstage';
 import ResetPasswordController from './auth/reset-password-controller';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashServices } from '../types/services';
+import { api } from './api-def';
 
 const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
 const Controller = require('./controller');
 const HealthCheckController = require('./health-check');
 const LogoutController = require('./logout');
-const api = require('./api-def');
 const SimplePasswordProvider = require('./auth/simple-password-provider');
 
 class IndexRouter extends Controller {

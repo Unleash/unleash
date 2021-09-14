@@ -1,10 +1,8 @@
-'use strict';
+import clientApiDef from './client-api/api-def.json';
+import adminApiDef from './admin-api/api-def.json';
+import version from '../util/version';
 
-const clientApiDef = require('./client-api/api-def.json');
-const adminApiDef = require('./admin-api/api-def.json');
-const version = require('../util/version');
-
-const apiDef = {
+export const api = {
     name: 'unleash-server',
     version,
     uri: '/api',
@@ -19,5 +17,3 @@ const apiDef = {
         },
     },
 };
-
-module.exports = apiDef;

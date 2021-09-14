@@ -3,21 +3,34 @@ import { CLIENT } from './permissions';
 interface IApiUserData {
     username: string;
     permissions?: string[];
+    project: string;
+    environment: string;
 }
 
 export default class ApiUser {
-    isAPI: boolean = true;
+    readonly isAPI: boolean = true;
 
-    username: string;
+    readonly username: string;
 
-    permissions: string[];
+    readonly permissions: string[];
 
-    constructor({ username, permissions = [CLIENT] }: IApiUserData) {
+    readonly project: string;
+
+    readonly environment: string;
+
+    constructor({
+        username,
+        permissions = [CLIENT],
+        project,
+        environment,
+    }: IApiUserData) {
         if (!username) {
             throw new TypeError('username is required');
         }
         this.username = username;
         this.permissions = permissions;
+        this.project = project;
+        this.environment = environment;
     }
 }
 

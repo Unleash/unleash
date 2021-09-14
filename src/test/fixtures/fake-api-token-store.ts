@@ -1,8 +1,6 @@
-import {
-    IApiToken,
-    IApiTokenCreate,
-    IApiTokenStore,
-} from '../../lib/types/stores/api-token-store';
+import { IApiTokenStore } from '../../lib/types/stores/api-token-store';
+import { IApiToken, IApiTokenCreate } from '../../lib/types/models/api-token';
+
 import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeApiTokenStore implements IApiTokenStore {

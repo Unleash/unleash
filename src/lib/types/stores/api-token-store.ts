@@ -1,21 +1,5 @@
+import { IApiToken, IApiTokenCreate } from '../models/api-token';
 import { Store } from './store';
-
-export enum ApiTokenType {
-    CLIENT = 'client',
-    ADMIN = 'admin',
-}
-
-export interface IApiTokenCreate {
-    secret: string;
-    username: string;
-    type: ApiTokenType;
-    expiresAt?: Date;
-}
-
-export interface IApiToken extends IApiTokenCreate {
-    createdAt: Date;
-    seenAt?: Date;
-}
 
 export interface IApiTokenStore extends Store<IApiToken, string> {
     getAllActive(): Promise<IApiToken[]>;

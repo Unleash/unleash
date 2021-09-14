@@ -59,6 +59,8 @@ test('should add user if unknown token', async () => {
     const apiUser = new ApiUser({
         username: 'default',
         permissions: [CLIENT],
+        project: '*',
+        environment: '*',
     });
     const apiTokenService = {
         getUserForToken: jest.fn().mockReturnValue(apiUser),
@@ -84,6 +86,8 @@ test('should not add user if disabled', async () => {
     const apiUser = new ApiUser({
         username: 'default',
         permissions: [CLIENT],
+        project: '*',
+        environment: '*',
     });
     const apiTokenService = {
         getUserForToken: jest.fn().mockReturnValue(apiUser),

@@ -46,6 +46,8 @@ test('should give api-user ADMIN permission', async () => {
         user: new ApiUser({
             username: 'api',
             permissions: [perms.ADMIN],
+            project: '*',
+            environment: '*',
         }),
     };
 
@@ -68,6 +70,8 @@ test('should not give api-user ADMIN permission', async () => {
         user: new ApiUser({
             username: 'api',
             permissions: [perms.CLIENT],
+            project: '*',
+            environment: '*',
         }),
     };
 

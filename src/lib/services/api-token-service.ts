@@ -4,19 +4,10 @@ import { ADMIN, CLIENT } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
-import {
-    ApiTokenType,
-    IApiToken,
-    IApiTokenStore,
-} from '../types/stores/api-token-store';
+import { ApiTokenType, IApiToken, IApiTokenCreate } from '../types/models/api-token';
+import { IApiTokenStore } from '../types/stores/api-token-store';
 
 const ONE_MINUTE = 60_000;
-
-interface CreateTokenRequest {
-    username: string;
-    type: ApiTokenType;
-    expiresAt?: Date;
-}
 
 export class ApiTokenService {
     private store: IApiTokenStore;
@@ -66,6 +57,8 @@ export class ApiTokenService {
             return new ApiUser({
                 username: token.username,
                 permissions,
+                project: token.project,
+                environment: token.environment,
             });
         }
         return undefined;
@@ -83,15 +76,16 @@ export class ApiTokenService {
     }
 
     public async creteApiToken(
-        creteTokenRequest: CreateTokenRequest,
+        creteTokenRequest: Omit<IApiTokenCreate, 'secret'>,
     ): Promise<IApiToken> {
-        const secret = this.generateSecretKey();
+        const secret = this.generateSecretKey(creteTokenRequest);
         const createNewToken = { ...creteTokenRequest, secret };
         return this.store.insert(createNewToken);
     }
 
-    private generateSecretKey() {
-        return crypto.randomBytes(32).toString('hex');
+    private generateSecretKey({ project, environment }) {
+        const randomStr = crypto.randomBytes(28).toString('hex');
+        return `${project}:${environment}.${randomStr}`;
     }
 
     destroy(): void {

@@ -1,7 +1,7 @@
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/types/stores/api-token-store';
+import { ApiTokenType } from '../../../../lib/types/models/api-token';
 
 let db;
 let app;
@@ -168,5 +168,71 @@ test('removes api token', async () => {
         .expect(200)
         .expect((res) => {
             expect(res.body.tokens.length).toBe(0);
+        });
+});
+
+test('creates new client token: project & environment defaults to "*"', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.type).toBe('client');
+            expect(res.body.secret.length > 16).toBe(true);
+            expect(res.body.environment).toBe('*');
+            expect(res.body.project).toBe('*');
+        });
+});
+
+test('creates new client token with project & environment set', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+            project: 'default',
+            environment: ':global:',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.type).toBe('client');
+            expect(res.body.secret.length > 16).toBe(true);
+            expect(res.body.environment).toBe(':global:');
+            expect(res.body.project).toBe('default');
+        });
+});
+
+test('should prefix defaul token with "*:*."', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.secret).toMatch(/\*:\*\..*/);
+        });
+});
+
+test('should prefix token with "project:environment."', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+            project: 'default',
+            environment: ':global:',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.secret).toMatch(/default::global:\..*/);
         });
 });

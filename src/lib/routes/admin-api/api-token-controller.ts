@@ -13,7 +13,7 @@ import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
 import User from '../../types/user';
 import { IUnleashConfig } from '../../types/option';
-import { ApiTokenType } from '../../types/stores/api-token-store';
+import { ApiTokenType } from '../../types/models/api-token';
 
 interface IServices {
     apiTokenService: ApiTokenService;
@@ -64,7 +64,14 @@ class ApiTokenController extends Controller {
     }
 
     async createApiToken(req: IAuthRequest, res: Response): Promise<any> {
-        const { username, type, expiresAt } = req.body;
+        // TODO use joi schema
+        const {
+            username,
+            type,
+            expiresAt,
+            environment = '*',
+            project = '*',
+        } = req.body;
 
         if (!username || !type) {
             this.logger.error(req.body);
@@ -79,6 +86,8 @@ class ApiTokenController extends Controller {
         try {
             const token = await this.apiTokenService.creteApiToken({
                 type: tokenType,
+                environment,
+                project,
                 username,
                 expiresAt,
             });

@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import { migrateDb } from '../../../migrator';
 import { createStores } from '../../../lib/db';
 import { createDb } from '../../../lib/db/db-pool';
-import dbConfig from './database-config';
+import { getDbConfig } from './database-config';
 import { createTestConfig } from '../../config/test-config';
 import dbState from './database.json';
 import { LogProvider } from '../../../lib/logger';
@@ -77,12 +77,12 @@ export interface ITestDb {
 }
 
 export default async function init(
-    databaseSchema: String = 'test',
+    databaseSchema: string = 'test',
     getLogger: LogProvider = noLoggerProvider,
 ): Promise<ITestDb> {
     const config = createTestConfig({
         db: {
-            ...dbConfig.getDb(),
+            ...getDbConfig(),
             pool: { min: 2, max: 8 },
             schema: databaseSchema,
             ssl: false,

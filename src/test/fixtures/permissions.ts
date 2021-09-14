@@ -1,7 +1,4 @@
-'use strict';
-
-module.exports = () => {
-    const _perms = ['ADMIN'];
+const adminUser = (): { hook: (app: any) => void } => {
     return {
         hook(app) {
             app.use((req, res, next) => {
@@ -9,10 +6,12 @@ module.exports = () => {
                     isAPI: true,
                     id: 1,
                     email: 'unknown',
-                    permissions: _perms,
+                    permissions: ['ADMIN'],
                 };
                 next();
             });
         },
     };
 };
+
+export default adminUser;

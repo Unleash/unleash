@@ -1,7 +1,5 @@
-'use strict';
-
-const express = require('express');
-const { createTestConfig } = require('../test/config/test-config');
+import express from 'express';
+import { createTestConfig } from '../test/config/test-config';
 
 jest.mock(
     './routes',

@@ -1,4 +1,4 @@
-import { setupApp, setupAppWithAuth } from '../../helpers/test-helper';
+import { setupAppWithAuth } from '../../helpers/test-helper';
 import metricsExample from '../../../examples/client-metrics.json';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';

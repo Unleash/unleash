@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import Controller from '../controller';
 import { IUnleashServices } from '../../types';
 import { IUnleashConfig } from '../../types/option';

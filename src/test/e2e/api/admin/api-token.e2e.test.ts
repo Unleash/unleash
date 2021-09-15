@@ -255,3 +255,50 @@ test('should prefix token with "project:environment."', async () => {
             expect(res.body.secret).toMatch(/default::global:\..*/);
         });
 });
+
+test('should not create token for invalid projectId', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+            project: 'bogus-project-something',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.details[0].message).toMatch(
+                /bogus-project-something/,
+            );
+        });
+});
+
+test('should not create token for invalid environment', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+            environment: 'bogus-environment-something',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.details[0].message).toMatch(
+                /bogus-environment-something/,
+            );
+        });
+});
+
+test('should not create token for invalid environment', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+            project: 'bogus-project-something',
+            environment: 'bogus-environment-something',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});

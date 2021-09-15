@@ -10,6 +10,8 @@ import {
     IApiTokenCreate,
 } from '../types/models/api-token';
 import { IApiTokenStore } from '../types/stores/api-token-store';
+import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
+import BadDataError from '../error/bad-data-error';
 
 const ONE_MINUTE = 60_000;
 
@@ -84,7 +86,21 @@ export class ApiTokenService {
     ): Promise<IApiToken> {
         const secret = this.generateSecretKey(creteTokenRequest);
         const createNewToken = { ...creteTokenRequest, secret };
-        return this.store.insert(createNewToken);
+
+        try {
+            return await this.store.insert(createNewToken);
+        } catch (error) {
+            if (error.code === FOREIGN_KEY_VIOLATION) {
+                let { message } = error;
+                if (error.constraint === 'api_tokens_project_fkey') {
+                    message = `Project=${creteTokenRequest.project} does not exist`;
+                } else if (error.constraint === 'api_tokens_environment_fkey') {
+                    message = `Environment=${creteTokenRequest.environment} does not exist`;
+                }
+                throw new BadDataError(message);
+            }
+            throw error;
+        }
     }
 
     private generateSecretKey({ project, environment }) {

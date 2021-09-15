@@ -66,7 +66,7 @@ class ApiTokenController extends Controller {
 
     async createApiToken(req: IAuthRequest, res: Response): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
-        const token = await this.apiTokenService.creteApiToken(createToken);
+        const token = await this.apiTokenService.createApiToken(createToken);
         return res.status(201).json(token);
     }
 

@@ -88,7 +88,9 @@ export class ApiTokenService {
         const createNewToken = { ...creteTokenRequest, secret };
 
         try {
-            return await this.store.insert(createNewToken);
+            const token = await this.store.insert(createNewToken);
+            this.activeTokens.push(token);
+            return token;
         } catch (error) {
             if (error.code === FOREIGN_KEY_VIOLATION) {
                 let { message } = error;

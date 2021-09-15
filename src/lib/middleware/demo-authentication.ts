@@ -30,7 +30,7 @@ function demoAuthentication(
         next();
     });
 
-    app.use(`${basePath}/api/admin/`, (req, res, next) => {
+    app.use(`${basePath}/api`, (req, res, next) => {
         // @ts-ignore
         if (req.user) {
             return next();

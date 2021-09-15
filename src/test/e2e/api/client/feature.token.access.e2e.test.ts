@@ -12,6 +12,8 @@ let apiTokenService: ApiTokenService;
 const environment = 'testing';
 const project = 'default';
 const username = 'test';
+const feature1 = 'f1.token.access';
+const feature2 = 'f2.token.access';
 
 beforeAll(async () => {
     db = await dbInit('feature_api_api_access_client', getLogger);
@@ -32,7 +34,7 @@ beforeAll(async () => {
     await featureToggleServiceV2.createFeatureToggle(
         project,
         {
-            name: 'f1.token.access',
+            name: feature1,
             description: 'the #1 feature',
         },
         username,
@@ -45,7 +47,7 @@ beforeAll(async () => {
             parameters: {},
         },
         project,
-        'f1.token.access',
+        feature1,
     );
 
     await featureToggleServiceV2.createStrategy(
@@ -55,7 +57,27 @@ beforeAll(async () => {
             parameters: {},
         },
         project,
-        'f1.token.access',
+        feature1,
+        environment,
+    );
+
+    await featureToggleServiceV2.createFeatureToggle(
+        project,
+        {
+            name: feature2,
+            description: 'the #1 feature',
+        },
+        username,
+    );
+
+    await featureToggleServiceV2.createStrategy(
+        {
+            name: 'default',
+            constraints: [],
+            parameters: {},
+        },
+        project,
+        feature2,
         environment,
     );
 });
@@ -78,6 +100,36 @@ test('returns feature toggle with :global: config', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.features).toHaveLength(1);
+            const { features } = res.body;
+            const f1 = features.find((f) => f.name === feature1);
+            const f2 = features.find((f) => f.name === feature2);
+            expect(features).toHaveLength(2);
+            expect(f1.strategies).toHaveLength(1);
+            expect(f2.strategies).toHaveLength(0);
+        });
+});
+
+test('returns feature toggle with :global: config', async () => {
+    const token = await apiTokenService.createApiToken({
+        type: ApiTokenType.CLIENT,
+        username,
+        environment,
+        project,
+    });
+    await app.request
+        .get('/api/client/features')
+        .set('Authorization', token.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            const { features, query } = res.body;
+            const f1 = features.find((f) => f.name === feature1);
+            const f2 = features.find((f) => f.name === feature2);
+
+            expect(features).toHaveLength(2);
+            expect(f1.strategies).toHaveLength(2);
+            expect(f2.strategies).toHaveLength(1);
+            expect(query.project[0]).toBe(project);
+            expect(query.environment).toBe(environment);
         });
 });

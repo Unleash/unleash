@@ -112,7 +112,7 @@ test('should only return valid tokens', async () => {
         environment: '*',
     });
 
-    const activeToken = await apiTokenService.creteApiToken({
+    const activeToken = await apiTokenService.createApiToken({
         username: 'default-valid',
         type: ApiTokenType.CLIENT,
         expiresAt: tomorrow,

@@ -260,8 +260,8 @@ test('should not create token for invalid projectId', async () => {
     return app.request
         .post('/api/admin/api-tokens')
         .send({
-            username: 'default-admin',
-            type: 'admin',
+            username: 'default-client',
+            type: 'client',
             project: 'bogus-project-something',
         })
         .set('Content-Type', 'application/json')
@@ -277,8 +277,8 @@ test('should not create token for invalid environment', async () => {
     return app.request
         .post('/api/admin/api-tokens')
         .send({
-            username: 'default-admin',
-            type: 'admin',
+            username: 'default-client',
+            type: 'client',
             environment: 'bogus-environment-something',
         })
         .set('Content-Type', 'application/json')
@@ -298,6 +298,32 @@ test('should not create token for invalid project & environment', async () => {
             type: 'admin',
             project: 'bogus-project-something',
             environment: 'bogus-environment-something',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
+test('admin token only supports ALL projects', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+            project: 'default',
+            environment: '*',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
+test('admin token only supports ALL environments', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+            project: '*',
+            environment: ':global:',
         })
         .set('Content-Type', 'application/json')
         .expect(400);

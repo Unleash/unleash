@@ -5,6 +5,7 @@ import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
 import {
+    ALL,
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,
@@ -82,11 +83,27 @@ export class ApiTokenService {
         return this.store.delete(secret);
     }
 
+    private validateAdminToken({ type, project, environment }) {
+        if (type === ApiTokenType.ADMIN && project !== ALL) {
+            throw new BadDataError(
+                'Admin token cannot be scoped to single project',
+            );
+        }
+
+        if (type === ApiTokenType.ADMIN && environment !== ALL) {
+            throw new BadDataError(
+                'Admin token cannot be scoped to single environment',
+            );
+        }
+    }
+
     public async createApiToken(
-        creteTokenRequest: Omit<IApiTokenCreate, 'secret'>,
+        newToken: Omit<IApiTokenCreate, 'secret'>,
     ): Promise<IApiToken> {
-        const secret = this.generateSecretKey(creteTokenRequest);
-        const createNewToken = { ...creteTokenRequest, secret };
+        this.validateAdminToken(newToken);
+
+        const secret = this.generateSecretKey(newToken);
+        const createNewToken = { ...newToken, secret };
 
         try {
             const token = await this.store.insert(createNewToken);
@@ -96,9 +113,9 @@ export class ApiTokenService {
             if (error.code === FOREIGN_KEY_VIOLATION) {
                 let { message } = error;
                 if (error.constraint === 'api_tokens_project_fkey') {
-                    message = `Project=${creteTokenRequest.project} does not exist`;
+                    message = `Project=${newToken.project} does not exist`;
                 } else if (error.constraint === 'api_tokens_environment_fkey') {
-                    message = `Environment=${creteTokenRequest.environment} does not exist`;
+                    message = `Environment=${newToken.environment} does not exist`;
                 }
                 throw new BadDataError(message);
             }

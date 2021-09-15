@@ -55,7 +55,7 @@ test('should create client token', async () => {
 });
 
 test('should create admin token', async () => {
-    const token = await apiTokenService.creteApiToken({
+    const token = await apiTokenService.createApiToken({
         username: 'admin',
         type: ApiTokenType.ADMIN,
         project: '*',

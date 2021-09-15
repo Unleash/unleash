@@ -65,6 +65,7 @@ export class ApiTokenService {
                 permissions,
                 project: token.project,
                 environment: token.environment,
+                type: token.type,
             });
         }
         return undefined;

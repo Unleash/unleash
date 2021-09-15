@@ -1,4 +1,5 @@
-import { Application, NextFunction, Request, Response } from 'express';
+import { Application, NextFunction, Response } from 'express';
+import { IAuthRequest } from '../routes/unleash-types';
 import AuthenticationRequired from '../types/authentication-required';
 
 function ossAuthHook(app: Application, baseUriPath: string): void {
@@ -11,14 +12,11 @@ function ossAuthHook(app: Application, baseUriPath: string): void {
 
     app.use(
         `${baseUriPath}/api`,
-        async (req: Request, res: Response, next: NextFunction) => {
-            // @ts-ignore
+        async (req: IAuthRequest, res: Response, next: NextFunction) => {
             if (req.session && req.session.user) {
-                // @ts-ignore
                 req.user = req.session.user;
                 return next();
             }
-            // @ts-ignore
             if (req.user) {
                 return next();
             }

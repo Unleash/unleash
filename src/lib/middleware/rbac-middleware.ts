@@ -22,8 +22,8 @@ const rbacMiddleware = (
     { featureToggleStore }: Pick<IUnleashStores, 'featureToggleStore'>,
     accessService: PermissionChecker,
 ): any => {
-    const logger = config.getLogger('/middleware/rbac-middleware.js');
-    logger.info('Enabling RBAC');
+    const logger = config.getLogger('/middleware/rbac-middleware.ts');
+    logger.debug('Enabling RBAC middleware');
 
     return (req, res, next) => {
         req.checkRbac = async (permission: string) => {

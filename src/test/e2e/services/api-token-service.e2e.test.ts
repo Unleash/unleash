@@ -68,7 +68,7 @@ test('should create admin token', async () => {
 
 test('should set expiry of token', async () => {
     const time = new Date('2022-01-01');
-    await apiTokenService.creteApiToken({
+    await apiTokenService.createApiToken({
         username: 'default-client',
         type: ApiTokenType.CLIENT,
         expiresAt: time,
@@ -85,7 +85,7 @@ test('should update expiry of token', async () => {
     const time = new Date('2022-01-01');
     const newTime = new Date('2023-01-01');
 
-    const token = await apiTokenService.creteApiToken({
+    const token = await apiTokenService.createApiToken({
         username: 'default-client',
         type: ApiTokenType.CLIENT,
         expiresAt: time,
@@ -104,7 +104,7 @@ test('should only return valid tokens', async () => {
     const today = new Date();
     const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
-    await apiTokenService.creteApiToken({
+    await apiTokenService.createApiToken({
         username: 'default-expired',
         type: ApiTokenType.CLIENT,
         expiresAt: new Date('2021-01-01'),

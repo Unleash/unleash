@@ -290,7 +290,7 @@ test('should not create token for invalid environment', async () => {
         });
 });
 
-test('should not create token for invalid environment', async () => {
+test('should not create token for invalid project & environment', async () => {
     return app.request
         .post('/api/admin/api-tokens')
         .send({

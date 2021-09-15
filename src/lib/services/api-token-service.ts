@@ -79,7 +79,7 @@ export class ApiTokenService {
         return this.store.delete(secret);
     }
 
-    public async creteApiToken(
+    public async createApiToken(
         creteTokenRequest: Omit<IApiTokenCreate, 'secret'>,
     ): Promise<IApiToken> {
         const secret = this.generateSecretKey(creteTokenRequest);

@@ -39,7 +39,7 @@ test('should have empty list of tokens', async () => {
 });
 
 test('should create client token', async () => {
-    const token = await apiTokenService.creteApiToken({
+    const token = await apiTokenService.createApiToken({
         username: 'default-client',
         type: ApiTokenType.CLIENT,
         project: '*',

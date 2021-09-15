@@ -11,9 +11,11 @@ let apiTokenService: ApiTokenService;
 
 const environment = 'testing';
 const project = 'default';
+const project2 = 'some';
 const username = 'test';
 const feature1 = 'f1.token.access';
 const feature2 = 'f2.token.access';
+const feature3 = 'f3.p2.token.access';
 
 beforeAll(async () => {
     db = await dbInit('feature_api_api_access_client', getLogger);
@@ -21,7 +23,7 @@ beforeAll(async () => {
     apiTokenService = app.services.apiTokenService;
 
     const { featureToggleServiceV2, environmentService } = app.services;
-    const { environmentStore } = db.stores;
+    const { environmentStore, projectStore } = db.stores;
 
     await environmentStore.create({
         name: environment,
@@ -29,7 +31,14 @@ beforeAll(async () => {
         type: 'test',
     });
 
+    await projectStore.create({
+        id: project2,
+        name: 'Test Project 2',
+        description: '',
+    });
+
     await environmentService.addEnvironmentToProject(environment, project);
+    await environmentService.addEnvironmentToProject(environment, project2);
 
     await featureToggleServiceV2.createFeatureToggle(
         project,
@@ -49,7 +58,6 @@ beforeAll(async () => {
         project,
         feature1,
     );
-
     await featureToggleServiceV2.createStrategy(
         {
             name: 'custom-testing',
@@ -61,15 +69,14 @@ beforeAll(async () => {
         environment,
     );
 
+    // create feature 2
     await featureToggleServiceV2.createFeatureToggle(
         project,
         {
             name: feature2,
-            description: 'the #1 feature',
         },
         username,
     );
-
     await featureToggleServiceV2.createStrategy(
         {
             name: 'default',
@@ -78,6 +85,25 @@ beforeAll(async () => {
         },
         project,
         feature2,
+        environment,
+    );
+
+    // create feature 3
+    await featureToggleServiceV2.createFeatureToggle(
+        project2,
+        {
+            name: feature3,
+        },
+        username,
+    );
+    await featureToggleServiceV2.createStrategy(
+        {
+            name: 'default',
+            constraints: [],
+            parameters: {},
+        },
+        project2,
+        feature3,
         environment,
     );
 });
@@ -131,5 +157,43 @@ test('returns feature toggle with :global: config', async () => {
             expect(f2.strategies).toHaveLength(1);
             expect(query.project[0]).toBe(project);
             expect(query.environment).toBe(environment);
+        });
+});
+
+test('returns feature toggle for project2', async () => {
+    const token = await apiTokenService.createApiToken({
+        type: ApiTokenType.CLIENT,
+        username,
+        environment,
+        project: project2,
+    });
+    await app.request
+        .get('/api/client/features')
+        .set('Authorization', token.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            const { features } = res.body;
+            const f3 = features.find((f) => f.name === feature3);
+            expect(features).toHaveLength(1);
+            expect(f3.strategies).toHaveLength(1);
+        });
+});
+
+test('returns feature toggle for all projects', async () => {
+    const token = await apiTokenService.createApiToken({
+        type: ApiTokenType.CLIENT,
+        username,
+        environment,
+        project: '*',
+    });
+    await app.request
+        .get('/api/client/features')
+        .set('Authorization', token.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            const { features } = res.body;
+            expect(features).toHaveLength(3);
         });
 });

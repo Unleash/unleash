@@ -5,18 +5,16 @@ import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
 import {
+    ALL,
     ApiTokenType,
     IApiToken,
-    IApiTokenStore,
-} from '../types/stores/api-token-store';
+    IApiTokenCreate,
+} from '../types/models/api-token';
+import { IApiTokenStore } from '../types/stores/api-token-store';
+import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
+import BadDataError from '../error/bad-data-error';
 
 const ONE_MINUTE = 60_000;
-
-interface CreateTokenRequest {
-    username: string;
-    type: ApiTokenType;
-    expiresAt?: Date;
-}
 
 export class ApiTokenService {
     private store: IApiTokenStore;
@@ -66,6 +64,9 @@ export class ApiTokenService {
             return new ApiUser({
                 username: token.username,
                 permissions,
+                project: token.project,
+                environment: token.environment,
+                type: token.type,
             });
         }
         return undefined;
@@ -82,16 +83,49 @@ export class ApiTokenService {
         return this.store.delete(secret);
     }
 
-    public async creteApiToken(
-        creteTokenRequest: CreateTokenRequest,
-    ): Promise<IApiToken> {
-        const secret = this.generateSecretKey();
-        const createNewToken = { ...creteTokenRequest, secret };
-        return this.store.insert(createNewToken);
+    private validateAdminToken({ type, project, environment }) {
+        if (type === ApiTokenType.ADMIN && project !== ALL) {
+            throw new BadDataError(
+                'Admin token cannot be scoped to single project',
+            );
+        }
+
+        if (type === ApiTokenType.ADMIN && environment !== ALL) {
+            throw new BadDataError(
+                'Admin token cannot be scoped to single environment',
+            );
+        }
     }
 
-    private generateSecretKey() {
-        return crypto.randomBytes(32).toString('hex');
+    public async createApiToken(
+        newToken: Omit<IApiTokenCreate, 'secret'>,
+    ): Promise<IApiToken> {
+        this.validateAdminToken(newToken);
+
+        const secret = this.generateSecretKey(newToken);
+        const createNewToken = { ...newToken, secret };
+
+        try {
+            const token = await this.store.insert(createNewToken);
+            this.activeTokens.push(token);
+            return token;
+        } catch (error) {
+            if (error.code === FOREIGN_KEY_VIOLATION) {
+                let { message } = error;
+                if (error.constraint === 'api_tokens_project_fkey') {
+                    message = `Project=${newToken.project} does not exist`;
+                } else if (error.constraint === 'api_tokens_environment_fkey') {
+                    message = `Environment=${newToken.environment} does not exist`;
+                }
+                throw new BadDataError(message);
+            }
+            throw error;
+        }
+    }
+
+    private generateSecretKey({ project, environment }) {
+        const randomStr = crypto.randomBytes(28).toString('hex');
+        return `${project}:${environment}.${randomStr}`;
     }
 
     destroy(): void {

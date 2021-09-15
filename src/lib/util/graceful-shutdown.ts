@@ -14,7 +14,7 @@ function registerGracefulShutdown(unleash: IUnleash, logger: Logger): void {
         }
     };
 
-    logger.info('Registering graceful shutdown');
+    logger.debug('Registering graceful shutdown');
 
     process.on('SIGINT', unleashCloser('SIGINT'));
     process.on('SIGHUP', unleashCloser('SIGHUP'));

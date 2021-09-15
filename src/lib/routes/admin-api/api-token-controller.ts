@@ -13,7 +13,8 @@ import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
 import User from '../../types/user';
 import { IUnleashConfig } from '../../types/option';
-import { ApiTokenType } from '../../types/stores/api-token-store';
+import { ApiTokenType } from '../../types/models/api-token';
+import { createApiToken } from '../../schema/api-token-schema';
 
 interface IServices {
     apiTokenService: ApiTokenService;
@@ -64,41 +65,16 @@ class ApiTokenController extends Controller {
     }
 
     async createApiToken(req: IAuthRequest, res: Response): Promise<any> {
-        const { username, type, expiresAt } = req.body;
-
-        if (!username || !type) {
-            this.logger.error(req.body);
-            return res.status(400).send();
-        }
-
-        const tokenType =
-            type.toLowerCase() === 'admin'
-                ? ApiTokenType.ADMIN
-                : ApiTokenType.CLIENT;
-
-        try {
-            const token = await this.apiTokenService.creteApiToken({
-                type: tokenType,
-                username,
-                expiresAt,
-            });
-            return res.status(201).json(token);
-        } catch (error) {
-            this.logger.error('error creating api-token', error);
-            return res.status(500);
-        }
+        const createToken = await createApiToken.validateAsync(req.body);
+        const token = await this.apiTokenService.createApiToken(createToken);
+        return res.status(201).json(token);
     }
 
     async deleteApiToken(req: IAuthRequest, res: Response): Promise<void> {
         const { token } = req.params;
 
-        try {
-            await this.apiTokenService.delete(token);
-            res.status(200).end();
-        } catch (error) {
-            this.logger.error('error creating api-token', error);
-            res.status(500);
-        }
+        await this.apiTokenService.delete(token);
+        res.status(200).end();
     }
 
     async updateApiToken(req: IAuthRequest, res: Response): Promise<any> {
@@ -110,13 +86,8 @@ class ApiTokenController extends Controller {
             return res.status(400).send();
         }
 
-        try {
-            await this.apiTokenService.updateExpiry(token, expiresAt);
-            return res.status(200).end();
-        } catch (error) {
-            this.logger.error('error creating api-token', error);
-            return res.status(500);
-        }
+        await this.apiTokenService.updateExpiry(token, expiresAt);
+        return res.status(200).end();
     }
 }
 

@@ -1,7 +1,7 @@
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/types/stores/api-token-store';
+import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token';
 
 let db;
 let app;
@@ -58,6 +58,25 @@ test('creates new admin token', async () => {
         .send({
             username: 'default-admin',
             type: 'admin',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.username).toBe('default-admin');
+            expect(res.body.type).toBe('admin');
+            expect(res.body.createdAt).toBeTruthy();
+            expect(res.body.expiresAt).toBeFalsy();
+            expect(res.body.secret.length > 16).toBe(true);
+        });
+});
+
+test('creates new ADMIN token should fix casing', async () => {
+    expect.assertions(5);
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'ADMIN',
         })
         .set('Content-Type', 'application/json')
         .expect(201)
@@ -169,4 +188,143 @@ test('removes api token', async () => {
         .expect((res) => {
             expect(res.body.tokens.length).toBe(0);
         });
+});
+
+test('creates new client token: project & environment defaults to "*"', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.type).toBe('client');
+            expect(res.body.secret.length > 16).toBe(true);
+            expect(res.body.environment).toBe(ALL);
+            expect(res.body.project).toBe(ALL);
+        });
+});
+
+test('creates new client token with project & environment set', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+            project: 'default',
+            environment: ':global:',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.type).toBe('client');
+            expect(res.body.secret.length > 16).toBe(true);
+            expect(res.body.environment).toBe(':global:');
+            expect(res.body.project).toBe('default');
+        });
+});
+
+test('should prefix default token with "*:*."', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.secret).toMatch(/\*:\*\..*/);
+        });
+});
+
+test('should prefix token with "project:environment."', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+            project: 'default',
+            environment: ':global:',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.secret).toMatch(/default::global:\..*/);
+        });
+});
+
+test('should not create token for invalid projectId', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+            project: 'bogus-project-something',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.details[0].message).toMatch(
+                /bogus-project-something/,
+            );
+        });
+});
+
+test('should not create token for invalid environment', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+            environment: 'bogus-environment-something',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.details[0].message).toMatch(
+                /bogus-environment-something/,
+            );
+        });
+});
+
+test('should not create token for invalid project & environment', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+            project: 'bogus-project-something',
+            environment: 'bogus-environment-something',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
+test('admin token only supports ALL projects', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+            project: 'default',
+            environment: '*',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
+test('admin token only supports ALL environments', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-admin',
+            type: 'admin',
+            project: '*',
+            environment: ':global:',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
 });

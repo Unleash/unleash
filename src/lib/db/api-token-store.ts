@@ -4,14 +4,16 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
+import { IApiTokenStore } from '../types/stores/api-token-store';
 import {
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,
-    IApiTokenStore,
-} from '../types/stores/api-token-store';
+} from '../types/models/api-token';
 
 const TABLE = 'api_tokens';
+
+const ALL = '*';
 
 interface ITokenTable {
     id: number;
@@ -21,12 +23,17 @@ interface ITokenTable {
     expires_at?: Date;
     created_at: Date;
     seen_at?: Date;
+    environment: string;
+    project: string;
 }
 
 const toRow = (newToken: IApiTokenCreate) => ({
     username: newToken.username,
     secret: newToken.secret,
     type: newToken.type,
+    project: newToken.project === ALL ? undefined : newToken.project,
+    environment:
+        newToken.environment === ALL ? undefined : newToken.environment,
     expires_at: newToken.expiresAt,
 });
 
@@ -34,6 +41,8 @@ const toToken = (row: ITokenTable): IApiToken => ({
     secret: row.secret,
     username: row.username,
     type: row.type,
+    environment: row.environment ? row.environment : ALL,
+    project: row.project ? row.project : ALL,
     expiresAt: row.expires_at,
     createdAt: row.created_at,
 });

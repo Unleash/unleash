@@ -1,23 +1,42 @@
+import { ApiTokenType } from './models/api-token';
 import { CLIENT } from './permissions';
 
 interface IApiUserData {
     username: string;
     permissions?: string[];
+    project: string;
+    environment: string;
+    type: ApiTokenType;
 }
 
 export default class ApiUser {
-    isAPI: boolean = true;
+    readonly isAPI: boolean = true;
 
-    username: string;
+    readonly username: string;
 
-    permissions: string[];
+    readonly permissions: string[];
 
-    constructor({ username, permissions = [CLIENT] }: IApiUserData) {
+    readonly project: string;
+
+    readonly environment: string;
+
+    readonly type: ApiTokenType;
+
+    constructor({
+        username,
+        permissions = [CLIENT],
+        project,
+        environment,
+        type,
+    }: IApiUserData) {
         if (!username) {
             throw new TypeError('username is required');
         }
         this.username = username;
         this.permissions = permissions;
+        this.project = project;
+        this.environment = environment;
+        this.type = type;
     }
 }
 

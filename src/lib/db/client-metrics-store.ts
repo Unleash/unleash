@@ -71,7 +71,12 @@ export class ClientMetricsStore
         }
     }
 
-    // Insert new client metrics
+    /**
+     * Insert client metrics. In the future we will isolate "appName" and "environment"
+     * in separate columns in the database to make it easier to query the data.
+     *
+     * @param metrics sent from the client SDK.
+     */
     async insert(metrics: IClientMetric): Promise<void> {
         const stopTimer = this.startTimer('insert');
 

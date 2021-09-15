@@ -115,9 +115,9 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
         if (config.db.disableMigration) {
             logger.info('DB migration: disabled');
         } else {
-            logger.info('DB migration: start');
+            logger.debug('DB migration: start');
             await migrateDb(config);
-            logger.info('DB migration: end');
+            logger.debug('DB migration: end');
         }
     } catch (err) {
         logger.error('Failed to migrate db', err);

@@ -6,6 +6,7 @@ import { createTestConfig } from '../../test/config/test-config';
 import ApiUser from '../types/api-user';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import FakeFeatureToggleStore from '../../test/fixtures/fake-feature-toggle-store';
+import { ApiTokenType } from '../types/models/api-token';
 
 let config: IUnleashConfig;
 let featureToggleStore: IFeatureToggleStore;
@@ -46,6 +47,9 @@ test('should give api-user ADMIN permission', async () => {
         user: new ApiUser({
             username: 'api',
             permissions: [perms.ADMIN],
+            project: '*',
+            environment: '*',
+            type: ApiTokenType.ADMIN,
         }),
     };
 
@@ -68,6 +72,9 @@ test('should not give api-user ADMIN permission', async () => {
         user: new ApiUser({
             username: 'api',
             permissions: [perms.CLIENT],
+            project: '*',
+            environment: '*',
+            type: ApiTokenType.CLIENT,
         }),
     };
 

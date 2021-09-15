@@ -13,6 +13,7 @@ export const clientMetricsSchema = joi
     .object()
     .options({ stripUnknown: true })
     .keys({
+        environment: joi.string().optional(),
         appName: joi.string().required(),
         instanceId: joi.string().required(),
         bucket: joi

@@ -43,7 +43,6 @@ afterEach(() => {
 });
 
 test('should validate client metrics', () => {
-    expect.assertions(0);
     return request
         .post('/api/client/metrics')
         .send({ random: 'blush' })
@@ -51,7 +50,6 @@ test('should validate client metrics', () => {
 });
 
 test('should accept empty client metrics', () => {
-    expect.assertions(0);
     return request
         .post('/api/client/metrics')
         .send({
@@ -67,7 +65,6 @@ test('should accept empty client metrics', () => {
 });
 
 test('should accept client metrics with yes/no', () => {
-    expect.assertions(0);
     return request
         .post('/api/client/metrics')
         .send({
@@ -88,7 +85,6 @@ test('should accept client metrics with yes/no', () => {
 });
 
 test('should accept client metrics with variants', () => {
-    expect.assertions(0);
     return request
         .post('/api/client/metrics')
         .send({
@@ -113,7 +109,6 @@ test('should accept client metrics with variants', () => {
 });
 
 test('should accept client metrics without yes/no', () => {
-    expect.assertions(0);
     return request
         .post('/api/client/metrics')
         .send({
@@ -133,7 +128,7 @@ test('should accept client metrics without yes/no', () => {
         .expect(202);
 });
 
-test('shema allow empty strings', () => {
+test('schema allow empty strings', () => {
     const data = {
         appName: 'java-test',
         instanceId: 'instance y',

@@ -309,6 +309,7 @@ class FeatureToggleServiceV2 {
             await this.eventStore.store({
                 type: FEATURE_CREATED,
                 createdBy: userName,
+                project: projectId,
                 data,
             });
 
@@ -341,6 +342,7 @@ class FeatureToggleServiceV2 {
             type: FEATURE_METADATA_UPDATED,
             createdBy: userName,
             data: featureToggle,
+            project: projectId,
             tags,
         });
         return featureToggle;
@@ -455,12 +457,13 @@ class FeatureToggleServiceV2 {
             createdBy: userName,
             data,
             tags,
+            project: feature.project,
         });
         return feature;
     }
 
     async archiveToggle(name: string, userName: string): Promise<void> {
-        await this.featureToggleStore.get(name);
+        const feature = await this.featureToggleStore.get(name);
         await this.featureToggleStore.archive(name);
         const tags =
             (await this.featureTagStore.getAllTagsForFeature(name)) || [];
@@ -468,6 +471,7 @@ class FeatureToggleServiceV2 {
             type: FEATURE_ARCHIVED,
             createdBy: userName,
             data: { name },
+            project: feature.project,
             tags,
         });
     }
@@ -514,6 +518,7 @@ class FeatureToggleServiceV2 {
                 createdBy: userName,
                 data,
                 tags,
+                project: projectId,
             });
             return feature;
         }
@@ -583,6 +588,7 @@ class FeatureToggleServiceV2 {
             type: event || FEATURE_UPDATED,
             createdBy: userName,
             data,
+            project: data.project,
             tags,
         });
         return feature;
@@ -612,6 +618,7 @@ class FeatureToggleServiceV2 {
             type: FEATURE_REVIVED,
             createdBy: userName,
             data,
+            project: data.project,
             tags,
         });
     }

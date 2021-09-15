@@ -226,7 +226,7 @@ test('creates new client token with project & environment set', async () => {
         });
 });
 
-test('should prefix defaul token with "*:*."', async () => {
+test('should prefix default token with "*:*."', async () => {
     return app.request
         .post('/api/admin/api-tokens')
         .send({

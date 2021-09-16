@@ -106,6 +106,7 @@ class FeatureToggleServiceV2 {
                     strategyName: strategyConfig.name,
                     constraints: strategyConfig.constraints,
                     parameters: strategyConfig.parameters,
+                    sortOrder: strategyConfig.sortOrder,
                     projectId,
                     featureName,
                     environment,
@@ -212,6 +213,7 @@ class FeatureToggleServiceV2 {
                 name: strat.strategyName,
                 constraints: strat.constraints,
                 parameters: strat.parameters,
+                sortOrder: strat.sortOrder,
             }));
         }
         throw new NotFoundError(

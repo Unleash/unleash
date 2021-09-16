@@ -4,6 +4,9 @@ import getLogger from '../../../../fixtures/no-logger';
 
 let app: IUnleashTest;
 let db: ITestDb;
+const sortOrderFirst = 0;
+const sortOrderSecond = 10;
+const sortOrderDefault = 9999;
 
 beforeAll(async () => {
     db = await dbInit('feature_strategy_api_serial', getLogger);
@@ -30,6 +33,44 @@ afterAll(async () => {
     await app.destroy();
     await db.destroy();
 });
+
+async function addStrategies(featureName: string, envName: string) {
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+            sortOrder: sortOrderFirst,
+        })
+        .expect(200);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+            sortOrder: sortOrderSecond,
+        })
+        .expect(200);
+}
 
 test('Trying to add a strategy configuration to environment not connected to toggle should fail', async () => {
     await app.request
@@ -841,4 +882,85 @@ test('Can delete strategy from feature toggle', async () => {
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/${strategyId}`,
         )
         .expect(200);
+});
+
+test('List of strategies should respect sortOrder', async () => {
+    const envName = 'sortOrderdel-strategy';
+    const featureName = 'feature.sort.order.one';
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Enable feature for environment',
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+    await addStrategies(featureName, envName);
+    const { body } = await app.request.get(
+        `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+    );
+    const strategies = body;
+    expect(strategies[0].sortOrder).toBe(sortOrderFirst);
+    expect(strategies[1].sortOrder).toBe(sortOrderSecond);
+    expect(strategies[2].sortOrder).toBe(sortOrderDefault);
+});
+
+test('Feature strategies list should respect strategy sortorders for each environment', async () => {
+    const envName = 'sort-order-within-environment-one';
+    const secondEnv = 'sort-order-within-environment-two';
+    const featureName = 'feature.sort.order.environment.list';
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: envName,
+        displayName: 'Sort orders within environment',
+        type: 'test',
+    });
+    await db.stores.environmentStore.create({
+        name: secondEnv,
+        displayName: 'Sort orders within environment',
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: secondEnv,
+        })
+        .expect(200);
+
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+
+    await addStrategies(featureName, envName);
+    await addStrategies(featureName, secondEnv);
+
+    const response = await app.request.get(
+        `/api/admin/projects/default/features/${featureName}`,
+    );
+    const { body } = response;
+    let { strategies } = body.environments.find((e) => e.name === envName);
+    expect(strategies[0].sortOrder).toBe(sortOrderFirst);
+    expect(strategies[1].sortOrder).toBe(sortOrderSecond);
+    expect(strategies[2].sortOrder).toBe(sortOrderDefault);
+    strategies = body.environments.find((e) => e.name === secondEnv).strategies;
+    expect(strategies[0].sortOrder).toBe(sortOrderFirst);
+    expect(strategies[1].sortOrder).toBe(sortOrderSecond);
+    expect(strategies[2].sortOrder).toBe(sortOrderDefault);
 });

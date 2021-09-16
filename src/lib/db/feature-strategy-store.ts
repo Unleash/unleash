@@ -47,6 +47,7 @@ interface IFeatureStrategiesTable {
     strategy_name: string;
     parameters: object;
     constraints: string;
+    sort_order: number;
     created_at?: Date;
 }
 
@@ -60,6 +61,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         parameters: row.parameters,
         constraints: (row.constraints as unknown as IConstraint[]) || [],
         createdAt: row.created_at,
+        sortOrder: row.sort_order,
     };
 }
 
@@ -73,6 +75,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         parameters: input.parameters,
         constraints: JSON.stringify(input.constraints || []),
         created_at: input.createdAt,
+        sort_order: input.sortOrder,
     };
 }
 
@@ -179,13 +182,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         environment: string,
     ): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getForFeature');
-        const rows = await this.db<IFeatureStrategiesTable>(
-            T.featureStrategies,
-        ).where({
-            project_name: projectId,
-            feature_name: featureName,
-            environment,
-        });
+        const rows = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
+            .where({
+                project_name: projectId,
+                feature_name: featureName,
+                environment,
+            })
+            .orderBy('sort_order', 'asc');
         stopTimer();
         return rows.map(mapRow);
     }
@@ -211,6 +214,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_strategies.strategy_name as strategy_name',
                 'feature_strategies.parameters as parameters',
                 'feature_strategies.constraints as constraints',
+                'feature_strategies.sort_order as sort_order',
             )
             .fullOuterJoin(
                 'feature_environments',
@@ -262,6 +266,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             featureToggle.environments = Object.values(
                 featureToggle.environments,
             );
+            featureToggle.environments = featureToggle.environments.map((e) => {
+                e.strategies = e.strategies.sort(
+                    (a, b) => a.sortOrder - b.sortOrder,
+                );
+                return e;
+            });
             featureToggle.archived = archived;
             return featureToggle;
         }
@@ -359,6 +369,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             name: r.strategy_name,
             constraints: r.constraints || [],
             parameters: r.parameters,
+            sortOrder: r.sort_order,
             id: r.strategy_id,
         };
         if (!includeId) {

@@ -22,6 +22,7 @@ interface FeatureStrategyParams {
     projectId: string;
     featureName: string;
     environment: string;
+    sortOrder?: number;
 }
 
 interface FeatureParams extends ProjectParam {

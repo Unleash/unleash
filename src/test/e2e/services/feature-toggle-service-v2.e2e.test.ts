@@ -27,6 +27,8 @@ afterAll(async () => {
 });
 
 test('Should create feature toggle strategy configuration', async () => {
+    const projectId = 'default';
+    const username = 'feature-toggle';
     const config: Omit<IStrategyConfig, 'id'> = {
         name: 'default',
         constraints: [],
@@ -43,8 +45,9 @@ test('Should create feature toggle strategy configuration', async () => {
 
     const createdConfig = await service.createStrategy(
         config,
-        'default',
+        projectId,
         'Demo',
+        username,
     );
 
     expect(createdConfig.name).toEqual('default');
@@ -52,6 +55,8 @@ test('Should create feature toggle strategy configuration', async () => {
 });
 
 test('Should be able to update existing strategy configuration', async () => {
+    const projectId = 'default';
+    const username = 'existing-strategy';
     const config: Omit<IStrategyConfig, 'id'> = {
         name: 'default',
         constraints: [],
@@ -59,7 +64,7 @@ test('Should be able to update existing strategy configuration', async () => {
     };
 
     await service.createFeatureToggle(
-        'default',
+        projectId,
         {
             name: 'update-existing-strategy',
         },
@@ -70,11 +75,18 @@ test('Should be able to update existing strategy configuration', async () => {
         config,
         'default',
         'update-existing-strategy',
+        username,
     );
     expect(createdConfig.name).toEqual('default');
-    const updatedConfig = await service.updateStrategy(createdConfig.id, {
-        parameters: { b2b: true },
-    });
+    const updatedConfig = await service.updateStrategy(
+        createdConfig.id,
+        GLOBAL_ENV,
+        projectId,
+        username,
+        {
+            parameters: { b2b: true },
+        },
+    );
     expect(createdConfig.id).toEqual(updatedConfig.id);
     expect(updatedConfig.parameters).toEqual({ b2b: true });
 });
@@ -96,7 +108,7 @@ test('Should include legacy props in event log when updating strategy configurat
         userName,
     );
 
-    await service.createStrategy(config, 'default', featureName);
+    await service.createStrategy(config, 'default', featureName, userName);
     await service.updateEnabled(
         'default',
         featureName,
@@ -112,6 +124,7 @@ test('Should include legacy props in event log when updating strategy configurat
 });
 
 test('Should be able to get strategy by id', async () => {
+    const userName = 'strategy';
     const config: Omit<IStrategyConfig, 'id'> = {
         name: 'default',
         constraints: [],
@@ -130,6 +143,7 @@ test('Should be able to get strategy by id', async () => {
         config,
         'default',
         'Demo',
+        userName,
     );
     const fetchedConfig = await service.getStrategy(createdConfig.id);
     expect(fetchedConfig).toEqual(createdConfig);

@@ -57,6 +57,7 @@ beforeAll(async () => {
         },
         project,
         feature1,
+        username,
     );
     await featureToggleServiceV2.createStrategy(
         {

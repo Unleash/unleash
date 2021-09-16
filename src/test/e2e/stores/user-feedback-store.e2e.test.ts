@@ -10,7 +10,7 @@ let userStore: IUserStore;
 let currentUser;
 
 beforeAll(async () => {
-    db = await dbInit('project_store_serial', getLogger);
+    db = await dbInit('user_feedback_store', getLogger);
     stores = db.stores;
     userFeedbackStore = stores.userFeedbackStore;
     userStore = stores.userStore;

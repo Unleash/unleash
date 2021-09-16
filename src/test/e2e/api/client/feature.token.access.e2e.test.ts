@@ -67,6 +67,7 @@ beforeAll(async () => {
         },
         project,
         feature1,
+        username,
         environment,
     );
 
@@ -86,6 +87,7 @@ beforeAll(async () => {
         },
         project,
         feature2,
+        username,
         environment,
     );
 
@@ -105,6 +107,7 @@ beforeAll(async () => {
         },
         project2,
         feature3,
+        username,
         environment,
     );
 });
@@ -136,7 +139,7 @@ test('returns feature toggle with :global: config', async () => {
         });
 });
 
-test('returns feature toggle with :global: config', async () => {
+test('returns feature toggle with testing environment config', async () => {
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         username,

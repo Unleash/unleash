@@ -17,7 +17,6 @@ import {
 } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
-import { projectSchema } from '../../../services/project-schema';
 
 interface FeatureStrategyParams {
     projectId: string;

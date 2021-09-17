@@ -11,7 +11,7 @@ export const featureStrategySchema = joi
     .keys({
         id: joi.string().optional(),
         featureName: joi.string(),
-        projectName: joi.string(),
+        projectId: joi.string(),
         environment: joi.string(),
         parameters: joi.object().optional(),
         constraints: joi.array().optional(),
@@ -29,6 +29,9 @@ export const environmentSchema = joi.object().keys({
     name: nameType.allow(':global:'),
     displayName: joi.string().optional().allow(''),
     type: joi.string().required(),
+    sortOrder: joi.number().optional(),
+    enabled: joi.boolean().optional(),
+    protected: joi.boolean().optional(),
 });
 
 export const updateEnvironmentSchema = joi.object().keys({

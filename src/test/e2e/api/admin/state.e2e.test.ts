@@ -1,11 +1,12 @@
-import dbInit from '../../helpers/database-init';
-import { setupApp } from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
+import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
+import { GLOBAL_ENV } from '../../../../lib/types/environment';
 
 const importData = require('../../../examples/import.json');
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('state_api_serial', getLogger);
@@ -92,4 +93,221 @@ test('imports strategies and features from yaml file', async () => {
         .post('/api/admin/state/import')
         .attach('file', 'src/test/examples/import.yml')
         .expect(202);
+});
+
+test('import works for 3.17 json format', async () => {
+    await app.request
+        .post('/api/admin/state/import')
+        .attach('file', 'src/test/examples/exported3176.json')
+        .expect(202);
+});
+
+test('import works for 3.17 enterprise json format', async () => {
+    await app.request
+        .post('/api/admin/state/import')
+        .attach('file', 'src/test/examples/exported-3175-enterprise.json')
+        .expect(202);
+});
+test('import works for 4.0 enterprise format', async () => {
+    await app.request
+        .post('/api/admin/state/import')
+        .attach('file', 'src/test/examples/exported405-enterprise.json')
+        .expect(202);
+});
+
+test('import for 4.1.2 enterprise format fails', async () => {
+    await expect(async () =>
+        app.request
+            .post('/api/admin/state/import')
+            .attach('file', 'src/test/examples/exported412-enterprise.json')
+            .expect(202),
+    ).rejects;
+});
+
+test('import for 4.1.2 enterprise format fixed works', async () => {
+    await app.request
+        .post('/api/admin/state/import')
+        .attach(
+            'file',
+            'src/test/examples/exported412-enterprise-necessary-fixes.json',
+        )
+        .expect(202);
+});
+
+test('Can roundtrip. I.e. export and then import', async () => {
+    const projectId = 'export-project';
+    const environmentId = 'export-environment';
+    const userName = 'export-user';
+    const featureName = 'export.feature';
+    await db.stores.environmentStore.create({
+        name: environmentId,
+        type: 'test',
+        displayName: 'Environment for export',
+    });
+    await db.stores.projectStore.create({
+        name: projectId,
+        id: projectId,
+        description: 'Project for export',
+    });
+    await app.services.environmentService.addEnvironmentToProject(
+        environmentId,
+        projectId,
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        projectId,
+        {
+            type: 'Release',
+            name: featureName,
+            description: 'Feature for export',
+        },
+        userName,
+    );
+    await app.services.featureToggleServiceV2.createStrategy(
+        {
+            name: 'default',
+            constraints: [
+                { contextName: 'userId', operator: 'IN', values: ['123'] },
+            ],
+            parameters: {},
+        },
+        projectId,
+        featureName,
+        environmentId,
+    );
+    const data = await app.services.stateService.export({});
+    await app.services.stateService.import({
+        data,
+        dropBeforeImport: true,
+        keepExisting: false,
+        userName: 'export-tester',
+    });
+});
+
+test('Roundtrip with tags works', async () => {
+    const projectId = 'tags-project';
+    const environmentId = 'tags-environment';
+    const userName = 'tags-user';
+    const featureName = 'tags.feature';
+    await db.stores.environmentStore.create({
+        name: environmentId,
+        type: 'test',
+        displayName: 'Environment for export',
+    });
+    await db.stores.projectStore.create({
+        name: projectId,
+        id: projectId,
+        description: 'Project for export',
+    });
+    await app.services.environmentService.addEnvironmentToProject(
+        environmentId,
+        projectId,
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        projectId,
+        {
+            type: 'Release',
+            name: featureName,
+            description: 'Feature for export',
+        },
+        userName,
+    );
+    await app.services.featureToggleServiceV2.createStrategy(
+        {
+            name: 'default',
+            constraints: [
+                { contextName: 'userId', operator: 'IN', values: ['123'] },
+            ],
+            parameters: {},
+        },
+        projectId,
+        featureName,
+        environmentId,
+    );
+    await app.services.featureTagService.addTag(
+        featureName,
+        { type: 'simple', value: 'export-test' },
+        userName,
+    );
+    await app.services.featureTagService.addTag(
+        featureName,
+        { type: 'simple', value: 'export-test-2' },
+        userName,
+    );
+    const data = await app.services.stateService.export({});
+    await app.services.stateService.import({
+        data,
+        dropBeforeImport: true,
+        keepExisting: false,
+        userName: 'export-tester',
+    });
+
+    const f = await app.services.featureTagService.listTags(featureName);
+    expect(f).toHaveLength(2);
+});
+
+test('Roundtrip with strategies in multiple environments works', async () => {
+    const projectId = 'multiple-environment-project';
+    const environmentId = 'multiple-environment-environment';
+    const userName = 'multiple-environment-user';
+    const featureName = 'multiple-environment.feature';
+    await db.stores.environmentStore.create({
+        name: environmentId,
+        type: 'test',
+        displayName: 'Environment for export',
+    });
+    await db.stores.projectStore.create({
+        name: projectId,
+        id: projectId,
+        description: 'Project for export',
+    });
+    await app.services.environmentService.addEnvironmentToProject(
+        environmentId,
+        projectId,
+    );
+    await app.services.environmentService.addEnvironmentToProject(
+        GLOBAL_ENV,
+        projectId,
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        projectId,
+        {
+            type: 'Release',
+            name: featureName,
+            description: 'Feature for export',
+        },
+        userName,
+    );
+    await app.services.featureToggleServiceV2.createStrategy(
+        {
+            name: 'default',
+            constraints: [
+                { contextName: 'userId', operator: 'IN', values: ['123'] },
+            ],
+            parameters: {},
+        },
+        projectId,
+        featureName,
+        environmentId,
+    );
+    await app.services.featureToggleServiceV2.createStrategy(
+        {
+            name: 'default',
+            constraints: [
+                { contextName: 'userId', operator: 'IN', values: ['123'] },
+            ],
+            parameters: {},
+        },
+        projectId,
+        featureName,
+        GLOBAL_ENV,
+    );
+    const data = await app.services.stateService.export({});
+    await app.services.stateService.import({
+        data,
+        dropBeforeImport: true,
+        keepExisting: false,
+        userName: 'export-tester',
+    });
+    const f = await app.services.featureToggleServiceV2.getFeature(featureName);
+    expect(f.environments).toHaveLength(2);
 });

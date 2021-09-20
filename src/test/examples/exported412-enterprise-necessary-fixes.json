@@ -1,0 +1,275 @@
+{
+  "version": 2,
+  "features": [
+    {
+      "name": "this-is-fun",
+      "description": "",
+      "type": "release",
+      "project": "default",
+      "stale": false,
+      "variants": [],
+      "createdAt": "2021-09-17T07:06:40.925Z",
+      "lastSeenAt": null
+    },
+    {
+      "name": "version.three.seventeen",
+      "description": "",
+      "type": "operational",
+      "project": "default",
+      "stale": false,
+      "variants": [],
+      "createdAt": "2021-09-17T07:06:56.421Z",
+      "lastSeenAt": null
+    },
+    {
+      "name": "in-another-project",
+      "description": "",
+      "type": "release",
+      "project": "someother",
+      "stale": false,
+      "variants": [],
+      "createdAt": "2021-09-17T07:14:03.718Z",
+      "lastSeenAt": null
+    },
+    {
+      "name": "with-constraints",
+      "description": "",
+      "type": "release",
+      "project": "default",
+      "stale": false,
+      "variants": [],
+      "createdAt": "2021-09-17T07:14:39.509Z",
+      "lastSeenAt": null
+    },
+    {
+      "name": "another-toggle",
+      "description": "",
+      "type": "release",
+      "project": "someother",
+      "stale": false,
+      "variants": [],
+      "createdAt": "2021-09-17T07:22:16.404Z",
+      "lastSeenAt": null
+    },
+    {
+      "name": "toggle-created-in-4-1",
+      "description": "",
+      "type": "operational",
+      "project": "default",
+      "stale": false,
+      "variants": [],
+      "createdAt": "2021-09-17T07:24:13.897Z",
+      "lastSeenAt": null
+    }
+  ],
+  "strategies": [
+    {
+      "name": "gradualRolloutRandom",
+      "description": "Randomly activate the feature toggle. No stickiness.",
+      "parameters": [
+        {
+          "name": "percentage",
+          "type": "percentage",
+          "description": "",
+          "required": false
+        }
+      ],
+      "deprecated": true
+    },
+    {
+      "name": "gradualRolloutSessionId",
+      "description": "Gradually activate feature toggle. Stickiness based on session id.",
+      "parameters": [
+        {
+          "name": "percentage",
+          "type": "percentage",
+          "description": "",
+          "required": false
+        },
+        {
+          "name": "groupId",
+          "type": "string",
+          "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+          "required": true
+        }
+      ],
+      "deprecated": true
+    },
+    {
+      "name": "gradualRolloutUserId",
+      "description": "Gradually activate feature toggle for logged in users. Stickiness based on user id.",
+      "parameters": [
+        {
+          "name": "percentage",
+          "type": "percentage",
+          "description": "",
+          "required": false
+        },
+        {
+          "name": "groupId",
+          "type": "string",
+          "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+          "required": true
+        }
+      ],
+      "deprecated": true
+    }
+  ],
+  "projects": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default project",
+      "createdAt": "2021-09-17T05:06:16.299Z",
+      "health": 100
+    },
+    {
+      "id": "someother",
+      "name": "Some other project",
+      "description": "",
+      "createdAt": "2021-09-17T05:13:45.011Z",
+      "health": 100
+    }
+  ],
+  "tagTypes": [
+    {
+      "name": "simple",
+      "description": "Used to simplify filtering of features",
+      "icon": "#"
+    }
+  ],
+  "tags": [],
+  "featureTags": [],
+  "featureStrategies": [
+    {
+      "id": "2ea91298-4565-4db2-8a23-50757001a076",
+      "featureName": "this-is-fun",
+      "projectId": "default",
+      "environment": ":global:",
+      "strategyName": "gradualRolloutRandom",
+      "parameters": {
+        "percentage": "100"
+      },
+      "constraints": [],
+      "createdAt": "2021-09-17T07:23:39.374Z"
+    },
+    {
+      "id": "edaffaee-cf6e-473f-b137-ae15fb88ff53",
+      "featureName": "version.three.seventeen",
+      "projectId": "default",
+      "environment": ":global:",
+      "strategyName": "default",
+      "parameters": {},
+      "constraints": [],
+      "createdAt": "2021-09-17T07:23:39.374Z"
+    },
+    {
+      "id": "e6eaede4-027a-41a9-8e80-0e0fc0a5d7af",
+      "featureName": "in-another-project",
+      "projectId": "someother",
+      "environment": ":global:",
+      "strategyName": "gradualRolloutRandom",
+      "parameters": {
+        "percentage": "29"
+      },
+      "constraints": [
+        {
+          "values": [
+            "dev"
+          ],
+          "operator": "IN",
+          "contextName": "environment"
+        },
+        {
+          "values": [
+            "prod"
+          ],
+          "operator": "IN",
+          "contextName": "environment"
+        }
+      ],
+      "createdAt": "2021-09-17T07:23:39.374Z"
+    },
+    {
+      "id": "da60e934-246c-4b3e-b314-f2fd1828dd51",
+      "featureName": "with-constraints",
+      "projectId": "default",
+      "environment": ":global:",
+      "strategyName": "default",
+      "parameters": {},
+      "constraints": [
+        {
+          "values": [
+            "123456"
+          ],
+          "operator": "IN",
+          "contextName": "userId"
+        }
+      ],
+      "createdAt": "2021-09-17T07:23:39.374Z"
+    },
+    {
+      "id": "162058f5-3600-4299-97df-d543a0301bdd",
+      "featureName": "another-toggle",
+      "projectId": "someother",
+      "environment": ":global:",
+      "strategyName": "userWithId",
+      "parameters": {
+        "userIds": "12541,123"
+      },
+      "constraints": [],
+      "createdAt": "2021-09-17T07:23:39.374Z"
+    },
+    {
+      "id": "5630e0fb-ebc1-4313-b6df-06b0a563c7b4",
+      "featureName": "toggle-created-in-4-1",
+      "projectId": "default",
+      "environment": ":global:",
+      "strategyName": "applicationHostname",
+      "parameters": {
+        "hostNames": "vg.no"
+      },
+      "constraints": [],
+      "createdAt": "2021-09-17T07:24:13.904Z"
+    }
+  ],
+  "environments": [
+    {
+      "name": ":global:",
+      "displayName": "Across all environments",
+      "type": "production"
+    }
+  ],
+  "featureEnvironments": [
+    {
+      "enabled": true,
+      "featureName": "this-is-fun",
+      "environment": ":global:"
+    },
+    {
+      "enabled": true,
+      "featureName": "version.three.seventeen",
+      "environment": ":global:"
+    },
+    {
+      "enabled": true,
+      "featureName": "in-another-project",
+      "environment": ":global:"
+    },
+    {
+      "enabled": true,
+      "featureName": "with-constraints",
+      "environment": ":global:"
+    },
+    {
+      "enabled": true,
+      "featureName": "another-toggle",
+      "environment": ":global:"
+    },
+    {
+      "enabled": true,
+      "featureName": "toggle-created-in-4-1",
+      "environment": ":global:"
+    }
+  ]
+}

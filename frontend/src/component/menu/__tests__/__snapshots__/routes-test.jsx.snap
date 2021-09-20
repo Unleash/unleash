@@ -333,7 +333,6 @@ Array [
     "component": [Function],
     "layout": "main",
     "menu": Object {
-      "adminSettings": true,
       "advanced": true,
       "mobile": true,
     },

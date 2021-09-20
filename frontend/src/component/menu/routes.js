@@ -380,7 +380,7 @@ export const routes = [
         component: AdminApi,
         type: 'protected',
         layout: 'main',
-        menu: { mobile: true, advanced: true, adminSettings: true },
+        menu: { mobile: true, advanced: true },
     },
     {
         path: '/admin/users',

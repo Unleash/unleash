@@ -299,6 +299,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         },
         projectId,
         featureName,
+        GLOBAL_ENV,
     );
     const data = await app.services.stateService.export({});
     await app.services.stateService.import({

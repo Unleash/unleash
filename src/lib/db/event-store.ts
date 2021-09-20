@@ -12,6 +12,8 @@ const EVENT_COLUMNS = [
     'created_at',
     'data',
     'tags',
+    'project',
+    'environment',
 ];
 
 export interface IEventTable {
@@ -20,6 +22,8 @@ export interface IEventTable {
     created_by: string;
     created_at: Date;
     data: any;
+    project?: string;
+    environment?: string;
     tags: [];
 }
 
@@ -126,6 +130,19 @@ class EventStore extends EventEmitter implements IEventStore {
         }
     }
 
+    async getEventsFilterByProject(project: string): Promise<IEvent[]> {
+        try {
+            const rows = await this.db
+                .select(EVENT_COLUMNS)
+                .from(TABLE)
+                .where({ project })
+                .orderBy('created_at', 'desc');
+            return rows.map(this.rowToEvent);
+        } catch (err) {
+            return [];
+        }
+    }
+
     rowToEvent(row: IEventTable): IEvent {
         return {
             id: row.id,
@@ -134,6 +151,8 @@ class EventStore extends EventEmitter implements IEventStore {
             createdAt: row.created_at,
             data: row.data,
             tags: row.tags || [],
+            project: row.project,
+            environment: row.environment,
         };
     }
 
@@ -143,6 +162,8 @@ class EventStore extends EventEmitter implements IEventStore {
             created_by: e.createdBy,
             data: e.data,
             tags: JSON.stringify(e.tags),
+            project: e.project,
+            environment: e.environment,
         };
     }
 }

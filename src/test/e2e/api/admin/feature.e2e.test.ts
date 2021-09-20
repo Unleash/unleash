@@ -32,6 +32,7 @@ beforeAll(async () => {
             strategy,
             projectId,
             toggle.name,
+            username,
         );
     };
 
@@ -273,6 +274,7 @@ test('can not toggle of feature that does not exist', async () => {
 test('can toggle a feature that does exist', async () => {
     expect.assertions(0);
     const featureName = 'existing.feature';
+    const username = 'toggle-feature';
     const feature =
         await app.services.featureToggleServiceV2.createFeatureToggle(
             'default',
@@ -285,6 +287,7 @@ test('can toggle a feature that does exist', async () => {
         defaultStrategy,
         'default',
         featureName,
+        username,
     );
     return app.request
         .post(`/api/admin/features/${feature.name}/toggle`)

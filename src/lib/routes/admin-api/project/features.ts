@@ -220,14 +220,16 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async addStrategy(
-        req: Request<FeatureStrategyParams, any, IStrategyConfig, any>,
+        req: IAuthRequest<FeatureStrategyParams, any, IStrategyConfig, any>,
         res: Response,
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
+        const userName = extractUsername(req);
         const featureStrategy = await this.featureService.createStrategy(
             req.body,
             projectId,
             featureName,
+            userName,
             environment,
         );
         res.status(200).json(featureStrategy);
@@ -248,34 +250,42 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async updateStrategy(
-        req: Request<StrategyIdParams, any, StrategyUpdateBody, any>,
+        req: IAuthRequest<StrategyIdParams, any, StrategyUpdateBody, any>,
         res: Response,
     ): Promise<void> {
-        const { strategyId } = req.params;
+        const { strategyId, environment, projectId } = req.params;
+        const userName = extractUsername(req);
         const updatedStrategy = await this.featureService.updateStrategy(
             strategyId,
+            environment,
+            projectId,
+            userName,
             req.body,
         );
         res.status(200).json(updatedStrategy);
     }
 
     async patchStrategy(
-        req: Request<StrategyIdParams, any, Operation[], any>,
+        req: IAuthRequest<StrategyIdParams, any, Operation[], any>,
         res: Response,
     ): Promise<void> {
-        const { strategyId } = req.params;
+        const { strategyId, projectId, environment } = req.params;
+        const userName = extractUsername(req);
         const patch = req.body;
         const strategy = await this.featureService.getStrategy(strategyId);
         const { newDocument } = applyPatch(strategy, patch);
         const updatedStrategy = await this.featureService.updateStrategy(
             strategyId,
+            environment,
+            projectId,
+            userName,
             newDocument,
         );
         res.status(200).json(updatedStrategy);
     }
 
     async getStrategy(
-        req: Request<StrategyIdParams, any, any, any>,
+        req: IAuthRequest<StrategyIdParams, any, any, any>,
         res: Response,
     ): Promise<void> {
         this.logger.info('Getting strategy');
@@ -286,18 +296,25 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async deleteStrategy(
-        req: Request<StrategyIdParams, any, any, any>,
+        req: IAuthRequest<StrategyIdParams, any, any, any>,
         res: Response,
     ): Promise<void> {
         this.logger.info('Deleting strategy');
+        const { environment, projectId } = req.params;
+        const userName = extractUsername(req);
         const { strategyId } = req.params;
         this.logger.info(strategyId);
-        const strategy = await this.featureService.deleteStrategy(strategyId);
+        const strategy = await this.featureService.deleteStrategy(
+            strategyId,
+            userName,
+            projectId,
+            environment,
+        );
         res.status(200).json(strategy);
     }
 
     async updateStrategyParameter(
-        req: Request<
+        req: IAuthRequest<
             StrategyIdParams,
             any,
             { name: string; value: string | number },
@@ -305,7 +322,8 @@ export default class ProjectFeaturesController extends Controller {
         >,
         res: Response,
     ): Promise<void> {
-        const { strategyId } = req.params;
+        const { strategyId, environment, projectId } = req.params;
+        const userName = extractUsername(req);
         const { name, value } = req.body;
 
         const updatedStrategy =
@@ -313,6 +331,9 @@ export default class ProjectFeaturesController extends Controller {
                 strategyId,
                 name,
                 value,
+                userName,
+                projectId,
+                environment,
             );
         res.status(200).json(updatedStrategy);
     }

@@ -28,6 +28,10 @@ export default class EventService {
             (e: IEvent) => e.type !== FEATURE_METADATA_UPDATED,
         );
     }
+
+    async getEventsForProject(project: string): Promise<IEvent[]> {
+        return this.eventStore.getEventsFilterByProject(project);
+    }
 }
 
 module.exports = EventService;

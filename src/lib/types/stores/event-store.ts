@@ -7,4 +7,5 @@ export interface IEventStore extends Store<IEvent, number>, EventEmitter {
     batchStore(events: ICreateEvent[]): Promise<void>;
     getEvents(): Promise<IEvent[]>;
     getEventsFilterByType(name: string): Promise<IEvent[]>;
+    getEventsFilterByProject(project: string): Promise<IEvent[]>;
 }

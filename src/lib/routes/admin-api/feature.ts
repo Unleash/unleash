@@ -174,6 +174,7 @@ class FeatureController extends Controller {
                     s,
                     createdFeature.project,
                     createdFeature.name,
+                    userName,
                 ),
             ),
         );
@@ -219,6 +220,7 @@ class FeatureController extends Controller {
                         s,
                         projectId,
                         featureName,
+                        userName,
                     ),
                 ),
             );

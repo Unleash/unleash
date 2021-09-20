@@ -131,6 +131,7 @@ export default class ProjectService {
             type: PROJECT_CREATED,
             createdBy: getCreatedBy(user),
             data,
+            project: newProject.id,
         });
 
         return data;
@@ -146,6 +147,7 @@ export default class ProjectService {
             type: PROJECT_UPDATED,
             createdBy: getCreatedBy(user),
             data: project,
+            project: project.id,
         });
     }
 
@@ -211,10 +213,11 @@ export default class ProjectService {
         await this.eventStore.store({
             type: PROJECT_DELETED,
             createdBy: getCreatedBy(user),
+            project: id,
             data: { id },
         });
 
-        this.accessService.removeDefaultProjectRoles(user, id);
+        await this.accessService.removeDefaultProjectRoles(user, id);
     }
 
     async validateId(id: string): Promise<boolean> {

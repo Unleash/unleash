@@ -57,6 +57,10 @@ class FakeEventStore extends EventEmitter implements IEventStore {
     async getEventsFilterByType(type: string): Promise<IEvent[]> {
         return this.events.filter((e) => e.type === type);
     }
+
+    async getEventsFilterByProject(project: string): Promise<IEvent[]> {
+        return this.events.filter((e) => e.project === project);
+    }
 }
 
 module.exports = FakeEventStore;

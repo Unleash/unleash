@@ -24,7 +24,14 @@ export default class EventController extends Controller {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async getEvents(req, res): Promise<void> {
-        const events = await this.eventService.getEvents();
+        let events;
+        if (req.query?.project) {
+            events = await this.eventService.getEventsForProject(
+                req.query.project,
+            );
+        } else {
+            events = await this.eventService.getEvents();
+        }
         eventDiffer.addDiffs(events);
         res.json({ version, events });
     }

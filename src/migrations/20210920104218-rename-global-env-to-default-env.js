@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = function (db, cb) {
+const up = function (db, cb) {
     db.runSql(
         `
        INSERT INTO environments(name, display_name, protected, sort_order) VALUES ('default', 'Default Environment', true, 1);
@@ -15,7 +15,7 @@ exports.up = function (db, cb) {
     );
 };
 
-exports.down = function (db, cb) {
+const down = function (db, cb) {
     db.runSql(
         `
         INSERT INTO environments(name, display_name, protected) VALUES (':global:', 'Across all environments', true);
@@ -29,3 +29,5 @@ exports.down = function (db, cb) {
         cb,
     );
 };
+
+module.exports = { up, down };

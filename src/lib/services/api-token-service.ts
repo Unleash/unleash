@@ -83,7 +83,7 @@ export class ApiTokenService {
         return this.store.delete(secret);
     }
 
-    private validateAdminToken({ type, project, environment }) {
+    private validateNewApiToken({ type, project, environment }) {
         if (type === ApiTokenType.ADMIN && project !== ALL) {
             throw new BadDataError(
                 'Admin token cannot be scoped to single project',
@@ -95,12 +95,18 @@ export class ApiTokenService {
                 'Admin token cannot be scoped to single environment',
             );
         }
+
+        if (type === ApiTokenType.CLIENT && environment === ALL) {
+            throw new BadDataError(
+                'Client token cannot be scoped to all environments',
+            );
+        }
     }
 
     public async createApiToken(
         newToken: Omit<IApiTokenCreate, 'secret'>,
     ): Promise<IApiToken> {
-        this.validateAdminToken(newToken);
+        this.validateNewApiToken(newToken);
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };

@@ -3,6 +3,7 @@ import getLogger from '../../fixtures/no-logger';
 import { ApiTokenService } from '../../../lib/services/api-token-service';
 import { createTestConfig } from '../../config/test-config';
 import { ApiTokenType, IApiToken } from '../../../lib/types/models/api-token';
+import { DEFAULT_ENV } from '../../../lib/util/constants';
 
 let db;
 let stores;
@@ -43,7 +44,7 @@ test('should create client token', async () => {
         username: 'default-client',
         type: ApiTokenType.CLIENT,
         project: '*',
-        environment: '*',
+        environment: DEFAULT_ENV,
     });
     const allTokens = await apiTokenService.getAllTokens();
 
@@ -73,7 +74,7 @@ test('should set expiry of token', async () => {
         type: ApiTokenType.CLIENT,
         expiresAt: time,
         project: '*',
-        environment: '*',
+        environment: DEFAULT_ENV,
     });
 
     const [token] = await apiTokenService.getAllTokens();
@@ -90,7 +91,7 @@ test('should update expiry of token', async () => {
         type: ApiTokenType.CLIENT,
         expiresAt: time,
         project: '*',
-        environment: '*',
+        environment: DEFAULT_ENV,
     });
 
     await apiTokenService.updateExpiry(token.secret, newTime);
@@ -109,7 +110,7 @@ test('should only return valid tokens', async () => {
         type: ApiTokenType.CLIENT,
         expiresAt: new Date('2021-01-01'),
         project: '*',
-        environment: '*',
+        environment: DEFAULT_ENV,
     });
 
     const activeToken = await apiTokenService.createApiToken({
@@ -117,7 +118,7 @@ test('should only return valid tokens', async () => {
         type: ApiTokenType.CLIENT,
         expiresAt: tomorrow,
         project: '*',
-        environment: '*',
+        environment: DEFAULT_ENV,
     });
 
     const tokens = await apiTokenService.getAllActiveTokens();

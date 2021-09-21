@@ -5,9 +5,9 @@ title: Technical Debt
 
 At Unleash we care deeply about code quality. Technical debt creeps up over time and slowly builds to the point where it really starts to hurt. At that point it's too late. Feature toggles that have outlived their feature and are not cleaned up represent technical dept that should be cleaned up and removed from your code.
 
-In order to assist with removing unused feature toggles, Unleash provides a technical debt dashboard in the management-ui. You can find it by opening up the sidebar in the management ui and clicking on the _reporting_ menu item.
+In order to assist with removing unused feature toggles, Unleash provides a technical debt dashboard in the management-ui. You can find it by clicking on “Advanced” in the top-line menu then choose _Reporting_ in the  dropdown menu.
 
-![Technical debt](/img/reporting.png)
+![Technical debt](/img/reporting.png) 
 
 The dasboard includes a health report card, and a list of toggles that can be filtrated on different parameters.
 

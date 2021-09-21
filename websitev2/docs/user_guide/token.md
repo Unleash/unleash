@@ -17,15 +17,19 @@ All users are able to see tokens with CLIENT level access, but only instance adm
 
 ### Step-by-step {#step-by-step}
 
-**1. Select `Admin` from the sidebar**
+**1. Select `Advanced` from the top-line menu**
+![Admin menu](/img/admin_top-line_menu.png)
 
-![Admin menu](/img/admin_side_menu.png)
+**2. Select `API Access` from the dropdown**
 
-**2. Select `Api Access` from the tab menu**
+![Tab Menu](/img/admin_advanced_dropdown.png)
 
+**3. Select `API ACCESS` from the tab men**
 ![Tab Menu](/img/admin_tab_menu.png)
 
-**3. Click `Add new API key` at the top right of the page**
+**4. Click `Add new API key` at the top right of the page**
+![Tab Menu](/img/admin_new_api_key_button.png)
+
 
 **Client keys**
 

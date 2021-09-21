@@ -97,6 +97,7 @@ export default class FeatureToggleClientStore
             })
             .where('feature_environments.environment', environment)
             .where({ archived });
+
         if (featureQuery) {
             if (featureQuery.tag) {
                 const tagQuery = this.db

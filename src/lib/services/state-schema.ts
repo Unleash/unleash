@@ -13,7 +13,7 @@ export const featureStrategySchema = joi
         featureName: joi.string(),
         projectId: joi.string(),
         environment: joi.string(),
-        parameters: joi.object().optional(),
+        parameters: joi.object().optional().allow(null),
         constraints: joi.array().optional(),
         strategyName: joi.string(),
     })

@@ -145,7 +145,7 @@ exported412-enterprise.json{
       "id": "2ea91298-4565-4db2-8a23-50757001a076",
       "featureName": "this-is-fun",
       "projectName": "default",
-      "environment": ":global:",
+      "environment": "default",
       "strategyName": "gradualRolloutRandom",
       "parameters": {
         "percentage": "100"
@@ -157,7 +157,7 @@ exported412-enterprise.json{
       "id": "edaffaee-cf6e-473f-b137-ae15fb88ff53",
       "featureName": "version.three.seventeen",
       "projectName": "default",
-      "environment": ":global:",
+      "environment": "default",
       "strategyName": "default",
       "parameters": {},
       "constraints": [],
@@ -167,7 +167,7 @@ exported412-enterprise.json{
       "id": "e6eaede4-027a-41a9-8e80-0e0fc0a5d7af",
       "featureName": "in-another-project",
       "projectName": "someother",
-      "environment": ":global:",
+      "environment": "default",
       "strategyName": "gradualRolloutRandom",
       "parameters": {
         "percentage": "29"
@@ -194,7 +194,7 @@ exported412-enterprise.json{
       "id": "da60e934-246c-4b3e-b314-f2fd1828dd51",
       "featureName": "with-constraints",
       "projectName": "default",
-      "environment": ":global:",
+      "environment": "default",
       "strategyName": "default",
       "parameters": {},
       "constraints": [
@@ -212,7 +212,7 @@ exported412-enterprise.json{
       "id": "162058f5-3600-4299-97df-d543a0301bdd",
       "featureName": "another-toggle",
       "projectName": "someother",
-      "environment": ":global:",
+      "environment": "default",
       "strategyName": "userWithId",
       "parameters": {
         "userIds": "12541,123"
@@ -224,7 +224,7 @@ exported412-enterprise.json{
       "id": "5630e0fb-ebc1-4313-b6df-06b0a563c7b4",
       "featureName": "toggle-created-in-4-1",
       "projectName": "default",
-      "environment": ":global:",
+      "environment": "default",
       "strategyName": "applicationHostname",
       "parameters": {
         "hostNames": "vg.no"
@@ -235,7 +235,7 @@ exported412-enterprise.json{
   ],
   "environments": [
     {
-      "name": ":global:",
+      "name": "default",
       "displayName": "Across all environments"
     }
   ],
@@ -243,32 +243,32 @@ exported412-enterprise.json{
     {
       "enabled": true,
       "featureName": "this-is-fun",
-      "environment": ":global:"
+      "environment": "default"
     },
     {
       "enabled": true,
       "featureName": "version.three.seventeen",
-      "environment": ":global:"
+      "environment": "default"
     },
     {
       "enabled": true,
       "featureName": "in-another-project",
-      "environment": ":global:"
+      "environment": "default"
     },
     {
       "enabled": true,
       "featureName": "with-constraints",
-      "environment": ":global:"
+      "environment": "default"
     },
     {
       "enabled": true,
       "featureName": "another-toggle",
-      "environment": ":global:"
+      "environment": "default"
     },
     {
       "enabled": true,
       "featureName": "toggle-created-in-4-1",
-      "environment": ":global:"
+      "environment": "default"
     }
   ]
 }

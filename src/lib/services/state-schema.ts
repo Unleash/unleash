@@ -26,7 +26,7 @@ export const featureEnvironmentsSchema = joi.object().keys({
 });
 
 export const environmentSchema = joi.object().keys({
-    name: nameType.allow(':global:'),
+    name: nameType,
     displayName: joi.string().optional().allow(''),
     type: joi.string().required(),
     sortOrder: joi.number().optional(),

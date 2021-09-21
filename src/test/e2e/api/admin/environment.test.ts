@@ -1,6 +1,7 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -23,8 +24,8 @@ test('Can list all existing environments', async () => {
         .expect((res) => {
             expect(res.body.version).toBe(1);
             expect(res.body.environments[0]).toStrictEqual({
-                displayName: 'Across all environments',
-                name: ':global:',
+                displayName: 'Default Environment',
+                name: DEFAULT_ENV,
                 enabled: true,
                 sortOrder: 1,
                 type: 'production',
@@ -43,7 +44,7 @@ test('Can update sort order', async () => {
     await app.request
         .put('/api/admin/environments/sort-order')
         .send({
-            ':global:': 2,
+            [DEFAULT_ENV]: 2,
             [envName]: 1,
         })
         .expect(200);
@@ -56,11 +57,11 @@ test('Can update sort order', async () => {
             const updatedSort = res.body.environments.find(
                 (t) => t.name === envName,
             );
-            const global = res.body.environments.find(
-                (t) => t.name === ':global:',
+            const defaultEnv = res.body.environments.find(
+                (t) => t.name === DEFAULT_ENV,
             );
             expect(updatedSort.sortOrder).toBe(1);
-            expect(global.sortOrder).toBe(2);
+            expect(defaultEnv.sortOrder).toBe(2);
         });
 });
 
@@ -70,7 +71,7 @@ test('Sort order will fail on wrong data format', async () => {
     await app.request
         .put('/api/admin/environments/sort-order')
         .send({
-            ':global:': 'test',
+            [DEFAULT_ENV]: 'test',
             [envName]: 1,
         })
         .expect(400);

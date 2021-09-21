@@ -9,6 +9,7 @@ import {
     IStrategyConfig,
 } from '../types/model';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
+import { DEFAULT_ENV } from '../util/constants';
 
 export interface FeaturesTable {
     name: string;
@@ -61,10 +62,7 @@ export default class FeatureToggleClientStore
         archived: boolean = false,
         isAdmin: boolean = true,
     ): Promise<IFeatureToggleClient[]> {
-        const environments = [':global:'];
-        if (featureQuery?.environment) {
-            environments.push(featureQuery.environment);
-        }
+        const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
         let query = this.db('features')
             .select(
@@ -97,7 +95,7 @@ export default class FeatureToggleClientStore
                     'feature_environments.environment',
                 );
             })
-            .whereIn('feature_environments.environment', environments)
+            .where('feature_environments.environment', environment)
             .where({ archived });
         if (featureQuery) {
             if (featureQuery.tag) {
@@ -133,11 +131,7 @@ export default class FeatureToggleClientStore
             if (r.strategy_name) {
                 feature.strategies.push(this.getAdminStrategy(r, isAdmin));
             }
-            if (feature.enabled === undefined) {
-                feature.enabled = r.enabled;
-            } else {
-                feature.enabled = feature.enabled && r.enabled;
-            }
+            feature.enabled = r.enabled;
             feature.name = r.name;
             feature.description = r.description;
             feature.project = r.project;

@@ -2,6 +2,7 @@ import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token';
+import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 let db;
 let app;
@@ -214,14 +215,14 @@ test('creates new client token with project & environment set', async () => {
             username: 'default-client',
             type: 'client',
             project: 'default',
-            environment: ':global:',
+            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
             expect(res.body.type).toBe('client');
             expect(res.body.secret.length > 16).toBe(true);
-            expect(res.body.environment).toBe(':global:');
+            expect(res.body.environment).toBe(DEFAULT_ENV);
             expect(res.body.project).toBe('default');
         });
 });
@@ -247,12 +248,12 @@ test('should prefix token with "project:environment."', async () => {
             username: 'default-client',
             type: 'client',
             project: 'default',
-            environment: ':global:',
+            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
-            expect(res.body.secret).toMatch(/default::global:\..*/);
+            expect(res.body.secret).toMatch(/default:default\..*/);
         });
 });
 
@@ -323,7 +324,7 @@ test('admin token only supports ALL environments', async () => {
             username: 'default-admin',
             type: 'admin',
             project: '*',
-            environment: ':global:',
+            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(400);

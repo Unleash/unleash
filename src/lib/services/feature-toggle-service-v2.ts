@@ -19,7 +19,6 @@ import {
     FEATURE_STRATEGY_UPDATE,
     FEATURE_UPDATED,
 } from '../types/events';
-import { GLOBAL_ENV } from '../types/environment';
 import NotFoundError from '../error/notfound-error';
 import {
     FeatureConfigurationClient,
@@ -42,6 +41,7 @@ import {
 } from '../types/model';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
+import { DEFAULT_ENV } from '../util/constants';
 
 class FeatureToggleServiceV2 {
     private logger: Logger;
@@ -96,7 +96,7 @@ class FeatureToggleServiceV2 {
         projectId: string,
         featureName: string,
         userName: string,
-        environment: string = GLOBAL_ENV,
+        environment: string = DEFAULT_ENV,
     ): Promise<IStrategyConfig> {
         try {
             const newFeatureStrategy =
@@ -226,7 +226,7 @@ class FeatureToggleServiceV2 {
         id: string,
         userName: string,
         project: string = 'default',
-        environment: string = GLOBAL_ENV,
+        environment: string = DEFAULT_ENV,
     ): Promise<void> {
         await this.featureStrategiesStore.delete(id);
         await this.eventStore.store({
@@ -243,7 +243,7 @@ class FeatureToggleServiceV2 {
     async getStrategiesForEnvironment(
         project: string,
         featureName: string,
-        environment: string = GLOBAL_ENV,
+        environment: string = DEFAULT_ENV,
     ): Promise<IStrategyConfig[]> {
         const hasEnv = await this.featureEnvironmentStore.featureHasEnvironment(
             environment,
@@ -405,7 +405,7 @@ class FeatureToggleServiceV2 {
 
     async removeAllStrategiesForEnv(
         toggleName: string,
-        environment: string = GLOBAL_ENV,
+        environment: string = DEFAULT_ENV,
     ): Promise<void> {
         await this.featureStrategiesStore.removeAllStrategiesForFeatureEnv(
             toggleName,
@@ -605,11 +605,11 @@ class FeatureToggleServiceV2 {
             await this.featureStrategiesStore.getFeatureToggleWithEnvs(
                 featureName,
             );
-        const globalEnv = feature.environments.find(
-            (e) => e.name === GLOBAL_ENV,
+        const defaultEnv = feature.environments.find(
+            (e) => e.name === DEFAULT_ENV,
         );
-        const strategies = globalEnv?.strategies || [];
-        const enabled = globalEnv?.enabled || false;
+        const strategies = defaultEnv?.strategies || [];
+        const enabled = defaultEnv?.enabled || false;
 
         return { ...feature, enabled, strategies };
     }

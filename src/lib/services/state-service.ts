@@ -28,7 +28,6 @@ import {
     IProject,
     IStrategyConfig,
 } from '../types/model';
-import { GLOBAL_ENV } from '../types/environment';
 import { Logger } from '../logger';
 import {
     IFeatureTag,
@@ -44,6 +43,7 @@ import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-stor
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
+import { DEFAULT_ENV } from '../util/constants';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -245,14 +245,14 @@ export default class StateService {
                 projectId: f.project,
                 constraints: strategy.constraints || [],
                 parameters: strategy.parameters || {},
-                environment: GLOBAL_ENV,
+                environment: DEFAULT_ENV,
                 strategyName: strategy.name,
             })),
         );
         const newFeatures = features;
         const featureEnvironments = features.map((feature) => ({
             featureName: feature.name,
-            environment: GLOBAL_ENV,
+            environment: DEFAULT_ENV,
             enabled: feature.enabled,
         }));
         return {

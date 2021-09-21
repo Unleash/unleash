@@ -10,6 +10,7 @@ import noLoggerProvider from '../../fixtures/no-logger';
 import EnvironmentStore from '../../../lib/db/environment-store';
 import { IUnleashStores } from '../../../lib/types';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
+import { DEFAULT_ENV } from '../../../lib/util/constants';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -54,7 +55,7 @@ function createTagTypes(store) {
 }
 
 async function connectProject(store: IFeatureEnvironmentStore): Promise<void> {
-    await store.connectProject(':global:', 'default');
+    await store.connectProject(DEFAULT_ENV, 'default');
 }
 
 async function createEnvironments(store: EnvironmentStore): Promise<void> {

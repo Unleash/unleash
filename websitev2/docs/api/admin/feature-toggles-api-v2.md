@@ -13,7 +13,7 @@ In this document we will guide you on how you can work with feature toggles and 
 - A feature toggle can take different configuration, activation strategies, per environment.
 
 TODO: Need to explain the following in a bit more details:
-- The _:global:: environment
+- The _default_ environment
 
 
 > We will in this guide use [HTTPie](https://httpie.io) commands to show examples on how to interact with the API. 

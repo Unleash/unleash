@@ -4,7 +4,7 @@ import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service
 import { IStrategyConfig } from '../../../lib/types/model';
 import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
-import { GLOBAL_ENV } from '../../../lib/types/environment';
+import { DEFAULT_ENV } from '../../../lib/util/constants';
 
 let stores;
 let db;
@@ -80,7 +80,7 @@ test('Should be able to update existing strategy configuration', async () => {
     expect(createdConfig.name).toEqual('default');
     const updatedConfig = await service.updateStrategy(
         createdConfig.id,
-        GLOBAL_ENV,
+        DEFAULT_ENV,
         projectId,
         username,
         {
@@ -112,7 +112,7 @@ test('Should include legacy props in event log when updating strategy configurat
     await service.updateEnabled(
         'default',
         featureName,
-        GLOBAL_ENV,
+        DEFAULT_ENV,
         true,
         userName,
     );

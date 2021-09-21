@@ -1,6 +1,7 @@
 import dbInit, { ITestDb } from '../../../helpers/database-init';
 import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
+import { DEFAULT_ENV } from '../../../../../lib/util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -16,7 +17,7 @@ afterEach(async () => {
     );
     await Promise.all(
         all
-            .filter((env) => env !== ':global:')
+            .filter((env) => env !== DEFAULT_ENV)
             .map(async (env) =>
                 db.stores.projectStore.deleteEnvironmentForProject(
                     'default',

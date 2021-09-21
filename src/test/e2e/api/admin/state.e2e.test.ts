@@ -1,7 +1,7 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
-import { GLOBAL_ENV } from '../../../../lib/types/environment';
+import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 const importData = require('../../../examples/import.json');
 
@@ -265,7 +265,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         projectId,
     );
     await app.services.environmentService.addEnvironmentToProject(
-        GLOBAL_ENV,
+        DEFAULT_ENV,
         projectId,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
@@ -299,7 +299,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         },
         projectId,
         featureName,
-        GLOBAL_ENV,
+        DEFAULT_ENV,
     );
     const data = await app.services.stateService.export({});
     await app.services.stateService.import({

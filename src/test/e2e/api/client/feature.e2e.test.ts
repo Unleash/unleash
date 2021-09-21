@@ -1,6 +1,7 @@
 import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -153,6 +154,7 @@ test('Can filter features by namePrefix', async () => {
 
 test('Can get strategies for specific environment', async () => {
     const featureName = 'test.feature.with.env';
+    const env = DEFAULT_ENV;
 
     // Create feature toggle
     await app.request.post('/api/admin/projects/default/features').send({
@@ -163,7 +165,7 @@ test('Can get strategies for specific environment', async () => {
     // Add global strategy
     await app.request
         .post(
-            `/api/admin/projects/default/features/${featureName}/environments/:global:/strategies`,
+            `/api/admin/projects/default/features/${featureName}/environments/${env}/strategies`,
         )
         .send({
             name: 'default',
@@ -198,7 +200,7 @@ test('Can get strategies for specific environment', async () => {
         .expect(200)
         .expect((res) => {
             expect(res.body.name).toBe(featureName);
-            expect(res.body.strategies).toHaveLength(2);
+            expect(res.body.strategies).toHaveLength(1);
             expect(
                 res.body.strategies.find((s) => s.name === 'custom1'),
             ).toBeDefined();

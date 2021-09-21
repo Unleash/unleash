@@ -2,6 +2,7 @@ import dbInit, { ITestDb } from '../../../helpers/database-init';
 import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
 import { GLOBAL_ENV } from '../../../../../lib/types/environment';
+import { DEFAULT_ENV } from '../../../../../lib/util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -20,7 +21,7 @@ afterEach(async () => {
     );
     await Promise.all(
         all
-            .filter((env) => env !== ':global:')
+            .filter((env) => env !== DEFAULT_ENV)
             .map(async (env) =>
                 db.stores.projectStore.deleteEnvironmentForProject(
                     'default',
@@ -181,7 +182,7 @@ test('Project overview includes environment connected to feature', async () => {
         .get('/api/admin/projects/default')
         .expect(200)
         .expect((r) => {
-            expect(r.body.features[0].environments[0].name).toBe(':global:');
+            expect(r.body.features[0].environments[0].name).toBe(DEFAULT_ENV);
             expect(r.body.features[0].environments[1].name).toBe(
                 'project-overview',
             );
@@ -540,8 +541,8 @@ test('Should archive feature toggle', async () => {
     expect(toggle).toBeDefined();
 });
 
-test('Can add strategy to feature toggle to default env', async () => {
-    const envName = 'default';
+test('Can add strategy to feature toggle to a "some-env-2"', async () => {
+    const envName = 'some-env-2';
     const featureName = 'feature.strategy.toggle';
     // Create environment
     await db.stores.environmentStore.create({

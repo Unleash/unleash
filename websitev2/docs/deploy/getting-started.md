@@ -32,7 +32,7 @@ To run multiple replicas of Unleash simply point all instances to the same datab
 - username: `admin`
 - password: `unleash4all`
 
-### Option one - use Docker {#option-one---use-docker}
+### Option 1 - use Docker {#option-one---use-docker}
 
 **Useful links:**
 
@@ -60,13 +60,13 @@ docker run -p 4242:4242 \
   --network unleash unleashorg/unleash-server
 ```
 
-#### Docker-compose {#docker-compose}
-
+### Option 2 - use Docker-compose {#option-two---use-docker-compose}
+**Steps:**
 1. Clone the [unleash-docker](https://github.com/Unleash/unleash-docker) repository.
 2. Run `docker-compose build` in repository root folder.
 3. Run `docker-compose up` in repository root folder.
 
-### Option two - from Node.js {#option-two---from-nodejs}
+### Option 3 - from Node.js {#option-three---from-nodejs}
 
 1. Create a new folder/directory on your development computer.
 2. From a terminal/bash shell, install the dependencies:

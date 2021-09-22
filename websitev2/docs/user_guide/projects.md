@@ -23,15 +23,11 @@ A common pattern is to organize the feature toggles according to key areas of th
 
 When you log into Unleash for the first time, there is a Default project already created. All feature toggles are included in the Default project, unless explicitly set to a different one.
 
-From the top-line menu – click on the hamburger icon.
+From the top-line menu – click on “Projects”
 
-![Project concept](/img/projects_menu.png)
+![Project concept](/img/projects_button.png)
 
-From the menu – choose “Projects”
-
-<img src="/img/projects_menu_open.png" alt="menu open" width="200"/>
-
-The available projects will now be listed. To create a new Project – choose the “+”
+The available projects will now be listed. To create a new Project – choose the “Add new project”
 
 ![Project concept](/img/projects_new_project.png)
 
@@ -47,7 +43,13 @@ The configuration of a new Project is now available. the following input is avai
 
 ## Deleting an existing project {#deleting-an-existing-project}
 
-To keep your feature toggles clean, removing deprecated projects is important. From the overview of Projects – choose the Delete button for the project you want to delete.
+To keep your feature toggles clean, removing deprecated projects is important. From the overview of Projects – 
+1. In the top right of the project card, find the project menu represented by three vertical dots.
+
+
+![Project concept](/img/projects_menu_button.png)
+
+2. Click on Delete Project
 
 ![Project concept](/img/projects_delete_button.png)
 
@@ -58,10 +60,6 @@ When browsing the feature toggles in Unleash, you might want to filter the view 
 From the top-line menu – choose the hamburger icon
 
 ![Project concept](/img/projects_menu.png)
-
-From the menu – choose “Feature toggles”
-
-![Project concept](/img/feature_toggles_menu.png)
 
 The list of features toggles can be filtered on the project of your choice. By default, all feature toggles are listed in the view.
 

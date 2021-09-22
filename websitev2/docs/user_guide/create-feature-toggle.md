@@ -13,7 +13,7 @@ The first time you log-in to your Unleash instance you will see an empty list of
 
 ## Step 2: Create Feature toggle {#step-2-create-feature-toggle}
 
-After clicking the “create feature toggle button you will be presented with a form for creating a new feature toggle. You will need to define a few fields before you can actually complete the new feature toggle.
+After clicking the “create feature toggle” button you will be presented with a form for creating a new feature toggle. You will need to define a few fields before you can actually complete the new feature toggle.
 
 - **Name** – Must be unique across all your feature toggle. The name must also follow a URL friendly format. Can not be changed.
 - **Description** – A good description makes it easier for other members on your team to understand why this feature toggle exists.

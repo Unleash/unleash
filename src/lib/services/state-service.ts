@@ -122,7 +122,7 @@ export default class StateService {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     replaceGlobalEnvWithDefaultEnv(data: any) {
         data.environments?.forEach((e) => {
-            if (e.name === ':global:') {
+            if (e.name === GLOBAL_ENV) {
                 e.name = DEFAULT_ENV;
             }
         });

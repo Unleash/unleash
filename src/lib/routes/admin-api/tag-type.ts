@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
 
-import { UPDATE_FEATURE } from '../../types/permissions';
+import { DELETE_TAG_TYPE, UPDATE_TAG_TYPE } from '../../types/permissions';
 import { extractUsername } from '../../util/extract-user';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
@@ -24,11 +24,11 @@ class TagTypeController extends Controller {
         this.logger = config.getLogger('/admin-api/tag-type.js');
         this.tagTypeService = tagTypeService;
         this.get('/', this.getTagTypes);
-        this.post('/', this.createTagType, UPDATE_FEATURE);
+        this.post('/', this.createTagType, UPDATE_TAG_TYPE);
         this.post('/validate', this.validate);
         this.get('/:name', this.getTagType);
-        this.put('/:name', this.updateTagType, UPDATE_FEATURE);
-        this.delete('/:name', this.deleteTagType, UPDATE_FEATURE);
+        this.put('/:name', this.updateTagType, UPDATE_TAG_TYPE);
+        this.delete('/:name', this.deleteTagType, DELETE_TAG_TYPE);
     }
 
     async getTagTypes(req: Request, res: Response): Promise<void> {

@@ -44,6 +44,7 @@ import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
 import { DEFAULT_ENV } from '../util/constants';
+import { GLOBAL_ENV } from '../types/environment';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -118,12 +119,36 @@ export default class StateService {
             );
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    replaceGlobalEnvWithDefaultEnv(data: any) {
+        data.environments?.forEach((e) => {
+            if (e.name === ':global:') {
+                e.name = DEFAULT_ENV;
+            }
+        });
+        data.featureEnvironments?.forEach((fe) => {
+            if (fe.environment === GLOBAL_ENV) {
+                // eslint-disable-next-line no-param-reassign
+                fe.environment = DEFAULT_ENV;
+            }
+        });
+        data.featureStrategies?.forEach((fs) => {
+            if (fs.environment === GLOBAL_ENV) {
+                // eslint-disable-next-line no-param-reassign
+                fs.environment = DEFAULT_ENV;
+            }
+        });
+    }
+
     async import({
         data,
         userName = 'importUser',
         dropBeforeImport = false,
         keepExisting = true,
     }: IImportData): Promise<void> {
+        if (data.version === 2) {
+            this.replaceGlobalEnvWithDefaultEnv(data);
+        }
         const importData = await stateSchema.validateAsync(data);
 
         if (importData.features) {
@@ -576,7 +601,7 @@ export default class StateService {
                 environments,
                 featureEnvironments,
             ]) => ({
-                version: 2,
+                version: 3,
                 features,
                 strategies,
                 projects,

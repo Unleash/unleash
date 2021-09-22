@@ -311,3 +311,17 @@ test('Roundtrip with strategies in multiple environments works', async () => {
     const f = await app.services.featureToggleServiceV2.getFeature(featureName);
     expect(f.environments).toHaveLength(2);
 });
+
+test(`Importing version 2 replaces :global: environment with 'default'`, async () => {
+    await app.request
+        .post('/api/admin/state/import')
+        .attach('file', 'src/test/examples/exported412-version2.json')
+        .expect(202);
+    const env = await app.services.environmentService.get(DEFAULT_ENV);
+    expect(env).toBeTruthy();
+    const feature = await app.services.featureToggleServiceV2.getFeatureToggle(
+        'this-is-fun',
+    );
+    expect(feature.environments).toHaveLength(1);
+    expect(feature.environments[0].name).toBe(DEFAULT_ENV);
+});

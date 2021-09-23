@@ -65,6 +65,8 @@ test('Can connect environment to project', async () => {
                 name: 'test-connection',
                 displayName: '',
                 enabled: false,
+                sortOrder: 9999,
+                type: 'production',
             },
         ]);
     });
@@ -92,6 +94,8 @@ test('Can remove environment from project', async () => {
                 name: 'removal-test',
                 displayName: '',
                 enabled: false,
+                sortOrder: 9999,
+                type: 'production',
             },
         ]);
     });

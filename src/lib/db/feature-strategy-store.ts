@@ -210,6 +210,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'features.last_seen_at as last_seen_at',
                 'feature_environments.enabled as enabled',
                 'feature_environments.environment as environment',
+                'environments.name as environment_name',
+                'environments.type as environment_type',
+                'environments.sort_order as environment_sort_order',
+                'environments.display_name as environment_display_name',
                 'feature_strategies.id as strategy_id',
                 'feature_strategies.strategy_name as strategy_name',
                 'feature_strategies.parameters as parameters',
@@ -232,7 +236,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'feature_environments.environment',
                 );
             })
-            .where({ name: featureName, archived: archived ? 1 : 0 });
+            .fullOuterJoin(
+                'environments',
+                'feature_environments.environment',
+                'environments.name',
+            )
+            .where('features.name', featureName)
+            .andWhere('features.archived', archived ? 1 : 0);
         stopTimer();
         if (rows.length > 0) {
             const featureToggle = rows.reduce((acc, r) => {
@@ -254,6 +264,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 }
                 const env = acc.environments[r.environment];
                 env.enabled = r.enabled;
+                env.type = r.environment_type;
+                env.sortOrder = r.environment_sort_order;
                 if (!env.strategies) {
                     env.strategies = [];
                 }
@@ -265,7 +277,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             }, {});
             featureToggle.environments = Object.values(
                 featureToggle.environments,
-            );
+            ).sort((a, b) => {
+                // @ts-ignore
+                return a.sortOrder - b.sortOrder;
+            });
             featureToggle.environments = featureToggle.environments.map((e) => {
                 e.strategies = e.strategies.sort(
                     (a, b) => a.sortOrder - b.sortOrder,
@@ -286,6 +301,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             name: r.environment,
             displayName: r.display_name,
             enabled: r.enabled,
+            type: r.environment_type,
+            sortOrder: r.environment_sort_order,
         };
     }
 
@@ -304,6 +321,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_environments.enabled as enabled',
                 'feature_environments.environment as environment',
                 'environments.display_name as display_name',
+                'environments.type as environment_type',
+                'environments.sort_order as environment_sort_order',
             )
             .fullOuterJoin(
                 'feature_environments',

@@ -1,6 +1,7 @@
 import dbInit, { ITestDb } from '../../../helpers/database-init';
 import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
+import { GLOBAL_ENV } from '../../../../../lib/types/environment';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -579,6 +580,76 @@ test('Can add strategy to feature toggle to default env', async () => {
         });
 });
 
+test('Environments are returned in sortOrder', async () => {
+    const sortedSecond = 'sortedSecond';
+    const sortedLast = 'sortedLast';
+    const featureName = 'feature.strategy.toggle.sortOrder';
+    // Create environments
+    await db.stores.environmentStore.create({
+        name: sortedLast,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+        sortOrder: 8000,
+    });
+    await db.stores.environmentStore.create({
+        name: sortedSecond,
+        displayName: 'Enable feature for environment',
+        type: 'production',
+        sortOrder: 8,
+    });
+
+    // Connect environments to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: sortedSecond,
+        })
+        .expect(200);
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: sortedLast,
+        })
+        .expect(200);
+    /* Create feature toggle */
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+    /* create strategies connected to feature toggle */
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${sortedSecond}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${sortedLast}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+    await app.request
+        .get(`/api/admin/projects/default/features/${featureName}`)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.environments).toHaveLength(3);
+            expect(res.body.environments[0].name).toBe(GLOBAL_ENV);
+            expect(res.body.environments[1].name).toBe(sortedSecond);
+            expect(res.body.environments[2].name).toBe(sortedLast);
+        });
+});
+
 test('Can get strategies for feature and environment', async () => {
     const envName = 'get-strategy';
     // Create environment
@@ -829,7 +900,7 @@ test('Can not enable environment for feature without strategies', async () => {
         .set('Content-Type', 'application/json')
         .expect(403);
     await app.request
-        .get('/api/admin/projects/default/features/com.test.enable.environment')
+        .get(`/api/admin/projects/default/features/${featureName}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
@@ -837,6 +908,7 @@ test('Can not enable environment for feature without strategies', async () => {
                 (e) => e.name === environment,
             );
             expect(enabledFeatureEnv.enabled).toBe(false);
+            expect(enabledFeatureEnv.type).toBe('test');
         });
 });
 

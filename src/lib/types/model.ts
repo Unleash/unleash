@@ -114,12 +114,15 @@ export interface IEnvironmentCreate {
     name: string;
     displayName: string;
     type: string;
+    sortOrder?: number;
 }
 
 export interface IEnvironmentOverview {
     name: string;
     displayName: string;
     enabled: boolean;
+    type: string;
+    sortOrder: number;
 }
 
 export interface IFeatureOverview {

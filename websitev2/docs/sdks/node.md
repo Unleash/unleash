@@ -12,7 +12,7 @@ In this guide we explain how to use feature toggles in a Node application using 
 First we must install Node.js dependency:
 
 ```sh
-npm install unleash-client --save
+npm install unleash-client
 ```
 
 ## Step 2: Initialize the client SDK {#step-2-initialize-the-client-sdk}

@@ -542,7 +542,7 @@ export default class StateService {
     }> {
         return Promise.all([
             includeFeatureToggles
-                ? this.toggleStore.getAll()
+                ? this.toggleStore.getAll({ archived: false })
                 : Promise.resolve([]),
             includeStrategies
                 ? this.strategyStore.getEditableStrategies()
@@ -583,9 +583,13 @@ export default class StateService {
                 tagTypes,
                 tags,
                 featureTags,
-                featureStrategies,
+                featureStrategies: featureStrategies.filter((fS) =>
+                    features.some((f) => fS.featureName === f.name),
+                ),
                 environments,
-                featureEnvironments,
+                featureEnvironments: featureEnvironments.filter((fE) =>
+                    features.some((f) => fE.featureName === f.name),
+                ),
             }),
         );
     }

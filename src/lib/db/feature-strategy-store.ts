@@ -266,6 +266,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 env.enabled = r.enabled;
                 env.type = r.environment_type;
                 env.sortOrder = r.environment_sort_order;
+                env.displayName = r.environment_display_name;
                 if (!env.strategies) {
                     env.strategies = [];
                 }

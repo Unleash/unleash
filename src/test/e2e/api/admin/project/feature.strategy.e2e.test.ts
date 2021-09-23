@@ -1,7 +1,6 @@
 import dbInit, { ITestDb } from '../../../helpers/database-init';
 import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
-import { GLOBAL_ENV } from '../../../../../lib/types/environment';
 import { DEFAULT_ENV } from '../../../../../lib/util/constants';
 
 let app: IUnleashTest;
@@ -645,7 +644,7 @@ test('Environments are returned in sortOrder', async () => {
         .expect(200)
         .expect((res) => {
             expect(res.body.environments).toHaveLength(3);
-            expect(res.body.environments[0].name).toBe(GLOBAL_ENV);
+            expect(res.body.environments[0].name).toBe(DEFAULT_ENV);
             expect(res.body.environments[1].name).toBe(sortedSecond);
             expect(res.body.environments[2].name).toBe(sortedLast);
         });

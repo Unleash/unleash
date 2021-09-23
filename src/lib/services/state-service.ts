@@ -1,11 +1,13 @@
 import { stateSchema } from './state-schema';
 import {
+    DROP_ENVIRONMENTS,
     DROP_FEATURE_TAGS,
     DROP_FEATURES,
     DROP_PROJECTS,
     DROP_STRATEGIES,
     DROP_TAG_TYPES,
     DROP_TAGS,
+    ENVIRONMENT_IMPORT,
     FEATURE_IMPORT,
     FEATURE_TAG_IMPORT,
     PROJECT_IMPORT,
@@ -150,6 +152,15 @@ export default class StateService {
             this.replaceGlobalEnvWithDefaultEnv(data);
         }
         const importData = await stateSchema.validateAsync(data);
+
+        if (importData.environments) {
+            await this.importEnvironments({
+                environments: data.environments,
+                userName,
+                dropBeforeImport,
+                keepExisting,
+            });
+        }
 
         if (importData.features) {
             let projectData;
@@ -363,6 +374,42 @@ export default class StateService {
                     }),
                 ),
         );
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async importEnvironments({
+        environments,
+        userName,
+        dropBeforeImport,
+        keepExisting,
+    }): Promise<void> {
+        this.logger.info(`Import ${environments.length} projects`);
+        const oldEnvs = dropBeforeImport
+            ? []
+            : await this.environmentStore.getAll();
+        if (dropBeforeImport) {
+            this.logger.info('Dropping existing environments');
+            await this.environmentStore.deleteAll();
+            await this.eventStore.store({
+                type: DROP_ENVIRONMENTS,
+                createdBy: userName,
+                data: { name: 'all-projects' },
+            });
+        }
+        const envsImport = environments.filter((env) =>
+            keepExisting ? !oldEnvs.some((old) => old.name === env.name) : true,
+        );
+        if (envsImport.length > 0) {
+            const importedEnvs = await this.environmentStore.importEnvironments(
+                envsImport,
+            );
+            const importedEnvironmentEvents = importedEnvs.map((env) => ({
+                type: ENVIRONMENT_IMPORT,
+                createdBy: userName,
+                data: env,
+            }));
+            await this.eventStore.batchStore(importedEnvironmentEvents);
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

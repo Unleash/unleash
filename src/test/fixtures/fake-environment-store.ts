@@ -3,6 +3,11 @@ import NotFoundError from '../../lib/error/notfound-error';
 import { IEnvironmentStore } from '../../lib/types/stores/environment-store';
 
 export default class FakeEnvironmentStore implements IEnvironmentStore {
+    importEnvironments(envs: IEnvironment[]): Promise<IEnvironment[]> {
+        this.environments = envs;
+        return Promise.resolve(envs);
+    }
+
     environments: IEnvironment[] = [];
 
     async getAll(): Promise<IEnvironment[]> {

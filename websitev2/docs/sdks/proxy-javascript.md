@@ -14,7 +14,7 @@ For single-page apps we have a tiny proxy-client in JavaScript, without any exte
 **Step 1: Install**
 
 ```
-npm install unleash-proxy-client --save
+npm install unleash-proxy-client
 ```
 
 **Step 2: Initialize the SDK**

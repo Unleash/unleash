@@ -3,7 +3,7 @@
 const up = function (db, cb) {
     db.runSql(
         `
-       INSERT INTO environments(name, display_name, protected, sort_order) VALUES ('default', 'Default Environment', true, 1);
+       INSERT INTO environments(name, display_name, protected, sort_order, type) VALUES ('default', 'Default Environment', true, 1, 'production');
        ALTER TABLE feature_strategies ALTER COLUMN environment SET DEFAULT 'default';
        ALTER TABLE feature_environments ALTER COLUMN environment SET DEFAULT 'default';
        UPDATE feature_strategies SET environment = 'default' WHERE environment = ':global:';
@@ -18,7 +18,7 @@ const up = function (db, cb) {
 const down = function (db, cb) {
     db.runSql(
         `
-        INSERT INTO environments(name, display_name, protected) VALUES (':global:', 'Across all environments', true);
+        INSERT INTO environments(name, display_name, protected, type) VALUES (':global:', 'Across all environments', true, 'production');
         ALTER TABLE feature_strategies ALTER COLUMN environment SET DEFAULT ':global:';
         ALTER TABLE feature_environments ALTER COLUMN environment SET DEFAULT ':global:';
         UPDATE feature_strategies SET environment = ':global:' WHERE environment = 'default';

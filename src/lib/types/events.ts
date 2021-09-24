@@ -48,3 +48,5 @@ export const DB_POOL_UPDATE = 'db-pool-update';
 export const USER_CREATED = 'user-created';
 export const USER_UPDATED = 'user-updated';
 export const USER_DELETED = 'user-deleted';
+export const DROP_ENVIRONMENTS = 'drop-environments';
+export const ENVIRONMENT_IMPORT = 'environment-import';

@@ -14,4 +14,5 @@ export interface IEnvironmentStore extends Store<IEnvironment, string> {
         value: string | number | boolean,
     ): Promise<void>;
     updateSortOrder(id: string, value: number): Promise<void>;
+    importEnvironments(environments: IEnvironment[]): Promise<IEnvironment[]>;
 }

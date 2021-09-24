@@ -145,7 +145,7 @@
       "id": "2ea91298-4565-4db2-8a23-50757001a076",
       "featureName": "this-is-fun",
       "projectId": "default",
-      "environment": "default",
+      "environment": ":global:",
       "strategyName": "gradualRolloutRandom",
       "parameters": {
         "percentage": "100"
@@ -157,7 +157,7 @@
       "id": "edaffaee-cf6e-473f-b137-ae15fb88ff53",
       "featureName": "version.three.seventeen",
       "projectId": "default",
-      "environment": "default",
+      "environment": ":global:",
       "strategyName": "default",
       "parameters": {},
       "constraints": [],
@@ -167,7 +167,7 @@
       "id": "e6eaede4-027a-41a9-8e80-0e0fc0a5d7af",
       "featureName": "in-another-project",
       "projectId": "someother",
-      "environment": "default",
+      "environment": ":global:",
       "strategyName": "gradualRolloutRandom",
       "parameters": {
         "percentage": "29"
@@ -194,7 +194,7 @@
       "id": "da60e934-246c-4b3e-b314-f2fd1828dd51",
       "featureName": "with-constraints",
       "projectId": "default",
-      "environment": "default",
+      "environment": ":global:",
       "strategyName": "default",
       "parameters": {},
       "constraints": [
@@ -212,7 +212,7 @@
       "id": "162058f5-3600-4299-97df-d543a0301bdd",
       "featureName": "another-toggle",
       "projectId": "someother",
-      "environment": "default",
+      "environment": ":global:",
       "strategyName": "userWithId",
       "parameters": {
         "userIds": "12541,123"
@@ -224,7 +224,7 @@
       "id": "5630e0fb-ebc1-4313-b6df-06b0a563c7b4",
       "featureName": "toggle-created-in-4-1",
       "projectId": "default",
-      "environment": "default",
+      "environment": ":global:",
       "strategyName": "applicationHostname",
       "parameters": {
         "hostNames": "vg.no"
@@ -235,7 +235,7 @@
   ],
   "environments": [
     {
-      "name": "default",
+      "name": ":global:",
       "displayName": "Across all environments",
       "type": "production"
     }
@@ -244,32 +244,32 @@
     {
       "enabled": true,
       "featureName": "this-is-fun",
-      "environment": "default"
+      "environment": ":global:"
     },
     {
       "enabled": true,
       "featureName": "version.three.seventeen",
-      "environment": "default"
+      "environment": ":global:"
     },
     {
       "enabled": true,
       "featureName": "in-another-project",
-      "environment": "default"
+      "environment": ":global:"
     },
     {
       "enabled": true,
       "featureName": "with-constraints",
-      "environment": "default"
+      "environment": ":global:"
     },
     {
       "enabled": true,
       "featureName": "another-toggle",
-      "environment": "default"
+      "environment": ":global:"
     },
     {
       "enabled": true,
       "featureName": "toggle-created-in-4-1",
-      "environment": "default"
+      "environment": ":global:"
     }
   ]
 }

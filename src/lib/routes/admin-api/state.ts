@@ -36,6 +36,7 @@ class StateController extends Controller {
         this.logger = config.getLogger('/admin-api/state.ts');
         this.stateService = stateService;
         this.fileupload('/import', upload.single('file'), this.import, ADMIN);
+        this.post('/import', this.import, ADMIN);
         this.get('/export', this.export, ADMIN);
     }
 

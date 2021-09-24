@@ -8,6 +8,7 @@ import {
     IProjectInsert,
     IProjectStore,
 } from '../types/stores/project-store';
+import { DEFAULT_ENV } from '../util/constants';
 
 const COLUMNS = ['id', 'name', 'description', 'created_at', 'health'];
 const TABLE = 'projects';
@@ -99,16 +100,16 @@ class ProjectStore implements IProjectStore {
             .onConflict('id')
             .ignore();
         if (rows.length > 0) {
-            await this.addGlobalEnvironment(rows);
+            await this.addDefaultEnvironment(rows);
             return rows.map(this.mapRow);
         }
         return [];
     }
 
-    async addGlobalEnvironment(projects: any[]): Promise<void> {
+    async addDefaultEnvironment(projects: any[]): Promise<void> {
         const environments = projects.map((p) => ({
             project_id: p.id,
-            environment_name: ':global:',
+            environment_name: DEFAULT_ENV,
         }));
         await this.db('project_environments')
             .insert(environments)

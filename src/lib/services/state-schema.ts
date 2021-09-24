@@ -13,7 +13,7 @@ export const featureStrategySchema = joi
         featureName: joi.string(),
         projectId: joi.string(),
         environment: joi.string(),
-        parameters: joi.object().optional(),
+        parameters: joi.object().optional().allow(null),
         constraints: joi.array().optional(),
         strategyName: joi.string(),
     })
@@ -26,7 +26,7 @@ export const featureEnvironmentsSchema = joi.object().keys({
 });
 
 export const environmentSchema = joi.object().keys({
-    name: nameType.allow(':global:'),
+    name: nameType,
     displayName: joi.string().optional().allow(''),
     type: joi.string().required(),
     sortOrder: joi.number().optional(),

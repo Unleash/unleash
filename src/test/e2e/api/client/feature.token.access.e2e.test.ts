@@ -3,6 +3,7 @@ import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenService } from '../../../../lib/services/api-token-service';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -117,11 +118,11 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('returns feature toggle with :global: config', async () => {
+test('returns feature toggle with "default" config', async () => {
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         username,
-        environment: ':global:',
+        environment: DEFAULT_ENV,
         project,
     });
     await app.request
@@ -157,7 +158,8 @@ test('returns feature toggle with testing environment config', async () => {
             const f2 = features.find((f) => f.name === feature2);
 
             expect(features).toHaveLength(2);
-            expect(f1.strategies).toHaveLength(2);
+            expect(f1.strategies).toHaveLength(1);
+            expect(f1.strategies[0].name).toBe('custom-testing');
             expect(f2.strategies).toHaveLength(1);
             expect(query.project[0]).toBe(project);
             expect(query.environment).toBe(environment);

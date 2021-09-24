@@ -16,8 +16,8 @@ import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
 import { featureSchema, querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
 import FeatureTagService from '../../services/feature-tag-service';
-import { GLOBAL_ENV } from '../../types/environment';
 import { IAuthRequest } from '../unleash-types';
+import { DEFAULT_ENV } from '../../util/constants';
 
 const version = 1;
 
@@ -110,11 +110,11 @@ class FeatureController extends Controller {
 
     private async getLegacyFeatureToggle(name: string): Promise<any> {
         const feature = await this.featureService2.getFeatureToggle(name);
-        const globalEnv = feature.environments.find(
-            (e) => e.name === GLOBAL_ENV,
+        const defaultEnv = feature.environments.find(
+            (e) => e.name === DEFAULT_ENV,
         );
-        const strategies = globalEnv?.strategies || [];
-        const enabled = globalEnv?.enabled || false;
+        const strategies = defaultEnv?.strategies || [];
+        const enabled = defaultEnv?.enabled || false;
         delete feature.environments;
 
         return { ...feature, enabled, strategies };
@@ -181,7 +181,7 @@ class FeatureController extends Controller {
         await this.featureService2.updateEnabled(
             createdFeature.project,
             createdFeature.name,
-            GLOBAL_ENV,
+            DEFAULT_ENV,
             enabled,
             userName,
         );
@@ -228,7 +228,7 @@ class FeatureController extends Controller {
         await this.featureService2.updateEnabled(
             projectId,
             updatedFeature.name,
-            GLOBAL_ENV,
+            DEFAULT_ENV,
             updatedFeature.enabled,
             userName,
         );
@@ -246,7 +246,7 @@ class FeatureController extends Controller {
         const feature = await this.featureService2.toggle(
             projectId,
             featureName,
-            GLOBAL_ENV,
+            DEFAULT_ENV,
             userName,
         );
         res.status(200).json(feature);
@@ -259,7 +259,7 @@ class FeatureController extends Controller {
         const feature = await this.featureService2.updateEnabled(
             projectId,
             featureName,
-            GLOBAL_ENV,
+            DEFAULT_ENV,
             true,
             userName,
         );
@@ -273,7 +273,7 @@ class FeatureController extends Controller {
         const feature = await this.featureService2.updateEnabled(
             projectId,
             featureName,
-            GLOBAL_ENV,
+            DEFAULT_ENV,
             false,
             userName,
         );

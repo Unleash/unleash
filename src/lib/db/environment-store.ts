@@ -39,6 +39,17 @@ function mapRow(row: IEnvironmentsTable): IEnvironment {
     };
 }
 
+function fieldToRow(env: IEnvironment): IEnvironmentsTable {
+    return {
+        name: env.name,
+        display_name: env.displayName,
+        type: env.type,
+        sort_order: env.sortOrder,
+        enabled: env.enabled,
+        protected: env.protected,
+    };
+}
+
 const TABLE = 'environments';
 
 export default class EnvironmentStore implements IEnvironmentStore {
@@ -56,6 +67,18 @@ export default class EnvironmentStore implements IEnvironmentStore {
                 store: 'environment',
                 action,
             });
+    }
+
+    async importEnvironments(
+        environments: IEnvironment[],
+    ): Promise<IEnvironment[]> {
+        const rows = await this.db(TABLE)
+            .insert(environments.map(fieldToRow))
+            .returning(COLUMNS)
+            .onConflict('name')
+            .ignore();
+
+        return rows.map(mapRow);
     }
 
     async deleteAll(): Promise<void> {

@@ -38,7 +38,7 @@ test('Can get all', async () => {
     });
 
     const environments = await service.getAll();
-    expect(environments).toHaveLength(3); // the one we created plus ':global:'
+    expect(environments).toHaveLength(3); // the one we created plus 'default'
 });
 
 test('Can connect environment to project', async () => {

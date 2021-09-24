@@ -2,6 +2,7 @@ import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token';
+import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 let db;
 let app;
@@ -23,7 +24,6 @@ afterEach(async () => {
 });
 
 test('returns empty list of tokens', async () => {
-    expect.assertions(1);
     return app.request
         .get('/api/admin/api-tokens')
         .expect('Content-Type', /json/)
@@ -34,7 +34,6 @@ test('returns empty list of tokens', async () => {
 });
 
 test('creates new client token', async () => {
-    expect.assertions(4);
     return app.request
         .post('/api/admin/api-tokens')
         .send({
@@ -52,7 +51,6 @@ test('creates new client token', async () => {
 });
 
 test('creates new admin token', async () => {
-    expect.assertions(5);
     return app.request
         .post('/api/admin/api-tokens')
         .send({
@@ -64,6 +62,7 @@ test('creates new admin token', async () => {
         .expect((res) => {
             expect(res.body.username).toBe('default-admin');
             expect(res.body.type).toBe('admin');
+            expect(res.body.environment).toBe(ALL);
             expect(res.body.createdAt).toBeTruthy();
             expect(res.body.expiresAt).toBeFalsy();
             expect(res.body.secret.length > 16).toBe(true);
@@ -71,7 +70,6 @@ test('creates new admin token', async () => {
 });
 
 test('creates new ADMIN token should fix casing', async () => {
-    expect.assertions(5);
     return app.request
         .post('/api/admin/api-tokens')
         .send({
@@ -90,7 +88,6 @@ test('creates new ADMIN token should fix casing', async () => {
 });
 
 test('creates new admin token with expiry', async () => {
-    expect.assertions(1);
     const expiresAt = new Date();
     const expiresAtAsISOStr = JSON.parse(JSON.stringify(expiresAt));
     return app.request
@@ -108,8 +105,6 @@ test('creates new admin token with expiry', async () => {
 });
 
 test('update admin token with expiry', async () => {
-    expect.assertions(2);
-
     const tokenSecret = 'random-secret-update';
 
     await db.stores.apiTokenStore.insert({
@@ -137,8 +132,6 @@ test('update admin token with expiry', async () => {
 });
 
 test('creates a lot of client tokens', async () => {
-    expect.assertions(4);
-
     const requests = [];
 
     for (let i = 0; i < 10; i++) {
@@ -166,8 +159,6 @@ test('creates a lot of client tokens', async () => {
 });
 
 test('removes api token', async () => {
-    expect.assertions(1);
-
     const tokenSecret = 'random-secret';
 
     await db.stores.apiTokenStore.insert({
@@ -202,7 +193,7 @@ test('creates new client token: project & environment defaults to "*"', async ()
         .expect((res) => {
             expect(res.body.type).toBe('client');
             expect(res.body.secret.length > 16).toBe(true);
-            expect(res.body.environment).toBe(ALL);
+            expect(res.body.environment).toBe(DEFAULT_ENV);
             expect(res.body.project).toBe(ALL);
         });
 });
@@ -214,14 +205,14 @@ test('creates new client token with project & environment set', async () => {
             username: 'default-client',
             type: 'client',
             project: 'default',
-            environment: ':global:',
+            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
             expect(res.body.type).toBe('client');
             expect(res.body.secret.length > 16).toBe(true);
-            expect(res.body.environment).toBe(':global:');
+            expect(res.body.environment).toBe(DEFAULT_ENV);
             expect(res.body.project).toBe('default');
         });
 });
@@ -236,7 +227,7 @@ test('should prefix default token with "*:*."', async () => {
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
-            expect(res.body.secret).toMatch(/\*:\*\..*/);
+            expect(res.body.secret).toMatch(/\*:default\..*/);
         });
 });
 
@@ -247,12 +238,12 @@ test('should prefix token with "project:environment."', async () => {
             username: 'default-client',
             type: 'client',
             project: 'default',
-            environment: ':global:',
+            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(201)
         .expect((res) => {
-            expect(res.body.secret).toMatch(/default::global:\..*/);
+            expect(res.body.secret).toMatch(/default:default\..*/);
         });
 });
 
@@ -323,7 +314,19 @@ test('admin token only supports ALL environments', async () => {
             username: 'default-admin',
             type: 'admin',
             project: '*',
-            environment: ':global:',
+            environment: DEFAULT_ENV,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
+test('client tokens cannot span all environments', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client',
+            type: 'client',
+            environment: ALL,
         })
         .set('Content-Type', 'application/json')
         .expect(400);

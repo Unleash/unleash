@@ -1,11 +1,13 @@
 import { stateSchema } from './state-schema';
 import {
+    DROP_ENVIRONMENTS,
     DROP_FEATURE_TAGS,
     DROP_FEATURES,
     DROP_PROJECTS,
     DROP_STRATEGIES,
     DROP_TAG_TYPES,
     DROP_TAGS,
+    ENVIRONMENT_IMPORT,
     FEATURE_IMPORT,
     FEATURE_TAG_IMPORT,
     PROJECT_IMPORT,
@@ -28,7 +30,6 @@ import {
     IProject,
     IStrategyConfig,
 } from '../types/model';
-import { GLOBAL_ENV } from '../types/environment';
 import { Logger } from '../logger';
 import {
     IFeatureTag,
@@ -44,6 +45,8 @@ import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-stor
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
+import { DEFAULT_ENV } from '../util/constants';
+import { GLOBAL_ENV } from '../types/environment';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -118,13 +121,46 @@ export default class StateService {
             );
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    replaceGlobalEnvWithDefaultEnv(data: any) {
+        data.environments?.forEach((e) => {
+            if (e.name === GLOBAL_ENV) {
+                e.name = DEFAULT_ENV;
+            }
+        });
+        data.featureEnvironments?.forEach((fe) => {
+            if (fe.environment === GLOBAL_ENV) {
+                // eslint-disable-next-line no-param-reassign
+                fe.environment = DEFAULT_ENV;
+            }
+        });
+        data.featureStrategies?.forEach((fs) => {
+            if (fs.environment === GLOBAL_ENV) {
+                // eslint-disable-next-line no-param-reassign
+                fs.environment = DEFAULT_ENV;
+            }
+        });
+    }
+
     async import({
         data,
         userName = 'importUser',
         dropBeforeImport = false,
         keepExisting = true,
     }: IImportData): Promise<void> {
+        if (data.version === 2) {
+            this.replaceGlobalEnvWithDefaultEnv(data);
+        }
         const importData = await stateSchema.validateAsync(data);
+
+        if (importData.environments) {
+            await this.importEnvironments({
+                environments: data.environments,
+                userName,
+                dropBeforeImport,
+                keepExisting,
+            });
+        }
 
         if (importData.features) {
             let projectData;
@@ -245,14 +281,14 @@ export default class StateService {
                 projectId: f.project,
                 constraints: strategy.constraints || [],
                 parameters: strategy.parameters || {},
-                environment: GLOBAL_ENV,
+                environment: DEFAULT_ENV,
                 strategyName: strategy.name,
             })),
         );
         const newFeatures = features;
         const featureEnvironments = features.map((feature) => ({
             featureName: feature.name,
-            environment: GLOBAL_ENV,
+            environment: DEFAULT_ENV,
             enabled: feature.enabled,
         }));
         return {
@@ -338,6 +374,42 @@ export default class StateService {
                     }),
                 ),
         );
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async importEnvironments({
+        environments,
+        userName,
+        dropBeforeImport,
+        keepExisting,
+    }): Promise<void> {
+        this.logger.info(`Import ${environments.length} projects`);
+        const oldEnvs = dropBeforeImport
+            ? []
+            : await this.environmentStore.getAll();
+        if (dropBeforeImport) {
+            this.logger.info('Dropping existing environments');
+            await this.environmentStore.deleteAll();
+            await this.eventStore.store({
+                type: DROP_ENVIRONMENTS,
+                createdBy: userName,
+                data: { name: 'all-projects' },
+            });
+        }
+        const envsImport = environments.filter((env) =>
+            keepExisting ? !oldEnvs.some((old) => old.name === env.name) : true,
+        );
+        if (envsImport.length > 0) {
+            const importedEnvs = await this.environmentStore.importEnvironments(
+                envsImport,
+            );
+            const importedEnvironmentEvents = importedEnvs.map((env) => ({
+                type: ENVIRONMENT_IMPORT,
+                createdBy: userName,
+                data: env,
+            }));
+            await this.eventStore.batchStore(importedEnvironmentEvents);
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -576,7 +648,7 @@ export default class StateService {
                 environments,
                 featureEnvironments,
             ]) => ({
-                version: 2,
+                version: 3,
                 features,
                 strategies,
                 projects,

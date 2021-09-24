@@ -20,7 +20,6 @@ import {
     IUserWithRole,
     RoleName,
 } from '../types/model';
-import { GLOBAL_ENV } from '../types/environment';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
@@ -31,6 +30,7 @@ import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleServiceV2 from './feature-toggle-service-v2';
 import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
+import { DEFAULT_ENV } from '../util/constants';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -123,7 +123,8 @@ export default class ProjectService {
 
         await this.store.create(data);
 
-        await this.featureEnvironmentStore.connectProject(GLOBAL_ENV, data.id);
+        // TODO: we should only connect to enabled environments
+        await this.featureEnvironmentStore.connectProject(DEFAULT_ENV, data.id);
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 

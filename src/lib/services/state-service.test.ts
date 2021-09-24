@@ -11,6 +11,7 @@ import {
     TAG_IMPORT,
     PROJECT_IMPORT,
 } from '../types/events';
+import { GLOBAL_ENV } from '../types/environment';
 
 const oldExportExample = require('./state-service-export-v1.json');
 
@@ -214,6 +215,57 @@ test('should export featureToggles', async () => {
 
     expect(data.features).toHaveLength(1);
     expect(data.features[0].name).toBe('a-feature');
+});
+
+test('archived feature toggles should not be included', async () => {
+    const { stateService, stores } = getSetup();
+
+    await stores.featureToggleStore.create('default', {
+        name: 'a-feature',
+        archived: true,
+    });
+    const data = await stateService.export({ includeFeatureToggles: true });
+
+    expect(data.features).toHaveLength(0);
+});
+
+test('featureStrategy connected to an archived feature toggle should not be included', async () => {
+    const { stateService, stores } = getSetup();
+    const featureName = 'fstrat-archived-feature';
+    await stores.featureToggleStore.create('default', {
+        name: featureName,
+        archived: true,
+    });
+
+    await stores.featureStrategiesStore.createStrategyFeatureEnv({
+        featureName,
+        strategyName: 'fstrat-archived-strat',
+        environment: GLOBAL_ENV,
+        constraints: [],
+        parameters: {},
+        projectId: 'default',
+    });
+    const data = await stateService.export({ includeFeatureToggles: true });
+    expect(data.featureStrategies).toHaveLength(0);
+});
+
+test('featureStrategy connected to a feature should be included', async () => {
+    const { stateService, stores } = getSetup();
+    const featureName = 'fstrat-feature';
+    await stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    await stores.featureStrategiesStore.createStrategyFeatureEnv({
+        featureName,
+        strategyName: 'fstrat-strat',
+        environment: GLOBAL_ENV,
+        constraints: [],
+        parameters: {},
+        projectId: 'default',
+    });
+    const data = await stateService.export({ includeFeatureToggles: true });
+    expect(data.featureStrategies).toHaveLength(1);
 });
 
 test('should export strategies', async () => {

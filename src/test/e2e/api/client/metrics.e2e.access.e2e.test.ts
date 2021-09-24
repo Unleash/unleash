@@ -8,7 +8,7 @@ let app;
 let db;
 
 beforeAll(async () => {
-    db = await dbInit('metrics_api_client', getLogger);
+    db = await dbInit('metrics_api_e2e_access_client', getLogger);
     app = await setupAppWithAuth(db.stores);
 });
 

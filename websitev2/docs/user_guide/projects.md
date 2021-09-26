@@ -4,7 +4,7 @@ title: Projects
 ---
 
 <div class="alert alert--info" role="alert">
-  Strategy constraints part of Unleash Pro and Enterprise.
+  Projects are part of Unleash Pro and Unleash Enterprise.
 </div>
 
 ## Overview {#overview}

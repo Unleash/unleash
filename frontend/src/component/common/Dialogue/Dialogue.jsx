@@ -16,7 +16,6 @@ const Dialogue = ({
     onClick,
     onClose,
     title,
-    style,
     primaryButtonText,
     disabledPrimaryButton = false,
     secondaryButtonText,

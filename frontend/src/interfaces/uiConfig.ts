@@ -13,6 +13,7 @@ export interface IUiConfig {
 export interface IFlags {
     C: boolean;
     P: boolean;
+    E: boolean;
 }
 
 export interface IVersionInfo {

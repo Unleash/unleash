@@ -9,9 +9,9 @@ import { useStyles } from './styles';
 const PageContent = ({
     children,
     headerContent,
-    disablePadding,
-    disableBorder,
-    bodyClass,
+    disablePadding = false,
+    disableBorder = false,
+    bodyClass = undefined,
     ...rest
 }) => {
     const styles = useStyles();

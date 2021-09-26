@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import ApiKeyList from './api-key-list-container';
+import ApiTokenList from '../../../component/api-token/ApiTokenList/ApiTokenList';
 
 import AdminMenu from '../admin-menu';
 import usePermissions from '../../../hooks/usePermissions';
 import ConditionallyRender from '../../../component/common/ConditionallyRender';
 
-const ApiPage = ({ history }) => {
+const ApiPage = ({ history, location }) => {
     const { isAdmin } = usePermissions();
 
     return (
@@ -14,7 +14,7 @@ const ApiPage = ({ history }) => {
                 condition={isAdmin()}
                 show={<AdminMenu history={history} />}
             />
-            <ApiKeyList />
+            <ApiTokenList location={location} />
         </div>
     );
 };
@@ -22,6 +22,7 @@ const ApiPage = ({ history }) => {
 ApiPage.propTypes = {
     match: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
 };
 
 export default ApiPage;

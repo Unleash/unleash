@@ -12,9 +12,9 @@ function Secret({ value }) {
     return (
         <div>
             {show ? (
-                <input readOnly value={value} style={{ width: '240px' }} />
+                <input readOnly value={value} style={{ width: '250px' }} />
             ) : (
-                <span>***************************</span>
+                <span style={{ width: '250px', display: 'inline-block' }}>************************************</span>
             )}
 
             <IconButton

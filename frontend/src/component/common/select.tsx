@@ -1,11 +1,31 @@
 import React from 'react';
-import { Select, FormControl, MenuItem, InputLabel } from '@material-ui/core';
-import PropTypes from 'prop-types';
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 
-const SelectMenu = ({
+export interface ISelectOption {
+    key: string;
+    title?: string;
+    label?: string
+}
+export interface ISelectMenuProps {
+    name: string;
+    id: string;
+    value?: string;
+    label?: string;
+    options: ISelectOption[];
+    style?: object;
+    onChange?: (
+        event: React.ChangeEvent<{ name?: string; value: unknown }>,
+        child: React.ReactNode
+    ) => void
+    disabled?: boolean
+    className?: string;
+    classes?: any;
+}
+
+const SelectMenu: React.FC<ISelectMenuProps> = ({
     name,
-    value,
-    label,
+    value = '',
+    label = '',
     options,
     onChange,
     id,
@@ -16,7 +36,7 @@ const SelectMenu = ({
 }) => {
     const renderSelectItems = () =>
         options.map(option => (
-            <MenuItem key={option.key} value={option.key} title={option.title}>
+            <MenuItem key={option.key} value={option.key} title={option.title || ''}>
                 {option.label}
             </MenuItem>
         ));
@@ -33,7 +53,6 @@ const SelectMenu = ({
                 className={className}
                 label={label}
                 id={id}
-                size="small"
                 value={value}
                 {...rest}
             >
@@ -43,15 +62,6 @@ const SelectMenu = ({
     );
 };
 
-SelectMenu.propTypes = {
-    name: PropTypes.string,
-    id: PropTypes.string,
-    value: PropTypes.string,
-    label: PropTypes.string,
-    options: PropTypes.array,
-    style: PropTypes.object,
-    onChange: PropTypes.func.isRequired,
-    disabled: PropTypes.bool,
-};
+
 
 export default SelectMenu;

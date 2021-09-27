@@ -6,11 +6,24 @@ import {
     DialogContent,
     Button,
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
+
 import ConditionallyRender from '../ConditionallyRender/ConditionallyRender';
 import { useStyles } from './Dialogue.styles';
 
-const Dialogue = ({
+interface IDialogue {
+    primaryButtonText?: string;
+    secondaryButtonText?: string;
+    open: boolean;
+    onClick: () => void;
+    onClose: () => void;
+    style?: object;
+    title: string;
+    fullWidth?: boolean;
+    maxWidth?: 'lg' | 'sm' | 'xs' | 'md' | 'xl';
+    disabledPrimaryButton?: boolean;
+}
+
+const Dialogue: React.FC<IDialogue> = ({
     children,
     open,
     onClick,
@@ -34,7 +47,7 @@ const Dialogue = ({
         >
             <DialogTitle className={styles.dialogTitle}>{title}</DialogTitle>
             <ConditionallyRender
-                condition={children}
+                condition={Boolean(children)}
                 show={
                     <DialogContent className={styles.dialogContentPadding}>
                         {children}
@@ -44,7 +57,7 @@ const Dialogue = ({
 
             <DialogActions>
                 <ConditionallyRender
-                    condition={onClick}
+                    condition={Boolean(onClick)}
                     show={
                         <Button
                             color="primary"
@@ -59,7 +72,7 @@ const Dialogue = ({
                 />
 
                 <ConditionallyRender
-                    condition={onClose}
+                    condition={Boolean(onClose)}
                     show={
                         <Button onClick={onClose}>
                             {secondaryButtonText || 'No take me back'}{' '}
@@ -69,18 +82,6 @@ const Dialogue = ({
             </DialogActions>
         </Dialog>
     );
-};
-
-Dialogue.propTypes = {
-    primaryButtonText: PropTypes.string,
-    secondaryButtonText: PropTypes.string,
-    open: PropTypes.bool,
-    onClick: PropTypes.func,
-    onClose: PropTypes.func,
-    ariaLabel: PropTypes.string,
-    ariaDescription: PropTypes.string,
-    title: PropTypes.string,
-    fullWidth: PropTypes.bool,
 };
 
 export default Dialogue;

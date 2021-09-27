@@ -31,6 +31,9 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
                     setStyles(enter);
                 }, 50);
             } else {
+                if (!leave) {
+                    setShow(false);
+                }
                 setStyles(leave);
             }
         }

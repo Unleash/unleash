@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Tabs, Tab, Paper } from '@material-ui/core';
 
@@ -12,7 +13,7 @@ const a11yProps = index => ({
     'aria-controls': `tabpanel-${index}`,
 });
 
-const TabNav = ({ tabData, className, startingTab = 0 }) => {
+const TabNav = ({ tabData, className, navClass, startingTab = 0 }) => {
     const styles = useStyles();
     const [activeTab, setActiveTab] = useState(startingTab);
     const history = useHistory();
@@ -29,14 +30,18 @@ const TabNav = ({ tabData, className, startingTab = 0 }) => {
 
     const renderTabPanels = () =>
         tabData.map((tab, index) => (
-            <TabPanel key={`tab_panel_${index}`} value={activeTab} index={index}>
+            <TabPanel
+                key={`tab_panel_${index}`}
+                value={activeTab}
+                index={index}
+            >
                 {tab.component}
             </TabPanel>
         ));
 
     return (
         <>
-            <Paper className={styles.tabNav}>
+            <Paper className={classnames(styles.tabNav, navClass)}>
                 <Tabs
                     value={activeTab}
                     onChange={(_, tabId) => {

@@ -5,7 +5,18 @@ import { formatApiPath } from '../../../../utils/format-path';
 import { IFeatureToggle } from '../../../../interfaces/featureToggle';
 import { defaultFeature } from './defaultFeature';
 
-const useFeature = (projectId: string, id: string) => {
+interface IUseFeatureOptions {
+    refreshInterval?: number;
+    revalidateOnFocus?: boolean;
+    revalidateOnReconnect?: boolean;
+    revalidateIfStale?: boolean;
+}
+
+const useFeature = (
+    projectId: string,
+    id: string,
+    options: IUseFeatureOptions
+) => {
     const fetcher = () => {
         const path = formatApiPath(
             `api/admin/projects/${projectId}/features/${id}`
@@ -15,31 +26,28 @@ const useFeature = (projectId: string, id: string) => {
         }).then(res => res.json());
     };
 
-    const KEY = `api/admin/projects/${projectId}/features/${id}`;
+    const FEATURE_CACHE_KEY = `api/admin/projects/${projectId}/features/${id}`;
 
-    const { data, error } = useSWR<IFeatureToggle>(KEY, fetcher);
+    const { data, error } = useSWR<IFeatureToggle>(FEATURE_CACHE_KEY, fetcher, {
+        ...options,
+    });
+
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {
-        mutate(KEY);
+        mutate(FEATURE_CACHE_KEY);
     };
 
     useEffect(() => {
         setLoading(!error && !data);
     }, [data, error]);
 
-    let feature = defaultFeature;
-    if (data) {
-        if (data.environments) {
-            feature = data;
-        }
-    }
-
     return {
-        feature,
+        feature: data || defaultFeature,
         error,
         loading,
         refetch,
+        FEATURE_CACHE_KEY,
     };
 };
 

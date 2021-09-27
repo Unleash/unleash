@@ -105,7 +105,6 @@ exports[`renders correctly with one feature 1`] = `
           <div
             className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl MuiInputBase-marginDense MuiOutlinedInput-marginDense"
             onClick={[Function]}
-            size="small"
           >
             <div
               aria-haspopup="listbox"

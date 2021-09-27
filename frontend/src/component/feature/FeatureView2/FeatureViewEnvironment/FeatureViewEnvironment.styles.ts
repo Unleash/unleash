@@ -4,7 +4,7 @@ export const useStyles = makeStyles(theme => ({
     environmentContainer: {
         alignItems: 'center',
         width: '100%',
-        borderRadius: '5px',
+        borderRadius: '10px',
         backgroundColor: '#fff',
         display: 'flex',
         padding: '1.5rem',

@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     container: {
-        borderRadius: '5px',
+        borderRadius: '10px',
         backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'column',

@@ -1,15 +1,21 @@
 import { useState } from 'react';
 import Toast from '../component/common/Toast/Toast';
 
+export interface IToast {
+    show: boolean;
+    type: string;
+    text: string;
+}
+
 const useToast = () => {
-    const [toastData, setToastData] = useState({
+    const [toastData, setToastData] = useState<IToast>({
         show: false,
         type: 'success',
         text: '',
     });
 
     const hideToast = () => {
-        setToastData(prev => ({ ...prev, show: false }));
+        setToastData((prev: IToast) => ({ ...prev, show: false }));
     };
     const toast = (
         <Toast

@@ -1,4 +1,4 @@
-import { IStrategy } from './strategy';
+import { IFeatureStrategy } from './strategy';
 
 export interface IFeatureToggleListItem {
     type: string;
@@ -28,7 +28,7 @@ export interface IFeatureToggle {
 export interface IFeatureEnvironment {
     name: string;
     enabled: boolean;
-    strategies: IStrategy[];
+    strategies: IFeatureStrategy[];
 }
 
 export interface IFeatureVariant {

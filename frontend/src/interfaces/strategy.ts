@@ -1,8 +1,16 @@
-export interface IStrategy {
-    constraints: IConstraint[];
+export interface IFeatureStrategy {
     id: string;
     name: string;
+    constraints: IConstraint[];
     parameters: IParameter;
+}
+
+export interface IStrategy {
+    name: string;
+    displayName: string;
+    editable: boolean;
+    deprecated: boolean;
+    description: string;
 }
 
 export interface IConstraint {
@@ -17,3 +25,11 @@ export interface IParameter {
     stickiness?: string;
     [index: string]: any;
 }
+
+export interface IStrategyPayload {
+    name?: string;
+    constraints: IConstraint[];
+    parameters: IParameter;
+}
+
+

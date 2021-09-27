@@ -10,6 +10,8 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_DELETED,
+    FEATURE_ENVIRONMENT_DISABLED,
+    FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_METADATA_UPDATED,
     FEATURE_REVIVED,
     FEATURE_STALE_OFF,
@@ -563,6 +565,16 @@ class FeatureToggleServiceV2 {
 
             await this.eventStore.store({
                 type: FEATURE_UPDATED,
+                createdBy: userName,
+                data,
+                tags,
+                project: projectId,
+                environment,
+            });
+            await this.eventStore.store({
+                type: enabled
+                    ? FEATURE_ENVIRONMENT_ENABLED
+                    : FEATURE_ENVIRONMENT_DISABLED,
                 createdBy: userName,
                 data,
                 tags,

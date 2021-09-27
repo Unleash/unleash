@@ -50,3 +50,5 @@ export const USER_UPDATED = 'user-updated';
 export const USER_DELETED = 'user-deleted';
 export const DROP_ENVIRONMENTS = 'drop-environments';
 export const ENVIRONMENT_IMPORT = 'environment-import';
+export const FEATURE_ENVIRONMENT_ENABLED = 'feature-environment-enabled';
+export const FEATURE_ENVIRONMENT_DISABLED = 'feature-environment-disabled';

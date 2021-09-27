@@ -90,18 +90,21 @@ class EventStore extends EventEmitter implements IEventStore {
         return this.rowToEvent(row);
     }
 
-    async getAll(): Promise<IEvent[]> {
-        return this.getEvents();
+    async getAll(query?: Object): Promise<IEvent[]> {
+        return this.getEvents(query);
     }
 
-    async getEvents(): Promise<IEvent[]> {
+    async getEvents(query?: Object): Promise<IEvent[]> {
         try {
-            const rows = await this.db
+            let qB = this.db
                 .select(EVENT_COLUMNS)
                 .from(TABLE)
                 .limit(100)
                 .orderBy('created_at', 'desc');
-
+            if (query) {
+                qB = qB.where(query);
+            }
+            const rows = await qB;
             return rows.map(this.rowToEvent);
         } catch (err) {
             return [];

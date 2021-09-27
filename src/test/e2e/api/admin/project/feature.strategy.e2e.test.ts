@@ -2,6 +2,10 @@ import dbInit, { ITestDb } from '../../../helpers/database-init';
 import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../../lib/util/constants';
+import {
+    FEATURE_ENVIRONMENT_DISABLED,
+    FEATURE_ENVIRONMENT_ENABLED,
+} from '../../../../../lib/types/events';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -910,6 +914,93 @@ test('Can not enable environment for feature without strategies', async () => {
             expect(enabledFeatureEnv.enabled).toBe(false);
             expect(enabledFeatureEnv.type).toBe('test');
         });
+});
+test('Enabling environment creates a FEATURE_ENVIRONMENT_ENABLED event', async () => {
+    const environment = 'environment_enabled_env';
+    const featureName = 'com.test.enable.environment.event.sent';
+
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: environment,
+        displayName: 'Enable feature for environment',
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ environment })
+        .expect(200);
+
+    // Create feature
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: featureName,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
+        )
+        .send({ name: 'default', constraints: [], properties: {} })
+        .expect(200);
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/on`,
+        )
+        .set('Content-Type', 'application/json')
+        .expect(200);
+    const events = await db.stores.eventStore.getAll({
+        type: FEATURE_ENVIRONMENT_ENABLED,
+    });
+    const enabledEvents = events.filter((e) => e.data.name === featureName);
+    expect(enabledEvents).toHaveLength(1);
+});
+test('Disabling environment creates a FEATURE_ENVIRONMENT_DISABLED event', async () => {
+    const environment = 'environment_disabled_env';
+    const featureName = 'com.test.enable.environment_disabled.sent';
+
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: environment,
+        displayName: 'Enable feature for environment',
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ environment })
+        .expect(200);
+
+    // Create feature
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: featureName,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
+        )
+        .send({ name: 'default', constraints: [], properties: {} })
+        .expect(200);
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/off`,
+        )
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    const events = await db.stores.eventStore.getAll({
+        type: FEATURE_ENVIRONMENT_DISABLED,
+    });
+    const ourFeatureEvent = events.find((e) => e.data.name === featureName);
+    expect(ourFeatureEvent).toBeTruthy();
 });
 
 test('Can delete strategy from feature toggle', async () => {

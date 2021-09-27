@@ -6935,10 +6935,10 @@ ts-node@10.2.1:
     make-error "^1.1.1"
     yn "3.1.1"
 
-tsc-watch@4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/tsc-watch/-/tsc-watch-4.4.0.tgz#3ebbf1db54bcef6bfe534b330fa87284a4139320"
-  integrity sha512-+0Yey6ptOOXAnt44OKTk2/EnQnmA0auL7VWXm9d9abMS4tabt0Xdr9B4AK6OJbWAre9ZdLA81+Nk8sz9unptyA==
+tsc-watch@4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/tsc-watch/-/tsc-watch-4.5.0.tgz#d6884b932822b2c2ccd37f1c1f3748304566a474"
+  integrity sha512-aXhN4jY+1YEcn/NwCQ/+fHqU43EqOpW+pS+933EPsVEsrKhvyrodPDIjQsk1a1niFrabAK3RIBrRbAslVefEbQ==
   dependencies:
     cross-spawn "^7.0.3"
     node-cleanup "^2.1.2"

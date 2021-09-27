@@ -955,7 +955,8 @@ test('Enabling environment creates a FEATURE_ENVIRONMENT_ENABLED event', async (
     const events = await db.stores.eventStore.getAll({
         type: FEATURE_ENVIRONMENT_ENABLED,
     });
-    expect(events).toHaveLength(1);
+    const enabledEvents = events.filter((e) => e.data.name === featureName);
+    expect(enabledEvents).toHaveLength(1);
 });
 test('Disabling environment creates a FEATURE_ENVIRONMENT_DISABLED event', async () => {
     const environment = 'environment_disabled_env';

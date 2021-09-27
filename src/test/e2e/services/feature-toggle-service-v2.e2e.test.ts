@@ -118,9 +118,10 @@ test('Should include legacy props in event log when updating strategy configurat
     );
 
     const events = await eventService.getEventsForToggle(featureName);
-    expect(events[0].type).toBe(FEATURE_UPDATED);
-    expect(events[0].data.enabled).toBe(true);
-    expect(events[0].data.strategies).toBeDefined();
+    const updatedEvent = events.find((e) => e.type === FEATURE_UPDATED);
+    expect(updatedEvent.type).toBe(FEATURE_UPDATED);
+    expect(updatedEvent.data.enabled).toBe(true);
+    expect(updatedEvent.data.strategies).toBeDefined();
 });
 
 test('Should be able to get strategy by id', async () => {

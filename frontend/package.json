@@ -37,7 +37,7 @@
     "@material-ui/icons": "4.11.2",
     "@material-ui/lab": "4.0.0-alpha.57",
     "@testing-library/jest-dom": "5.11.10",
-    "@testing-library/react": "11.2.6",
+    "@testing-library/react": "11.2.7",
     "@testing-library/user-event": "12.8.3",
     "@types/debounce": "1.2.0",
     "@types/enzyme": "3.10.8",

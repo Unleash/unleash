@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
 
+# 4.2.0
+- Feat/environment strategies (#339)
+- fix: not set env if undefined
+- Add renovate.json (#340)
+- Add project and environment scoping to API keys (#336)
+- Fix/strategy permissions (#337)
+- fix: header zIndex
+- Feat/environment crud (#335)
 # 4.1.1
 - fix: header zindex
 # 4.1.0

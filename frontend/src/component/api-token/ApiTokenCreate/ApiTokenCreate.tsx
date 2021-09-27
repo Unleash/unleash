@@ -42,13 +42,14 @@ const ApiTokenCreate = ({
     const { environments } = useEnvironments();
 
     useEffect(() => {
-        if(environments && data.type === TYPE_CLIENT && !data.environment) {
+        if(environments && environments.length > 0 && data.type === TYPE_CLIENT && !data.environment) {
             setData({...data, environment: environments[0].name})
         }
     }, [data, environments]);
 
     const clear = () => {
-        setData({...INITIAL_DATA});
+        const environment = environments && environments.length > 0 ? environments[0].name : undefined;
+        setData({...INITIAL_DATA, environment });
         setError({});
     }
 

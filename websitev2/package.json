@@ -27,7 +27,7 @@
   },
   "resolutions": {
     "trim": "^1.0.0",
-    "glob-parent": "^5.1.2",
+    "glob-parent": "^6.0.0",
     "browserslist": "^4.16.5",
     "set-value": "^4.0.1",
     "immer": "^9.0.6",

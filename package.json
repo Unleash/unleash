@@ -151,7 +151,7 @@
     "supertest": "6.1.6",
     "ts-jest": "27.0.5",
     "ts-node": "10.2.1",
-    "tsc-watch": "4.4.0",
+    "tsc-watch": "4.5.0",
     "typescript": "4.4.3"
   },
   "resolutions": {

@@ -161,7 +161,9 @@
     "knex/liftoff/findup-sync/micromatc/nanomatch/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatch/define-property/**/kind-of": "^6.0.3",
     "node-forge": "^0.10.0",
-    "set-value": "^4.0.1"
+    "set-value": "^4.0.1",
+    "ansi-regex": "^5.0.1",
+    "ssh2": "^1.4.0"
   },
   "lint-staged": {
     "*.js": [

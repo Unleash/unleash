@@ -148,7 +148,7 @@
     "proxyquire": "2.1.3",
     "source-map-support": "0.5.20",
     "superagent": "6.1.0",
-    "supertest": "6.1.5",
+    "supertest": "6.1.6",
     "ts-jest": "27.0.5",
     "ts-node": "10.2.0",
     "tsc-watch": "4.4.0",

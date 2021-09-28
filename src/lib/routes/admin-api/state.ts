@@ -50,7 +50,7 @@ class StateController extends Controller {
             // @ts-ignore
             if (mime.getType(req.file.originalname) === 'text/yaml') {
                 // @ts-ignore
-                data = YAML.safeLoad(req.file.buffer);
+                data = YAML.load(req.file.buffer);
             } else {
                 // @ts-ignore
                 data = JSON.parse(req.file.buffer);
@@ -93,7 +93,7 @@ class StateController extends Controller {
             if (downloadFile) {
                 res.attachment(`export-${timestamp}.yml`);
             }
-            res.type('yaml').send(YAML.safeDump(data, { skipInvalid: true }));
+            res.type('yaml').send(YAML.dump(data, { skipInvalid: true }));
         } else {
             if (downloadFile) {
                 res.attachment(`export-${timestamp}.json`);

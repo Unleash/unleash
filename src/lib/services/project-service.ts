@@ -30,7 +30,6 @@ import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleServiceV2 from './feature-toggle-service-v2';
 import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
-import { DEFAULT_ENV } from '../util/constants';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -123,8 +122,17 @@ export default class ProjectService {
 
         await this.store.create(data);
 
-        // TODO: we should only connect to enabled environments
-        await this.featureEnvironmentStore.connectProject(DEFAULT_ENV, data.id);
+        const enabledEnvironments = await this.environmentStore.getAll({
+            enabled: true,
+        });
+        await Promise.all(
+            enabledEnvironments.map(async (e) => {
+                await this.featureEnvironmentStore.connectProject(
+                    e.name,
+                    data.id,
+                );
+            }),
+        );
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 

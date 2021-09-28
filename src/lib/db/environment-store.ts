@@ -91,10 +91,14 @@ export default class EnvironmentStore implements IEnvironmentStore {
         throw new NotFoundError(`Could not find environment with name: ${key}`);
     }
 
-    async getAll(): Promise<IEnvironment[]> {
-        const rows = await this.db<IEnvironmentsTable>(TABLE)
+    async getAll(query?: Object): Promise<IEnvironment[]> {
+        let qB = this.db<IEnvironmentsTable>(TABLE)
             .select('*')
             .orderBy('sort_order', 'created_at');
+        if (query) {
+            qB = qB.where(query);
+        }
+        const rows = await qB;
         return rows.map(mapRow);
     }
 

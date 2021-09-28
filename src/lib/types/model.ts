@@ -113,6 +113,7 @@ export interface IEnvironmentCreate {
     name: string;
     type: string;
     sortOrder?: number;
+    enabled?: boolean;
 }
 
 export interface IEnvironmentOverview {

@@ -103,7 +103,6 @@ export interface IVariant {
 
 export interface IEnvironment {
     name: string;
-    displayName: string;
     type: string;
     sortOrder: number;
     enabled: boolean;
@@ -112,14 +111,12 @@ export interface IEnvironment {
 
 export interface IEnvironmentCreate {
     name: string;
-    displayName: string;
     type: string;
     sortOrder?: number;
 }
 
 export interface IEnvironmentOverview {
     name: string;
-    displayName: string;
     enabled: boolean;
     type: string;
     sortOrder: number;

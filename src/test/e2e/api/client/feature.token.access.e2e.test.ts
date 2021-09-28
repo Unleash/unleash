@@ -28,7 +28,6 @@ beforeAll(async () => {
 
     await environmentStore.create({
         name: environment,
-        displayName: '',
         type: 'test',
     });
 

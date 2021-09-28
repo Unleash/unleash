@@ -10,7 +10,6 @@ import { snakeCaseKeys } from '../util/snakeCase';
 
 interface IEnvironmentsTable {
     name: string;
-    display_name: string;
     created_at?: Date;
     type: string;
     sort_order: number;
@@ -20,7 +19,6 @@ interface IEnvironmentsTable {
 
 const COLUMNS = [
     'type',
-    'display_name',
     'name',
     'created_at',
     'sort_order',
@@ -31,7 +29,6 @@ const COLUMNS = [
 function mapRow(row: IEnvironmentsTable): IEnvironment {
     return {
         name: row.name,
-        displayName: row.display_name,
         type: row.type,
         sortOrder: row.sort_order,
         enabled: row.enabled,
@@ -42,7 +39,6 @@ function mapRow(row: IEnvironmentsTable): IEnvironment {
 function fieldToRow(env: IEnvironment): IEnvironmentsTable {
     return {
         name: env.name,
-        display_name: env.displayName,
         type: env.type,
         sort_order: env.sortOrder,
         enabled: env.enabled,
@@ -144,7 +140,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
     }
 
     async update(
-        env: Pick<IEnvironment, 'displayName' | 'type' | 'protected'>,
+        env: Pick<IEnvironment, 'type' | 'protected'>,
         name: string,
     ): Promise<IEnvironment> {
         const updatedEnv = await this.db<IEnvironmentsTable>(TABLE)

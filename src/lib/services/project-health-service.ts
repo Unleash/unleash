@@ -63,6 +63,9 @@ export default class ProjectHealthService {
         archived: boolean = false,
     ): Promise<IProjectOverview> {
         const project = await this.projectStore.get(projectId);
+        const environments = await this.projectStore.getEnvironmentsForProject(
+            projectId,
+        );
         const features = await this.featureToggleService.getFeatureOverview(
             projectId,
             archived,
@@ -72,6 +75,7 @@ export default class ProjectHealthService {
             name: project.name,
             description: project.description,
             health: project.health,
+            environments,
             features,
             members,
             version: 1,

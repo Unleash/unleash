@@ -135,6 +135,7 @@ export interface IFeatureOverview {
 export interface IProjectOverview {
     name: string;
     description: string;
+    environments: string[];
     features: IFeatureOverview[];
     members: number;
     version: number;

@@ -310,6 +310,9 @@ export default class ProjectService {
         archived: boolean = false,
     ): Promise<IProjectOverview> {
         const project = await this.store.get(projectId);
+        const environments = await this.store.getEnvironmentsForProject(
+            projectId,
+        );
         const features = await this.featureToggleService.getFeatureOverview(
             projectId,
             archived,
@@ -317,6 +320,7 @@ export default class ProjectService {
         const members = await this.store.getMembers(projectId);
         return {
             name: project.name,
+            environments,
             description: project.description,
             health: project.health,
             features,

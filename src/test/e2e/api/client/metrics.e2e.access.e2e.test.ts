@@ -23,7 +23,6 @@ test('should enrich metrics with environment from api-token', async () => {
 
     await environmentStore.create({
         name: 'some',
-        displayName: '',
         type: 'test',
     });
 

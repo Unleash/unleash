@@ -123,7 +123,6 @@ test('should add environment to project', async () => {
 
     await environmentStore.create({
         name: 'test',
-        displayName: 'Test Env',
         type: 'production',
     });
 

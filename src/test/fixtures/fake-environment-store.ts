@@ -37,7 +37,7 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
     }
 
     async update(
-        env: Pick<IEnvironment, 'displayName' | 'type' | 'protected'>,
+        env: Pick<IEnvironment, 'type' | 'protected'>,
         name: string,
     ): Promise<IEnvironment> {
         const found = this.environments.find(

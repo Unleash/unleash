@@ -30,7 +30,6 @@
   "environments": [
     {
       "name": "default",
-      "displayName": "Default Environment",
       "type": "production",
       "sortOrder": 1,
       "enabled": true,

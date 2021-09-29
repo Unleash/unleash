@@ -24,7 +24,6 @@ const EnvironmentList = () => {
     const defaultEnv = {
         name: '',
         type: '',
-        displayName: '',
         sortOrder: 0,
         createdAt: '',
         enabled: true,

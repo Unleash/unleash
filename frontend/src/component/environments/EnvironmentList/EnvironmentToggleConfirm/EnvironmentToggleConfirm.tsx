@@ -54,7 +54,6 @@ const EnvironmentToggleConfirm = ({
 
             <CreateEnvironmentSuccessCard
                 name={env?.name}
-                displayName={env?.displayName}
                 type={env?.type}
             />
         </Dialogue>

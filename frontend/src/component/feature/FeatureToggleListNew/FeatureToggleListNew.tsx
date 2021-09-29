@@ -36,8 +36,7 @@ const FeatureToggleListNew = ({
 
         return [
             {
-                name: ':global:',
-                displayName: 'Across all environments',
+                name: 'default',
                 enabled: false,
             },
         ];

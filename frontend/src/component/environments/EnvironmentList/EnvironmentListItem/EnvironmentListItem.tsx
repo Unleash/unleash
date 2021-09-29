@@ -147,7 +147,6 @@ const EnvironmentListItem = ({
                         />
                     </>
                 }
-                secondary={env.displayName}
             />
 
             <Tooltip title="Drag to reorder">

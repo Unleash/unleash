@@ -100,11 +100,6 @@ const FeatureStrategiesEnvironments = () => {
                 equal = false;
                 return;
             }
-            // If displayName is different
-            if (env.displayName !== cachedEnv.displayName) {
-                equal = false;
-                return;
-            }
             // If the type of environments are different
             if (env.type !== cachedEnv.type) {
                 equal = false;

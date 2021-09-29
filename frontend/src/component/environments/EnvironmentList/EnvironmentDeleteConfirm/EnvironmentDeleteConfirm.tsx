@@ -51,7 +51,6 @@ const EnvironmentDeleteConfirm = ({
             </Alert>
             <CreateEnvironmentSuccessCard
                 name={env?.name}
-                displayName={env?.displayName}
                 type={env?.type}
             />
 

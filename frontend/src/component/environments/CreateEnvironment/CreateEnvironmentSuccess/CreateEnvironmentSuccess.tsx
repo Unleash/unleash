@@ -6,13 +6,11 @@ import CreateEnvironmentSuccessCard from './CreateEnvironmentSuccessCard/CreateE
 
 export interface ICreateEnvironmentSuccessProps {
     name: string;
-    displayName: string;
     type: string;
 }
 
 const CreateEnvironmentSuccess = ({
     name,
-    displayName,
     type,
 }: ICreateEnvironmentSuccessProps) => {
     const history = useHistory();
@@ -28,7 +26,6 @@ const CreateEnvironmentSuccess = ({
             <h2 className={styles.subheader}>Environment created</h2>
             <CreateEnvironmentSuccessCard
                 name={name}
-                displayName={displayName}
                 type={type}
             />
             <h2 className={styles.subheader}>Next steps</h2>

@@ -4,7 +4,6 @@ import { useStyles } from './CreateEnvironmentSuccessCard.styles';
 
 const CreateEnvironmentSuccessCard = ({
     name,
-    displayName,
     type,
 }: ICreateEnvironmentSuccessProps) => {
     const styles = useStyles();
@@ -18,10 +17,6 @@ const CreateEnvironmentSuccessCard = ({
                 <div className={styles.infoInnerContainer}>
                     <div className={styles.infoTitle}>Id</div>
                     <div>{name}</div>
-                </div>
-                <div className={styles.infoInnerContainer}>
-                    <div className={styles.infoTitle}>Displayname</div>
-                    <div>{displayName}</div>
                 </div>
                 <div className={styles.infoInnerContainer}>
                     <div className={styles.infoTitle}>Type</div>

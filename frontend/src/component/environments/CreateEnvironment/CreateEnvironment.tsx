@@ -18,7 +18,6 @@ const NAME_EXISTS_ERROR = 'Error: Environment';
 const CreateEnvironment = () => {
     const [type, setType] = useState('development');
     const [envName, setEnvName] = useState('');
-    const [envDisplayName, setEnvDisplayName] = useState('');
     const [nameError, setNameError] = useState('');
     const [createSuccess, setCreateSucceess] = useState(false);
     const history = useHistory();
@@ -33,11 +32,7 @@ const CreateEnvironment = () => {
 
     const handleEnvNameChange = (e: React.FormEvent<HTMLInputElement>) => {
         setEnvName(e.currentTarget.value);
-        setEnvDisplayName(e.currentTarget.value);
     };
-
-    const handleEnvDisplayName = (e: React.FormEvent<HTMLInputElement>) =>
-        setEnvDisplayName(e.currentTarget.value);
 
     const goBack = () => history.goBack();
 
@@ -67,7 +62,6 @@ const CreateEnvironment = () => {
         if (validName) {
             const environment = {
                 name: envName,
-                displayName: envDisplayName,
                 type,
             };
 
@@ -87,7 +81,6 @@ const CreateEnvironment = () => {
                 show={
                     <CreateEnvironmentSuccess
                         name={envName}
-                        displayName={envDisplayName}
                         type={type}
                     />
                 }
@@ -132,21 +125,6 @@ const CreateEnvironment = () => {
                                     />
                                 </div>
 
-                                <div
-                                    data-loading
-                                    className={
-                                        styles.environmentDetailsContainer
-                                    }
-                                >
-                                    <p>Environment display name.</p>
-                                    <Input
-                                        label="Display name"
-                                        placeholder="Optional name to be displayed in the admin panel"
-                                        className={styles.inputField}
-                                        value={envDisplayName}
-                                        onChange={handleEnvDisplayName}
-                                    />
-                                </div>
                                 <EnvironmentTypeSelector
                                     onChange={handleTypeChange}
                                     value={type}

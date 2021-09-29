@@ -132,7 +132,7 @@ test('should validate name, legal', async () => {
     expect(result).toBe(true);
 });
 
-test('should not be able to create exiting project', async () => {
+test('should not be able to create existing project', async () => {
     const project = {
         id: 'test-delete',
         name: 'New project',
@@ -509,4 +509,30 @@ test('should change project when checks pass', async () => {
     );
 
     expect(updatedFeature.project).toBe(projectDestination.id);
+});
+
+test('A newly created project only gets connected to enabled environments', async () => {
+    const project = {
+        id: 'environment-test',
+        name: 'New environment project',
+        description: 'Blah',
+    };
+    const enabledEnv = 'connection_test';
+    await db.stores.environmentStore.create({
+        name: enabledEnv,
+        type: 'test',
+    });
+    const disabledEnv = 'do_not_connect';
+    await db.stores.environmentStore.create({
+        name: disabledEnv,
+        type: 'test',
+        enabled: false,
+    });
+
+    await projectService.createProject(project, user);
+    const connectedEnvs =
+        await db.stores.projectStore.getEnvironmentsForProject(project.id);
+    expect(connectedEnvs).toHaveLength(2); // default, connection_test
+    expect(connectedEnvs.some((e) => e === enabledEnv)).toBeTruthy();
+    expect(connectedEnvs.some((e) => e === disabledEnv)).toBeFalsy();
 });

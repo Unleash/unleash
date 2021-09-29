@@ -142,7 +142,6 @@ test('Can roundtrip. I.e. export and then import', async () => {
     await db.stores.environmentStore.create({
         name: environmentId,
         type: 'test',
-        displayName: 'Environment for export',
     });
     await db.stores.projectStore.create({
         name: projectId,
@@ -191,7 +190,6 @@ test('Roundtrip with tags works', async () => {
     await db.stores.environmentStore.create({
         name: environmentId,
         type: 'test',
-        displayName: 'Environment for export',
     });
     await db.stores.projectStore.create({
         name: projectId,
@@ -253,7 +251,6 @@ test('Roundtrip with strategies in multiple environments works', async () => {
     await db.stores.environmentStore.create({
         name: environmentId,
         type: 'test',
-        displayName: 'Environment for export',
     });
     await db.stores.projectStore.create({
         name: projectId,

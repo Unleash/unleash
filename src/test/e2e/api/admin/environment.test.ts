@@ -24,7 +24,6 @@ test('Can list all existing environments', async () => {
         .expect((res) => {
             expect(res.body.version).toBe(1);
             expect(res.body.environments[0]).toStrictEqual({
-                displayName: 'Default Environment',
                 name: DEFAULT_ENV,
                 enabled: true,
                 sortOrder: 1,
@@ -38,7 +37,6 @@ test('Can update sort order', async () => {
     const envName = 'update-sort-order';
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'production',
     });
     await app.request
@@ -81,7 +79,6 @@ test('Can update environment enabled status', async () => {
     const envName = 'enable-environment';
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'production',
     });
     await app.request
@@ -95,7 +92,6 @@ test('Can update environment disabled status', async () => {
 
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'production',
     });
 
@@ -128,7 +124,6 @@ test('Can get specific environment', async () => {
     await db.stores.environmentStore.create({
         name: envName,
         type: 'production',
-        displayName: 'Fun!',
     });
     await app.request
         .get(`/api/admin/environments/${envName}`)

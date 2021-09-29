@@ -12,8 +12,7 @@ export const readFile: (file: string) => Promise<string> = (file) =>
 export const parseFile: (file: string, data: string) => any = (
     file: string,
     data: string,
-) =>
-    mime.lookup(file) === 'text/yaml' ? YAML.safeLoad(data) : JSON.parse(data);
+) => (mime.lookup(file) === 'text/yaml' ? YAML.load(data) : JSON.parse(data));
 
 export const filterExisting: (
     keepExisting: boolean,

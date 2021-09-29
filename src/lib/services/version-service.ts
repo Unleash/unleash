@@ -4,6 +4,7 @@ import version from '../util/version';
 import { Logger } from '../logger';
 import { ISettingStore } from '../types/stores/settings-store';
 
+// Work-around for loading ESM module
 const fetch = (...args) =>
     // eslint-disable-next-line @typescript-eslint/no-shadow
     import('node-fetch').then(({ default: fetch }) => fetch.apply(this, args));

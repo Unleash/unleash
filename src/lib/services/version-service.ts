@@ -1,9 +1,12 @@
-import fetch from 'node-fetch';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import version from '../util/version';
 import { Logger } from '../logger';
 import { ISettingStore } from '../types/stores/settings-store';
+
+const fetch = (...args) =>
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    import('node-fetch').then(({ default: fetch }) => fetch.apply(this, args));
 
 const TWO_DAYS = 48 * 60 * 60 * 1000;
 

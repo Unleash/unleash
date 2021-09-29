@@ -576,7 +576,7 @@ class FeatureToggleServiceV2 {
                     ? FEATURE_ENVIRONMENT_ENABLED
                     : FEATURE_ENVIRONMENT_DISABLED,
                 createdBy: userName,
-                data,
+                data: { name: featureName },
                 tags,
                 project: projectId,
                 environment,

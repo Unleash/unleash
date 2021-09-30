@@ -44,7 +44,7 @@
     "@types/enzyme-adapter-react-16": "1.0.6",
     "@types/jest": "26.0.24",
     "@types/node": "12.20.7",
-    "@types/react": "17.0.3",
+    "@types/react": "17.0.25",
     "@types/react-dom": "17.0.3",
     "@types/react-router-dom": "5.1.7",
     "@welldone-software/why-did-you-render": "6.1.1",

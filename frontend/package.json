@@ -44,7 +44,7 @@
     "@types/debounce": "1.2.1",
     "@types/enzyme": "3.10.9",
     "@types/enzyme-adapter-react-16": "1.0.6",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.0.2",
     "@types/node": "14.17.20",
     "@types/react": "17.0.26",
     "@types/react-dom": "17.0.3",

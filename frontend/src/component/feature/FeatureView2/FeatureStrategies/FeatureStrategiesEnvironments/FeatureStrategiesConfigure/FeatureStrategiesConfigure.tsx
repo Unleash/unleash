@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button, useMediaQuery } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useContext, useState } from 'react';
 import { getHumanReadbleStrategyName } from '../../../../../../utils/strategy-names';
@@ -15,6 +15,7 @@ import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import cloneDeep from 'lodash.clonedeep';
 import FeatureStrategyCreateExecution from '../../FeatureStrategyCreateExecution/FeatureStrategyCreateExecution';
 import { PRODUCTION } from '../../../../../../constants/environmentTypes';
+import { ADD_NEW_STRATEGY_SAVE_ID } from '../../../../../../testIds';
 
 interface IFeatureStrategiesConfigure {
     setToastData: React.Dispatch<React.SetStateAction<IToastType>>;
@@ -22,6 +23,8 @@ interface IFeatureStrategiesConfigure {
 const FeatureStrategiesConfigure = ({
     setToastData,
 }: IFeatureStrategiesConfigure) => {
+    const smallScreen = useMediaQuery('(max-width:900px)');
+
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const [productionGuard, setProductionGuard] = useState(false);
 
@@ -132,12 +135,19 @@ const FeatureStrategiesConfigure = ({
                         setStrategyConstraints={setStrategyConstraints}
                     />
                 </div>
-                <div className={styles.executionContainer}>
-                    <FeatureStrategyCreateExecution
-                        parameters={strategyParams}
-                        constraints={strategyConstraints}
-                    />
-                </div>
+
+                <ConditionallyRender
+                    condition={!smallScreen}
+                    show={
+                        <div className={styles.executionContainer}>
+                            <FeatureStrategyCreateExecution
+                                parameters={strategyParams}
+                                constraints={strategyConstraints}
+                                configureNewStrategy={configureNewStrategy}
+                            />
+                        </div>
+                    }
+                />
             </div>
 
             <div className={styles.buttonContainer}>
@@ -146,6 +156,7 @@ const FeatureStrategiesConfigure = ({
                     color="primary"
                     className={styles.btn}
                     onClick={resolveSubmit}
+                    data-test={ADD_NEW_STRATEGY_SAVE_ID}
                 >
                     Save
                 </Button>

@@ -6,6 +6,10 @@ import RolloutSlider from '../RolloutSlider/RolloutSlider';
 import Select from '../../../../../common/select';
 import React from 'react';
 import Input from '../../../../../common/Input/Input';
+import {
+    FLEXIBLE_STRATEGY_GROUP_ID,
+    FLEXIBLE_STRATEGY_STICKINESS_ID,
+} from '../../../../../../testIds';
 
 const builtInStickinessOptions = [
     { key: 'default', label: 'default' },
@@ -64,6 +68,7 @@ const FlexibleStrategy = ({
                 value={1 * rollout}
                 onChange={updateRollout}
             />
+
             <br />
             <div>
                 <Tooltip title="Stickiness defines what parameter should be used to ensure that your users get consistency in features. By default unleash will use the first value present in the context in the order of userId, sessionId and random.">
@@ -91,6 +96,7 @@ const FlexibleStrategy = ({
                     label="Stickiness"
                     options={stickinessOptions}
                     value={stickiness}
+                    data-test={FLEXIBLE_STRATEGY_STICKINESS_ID}
                     onChange={e =>
                         onUpdate('stickiness')(e, e.target.value as number)
                     }
@@ -121,6 +127,7 @@ const FlexibleStrategy = ({
                     label="groupId"
                     value={groupId || ''}
                     onChange={e => onUpdate('groupId')(e, e.target.value)}
+                    data-test={FLEXIBLE_STRATEGY_GROUP_ID}
                 />
             </div>
         </div>

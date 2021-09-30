@@ -1,9 +1,20 @@
-import { IConstraint, IParameter, IFeatureStrategy } from '../../../../../interfaces/strategy';
+import {
+    IConstraint,
+    IParameter,
+    IFeatureStrategy,
+} from '../../../../../interfaces/strategy';
 
 import Accordion from '@material-ui/core/Accordion';
-import { AccordionDetails, AccordionSummary } from '@material-ui/core';
+import {
+    AccordionDetails,
+    AccordionSummary,
+    useMediaQuery,
+} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { getFeatureStrategyIcon, getHumanReadbleStrategyName } from '../../../../../utils/strategy-names';
+import {
+    getFeatureStrategyIcon,
+    getHumanReadbleStrategyName,
+} from '../../../../../utils/strategy-names';
 import { useStyles } from './FeatureStrategyAccordion.styles';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
 import FeatureStrategyAccordionBody from './FeatureStrategyAccordionBody/FeatureStrategyAccordionBody';
@@ -29,7 +40,9 @@ const FeatureStrategyAccordion: React.FC<IFeatureStrategyAccordionProps> = ({
     setStrategyConstraints,
     actions,
     children,
+    ...rest
 }) => {
+    const smallScreen = useMediaQuery('(max-width:500px)');
     const styles = useStyles();
     const strategyName = getHumanReadbleStrategyName(strategy.name);
     const Icon = getFeatureStrategyIcon(strategy.name);
@@ -43,7 +56,7 @@ const FeatureStrategyAccordion: React.FC<IFeatureStrategyAccordionProps> = ({
     };
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} {...rest}>
             <Accordion className={styles.accordion} defaultExpanded={expanded}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -51,12 +64,13 @@ const FeatureStrategyAccordion: React.FC<IFeatureStrategyAccordionProps> = ({
                     id={strategy.name}
                 >
                     <div className={styles.accordionSummary}>
-                        <p className={styles.accordionHeader}>
-                            <Icon className={styles.icon} /> {strategyName}
-                        </p>
+                        <Icon className={styles.icon} />
+                        <p className={styles.accordionHeader}>{strategyName}</p>
 
                         <ConditionallyRender
-                            condition={Boolean(parameters?.rollout)}
+                            condition={
+                                Boolean(parameters?.rollout) && !smallScreen
+                            }
                             show={
                                 <p className={styles.rollout}>
                                     Rolling out to {parameters?.rollout}%
@@ -67,7 +81,7 @@ const FeatureStrategyAccordion: React.FC<IFeatureStrategyAccordionProps> = ({
                         <div className={styles.accordionActions}>{actions}</div>
                     </div>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails className={styles.accordionDetails}>
                     <FeatureStrategyAccordionBody
                         strategy={{ ...strategy, parameters }}
                         updateParameters={updateParameters}

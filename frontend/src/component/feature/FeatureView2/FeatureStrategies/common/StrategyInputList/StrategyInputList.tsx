@@ -2,6 +2,10 @@ import React, { ChangeEvent, useState } from 'react';
 import { Button, Chip, TextField, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
+import {
+    ADD_TO_STRATEGY_INPUT_LIST,
+    STRATEGY_INPUT_LIST,
+} from '../../../../../../testIds';
 
 interface IStrategyInputList {
     name: string;
@@ -93,9 +97,11 @@ const StrategyInputList = ({
                             onBlur={onBlur}
                             onChange={onChange}
                             onKeyDown={onKeyDown}
+                            data-test={STRATEGY_INPUT_LIST}
                         />
                         <Button
                             onClick={setValue}
+                            data-test={ADD_TO_STRATEGY_INPUT_LIST}
                             color="secondary"
                             startIcon={<Add />}
                         >

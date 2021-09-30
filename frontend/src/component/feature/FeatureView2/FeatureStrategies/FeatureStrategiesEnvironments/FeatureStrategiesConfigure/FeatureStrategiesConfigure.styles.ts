@@ -18,9 +18,13 @@ export const useStyles = makeStyles(theme => ({
     configureContainer: { display: 'flex', width: '100%' },
     accordionContainer: {
         width: '68%',
+        [theme.breakpoints.down(900)]: {
+            width: '100%',
+        },
     },
     executionContainer: {
         width: '32%',
+        marginLeft: '1rem',
     },
     envWarning: {
         marginBottom: '1rem',

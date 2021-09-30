@@ -41,6 +41,7 @@ const FeatureEnvironmentStrategyExecutionWrapper = ({
             <FeatureStrategyExecution
                 constraints={strategy.constraints}
                 parameters={strategy.parameters}
+                strategy={strategy}
             />
         </div>
     );

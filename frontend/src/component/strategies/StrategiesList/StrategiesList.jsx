@@ -33,6 +33,7 @@ import HeaderTitle from '../../common/HeaderTitle';
 import { useStyles } from './styles';
 import AccessContext from '../../../contexts/AccessContext';
 import Dialogue from '../../common/Dialogue';
+import { ADD_NEW_STRATEGY_ID } from '../../../testIds';
 
 const StrategiesList = ({
     strategies,
@@ -61,6 +62,7 @@ const StrategiesList = ({
                     show={
                         <Tooltip title="Add new strategy">
                             <IconButton
+                                data-test={ADD_NEW_STRATEGY_ID}
                                 onClick={() =>
                                     history.push('/strategies/create')
                                 }
@@ -74,6 +76,7 @@ const StrategiesList = ({
                             onClick={() => history.push('/strategies/create')}
                             color="primary"
                             variant="contained"
+                            data-test={ADD_NEW_STRATEGY_ID}
                         >
                             Add new strategy
                         </Button>

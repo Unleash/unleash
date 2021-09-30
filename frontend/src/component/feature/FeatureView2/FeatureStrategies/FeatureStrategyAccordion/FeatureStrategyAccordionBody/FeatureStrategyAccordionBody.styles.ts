@@ -6,6 +6,12 @@ export const useStyles = makeStyles(theme => ({
         fontWeight: 'normal',
         marginBottom: '0.5rem',
     },
+    accordionContainer: {
+        width: '80%',
+        [theme.breakpoints.down(800)]: {
+            width: '100%',
+        },
+    },
     constraintHeader: {
         fontWeight: 'bold',
         fontSize: theme.fontSizes.smallBody,

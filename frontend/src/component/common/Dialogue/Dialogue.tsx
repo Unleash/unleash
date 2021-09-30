@@ -9,6 +9,7 @@ import {
 
 import ConditionallyRender from '../ConditionallyRender/ConditionallyRender';
 import { useStyles } from './Dialogue.styles';
+import { DIALOGUE_CONFIRM_ID } from '../../../testIds';
 
 interface IDialogue {
     primaryButtonText?: string;
@@ -65,6 +66,7 @@ const Dialogue: React.FC<IDialogue> = ({
                             onClick={onClick}
                             autoFocus
                             disabled={disabledPrimaryButton}
+                            data-test={DIALOGUE_CONFIRM_ID}
                         >
                             {primaryButtonText || "Yes, I'm sure"}
                         </Button>

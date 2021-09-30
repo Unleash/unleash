@@ -11,6 +11,7 @@ export interface IStrategy {
     editable: boolean;
     deprecated: boolean;
     description: string;
+    parameters: IParameter;
 }
 
 export interface IConstraint {
@@ -31,5 +32,3 @@ export interface IStrategyPayload {
     constraints: IConstraint[];
     parameters: IParameter;
 }
-
-

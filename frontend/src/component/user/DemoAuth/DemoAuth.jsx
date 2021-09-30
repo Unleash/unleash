@@ -5,6 +5,7 @@ import { Button, TextField } from '@material-ui/core';
 import styles from './DemoAuth.module.scss';
 
 import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
+import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from '../../../testIds';
 
 const DemoAuth = ({ demoLogin, history, authDetails }) => {
     const [email, setEmail] = useState('');
@@ -38,6 +39,7 @@ const DemoAuth = ({ demoLogin, history, authDetails }) => {
                         variant="outlined"
                         label="Email"
                         name="email"
+                        data-test={LOGIN_EMAIL_ID}
                         required
                         type="email"
                     />
@@ -46,8 +48,8 @@ const DemoAuth = ({ demoLogin, history, authDetails }) => {
                         type="submit"
                         variant="contained"
                         color="primary"
-                        data-test="login-submit"
                         className={styles.button}
+                        data-test={LOGIN_BUTTON}
                     >
                         Sign in
                     </Button>

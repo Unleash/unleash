@@ -1,10 +1,11 @@
 import React from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { SELECT_ITEM_ID } from '../../testIds';
 
 export interface ISelectOption {
     key: string;
     title?: string;
-    label?: string
+    label?: string;
 }
 export interface ISelectMenuProps {
     name: string;
@@ -16,8 +17,8 @@ export interface ISelectMenuProps {
     onChange?: (
         event: React.ChangeEvent<{ name?: string; value: unknown }>,
         child: React.ReactNode
-    ) => void
-    disabled?: boolean
+    ) => void;
+    disabled?: boolean;
     className?: string;
     classes?: any;
 }
@@ -36,7 +37,12 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
 }) => {
     const renderSelectItems = () =>
         options.map(option => (
-            <MenuItem key={option.key} value={option.key} title={option.title || ''}>
+            <MenuItem
+                key={option.key}
+                value={option.key}
+                title={option.title || ''}
+                data-test={`${SELECT_ITEM_ID}-${option.label}`}
+            >
                 {option.label}
             </MenuItem>
         ));
@@ -61,7 +67,5 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
         </FormControl>
     );
 };
-
-
 
 export default SelectMenu;

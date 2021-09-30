@@ -1,12 +1,14 @@
-import DefaultStrategy from '../../../../strategy/EditStrategyModal/default-strategy';
 import FlexibleStrategy from '../../common/FlexibleStrategy/FlexibleStrategy';
-import { IConstraint, IFeatureStrategy } from '../../../../../../interfaces/strategy';
+import {
+    IConstraint,
+    IFeatureStrategy,
+} from '../../../../../../interfaces/strategy';
 import useUnleashContext from '../../../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
 import useStrategies from '../../../../../../hooks/api/getters/useStrategies/useStrategies';
 import GeneralStrategy from '../../common/GeneralStrategy/GeneralStrategy';
 import UserWithIdStrategy from '../../common/UserWithIdStrategy/UserWithId';
 import StrategyConstraints from '../../common/StrategyConstraints/StrategyConstraints';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import useUiConfig from '../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { C } from '../../../../../common/flags';
@@ -14,6 +16,10 @@ import { Button } from '@material-ui/core';
 import { useStyles } from './FeatureStrategyAccordionBody.styles';
 import Dialogue from '../../../../../common/Dialogue';
 import FeatureStrategiesSeparator from '../../FeatureStrategiesEnvironments/FeatureStrategiesSeparator/FeatureStrategiesSeparator';
+import DefaultStrategy from '../../common/DefaultStrategy/DefaultStrategy';
+import { ADD_CONSTRAINT_ID } from '../../../../../../testIds';
+import AccessContext from '../../../../../../contexts/AccessContext';
+import { UPDATE_FEATURE } from '../../../../../AccessProvider/permissions';
 
 interface IFeatureStrategyAccordionBodyProps {
     strategy: IFeatureStrategy;
@@ -38,6 +44,7 @@ const FeatureStrategyAccordionBody: React.FC<IFeatureStrategyAccordionBodyProps>
         const { strategies } = useStrategies();
         const { uiConfig } = useUiConfig();
         const [showConstraints, setShowConstraints] = useState(false);
+        const { hasAccess } = useContext(AccessContext);
 
         const { context } = useUnleashContext();
 
@@ -131,7 +138,7 @@ const FeatureStrategyAccordionBody: React.FC<IFeatureStrategyAccordionBodyProps>
         const ON = uiConfig.flags[C];
 
         return (
-            <div>
+            <div className={styles.accordionContainer}>
                 <ConditionallyRender
                     condition={ON}
                     show={
@@ -140,12 +147,18 @@ const FeatureStrategyAccordionBody: React.FC<IFeatureStrategyAccordionBodyProps>
                                 Constraints
                             </p>
                             {renderConstraints()}
-                            <Button
-                                className={styles.addConstraintBtn}
-                                onClick={toggleConstraints}
-                            >
-                                + Add constraint
-                            </Button>
+                            <ConditionallyRender
+                                condition={hasAccess(UPDATE_FEATURE)}
+                                show={
+                                    <Button
+                                        className={styles.addConstraintBtn}
+                                        onClick={toggleConstraints}
+                                        data-test={ADD_CONSTRAINT_ID}
+                                    >
+                                        + Add constraint
+                                    </Button>
+                                }
+                            />
                         </>
                     }
                 />
@@ -167,13 +180,20 @@ const FeatureStrategyAccordionBody: React.FC<IFeatureStrategyAccordionBodyProps>
                         setConstraintError={setConstraintError}
                     />
                 </Dialogue>
-                <Type
-                    parameters={parameters}
-                    updateParameter={updateParameters}
-                    strategyDefinition={definition}
-                    context={context}
-                    editable
+
+                <ConditionallyRender
+                    condition={hasAccess(UPDATE_FEATURE)}
+                    show={
+                        <Type
+                            parameters={parameters}
+                            updateParameter={updateParameters}
+                            strategyDefinition={definition}
+                            context={context}
+                            editable
+                        />
+                    }
                 />
+
                 {children}
             </div>
         );

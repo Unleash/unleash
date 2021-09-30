@@ -7,7 +7,9 @@ import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import { IFeatureStrategy } from '../../../../../../interfaces/strategy';
 import cloneDeep from 'lodash.clonedeep';
 
-const useFeatureStrategiesEnvironmentList = (strategies: IFeatureStrategy[]) => {
+const useFeatureStrategiesEnvironmentList = (
+    strategies: IFeatureStrategy[]
+) => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
 
     const { deleteStrategyFromFeature, updateStrategyOnFeature } =
@@ -46,7 +48,7 @@ const useFeatureStrategiesEnvironmentList = (strategies: IFeatureStrategy[]) => 
             await updateStrategyOnFeature(
                 projectId,
                 featureId,
-                activeEnvironment.id,
+                activeEnvironment.name,
                 updatedStrategy.id,
                 updateStrategyPayload
             );

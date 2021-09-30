@@ -14,6 +14,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
     maxWidth,
     tooltip,
     children,
+    ...rest
 }) => {
     const smallScreen = useMediaQuery(`(max-width:${maxWidth})`);
 
@@ -22,7 +23,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
             condition={smallScreen}
             show={
                 <Tooltip title={tooltip ? tooltip : ''}>
-                    <IconButton onClick={onClick} data-loading>
+                    <IconButton onClick={onClick} data-loading {...rest}>
                         <Icon />
                     </IconButton>
                 </Tooltip>
@@ -33,6 +34,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                     color="primary"
                     variant="contained"
                     data-loading
+                    {...rest}
                 >
                     {children}
                 </Button>

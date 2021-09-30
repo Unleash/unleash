@@ -166,6 +166,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
       >
         <button
           className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+          data-test="ADD_NEW_STRATEGY_ID"
           disabled={false}
           onBlur={[Function]}
           onClick={[Function]}

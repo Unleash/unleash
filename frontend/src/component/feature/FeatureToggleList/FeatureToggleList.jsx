@@ -22,6 +22,7 @@ import AccessContext from '../../../contexts/AccessContext';
 import { useStyles } from './styles';
 import ListPlaceholder from '../../common/ListPlaceholder/ListPlaceholder';
 import { getCreateTogglePath } from '../../../utils/route-path-helpers';
+import { NAVIGATE_TO_CREATE_FEATURE } from '../../../testIds';
 
 const FeatureToggleList = ({
     fetcher,
@@ -161,7 +162,9 @@ const FeatureToggleList = ({
                                                     <IconButton
                                                         component={Link}
                                                         to={createURL}
-                                                        data-test="add-feature-btn"
+                                                        data-test={
+                                                            NAVIGATE_TO_CREATE_FEATURE
+                                                        }
                                                         disabled={
                                                             !hasAccess(
                                                                 CREATE_FEATURE,
@@ -176,10 +179,12 @@ const FeatureToggleList = ({
                                             elseShow={
                                                 <Button
                                                     to={createURL}
-                                                    data-test="add-feature-btn"
                                                     color="primary"
                                                     variant="contained"
                                                     component={Link}
+                                                    data-test={
+                                                        NAVIGATE_TO_CREATE_FEATURE
+                                                    }
                                                     disabled={
                                                         !hasAccess(
                                                             CREATE_FEATURE,

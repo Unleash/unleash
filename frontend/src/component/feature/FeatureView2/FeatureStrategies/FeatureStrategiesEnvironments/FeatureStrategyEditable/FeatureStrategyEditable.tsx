@@ -14,20 +14,31 @@ import cloneDeep from 'lodash.clonedeep';
 import { Button, IconButton, Tooltip } from '@material-ui/core';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import { useStyles } from './FeatureStrategyEditable.styles';
-import { Delete, FileCopy } from '@material-ui/icons';
+import { Delete } from '@material-ui/icons';
 import { PRODUCTION } from '../../../../../../constants/environmentTypes';
+import {
+    DELETE_STRATEGY_ID,
+    STRATEGY_ACCORDION_ID,
+    UPDATE_STRATEGY_BUTTON_ID,
+} from '../../../../../../testIds';
+import AccessContext from '../../../../../../contexts/AccessContext';
+import { UPDATE_FEATURE } from '../../../../../AccessProvider/permissions';
 
 interface IFeatureStrategyEditable {
     currentStrategy: IFeatureStrategy;
     setDelDialog?: React.Dispatch<React.SetStateAction<any>>;
     updateStrategy: (strategy: IFeatureStrategy) => void;
+    index?: number;
 }
 
 const FeatureStrategyEditable = ({
     currentStrategy,
     updateStrategy,
     setDelDialog,
+    index,
 }: IFeatureStrategyEditable) => {
+    const { hasAccess } = useContext(AccessContext);
+
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { activeEnvironment, featureCache, dirty, setDirty } = useContext(
         FeatureStrategiesUIContext
@@ -122,36 +133,31 @@ const FeatureStrategyEditable = ({
             <FeatureStrategyAccordion
                 parameters={parameters}
                 constraints={constraints}
+                data-test={`${STRATEGY_ACCORDION_ID}-${strategy.name}`}
                 strategy={strategy}
                 setStrategyParams={setStrategyParams}
                 setStrategyConstraints={setStrategyConstraints}
                 dirty={dirty[strategy.id]}
                 actions={
-                    <>
-                        <Tooltip title="Delete strategy">
-                            <IconButton
-                                onClick={e => {
-                                    e.stopPropagation();
-                                    setDelDialog({
-                                        strategyId: strategy.id,
-                                        show: true,
-                                    });
-                                }}
-                            >
-                                <Delete />
-                            </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title="Copy strategy">
-                            <IconButton
-                                onClick={e => {
-                                    e.stopPropagation();
-                                }}
-                            >
-                                <FileCopy />
-                            </IconButton>
-                        </Tooltip>
-                    </>
+                    <ConditionallyRender
+                        condition={hasAccess(UPDATE_FEATURE)}
+                        show={
+                            <Tooltip title="Delete strategy">
+                                <IconButton
+                                    data-test={`${DELETE_STRATEGY_ID}-${strategy.name}`}
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        setDelDialog({
+                                            strategyId: strategy.id,
+                                            show: true,
+                                        });
+                                    }}
+                                >
+                                    <Delete />
+                                </IconButton>
+                            </Tooltip>
+                        }
+                    />
                 }
             >
                 <ConditionallyRender
@@ -162,12 +168,16 @@ const FeatureStrategyEditable = ({
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    style={{ marginRight: '1rem' }}
+                                    className={styles.editButton}
                                     onClick={updateFeatureStrategy}
+                                    data-test={UPDATE_STRATEGY_BUTTON_ID}
                                 >
                                     Save changes
                                 </Button>
-                                <Button onClick={discardChanges}>
+                                <Button
+                                    onClick={discardChanges}
+                                    className={styles.editButton}
+                                >
                                     Discard changes
                                 </Button>
                             </div>

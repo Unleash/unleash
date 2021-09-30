@@ -10,6 +10,11 @@ import useQueryParams from '../../../hooks/useQueryParams';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from '../../common/DividerText/DividerText';
 import { Alert } from '@material-ui/lab';
+import {
+    LOGIN_BUTTON,
+    LOGIN_PASSWORD_ID,
+    LOGIN_EMAIL_ID,
+} from '../../../testIds';
 
 const PasswordAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
@@ -101,7 +106,7 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                         variant="outlined"
                         autoComplete="true"
                         size="small"
-                        data-test="LI_EMAIL_ID"
+                        data-test={LOGIN_EMAIL_ID}
                     />
                     <TextField
                         label="Password"
@@ -114,14 +119,14 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                         variant="outlined"
                         autoComplete="true"
                         size="small"
-                        data-test="LI_PASSWORD_ID"
+                        data-test={LOGIN_PASSWORD_ID}
                     />
                     <Button
                         variant="contained"
                         color="primary"
                         type="submit"
                         style={{ width: '150px', margin: '1rem auto' }}
-                        data-test="LI_BTN"
+                        data-test={LOGIN_BUTTON}
                     >
                         Sign in
                     </Button>

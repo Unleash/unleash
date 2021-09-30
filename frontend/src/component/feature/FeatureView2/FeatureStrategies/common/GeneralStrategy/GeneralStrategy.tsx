@@ -100,7 +100,7 @@ const GeneralStrategy = ({
                     return (
                         <div key={name} className={styles.generalSection}>
                             <TextField
-                                error={error !== undefined}
+                                error={error}
                                 helperText={error && `${name} is not a number!`}
                                 variant="outlined"
                                 size="small"

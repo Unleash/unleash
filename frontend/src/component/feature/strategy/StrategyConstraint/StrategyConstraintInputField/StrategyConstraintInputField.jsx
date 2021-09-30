@@ -9,6 +9,7 @@ import InputListField from '../../../../common/input-list-field';
 import ConditionallyRender from '../../../../common/ConditionallyRender/ConditionallyRender';
 import { useCommonStyles } from '../../../../../common.styles';
 import { useStyles } from './StrategyConstraintInputField.styles';
+import { CONSTRAINT_AUTOCOMPLETE_ID } from '../../../../../testIds';
 
 const constraintOperators = [
     { key: 'IN', label: 'IN' },
@@ -116,6 +117,7 @@ const StrategyConstraintInputField = ({
                                 multiple
                                 size="small"
                                 options={options}
+                                data-test={CONSTRAINT_AUTOCOMPLETE_ID}
                                 value={values || []}
                                 getOptionLabel={option => option.label}
                                 onBlur={onBlur}

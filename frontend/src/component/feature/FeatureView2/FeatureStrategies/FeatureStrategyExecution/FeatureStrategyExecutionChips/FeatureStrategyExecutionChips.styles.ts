@@ -7,5 +7,8 @@ export const useStyles = makeStyles(theme => ({
     },
     paragraph: {
         margin: '0.25rem 0',
+        maxWidth: '95%',
+        textAlign: 'center',
+        wordBreak: 'break-word',
     },
 }));

@@ -5,7 +5,7 @@ export const useStyles = makeStyles(theme => ({
         border: `1px solid ${theme.palette.grey[300]}`,
         borderRadius: '5px',
         width: '270px',
-        marginLeft: 'auto',
+        marginLeft: '1rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

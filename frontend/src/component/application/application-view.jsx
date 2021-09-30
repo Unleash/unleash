@@ -34,7 +34,7 @@ function ApplicationView({
                     </ListItemAvatar>
                     <ListItemText
                         primary={
-                            <Link to={`${createUrl}?name=${name}`}>{name}</Link>
+                            <Link to={`${createUrl}`}>{name}</Link>
                         }
                         secondary={'Missing, want to create?'}
                     />

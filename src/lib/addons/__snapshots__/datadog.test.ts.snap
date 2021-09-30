@@ -1,5 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Should call datadog webhook  for archived toggle 1`] = `"{\\"text\\":\\"%%% \\\\n The feature toggle *[some-toggle](http://some-url.com/archive/strategies/some-toggle)* was *archived* by some@user.com. \\\\n %%% \\",\\"title\\":\\"Unleash notification update\\"}"`;
+
 exports[`Should call datadog webhook 1`] = `"{\\"text\\":\\"%%% \\\\n some@user.com created feature toggle [some-toggle](http://some-url.com/features/strategies/some-toggle)\\\\n**Enabled**: no | **Type**: undefined | **Project**: undefined\\\\n**Activation strategies**: \`\`\`- name: default\\\\n\`\`\` \\\\n %%% \\",\\"title\\":\\"Unleash notification update\\"}"`;
 
 exports[`Should call datadog webhook for archived toggle 1`] = `"{\\"text\\":\\"%%% \\\\n The feature toggle *[some-toggle](http://some-url.com/archive/strategies/some-toggle)* was *archived* by some@user.com. \\\\n %%% \\",\\"title\\":\\"Unleash notification update\\"}"`;
+
+exports[`Should call datadog webhook for toggled environment 1`] = `"{\\"text\\":\\"%%% \\\\n The feature toggle *<http://some-url.com/features/strategies/some-toggle|some-toggle>* in the default project had the environment development disabled \\\\n %%% \\",\\"title\\":\\"Unleash notification update\\"}"`;

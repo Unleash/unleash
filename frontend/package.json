@@ -40,7 +40,7 @@
     "@testing-library/react": "12.1.1",
     "@testing-library/user-event": "12.8.3",
     "@types/debounce": "1.2.1",
-    "@types/enzyme": "3.10.8",
+    "@types/enzyme": "3.10.9",
     "@types/enzyme-adapter-react-16": "1.0.6",
     "@types/jest": "26.0.24",
     "@types/node": "12.20.7",

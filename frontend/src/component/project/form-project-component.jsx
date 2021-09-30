@@ -118,6 +118,17 @@ class ProjectFormComponent extends Component {
                                     hasAccess(CREATE_PROJECT) && editMode
                                 }
                                 show={
+                                    <>
+                                    <Button
+                                        color="primary"
+                                        onClick={() =>
+                                            this.props.history.push(
+                                                `/projects/${project.id}/environments`
+                                            )
+                                        }
+                                    >
+                                        Environments
+                                    </Button>
                                     <Button
                                         color="primary"
                                         onClick={() =>
@@ -128,6 +139,7 @@ class ProjectFormComponent extends Component {
                                     >
                                         Manage access
                                     </Button>
+                                    </>
                                 }
                             />
                         }

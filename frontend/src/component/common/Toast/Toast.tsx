@@ -1,13 +1,11 @@
 import { Portal, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useCommonStyles } from '../../../common.styles';
+import { IToast } from '../../../hooks/useToast';
 import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
 
-interface IToastProps {
-    show: boolean;
+interface IToastProps extends IToast {
     onClose: () => void;
-    type: string;
-    text: string;
     autoHideDuration?: number;
 }
 

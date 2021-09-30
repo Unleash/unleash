@@ -17,6 +17,7 @@ import EditContextField from '../../page/context/edit';
 import CreateProject from '../../page/project/create';
 import EditProject from '../../page/project/edit';
 import EditProjectAccess from '../../page/project/access';
+import EditProjectEnvironment from '../../page/project/environment';
 import ListTagTypes from '../../page/tag-types';
 import CreateTagType from '../../page/tag-types/create';
 import EditTagType from '../../page/tag-types/edit';
@@ -221,6 +222,15 @@ export const routes = [
         parent: '/projects',
         title: ':id',
         component: EditProjectAccess,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/projects/:id/environments',
+        parent: '/projects',
+        title: 'Environments',
+        component: EditProjectEnvironment,
         type: 'protected',
         layout: 'main',
         menu: {},

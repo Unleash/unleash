@@ -3,7 +3,7 @@ import Toast from '../component/common/Toast/Toast';
 
 export interface IToast {
     show: boolean;
-    type: string;
+    type: 'success' | 'info' | 'warning' | 'error';
     text: string;
 }
 

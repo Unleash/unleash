@@ -3,7 +3,6 @@ import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { IEvent } from '../types/model';
-import { FEATURE_METADATA_UPDATED } from '../types/events';
 
 export default class EventService {
     private logger: Logger;

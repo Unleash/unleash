@@ -1,7 +1,6 @@
 import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;

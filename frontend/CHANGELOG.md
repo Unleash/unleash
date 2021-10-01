@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
-
+# 4.2.1
+- Feat/toggle view (#389)
+- feat: created project header (#388)
+- feat: e2e tests and mobile views (#348)
+- fix: missing-toggle link should include name-param once
+- feat: project environments configuration (#365)
+- fix: use renovater github config
+- fix: renovate should be allowed to automerge all packages
+- fix: allow renovate bot to auto-merge
+- task: remove display name from environment (#367)
 # 4.2.0
 - Feat/environment strategies (#339)
 - fix: not set env if undefined

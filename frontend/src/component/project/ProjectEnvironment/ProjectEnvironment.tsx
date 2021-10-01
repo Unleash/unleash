@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useStyles } from './ProjectEnvironment.styles';
 
@@ -23,15 +22,18 @@ export interface ProjectEnvironment {
     enabled: boolean;
 }
 
-const ProjectEnvironmentList = () => {
-    const { id } = useParams<{id: string}>();
+interface ProjectEnvironmentListProps {
+    projectId: string;
+}
+
+const ProjectEnvironmentList = ({projectId}: ProjectEnvironmentListProps) => {
     const { hasAccess } = useContext(AccessContext);
 
     // api state
     const { toast, setToastData } = useToast();
     const { uiConfig } = useUiConfig();
     const { environments, loading, error, refetch: refetchEnvs } = useEnvironments();
-    const { project, refetch: refetchProject } = useProject(id);
+    const { project, refetch: refetchProject } = useProject(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } = useProjectApi();
     
     // local state
@@ -64,7 +66,7 @@ const ProjectEnvironmentList = () => {
             setSelectedEnv(env);
         } else {
             try {
-                await addEnvironmentToProject(id, env.name);
+                await addEnvironmentToProject(projectId, env.name);
                 setToastData({ text: 'Environment successfully enabled.', type: 'success', show: true});
             } catch (error) {
                 setToastData({text: errorMsg(true), type: 'error', show: true});
@@ -76,7 +78,7 @@ const ProjectEnvironmentList = () => {
     const handleDisableEnvironment = async () => {
         if(selectedEnv && confirmName===selectedEnv.name) {
             try {
-                await removeEnvironmentFromProject(id, selectedEnv.name);
+                await removeEnvironmentFromProject(projectId, selectedEnv.name);
                 setSelectedEnv(undefined);
                 setConfirmName('');
                 setToastData({ text: 'Environment successfully disabled.', type: 'success', show: true});
@@ -98,7 +100,7 @@ const ProjectEnvironmentList = () => {
         enabled: (project?.environments).includes(e.name),
     }));
 
-    const hasPermission = hasAccess(UPDATE_PROJECT, id);
+    const hasPermission = hasAccess(UPDATE_PROJECT, projectId);
 
     const genLabel = (env: ProjectEnvironment) => (
         <>

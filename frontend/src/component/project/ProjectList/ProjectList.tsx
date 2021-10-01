@@ -25,6 +25,25 @@ type projectMap = {
     [index: string]: boolean;
 };
 
+function resolveCreateButtonData(isOss: boolean, hasAccess: boolean) {
+    if(isOss) {
+        return {
+            title: 'You must be on a paid subscription to create new projects',
+            disabled: true
+        }
+    } else if (!hasAccess) {
+        return {
+            title: 'You do not have permissions create new projects',
+            disabled: true
+        }
+    } else {
+        return {
+            title: 'Click to create a new project',
+            disabled: false
+        }
+    }
+}
+
 const ProjectListNew = () => {
     const { hasAccess } = useContext(AccessContext);
     const history = useHistory();
@@ -33,7 +52,7 @@ const ProjectListNew = () => {
     const { projects, loading, error, refetch } = useProjects();
     const [fetchedProjects, setFetchedProjects] = useState<projectMap>({});
     const ref = useLoading(loading);
-    const { loading: configLoading, isOss } = useUiConfig();
+    const { isOss } = useUiConfig();
 
     const handleHover = (projectId: string) => {
         if (fetchedProjects[projectId]) {
@@ -44,6 +63,8 @@ const ProjectListNew = () => {
         mutate(KEY, fetcher);
         setFetchedProjects(prev => ({ ...prev, [projectId]: true }));
     };
+
+    const createButtonData = resolveCreateButtonData(isOss(), hasAccess(CREATE_PROJECT));
 
     const renderError = () => {
         return (
@@ -104,12 +125,6 @@ const ProjectListNew = () => {
         });
     };
 
-    if (!configLoading) {
-        if (isOss()) {
-            history.push('projects/default');
-        }
-    }
-
     return (
         <div ref={ref}>
             <PageContent
@@ -126,7 +141,8 @@ const ProjectListNew = () => {
                                             history.push('/projects/create')
                                         }
                                         maxWidth="700px"
-                                        tooltip="Add new project"
+                                        tooltip={createButtonData.title}
+                                        disabled={createButtonData.disabled}
                                     >
                                         Add new project
                                     </ResponsiveButton>

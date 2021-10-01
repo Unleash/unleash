@@ -5,6 +5,7 @@ interface IApiErrorProps {
     className?: string;
     onClick: () => void;
     text: string;
+    style?: React.CSSProperties;
 }
 
 const ApiError: React.FC<IApiErrorProps> = ({

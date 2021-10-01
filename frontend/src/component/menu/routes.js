@@ -15,9 +15,6 @@ import ContextFields from '../../page/context';
 import CreateContextField from '../../page/context/create';
 import EditContextField from '../../page/context/edit';
 import CreateProject from '../../page/project/create';
-import EditProject from '../../page/project/edit';
-import EditProjectAccess from '../../page/project/access';
-import EditProjectEnvironment from '../../page/project/environment';
 import ListTagTypes from '../../page/tag-types';
 import CreateTagType from '../../page/tag-types/create';
 import EditTagType from '../../page/tag-types/edit';
@@ -31,7 +28,6 @@ import AdminApi from '../../page/admin/api';
 import AdminUsers from '../../page/admin/users';
 import AdminInvoice from '../../page/admin/invoice';
 import AdminAuth from '../../page/admin/auth';
-import Reporting from '../../page/reporting';
 import Login from '../user/Login';
 import { P, C, E } from '../common/flags';
 import NewUser from '../user/NewUser';
@@ -208,33 +204,6 @@ export const routes = [
         menu: {},
     },
     {
-        path: '/projects/:id/edit',
-        parent: '/projects',
-        title: ':id',
-        component: EditProject,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/projects/:id/access',
-        parent: '/projects',
-        title: ':id',
-        component: EditProjectAccess,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/projects/:id/environments',
-        parent: '/projects',
-        title: 'Environments',
-        component: EditProjectEnvironment,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
         path: '/projects/:id/archived',
         title: ':name',
         parent: '/archive',
@@ -276,6 +245,16 @@ export const routes = [
         parent: '/projects',
         title: 'Create',
         component: CreateFeatureToggle,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/projects/:id/:activeTab',
+        parent: '/projects',
+        title: ':id',
+        component: Project,
+        flag: P,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -373,14 +352,6 @@ export const routes = [
         type: 'protected',
         layout: 'main',
         menu: { mobile: true, advanced: true },
-    },
-    {
-        path: '/reporting',
-        title: 'Reporting',
-        component: Reporting,
-        type: 'protected',
-        layout: 'main',
-        menu: { mobile: true },
     },
     // Admin
     {

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, Typography, Button } from '@material-ui/core';
+import { TextField, Typography } from '@material-ui/core';
 
 import styles from './Project.module.scss';
 import classnames from 'classnames';
@@ -112,37 +112,6 @@ class ProjectFormComponent extends Component {
                 headerContent={
                     <HeaderTitle
                         title={`${submitText} Project`}
-                        actions={
-                            <ConditionallyRender
-                                condition={
-                                    hasAccess(CREATE_PROJECT) && editMode
-                                }
-                                show={
-                                    <>
-                                    <Button
-                                        color="primary"
-                                        onClick={() =>
-                                            this.props.history.push(
-                                                `/projects/${project.id}/environments`
-                                            )
-                                        }
-                                    >
-                                        Environments
-                                    </Button>
-                                    <Button
-                                        color="primary"
-                                        onClick={() =>
-                                            this.props.history.push(
-                                                `/projects/${project.id}/access`
-                                            )
-                                        }
-                                    >
-                                        Manage access
-                                    </Button>
-                                    </>
-                                }
-                            />
-                        }
                     />
                 }
             >

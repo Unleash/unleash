@@ -1,29 +1,37 @@
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
 import useProject from '../../../hooks/api/getters/useProject/useProject';
 import useLoading from '../../../hooks/useLoading';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 import ApiError from '../../common/ApiError/ApiError';
 import ConditionallyRender from '../../common/ConditionallyRender';
-import ProjectFeatureToggles from './ProjectFeatureToggles/ProjectFeatureToggles';
-import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useStyles } from './Project.styles';
-import { IconButton } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
-import { Link } from 'react-router-dom';
+import { Tab, Tabs } from '@material-ui/core';
 import useToast from '../../../hooks/useToast';
 import useQueryParams from '../../../hooks/useQueryParams';
 import { useEffect } from 'react';
-import { getProjectEditPath } from '../../../utils/route-path-helpers';
+import useTabs from '../../../hooks/useTabs';
+import TabPanel from '../../common/TabNav/TabPanel';
+import ProjectAccess from '../access-container';
+import EditProject from '../edit-project-container';
+import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
+import ProjectOverview from './ProjectOverview';
+import ProjectHealth from './ProjectHealth/ProjectHealth';
 
 const Project = () => {
-    const { id } = useParams<{ id: string }>();
+    const { id, activeTab } = useParams<{ id: string, activeTab: string }>();
     const params = useQueryParams();
     const { project, error, loading, refetch } = useProject(id);
+    const { uiConfig } = useUiConfig();
     const ref = useLoading(loading);
     const { toast, setToastData } = useToast();
-    const { members, features, health } = project;
     const commonStyles = useCommonStyles();
     const styles = useStyles();
+    const history = useHistory();
+
+    const { a11yProps, activeTabIdx, setActiveTab } = useTabs(0);
+
+    const basePath = `/projects/${id}`;
 
     useEffect(() => {
         const created = params.get('created');
@@ -40,34 +48,116 @@ const Project = () => {
         /* eslint-disable-next-line */
     }, []);
 
+    useEffect(() => {
+        const tabIdx = tabData.findIndex(tab => tab.name === activeTab);
+        if(tabIdx > 0) {
+            setActiveTab(tabIdx);
+        } else {
+            setActiveTab(0);
+        }
+        
+        /* eslint-disable-next-line */
+    }, []);
+
+    const tabData = [
+        {
+            title: 'Overview',
+            component: <ProjectOverview projectId={id} />,
+            path: basePath,
+            name: 'overview',
+        },
+        {
+            title: 'Health',
+            component: <ProjectHealth projectId={id} />,
+            path: `${basePath}/health`,
+            name: 'health',
+        },
+        {
+            title: 'Access',
+            component: <ProjectAccess projectId={id} />,
+            path: `${basePath}/access`,
+            name: 'access',
+        },
+        {
+            title: 'Environments',
+            component: <ProjectEnvironment projectId={id}  />,
+            path: `${basePath}/environments`,
+            name: 'environments',
+            disabled: !uiConfig.flags.E
+        },
+        {
+            title: 'Settings',
+            // @ts-ignore (fix later)
+            component: <EditProject projectId={id} history={history} title="Edit project" />,
+            path: `${basePath}/settings`,
+            name: 'settings',
+        },
+    ].filter(tab => !tab.disabled);
+
+
+    const renderTabs = () => {
+        return tabData.map((tab, index) => {
+            return (
+                <Tab
+                    key={tab.title}
+                    label={tab.title}
+                    {...a11yProps(index)}
+                    onClick={() => {
+                        setActiveTab(index);
+                        history.push(tab.path);
+                    }}
+                    className={styles.tabButton}
+                />
+            );
+        });
+    };
+
+    const renderTabContent = () => {
+        return tabData.map((tab, index) => {
+            return (
+                <TabPanel value={activeTabIdx} index={index} key={tab.path}>
+                    {tab.component}
+                </TabPanel>
+            );
+        });
+    };
+
+
     return (
         <div ref={ref}>
-            <h1 data-loading className={commonStyles.title}>
-                {project?.name}{' '}
-                <IconButton component={Link} to={getProjectEditPath(id)}>
-                    <Edit />
-                </IconButton>
-            </h1>
-            <ConditionallyRender
-                condition={error}
-                show={
-                    <ApiError
-                        data-loading
-                        style={{ maxWidth: '400px', marginTop: '1rem' }}
-                        onClick={refetch}
-                        text="Could not fetch project"
-                    />
-                }
-            />
-            <div className={styles.containerStyles}>
-                <ProjectInfo
-                    id={id}
-                    memberCount={members}
-                    health={health}
-                    featureCount={features?.length}
+            <div className={styles.header}>
+                <div className={styles.innerContainer}>
+                    <h2 data-loading className={commonStyles.title}>
+                        Project: {project?.name}{' '}
+                    </h2>
+                    <p>{project?.description}</p>
+                </div>
+                <ConditionallyRender
+                    condition={error}
+                    show={
+                        <ApiError
+                            data-loading
+                            style={{ maxWidth: '400px', marginTop: '1rem' }}
+                            onClick={refetch}
+                            text="Could not fetch project"
+                        />
+                    }
                 />
-                <ProjectFeatureToggles features={features} loading={loading} />
+                <div className={styles.separator} />
+                <div className={styles.tabContainer}>
+                    <Tabs
+                        value={activeTabIdx}
+                        onChange={(_, tabId) => {
+                            setActiveTab(tabId);
+                        }}
+                        indicatorColor="primary"
+                        textColor="primary"
+                    >
+                        {renderTabs()}
+                    </Tabs>
+                </div>
             </div>
+            {renderTabContent()}
             {toast}
         </div>
     );

@@ -5,6 +5,7 @@ interface IResponsiveButtonProps {
     Icon: React.ElementType;
     onClick: () => void;
     tooltip?: string;
+    disabled?: boolean;
     maxWidth: string;
 }
 
@@ -13,33 +14,37 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
     onClick,
     maxWidth,
     tooltip,
+    disabled = false,
     children,
     ...rest
 }) => {
     const smallScreen = useMediaQuery(`(max-width:${maxWidth})`);
 
     return (
-        <ConditionallyRender
-            condition={smallScreen}
-            show={
-                <Tooltip title={tooltip ? tooltip : ''}>
-                    <IconButton onClick={onClick} data-loading {...rest}>
+        <Tooltip title={tooltip ? tooltip : ''} arrow>
+            <span>
+            <ConditionallyRender
+                condition={smallScreen}
+                show={
+                    <IconButton disabled={disabled} onClick={onClick} data-loading {...rest}>
                         <Icon />
                     </IconButton>
-                </Tooltip>
-            }
-            elseShow={
-                <Button
-                    onClick={onClick}
-                    color="primary"
-                    variant="contained"
-                    data-loading
-                    {...rest}
-                >
-                    {children}
-                </Button>
-            }
-        />
+                }
+                elseShow={
+                    <Button
+                        onClick={onClick}
+                        color="primary"
+                        variant="contained"
+                        disabled={disabled}
+                        data-loading
+                        {...rest}
+                    >
+                        {children}
+                    </Button>
+                }
+            />
+            </span>
+        </Tooltip>
     );
 };
 

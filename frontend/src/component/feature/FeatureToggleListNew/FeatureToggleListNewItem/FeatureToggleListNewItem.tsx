@@ -14,6 +14,7 @@ import { IEnvironments } from '../../../../interfaces/featureToggle';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import useToast from '../../../../hooks/useToast';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
+import { SyntheticEvent } from 'react-router/node_modules/@types/react';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -40,13 +41,13 @@ const FeatureToggleListNewItem = ({
     const history = useHistory();
     const ref = useRef(null);
 
-    const onClick = (e: Event) => {
+    const onClick = (e: SyntheticEvent) => {
         if (!ref.current?.contains(e.target)) {
             history.push(getTogglePath(projectId, name));
         }
     };
 
-    const handleToggle = (env: IEnvironments) => {
+    const handleToggle = (env: IEnvironments, e: SyntheticEvent) => {
         toggleFeatureByEnvironment(env.name, env.enabled)
             .then(() => {
                 setToastData({
@@ -68,14 +69,14 @@ const FeatureToggleListNewItem = ({
 
     return (
         <>
-            <TableRow onClick={onClick} className={styles.tableRow}>
-                <TableCell className={styles.tableCell} align="left">
+            <TableRow className={styles.tableRow}>
+                <TableCell className={styles.tableCell} align="left" onClick={onClick}>
                     <span data-loading>{name}</span>
                 </TableCell>
                 <ConditionallyRender
                     condition={!smallScreen}
                     show={
-                        <TableCell className={styles.tableCell} align="left">
+                        <TableCell className={styles.tableCell} align="left" onClick={onClick}>
                             <div className={styles.tableCellType}>
                                 <IconComponent
                                     data-loading
@@ -98,7 +99,7 @@ const FeatureToggleListNewItem = ({
                                 <Switch
                                     checked={env.enabled}
                                     ref={ref}
-                                    onClick={() => handleToggle(env)}
+                                    onClick={handleToggle.bind(this, env)}
                                 />
                             </span>
                         </TableCell>

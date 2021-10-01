@@ -25,14 +25,11 @@ import AddUserComponent from './access-add-user';
 
 import projectApi from '../../store/project/api';
 import PageContent from '../common/PageContent';
-import HeaderTitle from '../common/HeaderTitle';
-import { useHistory } from 'react-router-dom';
 
 function AccessComponent({ projectId, project }) {
     const [roles, setRoles] = useState([]);
     const [users, setUsers] = useState([]);
     const [error, setError] = useState();
-    const history = useHistory();
 
     const fetchAccess = async () => {
         try {
@@ -97,20 +94,6 @@ function AccessComponent({ projectId, project }) {
     return (
         <PageContent
             style={{ minHeight: '400px' }}
-            headerContent={
-                <HeaderTitle
-                    title={`Manage Access for project "${project.name}"`}
-                    actions={
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => history.goBack()}
-                        >
-                            Back
-                        </Button>
-                    }
-                />
-            }
         >
             <AddUserComponent roles={roles} addUserToRole={addUser} />
             <Dialog

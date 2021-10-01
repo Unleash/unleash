@@ -23,10 +23,7 @@ export default class EventService {
     }
 
     async getEventsForToggle(name: string): Promise<IEvent[]> {
-        const events = await this.eventStore.getEventsFilterByType(name);
-        return events.filter(
-            (e: IEvent) => e.type !== FEATURE_METADATA_UPDATED,
-        );
+        return this.eventStore.getEventsFilterByType(name);
     }
 
     async getEventsForProject(project: string): Promise<IEvent[]> {

@@ -5,6 +5,8 @@ import { styles as commonStyles } from '../../../component/common';
 import { IApiTokenCreate } from '../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import useEnvironments from '../../../hooks/api/getters/useEnvironments/useEnvironments';
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import ConditionallyRender from '../../common/ConditionallyRender';
 import Dialogue from '../../common/Dialogue';
 import MySelect from '../../common/select';
 import { useStyles } from './styles';
@@ -40,6 +42,7 @@ const ApiTokenCreate = ({
     const [error, setError] = useState<IDataError>({});
     const { projects } = useProjects();
     const { environments } = useEnvironments();
+    const { uiConfig } = useUiConfig();
 
     useEffect(() => {
         if(environments && environments.length > 0 && data.type === TYPE_CLIENT && !data.environment) {
@@ -167,24 +170,30 @@ const ApiTokenCreate = ({
                         id='api_key_type'
                         name="type" className={undefined} classes={undefined}
                     />
-                    <MySelect
-                        disabled={data.type === TYPE_ADMIN}
-                        options={selectableProjects}
-                        value={data.project}
-                        onChange={setProject}
-                        label="Project"
-                        id='api_key_project'
-                        name="project" className={undefined} classes={undefined}
-                    />
-                    <MySelect
-                        disabled={data.type === TYPE_ADMIN}
-                        options={selectableEnvs}
-                        value={data.environment}
-                        required
-                        onChange={setEnvironment}
-                        label="Environment"
-                        id='api_key_environment'
-                        name="environment" className={undefined} classes={undefined}                    />
+                    <ConditionallyRender condition={uiConfig.flags.E} show={
+                        <>
+                        <MySelect
+                            disabled={data.type === TYPE_ADMIN}
+                            options={selectableProjects}
+                            value={data.project}
+                            onChange={setProject}
+                            label="Project"
+                            id='api_key_project'
+                            name="project" className={undefined} classes={undefined}
+                        />
+                        <MySelect
+                            disabled={data.type === TYPE_ADMIN}
+                            options={selectableEnvs}
+                            value={data.environment}
+                            required
+                            onChange={setEnvironment}
+                            label="Environment"
+                            id='api_key_environment'
+                            name="environment" className={undefined} classes={undefined}
+                        />
+                    </>
+                    } />
+                    
                 </form>
         </Dialogue>
     );

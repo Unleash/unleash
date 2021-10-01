@@ -190,7 +190,7 @@ Array [
     "layout": "main",
     "menu": Object {},
     "parent": "/projects",
-    "path": "/projects/:projectId/features2/:featureId/:activeTab",
+    "path": "/projects/:projectId/features2/:featureId",
     "title": "FeatureView2",
     "type": "protected",
   },

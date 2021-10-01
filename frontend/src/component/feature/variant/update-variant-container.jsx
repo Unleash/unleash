@@ -6,6 +6,7 @@ import { updateWeight } from '../../common/util';
 
 const mapStateToProps = (state, ownProps) => ({
     variants: ownProps.featureToggle.variants || [],
+    features: state.features.toJS(),
     stickinessOptions: [
         'default',
         ...state.context.filter(c => c.stickiness).map(c => c.name),
@@ -20,7 +21,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if (currentVariants.length > 0) {
             stickiness = currentVariants[0].stickiness || 'default';
         } else {
-            stickiness = 'default'
+            stickiness = 'default';
         }
         variant.stickiness = stickiness;
 

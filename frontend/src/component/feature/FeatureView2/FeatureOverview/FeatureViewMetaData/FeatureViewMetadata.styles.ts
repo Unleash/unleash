@@ -15,8 +15,29 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
     },
+    header: {
+        fontSize: theme.fontSizes.subHeader,
+        fontWeight: 'normal',
+        margin: 0,
+    },
+    body: {
+        margin: '1rem 0',
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    bodyItem: {
+        margin: '0.5rem 0',
+        fontSize: theme.fontSizes.bodySize,
+    },
     headerIcon: {
         marginRight: '1rem',
+        height: '40px',
+        width: '40px',
         fill: theme.palette.primary.main,
+    },
+    descriptionContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        color: theme.palette.grey[600],
     },
 }));

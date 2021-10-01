@@ -2,7 +2,7 @@ import { Button, useMediaQuery } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useContext, useState } from 'react';
 import { getHumanReadbleStrategyName } from '../../../../../../utils/strategy-names';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import FeatureStrategiesUIContext from '../../../../../../contexts/FeatureStrategiesUIContext';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
@@ -24,6 +24,7 @@ const FeatureStrategiesConfigure = ({
     setToastData,
 }: IFeatureStrategiesConfigure) => {
     const smallScreen = useMediaQuery('(max-width:900px)');
+    const history = useHistory();
 
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const [productionGuard, setProductionGuard] = useState(false);
@@ -90,6 +91,7 @@ const FeatureStrategiesConfigure = ({
                 type: 'success',
                 text: 'Successfully added strategy.',
             });
+            history.replace(history.location.pathname);
         } catch (e) {
             setToastData({
                 show: true,

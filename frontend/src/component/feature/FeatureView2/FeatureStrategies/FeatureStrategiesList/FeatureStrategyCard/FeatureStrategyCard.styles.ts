@@ -9,6 +9,7 @@ export const useStyles = makeStyles(theme => ({
         margin: '0.5rem 0',
         display: 'flex',
         position: 'relative',
+        cursor: 'pointer',
         width: '100%',
         '&:active': {
             backgroundColor: theme.palette.primary.main,

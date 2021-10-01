@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { useStyles } from './FeatureStrategiesEnvironments.styles';
 import { Tabs, Tab, Button, useMediaQuery } from '@material-ui/core';
@@ -21,10 +21,12 @@ import ResponsiveButton from '../../../../common/ResponsiveButton/ResponsiveButt
 import { Add } from '@material-ui/icons';
 import AccessContext from '../../../../../contexts/AccessContext';
 import { UPDATE_FEATURE } from '../../../../AccessProvider/permissions';
+import useQueryParams from '../../../../../hooks/useQueryParams';
 
 const FeatureStrategiesEnvironments = () => {
     const smallScreen = useMediaQuery('(max-width:700px)');
     const { hasAccess } = useContext(AccessContext);
+    const history = useHistory();
 
     const startingTabId = 0;
     const { projectId, featureId } = useParams<IFeatureViewParams>();
@@ -32,6 +34,10 @@ const FeatureStrategiesEnvironments = () => {
     const [showRefreshPrompt, setShowRefreshPrompt] = useState(false);
 
     const styles = useStyles();
+    const query = useQueryParams();
+    const addStrategy = query.get('addStrategy');
+    const environmentTab = query.get('environment');
+
     const { a11yProps, activeTabIdx, setActiveTab } = useTabs(startingTabId);
     const {
         setActiveEnvironment,
@@ -48,6 +54,28 @@ const FeatureStrategiesEnvironments = () => {
         revalidateOnReconnect: false,
         refreshInterval: 5000,
     });
+
+    useEffect(() => {
+        if (addStrategy) {
+            setExpandedSidebar(true);
+        }
+
+        if (environmentTab) {
+            const env = feature.environments.find(
+                env => env.name === environmentTab
+            );
+            const index = feature.environments.findIndex(
+                env => env.name === environmentTab
+            );
+            if (index < 0 || !env) return;
+            setActiveEnvironment(env);
+            setActiveTab(index);
+            return;
+        }
+
+        setActiveEnvironment(feature?.environments[activeTabIdx]);
+        /*eslint-disable-next-line */
+    }, [feature]);
 
     useEffect(() => {
         if (!feature) return;
@@ -68,12 +96,6 @@ const FeatureStrategiesEnvironments = () => {
             setShowRefreshPrompt(true);
         }
         /*eslint-disable-next-line */
-    }, [feature]);
-
-    useEffect(() => {
-        if (!feature?.environments?.length > 0) return;
-        setActiveEnvironment(feature?.environments[activeTabIdx]);
-        /* eslint-disable-next-line */
     }, [feature]);
 
     const renderTabs = () => {
@@ -363,6 +385,7 @@ const FeatureStrategiesEnvironments = () => {
                                     setActiveEnvironment(
                                         featureCache?.environments[tabId]
                                     );
+                                    history.replace(history.location.pathname);
                                 }}
                                 indicatorColor="primary"
                                 textColor="primary"

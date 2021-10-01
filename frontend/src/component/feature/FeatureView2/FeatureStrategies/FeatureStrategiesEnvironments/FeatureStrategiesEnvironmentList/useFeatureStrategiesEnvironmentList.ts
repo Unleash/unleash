@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import FeatureStrategiesUIContext from '../../../../../../contexts/FeatureStrategiesUIContext';
 import useFeatureStrategyApi from '../../../../../../hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import useToast from '../../../../../../hooks/useToast';
@@ -11,7 +11,7 @@ const useFeatureStrategiesEnvironmentList = (
     strategies: IFeatureStrategy[]
 ) => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
-
+    const history = useHistory();
     const { deleteStrategyFromFeature, updateStrategyOnFeature } =
         useFeatureStrategyApi();
 
@@ -71,7 +71,7 @@ const useFeatureStrategiesEnvironmentList = (
 
             strategy.parameters = updateStrategyPayload.parameters;
             strategy.constraints = updateStrategyPayload.constraints;
-
+            history.replace(history.location.pathname);
             setFeatureCache(feature);
         } catch (e) {
             setToastData({
@@ -109,6 +109,7 @@ const useFeatureStrategiesEnvironmentList = (
                 type: 'success',
                 text: `Successfully deleted strategy from ${featureId}`,
             });
+            history.replace(history.location.pathname);
         } catch (e) {
             setToastData({
                 show: true,

@@ -15,7 +15,7 @@ interface IUseFeatureOptions {
 const useFeature = (
     projectId: string,
     id: string,
-    options: IUseFeatureOptions
+    options: IUseFeatureOptions = {}
 ) => {
     const fetcher = () => {
         const path = formatApiPath(

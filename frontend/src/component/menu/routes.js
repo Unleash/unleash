@@ -222,7 +222,7 @@ export const routes = [
         menu: {},
     },
     {
-        path: '/projects/:projectId/features2/:featureId/:activeTab',
+        path: '/projects/:projectId/features2/:featureId',
         parent: '/projects',
         title: 'FeatureView2',
         component: FeatureView2,

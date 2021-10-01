@@ -24,7 +24,7 @@ import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
-import { IProjectStore } from '../types/stores/project-store';
+import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import { IRole } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleServiceV2 from './feature-toggle-service-v2';
@@ -91,8 +91,8 @@ export default class ProjectService {
         this.logger = config.getLogger('services/project-service.js');
     }
 
-    async getProjects(): Promise<IProjectWithCount[]> {
-        const projects = await this.store.getAll();
+    async getProjects(query?: IProjectQuery): Promise<IProjectWithCount[]> {
+        const projects = await this.store.getAll(query);
         const projectsWithCount = await Promise.all(
             projects.map(async (p) => {
                 let featureCount = 0;

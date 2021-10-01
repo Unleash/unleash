@@ -15,6 +15,7 @@ import ConditionallyRender from '../../../common/ConditionallyRender';
 import useToast from '../../../../hooks/useToast';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
 import { SyntheticEvent } from 'react-router/node_modules/@types/react';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -36,6 +37,8 @@ const FeatureToggleListNewItem = ({
         projectId,
         name
     );
+    const { uiConfig } = useUiConfig();
+    
 
     const styles = useStyles();
     const history = useHistory();
@@ -43,7 +46,7 @@ const FeatureToggleListNewItem = ({
 
     const onClick = (e: SyntheticEvent) => {
         if (!ref.current?.contains(e.target)) {
-            history.push(getTogglePath(projectId, name));
+            history.push(getTogglePath(projectId, name, uiConfig.flags.E));
         }
     };
 

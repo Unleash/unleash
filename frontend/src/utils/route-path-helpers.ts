@@ -1,5 +1,5 @@
-export const getTogglePath = (projectId: string, featureToggleName: string) => {
-    return `/projects/${projectId}/features/${featureToggleName}/strategies`;
+export const getTogglePath = (projectId: string, featureToggleName: string, newPath: boolean) => {
+    return `/projects/${projectId}/features${newPath ? '2' : ''}/${featureToggleName}/strategies`;
 };
 
 export const getToggleCopyPath = (

@@ -40,7 +40,8 @@ jobs:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
+      - name: Test Coverage
+        uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          package-manager: yarn

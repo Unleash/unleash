@@ -81,8 +81,6 @@ $unleash->isEnabled("someToggle", $context);
 
 This is a bit more advanced approach, where you configure a unleash-context provider. By doing this you do not have to rebuild or to pass the unleash-context object to every place you are calling `$unleash->isEnabled()`.
 
-The provider typically binds the context to the same thread as the request. If you are using Spring the UnleashContextProvider will typically be a ‘request scoped’ bean.
-
 ```php
 <?php
 

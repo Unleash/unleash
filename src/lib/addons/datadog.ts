@@ -89,7 +89,7 @@ export default class DatadogAddon extends Addon {
         const toggleStatus =
             type === FEATURE_ENVIRONMENT_ENABLED ? 'enabled' : 'disabled';
         const feature = `<${this.featureLink(event)}|${data.name}>`;
-        return `The feature toggle *${feature}* in the ${project} project ${toggleStatus} in environment ${environment}`;
+        return `The feature toggle *${feature}* in the ${project} project was ${toggleStatus} in environment *${environment}*`;
     }
 
     generateStrategyChangeText(event: IEvent): string {

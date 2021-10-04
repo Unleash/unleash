@@ -113,7 +113,7 @@ export default class SlackAddon extends Addon {
         const toggleStatus =
             type === FEATURE_ENVIRONMENT_ENABLED ? 'enabled' : 'disabled';
         const feature = `<${this.featureLink(event)}|${data.name}>`;
-        return `The feature toggle *${feature}* in the ${project} project had the environment ${environment} ${toggleStatus}`;
+        return `The feature toggle *${feature}* in the ${project} project was ${toggleStatus} in environment *${environment}*`;
     }
 
     generateStrategyChangeText(event: IEvent): string {

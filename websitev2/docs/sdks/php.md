@@ -76,4 +76,28 @@ $context = new UnleashContext(
 $unleash->isEnabled("someToggle", $context);
 ```
 
+
+**b) Via a UnleashContextProvider**
+
+This is a bit more advanced approach, where you configure a unleash-context provider. By doing this you do not have to rebuild or to pass the unleash-context object to every place you are calling `unleash.isEnabled`.
+
+The provider typically binds the context to the same thread as the request. If you are using Spring the UnleashContextProvider will typically be a ‘request scoped’ bean.
+
+```php
+<?php
+
+use Unleash\Client\UnleashBuilder;
+
+$contextProvider = new MyAwesomeContextProvider();
+$unleash = UnleashBuilder::create()
+    ->withAppName('my.php-app')
+    ->withInstanceId('your-instance-1')
+    ->withAppUrl('http://unleash.herokuapp.com/api/')
+    ->withContextProvider($contextProvider)
+    ->build();
+
+// Anywhere in the code unleash will get the unleash context from your registered provider.
+$unleash->isEnabled("someToggle");
+```
+
 > You can read more complete documentation in the [Client SDK repository](https://github.com/Unleash/unleash-client-php).

@@ -122,16 +122,15 @@ export default class TeamsAddon extends Addon {
     generateStrategyChangeText(event: IEvent): string {
         const { environment, project, data, type } = event;
         const feature = `<${this.featureLink(event)}|${data.featureName}>`;
-        const strategyLink = `<${this.strategiesLink(event)}>`;
         let action;
         if (FEATURE_STRATEGY_UPDATE === type) {
-            action = 'updated';
+            action = 'updated in';
         } else if (FEATURE_STRATEGY_ADD) {
-            action = 'added';
+            action = 'added to';
         } else {
-            action = 'removed';
+            action = 'removed from';
         }
-        const strategyText = `the strategy ${strategyLink} of type ${data.name} ${action} in the *${environment}* environment`;
+        const strategyText = `a ${data.name} strategy ${action} the *${environment}* environment`;
         return `The feature toggle *${feature}* in project: ${project} had ${strategyText}`;
     }
 

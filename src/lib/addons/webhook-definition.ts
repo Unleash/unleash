@@ -61,6 +61,7 @@ const webhookDefinition: IAddonDefinition = {
         FEATURE_CREATED,
         FEATURE_UPDATED,
         FEATURE_ARCHIVED,
+        FEATURE_METADATA_UPDATED,
         FEATURE_REVIVED,
         FEATURE_STALE_ON,
         FEATURE_STALE_OFF,

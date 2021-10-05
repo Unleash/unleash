@@ -5,6 +5,9 @@ import { DEFAULT_ENV } from '../../../../../lib/util/constants';
 import {
     FEATURE_ENVIRONMENT_DISABLED,
     FEATURE_ENVIRONMENT_ENABLED,
+    FEATURE_METADATA_UPDATED,
+    FEATURE_STRATEGY_REMOVE,
+    FEATURE_UPDATED,
 } from '../../../../../lib/types/events';
 
 let app: IUnleashTest;
@@ -520,6 +523,13 @@ test('Should patch feature toggle', async () => {
     expect(toggle.description).toBe('New desc');
     expect(toggle.type).toBe('kill-switch');
     expect(toggle.archived).toBeFalsy();
+    const events = await db.stores.eventStore.getAll({
+        type: FEATURE_METADATA_UPDATED,
+    });
+    const updateForOurToggle = events.find((e) => e.data.name === name);
+    expect(updateForOurToggle).toBeTruthy();
+    expect(updateForOurToggle.data.description).toBe('New desc');
+    expect(updateForOurToggle.data.type).toBe('kill-switch');
 });
 
 test('Should archive feature toggle', async () => {
@@ -902,6 +912,55 @@ test('Can not enable environment for feature without strategies', async () => {
             expect(enabledFeatureEnv.type).toBe('test');
         });
 });
+
+test('Deleting a strategy should include name of feature strategy was deleted from', async () => {
+    const environment = 'delete_strategy_env';
+    const featureName = 'delete_strategy_feature';
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: environment,
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ environment })
+        .expect(200);
+
+    // Create feature
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: featureName,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    let strategyId;
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
+        )
+        .send({ name: 'default', constraints: [], properties: {} })
+        .expect(200)
+        .expect((res) => {
+            strategyId = res.body.id;
+        });
+    expect(strategyId).toBeTruthy();
+    // Delete strategy
+    await app.request
+        .delete(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies/${strategyId}`,
+        )
+        .expect(200);
+    const events = await db.stores.eventStore.getAll({
+        type: FEATURE_STRATEGY_REMOVE,
+    });
+    expect(events).toHaveLength(1);
+    expect(events[0].data.featureName).toBe(featureName);
+    expect(events[0].environment).toBe(environment);
+    expect(events[0].data.id).toBe(strategyId);
+});
+
 test('Enabling environment creates a FEATURE_ENVIRONMENT_ENABLED event', async () => {
     const environment = 'environment_enabled_env';
     const featureName = 'com.test.enable.environment.event.sent';

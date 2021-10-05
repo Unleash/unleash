@@ -226,6 +226,7 @@ class FeatureToggleServiceV2 {
      */
     async deleteStrategy(
         id: string,
+        featureName: string,
         userName: string,
         project: string = 'default',
         environment: string = DEFAULT_ENV,
@@ -240,6 +241,11 @@ class FeatureToggleServiceV2 {
                 id,
             },
         });
+        // If there are no strategies left for environment disable it
+        await this.featureEnvironmentStore.disableEnvironmentIfNoStrategies(
+            featureName,
+            environment,
+        );
     }
 
     async getStrategiesForEnvironment(

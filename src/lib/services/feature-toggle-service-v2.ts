@@ -399,6 +399,13 @@ class FeatureToggleServiceV2 {
             project: projectId,
             tags,
         });
+        await this.eventStore.store({
+            type: FEATURE_UPDATED,
+            createdBy: userName,
+            data: featureToggle,
+            project: projectId,
+            tags,
+        });
         return featureToggle;
     }
 

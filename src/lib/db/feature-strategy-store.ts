@@ -355,7 +355,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             }, {});
             return Object.values(overview).map((o: IFeatureOverview) => ({
                 ...o,
-                environments: o.environments.filter((f) => f.name),
+                environments: o.environments
+                    .filter((f) => f.name)
+                    .sort((a, b) => {
+                        if (a.sortOrder === b.sortOrder) {
+                            return a.name.localeCompare(b.name);
+                        }
+                        return a.sortOrder - b.sortOrder;
+                    }),
             }));
         }
         return [];

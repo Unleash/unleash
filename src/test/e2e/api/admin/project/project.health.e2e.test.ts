@@ -163,14 +163,12 @@ test('Sorts environments by sort order', async () => {
     const defaultEnvName = 'default';
     await db.stores.environmentStore.create({
         name: envOne,
-        displayName: 'Enable feature for environment',
         type: 'production',
         sortOrder: 0,
     });
 
     await db.stores.environmentStore.create({
         name: envTwo,
-        displayName: 'Enable feature for environment',
         type: 'production',
         sortOrder: 500,
     });
@@ -209,14 +207,12 @@ test('Sorts environments correctly if sort order is equal', async () => {
 
     await db.stores.environmentStore.create({
         name: envOne,
-        displayName: 'Enable feature for environment',
         type: 'production',
         sortOrder: -5,
     });
 
     await db.stores.environmentStore.create({
         name: envTwo,
-        displayName: 'Enable feature for environment',
         type: 'production',
         sortOrder: -5,
     });

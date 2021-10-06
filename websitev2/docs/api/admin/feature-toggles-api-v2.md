@@ -308,6 +308,58 @@ Some fields is not possible to change via this endpoint:
 - lastSeen
 
 
+### Clone Feature Toggle {#create-toggle}
+
+`http://localhost:4242/api/admin/projects/:projectId/features/:featureName/clone`
+
+This endpoint will accept HTTP POST request to clone an existing feature toggle with all strategies and variants. It is not possible to clone archived feature toggles. The newly created feature toggle will be disabled for all environments.
+
+**Example Query**
+
+```sh
+echo '{ "name": "newName" }' | http POST http://localhost:4242/api/admin/projects/default/features/Demo/clone Authorization:$KEY`
+```
+
+
+**Example response:**
+
+```json
+HTTP/1.1 201 Created
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Length: 260
+Content-Type: application/json; charset=utf-8
+Date: Wed, 06 Oct 2021 20:04:39 GMT
+ETag: W/"104-joC/gdjtJ29jZMxj91lIzR42Pmo"
+Keep-Alive: timeout=60
+Vary: Accept-Encoding
+
+{
+    "createdAt": "2021-09-29T10:22:28.523Z",
+    "description": "Some useful description",
+    "lastSeenAt": null,
+    "name": "DemoNew",
+    "project": "default",
+    "stale": false,
+    "type": "release",
+    "variants": [
+        {
+            "name": "blue",
+            "overrides": [],
+            "stickiness": "default",
+            "weight": 1000,
+            "weightType": "variable"
+        }
+    ]
+}
+
+```
+
+Possible Errors:
+
+- _409 Conflict_ - A toggle with that name already exists
+
+
 ### Archive Feature Toggle {#archive-toggle}
 
 `http://localhost:4242/api/admin/projects/:projectId/features/:featureName`

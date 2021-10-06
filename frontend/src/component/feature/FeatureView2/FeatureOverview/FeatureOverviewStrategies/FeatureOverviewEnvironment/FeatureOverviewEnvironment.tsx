@@ -26,8 +26,6 @@ const FeatureOverviewEnvironment = ({
     const { toast, setToastData } = useToast();
     const history = useHistory();
 
-    console.log(env);
-
     const handleClick = () => {
         history.push(
             `/projects/${projectId}/features2/${featureId}/strategies?environment=${env.name}`

@@ -1,4 +1,4 @@
-name: PullRequestJestReport
+name: PR -> Test & Coverage
 
 on:
   pull_request:

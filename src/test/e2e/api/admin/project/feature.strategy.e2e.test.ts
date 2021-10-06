@@ -7,7 +7,6 @@ import {
     FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_METADATA_UPDATED,
     FEATURE_STRATEGY_REMOVE,
-    FEATURE_UPDATED,
 } from '../../../../../lib/types/events';
 
 let app: IUnleashTest;

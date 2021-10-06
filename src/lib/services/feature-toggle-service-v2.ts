@@ -35,7 +35,6 @@ import {
     FeatureToggleDTO,
     FeatureToggleWithEnvironment,
     FeatureToggleWithEnvironmentLegacy,
-    IEnvironment,
     IEnvironmentDetail,
     IFeatureEnvironmentInfo,
     IFeatureOverview,

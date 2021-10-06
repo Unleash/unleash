@@ -204,7 +204,6 @@ test('Sorts environments correctly if sort order is equal', async () => {
     const envOne = 'my-sorted-env3';
     const envTwo = 'my-sorted-env4';
     const featureName = 'My-new-toggle-2';
-    const defaultEnvName = 'default';
 
     await db.stores.environmentStore.create({
         name: envOne,
@@ -241,7 +240,6 @@ test('Sorts environments correctly if sort order is equal', async () => {
 
     await app.request.get('/api/admin/projects/default').expect((res) => {
         const feature = res.body.features[0];
-        console.log(feature.environments);
         expect(feature.environments[0].name).toBe(envOne);
         expect(feature.environments[1].name).toBe(envTwo);
     });

@@ -28,6 +28,7 @@ import FeatureToggleClientStore from './feature-toggle-client-store';
 import EnvironmentStore from './environment-store';
 import FeatureTagStore from './feature-tag-store';
 import { FeatureEnvironmentStore } from './feature-environment-store';
+import { ClientMetricsStoreV2 } from './client-metrics-store-v2';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -54,6 +55,7 @@ export const createStores = (
             eventBus,
             getLogger,
         ),
+        clientMetricsStoreV2: new ClientMetricsStoreV2(db, getLogger),
         contextFieldStore: new ContextFieldStore(db, getLogger),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),

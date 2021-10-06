@@ -1,4 +1,3 @@
-import { LogProvider } from '../../logger';
 import { applicationSchema } from './metrics-schema';
 import { Projection } from './projection';
 import { clientMetricsSchema } from './client-metrics-schema';
@@ -65,8 +64,6 @@ export default class ClientMetricsService {
     private clientInstanceStore: IClientInstanceStore;
 
     private eventStore: IEventStore;
-
-    private getLogger: LogProvider;
 
     private bulkInterval: number;
 

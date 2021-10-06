@@ -25,6 +25,11 @@ process.nextTick(async () => {
                 versionCheck: {
                     enable: false,
                 },
+                experimental: {
+                    metricsV2: {
+                        enabled: true,
+                    },
+                },
             }),
         );
     } catch (error) {

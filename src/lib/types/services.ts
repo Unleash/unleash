@@ -22,12 +22,14 @@ import FeatureToggleServiceV2 from '../services/feature-toggle-service-v2';
 import EnvironmentService from '../services/environment-service';
 import FeatureTagService from '../services/feature-tag-service';
 import ProjectHealthService from '../services/project-health-service';
+import ClientMetricsServiceV2 from '../services/client-metrics/client-metrics-service-v2';
 
 export interface IUnleashServices {
     accessService: AccessService;
     addonService: AddonService;
     apiTokenService: ApiTokenService;
     clientMetricsService: ClientMetricsService;
+    clientMetricsServiceV2: ClientMetricsServiceV2;
     contextService: ContextService;
     emailService: EmailService;
     environmentService: EnvironmentService;

@@ -300,12 +300,13 @@ export default class ProjectFeaturesController extends Controller {
         res: Response,
     ): Promise<void> {
         this.logger.info('Deleting strategy');
-        const { environment, projectId } = req.params;
+        const { environment, projectId, featureName } = req.params;
         const userName = extractUsername(req);
         const { strategyId } = req.params;
         this.logger.info(strategyId);
         const strategy = await this.featureService.deleteStrategy(
             strategyId,
+            featureName,
             userName,
             projectId,
             environment,

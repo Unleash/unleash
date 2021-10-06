@@ -1108,3 +1108,140 @@ test('Feature strategies list should respect strategy sortorders for each enviro
     expect(strategies[1].sortOrder).toBe(sortOrderSecond);
     expect(strategies[2].sortOrder).toBe(sortOrderDefault);
 });
+
+test('Deleting last strategy for feature environment should disable that environment', async () => {
+    const envName = 'last_strategy_delete_env';
+    const featureName = 'last_strategy_delete_feature';
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+    let strategyId;
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200)
+        .expect((res) => {
+            strategyId = res.body.id;
+        });
+    // Enable feature_environment
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/on`,
+        )
+        .send({})
+        .expect(200);
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.enabled).toBeTruthy();
+        });
+    // Delete last strategy, this should also disable the environment
+    await app.request.delete(
+        `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/${strategyId}`,
+    );
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.enabled).toBeFalsy();
+        });
+});
+
+test('Deleting strategy for feature environment should not disable that environment as long as there are other strategies', async () => {
+    const envName = 'any_strategy_delete_env';
+    const featureName = 'any_strategy_delete_feature';
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+    let strategyId;
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200)
+        .expect((res) => {
+            strategyId = res.body.id;
+        });
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                customerId: 'string',
+            },
+        })
+        .expect(200);
+    // Enable feature_environment
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/on`,
+        )
+        .send({})
+        .expect(200);
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.enabled).toBeTruthy();
+        });
+    // Delete a strategy, this should also disable the environment
+    await app.request.delete(
+        `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/${strategyId}`,
+    );
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.enabled).toBeTruthy();
+        });
+});

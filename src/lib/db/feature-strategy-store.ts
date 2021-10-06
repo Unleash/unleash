@@ -213,7 +213,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments.name as environment_name',
                 'environments.type as environment_type',
                 'environments.sort_order as environment_sort_order',
-                'environments.display_name as environment_display_name',
                 'feature_strategies.id as strategy_id',
                 'feature_strategies.strategy_name as strategy_name',
                 'feature_strategies.parameters as parameters',
@@ -266,7 +265,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 env.enabled = r.enabled;
                 env.type = r.environment_type;
                 env.sortOrder = r.environment_sort_order;
-                env.displayName = r.environment_display_name;
                 if (!env.strategies) {
                     env.strategies = [];
                 }
@@ -300,7 +298,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private getEnvironment(r: any): IEnvironmentOverview {
         return {
             name: r.environment,
-            displayName: r.display_name,
             enabled: r.enabled,
             type: r.environment_type,
             sortOrder: r.environment_sort_order,
@@ -321,7 +318,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'features.stale as stale',
                 'feature_environments.enabled as enabled',
                 'feature_environments.environment as environment',
-                'environments.display_name as display_name',
                 'environments.type as environment_type',
                 'environments.sort_order as environment_sort_order',
             )

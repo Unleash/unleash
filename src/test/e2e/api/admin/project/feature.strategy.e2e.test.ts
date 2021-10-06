@@ -174,7 +174,6 @@ test('Project overview includes environment connected to feature', async () => {
         });
     await db.stores.environmentStore.create({
         name: 'project-overview',
-        displayName: 'Project Overview',
         type: 'production',
     });
     await app.request
@@ -208,7 +207,6 @@ test('Disconnecting environment from project, removes environment from features 
         });
     await db.stores.environmentStore.create({
         name: 'dis-project-overview',
-        displayName: 'Project Overview',
         type: 'production',
     });
     await app.request
@@ -236,7 +234,6 @@ test('Can enable/disable environment for feature with strategies', async () => {
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'production',
     });
     // Connect environment to project
@@ -386,7 +383,6 @@ test('Can get environment info for feature toggle', async () => {
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'production',
     });
     // Connect environment to project
@@ -550,7 +546,6 @@ test('Can add strategy to feature toggle to a "some-env-2"', async () => {
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'production',
     });
     // Connect environment to project
@@ -591,13 +586,11 @@ test('Environments are returned in sortOrder', async () => {
     // Create environments
     await db.stores.environmentStore.create({
         name: sortedLast,
-        displayName: 'Enable feature for environment',
         type: 'production',
         sortOrder: 8000,
     });
     await db.stores.environmentStore.create({
         name: sortedSecond,
-        displayName: 'Enable feature for environment',
         type: 'production',
         sortOrder: 8,
     });
@@ -659,7 +652,6 @@ test('Can get strategies for feature and environment', async () => {
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'production',
     });
     // Connect environment to project
@@ -714,7 +706,6 @@ test('Can update a strategy based on id', async () => {
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'production',
     });
     // Connect environment to project
@@ -767,7 +758,6 @@ test('Trying to update a non existing feature strategy should yield 404', async 
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'production',
     });
     // Connect environment to project
@@ -798,7 +788,6 @@ test('Can patch a strategy based on id', async () => {
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'test',
     });
     // Connect environment to project
@@ -851,7 +840,6 @@ test('Trying to get a non existing feature strategy should yield 404', async () 
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'production',
     });
     // Connect environment to project
@@ -880,7 +868,6 @@ test('Can not enable environment for feature without strategies', async () => {
     // Create environment
     await db.stores.environmentStore.create({
         name: environment,
-        displayName: 'Enable feature for environment',
         type: 'test',
     });
     // Connect environment to project
@@ -922,7 +909,6 @@ test('Enabling environment creates a FEATURE_ENVIRONMENT_ENABLED event', async (
     // Create environment
     await db.stores.environmentStore.create({
         name: environment,
-        displayName: 'Enable feature for environment',
         type: 'test',
     });
     // Connect environment to project
@@ -965,7 +951,6 @@ test('Disabling environment creates a FEATURE_ENVIRONMENT_DISABLED event', async
     // Create environment
     await db.stores.environmentStore.create({
         name: environment,
-        displayName: 'Enable feature for environment',
         type: 'test',
     });
     // Connect environment to project
@@ -1009,7 +994,6 @@ test('Can delete strategy from feature toggle', async () => {
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'test',
     });
     // Connect environment to project
@@ -1053,7 +1037,6 @@ test('List of strategies should respect sortOrder', async () => {
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Enable feature for environment',
         type: 'test',
     });
     // Connect environment to project
@@ -1084,12 +1067,10 @@ test('Feature strategies list should respect strategy sortorders for each enviro
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
-        displayName: 'Sort orders within environment',
         type: 'test',
     });
     await db.stores.environmentStore.create({
         name: secondEnv,
-        displayName: 'Sort orders within environment',
         type: 'test',
     });
     // Connect environment to project
@@ -1126,4 +1107,141 @@ test('Feature strategies list should respect strategy sortorders for each enviro
     expect(strategies[0].sortOrder).toBe(sortOrderFirst);
     expect(strategies[1].sortOrder).toBe(sortOrderSecond);
     expect(strategies[2].sortOrder).toBe(sortOrderDefault);
+});
+
+test('Deleting last strategy for feature environment should disable that environment', async () => {
+    const envName = 'last_strategy_delete_env';
+    const featureName = 'last_strategy_delete_feature';
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+    let strategyId;
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200)
+        .expect((res) => {
+            strategyId = res.body.id;
+        });
+    // Enable feature_environment
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/on`,
+        )
+        .send({})
+        .expect(200);
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.enabled).toBeTruthy();
+        });
+    // Delete last strategy, this should also disable the environment
+    await app.request.delete(
+        `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/${strategyId}`,
+    );
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.enabled).toBeFalsy();
+        });
+});
+
+test('Deleting strategy for feature environment should not disable that environment as long as there are other strategies', async () => {
+    const envName = 'any_strategy_delete_env';
+    const featureName = 'any_strategy_delete_feature';
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+    let strategyId;
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200)
+        .expect((res) => {
+            strategyId = res.body.id;
+        });
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                customerId: 'string',
+            },
+        })
+        .expect(200);
+    // Enable feature_environment
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/on`,
+        )
+        .send({})
+        .expect(200);
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.enabled).toBeTruthy();
+        });
+    // Delete a strategy, this should also disable the environment
+    await app.request.delete(
+        `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/${strategyId}`,
+    );
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.enabled).toBeTruthy();
+        });
 });

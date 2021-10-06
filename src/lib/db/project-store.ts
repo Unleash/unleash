@@ -6,6 +6,7 @@ import { IProject } from '../types/model';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
+    IProjectQuery,
     IProjectStore,
 } from '../types/stores/project-store';
 import { DEFAULT_ENV } from '../util/constants';
@@ -43,10 +44,11 @@ class ProjectStore implements IProjectStore {
         return present;
     }
 
-    async getAll(): Promise<IProject[]> {
+    async getAll(query: IProjectQuery = {}): Promise<IProject[]> {
         const rows = await this.db
             .select(COLUMNS)
             .from(TABLE)
+            .where(query)
             .orderBy('name', 'asc');
 
         return rows.map(this.mapRow);

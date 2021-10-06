@@ -176,7 +176,6 @@ test('Can get strategies for specific environment', async () => {
 
     await db.stores.environmentStore.create({
         name: 'testing',
-        displayName: 'simple test',
         type: 'test',
     });
 

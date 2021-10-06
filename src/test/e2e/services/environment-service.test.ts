@@ -22,7 +22,6 @@ afterAll(async () => {
 test('Can get environment', async () => {
     const created = await db.stores.environmentStore.create({
         name: 'testenv',
-        displayName: 'Environment for testing',
         type: 'production',
     });
 
@@ -33,7 +32,6 @@ test('Can get environment', async () => {
 test('Can get all', async () => {
     await db.stores.environmentStore.create({
         name: 'testenv2',
-        displayName: 'Environment for testing',
         type: 'production',
     });
 
@@ -44,7 +42,6 @@ test('Can get all', async () => {
 test('Can connect environment to project', async () => {
     await db.stores.environmentStore.create({
         name: 'test-connection',
-        displayName: '',
         type: 'production',
     });
     await stores.featureToggleStore.create('default', {
@@ -63,7 +60,6 @@ test('Can connect environment to project', async () => {
         expect(f.environments).toEqual([
             {
                 name: 'test-connection',
-                displayName: '',
                 enabled: false,
                 sortOrder: 9999,
                 type: 'production',
@@ -75,7 +71,6 @@ test('Can connect environment to project', async () => {
 test('Can remove environment from project', async () => {
     await db.stores.environmentStore.create({
         name: 'removal-test',
-        displayName: '',
         type: 'production',
     });
     await stores.featureToggleStore.create('default', {
@@ -92,7 +87,6 @@ test('Can remove environment from project', async () => {
         expect(f.environments).toEqual([
             {
                 name: 'removal-test',
-                displayName: '',
                 enabled: false,
                 sortOrder: 9999,
                 type: 'production',
@@ -113,7 +107,6 @@ test('Can remove environment from project', async () => {
 test('Adding same environment twice should throw a NameExistsError', async () => {
     await db.stores.environmentStore.create({
         name: 'uniqueness-test',
-        displayName: '',
         type: 'production',
     });
     await service.removeEnvironmentFromProject('test-connection', 'default');

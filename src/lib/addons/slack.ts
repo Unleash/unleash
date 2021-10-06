@@ -4,14 +4,14 @@ import Addon from './addon';
 import slackDefinition from './slack-definition';
 import { IAddonConfig, IEvent } from '../types/model';
 
-const {
+import {
     FEATURE_CREATED,
     FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
     FEATURE_STALE_ON,
     FEATURE_STALE_OFF,
-} = require('../types/events');
+} from '../types/events';
 
 export default class SlackAddon extends Addon {
     unleashUrl: string;
@@ -123,7 +123,7 @@ This was changed by ${createdBy}.`;
         const stale = data.stale ? '("stale")' : '';
         const typeStr = `*Type*: ${data.type}`;
         const project = `*Project*: ${data.project}`;
-        const strategies = `*Activation strategies*: \`\`\`${YAML.safeDump(
+        const strategies = `*Activation strategies*: \`\`\`${YAML.dump(
             data.strategies,
             { skipInvalid: true },
         )}\`\`\``;

@@ -3,7 +3,6 @@ import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { IEvent } from '../types/model';
-import { FEATURE_METADATA_UPDATED } from '../types/events';
 
 export default class EventService {
     private logger: Logger;
@@ -23,10 +22,7 @@ export default class EventService {
     }
 
     async getEventsForToggle(name: string): Promise<IEvent[]> {
-        const events = await this.eventStore.getEventsFilterByType(name);
-        return events.filter(
-            (e: IEvent) => e.type !== FEATURE_METADATA_UPDATED,
-        );
+        return this.eventStore.getEventsFilterByType(name);
     }
 
     async getEventsForProject(project: string): Promise<IEvent[]> {

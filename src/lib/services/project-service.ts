@@ -24,13 +24,12 @@ import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
-import { IProjectStore } from '../types/stores/project-store';
+import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import { IRole } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleServiceV2 from './feature-toggle-service-v2';
 import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
-import { DEFAULT_ENV } from '../util/constants';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -92,8 +91,8 @@ export default class ProjectService {
         this.logger = config.getLogger('services/project-service.js');
     }
 
-    async getProjects(): Promise<IProjectWithCount[]> {
-        const projects = await this.store.getAll();
+    async getProjects(query?: IProjectQuery): Promise<IProjectWithCount[]> {
+        const projects = await this.store.getAll(query);
         const projectsWithCount = await Promise.all(
             projects.map(async (p) => {
                 let featureCount = 0;
@@ -123,8 +122,17 @@ export default class ProjectService {
 
         await this.store.create(data);
 
-        // TODO: we should only connect to enabled environments
-        await this.featureEnvironmentStore.connectProject(DEFAULT_ENV, data.id);
+        const enabledEnvironments = await this.environmentStore.getAll({
+            enabled: true,
+        });
+        await Promise.all(
+            enabledEnvironments.map(async (e) => {
+                await this.featureEnvironmentStore.connectProject(
+                    e.name,
+                    data.id,
+                );
+            }),
+        );
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 
@@ -302,6 +310,9 @@ export default class ProjectService {
         archived: boolean = false,
     ): Promise<IProjectOverview> {
         const project = await this.store.get(projectId);
+        const environments = await this.store.getEnvironmentsForProject(
+            projectId,
+        );
         const features = await this.featureToggleService.getFeatureOverview(
             projectId,
             archived,
@@ -309,6 +320,7 @@ export default class ProjectService {
         const members = await this.store.getMembers(projectId);
         return {
             name: project.name,
+            environments,
             description: project.description,
             health: project.health,
             features,

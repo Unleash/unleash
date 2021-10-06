@@ -17,6 +17,10 @@ export interface IProjectHealthUpdate {
     health: number;
 }
 
+export interface IProjectQuery {
+    id?: string;
+}
+
 export interface IProjectStore extends Store<IProject, string> {
     hasProject(id: string): Promise<boolean>;
     updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void>;
@@ -28,4 +32,5 @@ export interface IProjectStore extends Store<IProject, string> {
     getEnvironmentsForProject(id: string): Promise<string[]>;
     getMembers(projectId: string): Promise<number>;
     count(): Promise<number>;
+    getAll(query?: IProjectQuery): Promise<IProject[]>;
 }

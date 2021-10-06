@@ -36,7 +36,6 @@ test('Should add environment to project', async () => {
     // Endpoint to create env does not exists anymore
     await db.stores.environmentStore.create({
         name: 'test',
-        displayName: 'Test Env',
         type: 'test',
     });
     await app.request
@@ -67,7 +66,6 @@ test('Should remove environment from project', async () => {
 
     await db.stores.environmentStore.create({
         name,
-        displayName: 'Test Env',
         type: 'test',
     });
 

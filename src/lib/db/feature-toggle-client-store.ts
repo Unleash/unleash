@@ -45,16 +45,20 @@ export default class FeatureToggleClientStore
         r: any,
         includeId: boolean = true,
     ): IStrategyConfig {
-        const strategy = {
-            name: r.strategy_name,
-            constraints: r.constraints || [],
-            parameters: r.parameters,
-            id: r.strategy_id,
-        };
-        if (!includeId) {
-            delete strategy.id;
+        if (includeId) {
+            return {
+                name: r.strategy_name,
+                constraints: r.constraints || [],
+                parameters: r.parameters,
+                id: r.strategy_id,
+            };
+        } else {
+            return {
+                name: r.strategy_name,
+                constraints: r.constraints || [],
+                parameters: r.parameters,
+            };
         }
-        return strategy;
     }
 
     private async getAll(
@@ -74,28 +78,29 @@ export default class FeatureToggleClientStore
                 'features.variants as variants',
                 'features.created_at as created_at',
                 'features.last_seen_at as last_seen_at',
-                'feature_environments.enabled as enabled',
-                'feature_environments.environment as environment',
-                'feature_strategies.id as strategy_id',
-                'feature_strategies.strategy_name as strategy_name',
-                'feature_strategies.parameters as parameters',
-                'feature_strategies.constraints as constraints',
+                'fe.enabled as enabled',
+                'fe.environment as environment',
+                'fs.id as strategy_id',
+                'fs.strategy_name as strategy_name',
+                'fs.parameters as parameters',
+                'fs.constraints as constraints',
             )
             .fullOuterJoin(
-                'feature_environments',
-                'feature_environments.feature_name',
+                this.db('feature_strategies')
+                    .select('*')
+                    .where({ environment })
+                    .as('fs'),
+                'fs.feature_name',
                 'features.name',
             )
-            .fullOuterJoin('feature_strategies', function () {
-                this.on(
-                    'feature_strategies.feature_name',
-                    'features.name',
-                ).andOn(
-                    'feature_strategies.environment',
-                    'feature_environments.environment',
-                );
-            })
-            .where('feature_environments.environment', environment)
+            .fullOuterJoin(
+                this.db('feature_environments')
+                    .select('feature_name', 'enabled', 'environment')
+                    .where({ environment })
+                    .as('fe'),
+                'fe.feature_name',
+                'features.name',
+            )
             .where({ archived });
 
         if (featureQuery) {
@@ -117,6 +122,7 @@ export default class FeatureToggleClientStore
                 );
             }
         }
+
         const rows = await query;
         stopTimer();
         const featureToggles = rows.reduce((acc, r) => {
@@ -132,7 +138,7 @@ export default class FeatureToggleClientStore
             if (r.strategy_name) {
                 feature.strategies.push(this.getAdminStrategy(r, isAdmin));
             }
-            feature.enabled = r.enabled;
+            feature.enabled = !!r.enabled;
             feature.name = r.name;
             feature.description = r.description;
             feature.project = r.project;

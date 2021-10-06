@@ -10,7 +10,10 @@ import { DB_TIME } from '../metric-events';
 import { IFeatureEnvironment } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 
-const T = { featureEnvs: 'feature_environments' };
+const T = {
+    featureEnvs: 'feature_environments',
+    featureStrategies: 'feature_strategies',
+};
 
 interface IFeatureEnvironmentRow {
     environment: string;
@@ -90,6 +93,22 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             featureName: r.feature_name,
             environment: r.environment,
         }));
+    }
+
+    async disableEnvironmentIfNoStrategies(
+        featureName: string,
+        environment: string,
+    ): Promise<void> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${T.featureStrategies} WHERE feature_name = ? AND environment = ?) AS enabled`,
+            [featureName, environment],
+        );
+        const { enabled } = result.rows[0];
+        if (!enabled) {
+            await this.db(T.featureEnvs)
+                .update({ enabled: false })
+                .where({ feature_name: featureName, environment });
+        }
     }
 
     async addEnvironmentToFeature(

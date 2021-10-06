@@ -34,7 +34,10 @@ export interface IFeatureEnvironmentStore
         environment: string,
         enabled: boolean,
     ): Promise<void>;
-
+    disableEnvironmentIfNoStrategies(
+        featureName: string,
+        environment: string,
+    ): Promise<void>;
     disconnectFeatures(environment: string, project: string): Promise<void>;
     connectFeatures(environment: string, projectId: string): Promise<void>;
 

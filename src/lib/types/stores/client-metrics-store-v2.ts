@@ -4,10 +4,10 @@ export interface IClientMetricsEnvKey {
     featureName: string;
     appName: string;
     environment: string;
+    timestamp: Date;
 }
 
 export interface IClientMetricsEnv extends IClientMetricsEnvKey {
-    timestamp: Date;
     yes: number;
     no: number;
 }

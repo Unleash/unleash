@@ -79,21 +79,29 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         // Nothing to do!
     }
 
+    // this function will collapse metrics before sending it to the database.
     async batchInsertMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
         const rows = metrics.map(toRow);
 
-        // Consider rewriting to SQL batch!
-        for (const row of rows) {
-            const insert = this.db<ClientMetricsEnvTable>(TABLE)
-                .insert(row)
-                .toQuery();
+        const batch = rows.reduce((prev, curr) => {
+            // eslint-disable-next-line prettier/prettier
+            const key = `${curr.feature_name}_${curr.app_name}_${curr.environment}_${curr.timestamp.getTime()}`;
+            if (prev[key]) {
+                prev[key].yes += curr.yes;
+                prev[key].no += curr.no;
+            } else {
+                prev[key] = curr;
+            }
+            return prev;
+        }, {});
 
-            const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) 
-                DO UPDATE SET  
-                "yes" = "client_metrics_env"."yes" + ?, 
-                "no" = "client_metrics_env"."no" + ?`;
-            await this.db.raw(query, [row.yes, row.no]);
-        }
+        // Consider rewriting to SQL batch!
+        const insert = this.db<ClientMetricsEnvTable>(TABLE)
+            .insert(Object.values(batch))
+            .toQuery();
+
+        const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no`;
+        await this.db.raw(query);
     }
 
     async getMetricsForFeatureToggle(

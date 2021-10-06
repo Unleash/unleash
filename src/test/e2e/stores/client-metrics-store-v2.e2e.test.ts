@@ -192,3 +192,25 @@ test('Should get toggle metrics', async () => {
     expect(savedMetrics[0].yes).toBe(4950);
     expect(savedMetrics[0].no).toBe(5050);
 });
+
+test('Should insert 1500 feature toggle metrics', async () => {
+    const metrics: IClientMetricsEnv[] = [];
+
+    const date = new Date();
+
+    for (let i = 0; i < 1500; i++) {
+        metrics.push({
+            featureName: `demo-${i}`,
+            appName: `web`,
+            environment: 'dev',
+            timestamp: date,
+            yes: 2,
+            no: 2,
+        });
+    }
+
+    await clientMetricsStore.batchInsertMetrics(metrics);
+    const savedMetrics = await clientMetricsStore.getAll();
+
+    expect(savedMetrics).toHaveLength(1500);
+});

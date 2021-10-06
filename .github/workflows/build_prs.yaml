@@ -35,11 +35,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn
       - run: yarn lint
-      - name: Tests
+      - name: Tests on ${{ matrix.node-version }}
         uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          skip-step: install
           test-script: yarn run test:coverage
         env:
           CI: true

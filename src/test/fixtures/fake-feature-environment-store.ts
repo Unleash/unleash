@@ -148,4 +148,13 @@ export default class FakeFeatureEnvironmentStore
     ): Promise<void> {
         return Promise.reject(new Error('Not implemented'));
     }
+
+    disableEnvironmentIfNoStrategies(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        featureName: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+    ): Promise<void> {
+        return Promise.reject(new Error('Not implemented'));
+    }
 }

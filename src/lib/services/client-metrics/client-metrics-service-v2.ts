@@ -2,13 +2,12 @@ import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../server-impl';
 import { IUnleashStores } from '../../types';
 import { IClientApp } from '../../types/model';
-import { GroupedClientMetrics } from '../../types/models/metrics';
+import { ToggleMetricsSummary } from '../../types/models/metrics';
 import {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './client-metrics-schema';
-import { groupMetricsOnEnv } from './util';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
@@ -57,14 +56,45 @@ export default class ClientMetricsServiceV2 {
         await this.clientMetricsStoreV2.batchInsertMetrics(clientMetrics);
     }
 
-    async getClientMetricsForToggle(
-        toggleName: string,
-    ): Promise<GroupedClientMetrics[]> {
+    // Overview over usage last "hour" bucket and all applications using the toggle
+    async getFeatureToggleMetricsSummary(
+        featureName: string,
+    ): Promise<ToggleMetricsSummary> {
         const metrics =
             await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
-                toggleName,
+                featureName,
+                1,
+            );
+        const seenApplications =
+            await this.clientMetricsStoreV2.getSeenAppsForFeatureToggle(
+                featureName,
             );
 
-        return groupMetricsOnEnv(metrics);
+        const groupedMetrics = metrics.reduce((prev, curr) => {
+            if (prev[curr.environment]) {
+                prev[curr.environment].yes += curr.yes;
+                prev[curr.environment].no += curr.no;
+            } else {
+                prev[curr.environment] = {
+                    environment: curr.environment,
+                    timestamp: curr.timestamp,
+                    yes: curr.yes,
+                    no: curr.no,
+                };
+            }
+            return prev;
+        }, {});
+
+        return {
+            featureName,
+            lastHourUsage: Object.values(groupedMetrics),
+            seenApplications,
+        };
+    }
+
+    async getClientMetricsForToggle(
+        toggleName: string,
+    ): Promise<IClientMetricsEnv[]> {
+        return this.clientMetricsStoreV2.getMetricsForFeatureToggle(toggleName);
     }
 }

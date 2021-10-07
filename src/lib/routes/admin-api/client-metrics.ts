@@ -21,16 +21,27 @@ class ClientMetricsController extends Controller {
 
         this.metrics = clientMetricsServiceV2;
 
-        this.get('/features/:name', this.getFeatureToggleMetrics);
+        this.get('/features/:name/raw', this.getRawToggleMetrics);
+        this.get('/features/:name', this.getToggleMetricsSummary);
     }
 
-    async getFeatureToggleMetrics(req: Request, res: Response): Promise<void> {
+    async getRawToggleMetrics(req: Request, res: Response): Promise<void> {
         const { name } = req.params;
         const data = await this.metrics.getClientMetricsForToggle(name);
         res.json({
             version: 1,
             maturity: 'experimental',
             data,
+        });
+    }
+
+    async getToggleMetricsSummary(req: Request, res: Response): Promise<void> {
+        const { name } = req.params;
+        const data = await this.metrics.getFeatureToggleMetricsSummary(name);
+        res.json({
+            version: 1,
+            maturity: 'experimental',
+            ...data,
         });
     }
 }

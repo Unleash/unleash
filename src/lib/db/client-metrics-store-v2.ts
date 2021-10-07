@@ -19,7 +19,8 @@ interface ClientMetricsEnvTable {
 
 const TABLE = 'client_metrics_env';
 
-function roundDownToHour(date) {
+// Unsure if this would be better be done by the service?
+export function roundDownToHour(date: Date): Date {
     let p = 60 * 60 * 1000; // milliseconds in an hour
     return new Date(Math.floor(date.getTime() / p) * p);
 }
@@ -72,7 +73,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     }
 
     deleteAll(): Promise<void> {
-        throw new Error('Method not implemented.');
+        return this.db(TABLE).del();
     }
 
     destroy(): void {

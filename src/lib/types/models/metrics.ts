@@ -1,6 +1,12 @@
 export interface GroupedClientMetrics {
     environment: string;
     timestamp: Date;
-    yes_count: number;
-    no_count: number;
+    yes: number;
+    no: number;
+}
+
+export interface ToggleMetricsSummary {
+    featureName: string;
+    lastHourUsage: GroupedClientMetrics[];
+    seenApplications: string[];
 }

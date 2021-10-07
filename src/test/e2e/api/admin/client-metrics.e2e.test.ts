@@ -1,7 +1,6 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
-import { roundDownToHour } from '../../../../lib/services/client-metrics/util';
 import { IClientMetricsEnv } from '../../../../lib/types/stores/client-metrics-store-v2';
 
 let app;
@@ -22,10 +21,11 @@ afterAll(async () => {
 
 afterEach(async () => {
     await db.reset();
+    await db.stores.clientMetricsStoreV2.deleteAll();
 });
 
-test('should return grouped metrics', async () => {
-    const date = roundDownToHour(new Date());
+test('should return raw metrics, aggregated on key', async () => {
+    const date = new Date();
     const metrics: IClientMetricsEnv[] = [
         {
             featureName: 'demo',
@@ -72,24 +72,95 @@ test('should return grouped metrics', async () => {
     await db.stores.clientMetricsStoreV2.batchInsertMetrics(metrics);
 
     const { body: demo } = await app.request
-        .get('/api/admin/client-metrics/features/demo')
+        .get('/api/admin/client-metrics/features/demo/raw')
         .expect('Content-Type', /json/)
         .expect(200);
     const { body: t2 } = await app.request
-        .get('/api/admin/client-metrics/features/t2')
+        .get('/api/admin/client-metrics/features/t2/raw')
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(demo.data).toHaveLength(48);
+    expect(demo.data).toHaveLength(2);
     expect(demo.data[0].environment).toBe('default');
-    expect(demo.data[0].yes_count).toBe(5);
-    expect(demo.data[0].no_count).toBe(4);
+    expect(demo.data[0].yes).toBe(5);
+    expect(demo.data[0].no).toBe(4);
     expect(demo.data[1].environment).toBe('test');
-    expect(demo.data[1].yes_count).toBe(1);
-    expect(demo.data[1].no_count).toBe(3);
+    expect(demo.data[1].yes).toBe(1);
+    expect(demo.data[1].no).toBe(3);
 
-    expect(t2.data).toHaveLength(24);
+    expect(t2.data).toHaveLength(1);
     expect(t2.data[0].environment).toBe('default');
-    expect(t2.data[0].yes_count).toBe(7);
-    expect(t2.data[0].no_count).toBe(104);
+    expect(t2.data[0].yes).toBe(7);
+    expect(t2.data[0].no).toBe(104);
+});
+
+test('should toggle summary', async () => {
+    const date = new Date();
+    const metrics: IClientMetricsEnv[] = [
+        {
+            featureName: 'demo',
+            appName: 'web',
+            environment: 'default',
+            timestamp: date,
+            yes: 2,
+            no: 2,
+        },
+        {
+            featureName: 't2',
+            appName: 'web',
+            environment: 'default',
+            timestamp: date,
+            yes: 5,
+            no: 5,
+        },
+        {
+            featureName: 't2',
+            appName: 'web',
+            environment: 'default',
+            timestamp: date,
+            yes: 2,
+            no: 99,
+        },
+        {
+            featureName: 'demo',
+            appName: 'web',
+            environment: 'default',
+            timestamp: date,
+            yes: 3,
+            no: 2,
+        },
+        {
+            featureName: 'demo',
+            appName: 'web',
+            environment: 'test',
+            timestamp: date,
+            yes: 1,
+            no: 3,
+        },
+        {
+            featureName: 'demo',
+            appName: 'backend-api',
+            environment: 'test',
+            timestamp: date,
+            yes: 1,
+            no: 3,
+        },
+    ];
+
+    await db.stores.clientMetricsStoreV2.batchInsertMetrics(metrics);
+
+    const { body: demo } = await app.request
+        .get('/api/admin/client-metrics/features/demo')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(demo.featureName).toBe('demo');
+    expect(demo.lastHourUsage).toHaveLength(2);
+    expect(demo.lastHourUsage[0].environment).toBe('default');
+    expect(demo.lastHourUsage[0].yes).toBe(5);
+    expect(demo.lastHourUsage[0].no).toBe(4);
+    expect(demo.lastHourUsage[1].environment).toBe('test');
+    expect(demo.lastHourUsage[1].yes).toBe(2);
+    expect(demo.lastHourUsage[1].no).toBe(6);
+    expect(demo.seenApplications).toStrictEqual(['backend-api', 'web']);
 });

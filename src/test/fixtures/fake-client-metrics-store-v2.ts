@@ -12,7 +12,7 @@ export default class FakeClientMetricsStoreV2
     extends EventEmitter
     implements IClientMetricsStoreV2
 {
-    metrics: IClientMetric[] = [];
+    metrics: IClientMetricsEnv[] = [];
 
     constructor() {
         super();
@@ -31,7 +31,8 @@ export default class FakeClientMetricsStoreV2
         throw new Error('Method not implemented.');
     }
     batchInsertMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
-        throw new Error('Method not implemented.');
+        metrics.forEach((m) => this.metrics.push(m));
+        return Promise.resolve();
     }
     get(key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {
         throw new Error('Method not implemented.');

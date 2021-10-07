@@ -52,13 +52,12 @@ export default class FeatureToggleClientStore
                 parameters: r.parameters,
                 id: r.strategy_id,
             };
-        } else {
-            return {
-                name: r.strategy_name,
-                constraints: r.constraints || [],
-                parameters: r.parameters,
-            };
         }
+        return {
+            name: r.strategy_name,
+            constraints: r.constraints || [],
+            parameters: r.parameters,
+        };
     }
 
     private async getAll(

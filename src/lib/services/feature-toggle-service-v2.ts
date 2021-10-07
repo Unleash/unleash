@@ -122,7 +122,7 @@ class FeatureToggleServiceV2 {
                 project: projectId,
                 createdBy: userName,
                 environment,
-                data,
+                data: { ...data, featureName: newFeatureStrategy.featureName },
             });
             return data;
         } catch (e) {
@@ -134,13 +134,6 @@ class FeatureToggleServiceV2 {
             throw e;
         }
     }
-    /*
-    TODO after 4.1.0 release:
-    - add FEATURE_STRATEGY_ADD event
-    - add FEATURE_STRATEGY_REMOVE event
-    - add FEATURE_STRATEGY_UPDATE event
-    */
-
     /**
      * PUT /api/admin/projects/:projectId/features/:featureName/strategies/:strategyId ?
      * {
@@ -167,6 +160,7 @@ class FeatureToggleServiceV2 {
             const data = {
                 id: strategy.id,
                 name: strategy.strategyName,
+                featureName: strategy.featureName,
                 constraints: strategy.constraints || [],
                 parameters: strategy.parameters,
             };
@@ -217,12 +211,15 @@ class FeatureToggleServiceV2 {
     }
 
     /**
-     * DELETE /api/admin/projects/:projectId/features/:featureName/strategies/:strategyId ?
+     * DELETE /api/admin/projects/:projectId/features/:featureName/environments/:environmentName/strategies/:strategyId
      * {
      *
      * }
-     * @param id
-     * @param updates
+     * @param id - strategy id
+     * @param featureName - Name of the feature the strategy belongs to
+     * @param userName - Who's doing the change
+     * @param project - Which project does this feature toggle belong to
+     * @param environment - Which environment does this strategy belong to
      */
     async deleteStrategy(
         id: string,
@@ -239,6 +236,7 @@ class FeatureToggleServiceV2 {
             createdBy: userName,
             data: {
                 id,
+                featureName,
             },
         });
         // If there are no strategies left for environment disable it
@@ -396,6 +394,13 @@ class FeatureToggleServiceV2 {
 
         await this.eventStore.store({
             type: FEATURE_METADATA_UPDATED,
+            createdBy: userName,
+            data: featureToggle,
+            project: projectId,
+            tags,
+        });
+        await this.eventStore.store({
+            type: FEATURE_UPDATED,
             createdBy: userName,
             data: featureToggle,
             project: projectId,

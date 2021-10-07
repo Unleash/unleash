@@ -214,3 +214,37 @@ test('Should insert 1500 feature toggle metrics', async () => {
 
     expect(savedMetrics).toHaveLength(1500);
 });
+
+test('Should return seen applications using a feature toggle', async () => {
+    const metrics: IClientMetricsEnv[] = [
+        {
+            featureName: 'demo',
+            appName: 'web',
+            environment: 'dev',
+            timestamp: new Date(),
+            yes: 2,
+            no: 2,
+        },
+        {
+            featureName: 'demo',
+            appName: 'backend-api',
+            environment: 'dev',
+            timestamp: new Date(),
+            yes: 1,
+            no: 3,
+        },
+        {
+            featureName: 'demo',
+            appName: 'backend-api',
+            environment: 'dev',
+            timestamp: new Date(),
+            yes: 1,
+            no: 3,
+        },
+    ];
+    await clientMetricsStore.batchInsertMetrics(metrics);
+    const apps = await clientMetricsStore.getSeenAppsForFeatureToggle('demo');
+
+    expect(apps).toHaveLength(2);
+    expect(apps).toStrictEqual(['backend-api', 'web']);
+});

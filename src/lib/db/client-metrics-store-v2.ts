@@ -114,4 +114,16 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             .andWhereRaw(`timestamp >= NOW() - INTERVAL '${hoursBack} hours'`);
         return rows.map(fromRow);
     }
+
+    async getSeenAppsForFeatureToggle(
+        featureName: string,
+        hoursBack: number = 24,
+    ): Promise<string[]> {
+        return this.db<ClientMetricsEnvTable>(TABLE)
+            .distinct()
+            .where({ feature_name: featureName })
+            .andWhereRaw(`timestamp >= NOW() - INTERVAL '${hoursBack} hours'`)
+            .pluck('app_name')
+            .orderBy('app_name');
+    }
 }

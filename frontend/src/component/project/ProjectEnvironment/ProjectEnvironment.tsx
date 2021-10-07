@@ -16,6 +16,9 @@ import useProject from '../../../hooks/api/getters/useProject/useProject';
 import { FormControlLabel, FormGroup, Switch } from '@material-ui/core';
 import useProjectApi from '../../../hooks/api/actions/useProjectApi/useProjectApi';
 import EnvironmentDisableConfirm from './EnvironmentDisableConfirm/EnvironmentDisableConfirm';
+import { Link } from 'react-router-dom';
+import { Alert } from '@material-ui/lab';
+
 
 export interface ProjectEnvironment {
     name: string;
@@ -41,6 +44,7 @@ const ProjectEnvironmentList = ({projectId}: ProjectEnvironmentListProps) => {
     const [confirmName, setConfirmName] = useState('');
     const ref = useLoading(loading);
     const styles = useStyles();
+
 
     const refetch = () => {
         refetchEnvs();
@@ -132,9 +136,26 @@ const ProjectEnvironmentList = ({projectId}: ProjectEnvironmentListProps) => {
                 headerContent={
                     <HeaderTitle
                         title={`Configure environments for "${project?.name}"`}
-                    />
-                }
+                    />}
             >
+                        <Alert severity="info">
+                        <b>Important!</b> In order for your application to ONLY retrieve feature toggle activation strategies for a specific environment, the application<br/> must use an environment-specific API key. You can look up the environment-specific API keys {' '}
+                        <Link
+                            to='/admin/api'
+                        >
+                            here.
+                        </Link>{' '}
+                        <br/>
+                        <br/>
+                        Your administrator can configure an environment-specific API key and add it to your SDK if you can't find it on the list.
+                        If you are an administrator you can create a new API key {' '}
+                        <Link
+                            to='/admin/api'
+                        >
+                            here.
+                        </Link>{' '}
+                    </Alert>
+                    <br/>
                 <ConditionallyRender condition={error} show={renderError()} />
                 <div className={styles.container}>
                     <ConditionallyRender

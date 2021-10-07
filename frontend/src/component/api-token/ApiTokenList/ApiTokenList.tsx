@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow, } from '@material-ui/core';
 import AccessContext from '../../../contexts/AccessContext';
 import useToast from '../../../hooks/useToast';
 import useLoading from '../../../hooks/useLoading';
@@ -15,7 +15,7 @@ import { CREATE_API_TOKEN, DELETE_API_TOKEN } from '../../AccessProvider/permiss
 import { useStyles } from './ApiTokenList.styles';
 import { formatDateWithLocale } from '../../common/util';
 import Secret from './secret';
-import { Delete } from '@material-ui/icons';
+import { Delete, FileCopy } from '@material-ui/icons';
 import ApiTokenCreate from '../ApiTokenCreate/ApiTokenCreate';
 import Dialogue from '../../common/Dialogue';
 
@@ -73,6 +73,14 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
             text: 'Successfully created API token.',
         });
     }
+    const copyToken = (value: string) => {
+        navigator.clipboard.writeText(value);
+        setToastData({
+            type: 'success',
+            show: true,
+            text: `Token is copied to clipboard`,
+        });
+    };
 
     const onDeleteToken = async () => {
         if(delToken) {
@@ -101,65 +109,81 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
             <Table size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Created</TableCell>
-                        <TableCell>Username</TableCell>
-                        <TableCell className={styles.center}>Type</TableCell>
+                        <TableCell className={styles.hideSM}>Created</TableCell>
+                        <TableCell className={styles.hideSM}>hideSM</TableCell>
+                        <TableCell className={`${styles.center} ${styles.hideXS}`}>Type</TableCell>
                         <ConditionallyRender condition={uiConfig.flags.E} show={<>
-                            <TableCell className={styles.center}>Project</TableCell>
-                            <TableCell className={styles.center}>Environment</TableCell>
+                            <TableCell className={`${styles.center} ${styles.hideXS}`}>Project</TableCell>
+                            <TableCell className={`${styles.center} ${styles.hideXS}`}>Environment</TableCell>
                         </>} />
-                        <TableCell>Secret</TableCell>
-                        <TableCell align="right">Action</TableCell>
+                        <TableCell className={styles.hideMD}>Secret</TableCell>
+                        <TableCell className={styles.token}>Token</TableCell>
+                        <TableCell className={styles.actionsContainer}>Actions</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {tokens.map(item => {
                         return (
                             <TableRow key={item.secret}>
-                                <TableCell align="left">
+                                <TableCell align="left" className={styles.hideSM}>
                                     {formatDateWithLocale(
                                         item.createdAt,
                                         location.locale
                                     )}
                                 </TableCell>
-                                <TableCell align="left">
+                                <TableCell align="left" className={styles.hideSM}>
                                     {item.username}
                                 </TableCell>
-                                <TableCell className={styles.center}>
+                                <TableCell className={`${styles.center} ${styles.hideXS}`}>
                                     {item.type}
                                 </TableCell>
                                 <ConditionallyRender condition={uiConfig.flags.E} show={<>
-                                    <TableCell className={styles.center}>
+                                    <TableCell className={`${styles.center} ${styles.hideXS}`}>
                                         {renderProject(item.project)}
                                     </TableCell>
-                                    <TableCell className={styles.center}>
+                                    <TableCell className={`${styles.center} ${styles.hideXS}`}>
                                         {item.environment}
                                     </TableCell>
+                                    <TableCell className={styles.token}>
+                                        <b>Type:</b> {item.type}<br/>
+                                        <b>Env:</b> {item.environment}<br/>
+                                        <b>Project:</b> {renderProject(item.project)}
+                                    </TableCell>
+
                                 </>} />
 
-                                <TableCell>
+                                <TableCell className={styles.hideMD}>
                                     <Secret value={item.secret} />
                                 </TableCell>
-                                <ConditionallyRender
-                                    condition={hasAccess(DELETE_API_TOKEN)}
-                                    show={<TableCell
-                                        width="20"
-                                        style={{ textAlign: 'right' }}
-                                    >
-                                        <IconButton
-                                            onClick={() => {
-                                                setDeleteToken(item);
-                                                setShowDelete(true);
-                                            } }
+                                <TableCell
+                                    className={styles.actionsContainer}
+                                >
+                                    <IconButton
+                                        onClick={() => {
+                                            copyToken(item.secret)
+                                        } }
                                         >
-                                            <Delete />
-                                        </IconButton>
-                                    </TableCell>} />
+                                            <FileCopy />
+                                    </IconButton>
+                                    <ConditionallyRender
+                                        condition={hasAccess(DELETE_API_TOKEN)}
+                                        show={
+                                            <IconButton
+                                                onClick={() => {
+                                                    setDeleteToken(item);
+                                                    setShowDelete(true);
+                                                } }
+                                            >
+                                                <Delete />
+                                            </IconButton>
+                                    } />
+                                </TableCell>
                             </TableRow>
                         );
                     })}
                 </TableBody>
-            </Table>)
+            </Table>
+        )
     }
 
     return (

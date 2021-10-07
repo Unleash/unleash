@@ -23,4 +23,5 @@ export interface IClientMetricsStoreV2
         featureName: string,
         hoursBack?: number,
     ): Promise<string[]>;
+    clearMetrics(hoursAgo: number): Promise<void>;
 }

@@ -10,9 +10,10 @@ import {
 import { clientMetricsSchema } from './client-metrics-schema';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
+const ONE_DAY = 24 * 60 * 60 * 1000;
 
 export default class ClientMetricsServiceV2 {
-    private timers: NodeJS.Timeout[] = [];
+    private timer: NodeJS.Timeout;
 
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
@@ -30,6 +31,11 @@ export default class ClientMetricsServiceV2 {
         this.logger = getLogger('/services/client-metrics/index.ts');
 
         this.bulkInterval = bulkInterval;
+        this.timer = setInterval(() => {
+            console.log('Clear metrics');
+            this.clientMetricsStoreV2.clearMetrics(48);
+        }, ONE_DAY);
+        this.timer.unref();
     }
 
     async registerClientMetrics(
@@ -96,5 +102,10 @@ export default class ClientMetricsServiceV2 {
         toggleName: string,
     ): Promise<IClientMetricsEnv[]> {
         return this.clientMetricsStoreV2.getMetricsForFeatureToggle(toggleName);
+    }
+
+    destroy(): void {
+        clearInterval(this.timer);
+        this.timer = null;
     }
 }

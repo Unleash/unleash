@@ -262,3 +262,123 @@ test('Should not fail on undefined list of metrics', async () => {
 
     expect(all).toHaveLength(0);
 });
+
+test('Should return delete old metric', async () => {
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setHours(-48);
+
+    const metrics: IClientMetricsEnv[] = [
+        {
+            featureName: 'demo1',
+            appName: 'web',
+            environment: 'dev',
+            timestamp: new Date(),
+            yes: 2,
+            no: 2,
+        },
+        {
+            featureName: 'demo2',
+            appName: 'backend-api',
+            environment: 'dev',
+            timestamp: new Date(),
+            yes: 1,
+            no: 3,
+        },
+        {
+            featureName: 'demo3',
+            appName: 'backend-api',
+            environment: 'dev',
+            timestamp: twoDaysAgo,
+            yes: 1,
+            no: 3,
+        },
+        {
+            featureName: 'demo4',
+            appName: 'backend-api',
+            environment: 'dev',
+            timestamp: twoDaysAgo,
+            yes: 1,
+            no: 3,
+        },
+    ];
+    await clientMetricsStore.batchInsertMetrics(metrics);
+    await clientMetricsStore.clearMetrics(24);
+    const all = await clientMetricsStore.getAll();
+
+    expect(all).toHaveLength(2);
+    expect(all[0].featureName).toBe('demo1');
+    expect(all[1].featureName).toBe('demo2');
+});
+
+test('Should get metric', async () => {
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setHours(-48);
+
+    const metrics: IClientMetricsEnv[] = [
+        {
+            featureName: 'demo1',
+            appName: 'web',
+            environment: 'dev',
+            timestamp: new Date(),
+            yes: 2,
+            no: 2,
+        },
+        {
+            featureName: 'demo2',
+            appName: 'backend-api',
+            environment: 'dev',
+            timestamp: new Date(),
+            yes: 1,
+            no: 3,
+        },
+        {
+            featureName: 'demo3',
+            appName: 'backend-api',
+            environment: 'dev',
+            timestamp: twoDaysAgo,
+            yes: 1,
+            no: 3,
+        },
+        {
+            featureName: 'demo4',
+            appName: 'backend-api',
+            environment: 'dev',
+            timestamp: twoDaysAgo,
+            yes: 41,
+            no: 42,
+        },
+    ];
+    await clientMetricsStore.batchInsertMetrics(metrics);
+    const metric = await clientMetricsStore.get({
+        featureName: 'demo4',
+        timestamp: twoDaysAgo,
+        appName: 'backend-api',
+        environment: 'dev',
+    });
+
+    expect(metric.featureName).toBe('demo4');
+    expect(metric.yes).toBe(41);
+    expect(metric.no).toBe(42);
+});
+
+test('Should not exists after delete', async () => {
+    const metric = {
+        featureName: 'demo4',
+        appName: 'backend-api',
+        environment: 'dev',
+        timestamp: new Date(),
+        yes: 41,
+        no: 42,
+    };
+
+    const metrics: IClientMetricsEnv[] = [metric];
+    await clientMetricsStore.batchInsertMetrics(metrics);
+
+    const existBefore = await clientMetricsStore.exists(metric);
+    expect(existBefore).toBe(true);
+
+    await clientMetricsStore.delete(metric);
+
+    const existAfter = await clientMetricsStore.exists(metric);
+    expect(existAfter).toBe(false);
+});

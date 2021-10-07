@@ -18,6 +18,9 @@ export default class FakeClientMetricsStoreV2
         super();
         this.setMaxListeners(0);
     }
+    clearMetrics(hoursBack: number): Promise<void> {
+        return Promise.resolve();
+    }
     getSeenAppsForFeatureToggle(
         featureName: string,
         hoursBack?: number,

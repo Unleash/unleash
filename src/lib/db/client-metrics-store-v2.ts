@@ -7,6 +7,7 @@ import {
     IClientMetricsEnvKey,
     IClientMetricsStoreV2,
 } from '../types/stores/client-metrics-store-v2';
+import NotFoundError from '../error/notfound-error';
 
 interface ClientMetricsEnvTable {
     feature_name: string;
@@ -53,8 +54,19 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         this.logger = getLogger('client-metrics-store-v2.js');
     }
 
-    get(key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {
-        throw new Error('Method not implemented.');
+    async get(key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {
+        const row = await this.db<ClientMetricsEnvTable>(TABLE)
+            .where({
+                feature_name: key.featureName,
+                app_name: key.appName,
+                environment: key.environment,
+                timestamp: roundDownToHour(key.timestamp),
+            })
+            .first();
+        if (row) {
+            return fromRow(row);
+        }
+        throw new NotFoundError(`Could not find metric`);
     }
 
     async getAll(query: Object = {}): Promise<IClientMetricsEnv[]> {
@@ -64,12 +76,24 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         return rows.map(fromRow);
     }
 
-    exists(key: IClientMetricsEnvKey): Promise<boolean> {
-        throw new Error('Method not implemented.');
+    async exists(key: IClientMetricsEnvKey): Promise<boolean> {
+        try {
+            await this.get(key);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
-    delete(key: IClientMetricsEnvKey): Promise<void> {
-        throw new Error('Method not implemented.');
+    async delete(key: IClientMetricsEnvKey): Promise<void> {
+        return this.db<ClientMetricsEnvTable>(TABLE)
+            .where({
+                feature_name: key.featureName,
+                app_name: key.appName,
+                environment: key.environment,
+                timestamp: roundDownToHour(key.timestamp),
+            })
+            .del();
     }
 
     deleteAll(): Promise<void> {
@@ -129,5 +153,11 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             .andWhereRaw(`timestamp >= NOW() - INTERVAL '${hoursBack} hours'`)
             .pluck('app_name')
             .orderBy('app_name');
+    }
+
+    async clearMetrics(hoursAgo: number): Promise<void> {
+        return this.db<ClientMetricsEnvTable>(TABLE)
+            .whereRaw(`timestamp <= NOW() - INTERVAL '${hoursAgo} hours'`)
+            .del();
     }
 }

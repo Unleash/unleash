@@ -1,4 +1,8 @@
-import { FEATURE_CREATED, FEATURE_ARCHIVED } from '../types/events';
+import {
+    FEATURE_CREATED,
+    FEATURE_ARCHIVED,
+    FEATURE_ENVIRONMENT_DISABLED,
+} from '../types/events';
 import { Logger } from '../logger';
 
 import SlackAddon from './slack';
@@ -80,6 +84,34 @@ test('Should call slack webhook for archived toggle', async () => {
     await addon.handleEvent(event, parameters);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+});
+
+test(`Should call webhook for toggled environment`, async () => {
+    const addon = new SlackAddon({
+        getLogger: noLogger,
+        unleashUrl: 'http://some-url.com',
+    });
+    const event: IEvent = {
+        id: 2,
+        createdAt: new Date(),
+        type: FEATURE_ENVIRONMENT_DISABLED,
+        createdBy: 'some@user.com',
+        environment: 'development',
+        project: 'default',
+        data: {
+            name: 'some-toggle',
+        },
+    };
+
+    const parameters = {
+        url: 'http://hooks.slack.com',
+    };
+
+    await addon.handleEvent(event, parameters);
+    expect(fetchRetryCalls).toHaveLength(1);
+    expect(fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 

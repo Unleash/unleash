@@ -131,7 +131,6 @@ test('Should be able to get strategy by id', async () => {
         constraints: [],
         parameters: {},
     };
-
     await service.createFeatureToggle(
         'default',
         {
@@ -145,6 +144,7 @@ test('Should be able to get strategy by id', async () => {
         'default',
         'Demo',
         userName,
+        DEFAULT_ENV,
     );
     const fetchedConfig = await service.getStrategy(createdConfig.id);
     expect(fetchedConfig).toEqual(createdConfig);

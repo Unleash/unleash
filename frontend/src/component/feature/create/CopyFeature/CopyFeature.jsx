@@ -19,31 +19,23 @@ import { trim } from '../../../common/util';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
+import useFeatureApi from '../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
+import useFeature from '../../../../hooks/api/getters/useFeature/useFeature';
 
 const CopyFeature = props => {
     // static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
     const [replaceGroupId, setReplaceGroupId] = useState(true);
     const [apiError, setApiError] = useState('');
-    const [copyToggle, setCopyToggle] = useState();
     const [nameError, setNameError] = useState(undefined);
     const [newToggleName, setNewToggleName] = useState();
+    const { cloneFeatureToggle } = useFeatureApi();
     const inputRef = useRef();
-    const { name } = useParams();
-    const copyToggleName = name;
-
-    const { features } = props;
+    const { name: copyToggleName, id: projectId  } = useParams();
+    const { feature } = useFeature(projectId, copyToggleName);
 
     useEffect(() => {
-        const copyToggle = features.find(item => item.name === copyToggleName);
-        if (copyToggle) {
-            setCopyToggle(copyToggle);
-
-            inputRef.current?.focus();
-        } else {
-            props.fetchFeatureToggles();
-        }
-        /* eslint-disable-next-line */
-    }, [features.length]);
+        inputRef.current?.focus();
+    }, []);
 
     const setValue = evt => {
         const value = trim(evt.target.value);
@@ -71,31 +63,21 @@ const CopyFeature = props => {
             return;
         }
 
-        const { history } = props;
-        copyToggle.name = newToggleName;
-
-        if (replaceGroupId) {
-            copyToggle.strategies.forEach(s => {
-                if (s.parameters && s.parameters.groupId) {
-                    s.parameters.groupId = newToggleName;
-                }
-            });
-        }
-
         try {
-            props
-                .createFeatureToggle(copyToggle)
-                .then(() =>
-                    history.push(
-                        getTogglePath(copyToggle.project, copyToggle.name)
-                    )
-                );
+            await cloneFeatureToggle(
+                projectId,
+                copyToggleName,
+                { name: newToggleName, replaceGroupId }
+            );
+            props.history.push(
+                getTogglePath(projectId, newToggleName)
+            )
         } catch (e) {
             setApiError(e);
         }
     };
 
-    if (!copyToggle) return <span>Toggle not found</span>;
+    if (!feature || !feature.name) return <span>Toggle not found</span>;
 
     return (
         <Paper
@@ -103,7 +85,7 @@ const CopyFeature = props => {
             style={{ overflow: 'visible' }}
         >
             <div className={styles.header}>
-                <h1>Copy&nbsp;{copyToggle.name}</h1>
+                <h1>Copy&nbsp;{copyToggleName}</h1>
             </div>
             <ConditionallyRender
                 condition={apiError}
@@ -114,9 +96,9 @@ const CopyFeature = props => {
                     You are about to create a new feature toggle by cloning the
                     configuration of feature toggle&nbsp;
                     <Link
-                        to={getTogglePath(copyToggle.project, copyToggle.name)}
+                        to={getTogglePath(projectId, copyToggleName)}
                     >
-                        {copyToggle.name}
+                        {copyToggleName}
                     </Link>
                     . You must give the new feature toggle a unique name before
                     you can proceed.
@@ -157,10 +139,7 @@ const CopyFeature = props => {
 };
 
 CopyFeature.propTypes = {
-    copyToggle: PropTypes.object,
     history: PropTypes.object.isRequired,
-    createFeatureToggle: PropTypes.func.isRequired,
-    fetchFeatureToggles: PropTypes.func.isRequired,
     validateName: PropTypes.func.isRequired,
 };
 

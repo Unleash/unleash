@@ -143,6 +143,26 @@ const useFeatureApi = () => {
         }
     };
 
+    const cloneFeatureToggle = async (
+        projectId: string,
+        featureId: string,
+        payload: {name: string, replaceGroupId: boolean}
+    ) => {
+        const path = `api/admin/projects/${projectId}/features/${featureId}/clone`;
+        const req = createRequest(
+            path,
+            { method: 'POST',  body: JSON.stringify(payload) },
+        );
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
     return {
         changeFeatureProject,
         errors,
@@ -152,6 +172,7 @@ const useFeatureApi = () => {
         deleteTagFromFeature,
         archiveFeatureToggle,
         patchFeatureToggle,
+        cloneFeatureToggle
     };
 };
 

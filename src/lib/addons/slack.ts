@@ -118,7 +118,7 @@ export default class SlackAddon extends Addon {
 
     generateStrategyChangeText(event: IEvent): string {
         const { environment, project, data, type } = event;
-        const feature = `<${this.featureLink(event)}|${data.featureName}>`;
+        const feature = `<${this.strategiesLink(event)}|${data.featureName}>`;
         let action;
         if (FEATURE_STRATEGY_UPDATE === type) {
             action = 'updated in';
@@ -143,8 +143,7 @@ export default class SlackAddon extends Addon {
     }
 
     strategiesLink(event: IEvent): string {
-        const { environment, project, data } = event;
-        return `${this.unleashUrl}/projects/${project}/features/${data.featureName}/environments/${environment}/strategies/${data.id}`;
+        return `${this.unleashUrl}/projects/${event.project}/features2/${event.data.featureName}/strategies?environment=${event.environment}`;
     }
 
     featureLink(event: IEvent): string {

@@ -121,7 +121,7 @@ export default class TeamsAddon extends Addon {
 
     generateStrategyChangeText(event: IEvent): string {
         const { environment, project, data, type } = event;
-        const feature = `<${this.featureLink(event)}|${data.featureName}>`;
+        const feature = `<${this.strategiesLink(event)}|${data.featureName}>`;
         let action;
         if (FEATURE_STRATEGY_UPDATE === type) {
             action = 'updated in';
@@ -146,8 +146,7 @@ export default class TeamsAddon extends Addon {
     }
 
     strategiesLink(event: IEvent): string {
-        const { project, environment, data } = event;
-        return `${this.unleashUrl}/projects/${project}/features/${data.featureName}/environments/${environment}/strategies/${event.id}`;
+        return `${this.unleashUrl}/projects/${event.project}/features2/${event.data.featureName}/strategies?environment=${event.environment}`;
     }
 
     featureLink(event: IEvent): string {

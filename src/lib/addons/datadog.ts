@@ -94,7 +94,7 @@ export default class DatadogAddon extends Addon {
 
     generateStrategyChangeText(event: IEvent): string {
         const { environment, project, data, type } = event;
-        const feature = `<${this.featureLink(event)}|${data.featureName}>`;
+        const feature = `<${this.strategiesLink(event)}|${data.featureName}>`;
         let action;
         if (FEATURE_STRATEGY_UPDATE === type) {
             action = 'updated in';
@@ -119,7 +119,7 @@ export default class DatadogAddon extends Addon {
     }
 
     strategiesLink(event: IEvent): string {
-        return `${this.unleashUrl}/projects/${event.project}/features/${event.data.featureName}/strategies/${event.id}`;
+        return `${this.unleashUrl}/projects/${event.project}/features2/${event.data.featureName}/strategies?environment=${event.environment}`;
     }
 
     featureLink(event: IEvent): string {

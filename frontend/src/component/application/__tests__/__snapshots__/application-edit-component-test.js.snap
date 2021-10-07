@@ -53,7 +53,7 @@ exports[`renders correctly with permissions 1`] = `
             }
           >
             <div
-              className="MuiAvatar-root MuiAvatar-circle MuiAvatar-colorDefault"
+              className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault"
               style={
                 Object {
                   "marginRight": "8px",
@@ -578,7 +578,7 @@ exports[`renders correctly without permission 1`] = `
             }
           >
             <div
-              className="MuiAvatar-root MuiAvatar-circle MuiAvatar-colorDefault"
+              className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault"
               style={
                 Object {
                   "marginRight": "8px",

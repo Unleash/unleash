@@ -8,6 +8,8 @@ import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import ClientMetricsServiceV2 from '../../services/client-metrics/client-metrics-service-v2';
+import { User } from '../../server-impl';
+import { IClientApp } from '../../types/model';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -42,13 +44,20 @@ export default class ClientMetricsController extends Controller {
         this.post('/', this.registerMetrics);
     }
 
-    async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
-        const { body: data, ip: clientIp, user } = req;
+    private resolveEnvironment(user: User, data: IClientApp) {
         if (user instanceof ApiUser) {
             if (user.environment !== ALL) {
-                data.environment = user.environment;
+                return user.environment;
+            } else if (user.environment === ALL && data.environment) {
+                return data.environment;
             }
         }
+        return 'default';
+    }
+
+    async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
+        const { body: data, ip: clientIp, user } = req;
+        data.environment = this.resolveEnvironment(user, data);
         await this.metrics.registerClientMetrics(data, clientIp);
 
         if (this.newServiceEnabled) {

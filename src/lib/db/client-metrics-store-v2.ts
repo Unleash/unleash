@@ -82,6 +82,9 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
 
     // this function will collapse metrics before sending it to the database.
     async batchInsertMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
+        if (!metrics || metrics.length == 0) {
+            return;
+        }
         const rows = metrics.map(toRow);
 
         const batch = rows.reduce((prev, curr) => {

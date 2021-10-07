@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import supertest from 'supertest';
 
 import EventEmitter from 'events';
@@ -62,7 +63,6 @@ export async function setupApp(stores: IUnleashStores): Promise<IUnleashTest> {
 
 export async function setupAppWithCustomConfig(
     stores: IUnleashStores,
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     customOptions: any,
 ): Promise<IUnleashTest> {
     return createApp(stores, undefined, undefined, customOptions);
@@ -70,8 +70,9 @@ export async function setupAppWithCustomConfig(
 
 export async function setupAppWithAuth(
     stores: IUnleashStores,
+    customOptions?: any,
 ): Promise<IUnleashTest> {
-    return createApp(stores, IAuthType.DEMO);
+    return createApp(stores, IAuthType.DEMO, undefined, customOptions);
 }
 
 export async function setupAppWithCustomAuth(

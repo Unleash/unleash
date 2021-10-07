@@ -248,3 +248,17 @@ test('Should return seen applications using a feature toggle', async () => {
     expect(apps).toHaveLength(2);
     expect(apps).toStrictEqual(['backend-api', 'web']);
 });
+
+test('Should not fail on empty list of metrics', async () => {
+    await clientMetricsStore.batchInsertMetrics([]);
+    const all = await clientMetricsStore.getAll();
+
+    expect(all).toHaveLength(0);
+});
+
+test('Should not fail on undefined list of metrics', async () => {
+    await clientMetricsStore.batchInsertMetrics(undefined);
+    const all = await clientMetricsStore.getAll();
+
+    expect(all).toHaveLength(0);
+});

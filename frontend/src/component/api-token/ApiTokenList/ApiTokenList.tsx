@@ -110,7 +110,7 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                 <TableHead>
                     <TableRow>
                         <TableCell className={styles.hideSM}>Created</TableCell>
-                        <TableCell className={styles.hideSM}>hideSM</TableCell>
+                        <TableCell className={styles.hideSM}>Username</TableCell>
                         <TableCell className={`${styles.center} ${styles.hideXS}`}>Type</TableCell>
                         <ConditionallyRender condition={uiConfig.flags.E} show={<>
                             <TableCell className={`${styles.center} ${styles.hideXS}`}>Project</TableCell>

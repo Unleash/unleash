@@ -31,6 +31,7 @@ const FeatureOverviewEnvironment = ({
         return strategies.map(strategy => {
             return (
                 <FeatureOverviewStrategyCard
+                    data-loading
                     strategy={strategy}
                     key={strategy.id}
                     onClick={handleClick}

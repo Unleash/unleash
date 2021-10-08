@@ -48,7 +48,7 @@ const FeatureStrategiesConfigure = ({
     const [strategyParams, setStrategyParams] = useState(
         configureNewStrategy.parameters
     );
-    const { addStrategyToFeature } = useFeatureStrategyApi();
+    const { addStrategyToFeature, loading } = useFeatureStrategyApi();
 
     const handleCancel = () => {
         setConfigureNewStrategy(null);
@@ -71,6 +71,7 @@ const FeatureStrategiesConfigure = ({
         };
 
         try {
+            if (loading) return;
             const res = await addStrategyToFeature(
                 projectId,
                 featureId,
@@ -163,15 +164,21 @@ const FeatureStrategiesConfigure = ({
                     className={styles.btn}
                     onClick={resolveSubmit}
                     data-test={ADD_NEW_STRATEGY_SAVE_ID}
+                    disabled={loading}
                 >
                     Save
                 </Button>
-                <Button className={styles.btn} onClick={handleCancel}>
+                <Button
+                    className={styles.btn}
+                    onClick={handleCancel}
+                    disabled={loading}
+                >
                     Cancel
                 </Button>
             </div>
             <FeatureStrategiesProductionGuard
                 primaryButtonText="Save changes"
+                loading={loading}
                 show={productionGuard}
                 onClick={() => {
                     handleSubmit();

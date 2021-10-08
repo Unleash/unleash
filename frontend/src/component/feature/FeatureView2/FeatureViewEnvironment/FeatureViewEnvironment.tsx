@@ -96,19 +96,22 @@ const FeatureViewEnvironment: FC<IFeatureViewEnvironmentProps> = ({
 
     return (
         <div className={containerClasses}>
-            <div className={environmentIdentifierClasses}>
+            <div className={environmentIdentifierClasses} data-loading>
                 <div className={iconContainerClasses}>
                     <Cloud className={iconClasses} />
                 </div>
                 <p className={styles.environmentBadgeParagraph}>{env.type}</p>
             </div>
+
             <div className={styles.header}>
                 <div className={styles.headerInfo}>
                     <Tooltip title={env.name}>
-                        <p className={styles.environmentTitle}>{env.name}</p>
+                        <p data-loading className={styles.environmentTitle}>
+                            {env.name}
+                        </p>
                     </Tooltip>
                 </div>
-                <div className={styles.environmentStatus}>
+                <div className={styles.environmentStatus} data-loading>
                     <ConditionallyRender
                         condition={env?.strategies?.length > 0}
                         show={

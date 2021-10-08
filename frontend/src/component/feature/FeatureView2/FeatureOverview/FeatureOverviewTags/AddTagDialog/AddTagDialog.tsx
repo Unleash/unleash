@@ -27,7 +27,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const DEFAULT_TAG: IDefaultTag = { type: 'simple', value: '' };
     const styles = useStyles();
     const { featureId } = useParams<IFeatureViewParams>();
-    const { addTagToFeature } = useFeatureApi();
+    const { addTagToFeature, loading } = useFeatureApi();
     const { refetch } = useTags(featureId);
     const [errors, setErrors] = useState({ tagError: '' });
     const { toast, setToastData } = useToast();
@@ -74,6 +74,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                 primaryButtonText="Add tag"
                 title="Add tags to feature toggle"
                 onClick={onSubmit}
+                disabledPrimaryButton={loading}
                 onClose={onCancel}
             >
                 <>

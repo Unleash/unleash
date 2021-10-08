@@ -24,13 +24,15 @@ const FeatureOverviewStrategyCard = ({
     const { parameters } = strategy;
     return (
         <button className={styles.card} onClick={onClick}>
-            <Icon className={styles.icon} />
-            <p className={styles.cardHeader}>{strategyName}</p>
+            <Icon className={styles.icon} data-loading />
+            <p data-loading className={styles.cardHeader}>
+                {strategyName}
+            </p>
 
             <ConditionallyRender
                 condition={Boolean(parameters?.rollout) && !smallScreen}
                 show={
-                    <p className={styles.rollout}>
+                    <p className={styles.rollout} data-loading>
                         Rolling out to {parameters?.rollout}%
                     </p>
                 }

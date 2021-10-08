@@ -22,18 +22,20 @@ const FeatureOverviewMetaData = () => {
 
     return (
         <div className={classnames(styles.container)}>
-            <div className={styles.metaDataHeader}>
+            <div className={styles.metaDataHeader} data-loading>
                 <IconComponent className={styles.headerIcon} />{' '}
                 <h3 className={styles.header}>
                     {capitalize(type || '')} toggle
                 </h3>
             </div>
             <div className={styles.body}>
-                <span className={styles.bodyItem}>Project: {project}</span>
+                <span className={styles.bodyItem} data-loading>
+                    Project: {project}
+                </span>
                 <ConditionallyRender
                     condition={description}
                     show={
-                        <span className={styles.bodyItem}>
+                        <span className={styles.bodyItem} data-loading>
                             <div>Description:</div>
                             <div className={styles.descriptionContainer}>
                                 <p>{description}</p>
@@ -47,7 +49,7 @@ const FeatureOverviewMetaData = () => {
                         </span>
                     }
                     elseShow={
-                        <span>
+                        <span data-loading>
                             <div className={styles.descriptionContainer}>
                                 No description.{' '}
                                 <IconButton

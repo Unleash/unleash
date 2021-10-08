@@ -18,9 +18,9 @@ const FeatureOverview = () => {
             </div>
             <div className={styles.mainContent}>
                 <div className={styles.trafficContainer}>
-                    <FeatureOverviewMetrics />
+                    <FeatureOverviewMetrics data-loading />
                 </div>
-                <FeatureOverviewStrategies />
+                <FeatureOverviewStrategies data-loading />
             </div>
         </div>
     );

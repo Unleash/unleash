@@ -2,7 +2,7 @@ import { ITag } from '../../../../interfaces/tags';
 import useAPI from '../useApi/useApi';
 
 const useFeatureApi = () => {
-    const { makeRequest, createRequest, errors } = useAPI({
+    const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
 
@@ -146,13 +146,13 @@ const useFeatureApi = () => {
     const cloneFeatureToggle = async (
         projectId: string,
         featureId: string,
-        payload: {name: string, replaceGroupId: boolean}
+        payload: { name: string; replaceGroupId: boolean }
     ) => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/clone`;
-        const req = createRequest(
-            path,
-            { method: 'POST',  body: JSON.stringify(payload) },
-        );
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        });
 
         try {
             const res = await makeRequest(req.caller, req.id);
@@ -172,7 +172,8 @@ const useFeatureApi = () => {
         deleteTagFromFeature,
         archiveFeatureToggle,
         patchFeatureToggle,
-        cloneFeatureToggle
+        cloneFeatureToggle,
+        loading,
     };
 };
 

@@ -26,7 +26,9 @@ const FeatureOverviewStrategies = () => {
         <div className={styles.container}>
             <div className={styles.headerContainer}>
                 <div className={styles.headerInnerContainer}>
-                    <h3 className={styles.headerTitle}>Toggle Strategies</h3>
+                    <h3 className={styles.headerTitle} data-loading>
+                        Toggle Strategies
+                    </h3>
                     <div className={styles.actions}>
                         <ResponsiveButton
                             maxWidth="700px"

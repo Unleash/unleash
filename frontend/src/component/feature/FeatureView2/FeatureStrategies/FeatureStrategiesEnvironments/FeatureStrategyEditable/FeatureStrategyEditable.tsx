@@ -23,6 +23,7 @@ import {
 } from '../../../../../../testIds';
 import AccessContext from '../../../../../../contexts/AccessContext';
 import { UPDATE_FEATURE } from '../../../../../AccessProvider/permissions';
+import useFeatureApi from '../../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 
 interface IFeatureStrategyEditable {
     currentStrategy: IFeatureStrategy;
@@ -38,6 +39,7 @@ const FeatureStrategyEditable = ({
     index,
 }: IFeatureStrategyEditable) => {
     const { hasAccess } = useContext(AccessContext);
+    const { loading } = useFeatureApi();
 
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { activeEnvironment, featureCache, dirty, setDirty } = useContext(
@@ -171,12 +173,14 @@ const FeatureStrategyEditable = ({
                                     className={styles.editButton}
                                     onClick={updateFeatureStrategy}
                                     data-test={UPDATE_STRATEGY_BUTTON_ID}
+                                    disabled={loading}
                                 >
                                     Save changes
                                 </Button>
                                 <Button
                                     onClick={discardChanges}
                                     className={styles.editButton}
+                                    disabled={loading}
                                 >
                                     Discard changes
                                 </Button>

@@ -3,9 +3,14 @@ import { useTheme } from '@material-ui/core';
 interface IPercentageCircleProps {
     styles?: object;
     percentage: number;
+    secondaryPieColor?: string;
 }
 
-const PercentageCircle = ({ styles, percentage }: IPercentageCircleProps) => {
+const PercentageCircle = ({
+    styles,
+    percentage,
+    secondaryPieColor,
+}: IPercentageCircleProps) => {
     const theme = useTheme();
 
     let circle = {
@@ -14,7 +19,9 @@ const PercentageCircle = ({ styles, percentage }: IPercentageCircleProps) => {
         borderRadius: '50%',
         color: '#fff',
         backgroundColor: theme.palette.grey[200],
-        backgroundImage: `conic-gradient(${theme.palette.primary.main} ${percentage}%, ${theme.palette.grey[200]} 1%)`,
+        backgroundImage: `conic-gradient(${
+            theme.palette.primary.main
+        } ${percentage}%, ${secondaryPieColor || theme.palette.grey[200]} 1%)`,
     };
 
     if (percentage === 100) {

@@ -51,18 +51,20 @@ const FeatureEnvironmentMetrics = ({
         return (
             <div className={containerClasses}>
                 <div className={styles.headerContainer}>
-                    <h2 className={styles.title}>Traffic in {metric.name}</h2>
+                    <h2 data-loading className={styles.title}>
+                        Traffic in {metric.name}
+                    </h2>
                 </div>
 
                 <div className={styles.bodyContainer}>
                     <div className={styles.textContainer}>
-                        <p className={styles.paragraph}>
+                        <p className={styles.paragraph} data-loading>
                             No metrics available for this environment.
                         </p>
                     </div>
 
                     <div className={styles.chartContainer}>
-                        <PieChartIcon className={styles.icon} />
+                        <PieChartIcon className={styles.icon} data-loading />
                     </div>
                 </div>
             </div>
@@ -72,30 +74,32 @@ const FeatureEnvironmentMetrics = ({
     return (
         <div className={containerClasses}>
             <div className={styles.headerContainer}>
-                <h2 className={styles.title}>Traffic in {metric.name}</h2>
+                <h2 data-loading className={styles.title}>
+                    Traffic in {metric.name}
+                </h2>
             </div>
 
             <div className={styles.bodyContainer}>
                 <div className={styles.textContainer}>
                     <div className={styles.trueCountContainer}>
                         <div>
-                            <div className={styles.trueCount} />
+                            <div className={styles.trueCount} data-loading />
                         </div>
-                        <p className={styles.paragraph}>
+                        <p className={styles.paragraph} data-loading>
                             {metric.yes} users received this feature
                         </p>
                     </div>
 
                     <div className={styles.trueCountContainer}>
                         <div>
-                            <div className={styles.falseCount} />
+                            <div className={styles.falseCount} data-loading />
                         </div>
-                        <p className={styles.paragraph}>
+                        <p className={styles.paragraph} data-loading>
                             {metric.no} users did not receive this feature
                         </p>
                     </div>
                 </div>
-                <div className={styles.chartContainer}>
+                <div className={styles.chartContainer} data-loading>
                     <PercentageCircle
                         percentage={calculatePercentage()}
                         styles={{

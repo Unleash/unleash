@@ -70,7 +70,10 @@ const FeatureStrategyExecution = ({
                                 are included.
                             </p>
 
-                            <PercentageCircle percentage={parameters[key]} />
+                            <PercentageCircle
+                                percentage={parameters[key]}
+                                secondaryPieColor={'#fff'}
+                            />
                         </Fragment>
                     );
                 case 'userIds':

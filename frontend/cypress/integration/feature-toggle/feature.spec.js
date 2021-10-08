@@ -27,29 +27,29 @@ describe('feature toggle', () => {
         }
     });
 
-    after(() => {
-        const authToken = Cypress.env('AUTH_TOKEN');
+    // after(() => {
+    //     const authToken = Cypress.env('AUTH_TOKEN');
 
-        cy.request({
-            method: 'DELETE',
-            url: `${
-                Cypress.config().baseUrl
-            }/api/admin/features/${featureToggleName}`,
-            headers: {
-                Authorization: authToken,
-            },
-        });
+    //     cy.request({
+    //         method: 'DELETE',
+    //         url: `${
+    //             Cypress.config().baseUrl
+    //         }/api/admin/features/${featureToggleName}`,
+    //         headers: {
+    //             Authorization: authToken,
+    //         },
+    //     });
 
-        cy.request({
-            method: 'DELETE',
-            url: `${
-                Cypress.config().baseUrl
-            }/api/admin/archive/${featureToggleName}`,
-            headers: {
-                Authorization: authToken,
-            },
-        });
-    });
+    //     cy.request({
+    //         method: 'DELETE',
+    //         url: `${
+    //             Cypress.config().baseUrl
+    //         }/api/admin/archive/${featureToggleName}`,
+    //         headers: {
+    //             Authorization: authToken,
+    //         },
+    //     });
+    // });
 
     beforeEach(() => {
         // Cypress starts out with a blank slate for each test
@@ -62,9 +62,9 @@ describe('feature toggle', () => {
         cy.visit('/');
 
         if (passwordAuth) {
-            cy.get('[data-test="LOGIN_EMAIL_ID"]').type('test@test.com');
+            cy.get('[data-test="LOGIN_EMAIL_ID"]').type('admin');
 
-            cy.get('[data-test="LOGIN_PASSWORD_ID"]').type('qY70$NDcJNXA');
+            cy.get('[data-test="LOGIN_PASSWORD_ID"]').type('unleash4all');
 
             cy.get("[data-test='LOGIN_BUTTON']").click();
         } else {
@@ -86,161 +86,167 @@ describe('feature toggle', () => {
         cy.url().should('include', featureToggleName);
     });
 
-    it('Can add a gradual rollout strategy to the default environment', () => {
-        cy.wait(500);
-        cy.visit(`/projects/default/features2/${featureToggleName}/strategies`);
-        cy.get('[data-test=ADD_NEW_STRATEGY_ID]').click();
-        cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-1').click();
-        cy.get('[data-test=ROLLOUT_SLIDER_ID')
-            .click()
-            .type('{leftarrow}'.repeat(20));
+    // it('Can add a gradual rollout strategy to the default environment', () => {
+    //     cy.wait(500);
+    //     cy.visit(`/projects/default/features2/${featureToggleName}/strategies`);
+    //     cy.get('[data-test=ADD_NEW_STRATEGY_ID]').click();
+    //     cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-1').click();
+    //     cy.get('[data-test=ROLLOUT_SLIDER_ID')
+    //         .click()
+    //         .type('{leftarrow}'.repeat(20));
 
-        if (enterprise) {
-            cy.get('[data-test=ADD_CONSTRAINT_ID]').click();
-            cy.get('[data-test=CONSTRAINT_AUTOCOMPLETE_ID]')
-                .type('{downArrow}'.repeat(1))
-                .type('{enter}');
-            cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
-        }
+    //     if (enterprise) {
+    //         cy.get('[data-test=ADD_CONSTRAINT_ID]').click();
+    //         cy.get('[data-test=CONSTRAINT_AUTOCOMPLETE_ID]')
+    //             .type('{downArrow}'.repeat(1))
+    //             .type('{enter}');
+    //         cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+    //     }
 
-        cy.intercept(
-            'POST',
-            `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies`,
-            req => {
-                expect(req.body.name).to.equal('flexibleRollout');
+    //     cy.intercept(
+    //         'POST',
+    //         `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies`,
+    //         req => {
+    //             expect(req.body.name).to.equal('flexibleRollout');
 
-                expect(req.body.parameters.groupId).to.equal(featureToggleName);
-                expect(req.body.parameters.stickiness).to.equal('default');
-                expect(req.body.parameters.rollout).to.equal(30);
+    //             expect(req.body.parameters.groupId).to.equal(featureToggleName);
+    //             expect(req.body.parameters.stickiness).to.equal('default');
+    //             expect(req.body.parameters.rollout).to.equal(30);
 
-                if (enterprise) {
-                    expect(req.body.constraints.length).to.equal(1);
-                } else {
-                    expect(req.body.constraints.length).to.equal(0);
-                }
+    //             if (enterprise) {
+    //                 expect(req.body.constraints.length).to.equal(1);
+    //             } else {
+    //                 expect(req.body.constraints.length).to.equal(0);
+    //             }
 
-                req.continue(res => {
-                    strategyId = res.body.id;
-                });
-            }
-        ).as('addStrategyToFeature');
+    //             req.continue(res => {
+    //                 strategyId = res.body.id;
+    //             });
+    //         }
+    //     ).as('addStrategyToFeature');
 
-        cy.get('[data-test=ADD_NEW_STRATEGY_SAVE_ID]').first().click();
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
-        cy.wait('@addStrategyToFeature');
-    });
+    //     cy.get('[data-test=ADD_NEW_STRATEGY_SAVE_ID]').first().click();
+    //     cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+    //     cy.wait('@addStrategyToFeature');
+    // });
 
-    it('can update a strategy in the default environment', () => {
-        cy.wait(500);
-        cy.visit(`/projects/default/features2/${featureToggleName}/strategies`);
-        cy.get('[data-test=STRATEGY_ACCORDION_ID-flexibleRollout').click();
+    // it('can update a strategy in the default environment', () => {
+    //     cy.wait(500);
+    //     cy.visit(`/projects/default/features2/${featureToggleName}/strategies`);
+    //     cy.get('[data-test=STRATEGY_ACCORDION_ID-flexibleRollout').click();
 
-        cy.get('[data-test=ROLLOUT_SLIDER_ID')
-            .first()
-            .click()
-            .type('{rightArrow}'.repeat(10));
+    //     cy.get('[data-test=ROLLOUT_SLIDER_ID')
+    //         .first()
+    //         .click()
+    //         .type('{rightArrow}'.repeat(10));
 
-        cy.get('[data-test=FLEXIBLE_STRATEGY_STICKINESS_ID]')
-            .first()
-            .click()
-            .get('[data-test=SELECT_ITEM_ID-sessionId')
-            .first()
-            .click();
+    //     cy.get('[data-test=FLEXIBLE_STRATEGY_STICKINESS_ID]')
+    //         .first()
+    //         .click()
+    //         .get('[data-test=SELECT_ITEM_ID-sessionId')
+    //         .first()
+    //         .click();
 
-        let newGroupId = 'new-group-id';
-        cy.get('[data-test=FLEXIBLE_STRATEGY_GROUP_ID]')
-            .first()
-            .clear()
-            .type('new-group-id');
+    //     let newGroupId = 'new-group-id';
+    //     cy.get('[data-test=FLEXIBLE_STRATEGY_GROUP_ID]')
+    //         .first()
+    //         .clear()
+    //         .type('new-group-id');
 
-        cy.intercept(
-            'PUT',
-            `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies/${strategyId}`,
-            req => {
-                expect(req.body.parameters.groupId).to.equal(newGroupId);
-                expect(req.body.parameters.stickiness).to.equal('sessionId');
-                expect(req.body.parameters.rollout).to.equal(60);
+    //     cy.intercept(
+    //         'PUT',
+    //         `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies/${strategyId}`,
+    //         req => {
+    //             expect(req.body.parameters.groupId).to.equal(newGroupId);
+    //             expect(req.body.parameters.stickiness).to.equal('sessionId');
+    //             expect(req.body.parameters.rollout).to.equal(60);
 
-                if (enterprise) {
-                    expect(req.body.constraints.length).to.equal(1);
-                } else {
-                    expect(req.body.constraints.length).to.equal(0);
-                }
+    //             if (enterprise) {
+    //                 expect(req.body.constraints.length).to.equal(1);
+    //             } else {
+    //                 expect(req.body.constraints.length).to.equal(0);
+    //             }
 
-                req.continue(res => {
-                    expect(res.statusCode).to.equal(200);
-                });
-            }
-        ).as('updateStrategy');
+    //             req.continue(res => {
+    //                 expect(res.statusCode).to.equal(200);
+    //             });
+    //         }
+    //     ).as('updateStrategy');
 
-        cy.get('[data-test=UPDATE_STRATEGY_BUTTON_ID]').first().click();
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
-        cy.wait('@updateStrategy');
-    });
+    //     cy.get('[data-test=UPDATE_STRATEGY_BUTTON_ID]').first().click();
+    //     cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+    //     cy.wait('@updateStrategy');
+    // });
 
-    it('can delete a strategy in the default environment', () => {
-        cy.wait(500);
-        cy.visit(`/projects/default/features2/${featureToggleName}/strategies`);
+    // it('can delete a strategy in the default environment', () => {
+    //     cy.wait(500);
+    //     cy.visit(`/projects/default/features2/${featureToggleName}/strategies`);
 
-        cy.intercept(
-            'DELETE',
-            `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies/${strategyId}`,
-            req => {
-                req.continue(res => {
-                    expect(res.statusCode).to.equal(200);
-                });
-            }
-        ).as('deleteStrategy');
+    //     cy.intercept(
+    //         'DELETE',
+    //         `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies/${strategyId}`,
+    //         req => {
+    //             req.continue(res => {
+    //                 expect(res.statusCode).to.equal(200);
+    //             });
+    //         }
+    //     ).as('deleteStrategy');
 
-        cy.get('[data-test=DELETE_STRATEGY_ID-flexibleRollout]').click();
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
-        cy.wait('@deleteStrategy');
-    });
+    //     cy.get('[data-test=DELETE_STRATEGY_ID-flexibleRollout]').click();
+    //     cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+    //     cy.wait('@deleteStrategy');
+    // });
 
-    it('Can add a userid  strategy to the default environment', () => {
-        cy.wait(500);
-        cy.visit(`/projects/default/features2/${featureToggleName}/strategies`);
-        cy.get('[data-test=ADD_NEW_STRATEGY_ID]').click();
-        cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-2').click();
+    // it('Can add a userid  strategy to the default environment', () => {
+    //     cy.wait(500);
+    //     cy.visit(`/projects/default/features2/${featureToggleName}/strategies`);
+    //     cy.get('[data-test=ADD_NEW_STRATEGY_ID]').click();
+    //     cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-2').click();
 
-        if (enterprise) {
-            cy.get('[data-test=ADD_CONSTRAINT_ID]').click();
-            cy.get('[data-test=CONSTRAINT_AUTOCOMPLETE_ID]')
-                .type('{downArrow}'.repeat(1))
-                .type('{enter}');
-            cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
-        }
+    //     if (enterprise) {
+    //         cy.get('[data-test=ADD_CONSTRAINT_ID]').click();
+    //         cy.get('[data-test=CONSTRAINT_AUTOCOMPLETE_ID]')
+    //             .type('{downArrow}'.repeat(1))
+    //             .type('{enter}');
+    //         cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+    //     }
 
-        cy.get('[data-test=STRATEGY_INPUT_LIST]')
-            .type('user1')
-            .type('{enter}')
-            .type('user2')
-            .type('{enter}');
-        cy.get('[data-test=ADD_TO_STRATEGY_INPUT_LIST]').click();
+    //     cy.get('[data-test=STRATEGY_INPUT_LIST]')
+    //         .type('user1')
+    //         .type('{enter}')
+    //         .type('user2')
+    //         .type('{enter}');
+    //     cy.get('[data-test=ADD_TO_STRATEGY_INPUT_LIST]').click();
 
-        cy.intercept(
-            'POST',
-            `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies`,
-            req => {
-                expect(req.body.name).to.equal('userWithId');
+    //     cy.intercept(
+    //         'POST',
+    //         `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies`,
+    //         req => {
+    //             expect(req.body.name).to.equal('userWithId');
 
-                expect(req.body.parameters.userIds.length).to.equal(11);
+    //             expect(req.body.parameters.userIds.length).to.equal(11);
 
-                if (enterprise) {
-                    expect(req.body.constraints.length).to.equal(1);
-                } else {
-                    expect(req.body.constraints.length).to.equal(0);
-                }
+    //             if (enterprise) {
+    //                 expect(req.body.constraints.length).to.equal(1);
+    //             } else {
+    //                 expect(req.body.constraints.length).to.equal(0);
+    //             }
 
-                req.continue(res => {
-                    strategyId = res.body.id;
-                });
-            }
-        ).as('addStrategyToFeature');
+    //             req.continue(res => {
+    //                 strategyId = res.body.id;
+    //             });
+    //         }
+    //     ).as('addStrategyToFeature');
 
-        cy.get('[data-test=ADD_NEW_STRATEGY_SAVE_ID]').first().click();
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
-        cy.wait('@addStrategyToFeature');
+    //     cy.get('[data-test=ADD_NEW_STRATEGY_SAVE_ID]').first().click();
+    //     cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+    //     cy.wait('@addStrategyToFeature');
+    // });
+
+    it('Creates an API key', () => {        
+        cy.wait(500)
+        cy.visit('/admin/api');
+        cy.get('[data-test="CREATE_API_TOKEN_BUTTON"]', { timeout: 10000 }).click();
     });
 
     it('Can add two variant to the feature', () => {

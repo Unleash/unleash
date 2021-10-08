@@ -173,7 +173,7 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
                     />}
             >
                         <Alert severity="info">
-                        <b>Important!</b> In order for your application to ONLY retrieve feature toggle activation strategies for a specific environment, the application<br/> must use an environment-specific API key. You can look up the environment-specific API keys {' '}
+                        <b>Important!</b> In order for your application to retrieve feature toggle activation strategies for a specific environment, the application<br/> must use an environment-specific API key. You can look up the environment-specific API keys {' '}
                         <Link
                             to='/admin/api'
                         >

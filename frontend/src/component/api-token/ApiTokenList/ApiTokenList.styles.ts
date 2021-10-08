@@ -20,6 +20,9 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex-inline',
         flexWrap: 'nowrap'
     },
+    infoBoxContainer:{
+        marginBottom:40
+    },
     hideSM:{
         [theme.breakpoints.down('sm')]: { 
             display: 'none'

@@ -18,6 +18,8 @@ import Secret from './secret';
 import { Delete, FileCopy } from '@material-ui/icons';
 import ApiTokenCreate from '../ApiTokenCreate/ApiTokenCreate';
 import Dialogue from '../../common/Dialogue';
+import {CREATE_API_TOKEN_BUTTON} from '../../../testIds'
+import { Alert } from '@material-ui/lab';
 
 interface IApiToken {
     createdAt: Date;
@@ -193,8 +195,27 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                     title="API Access"
                     actions={<ConditionallyRender
                         condition={hasAccess(CREATE_API_TOKEN)}
-                        show={<Button variant="contained" color="primary" onClick={openDialog}>Create API token</Button>} />} />}
+                        show={<Button variant="contained" color="primary" onClick={openDialog} data-test={CREATE_API_TOKEN_BUTTON}>Create API token</Button>} />} />}
                 >
+                <Alert severity="info" className={styles.infoBoxContainer}>
+                    <p>
+                        Read the{' '}
+                        <a
+                            href="https://docs.getunleash.io/docs"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            Getting started guide
+                        </a>{' '}
+                        to learn how to connect to the Unleash API from your
+                        application or programmatically. Please note it can take
+                        up to 1 minute before a new API key is activated.
+                    </p>
+                    <br />
+                    <strong>API URL: </strong>{' '}
+                    <pre style={{ display: 'inline' }}>{uiConfig.unleashUrl}/api/</pre>
+                </Alert>
+
                 <ConditionallyRender condition={error} show={renderError()} />
                 <div className={styles.container}>
                     <ConditionallyRender

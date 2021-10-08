@@ -151,9 +151,14 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                                         <b>Env:</b> {item.environment}<br/>
                                         <b>Project:</b> {renderProject(item.project)}
                                     </TableCell>
-
-                                </>} />
-
+                                    </>}
+                                    elseShow={<>
+                                        <TableCell className={styles.token}>
+                                            <b>Type:</b> {item.type}<br/>
+                                            <b>Username:</b> {item.username}
+                                        </TableCell>
+                                    </>}
+                                />
                                 <TableCell className={styles.hideMD}>
                                     <Secret value={item.secret} />
                                 </TableCell>

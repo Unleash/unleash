@@ -45,6 +45,7 @@ interface StrategyUpdateBody {
 
 const PATH = '/:projectId/features';
 const PATH_FEATURE = `${PATH}/:featureName`;
+const PATH_FEATURE_CLONE = `${PATH_FEATURE}/clone`;
 const PATH_ENV = `${PATH_FEATURE}/environments/:environment`;
 const PATH_STRATEGIES = `${PATH_ENV}/strategies`;
 const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
@@ -82,6 +83,8 @@ export default class ProjectFeaturesController extends Controller {
         this.get(PATH, this.getFeatures);
         this.post(PATH, this.createFeature, CREATE_FEATURE);
 
+        this.post(PATH_FEATURE_CLONE, this.cloneFeature, CREATE_FEATURE);
+
         this.get(PATH_FEATURE, this.getFeature);
         this.put(PATH_FEATURE, this.updateFeature);
         this.patch(PATH_FEATURE, this.patchFeature);
@@ -99,8 +102,30 @@ export default class ProjectFeaturesController extends Controller {
         res.json({ version: 1, features });
     }
 
+    async cloneFeature(
+        req: IAuthRequest<
+            FeatureParams,
+            any,
+            { name: string; replaceGroupId: boolean },
+            any
+        >,
+        res: Response,
+    ): Promise<void> {
+        const { projectId, featureName } = req.params;
+        const { name, replaceGroupId } = req.body;
+        const userName = extractUsername(req);
+        const created = await this.featureService.cloneFeatureToggle(
+            featureName,
+            projectId,
+            name,
+            replaceGroupId,
+            userName,
+        );
+        res.status(201).json(created);
+    }
+
     async createFeature(
-        req: IAuthRequest<ProjectParam, any, FeatureToggleDTO, any>,
+        req: IAuthRequest<FeatureParams, any, FeatureToggleDTO, any>,
         res: Response,
     ): Promise<void> {
         const { projectId } = req.params;

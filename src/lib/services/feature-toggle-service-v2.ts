@@ -35,6 +35,7 @@ import {
     FeatureToggleDTO,
     FeatureToggleWithEnvironment,
     FeatureToggleWithEnvironmentLegacy,
+    IEnvironmentDetail,
     IFeatureEnvironmentInfo,
     IFeatureOverview,
     IFeatureStrategy,
@@ -370,6 +371,57 @@ class FeatureToggleServiceV2 {
             return createdToggle;
         }
         throw new NotFoundError(`Project with id ${projectId} does not exist`);
+    }
+
+    async cloneFeatureToggle(
+        featureName: string,
+        projectId: string,
+        newFeatureName: string,
+        replaceGroupId: boolean = true,
+        userName: string,
+    ): Promise<FeatureToggle> {
+        this.logger.info(
+            `${userName} clones feature toggle ${featureName} to ${newFeatureName}`,
+        );
+        await this.validateName(newFeatureName);
+
+        const cToggle =
+            await this.featureStrategiesStore.getFeatureToggleWithEnvs(
+                featureName,
+            );
+
+        const newToggle = { ...cToggle, name: newFeatureName };
+
+        // Create feature toggle
+        const created = await this.createFeatureToggle(
+            projectId,
+            newToggle,
+            userName,
+        );
+
+        const createStrategies = [];
+        newToggle.environments.forEach((e: IEnvironmentDetail) =>
+            e.strategies.forEach((s: IStrategyConfig) => {
+                if (replaceGroupId && s.parameters.hasOwnProperty('groupId')) {
+                    //@ts-ignore
+                    s.parameters.groupId = newFeatureName;
+                }
+                delete s.id;
+                createStrategies.push(
+                    this.createStrategy(
+                        s,
+                        projectId,
+                        newFeatureName,
+                        userName,
+                        e.name,
+                    ),
+                );
+            }),
+        );
+
+        // Create strategies
+        await Promise.allSettled(createStrategies);
+        return created;
     }
 
     async updateFeatureToggle(

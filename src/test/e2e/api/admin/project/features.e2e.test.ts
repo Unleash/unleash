@@ -1303,3 +1303,132 @@ test('Deleting strategy for feature environment should not disable that environm
             expect(res.body.enabled).toBeTruthy();
         });
 });
+
+test('should clone feature toggle without strategies', async () => {
+    const envName = 'some-env-3';
+    const featureName = 'feature.toggle.base';
+    const cloneName = 'feature.toggle.clone';
+    const type = 'eExperiment';
+    const description = 'Lorem ipsum...';
+
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'production',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName, description, type })
+        .expect(201);
+    await app.request
+        .post(`/api/admin/projects/default/features/${featureName}/clone`)
+        .send({ name: cloneName, replaceGroupId: false })
+        .expect(201);
+    await app.request
+        .get(`/api/admin/projects/default/features/${cloneName}`)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.name).toBe(cloneName);
+            expect(res.body.type).toBe(type);
+            expect(res.body.project).toBe('default');
+            expect(res.body.description).toBe(description);
+        });
+});
+
+test('should clone feature toggle WITH strategies', async () => {
+    const envName = 'some-env-4';
+    const featureName = 'feature.toggle.base.2';
+    const cloneName = 'feature.toggle.clone.2';
+    const type = 'eExperiment';
+    const description = 'Lorem ipsum...';
+
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'production',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName, description, type })
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            parameters: {
+                groupId: featureName,
+            },
+        })
+        .expect(200);
+
+    await app.request
+        .post(`/api/admin/projects/default/features/${featureName}/clone`)
+        .send({ name: cloneName })
+        .expect(201);
+    await app.request
+        .get(`/api/admin/projects/default/features/${cloneName}`)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.name).toBe(cloneName);
+            expect(res.body.type).toBe(type);
+            expect(res.body.project).toBe('default');
+            expect(res.body.description).toBe(description);
+
+            const env = res.body.environments.find((e) => e.name === envName);
+            expect(env.strategies).toHaveLength(1);
+            expect(env.strategies[0].parameters.groupId).toBe(cloneName);
+        });
+});
+
+test('should clone feature toggle without replacing groupId', async () => {
+    const envName = 'default';
+    const featureName = 'feature.toggle.base.3';
+    const cloneName = 'feature.toggle.clone.3';
+
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            parameters: {
+                groupId: featureName,
+            },
+        })
+        .expect(200);
+
+    await app.request
+        .post(`/api/admin/projects/default/features/${featureName}/clone`)
+        .send({ name: cloneName, replaceGroupId: false })
+        .expect(201);
+    await app.request
+        .get(`/api/admin/projects/default/features/${cloneName}`)
+        .expect(200)
+        .expect((res) => {
+            const env = res.body.environments.find((e) => e.name === envName);
+            expect(env.strategies).toHaveLength(1);
+            expect(env.strategies[0].parameters.groupId).toBe(featureName);
+        });
+});

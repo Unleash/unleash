@@ -13,7 +13,7 @@ export interface IStrategyConfig {
     id?: string;
     name: string;
     constraints: IConstraint[];
-    parameters: Object;
+    parameters: object;
     sortOrder?: number;
 }
 export interface IFeatureStrategy {
@@ -37,6 +37,7 @@ export interface FeatureToggleDTO {
     variants?: IVariant[];
     createdAt?: Date;
 }
+
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
     lastSeenAt?: Date;

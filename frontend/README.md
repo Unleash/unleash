@@ -27,16 +27,16 @@ Start webpack-dev-server with hot-reload:
 
 ```bash
 cd ~/unleash-frontend
-npm install
-npm run start
+yarn install
+yarn run start
 ```
 
 ### Run with heroku hosted unleash-api:
 
 ```bash
 cd ~/unleash-frontend
-npm install
-npm run start:heroku
+yarn install
+yarn run start:heroku
 ```
 
 ## UI Framework

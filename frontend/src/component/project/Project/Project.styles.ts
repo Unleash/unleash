@@ -8,6 +8,7 @@ export const useStyles = makeStyles(theme => ({
             flexDirection: 'column',
         },
     },
+    projectToggles: { width: '100%', minHeight: '100%' },
     header: {
         backgroundColor: '#fff',
         borderRadius: '10px',

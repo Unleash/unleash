@@ -14,6 +14,11 @@ export const useStyles = makeStyles(theme => ({
             marginBottom: '1rem',
         },
     },
+    percentageContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        margin: '1rem 0',
+    },
     projectIcon: {
         margin: '2rem 0',
         [theme.breakpoints.down('sm')]: {
@@ -35,7 +40,7 @@ export const useStyles = makeStyles(theme => ({
     infoSection: {
         margin: '0',
         textAlign: 'center',
-        marginBottom: '1.5rem',
+        marginBottom: '1rem',
         backgroundColor: '#fff',
         borderRadius: '10px',
         width: '100%',

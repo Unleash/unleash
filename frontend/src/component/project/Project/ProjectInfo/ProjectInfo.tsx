@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import classnames from 'classnames';
 
-import { ReactComponent as ProjectIcon } from '../../../../assets/icons/projectIcon.svg';
 import { useCommonStyles } from '../../../../common.styles';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import PercentageCircle from '../../../common/PercentageCircle/PercentageCircle';
 
 interface IProjectInfoProps {
     id: string;
@@ -34,8 +34,8 @@ const ProjectInfo = ({
         <aside>
             <div className={styles.projectInfo}>
                 <div className={styles.infoSection}>
-                    <div data-loading>
-                        <ProjectIcon className={styles.projectIcon} />
+                    <div data-loading className={styles.percentageContainer}>
+                        <PercentageCircle percentage={health} />
                     </div>
                     <p className={styles.subtitle} data-loading>
                         Overall health rating

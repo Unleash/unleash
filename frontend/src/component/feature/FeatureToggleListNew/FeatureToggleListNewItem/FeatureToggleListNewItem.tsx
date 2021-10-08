@@ -3,6 +3,7 @@ import {
     Switch,
     TableCell,
     TableRow,
+    Tooltip,
     useMediaQuery,
     useTheme,
 } from '@material-ui/core';
@@ -16,16 +17,19 @@ import useToast from '../../../../hooks/useToast';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
 import { SyntheticEvent } from 'react-router/node_modules/@types/react';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
     type: string;
-    environments: IEnvironments[];
+    environments: IFeatureEnvironment[];
     projectId: string;
+    lastSeenAt?: Date;
 }
 
 const FeatureToggleListNewItem = ({
     name,
+    lastSeenAt,
     type,
     environments,
     projectId,
@@ -35,7 +39,7 @@ const FeatureToggleListNewItem = ({
     const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { toggleFeatureByEnvironment } = useToggleFeatureByEnv(
         projectId,
-        name
+        name,
     );
     const { uiConfig } = useUiConfig();
     
@@ -74,22 +78,25 @@ const FeatureToggleListNewItem = ({
         <>
             <TableRow className={styles.tableRow}>
                 <TableCell className={styles.tableCell} align="left" onClick={onClick}>
-                    <span data-loading>{name}</span>
+                    <FeatureStatus lastSeenAt={lastSeenAt} />
                 </TableCell>
                 <ConditionallyRender
                     condition={!smallScreen}
                     show={
-                        <TableCell className={styles.tableCell} align="left" onClick={onClick}>
-                            <div className={styles.tableCellType}>
+                        <TableCell className={styles.tableCell} align="center" onClick={onClick}>
+                            <Tooltip arrow placement="right" title={type}>
                                 <IconComponent
                                     data-loading
                                     className={styles.icon}
-                                />{' '}
-                                <span data-loading>{type}</span>
-                            </div>
+                                />
+                            </Tooltip>
                         </TableCell>
                     }
                 />
+                <TableCell className={styles.tableCell} align="left" onClick={onClick}>
+                    <span data-loading>{name}</span>
+                </TableCell>
+                
 
                 {environments.map((env: IEnvironments) => {
                     return (

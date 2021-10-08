@@ -8,7 +8,6 @@ export const useStyles = makeStyles(theme => ({
         marginTop: '0.5rem',
         width: '100%',
     },
-
     constraint: {
         fontSize: theme.fontSizes.smallBody,
         alignItems: 'center;',

@@ -17,6 +17,16 @@ export const useStyles = makeStyles(theme => ({
             maxWidth: 'none',
         },
     },
+    status: {
+        height: '12.5px',
+        width: '12.5px',
+        backgroundColor: theme.palette.success.main,
+        borderRadius: '50%',
+        marginLeft: '0.5rem',
+    },
+    statusStale: {
+        backgroundColor: theme.palette.error.main,
+    },
     staleHeaderContainer: {
         display: 'flex',
         alignItems: 'center',
@@ -41,6 +51,8 @@ export const useStyles = makeStyles(theme => ({
     bodyItem: {
         margin: '0.5rem 0',
         fontSize: theme.fontSizes.bodySize,
+        display: 'flex',
+        alignItems: 'center',
     },
     headerIcon: {
         marginRight: '1rem',

@@ -99,6 +99,7 @@ const FeatureOverviewTags = () => {
         <Chip
             icon={tagIcon(t.type)}
             className={styles.tagChip}
+            data-loading
             label={t.value}
             key={`${t.type}:${t.value}`}
             onDelete={() => {
@@ -112,7 +113,9 @@ const FeatureOverviewTags = () => {
         <div className={styles.container}>
             <div className={styles.tagheaderContainer}>
                 <div className={styles.tagHeader}>
-                    <h4 className={styles.tagHeaderText}>Tags</h4>
+                    <h4 className={styles.tagHeaderText} data-loading>
+                        Tags
+                    </h4>
                 </div>
 
                 <AddTagDialog open={openTagDialog} setOpen={setOpenTagDialog} />
@@ -120,6 +123,7 @@ const FeatureOverviewTags = () => {
                     onClick={() => setOpenTagDialog(true)}
                     permission={UPDATE_FEATURE}
                     tooltip="Add tag"
+                    data-loading
                 >
                     <Add />
                 </PermissionIconButton>
@@ -143,7 +147,7 @@ const FeatureOverviewTags = () => {
                 <ConditionallyRender
                     condition={tags.length > 0}
                     show={tags.map(renderTag)}
-                    elseShow={<p>No tags to display</p>}
+                    elseShow={<p data-loading>No tags to display</p>}
                 />
             </div>
             {toast}

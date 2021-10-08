@@ -6,6 +6,7 @@ interface IFeatureStrategiesProductionGuard {
     onClick: () => void;
     onClose: () => void;
     primaryButtonText: string;
+    loading: boolean;
 }
 
 const FeatureStrategiesProductionGuard = ({
@@ -13,6 +14,7 @@ const FeatureStrategiesProductionGuard = ({
     onClick,
     onClose,
     primaryButtonText,
+    loading,
 }: IFeatureStrategiesProductionGuard) => {
     return (
         <Dialogue
@@ -22,6 +24,7 @@ const FeatureStrategiesProductionGuard = ({
             secondaryButtonText="Cancel"
             onClick={onClick}
             onClose={onClose}
+            disabledPrimaryButton={loading}
         >
             <Alert severity="error">
                 WARNING. You are about to make changes to a production

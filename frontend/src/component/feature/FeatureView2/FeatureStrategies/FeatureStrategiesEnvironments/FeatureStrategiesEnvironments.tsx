@@ -59,7 +59,6 @@ const FeatureStrategiesEnvironments = () => {
         if (addStrategy) {
             setExpandedSidebar(true);
         }
-        console.log(feature);
         if (!feature) return;
 
         if (environmentTab) {

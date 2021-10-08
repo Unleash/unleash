@@ -9,9 +9,10 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        backgroundColor: theme.palette.grey[100],
     },
     header: {
-        color: theme.palette.primary.main,
+        color: theme.palette.grey[700],
         textAlign: 'center',
         margin: '0.5rem 0',
         fontSize: theme.fontSizes.bodySize,

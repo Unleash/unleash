@@ -17,16 +17,18 @@ import FeatureStrategies from './FeatureStrategies/FeatureStrategies';
 import FeatureVariants from './FeatureVariants/FeatureVariants';
 import { useStyles } from './FeatureView2.styles';
 import FeatureSettings from './FeatureSettings/FeatureSettings';
+import useLoading from '../../../hooks/useLoading';
 
 const FeatureView2 = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
-    const { feature } = useFeature(projectId, featureId);
+    const { feature, loading } = useFeature(projectId, featureId);
     const { a11yProps } = useTabs(0);
     const { archiveFeatureToggle } = useFeatureApi();
     const { toast, setToastData } = useToast();
     const [showDelDialog, setShowDelDialog] = useState(false);
     const styles = useStyles();
     const history = useHistory();
+    const ref = useLoading(loading);
 
     const basePath = `/projects/${projectId}/features2/${featureId}`;
 
@@ -55,7 +57,7 @@ const FeatureView2 = () => {
     const tabData = [
         {
             title: 'Overview',
-            path: `${basePath}/overview`,
+            path: `${basePath}`,
             name: 'overview',
         },
         {
@@ -81,6 +83,7 @@ const FeatureView2 = () => {
         return tabData.map((tab, index) => {
             return (
                 <Tab
+                    data-loading
                     key={tab.title}
                     label={tab.title}
                     value={tab.path}
@@ -95,14 +98,17 @@ const FeatureView2 = () => {
     };
 
     return (
-        <>
+        <div ref={ref}>
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
-                    <h2 className={styles.featureViewHeader}>{feature.name}</h2>
+                    <h2 className={styles.featureViewHeader} data-loading>
+                        {feature.name}
+                    </h2>
                     <div className={styles.actions}>
                         <PermissionIconButton
                             permission={UPDATE_FEATURE}
                             tooltip="Copy"
+                            data-loading
                             component={Link}
                             to={`${history.location.pathname}/copy`}
                         >
@@ -111,6 +117,7 @@ const FeatureView2 = () => {
                         <PermissionIconButton
                             permission={UPDATE_FEATURE}
                             tooltip="Archive feature toggle"
+                            data-loading
                             onClick={() => setShowDelDialog(true)}
                         >
                             <Archive />
@@ -130,7 +137,8 @@ const FeatureView2 = () => {
                 </div>
             </div>
             <Route
-                path={`/projects/:projectId/features2/:featureId/overview`}
+                exact
+                path={`/projects/:projectId/features2/:featureId`}
                 component={FeatureOverview}
             />
             <Route
@@ -164,7 +172,7 @@ const FeatureView2 = () => {
                 Are you sure you want to archive this feature toggle?
             </Dialogue>
             {toast}
-        </>
+        </div>
     );
 };
 

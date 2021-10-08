@@ -5,6 +5,7 @@ import {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
 } from '../../../lib/types/stores/client-metrics-store-v2';
+import { roundDownToHour } from '../../../lib/db/client-metrics-store-v2';
 
 let db;
 let stores: IUnleashStores;
@@ -381,4 +382,16 @@ test('Should not exists after delete', async () => {
 
     const existAfter = await clientMetricsStore.exists(metric);
     expect(existAfter).toBe(false);
+});
+
+test('should floor hours as expected', () => {
+    expect(
+        roundDownToHour(new Date('2019-11-12T08:44:32.499Z')).toISOString(),
+    ).toBe('2019-11-12T08:00:00.000Z');
+    expect(
+        roundDownToHour(new Date('2019-11-12T08:59:59.999Z')).toISOString(),
+    ).toBe('2019-11-12T08:00:00.000Z');
+    expect(
+        roundDownToHour(new Date('2019-11-12T09:01:00.999Z')).toISOString(),
+    ).toBe('2019-11-12T09:00:00.000Z');
 });

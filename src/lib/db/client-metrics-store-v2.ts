@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import util from 'util';
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import {
@@ -20,10 +19,8 @@ interface ClientMetricsEnvTable {
 
 const TABLE = 'client_metrics_env';
 
-// Unsure if this would be better be done by the service?
 export function roundDownToHour(date: Date): Date {
-    let p = 60 * 60 * 1000; // milliseconds in an hour
-    return new Date(Math.floor(date.getTime() / p) * p);
+    return new Date(date.getTime() - (date.getTime() % 3600000));
 }
 
 const fromRow = (row: ClientMetricsEnvTable) => ({

@@ -7,7 +7,7 @@ interface ProjectOverviewProps {
     projectId: string;
 }
 
-const ProjectOverview = ({projectId}: ProjectOverviewProps) => {
+const ProjectOverview = ({ projectId }: ProjectOverviewProps) => {
     const { project, loading } = useProject(projectId);
     const { members, features, health } = project;
     const styles = useStyles();
@@ -21,9 +21,13 @@ const ProjectOverview = ({projectId}: ProjectOverviewProps) => {
                     health={health}
                     featureCount={features?.length}
                 />
-                <ProjectFeatureToggles features={features} loading={loading} />
+                <div className={styles.projectToggles}>
+                    <ProjectFeatureToggles
+                        features={features}
+                        loading={loading}
+                    />
+                </div>
             </div>
-            
         </div>
     );
 };

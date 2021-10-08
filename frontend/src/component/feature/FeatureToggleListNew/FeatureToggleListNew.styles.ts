@@ -19,20 +19,24 @@ export const useStyles = makeStyles(theme => ({
             display: 'none',
         },
     },
+    tableCellStatus: {
+        width: '50px',
+    },
     tableCellName: {
         width: '250px',
+        display: 'flex',
     },
     tableCellEnv: {
         width: '20px',
     },
     tableCellType: {
-        display: 'flex',
+        width: '32px',
         alignItems: 'center',
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         },
     },
     icon: {
-        marginRight: '0.3rem',
+        color: theme.palette.grey[600],
     },
 }));

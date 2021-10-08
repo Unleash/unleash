@@ -3,9 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles(theme => ({
     container: {
         boxShadow: 'none',
-        marginLeft: '2rem',
-        width: '100%',
+        marginLeft: '1rem',
+        minHeight: '100%',
+        width: 'calc(100% - 1rem)',
         position: 'relative',
+        paddingBottom: '4rem',
         [theme.breakpoints.down('sm')]: {
             marginLeft: '0',
             paddingBottom: '4rem',

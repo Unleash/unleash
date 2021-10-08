@@ -8,7 +8,6 @@ export interface IFeatureToggleListItem {
 
 export interface IEnvironments {
     name: string;
-    displayName: string;
     enabled: boolean;
 }
 
@@ -16,7 +15,7 @@ export interface IFeatureToggle {
     stale: boolean;
     archived: boolean;
     createdAt: string;
-    lastSeenAt: string;
+    lastSeenAt: Date;
     description: string;
     environments: IFeatureEnvironment[];
     name: string;

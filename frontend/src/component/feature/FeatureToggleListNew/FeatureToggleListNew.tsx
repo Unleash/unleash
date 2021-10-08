@@ -11,7 +11,10 @@ import FeatureToggleListNewItem from './FeatureToggleListNewItem/FeatureToggleLi
 import usePagination from '../../../hooks/usePagination';
 
 import loadingFeatures from './FeatureToggleListNewItem/loadingFeatures';
-import { IFeatureToggleListItem } from '../../../interfaces/featureToggle';
+import {
+    IFeatureToggle,
+    IFeatureToggleListItem,
+} from '../../../interfaces/featureToggle';
 import PaginateUI from '../../common/PaginateUI/PaginateUI';
 interface IFeatureToggleListNewProps {
     features: IFeatureToggleListItem[];
@@ -26,7 +29,7 @@ const FeatureToggleListNew = ({
 }: IFeatureToggleListNewProps) => {
     const styles = useStyles();
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
-        usePagination(features, 9);
+        usePagination(features, 50);
 
     const getEnvironments = () => {
         if (features.length > 0) {
@@ -57,7 +60,7 @@ const FeatureToggleListNew = ({
             });
         }
 
-        return page.map((feature: IFeatureToggleListItem) => {
+        return page.map((feature: IFeatureToggle) => {
             return (
                 <FeatureToggleListNewItem
                     key={feature.name}
@@ -65,6 +68,7 @@ const FeatureToggleListNew = ({
                     type={feature.type}
                     environments={feature.environments}
                     projectId={projectId}
+                    lastSeenAt={feature.lastSeenAt}
                 />
             );
         });
@@ -78,12 +82,12 @@ const FeatureToggleListNew = ({
                         <TableCell
                             className={classnames(
                                 styles.tableCell,
-                                styles.tableCellName,
+                                styles.tableCellStatus,
                                 styles.tableCellHeader
                             )}
                             align="left"
                         >
-                            <span data-loading>Name</span>
+                            <span data-loading>Status</span>
                         </TableCell>
                         <TableCell
                             className={classnames(
@@ -91,9 +95,19 @@ const FeatureToggleListNew = ({
                                 styles.tableCellHeader,
                                 styles.typeHeader
                             )}
-                            align="left"
+                            align="center"
                         >
                             <span data-loading>Type</span>
+                        </TableCell>
+                        <TableCell
+                            className={classnames(
+                                styles.tableCell,
+                                styles.tableCellName,
+                                styles.tableCellHeader
+                            )}
+                            align="left"
+                        >
+                            <span data-loading>Name</span>
                         </TableCell>
                         {getEnvironments().map((env: any) => {
                             return (

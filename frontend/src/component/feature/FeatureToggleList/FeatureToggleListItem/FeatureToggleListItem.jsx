@@ -3,20 +3,22 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import { Link } from 'react-router-dom';
-import { Switch, IconButton, ListItem } from '@material-ui/core';
+import { IconButton, ListItem } from '@material-ui/core';
 import { Undo } from '@material-ui/icons';
 
 import TimeAgo from 'react-timeago';
-import Progress from '../../ProgressWheel';
 import Status from '../../status-component';
 import FeatureToggleListItemChip from './FeatureToggleListItemChip';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 
 import { UPDATE_FEATURE } from '../../../AccessProvider/permissions';
-import { calc, styles as commonStyles } from '../../../common';
+import { styles as commonStyles } from '../../../common';
 
 import { useStyles } from './styles';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
+import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
+
+
 
 const FeatureToggleListItem = ({
     feature,
@@ -30,25 +32,9 @@ const FeatureToggleListItem = ({
 }) => {
     const styles = useStyles();
 
-    const { name, description, enabled, type, stale, createdAt, project } =
+    const { name, description, type, stale, createdAt, project, lastSeenAt } =
         feature;
-    const { showLastHour = false } = settings;
-    const isStale = showLastHour
-        ? metricsLastHour.isFallback
-        : metricsLastMinute.isFallback;
-    const percent =
-        1 *
-        (showLastHour
-            ? calc(
-                  metricsLastHour.yes,
-                  metricsLastHour.yes + metricsLastHour.no,
-                  0
-              )
-            : calc(
-                  metricsLastMinute.yes,
-                  metricsLastMinute.yes + metricsLastMinute.no,
-                  0
-              ));
+   
     const featureUrl =
         toggleFeature === undefined
             ? `/projects/${feature.project}/archived/${name}/metrics`
@@ -60,33 +46,7 @@ const FeatureToggleListItem = ({
             className={classnames(styles.listItem, rest.className)}
         >
             <span className={styles.listItemMetric}>
-                <Progress
-                    strokeWidth={15}
-                    percentage={percent}
-                    isFallback={isStale}
-                />
-            </span>
-            <span className={styles.listItemToggle}>
-                <ConditionallyRender
-                    condition={hasAccess(UPDATE_FEATURE, project)}
-                    show={
-                        <Switch
-                            disabled={toggleFeature === undefined}
-                            title={`Toggle ${name}`}
-                            key="left-actions"
-                            onChange={() => toggleFeature(!enabled, name)}
-                            checked={enabled}
-                        />
-                    }
-                    elseShow={
-                        <Switch
-                            disabled
-                            title={`Toggle ${name}`}
-                            key="left-actions"
-                            checked={enabled}
-                        />
-                    }
-                />
+                <FeatureStatus lastSeenAt={lastSeenAt} />
             </span>
             <span className={classnames(styles.listItemLink)}>
                 <Link

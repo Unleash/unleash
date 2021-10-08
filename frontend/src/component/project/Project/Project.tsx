@@ -6,7 +6,8 @@ import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 import ApiError from '../../common/ApiError/ApiError';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useStyles } from './Project.styles';
-import { Tab, Tabs } from '@material-ui/core';
+import { IconButton, Tab, Tabs } from '@material-ui/core';
+import { Edit } from '@material-ui/icons';
 import useToast from '../../../hooks/useToast';
 import useQueryParams from '../../../hooks/useQueryParams';
 import { useEffect } from 'react';
@@ -58,6 +59,15 @@ const Project = () => {
         
         /* eslint-disable-next-line */
     }, []);
+
+    const goToTabWithName = (name: string) => {
+        const index = tabData.findIndex(t => t.name === name);
+        if(index >= 0) {
+            const tab = tabData[index];
+            history.push(tab.path);
+            setActiveTab(index);
+        }
+    }
 
     const tabData = [
         {
@@ -127,8 +137,11 @@ const Project = () => {
         <div ref={ref}>
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
-                    <h2 data-loading className={commonStyles.title}>
+                    <h2 data-loading className={commonStyles.title} style={{margin: 0}}>
                         Project: {project?.name}{' '}
+                        <IconButton onClick={() => goToTabWithName('settings')}>
+                            <Edit />
+                        </IconButton>
                     </h2>
                     <p>{project?.description}</p>
                 </div>

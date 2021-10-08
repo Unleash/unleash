@@ -11,7 +11,7 @@ export const Footer = () => {
 
     return (
         <footer className={styles.footer}>
-            <Grid container justify="center" spacing={10}>
+            <Grid container justifyContent="center" spacing={10}>
                 <Grid item md={4} xs={12}>
                     <ShowApiDetailsContainer />
                 </Grid>

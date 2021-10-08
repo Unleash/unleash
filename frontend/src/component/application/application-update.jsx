@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { TextField, Grid } from '@material-ui/core';
 import { useCommonStyles } from '../../common.styles';
 import icons from './icon-names';
-import MySelect from '../common/select';
+import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
 
 function ApplicationUpdate({ application, storeApplicationMetaData }) {
     const { appName, icon, url, description } = application;
@@ -15,11 +15,17 @@ function ApplicationUpdate({ application, storeApplicationMetaData }) {
         <Grid container style={{ marginTop: '1rem' }}>
             <Grid item sm={12} xs={12} className={commonStyles.contentSpacingY}>
                 <Grid item>
-                    <MySelect
+                    <GeneralSelect
                         label="Icon"
                         options={icons.map(v => ({ key: v, label: v }))}
                         value={icon || 'apps'}
-                        onChange={e => storeApplicationMetaData(appName, 'icon', e.target.value)}
+                        onChange={e =>
+                            storeApplicationMetaData(
+                                appName,
+                                'icon',
+                                e.target.value
+                            )
+                        }
                     />
                 </Grid>
                 <Grid item>
@@ -31,7 +37,9 @@ function ApplicationUpdate({ application, storeApplicationMetaData }) {
                         type="url"
                         variant="outlined"
                         size="small"
-                        onBlur={() => storeApplicationMetaData(appName, 'url', localUrl)}
+                        onBlur={() =>
+                            storeApplicationMetaData(appName, 'url', localUrl)
+                        }
                     />
                 </Grid>
                 <Grid item>
@@ -42,7 +50,13 @@ function ApplicationUpdate({ application, storeApplicationMetaData }) {
                         size="small"
                         rows={2}
                         onChange={e => setLocalDescription(e.target.value)}
-                        onBlur={() => storeApplicationMetaData(appName, 'description', localDescription)}
+                        onBlur={() =>
+                            storeApplicationMetaData(
+                                appName,
+                                'description',
+                                localDescription
+                            )
+                        }
                     />
                 </Grid>
             </Grid>

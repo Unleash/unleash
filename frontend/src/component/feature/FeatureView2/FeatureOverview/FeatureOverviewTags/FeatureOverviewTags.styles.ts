@@ -12,10 +12,16 @@ export const useStyles = makeStyles(theme => ({
         marginRight: '1rem',
         marginTop: '1rem',
     },
+    [theme.breakpoints.down(800)]: {
+        container: {
+            width: '100%',
+            maxWidth: 'none',
+        },
+    },
     tagheaderContainer: {
         display: 'flex',
         alignItems: 'center',
-        padding: '1.5rem',
+        padding: '0.5rem 1rem',
         justifyContent: 'space-between',
         borderBottom: `1px solid ${theme.palette.grey[300]}`,
     },
@@ -36,5 +42,10 @@ export const useStyles = makeStyles(theme => ({
     },
     tagContent: {
         padding: '1.5rem',
+    },
+    tagChip: {
+        marginRight: '0.25rem',
+        marginTop: '0.5rem',
+        fontSize: theme.fontSizes.smallBody,
     },
 }));

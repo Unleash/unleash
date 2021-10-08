@@ -3,7 +3,6 @@ import { FEATURE_STRATEGIES_DRAG_TYPE } from '../../FeatureStrategiesList/Featur
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { Fragment } from 'react';
 import useStrategies from '../../../../../../hooks/api/getters/useStrategies/useStrategies';
-import { useStyles } from './FeatureStrategiesEnvironmentList.styles';
 import classnames from 'classnames';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 
@@ -15,7 +14,9 @@ import useProductionGuardMarkup from './useProductionGuardMarkup';
 import FeatureStrategyEditable from '../FeatureStrategyEditable/FeatureStrategyEditable';
 import { PRODUCTION } from '../../../../../../constants/environmentTypes';
 import { getStrategyObject } from '../../../../../../utils/get-strategy-object';
+import FeatureViewEnvironment from '../../../FeatureViewEnvironment/FeatureViewEnvironment';
 
+import { useStyles } from './FeatureStrategiesEnvironmentList.styles';
 interface IFeatureStrategiesEnvironmentListProps {
     strategies: IFeatureStrategy[];
 }
@@ -44,6 +45,7 @@ const FeatureStrategiesEnvironmentList = ({
         setExpandedSidebar,
         expandedSidebar,
         featureId,
+        activeEnvironment,
     } = useFeatureStrategiesEnvironmentList(strategies);
 
     const [{ isOver }, drop] = useDrop({
@@ -130,15 +132,24 @@ const FeatureStrategiesEnvironmentList = ({
     const strategiesContainerClasses = classnames({
         [styles.strategiesContainer]: !expandedSidebar,
     });
-
     return (
         <ConditionallyRender
             condition={!configureNewStrategy}
             show={
                 <div className={classes} ref={drop}>
-                    <div className={strategiesContainerClasses}>
-                        {renderStrategies()}
-                    </div>
+                    <FeatureViewEnvironment
+                        env={activeEnvironment}
+                        className={styles.environmentList}
+                    >
+                        <div className={strategiesContainerClasses}>
+                            <ConditionallyRender
+                                condition={
+                                    activeEnvironment.strategies.length > 0
+                                }
+                                show={renderStrategies()}
+                            />
+                        </div>
+                    </FeatureViewEnvironment>
                     {dropboxMarkup}
                     {toast}
                     {delDialogueMarkup}

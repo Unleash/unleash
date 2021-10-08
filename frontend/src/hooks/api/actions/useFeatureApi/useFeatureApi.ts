@@ -68,7 +68,7 @@ const useFeatureApi = () => {
         }
     };
 
-    const addTag = async (featureId: string, tag: ITag) => {
+    const addTagToFeature = async (featureId: string, tag: ITag) => {
         // TODO: Change this path to the new API when moved.
         const path = `api/admin/features/${featureId}/tags`;
         const req = createRequest(path, {
@@ -85,7 +85,7 @@ const useFeatureApi = () => {
         }
     };
 
-    const deleteTag = async (
+    const deleteTagFromFeature = async (
         featureId: string,
         type: string,
         value: string
@@ -105,13 +105,74 @@ const useFeatureApi = () => {
         }
     };
 
+    const archiveFeatureToggle = async (
+        projectId: string,
+        featureId: string
+    ) => {
+        const path = `api/admin/projects/${projectId}/features/${featureId}`;
+        const req = createRequest(path, {
+            method: 'DELETE',
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    const patchFeatureToggle = async (
+        projectId: string,
+        featureId: string,
+        patchPayload: any
+    ) => {
+        const path = `api/admin/projects/${projectId}/features/${featureId}`;
+        const req = createRequest(path, {
+            method: 'PATCH',
+            body: JSON.stringify(patchPayload),
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    const cloneFeatureToggle = async (
+        projectId: string,
+        featureId: string,
+        payload: {name: string, replaceGroupId: boolean}
+    ) => {
+        const path = `api/admin/projects/${projectId}/features/${featureId}/clone`;
+        const req = createRequest(
+            path,
+            { method: 'POST',  body: JSON.stringify(payload) },
+        );
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
     return {
         changeFeatureProject,
         errors,
         toggleFeatureEnvironmentOn,
         toggleFeatureEnvironmentOff,
-        addTag,
-        deleteTag,
+        addTagToFeature,
+        deleteTagFromFeature,
+        archiveFeatureToggle,
+        patchFeatureToggle,
+        cloneFeatureToggle
     };
 };
 

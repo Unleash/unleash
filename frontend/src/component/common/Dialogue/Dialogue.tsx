@@ -15,7 +15,7 @@ interface IDialogue {
     primaryButtonText?: string;
     secondaryButtonText?: string;
     open: boolean;
-    onClick: () => void;
+    onClick: (e: any) => void;
     onClose: () => void;
     style?: object;
     title: string;

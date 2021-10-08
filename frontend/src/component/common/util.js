@@ -72,7 +72,7 @@ export function updateWeight(variants, totalWeight) {
     }
 
     if (!variableVariantCount) {
-        throw new Error('There must be atleast one variable variant');
+        throw new Error('There must be at least one variable variant');
     }
 
     const percentage = parseInt(remainingPercentage / variableVariantCount);

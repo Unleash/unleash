@@ -37,4 +37,7 @@ export const useStyles = makeStyles(theme => ({
         fill: '#fff',
         transition: 'color 0.4s ease',
     },
+    environmentList: {
+        marginTop: 0,
+    },
 }));

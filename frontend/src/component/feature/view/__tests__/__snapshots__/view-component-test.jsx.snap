@@ -86,12 +86,64 @@ exports[`renders correctly with one feature 1`] = `
       <div
         className="selectContainer"
       >
-        <FeatureTypeSelect
-          editable={true}
-          label="Feature type"
-          onChange={[Function]}
-          value="release"
-        />
+        <div
+          className="MuiFormControl-root"
+        >
+          <label
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-marginDense MuiInputLabel-outlined MuiFormLabel-filled"
+            data-shrink={true}
+          >
+            Feature type
+          </label>
+          <div
+            className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl MuiInputBase-marginDense MuiOutlinedInput-marginDense"
+            onClick={[Function]}
+          >
+            <div
+              aria-haspopup="listbox"
+              className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              Release
+            </div>
+            <input
+              aria-hidden={true}
+              className="MuiSelect-nativeInput"
+              onAnimationStart={[Function]}
+              onChange={[Function]}
+              required={false}
+              tabIndex={-1}
+              value="release"
+            />
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+            <fieldset
+              aria-hidden={true}
+              className="PrivateNotchedOutline-root-20 MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                className="PrivateNotchedOutline-legendLabelled-22 PrivateNotchedOutline-legendNotched-23"
+              >
+                <span>
+                  Feature type
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
          
         <div
           className="MuiFormControl-root"

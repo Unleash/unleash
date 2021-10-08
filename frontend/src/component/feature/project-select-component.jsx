@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import MySelect from '../common/select';
+import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
 
 class ProjectSelectComponent extends Component {
     componentDidMount() {
@@ -41,7 +41,7 @@ class ProjectSelectComponent extends Component {
         }
 
         return (
-            <MySelect
+            <GeneralSelect
                 label="Project"
                 options={options}
                 value={value}

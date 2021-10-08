@@ -16,7 +16,6 @@ const BreadcrumbNav = () => {
             item =>
                 item !== 'create' &&
                 item !== 'edit' &&
-                item !== 'access' &&
                 item !== 'view' &&
                 item !== 'variants' &&
                 item !== 'logs' &&

@@ -131,7 +131,7 @@ exports[`renders correctly with one strategy 1`] = `
                         className="MuiListItemAvatar-root"
                       >
                         <div
-                          className="MuiAvatar-root MuiAvatar-circle MuiAvatar-colorDefault"
+                          className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault"
                         >
                           <svg
                             aria-hidden={true}

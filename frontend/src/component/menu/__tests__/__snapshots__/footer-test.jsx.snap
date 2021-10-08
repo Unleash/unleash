@@ -5,7 +5,7 @@ exports[`should render DrawerMenu 1`] = `
   className="makeStyles-footer-1"
 >
   <div
-    className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-10 MuiGrid-justify-xs-center"
+    className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-10 MuiGrid-justify-content-xs-center"
   >
     <div
       className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -407,7 +407,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
   className="makeStyles-footer-1"
 >
   <div
-    className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-10 MuiGrid-justify-xs-center"
+    className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-10 MuiGrid-justify-content-xs-center"
   >
     <div
       className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"

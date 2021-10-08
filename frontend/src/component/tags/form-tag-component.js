@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 import styles from './Tag.module.scss';
 import { FormButtons } from '../common';
-import TagTypeSelect from '../feature/tag-type-select-container';
 import PageContent from '../common/PageContent/PageContent';
+import TagSelect from '../common/TagSelect/TagSelect';
 
 class AddTagComponent extends Component {
     constructor(props) {
@@ -62,10 +62,12 @@ class AddTagComponent extends Component {
                 <section className={styles.container}>
                     <form onSubmit={this.onSubmit}>
                         <p style={{ color: 'red' }}>{errors.general}</p>
-                        <TagTypeSelect
+                        <TagSelect
                             name="type"
                             value={tag.type}
-                            onChange={v => this.setValue('type', v.target.value)}
+                            onChange={v =>
+                                this.setValue('type', v.target.value)
+                            }
                             className={styles.select}
                         />
                         <TextField
@@ -78,11 +80,16 @@ class AddTagComponent extends Component {
                             value={tag.value}
                             error={errors.value !== undefined}
                             helperText={errors.value}
-                            onChange={v => this.setValue('value', v.target.value)}
+                            onChange={v =>
+                                this.setValue('value', v.target.value)
+                            }
                             className={styles.textfield}
                         />
                         <div className={styles.formbuttons}>
-                            <FormButtons submitText={submitText} onCancel={this.onCancel} />
+                            <FormButtons
+                                submitText={submitText}
+                                onCancel={this.onCancel}
+                            />
                         </div>
                     </form>
                 </section>

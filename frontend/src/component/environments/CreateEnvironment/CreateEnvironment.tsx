@@ -12,6 +12,8 @@ import useLoading from '../../../hooks/useLoading';
 import useToast from '../../../hooks/useToast';
 import EnvironmentTypeSelector from '../form/EnvironmentTypeSelector/EnvironmentTypeSelector';
 import Input from '../../common/Input/Input';
+import useEnvironments from '../../../hooks/api/getters/useEnvironments/useEnvironments';
+import { Alert } from '@material-ui/lab';
 
 const NAME_EXISTS_ERROR = 'Error: Environment';
 
@@ -23,6 +25,7 @@ const CreateEnvironment = () => {
     const history = useHistory();
     const styles = useStyles();
     const { validateEnvName, createEnvironment, loading } = useEnvironmentApi();
+    const { environments } = useEnvironments();
     const ref = useLoading(loading);
     const { toast, setToastData } = useToast();
 
@@ -35,6 +38,8 @@ const CreateEnvironment = () => {
     };
 
     const goBack = () => history.goBack();
+
+    const canCreateMoreEnvs = environments.length < 5;
 
     const validateEnvironmentName = async () => {
         if (envName.length === 0) {
@@ -85,6 +90,7 @@ const CreateEnvironment = () => {
                     />
                 }
                 elseShow={
+                    <ConditionallyRender condition={canCreateMoreEnvs} show={
                     <div ref={ref}>
                         <p className={styles.helperText} data-loading>
                             Environments allow you to manage your product
@@ -152,6 +158,16 @@ const CreateEnvironment = () => {
                             </div>
                         </form>
                     </div>
+                    } elseShow={
+                        <>
+                        <Alert severity="error">
+                            <p>Currently Unleash does not support more than 5 environments. If you need more please reach out.</p>
+                        </Alert>
+                        <br />
+                        <Button onClick={goBack}  variant="contained" color="primary">Go back</Button>
+                        </>
+                    } />
+                    
                 }
             />
             {toast}

@@ -24,6 +24,7 @@ export const useStyles = makeStyles(theme => ({
         fontWeight: 'normal',
         fontSize: '1rem',
     },
+
     projectIcon: {
         margin: '1rem auto',
         width: '80px',

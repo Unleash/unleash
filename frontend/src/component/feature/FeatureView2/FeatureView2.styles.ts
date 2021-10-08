@@ -7,7 +7,12 @@ export const useStyles = makeStyles(theme => ({
         borderRadius: '10px',
         marginBottom: '1rem',
     },
-    innerContainer: { padding: '2rem' },
+    innerContainer: {
+        padding: '1rem 2rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
     separator: {
         width: '100%',
         backgroundColor: theme.palette.grey[200],

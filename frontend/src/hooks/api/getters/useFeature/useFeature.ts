@@ -17,13 +17,29 @@ const useFeature = (
     id: string,
     options: IUseFeatureOptions = {}
 ) => {
-    const fetcher = () => {
+    const fetcher = async () => {
         const path = formatApiPath(
             `api/admin/projects/${projectId}/features/${id}`
         );
-        return fetch(path, {
+
+        const res = await fetch(path, {
             method: 'GET',
-        }).then(res => res.json());
+        });
+
+
+        // If the status code is not in the range 200-299,
+        // we still try to parse and throw it.
+        if (!res.ok) {
+          const error = new Error('An error occurred while fetching the data.')
+          // Attach extra info to the error object.
+          // @ts-ignore
+          error.info = await res.json();
+          // @ts-ignore
+          error.status = res.status;
+          throw error;
+        }
+      
+        return res.json()
     };
 
     const FEATURE_CACHE_KEY = `api/admin/projects/${projectId}/features/${id}`;

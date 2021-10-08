@@ -1,23 +1,56 @@
 import { Tabs, Tab } from '@material-ui/core';
-import { Route, useHistory, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { Archive, FileCopy } from '@material-ui/icons';
+import { Route, useHistory, useParams, Link } from 'react-router-dom';
+import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeature from '../../../hooks/api/getters/useFeature/useFeature';
 import useTabs from '../../../hooks/useTabs';
+import useToast from '../../../hooks/useToast';
 import { IFeatureViewParams } from '../../../interfaces/params';
+import { UPDATE_FEATURE } from '../../AccessProvider/permissions';
+import Dialogue from '../../common/Dialogue';
+import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
 import FeatureLog from './FeatureLog/FeatureLog';
 import FeatureMetrics from './FeatureMetrics/FeatureMetrics';
 import FeatureOverview from './FeatureOverview/FeatureOverview';
 import FeatureStrategies from './FeatureStrategies/FeatureStrategies';
 import FeatureVariants from './FeatureVariants/FeatureVariants';
 import { useStyles } from './FeatureView2.styles';
+import FeatureSettings from './FeatureSettings/FeatureSettings';
 
 const FeatureView2 = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature } = useFeature(projectId, featureId);
     const { a11yProps } = useTabs(0);
+    const { archiveFeatureToggle } = useFeatureApi();
+    const { toast, setToastData } = useToast();
+    const [showDelDialog, setShowDelDialog] = useState(false);
     const styles = useStyles();
     const history = useHistory();
 
     const basePath = `/projects/${projectId}/features2/${featureId}`;
+
+    const archiveToggle = async () => {
+        try {
+            await archiveFeatureToggle(projectId, featureId);
+            setToastData({
+                text: 'Feature archived',
+                type: 'success',
+                show: true,
+            });
+            setShowDelDialog(false);
+            history.push(`/projects/${projectId}`);
+        } catch (e) {
+            setToastData({
+                show: true,
+                type: 'error',
+                text: e.toString(),
+            });
+            setShowDelDialog(false);
+        }
+    };
+
+    const handleCancel = () => setShowDelDialog(false);
 
     const tabData = [
         {
@@ -41,6 +74,7 @@ const FeatureView2 = () => {
             name: 'Event log',
         },
         { title: 'Variants', path: `${basePath}/variants`, name: 'Variants' },
+        { title: 'Settings', path: `${basePath}/settings`, name: 'Settings' },
     ];
 
     const renderTabs = () => {
@@ -65,6 +99,23 @@ const FeatureView2 = () => {
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
                     <h2 className={styles.featureViewHeader}>{feature.name}</h2>
+                    <div className={styles.actions}>
+                        <PermissionIconButton
+                            permission={UPDATE_FEATURE}
+                            tooltip="Copy"
+                            component={Link}
+                            to={`${history.location.pathname}/copy`}
+                        >
+                            <FileCopy />
+                        </PermissionIconButton>
+                        <PermissionIconButton
+                            permission={UPDATE_FEATURE}
+                            tooltip="Archive feature toggle"
+                            onClick={() => setShowDelDialog(true)}
+                        >
+                            <Archive />
+                        </PermissionIconButton>
+                    </div>
                 </div>
                 <div className={styles.separator} />
                 <div className={styles.tabContainer}>
@@ -98,6 +149,21 @@ const FeatureView2 = () => {
                 path={`/projects/:projectId/features2/:featureId/variants`}
                 component={FeatureVariants}
             />
+            <Route
+                path={`/projects/:projectId/features2/:featureId/settings`}
+                component={FeatureSettings}
+            />
+            <Dialogue
+                onClick={() => archiveToggle()}
+                open={showDelDialog}
+                onClose={handleCancel}
+                primaryButtonText="Archive toggle"
+                secondaryButtonText="Cancel"
+                title="Archive feature toggle"
+            >
+                Are you sure you want to archive this feature toggle?
+            </Dialogue>
+            {toast}
         </>
     );
 };

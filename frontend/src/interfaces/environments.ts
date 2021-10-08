@@ -24,3 +24,10 @@ export interface IEnvironmentResponse {
 export interface ISortOrderPayload {
     [index: string]: number;
 }
+
+export interface IEnvironmentMetrics {
+    name: string;
+    yes: number;
+    no: number;
+    timestamp: string;
+}

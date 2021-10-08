@@ -6,12 +6,25 @@ export const useStyles = makeStyles(theme => ({
         backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'column',
-        padding: '1.5rem',
         maxWidth: '350px',
         minWidth: '350px',
         marginRight: '1rem',
+        marginTop: '1rem',
     },
-    metaDataHeader: {
+    [theme.breakpoints.down(800)]: {
+        container: {
+            width: '100%',
+            maxWidth: 'none',
+        },
+    },
+    staleHeaderContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '1rem',
+        borderBottom: `1px solid ${theme.palette.grey[300]}`,
+    },
+    staleHeader: {
         display: 'flex',
         alignItems: 'center',
     },
@@ -21,9 +34,9 @@ export const useStyles = makeStyles(theme => ({
         margin: 0,
     },
     body: {
-        margin: '1rem 0',
         display: 'flex',
         flexDirection: 'column',
+        padding: '1rem',
     },
     bodyItem: {
         margin: '0.5rem 0',
@@ -39,5 +52,8 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         color: theme.palette.grey[600],
+    },
+    staleButton: {
+        display: 'flex',
     },
 }));

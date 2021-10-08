@@ -16,6 +16,7 @@ import cloneDeep from 'lodash.clonedeep';
 import FeatureStrategyCreateExecution from '../../FeatureStrategyCreateExecution/FeatureStrategyCreateExecution';
 import { PRODUCTION } from '../../../../../../constants/environmentTypes';
 import { ADD_NEW_STRATEGY_SAVE_ID } from '../../../../../../testIds';
+import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
 
 interface IFeatureStrategiesConfigure {
     setToastData: React.Dispatch<React.SetStateAction<IToastType>>;
@@ -27,6 +28,8 @@ const FeatureStrategiesConfigure = ({
     const history = useHistory();
 
     const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const { refetch } = useFeature(projectId, featureId);
+
     const [productionGuard, setProductionGuard] = useState(false);
 
     const styles = useStyles();
@@ -92,6 +95,7 @@ const FeatureStrategiesConfigure = ({
                 text: 'Successfully added strategy.',
             });
             history.replace(history.location.pathname);
+            refetch();
         } catch (e) {
             setToastData({
                 show: true,

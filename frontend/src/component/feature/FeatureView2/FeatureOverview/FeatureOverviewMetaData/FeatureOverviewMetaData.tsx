@@ -1,15 +1,16 @@
 import { capitalize, IconButton } from '@material-ui/core';
 import classnames from 'classnames';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { getFeatureTypeIcons } from '../../../../../utils/get-feature-type-icons';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
-import { useStyles } from './FeatureViewMetadata.styles';
+import { useStyles } from './FeatureOverviewMetadata.styles';
 
 import { Edit } from '@material-ui/icons';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 
-const FeatureViewMetaData = () => {
+const FeatureOverviewMetaData = () => {
     const styles = useStyles();
     const { projectId, featureId } = useParams<IFeatureViewParams>();
 
@@ -30,13 +31,16 @@ const FeatureViewMetaData = () => {
             <div className={styles.body}>
                 <span className={styles.bodyItem}>Project: {project}</span>
                 <ConditionallyRender
-                    condition
+                    condition={description}
                     show={
                         <span className={styles.bodyItem}>
                             <div>Description:</div>
                             <div className={styles.descriptionContainer}>
                                 <p>{description}</p>
-                                <IconButton>
+                                <IconButton
+                                    component={Link}
+                                    to={`/projects/${projectId}/features2/${featureId}/settings`}
+                                >
                                     <Edit />
                                 </IconButton>
                             </div>
@@ -44,10 +48,15 @@ const FeatureViewMetaData = () => {
                     }
                     elseShow={
                         <span>
-                            No description.{' '}
-                            <IconButton>
-                                <Edit />
-                            </IconButton>
+                            <div className={styles.descriptionContainer}>
+                                No description.{' '}
+                                <IconButton
+                                    component={Link}
+                                    to={`/projects/${projectId}/features2/${featureId}/settings`}
+                                >
+                                    <Edit />
+                                </IconButton>
+                            </div>
                         </span>
                     }
                 />
@@ -56,4 +65,4 @@ const FeatureViewMetaData = () => {
     );
 };
 
-export default FeatureViewMetaData;
+export default FeatureOverviewMetaData;

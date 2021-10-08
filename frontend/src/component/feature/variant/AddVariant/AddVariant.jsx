@@ -12,12 +12,13 @@ import {
 } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 import Dialog from '../../../common/Dialogue';
-import MySelect from '../../../common/select';
+
 import { modalStyles, trim } from '../../../common/util';
 import { weightTypes } from '../enums';
 import OverrideConfig from './OverrideConfig/OverrideConfig';
 import { useCommonStyles } from '../../../../common.styles';
 import ConditionallyRender from '../../../common/ConditionallyRender';
+import GeneralSelect from '../../../common/GeneralSelect/GeneralSelect';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -264,7 +265,7 @@ const AddVariant = ({
                 </p>
                 <Grid container>
                     <Grid item md={2} sm={2} xs={4}>
-                        <MySelect
+                        <GeneralSelect
                             name="type"
                             label="Type"
                             className={commonStyles.fullWidth}

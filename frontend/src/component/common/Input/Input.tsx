@@ -1,9 +1,8 @@
 import { TextField } from '@material-ui/core';
 import { useStyles } from './Input.styles.ts';
 
-interface IInputProps {
+interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
-    placeholder?: string;
     error?: boolean;
     errorText?: string;
     style?: Object;

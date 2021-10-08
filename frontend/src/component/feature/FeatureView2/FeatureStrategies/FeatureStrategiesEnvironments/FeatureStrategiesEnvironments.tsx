@@ -59,6 +59,8 @@ const FeatureStrategiesEnvironments = () => {
         if (addStrategy) {
             setExpandedSidebar(true);
         }
+        console.log(feature);
+        if (!feature) return;
 
         if (environmentTab) {
             const env = feature.environments.find(
@@ -73,6 +75,7 @@ const FeatureStrategiesEnvironments = () => {
             return;
         }
 
+        if (feature?.environments?.length === 0) return;
         setActiveEnvironment(feature?.environments[activeTabIdx]);
         /*eslint-disable-next-line */
     }, [feature]);
@@ -97,6 +100,7 @@ const FeatureStrategiesEnvironments = () => {
         }
         /*eslint-disable-next-line */
     }, [feature]);
+    if (!feature) return null;
 
     const renderTabs = () => {
         return featureCache?.environments?.map((env, index) => {
@@ -312,11 +316,11 @@ const FeatureStrategiesEnvironments = () => {
                                                     <Button
                                                         variant="contained"
                                                         color="primary"
-                                                        onClick={() =>
+                                                        onClick={() => {
                                                             setExpandedSidebar(
                                                                 prev => !prev
-                                                            )
-                                                        }
+                                                            );
+                                                        }}
                                                     >
                                                         Add your first strategy
                                                     </Button>
@@ -370,7 +374,7 @@ const FeatureStrategiesEnvironments = () => {
                                         }
                                         Icon={Add}
                                         maxWidth="700px"
-                                        disabled={!hasAccess(UPDATE_FEATURE)}
+                                        permission={UPDATE_FEATURE}
                                     >
                                         Add new strategy
                                     </ResponsiveButton>

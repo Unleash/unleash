@@ -16,6 +16,7 @@ export const useStyles = makeStyles(theme => ({
             width: '85%',
         },
     },
+
     environmentsHeader: {
         padding: '2rem 2rem 1rem 2rem',
         display: 'flex',

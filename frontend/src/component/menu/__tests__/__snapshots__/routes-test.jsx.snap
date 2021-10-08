@@ -186,6 +186,15 @@ Array [
   },
   Object {
     "component": [Function],
+    "layout": "main",
+    "menu": Object {},
+    "parent": "/projects/:id/features/:name/:activeTab",
+    "path": "/projects/:id/features2/:name/:activeTab/copy",
+    "title": "Copy",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
     "flags": "E",
     "layout": "main",
     "menu": Object {},

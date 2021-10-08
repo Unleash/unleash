@@ -102,7 +102,7 @@ afterAll(async () => {
 });
 
 test('returns four feature toggles', async () => {
-    app.request
+    return app.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -111,19 +111,18 @@ test('returns four feature toggles', async () => {
         });
 });
 
-test('returns four feature toggles without createdAt', async () =>
-    app.request
+test('returns four feature toggles without createdAt', async () => {
+    return app.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
             expect(res.body.features).toHaveLength(4);
             expect(res.body.features[0].createdAt).toBeFalsy();
-        }));
+        });
+});
 
 test('gets a feature by name', async () => {
-    expect.assertions(0);
-
     return app.request
         .get('/api/client/features/featureX')
         .expect('Content-Type', /json/)
@@ -131,8 +130,6 @@ test('gets a feature by name', async () => {
 });
 
 test('cant get feature that does not exist', async () => {
-    expect.assertions(0);
-
     return app.request
         .get('/api/client/features/myfeature')
         .expect('Content-Type', /json/)
@@ -140,8 +137,6 @@ test('cant get feature that does not exist', async () => {
 });
 
 test('Can filter features by namePrefix', async () => {
-    expect.assertions(2);
-
     return app.request
         .get('/api/client/features?namePrefix=feature.')
         .expect('Content-Type', /json/)

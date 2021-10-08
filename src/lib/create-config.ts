@@ -40,7 +40,7 @@ function safeNumber(envVar, defaultVal): number {
     }
 }
 
-function safeBoolean(envVar, defaultVal) {
+function safeBoolean(envVar: string, defaultVal: boolean): boolean {
     if (envVar) {
         return envVar === 'true' || envVar === '1' || envVar === 't';
     }
@@ -223,6 +223,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     ]);
 
     const experimental = options.experimental || {};
+
+    if (safeBoolean(process.env.EXP_METRICS_V2, false)) {
+        experimental.metricsV2 = { enabled: true };
+    }
 
     const email: IEmailOption = mergeAll([defaultEmail, options.email]);
 

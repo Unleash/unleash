@@ -22,6 +22,7 @@ import { IFeatureEnvironmentStore } from './stores/feature-environment-store';
 import { IFeatureStrategiesStore } from './stores/feature-strategies-store';
 import { IEnvironmentStore } from './stores/environment-store';
 import { IFeatureToggleClientStore } from './stores/feature-toggle-client-store';
+import { IClientMetricsStoreV2 } from './stores/client-metrics-store-v2';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -30,6 +31,7 @@ export interface IUnleashStores {
     clientApplicationsStore: IClientApplicationsStore;
     clientInstanceStore: IClientInstanceStore;
     clientMetricsStore: IClientMetricsStore;
+    clientMetricsStoreV2: IClientMetricsStoreV2;
     contextFieldStore: IContextFieldStore;
     environmentStore: IEnvironmentStore;
     eventStore: IEventStore;

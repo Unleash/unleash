@@ -8,6 +8,7 @@ import HealthService from './health-service';
 import ProjectService from './project-service';
 import StateService from './state-service';
 import ClientMetricsService from './client-metrics';
+import ClientMetricsServiceV2 from './client-metrics/client-metrics-service-v2';
 import TagTypeService from './tag-type-service';
 import TagService from './tag-service';
 import StrategyService from './strategy-service';
@@ -34,6 +35,7 @@ export const createServices = (
     const accessService = new AccessService(stores, config);
     const apiTokenService = new ApiTokenService(stores, config);
     const clientMetricsService = new ClientMetricsService(stores, config);
+    const clientMetricsServiceV2 = new ClientMetricsServiceV2(stores, config);
     const contextService = new ContextService(stores, config);
     const emailService = new EmailService(config.email, config.getLogger);
     const eventService = new EventService(stores, config);
@@ -82,6 +84,7 @@ export const createServices = (
         tagTypeService,
         tagService,
         clientMetricsService,
+        clientMetricsServiceV2,
         contextService,
         versionService,
         apiTokenService,

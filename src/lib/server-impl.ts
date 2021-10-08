@@ -49,6 +49,7 @@ async function createApp(
         metricsMonitor.stopMonitoring();
         stores.clientInstanceStore.destroy();
         stores.clientMetricsStore.destroy();
+        services.clientMetricsServiceV2.destroy();
         await db.destroy();
     };
 

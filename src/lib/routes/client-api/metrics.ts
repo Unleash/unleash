@@ -7,33 +7,63 @@ import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
+import ClientMetricsServiceV2 from '../../services/client-metrics/client-metrics-service-v2';
+import { User } from '../../server-impl';
+import { IClientApp } from '../../types/model';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
 
     metrics: ClientMetricsService;
 
+    metricsV2: ClientMetricsServiceV2;
+
+    newServiceEnabled: boolean = false;
+
     constructor(
         {
             clientMetricsService,
-        }: Pick<IUnleashServices, 'clientMetricsService'>,
+            clientMetricsServiceV2,
+        }: Pick<
+            IUnleashServices,
+            'clientMetricsService' | 'clientMetricsServiceV2'
+        >,
         config: IUnleashConfig,
     ) {
         super(config);
-        this.logger = config.getLogger('/api/client/metrics');
+        const { experimental, getLogger } = config;
+        if (experimental && experimental.metricsV2) {
+            //@ts-ignore
+            this.newServiceEnabled = experimental.metricsV2.enabled;
+        }
+
+        this.logger = getLogger('/api/client/metrics');
         this.metrics = clientMetricsService;
+        this.metricsV2 = clientMetricsServiceV2;
 
         this.post('/', this.registerMetrics);
     }
 
-    async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
-        const { body: data, ip: clientIp, user } = req;
+    private resolveEnvironment(user: User, data: IClientApp) {
         if (user instanceof ApiUser) {
             if (user.environment !== ALL) {
-                data.environment = user.environment;
+                return user.environment;
+            } else if (user.environment === ALL && data.environment) {
+                return data.environment;
             }
         }
+        return 'default';
+    }
+
+    async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
+        const { body: data, ip: clientIp, user } = req;
+        data.environment = this.resolveEnvironment(user, data);
         await this.metrics.registerClientMetrics(data, clientIp);
+
+        if (this.newServiceEnabled) {
+            await this.metricsV2.registerClientMetrics(data, clientIp);
+        }
+
         return res.status(202).end();
     }
 }

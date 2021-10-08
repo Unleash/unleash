@@ -16,8 +16,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('should be possble to send metrics', async () => {
-    expect.assertions(0);
+test('should be possible to send metrics', async () => {
     return app.request
         .post('/api/client/metrics')
         .send(metricsExample)
@@ -25,7 +24,6 @@ test('should be possble to send metrics', async () => {
 });
 
 test('should require valid send metrics', async () => {
-    expect.assertions(0);
     return app.request
         .post('/api/client/metrics')
         .send({
@@ -34,8 +32,7 @@ test('should require valid send metrics', async () => {
         .expect(400);
 });
 
-test('should accept client metrics', async () => {
-    expect.assertions(0);
+test('should accept empty client metrics', async () => {
     return app.request
         .post('/api/client/metrics')
         .send({

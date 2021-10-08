@@ -6,13 +6,14 @@ import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/client-metrics-schema';
 import { createServices } from '../../services';
 import { IUnleashStores } from '../../types';
+import { IUnleashOptions } from '../../server-impl';
 
 const eventBus = new EventEmitter();
 
-function getSetup() {
+function getSetup(opts?: IUnleashOptions) {
     const stores = createStores();
 
-    const config = createTestConfig();
+    const config = createTestConfig(opts);
     const services = createServices(stores, config);
     const app = getApp(config, stores, services, eventBus);
 
@@ -82,6 +83,31 @@ test('should accept client metrics with yes/no', () => {
             },
         })
         .expect(202);
+});
+
+test('should accept client metrics with yes/no with metricsV2', async () => {
+    const testRunner = getSetup({
+        experimental: { metricsV2: { enabled: true } },
+    });
+    await testRunner.request
+        .post('/api/client/metrics')
+        .send({
+            appName: 'demo',
+            instanceId: '1',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {
+                    toggleA: {
+                        yes: 200,
+                        no: 0,
+                    },
+                },
+            },
+        })
+        .expect(202);
+
+    testRunner.destroy();
 });
 
 test('should accept client metrics with variants', () => {

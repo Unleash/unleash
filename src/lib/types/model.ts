@@ -259,6 +259,7 @@ export interface IClientApp {
     appName: string;
     instanceId: string;
     clientIp?: string;
+    environment?: string;
     seenToggles?: string[];
     metricsCount?: number;
     strategies?: string[] | Record<string, string>[];

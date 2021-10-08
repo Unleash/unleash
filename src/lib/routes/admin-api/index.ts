@@ -11,6 +11,7 @@ import MetricsController from './metrics';
 import UserController from './user';
 import ConfigController from './config';
 import ContextController from './context';
+import ClientMetricsController from './client-metrics';
 import BootstrapController from './bootstrap-controller';
 import StateController from './state';
 import TagController from './tag';
@@ -48,6 +49,10 @@ class AdminApi extends Controller {
         this.app.use(
             '/metrics',
             new MetricsController(config, services).router,
+        );
+        this.app.use(
+            '/client-metrics',
+            new ClientMetricsController(config, services).router,
         );
         this.app.use('/user', new UserController(config, services).router);
         this.app.use(

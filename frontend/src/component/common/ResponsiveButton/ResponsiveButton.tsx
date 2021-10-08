@@ -1,11 +1,14 @@
-import { IconButton, Tooltip, Button, useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@material-ui/core';
 import ConditionallyRender from '../ConditionallyRender';
+import PermissionButton from '../PermissionButton/PermissionButton';
+import PermissionIconButton from '../PermissionIconButton/PermissionIconButton';
 
 interface IResponsiveButtonProps {
     Icon: React.ElementType;
     onClick: () => void;
     tooltip?: string;
     disabled?: boolean;
+    permission?: string;
     maxWidth: string;
 }
 
@@ -16,35 +19,39 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
     tooltip,
     disabled = false,
     children,
+    permission,
     ...rest
 }) => {
     const smallScreen = useMediaQuery(`(max-width:${maxWidth})`);
 
     return (
-        <Tooltip title={tooltip ? tooltip : ''} arrow>
-            <span>
-            <ConditionallyRender
-                condition={smallScreen}
-                show={
-                    <IconButton disabled={disabled} onClick={onClick} data-loading {...rest}>
-                        <Icon />
-                    </IconButton>
-                }
-                elseShow={
-                    <Button
-                        onClick={onClick}
-                        color="primary"
-                        variant="contained"
-                        disabled={disabled}
-                        data-loading
-                        {...rest}
-                    >
-                        {children}
-                    </Button>
-                }
-            />
-            </span>
-        </Tooltip>
+        <ConditionallyRender
+            condition={smallScreen}
+            show={
+                <PermissionIconButton
+                    disabled={disabled}
+                    onClick={onClick}
+                    permission={permission}
+                    data-loading
+                    {...rest}
+                >
+                    <Icon />
+                </PermissionIconButton>
+            }
+            elseShow={
+                <PermissionButton
+                    onClick={onClick}
+                    permission={permission}
+                    color="primary"
+                    variant="contained"
+                    disabled={disabled}
+                    data-loading
+                    {...rest}
+                >
+                    {children}
+                </PermissionButton>
+            }
+        />
     );
 };
 

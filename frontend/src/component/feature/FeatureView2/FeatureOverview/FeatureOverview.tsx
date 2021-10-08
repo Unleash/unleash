@@ -1,17 +1,25 @@
-import FeatureViewMetaData from './FeatureViewMetaData/FeatureViewMetaData';
+import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData';
 import FeatureOverviewStrategies from './FeatureOverviewStrategies/FeatureOverviewStrategies';
-import { useStyles } from './FeatureOverview.styles';
 import FeatureOverviewTags from './FeatureOverviewTags/FeatureOverviewTags';
+import FeatureViewStale from './FeatureOverviewStale/FeatureOverviewStale';
+
+import { useStyles } from './FeatureOverview.styles';
+import FeatureOverviewMetrics from './FeatureOverviewMetrics/FeatureOverviewMetrics';
 
 const FeatureOverview = () => {
     const styles = useStyles();
+
     return (
         <div className={styles.container}>
-            <div className={styles.sidebar}>
-                <FeatureViewMetaData />
+            <div>
+                <FeatureOverviewMetaData />
+                <FeatureViewStale />
                 <FeatureOverviewTags />
             </div>
             <div className={styles.mainContent}>
+                <div className={styles.trafficContainer}>
+                    <FeatureOverviewMetrics />
+                </div>
                 <FeatureOverviewStrategies />
             </div>
         </div>

@@ -2,6 +2,7 @@ import { Add } from '@material-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
+import { UPDATE_FEATURE } from '../../../../AccessProvider/permissions';
 import ResponsiveButton from '../../../../common/ResponsiveButton/ResponsiveButton';
 import FeatureOverviewEnvironment from './FeatureOverviewEnvironment/FeatureOverviewEnvironment';
 import { useStyles } from './FeatureOverviewStrategies.styles';
@@ -9,7 +10,7 @@ import { useStyles } from './FeatureOverviewStrategies.styles';
 const FeatureOverviewStrategies = () => {
     const styles = useStyles();
     const { projectId, featureId } = useParams<IFeatureViewParams>();
-    const { feature, refetch } = useFeature(projectId, featureId);
+    const { feature } = useFeature(projectId, featureId);
 
     if (!feature) return null;
 
@@ -17,13 +18,7 @@ const FeatureOverviewStrategies = () => {
 
     const renderEnvironments = () => {
         return environments?.map(env => {
-            return (
-                <FeatureOverviewEnvironment
-                    env={env}
-                    key={env.name}
-                    refetch={refetch}
-                />
-            );
+            return <FeatureOverviewEnvironment env={env} key={env.name} />;
         });
     };
 
@@ -35,7 +30,9 @@ const FeatureOverviewStrategies = () => {
                     <div className={styles.actions}>
                         <ResponsiveButton
                             maxWidth="700px"
+                            permission={UPDATE_FEATURE}
                             Icon={Add}
+                            tooltip="Add new strategy"
                             className={styles.addStrategyButton}
                             component={Link}
                             to={`/projects/${projectId}/features2/${featureId}/strategies?addStrategy=true`}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import MySelect from '../common/select';
+import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
 
 class FeatureTypeSelectComponent extends Component {
     componentDidMount() {
@@ -34,7 +34,7 @@ class FeatureTypeSelectComponent extends Component {
         }
 
         return (
-            <MySelect
+            <GeneralSelect
                 disabled={!editable}
                 options={options}
                 value={value}

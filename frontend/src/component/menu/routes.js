@@ -222,6 +222,15 @@ export const routes = [
         menu: {},
     },
     {
+        path: '/projects/:id/features2/:name/:activeTab/copy',
+        parent: '/projects/:id/features/:name/:activeTab',
+        title: 'Copy',
+        component: CopyFeatureToggle,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
         path: '/projects/:projectId/features2/:featureId',
         parent: '/projects',
         title: 'FeatureView2',

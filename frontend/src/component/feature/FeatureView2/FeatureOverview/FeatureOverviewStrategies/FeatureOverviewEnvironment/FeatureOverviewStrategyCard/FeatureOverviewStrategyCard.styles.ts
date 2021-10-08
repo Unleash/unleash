@@ -12,6 +12,7 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         padding: '0.75rem',
+        cursor: 'pointer',
         fontSize: theme.fontSizes.bodySize,
     },
     cardHeader: {

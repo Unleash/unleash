@@ -21,9 +21,12 @@ jest.mock('../update-strategies-container', () => ({
     __esModule: true,
     default: 'UpdateStrategiesComponent',
 }));
-jest.mock('../../feature-type-select-container', () => 'FeatureTypeSelect');
+jest.mock(
+    '../../../feature/FeatureView2/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect',
+    () => 'FeatureTypeSelect'
+);
 jest.mock('../../../common/ProjectSelect', () => 'ProjectSelect');
-jest.mock('../../tag-type-select-container', () => 'TagTypeSelect');
+jest.mock('../../../common/TagSelect/TagSelect', () => 'TagSelect');
 jest.mock('../../feature-tag-component', () => 'FeatureTagComponent');
 jest.mock('../../add-tag-dialog-container', () => 'AddTagDialog');
 jest.spyOn(console, 'error').mockImplementation();
@@ -61,6 +64,7 @@ test('renders correctly with one feature', () => {
                 },
             }),
         },
+        featureTypes: { toJS: () => [{ id: 'release', name: 'Release' }] },
     };
 
     const mockReducer = state => state;

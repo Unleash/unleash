@@ -1,14 +1,13 @@
-import { TextField, } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import classNames from 'classnames';
 import React, { useState, useEffect } from 'react';
 import { styles as commonStyles } from '../../../component/common';
 import { IApiTokenCreate } from '../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import useEnvironments from '../../../hooks/api/getters/useEnvironments/useEnvironments';
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import ConditionallyRender from '../../common/ConditionallyRender';
 import Dialogue from '../../common/Dialogue';
-import MySelect from '../../common/select';
+import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
+
 import { useStyles } from './styles';
 
 const ALL = '*';
@@ -29,8 +28,8 @@ interface IDataError {
 const INITIAL_DATA: IApiTokenCreate = {
     username: '',
     type: TYPE_CLIENT,
-    project: ALL
-}
+    project: ALL,
+};
 
 const ApiTokenCreate = ({
     showDialog,
@@ -42,19 +41,26 @@ const ApiTokenCreate = ({
     const [error, setError] = useState<IDataError>({});
     const { projects } = useProjects();
     const { environments } = useEnvironments();
-    const { uiConfig } = useUiConfig();
 
     useEffect(() => {
-        if(environments && environments.length > 0 && data.type === TYPE_CLIENT && !data.environment) {
-            setData({...data, environment: environments[0].name})
+        if (
+            environments &&
+            environments.length > 0 &&
+            data.type === TYPE_CLIENT &&
+            !data.environment
+        ) {
+            setData({ ...data, environment: environments[0].name });
         }
     }, [data, environments]);
 
     const clear = () => {
-        const environment = environments && environments.length > 0 ? environments[0].name : undefined;
-        setData({...INITIAL_DATA, environment });
+        const environment =
+            environments && environments.length > 0
+                ? environments[0].name
+                : undefined;
+        setData({ ...INITIAL_DATA, environment });
         setError({});
-    }
+    };
 
     const onCancel = (e: Event) => {
         clear();
@@ -62,75 +68,78 @@ const ApiTokenCreate = ({
     };
 
     const isValid = () => {
-        if(!data.username) {
-            setError({username: 'Username is required.'});
+        if (!data.username) {
+            setError({ username: 'Username is required.' });
             return false;
         } else {
-            setError({})
+            setError({});
             return true;
         }
-    }
-
-    
+    };
 
     const submit = async () => {
-        if(!isValid()) {
+        if (!isValid()) {
             return;
         }
-        
+
         try {
             await createToken(data);
             clear();
             closeDialog();
         } catch (error) {
-            setError({general: 'Unable to create new API token'});
+            setError({ general: 'Unable to create new API token' });
         }
+    };
 
-    }
-
-    const setType = (event: React.ChangeEvent<{value: string }>) => {
+    const setType = (event: React.ChangeEvent<{ value: string }>) => {
         const value = event.target.value;
-        if(value === TYPE_ADMIN) {  
-            setData({...data, type: value, environment: ALL, project: ALL})
-
+        if (value === TYPE_ADMIN) {
+            setData({ ...data, type: value, environment: ALL, project: ALL });
         } else {
-            setData({...data, type: value, environment: environments[0].name})
+            setData({
+                ...data,
+                type: value,
+                environment: environments[0].name,
+            });
         }
-        
-    }
+    };
 
-    const setUsername = (event: React.ChangeEvent<{value: string }>) => {
+    const setUsername = (event: React.ChangeEvent<{ value: string }>) => {
         const value = event.target.value;
-        setData({...data, username: value})
-    }
+        setData({ ...data, username: value });
+    };
 
-    const setProject = (event:  React.ChangeEvent<{value: string }>) => {
+    const setProject = (event: React.ChangeEvent<{ value: string }>) => {
         const value = event.target.value;
-        setData({...data, project: value})
-    }
+        setData({ ...data, project: value });
+    };
 
-    const setEnvironment = (event: React.ChangeEvent<{value: string }>) => {
+    const setEnvironment = (event: React.ChangeEvent<{ value: string }>) => {
         const value = event.target.value;
-        setData({...data, environment: value})
-    }
+        setData({ ...data, environment: value });
+    };
 
-    const selectableProjects = [{id: '*', name: 'ALL'}, ...projects].map(i => ({
-        key: i.id,
-        label: i.name,
-        title: i.name,
-    }));
-    
-    const selectableEnvs = data.type === TYPE_ADMIN ? [{key: '*', label: 'ALL'}] : environments.map(i => ({
-        key: i.name,
-        label: i.name,
-        title: i.name,
-    }));
+    const selectableProjects = [{ id: '*', name: 'ALL' }, ...projects].map(
+        i => ({
+            key: i.id,
+            label: i.name,
+            title: i.name,
+        })
+    );
 
+    const selectableEnvs =
+        data.type === TYPE_ADMIN
+            ? [{ key: '*', label: 'ALL' }]
+            : environments.map(i => ({
+                  key: i.name,
+                  label: i.name,
+                  title: i.name,
+              }));
 
     const selectableTypes = [
-        {key: 'CLIENT', label: 'Client', title: 'Client SDK token'},
-        {key: 'ADMIN', label: 'Admin', title: 'Admin API token'}
-    ]
+        { key: 'CLIENT', label: 'Client', title: 'Client SDK token' },
+        { key: 'ADMIN', label: 'Admin', title: 'Admin API token' },
+    ];
 
     return (
         <Dialogue
@@ -142,59 +151,60 @@ const ApiTokenCreate = ({
             title="New API token"
         >
             <form
-                    onSubmit={submit}
-                    className={classNames(
-                        styles.addApiKeyForm,
-                        commonStyles.contentSpacing
-                    )}
-                >
-                    <TextField
-                        value={data.username}
-                        name="username"
-                        onChange={setUsername}
-                        onBlur={isValid}
-                        label="Username"
-                        style={{ width: '200px' }}
-                        error={error.username !== undefined}
-                        helperText={error.username}
-                        variant="outlined"
-                        size="small"
-                        required
-                    />
-                    <MySelect
-                        disabled={false}
-                        options={selectableTypes}
-                        value={data.type}
-                        onChange={setType}
-                        label="Token Type"
-                        id='api_key_type'
-                        name="type" className={undefined} classes={undefined}
-                    />
-                    <ConditionallyRender condition={uiConfig.flags.E} show={
-                        <>
-                        <MySelect
-                            disabled={data.type === TYPE_ADMIN}
-                            options={selectableProjects}
-                            value={data.project}
-                            onChange={setProject}
-                            label="Project"
-                            id='api_key_project'
-                            name="project" className={undefined} classes={undefined}
-                        />
-                        <MySelect
-                            disabled={data.type === TYPE_ADMIN}
-                            options={selectableEnvs}
-                            value={data.environment}
-                            required
-                            onChange={setEnvironment}
-                            label="Environment"
-                            id='api_key_environment'
-                            name="environment" className={undefined} classes={undefined}
-                        />
-                    </>
-                    } />
-                    
-                </form>
+                onSubmit={submit}
+                className={classNames(
+                    styles.addApiKeyForm,
+                    commonStyles.contentSpacing
+                )}
+            >
+                <TextField
+                    value={data.username}
+                    name="username"
+                    onChange={setUsername}
+                    onBlur={isValid}
+                    label="Username"
+                    style={{ width: '200px' }}
+                    error={error.username !== undefined}
+                    helperText={error.username}
+                    variant="outlined"
+                    size="small"
+                    required
+                />
+                <GeneralSelect
+                    disabled={false}
+                    options={selectableTypes}
+                    value={data.type}
+                    onChange={setType}
+                    label="Token Type"
+                    id="api_key_type"
+                    name="type"
+                    className={undefined}
+                    classes={undefined}
+                />
+                <GeneralSelect
+                    disabled={data.type === TYPE_ADMIN}
+                    options={selectableProjects}
+                    value={data.project}
+                    onChange={setProject}
+                    label="Project"
+                    id="api_key_project"
+                    name="project"
+                    className={undefined}
+                    classes={undefined}
+                />
+                <GeneralSelect
+                    disabled={data.type === TYPE_ADMIN}
+                    options={selectableEnvs}
+                    value={data.environment}
+                    required
+                    onChange={setEnvironment}
+                    label="Environment"
+                    id="api_key_environment"
+                    name="environment"
+                    className={undefined}
+                    classes={undefined}
+                />
+            </form>
         </Dialogue>
     );
 };

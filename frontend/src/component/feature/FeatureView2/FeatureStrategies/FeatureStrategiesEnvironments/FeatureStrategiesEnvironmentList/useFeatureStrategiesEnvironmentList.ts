@@ -133,6 +133,7 @@ const useFeatureStrategiesEnvironmentList = (
         setExpandedSidebar,
         expandedSidebar,
         featureId,
+        activeEnvironment,
     };
 };
 

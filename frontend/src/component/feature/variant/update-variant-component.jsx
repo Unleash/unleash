@@ -14,8 +14,9 @@ import {
     Typography,
 } from '@material-ui/core';
 import AddVariant from './AddVariant/AddVariant';
-import MySelect from '../../common/select';
+
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
 
 const initialState = {
     showDialog: false,
@@ -114,7 +115,7 @@ class UpdateVariantComponent extends Component {
 
         return (
             <section style={{ paddingTop: '16px' }}>
-                <MySelect
+                <GeneralSelect
                     label="Stickiness"
                     options={options}
                     value={value}
@@ -130,7 +131,8 @@ class UpdateVariantComponent extends Component {
                     allocation across variants.{' '}
                     <a
                         href="https://docs.getunleash.io/advanced/toggle_variants"
-                        target="_blank" rel="noreferrer"
+                        target="_blank"
+                        rel="noreferrer"
                     >
                         Read more
                     </a>

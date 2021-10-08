@@ -4,12 +4,12 @@ import { IconButton, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { Delete } from '@material-ui/icons';
 
-import MySelect from '../../../../common/select';
 import InputListField from '../../../../common/input-list-field';
 import ConditionallyRender from '../../../../common/ConditionallyRender/ConditionallyRender';
 import { useCommonStyles } from '../../../../../common.styles';
 import { useStyles } from './StrategyConstraintInputField.styles';
 import { CONSTRAINT_AUTOCOMPLETE_ID } from '../../../../../testIds';
+import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
 
 const constraintOperators = [
     { key: 'IN', label: 'IN' },
@@ -85,7 +85,7 @@ const StrategyConstraintInputField = ({
     return (
         <tr className={commonStyles.contentSpacingY}>
             <td className={styles.tableCell}>
-                <MySelect
+                <GeneralSelect
                     name="contextName"
                     label="Context Field"
                     options={constraintContextNames}
@@ -97,7 +97,7 @@ const StrategyConstraintInputField = ({
                 />
             </td>
             <td className={styles.tableCell}>
-                <MySelect
+                <GeneralSelect
                     name="operator"
                     label="Operator"
                     options={constraintOperators}

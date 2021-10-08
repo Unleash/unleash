@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { DialogContentText, Button, TextField } from '@material-ui/core';
-import TagTypeSelect from '../feature/tag-type-select-container';
 import Dialogue from '../common/Dialogue';
 import { trim } from '../common/util';
+import TagSelect from '../common/TagSelect/TagSelect';
 
 import styles from './add-tag-dialog-component.module.scss';
 
@@ -82,7 +82,7 @@ class AddTagDialogComponent extends Component {
                         </DialogContentText>
                         <form onSubmit={this.onSubmit}>
                             <section className={styles.dialogueFormContent}>
-                                <TagTypeSelect
+                                <TagSelect
                                     name="type"
                                     value={tag.type}
                                     onChange={v =>

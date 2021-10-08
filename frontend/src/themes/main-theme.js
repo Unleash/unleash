@@ -1,6 +1,6 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 
-const theme = createTheme({
+const theme = createMuiTheme({
     typography: {
         fontFamily: ['Sen', 'Roboto, sans-serif'],
         fontWeightBold: '700',

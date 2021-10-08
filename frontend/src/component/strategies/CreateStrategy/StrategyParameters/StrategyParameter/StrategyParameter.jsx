@@ -1,7 +1,8 @@
 import { TextField, Checkbox, FormControlLabel } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import MySelect from '../../../../common/select';
+
 import { styles as commonStyles } from '../../../../common';
+import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
 
 const paramTypesOptions = [
     { key: 'string', label: 'string' },
@@ -26,7 +27,7 @@ const StrategyParameter = ({ set, input = {}, index }) => {
                 variant="outlined"
                 size="small"
             />
-            <MySelect
+            <GeneralSelect
                 label="Type"
                 options={paramTypesOptions}
                 value={input.type || 'string'}

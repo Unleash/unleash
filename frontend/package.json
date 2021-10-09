@@ -54,7 +54,7 @@
     "array-move": "3.0.1",
     "classnames": "2.3.1",
     "craco": "0.0.3",
-    "css-loader": "6.3.0",
+    "css-loader": "6.4.0",
     "cypress": "8.5.0",
     "date-fns": "2.25.0",
     "debounce": "1.2.1",

@@ -12,16 +12,36 @@ export const useStyles = makeStyles(theme => ({
         maxWidth: '400px',
         marginBottom: '1rem',
     },
-    cardLink: {
-        color: 'inherit',
-        textDecoration: 'none',
-        border: 'none',
-        padding: '0',
-        background: 'transparent',
-        fontFamily: theme.typography.fontFamily,
-        pointer: 'cursor',
-    },
     center: {
         textAlign: 'center'
+    },
+    actionsContainer: {
+        textAlign: 'center',
+        display: 'flex-inline',
+        flexWrap: 'nowrap'
+    },
+    infoBoxContainer:{
+        marginBottom:40
+    },
+    hideSM:{
+        [theme.breakpoints.down('sm')]: { 
+            display: 'none'
+    }
+    },
+    hideMD:{
+        [theme.breakpoints.down('md')]: { 
+            display: 'none'
+    }
+    },
+    hideXS:{
+        [theme.breakpoints.down('xs')]: { 
+            display: 'none'
+    }
+    },
+    token:{
+        textAlign: 'left',
+        [theme.breakpoints.up('sm')]: { 
+            display: 'none'
+    }
     }
 }));

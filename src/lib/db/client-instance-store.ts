@@ -18,6 +18,7 @@ const COLUMNS = [
     'client_ip',
     'last_seen',
     'created_at',
+    'environment',
 ];
 const TABLE = 'client_instances';
 
@@ -30,6 +31,7 @@ const mapRow = (row) => ({
     clientIp: row.client_ip,
     lastSeen: row.last_seen,
     createdAt: row.created_at,
+    environment: row.environment,
 });
 
 const mapToDb = (client) => ({
@@ -38,6 +40,7 @@ const mapToDb = (client) => ({
     sdk_version: client.sdkVersion || '',
     client_ip: client.clientIp,
     last_seen: client.lastSeen || 'now()',
+    environment: client.environment || 'default',
 });
 
 export default class ClientInstanceStore implements IClientInstanceStore {
@@ -79,7 +82,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         const rows = instances.map(mapToDb);
         await this.db(TABLE)
             .insert(rows)
-            .onConflict(['app_name', 'instance_id'])
+            .onConflict(['app_name', 'instance_id', 'environment'])
             .merge();
     }
 
@@ -126,7 +129,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
 
         await this.db(TABLE)
             .insert(mapToDb(details))
-            .onConflict(['app_name', 'instance_id'])
+            .onConflict(['app_name', 'instance_id', 'environment'])
             .merge();
 
         stopTimer();

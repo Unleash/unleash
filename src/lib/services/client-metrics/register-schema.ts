@@ -13,4 +13,5 @@ export const clientRegisterSchema = joi
             .items(joi.string(), joi.any().strip()),
         started: joi.date().required(),
         interval: joi.number().required(),
+        environment: joi.string().optional(),
     });

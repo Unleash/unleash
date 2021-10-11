@@ -92,8 +92,8 @@ const FeatureToggleListNew = ({
                         <TableCell
                             className={classnames(
                                 styles.tableCell,
-                                styles.tableCellHeader,
-                                styles.typeHeader
+                                styles.tableCellType,
+                                styles.tableCellHeader
                             )}
                             align="center"
                         >

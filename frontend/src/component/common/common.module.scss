@@ -40,6 +40,13 @@
     }
 }
 
+@media (max-width: 600px) {
+    .hideLt600 {
+        display: none;
+    }
+}
+
+
 .dataTableHeader {
     display: flex;
     justify-content: space-between;

@@ -14,29 +14,23 @@ export const useStyles = makeStyles(theme => ({
         color: theme.palette.grey[600],
         borderBottom: '1px solid ' + theme.palette.grey[200],
     },
-    typeHeader: {
-        [theme.breakpoints.down('sm')]: {
-            display: 'none',
-        },
-    },
     tableCellStatus: {
         width: '50px',
     },
     tableCellName: {
-        width: '250px',
-        display: 'flex',
+        paddingLeft: '10px',
     },
     tableCellEnv: {
         width: '20px',
-    },
-    tableCellType: {
-        width: '32px',
-        alignItems: 'center',
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         },
     },
-    icon: {
-        color: theme.palette.grey[600],
+    tableCellType: {
+        width: '32px',
+        alignItems: 'center',
+        [theme.breakpoints.down(600)]: {
+            display: 'none',
+        },
     },
 }));

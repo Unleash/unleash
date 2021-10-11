@@ -105,7 +105,7 @@ const FeatureStrategiesEnvironments = () => {
         return featureCache?.environments?.map((env, index) => {
             return (
                 <Tab
-                    disabled={configureNewStrategy}
+                    disabled={!!configureNewStrategy}
                     key={`${env.name}_${index}`}
                     label={env.name}
                     {...a11yProps(index)}

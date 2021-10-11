@@ -52,6 +52,8 @@ Please note that in the above example we put the isEnabled-evaluation inside the
 
 It can also be nice to notice that if you use an undefined feature toggle the Unleash SDK will return false instead of crashing your application. The SDK will also report metrics back to Unleash-hosted on feature toggle usage, which makes it \_possible to spot toggles not yet defined. And this is a very neat way to help you debug if something does not work as expected.
 
+_Note that you can also wait until the Unleash SDK has fully syncrhonized similar to familiar "on-ready" hooks in other APIs. See [block until Unleashed is synchronized](https://github.com/Unleash/unleash-client-node#block-until-unleash-sdk-has-synchronized) for how to do this._
+
 ## Step 4: Provide the Unleash-context {#step-4-provide-the-unleash-context}
 
 It is the client SDK that computes whether a feature toggle should be considered enabled or disabled for a specific request. This is the job of the activation strategies, which are implemented in the client SDK.

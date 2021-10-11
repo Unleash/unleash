@@ -172,15 +172,11 @@ export default class ProjectFeaturesController extends Controller {
         res: Response,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
-        const featureToggle = await this.featureService.getFeatureMetadata(
-            featureName,
-        );
-        const { newDocument } = applyPatch(featureToggle, req.body);
-        const userName = extractUsername(req);
-        const updated = await this.featureService.updateFeatureToggle(
+        const updated = await this.featureService.patchFeature(
             projectId,
-            newDocument,
-            userName,
+            featureName,
+            extractUsername(req),
+            req.body,
         );
         res.status(200).json(updated);
     }

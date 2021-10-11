@@ -6,6 +6,8 @@ import {
     FEATURE_ENVIRONMENT_DISABLED,
     FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_METADATA_UPDATED,
+    FEATURE_STALE_OFF,
+    FEATURE_STALE_ON,
     FEATURE_STRATEGY_REMOVE,
 } from '../../../../../lib/types/events';
 
@@ -529,6 +531,56 @@ test('Should patch feature toggle', async () => {
     expect(updateForOurToggle).toBeTruthy();
     expect(updateForOurToggle.data.description).toBe('New desc');
     expect(updateForOurToggle.data.type).toBe('kill-switch');
+});
+
+test('Patching feature toggles to stale should trigger FEATURE_STALE_ON event', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'toggle.stale.on.patch';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release', stale: false })
+        .expect(201);
+    await app.request
+        .patch(`${url}/${name}`)
+        .send([{ op: 'replace', path: '/stale', value: true }])
+        .expect(200);
+
+    const { body: toggle } = await app.request.get(`${url}/${name}`);
+
+    expect(toggle.name).toBe(name);
+    expect(toggle.archived).toBeFalsy();
+    expect(toggle.stale).toBeTruthy();
+    const events = await db.stores.eventStore.getAll({
+        type: FEATURE_STALE_ON,
+    });
+    const updateForOurToggle = events.find((e) => e.data.name === name);
+    expect(updateForOurToggle).toBeTruthy();
+    expect(updateForOurToggle.data.stale).toBe(true);
+});
+
+test('Patching feature toggles to active (turning stale to false) should trigger FEATURE_STALE_OFF event', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'toggle.stale.off.patch';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release', stale: true })
+        .expect(201);
+    await app.request
+        .patch(`${url}/${name}`)
+        .send([{ op: 'replace', path: '/stale', value: false }])
+        .expect(200);
+
+    const { body: toggle } = await app.request.get(`${url}/${name}`);
+
+    expect(toggle.name).toBe(name);
+    expect(toggle.archived).toBeFalsy();
+    expect(toggle.stale).toBe(false);
+    const events = await db.stores.eventStore.getAll({
+        type: FEATURE_STALE_OFF,
+    });
+    const updateForOurToggle = events.find((e) => e.data.name === name);
+    expect(updateForOurToggle).toBeTruthy();
+    expect(updateForOurToggle.data.stale).toBe(false);
 });
 
 test('Should archive feature toggle', async () => {

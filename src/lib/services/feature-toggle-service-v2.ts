@@ -45,6 +45,7 @@ import {
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import { DEFAULT_ENV } from '../util/constants';
+import { applyPatch, deepClone, Operation } from 'fast-json-patch';
 
 class FeatureToggleServiceV2 {
     private logger: Logger;
@@ -92,6 +93,34 @@ class FeatureToggleServiceV2 {
         this.projectStore = projectStore;
         this.eventStore = eventStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
+    }
+
+    async patchFeature(
+        projectId: string,
+        featureName: string,
+        userName: string,
+        operations: Operation[],
+    ): Promise<FeatureToggle> {
+        const featureToggle = await this.getFeatureMetadata(featureName);
+
+        const { newDocument } = applyPatch(
+            deepClone(featureToggle),
+            operations,
+        );
+        const updated = await this.updateFeatureToggle(
+            projectId,
+            newDocument,
+            userName,
+        );
+        if (featureToggle.stale !== newDocument.stale) {
+            await this.eventStore.store({
+                type: newDocument.stale ? FEATURE_STALE_ON : FEATURE_STALE_OFF,
+                data: updated,
+                project: projectId,
+                createdBy: userName,
+            });
+        }
+        return updated;
     }
 
     async createStrategy(

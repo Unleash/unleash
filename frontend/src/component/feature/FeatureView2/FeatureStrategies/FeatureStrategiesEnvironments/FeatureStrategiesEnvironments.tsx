@@ -178,8 +178,8 @@ const FeatureStrategiesEnvironments = () => {
 
                 // Check groupId
 
-                const cacheParamKeys = Object.keys(cachedStrategy?.parameters);
-                const strategyParamKeys = Object.keys(strategy?.parameters);
+                const cacheParamKeys = Object.keys(cachedStrategy?.parameters || {});
+                const strategyParamKeys = Object.keys(strategy?.parameters || {});
                 // Check length of parameters
                 if (cacheParamKeys.length !== strategyParamKeys.length) {
                     equal = false;

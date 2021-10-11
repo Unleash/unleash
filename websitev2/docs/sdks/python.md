@@ -48,7 +48,7 @@ def custom_fallback(feature_name: str, context: dict) -> bool:
 client.is_enabled("My Toggle", fallback_function=custom_fallback)
 ```
 
-- Must accept the fature name and context as an argument.
+- Must accept the feature name and context as an argument.
 - Client will evaluate the fallback function only if exception occurs when calling the `is_enabled()` method i.e. feature flag not found or other general exception.
 - If both a `default_value` and `fallback_function` are supplied, client will define the default value by `OR`ing the default value and the output of the fallback function.
 

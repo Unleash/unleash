@@ -5,7 +5,7 @@ title: Unleash Context
 
 To standardize a few activation strategies, we also needed to standardize the Unleash context, which contains fields that vary per request, required to implement the activation strategies.
 
-The Unleash context is compromised by a set of predefined fields. The static fields do not change in the life-time of your application, while dynamic fields can change per feature toggle evaluation.
+The Unleash context is composed of a set of predefined fields. The static fields do not change in the life-time of your application, while dynamic fields can change per feature toggle evaluation.
 
 **Static context fields**
 

@@ -110,7 +110,7 @@ const FeatureView2 = () => {
                             tooltip="Copy"
                             data-loading
                             component={Link}
-                            to={`${history.location.pathname}/copy`}
+                            to={`/projects/${projectId}/features2/${featureId}/strategies/copy`}
                         >
                             <FileCopy />
                         </PermissionIconButton>

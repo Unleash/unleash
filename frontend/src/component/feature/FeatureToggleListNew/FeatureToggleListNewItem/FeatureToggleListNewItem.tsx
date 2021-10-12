@@ -3,21 +3,19 @@ import {
     Switch,
     TableCell,
     TableRow,
-    Tooltip,
-    useMediaQuery,
-    useTheme,
 } from '@material-ui/core';
 import { useHistory } from 'react-router';
-import { getFeatureTypeIcons } from '../../../../utils/get-feature-type-icons';
+
 import { useStyles } from '../FeatureToggleListNew.styles';
 import useToggleFeatureByEnv from '../../../../hooks/api/actions/useToggleFeatureByEnv/useToggleFeatureByEnv';
 import { IEnvironments } from '../../../../interfaces/featureToggle';
-import ConditionallyRender from '../../../common/ConditionallyRender';
 import useToast from '../../../../hooks/useToast';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
 import { SyntheticEvent } from 'react-router/node_modules/@types/react';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
+import FeatureType from '../../FeatureView2/FeatureType/FeatureType';
+import classNames from 'classnames';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -34,9 +32,7 @@ const FeatureToggleListNewItem = ({
     environments,
     projectId,
 }: IFeatureToggleListNewItemProps) => {
-    const theme = useTheme();
     const { toast, setToastData } = useToast();
-    const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { toggleFeatureByEnvironment } = useToggleFeatureByEnv(
         projectId,
         name,
@@ -72,28 +68,23 @@ const FeatureToggleListNewItem = ({
             });
     };
 
-    const IconComponent = getFeatureTypeIcons(type);
+    
 
     return (
         <>
             <TableRow className={styles.tableRow}>
-                <TableCell className={styles.tableCell} align="left" onClick={onClick}>
+                <TableCell className={classNames(
+                                styles.tableCell,
+                                styles.tableCellStatus)} align="left" onClick={onClick}>
                     <FeatureStatus lastSeenAt={lastSeenAt} />
                 </TableCell>
-                <ConditionallyRender
-                    condition={!smallScreen}
-                    show={
-                        <TableCell className={styles.tableCell} align="center" onClick={onClick}>
-                            <Tooltip arrow placement="right" title={type}>
-                                <IconComponent
-                                    data-loading
-                                    className={styles.icon}
-                                />
-                            </Tooltip>
-                        </TableCell>
-                    }
-                />
-                <TableCell className={styles.tableCell} align="left" onClick={onClick}>
+                <TableCell className={classNames(
+                                styles.tableCell,
+                                styles.tableCellType)} align="center" onClick={onClick}>
+                    <FeatureType type={type} />
+                </TableCell>
+                <TableCell className={classNames(
+                                styles.tableCell, styles.tableCellName)} align="left" onClick={onClick}>
                     <span data-loading>{name}</span>
                 </TableCell>
                 
@@ -101,7 +92,9 @@ const FeatureToggleListNewItem = ({
                 {environments.map((env: IEnvironments) => {
                     return (
                         <TableCell
-                            className={styles.tableCell}
+                            className={classNames(
+                                styles.tableCell,
+                                styles.tableCellEnv)}
                             align="center"
                             key={env.name}
                         >

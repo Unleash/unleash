@@ -51,3 +51,4 @@ build
 
 cypress/videos/*
 cypress/screenshots/*
+.env.local

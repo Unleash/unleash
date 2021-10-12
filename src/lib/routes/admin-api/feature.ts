@@ -96,7 +96,7 @@ class FeatureController extends Controller {
         const query = await this.prepQuery(req.query);
         const features = await this.featureService2.getFeatureToggles(query);
 
-        res.json({ version, features });
+        res.json({ version, features, maturity: 'deprecated' });
     }
 
     async getToggle(

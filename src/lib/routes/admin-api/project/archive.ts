@@ -1,14 +1,16 @@
-import { Response } from 'express';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import { Logger } from '../../logger';
+import { Request, Response } from 'express';
+import { IUnleashConfig } from '../../../types/option';
+import { IUnleashServices } from '../../../types/services';
+import { Logger } from '../../../logger';
 
-import Controller from '../controller';
+import Controller from '../../controller';
 
-import { extractUsername } from '../../util/extract-user';
-import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions';
-import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
-import { IAuthRequest } from '../unleash-types';
+import { extractUsername } from '../../../util/extract-user';
+import { DELETE_FEATURE, UPDATE_FEATURE } from '../../../types/permissions';
+import FeatureToggleServiceV2 from '../../../services/feature-toggle-service-v2';
+import { IAuthRequest } from '../../unleash-types';
+
+const PATH = `/:projectId/archived-features`;
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -22,24 +24,25 @@ export default class ArchiveController extends Controller {
         }: Pick<IUnleashServices, 'featureToggleServiceV2'>,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/archive.js');
+        this.logger = config.getLogger('/admin-api/project/archive.ts');
         this.featureService = featureToggleServiceV2;
 
-        this.get('/features', this.getArchivedFeatures);
-        this.delete('/:featureName', this.deleteFeature, DELETE_FEATURE);
+        this.get(`${PATH}`, this.getArchivedFeatures);
+        this.delete(`${PATH}/:featureName`, this.deleteFeature, DELETE_FEATURE);
         this.post(
-            '/revive/:featureName',
+            `${PATH}/:featureName/revive`,
             this.reviveFeatureToggle,
             UPDATE_FEATURE,
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async getArchivedFeatures(req, res): Promise<void> {
-        const features = await this.featureService.getMetadataForAllFeatures(
+    async getArchivedFeatures(req: Request, res: Response): Promise<void> {
+        const { projectId } = req.params;
+        const features = await this.featureService.getFeatureOverview(
+            projectId,
             true,
         );
-        res.json({ version: 2, features, maturity: 'deprecated' });
+        res.json({ version: 1, features });
     }
 
     async deleteFeature(
@@ -48,14 +51,15 @@ export default class ArchiveController extends Controller {
     ): Promise<void> {
         const { featureName } = req.params;
         const user = extractUsername(req);
+        // TODO: validate projectId
         await this.featureService.deleteFeature(featureName, user);
         res.status(200).end();
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async reviveFeatureToggle(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         const { featureName } = req.params;
+        // TODO: validate projectId
         await this.featureService.reviveToggle(featureName, userName);
         res.status(200).end();
     }

@@ -27,6 +27,10 @@ class UserStoreMock extends UserStore {
         return user;
     }
 
+    async count(): Promise<number> {
+        return Promise.resolve(this.data.length);
+    }
+
     async insert(user: User): Promise<User> {
         // eslint-disable-next-line no-param-reassign
         user.id = this.idSeq;

@@ -87,6 +87,13 @@ class UserStore {
         this.logger = getLogger('user-store.js');
     }
 
+    async count(): Promise<number> {
+        return this.db
+            .count('*')
+            .from(TABLE)
+            .then((res) => Number(res[0].count));
+    }
+
     async update(id: number, fields: IUserUpdateFields): Promise<User> {
         await this.db(TABLE)
             .where('id', id)

@@ -114,9 +114,9 @@ class UserService {
     }
 
     async initAdminUser(): Promise<void> {
-        const hasAdminUser = await this.store.hasUser({ username: 'admin' });
+        const userCount = await this.store.count();
 
-        if (!hasAdminUser) {
+        if (userCount === 0) {
             // create default admin user
             try {
                 const pwd = 'unleash4all';

@@ -113,6 +113,7 @@ const Project = () => {
         return tabData.map((tab, index) => {
             return (
                 <Tab
+                    data-loading    
                     key={tab.title}
                     label={tab.title}
                     {...a11yProps(index)}
@@ -147,7 +148,7 @@ const Project = () => {
                             <Edit />
                         </IconButton>
                     </h2>
-                    <p>{project?.description}</p>
+                    <p data-loading>{project?.description}</p>
                 </div>
                 <ConditionallyRender
                     condition={error}

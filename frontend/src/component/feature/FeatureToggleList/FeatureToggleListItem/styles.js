@@ -10,6 +10,10 @@ export const useStyles = makeStyles(theme => ({
         marginRight: '0.25rem',
         flexShrink: '0',
     },
+    listItemType: {
+        width: '40px',
+        textAlign: 'center',
+    },
     listItemSvg: {
         fill: theme.palette.icons.lightGrey,
     },

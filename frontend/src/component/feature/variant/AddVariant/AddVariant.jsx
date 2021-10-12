@@ -239,7 +239,7 @@ const AddVariant = ({
                                 control={
                                     <Switch
                                         name="weightType"
-                                        value={isFixWeight}
+                                        checked={isFixWeight}
                                         onChange={setVariantWeightType}
                                     />
                                 }

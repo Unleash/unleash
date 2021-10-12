@@ -17,6 +17,7 @@ import { styles as commonStyles } from '../../../common';
 import { useStyles } from './styles';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
 import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
+import FeatureType from '../../FeatureView2/FeatureType/FeatureType';
 
 
 
@@ -48,6 +49,9 @@ const FeatureToggleListItem = ({
             <span className={styles.listItemMetric}>
                 <FeatureStatus lastSeenAt={lastSeenAt} />
             </span>
+            <span className={classnames(styles.listItemType, commonStyles.hideLt600)}>
+                <FeatureType type={type} />
+            </span>
             <span className={classnames(styles.listItemLink)}>
                 <Link
                     to={featureUrl}
@@ -58,6 +62,8 @@ const FeatureToggleListItem = ({
                 >
                     <span className={commonStyles.toggleName}>
                         {name}&nbsp;
+                    </span>
+                    <span className={styles.listItemToggle}>
                     </span>
                     <small>
                         <TimeAgo date={createdAt} live={false} />

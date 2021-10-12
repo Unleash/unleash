@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import { Link } from 'react-router-dom';
-import { IconButton, ListItem } from '@material-ui/core';
+import { Chip, IconButton, ListItem } from '@material-ui/core';
 import { Undo } from '@material-ui/icons';
 
 import TimeAgo from 'react-timeago';
 import Status from '../../status-component';
-import FeatureToggleListItemChip from './FeatureToggleListItemChip';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 
 import { UPDATE_FEATURE } from '../../../AccessProvider/permissions';
@@ -33,14 +32,11 @@ const FeatureToggleListItem = ({
 }) => {
     const styles = useStyles();
 
+    const isArchive = !!revive;
+
     const { name, description, type, stale, createdAt, project, lastSeenAt } =
         feature;
    
-    const featureUrl =
-        toggleFeature === undefined
-            ? `/projects/${feature.project}/archived/${name}/metrics`
-            : getTogglePath(feature.project, name);
-
     return (
         <ListItem
             {...rest}
@@ -53,27 +49,48 @@ const FeatureToggleListItem = ({
                 <FeatureType type={type} />
             </span>
             <span className={classnames(styles.listItemLink)}>
-                <Link
-                    to={featureUrl}
-                    className={classnames(
-                        commonStyles.listLink,
-                        commonStyles.truncate
-                    )}
-                >
-                    <span className={commonStyles.toggleName}>
-                        {name}&nbsp;
-                    </span>
-                    <span className={styles.listItemToggle}>
-                    </span>
-                    <small>
-                        <TimeAgo date={createdAt} live={false} />
-                    </small>
-                    <div>
-                        <span className={commonStyles.truncate}>
-                            <small>{description}</small>
+                <ConditionallyRender condition={!isArchive} show={
+                    <Link
+                        to={getTogglePath(feature.project, name)}
+                        className={classnames(
+                            commonStyles.listLink,
+                            commonStyles.truncate
+                        )}
+                    >
+                        <span className={commonStyles.toggleName}>
+                            {name}&nbsp;
                         </span>
-                    </div>
-                </Link>
+                        <span className={styles.listItemToggle}>
+                        </span>
+                        <small>
+                            <TimeAgo date={createdAt} live={false} />
+                        </small>
+                        <div>
+                            <span className={commonStyles.truncate}>
+                                <small>{description}</small>
+                            </span>
+                        </div>
+                    </Link>
+                } elseShow={
+                    <>
+                        <span className={commonStyles.toggleName}>
+                            {name}&nbsp;
+                        </span>
+                        <span className={styles.listItemToggle}>
+                        </span>
+                        <small>
+                            <TimeAgo date={createdAt} live={false} />
+                        </small>
+                        <div>
+                            <span className={commonStyles.truncate}>
+                                <small>{description}</small>
+                            </span>
+                        </div>
+                    </>
+                }/>
+
+
+                
             </span>
             <span
                 className={classnames(
@@ -82,7 +99,7 @@ const FeatureToggleListItem = ({
                 )}
             >
                 <Status stale={stale} showActive={false} />
-                <FeatureToggleListItemChip type={type} />
+                <Chip color="primary" variant="outlined" className={styles.typeChip} style={{marginLeft: '8px'}} title={`Project: ${project}`} label={project}/>
             </span>
             <ConditionallyRender
                 condition={revive}

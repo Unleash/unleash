@@ -19,7 +19,7 @@ const sortingOptions = [
     { type: 'stale', displayName: 'Stale' },
     { type: 'created', displayName: 'Created' },
     { type: 'Last seen', displayName: 'Last seen' },
-    { type: 'strategies', displayName: 'Strategies' },
+    { type: 'project', displayName: 'Project' },
     { type: 'metrics', displayName: 'Metrics' },
 ];
 

@@ -92,9 +92,9 @@ export const mapStateToPropsConfigurable = isFeature => state => {
             }
             return 0;
         });
-    } else if (settings.sort === 'strategies') {
+    } else if (settings.sort === 'project') {
         features = features.sort((a, b) =>
-            a.strategies.length > b.strategies.length ? -1 : 1
+            a.project.length > b.project.length ? -1 : 1
         );
     } else if (settings.sort === 'type') {
         features = features.sort((a, b) => {

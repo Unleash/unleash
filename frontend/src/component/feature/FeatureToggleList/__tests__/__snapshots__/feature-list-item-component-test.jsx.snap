@@ -95,7 +95,25 @@ exports[`renders correctly with one feature 1`] = `
   </span>
   <span
     className="makeStyles-listItemStrategies-6 hideLt920"
-  />
+  >
+    <div
+      className="MuiChip-root MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      style={
+        Object {
+          "marginLeft": "8px",
+        }
+      }
+      title="Project: default"
+    >
+      <span
+        className="MuiChip-label"
+      >
+        default
+      </span>
+    </div>
+  </span>
 </li>
 `;
 
@@ -194,6 +212,22 @@ exports[`renders correctly with one feature without permission 1`] = `
   </span>
   <span
     className="makeStyles-listItemStrategies-6 hideLt920"
-  />
+  >
+    <div
+      className="MuiChip-root MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      style={
+        Object {
+          "marginLeft": "8px",
+        }
+      }
+      title="Project: undefined"
+    >
+      <span
+        className="MuiChip-label"
+      />
+    </div>
+  </span>
 </li>
 `;

@@ -58,6 +58,21 @@ test('should create initial admin user', async () => {
     ).toBeTruthy();
 });
 
+test('should not init default user if we already have users', async () => {
+    await userService.createUser({
+        username: 'test',
+        password: 'A very strange P4ssw0rd_',
+        rootRole: adminRole.id,
+    });
+    await userService.initAdminUser();
+    const users = await userService.getAll();
+    expect(users).toHaveLength(1);
+    expect(users[0].username).toBe('test');
+    await expect(async () =>
+        userService.loginUser('admin', 'unleash4all'),
+    ).rejects.toThrow(Error);
+});
+
 test('should not be allowed to create existing user', async () => {
     await userStore.insert({ username: 'test', name: 'Hans Mola' });
     await expect(async () =>

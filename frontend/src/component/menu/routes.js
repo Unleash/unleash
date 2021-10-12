@@ -42,157 +42,6 @@ import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironme
 import FeatureView2 from '../feature/FeatureView2/FeatureView2';
 
 export const routes = [
-    // Features
-    {
-        path: '/features/:activeTab/:name',
-        parent: '/features',
-        title: ':name',
-        component: RedirectFeatureViewPage,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/features',
-        title: 'Feature Toggles',
-        component: Features,
-        type: 'protected',
-        layout: 'main',
-        menu: { mobile: true },
-    },
-
-    // Strategies
-    {
-        path: '/strategies/create',
-        title: 'Create',
-        parent: '/strategies',
-        component: CreateStrategies,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/strategies/:activeTab/:strategyName',
-        title: ':strategyName',
-        parent: '/strategies',
-        component: StrategyView,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/strategies',
-        title: 'Strategies',
-        component: Strategies,
-        type: 'protected',
-        layout: 'main',
-        menu: { mobile: true, advanced: true },
-    },
-    {
-        path: '/environments/create',
-        title: 'Environments',
-        component: CreateEnvironment,
-        parent: '/environments',
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/environments',
-        title: 'Environments',
-        component: EnvironmentList,
-        type: 'protected',
-        layout: 'main',
-        flag: E,
-        menu: { mobile: true, advanced: true },
-    },
-
-    // History
-    {
-        path: '/history/:toggleName',
-        title: ':toggleName',
-        parent: '/history',
-        component: HistoryTogglePage,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/history',
-        title: 'Event History',
-        component: HistoryPage,
-        type: 'protected',
-        layout: 'main',
-        menu: { adminSettings: true },
-    },
-
-    // Archive
-    {
-        path: '/projects/:id/archived/:name/:activeTab',
-        title: ':name',
-        parent: '/archive',
-        component: ShowArchive,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/archive',
-        title: 'Archived Toggles',
-        component: Archive,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-
-    // Applications
-    {
-        path: '/applications/:name',
-        title: ':name',
-        parent: '/applications',
-        component: ApplicationView,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/applications',
-        title: 'Applications',
-        component: Applications,
-        type: 'protected',
-        layout: 'main',
-        menu: { mobile: true, advanced: true },
-    },
-
-    // Context
-    {
-        path: '/context/create',
-        parent: '/context',
-        title: 'Create',
-        component: CreateContextField,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/context/edit/:name',
-        parent: '/context',
-        title: ':name',
-        component: EditContextField,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/context',
-        title: 'Context Fields',
-        component: ContextFields,
-        type: 'protected',
-        flag: C,
-        layout: 'main',
-        menu: { mobile: true, advanced: true },
-    },
-
     // Project
     {
         path: '/projects/create',
@@ -282,12 +131,125 @@ export const routes = [
         path: '/projects',
         title: 'Projects',
         component: ProjectListNew,
-        flag: P,
         type: 'protected',
         layout: 'main',
         menu: { mobile: true },
     },
 
+    // Features
+    {
+        path: '/features/:activeTab/:name',
+        parent: '/features',
+        title: ':name',
+        component: RedirectFeatureViewPage,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/features',
+        title: 'Feature Toggles',
+        component: Features,
+        type: 'protected',
+        layout: 'main',
+        menu: { mobile: true },
+    },
+    
+    // Applications
+    {
+        path: '/applications/:name',
+        title: ':name',
+        parent: '/applications',
+        component: ApplicationView,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/applications',
+        title: 'Applications',
+        component: Applications,
+        type: 'protected',
+        layout: 'main',
+        menu: { mobile: true, advanced: true },
+    },
+
+    // Context
+    {
+        path: '/context/create',
+        parent: '/context',
+        title: 'Create',
+        component: CreateContextField,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/context/edit/:name',
+        parent: '/context',
+        title: ':name',
+        component: EditContextField,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/context',
+        title: 'Context Fields',
+        component: ContextFields,
+        type: 'protected',
+        flag: C,
+        layout: 'main',
+        menu: { mobile: true, advanced: true },
+    },
+
+    // Strategies
+    {
+        path: '/strategies/create',
+        title: 'Create',
+        parent: '/strategies',
+        component: CreateStrategies,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/strategies/:activeTab/:strategyName',
+        title: ':strategyName',
+        parent: '/strategies',
+        component: StrategyView,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/strategies',
+        title: 'Strategies',
+        component: Strategies,
+        type: 'protected',
+        layout: 'main',
+        menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/environments/create',
+        title: 'Environments',
+        component: CreateEnvironment,
+        parent: '/environments',
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/environments',
+        title: 'Environments',
+        component: EnvironmentList,
+        type: 'protected',
+        layout: 'main',
+        flag: E,
+        menu: { mobile: true, advanced: true },
+    },
+
+    // Tags
     {
         path: '/tag-types/create',
         parent: '/tag-types',
@@ -314,7 +276,6 @@ export const routes = [
         layout: 'main',
         menu: { mobile: true, advanced: true },
     },
-
     {
         path: '/tags/create',
         parent: '/tags',
@@ -334,8 +295,8 @@ export const routes = [
         menu: {},
     },
 
-    // Addons
-    {
+     // Addons
+     {
         path: '/addons/create/:provider',
         parent: '/addons',
         title: 'Create',
@@ -362,6 +323,45 @@ export const routes = [
         layout: 'main',
         menu: { mobile: true, advanced: true },
     },
+
+    // History
+    {
+        path: '/history/:toggleName',
+        title: ':toggleName',
+        parent: '/history',
+        component: HistoryTogglePage,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/history',
+        title: 'Event History',
+        component: HistoryPage,
+        type: 'protected',
+        layout: 'main',
+        menu: { adminSettings: true },
+    },
+
+    // Archive
+    {
+        path: '/projects/:id/archived/:name/:activeTab',
+        title: ':name',
+        parent: '/archive',
+        component: ShowArchive,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/archive',
+        title: 'Archived Toggles',
+        component: Archive,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+
     // Admin
     {
         path: '/admin/api',

@@ -33,42 +33,6 @@ const Project = () => {
     const { a11yProps, activeTabIdx, setActiveTab } = useTabs(0);
 
     const basePath = `/projects/${id}`;
-
-    useEffect(() => {
-        const created = params.get('created');
-        const edited = params.get('edited');
-
-        if (created || edited) {
-            const text = created ? 'Project created' : 'Project updated';
-            setToastData({
-                show: true,
-                type: 'success',
-                text,
-            });
-        }
-        /* eslint-disable-next-line */
-    }, []);
-
-    useEffect(() => {
-        const tabIdx = tabData.findIndex(tab => tab.name === activeTab);
-        if(tabIdx > 0) {
-            setActiveTab(tabIdx);
-        } else {
-            setActiveTab(0);
-        }
-        
-        /* eslint-disable-next-line */
-    }, []);
-
-    const goToTabWithName = (name: string) => {
-        const index = tabData.findIndex(t => t.name === name);
-        if(index >= 0) {
-            const tab = tabData[index];
-            history.push(tab.path);
-            setActiveTab(index);
-        }
-    }
-
     const tabData = [
         {
             title: 'Overview',
@@ -102,7 +66,47 @@ const Project = () => {
             path: `${basePath}/settings`,
             name: 'settings',
         },
-    ].filter(tab => !tab.disabled);
+    ]
+
+    useEffect(() => {
+        const created = params.get('created');
+        const edited = params.get('edited');
+
+        if (created || edited) {
+            const text = created ? 'Project created' : 'Project updated';
+            setToastData({
+                show: true,
+                type: 'success',
+                text,
+            });
+        }
+
+        tabData.filter(tab => !tab.disabled);
+
+        /* eslint-disable-next-line */
+    }, []);
+
+    useEffect(() => {
+        const tabIdx = tabData.findIndex(tab => tab.name === activeTab);
+        if(tabIdx > 0) {
+            setActiveTab(tabIdx);
+        } else {
+            setActiveTab(0);
+        }
+        
+        /* eslint-disable-next-line */
+    }, []);
+
+    const goToTabWithName = (name: string) => {
+        const index = tabData.findIndex(t => t.name === name);
+        if(index >= 0) {
+            const tab = tabData[index];
+            history.push(tab.path);
+            setActiveTab(index);
+        }
+    }
+
+    
 
 
     const renderTabs = () => {

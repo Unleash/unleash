@@ -17,6 +17,7 @@ import FeatureStrategyCreateExecution from '../../FeatureStrategyCreateExecution
 import { PRODUCTION } from '../../../../../../constants/environmentTypes';
 import { ADD_NEW_STRATEGY_SAVE_ID } from '../../../../../../testIds';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
+import { scrollToTop } from '../../../../../common/util';
 
 interface IFeatureStrategiesConfigure {
     setToastData: React.Dispatch<React.SetStateAction<IToastType>>;
@@ -97,6 +98,7 @@ const FeatureStrategiesConfigure = ({
             });
             history.replace(history.location.pathname);
             refetch();
+            scrollToTop();
         } catch (e) {
             setToastData({
                 show: true,

@@ -136,51 +136,6 @@ export const routes = [
         menu: { mobile: true },
     },
 
-    {
-        path: '/tag-types/create',
-        parent: '/tag-types',
-        title: 'Create',
-        component: CreateTagType,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/tag-types/edit/:name',
-        parent: '/tag-types',
-        title: ':name',
-        component: EditTagType,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/tag-types',
-        title: 'Tag types',
-        component: ListTagTypes,
-        type: 'protected',
-        layout: 'main',
-        menu: { mobile: true, advanced: true },
-    },
-
-    {
-        path: '/tags/create',
-        parent: '/tags',
-        title: 'Create',
-        component: CreateTag,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/tags',
-        title: 'Tags',
-        component: ListTags,
-        hidden: true,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
     // Features
     {
         path: '/features/:activeTab/:name',
@@ -199,91 +154,7 @@ export const routes = [
         layout: 'main',
         menu: { mobile: true },
     },
-
-    // Strategies
-    {
-        path: '/strategies/create',
-        title: 'Create',
-        parent: '/strategies',
-        component: CreateStrategies,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/strategies/:activeTab/:strategyName',
-        title: ':strategyName',
-        parent: '/strategies',
-        component: StrategyView,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/strategies',
-        title: 'Strategies',
-        component: Strategies,
-        type: 'protected',
-        layout: 'main',
-        menu: { mobile: true, advanced: true },
-    },
-    {
-        path: '/environments/create',
-        title: 'Environments',
-        component: CreateEnvironment,
-        parent: '/environments',
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/environments',
-        title: 'Environments',
-        component: EnvironmentList,
-        type: 'protected',
-        layout: 'main',
-        flag: E,
-        menu: { mobile: true, advanced: true },
-    },
-
-    // History
-    {
-        path: '/history/:toggleName',
-        title: ':toggleName',
-        parent: '/history',
-        component: HistoryTogglePage,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/history',
-        title: 'Event History',
-        component: HistoryPage,
-        type: 'protected',
-        layout: 'main',
-        menu: { adminSettings: true },
-    },
-
-    // Archive
-    {
-        path: '/projects/:id/archived/:name/:activeTab',
-        title: ':name',
-        parent: '/archive',
-        component: ShowArchive,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/archive',
-        title: 'Archived Toggles',
-        component: Archive,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-
+    
     // Applications
     {
         path: '/applications/:name',
@@ -332,8 +203,100 @@ export const routes = [
         menu: { mobile: true, advanced: true },
     },
 
-    // Addons
+    // Strategies
     {
+        path: '/strategies/create',
+        title: 'Create',
+        parent: '/strategies',
+        component: CreateStrategies,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/strategies/:activeTab/:strategyName',
+        title: ':strategyName',
+        parent: '/strategies',
+        component: StrategyView,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/strategies',
+        title: 'Strategies',
+        component: Strategies,
+        type: 'protected',
+        layout: 'main',
+        menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/environments/create',
+        title: 'Environments',
+        component: CreateEnvironment,
+        parent: '/environments',
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/environments',
+        title: 'Environments',
+        component: EnvironmentList,
+        type: 'protected',
+        layout: 'main',
+        flag: E,
+        menu: { mobile: true, advanced: true },
+    },
+
+    // Tags
+    {
+        path: '/tag-types/create',
+        parent: '/tag-types',
+        title: 'Create',
+        component: CreateTagType,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/tag-types/edit/:name',
+        parent: '/tag-types',
+        title: ':name',
+        component: EditTagType,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/tag-types',
+        title: 'Tag types',
+        component: ListTagTypes,
+        type: 'protected',
+        layout: 'main',
+        menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/tags/create',
+        parent: '/tags',
+        title: 'Create',
+        component: CreateTag,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/tags',
+        title: 'Tags',
+        component: ListTags,
+        hidden: true,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+
+     // Addons
+     {
         path: '/addons/create/:provider',
         parent: '/addons',
         title: 'Create',
@@ -360,6 +323,45 @@ export const routes = [
         layout: 'main',
         menu: { mobile: true, advanced: true },
     },
+
+    // History
+    {
+        path: '/history/:toggleName',
+        title: ':toggleName',
+        parent: '/history',
+        component: HistoryTogglePage,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/history',
+        title: 'Event History',
+        component: HistoryPage,
+        type: 'protected',
+        layout: 'main',
+        menu: { adminSettings: true },
+    },
+
+    // Archive
+    {
+        path: '/projects/:id/archived/:name/:activeTab',
+        title: ':name',
+        parent: '/archive',
+        component: ShowArchive,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/archive',
+        title: 'Archived Toggles',
+        component: Archive,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+
     // Admin
     {
         path: '/admin/api',

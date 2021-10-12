@@ -52,3 +52,5 @@ package-lock.json
 /website/yarn.lock
 /website/translated_docs
 /website/i18n/*
+.env
+

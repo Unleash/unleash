@@ -10,6 +10,7 @@ export interface INewClientInstance {
     sdkVersion?: string;
     clientIp?: string;
     lastSeen?: Date;
+    environment?: string;
 }
 export interface IClientInstanceStore
     extends Store<

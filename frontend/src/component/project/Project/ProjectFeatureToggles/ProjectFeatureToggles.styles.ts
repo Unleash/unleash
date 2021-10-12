@@ -11,6 +11,7 @@ export const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('sm')]: {
             marginLeft: '0',
             paddingBottom: '4rem',
+            width: 'inherit',
         },
     },
     bodyClass: { padding: '0.5rem 2rem' },

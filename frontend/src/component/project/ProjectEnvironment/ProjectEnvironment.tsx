@@ -45,8 +45,6 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
 
-    console.log(project);
-
     // local state
     const [selectedEnv, setSelectedEnv] = useState<ProjectEnvironment>();
     const [confirmName, setConfirmName] = useState('');

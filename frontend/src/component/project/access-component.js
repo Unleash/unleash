@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -20,16 +21,27 @@ import {
     FormControl,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
 
 import AddUserComponent from './access-add-user';
 
 import projectApi from '../../store/project/api';
 import PageContent from '../common/PageContent';
+import useUiConfig from '../../hooks/api/getters/useUiConfig/useUiConfig';
+
 
 function AccessComponent({ projectId, project }) {
     const [roles, setRoles] = useState([]);
     const [users, setUsers] = useState([]);
     const [error, setError] = useState();
+    const { isOss } = useUiConfig();
+
+    useEffect(() => {
+        fetchAccess();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [projectId]);
+
+    
 
     const fetchAccess = async () => {
         try {
@@ -43,13 +55,14 @@ function AccessComponent({ projectId, project }) {
         }
     };
 
-    useEffect(() => {
-        fetchAccess();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [projectId]);
-
-    if (!project) {
-        return <p>....</p>;
+    if (isOss()) {
+        return (
+        <PageContent>
+            <Alert severity="error">
+                Controlling access to projects requires a paid version of Unleash. 
+                Check out <a href="https://www.getunleash.io" target="_blank">getunleash.io</a> to find out more.
+            </Alert>
+        </PageContent>);
     }
 
     const handleRoleChange = (userId, currRoleId) => async evt => {

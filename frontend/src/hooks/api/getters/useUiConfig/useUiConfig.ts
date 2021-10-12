@@ -26,6 +26,8 @@ const useUiConfig = () => {
     const isOss = () => {
         if (data?.versionInfo?.current?.enterprise) {
             return false;
+        } else if (!data || !data.versionInfo) {
+            return false;
         }
         return true;
     };

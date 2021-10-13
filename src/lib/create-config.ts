@@ -51,6 +51,24 @@ function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));
 }
 
+function loadExperimental(options: IUnleashOptions): any {
+    const experimental = options.experimental || {};
+
+    if (safeBoolean(process.env.EXP_VARIANTS, false)) {
+        experimental.variants = { enabled: true };
+    }
+
+    if (
+        safeBoolean(process.env.EXP_METRICS_V2, false) ||
+        //@ts-ignore
+        experimental.variants?.enabled
+    ) {
+        experimental.metricsV2 = { enabled: true };
+    }
+
+    return experimental;
+}
+
 const defaultDbOptions: IDBOption = {
     user: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
@@ -222,11 +240,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.import,
     ]);
 
-    const experimental = options.experimental || {};
-
-    if (safeBoolean(process.env.EXP_METRICS_V2, false)) {
-        experimental.metricsV2 = { enabled: true };
-    }
+    const experimental = loadExperimental(options);
 
     const email: IEmailOption = mergeAll([defaultEmail, options.email]);
 

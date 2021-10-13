@@ -111,9 +111,24 @@ export interface IEmailOption {
 export interface IListeningPipe {
     path: string;
 }
+
 export interface IListeningHost {
     host?: string;
     port: number;
+}
+
+export interface IUIConfig {
+    slogan?: string;
+    name?: string;
+    flags?: { [key: string]: boolean };
+    links?: [
+        {
+            value: string;
+            icon?: string;
+            href: string;
+            title: string;
+        },
+    ];
 }
 
 export interface IUnleashConfig {
@@ -124,7 +139,7 @@ export interface IUnleashConfig {
     listen: IListeningHost | IListeningPipe;
     versionCheck: IVersionOption;
     authentication: IAuthOption;
-    ui: object;
+    ui: IUIConfig;
     import: IImportOption;
     experimental: {
         [key: string]: object;

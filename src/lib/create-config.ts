@@ -14,6 +14,7 @@ import {
     IEmailOption,
     IListeningPipe,
     IListeningHost,
+    IUIConfig,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -49,6 +50,36 @@ function safeBoolean(envVar: string, defaultVal: boolean): boolean {
 
 function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));
+}
+
+function loadExperimental(options: IUnleashOptions): any {
+    const experimental = options.experimental || {};
+
+    if (safeBoolean(process.env.EXP_ENVIRONMENTS, false)) {
+        experimental.environments = { enabled: true };
+    }
+
+    if (
+        safeBoolean(process.env.EXP_METRICS_V2, false) ||
+        //@ts-ignore
+        experimental.environments?.enabled
+    ) {
+        experimental.metricsV2 = { enabled: true };
+    }
+
+    return experimental;
+}
+
+function loadUI(options: IUnleashOptions, experimental: any = {}): IUIConfig {
+    const uiO = options.ui || {};
+    const ui: IUIConfig = {};
+
+    if (experimental.environments?.enabled) {
+        ui.flags = {
+            E: true,
+        };
+    }
+    return mergeAll([uiO, ui]);
 }
 
 const defaultDbOptions: IDBOption = {
@@ -215,18 +246,14 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             : options.authentication,
     ]);
 
-    const ui = options.ui || {};
-
     const importSetting: IImportOption = mergeAll([
         defaultImport,
         options.import,
     ]);
 
-    const experimental = options.experimental || {};
+    const experimental = loadExperimental(options);
 
-    if (safeBoolean(process.env.EXP_METRICS_V2, false)) {
-        experimental.metricsV2 = { enabled: true };
-    }
+    const ui = loadUI(options, experimental);
 
     const email: IEmailOption = mergeAll([defaultEmail, options.email]);
 
@@ -253,7 +280,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         authentication,
         ui,
         import: importSetting,
-        experimental: experimental || {},
+        experimental,
         email,
         secureHeaders,
         enableOAS,

@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should create default config 1`] = `
+Object {
+  "authentication": Object {
+    "createAdminUser": true,
+    "customAuthHandler": [Function],
+    "enableApiToken": true,
+    "type": "open-source",
+  },
+  "db": Object {
+    "acquireConnectionTimeout": 30000,
+    "database": "unleash_db",
+    "disableMigration": false,
+    "driver": "postgres",
+    "host": "localhost",
+    "password": "password",
+    "pool": Object {
+      "idleTimeoutMillis": 30000,
+      "max": 4,
+      "min": 0,
+      "propagateCreateError": false,
+    },
+    "port": 4242,
+    "schema": "public",
+    "ssl": Object {
+      "rejectUnauthorized": false,
+    },
+    "user": "unleash",
+    "version": undefined,
+  },
+  "email": Object {
+    "host": undefined,
+    "port": 587,
+    "secure": false,
+    "sender": "noreply@unleash-hosted.com",
+    "smtppass": undefined,
+    "smtpuser": undefined,
+  },
+  "enableOAS": false,
+  "enterpriseVersion": undefined,
+  "eventHook": undefined,
+  "experimental": Object {},
+  "getLogger": [Function],
+  "import": Object {
+    "dropBeforeImport": false,
+    "file": undefined,
+    "keepExisting": false,
+  },
+  "listen": Object {
+    "host": undefined,
+    "port": 4242,
+  },
+  "preHook": undefined,
+  "preRouterHook": undefined,
+  "secureHeaders": false,
+  "server": Object {
+    "baseUriPath": "",
+    "enableRequestLogger": false,
+    "gracefulShutdownEnable": true,
+    "gracefulShutdownTimeout": 1000,
+    "headersTimeout": 61000,
+    "host": undefined,
+    "keepAliveTimeout": 60000,
+    "pipe": undefined,
+    "port": 4242,
+    "secret": "super-secret",
+    "serverMetrics": true,
+    "unleashUrl": "http://localhost:4242",
+  },
+  "session": Object {
+    "db": true,
+    "ttlHours": 48,
+  },
+  "ui": Object {},
+  "versionCheck": Object {
+    "enable": true,
+    "url": "https://version.unleash.run",
+  },
+}
+`;

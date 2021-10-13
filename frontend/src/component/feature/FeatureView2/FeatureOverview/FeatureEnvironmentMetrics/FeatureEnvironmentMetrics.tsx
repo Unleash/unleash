@@ -1,13 +1,15 @@
 import classNames from 'classnames';
 import PercentageCircle from '../../../../common/PercentageCircle/PercentageCircle';
 import { useStyles } from './FeatureEnvironmentMetrics.styles';
-import { IEnvironmentMetrics } from '../../../../../interfaces/environments';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import { useMediaQuery } from '@material-ui/core';
+import { IFeatureEnvironmentMetrics } from '../../../../../interfaces/featureToggle';
+import { parseISO } from 'date-fns';
+
 interface IFeatureEnvironmentProps {
     className?: string;
     primaryMetric?: boolean;
-    metric: IEnvironmentMetrics;
+    metric: IFeatureEnvironmentMetrics;
 }
 
 const FeatureEnvironmentMetrics = ({
@@ -21,6 +23,11 @@ const FeatureEnvironmentMetrics = ({
     const containerClasses = classNames(styles.container, className, {
         [styles.primaryMetric]: primaryMetric,
     });
+    let hour = '';
+    if (metric?.timestamp) {
+        const metricTime = parseISO(metric.timestamp);
+        hour = `since ${metricTime.getHours()}:${metricTime.getMinutes()}`;
+    }
 
     const calculatePercentage = () => {
         const total = metric.yes + metric.no;
@@ -52,7 +59,7 @@ const FeatureEnvironmentMetrics = ({
             <div className={containerClasses}>
                 <div className={styles.headerContainer}>
                     <h2 data-loading className={styles.title}>
-                        Traffic in {metric.name}
+                        Traffic in {metric.environment} {hour}
                     </h2>
                 </div>
 
@@ -75,7 +82,7 @@ const FeatureEnvironmentMetrics = ({
         <div className={containerClasses}>
             <div className={styles.headerContainer}>
                 <h2 data-loading className={styles.title}>
-                    Traffic in {metric.name}
+                    Traffic in {metric.environment} {hour}
                 </h2>
             </div>
 

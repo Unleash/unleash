@@ -48,3 +48,17 @@ export interface IPayload {
     name: string;
     value: string;
 }
+
+export interface IFeatureEnvironmentMetrics {
+    environment: string;
+    timestamp: string;
+    yes: number;
+    no: number;
+}
+
+export interface IFeatureMetrics {
+    version: number;
+    maturity: string;
+    lastHourUsage: IFeatureEnvironmentMetrics[],
+    seenApplication: string[]
+}

@@ -1,72 +1,33 @@
 import { useParams } from 'react-router';
-import { useState, useEffect } from 'react';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
-import { IEnvironmentMetrics } from '../../../../../interfaces/environments';
 import FeatureEnvironmentMetrics from '../FeatureEnvironmentMetrics/FeatureEnvironmentMetrics';
 import { useStyles } from './FeatureOverviewMetrics.styles';
-
-const data = {
-    version: 1,
-    maturity: 'experimental',
-    lastHourUsage: [
-        {
-            environment: 'default',
-            timestamp: '2021-10-07 10:00:00',
-            yes: 250,
-            no: 60,
-        },
-        {
-            environment: 'production',
-            timestamp: '2021-10-07 10:00:00',
-            yes: 200,
-            no: 500,
-        },
-        {
-            environment: 'development',
-            timestamp: '2021-10-07 10:00:00',
-            yes: 0,
-            no: 0,
-        },
-    ],
-    seenApplications: ['web', 'backend-api', 'commerce'],
-};
+import useFeatureMetrics from '../../../../../hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 
 const FeatureOverviewMetrics = () => {
     const styles = useStyles();
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature } = useFeature(projectId, featureId);
-    const [featureMetrics, setFeatureMetrics] = useState<IEnvironmentMetrics[]>(
-        []
-    );
+    const { metrics } = useFeatureMetrics(projectId, featureId);
 
-    useEffect(() => {
-        const featureMetricList = feature?.environments.map(env => {
-            const metrics = data.lastHourUsage.find(
-                metric => metric.environment === env.name
-            );
+    const featureMetrics = feature?.environments.map(env => {
+        const metric = metrics.lastHourUsage.find(
+            metric => metric.environment === env.name
+        );
 
-            if (!metrics) {
-                return {
-                    name: env.name,
-                    yes: 0,
-                    no: 0,
-                    timestamp: '',
-                };
-            }
-
+        if (!metric) {
             return {
-                name: env.name,
-                yes: metrics.yes,
-                no: metrics.no,
-                timestamp: metrics.timestamp,
+                environment: env.name,
+                yes: 0,
+                no: 0,
+                timestamp: ''
             };
-        });
+        }
 
-        setFeatureMetrics(featureMetricList);
-        /* Update on useSWR metrics change */
-        /* eslint-disable-next-line */
-    }, []);
+        return metric;
+    });
+
 
     const renderFeatureMetrics = () => {
         if (featureMetrics.length === 0) {
@@ -88,14 +49,14 @@ const FeatureOverviewMetrics = () => {
                     return (
                         <FeatureEnvironmentMetrics
                             className={styles.firstContainer}
-                            key={metric.name}
+                            key={metric.environment}
                             metric={metric}
                         />
                     );
                 }
                 return (
                     <FeatureEnvironmentMetrics
-                        key={metric.name}
+                        key={metric.environment}
                         metric={metric}
                     />
                 );
@@ -109,7 +70,7 @@ const FeatureOverviewMetrics = () => {
                     return (
                         <FeatureEnvironmentMetrics
                             primaryMetric
-                            key={metric.name}
+                            key={metric.environment}
                             metric={metric}
                         />
                     );
@@ -119,7 +80,7 @@ const FeatureOverviewMetrics = () => {
                     return (
                         <FeatureEnvironmentMetrics
                             className={styles.firstContainer}
-                            key={metric.name}
+                            key={metric.environment}
                             metric={metric}
                         />
                     );
@@ -127,7 +88,7 @@ const FeatureOverviewMetrics = () => {
 
                 return (
                     <FeatureEnvironmentMetrics
-                        key={metric.name}
+                        key={metric.environment}
                         metric={metric}
                     />
                 );

@@ -153,3 +153,29 @@ test('should validate name to not ok for non url-friendly', async () => {
         .set('Content-Type', 'application/json')
         .expect(400);
 });
+
+test('should update context field with stickiness', async () => {
+    const name = 'with-sticky-update';
+    await app.request
+        .post('/api/admin/context')
+        .send({
+            name,
+            description: 'A context field supporting stickiness',
+        })
+        .set('Content-Type', 'application/json');
+    await app.request
+        .put(`/api/admin/context/${name}`)
+        .send({
+            description: 'asd',
+            legalValues: [],
+            name,
+            stickiness: true,
+        })
+        .set('Content-Type', 'application/json');
+
+    const res = await app.request.get(`/api/admin/context/${name}`);
+    const contextField = res.body;
+
+    expect(contextField.description).toBe('asd');
+    expect(contextField.stickiness).toBe(true);
+});

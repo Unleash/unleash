@@ -10,23 +10,23 @@ Object {
   },
   "db": Object {
     "acquireConnectionTimeout": 30000,
-    "database": "unleash",
+    "database": "unleash_db",
     "disableMigration": false,
     "driver": "postgres",
-    "host": undefined,
-    "password": undefined,
+    "host": "localhost",
+    "password": "passord",
     "pool": Object {
       "idleTimeoutMillis": 30000,
       "max": 4,
       "min": 0,
       "propagateCreateError": false,
     },
-    "port": 5432,
+    "port": 4242,
     "schema": "public",
     "ssl": Object {
       "rejectUnauthorized": false,
     },
-    "user": undefined,
+    "user": "unleash",
     "version": undefined,
   },
   "email": Object {

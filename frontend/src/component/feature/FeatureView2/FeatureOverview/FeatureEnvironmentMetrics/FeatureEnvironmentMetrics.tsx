@@ -26,7 +26,7 @@ const FeatureEnvironmentMetrics = ({
     let hour = '';
     if (metric?.timestamp) {
         const metricTime = parseISO(metric.timestamp);
-        hour = `since ${metricTime.getHours()}:${metricTime.getMinutes()}`;
+        hour = `since ${metricTime.getHours()}:00`;
     }
 
     const calculatePercentage = () => {

@@ -14,7 +14,7 @@ Object {
     "disableMigration": false,
     "driver": "postgres",
     "host": "localhost",
-    "password": "passord",
+    "password": "password",
     "pool": Object {
       "idleTimeoutMillis": 30000,
       "max": 4,

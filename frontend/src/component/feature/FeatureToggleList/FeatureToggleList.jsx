@@ -35,6 +35,7 @@ const FeatureToggleList = ({
     toggleFeature,
     archive,
     loading,
+    flags,
 }) => {
     const { hasAccess } = useContext(AccessContext);
     const styles = useStyles();
@@ -72,6 +73,8 @@ const FeatureToggleList = ({
                     revive={revive}
                     hasAccess={hasAccess}
                     className={'skeleton'}
+                    flags={flags}
+                    archive={archive}
                 />
             ));
         }
@@ -91,6 +94,7 @@ const FeatureToggleList = ({
                         toggleFeature={toggleFeature}
                         revive={revive}
                         hasAccess={hasAccess}
+                        flags={flags}
                     />
                 ))}
                 elseShow={
@@ -223,6 +227,7 @@ FeatureToggleList.propTypes = {
     history: PropTypes.object.isRequired,
     loading: PropTypes.bool,
     currentProjectId: PropTypes.string.isRequired,
+    flags: PropTypes.object,
 };
 
 export default FeatureToggleList;

@@ -28,6 +28,7 @@ const FeatureToggleListItem = ({
     metricsLastMinute = { yes: 0, no: 0, isFallback: true },
     revive,
     hasAccess,
+    flags = {},
     ...rest
 }) => {
     const styles = useStyles();
@@ -51,7 +52,7 @@ const FeatureToggleListItem = ({
             <span className={classnames(styles.listItemLink)}>
                 <ConditionallyRender condition={!isArchive} show={
                     <Link
-                        to={getTogglePath(feature.project, name)}
+                        to={getTogglePath(feature.project, name, flags.E)}
                         className={classnames(
                             commonStyles.listLink,
                             commonStyles.truncate
@@ -127,6 +128,7 @@ FeatureToggleListItem.propTypes = {
     metricsLastMinute: PropTypes.object,
     revive: PropTypes.func,
     hasAccess: PropTypes.func.isRequired,
+    flags: PropTypes.object,
 };
 
 export default memo(FeatureToggleListItem);

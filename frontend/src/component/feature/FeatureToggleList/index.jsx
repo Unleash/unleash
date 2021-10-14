@@ -22,6 +22,7 @@ function resolveCurrentProjectId(settings) {
 
 export const mapStateToPropsConfigurable = isFeature => state => {
     const featureMetrics = state.featureMetrics.toJS();
+    const flags = state.uiConfig.toJS().flags;
     const settings = state.settings.toJS().feature || {};
     let features = isFeature
         ? state.features.toJS()
@@ -131,6 +132,7 @@ export const mapStateToPropsConfigurable = isFeature => state => {
         featureMetrics,
         archive: !isFeature,
         settings,
+        flags,
         loading: state.apiCalls.fetchTogglesState.loading,
     };
 };

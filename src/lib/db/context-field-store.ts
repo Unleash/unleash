@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import {
     IContextField,
+    IContextFieldDto,
     IContextFieldStore,
 } from '../types/stores/context-field-store';
 
@@ -29,7 +30,7 @@ interface ICreateContextField {
     description: string;
     stickiness: boolean;
     sort_order: number;
-    legal_values?: string[];
+    legal_values?: string;
     updated_at: Date;
 }
 
@@ -43,15 +44,15 @@ class ContextFieldStore implements IContextFieldStore {
         this.logger = getLogger('context-field-store.ts');
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    fieldToRow(data): ICreateContextField {
+    fieldToRow(
+        data: IContextFieldDto,
+    ): Omit<ICreateContextField, 'updated_at'> {
         return {
             name: data.name,
             description: data.description,
             stickiness: data.stickiness,
             sort_order: data.sortOrder, // eslint-disable-line
-            legal_values: data.legalValues ? data.legalValues.join(',') : null, // eslint-disable-line
-            updated_at: data.createdAt, // eslint-disable-line
+            legal_values: data.legalValues ? data.legalValues.join(',') : undefined, // eslint-disable-line
         };
     }
 
@@ -87,20 +88,19 @@ class ContextFieldStore implements IContextFieldStore {
         return present;
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async create(contextField): Promise<IContextField> {
+    async create(contextField: IContextFieldDto): Promise<IContextField> {
         const row = await this.db(TABLE)
             .insert(this.fieldToRow(contextField))
             .returning('*');
         return mapRow(row);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async update(data): Promise<IContextField> {
-        const row = this.db(TABLE)
+    async update(data: IContextFieldDto): Promise<IContextField> {
+        const row = await this.db(TABLE)
             .where({ name: data.name })
             .update(this.fieldToRow(data))
             .returning('*');
+
         return mapRow(row);
     }
 
@@ -109,4 +109,3 @@ class ContextFieldStore implements IContextFieldStore {
     }
 }
 export default ContextFieldStore;
-module.exports = ContextFieldStore;

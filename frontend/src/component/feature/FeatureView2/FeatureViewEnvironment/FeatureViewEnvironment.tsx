@@ -146,7 +146,7 @@ const FeatureViewEnvironment: FC<IFeatureViewEnvironmentProps> = ({
             </div>
 
             <ConditionallyRender
-                condition={currentEnv.strategies.length > 0}
+                condition={currentEnv?.strategies?.length > 0}
                 show={<div className={styles.body}>{children}</div>}
             />
 

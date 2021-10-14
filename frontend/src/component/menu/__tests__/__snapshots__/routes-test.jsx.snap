@@ -205,7 +205,7 @@ Array [
   },
   Object {
     "component": [Function],
-    "flag": "E",
+    "flag": "EEA",
     "layout": "main",
     "menu": Object {
       "advanced": true,

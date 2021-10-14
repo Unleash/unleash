@@ -29,7 +29,7 @@ import AdminUsers from '../../page/admin/users';
 import AdminInvoice from '../../page/admin/invoice';
 import AdminAuth from '../../page/admin/auth';
 import Login from '../user/Login';
-import { P, C, E } from '../common/flags';
+import { P, C, E, EEA } from '../common/flags';
 import NewUser from '../user/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
@@ -245,7 +245,7 @@ export const routes = [
         component: EnvironmentList,
         type: 'protected',
         layout: 'main',
-        flag: E,
+        flag: EEA,
         menu: { mobile: true, advanced: true },
     },
 

@@ -27,8 +27,8 @@ export class AuthenticationError extends Error {
 }
 
 export class ForbiddenError extends Error {
-    constructor(statusCode, body) {
-        super('You cannot perform this action');
+    constructor(statusCode, body = {}) {
+        super(body.details?.length > 0 ? body.details[0].message : 'You cannot perform this action');
         this.name = 'ForbiddenError';
         this.statusCode = statusCode;
         this.body = body;

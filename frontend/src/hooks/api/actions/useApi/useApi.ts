@@ -153,12 +153,14 @@ const useAPI = ({
             }
 
             if (propagateErrors) {
-                throw new ForbiddenError(res.status);
+                const response = await res.json();
+                throw new ForbiddenError(res.status, response);
             }
         }
 
         if (res.status > 399) {
             const response = await res.json();
+            
             if (response?.details?.length > 0) {
                 const error = response.details[0];
                 if (propagateErrors) {

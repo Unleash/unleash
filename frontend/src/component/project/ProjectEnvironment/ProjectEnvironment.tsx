@@ -138,10 +138,6 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
     );
 
     const renderEnvironments = () => {
-        if (!uiConfig.flags.E) {
-            return <p>Feature not enabled.</p>;
-        }
-
         return (
             <FormGroup>
                 {envs.map(env => (
@@ -167,45 +163,53 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
             <PageContent
                 headerContent={
                     <HeaderTitle
-                        title={`Configure environments for "${project?.name}"`}
+                        title={`Configure environments for "${project?.name}" project`}
                     />}
             >
-                        <Alert severity="info">
-                        <b>Important!</b> In order for your application to retrieve feature toggle activation strategies for a specific environment, the application<br/> must use an environment-specific API key. You can look up the environment-specific API keys {' '}
-                        <Link
-                            to='/admin/api'
-                        >
-                            here.
-                        </Link>{' '}
-                        <br/>
-                        <br/>
-                        Your administrator can configure an environment-specific API key and add it to your SDK if you can't find it on the list.
-                        If you are an administrator you can create a new API key {' '}
-                        <Link
-                            to='/admin/api'
-                        >
-                            here.
-                        </Link>{' '}
+                <ConditionallyRender condition={uiConfig.flags.E} show={
+                    <div className={styles.container}>
+                        <ConditionallyRender condition={error} show={renderError()} />
+                        <Alert severity="info" style={{marginBottom: '20px'}}>
+                            <b>Important!</b> In order for your application to retrieve configured activation strategies for a specific environment, 
+                            the application<br/> must use an environment specific API key. You can look up the environment-specific API keys {' '}
+                            <Link
+                                to='/admin/api'
+                            >
+                                here.
+                            </Link>
+                            <br/>
+                            <br/>
+                            Your administrator can configure an environment-specific API key to be used in the SDK.
+                            If you are an administrator you can {' '}
+                            <Link
+                                to='/admin/api'
+                            >
+                                create a new API key.
+                            </Link>
+                        </Alert>
+                        <ConditionallyRender
+                            condition={environments.length < 1 && !loading}
+                            show={<div>No environments available.</div>}
+                            elseShow={renderEnvironments()}
+                        />
+                        <EnvironmentDisableConfirm
+                            env={selectedEnv}
+                            open={!!selectedEnv}
+                            handleDisableEnvironment={handleDisableEnvironment}
+                            handleCancelDisableEnvironment={
+                                handleCancelDisableEnvironment
+                            }
+                            confirmName={confirmName}
+                            setConfirmName={setConfirmName}
+                        />
+                    </div>
+                    
+                } elseShow={
+                    <Alert security="success">
+                        This feature has not been Unleashed for you yet. 
                     </Alert>
-                    <br/>
-                <ConditionallyRender condition={error} show={renderError()} />
-                <div className={styles.container}>
-                    <ConditionallyRender
-                        condition={environments.length < 1 && !loading}
-                        show={<div>No environments available.</div>}
-                        elseShow={renderEnvironments()}
-                    />
-                </div>
-                <EnvironmentDisableConfirm
-                    env={selectedEnv}
-                    open={!!selectedEnv}
-                    handleDisableEnvironment={handleDisableEnvironment}
-                    handleCancelDisableEnvironment={
-                        handleCancelDisableEnvironment
-                    }
-                    confirmName={confirmName}
-                    setConfirmName={setConfirmName}
-                />
+                } />
+                
                 {toast}
             </PageContent>
         </div>

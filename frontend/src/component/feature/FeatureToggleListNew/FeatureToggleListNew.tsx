@@ -120,10 +120,8 @@ const FeatureToggleListNew = ({
                                     )}
                                     align="center"
                                 >
-                                    <span data-loading>
-                                        {env.name === ':global:'
-                                            ? 'Status'
-                                            : env.name}
+                                    <span data-loading className={styles.envName} >
+                                       {env.name}
                                     </span>
                                 </TableCell>
                             );

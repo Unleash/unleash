@@ -63,7 +63,7 @@ const FeatureToggleListNewItem = ({
                 setToastData({
                     show: true,
                     type: 'error',
-                    text: e.toString(),
+                    text: e.message,
                 });
             });
     };

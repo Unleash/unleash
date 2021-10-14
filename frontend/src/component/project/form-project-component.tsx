@@ -107,16 +107,16 @@ const ProjectFormComponent = (props: ProjectFormComponentProps) => {
             <PageContent
                 headerContent={
                     <HeaderTitle
-                        title={`${submitText} Project`}
+                        title={`${submitText} ${project?.name} project`}
                     />
                 }
             >
                 
                 <ConditionallyRender condition={isOss()} show={
                     <Alert data-loading severity="error">
-                        Creating and updating projects requires a paid version of Unleash. 
-                        Check out <a href="https://www.getunleash.io" target="_blank" rel="noreferrer">getunleash.io</a> 
-                        to find out more.
+                        {submitText} project requires a paid version of Unleash. 
+                        Check out <a href="https://www.getunleash.io" target="_blank" rel="noreferrer">getunleash.io</a>{' '}
+                        to learn more.
                     </Alert>
                 } elseShow={
                     <>

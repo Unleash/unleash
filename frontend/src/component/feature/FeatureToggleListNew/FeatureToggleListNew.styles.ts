@@ -21,7 +21,7 @@ export const useStyles = makeStyles(theme => ({
         paddingLeft: '10px',
     },
     tableCellEnv: {
-        width: '20px',
+        width: '90px',
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         },
@@ -33,4 +33,11 @@ export const useStyles = makeStyles(theme => ({
             display: 'none',
         },
     },
+    envName: {
+        display: 'inline-block',
+        width: '90px',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+    }
 }));

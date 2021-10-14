@@ -2,7 +2,6 @@ import { useHistory, useParams } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
 import useProject from '../../../hooks/api/getters/useProject/useProject';
 import useLoading from '../../../hooks/useLoading';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 import ApiError from '../../common/ApiError/ApiError';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useStyles } from './Project.styles';
@@ -23,7 +22,6 @@ const Project = () => {
     const { id, activeTab } = useParams<{ id: string, activeTab: string }>();
     const params = useQueryParams();
     const { project, error, loading, refetch } = useProject(id);
-    const { uiConfig } = useUiConfig();
     const ref = useLoading(loading);
     const { toast, setToastData } = useToast();
     const commonStyles = useCommonStyles();
@@ -57,7 +55,6 @@ const Project = () => {
             component: <ProjectEnvironment projectId={id}  />,
             path: `${basePath}/environments`,
             name: 'environments',
-            disabled: !uiConfig.flags.E
         },
         {
             title: 'Settings',

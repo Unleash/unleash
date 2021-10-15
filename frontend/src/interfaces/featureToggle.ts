@@ -25,6 +25,7 @@ export interface IFeatureToggle {
 }
 
 export interface IFeatureEnvironment {
+    type: string;
     name: string;
     enabled: boolean;
     strategies: IFeatureStrategy[];

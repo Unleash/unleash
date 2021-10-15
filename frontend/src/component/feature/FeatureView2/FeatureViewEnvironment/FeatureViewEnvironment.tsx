@@ -100,18 +100,13 @@ const FeatureViewEnvironment: FC<IFeatureViewEnvironmentProps> = ({
                 <div className={iconContainerClasses}>
                     <Cloud className={iconClasses} />
                 </div>
-                <p className={styles.environmentBadgeParagraph}>{env.type}</p>
+                <Tooltip title={`${env.name} is an environment of type "${env.type}".`}>
+                    <p className={styles.environmentBadgeParagraph}>{env.name}</p>
+                </Tooltip>
             </div>
 
             <div className={styles.header}>
                 <div className={styles.headerInfo}>
-                    <Tooltip title={env.name}>
-                        <p data-loading className={styles.environmentTitle}>
-                            {env.name}
-                        </p>
-                    </Tooltip>
-                </div>
-                <div className={styles.environmentStatus} data-loading>
                     <ConditionallyRender
                         condition={env?.strategies?.length > 0}
                         show={
@@ -122,13 +117,16 @@ const FeatureViewEnvironment: FC<IFeatureViewEnvironmentProps> = ({
                                     onChange={toggleEnvironment}
                                 />{' '}
                                 <span className={styles.toggleText}>
-                                    The feature toggle is{' '}
-                                    {env.enabled ? 'enabled' : 'disabled'} in{' '}
-                                    {env.name}
+                                    {env.name}{' environment is '}
+                                    <strong>{env.enabled ? 'enabled' : 'disabled'}</strong>
                                 </span>
                             </div>
-                        }
-                        elseShow={
+                        } />
+                </div>
+                <div className={styles.environmentStatus} data-loading>
+                    <ConditionallyRender
+                        condition={env?.strategies?.length === 0}
+                        show={
                             <>
                                 <p className={styles.toggleText}>
                                     No strategies configured for environment.
@@ -140,8 +138,7 @@ const FeatureViewEnvironment: FC<IFeatureViewEnvironmentProps> = ({
                                     Configure strategies for {env.name}
                                 </Link>
                             </>
-                        }
-                    />
+                        } />
                 </div>
             </div>
 

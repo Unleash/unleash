@@ -60,5 +60,5 @@ export interface IFeatureMetrics {
     version: number;
     maturity: string;
     lastHourUsage: IFeatureEnvironmentMetrics[],
-    seenApplication: string[]
+    seenApplications: string[]
 }

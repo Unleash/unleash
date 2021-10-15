@@ -2,6 +2,7 @@ import { formatApiPath } from '../../../../utils/format-path';
 import { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { IFeatureMetrics } from '../../../../interfaces/featureToggle';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
 interface IUseFeatureMetricsOptions {
     refreshInterval?: number;
@@ -18,7 +19,7 @@ const useFeatureMetrics = (projectId: string, featureId: string, options: IUseFe
         const path = formatApiPath(`api/admin/client-metrics/features/${featureId}`);
         const res = await fetch(path, {
             method: 'GET'
-        });
+        }).then(handleErrorResponses('feature metrics'));
         if (res.ok) {
             return res.json();
         } else {

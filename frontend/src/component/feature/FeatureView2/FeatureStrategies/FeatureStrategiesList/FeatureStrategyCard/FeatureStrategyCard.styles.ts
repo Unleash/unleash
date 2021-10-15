@@ -14,7 +14,7 @@ export const useStyles = makeStyles(theme => ({
         '&:active': {
             backgroundColor: theme.palette.primary.main,
             color: '#fff',
-        },
+        },      
     },
     title: {
         maxWidth: '150px',

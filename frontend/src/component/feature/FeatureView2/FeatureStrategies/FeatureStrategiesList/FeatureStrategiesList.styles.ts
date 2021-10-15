@@ -25,11 +25,13 @@ export const useStyles = makeStyles(theme => ({
             width: '15%',
         },
     },
-    iconButton: {
+    iconButtonWrapper: {
         position: 'absolute',
         top: '300px',
         right: '-25px',
-        backgroundColor: theme.palette.grey[300],
+    },
+    iconButton: {
+        backgroundColor: `${theme.palette.grey[300]}!important`,
         [theme.breakpoints.down(700)]: {
             right: '-10px',
         },

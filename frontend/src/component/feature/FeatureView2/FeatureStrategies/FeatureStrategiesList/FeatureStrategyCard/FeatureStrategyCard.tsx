@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { useContext } from 'react';
 import { useDrag } from 'react-dnd';
 import { useParams } from 'react-router-dom';
+import AccessContext from '../../../../../../contexts/AccessContext';
 import FeatureStrategiesUIContext from '../../../../../../contexts/FeatureStrategiesUIContext';
 import useStrategies from '../../../../../../hooks/api/getters/useStrategies/useStrategies';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
@@ -13,6 +14,7 @@ import {
     getFeatureStrategyIcon,
     getHumanReadbleStrategyName,
 } from '../../../../../../utils/strategy-names';
+import { UPDATE_FEATURE } from '../../../../../AccessProvider/permissions';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import { useStyles } from './FeatureStrategyCard.styles';
 
@@ -37,6 +39,8 @@ const FeatureStrategyCard = ({
     const { setConfigureNewStrategy, setExpandedSidebar } = useContext(
         FeatureStrategiesUIContext
     );
+    const { hasAccess } = useContext(AccessContext);
+    const canUpdateFeature = hasAccess(UPDATE_FEATURE)
 
     const handleClick = () => {
         const strategy = getStrategyObject(strategies, name, featureId);
@@ -50,6 +54,7 @@ const FeatureStrategyCard = ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, drag] = useDrag({
         type: FEATURE_STRATEGIES_DRAG_TYPE,
+        canDrag: canUpdateFeature,
         item: () => {
             return { name };
         },
@@ -78,9 +83,8 @@ const FeatureStrategyCard = ({
                             <IconButton
                                 className={styles.addButton}
                                 onClick={handleClick}
-                                data-test={`${ADD_NEW_STRATEGY_CARD_BUTTON_ID}-${
-                                    index + 1
-                                }`}
+                                data-test={`${ADD_NEW_STRATEGY_CARD_BUTTON_ID}-${index + 1}`}
+                                disabled={!canUpdateFeature}
                             >
                                 <Add />
                             </IconButton>

@@ -103,7 +103,7 @@ const FeatureView2 = () => {
         return (
             <div>
                 <p>
-                    The feature <strong>{featureId} </strong>does not exist. Do
+                    The feature <strong>{featureId.substring(0,30)}</strong> does not exist. Do
                     you want to &nbsp;
                     <Link to={getCreateTogglePath(projectId)}>create it</Link>
                     &nbsp;?

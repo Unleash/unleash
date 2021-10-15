@@ -40,6 +40,7 @@ import RedirectArchive from '../feature/RedirectArchive/RedirectArchive';
 import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
 import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import FeatureView2 from '../feature/FeatureView2/FeatureView2';
+import FeatureCreate from '../feature/FeatureCreate/FeatureCreate'
 
 export const routes = [
     // Project
@@ -94,6 +95,15 @@ export const routes = [
         parent: '/projects',
         title: ':name',
         component: ViewFeatureToggle,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/projects/:projectId/create-toggle2',
+        parent: '/projects/:id/features',
+        title: 'Create feature toggle',
+        component: FeatureCreate,
         type: 'protected',
         layout: 'main',
         menu: {},

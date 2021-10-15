@@ -15,6 +15,7 @@ import ResponsiveButton from '../../../common/ResponsiveButton/ResponsiveButton'
 import FeatureToggleListNew from '../../../feature/FeatureToggleListNew/FeatureToggleListNew';
 import { useStyles } from './ProjectFeatureToggles.styles';
 import { CREATE_FEATURE } from '../../../AccessProvider/permissions';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectFeatureToggles {
     features: IFeatureToggleListItem[];
@@ -29,6 +30,7 @@ const ProjectFeatureToggles = ({
     const { id } = useParams();
     const history = useHistory();
     const { hasAccess } = useContext(AccessContext);
+    const { uiConfig } = useUiConfig();
 
     return (
         <PageContent
@@ -59,7 +61,7 @@ const ProjectFeatureToggles = ({
                                     <ResponsiveButton
                                         onClick={() =>
                                             history.push(
-                                                getCreateTogglePath(id)
+                                                getCreateTogglePath(id, uiConfig.flags.E)
                                             )
                                         }
                                         maxWidth="700px"

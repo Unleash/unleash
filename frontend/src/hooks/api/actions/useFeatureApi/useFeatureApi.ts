@@ -1,3 +1,4 @@
+import { IFeatureToggleDTO } from '../../../../interfaces/featureToggle';
 import { ITag } from '../../../../interfaces/tags';
 import useAPI from '../useApi/useApi';
 
@@ -5,6 +6,44 @@ const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
+
+    const validateFeatureToggleName = async (
+        name: string,
+    ) => {
+        const path = `api/admin/features/validate`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ name }),
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
+
+    const createFeatureToggle = async (
+        projectId: string,
+        featureToggle: IFeatureToggleDTO,
+    ) => {
+        const path = `api/admin/projects/${projectId}/features`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify(featureToggle),
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
 
     const toggleFeatureEnvironmentOn = async (
         projectId: string,
@@ -164,6 +203,8 @@ const useFeatureApi = () => {
     };
 
     return {
+        validateFeatureToggleName,
+        createFeatureToggle,
         changeFeatureProject,
         errors,
         toggleFeatureEnvironmentOn,

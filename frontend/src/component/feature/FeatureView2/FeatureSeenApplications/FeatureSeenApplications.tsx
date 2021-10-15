@@ -1,7 +1,7 @@
 import useFeatureMetrics from '../../../../hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { Link, useParams } from 'react-router-dom';
 import { IFeatureViewParams } from '../../../../interfaces/params';
-import { Grid, List, ListItem, ListItemText } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import React from 'react';
 import { useStyles } from './FeatureSeenApplications.styles';
 
@@ -12,7 +12,7 @@ const FeatureSeenApplications: React.FC = () => {
     let seenApplications;
     if (metrics?.seenApplications?.length > 0) {
         seenApplications = metrics.seenApplications.map(appName => {
-            return (<ListItem><ListItemText primary={
+            return (<Grid item xs={4}>
                 <Link
                     to={`/applications/${appName}`}
                     className={[
@@ -22,17 +22,16 @@ const FeatureSeenApplications: React.FC = () => {
                 >
                     {appName}
                 </Link>
-            } /></ListItem>)
+            </Grid>)
         });
     } else {
-        seenApplications = (<ListItem><ListItemText primary={'Not seen in any applications'} /></ListItem>);
+        seenApplications = (<Grid item xs={12}><div>{'Not seen in any applications'}</div></Grid>);
     }
 
     return (
-        <Grid sm={12}>
-            <List>
-                {seenApplications}
-            </List>
+        <Grid container spacing={1}>
+            <hr />
+            {seenApplications}
         </Grid>
     );
 }

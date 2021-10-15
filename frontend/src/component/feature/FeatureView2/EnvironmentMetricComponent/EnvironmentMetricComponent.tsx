@@ -27,18 +27,20 @@ const EnvironmentMetricComponent: React.FC = () => {
 
     const metricComponents = featureMetrics.map(metric => {
         return (
-            <Grid item sm={6}>
+            <Grid item sm={4}>
                 <FeatureEnvironmentMetrics key={metric.environment} metric={metric} />
             </Grid>)
     })
     return (
         <>
-            <Grid sm={12} data-loading>
+            <Grid container data-loading spacing={1}>
+                <Grid item xs={12}>
                 <h2>{'Environments'}</h2>
                 <hr />
+                </Grid>
                 {metricComponents}
             </Grid>
-            <Grid sm={12} data-loading>
+            <Grid container data-loading>
                 <h2>Applications</h2>
                 <hr />
                 <FeatureSeenApplications />

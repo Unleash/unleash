@@ -5,18 +5,19 @@ import React from 'react';
 import useFeature from '../../../../hooks/api/getters/useFeature/useFeature';
 import FeatureEnvironmentMetrics from '../FeatureOverview/FeatureEnvironmentMetrics/FeatureEnvironmentMetrics';
 import FeatureSeenApplications from '../FeatureSeenApplications/FeatureSeenApplications';
-import { Grid } from '@material-ui/core';
+import { useStyles } from './EnvironmentMetricComponent.style';
 
 const emptyMetric = (environment: string) => ({
     yes: 0,
     no: 0,
     environment,
-    timestamp: '',
+    timestamp: ''
 });
 const EnvironmentMetricComponent: React.FC = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature } = useFeature(projectId, featureId);
     const { metrics } = useFeatureMetrics(projectId, featureId);
+    const styles = useStyles();
 
     const featureMetrics = feature?.environments.map(env => {
         const envMetric = metrics.lastHourUsage.find(
@@ -27,26 +28,23 @@ const EnvironmentMetricComponent: React.FC = () => {
 
     const metricComponents = featureMetrics.map(metric => {
         return (
-            <Grid item sm={4}>
-                <FeatureEnvironmentMetrics key={metric.environment} metric={metric} />
-            </Grid>)
-    })
+            <FeatureEnvironmentMetrics key={metric.environment} metric={metric} />
+        );
+    });
+
     return (
         <>
-            <Grid container data-loading spacing={1}>
-                <Grid item xs={12}>
-                <h2>{'Environments'}</h2>
-                <hr />
-                </Grid>
+            <div className={styles.environmentHeader}>Environments</div>
+            <div className={styles.environmentContainer}>
                 {metricComponents}
-            </Grid>
-            <Grid container data-loading>
-                <h2>Applications</h2>
-                <hr />
+            </div>
+            <div className={styles.applicationHeader}>Applications</div>
+            <div className={styles.applicationsContainer}>
                 <FeatureSeenApplications />
-            </Grid>
+            </div>
         </>
-    );
+    )
+        ;
 };
 
 export default EnvironmentMetricComponent;

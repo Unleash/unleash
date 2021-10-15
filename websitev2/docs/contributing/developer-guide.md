@@ -6,7 +6,8 @@ Before developing on this project you will need two things:
 - Node.js 14.x or newer
 
 ```sh
-npm run start:dev
+yarn install
+yarn run start:dev
 ```
 
 ## PostgreSQL {#postgresql}
@@ -48,10 +49,10 @@ In order to start the application you will need Node.js v14.x or newer installed
 
 ```
 // Install dependencies
-npm install
+yarn install
 
 // Start server in development
-npm start:dev
+yarn start:dev
 
 // Unleash UI
 http://localhost:4242
@@ -60,7 +61,7 @@ http://localhost:4242
 http://localhost:4242/api/
 
 // Execute tests in all packages:
-npm test
+yarn test
 ```
 
 ## Database changes {#database-changes}
@@ -76,7 +77,7 @@ To run migrations, you will set the environment variable for DATABASE_URL
 Use db-migrate to create new migrations file.
 
 ```bash
-> npm run db-migrate -- create YOUR-MIGRATION-NAME
+> yarn run db-migrate create YOUR-MIGRATION-NAME
 ```
 
 All migrations require one `up` and one `down` method.
@@ -106,13 +107,13 @@ exports.down = function(db, cb) {
 Test your migrations:
 
 ```bash
-> npm run db-migrate -- up
-> npm run db-migrate -- down
+> yarn run db-migrate up
+> yarn run db-migrate down
 ```
 
 ## Publishing / Releasing new packages {#publishing--releasing-new-packages}
 
-Please run `npm run nsp` and `npm run test` checks before publishing.
+Please run `yarn test` checks before publishing.
 
 Run `npm run publish` to start the publishing process.
 

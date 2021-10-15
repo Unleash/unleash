@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { defaultValue } from './defaultValue';
 import { IUiConfig } from '../../../../interfaces/uiConfig';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
 const REQUEST_KEY = 'api/admin/ui-config';
 
@@ -13,7 +14,7 @@ const useUiConfig = () => {
         return fetch(path, {
             method: 'GET',
             credentials: 'include',
-        }).then(res => res.json());
+        }).then(handleErrorResponses('configuration')).then(res => res.json());
     };
 
     const { data, error } = useSWR<IUiConfig>(REQUEST_KEY, fetcher);

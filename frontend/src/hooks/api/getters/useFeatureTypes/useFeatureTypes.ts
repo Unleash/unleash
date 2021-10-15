@@ -2,13 +2,14 @@ import useSWR, { mutate } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { IFeatureType } from '../../../../interfaces/featureTypes';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
 const useFeatureTypes = () => {
     const fetcher = async () => {
         const path = formatApiPath(`api/admin/feature-types`);
         const res = await fetch(path, {
             method: 'GET',
-        });
+        }).then(handleErrorResponses('Feature types'));
         return res.json();
     };
 

@@ -2,13 +2,14 @@ import useSWR, { mutate } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { ITag } from '../../../../interfaces/tags';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
 const useTags = (featureId: string) => {
     const fetcher = async () => {
         const path = formatApiPath(`api/admin/features/${featureId}/tags`);
         const res = await fetch(path, {
             method: 'GET',
-        });
+        }).then(handleErrorResponses('Tags'));
         return res.json();
     };
 

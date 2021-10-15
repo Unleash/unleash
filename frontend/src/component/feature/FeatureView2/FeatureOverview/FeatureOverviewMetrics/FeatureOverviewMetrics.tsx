@@ -63,7 +63,7 @@ const FeatureOverviewMetrics = () => {
             });
         }
 
-        /* We display maxium three environments metrics */
+        /* We display maximum three environments metrics */
         if (featureMetrics.length >= 3) {
             return featureMetrics.slice(0, 3).map((metric, index) => {
                 if (index === 0) {

@@ -12,11 +12,11 @@ const FeatureMetrics = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature } = useFeature(projectId, featureId);
     const { uiConfig } = useUiConfig();
-    const isNewMetricsEnabled = uiConfig.flags.V;
+    const isEnterprise = uiConfig.flags.E;
 
     return (
         <div className={styles.container}>
-            <ConditionallyRender condition={isNewMetricsEnabled}
+            <ConditionallyRender condition={isEnterprise}
                                  show={<EnvironmentMetricComponent />}
                                  elseShow={<MetricComponent featureToggle={feature} />}
             />

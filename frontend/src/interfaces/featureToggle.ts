@@ -14,8 +14,8 @@ export interface IEnvironments {
 export interface IFeatureToggle {
     stale: boolean;
     archived: boolean;
-    createdAt: string;
-    lastSeenAt: Date;
+    createdAt: Date;
+    lastSeenAt?: Date;
     description: string;
     environments: IFeatureEnvironment[];
     name: string;

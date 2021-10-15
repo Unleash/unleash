@@ -13,12 +13,14 @@ export const useStyles = makeStyles(theme => ({
     listItemType: {
         width: '40px',
         textAlign: 'center',
+        marginRight: '0',
+        flexShrink: '0',
     },
     listItemSvg: {
         fill: theme.palette.icons.lightGrey,
     },
     listItemLink: {
-        marginLeft: '10px',
+        marginLeft: '0.25rem',
         minWidth: '0',
     },
     listItemStrategies: {

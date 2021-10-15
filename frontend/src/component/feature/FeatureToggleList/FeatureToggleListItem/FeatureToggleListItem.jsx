@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import { Link } from 'react-router-dom';
-import { Chip, IconButton, ListItem } from '@material-ui/core';
+import { Chip, IconButton, ListItem, Tooltip } from '@material-ui/core';
 import { Undo } from '@material-ui/icons';
 
 import TimeAgo from 'react-timeago';
@@ -58,9 +58,11 @@ const FeatureToggleListItem = ({
                             commonStyles.truncate
                         )}
                     >
-                        <span className={commonStyles.toggleName}>
-                            {name}&nbsp;
-                        </span>
+                        <Tooltip title={description}>
+                            <span className={commonStyles.toggleName}>
+                                    {name}&nbsp;
+                            </span>
+                            </Tooltip>
                         <span className={styles.listItemToggle}>
                         </span>
                         <small>
@@ -74,9 +76,11 @@ const FeatureToggleListItem = ({
                     </Link>
                 } elseShow={
                     <>
-                        <span className={commonStyles.toggleName}>
-                            {name}&nbsp;
-                        </span>
+                        <Tooltip title={description}>
+                            <span className={commonStyles.toggleName}>
+                                    {name}&nbsp;
+z                            </span>
+                        </Tooltip>
                         <span className={styles.listItemToggle}>
                         </span>
                         <small>
@@ -100,7 +104,9 @@ const FeatureToggleListItem = ({
                 )}
             >
                 <Status stale={stale} showActive={false} />
-                <Chip color="primary" variant="outlined" className={styles.typeChip} style={{marginLeft: '8px'}} title={`Project: ${project}`} label={project}/>
+                <Link to={`/projects/${project}`} style={{textDecoration: 'none'}}>
+                    <Chip color="primary" variant="outlined" className={styles.typeChip} style={{marginLeft: '8px' }} title={`Project: ${project}`} label={project}/>
+                </Link>
             </span>
             <ConditionallyRender
                 condition={revive}

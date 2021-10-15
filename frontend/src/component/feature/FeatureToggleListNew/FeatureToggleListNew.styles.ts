@@ -14,6 +14,9 @@ export const useStyles = makeStyles(theme => ({
         color: theme.palette.grey[600],
         borderBottom: '1px solid ' + theme.palette.grey[200],
     },
+    tableCellHeaderSortable: {
+        cursor: 'pointer',
+    },
     tableCellStatus: {
         width: '50px',
     },
@@ -22,6 +25,11 @@ export const useStyles = makeStyles(theme => ({
     },
     tableCellEnv: {
         width: '90px',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
+    },
+    tableCellCreated: {
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         },

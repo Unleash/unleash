@@ -14,7 +14,7 @@ export const useStyles = makeStyles(theme => ({
             width: 'inherit',
         },
     },
-    bodyClass: { padding: '0.5rem 2rem' },
+    bodyClass: { padding: '0.5rem 1rem' },
     header: {
         padding: '1rem',
     },

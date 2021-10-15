@@ -16,6 +16,7 @@ import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
 import FeatureType from '../../FeatureView2/FeatureType/FeatureType';
 import classNames from 'classnames';
+import CreatedAt from './CreatedAt';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -23,6 +24,7 @@ interface IFeatureToggleListNewItemProps {
     environments: IFeatureEnvironment[];
     projectId: string;
     lastSeenAt?: Date;
+    createdAt: Date;
 }
 
 const FeatureToggleListNewItem = ({
@@ -31,6 +33,7 @@ const FeatureToggleListNewItem = ({
     type,
     environments,
     projectId,
+    createdAt,
 }: IFeatureToggleListNewItemProps) => {
     const { toast, setToastData } = useToast();
     const { toggleFeatureByEnvironment } = useToggleFeatureByEnv(
@@ -86,6 +89,10 @@ const FeatureToggleListNewItem = ({
                 <TableCell className={classNames(
                                 styles.tableCell, styles.tableCellName)} align="left" onClick={onClick}>
                     <span data-loading>{name}</span>
+                </TableCell>
+                <TableCell className={classNames(
+                                styles.tableCell, styles.tableCellCreated)} align="left" onClick={onClick}>
+                        <CreatedAt time={createdAt} />
                 </TableCell>
                 
 

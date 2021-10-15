@@ -37,6 +37,14 @@ const PaginateUI = ({
         }
     }, [matches]);
 
+
+    useEffect(() => {
+        if(pageIndex === 0 && start !== 0) {
+            setStart(0);
+            setLimit(STARTLIMIT);
+        }
+    }, [pageIndex, start])
+
     return (
         <ConditionallyRender
             condition={pages.length > 1}

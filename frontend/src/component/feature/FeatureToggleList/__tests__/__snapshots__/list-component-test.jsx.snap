@@ -86,60 +86,6 @@ exports[`renders correctly with one feature 1`] = `
                 Sorted by:
               </p>
               <button
-                aria-controls="metric"
-                aria-haspopup="true"
-                className="MuiButtonBase-root MuiButton-root MuiButton-text"
-                data-loading={true}
-                disabled={false}
-                id="metric"
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "fontWeight": "normal",
-                    "textTransform": "lowercase",
-                  }
-                }
-                tabIndex={0}
-                title="Metric interval"
-                type="button"
-              >
-                <span
-                  className="MuiButton-label"
-                >
-                  Last minute
-                  <span
-                    className="MuiButton-endIcon MuiButton-iconSizeMedium"
-                  >
-                    <span
-                      aria-hidden={true}
-                      className="material-icons MuiIcon-root"
-                    >
-                      <svg
-                        aria-hidden={true}
-                        className="MuiSvgIcon-root"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M7 10l5 5 5-5z"
-                        />
-                      </svg>
-                    </span>
-                  </span>
-                </span>
-              </button>
-              <button
                 aria-controls="sorting"
                 aria-haspopup="true"
                 className="MuiButtonBase-root MuiButton-root MuiButton-text"
@@ -336,63 +282,6 @@ exports[`renders correctly with one feature without permissions 1`] = `
               >
                 Sorted by:
               </p>
-              <button
-                aria-controls="metric"
-                aria-haspopup="true"
-                className="MuiButtonBase-root MuiButton-root MuiButton-text"
-                data-loading={true}
-                disabled={false}
-                id="metric"
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "fontWeight": "normal",
-                    "textTransform": "lowercase",
-                  }
-                }
-                tabIndex={0}
-                title="Metric interval"
-                type="button"
-              >
-                <span
-                  className="MuiButton-label"
-                >
-                  Last minute
-                  <span
-                    className="MuiButton-endIcon MuiButton-iconSizeMedium"
-                  >
-                    <span
-                      aria-hidden={true}
-                      className="material-icons MuiIcon-root"
-                    >
-                      <svg
-                        aria-hidden={true}
-                        className="MuiSvgIcon-root"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M7 10l5 5 5-5z"
-                        />
-                      </svg>
-                    </span>
-                  </span>
-                </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
-              </button>
               <button
                 aria-controls="sorting"
                 aria-haspopup="true"

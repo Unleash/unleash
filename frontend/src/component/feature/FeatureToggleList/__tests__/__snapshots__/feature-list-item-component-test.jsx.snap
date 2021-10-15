@@ -23,7 +23,7 @@ exports[`renders correctly with one feature 1`] = `
           "fontSize": "0.8rem",
         }
       }
-      title="No usage reported"
+      title="No usage reported from connected applications"
     >
       <span
         style={
@@ -68,7 +68,15 @@ exports[`renders correctly with one feature 1`] = `
       onClick={[Function]}
     >
       <span
+        aria-describedby={null}
         className="toggleName"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        onTouchEnd={[Function]}
+        onTouchStart={[Function]}
+        title="another's description"
       >
         Another
          
@@ -96,23 +104,33 @@ exports[`renders correctly with one feature 1`] = `
   <span
     className="makeStyles-listItemStrategies-6 hideLt920"
   >
-    <div
-      className="MuiChip-root MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
+    <a
+      href="/projects/default"
+      onClick={[Function]}
       style={
         Object {
-          "marginLeft": "8px",
+          "textDecoration": "none",
         }
       }
-      title="Project: default"
     >
-      <span
-        className="MuiChip-label"
+      <div
+        className="MuiChip-root MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        style={
+          Object {
+            "marginLeft": "8px",
+          }
+        }
+        title="Project: default"
       >
-        default
-      </span>
-    </div>
+        <span
+          className="MuiChip-label"
+        >
+          default
+        </span>
+      </div>
+    </a>
   </span>
 </li>
 `;
@@ -140,7 +158,7 @@ exports[`renders correctly with one feature without permission 1`] = `
           "fontSize": "0.8rem",
         }
       }
-      title="No usage reported"
+      title="No usage reported from connected applications"
     >
       <span
         style={
@@ -185,7 +203,15 @@ exports[`renders correctly with one feature without permission 1`] = `
       onClick={[Function]}
     >
       <span
+        aria-describedby={null}
         className="toggleName"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        onTouchEnd={[Function]}
+        onTouchStart={[Function]}
+        title="another's description"
       >
         Another
          
@@ -213,21 +239,31 @@ exports[`renders correctly with one feature without permission 1`] = `
   <span
     className="makeStyles-listItemStrategies-6 hideLt920"
   >
-    <div
-      className="MuiChip-root MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
+    <a
+      href="/projects/undefined"
+      onClick={[Function]}
       style={
         Object {
-          "marginLeft": "8px",
+          "textDecoration": "none",
         }
       }
-      title="Project: undefined"
     >
-      <span
-        className="MuiChip-label"
-      />
-    </div>
+      <div
+        className="MuiChip-root MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        style={
+          Object {
+            "marginLeft": "8px",
+          }
+        }
+        title="Project: undefined"
+      >
+        <span
+          className="MuiChip-label"
+        />
+      </div>
+    </a>
   </span>
 </li>
 `;

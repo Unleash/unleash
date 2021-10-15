@@ -83,7 +83,7 @@ const FeatureStatus = ({ lastSeenAt }: FeatureStatusProps) => {
                     ) => {
                         return (
                             <Wrapper
-                                toolTip={`Last usage reported ${value} ${unit} ${suffix}`}
+                                toolTip={`Last usage reported ${value} ${unit}${value !== 1 ? 's' : ''} ${suffix}`}
                                 color={getColor(unit)}
                             >
                                 {value}
@@ -94,7 +94,7 @@ const FeatureStatus = ({ lastSeenAt }: FeatureStatusProps) => {
                 />
             }
             elseShow={
-                <Wrapper toolTip="No usage reported" color={getColor()}>
+                <Wrapper toolTip="No usage reported from connected applications" color={getColor()}>
                     <span style={{ fontSize: '1.4rem' }}>⊕</span>
                 </Wrapper>
             }

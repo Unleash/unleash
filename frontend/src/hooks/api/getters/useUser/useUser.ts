@@ -2,6 +2,7 @@ import useSWR, { mutate } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { IPermission } from '../../../../interfaces/user';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
 const useUser = () => {
     const KEY = `api/admin/user`;
@@ -9,7 +10,7 @@ const useUser = () => {
         const path = formatApiPath(`api/admin/user`);
         return fetch(path, {
             method: 'GET',
-        }).then(res => res.json());
+        }).then(handleErrorResponses('User info')).then(res => res.json());
     };
 
     const { data, error } = useSWR(KEY, fetcher);

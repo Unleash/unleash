@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 
 import ProtectedRoute from './common/ProtectedRoute/ProtectedRoute';
@@ -13,6 +13,9 @@ import IAuthStatus from '../interfaces/user';
 import { useEffect } from 'react';
 import NotFound from './common/NotFound/NotFound';
 import Feedback from './common/Feedback';
+import { SWRConfig } from 'swr';
+import useToast from '../hooks/useToast';
+
 interface IAppProps extends RouteComponentProps {
     user: IAuthStatus;
     fetchUiBootstrap: any;
@@ -20,6 +23,7 @@ interface IAppProps extends RouteComponentProps {
 }
 
 const App = ({ location, user, fetchUiBootstrap, feedback }: IAppProps) => {
+    const { toast, setToastData } = useToast();
     useEffect(() => {
         fetchUiBootstrap();
         /* eslint-disable-next-line */
@@ -71,27 +75,46 @@ const App = ({ location, user, fetchUiBootstrap, feedback }: IAppProps) => {
     };
 
     return (
-        <div className={styles.container}>
-            <LayoutPicker location={location}>
-                <Switch>
-                    <ProtectedRoute
-                        exact
-                        path="/"
-                        unauthorized={isUnauthorized()}
-                        component={Redirect}
-                        renderProps={{ to: '/features' }}
+        <SWRConfig value={{
+            onError: (error) => {
+                if (!isUnauthorized()) {
+                    if (error.status === 401) {
+                        // If we've been in an authorized state,
+                        // but cookie has been deleted (server or client side,
+                        // perform a window reload to reload app
+                        window.location.reload();
+                    }
+                    setToastData({
+                        show: true,
+                        type: 'error',
+                        text: error.message,
+                    });
+                }
+            },
+        }}>
+            <div className={styles.container}>
+                <LayoutPicker location={location}>
+                    <Switch>
+                        <ProtectedRoute
+                            exact
+                            path='/'
+                            unauthorized={isUnauthorized()}
+                            component={Redirect}
+                            renderProps={{ to: '/features' }}
+                        />
+                        {renderMainLayoutRoutes()}
+                        {renderStandaloneRoutes()}
+                        <Route path='/404' component={NotFound} />
+                        <Redirect to='/404' />
+                    </Switch>
+                    <Feedback
+                        feedbackId='pnps'
+                        openUrl='http://feedback.unleash.run'
                     />
-                    {renderMainLayoutRoutes()}
-                    {renderStandaloneRoutes()}
-                    <Route path="/404" component={NotFound} />
-                    <Redirect to="/404" />
-                </Switch>
-                <Feedback
-                    feedbackId="pnps"
-                    openUrl="http://feedback.unleash.run"
-                />
-            </LayoutPicker>
-        </div>
+                </LayoutPicker>
+                {toast}
+            </div>
+        </SWRConfig>
     );
 };
 // Set state to any for now, to avoid typing up entire state object while converting to tsx.

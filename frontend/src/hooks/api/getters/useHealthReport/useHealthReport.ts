@@ -4,6 +4,7 @@ import { IProjectHealthReport } from '../../../../interfaces/project';
 import { fallbackProject } from '../useProject/fallbackProject';
 import useSort from '../../../useSort';
 import { formatApiPath } from '../../../../utils/format-path';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
 const useHealthReport = (id: string) => {
     const KEY = `api/admin/projects/${id}/health-report`;
@@ -12,7 +13,7 @@ const useHealthReport = (id: string) => {
         const path = formatApiPath(`api/admin/projects/${id}/health-report`);
         return fetch(path, {
             method: 'GET',
-        }).then(res => res.json());
+        }).then(handleErrorResponses('Health report')).then(res => res.json());
     };
 
     const [sort] = useSort();

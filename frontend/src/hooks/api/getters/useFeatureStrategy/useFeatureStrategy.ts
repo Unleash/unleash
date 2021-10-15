@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 
 import { formatApiPath } from '../../../../utils/format-path';
 import { IFeatureStrategy } from '../../../../interfaces/strategy';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
 interface IUseFeatureOptions {
     refreshInterval?: number;
@@ -25,7 +26,7 @@ const useFeatureStrategy = (
         );
         return fetch(path, {
             method: 'GET',
-        }).then(res => res.json());
+        }).then(handleErrorResponses(`Strategies for ${featureId}`)).then(res => res.json());
     };
 
     const FEATURE_STRATEGY_CACHE_KEY = strategyId;

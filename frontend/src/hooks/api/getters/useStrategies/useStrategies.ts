@@ -2,6 +2,7 @@ import useSWR, { mutate } from 'swr';
 import { useEffect, useState } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { IStrategy } from '../../../../interfaces/strategy';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
 export const STRATEGIES_CACHE_KEY = 'api/admin/strategies';
 
@@ -12,7 +13,7 @@ const useStrategies = () => {
         return fetch(path, {
             method: 'GET',
             credentials: 'include',
-        }).then(res => res.json());
+        }).then(handleErrorResponses('Strategies')).then(res => res.json());
     };
 
     const { data, error } = useSWR<{ strategies: IStrategy[] }>(

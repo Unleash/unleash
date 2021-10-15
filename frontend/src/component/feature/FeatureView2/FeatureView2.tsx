@@ -18,10 +18,12 @@ import FeatureVariants from './FeatureVariants/FeatureVariants';
 import { useStyles } from './FeatureView2.styles';
 import FeatureSettings from './FeatureSettings/FeatureSettings';
 import useLoading from '../../../hooks/useLoading';
+import ConditionallyRender from '../../common/ConditionallyRender';
+import { getCreateTogglePath } from '../../../utils/route-path-helpers';
 
 const FeatureView2 = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
-    const { feature, loading } = useFeature(projectId, featureId);
+    const { feature, loading, error } = useFeature(projectId, featureId);
     const { a11yProps } = useTabs(0);
     const { archiveFeatureToggle } = useFeatureApi();
     const { toast, setToastData } = useToast();
@@ -97,82 +99,104 @@ const FeatureView2 = () => {
         });
     };
 
-    return (
-        <div ref={ref}>
-            <div className={styles.header}>
-                <div className={styles.innerContainer}>
-                    <h2 className={styles.featureViewHeader} data-loading>
-                        {feature.name}
-                    </h2>
-                    <div className={styles.actions}>
-                        <PermissionIconButton
-                            permission={UPDATE_FEATURE}
-                            tooltip="Copy"
-                            data-loading
-                            component={Link}
-                            to={`/projects/${projectId}/features2/${featureId}/strategies/copy`}
-                        >
-                            <FileCopy />
-                        </PermissionIconButton>
-                        <PermissionIconButton
-                            permission={UPDATE_FEATURE}
-                            tooltip="Archive feature toggle"
-                            data-loading
-                            onClick={() => setShowDelDialog(true)}
-                        >
-                            <Archive />
-                        </PermissionIconButton>
-                    </div>
-                </div>
-                <div className={styles.separator} />
-                <div className={styles.tabContainer}>
-                    <Tabs
-                        value={history.location.pathname}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        className={styles.tabNavigation}
-                    >
-                        {renderTabs()}
-                    </Tabs>
-                </div>
+    const renderFeatureNotExist = () => {
+        return (
+            <div>
+                <p>
+                    The feature <strong>{featureId} </strong>does not exist. Do
+                    you want to &nbsp;
+                    <Link to={getCreateTogglePath(projectId)}>create it</Link>
+                    &nbsp;?
+                </p>
             </div>
-            <Route
-                exact
-                path={`/projects/:projectId/features2/:featureId`}
-                component={FeatureOverview}
-            />
-            <Route
-                path={`/projects/:projectId/features2/:featureId/strategies`}
-                component={FeatureStrategies}
-            />
-            <Route
-                path={`/projects/:projectId/features2/:featureId/metrics`}
-                component={FeatureMetrics}
-            />
-            <Route
-                path={`/projects/:projectId/features2/:featureId/logs`}
-                component={FeatureLog}
-            />
-            <Route
-                path={`/projects/:projectId/features2/:featureId/variants`}
-                component={FeatureVariants}
-            />
-            <Route
-                path={`/projects/:projectId/features2/:featureId/settings`}
-                component={FeatureSettings}
-            />
-            <Dialogue
-                onClick={() => archiveToggle()}
-                open={showDelDialog}
-                onClose={handleCancel}
-                primaryButtonText="Archive toggle"
-                secondaryButtonText="Cancel"
-                title="Archive feature toggle"
-            >
-                Are you sure you want to archive this feature toggle?
-            </Dialogue>
-            {toast}
-        </div>
+        );
+    };
+
+    return (
+        <ConditionallyRender
+            condition={error === undefined}
+            show={
+                <div ref={ref}>
+                    <div className={styles.header}>
+                        <div className={styles.innerContainer}>
+                            <h2
+                                className={styles.featureViewHeader}
+                                data-loading
+                            >
+                                {feature.name}
+                            </h2>
+                            <div className={styles.actions}>
+                                <PermissionIconButton
+                                    permission={UPDATE_FEATURE}
+                                    tooltip="Copy"
+                                    data-loading
+                                    component={Link}
+                                    to={`/projects/${projectId}/features2/${featureId}/strategies/copy`}
+                                >
+                                    <FileCopy />
+                                </PermissionIconButton>
+                                <PermissionIconButton
+                                    permission={UPDATE_FEATURE}
+                                    tooltip="Archive feature toggle"
+                                    data-loading
+                                    onClick={() => setShowDelDialog(true)}
+                                >
+                                    <Archive />
+                                </PermissionIconButton>
+                            </div>
+                        </div>
+                        <div className={styles.separator} />
+                        <div className={styles.tabContainer}>
+                            <Tabs
+                                value={history.location.pathname}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                className={styles.tabNavigation}
+                            >
+                                {renderTabs()}
+                            </Tabs>
+                        </div>
+                    </div>
+                    <Route
+                        exact
+                        path={`/projects/:projectId/features2/:featureId`}
+                        component={FeatureOverview}
+                    />
+                    <Route
+                        path={`/projects/:projectId/features2/:featureId/strategies`}
+                        component={FeatureStrategies}
+                    />
+                    <Route
+                        path={`/projects/:projectId/features2/:featureId/metrics`}
+                        component={FeatureMetrics}
+                    />
+                    <Route
+                        path={`/projects/:projectId/features2/:featureId/logs`}
+                        component={FeatureLog}
+                    />
+                    <Route
+                        path={`/projects/:projectId/features2/:featureId/variants`}
+                        component={FeatureVariants}
+                    />
+                    <Route
+                        path={`/projects/:projectId/features2/:featureId/settings`}
+                        component={FeatureSettings}
+                    />
+                    <Dialogue
+                        onClick={() => archiveToggle()}
+                        open={showDelDialog}
+                        onClose={handleCancel}
+                        primaryButtonText="Archive toggle"
+                        secondaryButtonText="Cancel"
+                        title="Archive feature toggle"
+                    >
+                        Are you sure you want to archive this feature toggle?
+                    </Dialogue>
+                    {toast}
+                </div>
+            }
+            elseShow={renderFeatureNotExist()}
+        />
     );
 };
 

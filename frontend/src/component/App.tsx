@@ -75,17 +75,32 @@ const App = ({ location, user, fetchUiBootstrap, feedback }: IAppProps) => {
     };
 
     return (
-        <SWRConfig value={{
-            onError: (error) => {
-                if (!isUnauthorized()) {
-                    setToastData({
-                        show: true,
-                        type: 'error',
-                        text: error.message,
-                    });
-                }
-            },
-        }}>
+        <SWRConfig
+            value={{
+                onErrorRetry: (
+                    error,
+                    _key,
+                    _config,
+                    revalidate,
+                    { retryCount }
+                ) => {
+                    // Never retry on 404.
+                    if (error.status === 404) {
+                        return error;
+                    }
+                    setTimeout(() => revalidate({ retryCount }), 5000);
+                },
+                onError: error => {
+                    if (!isUnauthorized()) {
+                        setToastData({
+                            show: true,
+                            type: 'error',
+                            text: error.message,
+                        });
+                    }
+                },
+            }}
+        >
             <div className={styles.container}>
                 <LayoutPicker location={location}>
                     <Switch>

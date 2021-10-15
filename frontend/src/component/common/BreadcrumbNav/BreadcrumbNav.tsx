@@ -46,7 +46,7 @@ const BreadcrumbNav = () => {
                                                 styles.breadcrumbNavParagraph
                                             }
                                         >
-                                            {path}
+                                            {path.substring(0,30)}
                                         </p>
                                     );
                                 }
@@ -67,7 +67,7 @@ const BreadcrumbNav = () => {
                                         className={styles.breadcrumbLink}
                                         to={link}
                                     >
-                                        {path}
+                                        {path.substring(0,30)}
                                     </Link>
                                 );
                             })}

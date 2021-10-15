@@ -31,7 +31,6 @@ const FeatureSeenApplications: React.FC = () => {
     return (
         <Grid sm={12}>
             <List>
-                <ListItemText primary={'Seen in applications:'} />
                 {seenApplications}
             </List>
         </Grid>

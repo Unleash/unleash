@@ -4,7 +4,6 @@
 
 Before you begin:
 
-- This application is powered by Node.js v14.
 - Have you read the [code of conduct](CODE_OF_CONDUCT.md)?
 - Check out the [existing issues](https://github.com/unleash/Unleash/issues)
 

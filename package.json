@@ -117,7 +117,7 @@
     "@types/bcrypt": "5.0.0",
     "@types/express": "4.17.13",
     "@types/express-session": "1.17.4",
-    "@types/faker": "5.5.8",
+    "@types/faker": "5.5.9",
     "@types/jest": "27.0.2",
     "@types/js-yaml": "4.0.3",
     "@types/memoizee": "0.4.6",

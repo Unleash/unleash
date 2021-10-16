@@ -38,6 +38,7 @@
     "build": "yarn run copy-templates && tsc --pretty",
     "prepare": "yarn run build",
     "test": "NODE_ENV=test PORT=4243 jest",
+    "test:unit": "NODE_ENV=test jest --testPathIgnorePatterns='/node_modules/|/e2e/|datadog.test|health-check.test|rbac-middleware.test|server-impl.test|slack.test|state-service.test|teams.test|user.test|webhook.test'",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:watch": "yarn test --watch",
     "test:coverage": "NODE_ENV=test PORT=4243 jest --coverage --forceExit",

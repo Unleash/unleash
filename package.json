@@ -39,6 +39,7 @@
     "prepare": "yarn run build",
     "test": "NODE_ENV=test PORT=4243 jest",
     "test:docker": "./scripts/docker-postgres.sh",
+    "test:docker:cleanup":"docker rm -f unleash-postgres",
     "test:watch": "yarn test --watch",
     "test:coverage": "NODE_ENV=test PORT=4243 jest --coverage --forceExit",
     "test:coverage:jest": "NODE_ENV=test PORT=4243 jest --silent --ci --json --coverage --testLocationInResults --outputFile=\"report.json\" --forceExit",

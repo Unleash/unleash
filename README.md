@@ -163,7 +163,10 @@ _(PS! feel free to submit your logo!)_
 
 # Contribute to Unleash
 
-Unleash has been built with the help of many smart individuals. This ensures that we build a product that solves real problems for people. If you want to contribute to this project you are encouraged to send issue requests, or provide pull-requests. Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) to learn more on how you can contribute.
+Unleash has been built with the help of many smart individuals. This ensures that we build a product that solves real problems for people. If you want to contribute to this project you are encouraged to send issue requests, or provide pull-requests.
+
+1. Read [CONTRIBUTING.md](./CONTRIBUTING.md) to learn more on how you can contribute
+1. Browse the [developer-guide](./websitev2/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
 
 # Community and Help
 

@@ -87,7 +87,7 @@ export class AccessService {
         );
 
         try {
-            const userP = await this.store.getPermissionsForUser(user.id);
+            const userP = await this.getPermissionsForUser(user);
 
             return userP
                 .filter(
@@ -111,7 +111,9 @@ export class AccessService {
 
     async getPermissionsForUser(user: User): Promise<IUserPermission[]> {
         if (user.isAPI) {
-            return [];
+            return user.permissions.map((p) => ({
+                permission: p,
+            }));
         }
         return this.store.getPermissionsForUser(user.id);
     }

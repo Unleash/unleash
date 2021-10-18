@@ -393,6 +393,25 @@ exports[`should render DrawerMenu 1`] = `
                   </span>
                 </div>
               </li>
+              <li
+                className="MuiListItem-root makeStyles-listItem-3 MuiListItem-dense MuiListItem-gutters"
+                disabled={false}
+              >
+                <div
+                  className="MuiListItemText-root MuiListItemText-dense"
+                >
+                  <span
+                    className="MuiTypography-root MuiListItemText-primary MuiTypography-body2 MuiTypography-displayBlock"
+                  >
+                    <a
+                      href="https://slack.unleash.run"
+                      target="_blank"
+                    >
+                      Slack Community
+                    </a>
+                  </span>
+                </div>
+              </li>
             </ul>
           </section>
         </div>
@@ -791,6 +810,25 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       target="_blank"
                     >
                       GitHub
+                    </a>
+                  </span>
+                </div>
+              </li>
+              <li
+                className="MuiListItem-root makeStyles-listItem-3 MuiListItem-dense MuiListItem-gutters"
+                disabled={false}
+              >
+                <div
+                  className="MuiListItemText-root MuiListItemText-dense"
+                >
+                  <span
+                    className="MuiTypography-root MuiListItemText-primary MuiTypography-body2 MuiTypography-displayBlock"
+                  >
+                    <a
+                      href="https://slack.unleash.run"
+                      target="_blank"
+                    >
+                      Slack Community
                     </a>
                   </span>
                 </div>

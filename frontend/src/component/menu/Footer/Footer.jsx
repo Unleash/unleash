@@ -256,6 +256,19 @@ export const Footer = () => {
                                             }
                                         />
                                     </ListItem>
+                                    <ListItem className={styles.listItem}>
+                                        <ListItemText
+                                            primary={
+                                                <a
+                                                    href="https://slack.unleash.run"
+                                                    className={styles.link}
+                                                    target="_blank"
+                                                >
+                                                    Slack Community
+                                                </a>
+                                            }
+                                        />
+                                    </ListItem>
                                 </List>
                             </section>
                         </Grid>

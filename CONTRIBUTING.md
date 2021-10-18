@@ -4,9 +4,9 @@
 
 Before you begin:
 
-- This application is powered by Node.js v14.
 - Have you read the [code of conduct](CODE_OF_CONDUCT.md)?
 - Check out the [existing issues](https://github.com/unleash/Unleash/issues)
+- Browse the [developer-guide](./websitev2/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
 
 ### Don't see your issue? Open one
 

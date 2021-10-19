@@ -14,7 +14,7 @@ import PageContent from '../../common/PageContent';
 import AccessContext from '../../../contexts/AccessContext';
 import HeaderTitle from '../../common/HeaderTitle';
 import ResponsiveButton from '../../common/ResponsiveButton/ResponsiveButton';
-import { CREATE_PROJECT } from '../../AccessProvider/permissions';
+import { CREATE_PROJECT } from '../../providers/AccessProvider/permissions';
 
 import { Add } from '@material-ui/icons';
 import ApiError from '../../common/ApiError/ApiError';
@@ -26,21 +26,21 @@ type projectMap = {
 };
 
 function resolveCreateButtonData(isOss: boolean, hasAccess: boolean) {
-    if(isOss) {
+    if (isOss) {
         return {
             title: 'You must be on a paid subscription to create new projects',
-            disabled: true
-        }
+            disabled: true,
+        };
     } else if (!hasAccess) {
         return {
-            title: 'You do not have permissions create new projects',
-            disabled: true
-        }
+            title: 'You do not have permission to create new projects',
+            disabled: true,
+        };
     } else {
         return {
             title: 'Click to create a new project',
-            disabled: false
-        }
+            disabled: false,
+        };
     }
 }
 
@@ -64,7 +64,10 @@ const ProjectListNew = () => {
         setFetchedProjects(prev => ({ ...prev, [projectId]: true }));
     };
 
-    const createButtonData = resolveCreateButtonData(isOss(), hasAccess(CREATE_PROJECT));
+    const createButtonData = resolveCreateButtonData(
+        isOss(),
+        hasAccess(CREATE_PROJECT)
+    );
 
     const renderError = () => {
         return (

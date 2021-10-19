@@ -22,7 +22,7 @@ import {
     UPDATE_STRATEGY_BUTTON_ID,
 } from '../../../../../../testIds';
 import AccessContext from '../../../../../../contexts/AccessContext';
-import { UPDATE_FEATURE } from '../../../../../AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 import useFeatureApi from '../../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 
 interface IFeatureStrategyEditable {

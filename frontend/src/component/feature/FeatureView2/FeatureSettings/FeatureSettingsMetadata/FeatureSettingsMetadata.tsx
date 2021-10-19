@@ -5,7 +5,7 @@ import PermissionButton from '../../../../common/PermissionButton/PermissionButt
 import FeatureTypeSelect from './FeatureTypeSelect/FeatureTypeSelect';
 import { useParams } from 'react-router';
 import AccessContext from '../../../../../contexts/AccessContext';
-import { UPDATE_FEATURE } from '../../../../AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 import useToast from '../../../../../hooks/useToast';

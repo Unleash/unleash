@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, Typography } from '@material-ui/core';
 import ShowStrategy from './show-strategy-component';
 import EditStrategy from './CreateStrategy';
-import { UPDATE_STRATEGY } from '../AccessProvider/permissions';
+import { UPDATE_STRATEGY } from '../providers/AccessProvider/permissions';
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
 import TabNav from '../common/TabNav/TabNav';
 import PageContent from '../common/PageContent/PageContent';

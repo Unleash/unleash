@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import AuthenticationContainer from '../authentication-container';
+import AuthenticationContainer from '../Authentication';
 import ConditionallyRender from '../../common/ConditionallyRender';
 
 import { useStyles } from './Login.styles';
@@ -8,22 +8,21 @@ import useQueryParams from '../../../hooks/useQueryParams';
 import ResetPasswordSuccess from '../common/ResetPasswordSuccess/ResetPasswordSuccess';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import { DEMO_TYPE } from '../../../constants/authTypes';
+import useUser from '../../../hooks/api/getters/useUser/useUser';
+import { useHistory } from 'react-router';
 
-const Login = ({ history, user, fetchUser }) => {
+const Login = () => {
     const styles = useStyles();
+    const { permissions, authDetails } = useUser();
     const query = useQueryParams();
+    const history = useHistory();
 
     useEffect(() => {
-        fetchUser();
-        /* eslint-disable-next-line */
-    }, []);
-
-    useEffect(() => {
-        if (user.permissions.length > 0) {
+        if (permissions?.length > 0) {
             history.push('features');
         }
         /* eslint-disable-next-line */
-    }, [user.permissions]);
+    }, [permissions.length]);
 
     const resetPassword = query.get('reset') === 'true';
 
@@ -31,7 +30,7 @@ const Login = ({ history, user, fetchUser }) => {
         <StandaloneLayout>
             <div className={styles.loginFormContainer}>
                 <ConditionallyRender
-                    condition={user?.authDetails?.type !== DEMO_TYPE}
+                    condition={authDetails?.type !== DEMO_TYPE}
                     show={
                         <h2 className={styles.title}>
                             Login to continue the great work

@@ -1,6 +1,6 @@
 import { Alert } from '@material-ui/lab';
 import React, { useContext } from 'react';
-import { ADMIN } from '../../component/AccessProvider/permissions';
+import { ADMIN } from '../../component/providers/AccessProvider/permissions';
 import ConditionallyRender from '../../component/common/ConditionallyRender';
 import HistoryComponent from '../../component/history/EventHistory';
 import AccessContext from '../../contexts/AccessContext';

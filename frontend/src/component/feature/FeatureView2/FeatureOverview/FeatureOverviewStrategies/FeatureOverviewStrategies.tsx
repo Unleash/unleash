@@ -2,7 +2,7 @@ import { Add } from '@material-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
-import { UPDATE_FEATURE } from '../../../../AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import ResponsiveButton from '../../../../common/ResponsiveButton/ResponsiveButton';
 import FeatureOverviewEnvironment from './FeatureOverviewEnvironment/FeatureOverviewEnvironment';
 import { useStyles } from './FeatureOverviewStrategies.styles';

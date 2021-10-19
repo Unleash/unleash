@@ -1,4 +1,4 @@
-import { ADMIN } from '../component/AccessProvider/permissions';
+import { ADMIN } from '../component/providers/AccessProvider/permissions';
 import IAuthStatus, { IPermission } from '../interfaces/user';
 
 type objectIdx = {
@@ -24,6 +24,6 @@ export const projectFilterGenerator = (
         {}
     );
     return (projectId: string) => {
-        return admin || permissionMap[projectId]
+        return admin || permissionMap[projectId];
     };
 };

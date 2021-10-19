@@ -20,7 +20,7 @@ import AccessContext from '../../../../contexts/AccessContext';
 import {
     DELETE_ENVIRONMENT,
     UPDATE_ENVIRONMENT,
-} from '../../../AccessProvider/permissions';
+} from '../../../providers/AccessProvider/permissions';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 

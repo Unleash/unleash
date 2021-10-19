@@ -14,7 +14,7 @@ import { ReactComponent as UnleashLogo } from '../../../assets/img/logo-dark-wit
 import { useStyles } from './Header.styles';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { useCommonStyles } from '../../../common.styles';
-import { ADMIN } from '../../AccessProvider/permissions';
+import { ADMIN } from '../../providers/AccessProvider/permissions';
 import useUser from '../../../hooks/api/getters/useUser/useUser';
 import { IPermission } from '../../../interfaces/user';
 import NavigationMenu from './NavigationMenu/NavigationMenu';

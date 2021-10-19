@@ -13,8 +13,8 @@ import IAuthStatus from '../interfaces/user';
 import { useEffect } from 'react';
 import NotFound from './common/NotFound/NotFound';
 import Feedback from './common/Feedback';
-import { SWRConfig } from 'swr';
 import useToast from '../hooks/useToast';
+import SWRProvider from './providers/SWRProvider/SWRProvider';
 
 interface IAppProps extends RouteComponentProps {
     user: IAuthStatus;
@@ -75,55 +75,34 @@ const App = ({ location, user, fetchUiBootstrap, feedback }: IAppProps) => {
     };
 
     return (
-        <SWRConfig
-            value={{
-                onErrorRetry: (
-                    error,
-                    _key,
-                    _config,
-                    revalidate,
-                    { retryCount }
-                ) => {
-                    // Never retry on 404.
-                    if (error.status === 404) {
-                        return error;
-                    }
-                    setTimeout(() => revalidate({ retryCount }), 5000);
-                },
-                onError: error => {
-                    if (!isUnauthorized()) {
-                        setToastData({
-                            show: true,
-                            type: 'error',
-                            text: error.message,
-                        });
-                    }
-                },
-            }}
+        <SWRProvider
+            setToastData={setToastData}
+            isUnauthorized={isUnauthorized}
         >
+            {' '}
             <div className={styles.container}>
                 <LayoutPicker location={location}>
                     <Switch>
                         <ProtectedRoute
                             exact
-                            path='/'
+                            path="/"
                             unauthorized={isUnauthorized()}
                             component={Redirect}
                             renderProps={{ to: '/features' }}
                         />
                         {renderMainLayoutRoutes()}
                         {renderStandaloneRoutes()}
-                        <Route path='/404' component={NotFound} />
-                        <Redirect to='/404' />
+                        <Route path="/404" component={NotFound} />
+                        <Redirect to="/404" />
                     </Switch>
                     <Feedback
-                        feedbackId='pnps'
-                        openUrl='http://feedback.unleash.run'
+                        feedbackId="pnps"
+                        openUrl="http://feedback.unleash.run"
                     />
                 </LayoutPicker>
                 {toast}
             </div>
-        </SWRConfig>
+        </SWRProvider>
     );
 };
 // Set state to any for now, to avoid typing up entire state object while converting to tsx.

@@ -13,7 +13,10 @@ import {
 import { Report, Extension, Timeline } from '@material-ui/icons';
 
 import { shorten } from '../common';
-import { CREATE_FEATURE, CREATE_STRATEGY } from '../AccessProvider/permissions';
+import {
+    CREATE_FEATURE,
+    CREATE_STRATEGY,
+} from '../providers/AccessProvider/permissions';
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
 import { getTogglePath } from '../../utils/route-path-helpers';
 function ApplicationView({
@@ -33,9 +36,7 @@ function ApplicationView({
                         <Report />
                     </ListItemAvatar>
                     <ListItemText
-                        primary={
-                            <Link to={`${createUrl}`}>{name}</Link>
-                        }
+                        primary={<Link to={`${createUrl}`}>{name}</Link>}
                         secondary={'Missing, want to create?'}
                     />
                 </ListItem>

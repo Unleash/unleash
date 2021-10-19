@@ -1,24 +1,37 @@
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow, } from '@material-ui/core';
+import {
+    Button,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+} from '@material-ui/core';
 import AccessContext from '../../../contexts/AccessContext';
 import useToast from '../../../hooks/useToast';
 import useLoading from '../../../hooks/useLoading';
 import useApiTokens from '../../../hooks/api/getters/useApiTokens/useApiTokens';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useApiTokensApi, { IApiTokenCreate } from '../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
+import useApiTokensApi, {
+    IApiTokenCreate,
+} from '../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import ApiError from '../../common/ApiError/ApiError';
 import PageContent from '../../common/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender';
-import { CREATE_API_TOKEN, DELETE_API_TOKEN } from '../../AccessProvider/permissions';
+import {
+    CREATE_API_TOKEN,
+    DELETE_API_TOKEN,
+} from '../../providers/AccessProvider/permissions';
 import { useStyles } from './ApiTokenList.styles';
 import { formatDateWithLocale } from '../../common/util';
 import Secret from './secret';
 import { Delete, FileCopy } from '@material-ui/icons';
 import ApiTokenCreate from '../ApiTokenCreate/ApiTokenCreate';
 import Dialogue from '../../common/Dialogue';
-import {CREATE_API_TOKEN_BUTTON} from '../../../testIds'
+import { CREATE_API_TOKEN_BUTTON } from '../../../testIds';
 import { Alert } from '@material-ui/lab';
 
 interface IApiToken {
@@ -54,7 +67,6 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
     const closeDialog = () => {
         setDialog(false);
     };
-       
 
     const renderError = () => {
         return (
@@ -74,7 +86,7 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
             show: true,
             text: 'Successfully created API token.',
         });
-    }
+    };
     const copyToken = (value: string) => {
         navigator.clipboard.writeText(value);
         setToastData({
@@ -85,7 +97,7 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
     };
 
     const onDeleteToken = async () => {
-        if(delToken) {
+        if (delToken) {
             await deleteToken(delToken.secret);
         }
         setDeleteToken(undefined);
@@ -99,12 +111,12 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
     };
 
     const renderProject = (projectId: string) => {
-        if(!projectId || projectId === '*') {
+        if (!projectId || projectId === '*') {
             return projectId;
         } else {
-            return (<Link to={`/projects/${projectId}`}>{projectId}</Link>);
+            return <Link to={`/projects/${projectId}`}>{projectId}</Link>;
         }
-    }
+    };
 
     const renderApiTokens = (tokens: IApiToken[]) => {
         return (
@@ -112,65 +124,106 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                 <TableHead>
                     <TableRow>
                         <TableCell className={styles.hideSM}>Created</TableCell>
-                        <TableCell className={styles.hideSM}>Username</TableCell>
-                        <TableCell className={`${styles.center} ${styles.hideXS}`}>Type</TableCell>
-                        <ConditionallyRender condition={uiConfig.flags.E} show={<>
-                            <TableCell className={`${styles.center} ${styles.hideXS}`}>Project</TableCell>
-                            <TableCell className={`${styles.center} ${styles.hideXS}`}>Environment</TableCell>
-                        </>} />
+                        <TableCell className={styles.hideSM}>
+                            Username
+                        </TableCell>
+                        <TableCell
+                            className={`${styles.center} ${styles.hideXS}`}
+                        >
+                            Type
+                        </TableCell>
+                        <ConditionallyRender
+                            condition={uiConfig.flags.E}
+                            show={
+                                <>
+                                    <TableCell
+                                        className={`${styles.center} ${styles.hideXS}`}
+                                    >
+                                        Project
+                                    </TableCell>
+                                    <TableCell
+                                        className={`${styles.center} ${styles.hideXS}`}
+                                    >
+                                        Environment
+                                    </TableCell>
+                                </>
+                            }
+                        />
                         <TableCell className={styles.hideMD}>Secret</TableCell>
                         <TableCell className={styles.token}>Token</TableCell>
-                        <TableCell className={styles.actionsContainer}>Actions</TableCell>
+                        <TableCell className={styles.actionsContainer}>
+                            Actions
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {tokens.map(item => {
                         return (
                             <TableRow key={item.secret}>
-                                <TableCell align="left" className={styles.hideSM}>
+                                <TableCell
+                                    align="left"
+                                    className={styles.hideSM}
+                                >
                                     {formatDateWithLocale(
                                         item.createdAt,
                                         location.locale
                                     )}
                                 </TableCell>
-                                <TableCell align="left" className={styles.hideSM}>
+                                <TableCell
+                                    align="left"
+                                    className={styles.hideSM}
+                                >
                                     {item.username}
                                 </TableCell>
-                                <TableCell className={`${styles.center} ${styles.hideXS}`}>
+                                <TableCell
+                                    className={`${styles.center} ${styles.hideXS}`}
+                                >
                                     {item.type}
                                 </TableCell>
-                                <ConditionallyRender condition={uiConfig.flags.E} show={<>
-                                    <TableCell className={`${styles.center} ${styles.hideXS}`}>
-                                        {renderProject(item.project)}
-                                    </TableCell>
-                                    <TableCell className={`${styles.center} ${styles.hideXS}`}>
-                                        {item.environment}
-                                    </TableCell>
-                                    <TableCell className={styles.token}>
-                                        <b>Type:</b> {item.type}<br/>
-                                        <b>Env:</b> {item.environment}<br/>
-                                        <b>Project:</b> {renderProject(item.project)}
-                                    </TableCell>
-                                    </>}
-                                    elseShow={<>
-                                        <TableCell className={styles.token}>
-                                            <b>Type:</b> {item.type}<br/>
-                                            <b>Username:</b> {item.username}
-                                        </TableCell>
-                                    </>}
+                                <ConditionallyRender
+                                    condition={uiConfig.flags.E}
+                                    show={
+                                        <>
+                                            <TableCell
+                                                className={`${styles.center} ${styles.hideXS}`}
+                                            >
+                                                {renderProject(item.project)}
+                                            </TableCell>
+                                            <TableCell
+                                                className={`${styles.center} ${styles.hideXS}`}
+                                            >
+                                                {item.environment}
+                                            </TableCell>
+                                            <TableCell className={styles.token}>
+                                                <b>Type:</b> {item.type}
+                                                <br />
+                                                <b>Env:</b> {item.environment}
+                                                <br />
+                                                <b>Project:</b>{' '}
+                                                {renderProject(item.project)}
+                                            </TableCell>
+                                        </>
+                                    }
+                                    elseShow={
+                                        <>
+                                            <TableCell className={styles.token}>
+                                                <b>Type:</b> {item.type}
+                                                <br />
+                                                <b>Username:</b> {item.username}
+                                            </TableCell>
+                                        </>
+                                    }
                                 />
                                 <TableCell className={styles.hideMD}>
                                     <Secret value={item.secret} />
                                 </TableCell>
-                                <TableCell
-                                    className={styles.actionsContainer}
-                                >
+                                <TableCell className={styles.actionsContainer}>
                                     <IconButton
                                         onClick={() => {
-                                            copyToken(item.secret)
-                                        } }
-                                        >
-                                            <FileCopy />
+                                            copyToken(item.secret);
+                                        }}
+                                    >
+                                        <FileCopy />
                                     </IconButton>
                                     <ConditionallyRender
                                         condition={hasAccess(DELETE_API_TOKEN)}
@@ -179,29 +232,45 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                                                 onClick={() => {
                                                     setDeleteToken(item);
                                                     setShowDelete(true);
-                                                } }
+                                                }}
                                             >
                                                 <Delete />
                                             </IconButton>
-                                    } />
+                                        }
+                                    />
                                 </TableCell>
                             </TableRow>
                         );
                     })}
                 </TableBody>
             </Table>
-        )
-    }
+        );
+    };
 
     return (
         <div ref={ref}>
             <PageContent
-                headerContent={<HeaderTitle
-                    title="API Access"
-                    actions={<ConditionallyRender
-                        condition={hasAccess(CREATE_API_TOKEN)}
-                        show={<Button variant="contained" color="primary" onClick={openDialog} data-test={CREATE_API_TOKEN_BUTTON}>Create API token</Button>} />} />}
-                >
+                headerContent={
+                    <HeaderTitle
+                        title="API Access"
+                        actions={
+                            <ConditionallyRender
+                                condition={hasAccess(CREATE_API_TOKEN)}
+                                show={
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={openDialog}
+                                        data-test={CREATE_API_TOKEN_BUTTON}
+                                    >
+                                        Create API token
+                                    </Button>
+                                }
+                            />
+                        }
+                    />
+                }
+            >
                 <Alert severity="info" className={styles.infoBoxContainer}>
                     <p>
                         Read the{' '}
@@ -218,7 +287,9 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                     </p>
                     <br />
                     <strong>API URL: </strong>{' '}
-                    <pre style={{ display: 'inline' }}>{uiConfig.unleashUrl}/api/</pre>
+                    <pre style={{ display: 'inline' }}>
+                        {uiConfig.unleashUrl}/api/
+                    </pre>
                 </Alert>
 
                 <ConditionallyRender condition={error} show={renderError()} />
@@ -230,7 +301,11 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                     />
                 </div>
                 {toast}
-                <ApiTokenCreate showDialog={showDialog} createToken={onCreateToken} closeDialog={closeDialog} />
+                <ApiTokenCreate
+                    showDialog={showDialog}
+                    createToken={onCreateToken}
+                    closeDialog={closeDialog}
+                />
                 <Dialogue
                     open={showDelete}
                     onClick={onDeleteToken}
@@ -241,10 +316,17 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                     title="Confirm deletion"
                 >
                     <div>
-                        Are you sure you want to delete the following API token?<br />
+                        Are you sure you want to delete the following API token?
+                        <br />
                         <ul>
-                        <li><strong>username</strong>: <code>{delToken?.username}</code></li>
-                        <li><strong>type</strong>: <code>{delToken?.type}</code></li>
+                            <li>
+                                <strong>username</strong>:{' '}
+                                <code>{delToken?.username}</code>
+                            </li>
+                            <li>
+                                <strong>type</strong>:{' '}
+                                <code>{delToken?.type}</code>
+                            </li>
                         </ul>
                     </div>
                 </Dialogue>

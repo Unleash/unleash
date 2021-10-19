@@ -18,7 +18,7 @@ import {
     formatFullDateTimeWithLocale,
     formatDateWithLocale,
 } from '../common/util';
-import { UPDATE_APPLICATION } from '../AccessProvider/permissions';
+import { UPDATE_APPLICATION } from '../providers/AccessProvider/permissions';
 import ApplicationView from './application-view';
 import ApplicationUpdate from './application-update';
 import TabNav from '../common/TabNav/TabNav';

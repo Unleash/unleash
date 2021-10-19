@@ -10,7 +10,7 @@ import { projectFilterGenerator } from '../../../../../utils/project-filter-gene
 import {
     CREATE_FEATURE,
     UPDATE_FEATURE,
-} from '../../../../AccessProvider/permissions';
+} from '../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
 import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
 import FeatureProjectSelect from './FeatureProjectSelect/FeatureProjectSelect';

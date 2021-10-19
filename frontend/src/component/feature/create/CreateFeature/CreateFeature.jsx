@@ -16,7 +16,7 @@ import {
     CF_NAME_ID,
     CF_TYPE_ID,
 } from '../../../../testIds';
-import { CREATE_FEATURE } from '../../../AccessProvider/permissions';
+import { CREATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import { projectFilterGenerator } from '../../../../utils/project-filter-generator';
 import { useHistory } from 'react-router-dom';
 import useQueryParams from '../../../../hooks/useQueryParams';

@@ -19,7 +19,7 @@ import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyR
 import {
     CREATE_TAG_TYPE,
     DELETE_TAG_TYPE,
-} from '../../AccessProvider/permissions';
+} from '../../providers/AccessProvider/permissions';
 import Dialogue from '../../common/Dialogue/Dialogue';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 

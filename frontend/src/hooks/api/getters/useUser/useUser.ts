@@ -4,20 +4,23 @@ import { formatApiPath } from '../../../../utils/format-path';
 import { IPermission } from '../../../../interfaces/user';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
+export const USER_CACHE_KEY = `api/admin/user`;
+
 const useUser = () => {
-    const KEY = `api/admin/user`;
     const fetcher = () => {
         const path = formatApiPath(`api/admin/user`);
         return fetch(path, {
             method: 'GET',
-        }).then(handleErrorResponses('User info')).then(res => res.json());
+        })
+            .then(handleErrorResponses('User info'))
+            .then(res => res.json());
     };
 
-    const { data, error } = useSWR(KEY, fetcher);
+    const { data, error } = useSWR(USER_CACHE_KEY, fetcher);
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {
-        mutate(KEY);
+        mutate(USER_CACHE_KEY);
     };
 
     useEffect(() => {
@@ -28,6 +31,7 @@ const useUser = () => {
         user: data?.user || {},
         permissions: (data?.permissions || []) as IPermission[],
         feedback: data?.feedback || [],
+        authDetails: data || {},
         error,
         loading,
         refetch,

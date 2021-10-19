@@ -5,7 +5,7 @@ import AdminMenu from '../admin-menu';
 import PageContent from '../../../component/common/PageContent/PageContent';
 import AccessContext from '../../../contexts/AccessContext';
 import ConditionallyRender from '../../../component/common/ConditionallyRender';
-import { ADMIN } from '../../../component/AccessProvider/permissions';
+import { ADMIN } from '../../../component/providers/AccessProvider/permissions';
 import { Alert } from '@material-ui/lab';
 import HeaderTitle from '../../../component/common/HeaderTitle';
 import { Button } from '@material-ui/core';

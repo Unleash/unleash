@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Button, FormControlLabel, Grid, Switch, TextField } from '@material-ui/core';
+import {
+    Button,
+    FormControlLabel,
+    Grid,
+    Switch,
+    TextField,
+} from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import PageContent from '../../../component/common/PageContent/PageContent';
 import AccessContext from '../../../contexts/AccessContext';
-import { ADMIN } from '../../../component/AccessProvider/permissions';
+import { ADMIN } from '../../../component/providers/AccessProvider/permissions';
 import AutoCreateForm from './AutoCreateForm/AutoCreateForm';
 
 const initialState = {
@@ -57,7 +63,7 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
             ...data,
             [field]: value,
         });
-    }
+    };
 
     const onSubmit = async e => {
         e.preventDefault();
@@ -100,12 +106,14 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
                     </Grid>
                     <Grid item md={6} style={{ padding: '20px' }}>
                         <FormControlLabel
-                            control={ <Switch
-                                onChange={updateEnabled}
-                                value={data.enabled}
-                                name="enabled"
-                                checked={data.enabled}
-                            />}
+                            control={
+                                <Switch
+                                    onChange={updateEnabled}
+                                    value={data.enabled}
+                                    name="enabled"
+                                    checked={data.enabled}
+                                />
+                            }
                             label={data.enabled ? 'Enabled' : 'Disabled'}
                         />
                     </Grid>
@@ -125,7 +133,6 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
                             style={{ width: '400px' }}
                             variant="outlined"
                             size="small"
-                            
                         />
                     </Grid>
                 </Grid>
@@ -151,7 +158,9 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <strong>Client secret</strong>
-                        <p>(Required) Client secret of your OpenID application. </p>
+                        <p>
+                            (Required) Client secret of your OpenID application.{' '}
+                        </p>
                     </Grid>
                     <Grid item md={6}>
                         <TextField
@@ -171,18 +180,27 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <strong>(Optional) Enable Single Sign-Out</strong>
-                        <p>If you enable Single Sign-Out Unleash will redirect the user to the IDP as part of the Sign-out process.</p>
+                        <p>
+                            If you enable Single Sign-Out Unleash will redirect
+                            the user to the IDP as part of the Sign-out process.
+                        </p>
                     </Grid>
                     <Grid item md={6} style={{ padding: '20px' }}>
                         <FormControlLabel
-                            control={ <Switch
-                                onChange={updateSingleSignOut}
-                                value={data.enableSingleSignOut}
-                                disabled={!data.enabled}
-                                name="enableSingleSignOut"
-                                checked={data.enableSingleSignOut}
-                            />}
-                            label={data.enableSingleSignOut ? 'Enabled' : 'Disabled'}
+                            control={
+                                <Switch
+                                    onChange={updateSingleSignOut}
+                                    value={data.enableSingleSignOut}
+                                    disabled={!data.enabled}
+                                    name="enableSingleSignOut"
+                                    checked={data.enableSingleSignOut}
+                                />
+                            }
+                            label={
+                                data.enableSingleSignOut
+                                    ? 'Enabled'
+                                    : 'Disabled'
+                            }
                         />
                     </Grid>
                 </Grid>
@@ -199,7 +217,7 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
                             Save
                         </Button>{' '}
                         <small>{info}</small>
-                        <small style={{color: 'red'}}>{error}</small>
+                        <small style={{ color: 'red' }}>{error}</small>
                     </Grid>
                 </Grid>
             </form>

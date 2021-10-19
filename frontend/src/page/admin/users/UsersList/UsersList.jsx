@@ -14,7 +14,7 @@ import UpdateUser from '../update-user-component';
 import DelUser from '../del-user-component';
 import ConditionallyRender from '../../../../component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from '../../../../contexts/AccessContext';
-import { ADMIN } from '../../../../component/AccessProvider/permissions';
+import { ADMIN } from '../../../../component/providers/AccessProvider/permissions';
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
 import useUsers from '../../../../hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';

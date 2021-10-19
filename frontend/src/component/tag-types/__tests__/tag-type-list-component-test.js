@@ -6,14 +6,14 @@ import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from '../../../themes/main-theme';
 import { createFakeStore } from '../../../accessStoreFake';
-import AccessProvider from '../../AccessProvider/AccessProvider';
+import AccessProvider from '../../providers/AccessProvider/AccessProvider';
 
 import {
     ADMIN,
     CREATE_TAG_TYPE,
     UPDATE_TAG_TYPE,
     DELETE_TAG_TYPE,
-} from '../../AccessProvider/permissions';
+} from '../../providers/AccessProvider/permissions';
 
 test('renders an empty list correctly', () => {
     const tree = renderer.create(

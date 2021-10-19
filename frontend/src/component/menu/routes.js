@@ -28,7 +28,7 @@ import AdminApi from '../../page/admin/api';
 import AdminUsers from '../../page/admin/users';
 import AdminInvoice from '../../page/admin/invoice';
 import AdminAuth from '../../page/admin/auth';
-import Login from '../user/Login';
+import Login from '../user/Login/Login';
 import { P, C, E, EEA } from '../common/flags';
 import NewUser from '../user/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
@@ -40,7 +40,7 @@ import RedirectArchive from '../feature/RedirectArchive/RedirectArchive';
 import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
 import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import FeatureView2 from '../feature/FeatureView2/FeatureView2';
-import FeatureCreate from '../feature/FeatureCreate/FeatureCreate'
+import FeatureCreate from '../feature/FeatureCreate/FeatureCreate';
 
 export const routes = [
     // Project
@@ -164,7 +164,7 @@ export const routes = [
         layout: 'main',
         menu: { mobile: true },
     },
-    
+
     // Applications
     {
         path: '/applications/:name',
@@ -305,8 +305,8 @@ export const routes = [
         menu: {},
     },
 
-     // Addons
-     {
+    // Addons
+    {
         path: '/addons/create/:provider',
         parent: '/addons',
         title: 'Create',

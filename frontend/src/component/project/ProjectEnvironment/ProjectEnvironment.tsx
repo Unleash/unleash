@@ -6,7 +6,7 @@ import useLoading from '../../../hooks/useLoading';
 import PageContent from '../../common/PageContent';
 import AccessContext from '../../../contexts/AccessContext';
 import HeaderTitle from '../../common/HeaderTitle';
-import { UPDATE_PROJECT } from '../../AccessProvider/permissions';
+import { UPDATE_PROJECT } from '../../providers/AccessProvider/permissions';
 
 import ApiError from '../../common/ApiError/ApiError';
 import useToast from '../../../hooks/useToast';
@@ -18,7 +18,6 @@ import useProjectApi from '../../../hooks/api/actions/useProjectApi/useProjectAp
 import EnvironmentDisableConfirm from './EnvironmentDisableConfirm/EnvironmentDisableConfirm';
 import { Link } from 'react-router-dom';
 import { Alert } from '@material-ui/lab';
-
 
 export interface ProjectEnvironment {
     name: string;
@@ -50,7 +49,6 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
     const [confirmName, setConfirmName] = useState('');
     const ref = useLoading(loading);
     const styles = useStyles();
-
 
     const refetch = () => {
         refetchEnvs();
@@ -164,52 +162,62 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
                 headerContent={
                     <HeaderTitle
                         title={`Configure environments for "${project?.name}" project`}
-                    />}
+                    />
+                }
             >
-                <ConditionallyRender condition={uiConfig.flags.E} show={
-                    <div className={styles.container}>
-                        <ConditionallyRender condition={error} show={renderError()} />
-                        <Alert severity="info" style={{marginBottom: '20px'}}>
-                            <b>Important!</b> In order for your application to retrieve configured activation strategies for a specific environment, 
-                            the application<br/> must use an environment specific API key. You can look up the environment-specific API keys {' '}
-                            <Link
-                                to='/admin/api'
+                <ConditionallyRender
+                    condition={uiConfig.flags.E}
+                    show={
+                        <div className={styles.container}>
+                            <ConditionallyRender
+                                condition={error}
+                                show={renderError()}
+                            />
+                            <Alert
+                                severity="info"
+                                style={{ marginBottom: '20px' }}
                             >
-                                here.
-                            </Link>
-                            <br/>
-                            <br/>
-                            Your administrator can configure an environment-specific API key to be used in the SDK.
-                            If you are an administrator you can {' '}
-                            <Link
-                                to='/admin/api'
-                            >
-                                create a new API key.
-                            </Link>
+                                <b>Important!</b> In order for your application
+                                to retrieve configured activation strategies for
+                                a specific environment, the application
+                                <br /> must use an environment specific API key.
+                                You can look up the environment-specific API
+                                keys <Link to="/admin/api">here.</Link>
+                                <br />
+                                <br />
+                                Your administrator can configure an
+                                environment-specific API key to be used in the
+                                SDK. If you are an administrator you can{' '}
+                                <Link to="/admin/api">
+                                    create a new API key.
+                                </Link>
+                            </Alert>
+                            <ConditionallyRender
+                                condition={environments.length < 1 && !loading}
+                                show={<div>No environments available.</div>}
+                                elseShow={renderEnvironments()}
+                            />
+                            <EnvironmentDisableConfirm
+                                env={selectedEnv}
+                                open={!!selectedEnv}
+                                handleDisableEnvironment={
+                                    handleDisableEnvironment
+                                }
+                                handleCancelDisableEnvironment={
+                                    handleCancelDisableEnvironment
+                                }
+                                confirmName={confirmName}
+                                setConfirmName={setConfirmName}
+                            />
+                        </div>
+                    }
+                    elseShow={
+                        <Alert security="success">
+                            This feature has not been Unleashed for you yet.
                         </Alert>
-                        <ConditionallyRender
-                            condition={environments.length < 1 && !loading}
-                            show={<div>No environments available.</div>}
-                            elseShow={renderEnvironments()}
-                        />
-                        <EnvironmentDisableConfirm
-                            env={selectedEnv}
-                            open={!!selectedEnv}
-                            handleDisableEnvironment={handleDisableEnvironment}
-                            handleCancelDisableEnvironment={
-                                handleCancelDisableEnvironment
-                            }
-                            confirmName={confirmName}
-                            setConfirmName={setConfirmName}
-                        />
-                    </div>
-                    
-                } elseShow={
-                    <Alert security="success">
-                        This feature has not been Unleashed for you yet. 
-                    </Alert>
-                } />
-                
+                    }
+                />
+
                 {toast}
             </PageContent>
         </div>

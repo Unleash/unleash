@@ -79,50 +79,58 @@ const HostedAuth = ({ authDetails, passwordLogin }) => {
                 }
             />
 
-            <form onSubmit={handleSubmit} action={authDetails.path}>
-                <Typography variant="subtitle2" className={styles.apiError}>
-                    {apiError}
-                </Typography>
-                <div
-                    className={classnames(
-                        styles.contentContainer,
-                        commonStyles.contentSpacingY
-                    )}
-                >
-                    <TextField
-                        label="Username or email"
-                        name="username"
-                        type="string"
-                        onChange={evt => setUsername(evt.target.value)}
-                        value={username}
-                        error={!!usernameError}
-                        helperText={usernameError}
-                        variant="outlined"
-                        size="small"
-                    />
-                    <TextField
-                        label="Password"
-                        onChange={evt => setPassword(evt.target.value)}
-                        name="password"
-                        type="password"
-                        value={password}
-                        error={!!passwordError}
-                        helperText={passwordError}
-                        variant="outlined"
-                        size="small"
-                    />
-                    <Grid container>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            className={styles.button}
+            <ConditionallyRender
+                condition={!authDetails.disableDefault}
+                show={
+                    <form onSubmit={handleSubmit} action={authDetails.path}>
+                        <Typography
+                            variant="subtitle2"
+                            className={styles.apiError}
                         >
-                            Sign in
-                        </Button>
-                    </Grid>
-                </div>
-            </form>
+                            {apiError}
+                        </Typography>
+                        <div
+                            className={classnames(
+                                styles.contentContainer,
+                                commonStyles.contentSpacingY
+                            )}
+                        >
+                            <TextField
+                                label="Username or email"
+                                name="username"
+                                type="string"
+                                onChange={evt => setUsername(evt.target.value)}
+                                value={username}
+                                error={!!usernameError}
+                                helperText={usernameError}
+                                variant="outlined"
+                                size="small"
+                            />
+                            <TextField
+                                label="Password"
+                                onChange={evt => setPassword(evt.target.value)}
+                                name="password"
+                                type="password"
+                                value={password}
+                                error={!!passwordError}
+                                helperText={passwordError}
+                                variant="outlined"
+                                size="small"
+                            />
+                            <Grid container>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                    className={styles.button}
+                                >
+                                    Sign in
+                                </Button>
+                            </Grid>
+                        </div>
+                    </form>
+                }
+            />
         </>
     );
 };

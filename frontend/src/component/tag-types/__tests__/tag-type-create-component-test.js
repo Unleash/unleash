@@ -3,12 +3,12 @@ import { ThemeProvider } from '@material-ui/core';
 import TagTypes from '../form-tag-type-component';
 import renderer from 'react-test-renderer';
 import theme from '../../../themes/main-theme';
-import AccessProvider from '../../AccessProvider/AccessProvider';
+import AccessProvider from '../../providers/AccessProvider/AccessProvider';
 import { createFakeStore } from '../../../accessStoreFake';
 import {
     CREATE_TAG_TYPE,
     UPDATE_TAG_TYPE,
-} from '../../AccessProvider/permissions';
+} from '../../providers/AccessProvider/permissions';
 
 jest.mock('@material-ui/core/TextField');
 

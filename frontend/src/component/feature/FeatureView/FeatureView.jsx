@@ -21,7 +21,7 @@ import {
     CREATE_FEATURE,
     DELETE_FEATURE,
     UPDATE_FEATURE,
-} from '../../AccessProvider/permissions';
+} from '../../providers/AccessProvider/permissions';
 import StatusComponent from '../status-component';
 import FeatureTagComponent from '../feature-tag-component';
 import StatusUpdateComponent from '../view/status-update-component';

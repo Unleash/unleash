@@ -19,7 +19,7 @@ import FeatureStrategiesSeparator from '../../FeatureStrategiesEnvironments/Feat
 import DefaultStrategy from '../../common/DefaultStrategy/DefaultStrategy';
 import { ADD_CONSTRAINT_ID } from '../../../../../../testIds';
 import AccessContext from '../../../../../../contexts/AccessContext';
-import { UPDATE_FEATURE } from '../../../../../AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 
 interface IFeatureStrategyAccordionBodyProps {
     strategy: IFeatureStrategy;

@@ -4,11 +4,11 @@ import { ThemeProvider } from '@material-ui/core';
 import ClientApplications from '../application-edit-component';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
-import { ADMIN } from '../../AccessProvider/permissions';
+import { ADMIN } from '../../providers/AccessProvider/permissions';
 import theme from '../../../themes/main-theme';
 
 import { createFakeStore } from '../../../accessStoreFake';
-import AccessProvider from '../../AccessProvider/AccessProvider';
+import AccessProvider from '../../providers/AccessProvider/AccessProvider';
 
 test('renders correctly if no application', () => {
     const tree = renderer

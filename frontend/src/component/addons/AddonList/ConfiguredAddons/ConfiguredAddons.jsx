@@ -13,7 +13,7 @@ import ConditionallyRender from '../../../common/ConditionallyRender/Conditional
 import {
     DELETE_ADDON,
     UPDATE_ADDON,
-} from '../../../AccessProvider/permissions';
+} from '../../../providers/AccessProvider/permissions';
 import { Link } from 'react-router-dom';
 import PageContent from '../../../common/PageContent/PageContent';
 import PropTypes from 'prop-types';

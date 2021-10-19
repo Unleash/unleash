@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Button, FormControlLabel, Grid, Switch, TextField } from '@material-ui/core';
+import {
+    Button,
+    FormControlLabel,
+    Grid,
+    Switch,
+    TextField,
+} from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import PageContent from '../../../component/common/PageContent/PageContent';
 import AccessContext from '../../../contexts/AccessContext';
-import { ADMIN } from '../../../component/AccessProvider/permissions';
+import { ADMIN } from '../../../component/providers/AccessProvider/permissions';
 import AutoCreateForm from './AutoCreateForm/AutoCreateForm';
 
 const initialState = {
@@ -51,7 +57,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
             ...data,
             [field]: value,
         });
-    }
+    };
 
     const onSubmit = async e => {
         e.preventDefault();
@@ -92,12 +98,14 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                     </Grid>
                     <Grid item md={6}>
                         <FormControlLabel
-                            control={ <Switch
-                                onChange={updateEnabled}
-                                value={data.enabled}
-                                name="enabled"
-                                checked={data.enabled}
-                            />}
+                            control={
+                                <Switch
+                                    onChange={updateEnabled}
+                                    value={data.enabled}
+                                    name="enabled"
+                                    checked={data.enabled}
+                                />
+                            }
                             label={data.enabled ? 'Enabled' : 'Disabled'}
                         />
                     </Grid>
@@ -136,7 +144,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             name="signOnUrl"
                             value={data.signOnUrl || ''}
                             disabled={!data.enabled}
-                            style={{ width: '400px'}}
+                            style={{ width: '400px' }}
                             variant="outlined"
                             size="small"
                             required
@@ -158,12 +166,13 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             name="certificate"
                             value={data.certificate || ''}
                             disabled={!data.enabled}
-                            style={{width: '100%'}}
+                            style={{ width: '100%' }}
                             InputProps={{
                                 style: {
                                     fontSize: '0.6em',
                                     fontFamily: 'monospace',
-                            }}}
+                                },
+                            }}
                             multiline
                             rows={14}
                             rowsMax={14}
@@ -189,7 +198,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             name="signOutUrl"
                             value={data.signOutUrl || ''}
                             disabled={!data.enabled}
-                            style={{ width: '400px'}}
+                            style={{ width: '400px' }}
                             variant="outlined"
                             size="small"
                         />
@@ -199,8 +208,10 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                     <Grid item md={5}>
                         <strong>Service Provider X.509 Certificate</strong>
                         <p>
-                            (Optional) The private certificate used by the Service Provider used to sign the SAML 2.0
-                            request towards the IDP. E.g. used to sign single logout requests (SLO).
+                            (Optional) The private certificate used by the
+                            Service Provider used to sign the SAML 2.0 request
+                            towards the IDP. E.g. used to sign single logout
+                            requests (SLO).
                         </p>
                     </Grid>
                     <Grid item md={7}>
@@ -210,12 +221,13 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             name="spCertificate"
                             value={data.spCertificate || ''}
                             disabled={!data.enabled}
-                            style={{width: '100%'}}
+                            style={{ width: '100%' }}
                             InputProps={{
                                 style: {
                                     fontSize: '0.6em',
                                     fontFamily: 'monospace',
-                            }}}
+                                },
+                            }}
                             multiline
                             rows={14}
                             rowsMax={14}

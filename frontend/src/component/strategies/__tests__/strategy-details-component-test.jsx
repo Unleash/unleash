@@ -5,7 +5,7 @@ import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
 import theme from '../../../themes/main-theme';
 import { createFakeStore } from '../../../accessStoreFake';
-import AccessProvider from '../../AccessProvider/AccessProvider';
+import AccessProvider from '../../providers/AccessProvider/AccessProvider';
 
 test('renders correctly with one strategy', () => {
     const strategy = {

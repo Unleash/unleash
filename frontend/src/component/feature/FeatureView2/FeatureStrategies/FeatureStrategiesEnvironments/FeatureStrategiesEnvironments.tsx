@@ -20,7 +20,7 @@ import NoItems from '../../../../common/NoItems/NoItems';
 import ResponsiveButton from '../../../../common/ResponsiveButton/ResponsiveButton';
 import { Add } from '@material-ui/icons';
 import AccessContext from '../../../../../contexts/AccessContext';
-import { UPDATE_FEATURE } from '../../../../AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import useQueryParams from '../../../../../hooks/useQueryParams';
 
 const FeatureStrategiesEnvironments = () => {
@@ -178,8 +178,12 @@ const FeatureStrategiesEnvironments = () => {
 
                 // Check groupId
 
-                const cacheParamKeys = Object.keys(cachedStrategy?.parameters || {});
-                const strategyParamKeys = Object.keys(strategy?.parameters || {});
+                const cacheParamKeys = Object.keys(
+                    cachedStrategy?.parameters || {}
+                );
+                const strategyParamKeys = Object.keys(
+                    strategy?.parameters || {}
+                );
                 // Check length of parameters
                 if (cacheParamKeys.length !== strategyParamKeys.length) {
                     equal = false;

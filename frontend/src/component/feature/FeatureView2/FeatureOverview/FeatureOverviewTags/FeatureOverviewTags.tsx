@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'; 
+import { useState, useContext } from 'react';
 import { Chip } from '@material-ui/core';
 import { Add, Label } from '@material-ui/icons';
 import { useParams } from 'react-router-dom';
@@ -16,7 +16,10 @@ import AddTagDialog from './AddTagDialog/AddTagDialog';
 import Dialogue from '../../../../common/Dialogue';
 import { ITag } from '../../../../../interfaces/tags';
 import useToast from '../../../../../hooks/useToast';
-import { UPDATE_FEATURE, DELETE_TAG } from '../../../../AccessProvider/permissions';
+import {
+    UPDATE_FEATURE,
+    DELETE_TAG,
+} from '../../../../providers/AccessProvider/permissions';
 import PermissionIconButton from '../../../../common/PermissionIconButton/PermissionIconButton';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
 import AccessContext from '../../../../../contexts/AccessContext';
@@ -105,10 +108,14 @@ const FeatureOverviewTags = () => {
             data-loading
             label={t.value}
             key={`${t.type}:${t.value}`}
-            onDelete={canDeleteTag ? () => {
-                setShowDelDialog(true);
-                setSelectedTag({ type: t.type, value: t.value });
-            }: undefined}
+            onDelete={
+                canDeleteTag
+                    ? () => {
+                          setShowDelDialog(true);
+                          setSelectedTag({ type: t.type, value: t.value });
+                      }
+                    : undefined
+            }
         />
     );
 

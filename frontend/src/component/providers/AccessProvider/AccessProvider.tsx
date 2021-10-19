@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import AccessContext from '../../contexts/AccessContext';
+import AccessContext from '../../../contexts/AccessContext';
 import { ADMIN } from './permissions';
 
 // TODO: Type up redux store

@@ -10,15 +10,13 @@ import TimeAgo from 'react-timeago';
 import Status from '../../status-component';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 
-import { UPDATE_FEATURE } from '../../../AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import { styles as commonStyles } from '../../../common';
 
 import { useStyles } from './styles';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
 import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
 import FeatureType from '../../FeatureView2/FeatureType/FeatureType';
-
-
 
 const FeatureToggleListItem = ({
     feature,
@@ -37,7 +35,7 @@ const FeatureToggleListItem = ({
 
     const { name, description, type, stale, createdAt, project, lastSeenAt } =
         feature;
-   
+
     return (
         <ListItem
             {...rest}
@@ -46,56 +44,60 @@ const FeatureToggleListItem = ({
             <span className={styles.listItemMetric}>
                 <FeatureStatus lastSeenAt={lastSeenAt} />
             </span>
-            <span className={classnames(styles.listItemType, commonStyles.hideLt600)}>
+            <span
+                className={classnames(
+                    styles.listItemType,
+                    commonStyles.hideLt600
+                )}
+            >
                 <FeatureType type={type} />
             </span>
             <span className={classnames(styles.listItemLink)}>
-                <ConditionallyRender condition={!isArchive} show={
-                    <Link
-                        to={getTogglePath(feature.project, name, flags.E)}
-                        className={classnames(
-                            commonStyles.listLink,
-                            commonStyles.truncate
-                        )}
-                    >
-                        <Tooltip title={description}>
-                            <span className={commonStyles.toggleName}>
+                <ConditionallyRender
+                    condition={!isArchive}
+                    show={
+                        <Link
+                            to={getTogglePath(feature.project, name, flags.E)}
+                            className={classnames(
+                                commonStyles.listLink,
+                                commonStyles.truncate
+                            )}
+                        >
+                            <Tooltip title={description}>
+                                <span className={commonStyles.toggleName}>
                                     {name}&nbsp;
-                            </span>
+                                </span>
                             </Tooltip>
-                        <span className={styles.listItemToggle}>
-                        </span>
-                        <small>
-                            <TimeAgo date={createdAt} live={false} />
-                        </small>
-                        <div>
-                            <span className={commonStyles.truncate}>
-                                <small>{description}</small>
-                            </span>
-                        </div>
-                    </Link>
-                } elseShow={
-                    <>
-                        <Tooltip title={description}>
-                            <span className={commonStyles.toggleName}>
-                                    {name}&nbsp;
-z                            </span>
-                        </Tooltip>
-                        <span className={styles.listItemToggle}>
-                        </span>
-                        <small>
-                            <TimeAgo date={createdAt} live={false} />
-                        </small>
-                        <div>
-                            <span className={commonStyles.truncate}>
-                                <small>{description}</small>
-                            </span>
-                        </div>
-                    </>
-                }/>
-
-
-                
+                            <span className={styles.listItemToggle}></span>
+                            <small>
+                                <TimeAgo date={createdAt} live={false} />
+                            </small>
+                            <div>
+                                <span className={commonStyles.truncate}>
+                                    <small>{description}</small>
+                                </span>
+                            </div>
+                        </Link>
+                    }
+                    elseShow={
+                        <>
+                            <Tooltip title={description}>
+                                <span className={commonStyles.toggleName}>
+                                    {name}&nbsp; z{' '}
+                                </span>
+                            </Tooltip>
+                            <span className={styles.listItemToggle}></span>
+                            <small>
+                                <TimeAgo date={createdAt} live={false} />
+                            </small>
+                            <div>
+                                <span className={commonStyles.truncate}>
+                                    <small>{description}</small>
+                                </span>
+                            </div>
+                        </>
+                    }
+                />
             </span>
             <span
                 className={classnames(
@@ -104,8 +106,18 @@ z                            </span>
                 )}
             >
                 <Status stale={stale} showActive={false} />
-                <Link to={`/projects/${project}`} style={{textDecoration: 'none'}}>
-                    <Chip color="primary" variant="outlined" className={styles.typeChip} style={{marginLeft: '8px' }} title={`Project: ${project}`} label={project}/>
+                <Link
+                    to={`/projects/${project}`}
+                    style={{ textDecoration: 'none' }}
+                >
+                    <Chip
+                        color="primary"
+                        variant="outlined"
+                        className={styles.typeChip}
+                        style={{ marginLeft: '8px' }}
+                        title={`Project: ${project}`}
+                        label={project}
+                    />
                 </Link>
             </span>
             <ConditionallyRender

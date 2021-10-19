@@ -24,7 +24,7 @@ import {
 import {
     CREATE_STRATEGY,
     DELETE_STRATEGY,
-} from '../../AccessProvider/permissions';
+} from '../../providers/AccessProvider/permissions';
 
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import PageContent from '../../common/PageContent/PageContent';

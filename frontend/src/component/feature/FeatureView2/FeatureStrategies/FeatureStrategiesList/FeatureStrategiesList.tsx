@@ -8,9 +8,8 @@ import classnames from 'classnames';
 import { Button, IconButton, Tooltip, useMediaQuery } from '@material-ui/core';
 import { DoubleArrow } from '@material-ui/icons';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
-import { UPDATE_FEATURE } from '../../../../AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import AccessContext from '../../../../../contexts/AccessContext';
-
 
 const FeatureStrategiesList = () => {
     const smallScreen = useMediaQuery('(max-width:700px)');
@@ -53,7 +52,7 @@ const FeatureStrategiesList = () => {
     const iconClasses = classnames(styles.icon, {
         [styles.expandedIcon]: expandedSidebar,
     });
-    
+
     return (
         <section className={classes}>
             <ConditionallyRender
@@ -65,7 +64,14 @@ const FeatureStrategiesList = () => {
                     </div>
                 }
             />
-            <Tooltip title={hasAccess(UPDATE_FEATURE) ? 'Click to open.' : 'You don\'t have access to perform this operation'} arrow>
+            <Tooltip
+                title={
+                    hasAccess(UPDATE_FEATURE)
+                        ? 'Click to open.'
+                        : "You don't have access to perform this operation"
+                }
+                arrow
+            >
                 <span className={styles.iconButtonWrapper}>
                     <IconButton
                         className={styles.iconButton}

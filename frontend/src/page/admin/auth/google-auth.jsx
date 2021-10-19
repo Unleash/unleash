@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Button, FormControlLabel, Grid, Switch, TextField } from '@material-ui/core';
+import {
+    Button,
+    FormControlLabel,
+    Grid,
+    Switch,
+    TextField,
+} from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import PageContent from '../../../component/common/PageContent/PageContent';
 import AccessContext from '../../../contexts/AccessContext';
-import { ADMIN } from '../../../component/AccessProvider/permissions';
+import { ADMIN } from '../../../component/providers/AccessProvider/permissions';
 
 const initialState = {
     enabled: false,
@@ -93,12 +99,14 @@ function GoogleAuth({
                     </Grid>
                     <Grid item xs={6} style={{ padding: '20px' }}>
                         <FormControlLabel
-                            control={ <Switch
-                                onChange={updateEnabled}
-                                value={data.enabled}
-                                name="enabled"
-                                checked={data.enabled}
-                            />}
+                            control={
+                                <Switch
+                                    onChange={updateEnabled}
+                                    value={data.enabled}
+                                    name="enabled"
+                                    checked={data.enabled}
+                                />
+                            }
                             label={data.enabled ? 'Enabled' : 'Disabled'}
                         />
                     </Grid>

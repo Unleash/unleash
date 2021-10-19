@@ -30,7 +30,7 @@ const FeatureCreate = () => {
     const { projectId } = useParams<IFeatureViewParams>();
     const { createFeatureToggle, validateFeatureToggleName } = useFeatureApi();
     const history = useHistory();
-    const [ toggle, setToggle ] = useState<IFeatureToggleDTO>({
+    const [toggle, setToggle] = useState<IFeatureToggleDTO>({
         name: loadNameFromUrl(),
         description: '',
         type: 'release',
@@ -40,7 +40,6 @@ const FeatureCreate = () => {
         archived: false,
     });
     const [errors, setErrors] = useState<Errors>({});
-
 
     useEffect(() => {
         window.onbeforeunload = () =>
@@ -52,10 +51,7 @@ const FeatureCreate = () => {
         };
     }, []);
 
-    const onCancel = () => history.push(
-        `/projects/${projectId}`
-    );
-
+    const onCancel = () => history.push(`/projects/${projectId}`);
 
     const validateName = async (featureToggleName: string) => {
         const e = { ...errors };
@@ -80,25 +76,25 @@ const FeatureCreate = () => {
 
         try {
             await createFeatureToggle(projectId, toggle).then(() =>
-                history.push(
-                    getTogglePath(toggle.project, toggle.name, true)
-                )
+                history.push(getTogglePath(toggle.project, toggle.name, true))
             );
             // Trigger
         } catch (e: any) {
             if (e.toString().includes('not allowed to be empty')) {
-                setErrors({ name: 'Name is not allowed to be empty' })
+                setErrors({ name: 'Name is not allowed to be empty' });
             }
         }
     };
 
-    const setValue = (field:string, value:string) => {
-        setToggle({...toggle, [field]: value})
-    }
-
+    const setValue = (field: string, value: string) => {
+        setToggle({ ...toggle, [field]: value });
+    };
 
     return (
-        <PageContent headerContent="Create feature toggle" bodyClass={styles.bodyContainer}>
+        <PageContent
+            headerContent="Create feature toggle"
+            bodyClass={styles.bodyContainer}
+        >
             <form onSubmit={onSubmit}>
                 <input type="hidden" name="project" value={projectId} />
                 <div className={styles.formContainer}>

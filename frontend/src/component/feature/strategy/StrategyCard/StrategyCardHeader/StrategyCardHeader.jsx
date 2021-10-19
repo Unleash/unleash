@@ -8,7 +8,7 @@ import { useStyles } from './StrategyCardHeader.styles.js';
 import { ReactComponent as ReorderIcon } from '../../../../../assets/icons/reorder.svg';
 import ConditionallyRender from '../../../../common/ConditionallyRender/ConditionallyRender';
 import AccessContext from '../../../../../contexts/AccessContext';
-import { UPDATE_FEATURE } from '../../../../AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 
 const StrategyCardHeader = ({
     name,

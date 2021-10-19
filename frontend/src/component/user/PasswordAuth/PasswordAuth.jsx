@@ -79,59 +79,67 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
         const { usernameError, passwordError, apiError } = errors;
 
         return (
-            <form onSubmit={handleSubmit} action={authDetails.path}>
-                <ConditionallyRender
-                    condition={apiError}
-                    show={
-                        <Alert severity="error" className={styles.apiError}>
-                            {apiError}
-                        </Alert>
-                    }
-                />
+            <ConditionallyRender
+                condition={!authDetails.disableDefault}
+                show={
+                    <form onSubmit={handleSubmit} action={authDetails.path}>
+                        <ConditionallyRender
+                            condition={apiError}
+                            show={
+                                <Alert
+                                    severity="error"
+                                    className={styles.apiError}
+                                >
+                                    {apiError}
+                                </Alert>
+                            }
+                        />
 
-                <div
-                    className={classnames(
-                        styles.contentContainer,
-                        commonStyles.contentSpacingY
-                    )}
-                >
-                    <TextField
-                        label="Username or email"
-                        name="username"
-                        type="string"
-                        onChange={evt => setUsername(evt.target.value)}
-                        value={username}
-                        error={!!usernameError}
-                        helperText={usernameError}
-                        variant="outlined"
-                        autoComplete="true"
-                        size="small"
-                        data-test={LOGIN_EMAIL_ID}
-                    />
-                    <TextField
-                        label="Password"
-                        onChange={evt => setPassword(evt.target.value)}
-                        name="password"
-                        type="password"
-                        value={password}
-                        error={!!passwordError}
-                        helperText={passwordError}
-                        variant="outlined"
-                        autoComplete="true"
-                        size="small"
-                        data-test={LOGIN_PASSWORD_ID}
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                        style={{ width: '150px', margin: '1rem auto' }}
-                        data-test={LOGIN_BUTTON}
-                    >
-                        Sign in
-                    </Button>
-                </div>
-            </form>
+                        <div
+                            className={classnames(
+                                styles.contentContainer,
+                                commonStyles.contentSpacingY
+                            )}
+                        >
+                            <TextField
+                                label="Username or email"
+                                name="username"
+                                type="string"
+                                onChange={evt => setUsername(evt.target.value)}
+                                value={username}
+                                error={!!usernameError}
+                                helperText={usernameError}
+                                variant="outlined"
+                                autoComplete="true"
+                                size="small"
+                                data-test={LOGIN_EMAIL_ID}
+                            />
+                            <TextField
+                                label="Password"
+                                onChange={evt => setPassword(evt.target.value)}
+                                name="password"
+                                type="password"
+                                value={password}
+                                error={!!passwordError}
+                                helperText={passwordError}
+                                variant="outlined"
+                                autoComplete="true"
+                                size="small"
+                                data-test={LOGIN_PASSWORD_ID}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                style={{ width: '150px', margin: '1rem auto' }}
+                                data-test={LOGIN_BUTTON}
+                            >
+                                Sign in
+                            </Button>
+                        </div>
+                    </form>
+                }
+            />
         );
     };
 

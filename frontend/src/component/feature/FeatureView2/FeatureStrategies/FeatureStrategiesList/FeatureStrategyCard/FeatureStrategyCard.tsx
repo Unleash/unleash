@@ -14,7 +14,7 @@ import {
     getFeatureStrategyIcon,
     getHumanReadbleStrategyName,
 } from '../../../../../../utils/strategy-names';
-import { UPDATE_FEATURE } from '../../../../../AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import { useStyles } from './FeatureStrategyCard.styles';
 
@@ -40,7 +40,7 @@ const FeatureStrategyCard = ({
         FeatureStrategiesUIContext
     );
     const { hasAccess } = useContext(AccessContext);
-    const canUpdateFeature = hasAccess(UPDATE_FEATURE)
+    const canUpdateFeature = hasAccess(UPDATE_FEATURE);
 
     const handleClick = () => {
         const strategy = getStrategyObject(strategies, name, featureId);
@@ -83,7 +83,9 @@ const FeatureStrategyCard = ({
                             <IconButton
                                 className={styles.addButton}
                                 onClick={handleClick}
-                                data-test={`${ADD_NEW_STRATEGY_CARD_BUTTON_ID}-${index + 1}`}
+                                data-test={`${ADD_NEW_STRATEGY_CARD_BUTTON_ID}-${
+                                    index + 1
+                                }`}
                                 disabled={!canUpdateFeature}
                             >
                                 <Add />

@@ -19,7 +19,7 @@ import { useParams } from 'react-router';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 import AccessContext from '../../../../../contexts/AccessContext';
 import FeatureVariantListItem from './FeatureVariantsListItem/FeatureVariantsListItem';
-import { UPDATE_FEATURE } from '../../../../AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
 import useUnleashContext from '../../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
@@ -121,8 +121,8 @@ const FeatureOverviewVariants = () => {
                     style={{ display: 'block', marginTop: '0.5rem' }}
                 >
                     By overriding the stickiness you can control which parameter
-                    is used to ensure consistent traffic
-                    allocation across variants.{' '}
+                    is used to ensure consistent traffic allocation across
+                    variants.{' '}
                     <a
                         href="https://docs.getunleash.io/advanced/toggle_variants"
                         target="_blank"

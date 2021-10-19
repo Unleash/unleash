@@ -9,7 +9,7 @@ import {
     ListItemText,
 } from '@material-ui/core';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
-import { CREATE_ADDON } from '../../../AccessProvider/permissions';
+import { CREATE_ADDON } from '../../../providers/AccessProvider/permissions';
 import PropTypes from 'prop-types';
 
 const AvailableAddons = ({ providers, getIcon, hasAccess, history }) => {

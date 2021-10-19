@@ -5,7 +5,7 @@ import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyR
 import {
     CREATE_CONTEXT_FIELD,
     DELETE_CONTEXT_FIELD,
-} from '../../AccessProvider/permissions';
+} from '../../providers/AccessProvider/permissions';
 import {
     IconButton,
     List,

@@ -11,11 +11,11 @@ import {
     ADMIN,
     DELETE_FEATURE,
     UPDATE_FEATURE,
-} from '../../../AccessProvider/permissions';
+} from '../../../providers/AccessProvider/permissions';
 
 import theme from '../../../../themes/main-theme';
 import { createFakeStore } from '../../../../accessStoreFake';
-import AccessProvider from '../../../AccessProvider/AccessProvider';
+import AccessProvider from '../../../providers/AccessProvider/AccessProvider';
 
 jest.mock('../update-strategies-container', () => ({
     __esModule: true,

@@ -12,7 +12,7 @@ import AccessContext from '../../contexts/AccessContext';
 import {
     CREATE_TAG_TYPE,
     UPDATE_TAG_TYPE,
-} from '../AccessProvider/permissions';
+} from '../providers/AccessProvider/permissions';
 import ConditionallyRender from '../common/ConditionallyRender';
 
 const AddTagTypeComponent = ({

@@ -50,7 +50,7 @@ const ProjectInfo = ({
                             commonStyles.justifyCenter,
                             styles.infoLink
                         )}
-                        to={`/reporting?project=${id}`}
+                        to={`/projects/${id}/health`}
                     >
                         <span className={styles.linkText} data-loading>
                             view more{' '}

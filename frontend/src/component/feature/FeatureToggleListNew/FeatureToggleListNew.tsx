@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import {
     Table,
     TableBody,
@@ -80,6 +80,11 @@ const FeatureToggleListNew = ({
     
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
         usePagination(sortedFeatures, 50);
+    
+    useEffect(() => {
+        setSortedFeatures(sortList([...features], sortOpt))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [features])
 
     const updateSort = (field: string) => {
         let newSortOpt;

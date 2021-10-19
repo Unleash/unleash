@@ -195,6 +195,10 @@ export default class ProjectService {
             user.username,
             FEATURE_PROJECT_CHANGE,
         );
+        await this.featureToggleService.updateFeatureStrategyProject(
+            featureName,
+            newProjectId,
+        );
 
         return updatedFeature;
     }

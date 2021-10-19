@@ -21,6 +21,9 @@ import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../types/events';
 import { IEventStore } from '../types/stores/event-store';
 import { IUserSearch, IUserStore } from '../types/stores/user-store';
 import { RoleName } from '../types/model';
+import SettingService from './setting-service';
+import { SimpleAuthSettings } from '../server-impl';
+import { simpleAuthKey } from '../types/settings/simple-auth-settings';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -77,6 +80,8 @@ class UserService {
 
     private emailService: EmailService;
 
+    private settingService: SettingService;
+
     constructor(
         stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
@@ -88,6 +93,7 @@ class UserService {
             resetTokenService: ResetTokenService;
             emailService: EmailService;
             sessionService: SessionService;
+            settingService: SettingService;
         },
     ) {
         this.logger = getLogger('service/user-service.js');
@@ -97,6 +103,7 @@ class UserService {
         this.resetTokenService = services.resetTokenService;
         this.emailService = services.emailService;
         this.sessionService = services.sessionService;
+        this.settingService = services.settingService;
         if (authentication && authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
@@ -241,6 +248,16 @@ class UserService {
     }
 
     async loginUser(usernameOrEmail: string, password: string): Promise<IUser> {
+        const settings = await this.settingService.get<SimpleAuthSettings>(
+            simpleAuthKey,
+        );
+
+        if (settings && settings.disabled) {
+            throw new Error(
+                'Logging in with username/password has been disabled.',
+            );
+        }
+
         const idQuery = isEmail(usernameOrEmail)
             ? { email: usernameOrEmail }
             : { username: usernameOrEmail };

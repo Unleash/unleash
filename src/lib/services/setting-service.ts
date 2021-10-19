@@ -16,7 +16,7 @@ export default class SettingService {
         this.settingStore = settingStore;
     }
 
-    async get(id: string): Promise<object> {
+    async get<T>(id: string): Promise<T> {
         return this.settingStore.get(id);
     }
 

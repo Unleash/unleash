@@ -23,7 +23,7 @@ export default class FakeSettingStore implements ISettingStore {
         if (setting) {
             return setting;
         }
-        throw new NotFoundError(`Could not find setting with key ${key}`);
+        return undefined;
     }
 
     async getAll(): Promise<any[]> {

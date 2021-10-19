@@ -13,6 +13,8 @@ import { EmailService } from '../../../../lib/services/email-service';
 import SessionStore from '../../../../lib/db/session-store';
 import SessionService from '../../../../lib/services/session-service';
 import { RoleName } from '../../../../lib/types/model';
+import SettingService from '../../../../lib/services/setting-service';
+import FakeSettingStore from '../../../fixtures/fake-setting-store';
 
 let app;
 let stores;
@@ -53,11 +55,16 @@ beforeAll(async () => {
         config.getLogger,
     );
     const sessionService = new SessionService({ sessionStore }, config);
+    const settingService = new SettingService(
+        { settingStore: new FakeSettingStore() },
+        config,
+    );
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
     resetTokenService = new ResetTokenService(stores, config);
     const adminRole = await accessService.getRootRole(RoleName.ADMIN);

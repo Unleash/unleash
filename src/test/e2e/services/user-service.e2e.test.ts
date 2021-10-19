@@ -11,7 +11,6 @@ import NotFoundError from '../../../lib/error/notfound-error';
 import { IRole } from '../../../lib/types/stores/access-store';
 import { RoleName } from '../../../lib/types/model';
 import SettingService from '../../../lib/services/setting-service';
-import FakeSettingStore from '../../fixtures/fake-setting-store';
 import { simpleAuthKey } from '../../../lib/types/settings/simple-auth-settings';
 
 let db;

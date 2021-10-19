@@ -1,5 +1,4 @@
 import { ISettingStore } from '../../lib/types/stores/settings-store';
-import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeSettingStore implements ISettingStore {
     settings: Map<string, any> = new Map();

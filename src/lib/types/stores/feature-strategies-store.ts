@@ -46,4 +46,9 @@ export interface IFeatureStrategiesStore
         projectId: String,
         environment: String,
     ): Promise<void>;
+
+    setProjectForStrategiesBelongingToFeature(
+        featureName: string,
+        newProjectId: string,
+    ): Promise<void>;
 }

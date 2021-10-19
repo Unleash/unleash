@@ -250,6 +250,19 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(enabled);
     }
 
+    async setProjectForStrategiesBelongingToFeature(
+        featureName: string,
+        newProjectId: string,
+    ): Promise<void> {
+        this.featureStrategies = this.featureStrategies.map((f) => {
+            if (f.featureName === featureName) {
+                f.projectId = newProjectId;
+            }
+            return f;
+        });
+        return Promise.resolve(undefined);
+    }
+
     async setEnvironmentEnabledStatus(
         environment: string,
         featureName: string,

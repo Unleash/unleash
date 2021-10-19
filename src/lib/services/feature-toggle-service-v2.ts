@@ -785,6 +785,16 @@ class FeatureToggleServiceV2 {
     async getProjectId(name: string): Promise<string> {
         return this.featureToggleStore.getProjectId(name);
     }
+
+    async updateFeatureStrategyProject(
+        featureName: string,
+        newProjectId: string,
+    ): Promise<void> {
+        await this.featureStrategiesStore.setProjectForStrategiesBelongingToFeature(
+            featureName,
+            newProjectId,
+        );
+    }
 }
 
 module.exports = FeatureToggleServiceV2;

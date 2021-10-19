@@ -1,9 +1,10 @@
-import { Tabs, Tab } from '@material-ui/core';
+import { Tab, Tabs } from '@material-ui/core';
 import { useState } from 'react';
 import { Archive, FileCopy } from '@material-ui/icons';
-import { Route, useHistory, useParams, Link } from 'react-router-dom';
+import { Link, Route, useHistory, useParams } from 'react-router-dom';
 import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeature from '../../../hooks/api/getters/useFeature/useFeature';
+import useProject from '../../../hooks/api/getters/useProject/useProject';
 import useTabs from '../../../hooks/useTabs';
 import useToast from '../../../hooks/useToast';
 import { IFeatureViewParams } from '../../../interfaces/params';
@@ -24,6 +25,7 @@ import { getCreateTogglePath } from '../../../utils/route-path-helpers';
 const FeatureView2 = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature, loading, error } = useFeature(projectId, featureId);
+    const { refetch: projectRefetch } = useProject(projectId);
     const { a11yProps } = useTabs(0);
     const { archiveFeatureToggle } = useFeatureApi();
     const { toast, setToastData } = useToast();
@@ -43,6 +45,7 @@ const FeatureView2 = () => {
                 show: true,
             });
             setShowDelDialog(false);
+            projectRefetch();
             history.push(`/projects/${projectId}`);
         } catch (e) {
             setToastData({

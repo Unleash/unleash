@@ -9,16 +9,25 @@ function demoAuthentication(
 ): void {
     app.post(`${basePath}/api/admin/login`, async (req, res) => {
         const { email } = req.body;
-        const user = await userService.loginUserWithoutPassword(email, true);
-        const session = req.session || {};
-        // @ts-ignore
-        session.user = user;
-        // @ts-ignore
-        req.session = session;
-        res.status(200)
+        try {
+            const user = await userService.loginUserWithoutPassword(
+                email,
+                true,
+            );
+            const session = req.session || {};
             // @ts-ignore
-            .json(req.session.user)
-            .end();
+            session.user = user;
+            // @ts-ignore
+            req.session = session;
+            res.status(200)
+                // @ts-ignore
+                .json(req.session.user)
+                .end();
+        } catch (e) {
+            res.status(400)
+                .json({ error: `Could not sign in with ${email}` })
+                .end();
+        }
     });
 
     app.use(`${basePath}/api/admin/`, (req, res, next) => {

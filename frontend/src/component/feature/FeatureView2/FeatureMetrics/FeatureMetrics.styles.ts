@@ -11,7 +11,7 @@ export const useStyles = makeStyles(theme => ({
     },
     environmentMetrics: {
         border: `1px solid ${theme.palette.grey[300]}`,
-        margin: '1rem',
+        margin: '0.5rem',
         width: '30%',
     },
     [theme.breakpoints.down(1000)]: {

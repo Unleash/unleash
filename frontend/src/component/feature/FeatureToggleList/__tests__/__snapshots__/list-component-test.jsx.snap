@@ -183,6 +183,7 @@ exports[`renders correctly with one feature 1`] = `
               "reviveName": "Another",
             }
           }
+          flags={Object {}}
           hasAccess={[Function]}
           settings={
             Object {
@@ -383,6 +384,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
               "reviveName": "Another",
             }
           }
+          flags={Object {}}
           hasAccess={[Function]}
           settings={
             Object {

@@ -42,6 +42,7 @@ test('renders correctly with one feature', () => {
                         toggleFeature={jest.fn()}
                         fetcher={jest.fn()}
                         currentProjectId="default"
+                        flags={{}}
                     />
                 </AccessProvider>
             </ThemeProvider>
@@ -74,6 +75,7 @@ test('renders correctly with one feature without permissions', () => {
                         toggleFeature={jest.fn()}
                         fetcher={jest.fn()}
                         currentProjectId="default"
+                        flags={{}}
                     />
                 </AccessProvider>
             </ThemeProvider>

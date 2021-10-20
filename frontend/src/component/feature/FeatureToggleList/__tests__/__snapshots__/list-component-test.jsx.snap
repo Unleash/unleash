@@ -144,7 +144,7 @@ exports[`renders correctly with one feature 1`] = `
               aria-disabled={true}
               className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
               data-test="NAVIGATE_TO_CREATE_FEATURE"
-              href="/projects/default/create-toggle?project=default"
+              href="/projects/default/create-toggle"
               onBlur={[Function]}
               onClick={[Function]}
               onDragLeave={[Function]}
@@ -344,7 +344,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
               aria-disabled={true}
               className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
               data-test="NAVIGATE_TO_CREATE_FEATURE"
-              href="/projects/default/create-toggle?project=default"
+              href="/projects/default/create-toggle"
               onBlur={[Function]}
               onClick={[Function]}
               onDragLeave={[Function]}

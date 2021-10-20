@@ -89,9 +89,7 @@ const CreateFeature = ({
                     <ProjectSelect
                         value={input.project}
                         defaultValue={project}
-                        onChange={v => {
-                            setValue('project', v.target.value);
-                        }}
+                        onChange={v => setValue('project', v.target.value)}
                         filter={projectFilterGenerator(user, CREATE_FEATURE)}
                     />
                 </section>

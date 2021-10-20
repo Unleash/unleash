@@ -52,15 +52,17 @@ class WrapperComponent extends Component {
     };
 
     validateName = async featureToggleName => {
-        const { errors } = { ...this.state };
-        try {
-            await validateName(featureToggleName);
-            errors.name = undefined;
-        } catch (err) {
-            errors.name = err.message;
-        }
+        if (featureToggleName.length > 0) {
+            const { errors } = { ...this.state };
+            try {
+                await validateName(featureToggleName);
+                errors.name = undefined;
+            } catch (err) {
+                errors.name = err.message;
+            }
 
-        this.setState({ errors });
+            this.setState({ errors });
+        }
     };
 
     onSubmit = async evt => {

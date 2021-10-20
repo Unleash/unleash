@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { useStyles } from './FeatureCreate.styles';
 import { IFeatureViewParams } from '../../../interfaces/params';
 import PageContent from '../../common/PageContent';
 import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import { CardActions, TextField } from '@material-ui/core';
+import { CardActions } from '@material-ui/core';
 import FeatureTypeSelect from '../FeatureView2/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect';
 import {
     CF_CREATE_BTN_ID,
@@ -12,26 +12,28 @@ import {
     CF_NAME_ID,
     CF_TYPE_ID,
 } from '../../../testIds';
-import { loadNameFromUrl, trim } from '../../common/util';
 import { getTogglePath } from '../../../utils/route-path-helpers';
 import { IFeatureToggleDTO } from '../../../interfaces/featureToggle';
-import { FormEventHandler } from 'react-router/node_modules/@types/react';
 import { useCommonStyles } from '../../../common.styles';
 import { FormButtons } from '../../common';
-
-interface Errors {
-    name?: string;
-    description?: string;
-}
+import useQueryParams from '../../../hooks/useQueryParams';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import Input from '../../common/Input/Input';
+import ProjectSelect from '../project-select-container';
+import { projectFilterGenerator } from '../../../utils/project-filter-generator';
+import useUser from '../../../hooks/api/getters/useUser/useUser';
+import { trim } from '../../common/util';
+import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
 
 const FeatureCreate = () => {
     const styles = useStyles();
     const commonStyles = useCommonStyles();
     const { projectId } = useParams<IFeatureViewParams>();
+    const params = useQueryParams();
     const { createFeatureToggle, validateFeatureToggleName } = useFeatureApi();
     const history = useHistory();
     const [toggle, setToggle] = useState<IFeatureToggleDTO>({
-        name: loadNameFromUrl(),
+        name: params.get('name') || '',
         description: '',
         type: 'release',
         stale: false,
@@ -39,7 +41,10 @@ const FeatureCreate = () => {
         project: projectId,
         archived: false,
     });
-    const [errors, setErrors] = useState<Errors>({});
+
+    const [nameError, setNameError] = useState('');
+    const { uiConfig } = useUiConfig();
+    const { permissions } = useUser();
 
     useEffect(() => {
         window.onbeforeunload = () =>
@@ -54,34 +59,40 @@ const FeatureCreate = () => {
     const onCancel = () => history.push(`/projects/${projectId}`);
 
     const validateName = async (featureToggleName: string) => {
-        const e = { ...errors };
-        try {
-            await validateFeatureToggleName(featureToggleName);
-            e.name = undefined;
-        } catch (err: any) {
-            e.name = err && err.message ? err.message : 'Could not check name';
+        if (featureToggleName.length > 0) {
+            try {
+                await validateFeatureToggleName(featureToggleName);
+            } catch (err: any) {
+                setNameError(
+                    err && err.message ? err.message : 'Could not check name'
+                );
+            }
         }
-
-        setErrors(e);
     };
 
-    const onSubmit = async (evt: FormEventHandler) => {
+    const onSubmit = async (evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
 
-        const errorList = Object.values(errors).filter(i => i);
+        await validateName(toggle.name);
 
-        if (errorList.length > 0) {
+        if(!toggle.name) {
+            setNameError('Name is not allowed to be empty');
+            return;
+        }
+
+        if (nameError) {
             return;
         }
 
         try {
-            await createFeatureToggle(projectId, toggle).then(() =>
-                history.push(getTogglePath(toggle.project, toggle.name, true))
-            );
+            await createFeatureToggle(toggle.project, toggle)
+            history.push(getTogglePath(toggle.project, toggle.name, uiConfig.flags.E));
             // Trigger
-        } catch (e: any) {
-            if (e.toString().includes('not allowed to be empty')) {
-                setErrors({ name: 'Name is not allowed to be empty' });
+        } catch (err) {
+            if(err instanceof Error) {
+                if (err.toString().includes('not allowed to be empty')) {
+                    setNameError('Name is not allowed to be empty');
+                }
             }
         }
     };
@@ -98,11 +109,8 @@ const FeatureCreate = () => {
             <form onSubmit={onSubmit}>
                 <input type="hidden" name="project" value={projectId} />
                 <div className={styles.formContainer}>
-                    <TextField
-                        size="small"
-                        variant="outlined"
+                    <Input
                         label="Name"
-                        required
                         placeholder="Unique-name"
                         className={styles.nameInput}
                         name="name"
@@ -110,13 +118,16 @@ const FeatureCreate = () => {
                             'data-test': CF_NAME_ID,
                         }}
                         value={toggle.name}
-                        error={errors.name !== undefined}
-                        helperText={errors.name}
+                        error={Boolean(nameError)}
+                        helperText={nameError}
                         onBlur={v => validateName(v.target.value)}
-                        onChange={v => setValue('name', trim(v.target.value))}
+                        onChange={v => {
+                            setValue('name', trim(v.target.value));
+                            setNameError('');
+                        }}
                     />
                 </div>
-                <div className={styles.formContainer}>
+                <section className={styles.formContainer}>
                     <FeatureTypeSelect
                         value={toggle.type}
                         onChange={v => setValue('type', v.target.value)}
@@ -127,18 +138,21 @@ const FeatureCreate = () => {
                             'data-test': CF_TYPE_ID,
                         }}
                     />
-                </div>
+                </section>
                 <section className={styles.formContainer}>
-                    <TextField
-                        size="small"
-                        variant="outlined"
+                    <ProjectSelect
+                        value={toggle.project}
+                        onChange={v => setValue('project', v.target.value)}
+                        filter={projectFilterGenerator({ permissions }, CREATE_FEATURE)}
+                    />
+                </section>
+                <section className={styles.formContainer}>
+                    <Input
                         className={commonStyles.fullWidth}
                         multiline
                         rows={4}
                         label="Description"
                         placeholder="A short description of the feature toggle"
-                        error={errors.description !== undefined}
-                        helperText={errors.description}
                         value={toggle.description}
                         inputProps={{
                             'data-test': CF_DESC_ID,

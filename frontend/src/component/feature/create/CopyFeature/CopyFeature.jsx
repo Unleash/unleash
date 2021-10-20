@@ -21,6 +21,7 @@ import { Alert } from '@material-ui/lab';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
 import useFeatureApi from '../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeature from '../../../../hooks/api/getters/useFeature/useFeature';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 const CopyFeature = props => {
     // static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
@@ -32,6 +33,7 @@ const CopyFeature = props => {
     const inputRef = useRef();
     const { name: copyToggleName, id: projectId  } = useParams();
     const { feature } = useFeature(projectId, copyToggleName);
+    const { uiConfig } = useUiConfig();
 
     useEffect(() => {
         inputRef.current?.focus();
@@ -70,7 +72,7 @@ const CopyFeature = props => {
                 { name: newToggleName, replaceGroupId }
             );
             props.history.push(
-                getTogglePath(projectId, newToggleName)
+                getTogglePath(projectId, newToggleName, uiConfig.flags.E)
             )
         } catch (e) {
             setApiError(e);
@@ -96,7 +98,7 @@ const CopyFeature = props => {
                     You are about to create a new feature toggle by cloning the
                     configuration of feature toggle&nbsp;
                     <Link
-                        to={getTogglePath(projectId, copyToggleName)}
+                        to={getTogglePath(projectId, copyToggleName, uiConfig.flags.E)}
                     >
                         {copyToggleName}
                     </Link>
@@ -115,6 +117,7 @@ const CopyFeature = props => {
                         variant="outlined"
                         size="small"
                         inputRef={inputRef}
+                        required
                     />
                     <FormControlLabel
                         control={

@@ -21,6 +21,7 @@ import FeatureSettings from './FeatureSettings/FeatureSettings';
 import useLoading from '../../../hooks/useLoading';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { getCreateTogglePath } from '../../../utils/route-path-helpers';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 const FeatureView2 = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
@@ -33,6 +34,7 @@ const FeatureView2 = () => {
     const styles = useStyles();
     const history = useHistory();
     const ref = useLoading(loading);
+    const { uiConfig } = useUiConfig();
 
     const basePath = `/projects/${projectId}/features2/${featureId}`;
 
@@ -108,7 +110,15 @@ const FeatureView2 = () => {
                 <p>
                     The feature <strong>{featureId.substring(0, 30)}</strong>{' '}
                     does not exist. Do you want to &nbsp;
-                    <Link to={getCreateTogglePath(projectId)}>create it</Link>
+                    <Link
+                        to={getCreateTogglePath(
+                            projectId,
+                            uiConfig.flags.E,
+                            {name: featureId}
+                        )}
+                    >
+                        create it
+                    </Link>
                     &nbsp;?
                 </p>
             </div>

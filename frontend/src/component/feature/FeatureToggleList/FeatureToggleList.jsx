@@ -54,7 +54,7 @@ const FeatureToggleList = ({
         updateSetting('sort', typeof v === 'string' ? v.trim() : '');
     };
 
-    const createURL = getCreateTogglePath(currentProjectId);
+    const createURL = getCreateTogglePath(currentProjectId, flags.E);
 
     const renderFeatures = () => {
         features.forEach(e => {

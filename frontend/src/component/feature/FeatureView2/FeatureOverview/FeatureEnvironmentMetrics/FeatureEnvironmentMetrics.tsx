@@ -118,7 +118,7 @@ const FeatureEnvironmentMetrics = ({
                             width: '60px',
                             marginLeft: '1rem',
                             ...primaryStyles,
-                            transform: 'scale(1.7)',
+                            transform: 'scale(1.6)',
                         }}
                     />
                 </div>

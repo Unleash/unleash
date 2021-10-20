@@ -13,12 +13,12 @@ export const useStyles = makeStyles(theme => ({
         border: `1px solid ${theme.palette.grey[300]}`,
         margin: '1rem',
         width: '30%',
-        [theme.breakpoints.down(1000)]: {
-            width: '50%',
-        },
-        [theme.breakpoints.down(750)]: {
-            width: '100%',
-        },
+    },
+    [theme.breakpoints.down(1000)]: {
+        environmentMetrics: { width: '60%' },
+    },
+    [theme.breakpoints.down(750)]: {
+        environmentMetrics: { width: '100%' },
     },
     secondaryContent: {
         marginTop: '1rem',

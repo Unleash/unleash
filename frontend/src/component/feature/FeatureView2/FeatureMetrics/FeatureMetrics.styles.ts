@@ -15,7 +15,7 @@ export const useStyles = makeStyles(theme => ({
         width: '30%',
     },
     [theme.breakpoints.down(1000)]: {
-        environmentMetrics: { width: '60%' },
+        environmentMetrics: { width: '50%' },
     },
     [theme.breakpoints.down(750)]: {
         environmentMetrics: { width: '100%' },

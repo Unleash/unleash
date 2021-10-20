@@ -1,11 +1,12 @@
 import { useParams } from 'react-router';
 import useFeature from '../../../../hooks/api/getters/useFeature/useFeature';
-import { useStyles } from './FeatureMetrics.styles';
 import { IFeatureViewParams } from '../../../../interfaces/params';
 import useFeatureMetrics from '../../../../hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import FeatureEnvironmentMetrics from '../FeatureOverview/FeatureEnvironmentMetrics/FeatureEnvironmentMetrics';
 import FeatureSeenApplications from '../FeatureSeenApplications/FeatureSeenApplications';
 import PageContent from '../../../common/PageContent';
+
+import { useStyles } from './FeatureMetrics.styles';
 
 const emptyMetric = (environment: string) => ({
     yes: 0,

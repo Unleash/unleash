@@ -15,6 +15,8 @@ import useUiConfig from '../../hooks/api/getters/useUiConfig/useUiConfig';
 import { Alert } from '@material-ui/lab';
 import { FormEvent } from 'react-router/node_modules/@types/react';
 import useLoading from '../../hooks/useLoading';
+import PermissionButton from '../common/PermissionButton/PermissionButton';
+import { UPDATE_PROJECT } from '../../store/project/actions';
 
 interface ProjectFormComponentProps {
     editMode: boolean;
@@ -106,7 +108,7 @@ const ProjectFormComponent = (props: ProjectFormComponentProps) => {
             <PageContent
                 headerContent={
                     <HeaderTitle
-                        title={`${submitText} ${project?.name} project`}
+                        title={`${submitText} ${props.project?.name} project`}
                     />
                 }
             >
@@ -189,7 +191,9 @@ const ProjectFormComponent = (props: ProjectFormComponentProps) => {
                                 />
 
                                 <ConditionallyRender
-                                    condition={hasAccess(CREATE_PROJECT)}
+                                    condition={
+                                        hasAccess(CREATE_PROJECT) && !editMode
+                                    }
                                     show={
                                         <div className={styles.formButtons}>
                                             <FormButtons
@@ -197,6 +201,20 @@ const ProjectFormComponent = (props: ProjectFormComponentProps) => {
                                                 onCancel={onCancel}
                                             />
                                         </div>
+                                    }
+                                />
+
+                                <ConditionallyRender
+                                    condition={editMode}
+                                    show={
+                                        <PermissionButton
+                                            permission={UPDATE_PROJECT}
+                                            projectId={props.project.id}
+                                            type="submit"
+                                            style={{ marginTop: '1rem' }}
+                                        >
+                                            Update project
+                                        </PermissionButton>
                                     }
                                 />
                             </form>

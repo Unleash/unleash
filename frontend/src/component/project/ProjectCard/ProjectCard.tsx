@@ -1,10 +1,9 @@
-import { Card, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Card, Menu, MenuItem } from '@material-ui/core';
 import { Dispatch, SetStateAction } from 'react';
 import { useStyles } from './ProjectCard.styles';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { ReactComponent as ProjectIcon } from '../../../assets/icons/projectIcon.svg';
-import ConditionallyRender from '../../common/ConditionallyRender';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Dialogue from '../../common/Dialogue';
@@ -12,6 +11,8 @@ import useProjectApi from '../../../hooks/api/actions/useProjectApi/useProjectAp
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 import { Delete, Edit } from '@material-ui/icons';
 import { getProjectEditPath } from '../../../utils/route-path-helpers';
+import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_PROJECT } from '../../../store/project/actions';
 interface IProjectCardProps {
     name: string;
     featureCount: number;
@@ -53,18 +54,17 @@ const ProjectCard = ({
         <Card className={styles.projectCard} onMouseEnter={onHover}>
             <div className={styles.header} data-loading>
                 <h2 className={styles.title}>{name}</h2>
-                <ConditionallyRender
-                    condition={true}
-                    show={
-                        <IconButton
-                            className={styles.actionsBtn}
-                            data-loading
-                            onClick={handleClick}
-                        >
-                            <MoreVertIcon />
-                        </IconButton>
-                    }
-                />
+
+                <PermissionIconButton
+                    permission={UPDATE_PROJECT}
+                    projectId={id}
+                    className={styles.actionsBtn}
+                    data-loading
+                    onClick={handleClick}
+                >
+                    <MoreVertIcon />
+                </PermissionIconButton>
+
                 <Menu
                     id="project-card-menu"
                     open={Boolean(anchorEl)}

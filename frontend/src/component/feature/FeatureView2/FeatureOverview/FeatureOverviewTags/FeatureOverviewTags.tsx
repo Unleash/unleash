@@ -32,7 +32,7 @@ const FeatureOverviewTags = () => {
         type: '',
     });
     const styles = useStyles();
-    const { featureId } = useParams<IFeatureViewParams>();
+    const { featureId, projectId } = useParams<IFeatureViewParams>();
     const { tags, refetch } = useTags(featureId);
     const { tagTypes } = useTagTypes();
     const { deleteTagFromFeature } = useFeatureApi();
@@ -131,6 +131,7 @@ const FeatureOverviewTags = () => {
                 <PermissionIconButton
                     onClick={() => setOpenTagDialog(true)}
                     permission={UPDATE_FEATURE}
+                    projectId={projectId}
                     tooltip="Add tag"
                     data-loading
                 >

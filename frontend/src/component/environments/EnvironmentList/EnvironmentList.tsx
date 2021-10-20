@@ -70,6 +70,7 @@ const EnvironmentList = () => {
 
         try {
             await sortOrderAPICall(sortOrder);
+            refetch();
         } catch (e) {
             setToastData({
                 show: true,
@@ -77,13 +78,11 @@ const EnvironmentList = () => {
                 text: e.toString(),
             });
         }
-
-        mutate(ENVIRONMENT_CACHE_KEY);
     };
 
     const sortOrderAPICall = async (sortOrder: ISortOrderPayload) => {
         try {
-            changeSortOrder(sortOrder);
+            await changeSortOrder(sortOrder);
         } catch (e) {
             setToastData({
                 show: true,

@@ -132,6 +132,7 @@ const FeatureStrategiesEnvironmentList = ({
     const strategiesContainerClasses = classnames({
         [styles.strategiesContainer]: !expandedSidebar,
     });
+
     return (
         <ConditionallyRender
             condition={!configureNewStrategy}

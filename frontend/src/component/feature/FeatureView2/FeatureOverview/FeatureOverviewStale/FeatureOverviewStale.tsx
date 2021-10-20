@@ -40,6 +40,7 @@ const FeatureOverviewStale = () => {
                     <PermissionButton
                         onClick={() => setOpenStaleDialog(true)}
                         permission={UPDATE_FEATURE}
+                        projectId={projectId}
                         tooltip="Flip status"
                         variant="text"
                     >

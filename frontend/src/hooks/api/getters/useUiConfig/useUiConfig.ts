@@ -1,4 +1,4 @@
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { defaultValue } from './defaultValue';
@@ -7,17 +7,19 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 
 const REQUEST_KEY = 'api/admin/ui-config';
 
-const useUiConfig = () => {
+const useUiConfig = (options: SWRConfiguration = {}) => {
     const fetcher = () => {
         const path = formatApiPath(`api/admin/ui-config`);
 
         return fetch(path, {
             method: 'GET',
             credentials: 'include',
-        }).then(handleErrorResponses('configuration')).then(res => res.json());
+        })
+            .then(handleErrorResponses('configuration'))
+            .then(res => res.json());
     };
 
-    const { data, error } = useSWR<IUiConfig>(REQUEST_KEY, fetcher);
+    const { data, error } = useSWR<IUiConfig>(REQUEST_KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {

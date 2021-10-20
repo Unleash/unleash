@@ -1,9 +1,9 @@
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-const useApiTokens = () => {
+const useApiTokens = (options: SWRConfiguration = {}) => {
     const fetcher = async () => {
         const path = formatApiPath(`api/admin/api-tokens`);
         const res = await fetch(path, {
@@ -14,7 +14,7 @@ const useApiTokens = () => {
 
     const KEY = `api/admin/api-tokens`;
 
-    const { data, error } = useSWR(KEY, fetcher);
+    const { data, error } = useSWR(KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {

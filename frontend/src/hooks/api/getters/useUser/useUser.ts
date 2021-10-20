@@ -1,4 +1,4 @@
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { IPermission } from '../../../../interfaces/user';
@@ -6,7 +6,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 
 export const USER_CACHE_KEY = `api/admin/user`;
 
-const useUser = () => {
+const useUser = (options: SWRConfiguration = {}) => {
     const fetcher = () => {
         const path = formatApiPath(`api/admin/user`);
         return fetch(path, {
@@ -16,7 +16,7 @@ const useUser = () => {
             .then(res => res.json());
     };
 
-    const { data, error } = useSWR(USER_CACHE_KEY, fetcher);
+    const { data, error } = useSWR(USER_CACHE_KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {

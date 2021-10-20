@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     projectInfo: {
-        width: '275px',
+        width: '225px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

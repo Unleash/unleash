@@ -1,24 +1,22 @@
 import { formatApiPath } from '../../../../utils/format-path';
 import { useEffect, useState } from 'react';
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { IFeatureMetrics } from '../../../../interfaces/featureToggle';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-interface IUseFeatureMetricsOptions {
-    refreshInterval?: number;
-    revalidateOnFocus?: boolean;
-    revalidateOnReconnect?: boolean;
-    revalidateIfStale?: boolean;
-    revalidateOnMount?: boolean;
-}
-
 const emptyMetrics = { lastHourUsage: [], seenApplications: [] };
 
-const useFeatureMetrics = (projectId: string, featureId: string, options: IUseFeatureMetricsOptions = {}) => {
+const useFeatureMetrics = (
+    projectId: string,
+    featureId: string,
+    options: SWRConfiguration = {}
+) => {
     const fetcher = async () => {
-        const path = formatApiPath(`api/admin/client-metrics/features/${featureId}`);
+        const path = formatApiPath(
+            `api/admin/client-metrics/features/${featureId}`
+        );
         const res = await fetch(path, {
-            method: 'GET'
+            method: 'GET',
         }).then(handleErrorResponses('feature metrics'));
         if (res.ok) {
             return res.json();
@@ -32,7 +30,7 @@ const useFeatureMetrics = (projectId: string, featureId: string, options: IUseFe
         FEATURE_METRICS_CACHE_KEY,
         fetcher,
         {
-            ...options
+            ...options,
         }
     );
 
@@ -51,7 +49,7 @@ const useFeatureMetrics = (projectId: string, featureId: string, options: IUseFe
         error,
         loading,
         refetch,
-        FEATURE_METRICS_CACHE_KEY
+        FEATURE_METRICS_CACHE_KEY,
     };
 };
 

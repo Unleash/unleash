@@ -21,6 +21,7 @@ export interface ISelectMenuProps {
     disabled?: boolean;
     className?: string;
     classes?: any;
+    defaultValue?: string;
 }
 
 const GeneralSelect: React.FC<ISelectMenuProps> = ({
@@ -29,6 +30,7 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
     label = '',
     options,
     onChange,
+    defaultValue,
     id,
     disabled = false,
     className,
@@ -53,6 +55,7 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
                 {label}
             </InputLabel>
             <Select
+                defaultValue={defaultValue}
                 name={name}
                 disabled={disabled}
                 onChange={onChange}

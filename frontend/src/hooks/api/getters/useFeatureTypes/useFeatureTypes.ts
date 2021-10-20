@@ -1,10 +1,10 @@
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { IFeatureType } from '../../../../interfaces/featureTypes';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-const useFeatureTypes = () => {
+const useFeatureTypes = (options: SWRConfiguration = {}) => {
     const fetcher = async () => {
         const path = formatApiPath(`api/admin/feature-types`);
         const res = await fetch(path, {
@@ -15,7 +15,7 @@ const useFeatureTypes = () => {
 
     const KEY = `api/admin/feature-types`;
 
-    const { data, error } = useSWR(KEY, fetcher);
+    const { data, error } = useSWR(KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {

@@ -68,12 +68,12 @@ const FeatureViewEnvironment: FC<IFeatureViewEnvironmentProps> = ({
         }
     };
 
-    const toggleEnvironment = (e: React.ChangeEvent) => {
+    const toggleEnvironment = async (e: React.ChangeEvent) => {
         if (env.enabled) {
-            handleToggleEnvironmentOff();
+            await handleToggleEnvironmentOff();
             return;
         }
-        handleToggleEnvironmentOn();
+        await handleToggleEnvironmentOn();
     };
 
     const iconContainerClasses = classNames(styles.iconContainer, {
@@ -100,8 +100,12 @@ const FeatureViewEnvironment: FC<IFeatureViewEnvironmentProps> = ({
                 <div className={iconContainerClasses}>
                     <Cloud className={iconClasses} />
                 </div>
-                <Tooltip title={`${env.name} is an environment of type "${env.type}".`}>
-                    <p className={styles.environmentBadgeParagraph}>{env.name}</p>
+                <Tooltip
+                    title={`${env.name} is an environment of type "${env.type}".`}
+                >
+                    <p className={styles.environmentBadgeParagraph}>
+                        {env.name}
+                    </p>
                 </Tooltip>
             </div>
 
@@ -117,11 +121,15 @@ const FeatureViewEnvironment: FC<IFeatureViewEnvironmentProps> = ({
                                     onChange={toggleEnvironment}
                                 />{' '}
                                 <span className={styles.toggleText}>
-                                    {env.name}{' environment is '}
-                                    <strong>{env.enabled ? 'enabled' : 'disabled'}</strong>
+                                    {env.name}
+                                    {' environment is '}
+                                    <strong>
+                                        {env.enabled ? 'enabled' : 'disabled'}
+                                    </strong>
                                 </span>
                             </div>
-                        } />
+                        }
+                    />
                 </div>
                 <div className={styles.environmentStatus} data-loading>
                     <ConditionallyRender
@@ -138,7 +146,8 @@ const FeatureViewEnvironment: FC<IFeatureViewEnvironmentProps> = ({
                                     Configure strategies for {env.name}
                                 </Link>
                             </>
-                        } />
+                        }
+                    />
                 </div>
             </div>
 

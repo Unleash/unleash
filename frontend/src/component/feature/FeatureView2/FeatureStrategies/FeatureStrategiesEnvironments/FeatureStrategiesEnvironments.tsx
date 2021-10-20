@@ -377,6 +377,7 @@ const FeatureStrategiesEnvironments = () => {
                                         }
                                         Icon={Add}
                                         maxWidth="700px"
+                                        projectId={projectId}
                                         permission={UPDATE_FEATURE}
                                     >
                                         Add new strategy
@@ -390,7 +391,7 @@ const FeatureStrategiesEnvironments = () => {
                                 onChange={(_, tabId) => {
                                     setActiveTab(tabId);
                                     setActiveEnvironment(
-                                        featureCache?.environments[tabId]
+                                        feature?.environments[tabId]
                                     );
                                     history.replace(history.location.pathname);
                                 }}

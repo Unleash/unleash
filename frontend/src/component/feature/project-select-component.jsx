@@ -11,7 +11,8 @@ class ProjectSelectComponent extends Component {
     }
 
     render() {
-        const { value, projects, onChange, enabled, filter } = this.props;
+        const { value, projects, onChange, enabled, filter, defaultValue } =
+            this.props;
 
         if (!enabled) {
             return null;
@@ -43,6 +44,7 @@ class ProjectSelectComponent extends Component {
         return (
             <GeneralSelect
                 label="Project"
+                defaultValue={defaultValue}
                 options={options}
                 value={value}
                 onChange={onChange}

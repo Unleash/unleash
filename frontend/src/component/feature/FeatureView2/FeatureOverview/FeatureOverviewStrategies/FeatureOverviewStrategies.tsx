@@ -37,6 +37,7 @@ const FeatureOverviewStrategies = () => {
                             tooltip="Add new strategy"
                             className={styles.addStrategyButton}
                             component={Link}
+                            projectId={projectId}
                             to={`/projects/${projectId}/features2/${featureId}/strategies?addStrategy=true`}
                         >
                             Add new strategy

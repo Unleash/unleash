@@ -1,10 +1,10 @@
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { ITagType } from '../../../../interfaces/tags';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-const useTagTypes = () => {
+const useTagTypes = (options: SWRConfiguration = {}) => {
     const fetcher = async () => {
         const path = formatApiPath(`api/admin/tag-types`);
         const res = await fetch(path, {
@@ -15,7 +15,7 @@ const useTagTypes = () => {
 
     const KEY = `api/admin/tag-types`;
 
-    const { data, error } = useSWR(KEY, fetcher);
+    const { data, error } = useSWR(KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {

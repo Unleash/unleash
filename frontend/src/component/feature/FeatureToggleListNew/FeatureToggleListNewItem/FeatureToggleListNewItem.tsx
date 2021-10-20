@@ -1,9 +1,5 @@
-import { useRef } from 'react';
-import {
-    Switch,
-    TableCell,
-    TableRow,
-} from '@material-ui/core';
+import { useContext, useRef } from 'react';
+import { Switch, TableCell, TableRow } from '@material-ui/core';
 import { useHistory } from 'react-router';
 
 import { useStyles } from '../FeatureToggleListNew.styles';
@@ -17,6 +13,9 @@ import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
 import FeatureType from '../../FeatureView2/FeatureType/FeatureType';
 import classNames from 'classnames';
 import CreatedAt from './CreatedAt';
+import useProject from '../../../../hooks/api/getters/useProject/useProject';
+import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
+import AccessContext from '../../../../contexts/AccessContext';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -35,14 +34,15 @@ const FeatureToggleListNewItem = ({
     projectId,
     createdAt,
 }: IFeatureToggleListNewItemProps) => {
+    const { hasAccess } = useContext(AccessContext);
     const { toast, setToastData } = useToast();
     const { toggleFeatureByEnvironment } = useToggleFeatureByEnv(
         projectId,
-        name,
+        name
     );
-    const { uiConfig } = useUiConfig();
-    
 
+    const { uiConfig } = useUiConfig();
+    const { refetch } = useProject(projectId);
     const styles = useStyles();
     const history = useHistory();
     const ref = useRef(null);
@@ -61,6 +61,7 @@ const FeatureToggleListNewItem = ({
                     type: 'success',
                     text: 'Successfully updated toggle status.',
                 });
+                refetch();
             })
             .catch(e => {
                 setToastData({
@@ -71,43 +72,66 @@ const FeatureToggleListNewItem = ({
             });
     };
 
-    
-
     return (
         <>
             <TableRow className={styles.tableRow}>
-                <TableCell className={classNames(
-                                styles.tableCell,
-                                styles.tableCellStatus)} align="left" onClick={onClick}>
+                <TableCell
+                    className={classNames(
+                        styles.tableCell,
+                        styles.tableCellStatus
+                    )}
+                    align="left"
+                    onClick={onClick}
+                >
                     <FeatureStatus lastSeenAt={lastSeenAt} />
                 </TableCell>
-                <TableCell className={classNames(
-                                styles.tableCell,
-                                styles.tableCellType)} align="center" onClick={onClick}>
+                <TableCell
+                    className={classNames(
+                        styles.tableCell,
+                        styles.tableCellType
+                    )}
+                    align="center"
+                    onClick={onClick}
+                >
                     <FeatureType type={type} />
                 </TableCell>
-                <TableCell className={classNames(
-                                styles.tableCell, styles.tableCellName)} align="left" onClick={onClick}>
+                <TableCell
+                    className={classNames(
+                        styles.tableCell,
+                        styles.tableCellName
+                    )}
+                    align="left"
+                    onClick={onClick}
+                >
                     <span data-loading>{name}</span>
                 </TableCell>
-                <TableCell className={classNames(
-                                styles.tableCell, styles.tableCellCreated)} align="left" onClick={onClick}>
-                        <CreatedAt time={createdAt} />
+                <TableCell
+                    className={classNames(
+                        styles.tableCell,
+                        styles.tableCellCreated
+                    )}
+                    align="left"
+                    onClick={onClick}
+                >
+                    <CreatedAt time={createdAt} />
                 </TableCell>
-                
 
                 {environments.map((env: IEnvironments) => {
                     return (
                         <TableCell
                             className={classNames(
                                 styles.tableCell,
-                                styles.tableCellEnv)}
+                                styles.tableCellEnv
+                            )}
                             align="center"
                             key={env.name}
                         >
                             <span data-loading style={{ display: 'block' }}>
                                 <Switch
                                     checked={env.enabled}
+                                    disabled={
+                                        !hasAccess(UPDATE_FEATURE, projectId)
+                                    }
                                     ref={ref}
                                     onClick={handleToggle.bind(this, env)}
                                 />

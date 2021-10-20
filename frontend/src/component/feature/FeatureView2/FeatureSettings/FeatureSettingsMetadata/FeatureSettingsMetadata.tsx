@@ -89,6 +89,7 @@ const FeatureSettingsMetadata = () => {
                         tooltip="Save changes"
                         permission={UPDATE_FEATURE}
                         onClick={handleSubmit}
+                        projectId={projectId}
                     >
                         Save changes
                     </PermissionButton>

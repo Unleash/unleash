@@ -131,6 +131,7 @@ const FeatureView2 = () => {
                             <div className={styles.actions}>
                                 <PermissionIconButton
                                     permission={UPDATE_FEATURE}
+                                    projectId={projectId}
                                     tooltip="Copy"
                                     data-loading
                                     component={Link}
@@ -140,6 +141,7 @@ const FeatureView2 = () => {
                                 </PermissionIconButton>
                                 <PermissionIconButton
                                     permission={UPDATE_FEATURE}
+                                    projectId={projectId}
                                     tooltip="Archive feature toggle"
                                     data-loading
                                     onClick={() => setShowDelDialog(true)}

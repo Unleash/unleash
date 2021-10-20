@@ -1,24 +1,16 @@
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 
 import { formatApiPath } from '../../../../utils/format-path';
 import { IFeatureStrategy } from '../../../../interfaces/strategy';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-interface IUseFeatureOptions {
-    refreshInterval?: number;
-    revalidateOnFocus?: boolean;
-    revalidateOnReconnect?: boolean;
-    revalidateIfStale?: boolean;
-    revalidateOnMount?: boolean;
-}
-
 const useFeatureStrategy = (
     projectId: string,
     featureId: string,
     environmentId: string,
     strategyId: string,
-    options: IUseFeatureOptions
+    options: SWRConfiguration
 ) => {
     const fetcher = () => {
         const path = formatApiPath(
@@ -26,7 +18,9 @@ const useFeatureStrategy = (
         );
         return fetch(path, {
             method: 'GET',
-        }).then(handleErrorResponses(`Strategies for ${featureId}`)).then(res => res.json());
+        })
+            .then(handleErrorResponses(`Strategies for ${featureId}`))
+            .then(res => res.json());
     };
 
     const FEATURE_STRATEGY_CACHE_KEY = strategyId;

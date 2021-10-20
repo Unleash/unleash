@@ -1,15 +1,15 @@
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { getProjectFetcher } from './getProjectFetcher';
 import { IProject } from '../../../../interfaces/project';
 import { fallbackProject } from './fallbackProject';
 import useSort from '../../../useSort';
 
-const useProject = (id: string) => {
+const useProject = (id: string, options: SWRConfiguration = {}) => {
     const { KEY, fetcher } = getProjectFetcher(id);
     const [sort] = useSort();
 
-    const { data, error } = useSWR<IProject>(KEY, fetcher);
+    const { data, error } = useSWR<IProject>(KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {

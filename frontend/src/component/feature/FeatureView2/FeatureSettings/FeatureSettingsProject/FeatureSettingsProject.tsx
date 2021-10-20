@@ -78,6 +78,7 @@ const FeatureSettingsProject = () => {
                         permission={UPDATE_FEATURE}
                         tooltip="Update feature"
                         onClick={() => setShowConfirmDialog(true)}
+                        projectId={projectId}
                     >
                         Save changes
                     </PermissionButton>

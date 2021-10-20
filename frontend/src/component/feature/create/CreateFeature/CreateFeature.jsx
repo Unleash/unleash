@@ -87,8 +87,11 @@ const CreateFeature = ({
                 </div>
                 <section className={styles.formContainer}>
                     <ProjectSelect
-                        value={project || input.project}
-                        onChange={v => setValue('project', v.target.value)}
+                        value={input.project}
+                        defaultValue={project}
+                        onChange={v => {
+                            setValue('project', v.target.value);
+                        }}
                         filter={projectFilterGenerator(user, CREATE_FEATURE)}
                     />
                 </section>

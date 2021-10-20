@@ -1,4 +1,4 @@
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 
 import { formatApiPath } from '../../../../utils/format-path';
@@ -6,17 +6,10 @@ import { IFeatureToggle } from '../../../../interfaces/featureToggle';
 import { defaultFeature } from './defaultFeature';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-interface IUseFeatureOptions {
-    refreshInterval?: number;
-    revalidateOnFocus?: boolean;
-    revalidateOnReconnect?: boolean;
-    revalidateIfStale?: boolean;
-}
-
 const useFeature = (
     projectId: string,
     id: string,
-    options: IUseFeatureOptions = {}
+    options: SWRConfiguration = {}
 ) => {
     const fetcher = async () => {
         const path = formatApiPath(
@@ -24,7 +17,9 @@ const useFeature = (
         );
         return fetch(path, {
             method: 'GET',
-        }).then(handleErrorResponses('Feature toggle data')).then(res => res.json());
+        })
+            .then(handleErrorResponses('Feature toggle data'))
+            .then(res => res.json());
     };
 
     const FEATURE_CACHE_KEY = `api/admin/projects/${projectId}/features/${id}`;

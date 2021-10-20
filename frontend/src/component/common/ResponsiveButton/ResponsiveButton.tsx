@@ -9,6 +9,7 @@ interface IResponsiveButtonProps {
     tooltip?: string;
     disabled?: boolean;
     permission?: string;
+    projectId?: string;
     maxWidth: string;
 }
 
@@ -20,6 +21,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
     disabled = false,
     children,
     permission,
+    projectId,
     ...rest
 }) => {
     const smallScreen = useMediaQuery(`(max-width:${maxWidth})`);
@@ -32,6 +34,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                     disabled={disabled}
                     onClick={onClick}
                     permission={permission}
+                    projectId={projectId}
                     data-loading
                     {...rest}
                 >
@@ -42,6 +45,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                 <PermissionButton
                     onClick={onClick}
                     permission={permission}
+                    projectId={projectId}
                     color="primary"
                     variant="contained"
                     disabled={disabled}

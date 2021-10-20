@@ -8,7 +8,9 @@ interface ProjectOverviewProps {
 }
 
 const ProjectOverview = ({ projectId }: ProjectOverviewProps) => {
-    const { project, loading } = useProject(projectId);
+    const { project, loading } = useProject(projectId, {
+        refreshInterval: 10000,
+    });
     const { members, features, health } = project;
     const styles = useStyles();
 

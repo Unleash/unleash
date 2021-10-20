@@ -135,22 +135,16 @@ const ProjectListNew = () => {
                     <HeaderTitle
                         title="Projects"
                         actions={
-                            <ConditionallyRender
-                                condition={hasAccess(CREATE_PROJECT)}
-                                show={
-                                    <ResponsiveButton
-                                        Icon={Add}
-                                        onClick={() =>
-                                            history.push('/projects/create')
-                                        }
-                                        maxWidth="700px"
-                                        tooltip={createButtonData.title}
-                                        disabled={createButtonData.disabled}
-                                    >
-                                        Add new project
-                                    </ResponsiveButton>
-                                }
-                            />
+                            <ResponsiveButton
+                                Icon={Add}
+                                onClick={() => history.push('/projects/create')}
+                                maxWidth="700px"
+                                permission={CREATE_PROJECT}
+                                tooltip={createButtonData.title}
+                                disabled={createButtonData.disabled}
+                            >
+                                Add new project
+                            </ResponsiveButton>
                         }
                     />
                 }

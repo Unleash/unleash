@@ -179,11 +179,8 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
                 <h3>Optional Configuration</h3>
                 <Grid container spacing={3}>
                     <Grid item md={5}>
-                        <strong>(Optional) Enable Single Sign-Out</strong>
-                        <p>
-                            If you enable Single Sign-Out Unleash will redirect
-                            the user to the IDP as part of the Sign-out process.
-                        </p>
+                        <strong>Enable Single Sign-Out</strong>
+                        <p>If you enable Single Sign-Out Unleash will redirect the user to the IDP as part of the Sign-out process.</p>
                     </Grid>
                     <Grid item md={6} style={{ padding: '20px' }}>
                         <FormControlLabel
@@ -201,6 +198,25 @@ function OidcAuth({ config, getOidcConfig, updateOidcConfig, unleashUrl }) {
                                     ? 'Enabled'
                                     : 'Disabled'
                             }
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3}>
+                    <Grid item md={5}>
+                        <strong>ACR Values</strong>
+                        <p>Requested Authentication Context Class Reference values. If multiple values are specified they should be "space" separated. Will be sent as "acr_values" as 
+                            part of the authentication request. Unleash will validate the acr value in the id token claims against the list of acr values.</p>
+                    </Grid>
+                    <Grid item md={6}>
+                        <TextField
+                            onChange={updateField}
+                            label="ACR Values"
+                            name="acrValues"
+                            value={data.acrValues || ''}
+                            disabled={!data.enabled}
+                            style={{ width: '400px' }}
+                            variant="outlined"
+                            size="small"
                         />
                     </Grid>
                 </Grid>

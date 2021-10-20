@@ -1,11 +1,15 @@
 import { Application } from 'express';
 import AuthenticationRequired from '../types/authentication-required';
 import { IUnleashServices } from '../types/services';
+import { IUnleashConfig } from '../types/option';
+import ApiUser from '../types/api-user';
+import { ApiTokenType } from '../types/models/api-token';
 
 function demoAuthentication(
     app: Application,
     basePath: string = '',
     { userService }: Pick<IUnleashServices, 'userService'>,
+    { authentication }: Pick<IUnleashConfig, 'authentication'>,
 ): void {
     app.post(`${basePath}/api/admin/login`, async (req, res) => {
         const { email } = req.body;
@@ -39,6 +43,21 @@ function demoAuthentication(
         next();
     });
 
+    app.use(`${basePath}/api/client`, (req, res, next) => {
+        // @ts-ignore
+        if (!authentication.enableApiToken && !req.user) {
+            // @ts-ignore
+            req.user = new ApiUser({
+                username: 'unauthed-default-client',
+                permissions: [],
+                environment: 'default',
+                type: ApiTokenType.CLIENT,
+                project: '*',
+            });
+        }
+        next();
+    });
+
     app.use(`${basePath}/api`, (req, res, next) => {
         // @ts-ignore
         if (req.user) {
@@ -57,4 +76,5 @@ function demoAuthentication(
             .end();
     });
 }
+
 export default demoAuthentication;

@@ -14,7 +14,7 @@ export const useStyles = makeStyles(theme => ({
         margin: '1rem',
         width: '30%',
         [theme.breakpoints.down(1000)]: {
-            width: '40%',
+            width: '50%',
         },
         [theme.breakpoints.down(750)]: {
             width: '100%',

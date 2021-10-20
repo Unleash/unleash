@@ -71,7 +71,11 @@ const FeatureEnvironmentMetrics = ({
                     </div>
 
                     <div className={styles.chartContainer}>
-                        <PieChartIcon className={styles.icon} data-loading />
+                        <PieChartIcon
+                            style={{ transform: 'scale(1.4)' }}
+                            className={styles.icon}
+                            data-loading
+                        />
                     </div>
                 </div>
             </div>
@@ -114,6 +118,7 @@ const FeatureEnvironmentMetrics = ({
                             width: '60px',
                             marginLeft: '1rem',
                             ...primaryStyles,
+                            transform: 'scale(1.7)',
                         }}
                     />
                 </div>

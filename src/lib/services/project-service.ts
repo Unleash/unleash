@@ -59,6 +59,8 @@ export default class ProjectService {
 
     private featureToggleService: FeatureToggleServiceV2;
 
+    private environmentsEnabled: boolean = false;
+
     constructor(
         {
             projectStore,
@@ -89,6 +91,8 @@ export default class ProjectService {
         this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
         this.logger = config.getLogger('services/project-service.js');
+        this.environmentsEnabled =
+            config.experimental.environments?.enabled || false;
     }
 
     async getProjects(query?: IProjectQuery): Promise<IProjectWithCount[]> {
@@ -122,17 +126,26 @@ export default class ProjectService {
 
         await this.store.create(data);
 
-        const enabledEnvironments = await this.environmentStore.getAll({
-            enabled: true,
-        });
-        await Promise.all(
-            enabledEnvironments.map(async (e) => {
-                await this.featureEnvironmentStore.connectProject(
-                    e.name,
-                    data.id,
-                );
-            }),
-        );
+        if (this.environmentsEnabled) {
+            const enabledEnvironments = await this.environmentStore.getAll({
+                enabled: true,
+            });
+
+            // TODO: Only if enabled!
+            await Promise.all(
+                enabledEnvironments.map(async (e) => {
+                    await this.featureEnvironmentStore.connectProject(
+                        e.name,
+                        data.id,
+                    );
+                }),
+            );
+        } else {
+            await this.featureEnvironmentStore.connectProject(
+                'default',
+                data.id,
+            );
+        }
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 

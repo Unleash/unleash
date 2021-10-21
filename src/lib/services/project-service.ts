@@ -18,6 +18,7 @@ import {
     IProjectOverview,
     IProjectWithCount,
     IUserWithRole,
+    FeatureToggle,
     RoleName,
 } from '../types/model';
 import { IEnvironmentStore } from '../types/stores/environment-store';
@@ -30,6 +31,7 @@ import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleServiceV2 from './feature-toggle-service-v2';
 import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
+import IncompatibleProjectError from '../error/incompatible-project-error';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -173,6 +175,21 @@ export default class ProjectService {
         });
     }
 
+    async checkProjectsCompatibility(
+        feature: FeatureToggle,
+        newProjectId: string,
+    ): Promise<boolean> {
+        const featureEnvs = await this.featureEnvironmentStore.getAll({
+            feature_name: feature.name,
+        });
+        const newEnvs = await this.store.getEnvironmentsForProject(
+            newProjectId,
+        );
+        return featureEnvs.every(
+            (e) => !e.enabled || newEnvs.includes(e.environment),
+        );
+    }
+
     async changeProject(
         newProjectId: string,
         featureName: string,
@@ -184,7 +201,6 @@ export default class ProjectService {
         if (feature.project !== currentProjectId) {
             throw new NoAccessError(UPDATE_FEATURE);
         }
-
         const project = await this.getProject(newProjectId);
 
         if (!project) {
@@ -201,6 +217,11 @@ export default class ProjectService {
             throw new NoAccessError(CREATE_FEATURE);
         }
 
+        const isCompatibleWithTargetProject =
+            await this.checkProjectsCompatibility(feature, newProjectId);
+        if (!isCompatibleWithTargetProject) {
+            throw new IncompatibleProjectError(newProjectId);
+        }
         const updatedFeature = await this.featureToggleService.updateField(
             featureName,
             'project',

@@ -33,6 +33,7 @@ import ApiTokenCreate from '../ApiTokenCreate/ApiTokenCreate';
 import Dialogue from '../../common/Dialogue';
 import { CREATE_API_TOKEN_BUTTON } from '../../../testIds';
 import { Alert } from '@material-ui/lab';
+import copy from 'copy-to-clipboard';
 
 interface IApiToken {
     createdAt: Date;
@@ -88,12 +89,13 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
         });
     };
     const copyToken = (value: string) => {
-        navigator.clipboard.writeText(value);
-        setToastData({
-            type: 'success',
-            show: true,
-            text: `Token is copied to clipboard`,
-        });
+        if (copy(value)) {
+            setToastData({
+                type: 'success',
+                show: true,
+                text: `Token is copied to clipboard`,
+            });
+        }
     };
 
     const onDeleteToken = async () => {

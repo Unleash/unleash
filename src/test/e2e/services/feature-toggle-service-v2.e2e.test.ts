@@ -1,5 +1,3 @@
-import EventService from '../../../lib/services/event-service';
-import { FEATURE_UPDATED } from '../../../lib/types/events';
 import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service-v2';
 import { IStrategyConfig } from '../../../lib/types/model';
 import { createTestConfig } from '../../config/test-config';
@@ -9,7 +7,6 @@ import { DEFAULT_ENV } from '../../../lib/util/constants';
 let stores;
 let db;
 let service: FeatureToggleServiceV2;
-let eventService: EventService;
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -19,7 +16,6 @@ beforeAll(async () => {
     );
     stores = db.stores;
     service = new FeatureToggleServiceV2(stores, config);
-    eventService = new EventService(stores, config);
 });
 
 afterAll(async () => {

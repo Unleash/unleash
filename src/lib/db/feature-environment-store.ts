@@ -196,11 +196,10 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         environment: string,
         featureName: string,
         enabled: boolean,
-    ): Promise<boolean> {
-        await this.db(T.featureEnvs)
+    ): Promise<number> {
+        return this.db(T.featureEnvs)
             .update({ enabled })
             .where({ environment, feature_name: featureName });
-        return enabled;
     }
 
     async connectProject(

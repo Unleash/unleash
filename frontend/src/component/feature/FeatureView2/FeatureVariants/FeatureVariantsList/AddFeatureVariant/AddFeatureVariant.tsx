@@ -4,7 +4,6 @@ import {
     FormControl,
     FormControlLabel,
     Grid,
-    Switch,
     TextField,
     InputAdornment,
     Button,
@@ -20,6 +19,8 @@ import GeneralSelect from '../../../../../common/GeneralSelect/GeneralSelect';
 import { useCommonStyles } from '../../../../../../common.styles';
 import Dialogue from '../../../../../common/Dialogue';
 import { trim, modalStyles } from '../../../../../common/util';
+import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionSwitch';
+import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -242,7 +243,8 @@ const AddVariant = ({
                         <FormControl>
                             <FormControlLabel
                                 control={
-                                    <Switch
+                                    <PermissionSwitch
+                                        permission={UPDATE_FEATURE}
                                         name="weightType"
                                         checked={isFixWeight}
                                         data-test={'VARIANT_WEIGHT_TYPE'}

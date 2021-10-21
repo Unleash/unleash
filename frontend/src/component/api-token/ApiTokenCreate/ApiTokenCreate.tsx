@@ -5,6 +5,8 @@ import { styles as commonStyles } from '../../../component/common';
 import { IApiTokenCreate } from '../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import useEnvironments from '../../../hooks/api/getters/useEnvironments/useEnvironments';
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import ConditionallyRender from '../../common/ConditionallyRender';
 import Dialogue from '../../common/Dialogue';
 import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
 
@@ -41,6 +43,7 @@ const ApiTokenCreate = ({
     const [error, setError] = useState<IDataError>({});
     const { projects } = useProjects();
     const { environments } = useEnvironments();
+    const { uiConfig } = useUiConfig();
 
     useEffect(() => {
         if (
@@ -192,18 +195,22 @@ const ApiTokenCreate = ({
                     className={undefined}
                     classes={undefined}
                 />
-                <GeneralSelect
-                    disabled={data.type === TYPE_ADMIN}
-                    options={selectableEnvs}
-                    value={data.environment}
-                    required
-                    onChange={setEnvironment}
-                    label="Environment"
-                    id="api_key_environment"
-                    name="environment"
-                    className={undefined}
-                    classes={undefined}
-                />
+                <ConditionallyRender condition={uiConfig?.flags.E} show={
+                    <>
+                        <GeneralSelect
+                            disabled={data.type === TYPE_ADMIN}
+                            options={selectableEnvs}
+                            value={data.environment}
+                            required
+                            onChange={setEnvironment}
+                            label="Environment"
+                            id="api_key_environment"
+                            name="environment"
+                            className={undefined}
+                            classes={undefined}
+                        />
+                    </>
+                } />
             </form>
         </Dialogue>
     );

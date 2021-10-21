@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Cloud } from '@material-ui/icons';
-import { useParams, Link } from 'react-router-dom';
-import { Switch, Tooltip } from '@material-ui/core';
+import { Link, useParams } from 'react-router-dom';
+import { Tooltip } from '@material-ui/core';
 import classNames from 'classnames';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import useFeatureApi from '../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from '../../../../hooks/useToast';
-import { FC } from 'react';
 import { IFeatureEnvironment } from '../../../../interfaces/featureToggle';
 import { IFeatureViewParams } from '../../../../interfaces/params';
 
 import { useStyles } from './FeatureViewEnvironment.styles';
 import useFeature from '../../../../hooks/api/getters/useFeature/useFeature';
+import PermissionSwitch from '../../../common/PermissionSwitch/PermissionSwitch';
+import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 
 interface IFeatureViewEnvironmentProps {
     env: IFeatureEnvironment;
@@ -115,7 +116,9 @@ const FeatureViewEnvironment: FC<IFeatureViewEnvironmentProps> = ({
                         condition={env?.strategies?.length > 0}
                         show={
                             <div className={styles.textContainer}>
-                                <Switch
+                                <PermissionSwitch
+                                    projectId={projectId}
+                                    permission={UPDATE_FEATURE}
                                     value={env.enabled}
                                     checked={env.enabled}
                                     onChange={toggleEnvironment}

@@ -143,7 +143,8 @@ class FeatureToggleServiceV2 {
                 });
             const data = {
                 id: newFeatureStrategy.id,
-                name: newFeatureStrategy.strategyName,
+                name: newFeatureStrategy.featureName,
+                strategyName: newFeatureStrategy.strategyName,
                 constraints: newFeatureStrategy.constraints,
                 parameters: newFeatureStrategy.parameters,
             };
@@ -152,7 +153,7 @@ class FeatureToggleServiceV2 {
                 project: projectId,
                 createdBy: userName,
                 environment,
-                data: { ...data, featureName: newFeatureStrategy.featureName },
+                data,
             });
             return data;
         } catch (e) {
@@ -480,13 +481,6 @@ class FeatureToggleServiceV2 {
             project: projectId,
             tags,
         });
-        await this.eventStore.store({
-            type: FEATURE_UPDATED,
-            createdBy: userName,
-            data: featureToggle,
-            project: projectId,
-            tags,
-        });
         return featureToggle;
     }
 
@@ -653,16 +647,6 @@ class FeatureToggleServiceV2 {
             const tags = await this.featureTagStore.getAllTagsForFeature(
                 featureName,
             );
-            const data = await this.getFeatureToggleLegacy(featureName);
-
-            await this.eventStore.store({
-                type: FEATURE_UPDATED,
-                createdBy: userName,
-                data,
-                tags,
-                project: projectId,
-                environment,
-            });
             await this.eventStore.store({
                 type: enabled
                     ? FEATURE_ENVIRONMENT_ENABLED
@@ -678,6 +662,25 @@ class FeatureToggleServiceV2 {
         throw new NotFoundError(
             `Could not find environment ${environment} for feature: ${featureName}`,
         );
+    }
+
+    async storeFeatureUpdatedEventLegacy(
+        featureName: string,
+        userName: string,
+    ): Promise<FeatureToggleWithEnvironmentLegacy> {
+        const tags = await this.featureTagStore.getAllTagsForFeature(
+            featureName,
+        );
+        const feature = await this.getFeatureToggleLegacy(featureName);
+
+        await this.eventStore.store({
+            type: FEATURE_UPDATED,
+            createdBy: userName,
+            data: feature,
+            tags,
+            project: feature.project,
+        });
+        return feature;
     }
 
     // @deprecated
@@ -719,13 +722,14 @@ class FeatureToggleServiceV2 {
     }
 
     // @deprecated
+    // TODO: move to projectService
     async updateField(
         featureName: string,
         field: string,
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         value: any,
         userName: string,
-        event?: string,
+        event: string,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
         feature[field] = value;
@@ -738,7 +742,7 @@ class FeatureToggleServiceV2 {
         const data = await this.getFeatureToggleLegacy(featureName);
 
         await this.eventStore.store({
-            type: event || FEATURE_UPDATED,
+            type: event,
             createdBy: userName,
             data,
             project: data.project,

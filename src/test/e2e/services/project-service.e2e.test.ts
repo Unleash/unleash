@@ -17,7 +17,7 @@ let db: ITestDb;
 
 let projectService;
 let accessService;
-let featureToggleService;
+let featureToggleService: FeatureToggleServiceV2;
 let user;
 
 beforeAll(async () => {
@@ -511,12 +511,14 @@ test('should change project when checks pass', async () => {
     await projectService.createProject(projectDestination, user);
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
 
-    const updatedFeature = await projectService.changeProject(
+    await projectService.changeProject(
         projectDestination.id,
         toggle.name,
         user,
         project.id,
     );
+
+    const updatedFeature = await featureToggleService.getFeature(toggle.name);
 
     expect(updatedFeature.project).toBe(projectDestination.id);
 });

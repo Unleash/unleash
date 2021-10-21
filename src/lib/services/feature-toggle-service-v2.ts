@@ -13,6 +13,7 @@ import {
     FEATURE_ENVIRONMENT_DISABLED,
     FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_METADATA_UPDATED,
+    FEATURE_PROJECT_CHANGE,
     FEATURE_REVIVED,
     FEATURE_STALE_OFF,
     FEATURE_STALE_ON,
@@ -723,34 +724,30 @@ class FeatureToggleServiceV2 {
         return { ...legacyFeature, enabled, strategies };
     }
 
-    // @deprecated
-    // TODO: move to projectService
-    async updateField(
+    async changeProject(
         featureName: string,
-        field: string,
-        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-        value: any,
+        newProject: string,
         userName: string,
-        event: string,
-    ): Promise<any> {
+    ): Promise<void> {
         const feature = await this.featureToggleStore.get(featureName);
-        feature[field] = value;
-        await this.featureToggleStore.update(feature.project, feature);
+        const oldProject = feature.project;
+        feature.project = newProject;
+        await this.featureToggleStore.update(newProject, feature);
+
         const tags = await this.featureTagStore.getAllTagsForFeature(
             featureName,
         );
-
-        // Workaround to support pre 4.1 format
-        const data = await this.getFeatureToggleLegacy(featureName);
-
         await this.eventStore.store({
-            type: event,
+            type: FEATURE_PROJECT_CHANGE,
             createdBy: userName,
-            data,
-            project: data.project,
+            data: {
+                name: feature.name,
+                oldProject,
+                newProject,
+            },
+            project: newProject,
             tags,
         });
-        return feature;
     }
 
     async getArchivedFeatures(): Promise<FeatureToggle[]> {

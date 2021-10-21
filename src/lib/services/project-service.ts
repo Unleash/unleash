@@ -6,7 +6,6 @@ import { nameType } from '../routes/util';
 import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
-    FEATURE_PROJECT_CHANGE,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
@@ -222,12 +221,10 @@ export default class ProjectService {
         if (!isCompatibleWithTargetProject) {
             throw new IncompatibleProjectError(newProjectId);
         }
-        const updatedFeature = await this.featureToggleService.updateField(
+        const updatedFeature = await this.featureToggleService.changeProject(
             featureName,
-            'project',
             newProjectId,
             user.username,
-            FEATURE_PROJECT_CHANGE,
         );
         await this.featureToggleService.updateFeatureStrategyProject(
             featureName,

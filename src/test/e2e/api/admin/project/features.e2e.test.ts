@@ -1089,6 +1089,13 @@ test('Disabling environment creates a FEATURE_ENVIRONMENT_DISABLED event', async
 
     await app.request
         .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/on`,
+        )
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    await app.request
+        .post(
             `/api/admin/projects/default/features/${featureName}/environments/${environment}/off`,
         )
         .set('Content-Type', 'application/json')

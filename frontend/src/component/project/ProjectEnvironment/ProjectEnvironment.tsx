@@ -1,10 +1,9 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useStyles } from './ProjectEnvironment.styles';
 
 import useLoading from '../../../hooks/useLoading';
 import PageContent from '../../common/PageContent';
-import AccessContext from '../../../contexts/AccessContext';
 import HeaderTitle from '../../common/HeaderTitle';
 import { UPDATE_PROJECT } from '../../providers/AccessProvider/permissions';
 
@@ -13,11 +12,12 @@ import useToast from '../../../hooks/useToast';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useEnvironments from '../../../hooks/api/getters/useEnvironments/useEnvironments';
 import useProject from '../../../hooks/api/getters/useProject/useProject';
-import { FormControlLabel, FormGroup, Switch } from '@material-ui/core';
+import { FormControlLabel, FormGroup } from '@material-ui/core';
 import useProjectApi from '../../../hooks/api/actions/useProjectApi/useProjectApi';
 import EnvironmentDisableConfirm from './EnvironmentDisableConfirm/EnvironmentDisableConfirm';
 import { Link } from 'react-router-dom';
 import { Alert } from '@material-ui/lab';
+import PermissionSwitch from '../../common/PermissionSwitch/PermissionSwitch';
 
 export interface ProjectEnvironment {
     name: string;
@@ -29,8 +29,6 @@ interface ProjectEnvironmentListProps {
 }
 
 const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
-    const { hasAccess } = useContext(AccessContext);
-
     // api state
     const { toast, setToastData } = useToast();
     const { uiConfig } = useUiConfig();
@@ -126,8 +124,6 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
         enabled: project?.environments.includes(e.name),
     }));
 
-    const hasPermission = hasAccess(UPDATE_PROJECT, projectId);
-
     const genLabel = (env: ProjectEnvironment) => (
         <>
             <code>{env.name}</code> environment is{' '}
@@ -143,9 +139,11 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
                         key={env.name}
                         label={genLabel(env)}
                         control={
-                            <Switch
+                            <PermissionSwitch
+                                tooltip={`${env.enabled ? 'Disable' : 'Enable'} environment`}
                                 size="medium"
-                                disabled={!hasPermission}
+                                projectId={projectId}
+                                permission={UPDATE_PROJECT}
                                 checked={env.enabled}
                                 onChange={toggleEnv.bind(this, env)}
                             />

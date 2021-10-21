@@ -4,7 +4,7 @@ import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import {
     CREATE_CONTEXT_FIELD,
-    DELETE_CONTEXT_FIELD,
+    DELETE_CONTEXT_FIELD, UPDATE_CONTEXT_FIELD,
 } from '../../providers/AccessProvider/permissions';
 import {
     IconButton,
@@ -39,10 +39,10 @@ const ContextList = ({ removeContextField, history, contextFields }) => {
                 </ListItemIcon>
                 <ListItemText
                     primary={
-                        <Link to={`/context/edit/${field.name}`}>
+                        <ConditionallyRender condition={hasAccess(UPDATE_CONTEXT_FIELD)} show={<Link to={`/context/edit/${field.name}`}>
                             <strong>{field.name}</strong>
                         </Link>
-                    }
+                    } elseShow={<strong>{field.name}</strong>} />}
                     secondary={field.description}
                 />
                 <ConditionallyRender

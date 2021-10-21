@@ -9,6 +9,8 @@ import { useStyles } from './FeatureOverviewMetadata.styles';
 
 import { Edit } from '@material-ui/icons';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
+import PermissionIconButton from '../../../../common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 
 const FeatureOverviewMetaData = () => {
     const styles = useStyles();
@@ -39,12 +41,14 @@ const FeatureOverviewMetaData = () => {
                             <div>Description:</div>
                             <div className={styles.descriptionContainer}>
                                 <p>{description}</p>
-                                <IconButton
+                                <PermissionIconButton
+                                    projectId={projectId}
+                                    permission={UPDATE_FEATURE}
                                     component={Link}
                                     to={`/projects/${projectId}/features2/${featureId}/settings`}
                                 >
                                     <Edit />
-                                </IconButton>
+                                </PermissionIconButton>
                             </div>
                         </span>
                     }

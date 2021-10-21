@@ -1,5 +1,5 @@
-import { useContext, useRef } from 'react';
-import { Switch, TableCell, TableRow } from '@material-ui/core';
+import { useRef } from 'react';
+import { TableCell, TableRow } from '@material-ui/core';
 import { useHistory } from 'react-router';
 
 import { useStyles } from '../FeatureToggleListNew.styles';
@@ -15,7 +15,7 @@ import classNames from 'classnames';
 import CreatedAt from './CreatedAt';
 import useProject from '../../../../hooks/api/getters/useProject/useProject';
 import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
-import AccessContext from '../../../../contexts/AccessContext';
+import PermissionSwitch from '../../../common/PermissionSwitch/PermissionSwitch';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -34,7 +34,6 @@ const FeatureToggleListNewItem = ({
     projectId,
     createdAt,
 }: IFeatureToggleListNewItemProps) => {
-    const { hasAccess } = useContext(AccessContext);
     const { toast, setToastData } = useToast();
     const { toggleFeatureByEnvironment } = useToggleFeatureByEnv(
         projectId,
@@ -127,11 +126,10 @@ const FeatureToggleListNewItem = ({
                             key={env.name}
                         >
                             <span data-loading style={{ display: 'block' }}>
-                                <Switch
+                                <PermissionSwitch
                                     checked={env.enabled}
-                                    disabled={
-                                        !hasAccess(UPDATE_FEATURE, projectId)
-                                    }
+                                    projectId={projectId}
+                                    permission={UPDATE_FEATURE}
                                     ref={ref}
                                     onClick={handleToggle.bind(this, env)}
                                 />

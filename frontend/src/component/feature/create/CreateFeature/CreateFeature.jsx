@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useParams } from 'react-router';
 import PropTypes from 'prop-types';
 import { CardActions, Switch, TextField } from '@material-ui/core';
 import FeatureTypeSelect from '../../feature-type-select-container';
@@ -19,7 +20,6 @@ import {
 import { CREATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import { projectFilterGenerator } from '../../../../utils/project-filter-generator';
 import { useHistory } from 'react-router-dom';
-import useQueryParams from '../../../../hooks/useQueryParams';
 
 const CreateFeature = ({
     input,
@@ -29,13 +29,13 @@ const CreateFeature = ({
     onSubmit,
     user,
 }) => {
-    const params = useQueryParams();
-    const project = params.get('project');
+    const { projectId } = useParams();
+
     const history = useHistory();
 
     useEffect(() => {
-        if (project) {
-            setValue('project', project);
+        if (projectId) {
+            setValue('project', projectId);
         }
         /* eslint-disable-next-line */
     }, []);
@@ -88,7 +88,7 @@ const CreateFeature = ({
                 <section className={styles.formContainer}>
                     <ProjectSelect
                         value={input.project}
-                        defaultValue={project}
+                        defaultValue={projectId}
                         onChange={v => setValue('project', v.target.value)}
                         filter={projectFilterGenerator(user, CREATE_FEATURE)}
                     />

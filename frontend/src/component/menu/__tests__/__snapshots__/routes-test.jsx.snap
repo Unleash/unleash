@@ -71,7 +71,7 @@ Array [
     "layout": "main",
     "menu": Object {},
     "parent": "/projects",
-    "path": "/projects/:id/create-toggle",
+    "path": "/projects/:projectId/create-toggle",
     "title": "Create",
     "type": "protected",
   },

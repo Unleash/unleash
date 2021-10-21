@@ -109,7 +109,7 @@ export const routes = [
         menu: {},
     },
     {
-        path: '/projects/:id/create-toggle',
+        path: '/projects/:projectId/create-toggle',
         parent: '/projects',
         title: 'Create',
         component: CreateFeatureToggle,

@@ -67,7 +67,7 @@ const FeatureStrategyExecution = ({
                                 {constraints.length > 0
                                     ? 'who match constraints'
                                     : ''}{' '}
-                                are included.
+                                is included.
                             </p>
 
                             <PercentageCircle
@@ -154,7 +154,7 @@ const FeatureStrategyExecution = ({
                                 {constraints?.length > 0
                                     ? 'who match constraints'
                                     : ''}{' '}
-                                are included.
+                                is included.
                             </p>
 
                             <PercentageCircle

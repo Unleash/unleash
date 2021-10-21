@@ -15,6 +15,8 @@ import CreateStrategy from './AddStrategy/AddStrategy';
 import Dialogue from '../../common/Dialogue/Dialogue';
 import ResponsiveButton from '../../common/ResponsiveButton/ResponsiveButton';
 import { Add } from '@material-ui/icons';
+import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
+import { useParams } from 'react-router';
 
 const cleanStrategy = strategy => ({
     name: strategy.name,
@@ -23,6 +25,7 @@ const cleanStrategy = strategy => ({
 });
 
 const StrategiesList = props => {
+    const { projectId } = useParams();
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [delStrategy, setDelStrategy] = useState(null);
     const [showCreateStrategy, setShowCreateStrategy] = useState(false);
@@ -172,6 +175,8 @@ const StrategiesList = props => {
                                     maxWidth="700px"
                                     tooltip="Add strategy"
                                     Icon={Add}
+                                    permission={CREATE_FEATURE}
+                                    projectId={projectId}
                                 >
                                     Add strategy
                                 </ResponsiveButton>

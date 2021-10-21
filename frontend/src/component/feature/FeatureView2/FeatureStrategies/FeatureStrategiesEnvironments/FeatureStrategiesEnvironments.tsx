@@ -1,7 +1,7 @@
 import { useHistory, useParams } from 'react-router-dom';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { useStyles } from './FeatureStrategiesEnvironments.styles';
-import { Tabs, Tab, Button, useMediaQuery } from '@material-ui/core';
+import { Tabs, Tab, useMediaQuery } from '@material-ui/core';
 import TabPanel from '../../../../common/TabNav/TabPanel';
 import useTabs from '../../../../../hooks/useTabs';
 import FeatureStrategiesEnvironmentList from './FeatureStrategiesEnvironmentList/FeatureStrategiesEnvironmentList';
@@ -22,6 +22,7 @@ import { Add } from '@material-ui/icons';
 import AccessContext from '../../../../../contexts/AccessContext';
 import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import useQueryParams from '../../../../../hooks/useQueryParams';
+import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
 
 const FeatureStrategiesEnvironments = () => {
     const smallScreen = useMediaQuery('(max-width:700px)');
@@ -316,8 +317,12 @@ const FeatureStrategiesEnvironments = () => {
                                                     UPDATE_FEATURE
                                                 )}
                                                 show={
-                                                    <Button
+                                                    <PermissionButton
                                                         variant="contained"
+                                                        permission={
+                                                            UPDATE_FEATURE
+                                                        }
+                                                        projectId={projectId}
                                                         color="primary"
                                                         onClick={() => {
                                                             setExpandedSidebar(
@@ -326,7 +331,7 @@ const FeatureStrategiesEnvironments = () => {
                                                         }}
                                                     >
                                                         Add your first strategy
-                                                    </Button>
+                                                    </PermissionButton>
                                                 }
                                             />
                                         </NoItems>

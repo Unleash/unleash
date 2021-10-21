@@ -367,6 +367,7 @@ const FeatureView = ({
                                 featureToggleName={featureToggle.name}
                             />
                             <Button
+                                disabled={!hasAccess(CREATE_FEATURE, project)}
                                 title="Create new feature toggle by cloning configuration"
                                 component={Link}
                                 to={getToggleCopyPath(

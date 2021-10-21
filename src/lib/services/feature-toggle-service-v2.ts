@@ -642,25 +642,29 @@ class FeatureToggleServiceV2 {
                     );
                 }
             }
-            await this.featureEnvironmentStore.setEnvironmentEnabledStatus(
-                environment,
-                featureName,
-                enabled,
-            );
+            const updatedEnvironmentStatus =
+                await this.featureEnvironmentStore.setEnvironmentEnabledStatus(
+                    environment,
+                    featureName,
+                    enabled,
+                );
             const feature = await this.featureToggleStore.get(featureName);
-            const tags = await this.featureTagStore.getAllTagsForFeature(
-                featureName,
-            );
-            await this.eventStore.store({
-                type: enabled
-                    ? FEATURE_ENVIRONMENT_ENABLED
-                    : FEATURE_ENVIRONMENT_DISABLED,
-                createdBy: userName,
-                data: { name: featureName },
-                tags,
-                project: projectId,
-                environment,
-            });
+
+            if (updatedEnvironmentStatus > 0) {
+                const tags = await this.featureTagStore.getAllTagsForFeature(
+                    featureName,
+                );
+                await this.eventStore.store({
+                    type: enabled
+                        ? FEATURE_ENVIRONMENT_ENABLED
+                        : FEATURE_ENVIRONMENT_DISABLED,
+                    createdBy: userName,
+                    data: { name: featureName },
+                    tags,
+                    project: projectId,
+                    environment,
+                });
+            }
             return feature;
         }
         throw new NotFoundError(

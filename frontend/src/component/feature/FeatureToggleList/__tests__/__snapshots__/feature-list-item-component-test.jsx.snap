@@ -51,7 +51,7 @@ exports[`renders correctly with one feature 1`] = `
       onMouseOver={[Function]}
       onTouchEnd={[Function]}
       onTouchStart={[Function]}
-      title={null}
+      title="This is a \\"\\" toggle"
       viewBox="0 0 24 24"
     >
       <path
@@ -186,7 +186,7 @@ exports[`renders correctly with one feature without permission 1`] = `
       onMouseOver={[Function]}
       onTouchEnd={[Function]}
       onTouchStart={[Function]}
-      title={null}
+      title="This is a \\"\\" toggle"
       viewBox="0 0 24 24"
     >
       <path

@@ -104,20 +104,8 @@ class FeatureController extends Controller {
         res: Response,
     ): Promise<void> {
         const name = req.params.featureName;
-        const feature = await this.getLegacyFeatureToggle(name);
+        const feature = await this.featureService2.getFeatureToggleLegacy(name);
         res.json(feature).end();
-    }
-
-    private async getLegacyFeatureToggle(name: string): Promise<any> {
-        const feature = await this.featureService2.getFeatureToggle(name);
-        const defaultEnv = feature.environments.find(
-            (e) => e.name === DEFAULT_ENV,
-        );
-        const strategies = defaultEnv?.strategies || [];
-        const enabled = defaultEnv?.enabled || false;
-        delete feature.environments;
-
-        return { ...feature, enabled, strategies };
     }
 
     async listTags(req: Request, res: Response): Promise<void> {
@@ -233,7 +221,12 @@ class FeatureController extends Controller {
             userName,
         );
 
-        const feature = await this.getLegacyFeatureToggle(featureName);
+        const feature =
+            await this.featureService2.storeFeatureUpdatedEventLegacy(
+                featureName,
+                userName,
+            );
+
         res.status(200).json(feature);
     }
 
@@ -247,6 +240,10 @@ class FeatureController extends Controller {
             projectId,
             featureName,
             DEFAULT_ENV,
+            userName,
+        );
+        await this.featureService2.storeFeatureUpdatedEventLegacy(
+            featureName,
             userName,
         );
         res.status(200).json(feature);
@@ -263,6 +260,10 @@ class FeatureController extends Controller {
             true,
             userName,
         );
+        await this.featureService2.storeFeatureUpdatedEventLegacy(
+            featureName,
+            userName,
+        );
         res.json(feature);
     }
 
@@ -277,6 +278,10 @@ class FeatureController extends Controller {
             false,
             userName,
         );
+        await this.featureService2.storeFeatureUpdatedEventLegacy(
+            featureName,
+            userName,
+        );
         res.json(feature);
     }
 
@@ -284,7 +289,11 @@ class FeatureController extends Controller {
         const { featureName } = req.params;
         const userName = extractUsername(req);
         await this.featureService2.updateStale(featureName, true, userName);
-        const feature = await this.getLegacyFeatureToggle(featureName);
+        const feature =
+            await this.featureService2.storeFeatureUpdatedEventLegacy(
+                featureName,
+                userName,
+            );
         res.json(feature).end();
     }
 
@@ -292,7 +301,11 @@ class FeatureController extends Controller {
         const { featureName } = req.params;
         const userName = extractUsername(req);
         await this.featureService2.updateStale(featureName, false, userName);
-        const feature = await this.getLegacyFeatureToggle(featureName);
+        const feature =
+            await this.featureService2.storeFeatureUpdatedEventLegacy(
+                featureName,
+                userName,
+            );
         res.json(feature).end();
     }
 

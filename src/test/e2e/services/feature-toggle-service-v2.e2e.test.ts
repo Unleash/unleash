@@ -91,39 +91,6 @@ test('Should be able to update existing strategy configuration', async () => {
     expect(updatedConfig.parameters).toEqual({ b2b: true });
 });
 
-test('Should include legacy props in event log when updating strategy configuration', async () => {
-    const userName = 'event-tester';
-    const featureName = 'update-existing-strategy-events';
-    const config: Omit<IStrategyConfig, 'id'> = {
-        name: 'default',
-        constraints: [],
-        parameters: {},
-    };
-
-    await service.createFeatureToggle(
-        'default',
-        {
-            name: featureName,
-        },
-        userName,
-    );
-
-    await service.createStrategy(config, 'default', featureName, userName);
-    await service.updateEnabled(
-        'default',
-        featureName,
-        DEFAULT_ENV,
-        true,
-        userName,
-    );
-
-    const events = await eventService.getEventsForToggle(featureName);
-    const updatedEvent = events.find((e) => e.type === FEATURE_UPDATED);
-    expect(updatedEvent.type).toBe(FEATURE_UPDATED);
-    expect(updatedEvent.data.enabled).toBe(true);
-    expect(updatedEvent.data.strategies).toBeDefined();
-});
-
 test('Should be able to get strategy by id', async () => {
     const userName = 'strategy';
     const config: Omit<IStrategyConfig, 'id'> = {

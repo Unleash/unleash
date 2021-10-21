@@ -143,8 +143,7 @@ class FeatureToggleServiceV2 {
                 });
             const data = {
                 id: newFeatureStrategy.id,
-                name: newFeatureStrategy.featureName,
-                strategyName: newFeatureStrategy.strategyName,
+                name: newFeatureStrategy.strategyName,
                 constraints: newFeatureStrategy.constraints,
                 parameters: newFeatureStrategy.parameters,
             };
@@ -153,7 +152,11 @@ class FeatureToggleServiceV2 {
                 project: projectId,
                 createdBy: userName,
                 environment,
-                data,
+                data: {
+                    ...data,
+                    name: featureName, // Done like this since we use data as our return object.
+                    strategyName: newFeatureStrategy.strategyName,
+                },
             });
             return data;
         } catch (e) {

@@ -34,7 +34,7 @@ import {
     FeatureToggle,
     FeatureToggleDTO,
     FeatureToggleWithEnvironment,
-    FeatureToggleWithEnvironmentLegacy,
+    FeatureToggleLegacy,
     IEnvironmentDetail,
     IFeatureEnvironmentInfo,
     IFeatureOverview,
@@ -670,7 +670,7 @@ class FeatureToggleServiceV2 {
     async storeFeatureUpdatedEventLegacy(
         featureName: string,
         userName: string,
-    ): Promise<FeatureToggleWithEnvironmentLegacy> {
+    ): Promise<FeatureToggleLegacy> {
         const tags = await this.featureTagStore.getAllTagsForFeature(
             featureName,
         );
@@ -710,18 +710,17 @@ class FeatureToggleServiceV2 {
 
     async getFeatureToggleLegacy(
         featureName: string,
-    ): Promise<FeatureToggleWithEnvironmentLegacy> {
+    ): Promise<FeatureToggleLegacy> {
         const feature =
             await this.featureStrategiesStore.getFeatureToggleWithEnvs(
                 featureName,
             );
-        const defaultEnv = feature.environments.find(
-            (e) => e.name === DEFAULT_ENV,
-        );
+        const { environments, ...legacyFeature } = feature;
+        const defaultEnv = environments.find((e) => e.name === DEFAULT_ENV);
         const strategies = defaultEnv?.strategies || [];
         const enabled = defaultEnv?.enabled || false;
 
-        return { ...feature, enabled, strategies };
+        return { ...legacyFeature, enabled, strategies };
     }
 
     // @deprecated

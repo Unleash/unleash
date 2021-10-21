@@ -110,11 +110,15 @@ const EnvironmentListItem = ({
     });
 
     const opacity = isDragging ? 0 : 1;
-    drag(drop(ref));
 
     const { hasAccess } = useContext(AccessContext);
+    const updatePermission = hasAccess(UPDATE_ENVIRONMENT);
     const tooltipText = env.enabled ? 'Disable' : 'Enable';
 
+    if (updatePermission) {
+        drag(drop(ref));
+    }
+    
     return (
         <ListItem
             style={{ position: 'relative', opacity }}
@@ -148,14 +152,18 @@ const EnvironmentListItem = ({
                     </>
                 }
             />
-
-            <Tooltip title="Drag to reorder">
-                <IconButton>
-                    <DragIndicator />
-                </IconButton>
-            </Tooltip>
             <ConditionallyRender
-                condition={hasAccess(UPDATE_ENVIRONMENT)}
+                condition={updatePermission}
+                show={
+                    <Tooltip title="Drag to reorder">
+                        <IconButton>
+                            <DragIndicator />
+                        </IconButton>
+                    </Tooltip>
+                }
+            />
+            <ConditionallyRender
+                condition={updatePermission}
                 show={
                     <Tooltip title={`${tooltipText} environment`}>
                         <IconButton
@@ -172,7 +180,7 @@ const EnvironmentListItem = ({
                 }
             />
             <ConditionallyRender
-                condition={hasAccess(UPDATE_ENVIRONMENT)}
+                condition={updatePermission}
                 show={
                     <Tooltip title="Update environment">
                         <IconButton

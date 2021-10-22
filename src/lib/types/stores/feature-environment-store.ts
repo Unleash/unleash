@@ -20,7 +20,7 @@ export interface IFeatureEnvironmentStore
         environment: string,
         featureName: string,
         enabled: boolean,
-    ): Promise<boolean>;
+    ): Promise<number>;
     getEnvironmentMetaData(
         environment: string,
         featureName: string,

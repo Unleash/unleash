@@ -52,6 +52,8 @@ export const handleErrors: (
             return res.status(400).json(error).end();
         case 'PasswordUndefinedError':
             return res.status(400).json(error).end();
+        case 'IncompatibleProjectError':
+            return res.status(403).json(error).end();
         default:
             logger.error('Server failed executing request', error);
             return res.status(500).end();

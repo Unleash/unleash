@@ -148,7 +148,7 @@ function eachConsecutiveEvent(events, callback) {
     });
 }
 
-const ignoredProps = ['createdAt', 'lastSeenAt', 'environments', 'id'];
+const ignoredProps = ['createdAt', 'lastSeenAt', 'id'];
 
 const filterProps = (path, key) => {
     return ignoredProps.includes(key);

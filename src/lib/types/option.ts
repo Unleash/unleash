@@ -142,7 +142,7 @@ export interface IUnleashConfig {
     ui: IUIConfig;
     import: IImportOption;
     experimental: {
-        [key: string]: object;
+        [key: string]: any;
     };
     email: IEmailOption;
     secureHeaders: boolean;

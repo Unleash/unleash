@@ -409,6 +409,15 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .where({ project_name: projectId, environment })
             .del();
     }
+
+    async setProjectForStrategiesBelongingToFeature(
+        featureName: string,
+        newProjectId: string,
+    ): Promise<void> {
+        await this.db(T.featureStrategies)
+            .where({ feature_name: featureName })
+            .update({ project_name: newProjectId });
+    }
 }
 
 module.exports = FeatureStrategiesStore;

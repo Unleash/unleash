@@ -48,8 +48,8 @@ const FeatureEnvironmentMetrics = ({
             };
         } else {
             primaryStyles = {
-                width: '120px',
-                height: '120px',
+                width: '90px',
+                height: '90px',
             };
         }
     }

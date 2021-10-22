@@ -11,7 +11,7 @@ import {
 } from '../../../../../../interfaces/strategy';
 import FeatureStrategyAccordion from '../../FeatureStrategyAccordion/FeatureStrategyAccordion';
 import cloneDeep from 'lodash.clonedeep';
-import { Button, IconButton, Tooltip } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import { useStyles } from './FeatureStrategyEditable.styles';
 import { Delete } from '@material-ui/icons';
@@ -24,6 +24,8 @@ import {
 import AccessContext from '../../../../../../contexts/AccessContext';
 import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 import useFeatureApi from '../../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
+import PermissionIconButton from '../../../../../common/PermissionIconButton/PermissionIconButton';
+import PermissionButton from '../../../../../common/PermissionButton/PermissionButton';
 
 interface IFeatureStrategyEditable {
     currentStrategy: IFeatureStrategy;
@@ -45,8 +47,8 @@ const FeatureStrategyEditable = ({
     const { activeEnvironment, featureCache, dirty, setDirty } = useContext(
         FeatureStrategiesUIContext
     );
-    const [strategyCache, setStrategyCache] = useState<IFeatureStrategy | null>(
-        null
+    const [strategyCache, setStrategyCache] = useState<IFeatureStrategy>(
+        cloneDeep(currentStrategy)
     );
     const styles = useStyles();
 
@@ -88,7 +90,6 @@ const FeatureStrategyEditable = ({
     useEffect(() => {
         const dirtyStrategy = dirty[strategy.id];
         if (dirtyStrategy) return;
-
         mutate(FEATURE_STRATEGY_CACHE_KEY, { ...currentStrategy }, false);
         setStrategyCache(cloneDeep(currentStrategy));
         /* eslint-disable-next-line */
@@ -112,15 +113,16 @@ const FeatureStrategyEditable = ({
     };
 
     const discardChanges = () => {
-        mutate(FEATURE_STRATEGY_CACHE_KEY, { ...strategyCache }, false);
         setDirty(prev => ({ ...prev, [strategy.id]: false }));
+        mutate(FEATURE_STRATEGY_CACHE_KEY, { ...strategyCache }, false);
     };
 
     const setStrategyConstraints = (constraints: IConstraint[]) => {
-        const updatedStrategy = { ...strategy };
-        updatedStrategy.constraints = constraints;
-        mutate(FEATURE_STRATEGY_CACHE_KEY, { ...updatedStrategy }, false);
+        const updatedStrategy = cloneDeep(strategy);
+
+        updatedStrategy.constraints = [...cloneDeep(constraints)];
         setDirty(prev => ({ ...prev, [strategy.id]: true }));
+        mutate(FEATURE_STRATEGY_CACHE_KEY, { ...updatedStrategy }, false);
     };
 
     if (!strategy.id) return null;
@@ -134,7 +136,7 @@ const FeatureStrategyEditable = ({
             />
             <FeatureStrategyAccordion
                 parameters={parameters}
-                constraints={constraints}
+                constraints={cloneDeep(constraints)}
                 data-test={`${STRATEGY_ACCORDION_ID}-${strategy.name}`}
                 strategy={strategy}
                 setStrategyParams={setStrategyParams}
@@ -145,7 +147,9 @@ const FeatureStrategyEditable = ({
                         condition={hasAccess(UPDATE_FEATURE)}
                         show={
                             <Tooltip title="Delete strategy">
-                                <IconButton
+                                <PermissionIconButton
+                                    permission={UPDATE_FEATURE}
+                                    projectId={projectId}
                                     data-test={`${DELETE_STRATEGY_ID}-${strategy.name}`}
                                     onClick={e => {
                                         e.stopPropagation();
@@ -156,7 +160,7 @@ const FeatureStrategyEditable = ({
                                     }}
                                 >
                                     <Delete />
-                                </IconButton>
+                                </PermissionIconButton>
                             </Tooltip>
                         }
                     />
@@ -167,7 +171,9 @@ const FeatureStrategyEditable = ({
                     show={
                         <>
                             <div className={styles.buttonContainer}>
-                                <Button
+                                <PermissionButton
+                                    permission={UPDATE_FEATURE}
+                                    projectId={projectId}
                                     variant="contained"
                                     color="primary"
                                     className={styles.editButton}
@@ -176,14 +182,18 @@ const FeatureStrategyEditable = ({
                                     disabled={loading}
                                 >
                                     Save changes
-                                </Button>
-                                <Button
+                                </PermissionButton>
+                                <PermissionButton
                                     onClick={discardChanges}
                                     className={styles.editButton}
                                     disabled={loading}
+                                    color="tertiary"
+                                    variant="text"
+                                    permission={UPDATE_FEATURE}
+                                    projectId={projectId}
                                 >
                                     Discard changes
-                                </Button>
+                                </PermissionButton>
                             </div>
                         </>
                     }

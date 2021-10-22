@@ -109,26 +109,28 @@ export default class SlackAddon extends Addon {
     }
 
     generateEnvironmentToggleText(event: IEvent): string {
-        const { environment, project, data, type } = event;
+        const { createdBy, environment, project, data, type } = event;
         const toggleStatus =
             type === FEATURE_ENVIRONMENT_ENABLED ? 'enabled' : 'disabled';
         const feature = `<${this.featureLink(event)}|${data.name}>`;
-        return `The feature toggle *${feature}* in the ${project} project was ${toggleStatus} in environment *${environment}*`;
+        return `*${feature}* (project: ${project}) was *${toggleStatus}* in *${environment}* by ${createdBy}`;
     }
 
     generateStrategyChangeText(event: IEvent): string {
-        const { environment, project, data, type } = event;
-        const feature = `<${this.strategiesLink(event)}|${data.featureName}>`;
+        const { createdBy, environment, project, data, type } = event;
+        const feature = `<${this.strategiesLink(event)}|${data.name}>`;
         let action;
         if (FEATURE_STRATEGY_UPDATE === type) {
             action = 'updated in';
-        } else if (FEATURE_STRATEGY_ADD) {
+        } else if (FEATURE_STRATEGY_ADD === type) {
             action = 'added to';
         } else {
             action = 'removed from';
         }
-        const strategyText = `a ${data.name} strategy ${action} the *${environment}* environment`;
-        return `The feature toggle *${feature}* in project: ${project} had ${strategyText}`;
+        const strategyText = `a ${
+            data.strategyName ?? ''
+        } *strategy ${action}* the *${environment}* environment`;
+        return `*${feature}* (project: ${project}) had ${strategyText} by ${createdBy} `;
     }
 
     generateMetadataText(event: IEvent): string {
@@ -143,7 +145,7 @@ export default class SlackAddon extends Addon {
     }
 
     strategiesLink(event: IEvent): string {
-        return `${this.unleashUrl}/projects/${event.project}/features2/${event.data.featureName}/strategies?environment=${event.environment}`;
+        return `${this.unleashUrl}/projects/${event.project}/features2/${event.data.name}/strategies?environment=${event.environment}`;
     }
 
     featureLink(event: IEvent): string {

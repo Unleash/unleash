@@ -19,7 +19,7 @@ Feature toggle types currently supported by Unleash:
 
 ### Deprecate a feature toggle {#deprecate-a-feature-toggle}
 
-Feature toggles can now also be marked as `stale` (deprecated). This allows us to clearly signal that we should stop using the feature toggle in our applications.
+Feature toggles can now also be marked as `stale`. You can think of this as a way to deprecate a feature toggle, without removing the active configuration for connected applications. This allows us to clearly signal that we should stop using the feature toggle in our applications.
 
 The `stale` property can utilized to help us manage "feature toggle debt" in various ways:
 

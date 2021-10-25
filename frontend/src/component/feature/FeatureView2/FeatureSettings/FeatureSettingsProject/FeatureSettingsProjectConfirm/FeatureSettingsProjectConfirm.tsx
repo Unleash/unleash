@@ -54,18 +54,19 @@ const FeatureSettingsProjectConfirm = ({
     };
 
     return (
-        <Dialogue
-            open={open}
-            onClose={onClose}
-            onClick={onClick}
-            title="Confirm change project"
-            primaryButtonText="Change project"
-            secondaryButtonText="Cancel"
-        >
-            Are you sure you want to change the project for this feature toggle?
-            <ConditionallyRender
-                condition={incompatibleEnvs?.length === 0}
-                show={
+        <ConditionallyRender
+            condition={incompatibleEnvs?.length === 0}
+            show={
+                <Dialogue
+                    open={open}
+                    onClose={onClose}
+                    onClick={onClick}
+                    title="Confirm change project"
+                    primaryButtonText="Change project"
+                    secondaryButtonText="Cancel"
+                >
+                    Are you sure you want to change the project for this feature
+                    toggle?
                     <div className={styles.compatability}>
                         This feature toggle is 100% compatible with the new
                         project.
@@ -73,23 +74,29 @@ const FeatureSettingsProjectConfirm = ({
                             <Check className={styles.check} />
                         </div>
                     </div>
-                }
-                elseShow={
+                </Dialogue>
+            }
+            elseShow={
+                <Dialogue
+                    open={open}
+                    onClose={onClose}
+                    title="Confirm change project"
+                    secondaryButtonText="OK"
+                >
+                    <div className={styles.topContent}>
+                        <p>
+                            {' '}
+                            This feature toggle is not compatible with the new
+                            project destination.
+                        </p>
+                        <div className={styles.iconContainer}>
+                            <div className={styles.errorIconContainer}>
+                                <Error className={styles.check} />
+                            </div>
+                        </div>
+                    </div>
                     <div className={styles.compatability}>
                         <div>
-                            <div className={styles.topContent}>
-                                <p>
-                                    {' '}
-                                    This feature toggle is not compatible with
-                                    the new project destination.
-                                </p>
-                                <div className={styles.iconContainer}>
-                                    <div className={styles.errorIconContainer}>
-                                        <Error className={styles.check} />
-                                    </div>
-                                </div>
-                            </div>
-
                             <p className={styles.paragraph}>
                                 This feature toggle has strategy configuration
                                 in an environment that is not activated in the
@@ -105,17 +112,15 @@ const FeatureSettingsProjectConfirm = ({
                                     );
                                 })}
                             </List>
-                            <p className={styles.paragraph}>
-                                You may still move the feature toggle, but the
-                                strategies in these environment will not run
-                                while these environments are inactive in the
-                                target project.
-                            </p>
                         </div>
                     </div>
-                }
-            />
-        </Dialogue>
+                    <p className={styles.paragraph}>
+                        In order to move this feature toggle, make sure you
+                        enable the required environments in the target project.
+                    </p>
+                </Dialogue>
+            }
+        />
     );
 };
 

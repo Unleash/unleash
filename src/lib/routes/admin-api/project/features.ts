@@ -5,11 +5,7 @@ import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
 import FeatureToggleServiceV2 from '../../../services/feature-toggle-service-v2';
 import { Logger } from '../../../logger';
-import {
-    CREATE_FEATURE,
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} from '../../../types/permissions';
+import { CREATE_FEATURE, UPDATE_FEATURE } from '../../../types/permissions';
 import {
     FeatureToggleDTO,
     IConstraint,
@@ -78,7 +74,7 @@ export default class ProjectFeaturesController extends Controller {
         this.get(`${PATH_STRATEGY}`, this.getStrategy);
         this.put(`${PATH_STRATEGY}`, this.updateStrategy, UPDATE_FEATURE);
         this.patch(`${PATH_STRATEGY}`, this.patchStrategy, UPDATE_FEATURE);
-        this.delete(`${PATH_STRATEGY}`, this.deleteStrategy, DELETE_FEATURE);
+        this.delete(`${PATH_STRATEGY}`, this.deleteStrategy, UPDATE_FEATURE);
 
         this.get(PATH, this.getFeatures);
         this.post(PATH, this.createFeature, CREATE_FEATURE);

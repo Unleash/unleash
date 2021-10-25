@@ -75,7 +75,7 @@
     "dist",
     "snapshots",
     "coverage",
-    "websitev2",
+    "website",
     "setupJest.js"
   ]
 }

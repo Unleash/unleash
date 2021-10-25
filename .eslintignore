@@ -7,5 +7,5 @@ website/i18n/*.js
 website/translated_docs
 website/core
 website/pages
-websitev2
+website
 setupJest.js

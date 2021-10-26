@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "4.2.0-beta.7",
+  "version": "4.2.0-beta.8",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -39,7 +39,7 @@
     "prepare": "yarn run build",
     "test": "NODE_ENV=test PORT=4243 jest",
     "test:docker": "./scripts/docker-postgres.sh",
-    "test:docker:cleanup":"docker rm -f unleash-postgres",
+    "test:docker:cleanup": "docker rm -f unleash-postgres",
     "test:watch": "yarn test --watch",
     "test:coverage": "NODE_ENV=test PORT=4243 jest --coverage --forceExit",
     "test:coverage:jest": "NODE_ENV=test PORT=4243 jest --silent --ci --json --coverage --testLocationInResults --outputFile=\"report.json\" --forceExit",

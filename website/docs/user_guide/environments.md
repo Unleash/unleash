@@ -3,11 +3,21 @@ id: environments
 title: Environments
 ---
 
-Environments is a new way to organize activation strategy configurations for feature toggles into separate environments. In Unleash a feature lives across all your environments, after all, the goal is to get the new feature released as soon as possible, but it makes sense to configure the activation differently per environment. 
+<div class="alert alert--info" role="alert">
+  Environment is a new feature currently under beta. It can be enabled from <i>Unleash v4.2.x</i> behind with a feature toggle. The plan to make the environment feature general available from <i>Unleash v4.3.x</i>.
+</div>
+<br />
+
+
+<div style={{position: 'relative', paddingBottom: '56.25%', height: '0'}}>
+    <iframe src="https://www.loom.com/embed/95239e875bbc4e09a5c5833e1942e4b0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: 'absolute', top: '0', left: '0', width: '100%', height: '100%'}}></iframe>
+</div>
+
+Environments is a new way to organize activation strategy configurations for feature toggles into separate environments. In Unleash a feature lives across all your environments, after all, the goal is to get the new feature released as soon as possible. But it makes sense to configure the activation differently per environment. You might want the feature enabled for everyone in development, while only enable it for yourself in production.
 
 Unleash Enterprise users have been able to leverage strategy constraints to control the roll-out per environment. This will not be needed after the release as a "full group" of activation strategy will belong to an environment. 
 
-Connected applications will also use environment specific API keys, to make sure they only download feature toggle configurations for the environment they are running in.
+Connected applications will also use environment scoped API keys, to make sure they only download feature toggle configurations for the environment they are running in.
 
 Metrics has also been upgraded to record the environment, so that Unleash now can display the usage metrics per environment. 
 

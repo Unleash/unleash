@@ -2,6 +2,6 @@
   "rewrites": [
     { "source": "/api/:match*", "destination": "https://unleash.herokuapp.com/api/:match*" },
     { "source": "/logout", "destination": "https://unleash.herokuapp.com/logout" },
-    { "source": "/auth", "destination": "https://unleash.herokuapp.com/auth" }
+    { "source": "/auth/:match*", "destination": "https://unleash.herokuapp.com/auth/:match*" }
   ]
 }

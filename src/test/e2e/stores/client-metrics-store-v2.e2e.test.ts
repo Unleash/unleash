@@ -1,3 +1,4 @@
+import { subDays } from 'date-fns';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { IUnleashStores } from '../../../lib/types';
@@ -5,7 +6,6 @@ import {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
 } from '../../../lib/types/stores/client-metrics-store-v2';
-import { roundDownToHour } from '../../../lib/db/client-metrics-store-v2';
 
 let db;
 let stores: IUnleashStores;
@@ -265,8 +265,7 @@ test('Should not fail on undefined list of metrics', async () => {
 });
 
 test('Should return delete old metric', async () => {
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setHours(-48);
+    const twoDaysAgo = subDays(new Date(), 2);
 
     const metrics: IClientMetricsEnv[] = [
         {
@@ -312,8 +311,7 @@ test('Should return delete old metric', async () => {
 });
 
 test('Should get metric', async () => {
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setHours(-48);
+    const twoDaysAgo = subDays(new Date(), 2);
 
     const metrics: IClientMetricsEnv[] = [
         {
@@ -362,7 +360,7 @@ test('Should get metric', async () => {
     expect(metric.no).toBe(42);
 });
 
-test('Should not exists after delete', async () => {
+test('Should not exist after delete', async () => {
     const metric = {
         featureName: 'demo4',
         appName: 'backend-api',
@@ -382,16 +380,4 @@ test('Should not exists after delete', async () => {
 
     const existAfter = await clientMetricsStore.exists(metric);
     expect(existAfter).toBe(false);
-});
-
-test('should floor hours as expected', () => {
-    expect(
-        roundDownToHour(new Date('2019-11-12T08:44:32.499Z')).toISOString(),
-    ).toBe('2019-11-12T08:00:00.000Z');
-    expect(
-        roundDownToHour(new Date('2019-11-12T08:59:59.999Z')).toISOString(),
-    ).toBe('2019-11-12T08:00:00.000Z');
-    expect(
-        roundDownToHour(new Date('2019-11-12T09:01:00.999Z')).toISOString(),
-    ).toBe('2019-11-12T09:00:00.000Z');
 });

@@ -2,6 +2,7 @@ import dbInit, { ITestDb } from '../../helpers/database-init';
 import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { IClientMetricsEnv } from '../../../../lib/types/stores/client-metrics-store-v2';
+import { subHours } from 'date-fns';
 
 let app;
 let db: ITestDb;
@@ -166,15 +167,14 @@ test('should return toggle summary', async () => {
 });
 
 test('should only include last hour of metrics return toggle summary', async () => {
-    const date = new Date();
-    const dateHoneHourAgo = new Date();
-    dateHoneHourAgo.setHours(-1);
+    const now = new Date();
+    const dateOneHourAgo = subHours(now, 1);
     const metrics: IClientMetricsEnv[] = [
         {
             featureName: 'demo',
             appName: 'web',
             environment: 'default',
-            timestamp: date,
+            timestamp: now,
             yes: 2,
             no: 2,
         },
@@ -182,7 +182,7 @@ test('should only include last hour of metrics return toggle summary', async () 
             featureName: 'demo',
             appName: 'web',
             environment: 'default',
-            timestamp: date,
+            timestamp: now,
             yes: 3,
             no: 2,
         },
@@ -190,7 +190,7 @@ test('should only include last hour of metrics return toggle summary', async () 
             featureName: 'demo',
             appName: 'web',
             environment: 'test',
-            timestamp: date,
+            timestamp: now,
             yes: 1,
             no: 3,
         },
@@ -198,7 +198,7 @@ test('should only include last hour of metrics return toggle summary', async () 
             featureName: 'demo',
             appName: 'backend-api',
             environment: 'test',
-            timestamp: date,
+            timestamp: now,
             yes: 1,
             no: 3,
         },
@@ -206,7 +206,7 @@ test('should only include last hour of metrics return toggle summary', async () 
             featureName: 'demo',
             appName: 'backend-api',
             environment: 'test',
-            timestamp: dateHoneHourAgo,
+            timestamp: dateOneHourAgo,
             yes: 55,
             no: 55,
         },

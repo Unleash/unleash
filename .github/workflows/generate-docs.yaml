@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - websitev2/**
+      - website/**
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
         git config --global user.email "${GH_EMAIL}"
         echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
         # Stage the file, commit and push
-        cd websitev2 && yarn && GIT_USER="ivarconr" yarn deploy
+        cd website && yarn && GIT_USER="ivarconr" yarn deploy
       env:
         GH_NAME: 'ivarconr'
         GH_EMAIL: 'ivarconr@gmail.com'

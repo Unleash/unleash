@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths-ignore:
-      - websitev2/**
+      - website/**
 
 jobs:
   build:

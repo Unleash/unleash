@@ -172,7 +172,7 @@ test('Calling validate endpoint with already existing session should destroy ses
     expect.assertions(0);
     const { request, destroy } = await setupAppWithAuth(stores);
     await request
-        .post('/api/admin/login')
+        .post('/auth/demo/login')
         .send({
             email: 'user@mail.com',
         })
@@ -206,7 +206,7 @@ test('Calling reset endpoint with already existing session should logout/destroy
             token = res.body.token;
         });
     await request
-        .post('/api/admin/login')
+        .post('/auth/demo/login')
         .send({
             email: 'user@mail.com',
         })

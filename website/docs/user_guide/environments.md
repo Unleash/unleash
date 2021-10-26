@@ -4,7 +4,7 @@ title: Environments
 ---
 
 <div class="alert alert--info" role="alert">
-  Environment is a new feature currently under beta. It can be enabled from <i>Unleash v4.2.x</i> behind with a feature toggle. The plan to make the environment feature general available from <i>Unleash v4.3.x</i>.
+  Environment is a new feature currently under beta. It can be enabled from <i>Unleash v4.2.x</i> with a feature toggle. We plan to make the environment feature general available from <i>Unleash v4.3.x</i>.
 </div>
 <br />
 

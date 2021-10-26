@@ -47,6 +47,7 @@
   },
   "jest": {
     "automock": false,
+    "maxWorkers": 4,
     "setupFiles": [
       "./setupJest.js"
     ],

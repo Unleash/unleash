@@ -307,7 +307,7 @@ const FeatureStrategiesEnvironments = () => {
                                                 environment.
                                                 <a
                                                     className={styles.link}
-                                                    href="https://docs.getunleash.ai"
+                                                    href="https://docs.getunleash.io/user_guide/environments"
                                                 >
                                                     Read more here
                                                 </a>

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import CheckMarkBadge from '../../../common/CheckmarkBadge/CheckMarkBadge';
@@ -43,9 +44,8 @@ const CreateEnvironmentSuccess = ({
                             specified environment
                         </p>
                         <a
-                            href="https://docs.getunleash.io/"
+                            href="https://docs.getunleash.io/user_guide/environments"
                             target="_blank"
-                            rel="noopener noreferrer"
                             className={styles.link}
                         >
                             Learn more
@@ -64,9 +64,8 @@ const CreateEnvironmentSuccess = ({
                             adding new activation strategies on feature toggles.
                         </p>
                         <a
-                            href="https://docs.getunleash.io/"
+                            href="https://docs.getunleash.io/user_guide/environments"
                             target="_blank"
-                            rel="noopener noreferrer"
                             className={styles.link}
                         >
                             Learn more

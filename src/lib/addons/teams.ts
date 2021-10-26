@@ -16,15 +16,14 @@ import {
     FEATURE_STRATEGY_UPDATE,
     FEATURE_UPDATED,
 } from '../types/events';
-import { LogProvider } from '../logger';
 
 import teamsDefinition from './teams-definition';
-import { IEvent } from '../types/model';
+import { IAddonConfig, IEvent } from '../types/model';
 
 export default class TeamsAddon extends Addon {
-    unleashUrl: string;
+    private unleashUrl: string;
 
-    constructor(args: { unleashUrl: string; getLogger: LogProvider }) {
+    constructor(args: IAddonConfig) {
         super(teamsDefinition, args);
         this.unleashUrl = args.unleashUrl;
     }
@@ -112,16 +111,16 @@ export default class TeamsAddon extends Addon {
     }
 
     generateEnvironmentToggleText(event: IEvent): string {
-        const { environment, project, data, type } = event;
+        const { environment, data, type, createdBy } = event;
         const toggleStatus =
             type === FEATURE_ENVIRONMENT_ENABLED ? 'enabled' : 'disabled';
         const feature = `<${this.featureLink(event)}|${data.name}>`;
-        return `The feature toggle *${feature}* in the ${project} project was ${toggleStatus} in environment *${environment}*`;
+        return `${createdBy} *${toggleStatus}* ${feature} in *${environment}* environment`;
     }
 
     generateStrategyChangeText(event: IEvent): string {
-        const { environment, project, data, type } = event;
-        const feature = `<${this.strategiesLink(event)}|${data.featureName}>`;
+        const { environment, project, data, type, createdBy } = event;
+        const feature = `<${this.featureLink(event)}|${data.name}>`;
         let action;
         if (FEATURE_STRATEGY_UPDATE === type) {
             action = 'updated in';
@@ -131,13 +130,13 @@ export default class TeamsAddon extends Addon {
             action = 'removed from';
         }
         const strategyText = `a ${data.name} strategy ${action} the *${environment}* environment`;
-        return `The feature toggle *${feature}* in project: ${project} had ${strategyText}`;
+        return `${createdBy} updated *${feature}* (project: ${project}) with ${strategyText}`;
     }
 
     generateMetadataText(event: IEvent): string {
         const { createdBy, project, data } = event;
         const feature = `<${this.featureLink(event)}|${data.name}>`;
-        return `${createdBy} updated the metadata for ${feature} in project ${project}`;
+        return `${createdBy} updated the metadata for ${feature} (project ${project})`;
     }
 
     generateProjectChangeText(event: IEvent): string {
@@ -145,13 +144,12 @@ export default class TeamsAddon extends Addon {
         return `${createdBy} moved ${data.name} to ${project}`;
     }
 
-    strategiesLink(event: IEvent): string {
-        return `${this.unleashUrl}/projects/${event.project}/features2/${event.data.featureName}/strategies?environment=${event.environment}`;
-    }
-
     featureLink(event: IEvent): string {
-        const path = event.type === FEATURE_ARCHIVED ? 'archive' : 'features';
-        return `${this.unleashUrl}/${path}/strategies/${event.data.name}`;
+        const { type, project = '', data } = event;
+        if (type === FEATURE_ARCHIVED) {
+            return `${this.unleashUrl}/archive`;
+        }
+        return `${this.unleashUrl}/projects/${project}/${data.name}`;
     }
 
     generateStaleText(event: IEvent): string {
@@ -164,9 +162,10 @@ export default class TeamsAddon extends Addon {
     }
 
     generateArchivedText(event: IEvent): string {
-        const { data, type } = event;
+        const { data, type, createdBy } = event;
         const action = type === FEATURE_ARCHIVED ? 'archived' : 'revived';
-        return `The feature toggle *${data.name}* was *${action}*`;
+        const feature = `<${this.featureLink(event)}|${data.name}>`;
+        return ` ${createdBy} just ${action} feature toggle *${feature}*`;
     }
 
     generateText(event: IEvent): string {

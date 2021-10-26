@@ -17,13 +17,12 @@ import {
 } from '../types/events';
 
 import definition from './datadog-definition';
-import { LogProvider } from '../logger';
-import { IEvent } from '../types/model';
+import { IAddonConfig, IEvent } from '../types/model';
 
 export default class DatadogAddon extends Addon {
-    unleashUrl: string;
+    private unleashUrl: string;
 
-    constructor(config: { unleashUrl: string; getLogger: LogProvider }) {
+    constructor(config: IAddonConfig) {
         super(definition, config);
         this.unleashUrl = config.unleashUrl;
     }
@@ -94,7 +93,7 @@ export default class DatadogAddon extends Addon {
 
     generateStrategyChangeText(event: IEvent): string {
         const { environment, project, data, type } = event;
-        const feature = `<${this.strategiesLink(event)}|${data.featureName}>`;
+        const feature = `<${this.featureLink(event)}|${data.name}>`;
         let action;
         if (FEATURE_STRATEGY_UPDATE === type) {
             action = 'updated in';
@@ -118,13 +117,12 @@ export default class DatadogAddon extends Addon {
         return `${createdBy} moved ${data.name} to ${project}`;
     }
 
-    strategiesLink(event: IEvent): string {
-        return `${this.unleashUrl}/projects/${event.project}/features2/${event.data.featureName}/strategies?environment=${event.environment}`;
-    }
-
     featureLink(event: IEvent): string {
-        const path = event.type === FEATURE_ARCHIVED ? 'archive' : 'features';
-        return `${this.unleashUrl}/${path}/strategies/${event.data.name}`;
+        const { type, project = '', data } = event;
+        if (type === FEATURE_ARCHIVED) {
+            return `${this.unleashUrl}/archive`;
+        }
+        return `${this.unleashUrl}/projects/${project}/${data.name}`;
     }
 
     generateStaleText(event: IEvent): string {

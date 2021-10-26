@@ -21,7 +21,8 @@ import {
 } from '../types/events';
 
 export default class SlackAddon extends Addon {
-    unleashUrl: string;
+    private unleashUrl: string;
+
 
     constructor(args: IAddonConfig) {
         super(slackDefinition, args);
@@ -109,16 +110,16 @@ export default class SlackAddon extends Addon {
     }
 
     generateEnvironmentToggleText(event: IEvent): string {
-        const { createdBy, environment, project, data, type } = event;
+        const { createdBy, environment, data, type } = event;
         const toggleStatus =
             type === FEATURE_ENVIRONMENT_ENABLED ? 'enabled' : 'disabled';
         const feature = `<${this.featureLink(event)}|${data.name}>`;
-        return `*${feature}* (project: ${project}) was *${toggleStatus}* in *${environment}* by ${createdBy}`;
+        return `${createdBy} *${toggleStatus}* ${feature} in *${environment}* environment`;
     }
 
     generateStrategyChangeText(event: IEvent): string {
         const { createdBy, environment, project, data, type } = event;
-        const feature = `<${this.strategiesLink(event)}|${data.name}>`;
+        const feature = `<${this.featureLink(event)}|${data.name}>`;
         let action;
         if (FEATURE_STRATEGY_UPDATE === type) {
             action = 'updated in';
@@ -130,13 +131,13 @@ export default class SlackAddon extends Addon {
         const strategyText = `a ${
             data.strategyName ?? ''
         } *strategy ${action}* the *${environment}* environment`;
-        return `*${feature}* (project: ${project}) had ${strategyText} by ${createdBy} `;
+        return `${createdBy} updated *${feature}* (project: ${project}) with ${strategyText}`;
     }
 
     generateMetadataText(event: IEvent): string {
         const { createdBy, project, data } = event;
         const feature = `<${this.featureLink(event)}|${data.name}>`;
-        return `${createdBy} updated the metadata for ${feature} in project ${project}`;
+        return `${createdBy} updated the metadata for ${feature} (project: ${project})`;
     }
 
     generateProjectChangeText(event: IEvent): string {
@@ -144,13 +145,12 @@ export default class SlackAddon extends Addon {
         return `${createdBy} moved ${data.name} to ${project}`;
     }
 
-    strategiesLink(event: IEvent): string {
-        return `${this.unleashUrl}/projects/${event.project}/features2/${event.data.name}/strategies?environment=${event.environment}`;
-    }
-
     featureLink(event: IEvent): string {
-        const path = event.type === FEATURE_ARCHIVED ? 'archive' : 'features';
-        return `${this.unleashUrl}/${path}/strategies/${event.data.name}`;
+        const { type, project = '', data } = event;
+        if (type === FEATURE_ARCHIVED) {
+            return `${this.unleashUrl}/archive`;
+        }
+        return `${this.unleashUrl}/projects/${project}/${data.name}`;
     }
 
     findSlackChannels({ tags }: Pick<IEvent, 'tags'>): string[] {
@@ -178,7 +178,7 @@ This was changed by ${createdBy}.`;
         const { createdBy, data, type } = event;
         const action = type === FEATURE_ARCHIVED ? 'archived' : 'revived';
         const feature = `<${this.featureLink(event)}|${data.name}>`;
-        return `The feature toggle *${feature}* was *${action}* by ${createdBy}.`;
+        return ` ${createdBy} just ${action} feature toggle *${feature}*`;
     }
 
     generateText(event: IEvent): string {

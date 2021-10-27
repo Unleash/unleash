@@ -10,7 +10,7 @@ import SessionService from '../../../lib/services/session-service';
 import NotFoundError from '../../../lib/error/notfound-error';
 import { IRole } from '../../../lib/types/stores/access-store';
 import { RoleName } from '../../../lib/types/model';
-import { addDays, hoursToSeconds, minutesToMilliseconds } from 'date-fns';
+import { addDays, minutesToMilliseconds } from 'date-fns';
 
 let db;
 let stores;

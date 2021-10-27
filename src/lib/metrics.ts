@@ -3,18 +3,16 @@ import EventEmitter from 'events';
 import { Knex } from 'knex';
 import * as events from './metric-events';
 import {
-    FEATURE_CREATED,
-    FEATURE_UPDATED,
-    FEATURE_ARCHIVED,
-    FEATURE_REVIVED,
     DB_POOL_UPDATE,
+    FEATURE_ARCHIVED,
+    FEATURE_CREATED,
+    FEATURE_REVIVED,
+    FEATURE_UPDATED,
 } from './types/events';
 import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
+import { hoursToMilliseconds, millisecondsInMinute } from 'date-fns';
 import Timer = NodeJS.Timer;
-
-const TWO_HOURS = 2 * 60 * 60 * 1000;
-const ONE_MINUTE = 60 * 1000;
 
 export default class MetricsMonitor {
     timer?: Timer;
@@ -111,7 +109,7 @@ export default class MetricsMonitor {
         collectStaticCounters();
         this.timer = setInterval(
             () => collectStaticCounters(),
-            TWO_HOURS,
+            hoursToMilliseconds(2),
         ).unref();
 
         eventBus.on(
@@ -199,7 +197,7 @@ export default class MetricsMonitor {
             this.registerPoolMetrics(db.client.pool, eventBus);
             this.poolMetricsTimer = setInterval(
                 () => this.registerPoolMetrics(db.client.pool, eventBus),
-                ONE_MINUTE,
+                millisecondsInMinute,
             );
             this.poolMetricsTimer.unref();
         }

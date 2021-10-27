@@ -1,5 +1,6 @@
 import ClientMetricsService from '../../../lib/services/client-metrics';
 import { IClientApp } from '../../../lib/types/model';
+import { secondsToMilliseconds } from 'date-fns';
 
 const faker = require('faker');
 const dbInit = require('../helpers/database-init');
@@ -13,11 +14,15 @@ let clientMetricsService;
 beforeAll(async () => {
     db = await dbInit('client_metrics_service_serial', getLogger);
     stores = db.stores;
+
+    const bulkInterval = secondsToMilliseconds(0.5);
+    const announcementInterval = secondsToMilliseconds(2);
+
     clientMetricsService = new ClientMetricsService(
         stores,
         { getLogger },
-        500,
-        2000,
+        bulkInterval,
+        announcementInterval,
     );
 });
 
@@ -53,7 +58,7 @@ test('Apps registered should be announced', async () => {
     const first = await stores.clientApplicationsStore.getUnannounced();
     expect(first.length).toBe(2);
     await clientMetricsService.registerClient(clientRegistration, '127.0.0.1');
-    await new Promise((res) => setTimeout(res, 2000));
+    await new Promise((res) => setTimeout(res, secondsToMilliseconds(2)));
     const second = await stores.clientApplicationsStore.getUnannounced();
     expect(second.length).toBe(0);
     const events = await stores.eventStore.getEvents();

@@ -12,10 +12,9 @@ import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { IAddonDefinition } from '../types/model';
+import { millisecondsInMinute } from 'date-fns';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
-
-const ADDONS_CACHE_TIME = 60 * 1000; // 60s
 
 const MASKED_VALUE = '*****';
 
@@ -75,7 +74,7 @@ export default class AddonService {
             async () => addonStore.getAll({ enabled: true }),
             {
                 promise: true,
-                maxAge: ADDONS_CACHE_TIME,
+                maxAge: millisecondsInMinute,
             },
         );
     }

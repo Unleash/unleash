@@ -1,7 +1,7 @@
 'use strict';
 
-const moment = require('moment');
 const TTLList = require('./ttl-list');
+const { addMilliseconds } = require('date-fns');
 
 test('should emit expire', (done) => {
     jest.useFakeTimers('modern');
@@ -31,10 +31,10 @@ test('should slice off list', () => {
         expireType: 'milliseconds',
     });
 
-    list.add({ n: '1' }, moment().add(1, 'milliseconds'));
-    list.add({ n: '2' }, moment().add(50, 'milliseconds'));
-    list.add({ n: '3' }, moment().add(200, 'milliseconds'));
-    list.add({ n: '4' }, moment().add(300, 'milliseconds'));
+    list.add({ n: '1' }, addMilliseconds(Date.now(), 1));
+    list.add({ n: '2' }, addMilliseconds(Date.now(), 50));
+    list.add({ n: '3' }, addMilliseconds(Date.now(), 200));
+    list.add({ n: '4' }, addMilliseconds(Date.now(), 300));
 
     const expired = [];
 

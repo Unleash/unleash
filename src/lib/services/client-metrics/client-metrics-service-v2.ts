@@ -8,9 +8,7 @@ import {
     IClientMetricsStoreV2,
 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './client-metrics-schema';
-
-const FIVE_MINUTES = 5 * 60 * 1000;
-const ONE_DAY = 24 * 60 * 60 * 1000;
+import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 
 export default class ClientMetricsServiceV2 {
     private timer: NodeJS.Timeout;
@@ -24,7 +22,7 @@ export default class ClientMetricsServiceV2 {
     constructor(
         { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
-        bulkInterval = FIVE_MINUTES,
+        bulkInterval = minutesToMilliseconds(5),
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
 
@@ -34,7 +32,7 @@ export default class ClientMetricsServiceV2 {
         this.timer = setInterval(() => {
             console.log('Clear metrics');
             this.clientMetricsStoreV2.clearMetrics(48);
-        }, ONE_DAY);
+        }, hoursToMilliseconds(24));
         this.timer.unref();
     }
 

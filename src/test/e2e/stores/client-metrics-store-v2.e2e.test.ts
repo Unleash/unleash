@@ -1,4 +1,4 @@
-import { subDays } from 'date-fns';
+import { addHours, set, subDays } from 'date-fns';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { IUnleashStores } from '../../../lib/types';
@@ -66,10 +66,9 @@ test('Should "increment" metrics within same hour', async () => {
 });
 
 test('Should get individual metrics outside same hour', async () => {
-    const d1 = new Date();
-    const d2 = new Date();
-    d1.setHours(10, 10, 11);
-    d2.setHours(11, 10, 11);
+    const d1 = set(Date.now(), { hours: 10, minutes: 10, seconds: 11 });
+    const d2 = addHours(d1, 1);
+
     const metrics: IClientMetricsEnv[] = [
         {
             featureName: 'demo',
@@ -265,7 +264,7 @@ test('Should not fail on undefined list of metrics', async () => {
 });
 
 test('Should return delete old metric', async () => {
-    const twoDaysAgo = subDays(new Date(), 2);
+    const twoDaysAgo = subDays(Date.now(), 2);
 
     const metrics: IClientMetricsEnv[] = [
         {
@@ -311,7 +310,7 @@ test('Should return delete old metric', async () => {
 });
 
 test('Should get metric', async () => {
-    const twoDaysAgo = subDays(new Date(), 2);
+    const twoDaysAgo = subDays(Date.now(), 2);
 
     const metrics: IClientMetricsEnv[] = [
         {

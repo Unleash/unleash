@@ -19,6 +19,11 @@ import {
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 import { formatBaseUri } from './util/format-base-uri';
+import {
+    millisecondsInMinute,
+    millisecondsInSecond,
+    secondsToMilliseconds,
+} from 'date-fns';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -94,13 +99,13 @@ const defaultDbOptions: IDBOption = {
             : { rejectUnauthorized: false },
     driver: 'postgres',
     version: process.env.DATABASE_VERSION,
-    acquireConnectionTimeout: 30000,
+    acquireConnectionTimeout: secondsToMilliseconds(30),
     pool: {
         min: safeNumber(process.env.DATABASE_POOL_MIN, 0),
         max: safeNumber(process.env.DATABASE_POOL_MAX, 4),
         idleTimeoutMillis: safeNumber(
             process.env.DATABASE_POOL_IDLE_TIMEOUT_MS,
-            30000,
+            secondsToMilliseconds(30),
         ),
         propagateCreateError: false,
     },
@@ -120,8 +125,8 @@ const defaultServerOption: IServerOption = {
     baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
     serverMetrics: true,
-    keepAliveTimeout: 60 * 1000,
-    headersTimeout: 61 * 1000,
+    keepAliveTimeout: millisecondsInMinute,
+    headersTimeout: secondsToMilliseconds(61),
     enableRequestLogger: false,
     gracefulShutdownEnable: safeBoolean(
         process.env.GRACEFUL_SHUTDOWN_ENABLE,
@@ -129,7 +134,7 @@ const defaultServerOption: IServerOption = {
     ),
     gracefulShutdownTimeout: safeNumber(
         process.env.GRACEFUL_SHUTDOWN_TIMEOUT,
-        1000,
+        millisecondsInSecond,
     ),
     secret: process.env.UNLEASH_SECRET || 'super-secret',
 };

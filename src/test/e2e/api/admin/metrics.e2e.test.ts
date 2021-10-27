@@ -1,6 +1,7 @@
 import dbInit from '../../helpers/database-init';
 import { setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
+import { parseISO } from 'date-fns';
 
 let app;
 let db;
@@ -28,25 +29,27 @@ beforeEach(async () => {
         description: 'Some desc',
         announced: true,
     });
+
+    const clientStartedDate = parseISO('2018-01-15T14:35:38.494Z');
     await db.stores.clientInstanceStore.insert({
         appName: 'demo-app-1',
         instanceId: 'test-1',
         strategies: ['default'],
-        started: 1516026938494,
+        started: clientStartedDate,
         interval: 10,
     });
     await db.stores.clientInstanceStore.insert({
         appName: 'demo-seed-2',
         instanceId: 'test-2',
         strategies: ['default'],
-        started: 1516026938494,
+        started: clientStartedDate,
         interval: 10,
     });
     await db.stores.clientInstanceStore.insert({
         appName: 'deletable-app',
         instanceId: 'inst-1',
         strategies: ['default'],
-        started: 1516026938494,
+        started: clientStartedDate,
         interval: 10,
     });
     await app.services.clientMetricsService.addPayload({

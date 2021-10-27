@@ -3,6 +3,7 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import { ISession, ISessionStore } from '../types/stores/session-store';
+import { addDays } from 'date-fns';
 
 const TABLE = 'unleash_session';
 
@@ -72,7 +73,7 @@ export default class SessionStore implements ISessionStore {
             .insert({
                 sid: data.sid,
                 sess: JSON.stringify(data.sess),
-                expired: data.expired || new Date(Date.now() + 86400000),
+                expired: data.expired || addDays(Date.now(), 1),
             })
             .returning<ISessionRow>(['sid', 'sess', 'created_at', 'expired']);
         if (row) {

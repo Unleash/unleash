@@ -11,8 +11,7 @@ import {
     IResetToken,
     IResetTokenStore,
 } from '../types/stores/reset-token-store';
-
-const ONE_DAY = 86_400_000;
+import { hoursToMilliseconds } from 'date-fns';
 
 interface IInviteLinks {
     [key: string]: string;
@@ -106,7 +105,7 @@ export default class ResetTokenService {
     async createToken(
         tokenUser: number,
         creator: string,
-        expiryDelta: number = ONE_DAY,
+        expiryDelta: number = hoursToMilliseconds(24),
     ): Promise<IResetToken> {
         const token = await this.generateToken();
         const expiry = new Date(Date.now() + expiryDelta);

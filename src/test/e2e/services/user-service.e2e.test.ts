@@ -10,6 +10,7 @@ import SessionService from '../../../lib/services/session-service';
 import NotFoundError from '../../../lib/error/notfound-error';
 import { IRole } from '../../../lib/types/stores/access-store';
 import { RoleName } from '../../../lib/types/model';
+import { addDays, hoursToSeconds, minutesToMilliseconds } from 'date-fns';
 
 let db;
 let stores;
@@ -141,8 +142,8 @@ test("deleting a user should delete the user's sessions", async () => {
         sid: 'xyz321',
         sess: {
             cookie: {
-                originalMaxAge: 2880000,
-                expires: new Date(Date.now() + 86400000).toDateString(),
+                originalMaxAge: minutesToMilliseconds(48),
+                expires: addDays(Date.now(), 1).toDateString(),
                 secure: false,
                 httpOnly: true,
                 path: '/',

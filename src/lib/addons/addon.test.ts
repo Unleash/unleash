@@ -2,6 +2,7 @@ import fetchMock from 'jest-fetch-mock';
 import noLogger from '../../test/fixtures/no-logger';
 
 import SlackAddon from './slack';
+import { millisecondsInSecond } from 'date-fns';
 
 beforeEach(() => {
     fetchMock.resetMocks();
@@ -19,7 +20,7 @@ test('Retries if fetch throws', async () => {
         statusText: 'ACCEPTED',
     });
     await addon.fetchRetry(url);
-    jest.advanceTimersByTime(1000);
+    jest.advanceTimersByTime(millisecondsInSecond);
     jest.useRealTimers();
 });
 
@@ -34,7 +35,7 @@ test('does not crash even if fetch throws', async () => {
         throw new Error('Network error');
     });
     await addon.fetchRetry(url);
-    jest.advanceTimersByTime(1000);
+    jest.advanceTimersByTime(millisecondsInSecond);
     expect(fetchMock.mock.calls).toHaveLength(2);
     jest.useRealTimers();
 });

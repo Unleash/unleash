@@ -5,8 +5,7 @@ import { DB_TIME } from '../metric-events';
 import { ClientMetricsDb } from './client-metrics-db';
 import { IClientMetric } from '../types/stores/client-metrics-db';
 import { IClientMetricsStore } from '../types/stores/client-metrics-store';
-
-const TEN_SECONDS = 10 * 1000;
+import { secondsToMilliseconds } from 'date-fns';
 
 export class ClientMetricsStore
     extends EventEmitter
@@ -24,7 +23,7 @@ export class ClientMetricsStore
         private metricsDb: ClientMetricsDb,
         eventBus: EventEmitter,
         getLogger: LogProvider,
-        pollInterval = TEN_SECONDS,
+        pollInterval = secondsToMilliseconds(10),
     ) {
         super();
         this.logger = getLogger('client-metrics-store.ts.js');

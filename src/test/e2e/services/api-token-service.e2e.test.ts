@@ -4,6 +4,7 @@ import { ApiTokenService } from '../../../lib/services/api-token-service';
 import { createTestConfig } from '../../config/test-config';
 import { ApiTokenType, IApiToken } from '../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
+import { addDays, subDays } from 'date-fns';
 
 let db;
 let stores;
@@ -102,13 +103,14 @@ test('should update expiry of token', async () => {
 });
 
 test('should only return valid tokens', async () => {
-    const today = new Date();
-    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+    const now = Date.now();
+    const yesterday = subDays(now, 1);
+    const tomorrow = addDays(now, 1);
 
     await apiTokenService.createApiToken({
         username: 'default-expired',
         type: ApiTokenType.CLIENT,
-        expiresAt: new Date('2021-01-01'),
+        expiresAt: yesterday,
         project: '*',
         environment: DEFAULT_ENV,
     });

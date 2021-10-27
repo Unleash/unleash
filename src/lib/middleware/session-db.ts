@@ -3,16 +3,16 @@ import session from 'express-session';
 import knexSessionStore from 'connect-session-knex';
 import { RequestHandler } from 'express';
 import { IUnleashConfig } from '../types/option';
+import { hoursToMilliseconds } from 'date-fns';
 
-const TWO_DAYS = 48 * 60 * 60 * 1000;
-const HOUR = 60 * 60 * 1000;
 function sessionDb(
     config: Pick<IUnleashConfig, 'session' | 'server' | 'secureHeaders'>,
     knex: Knex,
 ): RequestHandler {
     let store;
     const { db } = config.session;
-    const age = config.session.ttlHours * HOUR || TWO_DAYS;
+    const age =
+        hoursToMilliseconds(config.session.ttlHours) || hoursToMilliseconds(48);
     const KnexSessionStore = knexSessionStore(session);
     if (db) {
         store = new KnexSessionStore({
@@ -41,4 +41,5 @@ function sessionDb(
         },
     });
 }
+
 export default sessionDb;

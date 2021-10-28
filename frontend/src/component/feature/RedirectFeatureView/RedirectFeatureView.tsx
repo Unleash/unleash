@@ -6,11 +6,13 @@ interface IRedirectFeatureViewProps {
     featureToggle: any;
     features: any;
     fetchFeatureToggles: () => void;
+    newPath: boolean;
 }
 
 const RedirectFeatureView = ({
     featureToggle,
     fetchFeatureToggles,
+    newPath = false,
 }: IRedirectFeatureViewProps) => {
     useEffect(() => {
         if (!featureToggle) {
@@ -22,7 +24,7 @@ const RedirectFeatureView = ({
     if (!featureToggle) return null;
     return (
         <Redirect
-            to={getTogglePath(featureToggle?.project, featureToggle?.name)}
+            to={getTogglePath(featureToggle?.project, featureToggle?.name, newPath)}
         />
     );
 };

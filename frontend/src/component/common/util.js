@@ -50,6 +50,9 @@ export const trim = value => {
 };
 
 export function updateWeight(variants, totalWeight) {
+    if (variants.length === 0){
+        return [];
+    }
     const variantMetadata = variants.reduce(
         ({ remainingPercentage, variableVariantCount }, variant) => {
             if (variant.weight && variant.weightType === weightTypes.FIX) {

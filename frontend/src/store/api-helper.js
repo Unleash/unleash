@@ -28,8 +28,23 @@ export class AuthenticationError extends Error {
 
 export class ForbiddenError extends Error {
     constructor(statusCode, body = {}) {
-        super(body.details?.length > 0 ? body.details[0].message : 'You cannot perform this action');
+        super(
+            body.details?.length > 0
+                ? body.details[0].message
+                : 'You cannot perform this action'
+        );
         this.name = 'ForbiddenError';
+        this.statusCode = statusCode;
+        this.body = body;
+    }
+}
+
+export class BadRequestError extends Error {
+    constructor(statusCode, body = {}) {
+        super(
+            body.details?.length > 0 ? body.details[0].message : 'Bad request'
+        );
+        this.name = 'BadRequestError';
         this.statusCode = statusCode;
         this.body = body;
     }

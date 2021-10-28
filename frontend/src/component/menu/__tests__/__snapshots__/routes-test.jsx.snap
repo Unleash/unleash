@@ -77,6 +77,15 @@ Array [
   },
   Object {
     "component": [Function],
+    "layout": "main",
+    "menu": Object {},
+    "parent": "/features",
+    "path": "/projects/:projectId/features/:name",
+    "title": ":name",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
     "flag": "P",
     "layout": "main",
     "menu": Object {},

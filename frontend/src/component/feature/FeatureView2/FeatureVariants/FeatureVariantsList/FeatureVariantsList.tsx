@@ -162,7 +162,6 @@ const FeatureOverviewVariants = () => {
     };
 
     const removeVariant = async (name: string) => {
-        console.log(`Removing variant ${name}`);
         let updatedVariants = variants.filter(v => v.name !== name);
         try {
             await updateVariants(
@@ -204,17 +203,21 @@ const FeatureOverviewVariants = () => {
         successText: string
     ) => {
         const newVariants = updateWeight(variants, 1000);
-
         const patch = createPatch(newVariants);
 
         if (patch.length === 0) return;
-        await patchFeatureToggle(projectId, featureId, patch);
-        refetch();
-        setToastData({
-            show: true,
-            type: 'success',
-            text: successText,
-        });
+        await patchFeatureToggle(projectId, featureId, patch)
+            .then(() => {
+                refetch();
+                setToastData({
+                    show: true,
+                    type: 'success',
+                    text: successText,
+                });
+            })
+            .catch(e => {
+                throw e;
+            });
     };
 
     const validateName = (name: string) => {
@@ -222,6 +225,14 @@ const FeatureOverviewVariants = () => {
             return { name: 'Name is required' };
         }
     };
+
+    const validateWeight = (weight: number) => {
+        const weightValue = parseInt(weight);
+        if (weightValue > 100 || weightValue < 0) {
+            return { weight: 'weight must be between 0 and 100' };
+        }
+    };
+
     const delDialogueMarkup = useDeleteVariantMarkup({
         show: delDialog.show,
         onClick: e => {
@@ -280,7 +291,11 @@ const FeatureOverviewVariants = () => {
                 <PermissionButton
                     onClick={() => {
                         setEditing(false);
-                        setEditVariant({});
+                        if (variants.length === 0) {
+                            setEditVariant({ weight: 1000 });
+                        } else {
+                            setEditVariant({ weightType: 'variable' });
+                        }
                         setShowAddVariant(true);
                     }}
                     className={styles.addVariantButton}
@@ -305,6 +320,7 @@ const FeatureOverviewVariants = () => {
                 }}
                 editing={editing}
                 validateName={validateName}
+                validateWeight={validateWeight}
                 editVariant={editVariant}
                 title={editing ? 'Edit variant' : 'Add variant'}
             />

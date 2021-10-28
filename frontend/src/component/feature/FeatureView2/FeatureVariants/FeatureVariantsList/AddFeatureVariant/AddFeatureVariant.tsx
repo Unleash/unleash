@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
     FormControl,
@@ -21,6 +21,11 @@ import Dialogue from '../../../../../common/Dialogue';
 import { trim, modalStyles } from '../../../../../common/util';
 import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
+import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
+import { useParams } from 'react-router-dom';
+import { IFeatureViewParams } from '../../../../../../interfaces/params';
+import { IFeatureVariant } from '../../../../../../interfaces/featureToggle';
+import cloneDeep from 'lodash.clonedeep';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -34,8 +39,8 @@ const AddVariant = ({
     showDialog,
     closeDialog,
     save,
-    validateName,
     editVariant,
+    validateName,
     title,
     editing,
 }) => {
@@ -44,6 +49,9 @@ const AddVariant = ({
     const [overrides, setOverrides] = useState([]);
     const [error, setError] = useState({});
     const commonStyles = useCommonStyles();
+    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const { feature } = useFeature(projectId, featureId);
+    const [variants, setVariants] = useState<IFeatureVariant[]>([]);
 
     const clear = () => {
         if (editVariant) {
@@ -55,6 +63,8 @@ const AddVariant = ({
             });
             if (editVariant.payload) {
                 setPayload(editVariant.payload);
+            } else {
+                setPayload(EMPTY_PAYLOAD);
             }
             if (editVariant.overrides) {
                 setOverrides(editVariant.overrides);
@@ -68,6 +78,16 @@ const AddVariant = ({
         }
         setError({});
     };
+
+    const setClonedVariants = clonedVariants =>
+        setVariants(cloneDeep(clonedVariants));
+
+    useEffect(() => {
+        if (feature) {
+            setClonedVariants(feature.variants);
+        }
+        /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    }, [feature.variants]);
 
     useEffect(() => {
         clear();
@@ -119,10 +139,15 @@ const AddVariant = ({
             clear();
             closeDialog();
         } catch (error) {
-            if (error.message.includes('duplicate value')) {
+            if (error?.body?.details[0]?.message?.includes('duplicate value')) {
                 setError({ name: 'A variant with that name already exists.' });
+            } else if (
+                error?.body?.details[0]?.message?.includes('must be a number')
+            ) {
+                setError({ weight: 'Weight must be a number' });
             } else {
-                const msg = error.message || 'Could not add variant';
+                const msg =
+                    error?.body?.details[0]?.message || 'Could not add variant';
                 setError({ general: msg });
             }
         }
@@ -215,46 +240,66 @@ const AddVariant = ({
                 />
                 <br />
                 <Grid container>
-                    <Grid item md={4}>
-                        <TextField
-                            id="weight"
-                            label="Weight"
-                            name="weight"
-                            variant="outlined"
-                            size="small"
-                            placeholder=""
-                            data-test={'VARIANT_WEIGHT_INPUT'}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="start">
-                                        %
-                                    </InputAdornment>
-                                ),
-                            }}
-                            style={{ marginRight: '0.8rem' }}
-                            value={data.weight || ''}
-                            error={Boolean(error.weight)}
-                            type="number"
-                            disabled={!isFixWeight}
-                            onChange={setVariantValue}
-                        />
-                    </Grid>
-                    <Grid item md={6}>
-                        <FormControl>
-                            <FormControlLabel
-                                control={
-                                    <PermissionSwitch
-                                        permission={UPDATE_FEATURE}
-                                        name="weightType"
-                                        checked={isFixWeight}
-                                        data-test={'VARIANT_WEIGHT_TYPE'}
-                                        onChange={setVariantWeightType}
+                    <ConditionallyRender
+                        condition={variants.length > 0}
+                        show={
+                            <Grid
+                                item
+                                md={12}
+                                style={{ marginBottom: '0.5rem' }}
+                            >
+                                <FormControl>
+                                    <FormControlLabel
+                                        control={
+                                            <PermissionSwitch
+                                                permission={UPDATE_FEATURE}
+                                                name="weightType"
+                                                checked={isFixWeight}
+                                                data-test={
+                                                    'VARIANT_WEIGHT_TYPE'
+                                                }
+                                                onChange={setVariantWeightType}
+                                            />
+                                        }
+                                        label="Custom percentage"
                                     />
-                                }
-                                label="Custom percentage"
-                            />
-                        </FormControl>
-                    </Grid>
+                                </FormControl>
+                            </Grid>
+                        }
+                    />
+
+                    <ConditionallyRender
+                        condition={data.weightType === weightTypes.FIX}
+                        show={
+                            <Grid item md={4}>
+                                <TextField
+                                    id="weight"
+                                    label="Weight"
+                                    name="weight"
+                                    variant="outlined"
+                                    size="small"
+                                    placeholder=""
+                                    data-test={'VARIANT_WEIGHT_INPUT'}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="start">
+                                                %
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    style={{ marginRight: '0.8rem' }}
+                                    value={data.weight}
+                                    error={Boolean(error.weight)}
+                                    helperText={error.weight}
+                                    type="number"
+                                    disabled={!isFixWeight}
+                                    onChange={e => {
+                                        setVariantValue(e);
+                                    }}
+                                />
+                            </Grid>
+                        }
+                    />
                 </Grid>
                 <p style={{ marginBottom: '1rem' }}>
                     <strong>Payload </strong>
@@ -339,6 +384,7 @@ AddVariant.propTypes = {
     closeDialog: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
     validateName: PropTypes.func.isRequired,
+    validateWeight: PropTypes.func.isRequired,
     editVariant: PropTypes.object,
     title: PropTypes.string,
     uiConfig: PropTypes.object,

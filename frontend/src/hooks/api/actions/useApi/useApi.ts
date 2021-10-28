@@ -8,6 +8,7 @@ import {
 } from '../../../../constants/statusCodes';
 import {
     AuthenticationError,
+    BadRequestError,
     ForbiddenError,
     headers,
     NotFoundError,
@@ -107,7 +108,8 @@ const useAPI = ({
             }
 
             if (propagateErrors) {
-                throw new Error();
+                const response = await res.json();
+                throw new BadRequestError(res.status, response);
             }
         }
 
@@ -160,7 +162,7 @@ const useAPI = ({
 
         if (res.status > 399) {
             const response = await res.json();
-            
+
             if (response?.details?.length > 0) {
                 const error = response.details[0];
                 if (propagateErrors) {

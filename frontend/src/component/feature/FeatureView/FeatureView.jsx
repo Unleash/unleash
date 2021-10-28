@@ -40,6 +40,8 @@ import { projectFilterGenerator } from '../../../utils/project-filter-generator'
 import { getToggleCopyPath } from '../../../utils/route-path-helpers';
 import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from '../../../hooks/useToast';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { getTogglePath } from '../../../utils/route-path-helpers';
 
 const FeatureView = ({
     activeTab,
@@ -68,6 +70,16 @@ const FeatureView = ({
     const { changeFeatureProject } = useFeatureApi();
     const { toast, setToastData } = useToast();
     const archive = !Boolean(isFeatureView);
+    const { uiConfig } = useUiConfig();
+
+    useEffect(() => {
+        if(uiConfig.flags.E && featureToggle && featureToggle.project) {
+            const newTogglePAth = getTogglePath(featureToggle.project, featureToggleName, true);
+            history.push(newTogglePAth);
+        }
+
+    }, [featureToggleName, uiConfig, featureToggle, history])
+    
 
     useEffect(() => {
         scrollToTop();

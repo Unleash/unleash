@@ -276,8 +276,8 @@ describe('feature toggle', () => {
         cy.wait('@variantcreation');
     });
     it('Can set weight to fixed value for one of the variants', () => {
-        const variantName = 'my-new-variant';
         cy.wait(500);
+
         cy.visit(`/projects/default/features2/${featureToggleName}/variants`);
         cy.get('[data-test=VARIANT_EDIT_BUTTON]').first().click();
         cy.get('[data-test=VARIANT_NAME_INPUT]')

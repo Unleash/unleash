@@ -118,6 +118,15 @@ export const routes = [
         menu: {},
     },
     {
+        path: '/projects/:projectId/features/:name',
+        parent: '/features',
+        title: ':name',
+        component: RedirectFeatureViewPage,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
         path: '/projects/:id/:activeTab',
         parent: '/projects',
         title: ':id',

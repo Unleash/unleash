@@ -61,6 +61,7 @@ export default class UserAdminController extends Controller {
         this.get('/search', this.search);
         this.post('/', this.createUser, ADMIN);
         this.post('/validate-password', this.validatePassword);
+        this.get('/:id', this.getUser, ADMIN);
         this.put('/:id', this.updateUser, ADMIN);
         this.post('/:id/change-password', this.changePassword, ADMIN);
         this.delete('/:id', this.deleteUser, ADMIN);
@@ -113,6 +114,12 @@ export default class UserAdminController extends Controller {
             this.logger.error(error);
             res.status(500).send({ msg: 'server errors' });
         }
+    }
+
+    async getUser(req: Request, res: Response): Promise<void> {
+        const { id } = req.params;
+        const user = await this.userService.getUser(Number(id));
+        res.json(user);
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

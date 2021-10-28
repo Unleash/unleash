@@ -18,12 +18,10 @@ export default class TeamsAddon extends Addon {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async handleEvent(event: IEvent, parameters: any): Promise<void> {
         const { url } = parameters;
-        const { createdBy, data } = event;
+        const { createdBy } = event;
         const text = this.msgFormatter.format(event);
         const featureLink = this.msgFormatter.featureLink(event);
 
-        const enabled = `*${data.enabled ? 'yes' : 'no'}*`;
-        const stale = data.stale ? '("stale")' : '';
         const body = {
             themeColor: '0076D7',
             summary: 'Message',
@@ -39,10 +37,6 @@ export default class TeamsAddon extends Addon {
                         {
                             name: 'Action',
                             value: event.type,
-                        },
-                        {
-                            name: 'Enabled',
-                            value: `${enabled}${stale}`,
                         },
                     ],
                 },

@@ -6,6 +6,7 @@ import { IAddonConfig, IEvent } from '../types/model';
 import {
     FeatureEventFormatter,
     FeatureEventFormatterMd,
+    LinkStyle,
 } from './feature-event-formatter-md';
 
 export default class SlackAddon extends Addon {
@@ -13,7 +14,10 @@ export default class SlackAddon extends Addon {
 
     constructor(args: IAddonConfig) {
         super(slackDefinition, args);
-        this.msgFormatter = new FeatureEventFormatterMd(args.unleashUrl);
+        this.msgFormatter = new FeatureEventFormatterMd(
+            args.unleashUrl,
+            LinkStyle.SLACK,
+        );
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

@@ -21,43 +21,58 @@ export interface FeatureEventFormatter {
     featureLink: (event: IEvent) => string;
 }
 
+export enum LinkStyle {
+    SLACK,
+    MD,
+}
+
 export class FeatureEventFormatterMd implements FeatureEventFormatter {
     private unleashUrl: string;
 
-    constructor(unleashUrl: string) {
+    private linkStyle: LinkStyle;
+
+    constructor(unleashUrl: string, linkStyle: LinkStyle = LinkStyle.MD) {
         this.unleashUrl = unleashUrl;
+        this.linkStyle = linkStyle;
     }
 
     generateArchivedText(event: IEvent): string {
-        const { createdBy, data, type } = event;
+        const { createdBy, type } = event;
         const action = type === FEATURE_ARCHIVED ? 'archived' : 'revived';
-        const feature = `<${this.featureLink(event)}|${data.name}>`;
+        const feature = this.generateFeatureLink(event);
         return ` ${createdBy} just ${action} feature toggle *${feature}*`;
     }
 
+    generateFeatureLink(event: IEvent): string {
+        if (this.linkStyle === LinkStyle.SLACK) {
+            return `<${this.featureLink(event)}|${event.data.name}>`;
+        } else {
+            return `[${event.data.name}](${this.featureLink(event)})`;
+        }
+    }
+
     generateStaleText(event: IEvent): string {
-        const { createdBy, data, type } = event;
+        const { createdBy, type } = event;
         const isStale = type === FEATURE_STALE_ON;
-        const feature = `<${this.featureLink(event)}|${data.name}>`;
+        const feature = this.generateFeatureLink(event);
 
         if (isStale) {
-            return `The feature toggle *${feature}* is now *ready to be removed* from the code. :technologist:
-    This was changed by ${createdBy}.`;
+            return `${createdBy} marked ${feature}  as stale and this feature toggle is now *ready to be removed* from the code.`;
         }
-        return `The feature toggle *${feature}* was *unmarked as stale* by ${createdBy}.`;
+        return `${createdBy} removed the stale marking on *${feature}*.`;
     }
 
     generateEnvironmentToggleText(event: IEvent): string {
-        const { createdBy, environment, data, type } = event;
+        const { createdBy, environment, type, project } = event;
         const toggleStatus =
             type === FEATURE_ENVIRONMENT_ENABLED ? 'enabled' : 'disabled';
-        const feature = `<${this.featureLink(event)}|${data.name}>`;
-        return `${createdBy} *${toggleStatus}* ${feature} in *${environment}* environment`;
+        const feature = this.generateFeatureLink(event);
+        return `${createdBy} *${toggleStatus}* ${feature} in *${environment}* environment in project *${project}*`;
     }
 
     generateStrategyChangeText(event: IEvent): string {
         const { createdBy, environment, project, data, type } = event;
-        const feature = `<${this.featureLink(event)}|${data.name}>`;
+        const feature = this.generateFeatureLink(event);
         let action;
         if (FEATURE_STRATEGY_UPDATE === type) {
             action = 'updated in';
@@ -68,14 +83,14 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         }
         const strategyText = `a ${
             data.strategyName ?? ''
-        } *strategy ${action}* the *${environment}* environment`;
-        return `${createdBy} updated *${feature}* (project: ${project}) with ${strategyText}`;
+        } strategy ${action} the *${environment}* environment`;
+        return `${createdBy} updated *${feature}* with ${strategyText} in project *${project}*`;
     }
 
     generateMetadataText(event: IEvent): string {
-        const { createdBy, project, data } = event;
-        const feature = `<${this.featureLink(event)}|${data.name}>`;
-        return `${createdBy} updated the metadata for ${feature} (project: ${project})`;
+        const { createdBy, project } = event;
+        const feature = this.generateFeatureLink(event);
+        return `${createdBy} updated the metadata for ${feature} in project *${project}*`;
     }
 
     generateProjectChangeText(event: IEvent): string {
@@ -103,20 +118,10 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     }
 
     defaultText(event: IEvent): string {
-        const { createdBy, data, type } = event;
+        const { createdBy, project, type } = event;
         const action = this.getAction(type);
-        const feature = `<${this.featureLink(event)}|${data.name}>`;
-        const enabled = `*Enabled*: ${data.enabled ? 'yes' : 'no'}`;
-        const stale = data.stale ? '("stale")' : '';
-        const typeStr = `*Type*: ${data.type}`;
-        const project = `*Project*: ${data.project}`;
-        const strategies = `*Activation strategies*: \`\`\`${YAML.dump(
-            data.strategies,
-            { skipInvalid: true },
-        )}\`\`\``;
-        return `${createdBy} ${action} feature toggle ${feature}
-    ${enabled}${stale} | ${typeStr} | ${project}
-    ${data.strategies ? strategies : ''}`;
+        const feature = this.generateFeatureLink(event);
+        return `${createdBy} ${action} feature toggle ${feature} in project *${project}*`;
     }
 
     format(event: IEvent): string {

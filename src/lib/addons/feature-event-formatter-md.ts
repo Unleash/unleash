@@ -1,4 +1,3 @@
-import YAML from 'js-yaml';
 import { IEvent } from '../types/model';
 import {
     FEATURE_CREATED,

@@ -112,13 +112,13 @@ function googleAdminAuth(app) {
 }
 ```
 
-Implement a preRouter hook for `/api/admin/login`. It's necessary for login with Google.
+Implement a preRouter hook for `/auth/google/login`. It's necessary for login with Google.
 
 ```js
 function googleAdminAuth(app) {
   // ...
   app.get(
-    '/api/admin/login',
+    '/auth/google/login',
     passport.authenticate('google', { scope: ['email'] }),
   );
   // ...
@@ -158,7 +158,7 @@ function googleAdminAuth(app) {
         .status('401')
         .json(
           new unleash.AuthenticationRequired({
-            path: '/api/admin/login',
+            path: '/auth/google/login',
             type: 'custom',
             message: `You have to identify yourself in order to use Unleash. Click the button and follow the instructions.`,
           }),
@@ -211,7 +211,7 @@ function googleAdminAuth(app) {
   passport.deserializeUser((user, done) => done(null, user));
 
   app.get(
-    '/api/admin/login',
+    '/auth/google/login',
     passport.authenticate('google', { scope: ['email'] }),
   );
   app.get(
@@ -232,7 +232,7 @@ function googleAdminAuth(app) {
         .status('401')
         .json(
           new unleash.AuthenticationRequired({
-            path: '/api/admin/login',
+            path: '/auth/google/login',
             type: 'custom',
             message: `You have to identify yourself in order to use Unleash. Click the button and follow the instructions.`,
           }),

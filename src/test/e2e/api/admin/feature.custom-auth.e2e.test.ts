@@ -26,7 +26,7 @@ test('should require authenticated user', async () => {
                 .status('401')
                 .json(
                     new AuthenticationRequired({
-                        path: '/api/admin/login',
+                        path: '/auth/demo/login',
                         type: 'custom',
                         message: 'You have to identify yourself.',
                     }),

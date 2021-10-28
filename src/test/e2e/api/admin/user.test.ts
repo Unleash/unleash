@@ -20,7 +20,7 @@ afterAll(async () => {
 test('Should get my user data', async () => {
     // login
     await app.request
-        .post('/api/admin/login')
+        .post('/auth/demo/login')
         .send({
             email,
         })

@@ -11,22 +11,16 @@ function demoAuthentication(
     { userService }: Pick<IUnleashServices, 'userService'>,
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
 ): void {
-    app.post(`${basePath}/api/admin/login`, async (req, res) => {
+    app.post(`${basePath}/auth/demo/login`, async (req, res) => {
         const { email } = req.body;
         try {
             const user = await userService.loginUserWithoutPassword(
                 email,
                 true,
             );
-            const session = req.session || {};
-            // @ts-ignore
-            session.user = user;
-            // @ts-ignore
-            req.session = session;
-            res.status(200)
-                // @ts-ignore
-                .json(req.session.user)
-                .end();
+            //@ts-ignore
+            req.session.user = user;
+            return res.status(200).json(user);
         } catch (e) {
             res.status(400)
                 .json({ error: `Could not sign in with ${email}` })
@@ -67,7 +61,7 @@ function demoAuthentication(
             .status(401)
             .json(
                 new AuthenticationRequired({
-                    path: `${basePath}/api/admin/login`,
+                    path: `${basePath}/auth/demo/login`,
                     type: 'demo',
                     message:
                         'You have to identify yourself in order to use Unleash.',

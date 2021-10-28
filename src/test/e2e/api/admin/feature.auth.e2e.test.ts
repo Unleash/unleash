@@ -18,7 +18,7 @@ test('creates new feature toggle with createdBy', async () => {
     const { request, destroy } = await setupAppWithAuth(db.stores);
 
     // Login
-    await request.post('/api/admin/login').send({
+    await request.post('/auth/demo/login').send({
         email: 'user@mail.com',
     });
 

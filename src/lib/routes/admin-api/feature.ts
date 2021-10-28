@@ -11,7 +11,6 @@ import {
 } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
-import { Logger } from '../../logger';
 import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
 import { featureSchema, querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';

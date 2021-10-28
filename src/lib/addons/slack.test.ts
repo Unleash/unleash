@@ -45,9 +45,11 @@ test('Should call slack webhook', async () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        project: 'default',
         data: {
             name: 'some-toggle',
             enabled: false,
+            type: 'release',
             strategies: [{ name: 'default' }],
         },
     };

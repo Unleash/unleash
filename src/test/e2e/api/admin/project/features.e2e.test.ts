@@ -1010,7 +1010,7 @@ test('Deleting a strategy should include name of feature strategy was deleted fr
         type: FEATURE_STRATEGY_REMOVE,
     });
     expect(events).toHaveLength(1);
-    expect(events[0].data.featureName).toBe(featureName);
+    expect(events[0].data.name).toBe(featureName);
     expect(events[0].environment).toBe(environment);
     expect(events[0].data.id).toBe(strategyId);
 });

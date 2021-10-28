@@ -271,7 +271,7 @@ class FeatureToggleServiceV2 {
             createdBy: userName,
             data: {
                 id,
-                featureName,
+                name: featureName,
             },
         });
         // If there are no strategies left for environment disable it

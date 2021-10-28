@@ -43,18 +43,45 @@ test('should slice off list', () => {
         expired.push(entry);
     });
 
+    expect(expired).toHaveLength(0);
+    expect(list.list.toArray()).toHaveLength(4);
+
     jest.advanceTimersByTime(21);
     expect(expired).toHaveLength(1);
+    expect(list.list.toArray()).toHaveLength(3);
 
     jest.advanceTimersByTime(51);
     expect(expired).toHaveLength(2);
+    expect(list.list.toArray()).toHaveLength(2);
 
     jest.advanceTimersByTime(201);
     expect(expired).toHaveLength(3);
+    expect(list.list.toArray()).toHaveLength(1);
 
     jest.advanceTimersByTime(301);
     expect(expired).toHaveLength(4);
+    expect(list.list.toArray()).toHaveLength(0);
 
     list.destroy();
+    jest.useRealTimers();
+});
+
+test('should add item created in the past but expiring in the future', () => {
+    jest.useFakeTimers('modern');
+
+    const list = new TTLList({
+        interval: 10,
+        expireAmount: 10,
+        expireType: 'milliseconds',
+    });
+
+    const expireCallback = jest.fn();
+    list.on('expire', expireCallback);
+
+    list.add({ n: '1' }, new Date());
+
+    expect(expireCallback).not.toHaveBeenCalled();
+    expect(list.list.toArray()).toHaveLength(1);
+
     jest.useRealTimers();
 });

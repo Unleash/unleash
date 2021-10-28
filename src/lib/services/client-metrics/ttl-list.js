@@ -2,7 +2,12 @@
 
 const { EventEmitter } = require('events');
 const List = require('./list');
-const { millisecondsInSecond, add, isFuture } = require('date-fns');
+const {
+    millisecondsInSecond,
+    add,
+    isFuture,
+    addMilliseconds,
+} = require('date-fns');
 
 // this list must have entries with sorted ttl range
 module.exports = class TTLList extends EventEmitter {
@@ -15,6 +20,14 @@ module.exports = class TTLList extends EventEmitter {
         this.interval = interval;
         this.expireAmount = expireAmount;
         this.expireType = expireType;
+
+        this.getExpiryFrom = (timestamp) => {
+            if (this.expireType === 'milliseconds') {
+                return addMilliseconds(timestamp, expireAmount);
+            } else {
+                return add(timestamp, { [expireType]: expireAmount });
+            }
+        };
 
         this.list = new List();
 
@@ -36,7 +49,7 @@ module.exports = class TTLList extends EventEmitter {
     }
 
     add(value, timestamp = new Date()) {
-        const ttl = add(timestamp, { [this.expireType]: this.expireAmount });
+        const ttl = this.getExpiryFrom(timestamp);
         if (isFuture(ttl)) {
             this.list.add({ ttl, value });
         } else {

@@ -111,7 +111,7 @@ Now you can fetch the feature toggle you created and try turning it on / off in 
 
 If you want to set up your own instance for testing purposes you can easily do so by using one of our premade setup kits for Heroku or DigitalOcean.
 
-> The Heroku instance setup is FREE, and includes a DB to save your state but it will eventually go to sleep when not used. The DigitalOcean setup utilises droplets and will cost you around 10$/month to run, but in turn it will not go to sleep. NOTE: If you use the DigitalOcean link below and are a new user, you will receive 100$ in FREE credits.
+> The Heroku instance setup is FREE, and includes a DB to save your state but it will eventually go to sleep when not used. The DigitalOcean setup utilises droplets and will cost you around $10/month to run, but in turn it will not go to sleep. NOTE: If you use the DigitalOcean link below and are a new user, you will receive $100 in FREE credits.
 
 ### Deploy a free version of Unleash to Heroku
 
@@ -119,7 +119,7 @@ If you want to set up your own instance for testing purposes you can easily do s
 
 ### Deploy a paid version of Unleash to DigitalOcean
 
-> You'll receive 100\$ in free credits if you are a new DigitalOcean user using this link.
+> You'll receive $100 in free credits if you are a new DigitalOcean user using this link.
 
 [![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/master&refcode=0e1d75187044)
 

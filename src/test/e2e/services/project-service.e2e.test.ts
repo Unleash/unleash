@@ -17,7 +17,7 @@ let db: ITestDb;
 
 let projectService;
 let accessService;
-let featureToggleService;
+let featureToggleService: FeatureToggleServiceV2;
 let user;
 
 beforeAll(async () => {
@@ -30,7 +30,7 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
         // @ts-ignore
-        experimental: { rbac: true },
+        experimental: { environments: { enabled: true } },
     });
     accessService = new AccessService(stores, config);
     featureToggleService = new FeatureToggleServiceV2(stores, config);
@@ -44,6 +44,16 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await db.destroy();
+});
+
+afterEach(async () => {
+    const envs = await stores.environmentStore.getAll();
+    const deleteEnvs = envs
+        .filter((env) => env.name !== 'default')
+        .map(async (env) => {
+            await stores.environmentStore.delete(env.name);
+        });
+    await Promise.allSettled(deleteEnvs);
 });
 
 test('should have default project', async () => {
@@ -501,12 +511,14 @@ test('should change project when checks pass', async () => {
     await projectService.createProject(projectDestination, user);
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
 
-    const updatedFeature = await projectService.changeProject(
+    await projectService.changeProject(
         projectDestination.id,
         toggle.name,
         user,
         project.id,
     );
+
+    const updatedFeature = await featureToggleService.getFeature(toggle.name);
 
     expect(updatedFeature.project).toBe(projectDestination.id);
 });
@@ -535,4 +547,41 @@ test('A newly created project only gets connected to enabled environments', asyn
     expect(connectedEnvs).toHaveLength(2); // default, connection_test
     expect(connectedEnvs.some((e) => e === enabledEnv)).toBeTruthy();
     expect(connectedEnvs.some((e) => e === disabledEnv)).toBeFalsy();
+});
+
+test('A newly created project only gets connected to default environment if experimental flag is disabled', async () => {
+    const config = createTestConfig({
+        getLogger,
+        // @ts-ignore
+        experimental: { environments: { enabled: false } },
+    });
+    projectService = new ProjectService(
+        stores,
+        //@ts-ignore
+        config,
+        accessService,
+        featureToggleService,
+    );
+    const project = {
+        id: 'environment-test-default',
+        name: 'New environment project',
+        description: 'Blah',
+    };
+    const enabledEnv = 'connection_test';
+    await db.stores.environmentStore.create({
+        name: enabledEnv,
+        type: 'test',
+    });
+    const disabledEnv = 'do_not_connect';
+    await db.stores.environmentStore.create({
+        name: disabledEnv,
+        type: 'test',
+        enabled: false,
+    });
+
+    await projectService.createProject(project, user);
+    const connectedEnvs =
+        await db.stores.projectStore.getEnvironmentsForProject(project.id);
+    expect(connectedEnvs).toHaveLength(1); // default, connection_test
+    expect(connectedEnvs[0]).toBe('default');
 });

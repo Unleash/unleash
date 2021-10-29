@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import {
@@ -7,6 +6,7 @@ import {
     IClientMetricsStoreV2,
 } from '../types/stores/client-metrics-store-v2';
 import NotFoundError from '../error/notfound-error';
+import { startOfHour } from 'date-fns';
 
 interface ClientMetricsEnvTable {
     feature_name: string;
@@ -18,10 +18,6 @@ interface ClientMetricsEnvTable {
 }
 
 const TABLE = 'client_metrics_env';
-
-export function roundDownToHour(date: Date): Date {
-    return new Date(date.getTime() - (date.getTime() % 3600000));
-}
 
 const fromRow = (row: ClientMetricsEnvTable) => ({
     featureName: row.feature_name,
@@ -36,7 +32,7 @@ const toRow = (metric: IClientMetricsEnv) => ({
     feature_name: metric.featureName,
     app_name: metric.appName,
     environment: metric.environment,
-    timestamp: roundDownToHour(metric.timestamp),
+    timestamp: startOfHour(metric.timestamp),
     yes: metric.yes,
     no: metric.no,
 });
@@ -57,7 +53,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
                 feature_name: key.featureName,
                 app_name: key.appName,
                 environment: key.environment,
-                timestamp: roundDownToHour(key.timestamp),
+                timestamp: startOfHour(key.timestamp),
             })
             .first();
         if (row) {
@@ -88,7 +84,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
                 feature_name: key.featureName,
                 app_name: key.appName,
                 environment: key.environment,
-                timestamp: roundDownToHour(key.timestamp),
+                timestamp: startOfHour(key.timestamp),
             })
             .del();
     }

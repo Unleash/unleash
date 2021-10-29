@@ -94,7 +94,12 @@ export default function getApp(
         }
         case IAuthType.DEMO: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            demoAuthentication(app, config.server.baseUriPath, services);
+            demoAuthentication(
+                app,
+                config.server.baseUriPath,
+                services,
+                config,
+            );
             break;
         }
         case IAuthType.CUSTOM: {
@@ -107,7 +112,13 @@ export default function getApp(
             break;
         }
         default: {
-            demoAuthentication(app, config.server.baseUriPath, services);
+            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            demoAuthentication(
+                app,
+                config.server.baseUriPath,
+                services,
+                config,
+            );
             break;
         }
     }

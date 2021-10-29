@@ -10,6 +10,9 @@ import {
     FEATURE_STALE_ON,
     FEATURE_STRATEGY_REMOVE,
 } from '../../../../../lib/types/events';
+import ApiUser from '../../../../../lib/types/api-user';
+import { ApiTokenType } from '../../../../../lib/types/models/api-token';
+import IncompatibleProjectError from '../../../../../lib/error/incompatible-project-error';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -1007,7 +1010,7 @@ test('Deleting a strategy should include name of feature strategy was deleted fr
         type: FEATURE_STRATEGY_REMOVE,
     });
     expect(events).toHaveLength(1);
-    expect(events[0].data.featureName).toBe(featureName);
+    expect(events[0].data.name).toBe(featureName);
     expect(events[0].environment).toBe(environment);
     expect(events[0].data.id).toBe(strategyId);
 });
@@ -1082,6 +1085,13 @@ test('Disabling environment creates a FEATURE_ENVIRONMENT_DISABLED event', async
             `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
         )
         .send({ name: 'default', constraints: [], properties: {} })
+        .expect(200);
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${environment}/on`,
+        )
+        .set('Content-Type', 'application/json')
         .expect(200);
 
     await app.request
@@ -1483,4 +1493,172 @@ test('should clone feature toggle without replacing groupId', async () => {
             expect(env.strategies).toHaveLength(1);
             expect(env.strategies[0].parameters.groupId).toBe(featureName);
         });
+});
+
+test('Should not allow changing project to target project without the same enabled environments', async () => {
+    const envNameNotInBoth = 'not-in-both';
+    const featureName = 'feature.dont.allow.change.project';
+    const project = 'default';
+    const targetProject = 'target-for-disallowed-change';
+    await db.stores.projectStore.create({
+        name: 'Project to be moved to',
+        id: targetProject,
+        description: '',
+    });
+
+    await db.stores.environmentStore.create({
+        name: envNameNotInBoth,
+        type: 'test',
+        enabled: true,
+        sortOrder: 500,
+    });
+
+    await db.stores.projectStore.addEnvironmentToProject(
+        'default',
+        envNameNotInBoth,
+    );
+    await db.stores.projectStore.addEnvironmentToProject(
+        targetProject,
+        'default',
+    );
+
+    await app.request
+        .post(`/api/admin/projects/${project}/features`)
+        .send({
+            name: featureName,
+        })
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/features/${featureName}/environments/default/strategies`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            parameters: {
+                groupId: featureName,
+            },
+        })
+        .expect(200);
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/features/${featureName}/environments/${envNameNotInBoth}/strategies`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            parameters: {
+                groupId: featureName,
+            },
+        })
+        .expect(200);
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/features/${featureName}/environments/default/on`,
+        )
+        .send({})
+        .expect(200);
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/features/${featureName}/environments/${envNameNotInBoth}/on`,
+        )
+        .send({})
+        .expect(200);
+    const user = new ApiUser({
+        username: 'project-changer',
+        permissions: ['ADMIN'],
+        project: '*',
+        type: ApiTokenType.ADMIN,
+        environment: '*',
+    });
+    await expect(async () =>
+        app.services.projectService.changeProject(
+            targetProject,
+            featureName,
+            //@ts-ignore
+            user,
+            'default',
+        ),
+    ).rejects.toThrow(new IncompatibleProjectError(targetProject));
+});
+
+test('Should allow changing project to target project with the same enabled environments', async () => {
+    const inBoth = 'in-both';
+    const featureName = 'feature.change.project';
+    const project = 'default';
+    const targetProject = 'target-for-change';
+    await db.stores.projectStore.create({
+        name: 'Project to be moved to',
+        id: targetProject,
+        description: '',
+    });
+
+    await db.stores.environmentStore.create({
+        name: inBoth,
+        type: 'test',
+        enabled: true,
+        sortOrder: 500,
+    });
+
+    await db.stores.projectStore.addEnvironmentToProject('default', inBoth);
+    await db.stores.projectStore.addEnvironmentToProject(
+        targetProject,
+        'default',
+    );
+    await db.stores.projectStore.addEnvironmentToProject(targetProject, inBoth);
+
+    await app.request
+        .post(`/api/admin/projects/${project}/features`)
+        .send({
+            name: featureName,
+        })
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/features/${featureName}/environments/default/strategies`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            parameters: {
+                groupId: featureName,
+            },
+        })
+        .expect(200);
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/features/${featureName}/environments/${inBoth}/strategies`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            parameters: {
+                groupId: featureName,
+            },
+        })
+        .expect(200);
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/features/${featureName}/environments/default/on`,
+        )
+        .send({})
+        .expect(200);
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/features/${featureName}/environments/${inBoth}/on`,
+        )
+        .send({})
+        .expect(200);
+    const user = new ApiUser({
+        username: 'project-changer',
+        permissions: ['ADMIN'],
+        project: '*',
+        type: ApiTokenType.ADMIN,
+        environment: '*',
+    });
+    await expect(async () =>
+        app.services.projectService.changeProject(
+            targetProject,
+            featureName,
+            //@ts-ignore
+            user,
+            'default',
+        ),
+    ).resolves;
 });

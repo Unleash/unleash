@@ -107,10 +107,14 @@ export default class FakeFeatureEnvironmentStore
         environment: string,
         featureName: string,
         enabled: boolean,
-    ): Promise<boolean> {
+    ): Promise<number> {
         const fE = await this.get({ environment, featureName });
-        fE.enabled = enabled;
-        return enabled;
+        if (fE.enabled !== enabled) {
+            fE.enabled = enabled;
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     async connectProject(

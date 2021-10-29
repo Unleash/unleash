@@ -67,8 +67,7 @@ export interface FeatureToggleWithEnvironment extends FeatureToggle {
 }
 
 // @deprecated
-export interface FeatureToggleWithEnvironmentLegacy
-    extends FeatureToggleWithEnvironment {
+export interface FeatureToggleLegacy extends FeatureToggle {
     strategies: IStrategyConfig[];
     enabled: boolean;
 }

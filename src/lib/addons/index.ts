@@ -12,6 +12,7 @@ export interface IAddonProviders {
 export const getAddons: (args: {
     getLogger: LogProvider;
     unleashUrl: string;
+    newFeatureLink?: boolean;
 }) => IAddonProviders = ({ getLogger, unleashUrl }) => {
     const addons = [
         new Webhook({ getLogger }),

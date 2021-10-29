@@ -32,7 +32,7 @@ Your project file structure should look something like this
 
 ```
 unleash/
-  websitev2/
+  website/
     /docs
         doc-1.md
         doc-2.md
@@ -79,7 +79,7 @@ title: This Doc Needs To Be Edited
 My new content here..
 ```
 
-1. Refer to that doc's ID in an existing sidebar in `websitev2/sidebars.json`:
+1. Refer to that doc's ID in an existing sidebar in `website/sidebars.json`:
 
 ```javascript
 // Add newly-created-doc to the Getting Started category of docs

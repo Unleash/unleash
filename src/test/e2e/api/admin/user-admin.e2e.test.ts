@@ -143,8 +143,6 @@ test('requires known root role', async () => {
 });
 
 test('update user name', async () => {
-    expect.assertions(3);
-
     const { body } = await app.request
         .post('/api/admin/user-admin')
         .send({
@@ -166,6 +164,25 @@ test('update user name', async () => {
             expect(res.body.name).toBe('New name');
             expect(res.body.id).toBe(body.id);
         });
+});
+
+test('get a single user', async () => {
+    const { body } = await app.request
+        .post('/api/admin/user-admin')
+        .send({
+            email: 'some2@getunelash.ai',
+            name: 'Some Name 2',
+            rootRole: editorRole.id,
+        })
+        .set('Content-Type', 'application/json');
+
+    const { body: user } = await app.request
+        .get(`/api/admin/user-admin/${body.id}`)
+        .expect(200);
+
+    expect(user.email).toBe('some2@getunelash.ai');
+    expect(user.name).toBe('Some Name 2');
+    expect(user.id).toBe(body.id);
 });
 
 test('should delete user', async () => {

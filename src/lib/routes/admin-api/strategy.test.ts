@@ -3,15 +3,11 @@ import { EventEmitter } from 'events';
 import { createTestConfig } from '../../../test/config/test-config';
 import createStores from '../../../test/fixtures/store';
 import permissions from '../../../test/fixtures/permissions';
-import getLogger from '../../../test/fixtures/no-logger';
 import getApp from '../../app';
 import { createServices } from '../../services';
 
 const eventBus = new EventEmitter();
-let request;
 let destroy;
-let strategyStore;
-let base;
 
 function getSetup() {
     const randomBase = `/random${Math.round(Math.random() * 1000)}`;
@@ -24,36 +20,26 @@ function getSetup() {
     const services = createServices(stores, config);
     const app = getApp(config, stores, services, eventBus);
 
+    destroy = () => {
+        services.versionService.destroy();
+        services.clientMetricsService.destroy();
+        services.apiTokenService.destroy();
+    };
+
     return {
         base: randomBase,
         strategyStore: stores.strategyStore,
         request: supertest(app),
         perms,
-        destroy: () => {
-            services.versionService.destroy();
-            services.clientMetricsService.destroy();
-            services.apiTokenService.destroy();
-        },
     };
 }
 
-beforeEach(() => {
-    const setup = getSetup();
-    request = setup.request;
-    base = setup.base;
-    strategyStore = setup.strategyStore;
-    destroy = setup.destroy;
-});
 afterEach(() => {
     destroy();
 });
 
-afterEach(() => {
-    getLogger.setMuteError(false);
-});
-
 test('add version numbers for /strategies', () => {
-    expect.assertions(1);
+    const { request, base } = getSetup();
     return request
         .get(`${base}/api/admin/strategies`)
         .expect('Content-Type', /json/)
@@ -64,7 +50,7 @@ test('add version numbers for /strategies', () => {
 });
 
 test('require a name when creating a new strategy', () => {
-    expect.assertions(1);
+    const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies`)
         .send({})
@@ -77,8 +63,7 @@ test('require a name when creating a new strategy', () => {
 });
 
 test('require parameters array when creating a new stratey', () => {
-    expect.assertions(1);
-
+    const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies`)
         .send({ name: 'TestStrat' })
@@ -91,7 +76,7 @@ test('require parameters array when creating a new stratey', () => {
 });
 
 test('create a new strategy with empty parameters', async () => {
-    expect.assertions(0);
+    const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies`)
         .send({ name: 'TestStrat', parameters: [] })
@@ -99,7 +84,7 @@ test('create a new strategy with empty parameters', async () => {
 });
 
 test('not be possible to override name', () => {
-    expect.assertions(0);
+    const { request, base, strategyStore } = getSetup();
     strategyStore.createStrategy({ name: 'Testing', parameters: [] });
 
     return request
@@ -109,7 +94,7 @@ test('not be possible to override name', () => {
 });
 
 test('update strategy', () => {
-    expect.assertions(0);
+    const { request, base, strategyStore } = getSetup();
     const name = 'AnotherStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -120,7 +105,7 @@ test('update strategy', () => {
 });
 
 test('not update unknown strategy', () => {
-    expect.assertions(0);
+    const { request, base } = getSetup();
     const name = 'UnknownStrat';
     return request
         .put(`${base}/api/admin/strategies/${name}`)
@@ -129,7 +114,7 @@ test('not update unknown strategy', () => {
 });
 
 test('validate format when updating strategy', () => {
-    expect.assertions(0);
+    const { request, base, strategyStore } = getSetup();
     const name = 'AnotherStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -140,15 +125,15 @@ test('validate format when updating strategy', () => {
 });
 
 test('editable=false will stop delete request', () => {
-    getLogger.setMuteError(true);
-    expect.assertions(0);
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    const { request, base } = getSetup();
     const name = 'default';
     return request.delete(`${base}/api/admin/strategies/${name}`).expect(500);
 });
 
 test('editable=false will stop edit request', () => {
-    getLogger.setMuteError(true);
-    expect.assertions(0);
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    const { request, base } = getSetup();
     const name = 'default';
     return request
         .put(`${base}/api/admin/strategies/${name}`)
@@ -157,7 +142,7 @@ test('editable=false will stop edit request', () => {
 });
 
 test('editable=true will allow delete request', () => {
-    expect.assertions(0);
+    const { request, base, strategyStore } = getSetup();
     const name = 'deleteStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -168,7 +153,7 @@ test('editable=true will allow delete request', () => {
 });
 
 test('editable=true will allow edit request', () => {
-    expect.assertions(0);
+    const { request, base, strategyStore } = getSetup();
     const name = 'editStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -179,7 +164,7 @@ test('editable=true will allow edit request', () => {
 });
 
 test('deprecating a strategy works', async () => {
-    expect.assertions(1);
+    const { request, base, strategyStore } = getSetup();
     const name = 'editStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -195,7 +180,7 @@ test('deprecating a strategy works', async () => {
 });
 
 test('deprecating a non-existent strategy yields 404', () => {
-    expect.assertions(0);
+    const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies/non-existent-strategy/deprecate`)
         .set('Content-Type', 'application/json')
@@ -203,7 +188,7 @@ test('deprecating a non-existent strategy yields 404', () => {
 });
 
 test('reactivating a strategy works', async () => {
-    expect.assertions(1);
+    const { request, base, strategyStore } = getSetup();
     const name = 'editStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -219,14 +204,15 @@ test('reactivating a strategy works', async () => {
 });
 
 test('reactivating a non-existent strategy yields 404', () => {
-    expect.assertions(0);
+    const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies/non-existent-strategy/reactivate`)
         .set('Content-Type', 'application/json')
         .expect(404);
 });
 test("deprecating 'default' strategy will yield 403", () => {
-    expect.assertions(0);
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    const { request, base } = getSetup();
     return request
         .post(`${base}/api/admin/strategies/default/deprecate`)
         .set('Content-Type', 'application/json')

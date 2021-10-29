@@ -23,7 +23,7 @@ test('should not crash for unknown toggle', async () => {
 });
 
 test('should not crash for undefined toggle name', async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    getLogger.setMuteError(true);
     const project = await featureToggleStore.getProjectId(undefined);
     expect(project).toBe(undefined);
 });

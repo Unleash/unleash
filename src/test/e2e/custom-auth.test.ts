@@ -10,7 +10,7 @@ beforeAll(async () => {
 });
 
 test('Using custom auth type without defining custom middleware causes default DENY ALL policy to take effect', async () => {
-    expect.assertions(1);
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
     const { request, destroy } = await setupAppWithCustomAuth(
         stores,
         undefined,

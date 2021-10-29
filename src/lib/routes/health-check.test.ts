@@ -42,6 +42,7 @@ afterEach(() => {
 });
 
 test('should give 500 when db is failing', () => {
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
     const config = createTestConfig();
     const failingStores: Partial<IUnleashStores> = {
         // @ts-ignore

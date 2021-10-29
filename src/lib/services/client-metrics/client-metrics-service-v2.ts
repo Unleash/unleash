@@ -9,33 +9,38 @@ import {
 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './client-metrics-schema';
 
-const FIVE_MINUTES = 5 * 60 * 1000;
+const DEFAULT_BULK_INTERVAL = 30 * 1000;
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
 export default class ClientMetricsServiceV2 {
     private timer: NodeJS.Timeout;
 
+    private bulkTimer: NodeJS.Timeout;
+
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
     private logger: Logger;
 
-    private bulkInterval: number;
+    private unsavedMetics: IClientMetricsEnv[] = [];
 
     constructor(
         { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
-        bulkInterval = FIVE_MINUTES,
+        bulkInterval = DEFAULT_BULK_INTERVAL,
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
 
         this.logger = getLogger('/services/client-metrics/index.ts');
 
-        this.bulkInterval = bulkInterval;
         this.timer = setInterval(() => {
-            console.log('Clear metrics');
             this.clientMetricsStoreV2.clearMetrics(48);
         }, ONE_DAY);
         this.timer.unref();
+
+        this.bulkTimer = setInterval(async () => {
+            await this.saveMetrics();
+        }, bulkInterval);
+        this.bulkTimer.unref();
     }
 
     async registerClientMetrics(
@@ -58,8 +63,22 @@ export default class ClientMetricsServiceV2 {
             }))
             .filter((item) => !(item.yes === 0 && item.no === 0));
 
-        // TODO: should we aggregate for a few minutes (bulkInterval) before pushing to DB?
-        await this.clientMetricsStoreV2.batchInsertMetrics(clientMetrics);
+        this.unsavedMetics = this.unsavedMetics.concat(clientMetrics);
+    }
+
+    async saveMetrics(): Promise<void> {
+        if (this.unsavedMetics.length === 0) {
+            return;
+        }
+        const metrics = this.unsavedMetics;
+        this.unsavedMetics = [];
+        try {
+            this.logger.debug('storing metrics');
+            await this.clientMetricsStoreV2.batchInsertMetrics(metrics);
+        } catch (error: any) {
+            this.logger.error(error);
+            this.unsavedMetics = this.unsavedMetics.concat(metrics);
+        }
     }
 
     // Overview over usage last "hour" bucket and all applications using the toggle
@@ -107,5 +126,7 @@ export default class ClientMetricsServiceV2 {
     destroy(): void {
         clearInterval(this.timer);
         this.timer = null;
+        clearInterval(this.bulkTimer);
+        this.bulkTimer = null;
     }
 }

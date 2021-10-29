@@ -44,13 +44,10 @@ class ConfigController extends Controller {
         const config = this.uiConfig;
         const simpleAuthSettings =
             await this.settingService.get<SimpleAuthSettings>(simpleAuthKey);
-        if (this.versionService) {
-            const versionInfo = this.versionService.getVersionInfo();
-            const disablePasswordAuth = simpleAuthSettings?.disabled;
-            res.json({ ...config, versionInfo, disablePasswordAuth });
-        } else {
-            res.json(config);
-        }
+
+        const versionInfo = this.versionService.getVersionInfo();
+        const disablePasswordAuth = simpleAuthSettings?.disabled;
+        res.json({ ...config, versionInfo, disablePasswordAuth });
     }
 }
 export default ConfigController;

@@ -11,6 +11,8 @@ import SessionService from './session-service';
 import FakeSessionStore from '../../test/fixtures/fake-session-store';
 import User from '../types/user';
 import FakeResetTokenStore from '../../test/fixtures/fake-reset-token-store';
+import SettingService from './setting-service';
+import FakeSettingStore from '../../test/fixtures/fake-setting-store';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -28,12 +30,17 @@ test('Should create new user', async () => {
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const emailService = new EmailService(config.email, config.getLogger);
+    const settingService = new SettingService(
+        { settingStore: new FakeSettingStore() },
+        config,
+    );
 
     const service = new UserService({ userStore, eventStore }, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
     const user = await service.createUser(
         {
@@ -63,12 +70,17 @@ test('Should create default user', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const settingService = new SettingService(
+        { settingStore: new FakeSettingStore() },
+        config,
+    );
 
     const service = new UserService({ userStore, eventStore }, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
 
     await service.initAdminUser();
@@ -90,12 +102,17 @@ test('Should be a valid password', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const settingService = new SettingService(
+        { settingStore: new FakeSettingStore() },
+        config,
+    );
 
     const service = new UserService({ userStore, eventStore }, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
 
     const valid = service.validatePassword('this is a strong password!');
@@ -115,12 +132,17 @@ test('Password must be at least 10 chars', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const settingService = new SettingService(
+        { settingStore: new FakeSettingStore() },
+        config,
+    );
 
     const service = new UserService({ userStore, eventStore }, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
     expect(() => service.validatePassword('admin')).toThrow(
         'The password must be at least 10 characters long.',
@@ -142,12 +164,17 @@ test('The password must contain at least one uppercase letter.', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const settingService = new SettingService(
+        { settingStore: new FakeSettingStore() },
+        config,
+    );
 
     const service = new UserService({ userStore, eventStore }, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
 
     expect(() => service.validatePassword('qwertyabcde')).toThrowError(
@@ -171,12 +198,17 @@ test('The password must contain at least one number', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const settingService = new SettingService(
+        { settingStore: new FakeSettingStore() },
+        config,
+    );
 
     const service = new UserService({ userStore, eventStore }, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
 
     expect(() => service.validatePassword('qwertyabcdE')).toThrowError(
@@ -199,12 +231,17 @@ test('The password must contain at least one special character', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const settingService = new SettingService(
+        { settingStore: new FakeSettingStore() },
+        config,
+    );
 
     const service = new UserService({ userStore, eventStore }, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
 
     expect(() => service.validatePassword('qwertyabcdE2')).toThrowError(
@@ -227,12 +264,17 @@ test('Should be a valid password with special chars', async () => {
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
+    const settingService = new SettingService(
+        { settingStore: new FakeSettingStore() },
+        config,
+    );
 
     const service = new UserService({ userStore, eventStore }, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
 
     const valid = service.validatePassword('this is a strong password!');

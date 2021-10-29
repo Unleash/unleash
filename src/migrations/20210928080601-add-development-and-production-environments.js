@@ -3,9 +3,9 @@
 exports.up = function (db, cb) {
     db.runSql(
         `
-            INSERT INTO environments(name, type, enabled)
-            VALUES ('development', 'development', true),
-                   ('production', 'production', true);
+            INSERT INTO environments(name, type, enabled, sort_order)
+            VALUES ('development', 'development', true, 100),
+                   ('production', 'production', true, 200);
         `,
         cb,
     );

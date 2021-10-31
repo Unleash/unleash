@@ -68,7 +68,7 @@
     "immutable": "4.0.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.flow": "3.5.0",
-    "node-fetch": "2.6.5",
+    "node-fetch": "2.6.6",
     "react": "17.0.2",
     "react-dnd": "14.0.4",
     "react-dnd-html5-backend": "14.0.2",

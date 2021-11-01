@@ -46,15 +46,17 @@ const unleash = new UnleashClient({
   appName: 'my-webapp',
 });
 
+unleash.on('synchronized', () => {
+  if (unleash.isEnabled('proxy.demo')) {
+    // do something
+  }
+});
+
 // Used to set the context fields, shared with the Unleash Proxy
 unleash.updateContext({ userId: '1233' });
 
 // Start the background polling
 unleash.start();
-
-if (unleash.isEnabled('proxy.demo')) {
-  // do something
-}
 ```
 
 Now you are ready to use the feature toggle you created in your client side application, using the appropriate proxy SDK.

@@ -3,6 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles(theme => ({
     tableRow: {
         cursor: 'pointer',
+        '&:hover': {
+            backgroundColor: '#f5f5f5',
+        },
     },
     tableCell: {
         border: 'none',

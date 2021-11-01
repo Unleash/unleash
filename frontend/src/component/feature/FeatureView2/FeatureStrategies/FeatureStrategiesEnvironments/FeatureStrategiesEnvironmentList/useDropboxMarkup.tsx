@@ -19,7 +19,7 @@ const useDropboxMarkup = (isOver: boolean, expandedSidebar: boolean) => {
             condition={expandedSidebar}
             show={
                 <div className={dropboxClasses}>
-                    <p>Drag and drop strategies from the left side menu</p>
+                    <p>Drag and drop strategies from the left side strategy panel</p>
                     <GetApp className={iconClasses} />
                 </div>
             }

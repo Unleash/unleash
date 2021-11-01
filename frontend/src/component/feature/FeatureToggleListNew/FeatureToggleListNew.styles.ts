@@ -4,7 +4,7 @@ export const useStyles = makeStyles(theme => ({
     tableRow: {
         cursor: 'pointer',
         '&:hover': {
-            backgroundColor: '#f5f5f5',
+            backgroundColor: theme.palette.grey[200],
         },
     },
     tableCell: {

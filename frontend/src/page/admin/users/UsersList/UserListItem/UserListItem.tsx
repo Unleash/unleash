@@ -12,6 +12,7 @@ import ConditionallyRender from '../../../../../component/common/ConditionallyRe
 import { formatDateWithLocale } from '../../../../../component/common/util';
 import AccessContext from '../../../../../contexts/AccessContext';
 import { IUser } from '../../../../../interfaces/user';
+import { useStyles } from './UserListItem.styles';
 
 interface IUserListItemProps {
     user: IUser;
@@ -35,9 +36,10 @@ const UserListItem = ({
     location,
 }: IUserListItemProps) => {
     const { hasAccess } = useContext(AccessContext);
+    const styles = useStyles();
 
     return (
-        <TableRow key={user.id}>
+        <TableRow key={user.id} className={styles.tableRow}>
             <TableCell>
                 <Avatar
                     data-loading
@@ -53,12 +55,12 @@ const UserListItem = ({
                     {formatDateWithLocale(user.createdAt, location.locale)}
                 </span>
             </TableCell>
-            <TableCell style={{ textAlign: 'left' }}>
+            <TableCell className={styles.leftTableCell}>
                 <Typography variant="body2" data-loading>
                     {user.name}
                 </Typography>
             </TableCell>
-            <TableCell style={{ textAlign: 'left' }}>
+            <TableCell className={styles.leftTableCell}>
                 <Typography variant="body2" data-loading>
                     {user.username || user.email}
                 </Typography>

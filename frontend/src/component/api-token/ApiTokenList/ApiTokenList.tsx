@@ -161,7 +161,7 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                 <TableBody>
                     {tokens.map(item => {
                         return (
-                            <TableRow key={item.secret}>
+                            <TableRow key={item.secret} className={styles.tableRow}>
                                 <TableCell
                                     align="left"
                                     className={styles.hideSM}

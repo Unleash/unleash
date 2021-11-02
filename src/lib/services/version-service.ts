@@ -4,8 +4,7 @@ import { IUnleashConfig } from '../types/option';
 import version from '../util/version';
 import { Logger } from '../logger';
 import { ISettingStore } from '../types/stores/settings-store';
-
-const TWO_DAYS = 48 * 60 * 60 * 1000;
+import { hoursToMilliseconds } from 'date-fns';
 
 export interface IVersionInfo {
     oss: string;
@@ -66,7 +65,7 @@ export default class VersionService {
         await this.checkLatestVersion();
         this.timer = setInterval(
             async () => this.checkLatestVersion(),
-            TWO_DAYS,
+            hoursToMilliseconds(48),
         );
         this.timer.unref();
     }

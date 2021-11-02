@@ -1,12 +1,13 @@
 import EventEmitter from 'events';
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
-import Timeout = NodeJS.Timeout;
 import {
     IClientInstance,
     IClientInstanceStore,
     INewClientInstance,
 } from '../types/stores/client-instance-store';
+import { hoursToMilliseconds } from 'date-fns';
+import Timeout = NodeJS.Timeout;
 
 const metricsHelper = require('../util/metrics-helper');
 const { DB_TIME } = require('../metric-events');
@@ -21,8 +22,6 @@ const COLUMNS = [
     'environment',
 ];
 const TABLE = 'client_instances';
-
-const ONE_DAY = 24 * 61 * 60 * 1000;
 
 const mapRow = (row) => ({
     appName: row.app_name,
@@ -65,7 +64,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
             });
         const clearer = () => this._removeInstancesOlderThanTwoDays();
         setTimeout(clearer, 10).unref();
-        this.timer = setInterval(clearer, ONE_DAY).unref();
+        this.timer = setInterval(clearer, hoursToMilliseconds(24)).unref();
     }
 
     async _removeInstancesOlderThanTwoDays(): Promise<void> {

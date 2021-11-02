@@ -8,15 +8,12 @@ import {
     IProjectHealthReport,
     IProjectOverview,
 } from '../types/model';
-import {
-    MILLISECONDS_IN_DAY,
-    MILLISECONDS_IN_ONE_HOUR,
-} from '../util/constants';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IProjectStore } from '../types/stores/project-store';
-import Timer = NodeJS.Timer;
 import FeatureToggleServiceV2 from './feature-toggle-service-v2';
+import { hoursToMilliseconds } from 'date-fns';
+import Timer = NodeJS.Timer;
 
 export default class ProjectHealthService {
     private logger: Logger;
@@ -52,7 +49,7 @@ export default class ProjectHealthService {
         this.featureTypes = new Map();
         this.healthRatingTimer = setInterval(
             () => this.setHealthRating(),
-            MILLISECONDS_IN_ONE_HOUR,
+            hoursToMilliseconds(1),
         ).unref();
         this.featureToggleService = featureToggleService;
     }
@@ -116,7 +113,7 @@ export default class ProjectHealthService {
             );
             return (
                 !feature.stale &&
-                diff >= featureTypeExpectedLifetime * MILLISECONDS_IN_DAY
+                diff >= featureTypeExpectedLifetime * hoursToMilliseconds(24)
             );
         }).length;
     }

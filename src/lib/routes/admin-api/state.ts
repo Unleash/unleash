@@ -1,7 +1,7 @@
 import * as mime from 'mime';
 import YAML from 'js-yaml';
-import moment from 'moment';
 import multer from 'multer';
+import { format as formatDate } from 'date-fns';
 import { Request, Response } from 'express';
 import Controller from '../controller';
 import { ADMIN } from '../../types/permissions';
@@ -88,7 +88,7 @@ class StateController extends Controller {
             includeTags,
             includeEnvironments,
         });
-        const timestamp = moment().format('YYYY-MM-DD_HH-mm-ss');
+        const timestamp = formatDate(Date.now(), 'yyyy-MM-dd_HH-mm-ss');
         if (format === 'yaml') {
             if (downloadFile) {
                 res.attachment(`export-${timestamp}.yml`);

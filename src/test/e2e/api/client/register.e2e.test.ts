@@ -60,7 +60,7 @@ test('should allow client to register multiple times', async () => {
         .send(clientRegistration)
         .expect(202);
 
-    jest.advanceTimersByTime(6 * 1000);
+    jest.advanceTimersByTime(6000);
     expect(clientApplicationsStore.exists(clientRegistration)).toBeTruthy();
     expect(clientInstanceStore.exists(clientRegistration)).toBeTruthy();
     jest.useRealTimers();

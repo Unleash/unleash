@@ -6,6 +6,7 @@ import getApp from '../../app';
 import { createServices } from '../../services';
 import FeatureController from './feature';
 import { createTestConfig } from '../../../test/config/test-config';
+import { secondsToMilliseconds } from 'date-fns';
 
 const eventBus = new EventEmitter();
 
@@ -74,7 +75,7 @@ test('if caching is enabled should memoize', async () => {
             experimental: {
                 clientFeatureMemoize: {
                     enabled: true,
-                    maxAge: 10000,
+                    maxAge: secondsToMilliseconds(10),
                 },
             },
         },
@@ -100,7 +101,7 @@ test('if caching is not enabled all calls goes to service', async () => {
             experimental: {
                 clientFeatureMemoize: {
                     enabled: false,
-                    maxAge: 10000,
+                    maxAge: secondsToMilliseconds(10),
                 },
             },
         },

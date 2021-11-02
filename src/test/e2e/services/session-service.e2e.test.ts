@@ -2,6 +2,7 @@ import noLoggerProvider from '../../fixtures/no-logger';
 import dbInit from '../helpers/database-init';
 import SessionService from '../../../lib/services/session-service';
 import NotFoundError from '../../../lib/error/notfound-error';
+import { addDays, minutesToMilliseconds } from 'date-fns';
 
 let stores;
 let db;
@@ -10,8 +11,8 @@ const newSession = {
     sid: 'abc123',
     sess: {
         cookie: {
-            originalMaxAge: 2880000,
-            expires: new Date(Date.now() + 86_400_000).toDateString(),
+            originalMaxAge: minutesToMilliseconds(48),
+            expires: addDays(Date.now(), 1).toDateString(),
             secure: false,
             httpOnly: true,
             path: '/',
@@ -31,8 +32,8 @@ const otherSession = {
     sid: 'xyz321',
     sess: {
         cookie: {
-            originalMaxAge: 2880000,
-            expires: new Date(Date.now() + 86400000).toDateString(),
+            originalMaxAge: minutesToMilliseconds(48),
+            expires: addDays(Date.now(), 1).toDateString(),
             secure: false,
             httpOnly: true,
             path: '/',

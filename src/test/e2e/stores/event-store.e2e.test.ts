@@ -102,7 +102,7 @@ test('Should be able to store multiple events at once', async () => {
     const seen = [];
     eventStore.on(APPLICATION_CREATED, (e) => seen.push(e));
     await eventStore.batchStore([event1, event2, event3]);
-    await jest.advanceTimersByTime(100);
+    jest.advanceTimersByTime(100);
     expect(seen.length).toBe(3);
     seen.forEach((e) => {
         expect(e.id).toBeTruthy();

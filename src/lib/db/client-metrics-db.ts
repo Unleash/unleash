@@ -1,11 +1,10 @@
 import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import { IClientMetric } from '../types/stores/client-metrics-db';
+import { minutesToMilliseconds } from 'date-fns';
 
 const METRICS_COLUMNS = ['id', 'created_at', 'metrics'];
 const TABLE = 'client_metrics';
-
-const ONE_MINUTE = 60 * 1000;
 
 const mapRow = (row) => ({
     id: row.id,
@@ -24,7 +23,7 @@ export class ClientMetricsDb {
         // Clear old metrics regularly
         const clearer = () => this.removeMetricsOlderThanOneHour();
         setTimeout(clearer, 10).unref();
-        this.timer = setInterval(clearer, ONE_MINUTE).unref();
+        this.timer = setInterval(clearer, minutesToMilliseconds(1)).unref();
     }
 
     async removeMetricsOlderThanOneHour(): Promise<void> {

@@ -21,12 +21,9 @@ import {
     IMetricCounts,
     IMetricsBucket,
 } from '../../types/model';
-
-import TTLList = require('./ttl-list');
 import { clientRegisterSchema } from './register-schema';
-
-const FIVE_SECONDS = 5 * 1000;
-const FIVE_MINUTES = 5 * 60 * 1000;
+import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
+import TTLList = require('./ttl-list');
 
 export default class ClientMetricsService {
     globalCount = 0;
@@ -38,13 +35,13 @@ export default class ClientMetricsService {
     lastMinuteProjection = new Projection();
 
     lastHourList = new TTLList({
-        interval: 10000,
+        interval: secondsToMilliseconds(10),
     });
 
     logger = null;
 
     lastMinuteList = new TTLList({
-        interval: 10000,
+        interval: secondsToMilliseconds(10),
         expireType: 'minutes',
         expireAmount: 1,
     });
@@ -87,8 +84,8 @@ export default class ClientMetricsService {
             | 'eventStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
-        bulkInterval = FIVE_SECONDS,
-        announcementInterval = FIVE_MINUTES,
+        bulkInterval = secondsToMilliseconds(5),
+        announcementInterval = minutesToMilliseconds(5),
     ) {
         this.clientMetricsStore = clientMetricsStore;
         this.strategyStore = strategyStore;

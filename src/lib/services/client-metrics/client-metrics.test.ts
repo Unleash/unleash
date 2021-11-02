@@ -1,8 +1,51 @@
 import EventEmitter from 'events';
-import moment from 'moment';
 import ClientMetricsService from './index';
 import getLogger from '../../../test/fixtures/no-logger';
 import { IClientApp } from '../../types/model';
+import {
+    addHours,
+    addMinutes,
+    hoursToMilliseconds,
+    minutesToMilliseconds,
+    secondsToMilliseconds,
+    subHours,
+    subMinutes,
+    subSeconds,
+} from 'date-fns';
+
+/**
+ * A utility to wait for any pending promises in the test subject code.
+ * For instance, if the test needs to wait for a timeout/interval handler,
+ * and that handler does something async, advancing the timers is not enough:
+ * We have to explicitly wait for the second promise.
+ * For more info, see https://stackoverflow.com/a/51045733/2868829
+ *
+ * Usage in test code after advancing timers, but before making assertions:
+ *
+ * test('hello', async () => {
+ *    jest.useFakeTimers('modern');
+ *
+ *    // Schedule a timeout with a callback that does something async
+ *    // before calling our spy
+ *    const spy = jest.fn();
+ *    setTimeout(async () => {
+ *        await Promise.resolve();
+ *        spy();
+ *    }, 1000);
+ *
+ *    expect(spy).not.toHaveBeenCalled();
+ *
+ *    jest.advanceTimersByTime(1500);
+ *    await flushPromises(); // this is required to make it work!
+ *
+ *    expect(spy).toHaveBeenCalledTimes(1);
+ *
+ *    jest.useRealTimers();
+ * });
+ */
+function flushPromises() {
+    return Promise.resolve(setImmediate);
+}
 
 const appName = 'appName';
 const instanceId = 'instanceId';
@@ -40,8 +83,8 @@ test('data should expire', () => {
         appName,
         instanceId,
         bucket: {
-            start: Date.now() - 2000,
-            stop: Date.now() - 1000,
+            start: subSeconds(Date.now(), 2),
+            stop: subSeconds(Date.now(), 1),
             toggles: {
                 toggleX: {
                     yes: 123,
@@ -61,11 +104,11 @@ test('data should expire', () => {
         lastMinExpires++;
     });
 
-    jest.advanceTimersByTime(60 * 1000);
+    jest.advanceTimersByTime(minutesToMilliseconds(1));
     expect(lastMinExpires).toBe(1);
     expect(lastHourExpires).toBe(0);
 
-    jest.advanceTimersByTime(60 * 60 * 1000);
+    jest.advanceTimersByTime(hoursToMilliseconds(1));
     expect(lastMinExpires).toBe(1);
     expect(lastHourExpires).toBe(1);
 
@@ -201,36 +244,36 @@ test('should have correct values for lastMinute', () => {
     const now = new Date();
     const input = [
         {
-            start: moment(now).subtract(1, 'hour'),
-            stop: moment(now).subtract(59, 'minutes'),
+            start: subHours(now, 1),
+            stop: subMinutes(now, 59),
             toggles: {
                 toggle: { yes: 10, no: 10 },
             },
         },
         {
-            start: moment(now).subtract(30, 'minutes'),
-            stop: moment(now).subtract(29, 'minutes'),
+            start: subMinutes(now, 30),
+            stop: subMinutes(now, 29),
             toggles: {
                 toggle: { yes: 10, no: 10 },
             },
         },
         {
-            start: moment(now).subtract(2, 'minutes'),
-            stop: moment(now).subtract(1, 'minutes'),
+            start: subMinutes(now, 2),
+            stop: subMinutes(now, 1),
             toggles: {
                 toggle: { yes: 10, no: 10 },
             },
         },
         {
-            start: moment(now).subtract(2, 'minutes'),
-            stop: moment(now).subtract(59, 'seconds'),
+            start: subMinutes(now, 2),
+            stop: subSeconds(now, 59),
             toggles: {
                 toggle: { yes: 10, no: 10 },
             },
         },
         {
-            start: moment(now),
-            stop: moment(now).subtract(30, 'seconds'),
+            start: now,
+            stop: subSeconds(now, 30),
             toggles: {
                 toggle: { yes: 10, no: 10 },
             },
@@ -252,11 +295,11 @@ test('should have correct values for lastMinute', () => {
     let c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 20, no: 20 });
 
-    jest.advanceTimersByTime(10 * 1000);
+    jest.advanceTimersByTime(10_000);
     c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 10, no: 10 });
 
-    jest.advanceTimersByTime(20 * 1000);
+    jest.advanceTimersByTime(20_000);
     c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 0, no: 0 });
 
@@ -270,32 +313,32 @@ test('should have correct values for lastHour', () => {
     const clientMetricsStore = new EventEmitter();
     const metrics = createMetricsService(clientMetricsStore);
 
-    const now = new Date();
+    const now = Date.now();
     const input = [
         {
-            start: moment(now).subtract(1, 'hour'),
-            stop: moment(now).subtract(59, 'minutes'),
+            start: subHours(now, 1),
+            stop: subMinutes(now, 59),
             toggles: {
                 toggle: { yes: 10, no: 10 },
             },
         },
         {
-            start: moment(now).subtract(30, 'minutes'),
-            stop: moment(now).subtract(29, 'minutes'),
+            start: subMinutes(now, 30),
+            stop: subMinutes(now, 29),
             toggles: {
                 toggle: { yes: 10, no: 10 },
             },
         },
         {
-            start: moment(now).subtract(15, 'minutes'),
-            stop: moment(now).subtract(14, 'minutes'),
+            start: subMinutes(now, 15),
+            stop: subMinutes(now, 14),
             toggles: {
                 toggle: { yes: 10, no: 10 },
             },
         },
         {
-            start: moment(now).add(59, 'minutes'),
-            stop: moment(now).add(1, 'hour'),
+            start: addMinutes(now, 59),
+            stop: addHours(now, 1),
             toggles: {
                 toggle: { yes: 11, no: 11 },
             },
@@ -318,27 +361,27 @@ test('should have correct values for lastHour', () => {
     let c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 41, no: 41 });
 
-    jest.advanceTimersByTime(10 * 1000);
+    jest.advanceTimersByTime(10_000);
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 41, no: 41 });
 
     // at 30
-    jest.advanceTimersByTime(30 * 60 * 1000);
+    jest.advanceTimersByTime(minutesToMilliseconds(30));
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 31, no: 31 });
 
     // at 45
-    jest.advanceTimersByTime(15 * 60 * 1000);
+    jest.advanceTimersByTime(minutesToMilliseconds(15));
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 21, no: 21 });
 
     // at 1:15
-    jest.advanceTimersByTime(30 * 60 * 1000);
+    jest.advanceTimersByTime(minutesToMilliseconds(30));
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 11, no: 11 });
 
     // at 2:00
-    jest.advanceTimersByTime(45 * 60 * 1000);
+    jest.advanceTimersByTime(minutesToMilliseconds(45));
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 0, no: 0 });
 
@@ -421,7 +464,8 @@ test('Multiple registrations of same appname and instanceid within same time per
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    await jest.advanceTimersByTime(7 * 1000);
+    jest.advanceTimersByTime(7000);
+    await flushPromises();
 
     expect(appStoreSpy).toHaveBeenCalledTimes(1);
     expect(bulkSpy).toHaveBeenCalledTimes(1);
@@ -448,6 +492,7 @@ test('Multiple unique clients causes multiple registrations', async () => {
     const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
+
     const clientMetrics = new ClientMetricsService(
         {
             clientMetricsStore,
@@ -479,10 +524,9 @@ test('Multiple unique clients causes multiple registrations', async () => {
     await clientMetrics.registerClient(client2, '127.0.0.1');
     await clientMetrics.registerClient(client2, '127.0.0.1');
     await clientMetrics.registerClient(client2, '127.0.0.1');
-    await jest.advanceTimersByTime(7 * 1000);
 
-    expect(appStoreSpy).toHaveBeenCalledTimes(1);
-    expect(bulkSpy).toHaveBeenCalledTimes(1);
+    jest.advanceTimersByTime(7000);
+    await flushPromises();
 
     const registrations = appStoreSpy.mock.calls[0][0];
 
@@ -501,7 +545,7 @@ test('Same client registered outside of dedup interval will be registered twice'
         bulkUpsert: bulkSpy,
     };
 
-    const bulkInterval = 2000;
+    const bulkInterval = secondsToMilliseconds(2);
 
     const clientMetrics = new ClientMetricsService(
         {
@@ -525,11 +569,16 @@ test('Same client registered outside of dedup interval will be registered twice'
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    await jest.advanceTimersByTime(3 * 1000);
+
+    jest.advanceTimersByTime(3000);
+
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    await jest.advanceTimersByTime(3 * 1000);
+
+    jest.advanceTimersByTime(3000);
+    await flushPromises();
+
     expect(appStoreSpy).toHaveBeenCalledTimes(2);
     expect(bulkSpy).toHaveBeenCalledTimes(2);
 
@@ -552,8 +601,7 @@ test('No registrations during a time period will not call stores', async () => {
     const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const clientMetrics = new ClientMetricsService(
+    new ClientMetricsService(
         {
             clientMetricsStore,
             strategyStore: null,
@@ -564,7 +612,7 @@ test('No registrations during a time period will not call stores', async () => {
         },
         { getLogger },
     );
-    await jest.advanceTimersByTime(6 * 1000);
+    jest.advanceTimersByTime(6000);
     expect(appStoreSpy).toHaveBeenCalledTimes(0);
     expect(bulkSpy).toHaveBeenCalledTimes(0);
     jest.useRealTimers();

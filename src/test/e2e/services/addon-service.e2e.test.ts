@@ -78,7 +78,7 @@ test('should only return active addons', async () => {
     await addonService.createAddon(config2, 'me@mail.com');
     await addonService.createAddon(config3, 'me@mail.com');
 
-    jest.advanceTimersByTime(61 * 1000);
+    jest.advanceTimersByTime(61_000);
 
     const activeAddons = await addonService.fetchAddonConfigs();
     const allAddons = await addonService.getAddons();

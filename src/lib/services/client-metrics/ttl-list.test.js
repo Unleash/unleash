@@ -1,7 +1,7 @@
 'use strict';
 
-const moment = require('moment');
 const TTLList = require('./ttl-list');
+const { addMilliseconds } = require('date-fns');
 
 test('should emit expire', (done) => {
     jest.useFakeTimers('modern');
@@ -31,10 +31,10 @@ test('should slice off list', () => {
         expireType: 'milliseconds',
     });
 
-    list.add({ n: '1' }, moment().add(1, 'milliseconds'));
-    list.add({ n: '2' }, moment().add(50, 'milliseconds'));
-    list.add({ n: '3' }, moment().add(200, 'milliseconds'));
-    list.add({ n: '4' }, moment().add(300, 'milliseconds'));
+    list.add({ n: '1' }, addMilliseconds(Date.now(), 1));
+    list.add({ n: '2' }, addMilliseconds(Date.now(), 50));
+    list.add({ n: '3' }, addMilliseconds(Date.now(), 200));
+    list.add({ n: '4' }, addMilliseconds(Date.now(), 300));
 
     const expired = [];
 
@@ -43,18 +43,45 @@ test('should slice off list', () => {
         expired.push(entry);
     });
 
+    expect(expired).toHaveLength(0);
+    expect(list.list.toArray()).toHaveLength(4);
+
     jest.advanceTimersByTime(21);
     expect(expired).toHaveLength(1);
+    expect(list.list.toArray()).toHaveLength(3);
 
     jest.advanceTimersByTime(51);
     expect(expired).toHaveLength(2);
+    expect(list.list.toArray()).toHaveLength(2);
 
     jest.advanceTimersByTime(201);
     expect(expired).toHaveLength(3);
+    expect(list.list.toArray()).toHaveLength(1);
 
     jest.advanceTimersByTime(301);
     expect(expired).toHaveLength(4);
+    expect(list.list.toArray()).toHaveLength(0);
 
     list.destroy();
+    jest.useRealTimers();
+});
+
+test('should add item created in the past but expiring in the future', () => {
+    jest.useFakeTimers('modern');
+
+    const list = new TTLList({
+        interval: 10,
+        expireAmount: 10,
+        expireType: 'milliseconds',
+    });
+
+    const expireCallback = jest.fn();
+    list.on('expire', expireCallback);
+
+    list.add({ n: '1' }, new Date());
+
+    expect(expireCallback).not.toHaveBeenCalled();
+    expect(list.list.toArray()).toHaveLength(1);
+
     jest.useRealTimers();
 });

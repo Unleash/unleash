@@ -11,7 +11,7 @@ import {
 } from './types/events';
 import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
-import { hoursToMilliseconds, millisecondsInMinute } from 'date-fns';
+import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import Timer = NodeJS.Timer;
 
 export default class MetricsMonitor {
@@ -197,7 +197,7 @@ export default class MetricsMonitor {
             this.registerPoolMetrics(db.client.pool, eventBus);
             this.poolMetricsTimer = setInterval(
                 () => this.registerPoolMetrics(db.client.pool, eventBus),
-                millisecondsInMinute,
+                minutesToMilliseconds(1),
             );
             this.poolMetricsTimer.unref();
         }

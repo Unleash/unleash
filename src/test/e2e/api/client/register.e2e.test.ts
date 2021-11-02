@@ -3,7 +3,6 @@ import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import version from '../../../../lib/util/version';
-import { secondsToMilliseconds } from 'date-fns';
 
 const asyncFilter = async (arr, predicate) => {
     const results = await Promise.all(arr.map(predicate));
@@ -61,7 +60,7 @@ test('should allow client to register multiple times', async () => {
         .send(clientRegistration)
         .expect(202);
 
-    jest.advanceTimersByTime(secondsToMilliseconds(6));
+    jest.advanceTimersByTime(6000);
     expect(clientApplicationsStore.exists(clientRegistration)).toBeTruthy();
     expect(clientInstanceStore.exists(clientRegistration)).toBeTruthy();
     jest.useRealTimers();

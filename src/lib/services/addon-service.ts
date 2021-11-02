@@ -12,7 +12,7 @@ import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { IAddonDefinition } from '../types/model';
-import { millisecondsInMinute } from 'date-fns';
+import { minutesToMilliseconds } from 'date-fns';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
@@ -74,7 +74,7 @@ export default class AddonService {
             async () => addonStore.getAll({ enabled: true }),
             {
                 promise: true,
-                maxAge: millisecondsInMinute,
+                maxAge: minutesToMilliseconds(1),
             },
         );
     }

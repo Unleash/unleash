@@ -19,11 +19,7 @@ import {
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 import { formatBaseUri } from './util/format-base-uri';
-import {
-    millisecondsInMinute,
-    millisecondsInSecond,
-    secondsToMilliseconds,
-} from 'date-fns';
+import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -125,7 +121,7 @@ const defaultServerOption: IServerOption = {
     baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
     serverMetrics: true,
-    keepAliveTimeout: millisecondsInMinute,
+    keepAliveTimeout: minutesToMilliseconds(1),
     headersTimeout: secondsToMilliseconds(61),
     enableRequestLogger: false,
     gracefulShutdownEnable: safeBoolean(
@@ -134,7 +130,7 @@ const defaultServerOption: IServerOption = {
     ),
     gracefulShutdownTimeout: safeNumber(
         process.env.GRACEFUL_SHUTDOWN_TIMEOUT,
-        millisecondsInSecond,
+        secondsToMilliseconds(1),
     ),
     secret: process.env.UNLEASH_SECRET || 'super-secret',
 };

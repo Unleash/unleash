@@ -7,7 +7,6 @@ import { IUnleashStores } from '../../../lib/types';
 import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon';
 import TagTypeService from '../../../lib/services/tag-type-service';
 import { FEATURE_CREATED } from '../../../lib/types/events';
-import { secondsToMilliseconds } from 'date-fns';
 
 const addonProvider = { simple: new SimpleAddon() };
 
@@ -79,7 +78,7 @@ test('should only return active addons', async () => {
     await addonService.createAddon(config2, 'me@mail.com');
     await addonService.createAddon(config3, 'me@mail.com');
 
-    jest.advanceTimersByTime(secondsToMilliseconds(61));
+    jest.advanceTimersByTime(61_000);
 
     const activeAddons = await addonService.fetchAddonConfigs();
     const allAddons = await addonService.getAddons();

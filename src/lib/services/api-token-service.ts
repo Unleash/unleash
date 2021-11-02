@@ -13,7 +13,7 @@ import {
 import { IApiTokenStore } from '../types/stores/api-token-store';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import BadDataError from '../error/bad-data-error';
-import { millisecondsInMinute } from 'date-fns';
+import { minutesToMilliseconds } from 'date-fns';
 
 export class ApiTokenService {
     private store: IApiTokenStore;
@@ -33,7 +33,7 @@ export class ApiTokenService {
         this.fetchActiveTokens();
         this.timer = setInterval(
             () => this.fetchActiveTokens(),
-            millisecondsInMinute,
+            minutesToMilliseconds(1),
         ).unref();
     }
 

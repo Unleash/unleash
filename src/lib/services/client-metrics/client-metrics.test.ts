@@ -5,8 +5,7 @@ import { IClientApp } from '../../types/model';
 import {
     addHours,
     addMinutes,
-    millisecondsInHour,
-    millisecondsInMinute,
+    hoursToMilliseconds,
     minutesToMilliseconds,
     secondsToMilliseconds,
     subHours,
@@ -105,11 +104,11 @@ test('data should expire', () => {
         lastMinExpires++;
     });
 
-    jest.advanceTimersByTime(millisecondsInMinute);
+    jest.advanceTimersByTime(minutesToMilliseconds(1));
     expect(lastMinExpires).toBe(1);
     expect(lastHourExpires).toBe(0);
 
-    jest.advanceTimersByTime(millisecondsInHour);
+    jest.advanceTimersByTime(hoursToMilliseconds(1));
     expect(lastMinExpires).toBe(1);
     expect(lastHourExpires).toBe(1);
 
@@ -296,11 +295,11 @@ test('should have correct values for lastMinute', () => {
     let c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 20, no: 20 });
 
-    jest.advanceTimersByTime(secondsToMilliseconds(10));
+    jest.advanceTimersByTime(10_000);
     c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 10, no: 10 });
 
-    jest.advanceTimersByTime(secondsToMilliseconds(20));
+    jest.advanceTimersByTime(20_000);
     c = metrics.getTogglesMetrics();
     expect(c.lastMinute.toggle).toEqual({ yes: 0, no: 0 });
 
@@ -362,7 +361,7 @@ test('should have correct values for lastHour', () => {
     let c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 41, no: 41 });
 
-    jest.advanceTimersByTime(secondsToMilliseconds(10));
+    jest.advanceTimersByTime(10_000);
     c = metrics.getTogglesMetrics();
     expect(c.lastHour.toggle).toEqual({ yes: 41, no: 41 });
 
@@ -465,7 +464,7 @@ test('Multiple registrations of same appname and instanceid within same time per
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
-    jest.advanceTimersByTime(secondsToMilliseconds(7));
+    jest.advanceTimersByTime(7000);
     await flushPromises();
 
     expect(appStoreSpy).toHaveBeenCalledTimes(1);
@@ -526,7 +525,7 @@ test('Multiple unique clients causes multiple registrations', async () => {
     await clientMetrics.registerClient(client2, '127.0.0.1');
     await clientMetrics.registerClient(client2, '127.0.0.1');
 
-    jest.advanceTimersByTime(secondsToMilliseconds(7));
+    jest.advanceTimersByTime(7000);
     await flushPromises();
 
     const registrations = appStoreSpy.mock.calls[0][0];
@@ -571,13 +570,13 @@ test('Same client registered outside of dedup interval will be registered twice'
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
 
-    jest.advanceTimersByTime(secondsToMilliseconds(3));
+    jest.advanceTimersByTime(3000);
 
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
     await clientMetrics.registerClient(client1, '127.0.0.1');
 
-    jest.advanceTimersByTime(secondsToMilliseconds(3));
+    jest.advanceTimersByTime(3000);
     await flushPromises();
 
     expect(appStoreSpy).toHaveBeenCalledTimes(2);
@@ -613,7 +612,7 @@ test('No registrations during a time period will not call stores', async () => {
         },
         { getLogger },
     );
-    jest.advanceTimersByTime(secondsToMilliseconds(6));
+    jest.advanceTimersByTime(6000);
     expect(appStoreSpy).toHaveBeenCalledTimes(0);
     expect(bulkSpy).toHaveBeenCalledTimes(0);
     jest.useRealTimers();

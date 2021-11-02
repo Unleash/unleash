@@ -3,16 +3,16 @@
 const { EventEmitter } = require('events');
 const List = require('./list');
 const {
-    millisecondsInSecond,
     add,
     isFuture,
     addMilliseconds,
+    secondsToMilliseconds,
 } = require('date-fns');
 
 // this list must have entries with sorted ttl range
 module.exports = class TTLList extends EventEmitter {
     constructor({
-        interval = millisecondsInSecond,
+        interval = secondsToMilliseconds(1),
         expireAmount = 1,
         expireType = 'hours',
     } = {}) {

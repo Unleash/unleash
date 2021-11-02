@@ -96,6 +96,17 @@ class FeatureToggleServiceV2 {
         this.featureEnvironmentStore = featureEnvironmentStore;
     }
 
+    validateProject(
+        project: string,
+        { projectId }: { projectId: string },
+    ): void {
+        if (project !== projectId) {
+            throw new InvalidOperationError(
+                'You can not change the projectId for an activation strategy.',
+            );
+        }
+    }
+
     async patchFeature(
         projectId: string,
         featureName: string,
@@ -178,7 +189,6 @@ class FeatureToggleServiceV2 {
      * @param updates
      */
 
-    // TODO: verify projectId is not changed from URL!
     async updateStrategy(
         id: string,
         environment: string,
@@ -188,6 +198,7 @@ class FeatureToggleServiceV2 {
     ): Promise<IStrategyConfig> {
         const existingStrategy = await this.featureStrategiesStore.get(id);
         if (existingStrategy.id === id) {
+            this.validateProject(project, existingStrategy);
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
                 updates,
@@ -211,7 +222,6 @@ class FeatureToggleServiceV2 {
         throw new NotFoundError(`Could not find strategy with id ${id}`);
     }
 
-    // TODO: verify projectId is not changed from URL!
     async updateStrategyParameter(
         id: string,
         name: string,
@@ -222,6 +232,7 @@ class FeatureToggleServiceV2 {
     ): Promise<IStrategyConfig> {
         const existingStrategy = await this.featureStrategiesStore.get(id);
         if (existingStrategy.id === id) {
+            this.validateProject(project, existingStrategy);
             existingStrategy.parameters[name] = value;
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
@@ -263,6 +274,12 @@ class FeatureToggleServiceV2 {
         project: string = 'default',
         environment: string = DEFAULT_ENV,
     ): Promise<void> {
+        const existingStrategy = await this.featureStrategiesStore.get(id);
+        if (project !== existingStrategy.projectId) {
+            throw new InvalidOperationError(
+                'You can not change the projectId for an activation strategy.',
+            );
+        }
         await this.featureStrategiesStore.delete(id);
         await this.eventStore.store({
             type: FEATURE_STRATEGY_REMOVE,

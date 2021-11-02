@@ -4557,10 +4557,10 @@ kleur@^3.0.3:
   resolved "https://registry.npmjs.org/kleur/-/kleur-3.0.3.tgz"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-knex@0.95.12:
-  version "0.95.12"
-  resolved "https://registry.yarnpkg.com/knex/-/knex-0.95.12.tgz#b250f6690dc643c17e59b82e5c8780f0ed82060a"
-  integrity sha512-/fdau7F372J/rZzMFjYo1trHs67kB13YtGErOe94Ev+OdilNEI2ddSE3O4Hb3EfgRtJUbhZWxp8T4PpDMtnjSg==
+knex@0.95.13:
+  version "0.95.13"
+  resolved "https://registry.yarnpkg.com/knex/-/knex-0.95.13.tgz#b0547c91f6a02662f08c5bf9efbb12d660f392f7"
+  integrity sha512-XagG/iYA4RabYy1BmgY607Q00kBduOgb/Nej3+UDcCNdmuzDvZcfFo/726BYhfxv5amTBtGjewodZrTNbO63VA==
   dependencies:
     colorette "2.0.16"
     commander "^7.1.0"

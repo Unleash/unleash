@@ -3,15 +3,31 @@ import { IUnleashServices } from '../../types/services';
 import { IUnleashConfig } from '../../types/option';
 import version from '../../util/version';
 
-const Controller = require('../controller');
+import Controller from '../controller';
+import VersionService from '../../services/version-service';
+import SettingService from '../../services/setting-service';
+import {
+    simpleAuthKey,
+    SimpleAuthSettings,
+} from '../../types/settings/simple-auth-settings';
 
 class ConfigController extends Controller {
+    private versionService: VersionService;
+
+    private settingService: SettingService;
+
+    private uiConfig: any;
+
     constructor(
         config: IUnleashConfig,
-        { versionService }: Pick<IUnleashServices, 'versionService'>,
+        {
+            versionService,
+            settingService,
+        }: Pick<IUnleashServices, 'versionService' | 'settingService'>,
     ) {
         super(config);
         this.versionService = versionService;
+        this.settingService = settingService;
         const authenticationType =
             config.authentication && config.authentication.type;
         this.uiConfig = {
@@ -26,13 +42,12 @@ class ConfigController extends Controller {
 
     async getUIConfig(req: Request, res: Response): Promise<void> {
         const config = this.uiConfig;
-        if (this.versionService) {
-            const versionInfo = this.versionService.getVersionInfo();
-            res.json({ ...config, versionInfo });
-        } else {
-            res.json(config);
-        }
+        const simpleAuthSettings =
+            await this.settingService.get<SimpleAuthSettings>(simpleAuthKey);
+
+        const versionInfo = this.versionService.getVersionInfo();
+        const disablePasswordAuth = simpleAuthSettings?.disabled;
+        res.json({ ...config, versionInfo, disablePasswordAuth });
     }
 }
 export default ConfigController;
-module.exports = ConfigController;

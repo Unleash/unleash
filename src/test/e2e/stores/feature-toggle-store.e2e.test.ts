@@ -23,6 +23,7 @@ test('should not crash for unknown toggle', async () => {
 });
 
 test('should not crash for undefined toggle name', async () => {
+    getLogger.setMuteError(true);
     const project = await featureToggleStore.getProjectId(undefined);
     expect(project).toBe(undefined);
 });

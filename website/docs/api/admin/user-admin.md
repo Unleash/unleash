@@ -65,6 +65,29 @@ Will return all users and all available root roles for the Unleash instance.
 }
 ```
 
+
+### Get a single users {#get-user}
+
+`GET https://unleash.host.com/api/admin/user-admin/:id`
+
+Will return a single user by id.
+
+**Body**
+
+```json
+{
+      "createdAt": "2021-05-14T08:58:07.891Z",
+      "email": "random-user2@getunleash.ai",
+      "id": 4,
+      "imageUrl": "https://gravatar.com/avatar/90047524992cd6ae8f66e249a7630d80?size=42&default=retro",
+      "inviteLink": "",
+      "isAPI": false,
+      "loginAttempts": 0,
+      "rootRole": 1,
+      "seenAt": null
+    }
+```
+
 ### Search for users {#search-for-users}
 
 You can also search for users via the search API. It will preform a simple search based on name and email matching the given query. Requires minimum 2 characters.

@@ -24,6 +24,7 @@ import { IAuthRequest } from './routes/unleash-types';
 import * as permissions from './types/permissions';
 import * as eventType from './types/events';
 import { RoleName } from './types/model';
+import { SimpleAuthSettings } from './types/settings/simple-auth-settings';
 
 async function createApp(
     config: IUnleashConfig,
@@ -177,4 +178,5 @@ export type {
     IUser,
     IUnleashServices,
     IAuthRequest,
+    SimpleAuthSettings,
 };

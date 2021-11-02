@@ -47,15 +47,16 @@ export const createServices = (
     const tagTypeService = new TagTypeService(stores, config);
     const addonService = new AddonService(stores, config, tagTypeService);
     const sessionService = new SessionService(stores, config);
+    const settingService = new SettingService(stores, config);
     const userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
     const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
-    const settingService = new SettingService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
     const featureToggleServiceV2 = new FeatureToggleServiceV2(stores, config);
     const environmentService = new EnvironmentService(stores, config);

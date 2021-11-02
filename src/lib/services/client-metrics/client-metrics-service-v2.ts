@@ -30,7 +30,6 @@ export default class ClientMetricsServiceV2 {
 
         this.bulkInterval = bulkInterval;
         this.timer = setInterval(() => {
-            console.log('Clear metrics');
             this.clientMetricsStoreV2.clearMetrics(48);
         }, hoursToMilliseconds(24));
         this.timer.unref();

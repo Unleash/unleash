@@ -1,5 +1,351 @@
 # Changelog
 
+# 4.2.0
+
+- ix: add default sort order for built in envs (#1076)
+- chore: mute expected test errors
+- feat: Disable password based login (#1046)
+- chore: remove console.error for tests expecting error
+- fix: lint
+- fix: legacy feature stale on/off needs to return full toggle
+- fix: bump unleash-frontend to v4.2.11
+- fix: add endpoint for fetching a single user (#1074)
+- fix: reuse message formatter for addons (#1058)
+- fix(deps): update dependency knex to v0.95.12
+- chore(deps): update dependency lint-staged to v11.2.6
+- fix: demo-auth should use /auth path
+- chore(deps): update metcalfc/changelog-generator action to v2 (#1062)
+- fix: use date-fns for date/time maths instead of (wrong) Date#setHours (#1070)
+- chore: pool min 1, max 4 DB connections & limit Jest workers to 4 (#1069)
+- chore(deps): update dependency lint-staged to v11.2.5
+- docs: minor typo
+- chore: add video to environments
+- fix: rename websitev2 to website
+- fix: Environments documentation
+- fix: place dollar sign before amount (#1066)
+- chore(deps): update typescript-eslint monorepo to v5.2.0
+- fix: removing a strategy from a toggle should only require UPDATE_FEATURE permission
+- chore(deps): update dependency lint-staged to v11.2.4
+- Chore: rework docker-postgres.sh to be cross-platform (#1037)
+- chore(deps): update dependency eslint to v8.1.0
+- chore(deps): update dependency @types/js-yaml to v4.0.4
+- chore(deps): update dependency ts-node to v10.4.0
+- fix: bump unleash-frontend to 4.2.10
+- Update feature-toggle-types.md
+- fix: bump unleash-frontend to 4.2.9
+- fix: Only trigger environment enabled/disabled events if different f… (#1053)
+- chore(deps): update dependency eslint to v8 (#1012)
+- fix: simplify how we update projects
+- fix: Remove duplicate FEATURE_METADATA_UPDATED from events list for webhook addon (#1052)
+- fix: only send FEATURE_UPDATED for legacy (#1054)
+- fix(deps): update docusaurus monorepo to v2.0.0-beta.8 (#1057)
+- chore(deps): update dependency ts-node to v10.3.1
+- fix: bump unleash-frontend to 4.2.8
+- chore(deps): update typescript-eslint monorepo to v5 (#1018)
+- fix: add constraint for changing project. (#1049)
+- fix: only add project environments if enabled (#1050)
+- chore(deps): update dependency husky to v7.0.4
+- fix: bump unleash-frontend to 4.2.7
+- fix: Create a apiuser for demo auth. (#1045)
+- add try-catch to demo auth middleware (#1044)
+- chore(deps): update dependency jest to v27.3.1
+- fix: make hasPermission call handle api tokens (#1041)
+- Fix/feature strategies needs project update (#1040)
+- chore(deps): update dependency jest to v27.3.0
+- chore(deps): update node.js to v14.18.1
+- chore(node-version): move node spec to .node-version (#1034)
+- docs: add reference to developer-guide (#1035)
+- chore(deps): update dependency ts-jest to v27.0.7
+- chore(deps): update dependency @types/faker to v5.5.9
+- fix: event-log
+- Update developer-guide.md
+- fix(deps): update docusaurus monorepo to v2.0.0-beta.7
+- fix: bump unleash-frontend to 4.2.6
+- chore(deps): update dependency ts-jest to v27.0.6
+- fix: bump unleash-forntend to 4.2.5
+- fix: update context field does not await the response (#1027)
+- fix(deps): update dependency unleash-frontend to v4.2.4
+- fix: add support for experimental flags (#1025)
+- fix: feature_strategies paramter column should not be null (#1024)
+- chore(deps): update dependency eslint-plugin-import to v2.25.2
+- chore(deps): update dependency typescript to v4.4.4
+- docs: typo fix (#1021)
+- docs: grammatical error (#1022)
+- fix: create admin users if enabled and zero users already
+- fix: upgrade unleash-frontend to version 4.2.3
+- chore(deps): update metcalfc/changelog-generator action to v1.0.1
+- Make Appinstance registration include environment (#1014)
+- chore(deps): update dependency ts-node to v10.3.0
+- Update node.md (#1016)
+- Docs: Update python.md (#1015)
+- Trigger STALE events when patching stale field
+- chore(deps): update dependency lint-staged to v11.2.3
+- chore(deps): update dependency lint-staged to v11.2.2
+- chore(deps): update dependency lint-staged to v11.2.1
+- chore(deps): update dependency jest to v27.2.5
+- chore(deps): update dependency eslint-config-airbnb-typescript to v14.0.1
+- feat/metricsV2 (#1005)
+- feat: clone feature toggle API (#1006)
+- feat: add new more specific feature/environment events to addons (#994)
+- fix: modify actions for PRs
+- fix: custom test-script for yart coverage reporter action
+- fix: custom test-script for yart coverage reporter action
+- fix: adjust test-script for jest-coverage action
+- chore: add jest coverage action for pr builds (#997)
+- fix: add sort order to environments (#1004)
+- task: Disables feature_environments without strategies (#1003)
+- docs: Mention php sdk as supporting variants (#1001)
+- docs: Update php documentation to include context provider (#1000)
+- chore(deps): update typescript-eslint monorepo to v4.33.0
+- chore(deps): update dependency lint-staged to v11.2.0
+- chore(deps): update dependency eslint-plugin-prettier to v4 (#980)
+- chore(deps): update typescript-eslint monorepo to v4.32.0 (#983)
+- fix(deps): update dependency prom-client to v14 (#987)
+- chore(deps): update dependency glob-parent to v6 (#981)
+- chore(deps): update actions/setup-node action to v2 (#977)
+- chore(deps): update dependency tsc-watch to v4.5.0 (#975)
+- fix(deps): update dependency unleash-frontend to v4.2.0 (#976)
+- fix: allow renovate-bot to autmerge minor and patch
+- chore(deps): update dependency ts-node to v10.2.1 (#973)
+- chore(deps): update dependency prettier to v2.4.1 (#974)
+- task: Adds FEATURE_ENVIRONMENT_{ENABLED,DISABLED} events (#970)
+- chore(deps): update dependency supertest to v6.1.6 (#969)
+- chore(deps): update typescript-eslint monorepo to v4.31.2 (#972)
+- chore(deps): update dependency typescript to v4.4.3 (#971)
+- chore: security resolutions
+- chore(deps): update dependency eslint-plugin-import to v2.24.2 (#960)
+- fix(deps): update docusaurus monorepo to v2.0.0-beta.6 (#968)
+- fix(deps): update dependency knex to v0.95.11 (#967)
+- chore(deps): update dependency eslint-plugin-prettier to v3.4.1 (#961)
+- chore(deps): update dependency husky to v7.0.2 (#965)
+- chore(deps): update dependency source-map-support to v0.5.20 (#966)
+- chore(deps): update dependency jest to v27.2.2 (#962)
+- chore(deps): update dependency trim to v1 (#963)
+- chore(deps): update dependency ts-jest to v27.0.5 (#964)
+- chore(deps): update dependency @types/jest to v27.0.2 (#958)
+- fix(deps): pin dependencies (#957)
+- chore: Add renovate.json (#956)
+- docs: minor adjustments.
+- fix: environments should have type
+- feat: rename :global: env to "default" (#947)
+- Fixed the react link appearance
+- fix: Enforce non-nullability of environment type (#950)
+- Add UPDATE and DELETE TAG_TYPE permissions (#951)
+- fix: don't include archived feature strategies (#955)
+- removed the --save from npm command
+- removed the --save flag
+- docs: Readme update dashboard screenshot (#953)
+- docs: remove the conflict between docker steps and docker-compose (#952)
+- chore(deps): bump prismjs from 1.24.1 to 1.25.0 in /websitev2 (#946)
+- chore(deps): bump tmpl from 1.0.4 to 1.0.5 (#949)
+- fix: correct test verifications
+- fix: Added displayName to feature environments
+- Add type to environments
+- Merge pull request #948 from Unleash/documentation-update
+- update the advanced part
+- update the docs with the new screenshots
+- chore: set transitive resolutions
+- fix: upgrade connect-session-knex to version 2.1.0
+- added tests and exports for 3.17, 4.0 and 4.1 (#944)
+- feat: add project and environment columns to events (#942)
+- Respect sort order when displaying strategies (#943)
+- Feat/api key scoping (#941)
+- fix: lint error
+- fix: convert schemas to typescript
+- fix: convert more tests to typescript
+- fix: convert api-def.js to typescript
+- fix: convert xtract-user.js to typescript
+- fix: convert event-hook.test.js to typescript
+- fix: convert files to typescript
+- fix: convert feature-schema.test.js to typescript
+
+# 4.1.4
+
+- feat: Move environments to enterprise (#935)
+- fix: correct failing feature toggle test
+- fix: Cleanup new features API with env support (#929)
+
+# 4.1.3
+
+- fix: Added indices and primary key to feature_tag (#936)
+- fix: failing test
+- fix: add resetDb to migrator
+- Set default SMTP port to 587 instead of 567
+- docs: add react-sdk to proxy docs.
+- Update README.md
+
+# 4.1.2
+
+- chore: update frontend
+- fix: fine tune db-config based on experience
+- chore: trigger docs generation
+- fix: set DEPLOYMENT_BRANCH for docusaurus
+- fix: upgrade docusaurus to 2.0.0-beta.5
+- fix: addon-service should only trigger enabled addons
+- fix: improve performance for fetching active api tokens
+- Fix/sso docs (#931)
+- chore(deps): bump tar from 6.1.7 to 6.1.11 (#930)
+
+# 4.1.1
+
+- chore: update frontend
+- fix: set correct projects count in metrics
+
+# 4.1.0
+
+- docs: Added mikefrancis/laravel-unleash (#927)
+
+
+# 4.1.0-beta.15
+
+- chore: update frontend
+- fix: make sure exising projects get :global: env automatically
+- docs: cleanup unleash-hosted refereces
+
+# 4.1.0-beta.14
+
+- fix: upgrade unleash-frontend to v4.1.0-beta.10
+- fix: correct data format for FEATURE_CREATED event
+
+#  4.1.0-beta.13
+
+- chore: update frontend
+
+#  4.1.0-beta.12
+
+- chore: update frontend
+- fix: oas docs on root
+- Revert "fix: oas being overriden"
+- fix: oas being overriden
+- fix: only add strategies to addon texts when available
+- fix: add user and project counters
+- fix: import schema needs to understand :global: env
+- fix: import should not drop built-in strategies
+
+# 4.1.0-beta.11
+
+- fix: bump unleash-frontend to 4.1.0-beta.7
+- Update index.md
+- Update feature-toggles-archive-api.md
+- Update configuring-unleash.md
+
+# 4.1.0-beta.10
+
+- chore: update yarn.lock
+- Fix/feature events (#924)
+- fix: getFeatureToggleAdmin should include project
+
+# 4.1.0-beta.9
+
+- fix: upgrade unleash-frontend to version 4.1.0-beta.5
+
+# 4.1.0-beta.8
+
+- chore: update unleash-frontend
+- Update README.md
+- Update README.md
+- Fix/switch project endpoint (#923)
+- fix: only update name if not undefined
+
+# 4.1.0-beta.7
+
+- feat: sync fields when logging in via SSO (#916)
+ 
+# 4.1.0-beta.6
+
+- fix: bump unleash-frontend to 4.1.0-beta.3,
+- fix: add php syntax highlighting to docs (#921)
+- fix: add properties to legacy endpoints (#919)
+- docs: Add official php documentation (#920)
+- fix: add member and toggle count to project list (#918)
+- Fix the custom activation strategy example (#913)
+- chore: update yarn.lock
+- Fix typo in sample (#917)
+- Fix Common Grammar Error in ReadMe (#914)
+- WIP: Feat/quickstart oss (#912)
+
+# 4.1.0-beta.5
+
+- fix: adjust logo in emails
+- Revert "fix: uri encode smtp connection string (#901)"
+- 
+# 4.1.0-beta.4
+
+- fix: Clean up exported types even more
+
+# 4.1.0-beta.3
+
+- fix: exported types x2
+
+# 4.1.0-beta.2
+- fix: export types from main entry
+
+# 4.1.0-beta.1
+- fix: upgrade unleash-fronendt to 4.1.0.beta.2
+- docs: Update Unleash Proxy docker pull instructions (#911)
+- feat: Adds sendEmail flag to body of create user request (#894)
+- fix: Controller wraps handler with try/catch (#909)
+- fix: upgrade husky to 7.0.1
+- Revert "fix: upgrade js-yaml to 4.1.0"
+- fix: upgrade js-yaml to 4.1.0
+- fix: bump eslint-plugin-import to 2.24.0
+- chore: remove resolution
+- fix: update supertest to version 6.1.5
+- fix: bump @types
+- fix: update ts-node to 10.2.0
+- fix: bump unleash-frontend to v4.0.10
+- fix: uri encode smtp connection string (#901)
+- fix: Stores as typescript and with interfaces.  (#902)
+- fix: add node v16 as build target
+- docs: update footer
+- docs: update link to unleash-proxy-client-js
+- doc: add import query params in doc (#673) (#903)
+- fix: yarn.lock resolution for website docs
+- fix: update yarn.lock file
+- fix: failing tests
+- fix: clean dist folder on build
+- chore: document password requirements
+- doc: Remove link to laravel php sdk
+- fix: only import feature_tags for imported features
+- Use absolute url to api-token doc
+
+
+# 4.1.0-beta.0
+
+- fix: Use 4.0.9 of frontend
+- Fix typo (#899)
+- fix: Update node.md (#896)
+- fix: remove public.pem (unused)
+- fix: logout-controller should support logoutUrl override (#881)
+- fix: Remove trailing backslash (#892)
+- fix link to proxy-javascript (#889)
+- fix curl health call (#888)
+- fix: always add global environment to new projects
+- fix: return empty array if no features are found for project
+- doc: Add rikudou/unleash-sdk to community clients (#885)
+
+# 4.0.6-beta.1
+
+- feat: Wip/environments (#880)
+- Fixed typo (#884)
+- Fix contextProvider not being in code block (#883)
+- Fix link to unleash-client-go (#876)
+- fix: digital ocean specs
+- fix: deploy.template.yaml to follow specs
+- fix: digitalocean deploy template
+- fix: Added cascade to user_feedback foreign key
+- fix: refactor code
+- fix: add option for graceful shutdown (#872)
+- docs: Added api key for algolia
+- fix: Do gracefull shutdown of Unleash on 'SIGINT' & 'SIGTERM' (#870)
+- docs: improve introduction section
+- docs: improve introduction section
+- docs: fix wrong grafana query
+- chore: update readme
+- docs: fix typo and remember to note that the slack addon needs Unleash URL
+- chore(deps): bump ws from 6.2.1 to 6.2.2 in /websitev2 (#869)
+- doc: redirects for external links
+
 # 4.0.4
 
 - fix: userFeedback should not be allowed to throw

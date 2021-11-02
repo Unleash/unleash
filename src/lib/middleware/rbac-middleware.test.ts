@@ -87,6 +87,7 @@ test('should not give api-user ADMIN permission', async () => {
 });
 
 test('should not allow user to miss userId', async () => {
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
     const accessService = {
         hasPermission: jest.fn(),
     };
@@ -108,6 +109,7 @@ test('should not allow user to miss userId', async () => {
 });
 
 test('should return false for missing user', async () => {
+    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
     const accessService = {
         hasPermission: jest.fn(),
     };

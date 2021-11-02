@@ -2,6 +2,7 @@ interface IBaseOptions {
     type: string;
     path: string;
     message: string;
+    defaultHidden?: boolean;
 }
 
 interface IOptions extends IBaseOptions {
@@ -15,13 +16,22 @@ class AuthenticationRequired {
 
     private message: string;
 
+    private defaultHidden: boolean;
+
     private options?: IBaseOptions[];
 
-    constructor({ type, path, message, options }: IOptions) {
+    constructor({
+        type,
+        path,
+        message,
+        options,
+        defaultHidden = false,
+    }: IOptions) {
         this.type = type;
         this.path = path;
         this.message = message;
         this.options = options;
+        this.defaultHidden = defaultHidden;
     }
 }
 

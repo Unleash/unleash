@@ -10,6 +10,8 @@ import SessionService from '../../../lib/services/session-service';
 import NotFoundError from '../../../lib/error/notfound-error';
 import { IRole } from '../../../lib/types/stores/access-store';
 import { RoleName } from '../../../lib/types/model';
+import SettingService from '../../../lib/services/setting-service';
+import { simpleAuthKey } from '../../../lib/types/settings/simple-auth-settings';
 import { addDays, minutesToMilliseconds } from 'date-fns';
 
 let db;
@@ -28,12 +30,14 @@ beforeAll(async () => {
     const resetTokenService = new ResetTokenService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);
     sessionService = new SessionService(stores, config);
+    const settingService = new SettingService(stores, config);
 
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
         sessionService,
+        settingService,
     });
     userStore = stores.userStore;
     const rootRoles = await accessService.getRootRoles();
@@ -92,6 +96,22 @@ test('should create user with password', async () => {
         'A very strange P4ssw0rd_',
     );
     expect(user.username).toBe('test');
+});
+
+test('should not login user if simple auth is disabled', async () => {
+    await db.stores.settingStore.insert(simpleAuthKey, { disabled: true });
+
+    await userService.createUser({
+        username: 'test_no_pass',
+        password: 'A very strange P4ssw0rd_',
+        rootRole: adminRole.id,
+    });
+
+    await expect(async () => {
+        await userService.loginUser('test_no_pass', 'A very strange P4ssw0rd_');
+    }).rejects.toThrowError(
+        'Logging in with username/password has been disabled.',
+    );
 });
 
 test('should login for user _without_ password', async () => {

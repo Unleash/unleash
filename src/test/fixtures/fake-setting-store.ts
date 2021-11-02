@@ -1,5 +1,4 @@
 import { ISettingStore } from '../../lib/types/stores/settings-store';
-import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeSettingStore implements ISettingStore {
     settings: Map<string, any> = new Map();
@@ -23,7 +22,7 @@ export default class FakeSettingStore implements ISettingStore {
         if (setting) {
             return setting;
         }
-        throw new NotFoundError(`Could not find setting with key ${key}`);
+        return undefined;
     }
 
     async getAll(): Promise<any[]> {

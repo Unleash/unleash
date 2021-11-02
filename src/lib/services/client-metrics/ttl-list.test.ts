@@ -1,11 +1,9 @@
-'use strict';
-
-const TTLList = require('./ttl-list');
-const { addMilliseconds } = require('date-fns');
+import { addMilliseconds } from 'date-fns';
+import TTLList from './ttl-list';
 
 test('should emit expire', (done) => {
     jest.useFakeTimers('modern');
-    const list = new TTLList({
+    const list = new TTLList<{ n: number }>({
         interval: 20,
         expireAmount: 10,
         expireType: 'milliseconds',
@@ -25,7 +23,7 @@ test('should emit expire', (done) => {
 test('should slice off list', () => {
     jest.useFakeTimers('modern');
 
-    const list = new TTLList({
+    const list = new TTLList<{ n: string }>({
         interval: 10,
         expireAmount: 10,
         expireType: 'milliseconds',
@@ -69,7 +67,7 @@ test('should slice off list', () => {
 test('should add item created in the past but expiring in the future', () => {
     jest.useFakeTimers('modern');
 
-    const list = new TTLList({
+    const list = new TTLList<{ n: string }>({
         interval: 10,
         expireAmount: 10,
         expireType: 'milliseconds',

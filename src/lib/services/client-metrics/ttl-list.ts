@@ -1,21 +1,38 @@
-'use strict';
-
-const { EventEmitter } = require('events');
-const List = require('./list');
-const {
+import { EventEmitter } from 'events';
+import List from './list';
+import {
     add,
-    isFuture,
     addMilliseconds,
     secondsToMilliseconds,
-} = require('date-fns');
+    Duration,
+    isFuture,
+} from 'date-fns';
+
+interface ConstructorArgs {
+    interval: number;
+    expireAmount: number;
+    expireType: keyof Duration | 'milliseconds';
+}
 
 // this list must have entries with sorted ttl range
-module.exports = class TTLList extends EventEmitter {
+export default class TTLList<T> extends EventEmitter {
+    private readonly interval: number;
+
+    private readonly expireAmount: number;
+
+    private readonly expireType: keyof Duration | 'milliseconds';
+
+    public list: List<{ ttl: Date; value: T }>;
+
+    private timer: NodeJS.Timeout;
+
+    private readonly getExpiryFrom: (timestamp) => Date;
+
     constructor({
         interval = secondsToMilliseconds(1),
         expireAmount = 1,
         expireType = 'hours',
-    } = {}) {
+    }: Partial<ConstructorArgs> = {}) {
         super();
         this.interval = interval;
         this.expireAmount = expireAmount;
@@ -37,7 +54,7 @@ module.exports = class TTLList extends EventEmitter {
         this.startTimer();
     }
 
-    startTimer() {
+    startTimer(): void {
         if (this.list) {
             this.timer = setTimeout(() => {
                 if (this.list) {
@@ -48,7 +65,7 @@ module.exports = class TTLList extends EventEmitter {
         }
     }
 
-    add(value, timestamp = new Date()) {
+    add(value: T, timestamp = new Date()): void {
         const ttl = this.getExpiryFrom(timestamp);
         if (isFuture(ttl)) {
             this.list.add({ ttl, value });
@@ -57,14 +74,14 @@ module.exports = class TTLList extends EventEmitter {
         }
     }
 
-    timedCheck() {
+    timedCheck(): void {
         this.list.reverseRemoveUntilTrue(({ value }) => isFuture(value.ttl));
         this.startTimer();
     }
 
-    destroy() {
+    destroy(): void {
         clearTimeout(this.timer);
         this.timer = null;
         this.list = null;
     }
-};
+}

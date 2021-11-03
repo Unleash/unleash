@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { CREATE_FEATURE, DELETE_FEATURE, ADMIN, UPDATE_FEATURE } from '../types/permissions';
+import {
+    CREATE_FEATURE,
+    DELETE_FEATURE,
+    ADMIN,
+    UPDATE_FEATURE,
+} from '../types/permissions';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import User from '../types/user';

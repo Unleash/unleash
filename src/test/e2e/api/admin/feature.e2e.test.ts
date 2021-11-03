@@ -263,6 +263,24 @@ test('can change status of feature toggle that does exist', async () => {
         .expect(200);
 });
 
+test('cannot change project for feature toggle', async () => {
+    await app.request
+        .put('/api/admin/features/featureY')
+        .send({
+            name: 'featureY',
+            enabled: true,
+            project: 'random', //will be ignored
+            strategies: [{ name: 'default' }],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+    const { body } = await app.request
+        .get('/api/admin/features/featureY')
+        .expect(200);
+
+    expect(body.project).toBe('default');
+});
+
 test('can not toggle of feature that does not exist', async () => {
     expect.assertions(0);
     return app.request

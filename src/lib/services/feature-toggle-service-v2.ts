@@ -142,6 +142,10 @@ class FeatureToggleServiceV2 {
         userName: string,
         environment: string = DEFAULT_ENV,
     ): Promise<IStrategyConfig> {
+        const actualProjectId = await this.featureToggleStore.getProjectId(
+            featureName,
+        );
+        this.validateProject(projectId, { projectId: actualProjectId });
         try {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({

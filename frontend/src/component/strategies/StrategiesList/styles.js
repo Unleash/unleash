@@ -7,6 +7,9 @@ export const useStyles = makeStyles(theme => ({
             textDecoration: 'none',
             color: 'inherit',
         },
+        '&:hover': {
+            backgroundColor: theme.palette.grey[200],
+        }
     },
     deprecated: {
         '& a': {

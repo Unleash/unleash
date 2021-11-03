@@ -55,7 +55,7 @@
     "classnames": "2.3.1",
     "copy-to-clipboard": "3.3.1",
     "craco": "0.0.3",
-    "css-loader": "6.5.0",
+    "css-loader": "6.5.1",
     "cypress": "8.7.0",
     "date-fns": "2.25.0",
     "debounce": "1.2.1",

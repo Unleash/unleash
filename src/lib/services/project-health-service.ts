@@ -11,7 +11,7 @@ import {
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IProjectStore } from '../types/stores/project-store';
-import FeatureToggleServiceV2 from './feature-toggle-service-v2';
+import FeatureToggleServiceV2 from './feature-toggle-service';
 import { hoursToMilliseconds } from 'date-fns';
 import Timer = NodeJS.Timer;
 

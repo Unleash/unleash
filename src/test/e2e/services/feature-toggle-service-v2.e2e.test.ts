@@ -1,4 +1,4 @@
-import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service-v2';
+import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service';
 import { IStrategyConfig } from '../../../lib/types/model';
 import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';

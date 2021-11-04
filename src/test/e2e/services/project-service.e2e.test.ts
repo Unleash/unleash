@@ -1,6 +1,6 @@
 import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service-v2';
+import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
 import {

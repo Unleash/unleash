@@ -3,7 +3,7 @@ import { applyPatch, Operation } from 'fast-json-patch';
 import Controller from '../../controller';
 import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
-import FeatureToggleServiceV2 from '../../../services/feature-toggle-service-v2';
+import FeatureToggleServiceV2 from '../../../services/feature-toggle-service';
 import { Logger } from '../../../logger';
 import { CREATE_FEATURE, UPDATE_FEATURE } from '../../../types/permissions';
 import {

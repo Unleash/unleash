@@ -27,7 +27,7 @@ import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-st
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import { IRole } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
-import FeatureToggleServiceV2 from './feature-toggle-service-v2';
+import FeatureToggleServiceV2 from './feature-toggle-service';
 import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import IncompatibleProjectError from '../error/incompatible-project-error';

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useStyles } from './ProjectEnvironment.styles';
 
@@ -18,11 +18,8 @@ import EnvironmentDisableConfirm from './EnvironmentDisableConfirm/EnvironmentDi
 import { Link } from 'react-router-dom';
 import { Alert } from '@material-ui/lab';
 import PermissionSwitch from '../../common/PermissionSwitch/PermissionSwitch';
-
-export interface ProjectEnvironment {
-    name: string;
-    enabled: boolean;
-}
+import { IProjectEnvironment } from '../../../interfaces/environments';
+import { getEnabledEnvs } from './helpers';
 
 interface ProjectEnvironmentListProps {
     projectId: string;
@@ -30,6 +27,7 @@ interface ProjectEnvironmentListProps {
 
 const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
     // api state
+    const [envs, setEnvs] = useState<IProjectEnvironment>([]);
     const { toast, setToastData } = useToast();
     const { uiConfig } = useUiConfig();
     const {
@@ -43,10 +41,19 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
         useProjectApi();
 
     // local state
-    const [selectedEnv, setSelectedEnv] = useState<ProjectEnvironment>();
+    const [selectedEnv, setSelectedEnv] = useState<IProjectEnvironment>();
     const [confirmName, setConfirmName] = useState('');
     const ref = useLoading(loading);
     const styles = useStyles();
+
+    useEffect(() => {
+        const envs = environments.map(e => ({
+            name: e.name,
+            enabled: project?.environments.includes(e.name),
+        }));
+
+        setEnvs(envs);
+    }, [environments, project?.environments]);
 
     const refetch = () => {
         refetchEnvs();
@@ -71,7 +78,17 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
 
     const toggleEnv = async (env: ProjectEnvironment) => {
         if (env.enabled) {
-            setSelectedEnv(env);
+            const enabledEnvs = getEnabledEnvs(envs);
+
+            if (enabledEnvs > 1) {
+                setSelectedEnv(env);
+                return;
+            }
+            setToastData({
+                text: 'You must always have one active environment',
+                type: 'error',
+                show: true,
+            });
         } else {
             try {
                 await addEnvironmentToProject(projectId, env.name);
@@ -119,11 +136,6 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
         setConfirmName('');
     };
 
-    const envs = environments.map(e => ({
-        name: e.name,
-        enabled: project?.environments.includes(e.name),
-    }));
-
     const genLabel = (env: ProjectEnvironment) => (
         <>
             <code>{env.name}</code> environment is{' '}
@@ -140,12 +152,14 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
                         label={genLabel(env)}
                         control={
                             <PermissionSwitch
-                                tooltip={`${env.enabled ? 'Disable' : 'Enable'} environment`}
+                                tooltip={`${
+                                    env.enabled ? 'Disable' : 'Enable'
+                                } environment`}
                                 size="medium"
                                 projectId={projectId}
                                 permission={UPDATE_PROJECT}
                                 checked={env.enabled}
-                                onChange={toggleEnv.bind(this, env)}
+                                onChange={() => toggleEnv(env)}
                             />
                         }
                     />

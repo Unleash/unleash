@@ -7,6 +7,11 @@ export interface IEnvironment {
     protected: boolean;
 }
 
+export interface IProjectEnvironment {
+    enabled: boolean;
+    name: string;
+}
+
 export interface IEnvironmentPayload {
     name: string;
     type: string;

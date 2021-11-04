@@ -643,6 +643,145 @@ test('Can add strategy to feature toggle to a "some-env-2"', async () => {
         });
 });
 
+test('Can update strategy on feature toggle', async () => {
+    const envName = 'default';
+    const featureName = 'feature.strategy.update.strat';
+
+    const projectPath = '/api/admin/projects/default';
+    const featurePath = `${projectPath}/features/${featureName}`;
+
+    // create feature toggle
+    await app.request
+        .post(`${projectPath}/features`)
+        .send({ name: featureName })
+        .expect(201);
+
+    // add strategy
+    const { body: strategy } = await app.request
+        .post(`${featurePath}/environments/${envName}/strategies`)
+        .send({
+            name: 'default',
+            parameters: {
+                userIds: '',
+            },
+        })
+        .expect(200);
+
+    // update strategy
+    await app.request
+        .put(`${featurePath}/environments/${envName}/strategies/${strategy.id}`)
+        .send({
+            name: 'default',
+            parameters: {
+                userIds: '1234',
+            },
+        })
+        .expect(200);
+
+    const { body } = await app.request.get(`${featurePath}`);
+    const defaultEnv = body.environments[0];
+    expect(body.environments).toHaveLength(1);
+    expect(defaultEnv.name).toBe(envName);
+    expect(defaultEnv.strategies).toHaveLength(1);
+    expect(defaultEnv.strategies[0].parameters).toStrictEqual({
+        userIds: '1234',
+    });
+});
+
+test('Can NOT delete strategy with wrong projectId', async () => {
+    const envName = 'default';
+    const featureName = 'feature.strategy.delete.strat.error';
+
+    const projectPath = '/api/admin/projects/default';
+    const featurePath = `${projectPath}/features/${featureName}`;
+
+    // create feature toggle
+    await app.request
+        .post(`${projectPath}/features`)
+        .send({ name: featureName })
+        .expect(201);
+
+    // add strategy
+    const { body: strategy } = await app.request
+        .post(`${featurePath}/environments/${envName}/strategies`)
+        .send({
+            name: 'default',
+            parameters: {
+                userIds: '',
+            },
+        })
+        .expect(200);
+
+    // delete strategy
+    await app.request
+        .delete(
+            `/api/admin/projects/wrongId/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
+        )
+        .expect(403);
+});
+
+test('add strategy cannot use wrong projectId', async () => {
+    const envName = 'default';
+    const featureName = 'feature.strategy.add.strat.wrong.projectId';
+
+    // create feature toggle
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+
+    // add strategy
+    await app.request
+        .post(
+            `/api/admin/projects/invalidId/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userIds: '',
+            },
+        })
+        .expect(403);
+});
+
+test('update strategy on feature toggle cannot use wrong projectId', async () => {
+    const envName = 'default';
+    const featureName = 'feature.strategy.update.strat.wrong.projectId';
+
+    const projectPath = '/api/admin/projects/default';
+    const featurePath = `${projectPath}/features/${featureName}`;
+
+    // create feature toggle
+    await app.request
+        .post(`${projectPath}/features`)
+        .send({ name: featureName })
+        .expect(201);
+
+    // add strategy
+    const { body: strategy } = await app.request
+        .post(`${featurePath}/environments/${envName}/strategies`)
+        .send({
+            name: 'default',
+            parameters: {
+                userIds: '',
+            },
+        })
+        .expect(200);
+
+    // update strategy
+    await app.request
+        .put(
+            `/api/admin/projects/invalidId/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userIds: '1234',
+            },
+        })
+        .expect(403);
+});
+
 test('Environments are returned in sortOrder', async () => {
     const sortedSecond = 'sortedSecond';
     const sortedLast = 'sortedLast';

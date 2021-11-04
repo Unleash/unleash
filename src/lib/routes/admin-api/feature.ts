@@ -11,7 +11,7 @@ import {
 } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
-import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
+import FeatureToggleServiceV2 from '../../services/feature-toggle-service';
 import { featureSchema, querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
 import FeatureTagService from '../../services/feature-tag-service';
@@ -150,8 +150,11 @@ class FeatureController extends Controller {
             toggle.strategies.map(async (s) =>
                 this.service.createStrategy(
                     s,
-                    createdFeature.project,
-                    createdFeature.name,
+                    {
+                        projectId: createdFeature.project,
+                        featureName: createdFeature.name,
+                        environment: DEFAULT_ENV,
+                    },
                     userName,
                 ),
             ),
@@ -190,8 +193,7 @@ class FeatureController extends Controller {
                 updatedFeature.strategies.map(async (s) =>
                     this.service.createStrategy(
                         s,
-                        projectId,
-                        featureName,
+                        { projectId, featureName, environment: DEFAULT_ENV },
                         userName,
                     ),
                 ),

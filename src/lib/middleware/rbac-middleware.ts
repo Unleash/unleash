@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
     CREATE_FEATURE,
-    UPDATE_FEATURE,
     DELETE_FEATURE,
     ADMIN,
+    UPDATE_FEATURE,
 } from '../types/permissions';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
@@ -47,33 +47,10 @@ const rbacMiddleware = (
             let { projectId } = params;
 
             // Temporary workaround to figure out projectId for feature toggle updates.
-            if (permission === DELETE_FEATURE) {
+            // will be removed in Unleash v5.0
+            if ([DELETE_FEATURE, UPDATE_FEATURE].includes(permission)) {
                 const { featureName } = params;
                 projectId = await featureToggleStore.getProjectId(featureName);
-            } else if (permission === UPDATE_FEATURE) {
-                // if projectId of feature is different from project in body
-                // need to check that we have UPDATE_FEATURE access on both old and new project
-                // TODO: Look at this to make it smoother once we get around to looking at project
-                // Changing project of a toggle should most likely be a separate endpoint
-                const { featureName } = params;
-                projectId = await featureToggleStore.getProjectId(featureName);
-                const newProjectId = req.body
-                    ? req.body.project || projectId
-                    : projectId;
-                if (newProjectId !== projectId) {
-                    return (
-                        accessService.hasPermission(
-                            user,
-                            permission,
-                            projectId,
-                        ) &&
-                        accessService.hasPermission(
-                            user,
-                            permission,
-                            newProjectId,
-                        )
-                    );
-                }
             } else if (permission === CREATE_FEATURE) {
                 projectId = req.body.project || 'default';
             }
@@ -84,5 +61,4 @@ const rbacMiddleware = (
     };
 };
 
-module.exports = rbacMiddleware;
 export default rbacMiddleware;

@@ -7,7 +7,7 @@ import Controller from '../controller';
 
 import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions';
-import FeatureToggleServiceV2 from '../../services/feature-toggle-service-v2';
+import FeatureToggleServiceV2 from '../../services/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
 
 export default class ArchiveController extends Controller {

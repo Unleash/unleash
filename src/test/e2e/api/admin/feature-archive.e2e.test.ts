@@ -98,8 +98,7 @@ test('returns three archived toggles', async () => {
         });
 });
 
-test.skip('revives a feature by name', async () => {
-    expect.assertions(0);
+test('revives a feature by name', async () => {
     return app.request
         .post('/api/admin/archive/revive/featureArchivedX')
         .set('Content-Type', 'application/json')

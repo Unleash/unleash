@@ -109,10 +109,11 @@ test('Adding same environment twice should throw a NameExistsError', async () =>
         name: 'uniqueness-test',
         type: 'production',
     });
+    await service.addEnvironmentToProject('uniqueness-test', 'default');
+
     await service.removeEnvironmentFromProject('test-connection', 'default');
     await service.removeEnvironmentFromProject('removal-test', 'default');
 
-    await service.addEnvironmentToProject('uniqueness-test', 'default');
     return expect(async () =>
         service.addEnvironmentToProject('uniqueness-test', 'default'),
     ).rejects.toThrow(

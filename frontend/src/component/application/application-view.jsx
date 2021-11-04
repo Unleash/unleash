@@ -98,7 +98,7 @@ function ApplicationView({
                                 key={`toggle_conditional_${name}`}
                                 condition={notFound}
                                 show={notFoundListItem({
-                                    createUrl: `/projects/${project}/create-toggle?name=${name}`,
+                                    createUrl: `/projects/default/create-toggle?name=${name}`,
                                     name,
                                     permission: CREATE_FEATURE,
                                     i,

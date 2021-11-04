@@ -29,6 +29,7 @@
     "start": "react-scripts start",
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
     "start:ea": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
+    "start:demo": "UNLEASH_API=http://unleash.herokuapp.com yarn run start",
     "test": "react-scripts test",
     "prepare": "yarn run build",
     "e2e": "yarn run cypress open --config baseUrl='http://localhost:3000' --env PASSWORD_AUTH=true,AUTH_TOKEN=$AUTH_TOKEN",

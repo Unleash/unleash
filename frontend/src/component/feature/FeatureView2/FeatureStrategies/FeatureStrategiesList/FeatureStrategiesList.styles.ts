@@ -23,22 +23,34 @@ export const useStyles = makeStyles(theme => ({
         width: '10%',
         [theme.breakpoints.down(700)]: {
             width: '15%',
+            paddingRight: '45px',
+            paddingLeft: '40px',
         },
     },
     iconButtonWrapper: {
         position: 'absolute',
         top: '300px',
         right: '-25px',
+        [theme.breakpoints.down(700)]: {
+            right: '-15px',
+        },
     },
     iconButton: {
-        backgroundColor: `${theme.palette.grey[300]}!important`,
         [theme.breakpoints.down(700)]: {
             right: '-10px',
+            background: `conic-gradient(rgba(255, 0, 0, 0), 50%, rgb(196, 196, 196) 50%)`,
+        },
+        background: `conic-gradient(rgb(255, 255, 255), 50%, rgb(196, 196, 196) 50%)`,
+        color: '#fff',
+        '&:hover': {
+            background: `conic-gradient(rgba(255, 0, 0, 0), 50%, rgb(196, 196, 196) 50%)`,
         },
     },
     icon: {
         transition: 'transform 0.4s ease',
         transitionDelay: '0.4s',
+        position: 'relative',
+        left: '-8px',
     },
     expandedIcon: {
         transform: 'rotate(180deg)',

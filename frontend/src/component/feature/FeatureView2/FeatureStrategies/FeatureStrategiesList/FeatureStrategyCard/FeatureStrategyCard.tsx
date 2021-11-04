@@ -98,7 +98,7 @@ const FeatureStrategyCard = ({
                     </div>
                 }
                 elseShow={
-                    <IconButton disabled>
+                    <IconButton disabled className={styles.disabledButton}>
                         <Icon />
                     </IconButton>
                 }

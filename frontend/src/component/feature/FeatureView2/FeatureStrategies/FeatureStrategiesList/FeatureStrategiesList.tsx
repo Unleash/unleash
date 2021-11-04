@@ -6,7 +6,7 @@ import { useContext } from 'react';
 import FeatureStrategiesUIContext from '../../../../../contexts/FeatureStrategiesUIContext';
 import classnames from 'classnames';
 import { Button, useMediaQuery } from '@material-ui/core';
-import { DoubleArrow } from '@material-ui/icons';
+import { NavigateNext } from '@material-ui/icons';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
 import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import PermissionIconButton from '../../../../common/PermissionIconButton/PermissionIconButton';
@@ -74,7 +74,7 @@ const FeatureStrategiesList = () => {
                     permission={UPDATE_FEATURE}
                     projectId={projectId}
                 >
-                    <DoubleArrow className={iconClasses} />
+                    <NavigateNext className={iconClasses} />
                 </PermissionIconButton>
             </span>
 

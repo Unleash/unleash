@@ -16,6 +16,7 @@ import CreatedAt from './CreatedAt';
 import useProject from '../../../../hooks/api/getters/useProject/useProject';
 import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import PermissionSwitch from '../../../common/PermissionSwitch/PermissionSwitch';
+import { Link } from 'react-router-dom';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -102,7 +103,12 @@ const FeatureToggleListNewItem = ({
                     align="left"
                     onClick={onClick}
                 >
-                    <span data-loading>{name}</span>
+                    <Link
+                        to={getTogglePath(projectId, name, uiConfig.flags.E)}
+                        className={styles.link}
+                    >
+                        <span data-loading>{name}</span>
+                    </Link>
                 </TableCell>
                 <TableCell
                     className={classNames(

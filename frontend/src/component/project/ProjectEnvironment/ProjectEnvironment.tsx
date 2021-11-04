@@ -85,7 +85,7 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
                 return;
             }
             setToastData({
-                text: 'You must always have one active environment',
+                text: 'You must always have at least one active environment per project',
                 type: 'error',
                 show: true,
             });

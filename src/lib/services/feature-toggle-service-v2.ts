@@ -48,6 +48,15 @@ import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client
 import { DEFAULT_ENV } from '../util/constants';
 import { applyPatch, deepClone, Operation } from 'fast-json-patch';
 
+interface IFeatureContext {
+    featureName: string;
+    projectId: string;
+}
+
+interface IFeatureStrategyContext extends IFeatureContext {
+    environment: string;
+}
+
 class FeatureToggleServiceV2 {
     private logger: Logger;
 
@@ -96,13 +105,31 @@ class FeatureToggleServiceV2 {
         this.featureEnvironmentStore = featureEnvironmentStore;
     }
 
-    validateProject(
-        project: string,
-        { projectId }: { projectId: string },
-    ): void {
-        if (project !== projectId) {
+    async validateFeatureContext({
+        featureName,
+        projectId,
+    }: IFeatureContext): Promise<void> {
+        const id = await this.featureToggleStore.getProjectId(featureName);
+        if (id !== projectId) {
             throw new InvalidOperationError(
                 'You can not change the projectId for an activation strategy.',
+            );
+        }
+    }
+
+    validateFeatureStrategyContext(
+        strategy: IFeatureStrategy,
+        { featureName, projectId }: IFeatureStrategyContext,
+    ): void {
+        if (strategy.projectId !== projectId) {
+            throw new InvalidOperationError(
+                'You can not change the projectId for an activation strategy.',
+            );
+        }
+
+        if (strategy.featureName !== featureName) {
+            throw new InvalidOperationError(
+                'You can not change the featureName for an activation strategy.',
             );
         }
     }
@@ -137,15 +164,11 @@ class FeatureToggleServiceV2 {
 
     async createStrategy(
         strategyConfig: Omit<IStrategyConfig, 'id'>,
-        projectId: string,
-        featureName: string,
+        context: IFeatureStrategyContext,
         userName: string,
-        environment: string = DEFAULT_ENV,
     ): Promise<IStrategyConfig> {
-        const actualProjectId = await this.featureToggleStore.getProjectId(
-            featureName,
-        );
-        this.validateProject(projectId, { projectId: actualProjectId });
+        const { featureName, projectId, environment } = context;
+        await this.validateFeatureContext(context);
         try {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
@@ -191,18 +214,21 @@ class FeatureToggleServiceV2 {
      * }
      * @param id
      * @param updates
+     * @param context - Which context does this strategy live in (projectId, featureName, environment)
+     * @param userName - Human readable id of the user performing the update
      */
 
     async updateStrategy(
         id: string,
-        environment: string,
-        project: string,
-        userName: string,
         updates: Partial<IFeatureStrategy>,
+        context: IFeatureStrategyContext,
+        userName: string,
     ): Promise<IStrategyConfig> {
+        const { projectId, environment } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
+        this.validateFeatureStrategyContext(existingStrategy, context);
+
         if (existingStrategy.id === id) {
-            this.validateProject(project, existingStrategy);
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
                 updates,
@@ -216,7 +242,7 @@ class FeatureToggleServiceV2 {
             };
             await this.eventStore.store({
                 type: FEATURE_STRATEGY_UPDATE,
-                project,
+                project: projectId,
                 environment,
                 createdBy: userName,
                 data,
@@ -230,13 +256,15 @@ class FeatureToggleServiceV2 {
         id: string,
         name: string,
         value: string | number,
+        context: IFeatureStrategyContext,
         userName: string,
-        project: string,
-        environment: string,
     ): Promise<IStrategyConfig> {
+        const { projectId, environment } = context;
+
         const existingStrategy = await this.featureStrategiesStore.get(id);
+        this.validateFeatureStrategyContext(existingStrategy, context);
+
         if (existingStrategy.id === id) {
-            this.validateProject(project, existingStrategy);
             existingStrategy.parameters[name] = value;
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
@@ -250,7 +278,7 @@ class FeatureToggleServiceV2 {
             };
             await this.eventStore.store({
                 type: FEATURE_STRATEGY_UPDATE,
-                project,
+                project: projectId,
                 environment,
                 createdBy: userName,
                 data,
@@ -266,28 +294,22 @@ class FeatureToggleServiceV2 {
      *
      * }
      * @param id - strategy id
-     * @param featureName - Name of the feature the strategy belongs to
-     * @param userName - Who's doing the change
-     * @param project - Which project does this feature toggle belong to
+     * @param context - Which context does this strategy live in (projectId, featureName, environment)
      * @param environment - Which environment does this strategy belong to
      */
     async deleteStrategy(
         id: string,
-        featureName: string,
+        context: IFeatureStrategyContext,
         userName: string,
-        project: string = 'default',
-        environment: string = DEFAULT_ENV,
     ): Promise<void> {
         const existingStrategy = await this.featureStrategiesStore.get(id);
-        if (project !== existingStrategy.projectId) {
-            throw new InvalidOperationError(
-                'You can not change the projectId for an activation strategy.',
-            );
-        }
+        const { featureName, projectId, environment } = context;
+        this.validateFeatureStrategyContext(existingStrategy, context);
+
         await this.featureStrategiesStore.delete(id);
         await this.eventStore.store({
             type: FEATURE_STRATEGY_REMOVE,
-            project,
+            project: projectId,
             environment,
             createdBy: userName,
             data: {
@@ -295,6 +317,7 @@ class FeatureToggleServiceV2 {
                 name: featureName,
             },
         });
+
         // If there are no strategies left for environment disable it
         await this.featureEnvironmentStore.disableEnvironmentIfNoStrategies(
             featureName,
@@ -465,10 +488,12 @@ class FeatureToggleServiceV2 {
                 createStrategies.push(
                     this.createStrategy(
                         s,
-                        projectId,
-                        newFeatureName,
+                        {
+                            projectId,
+                            featureName: newFeatureName,
+                            environment: e.name,
+                        },
                         userName,
-                        e.name,
                     ),
                 );
             }),

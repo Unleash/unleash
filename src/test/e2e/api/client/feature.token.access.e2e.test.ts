@@ -55,8 +55,7 @@ beforeAll(async () => {
             constraints: [],
             parameters: {},
         },
-        project,
-        feature1,
+        { projectId: project, featureName: feature1, environment: DEFAULT_ENV },
         username,
     );
     await featureToggleServiceV2.createStrategy(
@@ -65,10 +64,8 @@ beforeAll(async () => {
             constraints: [],
             parameters: {},
         },
-        project,
-        feature1,
+        { projectId: project, featureName: feature1, environment },
         username,
-        environment,
     );
 
     // create feature 2
@@ -85,10 +82,8 @@ beforeAll(async () => {
             constraints: [],
             parameters: {},
         },
-        project,
-        feature2,
+        { projectId: project, featureName: feature2, environment },
         username,
-        environment,
     );
 
     // create feature 3
@@ -105,10 +100,8 @@ beforeAll(async () => {
             constraints: [],
             parameters: {},
         },
-        project2,
-        feature3,
+        { projectId: project2, featureName: feature3, environment },
         username,
-        environment,
     );
 });
 

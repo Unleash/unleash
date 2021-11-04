@@ -3,6 +3,7 @@ import { FeatureToggleDTO, IStrategyConfig } from 'lib/types/model';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
+import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -30,8 +31,7 @@ beforeAll(async () => {
         );
         await app.services.featureToggleServiceV2.createStrategy(
             strategy,
-            projectId,
-            toggle.name,
+            { projectId, featureName: toggle.name, environment: DEFAULT_ENV },
             username,
         );
     };
@@ -303,8 +303,7 @@ test('can toggle a feature that does exist', async () => {
         );
     await app.services.featureToggleServiceV2.createStrategy(
         defaultStrategy,
-        'default',
-        featureName,
+        { projectId: 'default', featureName, environment: DEFAULT_ENV },
         username,
     );
     return app.request

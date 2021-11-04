@@ -41,8 +41,7 @@ test('Should create feature toggle strategy configuration', async () => {
 
     const createdConfig = await service.createStrategy(
         config,
-        projectId,
-        'Demo',
+        { projectId, featureName: 'Demo', environment: DEFAULT_ENV },
         username,
     );
 
@@ -53,6 +52,7 @@ test('Should create feature toggle strategy configuration', async () => {
 test('Should be able to update existing strategy configuration', async () => {
     const projectId = 'default';
     const username = 'existing-strategy';
+    const featureName = 'update-existing-strategy';
     const config: Omit<IStrategyConfig, 'id'> = {
         name: 'default',
         constraints: [],
@@ -62,32 +62,33 @@ test('Should be able to update existing strategy configuration', async () => {
     await service.createFeatureToggle(
         projectId,
         {
-            name: 'update-existing-strategy',
+            name: featureName,
         },
         'test',
     );
 
     const createdConfig = await service.createStrategy(
         config,
-        'default',
-        'update-existing-strategy',
+        { projectId, featureName, environment: DEFAULT_ENV },
         username,
     );
     expect(createdConfig.name).toEqual('default');
     const updatedConfig = await service.updateStrategy(
         createdConfig.id,
-        DEFAULT_ENV,
-        projectId,
-        username,
         {
             parameters: { b2b: true },
         },
+        { projectId, featureName, environment: DEFAULT_ENV },
+        username,
     );
     expect(createdConfig.id).toEqual(updatedConfig.id);
     expect(updatedConfig.parameters).toEqual({ b2b: true });
 });
 
 test('Should be able to get strategy by id', async () => {
+    const featureName = 'get-strategy-by-id';
+    const projectId = 'default';
+
     const userName = 'strategy';
     const config: Omit<IStrategyConfig, 'id'> = {
         name: 'default',
@@ -95,19 +96,17 @@ test('Should be able to get strategy by id', async () => {
         parameters: {},
     };
     await service.createFeatureToggle(
-        'default',
+        projectId,
         {
-            name: 'get-strategy-by-id',
+            name: featureName,
         },
-        'test',
+        userName,
     );
 
     const createdConfig = await service.createStrategy(
         config,
-        'default',
-        'Demo',
+        { projectId, featureName, environment: DEFAULT_ENV },
         userName,
-        DEFAULT_ENV,
     );
     const fetchedConfig = await service.getStrategy(createdConfig.id);
     expect(fetchedConfig).toEqual(createdConfig);

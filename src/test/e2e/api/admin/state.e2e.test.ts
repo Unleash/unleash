@@ -136,11 +136,11 @@ test('import for 4.1.2 enterprise format fixed works', async () => {
 
 test('Can roundtrip. I.e. export and then import', async () => {
     const projectId = 'export-project';
-    const environmentId = 'export-environment';
+    const environment = 'export-environment';
     const userName = 'export-user';
     const featureName = 'export.feature';
     await db.stores.environmentStore.create({
-        name: environmentId,
+        name: environment,
         type: 'test',
     });
     await db.stores.projectStore.create({
@@ -149,7 +149,7 @@ test('Can roundtrip. I.e. export and then import', async () => {
         description: 'Project for export',
     });
     await app.services.environmentService.addEnvironmentToProject(
-        environmentId,
+        environment,
         projectId,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
@@ -169,9 +169,8 @@ test('Can roundtrip. I.e. export and then import', async () => {
             ],
             parameters: {},
         },
-        projectId,
-        featureName,
-        environmentId,
+        { projectId, featureName, environment },
+        userName,
     );
     const data = await app.services.stateService.export({});
     await app.services.stateService.import({
@@ -184,11 +183,11 @@ test('Can roundtrip. I.e. export and then import', async () => {
 
 test('Roundtrip with tags works', async () => {
     const projectId = 'tags-project';
-    const environmentId = 'tags-environment';
+    const environment = 'tags-environment';
     const userName = 'tags-user';
     const featureName = 'tags.feature';
     await db.stores.environmentStore.create({
-        name: environmentId,
+        name: environment,
         type: 'test',
     });
     await db.stores.projectStore.create({
@@ -197,7 +196,7 @@ test('Roundtrip with tags works', async () => {
         description: 'Project for export',
     });
     await app.services.environmentService.addEnvironmentToProject(
-        environmentId,
+        environment,
         projectId,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
@@ -217,9 +216,12 @@ test('Roundtrip with tags works', async () => {
             ],
             parameters: {},
         },
-        projectId,
-        featureName,
-        environmentId,
+        {
+            projectId,
+            featureName,
+            environment,
+        },
+        userName,
     );
     await app.services.featureTagService.addTag(
         featureName,
@@ -245,11 +247,11 @@ test('Roundtrip with tags works', async () => {
 
 test('Roundtrip with strategies in multiple environments works', async () => {
     const projectId = 'multiple-environment-project';
-    const environmentId = 'multiple-environment-environment';
+    const environment = 'multiple-environment-environment';
     const userName = 'multiple-environment-user';
     const featureName = 'multiple-environment.feature';
     await db.stores.environmentStore.create({
-        name: environmentId,
+        name: environment,
         type: 'test',
     });
     await db.stores.projectStore.create({
@@ -258,7 +260,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         description: 'Project for export',
     });
     await app.services.environmentService.addEnvironmentToProject(
-        environmentId,
+        environment,
         projectId,
     );
     await app.services.environmentService.addEnvironmentToProject(
@@ -282,9 +284,8 @@ test('Roundtrip with strategies in multiple environments works', async () => {
             ],
             parameters: {},
         },
-        projectId,
-        featureName,
-        environmentId,
+        { projectId, featureName, environment },
+        userName,
     );
     await app.services.featureToggleServiceV2.createStrategy(
         {
@@ -294,9 +295,8 @@ test('Roundtrip with strategies in multiple environments works', async () => {
             ],
             parameters: {},
         },
-        projectId,
-        featureName,
-        DEFAULT_ENV,
+        { projectId, featureName, environment: DEFAULT_ENV },
+        userName,
     );
     const data = await app.services.stateService.export({});
     await app.services.stateService.import({

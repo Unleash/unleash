@@ -150,8 +150,11 @@ class FeatureController extends Controller {
             toggle.strategies.map(async (s) =>
                 this.service.createStrategy(
                     s,
-                    createdFeature.project,
-                    createdFeature.name,
+                    {
+                        projectId: createdFeature.project,
+                        featureName: createdFeature.name,
+                        environment: DEFAULT_ENV,
+                    },
                     userName,
                 ),
             ),
@@ -190,8 +193,7 @@ class FeatureController extends Controller {
                 updatedFeature.strategies.map(async (s) =>
                     this.service.createStrategy(
                         s,
-                        projectId,
-                        featureName,
+                        { projectId, featureName, environment: DEFAULT_ENV },
                         userName,
                     ),
                 ),

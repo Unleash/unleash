@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
+# 4.2.2
+- fix: toast text
+- Fix/strategy sidepanel (#479)
+- fix: guard for disabling envs (#4
+92)
+- fix: handle undefined project wit
+h default (#486)
+- chore(deps): update dependency cs
+s-loader to v6.5.1
+- chore(deps): update dependency @types/react-dom to v17.0.11
+- chore(deps): update dependency @types/react to v17.0.34
+- Merge pull request #483 from Unleash/fix/add-highlight-row
+
 # 4.2.1
 - Feat/toggle view (#389)
 - feat: created project header (#388)

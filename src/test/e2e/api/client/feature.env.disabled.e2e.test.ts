@@ -51,20 +51,3 @@ test('returns feature toggle for default env', async () => {
             expect(res.body.features[0].strategies).toHaveLength(1);
         });
 });
-
-test('returns feature toggle for default env even if it is removed from project', async () => {
-    await app.services.environmentService.removeEnvironmentFromProject(
-        'default',
-        'default',
-    );
-
-    await app.request
-        .get('/api/client/features')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.features).toHaveLength(1);
-            expect(res.body.features[0].enabled).toBe(false);
-            expect(res.body.features[0].strategies).toHaveLength(1);
-        });
-});

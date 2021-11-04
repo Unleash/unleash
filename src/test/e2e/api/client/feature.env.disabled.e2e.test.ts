@@ -55,7 +55,12 @@ test('returns feature toggle for default env', async () => {
 });
 
 test('returns feature toggle for default env even if it is removed from project', async () => {
-    await app.services.environmentService.removeEnvironmentFromProject(
+    await db.stores.featureEnvironmentStore.disconnectFeatures(
+        'default',
+        'default',
+    );
+
+    await db.stores.featureEnvironmentStore.disconnectProject(
         'default',
         'default',
     );

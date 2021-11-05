@@ -83,7 +83,7 @@ const FeatureToggleListItem = ({
                         <>
                             <Tooltip title={description}>
                                 <span className={commonStyles.toggleName}>
-                                    {name}&nbsp; z{' '}
+                                    {name}&nbsp;{' '}
                                 </span>
                             </Tooltip>
                             <span className={styles.listItemToggle}></span>

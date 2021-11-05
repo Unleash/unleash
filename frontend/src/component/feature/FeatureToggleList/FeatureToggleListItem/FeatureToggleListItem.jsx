@@ -32,13 +32,25 @@ const FeatureToggleListItem = ({
 }) => {
     const styles = useStyles();
 
-    // const {projects} = useProjects()
+    const { projects } = useProjects();
     const isArchive = !!revive;
 
     const { name, description, type, stale, createdAt, project, lastSeenAt } =
         feature;
 
-    // let obj = projects.find(project => project.id === 'projectId');
+    const isProjectDeleted = () => {
+        let projectExist = projects.find(proj => proj.id === project);
+        if (projectExist) {
+            return true;
+        }
+        return false;
+    };
+
+    const reviveFeature = () => {
+        if (isProjectDeleted()) {
+            revive(feature.name);
+        }
+    };
     return (
         <ListItem
             {...rest}
@@ -112,12 +124,15 @@ const FeatureToggleListItem = ({
                 <Link
                     to={`/projects/${project}`}
                     style={{ textDecoration: 'none' }}
+                    className={classnames({
+                        [`${styles.disabledLink}`]: !isProjectDeleted(),
+                    })}
                 >
                     <Chip
                         color="primary"
                         variant="outlined"
                         className={styles.typeChip}
-                        style={{ marginLeft: '8px' }}
+                        style={{ marginLeft: '8px', cursor: 'pointer' }}
                         title={`Project: ${project}`}
                         label={project}
                     />
@@ -129,7 +144,10 @@ const FeatureToggleListItem = ({
                     <ConditionallyRender
                         condition={hasAccess(UPDATE_FEATURE, project)}
                         show={
-                            <IconButton onClick={() => console.log('ho')}>
+                            <IconButton
+                                onClick={reviveFeature}
+                                disabled={!isProjectDeleted()}
+                            >
                                 <Undo />
                             </IconButton>
                         }

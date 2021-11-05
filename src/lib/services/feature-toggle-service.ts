@@ -154,7 +154,7 @@ class FeatureToggleServiceV2 {
         if (featureToggle.stale !== newDocument.stale) {
             await this.eventStore.store({
                 type: newDocument.stale ? FEATURE_STALE_ON : FEATURE_STALE_OFF,
-                data: updated,
+                featureName,
                 project: projectId,
                 createdBy: userName,
             });
@@ -165,7 +165,7 @@ class FeatureToggleServiceV2 {
     async createStrategy(
         strategyConfig: Omit<IStrategyConfig, 'id'>,
         context: IFeatureStrategyContext,
-        userName: string,
+        createdBy: string,
     ): Promise<IStrategyConfig> {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
@@ -189,11 +189,11 @@ class FeatureToggleServiceV2 {
             await this.eventStore.store({
                 type: FEATURE_STRATEGY_ADD,
                 project: projectId,
-                createdBy: userName,
+                featureName,
+                createdBy,
                 environment,
                 data: {
                     ...data,
-                    name: featureName, // Done like this since we use data as our return object.
                     strategyName: newFeatureStrategy.strategyName,
                 },
             });
@@ -224,7 +224,7 @@ class FeatureToggleServiceV2 {
         context: IFeatureStrategyContext,
         userName: string,
     ): Promise<IStrategyConfig> {
-        const { projectId, environment } = context;
+        const { projectId, environment, featureName } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
 
@@ -236,16 +236,23 @@ class FeatureToggleServiceV2 {
             const data = {
                 id: strategy.id,
                 name: strategy.strategyName,
-                featureName: strategy.featureName,
                 constraints: strategy.constraints || [],
                 parameters: strategy.parameters,
+            };
+            const preData = {
+                id: existingStrategy.id,
+                name: existingStrategy.strategyName,
+                constraints: existingStrategy.constraints || [],
+                parameters: existingStrategy.parameters,
             };
             await this.eventStore.store({
                 type: FEATURE_STRATEGY_UPDATE,
                 project: projectId,
+                featureName,
                 environment,
                 createdBy: userName,
                 data,
+                preData,
             });
             return data;
         }
@@ -259,7 +266,7 @@ class FeatureToggleServiceV2 {
         context: IFeatureStrategyContext,
         userName: string,
     ): Promise<IStrategyConfig> {
-        const { projectId, environment } = context;
+        const { projectId, environment, featureName } = context;
 
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
@@ -278,6 +285,7 @@ class FeatureToggleServiceV2 {
             };
             await this.eventStore.store({
                 type: FEATURE_STRATEGY_UPDATE,
+                featureName,
                 project: projectId,
                 environment,
                 createdBy: userName,
@@ -307,15 +315,21 @@ class FeatureToggleServiceV2 {
         this.validateFeatureStrategyContext(existingStrategy, context);
 
         await this.featureStrategiesStore.delete(id);
+
+        const preData = {
+            id: existingStrategy.id,
+            name: existingStrategy.strategyName,
+            constraints: existingStrategy.constraints || [],
+            parameters: existingStrategy.parameters,
+        };
+
         await this.eventStore.store({
             type: FEATURE_STRATEGY_REMOVE,
+            featureName,
             project: projectId,
             environment,
             createdBy: userName,
-            data: {
-                id,
-                name: featureName,
-            },
+            preData,
         });
 
         // If there are no strategies left for environment disable it
@@ -419,9 +433,9 @@ class FeatureToggleServiceV2 {
     async createFeatureToggle(
         projectId: string,
         value: FeatureToggleDTO,
-        userName: string,
+        createdBy: string,
     ): Promise<FeatureToggle> {
-        this.logger.info(`${userName} creates feature toggle ${value.name}`);
+        this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
         const exists = await this.projectStore.hasProject(projectId);
         if (exists) {
@@ -441,7 +455,8 @@ class FeatureToggleServiceV2 {
 
             await this.eventStore.store({
                 type: FEATURE_CREATED,
-                createdBy: userName,
+                featureName: featureData.name,
+                createdBy: createdBy,
                 project: projectId,
                 data,
             });
@@ -628,7 +643,7 @@ class FeatureToggleServiceV2 {
     async updateStale(
         featureName: string,
         isStale: boolean,
-        userName: string,
+        createdBy: string,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
         feature.stale = isStale;
@@ -636,27 +651,27 @@ class FeatureToggleServiceV2 {
         const tags = await this.featureTagStore.getAllTagsForFeature(
             featureName,
         );
-        const data = await this.getFeatureToggleLegacy(featureName);
 
         await this.eventStore.store({
             type: isStale ? FEATURE_STALE_ON : FEATURE_STALE_OFF,
-            createdBy: userName,
-            data,
+            createdBy,
             tags,
+            featureName,
             project: feature.project,
         });
         return feature;
     }
 
-    async archiveToggle(name: string, userName: string): Promise<void> {
-        const feature = await this.featureToggleStore.get(name);
-        await this.featureToggleStore.archive(name);
+    async archiveToggle(featureName: string, createdBy: string): Promise<void> {
+        const feature = await this.featureToggleStore.get(featureName);
+        await this.featureToggleStore.archive(featureName);
         const tags =
-            (await this.featureTagStore.getAllTagsForFeature(name)) || [];
+            (await this.featureTagStore.getAllTagsForFeature(featureName)) ||
+            [];
         await this.eventStore.store({
             type: FEATURE_ARCHIVED,
-            createdBy: userName,
-            data: { name },
+            featureName,
+            createdBy,
             project: feature.project,
             tags,
         });
@@ -667,7 +682,7 @@ class FeatureToggleServiceV2 {
         featureName: string,
         environment: string,
         enabled: boolean,
-        userName: string,
+        createdBy: string,
     ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
@@ -704,8 +719,8 @@ class FeatureToggleServiceV2 {
                     type: enabled
                         ? FEATURE_ENVIRONMENT_ENABLED
                         : FEATURE_ENVIRONMENT_DISABLED,
-                    createdBy: userName,
-                    data: { name: featureName },
+                    createdBy,
+                    featureName,
                     tags,
                     project: projectId,
                     environment,
@@ -720,7 +735,7 @@ class FeatureToggleServiceV2 {
 
     async storeFeatureUpdatedEventLegacy(
         featureName: string,
-        userName: string,
+        createdBy: string,
     ): Promise<FeatureToggleLegacy> {
         const tags = await this.featureTagStore.getAllTagsForFeature(
             featureName,
@@ -729,7 +744,8 @@ class FeatureToggleServiceV2 {
 
         await this.eventStore.store({
             type: FEATURE_UPDATED,
-            createdBy: userName,
+            createdBy,
+            featureName,
             data: feature,
             tags,
             project: feature.project,
@@ -777,7 +793,7 @@ class FeatureToggleServiceV2 {
     async changeProject(
         featureName: string,
         newProject: string,
-        userName: string,
+        createdBy: string,
     ): Promise<void> {
         const feature = await this.featureToggleStore.get(featureName);
         const oldProject = feature.project;
@@ -789,12 +805,13 @@ class FeatureToggleServiceV2 {
         );
         await this.eventStore.store({
             type: FEATURE_PROJECT_CHANGE,
-            createdBy: userName,
+            createdBy,
             data: {
                 name: feature.name,
                 oldProject,
                 newProject,
             },
+            featureName,
             project: newProject,
             tags,
         });
@@ -804,27 +821,28 @@ class FeatureToggleServiceV2 {
         return this.getFeatureToggles({}, true);
     }
 
-    async deleteFeature(featureName: string, userName: string): Promise<void> {
+    // TODO: add project id.
+    async deleteFeature(featureName: string, createdBy: string): Promise<void> {
+        const toggle = await this.featureToggleStore.get(featureName);
         await this.featureToggleStore.delete(featureName);
         await this.eventStore.store({
             type: FEATURE_DELETED,
-            createdBy: userName,
-            data: {
-                featureName,
-            },
+            featureName,
+            project: toggle.project,
+            createdBy,
         });
     }
 
-    async reviveToggle(featureName: string, userName: string): Promise<void> {
-        const data = await this.featureToggleStore.revive(featureName);
+    async reviveToggle(featureName: string, createdBy: string): Promise<void> {
+        const toggle = await this.featureToggleStore.revive(featureName);
         const tags = await this.featureTagStore.getAllTagsForFeature(
             featureName,
         );
         await this.eventStore.store({
             type: FEATURE_REVIVED,
-            createdBy: userName,
-            data,
-            project: data.project,
+            createdBy,
+            featureName,
+            project: toggle.project,
             tags,
         });
     }

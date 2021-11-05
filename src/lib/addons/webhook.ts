@@ -2,7 +2,7 @@ import Mustache from 'mustache';
 import Addon from './addon';
 import definition from './webhook-definition';
 import { LogProvider } from '../logger';
-import { IEvent } from '../types/model';
+import { IEvent } from '../types/events';
 
 export default class Webhook extends Addon {
     constructor(args: { getLogger: LogProvider }) {

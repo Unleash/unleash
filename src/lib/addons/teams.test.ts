@@ -4,12 +4,12 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
+    IEvent,
 } from '../types/events';
 
 import TeamsAddon from './teams';
 
 import noLogger from '../../test/fixtures/no-logger';
-import { IEvent } from '../types/model';
 
 let fetchRetryCalls: any[];
 

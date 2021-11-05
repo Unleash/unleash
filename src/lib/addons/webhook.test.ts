@@ -1,11 +1,10 @@
 import { Logger } from '../logger';
 
-import { FEATURE_CREATED } from '../types/events';
+import { FEATURE_CREATED, IEvent } from '../types/events';
 
 import WebhookAddon from './webhook';
 
 import noLogger from '../../test/fixtures/no-logger';
-import { IEvent } from '../types/model';
 
 let fetchRetryCalls: any[] = [];
 

@@ -1,4 +1,3 @@
-import { IEvent } from '../types/model';
 import {
     FEATURE_CREATED,
     FEATURE_UPDATED,
@@ -13,6 +12,7 @@ import {
     FEATURE_STRATEGY_REMOVE,
     FEATURE_METADATA_UPDATED,
     FEATURE_PROJECT_CHANGE,
+    IEvent,
 } from '../types/events';
 
 export interface FeatureEventFormatter {

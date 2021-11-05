@@ -1,11 +1,12 @@
 import Addon from './addon';
 
 import teamsDefinition from './teams-definition';
-import { IAddonConfig, IEvent } from '../types/model';
+import { IAddonConfig } from '../types/model';
 import {
     FeatureEventFormatter,
     FeatureEventFormatterMd,
 } from './feature-event-formatter-md';
+import { IEvent } from '../types/events';
 
 export default class TeamsAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;

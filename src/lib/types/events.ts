@@ -1,3 +1,5 @@
+import { ITag } from './model';
+
 export const APPLICATION_CREATED = 'application-created';
 export const FEATURE_CREATED = 'feature-created';
 export const FEATURE_DELETED = 'feature-deleted';
@@ -52,3 +54,19 @@ export const DROP_ENVIRONMENTS = 'drop-environments';
 export const ENVIRONMENT_IMPORT = 'environment-import';
 export const FEATURE_ENVIRONMENT_ENABLED = 'feature-environment-enabled';
 export const FEATURE_ENVIRONMENT_DISABLED = 'feature-environment-disabled';
+
+export interface ICreateEvent {
+    type: string;
+    createdBy: string;
+    project?: string;
+    environment?: string;
+    featureName?: string;
+    data?: any;
+    preData?: any;
+    tags?: ITag[];
+}
+
+export interface IEvent extends ICreateEvent {
+    id: number;
+    createdAt: Date;
+}

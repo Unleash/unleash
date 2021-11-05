@@ -2,13 +2,13 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
+    IEvent,
 } from '../types/events';
 import { Logger } from '../logger';
 
 import DatadogAddon from './datadog';
 
 import noLogger from '../../test/fixtures/no-logger';
-import { IEvent } from '../types/model';
 
 let fetchRetryCalls: any[] = [];
 

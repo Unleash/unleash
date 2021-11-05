@@ -1,7 +1,7 @@
 import { applicationSchema } from './metrics-schema';
 import { Projection } from './projection';
 import { clientMetricsSchema } from './client-metrics-schema';
-import { APPLICATION_CREATED } from '../../types/events';
+import { APPLICATION_CREATED, ICreateEvent } from '../../types/events';
 import { IApplication, IYesNoCount } from './models';
 import { IUnleashStores } from '../../types/stores';
 import { IUnleashConfig } from '../../types/option';
@@ -15,12 +15,7 @@ import { IStrategyStore } from '../../types/stores/strategy-store';
 import { IClientMetricsStore } from '../../types/stores/client-metrics-store';
 import { IClientInstanceStore } from '../../types/stores/client-instance-store';
 import { IApplicationQuery } from '../../types/query';
-import {
-    IClientApp,
-    ICreateEvent,
-    IMetricCounts,
-    IMetricsBucket,
-} from '../../types/model';
+import { IClientApp, IMetricCounts, IMetricsBucket } from '../../types/model';
 import { clientRegisterSchema } from './register-schema';
 import {
     minutesToMilliseconds,

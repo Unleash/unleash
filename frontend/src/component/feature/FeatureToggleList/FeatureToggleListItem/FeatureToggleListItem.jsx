@@ -17,6 +17,7 @@ import { useStyles } from './styles';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
 import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
 import FeatureType from '../../FeatureView2/FeatureType/FeatureType';
+import useProjects from '../../../../hooks/api/getters/useProjects/useProjects';
 
 const FeatureToggleListItem = ({
     feature,
@@ -31,11 +32,13 @@ const FeatureToggleListItem = ({
 }) => {
     const styles = useStyles();
 
+    // const {projects} = useProjects()
     const isArchive = !!revive;
 
     const { name, description, type, stale, createdAt, project, lastSeenAt } =
         feature;
 
+    // let obj = projects.find(project => project.id === 'projectId');
     return (
         <ListItem
             {...rest}
@@ -126,7 +129,7 @@ const FeatureToggleListItem = ({
                     <ConditionallyRender
                         condition={hasAccess(UPDATE_FEATURE, project)}
                         show={
-                            <IconButton onClick={() => revive(feature.name)}>
+                            <IconButton onClick={() => console.log('ho')}>
                                 <Undo />
                             </IconButton>
                         }

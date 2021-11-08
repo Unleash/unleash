@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import { Link } from 'react-router-dom';
-import { Chip, IconButton, ListItem, Tooltip } from '@material-ui/core';
+import { Chip, ListItem, Tooltip } from '@material-ui/core';
 import { Undo } from '@material-ui/icons';
 
 import TimeAgo from 'react-timeago';
@@ -18,6 +18,7 @@ import { getTogglePath } from '../../../../utils/route-path-helpers';
 import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
 import FeatureType from '../../FeatureView2/FeatureType/FeatureType';
 import useProjects from '../../../../hooks/api/getters/useProjects/useProjects';
+import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
 
 const FeatureToggleListItem = ({
     feature,
@@ -38,7 +39,7 @@ const FeatureToggleListItem = ({
     const { name, description, type, stale, createdAt, project, lastSeenAt } =
         feature;
 
-    const isProjectDeleted = () => {
+    const projectExists = () => {
         let projectExist = projects.find(proj => proj.id === project);
         if (projectExist) {
             return true;
@@ -47,7 +48,7 @@ const FeatureToggleListItem = ({
     };
 
     const reviveFeature = () => {
-        if (isProjectDeleted()) {
+        if (projectExists()) {
             revive(feature.name);
         }
     };
@@ -125,7 +126,7 @@ const FeatureToggleListItem = ({
                     to={`/projects/${project}`}
                     style={{ textDecoration: 'none' }}
                     className={classnames({
-                        [`${styles.disabledLink}`]: !isProjectDeleted(),
+                        [`${styles.disabledLink}`]: !projectExists(),
                     })}
                 >
                     <Chip
@@ -141,18 +142,14 @@ const FeatureToggleListItem = ({
             <ConditionallyRender
                 condition={revive}
                 show={
-                    <ConditionallyRender
-                        condition={hasAccess(UPDATE_FEATURE, project)}
-                        show={
-                            <IconButton
-                                onClick={reviveFeature}
-                                disabled={!isProjectDeleted()}
-                            >
-                                <Undo />
-                            </IconButton>
-                        }
-                        elseShow={<span style={{ width: '48px ' }} />}
-                    />
+                    <PermissionIconButton
+                        permission={UPDATE_FEATURE}
+                        projectId={project}
+                        disabled={!projectExists()}
+                        onClick={reviveFeature}
+                    >
+                        <Undo />
+                    </PermissionIconButton>
                 }
             />
         </ListItem>

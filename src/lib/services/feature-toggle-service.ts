@@ -531,6 +531,8 @@ class FeatureToggleServiceV2 {
             updatedFeature,
         );
 
+        const preData = await this.featureToggleStore.get(featureName);
+
         const featureToggle = await this.featureToggleStore.update(
             projectId,
             featureData,
@@ -543,6 +545,8 @@ class FeatureToggleServiceV2 {
             type: FEATURE_METADATA_UPDATED,
             createdBy: userName,
             data: featureToggle,
+            preData,
+            featureName,
             project: projectId,
             tags,
         });

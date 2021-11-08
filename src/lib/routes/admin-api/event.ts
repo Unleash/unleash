@@ -1,11 +1,11 @@
+import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import EventService from '../../services/event-service';
 import { ADMIN } from '../../types/permissions';
+import { IEvent } from '../../types/events';
 
 const Controller = require('../controller');
-
-const eventDiffer = require('../../event-differ');
 
 const version = 1;
 
@@ -22,17 +22,17 @@ export default class EventController extends Controller {
         this.get('/:name', this.getEventsForToggle);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async getEvents(req, res): Promise<void> {
-        let events;
-        if (req.query?.project) {
-            events = await this.eventService.getEventsForProject(
-                req.query.project,
-            );
+    async getEvents(
+        req: Request<any, any, any, { project?: string }>,
+        res: Response,
+    ): Promise<void> {
+        const { project } = req.query;
+        let events: IEvent[];
+        if (project) {
+            events = await this.eventService.getEventsForProject(project);
         } else {
             events = await this.eventService.getEvents();
         }
-        eventDiffer.addDiffs(events);
         res.json({ version, events });
     }
 
@@ -42,12 +42,10 @@ export default class EventController extends Controller {
         const events = await this.eventService.getEventsForToggle(toggleName);
 
         if (events) {
-            eventDiffer.addDiffs(events);
+            //eventDiffer.addDiffs(events);
             res.json({ toggleName, events });
         } else {
             res.status(404).json({ error: 'Could not find events' });
         }
     }
 }
-
-module.exports = EventController;

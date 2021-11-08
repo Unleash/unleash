@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { diff } from 'deep-diff';
 
 import { useStyles } from './EventDiff.styles';
 
@@ -18,6 +19,8 @@ const EventDiff = ({ entry }) => {
         D: styles.negative, // deleted
         N: styles.positive, // added
     };
+
+    const diffs = entry.data && entry.preData ? diff(entry.preData, entry.data) : undefined;
 
     const buildItemDiff = (diff, key) => {
         let change;
@@ -75,13 +78,14 @@ const EventDiff = ({ entry }) => {
 
     let changes;
 
-    if (entry.diffs) {
-        changes = entry.diffs.map(buildDiff);
+    if (diffs) {
+        changes = diffs.map(buildDiff);
     } else {
         // Just show the data if there is no diff yet.
+        const data = entry.data || entry.preData;
         changes = (
-            <div className={KLASSES.N}>
-                {JSON.stringify(entry.data, null, 2)}
+            <div className={entry.data ? KLASSES.N : KLASSES.D}>
+                {JSON.stringify(data, null, 2)}
             </div>
         );
     }

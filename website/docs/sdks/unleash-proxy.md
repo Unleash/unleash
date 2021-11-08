@@ -5,7 +5,7 @@ title: Unleash Proxy
 
 > The unleash-proxy is compatible with all Unleash Enterprise versions and Unleash Open-Source v4. You should reach out to **support@getunleash.io** if you want the Unleash Team to host the Unleash Proxy for you.
 
-A lot of our users wanted to use feature toggles in their single-page and native applications. To solve this in a preformat and privacy concerned way we built The Unleash Proxy
+A lot of our users wanted to use feature toggles in their single-page and native applications. To solve this in a performant and privacy concerned way we built The Unleash Proxy
 
 The Unleash Proxy sits between the Unleash API and the application. It provides a simple and super-fast API, as it has all the data it needs available in memory.
 

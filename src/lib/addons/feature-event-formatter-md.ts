@@ -44,9 +44,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
 
     generateFeatureLink(event: IEvent): string {
         if (this.linkStyle === LinkStyle.SLACK) {
-            return `<${this.featureLink(event)}|${event.data.name}>`;
+            return `<${this.featureLink(event)}|${event.featureName}>`;
         } else {
-            return `[${event.data.name}](${this.featureLink(event)})`;
+            return `[${event.featureName}](${this.featureLink(event)})`;
         }
     }
 
@@ -93,16 +93,16 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     }
 
     generateProjectChangeText(event: IEvent): string {
-        const { createdBy, project, data } = event;
-        return `${createdBy} moved ${data.name} to ${project}`;
+        const { createdBy, project, featureName } = event;
+        return `${createdBy} moved ${featureName} to ${project}`;
     }
 
     featureLink(event: IEvent): string {
-        const { type, project = '', data } = event;
+        const { type, project = '', featureName } = event;
         if (type === FEATURE_ARCHIVED) {
             return `${this.unleashUrl}/archive`;
         }
-        return `${this.unleashUrl}/projects/${project}/${data.name}`;
+        return `${this.unleashUrl}/projects/${project}/${featureName}`;
     }
 
     getAction(type: string): string {

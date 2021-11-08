@@ -46,6 +46,7 @@ test('Should call slack webhook', async () => {
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: 'default',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
             enabled: false,
@@ -73,6 +74,7 @@ test('Should call slack webhook for archived toggle', async () => {
         id: 2,
         createdAt: new Date(),
         type: FEATURE_ARCHIVED,
+        featureName: 'some-toggle',
         createdBy: 'some@user.com',
         data: {
             name: 'some-toggle',
@@ -101,6 +103,7 @@ test(`Should call webhook for toggled environment`, async () => {
         createdBy: 'some@user.com',
         environment: 'development',
         project: 'default',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
         },
@@ -127,6 +130,7 @@ test('Should use default channel', async () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
             enabled: false,
@@ -156,6 +160,7 @@ test('Should override default channel with data from tag', async () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
             enabled: false,
@@ -191,6 +196,7 @@ test('Should post to all channels in tags', async () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
             enabled: false,

@@ -38,6 +38,7 @@ test('Should handle event without "bodyTemplate"', () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
             enabled: false,
@@ -62,6 +63,7 @@ test('Should format event with "bodyTemplate"', () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
             enabled: false,

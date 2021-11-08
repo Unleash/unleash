@@ -5,14 +5,14 @@ title: Unleash Proxy
 
 > The unleash-proxy is compatible with all Unleash Enterprise versions and Unleash Open-Source v4. You should reach out to **support@getunleash.io** if you want the Unleash Team to host the Unleash Proxy for you.
 
-A lot of our users wanted to use feature toggles in their single-page and native applications. To solve this in a preformat and privacy concerned way we built The Unleash Proxy
+A lot of our users wanted to use feature toggles in their single-page and native applications. To solve this in a performant and privacy concerned way we built The Unleash Proxy
 
 The Unleash Proxy sits between the Unleash API and the application. It provides a simple and super-fast API, as it has all the data it needs available in memory.
 
 The proxy solves three important aspects:
 
 - **Performance** – The proxy will cache all toggles in memory, and will be running on the edge, close to your end-users. A single instance will be able to handle thousands of request/sec, and you can scale it easily by adding additional instances.
-- **Security** – The proxy evaluates the feature flags for the user on the server-side, and only exposes the results of enabled feature flags for a specific user.
+- **Security** – The proxy evaluates the feature flags for the user on the server-side, and exposes results for feature flags that are enabled for a specific user (flags not enabled for that specific user are _not_ exposed).
 - **Privacy** – If you run the proxy yourself (we can host it as well though) we will not see your end users. This means that you still have full control of your end-users, the way it should be!
 
 ![The Unleash Proxy](/img/The-unleash-proxy.png)
@@ -111,7 +111,7 @@ The Unleash Proxy has a very simple API. It takes the [Unleash Context](../user_
 
 ### We care about Privacy! {#we-care-about-privacy}
 
-The Unleash Proxy is important because you should not expose your entire toggle configurations to your end users! Single page apps works in context of a specific user. The proxy will only return the evaluated toggles (with variants) that should be enabled for those specific users in that specific context.
+The Unleash Proxy is important because you should not expose your entire set of toggle configurations to your end users. Single page apps work in the context of a specific user. The proxy allows you to only provide data that relates to that one user: _The proxy will only return the evaluated toggles (with variants) that should be enabled for that specific user in that specific context._
 
 Most of our customers prefer to run The Unleash Proxy themselves. PS! We actually prefer this as we don’t want to see your users. Running it is pretty simple, it is either a small Node.js process you start or a docker image you use. (We can of course host the proxy for you also.)
 

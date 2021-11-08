@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { Knex } from 'knex';
-import { DROP_FEATURES, IEvent, ICreateEvent } from '../types/events';
+import { DROP_FEATURES, IEvent, IBaseEvent } from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
@@ -44,7 +44,7 @@ class EventStore extends EventEmitter implements IEventStore {
         this.logger = getLogger('lib/db/event-store.ts');
     }
 
-    async store(event: ICreateEvent): Promise<void> {
+    async store(event: IBaseEvent): Promise<void> {
         try {
             const rows = await this.db(TABLE)
                 .insert(this.eventToDbRow(event))
@@ -56,7 +56,7 @@ class EventStore extends EventEmitter implements IEventStore {
         }
     }
 
-    async batchStore(events: ICreateEvent[]): Promise<void> {
+    async batchStore(events: IBaseEvent[]): Promise<void> {
         try {
             const savedRows = await this.db(TABLE)
                 .insert(events.map(this.eventToDbRow))
@@ -179,7 +179,7 @@ class EventStore extends EventEmitter implements IEventStore {
         };
     }
 
-    eventToDbRow(e: ICreateEvent): Omit<IEventTable, 'id' | 'created_at'> {
+    eventToDbRow(e: IBaseEvent): Omit<IEventTable, 'id' | 'created_at'> {
         return {
             type: e.type,
             created_by: e.createdBy,

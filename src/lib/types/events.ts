@@ -1,6 +1,8 @@
 import { ITag } from './model';
 
 export const APPLICATION_CREATED = 'application-created';
+
+// feature event types
 export const FEATURE_CREATED = 'feature-created';
 export const FEATURE_DELETED = 'feature-deleted';
 export const FEATURE_UPDATED = 'feature-updated';
@@ -19,6 +21,9 @@ export const FEATURE_UNTAGGED = 'feature-untagged';
 export const FEATURE_STALE_ON = 'feature-stale-on';
 export const FEATURE_STALE_OFF = 'feature-stale-off';
 export const DROP_FEATURES = 'drop-features';
+export const FEATURE_ENVIRONMENT_ENABLED = 'feature-environment-enabled';
+export const FEATURE_ENVIRONMENT_DISABLED = 'feature-environment-disabled';
+
 export const STRATEGY_CREATED = 'strategy-created';
 export const STRATEGY_DELETED = 'strategy-deleted';
 export const STRATEGY_DEPRECATED = 'strategy-deprecated';
@@ -52,10 +57,8 @@ export const USER_UPDATED = 'user-updated';
 export const USER_DELETED = 'user-deleted';
 export const DROP_ENVIRONMENTS = 'drop-environments';
 export const ENVIRONMENT_IMPORT = 'environment-import';
-export const FEATURE_ENVIRONMENT_ENABLED = 'feature-environment-enabled';
-export const FEATURE_ENVIRONMENT_DISABLED = 'feature-environment-disabled';
 
-export interface ICreateEvent {
+export interface IBaseEvent {
     type: string;
     createdBy: string;
     project?: string;
@@ -66,7 +69,71 @@ export interface ICreateEvent {
     tags?: ITag[];
 }
 
-export interface IEvent extends ICreateEvent {
+export interface IEvent extends IBaseEvent {
     id: number;
     createdAt: Date;
+}
+
+class BaseEvent implements IBaseEvent {
+    readonly type: string;
+
+    readonly createdBy: string;
+
+    readonly tags: ITag[];
+
+    constructor(type: string, createdBy: string, tags: ITag[] = []) {
+        this.type = type;
+        this.createdBy = createdBy;
+        this.tags = tags;
+    }
+}
+
+export class FeatureStaleEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    constructor(p: {
+        stale: boolean;
+        project: string;
+        featureName: string;
+        createdBy: string;
+        tags: ITag[];
+    }) {
+        super(
+            p.stale ? FEATURE_STALE_ON : FEATURE_STALE_OFF,
+            p.createdBy,
+            p.tags,
+        );
+        this.project = p.project;
+        this.featureName = p.featureName;
+    }
+}
+
+export class FeatureEnvironmentEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly environment: string;
+
+    constructor(p: {
+        enabled: boolean;
+        project: string;
+        featureName: string;
+        environment: string;
+        createdBy: string;
+        tags: ITag[];
+    }) {
+        super(
+            p.enabled
+                ? FEATURE_ENVIRONMENT_ENABLED
+                : FEATURE_ENVIRONMENT_DISABLED,
+            p.createdBy,
+            p.tags,
+        );
+        this.project = p.project;
+        this.featureName = p.featureName;
+        this.environment = p.environment;
+    }
 }

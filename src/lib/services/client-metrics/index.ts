@@ -1,7 +1,7 @@
 import { applicationSchema } from './metrics-schema';
 import { Projection } from './projection';
 import { clientMetricsSchema } from './client-metrics-schema';
-import { APPLICATION_CREATED, ICreateEvent } from '../../types/events';
+import { APPLICATION_CREATED, IBaseEvent } from '../../types/events';
 import { IApplication, IYesNoCount } from './models';
 import { IUnleashStores } from '../../types/stores';
 import { IUnleashConfig } from '../../types/option';
@@ -201,7 +201,7 @@ export default class ClientMetricsService {
         }
     }
 
-    appToEvent(app: IClientApp): ICreateEvent {
+    appToEvent(app: IClientApp): IBaseEvent {
         return {
             type: APPLICATION_CREATED,
             createdBy: app.clientIp,

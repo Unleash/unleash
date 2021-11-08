@@ -93,7 +93,7 @@ const ProjectFeatureToggles = ({
                             condition={hasAccess(CREATE_FEATURE, id)}
                             show={
                                 <Link
-                                    to={getCreateTogglePath(id)}
+                                    to={getCreateTogglePath(id, uiConfig.flags.E)}
                                     className={styles.link}
                                     data-loading
                                 >

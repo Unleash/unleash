@@ -10,7 +10,7 @@ exports[`renders correctly with one feature 1`] = `
   >
     <div
       aria-describedby={null}
-      className="makeStyles-container-7"
+      className="makeStyles-container-8"
       onBlur={[Function]}
       onFocus={[Function]}
       onMouseLeave={[Function]}
@@ -42,7 +42,7 @@ exports[`renders correctly with one feature 1`] = `
     <svg
       aria-describedby={null}
       aria-hidden={true}
-      className="MuiSvgIcon-root makeStyles-icon-8"
+      className="MuiSvgIcon-root makeStyles-icon-9"
       data-loading={true}
       focusable="false"
       onBlur={[Function]}
@@ -105,6 +105,7 @@ exports[`renders correctly with one feature 1`] = `
     className="makeStyles-listItemStrategies-6 hideLt920"
   >
     <a
+      className="makeStyles-disabledLink-7"
       href="/projects/default"
       onClick={[Function]}
       style={
@@ -119,6 +120,7 @@ exports[`renders correctly with one feature 1`] = `
         onKeyUp={[Function]}
         style={
           Object {
+            "cursor": "pointer",
             "marginLeft": "8px",
           }
         }
@@ -145,7 +147,7 @@ exports[`renders correctly with one feature without permission 1`] = `
   >
     <div
       aria-describedby={null}
-      className="makeStyles-container-7"
+      className="makeStyles-container-8"
       onBlur={[Function]}
       onFocus={[Function]}
       onMouseLeave={[Function]}
@@ -177,7 +179,7 @@ exports[`renders correctly with one feature without permission 1`] = `
     <svg
       aria-describedby={null}
       aria-hidden={true}
-      className="MuiSvgIcon-root makeStyles-icon-8"
+      className="MuiSvgIcon-root makeStyles-icon-9"
       data-loading={true}
       focusable="false"
       onBlur={[Function]}
@@ -240,6 +242,7 @@ exports[`renders correctly with one feature without permission 1`] = `
     className="makeStyles-listItemStrategies-6 hideLt920"
   >
     <a
+      className="makeStyles-disabledLink-7"
       href="/projects/undefined"
       onClick={[Function]}
       style={
@@ -254,6 +257,7 @@ exports[`renders correctly with one feature without permission 1`] = `
         onKeyUp={[Function]}
         style={
           Object {
+            "cursor": "pointer",
             "marginLeft": "8px",
           }
         }

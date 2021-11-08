@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import { Link } from 'react-router-dom';
-import { Chip, IconButton, ListItem, Tooltip } from '@material-ui/core';
+import { Chip, ListItem, Tooltip } from '@material-ui/core';
 import { Undo } from '@material-ui/icons';
 
 import TimeAgo from 'react-timeago';
@@ -17,6 +17,8 @@ import { useStyles } from './styles';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
 import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
 import FeatureType from '../../FeatureView2/FeatureType/FeatureType';
+import useProjects from '../../../../hooks/api/getters/useProjects/useProjects';
+import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
 
 const FeatureToggleListItem = ({
     feature,
@@ -31,11 +33,25 @@ const FeatureToggleListItem = ({
 }) => {
     const styles = useStyles();
 
+    const { projects } = useProjects();
     const isArchive = !!revive;
 
     const { name, description, type, stale, createdAt, project, lastSeenAt } =
         feature;
 
+    const projectExists = () => {
+        let projectExist = projects.find(proj => proj.id === project);
+        if (projectExist) {
+            return true;
+        }
+        return false;
+    };
+
+    const reviveFeature = () => {
+        if (projectExists()) {
+            revive(feature.name);
+        }
+    };
     return (
         <ListItem
             {...rest}
@@ -83,7 +99,7 @@ const FeatureToggleListItem = ({
                         <>
                             <Tooltip title={description}>
                                 <span className={commonStyles.toggleName}>
-                                    {name}&nbsp; z{' '}
+                                    {name}&nbsp;{' '}
                                 </span>
                             </Tooltip>
                             <span className={styles.listItemToggle}></span>
@@ -109,12 +125,15 @@ const FeatureToggleListItem = ({
                 <Link
                     to={`/projects/${project}`}
                     style={{ textDecoration: 'none' }}
+                    className={classnames({
+                        [`${styles.disabledLink}`]: !projectExists(),
+                    })}
                 >
                     <Chip
                         color="primary"
                         variant="outlined"
                         className={styles.typeChip}
-                        style={{ marginLeft: '8px' }}
+                        style={{ marginLeft: '8px', cursor: 'pointer' }}
                         title={`Project: ${project}`}
                         label={project}
                     />
@@ -123,15 +142,14 @@ const FeatureToggleListItem = ({
             <ConditionallyRender
                 condition={revive}
                 show={
-                    <ConditionallyRender
-                        condition={hasAccess(UPDATE_FEATURE, project)}
-                        show={
-                            <IconButton onClick={() => revive(feature.name)}>
-                                <Undo />
-                            </IconButton>
-                        }
-                        elseShow={<span style={{ width: '48px ' }} />}
-                    />
+                    <PermissionIconButton
+                        permission={UPDATE_FEATURE}
+                        projectId={project}
+                        disabled={!projectExists()}
+                        onClick={reviveFeature}
+                    >
+                        <Undo />
+                    </PermissionIconButton>
                 }
             />
         </ListItem>

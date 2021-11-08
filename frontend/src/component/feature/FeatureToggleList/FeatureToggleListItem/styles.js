@@ -29,4 +29,7 @@ export const useStyles = makeStyles(theme => ({
     listItemStrategies: {
         marginLeft: 'auto',
     },
+    disabledLink:{
+        pointerEvents: 'none'
+    },
 }));

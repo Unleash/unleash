@@ -1569,52 +1569,6 @@ components:
                 example: '2016-12-09T14:56:36.730Z'
               data:
                 $ref: '#/components/schemas/featureToggleSchema'
-              diffs:
-                description: |-
-                  The JSON differences between the current and last version of the Feature Toggle.
-                  (Uses the [deep-diff Node.js module](https://www.npmjs.com/package/deep-diff))
-                externalDocs:
-                  description: Activation strategies
-                  url: 'https://www.npmjs.com/package/deep-diff#differences'
-                type: array
-                items:
-                  required:
-                    - kind
-                    - lhs
-                    - rhs
-                  properties:
-                    kind:
-                      description: |-
-                        The kind of change:
-                        - **N** - a newly-added property or element
-                        - **D** - a property or element was deleted
-                        - **E** - a property or element was edited
-                        - **A** - a change occurred within an array
-                      type: string
-                      enum:
-                        - 'N'
-                        - D
-                        - E
-                        - A
-                      example: E
-                    path:
-                      type: array
-                      items:
-                        required:
-                          - pathItem
-                      properties:
-                        pathItem:
-                          description: The property path (from the left-hand-side root)
-                          type: string
-                          example: enabled
-                    lhs:
-                      description: The value on the left-hand-side of the comparison (*undefined* if **kind** is *N*)
-                      type: boolean
-                      example: true
-                    rhs:
-                      description: The value on the right-hand-side of the comparison (*undefined* if **kind** is *D*)
-                      type: boolean
-                      example: false
       x-tags:
         - Responses
     200export:

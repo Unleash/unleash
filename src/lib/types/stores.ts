@@ -23,6 +23,8 @@ import { IFeatureStrategiesStore } from './stores/feature-strategies-store';
 import { IEnvironmentStore } from './stores/environment-store';
 import { IFeatureToggleClientStore } from './stores/feature-toggle-client-store';
 import { IClientMetricsStoreV2 } from './stores/client-metrics-store-v2';
+import { IUserSplashStore } from './stores/user-splash-store';
+
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -50,4 +52,5 @@ export interface IUnleashStores {
     tagTypeStore: ITagTypeStore;
     userFeedbackStore: IUserFeedbackStore;
     userStore: IUserStore;
+    userSplashStore: IUserSplashStore;
 }

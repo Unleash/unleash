@@ -4,13 +4,18 @@ import definition from './webhook-definition';
 import { LogProvider } from '../logger';
 import { IEvent } from '../types/events';
 
+interface IParameters {
+    url: string;
+    bodyTemplate?: string;
+    contentType?: string;
+}
+
 export default class Webhook extends Addon {
     constructor(args: { getLogger: LogProvider }) {
         super(definition, args);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async handleEvent(event: IEvent, parameters: any): Promise<void> {
+    async handleEvent(event: IEvent, parameters: IParameters): Promise<void> {
         const { url, bodyTemplate, contentType } = parameters;
         const context = {
             event,

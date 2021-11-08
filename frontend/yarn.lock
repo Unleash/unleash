@@ -1971,9 +1971,9 @@
   resolved "https://registry.npmjs.org/@types/debounce/-/debounce-1.2.1.tgz"
   integrity sha512-epMsEE85fi4lfmJUH/89/iV/LI+F5CvNIvmgs5g5jYFPfhO2S/ae8WSsLOKWdwtoaZw9Q2IhJ4tQ5tFCcS/4HA==
 
-"@types/deep-diff@^1.0.1":
+"@types/deep-diff@1.0.1":
   version "1.0.1"
-  resolved "https://registry.npmjs.org/@types/deep-diff/-/deep-diff-1.0.1.tgz"
+  resolved "https://registry.yarnpkg.com/@types/deep-diff/-/deep-diff-1.0.1.tgz#eae15119c68b72b541731872a2883da89dc39396"
   integrity sha512-cZIq2GFcPmW0/M7dtLuphyoU8f3zpTcBgV+wkFFJ0CK0lwRVGGLaBSJZ98qs4LjtLimPq1Bb2VJnhGn6SEE4IA==
 
 "@types/enzyme-adapter-react-16@1.0.6":
@@ -4713,9 +4713,9 @@ dedent@^0.7.0:
   resolved "https://registry.npmjs.org/dedent/-/dedent-0.7.0.tgz"
   integrity sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=
 
-deep-diff@^1.0.2:
+deep-diff@1.0.2:
   version "1.0.2"
-  resolved "https://registry.npmjs.org/deep-diff/-/deep-diff-1.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/deep-diff/-/deep-diff-1.0.2.tgz#afd3d1f749115be965e89c63edc7abb1506b9c26"
   integrity sha512-aWS3UIVH+NPGCD1kki+DCU9Dua032iSsO43LqQpcs4R3+dVv7tX0qBGjiVHJHjplsoUM2XRO/KB92glqc68awg==
 
 deep-equal@^1.0.1:

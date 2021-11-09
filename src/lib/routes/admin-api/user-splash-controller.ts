@@ -74,3 +74,4 @@ class UserSplashController extends Controller {
 }
 
 module.exports = UserSplashController;
+export default UserSplashController;

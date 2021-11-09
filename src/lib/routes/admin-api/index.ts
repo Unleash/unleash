@@ -21,6 +21,7 @@ import ApiTokenController from './api-token-controller';
 import UserAdminController from './user-admin';
 import EmailController from './email';
 import UserFeedbackController from './user-feedback-controller';
+import UserSplashController from './user-splash-controller';
 import ProjectApi from './project';
 import { EnvironmentsController } from './environments-controller';
 
@@ -91,6 +92,10 @@ class AdminApi extends Controller {
         this.app.use(
             '/environments',
             new EnvironmentsController(config, services).router,
+        );
+        this.app.use(
+            '/splash',
+            new UserSplashController(config, services).router,
         );
     }
 

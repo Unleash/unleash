@@ -2,7 +2,7 @@ import {
     IUserSplashKey,
     IUserSplash,
     IUserSplashStore,
-} from 'lib/types/stores/user-splash-store';
+} from '../../lib/types/stores/user-splash-store'
 
 export default class FakeUserSplashStore implements IUserSplashStore {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -11,13 +11,13 @@ export default class FakeUserSplashStore implements IUserSplashStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getSplash(userId: number, splashId: string): Promise<IUserSplash> {
-        return Promise.resolve({ seen: false, userId: 123, splashId: 'env' });
+     getSplash(userId: number, splashId: string): Promise<IUserSplash> {
+        return Promise.resolve(undefined);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    updateSplash(splash: IUserSplash): Promise<IUserSplash> {
-        return Promise.resolve({ seen: false, userId: 123, splashId: 'env' });
+     updateSplash(splash: IUserSplash): Promise<IUserSplash> {
+        return Promise.resolve(undefined);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -33,21 +33,6 @@ export default class FakeUserSplashStore implements IUserSplashStore {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getAll(): Promise<IUserSplash[]> {
         return Promise.resolve([]);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getAllUserFeedback(userId: number): Promise<IUserSplash[]> {
-        return Promise.resolve([]);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getFeedback(userId: number, feedbackId: string): Promise<IUserSplash> {
-        return Promise.resolve(undefined);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    updateFeedback(feedback: IUserSplash): Promise<IUserSplash> {
-        return Promise.resolve(undefined);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

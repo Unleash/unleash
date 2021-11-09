@@ -2,7 +2,7 @@ import {
     IUserSplashKey,
     IUserSplash,
     IUserSplashStore,
-} from '../../lib/types/stores/user-splash-store'
+} from '../../lib/types/stores/user-splash-store';
 
 export default class FakeUserSplashStore implements IUserSplashStore {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -11,12 +11,12 @@ export default class FakeUserSplashStore implements IUserSplashStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-     getSplash(userId: number, splashId: string): Promise<IUserSplash> {
+    getSplash(userId: number, splashId: string): Promise<IUserSplash> {
         return Promise.resolve(undefined);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-     updateSplash(splash: IUserSplash): Promise<IUserSplash> {
+    updateSplash(splash: IUserSplash): Promise<IUserSplash> {
         return Promise.resolve(undefined);
     }
 

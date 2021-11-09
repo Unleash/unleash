@@ -25,7 +25,6 @@ import { IFeatureToggleClientStore } from './stores/feature-toggle-client-store'
 import { IClientMetricsStoreV2 } from './stores/client-metrics-store-v2';
 import { IUserSplashStore } from './stores/user-splash-store';
 
-
 export interface IUnleashStores {
     accessStore: IAccessStore;
     addonStore: IAddonStore;

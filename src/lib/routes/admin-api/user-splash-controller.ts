@@ -14,6 +14,7 @@ interface ISplashBody {
 
 class UserSplashController extends Controller {
     private logger: Logger;
+
     private userSplashService: UserSplashService;
 
     constructor(

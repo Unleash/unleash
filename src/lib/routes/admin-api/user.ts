@@ -63,14 +63,15 @@ class UserController extends Controller {
         const feedback = await this.userFeedbackService.getAllUserFeedback(
             user,
         );
-       const splash = await this.userSplashService.getAllUserSplashs(
-           user,
-        );
+        const splash = await this.userSplashService.getAllUserSplashs(user);
 
         // TODO: remove this line after we remove it from db.
         delete user.permissions;
 
-        return res.status(200).json({ user, permissions, feedback, splash }).end();
+        return res
+            .status(200)
+            .json({ user, permissions, feedback, splash })
+            .end();
     }
 
     async updateUserPass(

@@ -1,7 +1,7 @@
 import { Store } from './store';
 
 export interface IUserSplash {
-    seen?: boolean;
+    seen: boolean;
     splashId: string;
     userId: number;
 }
@@ -11,8 +11,7 @@ export interface IUserSplashKey {
     splashId: string;
 }
 
-export interface IUserSplashStore
-    extends Store<IUserSplash, IUserSplashKey> {
+export interface IUserSplashStore extends Store<IUserSplash, IUserSplashKey> {
     getAllUserSplashs(userId: number): Promise<IUserSplash[]>;
     getSplash(userId: number, splashId: string): Promise<IUserSplash>;
     updateSplash(splash: IUserSplash): Promise<IUserSplash>;

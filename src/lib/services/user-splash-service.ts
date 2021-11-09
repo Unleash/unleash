@@ -28,14 +28,12 @@ export default class UserSplashService {
             return await this.userSplashStore.getAllUserSplashs(user.id);
         } catch (err) {
             this.logger.error(err);
+
             return [];
         }
     }
 
-    async getSplash(
-        user_id: number,
-        splash_id: string,
-    ): Promise<IUserSplash> {
+    async getSplash(user_id: number, splash_id: string): Promise<IUserSplash> {
         return this.userSplashStore.getSplash(user_id, splash_id);
     }
 

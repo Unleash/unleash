@@ -24,6 +24,7 @@ import FakeFeatureTypeStore from './fake-feature-type-store';
 import FakeResetTokenStore from './fake-reset-token-store';
 import FakeFeatureToggleClientStore from './fake-feature-toggle-client-store';
 import FakeClientMetricsStoreV2 from './fake-client-metrics-store-v2';
+import FakeUserSplashStore from './fake-user-splash-store';
 
 const createStores: () => IUnleashStores = () => {
     const db = {
@@ -59,6 +60,7 @@ const createStores: () => IUnleashStores = () => {
         featureTypeStore: new FakeFeatureTypeStore(),
         resetTokenStore: new FakeResetTokenStore(),
         sessionStore: new FakeSessionStore(),
+        userSplashStore: new FakeUserSplashStore(),
     };
 };
 

@@ -7,6 +7,7 @@ import { IUnleashServices } from '../../types/services';
 import UserService from '../../services/user-service';
 import SessionService from '../../services/session-service';
 import UserFeedbackService from '../../services/user-feedback-service';
+import UserSplashService from 'lib/services/user-splash-service';
 
 interface IChangeUserRequest {
     password: string;
@@ -22,6 +23,8 @@ class UserController extends Controller {
 
     private sessionService: SessionService;
 
+    private userSplashService: UserSplashService;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -29,12 +32,14 @@ class UserController extends Controller {
             userService,
             sessionService,
             userFeedbackService,
+            userSplashService,
         }: Pick<
             IUnleashServices,
             | 'accessService'
             | 'userService'
             | 'sessionService'
             | 'userFeedbackService'
+            | 'userSplashService'
         >,
     ) {
         super(config);
@@ -57,6 +62,7 @@ class UserController extends Controller {
         const feedback = await this.userFeedbackService.getAllUserFeedback(
             user,
         );
+        //const splash = await this.userSplashService.getAllUserSplash(user);
 
         // TODO: remove this line after we remove it from db.
         delete user.permissions;

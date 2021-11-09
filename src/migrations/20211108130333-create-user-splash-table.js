@@ -8,18 +8,17 @@ exports.up = function (db, cb) {
         splash_id TEXT, 
         seen BOOLEAN NOT NULL DEFAULT false, 
         PRIMARY KEY (user_id, splash_id));
-        CREATE INDEX user_splash_user_id_idx ON user_splash (user_id);
-    );`,
+        CREATE INDEX user_splash_user_id_idx ON user_splash (user_id);`,
         cb,
     );
 };
 
 exports.down = function (db, cb) {
-  db.runSql(
-    `
+    db.runSql(
+        `
     DROP INDEX user_splash_user_id_idx;
     DROP TABLE user_splash;
 `,
-    cb,
-);
+        cb,
+    );
 };

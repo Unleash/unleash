@@ -47,10 +47,7 @@ export default class UserSplashStore implements IUserSplashStore {
         return userSplash.map(rowToField);
     }
 
-    async getSplash(
-        userId: number,
-        splashId: string,
-    ): Promise<IUserSplash> {
+    async getSplash(userId: number, splashId: string): Promise<IUserSplash> {
         const userSplash = await this.db
             .table<IUserSplashTable>(TABLE)
             .select()
@@ -92,10 +89,7 @@ export default class UserSplashStore implements IUserSplashStore {
         return present;
     }
 
-    async get({
-        userId,
-        splashId,
-    }: IUserSplashKey): Promise<IUserSplash> {
+    async get({ userId, splashId }: IUserSplashKey): Promise<IUserSplash> {
         return this.getSplash(userId, splashId);
     }
 

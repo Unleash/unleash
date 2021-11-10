@@ -3,7 +3,7 @@ import { Response } from 'express';
 import Controller from '../controller';
 import { IUnleashServices } from '../../types/services';
 import { IUnleashConfig } from '../../types/option';
-import FeatureToggleServiceV2 from '../../services/feature-toggle-service';
+import FeatureToggleService from '../../services/feature-toggle-service';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
@@ -22,7 +22,7 @@ interface QueryOverride {
 export default class FeatureController extends Controller {
     private readonly logger: Logger;
 
-    private featureToggleServiceV2: FeatureToggleServiceV2;
+    private featureToggleServiceV2: FeatureToggleService;
 
     private readonly cache: boolean;
 

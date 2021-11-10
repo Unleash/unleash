@@ -7,17 +7,17 @@ import InvalidOperationError from '../error/invalid-operation-error';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import { featureMetadataSchema, nameSchema } from '../schema/feature-schema';
 import {
+    FeatureArchivedEvent,
+    FeatureChangeProjectEvent,
+    FeatureCreatedEvent,
+    FeatureDeletedEvent,
     FeatureEnvironmentEvent,
+    FeatureMetadataUpdateEvent,
+    FeatureRevivedEvent,
     FeatureStaleEvent,
-    FEATURE_ARCHIVED,
-    FEATURE_CREATED,
-    FEATURE_DELETED,
-    FEATURE_METADATA_UPDATED,
-    FEATURE_PROJECT_CHANGE,
-    FEATURE_REVIVED,
-    FEATURE_STRATEGY_ADD,
-    FEATURE_STRATEGY_REMOVE,
-    FEATURE_STRATEGY_UPDATE,
+    FeatureStrategyAddEvent,
+    FeatureStrategyRemoveEvent,
+    FeatureStrategyUpdateEvent,
     FEATURE_UPDATED,
 } from '../types/events';
 import NotFoundError from '../error/notfound-error';
@@ -55,7 +55,7 @@ interface IFeatureStrategyContext extends IFeatureContext {
     environment: string;
 }
 
-class FeatureToggleServiceV2 {
+class FeatureToggleService {
     private logger: Logger;
 
     private featureStrategiesStore: IFeatureStrategiesStore;
@@ -144,11 +144,13 @@ class FeatureToggleServiceV2 {
             deepClone(featureToggle),
             operations,
         );
+
         const updated = await this.updateFeatureToggle(
             project,
             newDocument,
             createdBy,
         );
+
         if (featureToggle.stale !== newDocument.stale) {
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
@@ -162,7 +164,19 @@ class FeatureToggleServiceV2 {
                 }),
             );
         }
+
         return updated;
+    }
+
+    featureStrategyToPublic(
+        featureStrategy: IFeatureStrategy,
+    ): IStrategyConfig {
+        return {
+            id: featureStrategy.id,
+            name: featureStrategy.strategyName,
+            constraints: featureStrategy.constraints || [],
+            parameters: featureStrategy.parameters,
+        };
     }
 
     async createStrategy(
@@ -183,24 +197,20 @@ class FeatureToggleServiceV2 {
                     featureName,
                     environment,
                 });
-            const data = {
-                id: newFeatureStrategy.id,
-                name: newFeatureStrategy.strategyName,
-                constraints: newFeatureStrategy.constraints,
-                parameters: newFeatureStrategy.parameters,
-            };
-            await this.eventStore.store({
-                type: FEATURE_STRATEGY_ADD,
-                project: projectId,
-                featureName,
-                createdBy,
-                environment,
-                data: {
-                    ...data,
-                    strategyName: newFeatureStrategy.strategyName,
-                },
-            });
-            return data;
+
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
+            const strategy = this.featureStrategyToPublic(newFeatureStrategy);
+            await this.eventStore.store(
+                new FeatureStrategyAddEvent({
+                    project: projectId,
+                    featureName,
+                    createdBy,
+                    environment,
+                    data: strategy,
+                    tags,
+                }),
+            );
+            return strategy;
         } catch (e) {
             if (e.code === FOREIGN_KEY_VIOLATION) {
                 throw new BadDataError(
@@ -236,27 +246,22 @@ class FeatureToggleServiceV2 {
                 id,
                 updates,
             );
-            const data = {
-                id: strategy.id,
-                name: strategy.strategyName,
-                constraints: strategy.constraints || [],
-                parameters: strategy.parameters,
-            };
-            const preData = {
-                id: existingStrategy.id,
-                name: existingStrategy.strategyName,
-                constraints: existingStrategy.constraints || [],
-                parameters: existingStrategy.parameters,
-            };
-            await this.eventStore.store({
-                type: FEATURE_STRATEGY_UPDATE,
-                project: projectId,
-                featureName,
-                environment,
-                createdBy: userName,
-                data,
-                preData,
-            });
+
+            // Store event!
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
+            const data = this.featureStrategyToPublic(strategy);
+            const preData = this.featureStrategyToPublic(existingStrategy);
+            await this.eventStore.store(
+                new FeatureStrategyUpdateEvent({
+                    project: projectId,
+                    featureName,
+                    environment,
+                    createdBy: userName,
+                    data,
+                    preData,
+                    tags,
+                }),
+            );
             return data;
         }
         throw new NotFoundError(`Could not find strategy with id ${id}`);
@@ -280,20 +285,20 @@ class FeatureToggleServiceV2 {
                 id,
                 existingStrategy,
             );
-            const data = {
-                id: strategy.id,
-                name: strategy.strategyName,
-                constraints: strategy.constraints || [],
-                parameters: strategy.parameters,
-            };
-            await this.eventStore.store({
-                type: FEATURE_STRATEGY_UPDATE,
-                featureName,
-                project: projectId,
-                environment,
-                createdBy: userName,
-                data,
-            });
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
+            const data = this.featureStrategyToPublic(strategy);
+            const preData = this.featureStrategyToPublic(existingStrategy);
+            await this.eventStore.store(
+                new FeatureStrategyUpdateEvent({
+                    featureName,
+                    project: projectId,
+                    environment,
+                    createdBy: userName,
+                    data,
+                    preData,
+                    tags,
+                }),
+            );
             return data;
         }
         throw new NotFoundError(`Could not find strategy with id ${id}`);
@@ -311,7 +316,7 @@ class FeatureToggleServiceV2 {
     async deleteStrategy(
         id: string,
         context: IFeatureStrategyContext,
-        userName: string,
+        createdBy: string,
     ): Promise<void> {
         const existingStrategy = await this.featureStrategiesStore.get(id);
         const { featureName, projectId, environment } = context;
@@ -319,21 +324,19 @@ class FeatureToggleServiceV2 {
 
         await this.featureStrategiesStore.delete(id);
 
-        const preData = {
-            id: existingStrategy.id,
-            name: existingStrategy.strategyName,
-            constraints: existingStrategy.constraints || [],
-            parameters: existingStrategy.parameters,
-        };
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+        const preData = this.featureStrategyToPublic(existingStrategy);
 
-        await this.eventStore.store({
-            type: FEATURE_STRATEGY_REMOVE,
-            featureName,
-            project: projectId,
-            environment,
-            createdBy: userName,
-            preData,
-        });
+        await this.eventStore.store(
+            new FeatureStrategyRemoveEvent({
+                featureName,
+                project: projectId,
+                environment,
+                createdBy,
+                preData,
+                tags,
+            }),
+        );
 
         // If there are no strategies left for environment disable it
         await this.featureEnvironmentStore.disableEnvironmentIfNoStrategies(
@@ -445,24 +448,27 @@ class FeatureToggleServiceV2 {
             const featureData = await featureMetadataSchema.validateAsync(
                 value,
             );
+            const featureName = featureData.name;
             const createdToggle = await this.featureToggleStore.create(
                 projectId,
                 featureData,
             );
             await this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
-                featureData.name,
+                featureName,
                 projectId,
             );
 
-            const data = { ...featureData, project: projectId };
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
-            await this.eventStore.store({
-                type: FEATURE_CREATED,
-                featureName: featureData.name,
-                createdBy: createdBy,
-                project: projectId,
-                data,
-            });
+            await this.eventStore.store(
+                new FeatureCreatedEvent({
+                    featureName,
+                    createdBy,
+                    project: projectId,
+                    data: createdToggle,
+                    tags,
+                }),
+            );
 
             return createdToggle;
         }
@@ -542,15 +548,16 @@ class FeatureToggleServiceV2 {
         );
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
-        await this.eventStore.store({
-            type: FEATURE_METADATA_UPDATED,
-            createdBy: userName,
-            data: featureToggle,
-            preData,
-            featureName,
-            project: projectId,
-            tags,
-        });
+        await this.eventStore.store(
+            new FeatureMetadataUpdateEvent({
+                createdBy: userName,
+                data: featureToggle,
+                preData,
+                featureName,
+                project: projectId,
+                tags,
+            }),
+        );
         return featureToggle;
     }
 
@@ -607,6 +614,7 @@ class FeatureToggleServiceV2 {
         };
     }
 
+    // todo: store events for this change.
     async deleteEnvironment(
         projectId: string,
         environment: string,
@@ -629,7 +637,7 @@ class FeatureToggleServiceV2 {
     }
 
     async validateUniqueFeatureName(name: string): Promise<void> {
-        let msg;
+        let msg: string;
         try {
             const feature = await this.featureToggleStore.get(name);
             msg = feature.archived
@@ -669,18 +677,19 @@ class FeatureToggleServiceV2 {
         return feature;
     }
 
+    // todo: add projectId
     async archiveToggle(featureName: string, createdBy: string): Promise<void> {
         const feature = await this.featureToggleStore.get(featureName);
         await this.featureToggleStore.archive(featureName);
-        const tags =
-            (await this.tagStore.getAllTagsForFeature(featureName)) || [];
-        await this.eventStore.store({
-            type: FEATURE_ARCHIVED,
-            featureName,
-            createdBy,
-            project: feature.project,
-            tags,
-        });
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+        await this.eventStore.store(
+            new FeatureArchivedEvent({
+                featureName,
+                createdBy,
+                project: feature.project,
+                tags,
+            }),
+        );
     }
 
     async updateEnabled(
@@ -739,6 +748,7 @@ class FeatureToggleServiceV2 {
         );
     }
 
+    // @deprecated
     async storeFeatureUpdatedEventLegacy(
         featureName: string,
         createdBy: string,
@@ -746,6 +756,8 @@ class FeatureToggleServiceV2 {
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         const feature = await this.getFeatureToggleLegacy(featureName);
 
+        // Legacy event. Will not be used from v4.3.
+        // We do not include 'preData' on purpose.
         await this.eventStore.store({
             type: FEATURE_UPDATED,
             createdBy,
@@ -779,6 +791,7 @@ class FeatureToggleServiceV2 {
         );
     }
 
+    // @deprecated
     async getFeatureToggleLegacy(
         featureName: string,
     ): Promise<FeatureToggleLegacy> {
@@ -805,18 +818,15 @@ class FeatureToggleServiceV2 {
         await this.featureToggleStore.update(newProject, feature);
 
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        await this.eventStore.store({
-            type: FEATURE_PROJECT_CHANGE,
-            createdBy,
-            data: {
-                name: feature.name,
+        await this.eventStore.store(
+            new FeatureChangeProjectEvent({
+                createdBy,
                 oldProject,
                 newProject,
-            },
-            featureName,
-            project: newProject,
-            tags,
-        });
+                featureName,
+                tags,
+            }),
+        );
     }
 
     async getArchivedFeatures(): Promise<FeatureToggle[]> {
@@ -826,25 +836,31 @@ class FeatureToggleServiceV2 {
     // TODO: add project id.
     async deleteFeature(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.get(featureName);
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
         await this.featureToggleStore.delete(featureName);
-        await this.eventStore.store({
-            type: FEATURE_DELETED,
-            featureName,
-            project: toggle.project,
-            createdBy,
-        });
+        await this.eventStore.store(
+            new FeatureDeletedEvent({
+                featureName,
+                project: toggle.project,
+                createdBy,
+                preData: toggle,
+                tags,
+            }),
+        );
     }
 
+    // TODO: add project id.
     async reviveToggle(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        await this.eventStore.store({
-            type: FEATURE_REVIVED,
-            createdBy,
-            featureName,
-            project: toggle.project,
-            tags,
-        });
+        await this.eventStore.store(
+            new FeatureRevivedEvent({
+                createdBy,
+                featureName,
+                project: toggle.project,
+                tags,
+            }),
+        );
     }
 
     async getMetadataForAllFeatures(
@@ -868,5 +884,4 @@ class FeatureToggleServiceV2 {
     }
 }
 
-module.exports = FeatureToggleServiceV2;
-export default FeatureToggleServiceV2;
+export default FeatureToggleService;

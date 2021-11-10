@@ -1,4 +1,4 @@
-import { ITag } from './model';
+import { FeatureToggle, IStrategyConfig, ITag } from './model';
 
 export const APPLICATION_CREATED = 'application-created';
 
@@ -135,5 +135,218 @@ export class FeatureEnvironmentEvent extends BaseEvent {
         this.project = p.project;
         this.featureName = p.featureName;
         this.environment = p.environment;
+    }
+}
+
+export class FeatureChangeProjectEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly data: {
+        oldProject: string;
+        newProject: string;
+    };
+
+    constructor(p: {
+        oldProject: string;
+        newProject: string;
+        featureName: string;
+        createdBy: string;
+        tags: ITag[];
+    }) {
+        super(FEATURE_PROJECT_CHANGE, p.createdBy, p.tags);
+        const { newProject, oldProject, featureName } = p;
+        this.project = newProject;
+        this.featureName = featureName;
+        this.data = { newProject, oldProject };
+    }
+}
+
+export class FeatureCreatedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly data: FeatureToggle;
+
+    constructor(p: {
+        project: string;
+        featureName: string;
+        createdBy: string;
+        data: FeatureToggle;
+        tags: ITag[];
+    }) {
+        super(FEATURE_CREATED, p.createdBy, p.tags);
+        const { project, featureName, data } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.data = data;
+    }
+}
+
+export class FeatureArchivedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    constructor(p: {
+        project: string;
+        featureName: string;
+        createdBy: string;
+        tags: ITag[];
+    }) {
+        super(FEATURE_ARCHIVED, p.createdBy, p.tags);
+        const { project, featureName } = p;
+        this.project = project;
+        this.featureName = featureName;
+    }
+}
+
+export class FeatureRevivedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    constructor(p: {
+        project: string;
+        featureName: string;
+        createdBy: string;
+        tags: ITag[];
+    }) {
+        super(FEATURE_REVIVED, p.createdBy, p.tags);
+        const { project, featureName } = p;
+        this.project = project;
+        this.featureName = featureName;
+    }
+}
+
+export class FeatureDeletedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly preData: FeatureToggle;
+
+    constructor(p: {
+        project: string;
+        featureName: string;
+        preData: FeatureToggle;
+        createdBy: string;
+        tags: ITag[];
+    }) {
+        super(FEATURE_DELETED, p.createdBy, p.tags);
+        const { project, featureName, preData } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.preData = preData;
+    }
+}
+
+export class FeatureMetadataUpdateEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly data: FeatureToggle;
+
+    readonly preData: FeatureToggle;
+
+    constructor(p: {
+        featureName: string;
+        createdBy: string;
+        project: string;
+        data: FeatureToggle;
+        preData: FeatureToggle;
+        tags: ITag[];
+    }) {
+        super(FEATURE_METADATA_UPDATED, p.createdBy, p.tags);
+        const { project, featureName, data, preData } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.data = data;
+        this.preData = preData;
+    }
+}
+
+export class FeatureStrategyAddEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly environment: string;
+
+    readonly data: IStrategyConfig;
+
+    constructor(p: {
+        project: string;
+        featureName: string;
+        environment: string;
+        createdBy: string;
+        data: IStrategyConfig;
+        tags: ITag[];
+    }) {
+        super(FEATURE_STRATEGY_ADD, p.createdBy, p.tags);
+        const { project, featureName, environment, data } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.environment = environment;
+        this.data = data;
+    }
+}
+
+export class FeatureStrategyUpdateEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly environment: string;
+
+    readonly data: IStrategyConfig;
+
+    readonly preData: IStrategyConfig;
+
+    constructor(p: {
+        project: string;
+        featureName: string;
+        environment: string;
+        createdBy: string;
+        data: IStrategyConfig;
+        preData: IStrategyConfig;
+        tags: ITag[];
+    }) {
+        super(FEATURE_STRATEGY_UPDATE, p.createdBy, p.tags);
+        const { project, featureName, environment, data, preData } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.environment = environment;
+        this.data = data;
+        this.preData = preData;
+    }
+}
+
+export class FeatureStrategyRemoveEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly environment: string;
+
+    readonly preData: IStrategyConfig;
+
+    constructor(p: {
+        project: string;
+        featureName: string;
+        environment: string;
+        createdBy: string;
+        preData: IStrategyConfig;
+        tags: ITag[];
+    }) {
+        super(FEATURE_STRATEGY_REMOVE, p.createdBy, p.tags);
+        const { project, featureName, environment, preData } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.environment = environment;
+        this.preData = preData;
     }
 }

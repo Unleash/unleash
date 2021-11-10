@@ -1,6 +1,6 @@
 import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service';
+import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
 import {
@@ -17,7 +17,7 @@ let db: ITestDb;
 
 let projectService;
 let accessService;
-let featureToggleService: FeatureToggleServiceV2;
+let featureToggleService: FeatureToggleService;
 let user;
 
 beforeAll(async () => {
@@ -33,7 +33,7 @@ beforeAll(async () => {
         experimental: { environments: { enabled: true } },
     });
     accessService = new AccessService(stores, config);
-    featureToggleService = new FeatureToggleServiceV2(stores, config);
+    featureToggleService = new FeatureToggleService(stores, config);
     projectService = new ProjectService(
         stores,
         config,

@@ -4,8 +4,7 @@ import { IUnleashServices } from '../../types/services';
 import EventService from '../../services/event-service';
 import { ADMIN } from '../../types/permissions';
 import { IEvent } from '../../types/events';
-
-const Controller = require('../controller');
+import Controller from '../controller';
 
 const version = 1;
 
@@ -36,13 +35,14 @@ export default class EventController extends Controller {
         res.json({ version, events });
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async getEventsForToggle(req, res): Promise<void> {
+    async getEventsForToggle(
+        req: Request<{ name: string }>,
+        res: Response,
+    ): Promise<void> {
         const toggleName = req.params.name;
         const events = await this.eventService.getEventsForToggle(toggleName);
 
         if (events) {
-            //eventDiffer.addDiffs(events);
             res.json({ toggleName, events });
         } else {
             res.status(404).json({ error: 'Could not find events' });

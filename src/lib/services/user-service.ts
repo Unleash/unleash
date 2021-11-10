@@ -206,26 +206,25 @@ class UserService {
             await this.store.setPasswordHash(user.id, passwordHash);
         }
 
-        await this.updateChangeLog(USER_CREATED, user, updatedBy);
+        await this.eventStore.store({
+            type: USER_CREATED,
+            createdBy: updatedBy.username || updatedBy.email,
+            data: this.mapUserToData(user),
+        });
 
         return user;
     }
 
-    private async updateChangeLog(
-        type: string,
-        user: IUser,
-        updatedBy: User = systemUser,
-    ): Promise<void> {
-        await this.eventStore.store({
-            type,
-            createdBy: updatedBy.username || updatedBy.email,
-            data: {
-                id: user.id,
-                name: user.name,
-                username: user.username,
-                email: user.email,
-            },
-        });
+    private mapUserToData(user?: IUser): any {
+        if (!user) {
+            return undefined;
+        }
+        return {
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+        };
     }
 
     async updateUser(
@@ -236,15 +235,41 @@ class UserService {
             Joi.assert(email, Joi.string().email(), 'Email');
         }
 
+        const preUser = await this.store.get(id);
+
         if (rootRole) {
             await this.accessService.setUserRootRole(id, rootRole);
         }
 
         const user = await this.store.update(id, { name, email });
 
-        await this.updateChangeLog(USER_UPDATED, user, updatedBy);
+        await this.eventStore.store({
+            type: USER_UPDATED,
+            createdBy: updatedBy.username || updatedBy.email,
+            data: this.mapUserToData(user),
+            preData: this.mapUserToData(preUser),
+        });
 
         return user;
+    }
+
+    async deleteUser(userId: number, updatedBy?: User): Promise<void> {
+        const user = await this.store.get(userId);
+        const roles = await this.accessService.getRolesForUser(userId);
+        await Promise.all(
+            roles.map((role) =>
+                this.accessService.removeUserFromRole(userId, role.id),
+            ),
+        );
+        await this.sessionService.deleteSessionsForUser(userId);
+
+        await this.store.delete(userId);
+
+        await this.eventStore.store({
+            type: USER_DELETED,
+            createdBy: updatedBy.username || updatedBy.email,
+            preData: this.mapUserToData(user),
+        });
     }
 
     async loginUser(usernameOrEmail: string, password: string): Promise<IUser> {
@@ -321,21 +346,6 @@ class UserService {
         this.validatePassword(password);
         const passwordHash = await bcrypt.hash(password, saltRounds);
         return this.store.setPasswordHash(userId, passwordHash);
-    }
-
-    async deleteUser(userId: number, updatedBy?: User): Promise<void> {
-        const user = await this.store.get(userId);
-        const roles = await this.accessService.getRolesForUser(userId);
-        await Promise.all(
-            roles.map((role) =>
-                this.accessService.removeUserFromRole(userId, role.id),
-            ),
-        );
-        await this.sessionService.deleteSessionsForUser(userId);
-
-        await this.store.delete(userId);
-
-        await this.updateChangeLog(USER_DELETED, user, updatedBy);
     }
 
     async getUserForToken(token: string): Promise<ITokenUser> {

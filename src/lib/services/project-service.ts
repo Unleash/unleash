@@ -161,16 +161,17 @@ export default class ProjectService {
     }
 
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
-        await this.store.get(updatedProject.id);
+        const preData = await this.store.get(updatedProject.id);
         const project = await projectSchema.validateAsync(updatedProject);
 
         await this.store.update(project);
 
         await this.eventStore.store({
             type: PROJECT_UPDATED,
+            project: project.id,
             createdBy: getCreatedBy(user),
             data: project,
-            project: project.id,
+            preData,
         });
     }
 
@@ -258,7 +259,6 @@ export default class ProjectService {
             type: PROJECT_DELETED,
             createdBy: getCreatedBy(user),
             project: id,
-            data: { id },
         });
 
         await this.accessService.removeDefaultProjectRoles(user, id);
@@ -289,6 +289,7 @@ export default class ProjectService {
         };
     }
 
+    // TODO: should be an event too
     async addUser(
         projectId: string,
         roleId: number,
@@ -313,6 +314,7 @@ export default class ProjectService {
         await this.accessService.addUserToRole(userId, role.id);
     }
 
+    // TODO: should be an event too
     async removeUser(
         projectId: string,
         roleId: number,

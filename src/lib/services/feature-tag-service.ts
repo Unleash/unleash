@@ -37,6 +37,7 @@ class FeatureTagService {
         return this.featureTagStore.getAllTagsForFeature(featureName);
     }
 
+    // TODO: add project Id
     async addTag(
         featureName: string,
         tag: ITag,
@@ -50,10 +51,8 @@ class FeatureTagService {
         await this.eventStore.store({
             type: FEATURE_TAGGED,
             createdBy: userName,
-            data: {
-                featureName,
-                tag: validatedTag,
-            },
+            featureName,
+            data: validatedTag,
         });
         return validatedTag;
     }
@@ -67,14 +66,13 @@ class FeatureTagService {
                 await this.eventStore.store({
                     type: TAG_CREATED,
                     createdBy: userName,
-                    data: {
-                        tag,
-                    },
+                    data: tag,
                 });
             }
         }
     }
 
+    // TODO: add project Id
     async removeTag(
         featureName: string,
         tag: ITag,
@@ -84,10 +82,8 @@ class FeatureTagService {
         await this.eventStore.store({
             type: FEATURE_UNTAGGED,
             createdBy: userName,
-            data: {
-                featureName,
-                tag,
-            },
+            featureName,
+            data: tag,
         });
     }
 }

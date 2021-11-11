@@ -28,7 +28,7 @@ import {
     parseISO,
     secondsToMilliseconds,
 } from 'date-fns';
-import TTLList = require('./ttl-list');
+import TTLList from './ttl-list';
 
 export default class ClientMetricsService {
     globalCount = 0;

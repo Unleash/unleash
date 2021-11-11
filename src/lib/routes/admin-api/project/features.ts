@@ -3,7 +3,7 @@ import { applyPatch, Operation } from 'fast-json-patch';
 import Controller from '../../controller';
 import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
-import FeatureToggleServiceV2 from '../../../services/feature-toggle-service-v2';
+import FeatureToggleServiceV2 from '../../../services/feature-toggle-service';
 import { Logger } from '../../../logger';
 import { CREATE_FEATURE, UPDATE_FEATURE } from '../../../types/permissions';
 import {
@@ -64,18 +64,20 @@ export default class ProjectFeaturesController extends Controller {
         this.featureService = featureToggleServiceV2;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
+        // Environments
         this.get(`${PATH_ENV}`, this.getEnvironment);
         this.post(`${PATH_ENV}/on`, this.toggleEnvironmentOn, UPDATE_FEATURE);
         this.post(`${PATH_ENV}/off`, this.toggleEnvironmentOff, UPDATE_FEATURE);
 
+        // activation strategies
         this.get(`${PATH_STRATEGIES}`, this.getStrategies);
         this.post(`${PATH_STRATEGIES}`, this.addStrategy, UPDATE_FEATURE);
-
         this.get(`${PATH_STRATEGY}`, this.getStrategy);
         this.put(`${PATH_STRATEGY}`, this.updateStrategy, UPDATE_FEATURE);
         this.patch(`${PATH_STRATEGY}`, this.patchStrategy, UPDATE_FEATURE);
         this.delete(`${PATH_STRATEGY}`, this.deleteStrategy, UPDATE_FEATURE);
 
+        // feature toggles
         this.get(PATH, this.getFeatures);
         this.post(PATH, this.createFeature, CREATE_FEATURE);
 
@@ -244,10 +246,8 @@ export default class ProjectFeaturesController extends Controller {
         const userName = extractUsername(req);
         const featureStrategy = await this.featureService.createStrategy(
             req.body,
-            projectId,
-            featureName,
+            { environment, projectId, featureName },
             userName,
-            environment,
         );
         res.status(200).json(featureStrategy);
     }
@@ -270,14 +270,13 @@ export default class ProjectFeaturesController extends Controller {
         req: IAuthRequest<StrategyIdParams, any, StrategyUpdateBody, any>,
         res: Response,
     ): Promise<void> {
-        const { strategyId, environment, projectId } = req.params;
+        const { strategyId, environment, projectId, featureName } = req.params;
         const userName = extractUsername(req);
         const updatedStrategy = await this.featureService.updateStrategy(
             strategyId,
-            environment,
-            projectId,
-            userName,
             req.body,
+            { environment, projectId, featureName },
+            userName,
         );
         res.status(200).json(updatedStrategy);
     }
@@ -286,17 +285,16 @@ export default class ProjectFeaturesController extends Controller {
         req: IAuthRequest<StrategyIdParams, any, Operation[], any>,
         res: Response,
     ): Promise<void> {
-        const { strategyId, projectId, environment } = req.params;
+        const { strategyId, projectId, environment, featureName } = req.params;
         const userName = extractUsername(req);
         const patch = req.body;
         const strategy = await this.featureService.getStrategy(strategyId);
         const { newDocument } = applyPatch(strategy, patch);
         const updatedStrategy = await this.featureService.updateStrategy(
             strategyId,
-            environment,
-            projectId,
-            userName,
             newDocument,
+            { environment, projectId, featureName },
+            userName,
         );
         res.status(200).json(updatedStrategy);
     }
@@ -323,10 +321,8 @@ export default class ProjectFeaturesController extends Controller {
         this.logger.info(strategyId);
         const strategy = await this.featureService.deleteStrategy(
             strategyId,
-            featureName,
+            { environment, projectId, featureName },
             userName,
-            projectId,
-            environment,
         );
         res.status(200).json(strategy);
     }
@@ -340,7 +336,7 @@ export default class ProjectFeaturesController extends Controller {
         >,
         res: Response,
     ): Promise<void> {
-        const { strategyId, environment, projectId } = req.params;
+        const { strategyId, environment, projectId, featureName } = req.params;
         const userName = extractUsername(req);
         const { name, value } = req.body;
 
@@ -349,9 +345,8 @@ export default class ProjectFeaturesController extends Controller {
                 strategyId,
                 name,
                 value,
+                { environment, projectId, featureName },
                 userName,
-                projectId,
-                environment,
             );
         res.status(200).json(updatedStrategy);
     }

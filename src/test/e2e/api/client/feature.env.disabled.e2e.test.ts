@@ -1,30 +1,32 @@
 import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 const featureName = 'feature.default.1';
+const username = 'test';
+const projectId = 'default';
 
 beforeAll(async () => {
     db = await dbInit('feature_env_api_client', getLogger);
     app = await setupApp(db.stores);
 
     await app.services.featureToggleServiceV2.createFeatureToggle(
-        'default',
+        projectId,
         {
             name: featureName,
             description: 'the #1 feature',
         },
-        'test',
+        username,
     );
 
     await app.services.featureToggleServiceV2.createStrategy(
         { name: 'default', constraints: [], parameters: {} },
-        'default',
-        featureName,
-        'test',
+        { projectId, featureName, environment: DEFAULT_ENV },
+        username,
     );
 });
 
@@ -53,7 +55,12 @@ test('returns feature toggle for default env', async () => {
 });
 
 test('returns feature toggle for default env even if it is removed from project', async () => {
-    await app.services.environmentService.removeEnvironmentFromProject(
+    await db.stores.featureEnvironmentStore.disconnectFeatures(
+        'default',
+        'default',
+    );
+
+    await db.stores.featureEnvironmentStore.disconnectProject(
         'default',
         'default',
     );

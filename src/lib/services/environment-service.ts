@@ -9,6 +9,8 @@ import NotFoundError from '../error/notfound-error';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
+import { IProjectStore } from 'lib/types/stores/project-store';
+import MinimumOneEnvironmentError from '../error/minimum-one-environment-error';
 
 export default class EnvironmentService {
     private logger: Logger;
@@ -17,6 +19,8 @@ export default class EnvironmentService {
 
     private featureStrategiesStore: IFeatureStrategiesStore;
 
+    private projectStore: IProjectStore;
+
     private featureEnvironmentStore: IFeatureEnvironmentStore;
 
     constructor(
@@ -24,11 +28,13 @@ export default class EnvironmentService {
             environmentStore,
             featureStrategiesStore,
             featureEnvironmentStore,
+            projectStore,
         }: Pick<
             IUnleashStores,
             | 'environmentStore'
             | 'featureStrategiesStore'
             | 'featureEnvironmentStore'
+            | 'projectStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
@@ -36,6 +42,7 @@ export default class EnvironmentService {
         this.environmentStore = environmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
+        this.projectStore = projectStore;
     }
 
     async getAll(): Promise<IEnvironment[]> {
@@ -91,13 +98,23 @@ export default class EnvironmentService {
         environment: string,
         projectId: string,
     ): Promise<void> {
-        await this.featureEnvironmentStore.disconnectFeatures(
-            environment,
+        const projectEnvs = await this.projectStore.getEnvironmentsForProject(
             projectId,
         );
-        await this.featureEnvironmentStore.disconnectProject(
-            environment,
-            projectId,
+
+        if (projectEnvs.length > 1) {
+            await this.featureEnvironmentStore.disconnectFeatures(
+                environment,
+                projectId,
+            );
+            await this.featureEnvironmentStore.disconnectProject(
+                environment,
+                projectId,
+            );
+            return;
+        }
+        throw new MinimumOneEnvironmentError(
+            'You must always have one active environment',
         );
     }
 }

@@ -22,8 +22,13 @@ import {
     IMetricsBucket,
 } from '../../types/model';
 import { clientRegisterSchema } from './register-schema';
-import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
-import TTLList from './ttl-list';
+
+import {
+    minutesToMilliseconds,
+    parseISO,
+    secondsToMilliseconds,
+} from 'date-fns';
+import TTLList = require('./ttl-list');
 
 export default class ClientMetricsService {
     globalCount = 0;
@@ -352,8 +357,9 @@ export default class ClientMetricsService {
             count += countObj.yes + countObj.no;
         });
 
-        this.lastHourList.add(toggles, stop);
-        this.lastMinuteList.add(toggles, stop);
+        const timestamp = typeof stop === 'string' ? parseISO(stop) : stop;
+        this.lastHourList.add(toggles, timestamp);
+        this.lastMinuteList.add(toggles, timestamp);
 
         this.globalCount += count;
         // eslint-disable-next-line no-param-reassign

@@ -252,40 +252,6 @@ test('should lookup projectId from data', async () => {
     );
 });
 
-test('Need access to UPDATE_FEATURE on the project you change to', async () => {
-    const oldProjectId = 'some-project-34';
-    const newProjectId = 'some-project-35';
-    const featureName = 'some-feature-toggle';
-    const accessService = {
-        hasPermission: jest.fn().mockReturnValue(true),
-    };
-    featureToggleStore.getProjectId = jest.fn().mockReturnValue(oldProjectId);
-
-    const func = rbacMiddleware(config, { featureToggleStore }, accessService);
-    const cb = jest.fn();
-    const req: any = {
-        user: new User({ username: 'user', id: 1 }),
-        params: { featureName },
-        body: { featureName, project: newProjectId },
-    };
-    func(req, undefined, cb);
-
-    await req.checkRbac(perms.UPDATE_FEATURE);
-    expect(accessService.hasPermission).toHaveBeenCalledTimes(2);
-    expect(accessService.hasPermission).toHaveBeenNthCalledWith(
-        1,
-        req.user,
-        perms.UPDATE_FEATURE,
-        oldProjectId,
-    );
-    expect(accessService.hasPermission).toHaveBeenNthCalledWith(
-        2,
-        req.user,
-        perms.UPDATE_FEATURE,
-        newProjectId,
-    );
-});
-
 test('Does not double check permission if not changing project when updating toggle', async () => {
     const oldProjectId = 'some-project-34';
     const featureName = 'some-feature-toggle';

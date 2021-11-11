@@ -23,7 +23,7 @@ import ResetTokenService from './reset-token-service';
 import SettingService from './setting-service';
 import SessionService from './session-service';
 import UserFeedbackService from './user-feedback-service';
-import FeatureToggleServiceV2 from './feature-toggle-service-v2';
+import FeatureToggleService from './feature-toggle-service';
 import EnvironmentService from './environment-service';
 import FeatureTagService from './feature-tag-service';
 import ProjectHealthService from './project-health-service';
@@ -58,7 +58,7 @@ export const createServices = (
     const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
-    const featureToggleServiceV2 = new FeatureToggleServiceV2(stores, config);
+    const featureToggleServiceV2 = new FeatureToggleService(stores, config);
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
     const projectHealthService = new ProjectHealthService(
@@ -76,6 +76,7 @@ export const createServices = (
     return {
         accessService,
         addonService,
+        featureToggleService: featureToggleServiceV2,
         featureToggleServiceV2,
         featureTypeService,
         healthService,

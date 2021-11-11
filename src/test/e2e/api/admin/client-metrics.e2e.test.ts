@@ -155,14 +155,19 @@ test('should return toggle summary', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
+    const test = demo.lastHourUsage.find((u) => u.environment === 'test');
+    const defaultEnv = demo.lastHourUsage.find(
+        (u) => u.environment === 'default',
+    );
+
     expect(demo.featureName).toBe('demo');
     expect(demo.lastHourUsage).toHaveLength(2);
-    expect(demo.lastHourUsage[0].environment).toBe('default');
-    expect(demo.lastHourUsage[0].yes).toBe(5);
-    expect(demo.lastHourUsage[0].no).toBe(4);
-    expect(demo.lastHourUsage[1].environment).toBe('test');
-    expect(demo.lastHourUsage[1].yes).toBe(2);
-    expect(demo.lastHourUsage[1].no).toBe(6);
+    expect(test.environment).toBe('test');
+    expect(test.yes).toBe(2);
+    expect(test.no).toBe(6);
+    expect(defaultEnv.environment).toBe('default');
+    expect(defaultEnv.yes).toBe(5);
+    expect(defaultEnv.no).toBe(4);
     expect(demo.seenApplications).toStrictEqual(['backend-api', 'web']);
 });
 
@@ -219,13 +224,18 @@ test('should only include last hour of metrics return toggle summary', async () 
         .expect('Content-Type', /json/)
         .expect(200);
 
+    const test = demo.lastHourUsage.find((u) => u.environment === 'test');
+    const defaultEnv = demo.lastHourUsage.find(
+        (u) => u.environment === 'default',
+    );
+
     expect(demo.featureName).toBe('demo');
     expect(demo.lastHourUsage).toHaveLength(2);
-    expect(demo.lastHourUsage[0].environment).toBe('default');
-    expect(demo.lastHourUsage[0].yes).toBe(5);
-    expect(demo.lastHourUsage[0].no).toBe(4);
-    expect(demo.lastHourUsage[1].environment).toBe('test');
-    expect(demo.lastHourUsage[1].yes).toBe(2);
-    expect(demo.lastHourUsage[1].no).toBe(6);
+    expect(defaultEnv.environment).toBe('default');
+    expect(defaultEnv.yes).toBe(5);
+    expect(defaultEnv.no).toBe(4);
+    expect(test.environment).toBe('test');
+    expect(test.yes).toBe(2);
+    expect(test.no).toBe(6);
     expect(demo.seenApplications).toStrictEqual(['backend-api', 'web']);
 });

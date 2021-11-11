@@ -116,9 +116,17 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             return prev;
         }, {});
 
+        // Sort the rows to avoid deadlocks
+        const batchRow = Object.values<ClientMetricsEnvTable>(batch).sort(
+            (a, b) =>
+                a.feature_name.localeCompare(b.feature_name) ||
+                a.app_name.localeCompare(b.app_name) ||
+                a.environment.localeCompare(b.environment),
+        );
+
         // Consider rewriting to SQL batch!
         const insert = this.db<ClientMetricsEnvTable>(TABLE)
-            .insert(Object.values(batch))
+            .insert(batchRow)
             .toQuery();
 
         const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no`;

@@ -208,11 +208,15 @@ class UserService {
 
         await this.eventStore.store({
             type: USER_CREATED,
-            createdBy: updatedBy.username || updatedBy.email,
+            createdBy: this.getCreatedBy(updatedBy),
             data: this.mapUserToData(user),
         });
 
         return user;
+    }
+
+    private getCreatedBy(updatedBy: User = systemUser) {
+        return updatedBy.username || updatedBy.email;
     }
 
     private mapUserToData(user?: IUser): any {
@@ -245,7 +249,7 @@ class UserService {
 
         await this.eventStore.store({
             type: USER_UPDATED,
-            createdBy: updatedBy.username || updatedBy.email,
+            createdBy: this.getCreatedBy(updatedBy),
             data: this.mapUserToData(user),
             preData: this.mapUserToData(preUser),
         });
@@ -267,7 +271,7 @@ class UserService {
 
         await this.eventStore.store({
             type: USER_DELETED,
-            createdBy: updatedBy.username || updatedBy.email,
+            createdBy: this.getCreatedBy(updatedBy),
             preData: this.mapUserToData(user),
         });
     }

@@ -307,8 +307,8 @@ test('generates USER_DELETED event', async () => {
 
     const events = await eventStore.getEvents();
     expect(events[0].type).toBe(USER_DELETED);
-    expect(events[0].data.id).toBe(user.id);
-    expect(events[0].data.email).toBe(user.email);
+    expect(events[0].preData.id).toBe(user.id);
+    expect(events[0].preData.email).toBe(user.email);
 });
 
 test('generates USER_UPDATED event', async () => {

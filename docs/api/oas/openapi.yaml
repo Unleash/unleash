@@ -660,7 +660,7 @@ paths:
       operationId: get-admin-events
       summary: Fetch all changes in the Unleash system
       description: |-
-        Returns one of the six event types:
+        Returns one of the twelve event types:
         - feature-created
         - feature-metadata-updated
         - feature-project-change

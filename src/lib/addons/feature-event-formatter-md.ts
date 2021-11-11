@@ -70,20 +70,17 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     }
 
     generateStrategyChangeText(event: IEvent): string {
-        const { createdBy, environment, project, data, type } = event;
+        const { createdBy, environment, project, data, preData, type } = event;
         const feature = this.generateFeatureLink(event);
-        let action;
+        let strategyText: string = '';
         if (FEATURE_STRATEGY_UPDATE === type) {
-            action = 'updated in';
+            strategyText = `by updating strategy ${data?.name} in *${environment}*`;
         } else if (FEATURE_STRATEGY_ADD === type) {
-            action = 'added to';
-        } else {
-            action = 'removed from';
+            strategyText = `by adding strategy ${data?.name} in *${environment}*`;
+        } else if (FEATURE_STRATEGY_REMOVE === type) {
+            strategyText = `by removing strategy ${preData?.name} in *${environment}*`;
         }
-        const strategyText = `a ${
-            data.strategyName ?? ''
-        } strategy ${action} the *${environment}* environment`;
-        return `${createdBy} updated *${feature}* with ${strategyText} in project *${project}*`;
+        return `${createdBy} updated *${feature}* in project *${project}* ${strategyText}`;
     }
 
     generateMetadataText(event: IEvent): string {

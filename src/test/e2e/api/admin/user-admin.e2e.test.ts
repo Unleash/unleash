@@ -44,8 +44,6 @@ afterEach(async () => {
 });
 
 test('returns empty list of users', async () => {
-    expect.assertions(1);
-
     return app.request
         .get('/api/admin/user-admin')
         .expect('Content-Type', /json/)
@@ -56,8 +54,6 @@ test('returns empty list of users', async () => {
 });
 
 test('creates and returns all users', async () => {
-    expect.assertions(2);
-
     const createUserRequests = [...Array(20).keys()].map((i) =>
         app.request
             .post('/api/admin/user-admin')
@@ -82,8 +78,6 @@ test('creates and returns all users', async () => {
 });
 
 test('creates editor-user without password', async () => {
-    expect.assertions(3);
-
     return app.request
         .post('/api/admin/user-admin')
         .send({
@@ -101,8 +95,6 @@ test('creates editor-user without password', async () => {
 });
 
 test('creates admin-user with password', async () => {
-    expect.assertions(6);
-
     const { body } = await app.request
         .post('/api/admin/user-admin')
         .send({
@@ -129,8 +121,6 @@ test('creates admin-user with password', async () => {
 });
 
 test('requires known root role', async () => {
-    expect.assertions(0);
-
     return app.request
         .post('/api/admin/user-admin')
         .send({
@@ -186,16 +176,12 @@ test('get a single user', async () => {
 });
 
 test('should delete user', async () => {
-    expect.assertions(0);
-
     const user = await userStore.insert({ email: 'some@mail.com' });
 
     return app.request.delete(`/api/admin/user-admin/${user.id}`).expect(200);
 });
 
 test('validator should require strong password', async () => {
-    expect.assertions(0);
-
     return app.request
         .post('/api/admin/user-admin/validate-password')
         .send({ password: 'simple' })
@@ -203,8 +189,6 @@ test('validator should require strong password', async () => {
 });
 
 test('validator should accept strong password', async () => {
-    expect.assertions(0);
-
     return app.request
         .post('/api/admin/user-admin/validate-password')
         .send({ password: 'simple123-_ASsad' })
@@ -212,8 +196,6 @@ test('validator should accept strong password', async () => {
 });
 
 test('should change password', async () => {
-    expect.assertions(0);
-
     const user = await userStore.insert({ email: 'some@mail.com' });
 
     return app.request
@@ -223,8 +205,6 @@ test('should change password', async () => {
 });
 
 test('should search for users', async () => {
-    expect.assertions(2);
-
     await userStore.insert({ email: 'some@mail.com' });
     await userStore.insert({ email: 'another@mail.com' });
     await userStore.insert({ email: 'another2@mail.com' });
@@ -241,8 +221,6 @@ test('should search for users', async () => {
 });
 
 test('Creates a user and includes inviteLink and emailConfigured', async () => {
-    expect.assertions(5);
-
     return app.request
         .post('/api/admin/user-admin')
         .send({
@@ -300,7 +278,6 @@ test('Creates a user but does not send email if sendEmail is set to false', asyn
 });
 
 test('generates USER_CREATED event', async () => {
-    expect.assertions(5);
     const email = 'some@getunelash.ai';
     const name = 'Some Name';
 
@@ -325,8 +302,6 @@ test('generates USER_CREATED event', async () => {
 });
 
 test('generates USER_DELETED event', async () => {
-    expect.assertions(3);
-
     const user = await userStore.insert({ email: 'some@mail.com' });
     await app.request.delete(`/api/admin/user-admin/${user.id}`);
 
@@ -337,8 +312,6 @@ test('generates USER_DELETED event', async () => {
 });
 
 test('generates USER_UPDATED event', async () => {
-    expect.assertions(3);
-
     const { body } = await app.request
         .post('/api/admin/user-admin')
         .send({

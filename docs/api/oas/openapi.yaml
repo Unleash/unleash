@@ -662,11 +662,17 @@ paths:
       description: |-
         Returns one of the six event types:
         - feature-created
-        - feature-updated
+        - feature-metadata-updated
+        - feature-project-change
         - feature-archived
         - feature-revived
-        - strategy-created
-        - strategy-deleted
+        - feature-strategy-update
+        - feature-strategy-add
+        - feature-strategy-remove
+        - feature-stale-on
+        - feature-stale-off
+        - feature-environment-enabled
+        - feature-environment-disabled
       tags:
         - Events
       responses:
@@ -1548,15 +1554,21 @@ components:
                 type: number
                 example: 55
               type:
-                description: One of the six event types
+                description: Identifies the event
                 type: string
                 enum:
                   - feature-created
-                  - feature-updated
+                  - feature-metadata-updated
+                  - feature-project-change
                   - feature-archived
                   - feature-revived
-                  - strategy-created
-                  - strategy-deleted
+                  - feature-strategy-update
+                  - feature-strategy-add
+                  - feature-strategy-remove
+                  - feature-stale-on
+                  - feature-stale-off
+                  - feature-environment-enabled
+                  - feature-environment-disabled
                 minLength: 1
                 example: feature-updated
               createdBy:
@@ -1568,7 +1580,21 @@ components:
                 type: string
                 example: '2016-12-09T14:56:36.730Z'
               data:
-                $ref: '#/components/schemas/featureToggleSchema'
+                description: The current state of the updated resource
+                type: object
+              preData:
+                description: The previous state of the updated resource
+                type: object
+              featureName:
+                description: Name of the feature toggle (if event related to a feature toggle)
+                type: string
+              project:
+                description: Name of the project (if event related to a project resource)
+                type: string
+              environment:
+                description: Name of the environment (if event related to a environment resource)
+                type: string
+
       x-tags:
         - Responses
     200export:

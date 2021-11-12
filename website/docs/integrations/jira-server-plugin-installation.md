@@ -69,7 +69,7 @@ Once you have configured at least one Unleash server, your users should be ready
 
 ### Edit existing servers
 
-In the list of known servers, each server has a connected edit button. Clicking the Edit button brings up the edit
+In the list of known servers, each server has a connected edit button. Clicking the edit button brings up the edit
 dialog for the server, allowing you to change the details for the selected server
 
 ![Jira Manage Apps - Edit server](/img/jira_server_edit_server.png)

@@ -46,5 +46,5 @@ Once you click the button, you'll need to confirm the dialog that opens up.
 
 ![Jira Server - Disconnect toggle dialog](/img/jira_server_disconnect_toggle_dialog.png)
 
-if confirmed, the toggle will be disconnected immediately. However, the plugin will not delete the toggle from Unleash,
+If confirmed, the toggle will be disconnected immediately. However, the plugin will not delete the toggle from Unleash,
 so you can still reconnect your Jira issue to the same toggle using the "Connect to existing toggle" functionality 

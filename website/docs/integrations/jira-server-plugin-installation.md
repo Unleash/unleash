@@ -14,7 +14,7 @@ The plugin also shows you current status of connected toggles.
 
 ### Unleash
 
-You will need an Unleash Instance admin to configure an admin API token.
+You will need an Unleash admin to configure an admin API token.
 
 ### Jira
 
@@ -78,7 +78,7 @@ dialog for the server, allowing you to change the details for the selected serve
 ### Delete (disconnect) existing servers
 
 Deleting a server from the admin interface does not actually delete the server, but it deletes Jira's knowledge of the
-server. 
+server.
 Since this is a destructive operation, our plugin will ask for confirmation that you're sure you want to do this.
 
 ![Jira Manage apps - Delete server confirmation](/img/jira_server_delete_server_confirmation.png)

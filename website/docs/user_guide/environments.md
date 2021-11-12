@@ -21,6 +21,8 @@ Further, connected applications will use environment-scoped API keys to make sur
 
 Finally, metrics have also been upgraded to record the environment. This, in turn, means that Unleash can display usage metrics per environment.
 
+Despite this being a shift in how Unleash works, everything will continue to work exactly how it did for existing users. For backwards compatibility, we have created an environment named "default" that will contain all of the existing toggles and API keys. Read more about that in [the migration section](#migration).
+
 
 
 ![Environments Overview](/img/environments_overview.svg "A feature toggle exists across all environments, but take different activation strategies per environment.")

@@ -110,5 +110,9 @@ module.exports = {
             'integrations/jira_plugin_installation',
             'integrations/jira_plugin_usage',
         ],
+        'Jira server': [
+            'integrations/jira_server_plugin_installation',
+            'integrations/jira_server_plugin_usage',
+        ]
     },
 };

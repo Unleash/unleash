@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 The latest version of this document is always available in
 [releases](https://github.com/Unleash/unleash-frontend/releases).
+
+# 4.2.13
+- fix: mobile percentagecircle (#502)
+- fix: status chip (#501)
+- Feat/new toggle overview (#497)
+- chore(deps): update dependency @types/node to v14.17.33
+- chore(deps): pin dependencies
+- fix: support new event format with diff will be done in th
+e UI (#496)
+- Merge pull request #495 from Unleash/fix/revive-archived-f
+eature
+- update snapshots
+- fix: disable revive feature when project is deleted
+- use useProjects to check if project deleted or not
+- fix: add correct path for create first toggle button
+- fix: remove typo from UI
+- fix: rename isProject
+Deleted to projectExists and add PermissionIconButton
 # 4.2.2
 - fix: toast text
 - Fix/strategy sidepanel (#479)

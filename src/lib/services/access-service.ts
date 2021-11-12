@@ -19,6 +19,7 @@ import {
 } from '../types/model';
 
 export const ALL_PROJECTS = '*';
+export const ALL_ENVS = '*';
 
 const PROJECT_DESCRIPTION = {
     OWNER: 'Users with this role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
@@ -81,9 +82,10 @@ export class AccessService {
         user: User,
         permission: string,
         projectId?: string,
+        environment?: string,
     ): Promise<boolean> {
         this.logger.info(
-            `Checking permission=${permission}, userId=${user.id} projectId=${projectId}`,
+            `Checking permission=${permission}, userId=${user.id}, projectId=${projectId}, environment=${environment}`,
         );
 
         try {
@@ -95,6 +97,12 @@ export class AccessService {
                         !p.project ||
                         p.project === projectId ||
                         p.project === ALL_PROJECTS,
+                )
+                .filter(
+                    (p) =>
+                        !p.environment ||
+                        p.environment === environment ||
+                        p.environment === ALL_ENVS,
                 )
                 .some(
                     (p) =>

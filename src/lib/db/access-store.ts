@@ -67,7 +67,7 @@ export class AccessStore implements IAccessStore {
     async getPermissionsForUser(userId: number): Promise<IUserPermission[]> {
         const stopTimer = this.timer('getPermissionsForUser');
         const rows = await this.db
-            .select('project', 'permission')
+            .select('project', 'permission', 'environment')
             .from<IUserPermission>(`${T.ROLE_PERMISSION} AS rp`)
             .leftJoin(`${T.ROLE_USER} AS ur`, 'ur.role_id', 'rp.role_id')
             .where('ur.user_id', '=', userId);
@@ -78,7 +78,7 @@ export class AccessStore implements IAccessStore {
     async getPermissionsForRole(roleId: number): Promise<IUserPermission[]> {
         const stopTimer = this.timer('getPermissionsForRole');
         const rows = await this.db
-            .select('project', 'permission')
+            .select('project', 'permission', 'environment')
             .from<IUserPermission>(`${T.ROLE_PERMISSION}`)
             .where('role_id', '=', roleId);
         stopTimer();
@@ -195,11 +195,13 @@ export class AccessStore implements IAccessStore {
         role_id: number,
         permissions: string[],
         projectId?: string,
+        environment?: string,
     ): Promise<void> {
         const rows = permissions.map((permission) => ({
             role_id,
             project: projectId,
             permission,
+            environment,
         }));
         return this.db.batchInsert(T.ROLE_PERMISSION, rows);
     }

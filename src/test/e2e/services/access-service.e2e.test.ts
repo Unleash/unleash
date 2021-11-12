@@ -1,4 +1,4 @@
-import dbInit from '../helpers/database-init';
+import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 
 // eslint-disable-next-line import/no-unresolved
@@ -9,9 +9,10 @@ import {
 
 import * as permissions from '../../../lib/types/permissions';
 import { RoleName } from '../../../lib/types/model';
+import { IUnleashStores } from '../../../lib/types';
 
-let db;
-let stores;
+let db: ITestDb;
+let stores: IUnleashStores;
 let accessService;
 
 let editorUser;
@@ -452,4 +453,50 @@ test('should not crash if user does not have permission', async () => {
     );
 
     expect(hasAccess).toBe(false);
+});
+
+test('should support permission with "ALL" environment requirement', async () => {
+    const { userStore, accessStore } = stores;
+
+    const user = await userStore.insert({
+        name: 'Some User',
+        email: 'randomEnv1@getunleash.io',
+    });
+
+    await accessService.setUserRootRole(user.id, readRole.id);
+
+    const customRole = await accessStore.createRole(
+        'Power user',
+        'custom',
+        'default',
+        'Grants access to modify all environments',
+    );
+
+    const { CREATE_FEATURE_STRATEGY } = permissions;
+
+    await accessStore.addPermissionsToRole(
+        customRole.id,
+        [CREATE_FEATURE_STRATEGY],
+        'default',
+        ALL_PROJECTS,
+    );
+
+    await accessStore.addUserToRole(user.id, customRole.id);
+
+    const hasAccess = await accessService.hasPermission(
+        user,
+        CREATE_FEATURE_STRATEGY,
+        'default',
+        'production',
+    );
+
+    expect(hasAccess).toBe(true);
+
+    const hasNotAccess = await accessService.hasPermission(
+        user,
+        CREATE_FEATURE_STRATEGY,
+        'default',
+        'development',
+    );
+    expect(hasNotAccess).toBe(true);
 });

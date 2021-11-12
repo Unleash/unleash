@@ -38,7 +38,7 @@ export default class UserSplashService {
         } catch (err) {
             this.logger.error(err);
 
-            return [];
+            return {};
         }
     }
 

@@ -41,40 +41,11 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('it creates splash for user', async () => {
-    expect.assertions(1);
-
-    return app.request
-        .post('/api/admin/splash')
-        .send({ splashId: 'environment' })
-        .set('Content-Type', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.splashId).toBe('environment');
-        });
-});
-
-test('it gives 400 when splash is not present', async () => {
-    expect.assertions(1);
-
-    return app.request
-        .post('/api/admin/splash')
-        .send({})
-        .set('Content-Type', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .expect((res) => {
-            expect(res.body.error).toBeTruthy();
-        });
-});
-
 test('it updates splash for user', async () => {
     expect.assertions(1);
 
     return app.request
-        .put('/api/admin/splash/environment')
-        .send({ seen: true })
+        .post('/api/admin/splash/environment')
         .set('Content-Type', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)

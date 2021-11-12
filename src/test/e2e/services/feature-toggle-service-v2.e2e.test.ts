@@ -1,4 +1,4 @@
-import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service';
+import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { IStrategyConfig } from '../../../lib/types/model';
 import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
@@ -6,7 +6,7 @@ import { DEFAULT_ENV } from '../../../lib/util/constants';
 
 let stores;
 let db;
-let service: FeatureToggleServiceV2;
+let service: FeatureToggleService;
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -15,7 +15,7 @@ beforeAll(async () => {
         config.getLogger,
     );
     stores = db.stores;
-    service = new FeatureToggleServiceV2(stores, config);
+    service = new FeatureToggleService(stores, config);
 });
 
 afterAll(async () => {

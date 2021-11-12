@@ -85,7 +85,6 @@
     "db-migrate": "0.11.12",
     "db-migrate-pg": "1.2.2",
     "db-migrate-shared": "1.2.0",
-    "deep-diff": "^1.0.2",
     "deepmerge": "^4.2.2",
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",

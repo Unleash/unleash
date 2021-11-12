@@ -2,7 +2,7 @@ import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
-import { IEvent } from '../types/model';
+import { IEvent } from '../types/events';
 
 export default class EventService {
     private logger: Logger;
@@ -22,7 +22,7 @@ export default class EventService {
     }
 
     async getEventsForToggle(name: string): Promise<IEvent[]> {
-        return this.eventStore.getEventsFilterByType(name);
+        return this.eventStore.getEventsForFeature(name);
     }
 
     async getEventsForProject(project: string): Promise<IEvent[]> {

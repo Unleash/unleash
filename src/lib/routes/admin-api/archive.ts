@@ -7,13 +7,13 @@ import Controller from '../controller';
 
 import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions';
-import FeatureToggleServiceV2 from '../../services/feature-toggle-service';
+import FeatureToggleService from '../../services/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
 
-    private featureService: FeatureToggleServiceV2;
+    private featureService: FeatureToggleService;
 
     constructor(
         config: IUnleashConfig,

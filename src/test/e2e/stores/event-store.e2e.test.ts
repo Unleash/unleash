@@ -1,11 +1,11 @@
 import {
     APPLICATION_CREATED,
     FEATURE_CREATED,
+    IEvent,
 } from '../../../lib/types/events';
 
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import { IEvent } from '../../../lib/types/model';
 import { IEventStore } from '../../../lib/types/stores/event-store';
 import { IUnleashStores } from '../../../lib/types';
 

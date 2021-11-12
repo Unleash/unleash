@@ -36,7 +36,6 @@ class UserSplashController extends Controller {
         const { id } = req.params;
 
         const splash = {
-            ...req.body,
             splashId: id,
             userId: user.id,
             seen: true,

@@ -65,7 +65,7 @@ server configured for a specific Jira project.
 
 ![Jira Manage Apps - Unleash Server Admin](/img/jira_server_manage_servers.png)
 
-Once you have configured at least one Unleash server, your users should be ready to [Use the Jira Server plugin](/integrations/jira_server_plugin_usage)
+Once you have configured at least one Unleash server, your users should be ready to [use the Jira Server plugin](/integrations/jira_server_plugin_usage)
 
 ### Edit existing servers
 

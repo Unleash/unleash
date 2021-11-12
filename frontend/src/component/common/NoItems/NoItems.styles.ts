@@ -28,5 +28,8 @@ export const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down(700)]: {
             marginTop: '2rem',
         },
+        [theme.breakpoints.down(500)]: {
+            display: 'none',
+        },
     },
 }));

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import Toast from '../component/common/Toast/Toast';
 
 export interface IToast {
@@ -6,6 +6,8 @@ export interface IToast {
     type: 'success' | 'info' | 'warning' | 'error';
     text: string;
 }
+
+export type TSetToastData = Dispatch<SetStateAction<IToast>>;
 
 const useToast = () => {
     const [toastData, setToastData] = useState<IToast>({

@@ -90,7 +90,7 @@ describe('feature toggle', () => {
         cy.wait(500);
         cy.visit(`/projects/default/features2/${featureToggleName}/strategies`);
         cy.get('[data-test=ADD_NEW_STRATEGY_ID]').click();
-        cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-1').click();
+        cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-2').click();
         cy.get('[data-test=ROLLOUT_SLIDER_ID')
             .click()
             .type('{leftarrow}'.repeat(20));
@@ -201,7 +201,7 @@ describe('feature toggle', () => {
         cy.wait(500);
         cy.visit(`/projects/default/features2/${featureToggleName}/strategies`);
         cy.get('[data-test=ADD_NEW_STRATEGY_ID]').click();
-        cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-2').click();
+        cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-3').click();
 
         if (enterprise) {
             cy.get('[data-test=ADD_CONSTRAINT_ID]').click();

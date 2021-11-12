@@ -5,11 +5,13 @@ import PieChartIcon from '@material-ui/icons/PieChart';
 import { useMediaQuery } from '@material-ui/core';
 import { IFeatureEnvironmentMetrics } from '../../../../../interfaces/featureToggle';
 import { parseISO } from 'date-fns';
+import { calculatePercentage } from '../../../../../utils/calculate-percentage';
+import StringTruncator from '../../../../common/StringTruncator/StringTruncator';
 
 interface IFeatureEnvironmentProps {
     className?: string;
     primaryMetric?: boolean;
-    metric: IFeatureEnvironmentMetrics;
+    metric?: IFeatureEnvironmentMetrics;
 }
 
 const FeatureEnvironmentMetrics = ({
@@ -20,6 +22,8 @@ const FeatureEnvironmentMetrics = ({
     const styles = useStyles();
     const smallScreen = useMediaQuery(`(max-width:1000px)`);
 
+    if (!metric) return null;
+
     const containerClasses = classNames(styles.container, className, {
         [styles.primaryMetric]: primaryMetric,
     });
@@ -29,14 +33,7 @@ const FeatureEnvironmentMetrics = ({
         hour = `since ${metricTime.getHours()}:00`;
     }
 
-    const calculatePercentage = () => {
-        const total = metric.yes + metric.no;
-        if (total === 0) {
-            return 0;
-        }
-
-        return Math.round((metric.yes / total) * 100);
-    };
+    const total = metric.yes + metric.no;
 
     let primaryStyles = {};
 
@@ -59,7 +56,14 @@ const FeatureEnvironmentMetrics = ({
             <div className={containerClasses}>
                 <div className={styles.headerContainer}>
                     <h2 data-loading className={styles.title}>
-                        Traffic in {metric.environment} {hour}
+                        Traffic in&nbsp;
+                        <StringTruncator
+                            text={metric.environment}
+                            className={styles.truncator}
+                            maxWidth="200"
+                        />
+                        &nbsp;
+                        {hour}
                     </h2>
                 </div>
 
@@ -86,7 +90,14 @@ const FeatureEnvironmentMetrics = ({
         <div className={containerClasses}>
             <div className={styles.headerContainer}>
                 <h2 data-loading className={styles.title}>
-                    Traffic in {metric.environment} {hour}
+                    Traffic in&nbsp;
+                    <StringTruncator
+                        text={metric.environment}
+                        maxWidth="150"
+                        className={styles.truncator}
+                    />
+                    &nbsp;
+                    {hour}
                 </h2>
             </div>
 
@@ -112,7 +123,7 @@ const FeatureEnvironmentMetrics = ({
                 </div>
                 <div className={styles.chartContainer} data-loading>
                     <PercentageCircle
-                        percentage={calculatePercentage()}
+                        percentage={calculatePercentage(total, metric.yes)}
                         styles={{
                             height: '60px',
                             width: '60px',

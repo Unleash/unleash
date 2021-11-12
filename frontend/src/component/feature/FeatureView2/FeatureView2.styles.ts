@@ -7,6 +7,10 @@ export const useStyles = makeStyles(theme => ({
         borderRadius: '10px',
         marginBottom: '1rem',
     },
+    toggleInfoContainer: {
+        display: 'flex',
+        alignItems: 'center',
+    },
     innerContainer: {
         padding: '1rem 2rem',
         display: 'flex',
@@ -29,5 +33,15 @@ export const useStyles = makeStyles(theme => ({
     featureViewHeader: {
         fontSize: theme.fontSizes.mainHeader,
         fontWeight: 'normal',
+        display: 'flex',
+        alignItems: 'center',
+    },
+    statusContainer: {
+        marginLeft: '0.5rem',
+    },
+    [theme.breakpoints.down(500)]: {
+        innerContainer: {
+            flexDirection: 'column',
+        },
     },
 }));

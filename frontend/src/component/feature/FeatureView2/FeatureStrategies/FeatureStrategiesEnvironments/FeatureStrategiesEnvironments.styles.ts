@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     container: {
-        width: '70%',
+        width: '100%',
         [theme.breakpoints.down(900)]: {
             width: '50%',
         },
@@ -11,24 +11,30 @@ export const useStyles = makeStyles(theme => ({
         },
     },
     fullWidth: {
-        width: '90%',
-        [theme.breakpoints.down(700)]: {
-            width: '85%',
-        },
+        width: '100%',
     },
-
     environmentsHeader: {
-        padding: '2rem 2rem 1rem 2rem',
         display: 'flex',
-        justifyContent: 'space-between',
+        paddingTop: '1rem',
+        justifyContent: 'flex-end',
+        position: 'relative',
         alignItems: 'center',
         [theme.breakpoints.down(700)]: {
             padding: '1.5rem',
         },
     },
-    tabContentContainer: {
-        padding: '1rem 2rem 2rem 2rem',
+    outerTabContentContainer: {
+        marginTop: '1rem',
+        padding: '0rem 2rem 2rem 2rem',
         display: 'flex',
+        flexDirection: 'column',
+        [theme.breakpoints.down(700)]: {
+            padding: '0',
+        },
+    },
+    tabContentContainer: {
+        display: 'flex',
+        position: 'relative',
         justifyContent: 'space-between',
         [theme.breakpoints.down(700)]: {
             padding: '1.5rem',
@@ -38,7 +44,7 @@ export const useStyles = makeStyles(theme => ({
         width: '100%',
     },
     listContainer: {
-        width: '70%',
+        width: '100%',
         [theme.breakpoints.down(700)]: {
             width: '100%',
         },
@@ -46,6 +52,7 @@ export const useStyles = makeStyles(theme => ({
     listContainerFullWidth: { width: '100%' },
     containerListView: {
         display: 'none',
+        marginTop: 'none',
     },
     header: {
         fontSize: theme.fontSizes.mainHeader,
@@ -53,7 +60,20 @@ export const useStyles = makeStyles(theme => ({
     },
     tabContainer: {
         margin: '0rem 2rem 2rem 2rem',
+        display: 'flex',
+        alignItems: 'center',
     },
+    strategyButtonContainer: {
+        marginLeft: 'auto',
+        marginBottom: '2rem',
+    },
+    selectStrategy: {
+        marginTop: '0',
+    },
+    configureStrategy: {
+        display: 'none',
+    },
+    addStrategyButton: { marginLeft: 'auto' },
     tabNavigation: {
         backgroundColor: 'transparent',
         textTransform: 'none',
@@ -64,12 +84,5 @@ export const useStyles = makeStyles(theme => ({
     tabButton: {
         textTransform: 'none',
         width: 'auto',
-    },
-    noItemsParagraph: {
-        margin: '1rem 0',
-    },
-    link: {
-        display: 'block',
-        margin: '1rem 0 0 0',
     },
 }));

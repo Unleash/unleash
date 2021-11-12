@@ -1,7 +1,6 @@
-import { Button, useMediaQuery } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useContext, useState } from 'react';
-import { getHumanReadbleStrategyName } from '../../../../../../utils/strategy-names';
 import { useHistory, useParams } from 'react-router-dom';
 
 import FeatureStrategiesUIContext from '../../../../../../contexts/FeatureStrategiesUIContext';
@@ -13,7 +12,6 @@ import { useStyles } from './FeatureStrategiesConfigure.styles';
 import FeatureStrategiesProductionGuard from '../FeatureStrategiesProductionGuard/FeatureStrategiesProductionGuard';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import cloneDeep from 'lodash.clonedeep';
-import FeatureStrategyCreateExecution from '../../FeatureStrategyCreateExecution/FeatureStrategyCreateExecution';
 import { PRODUCTION } from '../../../../../../constants/environmentTypes';
 import { ADD_NEW_STRATEGY_SAVE_ID } from '../../../../../../testIds';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
@@ -25,7 +23,6 @@ interface IFeatureStrategiesConfigure {
 const FeatureStrategiesConfigure = ({
     setToastData,
 }: IFeatureStrategiesConfigure) => {
-    const smallScreen = useMediaQuery('(max-width:900px)');
     const history = useHistory();
 
     const { projectId, featureId } = useParams<IFeatureViewParams>();
@@ -110,24 +107,13 @@ const FeatureStrategiesConfigure = ({
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.header}>
-                Configuring{' '}
-                {getHumanReadbleStrategyName(configureNewStrategy.name)} in{' '}
-                {activeEnvironment.name}
-            </h2>
             <ConditionallyRender
                 condition={activeEnvironment.enabled}
                 show={
                     <Alert severity="warning" className={styles.envWarning}>
-                        This environment is currently enabled. The strategy will
-                        take effect immediately after you save your changes.
-                    </Alert>
-                }
-                elseShow={
-                    <Alert severity="warning" className={styles.envWarning}>
-                        This environment is currently disabled. The strategy
-                        will not take effect before you enable the environment
-                        on the feature toggle.
+                        This toggle is currently enabled in this environment.
+                        The strategy will take effect immediately after you save
+                        your changes.
                     </Alert>
                 }
             />
@@ -144,19 +130,6 @@ const FeatureStrategiesConfigure = ({
                         setStrategyConstraints={setStrategyConstraints}
                     />
                 </div>
-
-                <ConditionallyRender
-                    condition={!smallScreen}
-                    show={
-                        <div className={styles.executionContainer}>
-                            <FeatureStrategyCreateExecution
-                                parameters={strategyParams}
-                                constraints={strategyConstraints}
-                                configureNewStrategy={configureNewStrategy}
-                            />
-                        </div>
-                    }
-                />
             </div>
 
             <div className={styles.buttonContainer}>

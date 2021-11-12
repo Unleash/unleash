@@ -6,16 +6,16 @@ export const useStyles = makeStyles(theme => ({
         backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'column',
-        padding: '1.5rem',
         maxWidth: '350px',
         minWidth: '350px',
         marginRight: '1rem',
     },
-    [theme.breakpoints.down(800)]: {
-        container: {
-            width: '100%',
-            maxWidth: 'none',
-        },
+    paddingContainerTop: {
+        padding: '1.5rem 1.5rem 0 1.5rem',
+    },
+    paddingContainerBottom: {
+        padding: '0 1.5rem 1.5rem 1.5rem',
+        borderTop: `1px solid ${theme.palette.grey[300]}`,
     },
     metaDataHeader: {
         display: 'flex',
@@ -45,5 +45,12 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         color: theme.palette.grey[600],
+    },
+    [theme.breakpoints.down(1000)]: {
+        container: {
+            width: '100%',
+            maxWidth: 'none',
+            minWidth: 'auto',
+        },
     },
 }));

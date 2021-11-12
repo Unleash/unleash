@@ -22,7 +22,8 @@ import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from '../../providers/AccessProvider/permissions';
-import StatusComponent from '../status-component';
+
+import StatusChip from '../../common/StatusChip/StatusChip';
 import FeatureTagComponent from '../feature-tag-component';
 import StatusUpdateComponent from '../view/status-update-component';
 import AddTagDialog from '../add-tag-dialog-container';
@@ -70,16 +71,18 @@ const FeatureView = ({
     const { changeFeatureProject } = useFeatureApi();
     const { toast, setToastData } = useToast();
     const archive = !Boolean(isFeatureView);
-    const { uiConfig } = useUiConfig();
+    const { uiConfig } = useUiConfig();
 
     useEffect(() => {
-        if(uiConfig.flags.E && featureToggle && featureToggle.project) {
-            const newTogglePAth = getTogglePath(featureToggle.project, featureToggleName, true);
+        if (uiConfig.flags.E && featureToggle && featureToggle.project) {
+            const newTogglePAth = getTogglePath(
+                featureToggle.project,
+                featureToggleName,
+                true
+            );
             history.push(newTogglePAth);
         }
-
-    }, [featureToggleName, uiConfig, featureToggle, history])
-    
+    }, [featureToggleName, uiConfig, featureToggle, history]);
 
     useEffect(() => {
         scrollToTop();
@@ -286,9 +289,7 @@ const FeatureView = ({
                     <ConditionallyRender
                         condition={archive}
                         show={<span>Archived</span>}
-                        elseShow={
-                            <StatusComponent stale={featureToggle.stale} />
-                        }
+                        elseShow={<StatusChip stale={featureToggle.stale} />}
                     />
                 </div>
                 <div

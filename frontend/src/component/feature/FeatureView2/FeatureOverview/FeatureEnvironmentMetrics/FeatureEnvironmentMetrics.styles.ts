@@ -27,6 +27,9 @@ export const useStyles = makeStyles(theme => ({
         fontWeight: 'normal',
         margin: 0,
     },
+    truncator: {
+        verticalAlign: 'bottom',
+    },
     bodyContainer: {
         display: 'flex',
         align: 'items',

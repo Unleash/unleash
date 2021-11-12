@@ -21,16 +21,25 @@ exports[`renders correctly with one feature 1`] = `
         Another
       </h1>
       <div
-        className="MuiChip-root active"
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        title="Feature toggle is active."
+        data-loading={true}
+        style={
+          Object {
+            "marginLeft": "8px",
+          }
+        }
       >
-        <span
-          className="MuiChip-label"
+        <div
+          className="MuiChip-root makeStyles-chip-20 MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          title="Feature toggle is active."
         >
-          Active
-        </span>
+          <span
+            className="MuiChip-label"
+          >
+            Active
+          </span>
+        </div>
       </div>
     </div>
     <div
@@ -132,10 +141,10 @@ exports[`renders correctly with one feature 1`] = `
             </svg>
             <fieldset
               aria-hidden={true}
-              className="PrivateNotchedOutline-root-20 MuiOutlinedInput-notchedOutline"
+              className="PrivateNotchedOutline-root-21 MuiOutlinedInput-notchedOutline"
             >
               <legend
-                className="PrivateNotchedOutline-legendLabelled-22 PrivateNotchedOutline-legendNotched-23"
+                className="PrivateNotchedOutline-legendLabelled-23 PrivateNotchedOutline-legendNotched-24"
               >
                 <span>
                   Feature type
@@ -191,10 +200,10 @@ exports[`renders correctly with one feature 1`] = `
             </svg>
             <fieldset
               aria-hidden={true}
-              className="PrivateNotchedOutline-root-20 MuiOutlinedInput-notchedOutline"
+              className="PrivateNotchedOutline-root-21 MuiOutlinedInput-notchedOutline"
             >
               <legend
-                className="PrivateNotchedOutline-legendLabelled-22 PrivateNotchedOutline-legendNotched-23"
+                className="PrivateNotchedOutline-legendLabelled-23 PrivateNotchedOutline-legendNotched-24"
               >
                 <span>
                   Project
@@ -226,7 +235,7 @@ exports[`renders correctly with one feature 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-24 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-25 MuiSwitch-switchBase MuiSwitch-colorSecondary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -245,7 +254,7 @@ exports[`renders correctly with one feature 1`] = `
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-27 MuiSwitch-input"
+              className="PrivateSwitchBase-input-28 MuiSwitch-input"
               disabled={false}
               onChange={[Function]}
               type="checkbox"
@@ -390,7 +399,7 @@ exports[`renders correctly with one feature 1`] = `
   </div>
   <hr />
   <div
-    className="MuiPaper-root makeStyles-tabNav-28 MuiPaper-elevation1 MuiPaper-rounded"
+    className="MuiPaper-root makeStyles-tabNav-29 MuiPaper-elevation1 MuiPaper-rounded"
   >
     <div
       className="MuiTabs-root"
@@ -536,7 +545,7 @@ exports[`renders correctly with one feature 1`] = `
           </button>
         </div>
         <span
-          className="PrivateTabIndicator-root-29 PrivateTabIndicator-colorPrimary-30 MuiTabs-indicator"
+          className="PrivateTabIndicator-root-30 PrivateTabIndicator-colorPrimary-31 MuiTabs-indicator"
           style={
             Object {
               "left": 0,

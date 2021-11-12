@@ -7,13 +7,7 @@ import FeatureSeenApplications from '../FeatureSeenApplications/FeatureSeenAppli
 import PageContent from '../../../common/PageContent';
 
 import { useStyles } from './FeatureMetrics.styles';
-
-const emptyMetric = (environment: string) => ({
-    yes: 0,
-    no: 0,
-    environment,
-    timestamp: '',
-});
+import { getFeatureMetrics } from '../../../../utils/get-feature-metrics';
 
 const FeatureMetrics = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
@@ -21,12 +15,7 @@ const FeatureMetrics = () => {
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const styles = useStyles();
 
-    const featureMetrics = feature?.environments.map(env => {
-        const envMetric = metrics.lastHourUsage.find(
-            metric => metric.environment === env.name
-        );
-        return envMetric || emptyMetric(env.name);
-    });
+    const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
 
     const metricComponents = featureMetrics.map(metric => {
         return (

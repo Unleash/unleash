@@ -6,10 +6,9 @@ import useToast from '../../../../../../hooks/useToast';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import { IFeatureStrategy } from '../../../../../../interfaces/strategy';
 import cloneDeep from 'lodash.clonedeep';
+import { IFeatureEnvironment } from '../../../../../../interfaces/featureToggle';
 
-const useFeatureStrategiesEnvironmentList = (
-    strategies: IFeatureStrategy[]
-) => {
+const useFeatureStrategiesEnvironmentList = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const history = useHistory();
     const { deleteStrategyFromFeature, updateStrategyOnFeature } =
@@ -37,6 +36,18 @@ const useFeatureStrategiesEnvironmentList = (
     useEffect(() => {
         activeEnvironmentsRef.current = activeEnvironment;
     }, [activeEnvironment]);
+
+    const updateFeatureEnvironmentCache = () => {
+        const feature = cloneDeep(featureCache);
+
+        const environment = feature.environments.find(
+            (env: IFeatureEnvironment) => env.name === activeEnvironment.name
+        );
+
+        environment.enabled = !environment.enabled;
+
+        setFeatureCache(feature);
+    };
 
     const updateStrategy = async (updatedStrategy: IFeatureStrategy) => {
         try {
@@ -122,6 +133,7 @@ const useFeatureStrategiesEnvironmentList = (
     return {
         activeEnvironmentsRef,
         toast,
+        setToastData,
         deleteStrategy,
         updateStrategy,
         delDialog,
@@ -134,6 +146,7 @@ const useFeatureStrategiesEnvironmentList = (
         expandedSidebar,
         featureId,
         activeEnvironment,
+        updateFeatureEnvironmentCache,
     };
 };
 

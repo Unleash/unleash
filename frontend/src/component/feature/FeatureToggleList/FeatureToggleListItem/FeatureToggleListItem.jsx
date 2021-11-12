@@ -7,7 +7,7 @@ import { Chip, ListItem, Tooltip } from '@material-ui/core';
 import { Undo } from '@material-ui/icons';
 
 import TimeAgo from 'react-timeago';
-import Status from '../../status-component';
+import StatusChip from '../../../common/StatusChip/StatusChip';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 
 import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
@@ -121,7 +121,7 @@ const FeatureToggleListItem = ({
                     commonStyles.hideLt920
                 )}
             >
-                <Status stale={stale} showActive={false} />
+                <StatusChip stale={stale} showActive={false} />
                 <Link
                     to={`/projects/${project}`}
                     style={{ textDecoration: 'none' }}

@@ -15,11 +15,11 @@ import { C } from '../../../../../common/flags';
 import { Button } from '@material-ui/core';
 import { useStyles } from './FeatureStrategyAccordionBody.styles';
 import Dialogue from '../../../../../common/Dialogue';
-import FeatureStrategiesSeparator from '../../FeatureStrategiesEnvironments/FeatureStrategiesSeparator/FeatureStrategiesSeparator';
 import DefaultStrategy from '../../common/DefaultStrategy/DefaultStrategy';
 import { ADD_CONSTRAINT_ID } from '../../../../../../testIds';
 import AccessContext from '../../../../../../contexts/AccessContext';
 import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
+import Constraint from '../../../../../common/Constraint/Constraint';
 
 interface IFeatureStrategyAccordionBodyProps {
     strategy: IFeatureStrategy;
@@ -104,21 +104,11 @@ const FeatureStrategyAccordionBody: React.FC<IFeatureStrategyAccordionBodyProps>
 
             return constraints.map((constraint, index) => {
                 return (
-                    <div
+                    <Constraint
+                        constraint={constraint}
                         key={`${constraint.contextName}-${index}`}
-                        className={styles.constraint}
-                    >
-                        <span className={styles.contextName}>
-                            {constraint.contextName}
-                        </span>
-                        <FeatureStrategiesSeparator
-                            text={constraint.operator}
-                            maxWidth="none"
-                        />
-                        <span className={styles.values}>
-                            {constraint.values.join(', ')}
-                        </span>
-                    </div>
+                        className={styles.constraintBody}
+                    />
                 );
             });
         };
@@ -155,7 +145,7 @@ const FeatureStrategyAccordionBody: React.FC<IFeatureStrategyAccordionBodyProps>
                                         onClick={toggleConstraints}
                                         data-test={ADD_CONSTRAINT_ID}
                                     >
-                                        + Add constraint
+                                        + Edit constraints
                                     </Button>
                                 }
                             />

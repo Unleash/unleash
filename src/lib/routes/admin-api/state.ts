@@ -103,4 +103,3 @@ class StateController extends Controller {
     }
 }
 export default StateController;
-module.exports = StateController;

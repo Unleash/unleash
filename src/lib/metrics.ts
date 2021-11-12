@@ -7,6 +7,9 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
+    FEATURE_STRATEGY_ADD,
+    FEATURE_STRATEGY_REMOVE,
+    FEATURE_STRATEGY_UPDATE,
     FEATURE_UPDATED,
 } from './types/events';
 import { IUnleashConfig } from './types/option';
@@ -123,17 +126,26 @@ export default class MetricsMonitor {
             dbDuration.labels(store, action).observe(time);
         });
 
-        eventStore.on(FEATURE_CREATED, ({ data }) => {
-            featureToggleUpdateTotal.labels(data.name).inc();
+        eventStore.on(FEATURE_CREATED, ({ featureName }) => {
+            featureToggleUpdateTotal.labels(featureName).inc();
         });
-        eventStore.on(FEATURE_UPDATED, ({ data }) => {
-            featureToggleUpdateTotal.labels(data.name).inc();
+        eventStore.on(FEATURE_UPDATED, ({ featureName }) => {
+            featureToggleUpdateTotal.labels(featureName).inc();
         });
-        eventStore.on(FEATURE_ARCHIVED, ({ data }) => {
-            featureToggleUpdateTotal.labels(data.name).inc();
+        eventStore.on(FEATURE_STRATEGY_ADD, ({ featureName }) => {
+            featureToggleUpdateTotal.labels(featureName).inc();
         });
-        eventStore.on(FEATURE_REVIVED, ({ data }) => {
-            featureToggleUpdateTotal.labels(data.name).inc();
+        eventStore.on(FEATURE_STRATEGY_REMOVE, ({ featureName }) => {
+            featureToggleUpdateTotal.labels(featureName).inc();
+        });
+        eventStore.on(FEATURE_STRATEGY_UPDATE, ({ featureName }) => {
+            featureToggleUpdateTotal.labels(featureName).inc();
+        });
+        eventStore.on(FEATURE_ARCHIVED, ({ featureName }) => {
+            featureToggleUpdateTotal.labels(featureName).inc();
+        });
+        eventStore.on(FEATURE_REVIVED, ({ featureName }) => {
+            featureToggleUpdateTotal.labels(featureName).inc();
         });
 
         clientMetricsStore.on('metrics', (m) => {

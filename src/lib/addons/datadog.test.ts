@@ -2,13 +2,13 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
+    IEvent,
 } from '../types/events';
 import { Logger } from '../logger';
 
 import DatadogAddon from './datadog';
 
 import noLogger from '../../test/fixtures/no-logger';
-import { IEvent } from '../types/model';
 
 let fetchRetryCalls: any[] = [];
 
@@ -45,6 +45,7 @@ test('Should call datadog webhook', async () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
             enabled: false,
@@ -72,6 +73,7 @@ test('Should call datadog webhook  for archived toggle', async () => {
         createdAt: new Date(),
         type: FEATURE_ARCHIVED,
         createdBy: 'some@user.com',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
         },
@@ -99,6 +101,7 @@ test(`Should call datadog webhook for toggled environment`, async () => {
         createdBy: 'some@user.com',
         environment: 'development',
         project: 'default',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
         },

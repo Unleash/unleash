@@ -1,6 +1,6 @@
 import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import FeatureToggleServiceV2 from '../../../lib/services/feature-toggle-service';
+import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { AccessService } from '../../../lib/services/access-service';
 import ProjectService from '../../../lib/services/project-service';
 import ProjectHealthService from '../../../lib/services/project-health-service';
@@ -25,7 +25,7 @@ beforeAll(async () => {
         email: 'test@getunleash.io',
     });
     accessService = new AccessService(stores, config);
-    featureToggleService = new FeatureToggleServiceV2(stores, config);
+    featureToggleService = new FeatureToggleService(stores, config);
     projectService = new ProjectService(
         stores,
         config,

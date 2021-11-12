@@ -556,9 +556,8 @@ test('Patching feature toggles to stale should trigger FEATURE_STALE_ON event', 
     const events = await db.stores.eventStore.getAll({
         type: FEATURE_STALE_ON,
     });
-    const updateForOurToggle = events.find((e) => e.data.name === name);
+    const updateForOurToggle = events.find((e) => e.featureName === name);
     expect(updateForOurToggle).toBeTruthy();
-    expect(updateForOurToggle.data.stale).toBe(true);
 });
 
 test('Patching feature toggles to active (turning stale to false) should trigger FEATURE_STALE_OFF event', async () => {
@@ -581,9 +580,8 @@ test('Patching feature toggles to active (turning stale to false) should trigger
     const events = await db.stores.eventStore.getAll({
         type: FEATURE_STALE_OFF,
     });
-    const updateForOurToggle = events.find((e) => e.data.name === name);
+    const updateForOurToggle = events.find((e) => e.featureName === name);
     expect(updateForOurToggle).toBeTruthy();
-    expect(updateForOurToggle.data.stale).toBe(false);
 });
 
 test('Should archive feature toggle', async () => {
@@ -1149,9 +1147,9 @@ test('Deleting a strategy should include name of feature strategy was deleted fr
         type: FEATURE_STRATEGY_REMOVE,
     });
     expect(events).toHaveLength(1);
-    expect(events[0].data.name).toBe(featureName);
+    expect(events[0].featureName).toBe(featureName);
     expect(events[0].environment).toBe(environment);
-    expect(events[0].data.id).toBe(strategyId);
+    expect(events[0].preData.id).toBe(strategyId);
 });
 
 test('Enabling environment creates a FEATURE_ENVIRONMENT_ENABLED event', async () => {
@@ -1193,7 +1191,7 @@ test('Enabling environment creates a FEATURE_ENVIRONMENT_ENABLED event', async (
     const events = await db.stores.eventStore.getAll({
         type: FEATURE_ENVIRONMENT_ENABLED,
     });
-    const enabledEvents = events.filter((e) => e.data.name === featureName);
+    const enabledEvents = events.filter((e) => e.featureName === featureName);
     expect(enabledEvents).toHaveLength(1);
 });
 test('Disabling environment creates a FEATURE_ENVIRONMENT_DISABLED event', async () => {
@@ -1243,7 +1241,7 @@ test('Disabling environment creates a FEATURE_ENVIRONMENT_DISABLED event', async
     const events = await db.stores.eventStore.getAll({
         type: FEATURE_ENVIRONMENT_DISABLED,
     });
-    const ourFeatureEvent = events.find((e) => e.data.name === featureName);
+    const ourFeatureEvent = events.find((e) => e.featureName === featureName);
     expect(ourFeatureEvent).toBeTruthy();
 });
 

@@ -11,7 +11,7 @@ import {
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IProjectStore } from '../types/stores/project-store';
-import FeatureToggleServiceV2 from './feature-toggle-service';
+import FeatureToggleService from './feature-toggle-service';
 import { hoursToMilliseconds } from 'date-fns';
 import Timer = NodeJS.Timer;
 
@@ -28,7 +28,7 @@ export default class ProjectHealthService {
 
     private healthRatingTimer: Timer;
 
-    private featureToggleService: FeatureToggleServiceV2;
+    private featureToggleService: FeatureToggleService;
 
     constructor(
         {
@@ -40,7 +40,7 @@ export default class ProjectHealthService {
             'projectStore' | 'featureTypeStore' | 'featureToggleStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
-        featureToggleService: FeatureToggleServiceV2,
+        featureToggleService: FeatureToggleService,
     ) {
         this.logger = getLogger('services/project-health-service.ts');
         this.projectStore = projectStore;

@@ -1,11 +1,10 @@
 import { Logger } from '../logger';
 
-import { FEATURE_CREATED } from '../types/events';
+import { FEATURE_CREATED, IEvent } from '../types/events';
 
 import WebhookAddon from './webhook';
 
 import noLogger from '../../test/fixtures/no-logger';
-import { IEvent } from '../types/model';
 
 let fetchRetryCalls: any[] = [];
 
@@ -39,6 +38,7 @@ test('Should handle event without "bodyTemplate"', () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
             enabled: false,
@@ -63,6 +63,7 @@ test('Should format event with "bodyTemplate"', () => {
         createdAt: new Date(),
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
+        featureName: 'some-toggle',
         data: {
             name: 'some-toggle',
             enabled: false,

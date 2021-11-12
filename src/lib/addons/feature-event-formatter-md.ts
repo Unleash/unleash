@@ -1,4 +1,3 @@
-import { IEvent } from '../types/model';
 import {
     FEATURE_CREATED,
     FEATURE_UPDATED,
@@ -13,6 +12,7 @@ import {
     FEATURE_STRATEGY_REMOVE,
     FEATURE_METADATA_UPDATED,
     FEATURE_PROJECT_CHANGE,
+    IEvent,
 } from '../types/events';
 
 export interface FeatureEventFormatter {
@@ -44,9 +44,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
 
     generateFeatureLink(event: IEvent): string {
         if (this.linkStyle === LinkStyle.SLACK) {
-            return `<${this.featureLink(event)}|${event.data.name}>`;
+            return `<${this.featureLink(event)}|${event.featureName}>`;
         } else {
-            return `[${event.data.name}](${this.featureLink(event)})`;
+            return `[${event.featureName}](${this.featureLink(event)})`;
         }
     }
 
@@ -70,20 +70,17 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     }
 
     generateStrategyChangeText(event: IEvent): string {
-        const { createdBy, environment, project, data, type } = event;
+        const { createdBy, environment, project, data, preData, type } = event;
         const feature = this.generateFeatureLink(event);
-        let action;
+        let strategyText: string = '';
         if (FEATURE_STRATEGY_UPDATE === type) {
-            action = 'updated in';
+            strategyText = `by updating strategy ${data?.name} in *${environment}*`;
         } else if (FEATURE_STRATEGY_ADD === type) {
-            action = 'added to';
-        } else {
-            action = 'removed from';
+            strategyText = `by adding strategy ${data?.name} in *${environment}*`;
+        } else if (FEATURE_STRATEGY_REMOVE === type) {
+            strategyText = `by removing strategy ${preData?.name} in *${environment}*`;
         }
-        const strategyText = `a ${
-            data.strategyName ?? ''
-        } strategy ${action} the *${environment}* environment`;
-        return `${createdBy} updated *${feature}* with ${strategyText} in project *${project}*`;
+        return `${createdBy} updated *${feature}* in project *${project}* ${strategyText}`;
     }
 
     generateMetadataText(event: IEvent): string {
@@ -93,16 +90,16 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     }
 
     generateProjectChangeText(event: IEvent): string {
-        const { createdBy, project, data } = event;
-        return `${createdBy} moved ${data.name} to ${project}`;
+        const { createdBy, project, featureName } = event;
+        return `${createdBy} moved ${featureName} to ${project}`;
     }
 
     featureLink(event: IEvent): string {
-        const { type, project = '', data } = event;
+        const { type, project = '', featureName } = event;
         if (type === FEATURE_ARCHIVED) {
             return `${this.unleashUrl}/archive`;
         }
-        return `${this.unleashUrl}/projects/${project}/${data.name}`;
+        return `${this.unleashUrl}/projects/${project}/${featureName}`;
     }
 
     getAction(type: string): string {

@@ -22,12 +22,13 @@ import {
     IMetricsBucket,
 } from '../../types/model';
 import { clientRegisterSchema } from './register-schema';
+
 import {
     minutesToMilliseconds,
     parseISO,
     secondsToMilliseconds,
 } from 'date-fns';
-import TTLList = require('./ttl-list');
+import TTLList from './ttl-list';
 
 export default class ClientMetricsService {
     globalCount = 0;
@@ -38,13 +39,13 @@ export default class ClientMetricsService {
 
     lastMinuteProjection = new Projection();
 
-    lastHourList = new TTLList({
+    lastHourList = new TTLList<IMetricCounts>({
         interval: secondsToMilliseconds(10),
     });
 
     logger = null;
 
-    lastMinuteList = new TTLList({
+    lastMinuteList = new TTLList<IMetricCounts>({
         interval: secondsToMilliseconds(10),
         expireType: 'minutes',
         expireAmount: 1,

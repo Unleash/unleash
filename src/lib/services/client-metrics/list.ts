@@ -1,31 +1,41 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-classes-per-file */
 
-'use strict';
+import { EventEmitter } from 'events';
 
-const { EventEmitter } = require('events');
+class Node<T> {
+    value: T | null;
 
-class Node {
-    constructor(value) {
+    prev: Node<T> | null;
+
+    next: Node<T> | null;
+
+    constructor(value: T) {
         this.value = value;
         this.next = null;
     }
 
-    link(next) {
+    link(next: Node<T>) {
         this.next = next;
         next.prev = this;
         return this;
     }
 }
 
-module.exports = class List extends EventEmitter {
+type IteratorFn<T, U = unknown> = (cursor: Node<T>) => U;
+
+export default class List<T> extends EventEmitter {
+    private start: Node<T> | null;
+
+    private tail: Node<T> | null;
+
     constructor() {
         super();
         this.start = null;
         this.tail = null;
     }
 
-    add(obj) {
+    add(obj: T): Node<T> {
         const node = new Node(obj);
         if (this.start) {
             this.start = node.link(this.start);
@@ -36,7 +46,7 @@ module.exports = class List extends EventEmitter {
         return node;
     }
 
-    iterate(fn) {
+    iterate(fn: IteratorFn<T>): void {
         if (!this.start) {
             return;
         }
@@ -51,7 +61,7 @@ module.exports = class List extends EventEmitter {
         }
     }
 
-    iterateReverse(fn) {
+    iterateReverse(fn: IteratorFn<T>): void {
         if (!this.tail) {
             return;
         }
@@ -66,7 +76,7 @@ module.exports = class List extends EventEmitter {
         }
     }
 
-    reverseRemoveUntilTrue(fn) {
+    reverseRemoveUntilTrue(fn: IteratorFn<T, boolean>): void {
         if (!this.tail) {
             return;
         }
@@ -98,7 +108,7 @@ module.exports = class List extends EventEmitter {
         }
     }
 
-    toArray() {
+    toArray(): T[] {
         const result = [];
 
         if (this.start) {
@@ -125,4 +135,4 @@ module.exports = class List extends EventEmitter {
 
     //     return result;
     // }
-};
+}

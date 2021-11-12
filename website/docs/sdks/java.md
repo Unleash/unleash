@@ -13,7 +13,7 @@ First we must add Unleash Client SDK as a dependency to your project. Below is a
 
 ```xml
 <dependency>
-    <groupId>no.finn.unleash</groupId>
+    <groupId>io.getunleash</groupId>
     <artifactId>unleash-client-java</artifactId>
     <version>Latest version here</version>
 </dependency>

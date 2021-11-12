@@ -1,9 +1,7 @@
-'use strict';
-
-const List = require('./list');
+import List from './list';
 
 function getList() {
-    const list = new List();
+    const list = new List<number>();
     list.add(1);
     list.add(2);
     list.add(3);

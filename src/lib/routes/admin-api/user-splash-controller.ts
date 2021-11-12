@@ -25,34 +25,7 @@ class UserSplashController extends Controller {
         this.logger = config.getLogger('splash-controller.ts');
         this.userSplashService = userSplashService;
 
-        this.post('/', this.recordSplash);
-        this.put('/:id', this.updateSplashSettings);
-    }
-
-    private async recordSplash(
-        req: IAuthRequest<any, any, ISplashBody, any>,
-        res: Response,
-    ): Promise<void> {
-        const BAD_REQUEST = 400;
-        const { user } = req;
-
-        const { splashId } = req.body;
-
-        if (!splashId) {
-            res.status(BAD_REQUEST).json({
-                error: 'splashId must be present.',
-            });
-            return;
-        }
-
-        const splash = {
-            ...req.body,
-            userId: user.id,
-            seen: req.body.seen || false,
-        };
-
-        const updated = await this.userSplashService.updateSplash(splash);
-        res.json(updated);
+        this.post('/:id', this.updateSplashSettings);
     }
 
     private async updateSplashSettings(
@@ -66,9 +39,8 @@ class UserSplashController extends Controller {
             ...req.body,
             splashId: id,
             userId: user.id,
-            seen: req.body.seen || false,
+            seen: true,
         };
-
         const updated = await this.userSplashService.updateSplash(splash);
         res.json(updated);
     }

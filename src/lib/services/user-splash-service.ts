@@ -25,7 +25,7 @@ export default class UserSplashService {
             return [];
         }
         try {
-            const splashs = await (
+            const splashs = (
                 await this.userSplashStore.getAllUserSplashs(user.id)
             ).reduce(
                 (splashObject, splash) => ({

@@ -46,8 +46,11 @@ This will prompt you to select the plugin artifact for upload.
 
 ![Jira Manage Apps - Browse](/img/jira_upload_app_dialog.png)
 
-Once you've selected your file and clicked "Upload". Jira will install the plugin, and you can move on
-to [Configuring the plugin](#configure-plugin)
+Once you've selected your file and clicked "Upload". Jira will install the plugin, and you should get a nice status screen saying that it successfully installed.
+
+![Jira Manage Apps - Successful install](/img/jira_server_installed_ready_to_go.png)
+
+You can now move on to [Configuring the plugin](#configure-plugin)
 
 ## Configuring plugin {#configure-plugin}
 

@@ -15,7 +15,7 @@ yarn add @unleash/proxy-client-react
 
 Import the provider like this in your entrypoint file (typically index.js/ts):
 
-```
+```js
 import FlagProvider from '@unleash/proxy-client-react';
 
 const config = {
@@ -38,7 +38,7 @@ ReactDOM.render(
 
 To check if a feature is enabled:
 
-```
+```js
 import { useFlag } from '@unleash/proxy-client-react';
 
 const TestComponent = () => {
@@ -55,7 +55,7 @@ export default TestComponent;
 
 To check variants:
 
-```
+```js
 import { useVariant } from '@unleash/proxy-client-react';
 
 const TestComponent = () => {
@@ -76,7 +76,7 @@ export default TestComponent;
 
 Follow the following steps in order to update the unleash context:
 
-```
+```js
 import { useUnleashContext, useFlag } from '@unleash/proxy-client-react'
 
 const MyComponent = ({ userId }) => {

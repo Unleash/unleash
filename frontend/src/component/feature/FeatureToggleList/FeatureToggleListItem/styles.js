@@ -6,7 +6,7 @@ export const useStyles = makeStyles(theme => ({
         margin: '1rem 0',
         '&:hover': {
             backgroundColor: theme.palette.grey[200],
-        }
+        },
     },
     listItemMetric: {
         width: '40px',
@@ -28,8 +28,10 @@ export const useStyles = makeStyles(theme => ({
     },
     listItemStrategies: {
         marginLeft: 'auto',
+        display: 'flex',
+        alignItems: 'center',
     },
-    disabledLink:{
-        pointerEvents: 'none'
+    disabledLink: {
+        pointerEvents: 'none',
     },
 }));

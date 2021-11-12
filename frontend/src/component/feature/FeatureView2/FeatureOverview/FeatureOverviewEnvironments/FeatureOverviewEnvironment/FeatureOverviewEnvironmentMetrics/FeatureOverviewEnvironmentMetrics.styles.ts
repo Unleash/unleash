@@ -36,4 +36,9 @@ export const useStyles = makeStyles(theme => ({
             display: 'none',
         },
     },
+    [theme.breakpoints.down(400)]: {
+        percentageCircle: {
+            display: 'none',
+        },
+    },
 }));

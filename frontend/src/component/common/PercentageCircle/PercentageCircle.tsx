@@ -10,6 +10,7 @@ const PercentageCircle = ({
     styles,
     percentage,
     secondaryPieColor,
+    ...rest
 }: IPercentageCircleProps) => {
     const theme = useTheme();
 
@@ -40,7 +41,7 @@ const PercentageCircle = ({
         );
     }
 
-    return <div style={{ ...circle, ...styles }} />;
+    return <div style={{ ...circle, ...styles }} {...rest} />;
 };
 
 export default PercentageCircle;

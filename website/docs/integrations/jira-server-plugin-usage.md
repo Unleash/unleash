@@ -42,7 +42,7 @@ provided your user has edit rights on the issue)
 
 ![Jira Server - Disconnect toggle](/img/jira_server_disconnect_toggle.png)
 
-Once you click the button, you'll need to confirm the dialog that opens up
+Once you click the button, you'll need to confirm the dialog that opens up.
 
 ![Jira Server - Disconnect toggle dialog](/img/jira_server_disconnect_toggle_dialog.png)
 

@@ -1,9 +1,9 @@
 import { EventEmitter } from 'events';
 import { Knex } from 'knex';
-import { DROP_FEATURES } from '../types/events';
+import { DROP_FEATURES, IEvent, IBaseEvent } from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
-import { ICreateEvent, IEvent } from '../types/model';
+import { ITag } from '../types/model';
 
 const EVENT_COLUMNS = [
     'id',
@@ -11,7 +11,9 @@ const EVENT_COLUMNS = [
     'created_by',
     'created_at',
     'data',
+    'pre_data',
     'tags',
+    'feature_name',
     'project',
     'environment',
 ];
@@ -21,10 +23,12 @@ export interface IEventTable {
     type: string;
     created_by: string;
     created_at: Date;
-    data: any;
+    data?: any;
+    pre_data?: any;
+    feature_name?: string;
     project?: string;
     environment?: string;
-    tags: [];
+    tags: ITag[];
 }
 
 const TABLE = 'events';
@@ -40,7 +44,7 @@ class EventStore extends EventEmitter implements IEventStore {
         this.logger = getLogger('lib/db/event-store.ts');
     }
 
-    async store(event: ICreateEvent): Promise<void> {
+    async store(event: IBaseEvent): Promise<void> {
         try {
             const rows = await this.db(TABLE)
                 .insert(this.eventToDbRow(event))
@@ -52,7 +56,7 @@ class EventStore extends EventEmitter implements IEventStore {
         }
     }
 
-    async batchStore(events: ICreateEvent[]): Promise<void> {
+    async batchStore(events: IBaseEvent[]): Promise<void> {
         try {
             const savedRows = await this.db(TABLE)
                 .insert(events.map(this.eventToDbRow))
@@ -129,6 +133,7 @@ class EventStore extends EventEmitter implements IEventStore {
                 .orderBy('created_at', 'desc');
             return rows.map(this.rowToEvent);
         } catch (err) {
+            this.logger.error(err);
             return [];
         }
     }
@@ -146,6 +151,19 @@ class EventStore extends EventEmitter implements IEventStore {
         }
     }
 
+    async getEventsForFeature(featureName: string): Promise<IEvent[]> {
+        try {
+            const rows = await this.db
+                .select(EVENT_COLUMNS)
+                .from(TABLE)
+                .where({ feature_name: featureName })
+                .orderBy('created_at', 'desc');
+            return rows.map(this.rowToEvent);
+        } catch (err) {
+            return [];
+        }
+    }
+
     rowToEvent(row: IEventTable): IEvent {
         return {
             id: row.id,
@@ -153,23 +171,27 @@ class EventStore extends EventEmitter implements IEventStore {
             createdBy: row.created_by,
             createdAt: row.created_at,
             data: row.data,
+            preData: row.pre_data,
             tags: row.tags || [],
+            featureName: row.feature_name,
             project: row.project,
             environment: row.environment,
         };
     }
 
-    eventToDbRow(e: ICreateEvent): any {
+    eventToDbRow(e: IBaseEvent): Omit<IEventTable, 'id' | 'created_at'> {
         return {
             type: e.type,
             created_by: e.createdBy,
             data: e.data,
+            pre_data: e.preData,
+            //@ts-ignore workaround for json-array
             tags: JSON.stringify(e.tags),
+            feature_name: e.featureName,
             project: e.project,
             environment: e.environment,
         };
     }
 }
 
-module.exports = EventStore;
 export default EventStore;

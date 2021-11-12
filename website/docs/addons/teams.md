@@ -13,14 +13,23 @@ The Microsoft Teams addon will perform a single retry if the HTTP POST against t
 
 #### Events {#events}
 
-You can choose to trigger updates for the following events (we might add more event types in the future):
+You can choose to trigger updates for the following events:
 
 - feature-created
-- feature-updated
+- feature-updated (*)
+- feature-metadata-updated
+- feature-project-change
 - feature-archived
 - feature-revived
+- feature-strategy-update
+- feature-strategy-add
+- feature-strategy-remove
 - feature-stale-on
 - feature-stale-off
+- feature-environment-enabled
+- feature-environment-disabled
+
+> *) Deprecated, and will not be used after transition to environments in Unleash v4.3
 
 #### Parameters {#parameters}
 

@@ -53,6 +53,7 @@ test('should collect metrics for requests', async () => {
 
 test('should collect metrics for updated toggles', async () => {
     stores.eventStore.emit(FEATURE_UPDATED, {
+        featureName: 'TestToggle',
         data: { name: 'TestToggle' },
     });
 

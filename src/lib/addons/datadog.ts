@@ -1,12 +1,13 @@
 import Addon from './addon';
 
 import definition from './datadog-definition';
-import { IAddonConfig, IEvent } from '../types/model';
+import { IAddonConfig } from '../types/model';
 import {
     FeatureEventFormatter,
     FeatureEventFormatterMd,
     LinkStyle,
 } from './feature-event-formatter-md';
+import { IEvent } from '../types/events';
 
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;

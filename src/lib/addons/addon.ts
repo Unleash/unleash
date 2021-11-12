@@ -2,7 +2,8 @@ import fetch, { Response } from 'node-fetch';
 import { addonDefinitionSchema } from './addon-schema';
 import { IUnleashConfig } from '../types/option';
 import { Logger } from '../logger';
-import { IAddonDefinition, IEvent } from '../types/model';
+import { IAddonDefinition } from '../types/model';
+import { IEvent } from '../types/events';
 
 export default abstract class Addon {
     logger: Logger;

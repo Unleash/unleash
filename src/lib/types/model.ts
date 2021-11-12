@@ -196,20 +196,6 @@ export interface IAddonConfig {
     unleashUrl: string;
 }
 
-export interface ICreateEvent {
-    type: string;
-    createdBy: string;
-    project?: string;
-    environment?: string;
-    data?: any;
-    tags?: ITag[];
-}
-
-export interface IEvent extends ICreateEvent {
-    id: number;
-    createdAt: Date;
-}
-
 export interface IUserWithRole {
     id: number;
     roleId: number;

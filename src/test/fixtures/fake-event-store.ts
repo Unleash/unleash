@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import { IEventStore } from '../../lib/types/stores/event-store';
-import { IEvent } from '../../lib/types/model';
+import { IEvent } from '../../lib/types/events';
 
 class FakeEventStore extends EventEmitter implements IEventStore {
     events: IEvent[];
@@ -9,6 +9,10 @@ class FakeEventStore extends EventEmitter implements IEventStore {
         super();
         this.setMaxListeners(0);
         this.events = [];
+    }
+
+    async getEventsForFeature(featureName: string): Promise<IEvent[]> {
+        return this.events.filter((e) => e.featureName === featureName);
     }
 
     store(event: IEvent): Promise<void> {

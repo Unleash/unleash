@@ -2,6 +2,7 @@ import { Store } from './store';
 
 export interface IUserPermission {
     project?: string;
+    environment?: string;
     permission: string;
 }
 
@@ -39,6 +40,7 @@ export interface IAccessStore extends Store<IRole, number> {
         role_id: number,
         permissions: string[],
         projectId?: string,
+        environment?: string,
     ): Promise<void>;
     removePermissionFromRole(
         roleId: number,

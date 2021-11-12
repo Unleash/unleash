@@ -30,7 +30,9 @@ Despite this being a shift in how Unleash works, everything will continue to wor
 
 ## How to start using environments
 
-In order to start using environments you need to be on Unleash v4.2. You also need to have the environment feature enabled (if you are using Unleash Hosted, please reach out on [contact@getunleash.io](mailto:contact@getunleash.io) if you want to start using environments.
+In order to start using environments you need to be on Unleash v4.2 or higher. You also need to have the environment feature enabled (if you are using Unleash Hosted, please reach out on [contact@getunleash.io](mailto:contact@getunleash.io) if you want to start using environments.
+
+Note that in order to enable an environment for a feature toggle, you must first add activation strategies for that environment. You cannot enable an environment without activation strategies.
 
 ### Step 1: Enable new environments for your Project
 
@@ -44,7 +46,7 @@ Navigate to the project and choose the “environments” tab.
 
 ### Step 2: Configure activation strategies for the new environment
 
-From the “feature toggle view” you will now be able to configure activation strategies per environment.
+From the “feature toggle view” you will now be able to configure activation strategies per environment. You can also enable and disable environments here. Remember that an environment must have activation strategies before you can enable it.
 
 
 

@@ -2024,10 +2024,10 @@ db-migrate-shared@1.2.0, db-migrate-shared@^1.2.0:
   resolved "https://registry.npmjs.org/db-migrate-shared/-/db-migrate-shared-1.2.0.tgz"
   integrity sha512-65k86bVeHaMxb2L0Gw3y5V+CgZSRwhVQMwDMydmw5MvIpHHwD6SmBciqIwHsZfzJ9yzV/yYhdRefRM6FV5/siw==
 
-db-migrate@0.11.12:
-  version "0.11.12"
-  resolved "https://registry.npmjs.org/db-migrate/-/db-migrate-0.11.12.tgz"
-  integrity sha512-HUS8T5A3sKGCi+hz9XMKMwAKfU9sqhpDufW9nbVSRc5wxDO695uxA5lDe+If0OdvwwQOVxOnEZqkzAAxgyeFWg==
+db-migrate@0.11.13:
+  version "0.11.13"
+  resolved "https://registry.yarnpkg.com/db-migrate/-/db-migrate-0.11.13.tgz#b9e5b242c62e82ef8ed2b29e118698813e953d67"
+  integrity sha512-OE/bbDo/mQvLmZrui/2jNAiAECJROSURCOU5xs6qKr3FvtUE2O6b0xBUI6WyAAKdili3LJQHFlpqugiYCGTSBA==
   dependencies:
     balanced-match "^1.0.0"
     bluebird "^3.1.1"

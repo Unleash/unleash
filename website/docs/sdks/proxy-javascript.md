@@ -66,16 +66,16 @@ unleash.on('update', () => {
 ### Tracking user interactions with events
 
 The Unleash client emits events every time a feature toggle's state is
-queried. It exposes three types of events that you can hook into:
+queried. It exposes two types of events that you can hook into:
 
    1. `is-enabled` is emitted whenever you use the `isEnabled` call.
    2. `get-variant` is emitted whenever you use the `getVariant` call.
-   3. `custom` is ... not emitted yet.
+
 
 These events are exported as members of the `EVENTS` enum from the proxy client:
   1. `EVENTS.IS_ENABLED`
   2. `EVENTS.GET_VARIANT`
-  3. `EVENTS.CUSTOM`
+
 
 #### Event shape
 

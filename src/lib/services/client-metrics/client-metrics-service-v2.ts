@@ -29,9 +29,9 @@ export default class ClientMetricsServiceV2 {
         this.logger = getLogger('/services/client-metrics/index.ts');
 
         this.bulkInterval = bulkInterval;
-        this.timer = setInterval(() => {
-            this.clientMetricsStoreV2.clearMetrics(48);
-        }, hoursToMilliseconds(24));
+        this.timer = setInterval(async () => {
+            await this.clientMetricsStoreV2.clearMetrics(48);
+        }, hoursToMilliseconds(12));
         this.timer.unref();
     }
 

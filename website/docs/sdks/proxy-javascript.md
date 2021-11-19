@@ -5,7 +5,7 @@ title: JavaScript Proxy SDK
 
 In this guide we explain how to use feature toggles in a Single Page App via [The Unleash Proxy](/sdks/unleash-proxy). You can also checkout the source code for the [JavaScript Proxy SDK](https://github.com/unleash/unleash-proxy-client-js).
 
-### Introduction {#introduction}
+## Introduction {#introduction}
 
 For single-page apps we have a tiny proxy-client in JavaScript, without any external dependencies, except from browser APIs. This client will store toggles relevant for the current user in local-storage and synchronize with the Unleash Proxy in the background. This means we can bootstrap the toggles for a specific use the next time the user visits the web-page.
 
@@ -52,7 +52,7 @@ if (variant.name === 'blue') {
 }
 ```
 
-**Listen for updates via the EventEmitter**
+## Listen for updates via the EventEmitter
 
 The client is also an event emitter. This means that your code can subscribe to updates from the client. This is a neat way to update a single page app when toggle state updates.
 
@@ -61,4 +61,47 @@ unleash.on('update', () => {
   const myToggle = unleash.isEnabled('proxy.demo');
   //do something useful
 });
+```
+
+### Tracking user interactions with events
+
+The Unleash client emits events every time a feature toggle's state is
+queried. It exposes three types of events that you can hook into:
+
+   1. `is-enabled` is emitted whenever you use the `isEnabled` call.
+   2. `get-variant` is emitted whenever you use the `getVariant` call.
+   3. `custom` is ... not emitted yet.
+
+These events are exported as members of the `EVENTS` enum from the proxy client:
+  1. `EVENTS.IS_ENABLED`
+  2. `EVENTS.GET_VARIANT`
+  3. `EVENTS.CUSTOM`
+
+#### Event shape
+
+An event looks like this ...
+
+#### Example
+
+```js
+import {
+  UnleashClient,
+  EVENTS,
+} from 'unleash-proxy-client';
+
+const unleash = new UnleashClient({
+  url: 'unleash-url.com',
+  clientKey: '123456thisisakey',
+  refreshInterval: 10,
+  appName: 'event-tracking-app',
+  environment: 'production',
+});
+
+
+unleash.on(EVENTS.GET_VARIANT, (event) => {
+    // send the events to your system here
+    console.log(event)
+});
+
+unleash.start();
 ```

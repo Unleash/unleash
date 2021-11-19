@@ -120,7 +120,7 @@
     "@types/express-session": "1.17.4",
     "@types/faker": "5.5.9",
     "@types/jest": "27.0.3",
-    "@types/js-yaml": "4.0.4",
+    "@types/js-yaml": "4.0.5",
     "@types/memoizee": "0.4.6",
     "@types/mime": "2.0.3",
     "@types/node": "16.6.1",

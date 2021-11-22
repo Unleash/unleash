@@ -5,7 +5,12 @@ import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
-import { featureMetadataSchema, nameSchema } from '../schema/feature-schema';
+import {
+    featureMetadataSchema,
+    nameSchema,
+    variantsArraySchema,
+    variantsSchema,
+} from '../schema/feature-schema';
 import {
     FeatureArchivedEvent,
     FeatureChangeProjectEvent,
@@ -906,6 +911,7 @@ class FeatureToggleService {
         featureName: string,
         newVariants: IVariant[],
     ): Promise<FeatureToggle> {
+        await variantsArraySchema.validateAsync(newVariants);
         return this.featureToggleStore.saveVariants(featureName, newVariants);
     }
 }

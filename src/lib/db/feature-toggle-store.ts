@@ -171,7 +171,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         if (!row) {
             throw new NotFoundError('No feature toggle found');
         }
-        return row.variants as unknown as IVariant[];
+        return (row.variants as unknown as IVariant[]) || [];
     }
 
     dtoToRow(project: string, data: FeatureToggleDTO): FeaturesTable {

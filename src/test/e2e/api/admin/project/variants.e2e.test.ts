@@ -2,6 +2,8 @@ import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../../helpers/database-init';
 import getLogger from '../../../../fixtures/no-logger';
 import * as jsonpatch from 'fast-json-patch';
+import { IVariant } from '../../../../../lib/types/model';
+import faker from 'faker';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -25,7 +27,7 @@ test('Can get variants for a feature', async () => {
             {
                 name: variantName,
                 stickiness: 'default',
-                weight: 100,
+                weight: 1000,
                 weightType: 'variable',
             },
         ],
@@ -48,7 +50,7 @@ test('Can patch variants for a feature and get a response of new variant', async
         {
             name: variantName,
             stickiness: 'default',
-            weight: 100,
+            weight: 1000,
             weightType: 'variable',
         },
     ];
@@ -81,7 +83,7 @@ test('Can add variant for a feature', async () => {
         {
             name: variantName,
             stickiness: 'default',
-            weight: 100,
+            weight: 1000,
             weightType: 'variable',
         },
     ];
@@ -95,11 +97,10 @@ test('Can add variant for a feature', async () => {
     variants.push({
         name: expectedVariantName,
         stickiness: 'default',
-        weight: 100,
+        weight: 1000,
         weightType: 'variable',
     });
     const patch = jsonpatch.generate(observer);
-
     await app.request
         .patch(`/api/admin/projects/default/features/${featureName}/variants`)
         .send(patch)
@@ -127,7 +128,7 @@ test('Can remove variant for a feature', async () => {
         {
             name: variantName,
             stickiness: 'default',
-            weight: 100,
+            weight: 1000,
             weightType: 'variable',
         },
     ];
@@ -152,5 +153,116 @@ test('Can remove variant for a feature', async () => {
             console.log(res.body);
             expect(res.body.version).toBe('1');
             expect(res.body.variants).toHaveLength(0);
+        });
+});
+
+test('PUT overwrites current variant on feature', async () => {
+    const featureName = 'variant-put-overwrites';
+    const variantName = 'overwriting-for-fun';
+    const variants = [
+        {
+            name: variantName,
+            stickiness: 'default',
+            weight: 1000,
+            weightType: 'variable',
+        },
+    ];
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+        variants,
+    });
+
+    const newVariants: IVariant[] = [
+        {
+            name: faker.hacker.verb(),
+            stickiness: 'default',
+            weight: 250,
+            weightType: 'fix',
+        },
+        {
+            name: faker.hacker.noun(),
+            stickiness: 'default',
+            weight: 375,
+            weightType: 'variable',
+        },
+        {
+            name: faker.hacker.ingverb(),
+            stickiness: 'default',
+            weight: 375,
+            weightType: 'variable',
+        },
+    ];
+    await app.request
+        .put(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(newVariants)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants).toHaveLength(3);
+        });
+    await app.request
+        .get(`/api/admin/projects/default/features/${featureName}/variants`)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants).toHaveLength(3);
+            expect(res.body.variants.reduce((a, v) => a + v.weight, 0)).toEqual(
+                1000,
+            );
+        });
+});
+
+test('PUTing an invalid variant throws 400 exception', async () => {
+    const featureName = 'variants-validation-feature';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    const invalidJson = [
+        {
+            name: 'variant',
+            weight: 500,
+            weightType: 'party',
+        },
+    ];
+    await app.request
+        .put(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(invalidJson)
+        .expect(400)
+        .expect((res) => {
+            console.log(res.body);
+            expect(res.body.details).toHaveLength(1);
+            expect(res.body.details[0].message).toMatch(
+                /.*weightType\" must be one of/,
+            );
+        });
+});
+
+test('Invalid variant in PATCH also throws 400 exception', async () => {
+    const featureName = 'patch-validation-feature';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    const invalidPatch = `[{
+        "op": "add",
+        "path": "/1",
+        "value": {
+            "name": "not-so-cool-variant-name",
+            "stickiness": "default",
+            "weight": 2000,
+            "weightType": "variable"
+        }
+    }]`;
+
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .set('Content-Type', 'application/json')
+        .send(invalidPatch)
+        .expect(400)
+        .expect((res) => {
+            console.log(res.body);
+            expect(res.body.details).toHaveLength(1);
+            expect(res.body.details[0].message).toMatch(
+                /.*weight\" must be less than or equal to 1000/,
+            );
         });
 });

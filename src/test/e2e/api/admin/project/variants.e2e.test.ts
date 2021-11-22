@@ -266,3 +266,119 @@ test('Invalid variant in PATCH also throws 400 exception', async () => {
             );
         });
 });
+
+test('PATCHING with all variable weightTypes forces weights to sum to no less than 1000 minus the number of variable variants', async () => {
+    const featureName = 'variants-validation-with-all-variable-weights';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    const newVariants: IVariant[] = [];
+
+    const observer = jsonpatch.observe(newVariants);
+    newVariants.push({
+        name: 'variant1',
+        stickiness: 'default',
+        weight: 700,
+        weightType: 'variable',
+    });
+    let patch = jsonpatch.generate(observer);
+
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants).toHaveLength(1);
+            expect(res.body.variants[0].weight).toEqual(1000);
+        });
+
+    newVariants.push({
+        name: 'variant2',
+        stickiness: 'default',
+        weight: 700,
+        weightType: 'variable',
+    });
+
+    patch = jsonpatch.generate(observer);
+
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants).toHaveLength(2);
+            expect(
+                res.body.variants.every((x) => x.weight === 500),
+            ).toBeTruthy();
+        });
+
+    newVariants.push({
+        name: 'variant3',
+        stickiness: 'default',
+        weight: 700,
+        weightType: 'variable',
+    });
+
+    patch = jsonpatch.generate(observer);
+
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants).toHaveLength(3);
+            expect(
+                res.body.variants.every((x) => x.weight === 333),
+            ).toBeTruthy();
+        });
+
+    newVariants.push({
+        name: 'variant4',
+        stickiness: 'default',
+        weight: 700,
+        weightType: 'variable',
+    });
+
+    patch = jsonpatch.generate(observer);
+
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants).toHaveLength(4);
+            expect(
+                res.body.variants.every((x) => x.weight === 250),
+            ).toBeTruthy();
+        });
+});
+
+test('PATCHING with no variable variants fails with 400', async () => {
+    const featureName = 'variants-validation-with-no-variable-weights';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    const newVariants: IVariant[] = [];
+
+    const observer = jsonpatch.observe(newVariants);
+    newVariants.push({
+        name: 'variant1',
+        stickiness: 'default',
+        weight: 900,
+        weightType: 'fix',
+    });
+
+    const patch = jsonpatch.generate(observer);
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.details).toHaveLength(1);
+            expect(res.body.details[0].message).toEqual(
+                'There must be at least one "variable" variant',
+            );
+        });
+});

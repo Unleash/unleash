@@ -51,6 +51,7 @@ import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-st
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import { DEFAULT_ENV } from '../util/constants';
 import { applyPatch, deepClone, Operation } from 'fast-json-patch';
+import { ValidationError } from 'joi';
 
 interface IFeatureContext {
     featureName: string;
@@ -912,7 +913,36 @@ class FeatureToggleService {
         newVariants: IVariant[],
     ): Promise<FeatureToggle> {
         await variantsArraySchema.validateAsync(newVariants);
-        return this.featureToggleStore.saveVariants(featureName, newVariants);
+        const fixedVariants = this.fixVariantWeights(newVariants);
+        return this.featureToggleStore.saveVariants(featureName, fixedVariants);
+    }
+
+    fixVariantWeights(variants: IVariant[]): IVariant[] {
+        let variableVariants = variants.filter((x) => {
+            return x.weightType === 'variable';
+        });
+
+        if (variants.length > 0 && variableVariants.length === 0) {
+            throw new BadDataError(
+                'There must be at least one "variable" variant',
+            );
+        }
+
+        let fixedVariants = variants.filter((x) => {
+            return x.weightType === 'fix';
+        });
+
+        let fixedWeights = fixedVariants.reduce((a, v) => a + v.weight, 0);
+
+        let averageWeight = Math.floor(
+            (1000 - fixedWeights) / variableVariants.length,
+        );
+
+        variableVariants = variableVariants.map((x) => {
+            x.weight = averageWeight;
+            return x;
+        });
+        return variableVariants.concat(fixedVariants);
     }
 }
 

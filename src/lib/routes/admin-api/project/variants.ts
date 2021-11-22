@@ -43,7 +43,7 @@ export default class VariantsController extends Controller {
     ): Promise<void> {
         const { featureName } = req.params;
         const variants = await this.featureService.getVariants(featureName);
-        res.status(200).json({ version: '1', variants: variants || [] });
+        res.status(200).json({ version: '1', variants });
     }
 
     async patchVariants(
@@ -57,7 +57,7 @@ export default class VariantsController extends Controller {
         );
         res.status(200).json({
             version: '1',
-            variants: updatedFeature.variants || [],
+            variants: updatedFeature.variants,
         });
     }
 

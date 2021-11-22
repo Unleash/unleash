@@ -3,7 +3,6 @@ import dbInit, { ITestDb } from '../../../helpers/database-init';
 import getLogger from '../../../../fixtures/no-logger';
 import * as jsonpatch from 'fast-json-patch';
 import { IVariant } from '../../../../../lib/types/model';
-import faker from 'faker';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -174,21 +173,21 @@ test('PUT overwrites current variant on feature', async () => {
 
     const newVariants: IVariant[] = [
         {
-            name: faker.hacker.verb(),
+            name: 'variant1',
             stickiness: 'default',
             weight: 250,
             weightType: 'fix',
         },
         {
-            name: faker.hacker.noun(),
+            name: 'variant2',
             stickiness: 'default',
             weight: 375,
             weightType: 'variable',
         },
         {
-            name: faker.hacker.ingverb(),
+            name: 'variant3',
             stickiness: 'default',
-            weight: 375,
+            weight: 450,
             weightType: 'variable',
         },
     ];
@@ -228,7 +227,6 @@ test('PUTing an invalid variant throws 400 exception', async () => {
         .send(invalidJson)
         .expect(400)
         .expect((res) => {
-            console.log(res.body);
             expect(res.body.details).toHaveLength(1);
             expect(res.body.details[0].message).toMatch(
                 /.*weightType\" must be one of/,
@@ -259,7 +257,6 @@ test('Invalid variant in PATCH also throws 400 exception', async () => {
         .send(invalidPatch)
         .expect(400)
         .expect((res) => {
-            console.log(res.body);
             expect(res.body.details).toHaveLength(1);
             expect(res.body.details[0].message).toMatch(
                 /.*weight\" must be less than or equal to 1000/,

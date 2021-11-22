@@ -108,7 +108,6 @@ test('Can add variant for a feature', async () => {
     await app.request
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect((res) => {
-            console.log(res.body);
             expect(res.body.version).toBe('1');
             expect(res.body.variants).toHaveLength(2);
             expect(
@@ -149,7 +148,6 @@ test('Can remove variant for a feature', async () => {
     await app.request
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect((res) => {
-            console.log(res.body);
             expect(res.body.version).toBe('1');
             expect(res.body.variants).toHaveLength(0);
         });

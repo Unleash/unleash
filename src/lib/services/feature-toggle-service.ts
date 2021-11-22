@@ -9,7 +9,6 @@ import {
     featureMetadataSchema,
     nameSchema,
     variantsArraySchema,
-    variantsSchema,
 } from '../schema/feature-schema';
 import {
     FeatureArchivedEvent,
@@ -51,7 +50,6 @@ import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-st
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import { DEFAULT_ENV } from '../util/constants';
 import { applyPatch, deepClone, Operation } from 'fast-json-patch';
-import { ValidationError } from 'joi';
 
 interface IFeatureContext {
     featureName: string;

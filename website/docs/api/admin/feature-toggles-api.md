@@ -220,7 +220,7 @@ Removes the specified tag from the `(type, value)` tuple from the Feature Toggle
 
 `DELETE: http://unleash.host.com/api/admin/features/:toggleName`
 
-Used to archive a feature toggle. A feature toggle can never be totally be deleted, but can be archived. This is a design decision to make sure that a old feature toggle suddenly reappears becuase someone else re-using the same name.
+Used to archive a feature toggle. A feature toggle can never be totally be deleted, but can be archived. This is a design decision to make sure that a old feature toggle does not suddenly reappear because someone else is re-using the same name.
 
 ### Enable a Feature Toggle {#enable-a-feature-toggle}
 

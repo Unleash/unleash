@@ -40,6 +40,7 @@ import {
     IFeatureStrategy,
     IFeatureToggleQuery,
     IStrategyConfig,
+    IVariant,
 } from '../types/model';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
@@ -387,6 +388,15 @@ class FeatureToggleService {
             featureName,
             archived,
         );
+    }
+
+    /**
+     * GET /api/admin/projects/:project/features/:featureName/variants
+     * @param featureName
+     * @return The list of variants
+     */
+    async getVariants(featureName: string): Promise<IVariant[]> {
+        return this.featureToggleStore.getVariants(featureName);
     }
 
     async getFeatureMetadata(featureName: string): Promise<FeatureToggle> {
@@ -881,6 +891,16 @@ class FeatureToggleService {
             featureName,
             newProjectId,
         );
+    }
+
+    async updateVariants(featureName: string, newVariants: Operation[]) {
+        const oldVariants = await this.getVariants(featureName);
+        const { newDocument } = await applyPatch(oldVariants, newVariants);
+        await this.saveVariants(featureName, newDocument);
+    }
+
+    async saveVariants(featureName: string, newVariants: IVariant[]) {
+        this.featureToggleStore.saveVariants(featureName, newVariants);
     }
 }
 

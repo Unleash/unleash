@@ -167,6 +167,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         };
     }
 
+    rowToVariants(row: FeaturesTable): IVariant[] {
+        if (!row) {
+            throw new NotFoundError('No feature toggle found');
+        }
+        return row.variants as unknown as IVariant[];
+    }
+
     dtoToRow(project: string, data: FeatureToggleDTO): FeaturesTable {
         const row = {
             name: data.name,
@@ -229,6 +236,24 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const row = await this.db(TABLE)
             .where({ name })
             .update({ archived: false })
+            .returning(FEATURE_COLUMNS);
+        return this.rowToFeature(row[0]);
+    }
+
+    async getVariants(featureName: string): Promise<IVariant[]> {
+        const row = await this.db(TABLE)
+            .select('variants')
+            .where({ name: featureName });
+        return this.rowToVariants(row[0]);
+    }
+
+    async saveVariants(
+        featureName: string,
+        newVariants: IVariant[],
+    ): Promise<FeatureToggle> {
+        const row = await this.db(TABLE)
+            .update({ variants: newVariants })
+            .where({ name: featureName })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
     }

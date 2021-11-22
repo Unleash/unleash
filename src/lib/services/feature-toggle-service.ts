@@ -893,14 +893,20 @@ class FeatureToggleService {
         );
     }
 
-    async updateVariants(featureName: string, newVariants: Operation[]) {
+    async updateVariants(
+        featureName: string,
+        newVariants: Operation[],
+    ): Promise<FeatureToggle> {
         const oldVariants = await this.getVariants(featureName);
         const { newDocument } = await applyPatch(oldVariants, newVariants);
-        await this.saveVariants(featureName, newDocument);
+        return this.saveVariants(featureName, newDocument);
     }
 
-    async saveVariants(featureName: string, newVariants: IVariant[]) {
-        this.featureToggleStore.saveVariants(featureName, newVariants);
+    async saveVariants(
+        featureName: string,
+        newVariants: IVariant[],
+    ): Promise<FeatureToggle> {
+        return this.featureToggleStore.saveVariants(featureName, newVariants);
     }
 }
 

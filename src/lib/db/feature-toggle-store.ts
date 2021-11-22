@@ -252,7 +252,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         newVariants: IVariant[],
     ): Promise<FeatureToggle> {
         const row = await this.db(TABLE)
-            .update({ variants: newVariants })
+            .update({ variants: JSON.stringify(newVariants) })
             .where({ name: featureName })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);

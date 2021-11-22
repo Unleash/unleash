@@ -21,6 +21,6 @@ export const useStyles = makeStyles(theme => ({
         fontSize: theme.fontSizes.smallBody,
     },
     constraintBody: {
-        justifyContent: 'flex-start',
+        maxWidth: '350px',
     },
 }));

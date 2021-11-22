@@ -12,12 +12,12 @@ interface IConstraintProps {
 const Constraint = ({ constraint, className, ...rest }: IConstraintProps) => {
     const styles = useStyles();
 
-    const classes = classnames(styles.constraint, className, {
+    const classes = classnames(styles.constraint, {
         [styles.column]: constraint.values.length > 2,
     });
 
     return (
-        <div className={classes} {...rest}>
+        <div className={classes + ' ' + className} {...rest}>
             <StringTruncator text={constraint.contextName} maxWidth="125" />
             <FeatureStrategiesSeparator
                 text={constraint.operator}

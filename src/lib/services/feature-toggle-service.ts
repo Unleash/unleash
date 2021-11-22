@@ -932,6 +932,11 @@ class FeatureToggleService {
 
         let fixedWeights = fixedVariants.reduce((a, v) => a + v.weight, 0);
 
+        if (fixedWeights > 1000) {
+            throw new BadDataError(
+                'The traffic distribution total must equal 100%',
+            );
+        }
         let averageWeight = Math.floor(
             (1000 - fixedWeights) / variableVariants.length,
         );

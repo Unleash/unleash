@@ -379,3 +379,230 @@ test('PATCHING with no variable variants fails with 400', async () => {
             );
         });
 });
+
+test('Patching with a fixed variant and variable variants splits remaining weight among variable variants', async () => {
+    const featureName = 'variants-fixed-and-variable';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    const newVariants: IVariant[] = [];
+    const observer = jsonpatch.observe(newVariants);
+    newVariants.push({
+        name: 'variant1',
+        stickiness: 'default',
+        weight: 900,
+        weightType: 'fix',
+    });
+    newVariants.push({
+        name: 'variant2',
+        stickiness: 'default',
+        weight: 20,
+        weightType: 'variable',
+    });
+    newVariants.push({
+        name: 'variant3',
+        stickiness: 'default',
+        weight: 123,
+        weightType: 'variable',
+    });
+    newVariants.push({
+        name: 'variant4',
+        stickiness: 'default',
+        weight: 123,
+        weightType: 'variable',
+    });
+    newVariants.push({
+        name: 'variant5',
+        stickiness: 'default',
+        weight: 123,
+        weightType: 'variable',
+    });
+    newVariants.push({
+        name: 'variant6',
+        stickiness: 'default',
+        weight: 123,
+        weightType: 'variable',
+    });
+    newVariants.push({
+        name: 'variant7',
+        stickiness: 'default',
+        weight: 123,
+        weightType: 'variable',
+    });
+
+    const patch = jsonpatch.generate(observer);
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(200);
+
+    await app.request
+        .get(`/api/admin/projects/default/features/${featureName}/variants`)
+        .expect(200)
+        .expect((res) => {
+            let body = res.body;
+            expect(body.variants).toHaveLength(7);
+            expect(
+                body.variants.find((v) => v.name === 'variant1').weight,
+            ).toEqual(900);
+            expect(
+                body.variants.find((v) => v.name === 'variant2').weight,
+            ).toEqual(16);
+            expect(
+                body.variants.find((v) => v.name === 'variant3').weight,
+            ).toEqual(16);
+            expect(
+                body.variants.find((v) => v.name === 'variant4').weight,
+            ).toEqual(16);
+            expect(
+                body.variants.find((v) => v.name === 'variant5').weight,
+            ).toEqual(16);
+            expect(
+                body.variants.find((v) => v.name === 'variant6').weight,
+            ).toEqual(16);
+            expect(
+                body.variants.find((v) => v.name === 'variant7').weight,
+            ).toEqual(16);
+        });
+});
+
+test('Multiple fixed variants gets added together to decide how much weight variable variants should get', async () => {
+    const featureName = 'variants-multiple-fixed-and-variable';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    const newVariants: IVariant[] = [];
+
+    const observer = jsonpatch.observe(newVariants);
+    newVariants.push({
+        name: 'variant1',
+        stickiness: 'default',
+        weight: 600,
+        weightType: 'fix',
+    });
+    newVariants.push({
+        name: 'variant2',
+        stickiness: 'default',
+        weight: 350,
+        weightType: 'fix',
+    });
+    newVariants.push({
+        name: 'variant3',
+        stickiness: 'default',
+        weight: 350,
+        weightType: 'variable',
+    });
+
+    const patch = jsonpatch.generate(observer);
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(200);
+    await app.request
+        .get(`/api/admin/projects/default/features/${featureName}/variants`)
+        .expect(200)
+        .expect((res) => {
+            let body = res.body;
+            expect(body.variants).toHaveLength(3);
+            expect(
+                body.variants.find((v) => v.name === 'variant3').weight,
+            ).toEqual(50);
+        });
+});
+
+test('If sum of fixed variant weight exceed 1000 fails with 400', async () => {
+    const featureName = 'variants-fixed-weight-over-1000';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    const newVariants: IVariant[] = [];
+
+    const observer = jsonpatch.observe(newVariants);
+    newVariants.push({
+        name: 'variant1',
+        stickiness: 'default',
+        weight: 900,
+        weightType: 'fix',
+    });
+    newVariants.push({
+        name: 'variant2',
+        stickiness: 'default',
+        weight: 900,
+        weightType: 'fix',
+    });
+    newVariants.push({
+        name: 'variant3',
+        stickiness: 'default',
+        weight: 350,
+        weightType: 'variable',
+    });
+
+    const patch = jsonpatch.generate(observer);
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.details).toHaveLength(1);
+            expect(res.body.details[0].message).toEqual(
+                'The traffic distribution total must equal 100%',
+            );
+        });
+});
+
+test('If sum of fixed variant weight equals 1000 variable variants gets weight 0', async () => {
+    const featureName = 'variants-fixed-weight-equals-1000-no-variable-weight';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    const newVariants: IVariant[] = [];
+
+    const observer = jsonpatch.observe(newVariants);
+    newVariants.push({
+        name: 'variant1',
+        stickiness: 'default',
+        weight: 900,
+        weightType: 'fix',
+    });
+    newVariants.push({
+        name: 'variant2',
+        stickiness: 'default',
+        weight: 100,
+        weightType: 'fix',
+    });
+    newVariants.push({
+        name: 'variant3',
+        stickiness: 'default',
+        weight: 350,
+        weightType: 'variable',
+    });
+    newVariants.push({
+        name: 'variant4',
+        stickiness: 'default',
+        weight: 350,
+        weightType: 'variable',
+    });
+
+    const patch = jsonpatch.generate(observer);
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(200);
+    await app.request
+        .get(`/api/admin/projects/default/features/${featureName}/variants`)
+        .expect(200)
+        .expect((res) => {
+            let body = res.body;
+            expect(body.variants).toHaveLength(4);
+            expect(
+                body.variants.find((v) => v.name === 'variant3').weight,
+            ).toEqual(0);
+            expect(
+                body.variants.find((v) => v.name === 'variant4').weight,
+            ).toEqual(0);
+        });
+});

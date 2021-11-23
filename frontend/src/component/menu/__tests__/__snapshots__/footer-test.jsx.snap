@@ -6,6 +6,11 @@ exports[`should render DrawerMenu 1`] = `
 >
   <div
     className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-10 MuiGrid-justify-content-xs-center"
+    style={
+      Object {
+        "marginBottom": 0,
+      }
+    }
   >
     <div
       className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -427,6 +432,11 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
 >
   <div
     className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-10 MuiGrid-justify-content-xs-center"
+    style={
+      Object {
+        "marginBottom": 0,
+      }
+    }
   >
     <div
       className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"

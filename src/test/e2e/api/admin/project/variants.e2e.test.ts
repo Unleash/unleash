@@ -442,6 +442,9 @@ test('Patching with a fixed variant and variable variants splits remaining weigh
         .expect((res) => {
             let body = res.body;
             expect(body.variants).toHaveLength(7);
+            expect(
+                body.variants.reduce((total, v) => total + v.weight, 0),
+            ).toEqual(1000);
             body.variants.sort((a, b) => b.weight - a.weight);
             expect(
                 body.variants.find((v) => v.name === 'variant1').weight,

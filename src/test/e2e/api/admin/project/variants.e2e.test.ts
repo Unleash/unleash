@@ -322,10 +322,11 @@ test('PATCHING with all variable weightTypes forces weights to sum to no less th
         .send(patch)
         .expect(200)
         .expect((res) => {
+            res.body.variants.sort((v, other) => other.weight - v.weight);
             expect(res.body.variants).toHaveLength(3);
-            expect(
-                res.body.variants.every((x) => x.weight === 333),
-            ).toBeTruthy();
+            expect(res.body.variants[0].weight).toBe(334);
+            expect(res.body.variants[1].weight).toBe(333);
+            expect(res.body.variants[2].weight).toBe(333);
         });
 
     newVariants.push({
@@ -441,21 +442,22 @@ test('Patching with a fixed variant and variable variants splits remaining weigh
         .expect((res) => {
             let body = res.body;
             expect(body.variants).toHaveLength(7);
+            body.variants.sort((a, b) => b.weight - a.weight);
             expect(
                 body.variants.find((v) => v.name === 'variant1').weight,
             ).toEqual(900);
             expect(
                 body.variants.find((v) => v.name === 'variant2').weight,
-            ).toEqual(16);
+            ).toEqual(17);
             expect(
                 body.variants.find((v) => v.name === 'variant3').weight,
-            ).toEqual(16);
+            ).toEqual(17);
             expect(
                 body.variants.find((v) => v.name === 'variant4').weight,
-            ).toEqual(16);
+            ).toEqual(17);
             expect(
                 body.variants.find((v) => v.name === 'variant5').weight,
-            ).toEqual(16);
+            ).toEqual(17);
             expect(
                 body.variants.find((v) => v.name === 'variant6').weight,
             ).toEqual(16);

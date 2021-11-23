@@ -937,12 +937,18 @@ class FeatureToggleService {
                 'The traffic distribution total must equal 100%',
             );
         }
+
         let averageWeight = Math.floor(
             (1000 - fixedWeights) / variableVariants.length,
         );
+        let remainder = (1000 - fixedWeights) % variableVariants.length;
 
         variableVariants = variableVariants.map((x) => {
             x.weight = averageWeight;
+            if (remainder > 0) {
+                x.weight += 1;
+                remainder--;
+            }
             return x;
         });
         return variableVariants.concat(fixedVariants);

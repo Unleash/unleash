@@ -70,6 +70,9 @@ export default class VariantsController extends Controller {
             featureName,
             req.body,
         );
-        res.status(200).json(updatedFeature);
+        res.status(200).json({
+            version: '1',
+            variants: updatedFeature.variants,
+        });
     }
 }

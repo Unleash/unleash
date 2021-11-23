@@ -17,7 +17,7 @@ Classifying feature toggles by their type makes it easier for you manage them: t
 
 ![Five feature toggles, each of a different type, showing the different icons that Unleash uses for each toggle type.](/img/toggle_type_icons.png "Feature toggle type icons")
 
-A toggle's type also helps Unleash understand the [toggle's expected lifetime](https://www.getunleash.io/blog/feature-toggle-life-time-best-practices): some feature toggles are meant to live for a few weeks as you work on new functionality, while others stay in for much longer. When a feature toggle lives past its expected lifetime, Unleash will mark it as _potentially stale_. See the [technical debt section](/user_guide/technical_debt) for more information on what this means and how to handle it.
+A toggle's type also helps Unleash understand the [toggle's expected lifetime](https://www.getunleash.io/blog/feature-toggle-life-time-best-practices): some feature toggles are meant to live for a few weeks as you work on new functionality, while others stay in for much longer. When a feature toggle lives past its expected lifetime, Unleash will mark it as _potentially stale_. See the [technical debt section](../user_guide/technical_debt) for more information on what this means and how to handle it.
 
 ## Feature toggle types
 
@@ -31,9 +31,9 @@ Here's the list of the feature toggle types that Unleash supports together with 
 
 ## Deprecating a feature toggle {#deprecate-a-feature-toggle}
 
-You can mark feature toggles as `stale`. This is a way to deprecate a feature toggle without removing the active configuration for connected applications. Use this to signal that you should stop using the feature in your applications.
+You can mark feature toggles as `stale`. This is a way to deprecate a feature toggle without removing the active configuration for connected applications. Use this to signal that you should stop using the feature in your applications. Stale toggles will show as stale in the ["technical debt dashboard"](../user_guide/technical_debt).
 
-The `stale` property can utilized to help us manage ["feature toggle debt"](/user_guide/technical_debt) in various ways:
+The `stale` property can utilized to help us manage  in various ways:
 
 - Inform the developer working locally when we detect usage of a stale feature toggle.
 - Use it to break the build if the code contains stale feature toggles.

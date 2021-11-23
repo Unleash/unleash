@@ -204,10 +204,7 @@ The easiest way to run unleash locally is using [docker](https://www.docker.com/
 
 :::tip
 
-Each container that runs in your local Docker instance must have a
-unique name. If you've run these commands before, you can either start
-the containers again (`docker start ${CONTAINER_NAME}`) or remove them
-(`docker rm ${CONTAINER_NAME}`) and run the commands again.
+Each container that runs in your local Docker instance must have a unique name. If you've run these commands before, you can either start the containers again (`docker start ${CONTAINER_NAME}`) or remove them (`docker rm ${CONTAINER_NAME}`) and run the commands again.
 
 :::
 
@@ -236,7 +233,7 @@ docker run \
   -e DATABASE_SSL=false \
   --network unleash \
   --name unleash \
-  unleashorg/unleash-server
+  --pull=always unleashorg/unleash-server
 ```
 
 [Click here to see all options to get started locally.](deploy/getting-started.md)
@@ -252,74 +249,55 @@ password: unleash4all
 
 ### Run Unleash and the Unleash proxy with Docker
 
-Follow steps outlined in the [Run Unleash with
-Docker](#run-unleash-with-docker) section to get the Unleash instance
-up and running. Once you have done that you need to first get an API
-key from your Unleash instance and then use that API key when starting
-the Unleash proxy.
+Follow steps outlined in the [Run Unleash with Docker](#run-unleash-with-docker) section to get the Unleash instance up and running. Once you have done that you need to first get an API key from your Unleash instance and then use that API key when starting the Unleash proxy.
 
 1. Get an API key.
 
-   To get an API key, access your Unleash instance in a web browser.
-   First, navigate to the API access screen.
+   To get an API key, access your Unleash instance in a web browser. First, navigate to the API access screen.
 
    ![The Unleash UI showing a dropdown menu under the "Configure" menu
-   entry. The dropdown menu's "API Access" option is highlighted and
-   you're told to navigate there.](/img/api_access_navigation.png
-   "Navigate to the API access page.")
+entry. The dropdown menu's "API Access" option is highlighted and
+you're told to navigate there.](/img/api_access_navigation.png 'Navigate to the API access page.')
 
    Next, create an API key with these details
 
-    -   **name:** proxy-key (this can be whatever you want)
-    -   **token type:** client
-    -   **project:** all
-    -   **environment:** select your preferred environment (this option is
-        only available in Unleash 4.3 and later)
+   - **name:** proxy-key (this can be whatever you want)
+   - **token type:** client
+   - **project:** all
+   - **environment:** select your preferred environment (this option is only available in Unleash 4.3 and later)
 
-    Copy the API key to your clipboard. You'll need it in the next step.
+   Copy the API key to your clipboard. You'll need it in the next step.
 
    :::note
 
-    Depending on whether you have the environments feature
-    enabled or not, the API key will look a little different. If you
-    don't have environments enabled, it'll just be a 64 character long
-    hexadecimal string (for instance
-    `be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178`).
-    If you do have environments enabled, the key will be prefixed with
-    the project and the environment that the key is valid for. It'll use the
-    format `<project>:<environment>.<key>`, e.g.
-    `demo-app:production.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178`.
+   Depending on whether you have the environments feature enabled or not, the API key will look a little different. If you don't have environments enabled, it'll just be a 64 character long hexadecimal string (for instance `be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178`). If you do have environments enabled, the key will be prefixed with the project and the environment that the key is valid for. It'll use the format `<project>:<environment>.<key>`, e.g. `demo-app:production.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178`.
 
-    Regardless of which format your string uses, do not modify it.
+   Regardless of which format your string uses, do not modify it.
 
-    :::
-
+   :::
 
 2. Start the Unleash proxy
 
-    Start a container with the Unleash proxy by running the following
-    command. Replace `${API_KEY}` with the key you created in the
-    following step.
+   Start a container with the Unleash proxy by running the following command. Replace `${API_KEY}` with the key you created in the following step.
 
-    ```sh
-    docker run \
-      -e UNLEASH_PROXY_SECRETS=some-secret \
-      -e UNLEASH_URL='http://unleash:4242/api/' \
-      -e UNLEASH_API_TOKEN='${API_KEY}' \
-      -p 3000:3000 \
-      --network unleash \
-      --name unleash-proxy \
-      unleashorg/unleash-proxy
-    ```
+   ```sh
+   docker run \
+     -e UNLEASH_PROXY_SECRETS=some-secret \
+     -e UNLEASH_URL='http://unleash:4242/api/' \
+     -e UNLEASH_API_TOKEN='${API_KEY}' \
+     -p 3000:3000 \
+     --network unleash \
+     --name unleash-proxy \
+     --pull=always unleashorg/unleash-proxy
+   ```
 
 3. Test the proxy
 
-    To make sure the proxy is running successfully, you can test it by
-    running the following command:
+   To make sure the proxy is running successfully, you can test it by running the following command:
 
-    ```curl
-    curl http://localhost:3000/proxy -H "Authorization: some-secret"
-    ```
+   ```curl
+   curl http://localhost:3000/proxy -H "Authorization: some-secret"
+   ```
 
 ### Create your first toggle
 

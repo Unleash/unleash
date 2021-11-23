@@ -206,21 +206,28 @@ The easiest way to run unleash locally is using [docker](https://www.docker.com/
 2. Start a postgres database:
 
 ```sh
-docker run -e POSTGRES_PASSWORD=some_password \
-  -e POSTGRES_USER=unleash_user -e POSTGRES_DB=unleash \
-  --network unleash --name postgres postgres
+docker run \
+  -e POSTGRES_USER=unleash_user \
+  -e POSTGRES_PASSWORD=some_password \
+  -e POSTGRES_DB=unleash \
+  --network unleash \
+  --name postgres \
+  postgres
 ```
 
 3. Start Unleash via docker:
 
 ```sh
-docker run --name unleash \
+docker run \
   -p 4242:4242 \
-  -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
-  -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=some_password \
+  -e DATABASE_HOST=postgres \
+  -e DATABASE_NAME=unleash \
+  -e DATABASE_USERNAME=unleash_user \
+  -e DATABASE_PASSWORD=some_password \
   -e DATABASE_SSL=false \
-  --network unleash unleashorg/unleash-server \
-
+  --network unleash \
+  --name unleash \
+  unleashorg/unleash-server
 ```
 
 [Click here to see all options to get started locally.](deploy/getting-started.md)
@@ -268,11 +275,11 @@ the Unleash proxy.
     enabled or not, the API key will look a little different. If you
     don't have environments enabled, it'll just be a 64 character long
     hexadecimal string (for instance
-    `943ca9171e2c884c545c5d82417a655fb77cec970cc3b78a8ff87f4406b495d0`).
+    `be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178`).
     If you do have environments enabled, the key will be prefixed with
     the project and the environment that the key is valid for. It'll use the
     format `<project>:<environment>.<key>`, e.g.
-    `demo-app:production.614a75cf68bef8703aa1bd8304938a81ec871f86ea40c975468eabd6`.
+    `demo-app:production.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178`.
 
     Regardless of which format your string uses, do not modify it.
 
@@ -286,12 +293,14 @@ the Unleash proxy.
     following step.
 
     ```sh
-    docker run --name unleash-proxy \
-        -e UNLEASH_PROXY_SECRETS=some-secret \
-        -e UNLEASH_URL='http://unleash:4242/api/' \
-        -e UNLEASH_API_TOKEN='${API_KEY}' \
-        -p 3000:3000 \
-        unleashorg/unleash-proxy
+    docker run \
+      -e UNLEASH_PROXY_SECRETS=some-secret \
+      -e UNLEASH_URL='http://unleash:4242/api/' \
+      -e UNLEASH_API_TOKEN='${API_KEY}' \
+      -p 3000:3000 \
+      --network unleash \
+      --name unleash-proxy \
+      unleashorg/unleash-proxy
     ```
 
 3. Test the proxy

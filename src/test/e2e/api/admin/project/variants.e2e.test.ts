@@ -41,6 +41,40 @@ test('Can get variants for a feature', async () => {
         });
 });
 
+test('Trying to do operations on a non-existing feature yields 404', async () => {
+    await app.request
+        .get(
+            '/api/admin/projects/default/features/non-existing-feature/variants',
+        )
+        .expect(404);
+    const variants = [
+        {
+            name: 'variant-put-overwrites',
+            stickiness: 'default',
+            weight: 1000,
+            weightType: 'variable',
+        },
+    ];
+    await app.request
+        .put('/api/admin/projects/default/features/${featureName}/variants')
+        .send(variants)
+        .expect(404);
+
+    const newVariants: IVariant[] = [];
+    const observer = jsonpatch.observe(newVariants);
+    newVariants.push({
+        name: 'variant1',
+        stickiness: 'default',
+        weight: 700,
+        weightType: 'variable',
+    });
+    let patch = jsonpatch.generate(observer);
+    await app.request
+        .patch('/api/admin/projects/default/features/${featureName}/variants')
+        .send(patch)
+        .expect(404);
+});
+
 test('Can patch variants for a feature and get a response of new variant', async () => {
     const featureName = 'feature-variants-patch';
     const variantName = 'fancy-variant-patch';

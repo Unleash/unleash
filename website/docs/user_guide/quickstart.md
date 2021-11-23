@@ -202,6 +202,15 @@ unleash.on('synchronized', () => {
 
 The easiest way to run unleash locally is using [docker](https://www.docker.com/).
 
+:::tip
+
+Each container that runs in your local Docker instance must have a
+unique name. If you've run these commands before, you can either start
+the containers again (`docker start ${CONTAINER_NAME}`) or remove them
+(`docker rm ${CONTAINER_NAME}`) and run the commands again.
+
+:::
+
 1. Create a network by running `docker network create unleash`
 2. Start a postgres database:
 

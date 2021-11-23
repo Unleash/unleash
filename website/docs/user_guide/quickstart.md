@@ -255,9 +255,9 @@ Follow steps outlined in the [Run Unleash with Docker](#run-unleash-with-docker)
 
    To get an API key, access your Unleash instance in a web browser. First, navigate to the API access screen.
 
-   ![The Unleash UI showing a dropdown menu under the "Configure" menu
-entry. The dropdown menu's "API Access" option is highlighted and
-you're told to navigate there.](/img/api_access_navigation.png 'Navigate to the API access page.')
+   [![The Unleash UI showing a dropdown menu under the Configure menu
+entry. The dropdown menu's API Access option is highlighted and
+you're told to navigate there.]](/img/api_access_navigation.png 'Navigate to the API access page.')
 
    Next, create an API key with these details
 

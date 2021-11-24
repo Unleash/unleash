@@ -21,7 +21,7 @@ Unleash comes with a set of built in strategies. [But you can also build your ow
 
 All our SDKs perform local evaluation of feature toggles, which means that they download the configuration from unleash and cache the configuration in memory in your application. This is done in order to avoid adding network latency to user interactions, making it unnoticable for users that you are using feature flagging, in addition to the added benefit that none of your data leaves your application - enforcing privacy by design.
 
-[Read more about our unique architecture here](https://www.getunleash.io/blog/our-unique-architecture)
+[Read more about our unique architecture here.](https://www.getunleash.io/blog/our-unique-architecture)
 
 ## Unleash Context
 
@@ -31,10 +31,16 @@ Since the SDKs perform local evaluation, some of the parameters needed for evalu
 
 ## API architecture
 
-The Unleash API is split into two. One API is for the clients connecting unleash and is located under the path /api/client, and provides access to retrieving saved feature toggle configurations, metrics and registering the application. 
+The Unleash API is split into two. One API is for the clients connecting to unleash. It is located under the path /api/client. This provides access to retrieving saved feature toggle configurations, metrics and registering the application.
 
 The second API is the admin API, which is utilised in order to control any CRUD aspect of unleash resources. The split ensures a second layer of security that ensures that in the case you should loose your client api key, attackers will only have read-only access to your feature toggle configurations.
 
 This ensures that we can have different data responses for the client API endpoints which will include less metadata, and be cached more heavily - optimising the SDK endpoints for best performance.
 
-[Read more about unleash API here](../api)
+[Read more about unleash API here.](../api)
+
+## Feature toggle types
+
+Unleash categorizes feature toggles into five distinct types. This categorization makes it easier for you to see what the purpose of a toggle is and helps Unleash with [managing technical debt](/user_guide/technical_debt). A feature toggle's type has no effect on how the toggle behaves or how you can configure it.
+
+[Read more about feature toggle types here.](../advanced/feature-toggle-types.md)

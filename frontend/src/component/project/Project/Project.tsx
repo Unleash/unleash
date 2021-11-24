@@ -5,7 +5,7 @@ import useLoading from '../../../hooks/useLoading';
 import ApiError from '../../common/ApiError/ApiError';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useStyles } from './Project.styles';
-import { IconButton, Tab, Tabs } from '@material-ui/core';
+import { Tab, Tabs } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import useToast from '../../../hooks/useToast';
 import useQueryParams from '../../../hooks/useQueryParams';
@@ -17,9 +17,11 @@ import EditProject from '../edit-project-container';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
+import { UPDATE_PROJECT } from '../../../store/project/actions';
+import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
 
 const Project = () => {
-    const { id, activeTab } = useParams<{ id: string, activeTab: string }>();
+    const { id, activeTab } = useParams<{ id: string; activeTab: string }>();
     const params = useQueryParams();
     const { project, error, loading, refetch } = useProject(id);
     const ref = useLoading(loading);
@@ -52,18 +54,24 @@ const Project = () => {
         },
         {
             title: 'Environments',
-            component: <ProjectEnvironment projectId={id}  />,
+            component: <ProjectEnvironment projectId={id} />,
             path: `${basePath}/environments`,
             name: 'environments',
         },
         {
             title: 'Settings',
             // @ts-ignore (fix later)
-            component: <EditProject projectId={id} history={history} title="Edit project" />,
+            component: (
+                <EditProject
+                    projectId={id}
+                    history={history}
+                    title="Edit project"
+                />
+            ),
             path: `${basePath}/settings`,
             name: 'settings',
         },
-    ]
+    ];
 
     useEffect(() => {
         const created = params.get('created');
@@ -85,32 +93,29 @@ const Project = () => {
 
     useEffect(() => {
         const tabIdx = tabData.findIndex(tab => tab.name === activeTab);
-        if(tabIdx > 0) {
+        if (tabIdx > 0) {
             setActiveTab(tabIdx);
         } else {
             setActiveTab(0);
         }
-        
+
         /* eslint-disable-next-line */
     }, []);
 
     const goToTabWithName = (name: string) => {
         const index = tabData.findIndex(t => t.name === name);
-        if(index >= 0) {
+        if (index >= 0) {
             const tab = tabData[index];
             history.push(tab.path);
             setActiveTab(index);
         }
-    }
-
-    
-
+    };
 
     const renderTabs = () => {
         return tabData.map((tab, index) => {
             return (
                 <Tab
-                    data-loading    
+                    data-loading
                     key={tab.title}
                     label={tab.title}
                     {...a11yProps(index)}
@@ -134,18 +139,26 @@ const Project = () => {
         });
     };
 
-
     return (
         <div ref={ref}>
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
-                    <h2 data-loading className={commonStyles.title} style={{margin: 0}}>
+                    <h2
+                        data-loading
+                        className={commonStyles.title}
+                        style={{ margin: 0 }}
+                    >
                         Project: {project?.name}{' '}
-                        <IconButton onClick={() => goToTabWithName('settings')}>
+                        <PermissionIconButton
+                            permission={UPDATE_PROJECT}
+                            tooltip={'Edit description'}
+                            projectId={project?.id}
+                            onClick={() => goToTabWithName('settings')}
+                            data-loading
+                        >
                             <Edit />
-                        </IconButton>
+                        </PermissionIconButton>
                     </h2>
-                    <p data-loading>{project?.description}</p>
                 </div>
                 <ConditionallyRender
                     condition={error}

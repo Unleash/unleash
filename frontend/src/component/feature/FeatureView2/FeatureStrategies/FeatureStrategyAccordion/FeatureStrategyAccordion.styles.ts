@@ -40,9 +40,8 @@ export const useStyles = makeStyles(theme => ({
         marginLeft: 'auto',
     },
     icon: {
-        marginRight: '0.5rem',
         fill: theme.palette.primary.main,
-        minWidth: '35px',
+        minWidth: '50px',
     },
     rollout: {
         fontSize: theme.fontSizes.smallBody,

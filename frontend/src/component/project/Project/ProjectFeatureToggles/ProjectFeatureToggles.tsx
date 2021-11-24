@@ -39,7 +39,7 @@ const ProjectFeatureToggles = ({
             headerContent={
                 <HeaderTitle
                     className={styles.title}
-                    title="Feature toggles"
+                    title={`Feature toggles (${features.length})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -55,11 +55,14 @@ const ProjectFeatureToggles = ({
                                     </IconButton>
                                 }
                             />
-                            
+
                             <ResponsiveButton
                                 onClick={() =>
                                     history.push(
-                                        getCreateTogglePath(id, uiConfig.flags.E)
+                                        getCreateTogglePath(
+                                            id,
+                                            uiConfig.flags.E
+                                        )
                                     )
                                 }
                                 maxWidth="700px"
@@ -93,7 +96,10 @@ const ProjectFeatureToggles = ({
                             condition={hasAccess(CREATE_FEATURE, id)}
                             show={
                                 <Link
-                                    to={getCreateTogglePath(id, uiConfig.flags.E)}
+                                    to={getCreateTogglePath(
+                                        id,
+                                        uiConfig.flags.E
+                                    )}
                                     className={styles.link}
                                     data-loading
                                 >

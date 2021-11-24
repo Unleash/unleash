@@ -23,6 +23,7 @@ import {
 } from '../../../providers/AccessProvider/permissions';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
+import DisabledIndicator from '../../../common/DisabledIndicator/DisabledIndicator';
 
 interface IEnvironmentListItemProps {
     env: IEnvironment;
@@ -118,7 +119,7 @@ const EnvironmentListItem = ({
     if (updatePermission) {
         drag(drop(ref));
     }
-    
+
     return (
         <ListItem
             style={{ position: 'relative', opacity }}
@@ -134,20 +135,7 @@ const EnvironmentListItem = ({
                         <strong>{env.name}</strong>
                         <ConditionallyRender
                             condition={!env.enabled}
-                            show={
-                                <span
-                                    style={{
-                                        padding: '0.2rem',
-                                        borderRadius: '5px',
-                                        marginLeft: '0.5rem',
-                                        backgroundColor: '#000',
-                                        color: '#fff',
-                                        fontWeight: 'bold',
-                                    }}
-                                >
-                                    disabled
-                                </span>
-                            }
+                            show={<DisabledIndicator />}
                         />
                     </>
                 }

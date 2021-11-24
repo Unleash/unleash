@@ -21,7 +21,7 @@ export const useStyles = makeStyles(theme => ({
         cursor: 'pointer',
     },
     tableCellStatus: {
-        width: '50px',
+        width: '60px',
     },
     tableCellName: {
         paddingLeft: '10px',
@@ -44,9 +44,9 @@ export const useStyles = makeStyles(theme => ({
             display: 'none',
         },
     },
-    link:{
+    link: {
         textDecoration: 'none',
-        color: 'inherit'
+        color: 'inherit',
     },
     envName: {
         display: 'inline-block',
@@ -54,5 +54,5 @@ export const useStyles = makeStyles(theme => ({
         textOverflow: 'ellipsis',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
-    }
+    },
 }));

@@ -11,7 +11,7 @@ const ProjectOverview = ({ projectId }: ProjectOverviewProps) => {
     const { project, loading } = useProject(projectId, {
         refreshInterval: 10000,
     });
-    const { members, features, health } = project;
+    const { members, features, health, description } = project;
     const styles = useStyles();
 
     return (
@@ -19,6 +19,7 @@ const ProjectOverview = ({ projectId }: ProjectOverviewProps) => {
             <div className={styles.containerStyles}>
                 <ProjectInfo
                     id={projectId}
+                    description={description}
                     memberCount={members}
                     health={health}
                     featureCount={features?.length}

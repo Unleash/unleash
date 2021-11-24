@@ -643,3 +643,74 @@ test('If sum of fixed variant weight equals 1000 variable variants gets weight 0
             ).toEqual(0);
         });
 });
+
+test('PATCH endpoint validates uniqueness of variant names', async () => {
+    const featureName = 'variants-uniqueness-names';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+        variants: [
+            {
+                name: 'variant1',
+                weight: 1000,
+                weightType: WeightType.VARIABLE,
+                stickiness: 'default',
+            },
+        ],
+    });
+
+    const newVariants: IVariant[] = [];
+
+    const observer = jsonpatch.observe(newVariants);
+    newVariants.push({
+        name: 'variant1',
+        weight: 550,
+        weightType: WeightType.VARIABLE,
+        stickiness: 'default',
+    });
+    newVariants.push({
+        name: 'variant2',
+        weight: 550,
+        weightType: WeightType.VARIABLE,
+        stickiness: 'default',
+    });
+    const patch = jsonpatch.generate(observer);
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.details[0].message).toMatch(
+                /contains a duplicate value/,
+            );
+        });
+});
+
+test('PUT endpoint validates uniqueness of variant names', async () => {
+    const featureName = 'variants-put-uniqueness-names';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+        variants: [],
+    });
+    await app.request
+        .put(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send([
+            {
+                name: 'variant1',
+                weightType: 'variable',
+                weight: 500,
+                stickiness: 'default',
+            },
+            {
+                name: 'variant1',
+                weightType: 'variable',
+                weight: 500,
+                stickiness: 'default',
+            },
+        ])
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.details[0].message).toMatch(
+                /contains a duplicate value/,
+            );
+        });
+});

@@ -7,13 +7,13 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import { useStyles } from './styles';
 
-function SearchField({ value = '', updateValue, className }) {
+function SearchField({ updateValue, className }) {
     const styles = useStyles();
 
-    const [localValue, setLocalValue] = useState(value);
+    const [localValue, setLocalValue] = useState('');
     const debounceUpdateValue = debounce(updateValue, 500);
 
-    const handleCange = e => {
+    const handleChange = e => {
         e.preventDefault();
         const v = e.target.value || '';
         setLocalValue(v);
@@ -42,7 +42,7 @@ function SearchField({ value = '', updateValue, className }) {
                     }}
                     inputProps={{ 'aria-label': 'search' }}
                     value={localValue}
-                    onChange={handleCange}
+                    onChange={handleChange}
                     onBlur={updateNow}
                     onKeyPress={handleKeyPress}
                 />

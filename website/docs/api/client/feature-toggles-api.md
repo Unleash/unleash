@@ -117,7 +117,7 @@ Used to fetch details about a specific feature toggle. This is mainly provided t
 
 > This is a unleash-enterprise feature
 
-Strategy definitions may also contain a `constraints` property. Strategy constraints is a feature in Unleash which work on context fields, which is defined as part of the [Unleash Context](/unleash_context). The purpose is to define a set of rules where all needs to be satisfied in order for the activation strategy to . A [high level description](https://www.unleash-hosted.com/articles/strategy-constraints) of it is available online.
+Strategy definitions may also contain a `constraints` property. Strategy constraints is a feature in Unleash which work on context fields, which is defined as part of the [Unleash Context](../../user_guide/unleash-context.md). The purpose is to define a set of rules where all needs to be satisfied in order for the activation strategy to . A [high level description](https://www.unleash-hosted.com/articles/strategy-constraints) of it is available online.
 
 **Example response:**
 

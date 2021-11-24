@@ -57,11 +57,13 @@ docker run -p 4242:4242 \
   -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
   -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=some_password \
   -e DATABASE_SSL=false \
-  --network unleash unleashorg/unleash-server
+  --network unleash --pull=always unleashorg/unleash-server
 ```
 
 ### Option 2 - use Docker-compose {#option-two---use-docker-compose}
+
 **Steps:**
+
 1. Clone the [unleash-docker](https://github.com/Unleash/unleash-docker) repository.
 2. Run `docker-compose build` in repository root folder.
 3. Run `docker-compose up` in repository root folder.
@@ -95,7 +97,7 @@ docker run -p 4242:4242 \
          port: 4242,
        },
      })
-     .then(unleash => {
+     .then((unleash) => {
        console.log(
          `Unleash started on http://localhost:${unleash.app.get('port')}`,
        );

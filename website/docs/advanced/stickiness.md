@@ -26,7 +26,7 @@ Custom stickiness is available Unleash Enterprise v4 and later.
 When using [the gradual rollout strategy](../user_guide/activation-strategies.md#gradual-rollout) or [feature toggle variants](./feature-toggle-variants.md), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](../user_guide/unleash-context.md) as long as you have enabled custom stickiness for these fields.
 
 :::note
-This is a beta featue, so not all client SDKs support this feature yet. Consult the [SDK overview](./link-to-ivar's-overview) to check if your preferred client supports it or not.
+This is a beta featue, so not all client SDKs support this feature yet. Check your SDK's documentation to learn more.
 :::
 
 ### Enabling custom stickiness

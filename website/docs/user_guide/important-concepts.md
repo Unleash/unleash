@@ -31,7 +31,7 @@ Since the SDKs perform local evaluation, some of the parameters needed for evalu
 
 ## API architecture
 
-The Unleash API is split into two. One API is for the clients connecting unleash and is located under the path /api/client, and provides access to retrieving saved feature toggle configurations, metrics and registering the application.
+The Unleash API is split into two. One API is for the clients connecting to unleash. It is located under the path /api/client. This provides access to retrieving saved feature toggle configurations, metrics and registering the application.
 
 The second API is the admin API, which is utilised in order to control any CRUD aspect of unleash resources. The split ensures a second layer of security that ensures that in the case you should loose your client api key, attackers will only have read-only access to your feature toggle configurations.
 

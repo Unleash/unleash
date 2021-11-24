@@ -23,6 +23,11 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
     },
+    disabledIndicatorPos: {
+        position: 'absolute',
+        top: '15px',
+        left: '20px',
+    },
     iconContainer: {
         backgroundColor: theme.palette.primary.light,
         borderRadius: '50%',
@@ -118,6 +123,9 @@ export const useStyles = makeStyles(theme => ({
         },
     },
     [theme.breakpoints.down(560)]: {
+        disabledIndicatorPos: {
+            top: '-8px',
+        },
         headerTitle: {
             flexDirection: 'column',
         },

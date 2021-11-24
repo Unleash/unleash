@@ -2,23 +2,34 @@ import { useStyles } from './ProjectInfo.styles';
 import { Link } from 'react-router-dom';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import classnames from 'classnames';
+import { Edit, ExpandMore } from '@material-ui/icons';
 
 import { useCommonStyles } from '../../../../common.styles';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import PercentageCircle from '../../../common/PercentageCircle/PercentageCircle';
+import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_PROJECT } from '../../../../store/project/actions';
+import ConditionallyRender from '../../../common/ConditionallyRender';
+import {
+    Accordion,
+    AccordionActions,
+    AccordionDetails,
+    AccordionSummary,
+} from '@material-ui/core';
 
 interface IProjectInfoProps {
     id: string;
     memberCount: number;
     featureCount: number;
     health: number;
+    description: string;
 }
 
 const ProjectInfo = ({
     id,
     memberCount,
-    featureCount,
     health,
+    description,
 }: IProjectInfoProps) => {
     const commonStyles = useCommonStyles();
     const styles = useStyles();
@@ -30,9 +41,87 @@ const ProjectInfo = ({
         link = `/projects/${id}/access`;
     }
 
+    const LONG_DESCRIPTION = 100;
+
+    const permissionButtonClass = classnames({
+        [styles.permissionButtonShortDesc]:
+            description.length < LONG_DESCRIPTION,
+    });
+    const permissionButton = (
+        <PermissionIconButton
+            permission={UPDATE_PROJECT}
+            tooltip={'Edit description'}
+            projectId={id}
+            component={Link}
+            className={permissionButtonClass}
+            data-loading
+            to={`/projects/${id}/settings`}
+        >
+            <Edit />
+        </PermissionIconButton>
+    );
+
     return (
         <aside>
             <div className={styles.projectInfo}>
+                <div className={styles.infoSection}>
+                    <div className={styles.descriptionContainer}>
+                        <ConditionallyRender
+                            condition={Boolean(description)}
+                            show={
+                                <ConditionallyRender
+                                    condition={
+                                        description.length < LONG_DESCRIPTION
+                                    }
+                                    show={
+                                        <p
+                                            data-loading
+                                            className={styles.description}
+                                        >
+                                            {description}
+                                        </p>
+                                    }
+                                    elseShow={
+                                        <Accordion className={styles.accordion}>
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMore />}
+                                                className={styles.accordionBody}
+                                            >
+                                                Description
+                                            </AccordionSummary>
+                                            <AccordionDetails
+                                                className={styles.accordionBody}
+                                            >
+                                                {description}
+                                            </AccordionDetails>
+                                            <AccordionActions
+                                                className={
+                                                    styles.accordionActions
+                                                }
+                                            >
+                                                Edit description{' '}
+                                                {permissionButton}
+                                            </AccordionActions>
+                                        </Accordion>
+                                    }
+                                />
+                            }
+                            elseShow={
+                                <p data-loading className={styles.description}>
+                                    No description
+                                </p>
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={description.length < LONG_DESCRIPTION}
+                            show={permissionButton}
+                        />
+                    </div>
+                    <div className={styles.idContainer}>
+                        <p data-loading>projectId: {id}</p>
+                    </div>
+                </div>
+
                 <div className={styles.infoSection}>
                     <div data-loading className={styles.percentageContainer}>
                         <PercentageCircle percentage={health} />
@@ -60,15 +149,6 @@ const ProjectInfo = ({
                             className={styles.arrowIcon}
                         />
                     </Link>
-                </div>
-
-                <div className={styles.infoSection}>
-                    <p className={styles.subtitle} data-loading>
-                        Feature toggles
-                    </p>
-                    <p className={styles.emphazisedText} data-loading>
-                        {featureCount}
-                    </p>
                 </div>
 
                 <div

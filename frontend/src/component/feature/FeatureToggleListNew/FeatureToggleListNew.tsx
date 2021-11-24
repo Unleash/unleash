@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import {
     Table,
     TableBody,
@@ -25,12 +25,12 @@ interface IFeatureToggleListNewProps {
 
 //@ts-ignore
 const sortList = (list, sortOpt) => {
-    if(!list) {
+    if (!list) {
         return list;
     }
-    if(!sortOpt.field) {
+    if (!sortOpt.field) {
         return list;
-    } 
+    }
     if (sortOpt.type === 'string') {
         //@ts-ignore
         return list.sort((a, b) => {
@@ -45,7 +45,7 @@ const sortList = (list, sortOpt) => {
                 return direction === 0 ? 1 : -1;
             }
             return 0;
-        })
+        });
     }
     if (sortOpt.type === 'date') {
         //@ts-ignore
@@ -60,10 +60,10 @@ const sortList = (list, sortOpt) => {
                 return sortOpt.direction === 0 ? -1 : 1;
             }
             return 0;
-        })
+        });
     }
     return list;
-} 
+};
 
 const FeatureToggleListNew = ({
     features,
@@ -76,32 +76,33 @@ const FeatureToggleListNew = ({
         type: 'string',
         direction: 0,
     });
-    const [sortedFeatures, setSortedFeatures] = useState(sortList([...features], sortOpt));
-    
+    const [sortedFeatures, setSortedFeatures] = useState(
+        sortList([...features], sortOpt)
+    );
+
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
         usePagination(sortedFeatures, 50);
-    
+
     useEffect(() => {
-        setSortedFeatures(sortList([...features], sortOpt))
+        setSortedFeatures(sortList([...features], sortOpt));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [features])
+    }, [features]);
 
     const updateSort = (field: string) => {
         let newSortOpt;
-        if(field === sortOpt.field) {
-            newSortOpt = {...sortOpt, direction: (sortOpt.direction + 1) % 2};
-        }
-        else if(['createdAt', 'lastSeenAt'].includes(field)) {
+        if (field === sortOpt.field) {
+            newSortOpt = { ...sortOpt, direction: (sortOpt.direction + 1) % 2 };
+        } else if (['createdAt', 'lastSeenAt'].includes(field)) {
             newSortOpt = {
                 field,
                 type: 'date',
-                direction: 0
+                direction: 0,
             };
         } else {
             newSortOpt = {
                 field,
                 type: 'string',
-                direction: 0
+                direction: 0,
             };
         }
         setSortOpt(newSortOpt);
@@ -164,44 +165,64 @@ const FeatureToggleListNew = ({
                                 styles.tableCell,
                                 styles.tableCellStatus,
                                 styles.tableCellHeader,
-                                styles.tableCellHeaderSortable,
+                                styles.tableCellHeaderSortable
                             )}
                             align="left"
                         >
-                            <span data-loading onClick={() => updateSort('lastSeenAt')}>Status</span>
+                            <span
+                                data-loading
+                                onClick={() => updateSort('lastSeenAt')}
+                            >
+                                Last use
+                            </span>
                         </TableCell>
                         <TableCell
                             className={classnames(
                                 styles.tableCell,
                                 styles.tableCellType,
                                 styles.tableCellHeader,
-                                styles.tableCellHeaderSortable,
+                                styles.tableCellHeaderSortable
                             )}
                             align="center"
                         >
-                            <span data-loading onClick={() => updateSort('type')}>Type</span>
+                            <span
+                                data-loading
+                                onClick={() => updateSort('type')}
+                            >
+                                Type
+                            </span>
                         </TableCell>
                         <TableCell
                             className={classnames(
                                 styles.tableCell,
                                 styles.tableCellName,
                                 styles.tableCellHeader,
-                                styles.tableCellHeaderSortable,
+                                styles.tableCellHeaderSortable
                             )}
                             align="left"
                         >
-                            <span data-loading onClick={() => updateSort('name')}>Name</span>
+                            <span
+                                data-loading
+                                onClick={() => updateSort('name')}
+                            >
+                                Name
+                            </span>
                         </TableCell>
                         <TableCell
                             className={classnames(
                                 styles.tableCell,
                                 styles.tableCellCreated,
                                 styles.tableCellHeader,
-                                styles.tableCellHeaderSortable,
+                                styles.tableCellHeaderSortable
                             )}
                             align="left"
                         >
-                            <span data-loading onClick={() => updateSort('createdAt')}>Created</span>
+                            <span
+                                data-loading
+                                onClick={() => updateSort('createdAt')}
+                            >
+                                Created
+                            </span>
                         </TableCell>
                         {getEnvironments().map((env: any) => {
                             return (
@@ -211,12 +232,15 @@ const FeatureToggleListNew = ({
                                         styles.tableCell,
                                         styles.tableCellEnv,
                                         styles.tableCellHeader,
-                                        styles.tableCellHeaderSortable,
+                                        styles.tableCellHeaderSortable
                                     )}
                                     align="center"
                                 >
-                                    <span data-loading className={styles.envName} >
-                                       {env.name}
+                                    <span
+                                        data-loading
+                                        className={styles.envName}
+                                    >
+                                        {env.name}
                                     </span>
                                 </TableCell>
                             );

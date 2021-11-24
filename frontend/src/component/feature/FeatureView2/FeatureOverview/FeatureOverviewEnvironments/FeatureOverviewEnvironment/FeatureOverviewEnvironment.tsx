@@ -10,6 +10,8 @@ import useFeatureMetrics from '../../../../../../hooks/api/getters/useFeatureMet
 import { IFeatureEnvironment } from '../../../../../../interfaces/featureToggle';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import { getFeatureMetrics } from '../../../../../../utils/get-feature-metrics';
+import ConditionallyRender from '../../../../../common/ConditionallyRender';
+import DisabledIndicator from '../../../../../common/DisabledIndicator/DisabledIndicator';
 import EnvironmentIcon from '../../../../../common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from '../../../../../common/StringTruncator/StringTruncator';
 
@@ -63,6 +65,14 @@ const FeatureOverviewEnvironment = ({
                             text={env.name}
                             className={styles.truncator}
                             maxWidth="120"
+                        />
+                        <ConditionallyRender
+                            condition={!env.enabled}
+                            show={
+                                <DisabledIndicator
+                                    className={styles.disabledIndicatorPos}
+                                />
+                            }
                         />
                     </div>
 

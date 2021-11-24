@@ -14,6 +14,18 @@ export const useStyles = makeStyles(theme => ({
             marginBottom: '1rem',
         },
     },
+    description: {
+        textAlign: 'left',
+        marginBottom: '0.5rem',
+    },
+    descriptionContainer: {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+    idContainer: {
+        display: 'flex',
+        width: '100%',
+    },
     percentageContainer: {
         display: 'flex',
         justifyContent: 'center',
@@ -66,6 +78,9 @@ export const useStyles = makeStyles(theme => ({
         color: '#635dc5',
         marginLeft: '0.5rem',
     },
+    permissionButtonShortDesc: {
+        transform: `translateY(-10px)`,
+    },
     infoLink: {
         textDecoration: 'none',
         color: '#635dc5',
@@ -73,6 +88,15 @@ export const useStyles = makeStyles(theme => ({
             position: 'absolute',
             bottom: '5px',
         },
+    },
+    accordion: {
+        boxShadow: 'none',
+        textAlign: 'left',
+    },
+    accordionBody: { padding: '0' },
+    accordionActions: {
+        padding: '0',
+        justifyContent: 'flex-start',
     },
     linkText: {
         [theme.breakpoints.down('sm')]: {

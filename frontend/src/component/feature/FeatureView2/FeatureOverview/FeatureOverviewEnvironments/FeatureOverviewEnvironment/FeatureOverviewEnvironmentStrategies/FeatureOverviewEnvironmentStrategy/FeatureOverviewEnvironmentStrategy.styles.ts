@@ -15,7 +15,6 @@ export const useStyles = makeStyles(theme => ({
     },
     icon: {
         fill: theme.palette.grey[600],
-        marginRight: '0.5rem',
     },
     editStrategy: {
         marginLeft: 'auto',

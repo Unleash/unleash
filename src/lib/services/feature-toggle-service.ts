@@ -45,6 +45,7 @@ import {
     IFeatureToggleQuery,
     IStrategyConfig,
     IVariant,
+    WeightType,
 } from '../types/model';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
@@ -917,7 +918,7 @@ class FeatureToggleService {
 
     fixVariantWeights(variants: IVariant[]): IVariant[] {
         let variableVariants = variants.filter((x) => {
-            return x.weightType === 'variable';
+            return x.weightType === WeightType.VARIABLE;
         });
 
         if (variants.length > 0 && variableVariants.length === 0) {
@@ -927,7 +928,7 @@ class FeatureToggleService {
         }
 
         let fixedVariants = variants.filter((x) => {
-            return x.weightType === 'fix';
+            return x.weightType === WeightType.FIX;
         });
 
         let fixedWeights = fixedVariants.reduce((a, v) => a + v.weight, 0);

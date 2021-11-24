@@ -2,7 +2,7 @@ import { IUnleashTest, setupApp } from '../../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../../helpers/database-init';
 import getLogger from '../../../../fixtures/no-logger';
 import * as jsonpatch from 'fast-json-patch';
-import { IVariant } from '../../../../../lib/types/model';
+import { IVariant, WeightType } from '../../../../../lib/types/model';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -27,7 +27,7 @@ test('Can get variants for a feature', async () => {
                 name: variantName,
                 stickiness: 'default',
                 weight: 1000,
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
             },
         ],
     });
@@ -52,7 +52,7 @@ test('Trying to do operations on a non-existing feature yields 404', async () =>
             name: 'variant-put-overwrites',
             stickiness: 'default',
             weight: 1000,
-            weightType: 'variable',
+            weightType: WeightType.VARIABLE,
         },
     ];
     await app.request
@@ -66,7 +66,7 @@ test('Trying to do operations on a non-existing feature yields 404', async () =>
         name: 'variant1',
         stickiness: 'default',
         weight: 700,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
     let patch = jsonpatch.generate(observer);
     await app.request
@@ -84,7 +84,7 @@ test('Can patch variants for a feature and get a response of new variant', async
             name: variantName,
             stickiness: 'default',
             weight: 1000,
-            weightType: 'variable',
+            weightType: WeightType.VARIABLE,
         },
     ];
 
@@ -117,7 +117,7 @@ test('Can add variant for a feature', async () => {
             name: variantName,
             stickiness: 'default',
             weight: 1000,
-            weightType: 'variable',
+            weightType: WeightType.VARIABLE,
         },
     ];
 
@@ -131,7 +131,7 @@ test('Can add variant for a feature', async () => {
         name: expectedVariantName,
         stickiness: 'default',
         weight: 1000,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
     const patch = jsonpatch.generate(observer);
     await app.request
@@ -161,7 +161,7 @@ test('Can remove variant for a feature', async () => {
             name: variantName,
             stickiness: 'default',
             weight: 1000,
-            weightType: 'variable',
+            weightType: WeightType.VARIABLE,
         },
     ];
 
@@ -195,7 +195,7 @@ test('PUT overwrites current variant on feature', async () => {
             name: variantName,
             stickiness: 'default',
             weight: 1000,
-            weightType: 'variable',
+            weightType: WeightType.VARIABLE,
         },
     ];
     await db.stores.featureToggleStore.create('default', {
@@ -208,19 +208,19 @@ test('PUT overwrites current variant on feature', async () => {
             name: 'variant1',
             stickiness: 'default',
             weight: 250,
-            weightType: 'fix',
+            weightType: WeightType.FIX,
         },
         {
             name: 'variant2',
             stickiness: 'default',
             weight: 375,
-            weightType: 'variable',
+            weightType: WeightType.VARIABLE,
         },
         {
             name: 'variant3',
             stickiness: 'default',
             weight: 450,
-            weightType: 'variable',
+            weightType: WeightType.VARIABLE,
         },
     ];
     await app.request
@@ -309,7 +309,7 @@ test('PATCHING with all variable weightTypes forces weights to sum to no less th
         name: 'variant1',
         stickiness: 'default',
         weight: 700,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
     let patch = jsonpatch.generate(observer);
 
@@ -326,7 +326,7 @@ test('PATCHING with all variable weightTypes forces weights to sum to no less th
         name: 'variant2',
         stickiness: 'default',
         weight: 700,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
 
     patch = jsonpatch.generate(observer);
@@ -346,7 +346,7 @@ test('PATCHING with all variable weightTypes forces weights to sum to no less th
         name: 'variant3',
         stickiness: 'default',
         weight: 700,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
 
     patch = jsonpatch.generate(observer);
@@ -367,7 +367,7 @@ test('PATCHING with all variable weightTypes forces weights to sum to no less th
         name: 'variant4',
         stickiness: 'default',
         weight: 700,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
 
     patch = jsonpatch.generate(observer);
@@ -397,7 +397,7 @@ test('PATCHING with no variable variants fails with 400', async () => {
         name: 'variant1',
         stickiness: 'default',
         weight: 900,
-        weightType: 'fix',
+        weightType: WeightType.FIX,
     });
 
     const patch = jsonpatch.generate(observer);
@@ -425,43 +425,43 @@ test('Patching with a fixed variant and variable variants splits remaining weigh
         name: 'variant1',
         stickiness: 'default',
         weight: 900,
-        weightType: 'fix',
+        weightType: WeightType.FIX,
     });
     newVariants.push({
         name: 'variant2',
         stickiness: 'default',
         weight: 20,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
     newVariants.push({
         name: 'variant3',
         stickiness: 'default',
         weight: 123,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
     newVariants.push({
         name: 'variant4',
         stickiness: 'default',
         weight: 123,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
     newVariants.push({
         name: 'variant5',
         stickiness: 'default',
         weight: 123,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
     newVariants.push({
         name: 'variant6',
         stickiness: 'default',
         weight: 123,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
     newVariants.push({
         name: 'variant7',
         stickiness: 'default',
         weight: 123,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
 
     const patch = jsonpatch.generate(observer);
@@ -517,19 +517,19 @@ test('Multiple fixed variants gets added together to decide how much weight vari
         name: 'variant1',
         stickiness: 'default',
         weight: 600,
-        weightType: 'fix',
+        weightType: WeightType.FIX,
     });
     newVariants.push({
         name: 'variant2',
         stickiness: 'default',
         weight: 350,
-        weightType: 'fix',
+        weightType: WeightType.FIX,
     });
     newVariants.push({
         name: 'variant3',
         stickiness: 'default',
         weight: 350,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
 
     const patch = jsonpatch.generate(observer);
@@ -562,19 +562,19 @@ test('If sum of fixed variant weight exceed 1000 fails with 400', async () => {
         name: 'variant1',
         stickiness: 'default',
         weight: 900,
-        weightType: 'fix',
+        weightType: WeightType.FIX,
     });
     newVariants.push({
         name: 'variant2',
         stickiness: 'default',
         weight: 900,
-        weightType: 'fix',
+        weightType: WeightType.FIX,
     });
     newVariants.push({
         name: 'variant3',
         stickiness: 'default',
         weight: 350,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
 
     const patch = jsonpatch.generate(observer);
@@ -603,25 +603,25 @@ test('If sum of fixed variant weight equals 1000 variable variants gets weight 0
         name: 'variant1',
         stickiness: 'default',
         weight: 900,
-        weightType: 'fix',
+        weightType: WeightType.FIX,
     });
     newVariants.push({
         name: 'variant2',
         stickiness: 'default',
         weight: 100,
-        weightType: 'fix',
+        weightType: WeightType.FIX,
     });
     newVariants.push({
         name: 'variant3',
         stickiness: 'default',
         weight: 350,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
     newVariants.push({
         name: 'variant4',
         stickiness: 'default',
         weight: 350,
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
     });
 
     const patch = jsonpatch.generate(observer);

@@ -20,7 +20,7 @@ For instance: When using the [gradual rollout activation strategy](../user_guide
 ## Custom stickiness (beta)
 
 :::info
-Custom stickiness is available Unleash Enterprise v4 and later.
+Custom stickiness is available starting from Unleash Enterprise v4.
 :::
 
 When using [the gradual rollout strategy](../user_guide/activation-strategies.md#gradual-rollout) or [feature toggle variants](./feature-toggle-variants.md), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](../user_guide/unleash-context.md) as long as you have enabled custom stickiness for these fields.

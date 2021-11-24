@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect } from 'react';
+import { useContext, useLayoutEffect, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -46,6 +46,11 @@ const FeatureToggleList = ({
         fetcher();
     }, [fetcher]);
 
+    useEffect(() => {
+        updateSetting('filter', '');
+        /* eslint-disable-next-line */
+    }, []);
+
     const toggleMetrics = () => {
         updateSetting('showLastHour', !settings.showLastHour);
     };
@@ -74,7 +79,6 @@ const FeatureToggleList = ({
                     hasAccess={hasAccess}
                     className={'skeleton'}
                     flags={flags}
-                    archive={archive}
                 />
             ));
         }
@@ -125,7 +129,6 @@ const FeatureToggleList = ({
         <div className={styles.featureContainer}>
             <div className={styles.searchBarContainer}>
                 <SearchField
-                    value={settings.filter}
                     updateValue={updateSetting.bind(this, 'filter')}
                     className={classnames(styles.searchBar, {
                         skeleton: loading,

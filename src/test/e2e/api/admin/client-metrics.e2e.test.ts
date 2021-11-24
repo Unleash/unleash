@@ -173,7 +173,7 @@ test('should return toggle summary', async () => {
 
 test('should only include last hour of metrics return toggle summary', async () => {
     const now = new Date();
-    const dateOneHourAgo = subHours(now, 1);
+    const dateTwoHoursAgo = subHours(now, 2);
     const metrics: IClientMetricsEnv[] = [
         {
             featureName: 'demo',
@@ -211,7 +211,7 @@ test('should only include last hour of metrics return toggle summary', async () 
             featureName: 'demo',
             appName: 'backend-api',
             environment: 'test',
-            timestamp: dateOneHourAgo,
+            timestamp: dateTwoHoursAgo,
             yes: 55,
             no: 55,
         },

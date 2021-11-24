@@ -8,7 +8,10 @@ export interface IConstraint {
     operator: string;
     values: string[];
 }
-
+export enum WeightType {
+    VARIABLE = 'variable',
+    FIX = 'fix',
+}
 export interface IStrategyConfig {
     id?: string;
     name: string;

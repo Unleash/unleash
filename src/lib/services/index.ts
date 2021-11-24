@@ -27,6 +27,7 @@ import FeatureToggleService from './feature-toggle-service';
 import EnvironmentService from './environment-service';
 import FeatureTagService from './feature-tag-service';
 import ProjectHealthService from './project-health-service';
+import UserSplashService from './user-splash-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -72,6 +73,7 @@ export const createServices = (
         accessService,
         featureToggleServiceV2,
     );
+    const userSplashService = new UserSplashService(stores, config);
 
     return {
         accessService,
@@ -100,6 +102,7 @@ export const createServices = (
         userFeedbackService,
         featureTagService,
         projectHealthService,
+        userSplashService,
     };
 };
 

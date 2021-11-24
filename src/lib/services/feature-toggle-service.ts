@@ -5,7 +5,11 @@ import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
-import { featureMetadataSchema, nameSchema } from '../schema/feature-schema';
+import {
+    featureMetadataSchema,
+    nameSchema,
+    variantsArraySchema,
+} from '../schema/feature-schema';
 import {
     FeatureArchivedEvent,
     FeatureChangeProjectEvent,
@@ -40,6 +44,8 @@ import {
     IFeatureStrategy,
     IFeatureToggleQuery,
     IStrategyConfig,
+    IVariant,
+    WeightType,
 } from '../types/model';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
@@ -387,6 +393,15 @@ class FeatureToggleService {
             featureName,
             archived,
         );
+    }
+
+    /**
+     * GET /api/admin/projects/:project/features/:featureName/variants
+     * @param featureName
+     * @return The list of variants
+     */
+    async getVariants(featureName: string): Promise<IVariant[]> {
+        return this.featureToggleStore.getVariants(featureName);
     }
 
     async getFeatureMetadata(featureName: string): Promise<FeatureToggle> {
@@ -881,6 +896,63 @@ class FeatureToggleService {
             featureName,
             newProjectId,
         );
+    }
+
+    async updateVariants(
+        featureName: string,
+        newVariants: Operation[],
+    ): Promise<FeatureToggle> {
+        const oldVariants = await this.getVariants(featureName);
+        const { newDocument } = await applyPatch(oldVariants, newVariants);
+        return this.saveVariants(featureName, newDocument);
+    }
+
+    async saveVariants(
+        featureName: string,
+        newVariants: IVariant[],
+    ): Promise<FeatureToggle> {
+        await variantsArraySchema.validateAsync(newVariants);
+        const fixedVariants = this.fixVariantWeights(newVariants);
+        return this.featureToggleStore.saveVariants(featureName, fixedVariants);
+    }
+
+    fixVariantWeights(variants: IVariant[]): IVariant[] {
+        let variableVariants = variants.filter((x) => {
+            return x.weightType === WeightType.VARIABLE;
+        });
+
+        if (variants.length > 0 && variableVariants.length === 0) {
+            throw new BadDataError(
+                'There must be at least one "variable" variant',
+            );
+        }
+
+        let fixedVariants = variants.filter((x) => {
+            return x.weightType === WeightType.FIX;
+        });
+
+        let fixedWeights = fixedVariants.reduce((a, v) => a + v.weight, 0);
+
+        if (fixedWeights > 1000) {
+            throw new BadDataError(
+                'The traffic distribution total must equal 100%',
+            );
+        }
+
+        let averageWeight = Math.floor(
+            (1000 - fixedWeights) / variableVariants.length,
+        );
+        let remainder = (1000 - fixedWeights) % variableVariants.length;
+
+        variableVariants = variableVariants.map((x) => {
+            x.weight = averageWeight;
+            if (remainder > 0) {
+                x.weight += 1;
+                remainder--;
+            }
+            return x;
+        });
+        return variableVariants.concat(fixedVariants);
     }
 }
 

@@ -6,6 +6,7 @@ import ProjectFeaturesController from './features';
 import EnvironmentsController from './environments';
 import ProjectHealthReport from './health-report';
 import ProjectService from '../../../services/project-service';
+import VariantsController from './variants';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -17,6 +18,7 @@ export default class ProjectApi extends Controller {
         this.use('/', new ProjectFeaturesController(config, services).router);
         this.use('/', new EnvironmentsController(config, services).router);
         this.use('/', new ProjectHealthReport(config, services).router);
+        this.use('/', new VariantsController(config, services).router);
     }
 
     async getProjects(req: Request, res: Response): Promise<void> {

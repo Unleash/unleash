@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: setup git config
+      - name: Build docs
         run: |
           # Build the site
           cd website && yarn && yarn build

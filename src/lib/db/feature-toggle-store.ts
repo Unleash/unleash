@@ -161,7 +161,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             type: row.type,
             project: row.project,
             stale: row.stale,
-            variants: row.variants as unknown as IVariant[],
+            variants: (row.variants as unknown as IVariant[]) || [],
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
         };
@@ -182,7 +182,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             project,
             archived: data.archived || false,
             stale: data.stale,
-            variants: data.variants ? JSON.stringify(data.variants) : null,
+            variants: data.variants
+                ? JSON.stringify(data.variants)
+                : JSON.stringify([]),
             created_at: data.createdAt,
         };
         if (!row.created_at) {

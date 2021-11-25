@@ -187,4 +187,5 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 - [Medium blog](https://medium.com/unleash-hosted)
 - [Blog: Unleash your features gradually!](http://bytes.schibsted.com/unleash-features-gradually/)
 - [Presentation: Unleash your features gradually!](http://ivarconr.github.io/feature-toggles-presentation/sch-dev-lunch-2017/#1)
+- [Free Code Camp: Feature toggles - Why and how to add to your software](https://www.youtube.com/watch?v=-yHZ9uLVSp4)
 - http://martinfowler.com/bliki/FeatureToggle.html

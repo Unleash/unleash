@@ -54,6 +54,7 @@ module.exports = {
             'advanced/custom_activation_strategy',
             'advanced/feature_toggle_types',
             'advanced/toggle_variants',
+            'advanced/stickiness',
             'advanced/archived_toggles',
             'advanced/audit_log',
             'advanced/api_access',

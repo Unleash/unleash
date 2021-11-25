@@ -65,7 +65,7 @@ The Go client comes with implementations for the built-in activation strategies 
 - RemoteAddressStrategy
 - ApplicationHostnameStrategy
 
-Read more about the strategies in [activation-strategy.md](/activation_strategy).
+Read more about the strategies in [the activation strategies document](../user_guide/activation_strategy).
 
 ### Unleash context {#unleash-context}
 

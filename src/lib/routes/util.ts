@@ -30,34 +30,34 @@ export const handleErrors: (
     // eslint-disable-next-line no-param-reassign
     error.isJoi = true;
     switch (error.name) {
-        case 'NoAccessError':
-            return res.status(403).json(error).end();
-        case 'NotFoundError':
-            return res.status(404).json(error).end();
-        case 'InvalidOperationError':
-            return res.status(403).json(error).end();
-        case 'NameExistsError':
-            return res.status(409).json(error).end();
         case 'ValidationError':
             return res.status(400).json(error).end();
         case 'BadDataError':
             return res.status(400).json(error).end();
-        case 'FeatureHasTagError':
-            return res.status(409).json(error).end();
-        case 'UsedTokenError':
-            return res.status(403).json(error).end();
-        case 'InvalidTokenError':
-            return res.status(401).json(error).end();
         case 'OwaspValidationError':
             return res.status(400).json(error).end();
         case 'PasswordUndefinedError':
             return res.status(400).json(error).end();
-        case 'IncompatibleProjectError':
-            return res.status(403).json(error).end();
         case 'MinimumOneEnvironmentError':
             return res.status(400).json(error).end();
+        case 'InvalidTokenError':
+            return res.status(401).json(error).end();
+        case 'NoAccessError':
+            return res.status(403).json(error).end();
+        case 'UsedTokenError':
+            return res.status(403).json(error).end();
+        case 'InvalidOperationError':
+            return res.status(403).json(error).end();
+        case 'IncompatibleProjectError':
+            return res.status(403).json(error).end();
         case 'OperationDeniedError':
             return res.status(403).json(error).end();
+        case 'NotFoundError':
+            return res.status(404).json(error).end();
+        case 'NameExistsError':
+            return res.status(409).json(error).end();
+        case 'FeatureHasTagError':
+            return res.status(409).json(error).end();
         default:
             logger.error('Server failed executing request', error);
             return res.status(500).end();

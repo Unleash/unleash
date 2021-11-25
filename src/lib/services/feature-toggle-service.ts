@@ -51,6 +51,7 @@ import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-st
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import { DEFAULT_ENV } from '../util/constants';
 import { applyPatch, deepClone, Operation } from 'fast-json-patch';
+import { OperationDeniedError } from '../error/operation-denied-error';
 
 interface IFeatureContext {
     featureName: string;
@@ -146,6 +147,11 @@ class FeatureToggleService {
     ): Promise<FeatureToggle> {
         const featureToggle = await this.getFeatureMetadata(featureName);
 
+        if (operations.some((op) => op.path.indexOf('/variants') >= 0)) {
+            throw new OperationDeniedError(
+                `Changing variants is done via PATCH operation to /api/admin/projects/:project/features/:feature/variants`,
+            );
+        }
         const { newDocument } = applyPatch(
             deepClone(featureToggle),
             operations,
@@ -455,14 +461,18 @@ class FeatureToggleService {
         projectId: string,
         value: FeatureToggleDTO,
         createdBy: string,
+        isValidated: boolean = false,
     ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
         const exists = await this.projectStore.hasProject(projectId);
         if (exists) {
-            const featureData = await featureMetadataSchema.validateAsync(
-                value,
-            );
+            let featureData;
+            if (isValidated) {
+                featureData = value;
+            } else {
+                featureData = await featureMetadataSchema.validateAsync(value);
+            }
             const featureName = featureData.name;
             const createdToggle = await this.featureToggleStore.create(
                 projectId,

@@ -7,7 +7,7 @@ At Unleash we care deeply about code quality. Technical debt creeps up over time
 
 In order to assist with removing unused feature toggles, Unleash provides a technical debt dashboard in the management-ui. You can find it by clicking on “Advanced” in the top-line menu then choose _Reporting_ in the  dropdown menu.
 
-![Technical debt](/img/reporting.png) 
+![Technical debt](/img/reporting.png)
 
 The dasboard includes a health report card, and a list of toggles that can be filtrated on different parameters.
 
@@ -25,7 +25,13 @@ The report card includes some statistics of your application. It lists the overa
 
 If your toggle exceeds the expected lifetime of it's toggle type it will be marked as _potentially stale_.
 
-Your overall health rating is calculated based on the total amount of toggles and how many stale and potentially stale toggles you have in your project. One thing to note is that the report card and corresponding list are showing stats related to the currently selected project. If you have more than one project, you will be provided with a project selector in order to swap between the projects.
+One thing to note is that the report card and corresponding list are showing stats related to the currently selected project. If you have more than one project, you will be provided with a project selector in order to swap between the projects.
+
+## Health rating
+
+Unleash calculates a project's health rating based on the project's total number of active toggles and how many of those active toggles are stale or potentially stale. When you archive a toggle, it no longer counts towards your project's health rating.
+
+The health rating updates once every hour, so there may be some lag if you have recently added, removed, or changed the status of a toggle.
 
 ## Toggle list {#toggle-list}
 

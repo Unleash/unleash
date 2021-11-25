@@ -2,14 +2,7 @@ import classnames from 'classnames';
 import * as jsonpatch from 'fast-json-patch';
 
 import styles from './variants.module.scss';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Typography,
-} from '@material-ui/core';
+import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
 import AddVariant from './AddFeatureVariant/AddFeatureVariant';
 
 import { useContext, useEffect, useState } from 'react';
@@ -29,16 +22,17 @@ import { updateWeight } from '../../../../common/util';
 import cloneDeep from 'lodash.clonedeep';
 import useDeleteVariantMarkup from './FeatureVariantsListItem/useDeleteVariantMarkup';
 import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
+import { mutate } from 'swr';
 
 const FeatureOverviewVariants = () => {
     const { hasAccess } = useContext(AccessContext);
     const { projectId, featureId } = useParams<IFeatureViewParams>();
-    const { feature, refetch } = useFeature(projectId, featureId);
+    const { feature, FEATURE_CACHE_KEY } = useFeature(projectId, featureId);
     const [variants, setVariants] = useState<IFeatureVariant[]>([]);
     const [editing, setEditing] = useState(false);
     const { context } = useUnleashContext();
     const { toast, setToastData } = useToast();
-    const { patchFeatureToggle } = useFeatureApi();
+    const { patchFeatureVariants } = useFeatureApi();
     const [editVariant, setEditVariant] = useState({});
     const [showAddVariant, setShowAddVariant] = useState(false);
     const [stickinessOptions, setStickinessOptions] = useState([]);
@@ -110,7 +104,7 @@ const FeatureOverviewVariants = () => {
         return (
             <section style={{ paddingTop: '16px' }}>
                 <GeneralSelect
-                    label="Stickiness"
+                    label='Stickiness'
                     options={options}
                     value={value}
                     onChange={onChange}
@@ -124,9 +118,9 @@ const FeatureOverviewVariants = () => {
                     is used to ensure consistent traffic allocation across
                     variants.{' '}
                     <a
-                        href="https://docs.getunleash.io/advanced/toggle_variants"
-                        target="_blank"
-                        rel="noreferrer"
+                        href='https://docs.getunleash.io/advanced/toggle_variants'
+                        target='_blank'
+                        rel='noreferrer'
                     >
                         Read more
                     </a>
@@ -145,8 +139,10 @@ const FeatureOverviewVariants = () => {
         if (patch.length === 0) return;
 
         try {
-            await patchFeatureToggle(projectId, featureId, patch);
-            refetch();
+            const res = await patchFeatureVariants(projectId, featureId, patch);
+            // @ts-ignore
+            const { variants } = await res.json();
+            mutate(FEATURE_CACHE_KEY, { ...feature, variants }, false);
             setToastData({
                 show: true,
                 type: 'success',
@@ -166,7 +162,7 @@ const FeatureOverviewVariants = () => {
         try {
             await updateVariants(
                 updatedVariants,
-                'Successfully removed variant'
+                'Successfully removed variant',
             );
         } catch (e) {
             setToastData({
@@ -179,7 +175,7 @@ const FeatureOverviewVariants = () => {
     const updateVariant = async (variant: IFeatureVariant) => {
         const updatedVariants = cloneDeep(variants);
         const variantIdxToUpdate = updatedVariants.findIndex(
-            (v: IFeatureVariant) => v.name === variant.name
+            (v: IFeatureVariant) => v.name === variant.name,
         );
         updatedVariants[variantIdxToUpdate] = variant;
         await updateVariants(updatedVariants, 'Successfully updated variant');
@@ -194,30 +190,36 @@ const FeatureOverviewVariants = () => {
 
         await updateVariants(
             [...variants, variant],
-            'Successfully added a variant'
+            'Successfully added a variant',
         );
     };
 
     const updateVariants = async (
         variants: IFeatureVariant[],
-        successText: string
+        successText: string,
     ) => {
         const newVariants = updateWeight(variants, 1000);
         const patch = createPatch(newVariants);
 
         if (patch.length === 0) return;
-        await patchFeatureToggle(projectId, featureId, patch)
-            .then(() => {
-                refetch();
-                setToastData({
-                    show: true,
-                    type: 'success',
-                    text: successText,
-                });
-            })
-            .catch(e => {
-                throw e;
+        try {
+            const res = await patchFeatureVariants(projectId, featureId, patch);
+            // @ts-ignore
+            const { variants } = await res.json();
+            mutate(FEATURE_CACHE_KEY, { ...feature, variants }, false);
+            setToastData({
+                show: true,
+                type: 'success',
+                text: successText,
             });
+        } catch (e) {
+            setToastData({
+                show: true,
+                type: 'error',
+                text: e.toString(),
+            });
+        }
+
     };
 
     const validateName = (name: string) => {
@@ -248,17 +250,13 @@ const FeatureOverviewVariants = () => {
     });
 
     const createPatch = (newVariants: IFeatureVariant[]) => {
-        const patch = jsonpatch
-            .compare(feature.variants, newVariants)
-            .map(patch => {
-                return { ...patch, path: `/variants${patch.path}` };
-            });
-        return patch;
+        return jsonpatch
+            .compare(feature.variants, newVariants);
     };
 
     return (
         <section style={{ padding: '16px' }}>
-            <Typography variant="body1">
+            <Typography variant='body1'>
                 Variants allows you to return a variant object if the feature
                 toggle is considered enabled for the current request. When using
                 variants you should use the{' '}

@@ -41,6 +41,7 @@ const AddVariant = ({
     save,
     editVariant,
     validateName,
+    validateWeight,
     title,
     editing,
 }) => {
@@ -115,9 +116,14 @@ const AddVariant = ({
         setError({});
         e.preventDefault();
 
-        const validationError = validateName(data.name);
-        if (validationError) {
-            setError(validationError);
+        const nameValidation = validateName(data.name);
+        if (nameValidation) {
+            setError(nameValidation);
+            return;
+        }
+        const weightValidation = validateWeight(data.weight);
+        if (weightValidation) {
+            setError(weightValidation);
             return;
         }
 
@@ -240,8 +246,9 @@ const AddVariant = ({
                 />
                 <br />
                 <Grid container>
+                    {/* If we're editing, we need to have at least 2 existing variants, since we require at least 1 variable. If adding, we could be adding nr 2, and as such should be allowed to set weightType to variable */}
                     <ConditionallyRender
-                        condition={variants.length > 0}
+                        condition={(editing && variants.length > 1) || (!editing && variants.length > 0)}
                         show={
                             <Grid
                                 item
@@ -296,6 +303,8 @@ const AddVariant = ({
                                     onChange={e => {
                                         setVariantValue(e);
                                     }}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
                                 />
                             </Grid>
                         }

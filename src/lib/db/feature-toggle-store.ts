@@ -161,10 +161,17 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             type: row.type,
             project: row.project,
             stale: row.stale,
-            variants: row.variants as unknown as IVariant[],
+            variants: (row.variants as unknown as IVariant[]) || [],
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
         };
+    }
+
+    rowToVariants(row: FeaturesTable): IVariant[] {
+        if (!row) {
+            throw new NotFoundError('No feature toggle found');
+        }
+        return (row.variants as unknown as IVariant[]) || [];
     }
 
     dtoToRow(project: string, data: FeatureToggleDTO): FeaturesTable {
@@ -175,7 +182,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             project,
             archived: data.archived || false,
             stale: data.stale,
-            variants: data.variants ? JSON.stringify(data.variants) : null,
+            variants: data.variants
+                ? JSON.stringify(data.variants)
+                : JSON.stringify([]),
             created_at: data.createdAt,
         };
         if (!row.created_at) {
@@ -229,6 +238,24 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const row = await this.db(TABLE)
             .where({ name })
             .update({ archived: false })
+            .returning(FEATURE_COLUMNS);
+        return this.rowToFeature(row[0]);
+    }
+
+    async getVariants(featureName: string): Promise<IVariant[]> {
+        const row = await this.db(TABLE)
+            .select('variants')
+            .where({ name: featureName });
+        return this.rowToVariants(row[0]);
+    }
+
+    async saveVariants(
+        featureName: string,
+        newVariants: IVariant[],
+    ): Promise<FeatureToggle> {
+        const row = await this.db(TABLE)
+            .update({ variants: JSON.stringify(newVariants) })
+            .where({ name: featureName })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
     }

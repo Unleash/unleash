@@ -286,6 +286,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 );
                 return e;
             });
+            featureToggle.variants = featureToggle.variants || [];
             featureToggle.archived = archived;
             return featureToggle;
         }

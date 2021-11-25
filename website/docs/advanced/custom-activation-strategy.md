@@ -3,7 +3,7 @@ id: custom_activation_strategy
 title: Custom Activation Strategy
 ---
 
-Even though Unleash comes with a few powerful [activation strategies](activation-strategies.md) there might be scenarios where you would like to extend Unleash with your own custom strategies.
+Even though Unleash comes with a few powerful [activation strategies](../user_guide/activation-strategies.md) there might be scenarios where you would like to extend Unleash with your own custom strategies.
 
 ### Example: TimeStamp Strategy {#example-timestamp-strategy}
 

@@ -97,7 +97,67 @@ test('Health rating endpoint yields stale, potentially stale and active count on
             expect(res.body.potentiallyStaleCount).toBe(0);
         });
 });
+test('Health rating endpoint does not include archived toggles when calculating potentially stale toggles', async () => {
+    const project = {
+        id: 'potentially-stale-archived',
+        name: 'Health rating',
+        description: 'Fancy',
+    };
+    await app.services.projectService.createProject(project, user);
+    await app.request
+        .post(`/api/admin/projects/${project.id}/features`)
+        .send({
+            name: 'potentially-stale-archive-fresh',
+            description: 'new',
+            stale: false,
+        })
+        .expect(201);
+    await app.request
+        .post(`/api/admin/projects/${project.id}/features`)
+        .send({
+            name: 'potentially-stale-archive-fresh-2',
+            description: 'new too',
+            stale: false,
+        })
+        .expect(201);
+    await app.request
+        .post(`/api/admin/projects/${project.id}/features`)
+        .send({
+            name: 'potentially-stale-archive-stale',
+            description: 'stale',
+            stale: true,
+        })
+        .expect(201);
+    await app.request
+        .post(`/api/admin/projects/${project.id}/features`)
+        .send({
+            name: 'potentially-archive-stale',
+            description: 'Really Old',
+            createdAt: new Date(2019, 5, 1),
+        })
+        .expect(201);
+    await app.request
+        .post(`/api/admin/projects/${project.id}/features`)
+        .send({
+            name: 'potentially-archive-stale-archived',
+            description: 'Really Old',
+            createdAt: new Date(2019, 5, 1),
+            archived: true,
+        })
+        .expect(201);
 
+    await app.services.projectHealthService.setHealthRating();
+    await app.request
+        .get(`/api/admin/projects/${project.id}/health-report`)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            expect(res.body.health).toBe(50);
+            expect(res.body.activeCount).toBe(3);
+            expect(res.body.staleCount).toBe(1);
+            expect(res.body.potentiallyStaleCount).toBe(1);
+        });
+});
 test('Health rating endpoint correctly handles potentially stale toggles', async () => {
     const project = {
         id: 'potentially-stale',

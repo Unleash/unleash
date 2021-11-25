@@ -56,12 +56,6 @@ export const featureMetadataSchema = joi
         archived: joi.boolean().default(false),
         type: joi.string().default('release'),
         description: joi.string().allow('').allow(null).optional(),
-        variants: joi
-            .array()
-            .allow(null)
-            .unique((a, b) => a.name === b.name)
-            .optional()
-            .items(variantsSchema),
         createdAt: joi.date().optional().allow(null),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });

@@ -145,6 +145,7 @@ class FeatureController extends Controller {
             validatedToggle.project,
             validatedToggle,
             userName,
+            true,
         );
         const strategies = await Promise.all(
             toggle.strategies.map(async (s) =>

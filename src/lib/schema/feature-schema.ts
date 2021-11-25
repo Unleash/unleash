@@ -42,6 +42,12 @@ export const variantsSchema = joi.object().keys({
     ),
 });
 
+export const variantsArraySchema = joi
+    .array()
+    .min(0)
+    .items(variantsSchema)
+    .unique((a, b) => a.name === b.name);
+
 export const featureMetadataSchema = joi
     .object()
     .keys({

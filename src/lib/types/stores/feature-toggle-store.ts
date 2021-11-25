@@ -1,4 +1,4 @@
-import { FeatureToggle, FeatureToggleDTO } from '../model';
+import { FeatureToggle, FeatureToggleDTO, IVariant } from '../model';
 import { Store } from './store';
 
 export interface IFeatureToggleQuery {
@@ -16,4 +16,9 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     archive(featureName: string): Promise<FeatureToggle>;
     revive(featureName: string): Promise<FeatureToggle>;
     getAll(query?: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]>;
+    getVariants(featureName: string): Promise<IVariant[]>;
+    saveVariants(
+        featureName: string,
+        newVariants: IVariant[],
+    ): Promise<FeatureToggle>;
 }

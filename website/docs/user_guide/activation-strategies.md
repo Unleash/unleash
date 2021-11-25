@@ -40,7 +40,7 @@ A flexible rollout strategy which combines all gradual rollout strategies in to 
   - **userId** - guaranteed to be sticky on userId. If userId not present the behavior would be false
   - **sessionId** - guaranteed to be sticky on sessionId. If sessionId not present the behavior would be false.
   - **random** - no stickiness guaranteed. For every isEnabled call it will yield a random true/false based on the selected rollout percentage.
-- **groupId** is used to ensure that different toggles will **hash differently** for the same user. The groupId defaults to _feature toggle name_, but the use can override it to _correlate rollout_ of multiple feature toggles.
+- **groupId** is used to ensure that different toggles will **hash differently** for the same user. The groupId defaults to _feature toggle name_, but the user can override it to _correlate rollout_ of multiple feature toggles.
 - **rollout** The percentage (0-100) you want to enable the feature toggle for.
 
 This strategy has the following modelling name in the code:

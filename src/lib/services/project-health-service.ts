@@ -129,6 +129,7 @@ export default class ProjectHealthService {
     async calculateHealthRating(project: IProject): Promise<number> {
         const toggles = await this.featureToggleStore.getAll({
             project: project.id,
+            archived: false,
         });
 
         const activeToggles = toggles.filter((feature) => !feature.stale);

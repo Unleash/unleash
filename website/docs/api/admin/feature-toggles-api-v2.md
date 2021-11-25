@@ -9,7 +9,7 @@ title: /api/admin/projects/:projectId
 In this document we will guide you on how you can work with feature toggles and their configuration. Please remember the following details:
 
 - All feature toggles exists _inside a project_. 
-- A feature toggles exists _across all environments_. 
+- A feature toggle exists _across all environments_. 
 - A feature toggle can take different configuration, activation strategies, per environment.
 
 TODO: Need to explain the following in a bit more details:
@@ -506,3 +506,98 @@ Transfer-Encoding: chunked
 Possible Errors:
 
 - _409 Conflict_ - You can not enable the environment before it has strategies.
+
+## Feature Variants
+
+### Put variants for Feature Toggle {#update-variants}
+
+This overwrites the current variants for the feature toggle specified in the :featureName parameter.
+The backend will validate the input for the following invariants
+
+* If there are variants, there needs to be at least one variant with `weightType: variable`
+* The sum of the weights of variants with `weightType: fix` must be below 1000 (< 1000)
+
+The backend will also distribute remaining weight up to 1000 after adding the variants with `weightType: fix` together amongst the variants of `weightType: variable`
+
+**Example Query**
+```bash
+echo '[
+	{
+		"name": "variant1",
+		"weightType": "fix",
+		"weight": 650
+	},
+	{
+		"name": "variant2",
+		"weightType": "variable",
+		"weight": 123
+	}
+]' | \
+http PUT http://localhost:4242/api/admin/projects/default/features/demo/variants Authorization:$KEY
+```
+
+**Example response:**
+
+```sh
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Date: Tue, 23 Nov 2021 08:46:32 GMT
+Keep-Alive: timeout=60
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+
+{
+  "version": "1",
+  "variants": [
+    {
+      "name": "variant2",
+      "weightType": "variable",
+      "weight": 350
+    },
+    {
+      "name": "variant1",
+      "weightType": "fix",
+      "weight": 650
+    }
+  ]
+}
+```
+
+### PATCH variants for a feature toggle
+
+**Example Query**
+
+```sh
+echo '[{"op": "add", "path": "/1", "value": {
+  "name": "new-variant",
+  "weightType": "fix",
+  "weight": 200
+}}]' | \
+http PATCH http://localhost:4242/api/admin/projects/default/features/demo/variants Authorization:$KEY
+```
+
+** Example Response **
+```json
+{
+  "version": "1",
+  "variants": [
+    {
+      "name": "variant2",
+      "weightType": "variable",
+      "weight": 150
+    },
+    {
+      "name": "new-variant",
+      "weightType": "fix",
+      "weight": 200
+    },
+    {
+      "name": "variant1",
+      "weightType": "fix",
+      "weight": 650
+    }
+  ]
+}
+```
+

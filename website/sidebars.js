@@ -20,6 +20,7 @@ module.exports = {
             'user_guide/activation_strategy',
             'user_guide/control_rollout',
             'user_guide/projects',
+            'user_guide/environments',
             'user_guide/unleash_context',
             'user_guide/user-management',
             'user_guide/rbac',

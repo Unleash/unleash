@@ -111,7 +111,7 @@
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",
-    "unleash-frontend": "4",
+    "unleash-frontend": "4.2.13",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -166,8 +166,7 @@
     "node-forge": "^0.10.0",
     "set-value": "^4.0.1",
     "ansi-regex": "^5.0.1",
-    "ssh2": "^1.4.0",
-    "json-schema": "^0.4.0"
+    "ssh2": "^1.4.0"
   },
   "lint-staged": {
     "*.js": [

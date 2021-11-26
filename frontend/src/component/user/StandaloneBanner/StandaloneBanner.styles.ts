@@ -1,15 +1,21 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
+    gradient: {
+        display: 'flex',
+        justifyContent: 'center',
+        [theme.breakpoints.up('sm')]: {
+            borderBottomLeftRadius: '3px',
+            borderTopLeftRadius: '3px',
+        },
+    },
     title: {
         color: '#fff',
         marginBottom: '1rem',
         fontSize: '2rem',
         marginTop: '5rem',
         [theme.breakpoints.down('sm')]: {
-            textAlign: 'left',
-            fontSize: '1.75rem',
-            marginTop: 0,
+            display: 'none',
         },
     },
     container: {
@@ -28,9 +34,7 @@ export const useStyles = makeStyles(theme => ({
     },
     bannerSubtitle: {
         [theme.breakpoints.down('sm')]: {
-            maxWidth: '300px',
-            fontSize: '1.75rem',
-            textAlign: 'left',
+            display: 'none',
         },
         [theme.breakpoints.down('xs')]: {
             display: 'none',
@@ -40,16 +44,18 @@ export const useStyles = makeStyles(theme => ({
     },
     logoContainer: {
         position: 'absolute',
-        bottom: '-50px',
-        left: '-50px',
-        display: 'flex',
-        flexDirection: 'column',
-        [theme.breakpoints.down('sm')]: {
-            display: 'none',
+        [theme.breakpoints.up('md')]: {
+            bottom: '-50px',
+            left: '-50px',
+            display: 'flex',
+            flexDirection: 'column',
         },
     },
     logo: {
-        width: '240px',
-        height: '240px',
+        width: '200px',
+        [theme.breakpoints.up('md')]: {
+            width: '240px',
+            height: '200px',
+        },
     },
 }));

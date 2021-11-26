@@ -24,7 +24,6 @@ const FeatureVariantListItem = ({
     return (
         <TableRow>
             <TableCell
-                onClick={() => editVariant(variant.name)}
                 data-test={'VARIANT_NAME'}
             >
                 {variant.name}

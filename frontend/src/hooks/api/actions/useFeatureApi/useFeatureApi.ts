@@ -1,6 +1,7 @@
 import { IFeatureToggleDTO } from '../../../../interfaces/featureToggle';
 import { ITag } from '../../../../interfaces/tags';
 import useAPI from '../useApi/useApi';
+import { Operation } from 'fast-json-patch';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -182,6 +183,21 @@ const useFeatureApi = () => {
         }
     };
 
+    const patchFeatureVariants = async (projectId: string, featureId: string, patchPayload: Operation[]) => {
+        const path = `api/admin/projects/${projectId}/features/${featureId}/variants`;
+        const req = createRequest(path, {
+            method: 'PATCH',
+            body: JSON.stringify(patchPayload),
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
     const cloneFeatureToggle = async (
         projectId: string,
         featureId: string,
@@ -213,6 +229,7 @@ const useFeatureApi = () => {
         deleteTagFromFeature,
         archiveFeatureToggle,
         patchFeatureToggle,
+        patchFeatureVariants,
         cloneFeatureToggle,
         loading,
     };

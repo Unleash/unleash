@@ -12,7 +12,6 @@ import { useContext, useState } from 'react';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import useUiConfig from '../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { C } from '../../../../../common/flags';
-import { Button } from '@material-ui/core';
 import { useStyles } from './FeatureStrategyAccordionBody.styles';
 import Dialogue from '../../../../../common/Dialogue';
 import DefaultStrategy from '../../common/DefaultStrategy/DefaultStrategy';
@@ -20,6 +19,9 @@ import { ADD_CONSTRAINT_ID } from '../../../../../../testIds';
 import AccessContext from '../../../../../../contexts/AccessContext';
 import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 import Constraint from '../../../../../common/Constraint/Constraint';
+import PermissionButton from '../../../../../common/PermissionButton/PermissionButton';
+import { useParams } from 'react-router';
+import { IFeatureViewParams } from '../../../../../../interfaces/params';
 
 interface IFeatureStrategyAccordionBodyProps {
     strategy: IFeatureStrategy;
@@ -40,6 +42,7 @@ const FeatureStrategyAccordionBody: React.FC<IFeatureStrategyAccordionBodyProps>
         setStrategyConstraints,
     }) => {
         const styles = useStyles();
+        const { projectId } = useParams<IFeatureViewParams>();
         const [constraintError, setConstraintError] = useState({});
         const { strategies } = useStrategies();
         const { uiConfig } = useUiConfig();
@@ -106,11 +109,23 @@ const FeatureStrategyAccordionBody: React.FC<IFeatureStrategyAccordionBodyProps>
                 return (
                     <Constraint
                         constraint={constraint}
+                        editCallback={() => {
+                            setShowConstraints(true);
+                        }}
+                        deleteCallback={() => {
+                            removeConstraint(index);
+                        }}
                         key={`${constraint.contextName}-${index}`}
-                        className={styles.constraintBody}
                     />
                 );
             });
+        };
+
+        const removeConstraint = (index: number) => {
+            const updatedConstraints = [...constraints];
+            updatedConstraints.splice(index, 1);
+
+            updateConstraints(updatedConstraints);
         };
 
         const closeConstraintDialog = () => {
@@ -137,18 +152,17 @@ const FeatureStrategyAccordionBody: React.FC<IFeatureStrategyAccordionBodyProps>
                                 Constraints
                             </p>
                             {renderConstraints()}
-                            <ConditionallyRender
-                                condition={hasAccess(UPDATE_FEATURE)}
-                                show={
-                                    <Button
-                                        className={styles.addConstraintBtn}
-                                        onClick={toggleConstraints}
-                                        data-test={ADD_CONSTRAINT_ID}
-                                    >
-                                        + Edit constraints
-                                    </Button>
-                                }
-                            />
+
+                            <PermissionButton
+                                className={styles.addConstraintBtn}
+                                onClick={toggleConstraints}
+                                variant={'text'}
+                                data-test={ADD_CONSTRAINT_ID}
+                                permission={UPDATE_FEATURE}
+                                projectId={projectId}
+                            >
+                                + Add constraints
+                            </PermissionButton>
                         </>
                     }
                 />

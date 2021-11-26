@@ -5,7 +5,7 @@ import AccessContext from '../../../contexts/AccessContext';
 
 interface IPermissionIconButtonProps extends OverridableComponent<any> {
     permission: string;
-    Icon: React.ElementType;
+    Icon?: React.ElementType;
     tooltip: string;
     onClick?: (e: any) => void;
     projectId?: string;

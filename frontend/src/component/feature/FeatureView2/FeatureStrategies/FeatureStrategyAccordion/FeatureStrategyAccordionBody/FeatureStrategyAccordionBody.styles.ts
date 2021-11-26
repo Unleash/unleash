@@ -7,7 +7,8 @@ export const useStyles = makeStyles(theme => ({
         marginBottom: '0.5rem',
     },
     accordionContainer: {
-        width: '80%',
+        width: '100%',
+        paddingRight: '37px',
         [theme.breakpoints.down(800)]: {
             width: '100%',
         },
@@ -19,8 +20,5 @@ export const useStyles = makeStyles(theme => ({
     noConstraints: {
         marginTop: '0.5rem',
         fontSize: theme.fontSizes.smallBody,
-    },
-    constraintBody: {
-        maxWidth: '350px',
     },
 }));

@@ -82,7 +82,9 @@ describe('feature toggle', () => {
 
         cy.get('[data-test=NAVIGATE_TO_CREATE_FEATURE').click();
 
-        cy.intercept('POST', '/api/admin/features').as('createFeature');
+        cy.intercept('POST', '/api/admin/projects/default/features').as(
+            'createFeature'
+        );
 
         cy.get("[data-test='CF_NAME_ID'").type(featureToggleName);
         cy.get("[data-test='CF_DESC_ID'").type('hellowrdada');

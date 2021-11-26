@@ -714,3 +714,102 @@ test('PUT endpoint validates uniqueness of variant names', async () => {
             );
         });
 });
+
+test('Variants should be sorted by their name when PUT', async () => {
+    const featureName = 'variants-sort-by-name';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    await app.request
+        .put(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send([
+            {
+                name: 'zvariant',
+                weightType: 'variable',
+                weight: 500,
+                stickiness: 'default',
+            },
+            {
+                name: 'variant-a',
+                weightType: 'variable',
+                weight: 500,
+                stickiness: 'default',
+            },
+            {
+                name: 'g-variant',
+                weightType: 'variable',
+                weight: 500,
+                stickiness: 'default',
+            },
+            {
+                name: 'variant-g',
+                weightType: 'variable',
+                weight: 500,
+                stickiness: 'default',
+            },
+        ])
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants[0].name).toBe('g-variant');
+            expect(res.body.variants[1].name).toBe('variant-a');
+            expect(res.body.variants[2].name).toBe('variant-g');
+            expect(res.body.variants[3].name).toBe('zvariant');
+        });
+});
+
+test('Variants should be sorted by name when PATCHed as well', async () => {
+    const featureName = 'variants-patch-sort-by-name';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+    });
+
+    const variants: IVariant[] = [];
+    const observer = jsonpatch.observe(variants);
+    variants.push({
+        name: 'g-variant',
+        weightType: 'variable',
+        weight: 500,
+        stickiness: 'default',
+    });
+    variants.push({
+        name: 'a-variant',
+        weightType: 'variable',
+        weight: 500,
+        stickiness: 'default',
+    });
+    const patch = jsonpatch.generate(observer);
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(patch)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants[0].name).toBe('a-variant');
+            expect(res.body.variants[1].name).toBe('g-variant');
+        });
+    variants.push({
+        name: '00-variant',
+        weightType: 'variable',
+        weight: 500,
+        stickiness: 'default',
+    });
+    variants.push({
+        name: 'z-variant',
+        weightType: 'variable',
+        weight: 500,
+        stickiness: 'default',
+    });
+    const secondPatch = jsonpatch.generate(observer);
+    expect(secondPatch).toHaveLength(2);
+    await app.request
+        .patch(`/api/admin/projects/default/features/${featureName}/variants`)
+        .send(secondPatch)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants).toHaveLength(4);
+            expect(res.body.variants[0].name).toBe('00-variant');
+            expect(res.body.variants[1].name).toBe('a-variant');
+            expect(res.body.variants[2].name).toBe('g-variant');
+            expect(res.body.variants[3].name).toBe('z-variant');
+        });
+});

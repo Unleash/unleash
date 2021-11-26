@@ -51,4 +51,5 @@ In version 4 we improved the API Access and made it available for Unleash Open-S
 
 ### Custom stickiness {#custom-stickiness}
 
-In Unleash Enterprise v4 you can configure stickiness when you are doing a gradual rollout with the "flexible rollout" strategy or together with feature toggle variants. This means that you can now have consistent behavior based on any field available on the [Unleash context](unleash-context.md).
+In Unleash Enterprise v4 you can configure stickiness when you are
+doing a gradual rollout with the "gradual rollout" strategy (previously known as "flexible rollout") or together with feature toggle variants. This means that you can now have consistent behavior based on any field available on the [Unleash context](unleash-context.md).

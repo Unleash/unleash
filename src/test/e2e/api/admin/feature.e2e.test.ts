@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { FeatureToggleDTO, IStrategyConfig } from 'lib/types/model';
+import { FeatureToggleDTO, IStrategyConfig, IVariant } from 'lib/types/model';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
@@ -33,6 +33,15 @@ beforeAll(async () => {
             strategy,
             { projectId, featureName: toggle.name, environment: DEFAULT_ENV },
             username,
+        );
+    };
+    const createVariants = async (
+        featureName: string,
+        variants: IVariant[],
+    ) => {
+        await app.services.featureToggleServiceV2.saveVariants(
+            featureName,
+            variants,
         );
     };
 
@@ -127,23 +136,23 @@ beforeAll(async () => {
     await createToggle({
         name: 'feature.with.variants',
         description: 'A feature toggle with variants',
-        variants: [
-            {
-                name: 'control',
-                weight: 50,
-                weightType: 'variable',
-                overrides: [],
-                stickiness: 'default',
-            },
-            {
-                name: 'new',
-                weight: 50,
-                weightType: 'variable',
-                overrides: [],
-                stickiness: 'default',
-            },
-        ],
     });
+    await createVariants('feature.with.variants', [
+        {
+            name: 'control',
+            weight: 50,
+            weightType: 'variable',
+            overrides: [],
+            stickiness: 'default',
+        },
+        {
+            name: 'new',
+            weight: 50,
+            weightType: 'variable',
+            overrides: [],
+            stickiness: 'default',
+        },
+    ]);
 });
 
 afterAll(async () => {
@@ -191,7 +200,7 @@ test('creates new feature toggle', async () => {
 });
 
 test('creates new feature toggle with variants', async () => {
-    expect.assertions(0);
+    expect.assertions(1);
     return app.request
         .post('/api/admin/features')
         .send({
@@ -204,7 +213,10 @@ test('creates new feature toggle with variants', async () => {
             ],
         })
         .set('Content-Type', 'application/json')
-        .expect(201);
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.variants).toHaveLength(2);
+        });
 });
 
 test('fetch feature toggle with variants', async () => {

@@ -42,6 +42,12 @@ export const variantsSchema = joi.object().keys({
     ),
 });
 
+export const variantsArraySchema = joi
+    .array()
+    .min(0)
+    .items(variantsSchema)
+    .unique((a, b) => a.name === b.name);
+
 export const featureMetadataSchema = joi
     .object()
     .keys({
@@ -50,12 +56,6 @@ export const featureMetadataSchema = joi
         archived: joi.boolean().default(false),
         type: joi.string().default('release'),
         description: joi.string().allow('').allow(null).optional(),
-        variants: joi
-            .array()
-            .allow(null)
-            .unique((a, b) => a.name === b.name)
-            .optional()
-            .items(variantsSchema),
         createdAt: joi.date().optional().allow(null),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });

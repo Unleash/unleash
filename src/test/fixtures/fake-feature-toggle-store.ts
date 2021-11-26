@@ -2,7 +2,11 @@ import {
     IFeatureToggleQuery,
     IFeatureToggleStore,
 } from '../../lib/types/stores/feature-toggle-store';
-import { FeatureToggle, FeatureToggleDTO } from '../../lib/types/model';
+import {
+    FeatureToggle,
+    FeatureToggleDTO,
+    IVariant,
+} from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
@@ -122,5 +126,19 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
                 toUpdate.lastSeenAt = new Date();
             }
         });
+    }
+
+    async getVariants(featureName: string): Promise<IVariant[]> {
+        const feature = await this.get(featureName);
+        return feature.variants;
+    }
+
+    async saveVariants(
+        featureName: string,
+        newVariants: IVariant[],
+    ): Promise<FeatureToggle> {
+        const feature = await this.get(featureName);
+        feature.variants = newVariants;
+        return feature;
     }
 }

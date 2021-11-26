@@ -560,6 +560,34 @@ test('Patching feature toggles to stale should trigger FEATURE_STALE_ON event', 
     expect(updateForOurToggle).toBeTruthy();
 });
 
+test('Trying to patch variants on a feature toggle should trigger an OperationDeniedError', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'toggle.variants.on.patch';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release', stale: false });
+    await app.request
+        .patch(`${url}/${name}`)
+        .send([
+            {
+                op: 'add',
+                path: '/variants/1',
+                value: {
+                    name: 'variant',
+                    weightType: 'variable',
+                    weight: 500,
+                    stickiness: 'default',
+                },
+            },
+        ])
+        .expect(403)
+        .expect((res) => {
+            expect(res.body.details[0].message).toEqual(
+                'Changing variants is done via PATCH operation to /api/admin/projects/:project/features/:feature/variants',
+            );
+        });
+});
+
 test('Patching feature toggles to active (turning stale to false) should trigger FEATURE_STALE_OFF event', async () => {
     const url = '/api/admin/projects/default/features';
     const name = 'toggle.stale.off.patch';

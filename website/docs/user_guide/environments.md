@@ -15,7 +15,7 @@ title: Environments
 
 Environments is a new way to organize activation strategy configurations for feature toggles into separate environments. In Unleash, a feature lives across all your environments — after all, the goal is to get the new feature released as soon as possible — but it makes sense to configure the activation differently per environment. You might want the feature enabled for everyone in development, but only for yourself in production, for instance.
 
-Previously, Unleash Enterprise could use [strategy constraints](https://docs.getunleash.io/advanced/strategy_constraints) to control the rollout across environments. With the new environments feature, this is no longer necessary. Now all activation strategies belong to an explicit environment instead.
+Previously, Unleash Enterprise could use [strategy constraints](../advanced/strategy-constraints.md) to control the rollout across environments. With the new environments feature, this is no longer necessary. Now all activation strategies belong to an explicit environment instead.
 
 Further, connected applications will use environment-scoped API keys to make sure they only download feature toggle configurations for the environment they are running in.
 
@@ -103,8 +103,8 @@ In order to support configuration per environment we had to rebuild our feature 
 
 
 
-* **/api/admin/features** - _deprecated (scheduled for removal in Unleash v5.0). The [old feature toggles admin API](https://docs.getunleash.io/api/admin/features) still works, but strategy configuration will be assumed to target the “default” environment._
-* **/api/admin/projects/:projectId/features** - New feature API to be used for feature toggles which also adds support for environments. See [the documentation](https://docs.getunleash.io/api/admin/feature-toggles-v2) to learn more.
+* **/api/admin/features** - _deprecated (scheduled for removal in Unleash v5.0). The [old feature toggles admin API](../api/admin/feature-toggles-api.md) still works, but strategy configuration will be assumed to target the “default” environment._
+* **/api/admin/projects/:projectId/features** - New feature API to be used for feature toggles which also adds support for environments. See [the documentation](../api/admin/feature-toggles-api-v2.md) to learn more.
 
 
 ## Plan Differences

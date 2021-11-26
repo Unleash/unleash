@@ -4,7 +4,7 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import NotFoundError from '../error/notfound-error';
 import { Logger, LogProvider } from '../logger';
-import { FeatureToggleDTO, FeatureToggle, IVariant } from '../types/model';
+import { FeatureToggle, FeatureToggleDTO, IVariant } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 
 const FEATURE_COLUMNS = [
@@ -155,13 +155,15 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         if (!row) {
             throw new NotFoundError('No feature toggle found');
         }
+        const sortedVariants = (row.variants as unknown as IVariant[]) || [];
+        sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
         return {
             name: row.name,
             description: row.description,
             type: row.type,
             project: row.project,
             stale: row.stale,
-            variants: (row.variants as unknown as IVariant[]) || [],
+            variants: sortedVariants,
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
         };
@@ -171,7 +173,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         if (!row) {
             throw new NotFoundError('No feature toggle found');
         }
-        return (row.variants as unknown as IVariant[]) || [];
+        const sortedVariants = (row.variants as unknown as IVariant[]) || [];
+        sortedVariants.sort((a, b) => a.name.localeCompare(b.name));
+
+        return sortedVariants;
     }
 
     dtoToRow(project: string, data: FeatureToggleDTO): FeaturesTable {
@@ -183,7 +188,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             archived: data.archived || false,
             stale: data.stale,
             variants: data.variants
-                ? JSON.stringify(data.variants)
+                ? JSON.stringify(
+                      data.variants.sort((a, b) =>
+                          a.name.localeCompare(b.name),
+                      ),
+                  )
                 : JSON.stringify([]),
             created_at: data.createdAt,
         };

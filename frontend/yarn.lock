@@ -10775,10 +10775,10 @@ redux-mock-store@1.5.4:
   dependencies:
     lodash.isplainobject "^4.0.6"
 
-redux-thunk@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/redux-thunk/-/redux-thunk-2.4.0.tgz"
-  integrity sha512-/y6ZKQNU/0u8Bm7ROLq9Pt/7lU93cT0IucYMrubo89ENjxPa7i8pqLKu6V4X7/TvYovQ6x01unTeyeZ9lgXiTA==
+redux-thunk@2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.4.1.tgz#0dd8042cf47868f4b29699941de03c9301a75714"
+  integrity sha512-OOYGNY5Jy2TWvTL1KgAlVy6dcx3siPJ1wTq741EPyUKfn6W6nChdICjZwCd0p8AZBs5kWpZlbkXW2nE/zjUa+Q==
 
 redux@4.1.2:
   version "4.1.2"

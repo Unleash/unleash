@@ -18,8 +18,6 @@ export default class ClientMetricsController extends Controller {
 
     metricsV2: ClientMetricsServiceV2;
 
-    newServiceEnabled: boolean = false;
-
     constructor(
         {
             clientMetricsService,
@@ -31,11 +29,7 @@ export default class ClientMetricsController extends Controller {
         config: IUnleashConfig,
     ) {
         super(config);
-        const { experimental, getLogger } = config;
-        if (experimental && experimental.metricsV2) {
-            //@ts-ignore
-            this.newServiceEnabled = experimental.metricsV2.enabled;
-        }
+        const { getLogger } = config;
 
         this.logger = getLogger('/api/client/metrics');
         this.metrics = clientMetricsService;
@@ -60,12 +54,8 @@ export default class ClientMetricsController extends Controller {
         data.environment = this.resolveEnvironment(user, data);
         await this.metrics.registerClientMetrics(data, clientIp);
 
-        if (this.newServiceEnabled) {
-            await this.metricsV2.registerClientMetrics(data, clientIp);
-        }
+        await this.metricsV2.registerClientMetrics(data, clientIp);
 
         return res.status(202).end();
     }
 }
-
-module.exports = ClientMetricsController;

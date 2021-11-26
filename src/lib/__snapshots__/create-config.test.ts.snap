@@ -72,7 +72,11 @@ Object {
     "db": true,
     "ttlHours": 48,
   },
-  "ui": Object {},
+  "ui": Object {
+    "flags": Object {
+      "E": true,
+    },
+  },
   "versionCheck": Object {
     "enable": true,
     "url": "https://version.unleash.run",

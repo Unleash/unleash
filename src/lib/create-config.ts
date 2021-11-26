@@ -56,30 +56,16 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 function loadExperimental(options: IUnleashOptions): any {
     const experimental = options.experimental || {};
 
-    if (safeBoolean(process.env.EXP_ENVIRONMENTS, false)) {
-        experimental.environments = { enabled: true };
-    }
-
-    if (
-        safeBoolean(process.env.EXP_METRICS_V2, false) ||
-        //@ts-ignore
-        experimental.environments?.enabled
-    ) {
-        experimental.metricsV2 = { enabled: true };
-    }
-
     return experimental;
 }
 
-function loadUI(options: IUnleashOptions, experimental: any = {}): IUIConfig {
+function loadUI(options: IUnleashOptions): IUIConfig {
     const uiO = options.ui || {};
     const ui: IUIConfig = {};
 
-    if (experimental.environments?.enabled) {
-        ui.flags = {
-            E: true,
-        };
-    }
+    ui.flags = {
+        E: true,
+    };
     return mergeAll([uiO, ui]);
 }
 
@@ -254,7 +240,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const experimental = loadExperimental(options);
 
-    const ui = loadUI(options, experimental);
+    const ui = loadUI(options);
 
     const email: IEmailOption = mergeAll([defaultEmail, options.email]);
 

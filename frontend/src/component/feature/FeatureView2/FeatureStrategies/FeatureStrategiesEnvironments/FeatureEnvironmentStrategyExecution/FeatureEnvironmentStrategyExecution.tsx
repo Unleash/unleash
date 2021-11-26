@@ -36,9 +36,12 @@ const FeatureEnvironmentStrategyExecution = ({
 
     return (
         <div className={styles.container}>
-            <h3 className={styles.header}>
-                Visual overview of your strategy configuration
-            </h3>
+            <div className={styles.headerContainer}>
+                <h6 className={styles.header}>
+                    Visual overview of your strategy configuration
+                </h6>
+            </div>
+
             {renderStrategies()}
         </div>
     );

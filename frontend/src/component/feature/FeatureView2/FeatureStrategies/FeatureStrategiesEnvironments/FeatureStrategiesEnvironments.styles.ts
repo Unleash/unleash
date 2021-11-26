@@ -24,8 +24,8 @@ export const useStyles = makeStyles(theme => ({
         },
     },
     outerTabContentContainer: {
-        marginTop: '1rem',
-        padding: '0rem 2rem 2rem 2rem',
+        margin: '1rem 2rem',
+        paddingBottom: '2rem',
         display: 'flex',
         flexDirection: 'column',
         [theme.breakpoints.down(700)]: {
@@ -73,7 +73,10 @@ export const useStyles = makeStyles(theme => ({
     configureStrategy: {
         display: 'none',
     },
-    addStrategyButton: { marginLeft: 'auto' },
+    addStrategyButton: {
+        marginLeft: 'auto',
+        marginTop: '10px',
+    },
     tabNavigation: {
         backgroundColor: 'transparent',
         textTransform: 'none',

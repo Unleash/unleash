@@ -149,16 +149,18 @@ const FeatureStrategiesEnvironmentList = ({
                         condition={!expandedSidebar}
                         show={
                             <div className={styles.headerContainer}>
-                                <FeatureOverviewEnvSwitch
-                                    text={
-                                        activeEnvironment.enabled
-                                            ? 'Toggle is enabled and the following strategies are executing'
-                                            : 'Toggle is disabled and no strategies are executing'
-                                    }
-                                    env={activeEnvironment}
-                                    setToastData={setToastData}
-                                    callback={updateFeatureEnvironmentCache}
-                                />
+                                <div className={styles.headerInnerContainer}>
+                                    <FeatureOverviewEnvSwitch
+                                        text={
+                                            activeEnvironment.enabled
+                                                ? 'Toggle is enabled and the following strategies are executing'
+                                                : 'Toggle is disabled and no strategies are executing'
+                                        }
+                                        env={activeEnvironment}
+                                        setToastData={setToastData}
+                                        callback={updateFeatureEnvironmentCache}
+                                    />
+                                </div>
                             </div>
                         }
                     />

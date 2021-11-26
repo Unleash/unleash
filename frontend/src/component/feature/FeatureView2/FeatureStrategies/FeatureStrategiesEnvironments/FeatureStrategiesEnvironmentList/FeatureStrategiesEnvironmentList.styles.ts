@@ -44,7 +44,6 @@ export const useStyles = makeStyles(theme => ({
         top: '-65px',
         display: 'flex',
         justifyContent: 'space-between',
-        width: '100%',
         [theme.breakpoints.down(700)]: {
             top: '-94px',
         },

@@ -21,7 +21,7 @@ const PercentageCircle = ({
         color: '#fff',
         backgroundColor: theme.palette.grey[200],
         backgroundImage: `conic-gradient(${
-            theme.palette.primary.main
+            theme.palette.primary.light
         } ${percentage}%, ${secondaryPieColor || theme.palette.grey[200]} 1%)`,
     };
 

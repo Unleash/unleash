@@ -549,7 +549,7 @@ test('A newly created project only gets connected to enabled environments', asyn
     expect(connectedEnvs.some((e) => e === disabledEnv)).toBeFalsy();
 });
 
-test('A newly created project only gets connected to default environment if experimental flag is disabled', async () => {
+test.skip('A newly created project only gets connected to default environment if experimental flag is disabled', async () => {
     const config = createTestConfig({
         getLogger,
         // @ts-ignore

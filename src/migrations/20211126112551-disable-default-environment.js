@@ -1,12 +1,13 @@
 exports.up = function (db, cb) {
     db.runSql(
         `
-        DELETE FROM project_environments 
-        WHERE environment_name = 'default'
+        UPDATE environments 
+        SET enabled = false
+        WHERE name = 'default'
         AND NOT EXISTS (select  * from features);
 
-        DELETE FROM environments 
-        WHERE name = 'default'
+        DELETE FROM project_environments 
+        WHERE environment_name = 'default'
         AND NOT EXISTS (select  * from features);
 
         INSERT INTO project_environments(project_id, environment_name) 

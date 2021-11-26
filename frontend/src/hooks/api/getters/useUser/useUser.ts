@@ -6,7 +6,13 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 
 export const USER_CACHE_KEY = `api/admin/user`;
 
-const useUser = (options: SWRConfiguration = {}) => {
+const useUser = (
+    options: SWRConfiguration = {
+        revalidateIfStale: false,
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+    }
+) => {
     const fetcher = () => {
         const path = formatApiPath(`api/admin/user`);
         return fetch(path, {
@@ -31,6 +37,7 @@ const useUser = (options: SWRConfiguration = {}) => {
         user: data?.user || {},
         permissions: (data?.permissions || []) as IPermission[],
         feedback: data?.feedback || [],
+        splash: data?.splash || {},
         authDetails: data || {},
         error,
         loading,

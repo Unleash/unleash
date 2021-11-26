@@ -9,6 +9,7 @@ const userStore = (state = new $Map({ permissions: [] }), action) => {
                 .set('profile', action.value.user)
                 .set('permissions', action.value.permissions || [])
                 .set('feedback', action.value.feedback || [])
+                .set('splash', action.value.splash || {})
                 .set('showDialog', false)
                 .set('authDetails', undefined);
             return state;

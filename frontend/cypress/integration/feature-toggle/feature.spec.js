@@ -67,6 +67,16 @@ describe('feature toggle', () => {
             cy.get('[data-test="LOGIN_PASSWORD_ID"]').type('qY70$NDcJNXA');
 
             cy.get("[data-test='LOGIN_BUTTON']").click();
+
+            cy.request({
+                method: 'POST',
+                url: `${
+                    Cypress.config().baseUrl
+                }/api/admin/features/${featureToggleName}`,
+                headers: {
+                    Authorization: authToken,
+                },
+            });
         } else {
             cy.get('[data-test=LOGIN_EMAIL_ID]').type('test@unleash-e2e.com');
             cy.get('[data-test=LOGIN_BUTTON]').click();
@@ -74,6 +84,12 @@ describe('feature toggle', () => {
     });
 
     it('Creates a feature toggle', () => {
+        if (
+            document.querySelectorAll("[data-test='CLOSE_SPLASH']").length > 0
+        ) {
+            cy.get("[data-test='CLOSE_SPLASH']").click();
+        }
+
         cy.get('[data-test=NAVIGATE_TO_CREATE_FEATURE').click();
 
         cy.intercept('POST', '/api/admin/features').as('createFeature');

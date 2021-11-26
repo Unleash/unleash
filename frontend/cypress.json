@@ -1,3 +1,4 @@
 {
-  "projectId": "tc2qff"
+  "projectId": "tc2qff",
+  "defaultCommandTimeout": 12000
 }

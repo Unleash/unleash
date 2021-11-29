@@ -3,7 +3,7 @@ id: api-token
 title: API Tokens
 ---
 
-In order to connect to Unleash clients will need an API token to grant access. A client SDK will need to token with "client privileges", which allows them to fetch feature toggle configuration and post usage metics back.
+In order to connect to Unleash clients will need an API token to grant access. A client SDK will need to token with "client privileges", which allows them to fetch feature toggle configuration and post usage metrics back.
 
 ## Create API Token {#create-api-token}
 

@@ -66,6 +66,8 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         }
     };
 
+    const formId = 'add-tag-form';
+
     return (
         <>
             <Dialogue
@@ -76,14 +78,16 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                 onClick={onSubmit}
                 disabledPrimaryButton={loading}
                 onClose={onCancel}
+                formId={formId}
             >
                 <>
                     <DialogContentText>
-                        Tags allows you to group features together
+                        Tags allow you to group features together
                     </DialogContentText>
-                    <form onSubmit={onSubmit}>
+                    <form id={formId} onSubmit={onSubmit}>
                         <section className={styles.dialogFormContent}>
                             <TagSelect
+                                autoFocus
                                 name="type"
                                 value={tag.type}
                                 onChange={e => setValue('type', e.target.value)}

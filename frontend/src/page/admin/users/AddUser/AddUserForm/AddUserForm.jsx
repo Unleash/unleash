@@ -30,6 +30,7 @@ function AddUserForm({
     roles,
     userLoading,
     userApiErrors,
+    formId,
 }) {
     const ref = useLoading(userLoading);
     const commonStyles = useCommonStyles();
@@ -76,7 +77,7 @@ function AddUserForm({
         userApiErrors[ADD_USER_ERROR] || userApiErrors[UPDATE_USER_ERROR];
     return (
         <div ref={ref}>
-            <form onSubmit={submit}>
+            <form id={formId} onSubmit={submit}>
                 <DialogContent>
                     <ConditionallyRender
                         condition={apiError}
@@ -110,6 +111,7 @@ function AddUserForm({
                         />
 
                         <TextField
+                            autoFocus
                             label="Full name"
                             data-loading
                             name="name"

@@ -34,6 +34,8 @@ const EnvironmentDeleteConfirm = ({
         setConfirmName('');
     };
 
+    const formId = 'delete-environment-confirmation-form';
+
     return (
         <Dialogue
             title="Are you sure you want to delete this environment?"
@@ -43,6 +45,7 @@ const EnvironmentDeleteConfirm = ({
             onClick={handleDeleteEnvironment}
             disabledPrimaryButton={env?.name !== confirmName}
             onClose={handleCancel}
+            formId={formId}
         >
             <Alert severity="error">
                 Danger. Deleting this environment will result in removing all
@@ -59,12 +62,15 @@ const EnvironmentDeleteConfirm = ({
                 environment in the textfield below: <strong>{env?.name}</strong>
             </p>
 
-            <Input
-                onChange={handleChange}
-                value={confirmName}
-                label="Environment name"
-                className={styles.environmentDeleteInput}
-            />
+            <form id={formId}>
+                <Input
+                    autoFocus
+                    onChange={handleChange}
+                    value={confirmName}
+                    label="Environment name"
+                    className={styles.environmentDeleteInput}
+                />
+            </form>
         </Dialogue>
     );
 };

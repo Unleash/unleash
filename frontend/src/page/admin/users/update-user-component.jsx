@@ -44,11 +44,14 @@ function AddUser({
         closeDialog();
     };
 
+    const formId = 'update-user-dialog-form'
+
     return (
         <Dialogue
             onClick={e => {
                 submit(e);
             }}
+            formId={formId}
             open={showDialog}
             onClose={onCancel}
             primaryButtonText="Update user"
@@ -64,6 +67,7 @@ function AddUser({
                 error={error}
                 userApiErrors={userApiErrors}
                 userLoading={userLoading}
+                formId={formId}
             />
         </Dialogue>
     );

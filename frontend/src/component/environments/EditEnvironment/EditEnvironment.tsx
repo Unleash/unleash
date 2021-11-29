@@ -75,6 +75,8 @@ const EditEnvironment = ({
         setType(env.type);
     };
 
+    const formId = 'edit-environment-form';
+
     return (
         <Dialogue
             open={editEnvironment}
@@ -84,6 +86,7 @@ const EditEnvironment = ({
             primaryButtonText="Save"
             secondaryButtonText="Cancel"
             disabledPrimaryButton={isDisabled()}
+            formId={formId}
         >
             <div className={styles.body} ref={ref}>
                 <h3 className={styles.formHeader} data-loading>
@@ -92,7 +95,7 @@ const EditEnvironment = ({
                 <h3 className={styles.subheader} data-loading>
                     <CloudCircle className={styles.icon} /> {env.name}
                 </h3>
-                <form>
+                <form id={formId}>
                     <EnvironmentTypeSelector
                         onChange={handleTypeChange}
                         value={type}

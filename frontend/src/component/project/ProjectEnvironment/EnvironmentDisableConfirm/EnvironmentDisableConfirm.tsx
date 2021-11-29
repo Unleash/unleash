@@ -27,6 +27,8 @@ const EnvironmentDisableConfirm = ({
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         setConfirmName(e.currentTarget.value);
 
+    const formId = 'disable-environment-confirmation-form';
+
     return (
         <Dialogue
             title="Are you sure you want to disable this environment?"
@@ -36,10 +38,11 @@ const EnvironmentDisableConfirm = ({
             onClick={() => handleDisableEnvironment()}
             disabledPrimaryButton={env?.name !== confirmName}
             onClose={handleCancelDisableEnvironment}
+            formId={formId}
         >
             <Alert severity="error">
-                Danger. Disabling an environment can impact client applications 
-                connected to the environment and result in feature toggles being 
+                Danger. Disabling an environment can impact client applications
+                connected to the environment and result in feature toggles being
                 disabled.
             </Alert>
 
@@ -48,12 +51,15 @@ const EnvironmentDisableConfirm = ({
                 environment in the textfield below: <strong>{env?.name}</strong>
             </p>
 
-            <Input
-                onChange={handleChange}
-                value={confirmName}
-                label="Environment name"
-                className={styles.environmentDeleteInput}
-            />
+            <form id={formId}>
+                <Input
+                    autoFocus
+                    onChange={handleChange}
+                    value={confirmName}
+                    label="Environment name"
+                    className={styles.environmentDeleteInput}
+                />
+            </form>
         </Dialogue>
     );
 };

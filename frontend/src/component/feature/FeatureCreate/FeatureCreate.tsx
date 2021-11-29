@@ -110,6 +110,7 @@ const FeatureCreate = () => {
                 <input type="hidden" name="project" value={projectId} />
                 <div className={styles.formContainer}>
                     <Input
+                        autoFocus
                         label="Name"
                         placeholder="Unique-name"
                         className={styles.nameInput}

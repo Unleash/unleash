@@ -61,11 +61,14 @@ const AddUser = ({
         closeDialog();
     };
 
+    const formId = 'add-user-dialog-form';
+
     return (
         <Dialogue
             onClick={e => {
                 submit(e);
             }}
+            formId={formId}
             open={showDialog}
             onClose={onCancel}
             primaryButtonText="Add user"
@@ -74,6 +77,7 @@ const AddUser = ({
             fullWidth
         >
             <AddUserForm
+                formId={formId}
                 userApiErrors={userApiErrors}
                 data={data}
                 setData={setData}

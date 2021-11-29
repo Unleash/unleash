@@ -144,6 +144,8 @@ const ApiTokenCreate = ({
         { key: 'ADMIN', label: 'Admin', title: 'Admin API token' },
     ];
 
+    const formId = 'create-api-token-form';
+
     return (
         <Dialogue
             onClick={() => submit()}
@@ -152,8 +154,10 @@ const ApiTokenCreate = ({
             primaryButtonText="Create"
             secondaryButtonText="Cancel"
             title="New API token"
+            formId={formId}
         >
             <form
+                id={formId}
                 onSubmit={submit}
                 className={classNames(
                     styles.addApiKeyForm,
@@ -161,6 +165,7 @@ const ApiTokenCreate = ({
                 )}
             >
                 <TextField
+                    autoFocus
                     value={data.username}
                     name="username"
                     onChange={setUsername}

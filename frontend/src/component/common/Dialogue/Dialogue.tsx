@@ -22,6 +22,7 @@ interface IDialogue {
     fullWidth?: boolean;
     maxWidth?: 'lg' | 'sm' | 'xs' | 'md' | 'xl';
     disabledPrimaryButton?: boolean;
+    formId?: string;
 }
 
 const Dialogue: React.FC<IDialogue> = ({
@@ -35,8 +36,15 @@ const Dialogue: React.FC<IDialogue> = ({
     secondaryButtonText,
     maxWidth = 'sm',
     fullWidth = false,
+    formId,
 }) => {
     const styles = useStyles();
+    const handleClick = formId
+        ? (e: React.SyntheticEvent) => {
+              e.preventDefault();
+              onClick(e);
+          }
+        : onClick;
     return (
         <Dialog
             open={open}
@@ -61,12 +69,14 @@ const Dialogue: React.FC<IDialogue> = ({
                     condition={Boolean(onClick)}
                     show={
                         <Button
+                            form={formId}
                             color="primary"
                             variant="contained"
-                            onClick={onClick}
-                            autoFocus
+                            onClick={handleClick}
+                            autoFocus={!formId}
                             disabled={disabledPrimaryButton}
                             data-test={DIALOGUE_CONFIRM_ID}
+                            type={formId ? 'submit' : 'button'}
                         >
                             {primaryButtonText || "Yes, I'm sure"}
                         </Button>
@@ -77,7 +87,7 @@ const Dialogue: React.FC<IDialogue> = ({
                     condition={Boolean(onClose)}
                     show={
                         <Button onClick={onClose}>
-                            {secondaryButtonText || 'No take me back'}{' '}
+                            {secondaryButtonText || 'No, take me back'}
                         </Button>
                     }
                 />

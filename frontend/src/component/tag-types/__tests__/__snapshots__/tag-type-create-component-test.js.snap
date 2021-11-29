@@ -37,7 +37,7 @@ exports[`it supports editMode 1`] = `
       <h6
         className="MuiTypography-root MuiTypography-subtitle1"
       >
-        Tag types allows you to group tags together in the management UI
+        Tag types allow you to group tags together in the management UI
       </h6>
       <form
         className="addTagTypeForm contentSpacing"
@@ -140,7 +140,7 @@ exports[`renders correctly for creating 1`] = `
       <h6
         className="MuiTypography-root MuiTypography-subtitle1"
       >
-        Tag types allows you to group tags together in the management UI
+        Tag types allow you to group tags together in the management UI
       </h6>
       <form
         className="addTagTypeForm contentSpacing"
@@ -243,7 +243,7 @@ exports[`renders correctly for creating without permissions 1`] = `
       <h6
         className="MuiTypography-root MuiTypography-subtitle1"
       >
-        Tag types allows you to group tags together in the management UI
+        Tag types allow you to group tags together in the management UI
       </h6>
       <form
         className="addTagTypeForm contentSpacing"

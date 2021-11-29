@@ -71,7 +71,7 @@ const AddTagTypeComponent = ({
                 )}
             >
                 <Typography variant="subtitle1">
-                    Tag types allows you to group tags together in the
+                    Tag types allow you to group tags together in the
                     management UI
                 </Typography>
                 <form

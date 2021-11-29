@@ -3,7 +3,18 @@ id: technical_debt
 title: Technical Debt
 ---
 
-At Unleash we care deeply about code quality. Technical debt creeps up over time and slowly builds to the point where it really starts to hurt. At that point it's too late. Feature toggles that have outlived their feature and are not cleaned up represent technical dept that should be cleaned up and removed from your code.
+At Unleash we care deeply about code quality. Technical debt creeps up over time and slowly builds to the point where it really starts to hurt. At that point it's too late. Feature toggles that have outlived their feature and are not cleaned up represent technical debt that you should remove from your code.
+
+## Stale and potentially stale toggles
+
+When a toggle is no longer useful, we say that it has become _stale_. A stale toggle is a toggle that has served its purpose and that you should remove from the code base. For a toggle to become stale, you have to explicitly mark it as such. You can mark a toggle as stale in the [technical debt dashboard](#the-technical-debt-dashboard).
+
+Unleash also has a concept of _potentially_ stale toggles. These are toggles that have lived longer than what Unleash expects them to based on their [feature toggle type](../advanced/feature-toggle-types.md). However, Unleash can't know for sure whether a toggle is actually stale or not, so it's up to you to make the decision on whether to mark it as stale or to keep it as an active toggle.
+
+A toggle being (potentially) stale, does not affect how it performs in your application; it's only there to make it easier for you to manage your toggles.
+
+
+## The technical debt dashboard
 
 In order to assist with removing unused feature toggles, Unleash provides a technical debt dashboard in the management-ui. You can find it by clicking on “Advanced” in the top-line menu then choose _Reporting_ in the  dropdown menu.
 
@@ -11,7 +22,7 @@ In order to assist with removing unused feature toggles, Unleash provides a tech
 
 The dasboard includes a health report card, and a list of toggles that can be filtrated on different parameters.
 
-## Report card {#report-card}
+### Report card {#report-card}
 
 ![Report card](/img/reportcard.png)
 
@@ -27,13 +38,13 @@ If your toggle exceeds the expected lifetime of it's toggle type it will be mark
 
 One thing to note is that the report card and corresponding list are showing stats related to the currently selected project. If you have more than one project, you will be provided with a project selector in order to swap between the projects.
 
-## Health rating
+### Health rating
 
 Unleash calculates a project's health rating based on the project's total number of active toggles and how many of those active toggles are stale or potentially stale. When you archive a toggle, it no longer counts towards your project's health rating.
 
 The health rating updates once every hour, so there may be some lag if you have recently added, removed, or changed the status of a toggle.
 
-## Toggle list {#toggle-list}
+### Toggle list {#toggle-list}
 
 ![Toggle list](/img/togglelist.png)
 

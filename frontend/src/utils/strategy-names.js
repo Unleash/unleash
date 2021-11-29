@@ -47,7 +47,7 @@ const nameMapping = {
 export const getHumanReadbleStrategy = strategyName =>
     nameMapping[strategyName];
 
-export const getHumanReadbleStrategyName = strategyName => {
+export const getHumanReadableStrategyName = strategyName => {
     const humanReadableStrategy = nameMapping[strategyName];
 
     if (humanReadableStrategy) {

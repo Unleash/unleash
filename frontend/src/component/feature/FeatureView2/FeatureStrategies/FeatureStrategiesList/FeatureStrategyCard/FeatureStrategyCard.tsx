@@ -12,7 +12,7 @@ import { ADD_NEW_STRATEGY_CARD_BUTTON_ID } from '../../../../../../testIds';
 import { getStrategyObject } from '../../../../../../utils/get-strategy-object';
 import {
     getFeatureStrategyIcon,
-    getHumanReadbleStrategyName,
+    getHumanReadableStrategyName,
 } from '../../../../../../utils/strategy-names';
 import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
@@ -63,7 +63,7 @@ const FeatureStrategyCard = ({
         }),
     });
 
-    const readableName = getHumanReadbleStrategyName(name);
+    const readableName = getHumanReadableStrategyName(name);
     const Icon = getFeatureStrategyIcon(name);
 
     const classes = classNames(styles.featureStrategyCard);

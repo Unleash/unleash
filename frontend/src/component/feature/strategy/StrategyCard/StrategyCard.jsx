@@ -6,7 +6,7 @@ import { Card, CardContent } from '@material-ui/core';
 import { useStyles } from './StrategyCard.styles';
 import StrategyCardContent from './StrategyCardContent/StrategyCardContent';
 import StrategyCardHeader from './StrategyCardHeader/StrategyCardHeader';
-import { getHumanReadbleStrategyName } from '../../../../utils/strategy-names';
+import { getHumanReadableStrategyName } from '../../../../utils/strategy-names';
 
 const StrategyCard = ({
     strategy,
@@ -25,7 +25,7 @@ const StrategyCard = ({
             <span style={{ alignItems: 'stretch' }}>
                 <Card className={styles.strategyCard}>
                     <StrategyCardHeader
-                        name={getHumanReadbleStrategyName(strategy.name)}
+                        name={getHumanReadableStrategyName(strategy.name)}
                         connectDragSource={connectDragSource}
                         removeStrategy={removeStrategy}
                         editStrategy={editStrategy}

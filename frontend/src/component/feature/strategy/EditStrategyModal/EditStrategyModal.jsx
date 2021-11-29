@@ -7,7 +7,7 @@ import UserWithIdStrategy from './user-with-id-strategy';
 import GeneralStrategy from './general-strategy';
 import StrategyConstraints from '../StrategyConstraint/StrategyConstraintInput';
 
-import { getHumanReadbleStrategyName } from '../../../../utils/strategy-names';
+import { getHumanReadableStrategyName } from '../../../../utils/strategy-names';
 import Dialogue from '../../../common/Dialogue';
 
 const EditStrategyModal = ({
@@ -91,7 +91,7 @@ const EditStrategyModal = ({
             fullWidth
             onClose={onCancel}
             onClick={save}
-            title={`Configure ${getHumanReadbleStrategyName(
+            title={`Configure ${getHumanReadableStrategyName(
                 strategy.name
             )} strategy`}
             primaryButtonText="Save"

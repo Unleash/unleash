@@ -4,10 +4,27 @@ import classnames from 'classnames';
 import { Link, useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import { IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@material-ui/core';
-import { Add, Delete, Extension, Visibility, VisibilityOff } from '@material-ui/icons';
+import {
+    IconButton,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+    Tooltip,
+} from '@material-ui/core';
+import {
+    Add,
+    Delete,
+    Extension,
+    Visibility,
+    VisibilityOff,
+} from '@material-ui/icons';
 
-import { CREATE_STRATEGY, DELETE_STRATEGY, UPDATE_STRATEGY } from '../../providers/AccessProvider/permissions';
+import {
+    CREATE_STRATEGY,
+    DELETE_STRATEGY,
+    UPDATE_STRATEGY,
+} from '../../providers/AccessProvider/permissions';
 
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import PageContent from '../../common/PageContent/PageContent';
@@ -19,6 +36,7 @@ import Dialogue from '../../common/Dialogue';
 import { ADD_NEW_STRATEGY_ID } from '../../../testIds';
 import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import { getHumanReadableStrategyName } from '../../../utils/strategy-names';
 
 const StrategiesList = ({
     strategies,
@@ -45,17 +63,14 @@ const StrategiesList = ({
                 <ConditionallyRender
                     condition={smallScreen}
                     show={
-                            <PermissionIconButton
-                                data-test={ADD_NEW_STRATEGY_ID}
-                                onClick={() =>
-                                    history.push('/strategies/create')
-                                }
-                                permission={CREATE_STRATEGY}
-                                tooltip={'Add new strategy'}
-                            >
-                                <Add />
-                            </PermissionIconButton>
-
+                        <PermissionIconButton
+                            data-test={ADD_NEW_STRATEGY_ID}
+                            onClick={() => history.push('/strategies/create')}
+                            permission={CREATE_STRATEGY}
+                            tooltip={'Add new strategy'}
+                        >
+                            <Add />
+                        </PermissionIconButton>
                     }
                     elseShow={
                         <PermissionButton
@@ -76,7 +91,7 @@ const StrategiesList = ({
 
     const strategyLink = ({ name, deprecated }) => (
         <Link to={`/strategies/view/${name}`}>
-            <strong>{name}</strong>
+            <strong>{getHumanReadableStrategyName(name)}</strong>
             <ConditionallyRender
                 condition={deprecated}
                 show={<small> (Deprecated)</small>}
@@ -96,7 +111,9 @@ const StrategiesList = ({
                 }
                 permission={UPDATE_STRATEGY}
                 tooltip={'Reactivate activation strategy'}
-            ><VisibilityOff /></PermissionIconButton>
+            >
+                <VisibilityOff />
+            </PermissionIconButton>
         </Tooltip>
     );
 
@@ -119,8 +136,7 @@ const StrategiesList = ({
                             setDialogueMetaData({
                                 show: true,
                                 title: 'Really deprecate strategy?',
-                                onConfirm: () =>
-                                    deprecateStrategy(strategy),
+                                onConfirm: () => deprecateStrategy(strategy),
                             })
                         }
                         permission={UPDATE_STRATEGY}
@@ -137,19 +153,19 @@ const StrategiesList = ({
         <ConditionallyRender
             condition={strategy.editable}
             show={
-                    <PermissionIconButton
-                        onClick={() =>
-                            setDialogueMetaData({
-                                show: true,
-                                title: 'Really delete strategy?',
-                                onConfirm: () => removeStrategy(strategy),
-                            })
-                        }
-                        permission={DELETE_STRATEGY}
-                        tooltip={'Delete strategy'}
-                    >
-                        <Delete />
-                    </PermissionIconButton>
+                <PermissionIconButton
+                    onClick={() =>
+                        setDialogueMetaData({
+                            show: true,
+                            title: 'Really delete strategy?',
+                            onConfirm: () => removeStrategy(strategy),
+                        })
+                    }
+                    permission={DELETE_STRATEGY}
+                    tooltip={'Delete strategy'}
+                >
+                    <Delete />
+                </PermissionIconButton>
             }
             elseShow={
                 <Tooltip title="You cannot delete a built-in strategy">

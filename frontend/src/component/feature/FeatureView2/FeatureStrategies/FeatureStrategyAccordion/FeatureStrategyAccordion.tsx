@@ -13,7 +13,7 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
     getFeatureStrategyIcon,
-    getHumanReadbleStrategyName,
+    getHumanReadableStrategyName,
 } from '../../../../../utils/strategy-names';
 import { useStyles } from './FeatureStrategyAccordion.styles';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
@@ -44,7 +44,7 @@ const FeatureStrategyAccordion: React.FC<IFeatureStrategyAccordionProps> = ({
 }) => {
     const smallScreen = useMediaQuery('(max-width:500px)');
     const styles = useStyles();
-    const strategyName = getHumanReadbleStrategyName(strategy.name);
+    const strategyName = getHumanReadableStrategyName(strategy.name);
     const Icon = getFeatureStrategyIcon(strategy.name);
 
     const updateParameters = (field: string, value: any) => {

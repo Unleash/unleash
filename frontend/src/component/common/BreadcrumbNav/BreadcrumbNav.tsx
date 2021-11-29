@@ -22,7 +22,8 @@ const BreadcrumbNav = () => {
                 item !== 'metrics' &&
                 item !== 'copy' &&
                 item !== 'strategies' &&
-                item !== 'features'
+                item !== 'features' &&
+                item !== 'features2'
         );
 
     return (

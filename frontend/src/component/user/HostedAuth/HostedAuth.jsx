@@ -9,10 +9,12 @@ import useQueryParams from '../../../hooks/useQueryParams';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from '../../common/DividerText/DividerText';
 import ConditionallyRender from '../../common/ConditionallyRender';
+import useUser from '../../../hooks/api/getters/useUser/useUser';
 
 const HostedAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
     const styles = useStyles();
+    const { refetch } = useUser();
     const history = useHistory();
     const params = useQueryParams();
     const [username, setUsername] = useState(params.get('email') || '');
@@ -47,6 +49,7 @@ const HostedAuth = ({ authDetails, passwordLogin }) => {
 
         try {
             await passwordLogin(path, user);
+            refetch();
             history.push(`/`);
         } catch (error) {
             if (error.statusCode === 404 || error.statusCode === 400) {

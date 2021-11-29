@@ -11,12 +11,14 @@ interface IEnvironmentSplashProps {
     onFinish: (status: boolean) => void;
 }
 
+const ENVIRONMENT_SPLASH_ID = 'environment';
+
 const EnvironmentSplash = ({ onFinish }: IEnvironmentSplashProps) => {
     const styles = useStyles();
     const { setSplashSeen } = useSplashApi();
 
     useEffect(() => {
-        setSplashSeen('environments');
+        setSplashSeen(ENVIRONMENT_SPLASH_ID);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

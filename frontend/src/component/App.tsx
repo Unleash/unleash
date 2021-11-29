@@ -36,12 +36,12 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
     }, [user.authDetails?.type]);
 
     useEffect(() => {
-        if (splash?.environments === undefined) return;
-        if (!splash?.environments && !isUnauthorized()) {
+        if (splash?.environment === undefined) return;
+        if (!splash?.environment && !isUnauthorized()) {
             setShowSplash(true);
         }
         /* eslint-disable-next-line */
-    }, [splash.environments]);
+    }, [splash.environment]);
 
     const renderMainLayoutRoutes = () => {
         return routes.filter(route => route.layout === 'main').map(renderRoute);

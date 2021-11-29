@@ -3,16 +3,21 @@ import PropTypes from 'prop-types';
 import { Button, TextField } from '@material-ui/core';
 
 import styles from './SimpleAuth.module.scss';
+import useUser from '../../../hooks/api/getters/useUser/useUser';
 
 const SimpleAuth = ({ insecureLogin, history, authDetails }) => {
     const [email, setEmail] = useState('');
+    const { refetch } = useUser();
 
     const handleSubmit = evt => {
         evt.preventDefault();
         const user = { email };
         const path = evt.target.action;
 
-        insecureLogin(path, user).then(() => history.push(`/`));
+        insecureLogin(path, user).then(() => {
+            refetch();
+            history.push(`/`);
+        });
     };
 
     const handleChange = e => {

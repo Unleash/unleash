@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, TextField } from '@material-ui/core';
+import useUser from '../../../hooks/api/getters/useUser/useUser';
 
 import styles from './DemoAuth.module.scss';
 
@@ -10,12 +11,17 @@ import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from '../../../testIds';
 const DemoAuth = ({ demoLogin, history, authDetails }) => {
     const [email, setEmail] = useState('');
 
+    const { refetch } = useUser();
+
     const handleSubmit = evt => {
         evt.preventDefault();
         const user = { email };
         const path = evt.target.action;
 
-        demoLogin(path, user).then(() => history.push(`/`));
+        demoLogin(path, user).then(() => {
+            refetch();
+            history.push(`/`);
+        });
     };
 
     const handleChange = e => {

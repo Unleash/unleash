@@ -15,11 +15,13 @@ import {
     LOGIN_PASSWORD_ID,
     LOGIN_EMAIL_ID,
 } from '../../../testIds';
+import useUser from '../../../hooks/api/getters/useUser/useUser';
 
 const PasswordAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
     const styles = useStyles();
     const history = useHistory();
+    const { refetch } = useUser();
     const params = useQueryParams();
     const [username, setUsername] = useState(params.get('email') || '');
     const [password, setPassword] = useState('');
@@ -53,7 +55,7 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
 
         try {
             await passwordLogin(path, user);
-
+            refetch();
             history.push(`/`);
         } catch (error) {
             if (error.statusCode === 404 || error.statusCode === 400) {

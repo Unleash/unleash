@@ -14,7 +14,6 @@ const StandaloneBanner: FC<IStandaloneBannerProps> = ({ title, children }) => {
     const theme = useTheme();
     const styles = useStyles();
     const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    console.log(smallScreen);
 
     return (
         <Gradient

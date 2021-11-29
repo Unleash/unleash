@@ -4,7 +4,7 @@ title: Environments
 ---
 
 <div class="alert alert--info" role="alert">
-  <em>Environments</em> is a new feature currently in beta. It can be enabled from <i>Unleash v4.2.x</i> with a feature toggle. We plan to make the environment feature general available from <i>Unleash v4.3.x</i>.
+  <em>Environments</em> are available in <i>Unleash v4.3.x</i> and later. They can also be enabled from <i>Unleash v4.2.x</i> with a feature toggle.
 </div>
 <br />
 
@@ -30,7 +30,11 @@ Despite this being a shift in how Unleash works, everything will continue to wor
 
 ## How to start using environments
 
-In order to start using environments you need to be on Unleash v4.2 or higher. You also need to have the environment feature enabled (if you are using Unleash Hosted, please reach out on [contact@getunleash.io](mailto:contact@getunleash.io) if you want to start using environments.
+In order to start using environments you need to be on Unleash v4.2 or higher.
+
+If you are on v4.2, you also need to have the environment feature enabled (if you are using Unleash Hosted, please reach out on [contact@getunleash.io](mailto:contact@getunleash.io) if you want to start using environments.
+
+If you are on v4.3 or later, environments are already enabled for you.
 
 Note that in order to enable an environment for a feature toggle, you must first add activation strategies for that environment. You cannot enable an environment without activation strategies.
 

@@ -5,7 +5,7 @@ export interface IProjectInsert {
     id: string;
     name: string;
     description: string;
-    lastUpdate?: Date;
+    updatedAt?: Date;
 }
 
 export interface IProjectArchived {

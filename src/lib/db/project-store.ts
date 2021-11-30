@@ -17,7 +17,7 @@ const COLUMNS = [
     'description',
     'created_at',
     'health',
-    'last_update',
+    'updated_at',
 ];
 const TABLE = 'projects';
 
@@ -81,7 +81,7 @@ class ProjectStore implements IProjectStore {
     async updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void> {
         await this.db(TABLE)
             .where({ id: healthUpdate.id })
-            .update({ health: healthUpdate.health, last_update: new Date() });
+            .update({ health: healthUpdate.health, updated_at: new Date() });
     }
 
     async create(project: IProjectInsert): Promise<IProject> {
@@ -204,7 +204,7 @@ class ProjectStore implements IProjectStore {
             description: row.description,
             createdAt: row.created_at,
             health: row.health || 100,
-            lastUpdate: row.last_update || new Date(),
+            updatedAt: row.updated_at || new Date(),
         };
     }
 }

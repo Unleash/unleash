@@ -60,7 +60,7 @@
     "craco": "0.0.3",
     "css-loader": "6.5.1",
     "cypress": "8.7.0",
-    "date-fns": "2.26.0",
+    "date-fns": "2.27.0",
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",
     "enzyme": "3.11.0",

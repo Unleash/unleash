@@ -19,7 +19,7 @@ The proxy solves three important aspects:
 
 _The Unleash Proxy uses the Unleash SDK and exposes a simple API_. The Proxy will synchronize with the Unleash API in the background and provide a simple HTTP API for clients.
 
-### How to Run the Unleash Proxy
+## How to Run the Unleash Proxy
 
 The Unleash Proxy is Open Source and [available on github](https://github.com/Unleash/unleash-proxy). You can either run it as a docker image or as part of a [node.js express application](https://github.com/Unleash/unleash-proxy#run-with-nodejs).
 
@@ -56,7 +56,40 @@ In order to verify the proxy you can use curl and see that you get a few evaluat
 curl http://localhost:3000/proxy -H "Authorization: some-secret"
 ```
 
-Expected output would be something like:
+The output is of the form described in the [payload section](#payload).
+
+**Health endpoint**
+
+The proxy will try to synchronize with the Unleash API at startup, until it has successfully done that the proxy will return `HTTP 503 - Not Read?` for all request. You can use the health endpoint to validate that the proxy is ready to recieve requests:
+
+```bash
+curl http://localhost:3000/proxy/health -I
+```
+
+```bash
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: ETag
+Content-Type: text/html; charset=utf-8
+Content-Length: 2
+ETag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+Date: Fri, 04 Jun 2021 10:38:27 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+```
+
+There are multiple more configuration options available. You find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
+
+## Unleash Proxy API {#unleash-proxy-api}
+
+The Unleash Proxy has a very simple API. It takes the [Unleash Context](../user_guide/unleash_context) as input and will return the feature toggles relevant for that specific context.
+
+![The Unleash Proxy](/img/The-Unleash-Proxy-API.png).
+
+### Payload
+
+The `proxy` endpoint returns information about toggles enabled for the current user. The payload is a JSON object with a `toggles` property, which contains a list of toggles.
+
 
 ```json
 {
@@ -81,41 +114,98 @@ Expected output would be something like:
 }
 ```
 
-**Health endpoint**
+#### Toggle data
 
-The proxy will try to synchronize with the Unleash API at startup, until it has successfully done that the proxy will return `HTTP 503 - Not Read?` for all request. You can use the health endpoint to validate that the proxy is ready to recieve requests:
+The data for a toggle without [variants](../advanced/feature-toggle-variants.md) looks like this:
 
-```bash
-curl http://localhost:3000/proxy/health -I
+``` json
+{
+  "name": "basic-toggle",
+  "enabled": true,
+  "variant": {
+    "name": "disabled",
+    "enabled": false
+  }
+}
 ```
 
-```bash
-HTTP/1.1 200 OK
-Access-Control-Allow-Origin: *
-Access-Control-Expose-Headers: ETag
-Content-Type: text/html; charset=utf-8
-Content-Length: 2
-ETag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
-Date: Fri, 04 Jun 2021 10:38:27 GMT
-Connection: keep-alive
-Keep-Alive: timeout=5
+- **`name`**: the name of the feature.
+- **`enabled`**: whether the toggle is enabled or not. Will always be `true`.
+- **`variant`**: describes whether the toggle has variants and, if it does, what variant is active for this user. If a toggle doesn't have any variants, it will always be `{"name": "disabled", "enabled": true}`.
+
+:::note
+Unleash uses a fallback variant called "disabled" to indicate that a toggle has no variants. However, you are free to create a variant called "disabled" yourself. In that case you can tell them apart by checking the variant's `enabled` property: if the toggle has no variants, `enabled` will be `false`. If the toggle is the "disabled" variant that you created, it will have `enabled` set to `true`.
+:::
+
+
+If a toggle has variants, then the variant object can also contain an optional `payload` property. The `payload` will contain data about the variant's payload: what type it is, and what the content is. To learn more about variants and their payloads, check [the feature toggle variants documentation](../advanced/feature-toggle-variants.md).
+
+Variant toggles without payloads look will have their name listed and the `enabled` property set to `true`:
+
+``` json
+{
+  "name": "toggle-with-variants",
+  "enabled": true,
+  "variant": {
+    "name": "simple",
+    "enabled": true
+  }
+}
+
 ```
 
-There are multiple more configuration options available. You find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
+If the variant has a payload, the optional `payload` property will list the payload's type and it's content in a stringified form:
 
-### Unleash Proxy API {#unleash-proxy-api}
+``` json
+{
+  "name": "toggle-with-variants",
+  "enabled": true,
+  "variant": {
+    "name": "with-payload-string",
+    "payload": {
+      "type": "string",
+      "value": "this string is the variant's payload"
+    },
+    "enabled": true
+  }
+}
+```
 
-The Unleash Proxy has a very simple API. It takes the [Unleash Context](../user_guide/unleash_context) as input and will return the feature toggles relevant for that specific context.
+For the `variant` property:
+- **`name`**: is the name of the variant, as shown in the Admin UI.
+- **`enabled`**: indicates whether the variant is enabled or not. If the toggle has variants, this is always `true`.
+- **`payload`** (optional): Only present if the variant has a payload. Describes the payload's type and content.
 
-![The Unleash Proxy](/img/The-Unleash-Proxy-API.png).
+If the variant has a payload, the `payload` object contains:
+- **`type`**: the type of the variant's payload
+- **`value`**: the value of the variant's payload
 
-### We care about Privacy! {#we-care-about-privacy}
+The `value` will always be the payload's content as a string, escaped as necessary. For instance, a variant with a JSON payload would look like this:
+
+``` json
+{
+  "name": "toggle-with-variants",
+  "enabled": true,
+  "variant": {
+    "name": "with-payload-json",
+    "payload": {
+      "type": "json",
+      "value": "{\"description\": \"this is data delivered as a json string\"}"
+    },
+    "enabled": true
+  }
+}
+```
+
+## We care about Privacy! {#we-care-about-privacy}
 
 The Unleash Proxy is important because you should not expose your entire set of toggle configurations to your end users. Single page apps work in the context of a specific user. The proxy allows you to only provide data that relates to that one user: _The proxy will only return the evaluated toggles (with variants) that should be enabled for that specific user in that specific context._
 
 Most of our customers prefer to run The Unleash Proxy themselves. PS! We actually prefer this as we don’t want to see your users. Running it is pretty simple, it is either a small Node.js process you start or a docker image you use. (We can of course host the proxy for you also.)
 
-### How to connect to the Proxy? {#how-to-connect-to-the-proxy}
+
+
+## How to connect to the Proxy? {#how-to-connect-to-the-proxy}
 
 The Unleash Proxy takes the heavy lifting of evaluating toggles and only returns enabled toggles and their values to the client. This means that you would get away with a simple http-client in many common use-cases.
 

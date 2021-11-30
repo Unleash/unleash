@@ -1,4 +1,3 @@
-import { DateFileAppender } from 'log4js';
 import { IProject } from '../model';
 import { Store } from './store';
 

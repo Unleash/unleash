@@ -37,7 +37,6 @@ class ProjectStore implements IProjectStore {
             id: data.id,
             name: data.name,
             description: data.description,
-            lastUpdate: data.lastUpdate,
         };
     }
 

@@ -87,7 +87,7 @@
     "redux-devtools-extension": "2.13.9",
     "redux-mock-store": "1.5.4",
     "redux-thunk": "2.4.1",
-    "sass": "1.43.5",
+    "sass": "1.44.0",
     "swr": "1.0.1",
     "typescript": "4.5.2",
     "web-vitals": "2.1.2"

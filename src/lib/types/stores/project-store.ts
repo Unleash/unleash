@@ -1,3 +1,4 @@
+import { DateFileAppender } from 'log4js';
 import { IProject } from '../model';
 import { Store } from './store';
 
@@ -5,6 +6,7 @@ export interface IProjectInsert {
     id: string;
     name: string;
     description: string;
+    lastUpdate?: Date;
 }
 
 export interface IProjectArchived {

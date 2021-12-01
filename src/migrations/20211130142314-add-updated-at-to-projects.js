@@ -2,7 +2,7 @@
 
 exports.up = function (db, callback) {
     db.runSql(
-        'ALTER TABLE projects ADD COLUMN "updated_at" TIMESTAMP WITH TIME ZONE',
+        'ALTER TABLE projects ADD COLUMN "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now();',
         callback,
     );
 };

@@ -14,6 +14,7 @@ interface PermissionChecker {
         user: User,
         permission: string,
         projectId?: string,
+        environment?: string,
     ): Promise<boolean>;
 }
 
@@ -44,7 +45,7 @@ const rbacMiddleware = (
             }
 
             // For /api/admin/projects/:projectId we will find it as part of params
-            let { projectId } = params;
+            let { projectId, environment } = params;
 
             // Temporary workaround to figure out projectId for feature toggle updates.
             // will be removed in Unleash v5.0
@@ -55,7 +56,12 @@ const rbacMiddleware = (
                 projectId = req.body.project || 'default';
             }
 
-            return accessService.hasPermission(user, permission, projectId);
+            return accessService.hasPermission(
+                user,
+                permission,
+                projectId,
+                environment,
+            );
         };
         return next();
     };

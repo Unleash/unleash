@@ -39,7 +39,7 @@ const CreateEnvironment = () => {
 
     const goBack = () => history.goBack();
 
-    const canCreateMoreEnvs = environments.length < 5;
+    const canCreateMoreEnvs = environments.length < 7;
 
     const validateEnvironmentName = async () => {
         if (envName.length === 0) {

@@ -109,9 +109,9 @@ export class AccessService {
         }
     }
 
-    async getPermissionsForUser(user: User): Promise<IUserPermission[]> {
+    async getPermissionsForUser(user: IUser): Promise<IUserPermission[]> {
         if (user.isAPI) {
-            return user.permissions.map((p) => ({
+            return user.permissions?.map((p) => ({
                 permission: p,
             }));
         }

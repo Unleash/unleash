@@ -65,9 +65,6 @@ class UserController extends Controller {
         );
         const splash = await this.userSplashService.getAllUserSplashs(user);
 
-        // TODO: remove this line after we remove it from db.
-        delete user.permissions;
-
         return res
             .status(200)
             .json({ user, permissions, feedback, splash })

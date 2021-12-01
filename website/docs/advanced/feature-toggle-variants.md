@@ -2,8 +2,20 @@
 id: toggle_variants
 title: Feature Toggle Variants
 ---
+<div class="alert alert--info" role="alert">
+  <em>Feature toggle variants</em> were introduced in <em>Unleash v3.2.0</em>.
+</div>
+<br/>
 
-> This feature was introduced in _Unleash v3.2.0_.
+Every toggle in Unleash can have something called _variants_ ...
+
+Variants help facilitate A/B testing and experimentation by ... [read more about that in the discussion topic]
+
+## How well do my variants perform?
+
+
+
+## What is it?
 
 Do you want to facilitate more advanced experimentations? Do you want to use Unleash to handle your A/B experiments? Say hello to feature toggle variants!
 
@@ -11,7 +23,7 @@ You can now extend feature toggles with multiple variants. This feature enables 
 
 ![toggle_variants](/img/variants.png 'Feature Toggle Variants')
 
-#### How does it work? {#how-does-it-work}
+## How does it work? {#how-does-it-work}
 
 Unleash will first use activation strategies to decide whether a feature toggle is considered enabled or disabled for the current user.
 
@@ -39,7 +51,9 @@ Variant variant = unleash.getVariant("toggle.name", unleashContext);
 System.out.println(variant.getName());
 ```
 
-#### Client SDK Support {#client-sdk-support}
+## Variant payload types
+
+## Client SDK Support {#client-sdk-support}
 
 To make use of toggle variants, you need to use a compatible client. Client SDK with variant support:
 

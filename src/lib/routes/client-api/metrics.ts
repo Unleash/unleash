@@ -10,6 +10,7 @@ import { ALL } from '../../types/models/api-token';
 import ClientMetricsServiceV2 from '../../services/client-metrics/client-metrics-service-v2';
 import { User } from '../../server-impl';
 import { IClientApp } from '../../types/model';
+import { NONE } from '../../types/permissions';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -35,7 +36,7 @@ export default class ClientMetricsController extends Controller {
         this.metrics = clientMetricsService;
         this.metricsV2 = clientMetricsServiceV2;
 
-        this.post('/', this.registerMetrics);
+        this.post('/', this.registerMetrics, NONE);
     }
 
     private resolveEnvironment(user: User, data: IClientApp) {

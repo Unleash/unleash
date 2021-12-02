@@ -6,6 +6,7 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import UserSplashService from '../../services/user-splash-service';
 import { IAuthRequest } from '../unleash-types';
+import { NONE } from '../../types/permissions';
 
 interface ISplashBody {
     seen: boolean;
@@ -25,7 +26,7 @@ class UserSplashController extends Controller {
         this.logger = config.getLogger('splash-controller.ts');
         this.userSplashService = userSplashService;
 
-        this.post('/:id', this.updateSplashSettings);
+        this.post('/:id', this.updateSplashSettings, NONE);
     }
 
     private async updateSplashSettings(

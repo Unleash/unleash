@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
-import { ADMIN } from '../../types/permissions';
+import { ADMIN, NONE } from '../../types/permissions';
 import UserService from '../../services/user-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
@@ -60,12 +60,12 @@ export default class UserAdminController extends Controller {
         this.get('/', this.getUsers, ADMIN);
         this.get('/search', this.search);
         this.post('/', this.createUser, ADMIN);
-        this.post('/validate-password', this.validatePassword);
+        this.post('/validate-password', this.validatePassword, NONE);
         this.get('/:id', this.getUser, ADMIN);
         this.put('/:id', this.updateUser, ADMIN);
         this.post('/:id/change-password', this.changePassword, ADMIN);
         this.delete('/:id', this.deleteUser, ADMIN);
-        this.post('/reset-password', this.resetPassword);
+        this.post('/reset-password', this.resetPassword, ADMIN);
         this.get('/active-sessions', this.getActiveSessions, ADMIN);
     }
 

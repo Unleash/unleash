@@ -8,6 +8,7 @@ import UserService from '../../services/user-service';
 import SessionService from '../../services/session-service';
 import UserFeedbackService from '../../services/user-feedback-service';
 import UserSplashService from '../../services/user-splash-service';
+import { NONE } from '../../types/permissions';
 
 interface IChangeUserRequest {
     password: string;
@@ -50,7 +51,7 @@ class UserController extends Controller {
         this.userSplashService = userSplashService;
 
         this.get('/', this.getUser);
-        this.post('/change-password', this.updateUserPass);
+        this.post('/change-password', this.updateUserPass, NONE);
         this.get('/my-sessions', this.mySessions);
     }
 

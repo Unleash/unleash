@@ -25,7 +25,7 @@ class TagTypeController extends Controller {
         this.tagTypeService = tagTypeService;
         this.get('/', this.getTagTypes);
         this.post('/', this.createTagType, UPDATE_TAG_TYPE);
-        this.post('/validate', this.validate);
+        this.post('/validate', this.validate, UPDATE_TAG_TYPE);
         this.get('/:name', this.getTagType);
         this.put('/:name', this.updateTagType, UPDATE_TAG_TYPE);
         this.delete('/:name', this.deleteTagType, DELETE_TAG_TYPE);

@@ -44,7 +44,7 @@ class FeatureController extends Controller {
         this.get('/:featureName', this.getToggle);
         this.put('/:featureName', this.updateToggle, UPDATE_FEATURE);
         this.delete('/:featureName', this.archiveToggle, DELETE_FEATURE);
-        this.post('/validate', this.validate);
+        this.post('/validate', this.validate, UPDATE_FEATURE);
         this.post('/:featureName/toggle', this.toggle, UPDATE_FEATURE);
         this.post('/:featureName/toggle/on', this.toggleOn, UPDATE_FEATURE);
         this.post('/:featureName/toggle/off', this.toggleOff, UPDATE_FEATURE);

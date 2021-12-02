@@ -8,6 +8,7 @@ import { IAuthRequest, User } from '../../server-impl';
 import { IClientApp } from '../../types/model';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
+import { NONE } from '../../types/permissions';
 
 export default class RegisterController extends Controller {
     logger: Logger;
@@ -23,7 +24,9 @@ export default class RegisterController extends Controller {
         super(config);
         this.logger = config.getLogger('/api/client/register');
         this.metrics = clientMetricsService;
-        this.post('/', this.handleRegister);
+
+        // NONE permission is not optimal here in terms of readability.
+        this.post('/', this.handleRegister, NONE);
     }
 
     private resolveEnvironment(user: User, data: IClientApp) {

@@ -41,7 +41,7 @@ class ContextController extends Controller {
             this.deleteContextField,
             DELETE_CONTEXT_FIELD,
         );
-        this.post('/validate', this.validate);
+        this.post('/validate', this.validate, UPDATE_CONTEXT_FIELD);
     }
 
     async getContextFields(req: Request, res: Response): Promise<void> {

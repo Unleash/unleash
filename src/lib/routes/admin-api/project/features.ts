@@ -5,7 +5,11 @@ import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types/services';
 import FeatureToggleService from '../../../services/feature-toggle-service';
 import { Logger } from '../../../logger';
-import { CREATE_FEATURE, DELETE_FEATURE, UPDATE_FEATURE } from '../../../types/permissions';
+import {
+    CREATE_FEATURE,
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from '../../../types/permissions';
 import {
     FeatureToggleDTO,
     IConstraint,

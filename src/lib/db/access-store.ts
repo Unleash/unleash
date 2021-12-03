@@ -12,7 +12,7 @@ import {
 
 const T = {
     ROLE_USER: 'role_user',
-    ROLES: 'roles',
+    ROLES: 'role_project',
     ROLE_PERMISSION: 'role_permission',
 };
 

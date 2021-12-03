@@ -354,7 +354,7 @@ test('add user should fail if user already have access', async () => {
     await expect(async () =>
         projectService.addUser(project.id, memberRole.id, projectMember1.id),
     ).rejects.toThrow(
-        new Error('User already have access to project=add-users-twice'),
+        new Error('User already has access to project=add-users-twice'),
     );
 });
 

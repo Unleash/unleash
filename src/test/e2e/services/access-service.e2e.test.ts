@@ -526,3 +526,55 @@ test('Should be denied access to create a strategy in an environment the user do
         ),
     ).toBe(false);
 });
+
+test('Should have access to edit a strategy in an environment', async () => {
+    const { UPDATE_FEATURE_STRATEGY } = permissions;
+    const user = editorUser;
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_STRATEGY,
+            'default',
+            'development',
+        ),
+    ).toBe(true);
+});
+
+test('Should be denied access to edit a strategy in an environment the user does not have access to', async () => {
+    const { UPDATE_FEATURE_STRATEGY } = permissions;
+    const user = editorUser;
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_STRATEGY,
+            'default',
+            'noaccess',
+        ),
+    ).toBe(false);
+});
+
+test('Should have access to delete a strategy in an environment', async () => {
+    const { DELETE_FEATURE_STRATEGY } = permissions;
+    const user = editorUser;
+    expect(
+        await accessService.hasPermission(
+            user,
+            DELETE_FEATURE_STRATEGY,
+            'default',
+            'development',
+        ),
+    ).toBe(true);
+});
+
+test('Should be denied access to delete a strategy in an environment the user does not have access to', async () => {
+    const { DELETE_FEATURE_STRATEGY } = permissions;
+    const user = editorUser;
+    expect(
+        await accessService.hasPermission(
+            user,
+            DELETE_FEATURE_STRATEGY,
+            'default',
+            'noaccess',
+        ),
+    ).toBe(false);
+});

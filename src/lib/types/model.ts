@@ -313,6 +313,13 @@ export interface IProject {
     updatedAt?: Date;
 }
 
+export interface ICustomRole {
+    id: number;
+    name: string;
+    description: string;
+    createdAt: Date;
+}
+
 export interface IProjectWithCount extends IProject {
     featureCount: number;
     memberCount: number;

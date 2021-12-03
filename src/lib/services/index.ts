@@ -28,6 +28,7 @@ import EnvironmentService from './environment-service';
 import FeatureTagService from './feature-tag-service';
 import ProjectHealthService from './project-health-service';
 import UserSplashService from './user-splash-service';
+import RoleService from './role-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -75,6 +76,8 @@ export const createServices = (
     );
     const userSplashService = new UserSplashService(stores, config);
 
+    const roleService = new RoleService(stores, config);
+
     return {
         accessService,
         addonService,
@@ -103,6 +106,7 @@ export const createServices = (
         featureTagService,
         projectHealthService,
         userSplashService,
+        roleService,
     };
 };
 

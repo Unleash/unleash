@@ -297,7 +297,7 @@ export default class ProjectService {
 
         const alreadyHasAccess = users.some((u) => u.id === userId);
         if (alreadyHasAccess) {
-            throw new Error(`User already have access to project=${projectId}`);
+            throw new Error(`User already has access to project=${projectId}`);
         }
 
         await this.accessService.addUserToRole(userId, role.id);

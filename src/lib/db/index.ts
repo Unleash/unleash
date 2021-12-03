@@ -27,6 +27,7 @@ import FeatureTagStore from './feature-tag-store';
 import { FeatureEnvironmentStore } from './feature-environment-store';
 import { ClientMetricsStoreV2 } from './client-metrics-store-v2';
 import UserSplashStore from './user-splash-store';
+import RoleStore from './role-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -77,6 +78,7 @@ export const createStores = (
             getLogger,
         ),
         userSplashStore: new UserSplashStore(db, eventBus, getLogger),
+        roleStore: new RoleStore(db, eventBus, getLogger),
     };
 };
 

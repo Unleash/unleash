@@ -9,7 +9,10 @@ import {
     CREATE_FEATURE,
     DELETE_FEATURE,
     CREATE_FEATURE_STRATEGY,
+    DELETE_FEATURE_STRATEGY,
     UPDATE_FEATURE,
+    UPDATE_FEATURE_ENVIRONMENT,
+    UPDATE_FEATURE_STRATEGY,
 } from '../../../types/permissions';
 import {
     FeatureToggleDTO,

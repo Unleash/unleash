@@ -1,5 +1,8 @@
+// Special
 export const ADMIN = 'ADMIN';
 export const CLIENT = 'CLIENT';
+export const NONE = 'NONE';
+
 export const CREATE_FEATURE = 'CREATE_FEATURE';
 export const UPDATE_FEATURE = 'UPDATE_FEATURE';
 export const DELETE_FEATURE = 'DELETE_FEATURE';

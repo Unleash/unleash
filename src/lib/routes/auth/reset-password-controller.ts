@@ -4,6 +4,7 @@ import UserService from '../../services/user-service';
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
+import { NONE } from '../../types/permissions';
 
 interface IValidateQuery {
     token: string;
@@ -31,9 +32,9 @@ class ResetPasswordController extends Controller {
         );
         this.userService = userService;
         this.get('/validate', this.validateToken);
-        this.post('/password', this.changePassword);
-        this.post('/validate-password', this.validatePassword);
-        this.post('/password-email', this.sendResetPasswordEmail);
+        this.post('/password', this.changePassword, NONE);
+        this.post('/validate-password', this.validatePassword, NONE);
+        this.post('/password-email', this.sendResetPasswordEmail, NONE);
     }
 
     async sendResetPasswordEmail(req: Request, res: Response): Promise<void> {

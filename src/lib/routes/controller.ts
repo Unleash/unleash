@@ -1,11 +1,10 @@
-import { IRouter, Request, Response } from 'express';
+import { IRouter, Router, Request, Response } from 'express';
 import { Logger } from 'lib/logger';
 import { IUnleashConfig } from '../types/option';
+import { NONE } from '../types/permissions';
 import { handleErrors } from './util';
-
-const { Router } = require('express');
-const NoAccessError = require('../error/no-access-error');
-const requireContentType = require('../middleware/content_type_checker');
+import NoAccessError from '../error/no-access-error';
+import requireContentType from '../middleware/content_type_checker';
 
 interface IRequestHandler<
     P = any,
@@ -20,7 +19,7 @@ interface IRequestHandler<
 }
 
 const checkPermission = (permission) => async (req, res, next) => {
-    if (!permission) {
+    if (!permission || permission === NONE) {
         return next();
     }
     if (req.checkRbac && (await req.checkRbac(permission))) {
@@ -73,7 +72,7 @@ export default class Controller {
     post(
         path: string,
         handler: IRequestHandler,
-        permission?: string,
+        permission: string,
         ...acceptedContentTypes: string[]
     ): void {
         this.app.post(
@@ -87,7 +86,7 @@ export default class Controller {
     put(
         path: string,
         handler: IRequestHandler,
-        permission?: string,
+        permission: string,
         ...acceptedContentTypes: string[]
     ): void {
         this.app.put(
@@ -101,7 +100,7 @@ export default class Controller {
     patch(
         path: string,
         handler: IRequestHandler,
-        permission?: string,
+        permission: string,
         ...acceptedContentTypes: string[]
     ): void {
         this.app.patch(
@@ -112,7 +111,7 @@ export default class Controller {
         );
     }
 
-    delete(path: string, handler: IRequestHandler, permission?: string): void {
+    delete(path: string, handler: IRequestHandler, permission: string): void {
         this.app.delete(
             path,
             checkPermission(permission),
@@ -124,7 +123,7 @@ export default class Controller {
         path: string,
         filehandler: IRequestHandler,
         handler: Function,
-        permission?: string,
+        permission: string,
     ): void {
         this.app.post(
             path,

@@ -6,6 +6,7 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import UserFeedbackService from '../../services/user-feedback-service';
 import { IAuthRequest } from '../unleash-types';
+import { NONE } from '../../types/permissions';
 
 interface IFeedbackBody {
     neverShow?: boolean;
@@ -26,8 +27,8 @@ class UserFeedbackController extends Controller {
         this.logger = config.getLogger('feedback-controller.ts');
         this.userFeedbackService = userFeedbackService;
 
-        this.post('/', this.recordFeedback);
-        this.put('/:id', this.updateFeedbackSettings);
+        this.post('/', this.recordFeedback, NONE);
+        this.put('/:id', this.updateFeedbackSettings, NONE);
     }
 
     private async recordFeedback(

@@ -5,15 +5,13 @@ title: /api/admin/projects/:projectId
 
 > In order to access the admin API endpoints you need to identify yourself. You'll need to [create an ADMIN token](/user_guide/api-token) and add an Authorization header using the token.
 
+**Available sense Unleash v4.3**
 
 In this document we will guide you on how you can work with feature toggles and their configuration. Please remember the following details:
 
 - All feature toggles exists _inside a project_. 
 - A feature toggle exists _across all environments_. 
 - A feature toggle can take different configuration, activation strategies, per environment.
-
-TODO: Need to explain the following in a bit more details:
-- The _default_ environment
 
 
 > We will in this guide use [HTTPie](https://httpie.io) commands to show examples on how to interact with the API. 

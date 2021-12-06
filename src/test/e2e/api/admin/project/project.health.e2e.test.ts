@@ -302,3 +302,16 @@ test('Sorts environments correctly if sort order is equal', async () => {
         expect(feature.environments[1].name).toBe(envTwo);
     });
 });
+
+test('Update update_at when setHealth runs', async () => {
+    await app.services.projectHealthService.setHealthRating();
+    await app.request
+        .get('/api/admin/projects/default/health-report')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            let now = new Date().getTime();
+            let updatedAt = new Date(res.body.updatedAt).getTime();
+            expect(now - updatedAt).toBeLessThan(5000);
+        });
+});

@@ -72,6 +72,7 @@ export default class ProjectHealthService {
             name: project.name,
             description: project.description,
             health: project.health,
+            updatedAt: project.updatedAt,
             environments,
             features,
             members,

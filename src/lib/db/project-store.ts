@@ -11,7 +11,14 @@ import {
 } from '../types/stores/project-store';
 import { DEFAULT_ENV } from '../util/constants';
 
-const COLUMNS = ['id', 'name', 'description', 'created_at', 'health'];
+const COLUMNS = [
+    'id',
+    'name',
+    'description',
+    'created_at',
+    'health',
+    'updated_at',
+];
 const TABLE = 'projects';
 
 class ProjectStore implements IProjectStore {
@@ -74,7 +81,7 @@ class ProjectStore implements IProjectStore {
     async updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void> {
         await this.db(TABLE)
             .where({ id: healthUpdate.id })
-            .update({ health: healthUpdate.health });
+            .update({ health: healthUpdate.health, updated_at: new Date() });
     }
 
     async create(project: IProjectInsert): Promise<IProject> {
@@ -197,6 +204,7 @@ class ProjectStore implements IProjectStore {
             description: row.description,
             createdAt: row.created_at,
             health: row.health || 100,
+            updatedAt: row.updated_at || new Date(),
         };
     }
 }

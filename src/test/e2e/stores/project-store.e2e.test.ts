@@ -39,6 +39,7 @@ test('should create new project', async () => {
     expect(project.name).toEqual(ret.name);
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
+    expect(ret.updatedAt).toBeTruthy();
     expect(exists).toBe(true);
 });
 

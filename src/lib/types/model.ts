@@ -143,6 +143,7 @@ export interface IProjectOverview {
     members: number;
     version: number;
     health: number;
+    updatedAt?: Date;
 }
 
 export interface IProjectHealthReport extends IProjectOverview {
@@ -309,6 +310,7 @@ export interface IProject {
     description: string;
     health?: number;
     createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface IProjectWithCount extends IProject {

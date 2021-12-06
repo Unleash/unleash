@@ -1,4 +1,5 @@
 import { CloudCircle } from '@material-ui/icons';
+import StringTruncator from '../../../../common/StringTruncator/StringTruncator';
 import { ICreateEnvironmentSuccessProps } from '../CreateEnvironmentSuccess';
 import { useStyles } from './CreateEnvironmentSuccessCard.styles';
 
@@ -16,7 +17,9 @@ const CreateEnvironmentSuccessCard = ({
             <div className={styles.infoContainer}>
                 <div className={styles.infoInnerContainer}>
                     <div className={styles.infoTitle}>Id</div>
-                    <div>{name}</div>
+                    <div>
+                        <StringTruncator text={name} maxWidth={'250'} />
+                    </div>
                 </div>
                 <div className={styles.infoInnerContainer}>
                     <div className={styles.infoTitle}>Type</div>

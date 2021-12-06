@@ -24,6 +24,7 @@ import {
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 import DisabledIndicator from '../../../common/DisabledIndicator/DisabledIndicator';
+import StringTruncator from '../../../common/StringTruncator/StringTruncator';
 
 interface IEnvironmentListItemProps {
     env: IEnvironment;
@@ -132,7 +133,9 @@ const EnvironmentListItem = ({
             <ListItemText
                 primary={
                     <>
-                        <strong>{env.name}</strong>
+                        <strong>
+                            <StringTruncator text={env.name} maxWidth={'125'} />
+                        </strong>
                         <ConditionallyRender
                             condition={!env.enabled}
                             show={<DisabledIndicator />}

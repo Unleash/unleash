@@ -52,10 +52,7 @@ const EnvironmentDeleteConfirm = ({
                 strategies that are active in this environment across all
                 feature toggles.
             </Alert>
-            <CreateEnvironmentSuccessCard
-                name={env?.name}
-                type={env?.type}
-            />
+            <CreateEnvironmentSuccessCard name={env?.name} type={env?.type} />
 
             <p className={styles.deleteParagraph}>
                 In order to delete this environment, please enter the id of the

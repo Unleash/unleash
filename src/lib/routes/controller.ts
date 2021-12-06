@@ -72,7 +72,7 @@ export default class Controller {
     post(
         path: string,
         handler: IRequestHandler,
-        permission: string,
+        permission?: string,
         ...acceptedContentTypes: string[]
     ): void {
         this.app.post(

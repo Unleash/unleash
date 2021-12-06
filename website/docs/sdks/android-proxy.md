@@ -7,7 +7,7 @@ In this guide we'll explain how to use feature toggles in an Android application
 
 
 :::note
-The Android proxy SDK requires Unleash Proxy to function. You'll need the proxy's URL and a configured proxy secret. Refer to the [proxy documentation](/sdks/unleash-proxy) for how to set it up and [how to configure the proxy secrets](/sdks/unleash-proxy#configuration-variables).
+The Android proxy SDK requires the Unleash Proxy to function. You'll need the proxy's URL and a configured proxy secret. Refer to the [proxy documentation](/sdks/unleash-proxy) for how to set it up and [how to configure the proxy secrets](/sdks/unleash-proxy#configuration-variables).
 :::
 
 ## How to use the Android Proxy SDK
@@ -61,7 +61,7 @@ To create a client, use the `UnleashConfig.newBuilder` method. When building a c
 - `clientSecret`: the [proxy secret](/sdks/unleash-proxy#configuration-variables) you wish to use
 - `pollMode`: how you want to load the toggle status
 
-As of v0.1 the SDK supports an automatic polling with an adjustable poll period or loading the state from disk. Most users will probably use the polling client, but it's nice to know that you can instantiate your client without actually needing Internet if you choose loading from File
+As of v0.1 the SDK supports an automatic polling with an adjustable poll period or loading the state from disk. Most users will probably want to use the polling client, but it's nice to know that you can instantiate your client without actually needing Internet if you choose loading from File
 
 #### Step 4a: Configure client polling proxy
 

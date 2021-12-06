@@ -37,7 +37,7 @@ Regardless of how you choose to run the it, the proxy will need access to these 
 
 - **`proxySecrets`** / **`UNLEASH_PROXY_SECRETS`**
 
-  A list of client keys that the proxy will accept. For the proxy to accept an incoming request, the client must use one of these keys for authorization. In client SDKs, this is usually known as a `clientKey` . If you query the proxy directly via HTTP, this is the `authorization` header.
+  A list of client keys that the proxy will accept. For the proxy to accept an incoming request, the client must use one of these keys for authorization. In client SDKs, this is usually known as a `clientKey` or a `clientSecret` . If you query the proxy directly via HTTP, this is the `authorization` header.
 
   When using an environment variable to set the proxy secrets, the value should be a comma-separated list of strings, such as `secret-one,secret-two`.
 

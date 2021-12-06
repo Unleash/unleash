@@ -24,6 +24,7 @@ import FakeResetTokenStore from './fake-reset-token-store';
 import FakeFeatureToggleClientStore from './fake-feature-toggle-client-store';
 import FakeClientMetricsStoreV2 from './fake-client-metrics-store-v2';
 import FakeUserSplashStore from './fake-user-splash-store';
+import FakeRoleStore from './fake-role-store';
 
 const createStores: () => IUnleashStores = () => {
     const db = {
@@ -59,6 +60,7 @@ const createStores: () => IUnleashStores = () => {
         resetTokenStore: new FakeResetTokenStore(),
         sessionStore: new FakeSessionStore(),
         userSplashStore: new FakeUserSplashStore(),
+        roleStore: new FakeRoleStore(),
     };
 };
 

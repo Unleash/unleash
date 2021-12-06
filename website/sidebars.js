@@ -76,6 +76,8 @@ module.exports = {
         ],
         'Admin API': [
             'api/admin/features',
+            'api/admin/projects',
+            'api/admin/feature-toggles-v2',
             'api/admin/features-archive',
             'api/admin/strategies',
             'api/admin/metrics',
@@ -84,7 +86,6 @@ module.exports = {
             'api/admin/feature-types',
             'api/admin/addons',
             'api/admin/context',
-            'api/admin/projects',
             'api/admin/user-admin',
         ],
         'Client SDK API': [

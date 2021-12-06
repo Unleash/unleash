@@ -5,6 +5,8 @@ title: /api/admin/features
 
 > In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/user_guide/api-token) and add an Authorization header using the token.
 
+**This API was deprecated as part of the v4.3 release and will be removed in v5.0. See [/api/admin/projects/:projectId](/api/admin/feature-toggles-v2) instead.**
+
 ### Fetching Feature Toggles {#fetching-feature-toggles}
 
 `GET: http://unleash.host.com/api/admin/features`

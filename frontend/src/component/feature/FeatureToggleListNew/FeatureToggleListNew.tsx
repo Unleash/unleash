@@ -17,6 +17,7 @@ import {
     IFeatureToggleListItem,
 } from '../../../interfaces/featureToggle';
 import PaginateUI from '../../common/PaginateUI/PaginateUI';
+import StringTruncator from '../../common/StringTruncator/StringTruncator';
 interface IFeatureToggleListNewProps {
     features: IFeatureToggleListItem[];
     loading: boolean;
@@ -236,12 +237,11 @@ const FeatureToggleListNew = ({
                                     )}
                                     align="center"
                                 >
-                                    <span
+                                    <StringTruncator
+                                        text={env.name}
+                                        maxWidth="90"
                                         data-loading
-                                        className={styles.envName}
-                                    >
-                                        {env.name}
-                                    </span>
+                                    />
                                 </TableCell>
                             );
                         })}

@@ -55,4 +55,8 @@ export const useStyles = makeStyles(theme => ({
         overflow: 'hidden',
         whiteSpace: 'nowrap',
     },
+    infoText:{
+        marginBottom: '10px',
+        fontSize: theme.fontSizes.bodySize,
+    },
 }));

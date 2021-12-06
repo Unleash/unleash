@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { TableCell, TableRow } from '@material-ui/core';
 import { useHistory } from 'react-router';
 
@@ -17,6 +17,7 @@ import useProject from '../../../../hooks/api/getters/useProject/useProject';
 import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import PermissionSwitch from '../../../common/PermissionSwitch/PermissionSwitch';
 import { Link } from 'react-router-dom';
+import Dialogue from '../../../common/Dialogue';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -46,6 +47,7 @@ const FeatureToggleListNewItem = ({
     const styles = useStyles();
     const history = useHistory();
     const ref = useRef(null);
+    const [showInfoBox, setShowInfoBox] = useState(false);
 
     const onClick = (e: SyntheticEvent) => {
         if (!ref.current?.contains(e.target)) {
@@ -64,6 +66,7 @@ const FeatureToggleListNewItem = ({
                 refetch();
             })
             .catch(e => {
+                setShowInfoBox(true);
                 setToastData({
                     show: true,
                     type: 'error',
@@ -145,6 +148,26 @@ const FeatureToggleListNewItem = ({
                 })}
             </TableRow>
             {toast}
+
+            <Dialogue
+                open={showInfoBox}
+                maxWidth="sm"
+                onClick={() => console.log('hi')}
+                onClose={() => setShowInfoBox(false)}
+                title="You need to add a strategy to your toggle"
+                primaryButtonText="Take me directly to add strategy"
+                secondaryButtonText="Cancel"
+            >
+                <p className={styles.infoText}>
+                    Before you can enable the toggle in the environment, you
+                    need to add an execution strategy.
+                </p>
+                <p className={styles.infoText}>
+                    You can add the execution strategy by selecting the toggle,
+                    open the environment accordion and add the execution
+                    strategy.
+                </p>
+            </Dialogue>
         </>
     );
 };

@@ -19,7 +19,7 @@ const FeatureOverviewEnvironmentBody = ({
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const styles = useStyles();
     const history = useHistory();
-    const strategiesLink = `/projects/${projectId}/features2/${featureId}/strategies?environment=${featureEnvironment?.name}`;
+    const strategiesLink = `/projects/${projectId}/features2/${featureId}/strategies?environment=${featureEnvironment?.name}&addStrategy=true`;
 
     if (!featureEnvironment) return null;
 

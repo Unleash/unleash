@@ -8,4 +8,9 @@ export const useStyles = makeStyles(theme => ({
         display: 'block',
         margin: '1rem 0 0 0',
     },
+    envName: {
+        position: 'relative',
+        top: '6px',
+        fontWeight: 'bold'
+    },
 }));

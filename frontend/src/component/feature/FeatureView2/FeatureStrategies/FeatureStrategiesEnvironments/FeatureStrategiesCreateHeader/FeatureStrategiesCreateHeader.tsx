@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import FeatureStrategiesUIContext from '../../../../../../contexts/FeatureStrategiesUIContext';
 import EnvironmentIcon from '../../../../../common/EnvironmentIcon/EnvironmentIcon';
+import StringTruncator from '../../../../../common/StringTruncator/StringTruncator';
 import { useStyles } from './FeatureStrategiesCreateHeader.styles';
 
 const FeatureStrategiesCreateHeader = () => {
@@ -13,8 +14,12 @@ const FeatureStrategiesCreateHeader = () => {
     return (
         <div className={styles.container}>
             <div className={styles.headerContainer}>
-                <EnvironmentIcon enabled={activeEnvironment?.enabled} />{' '}
-                Configuring strategy for {activeEnvironment?.name}
+                <EnvironmentIcon enabled={activeEnvironment?.enabled} />
+                Configuring strategy for&nbsp;
+                <StringTruncator
+                    text={activeEnvironment?.name}
+                    maxWidth={'200'}
+                />
             </div>
         </div>
     );

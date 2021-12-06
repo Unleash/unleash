@@ -23,7 +23,29 @@ _The Unleash Proxy uses the Unleash SDK and exposes a simple API_. The Proxy wil
 
 The Unleash Proxy is Open Source and [available on github](https://github.com/Unleash/unleash-proxy). You can either run it as a docker image or as part of a [node.js express application](https://github.com/Unleash/unleash-proxy#run-with-nodejs).
 
-The easies way to run Unleash is via Docker. We have published a [docker image on docker hub](https://hub.docker.com/r/unleashorg/unleash-proxy).
+### Configuration variables
+
+Regardless of how you choose to run the it, the proxy will need access to these three variables:
+
+- **`unleashUrl`** / **`UNLEASH_URL`**
+
+  The URL of your Unleash instance's API. For instance, to connect to the [Unleash demo app](https://app.unleash-hosted.com/demo/), you would use `https://app.unleash-hosted.com/demo/api/`
+
+- **`unleashApiToken`** / **`UNLEASH_API_TOKEN`**
+
+  The API token to connect to your Unleash project. For more information on how these work and how to create them, check out the [API token documentation](../user_guide/token.md).
+
+- **`proxySecrets`** / **`UNLEASH_PROXY_SECRETS`**
+
+  A list of client keys that the proxy will accept. For the proxy to accept an incoming request, the client must use one of these keys for authorization. In client SDKs, this is usually known as a `clientKey` or a `clientSecret`. If you query the proxy directly via HTTP, this is the `authorization` header.
+
+  When using an environment variable to set the proxy secrets, the value should be a comma-separated list of strings, such as `secret-one,secret-two`.
+
+For more information, check out the [documentation on GitHub](https://github.com/Unleash/unleash-proxy).
+
+### Running the proxy via Docker
+
+The easiest way to run Unleash is via Docker. We have published a [docker image on docker hub](https://hub.docker.com/r/unleashorg/unleash-proxy).
 
 **Step 1: Pull**
 

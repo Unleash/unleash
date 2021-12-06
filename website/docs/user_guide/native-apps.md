@@ -23,7 +23,7 @@ https://hostname.com/api/proxy?appName=webapp&userId=123&country=NO
 
 The Proxy will return a list of all the active feature toggles, including variants, available. See an example below
 
-```sh
+```json
 {
     "toggles": [
     {

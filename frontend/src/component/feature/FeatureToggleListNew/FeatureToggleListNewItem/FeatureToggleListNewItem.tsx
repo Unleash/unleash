@@ -17,7 +17,8 @@ import useProject from '../../../../hooks/api/getters/useProject/useProject';
 import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import PermissionSwitch from '../../../common/PermissionSwitch/PermissionSwitch';
 import { Link } from 'react-router-dom';
-import Dialogue from '../../../common/Dialogue';
+import { ENVIRONMENT_STRATEGY_ERROR } from '../../../../constants/apiErrors';
+import EnvironmentStrategyDialog from '../../../common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -48,6 +49,11 @@ const FeatureToggleListNewItem = ({
     const history = useHistory();
     const ref = useRef(null);
     const [showInfoBox, setShowInfoBox] = useState(false);
+    const [environmentName, setEnvironmentName] = useState('');
+
+    const closeInfoBox = () => {
+        setShowInfoBox(false);
+    };
 
     const onClick = (e: SyntheticEvent) => {
         if (!ref.current?.contains(e.target)) {
@@ -66,12 +72,16 @@ const FeatureToggleListNewItem = ({
                 refetch();
             })
             .catch(e => {
-                setShowInfoBox(true);
-                setToastData({
-                    show: true,
-                    type: 'error',
-                    text: e.message,
-                });
+                if (e.message === ENVIRONMENT_STRATEGY_ERROR) {
+                    setEnvironmentName(env.name);
+                    setShowInfoBox(true);
+                } else {
+                    setToastData({
+                        show: true,
+                        type: 'error',
+                        text: e.message,
+                    });
+                }
             });
     };
 
@@ -148,26 +158,13 @@ const FeatureToggleListNewItem = ({
                 })}
             </TableRow>
             {toast}
-
-            <Dialogue
+            <EnvironmentStrategyDialog
                 open={showInfoBox}
-                maxWidth="sm"
-                onClick={() => console.log('hi')}
-                onClose={() => setShowInfoBox(false)}
-                title="You need to add a strategy to your toggle"
-                primaryButtonText="Take me directly to add strategy"
-                secondaryButtonText="Cancel"
-            >
-                <p className={styles.infoText}>
-                    Before you can enable the toggle in the environment, you
-                    need to add an execution strategy.
-                </p>
-                <p className={styles.infoText}>
-                    You can add the execution strategy by selecting the toggle,
-                    open the environment accordion and add the execution
-                    strategy.
-                </p>
-            </Dialogue>
+                onClose={closeInfoBox}
+                projectId={projectId}
+                featureId={name}
+                environmentName={environmentName}
+            />
         </>
     );
 };

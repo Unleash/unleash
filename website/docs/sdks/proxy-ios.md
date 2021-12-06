@@ -52,23 +52,23 @@ In the example above we import the `UnleashProxyClientSwift` and instantiate the
 
 - `unleashUrl` (`String`)
 
-    the full URL to your proxy instance
+    The full URL to your proxy instance.
 
 - `clientKey` (`String`)
 
-   one of the configured [proxy keys / proxy secrets](unleash-proxy#configuration-variables)
+   One of the configured [proxy keys / proxy secrets](unleash-proxy#configuration-variables).
 
 - `refreshInterval` (`Int`)
 
-   the polling interval in seconds.
+   The polling interval in seconds.
 
 - `appName` (`String`)
 
-   the application name; only used to identify your application.
+   The application name; only used to identify your application.
 
 - `environment` (`String`)
 
-   the application environment. This corresponds to the environment field in [the Unleash Context](../user_guide/unleash-context.md). Note that this is separate from the newer [Environments feature](../user_guide/environments.md).
+   The application environment. This corresponds to the environment field in [the Unleash Context](../user_guide/unleash-context.md). Note that this is separate from the newer [Environments feature](../user_guide/environments.md).
 
 Running `unleash.start()` will make the first request against the proxy and retrieve the feature toggle configuration, and set up the polling interval in the background.
 

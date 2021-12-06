@@ -25,7 +25,6 @@ const Login = () => {
     }, [permissions.length]);
 
     const resetPassword = query.get('reset') === 'true';
-
     return (
         <StandaloneLayout>
             <div className={styles.loginFormContainer}>

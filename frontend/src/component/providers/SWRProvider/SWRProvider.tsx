@@ -5,6 +5,7 @@ import { IToast } from '../../../hooks/useToast';
 
 interface ISWRProviderProps {
     setToastData: (toastData: IToast) => void;
+    setShowLoader: React.Dispatch<React.SetStateAction<boolean>>;
     isUnauthorized: () => boolean;
 }
 
@@ -12,15 +13,16 @@ const SWRProvider: React.FC<ISWRProviderProps> = ({
     children,
     setToastData,
     isUnauthorized,
+    setShowLoader,
 }) => {
     const { cache } = useSWRConfig();
     const history = useHistory();
 
     const handleFetchError = error => {
+        setShowLoader(false);
         if (error.status === 401) {
             cache.clear();
             const path = location.pathname;
-
             mutate(USER_CACHE_KEY, { ...error.info }, false);
             if (path === '/login') {
                 return;

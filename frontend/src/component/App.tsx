@@ -28,12 +28,23 @@ interface IAppProps extends RouteComponentProps {
 const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
     const { toast, setToastData } = useToast();
     // because we need the userId when the component load.
-    const { splash, user: userFromUseUser } = useUser();
+    const { splash, user: userFromUseUser, authDetails } = useUser();
     const [showSplash, setShowSplash] = useState(false);
+    const [showLoader, setShowLoader] = useState(false);
     useEffect(() => {
         fetchUiBootstrap();
         /* eslint-disable-next-line */
     }, [user.authDetails?.type]);
+
+    useEffect(() => {
+        // Temporary duality until redux store is removed
+        if (!isUnauthorized() && !userFromUseUser?.id && !authDetails) {
+            setShowLoader(true);
+            return;
+        }
+        setShowLoader(false);
+        /* eslint-disable-next-line */
+    }, [user.authDetails, userFromUseUser.id]);
 
     useEffect(() => {
         if (splash?.environment === undefined) return;
@@ -92,9 +103,10 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
         <SWRProvider
             setToastData={setToastData}
             isUnauthorized={isUnauthorized}
+            setShowLoader={setShowLoader}
         >
             <ConditionallyRender
-                condition={!isUnauthorized() && !userFromUseUser?.id}
+                condition={showLoader}
                 show={<Loader />}
                 elseShow={
                     <div className={styles.container}>

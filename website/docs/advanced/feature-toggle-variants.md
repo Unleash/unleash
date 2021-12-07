@@ -7,19 +7,62 @@ title: Feature Toggle Variants
 </div>
 <br/>
 
-Every toggle in Unleash can have something called _variants_ ...
+Every toggle in Unleash can have something called _variants_. Where _feature toggles_ allow you to decide which users get access to a feature, _toggle variants_ allow you to further split those users into segments. Say, for instance, that you're testing out a new feature, such as an alternate sign-up form. The feature toggle would expose the form only to a select group of users. The variants could decide whether the user sees a blue or a green submit button on that form.
 
-Variants help facilitate A/B testing and experimentation by ... [read more about that in the discussion topic]
+Variants facilitate A/B testing and experimentation by letting you create controlled and measurable experiments. Check [our blog post on using Unleash for A/B/n experiments](https://www.getunleash.io/blog/a-b-n-experiments-in-3-simple-steps) for some more insights into how you can set it up.
 
-## How well do my variants perform?
+## What are variants?
+
+Whenever you create a feature toggle, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better.
+
+A variant has four components that define it:
+- a **name**:
+
+    This must be unique among the toggle's variants. When working with a toggle with variants in a client, you will typically use variant name to find out which variant it is.
+
+- a **weight**:
+
+    The weight is the likelihood of any one user getting this specific variant. See the [weights section](#variant-weight) for more info.
+
+- an optional **payload**:
+
+    A variant can also have an associated payload. Use this to deliver more data or context. See the [payload section](#variant-payload) for a more details.
+
+
+- an optional **override**
+
+    Overrides let you specify that certain users (as identified either by their user ID or by another [custom stickiness](stickiness) value) will always get this variant, regardless of the variant's weighting.
+
+![A form for adding new variants. It has fields for name, weight, payload, and overrides.](/img/variant-creation-form.png 'Creating a new toggle variant')
+
+### Variant weight
+
+A variant's weight determines how likely it is that a user will receive that variant. It is a numeric value between 0 and 100 (inclusive) with one decimal's worth of precision.
+
+When you have multiple variants, the sum of all their weights must add up to exactly 100. Depending on the [weight type](#weight-types), Unleash may automatically determine the weight of the new variant and balance it out with the other variants.
+
+#### Weight types
+
+There are two kinds of variant weight types: _variable_ and _fixed_. Unleash requires you to always have _at least_ one variable weight variant.
+
+
+The default weight type is _variable_. This means that the variant's weight will automatically adjust based on the number of other variable weight variants. All variable weight variants will receive an equal weighting (or as close as we can get with rounding) based on the available, non-fixed weight space. <— whew, rewrite this.
+
+When creating a variant, you can also give it a fixed weight.
 
 
 
-## What is it?
+### Variant payload
+
+### Overrides
+
+### Stickiness
 
 Do you want to facilitate more advanced experimentations? Do you want to use Unleash to handle your A/B experiments? Say hello to feature toggle variants!
 
 You can now extend feature toggles with multiple variants. This feature enables you to extend a feature toggle to divide your traffic among a set of variants.
+
+## How do I configure variants
 
 ![toggle_variants](/img/variants.png 'Feature Toggle Variants')
 

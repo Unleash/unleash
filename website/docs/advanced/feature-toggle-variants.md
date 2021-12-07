@@ -58,6 +58,14 @@ For instance, if you have three variable weight variants and two fixed weight va
 
 ### Variant payload
 
+Each variant can have an associated payload. Use this to add more context or data to a payload that you can access on the client, such as a customized message or other information.
+
+Unleash currently supports these payload types:
+
+- JSON
+- CSV
+- String
+
 ### Overrides
 
 ### Variant stickiness

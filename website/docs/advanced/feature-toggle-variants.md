@@ -56,6 +56,18 @@ For instance, if you have three variable weight variants and two fixed weight va
 2. Divide the remainder by the number of variable weight variants: 60 / 3 = 20
 3. Assign each variable weight variant the same (up to rounding differences) weight: 20%
 
+#### Overrides
+
+The weighting system automatically assigns users to a specific group for you. If you want to make sure that a specific user or group of users receives a certain variant, though, you can use the override functionality to achieve that.
+
+When adding an override, you choose a [field from the Unleash Context](../user_guide/unleash_context) and specify that if a context contains one of a given list of values, then the current variant should always activate.
+
+You can use both standard and custom context fields when creating overrides.
+
+Each variant can have multiple overrides, so you can use any number of context fields you want to group people.
+
+If two variants have the same override, then ...
+
 ### Variant payload
 
 Each variant can have an associated payload. Use this to add more context or data to a payload that you can access on the client, such as a customized message or other information.
@@ -65,8 +77,6 @@ Unleash currently supports these payload types:
 - JSON
 - CSV
 - String
-
-### Overrides
 
 ### Variant stickiness
 

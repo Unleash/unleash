@@ -47,16 +47,20 @@ function getColor(unit?: string): string {
 
 interface FeatureStatusProps {
     lastSeenAt?: Date;
+    tooltipPlacement?: string;
 }
 
-const FeatureStatus = ({ lastSeenAt }: FeatureStatusProps) => {
+const FeatureStatus = ({
+    lastSeenAt,
+    tooltipPlacement,
+}: FeatureStatusProps) => {
     const styles = useStyles();
 
     const Wrapper = (
         props: React.PropsWithChildren<{ color: string; toolTip: string }>
     ) => {
         return (
-            <Tooltip title={props.toolTip} arrow placement="left">
+            <Tooltip title={props.toolTip} arrow placement={tooltipPlacement}>
                 <div
                     className={styles.container}
                     style={{ background: props.color, fontSize: '0.8rem' }}
@@ -83,7 +87,9 @@ const FeatureStatus = ({ lastSeenAt }: FeatureStatusProps) => {
                     ) => {
                         return (
                             <Wrapper
-                                toolTip={`Last usage reported ${value} ${unit}${value !== 1 ? 's' : ''} ${suffix}`}
+                                toolTip={`Last usage reported ${value} ${unit}${
+                                    value !== 1 ? 's' : ''
+                                } ${suffix}`}
                                 color={getColor(unit)}
                             >
                                 {value}
@@ -94,7 +100,10 @@ const FeatureStatus = ({ lastSeenAt }: FeatureStatusProps) => {
                 />
             }
             elseShow={
-                <Wrapper toolTip="No usage reported from connected applications" color={getColor()}>
+                <Wrapper
+                    toolTip="No usage reported from connected applications"
+                    color={getColor()}
+                >
                     <span style={{ fontSize: '1.4rem' }}>⊕</span>
                 </Wrapper>
             }

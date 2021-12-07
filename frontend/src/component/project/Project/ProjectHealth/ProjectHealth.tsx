@@ -1,8 +1,8 @@
 import useHealthReport from '../../../../hooks/api/getters/useHealthReport/useHealthReport';
 import ApiError from '../../../common/ApiError/ApiError';
 import ConditionallyRender from '../../../common/ConditionallyRender';
-import ReportCardContainer from '../../../Reporting/ReportCard/ReportCardContainer'
-import ReportToggleList from '../../../Reporting/ReportToggleList/ReportToggleList'
+import ReportCardContainer from '../../../Reporting/ReportCard/ReportCardContainer';
+import ReportToggleList from '../../../Reporting/ReportToggleList/ReportToggleList';
 
 interface ProjectHealthProps {
     projectId: string;
@@ -25,18 +25,19 @@ const ProjectHealth = ({ projectId }: ProjectHealthProps) => {
                 }
             />
             <ReportCardContainer
-                    health={project?.health}
-                    staleCount={project?.staleCount}
-                    activeCount={project?.activeCount}
-                    potentiallyStaleCount={project?.potentiallyStaleCount}
-                    selectedProject={project.name}
+                health={project?.health}
+                staleCount={project?.staleCount}
+                activeCount={project?.activeCount}
+                potentiallyStaleCount={project?.potentiallyStaleCount}
+                selectedProject={project.name}
+                lastUpdate={project.updatedAt}
             />
             <ReportToggleList
                 features={project.features}
                 selectedProject={projectId}
             />
         </div>
-    )
-}
+    );
+};
 
 export default ProjectHealth;

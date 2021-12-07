@@ -1,4 +1,3 @@
-import React from 'react';
 import classnames from 'classnames';
 import { Paper } from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -8,12 +7,14 @@ import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined'
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 
 import styles from './ReportCard.module.scss';
+import ReactTimeAgo from 'react-timeago';
 
 const ReportCard = ({
     health,
     activeCount,
     staleCount,
     potentiallyStaleCount,
+    lastUpdate,
 }) => {
     const healthLessThan50 = health < 50;
     const healthLessThan75 = health < 75;
@@ -52,11 +53,22 @@ const ReportCard = ({
                     <div className={styles.reportCardHealthInnerContainer}>
                         <ConditionallyRender
                             condition={health > -1}
-                            show={<p className={healthClasses}>{health}%</p>}
+                            show={
+                                <div>
+                                    <p className={healthClasses}>{health}%</p>
+                                    <p className={styles.lastUpdate}>
+                                        Last updated:{' '}
+                                        <ReactTimeAgo
+                                            date={lastUpdate}
+                                            live={false}
+                                        />
+                                    </p>
+                                </div>
+                            }
                         />
                     </div>
                 </div>
-                <div className={styles.reportCardListContainer}>
+                <div className={styles.reportCardToggle}>
                     <h2 className={styles.header}>Toggle report</h2>
                     <ul className={styles.reportCardList}>
                         <li>
@@ -65,16 +77,19 @@ const ReportCard = ({
                                 show={renderActiveToggles}
                             />
                         </li>
+                        <ConditionallyRender
+                            condition={activeCount}
+                            show={
+                                <p className={styles.reportCardActionText}>
+                                    Also includes potentially stale toggles.
+                                </p>
+                            }
+                        />
+
                         <li>
                             <ConditionallyRender
                                 condition={staleCount}
                                 show={renderStaleToggles}
-                            />
-                        </li>
-                        <li>
-                            <ConditionallyRender
-                                condition={potentiallyStaleCount}
-                                show={renderPotentiallyStaleToggles}
                             />
                         </li>
                     </ul>
@@ -83,10 +98,28 @@ const ReportCard = ({
                 <div className={styles.reportCardAction}>
                     <h2 className={styles.header}>Potential actions</h2>
                     <div className={styles.reportCardActionContainer}>
-                        <p className={styles.reportCardActionText}>
-                            Review your feature toggles and delete unused
-                            toggles.
-                        </p>
+                        <ul className={styles.reportCardList}>
+                            <li>
+                                <ConditionallyRender
+                                    condition={potentiallyStaleCount}
+                                    show={renderPotentiallyStaleToggles}
+                                />
+                            </li>
+                        </ul>
+                        <ConditionallyRender
+                            condition={potentiallyStaleCount}
+                            show={
+                                <p className={styles.reportCardActionText}>
+                                    Review your feature toggles and delete
+                                    unused toggles.
+                                </p>
+                            }
+                            elseShow={
+                                <p className={styles.reportCardNoActionText}>
+                                    No action is required
+                                </p>
+                            }
+                        />
                     </div>
                 </div>
             </div>

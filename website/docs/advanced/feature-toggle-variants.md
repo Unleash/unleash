@@ -80,23 +80,18 @@ Unleash currently supports these payload types:
 
 ### Variant stickiness
 
-Do you want to facilitate more advanced experimentations? Do you want to use Unleash to handle your A/B experiments? Say hello to feature toggle variants!
+Variant stickiness is calculated on the received user and context, as described in [the stickiness chapter](stickiness). This ensures that the same user will consistently see the same variant barring overrides and weight changes. If no context data is provided, the traffic will be spread randomly for each request.
 
-You can now extend feature toggles with multiple variants. This feature enables you to extend a feature toggle to divide your traffic among a set of variants.
 
 ## How do I configure variants
 
+In the Unleash UI, you can configure variants by navigating to the feature view, and then choosing the 'Variants' tab.
+
 ![toggle_variants](/img/variants.png 'Feature Toggle Variants')
 
-## How does it work? {#how-does-it-work}
+## The `disabled` variant
 
-Unleash will first use activation strategies to decide whether a feature toggle is considered enabled or disabled for the current user.
-
-If the toggle is considered **enabled**, the Unleash client will select the correct variant for the request. Unleash clients will use values from the Unleash context to make the allocation predictable. `UserId` is the preferred value, then `sessionId` and `remoteAdr`. If no context data is provided, the traffic will be spread randomly for each request.
-
-If the toggle is considered **disabled** you will get the built-in `disabled` variant.
-
-A json representation of the empty variant will be the following:
+When a toggle has no variants or when a toggle is disabled for a user, Unleash will return it with variant data that looks like this:
 
 ```json
 {
@@ -105,9 +100,13 @@ A json representation of the empty variant will be the following:
 }
 ```
 
-The actual representation of the built-in the client SDK will vary slightly, to honor best practices in various languages.
+This is a fallback variant that Unleash uses to represent the lack of a variant.
 
-> If you change the number of variants, it will affect variant allocations. This means that some of the users will be moved to the next variant.
+Note: The actual representation of the built-in fallback variant in the client SDK will vary slightly, to honor best practices in various languages.
+
+## Usage example
+
+The exact usage will vary depending on your SDK, so make sure to consult its documentation, but a simple use case would usually look a little something like this:
 
 _Java SDK example:_
 
@@ -115,8 +114,6 @@ _Java SDK example:_
 Variant variant = unleash.getVariant("toggle.name", unleashContext);
 System.out.println(variant.getName());
 ```
-
-## Variant payload types
 
 ## Client SDK Support {#client-sdk-support}
 

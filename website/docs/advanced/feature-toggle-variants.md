@@ -41,22 +41,26 @@ A variant's weight determines how likely it is that a user will receive that var
 
 When you have multiple variants, the sum of all their weights must add up to exactly 100. Depending on the [weight type](#weight-types), Unleash may automatically determine the weight of the new variant and balance it out with the other variants.
 
-#### Weight types
+#### Weight types and calculation
 
 There are two kinds of variant weight types: _variable_ and _fixed_. Unleash requires you to always have _at least_ one variable weight variant.
 
+The default weight type is _variable_. Variable weight variants will adjust their weight based on the number of other variable weight variants and whatever weight is not used up by fixed weight variants.
 
-The default weight type is _variable_. This means that the variant's weight will automatically adjust based on the number of other variable weight variants. All variable weight variants will receive an equal weighting (or as close as we can get with rounding) based on the available, non-fixed weight space. <— whew, rewrite this.
+_Fixed_ weight variants have a set weight which will not change. All fixed weight variants' weights can not add up to more than 100.
 
-When creating a variant, you can also give it a fixed weight.
+To calculate what the weight of a variable weight variant is, Unleash first subtracts the sum of fixed weights from 100 and then distributes the remaining weight evenly among the variable weight variants.
 
-
+For instance, if you have three variable weight variants and two fixed weight variants weighted at 25 and 15 respectively, Unleash will:
+1. Subtract the fixed weight from the total available: 100 - 40 = 60
+2. Divide the remainder by the number of variable weight variants: 60 / 3 = 20
+3. Assign each variable weight variant the same (up to rounding differences) weight: 20%
 
 ### Variant payload
 
 ### Overrides
 
-### Stickiness
+### Variant stickiness
 
 Do you want to facilitate more advanced experimentations? Do you want to use Unleash to handle your A/B experiments? Say hello to feature toggle variants!
 

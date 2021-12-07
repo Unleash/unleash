@@ -62,7 +62,6 @@ const FeatureStrategiesEnvironments = () => {
     useEffect(() => {
         if (addStrategy) {
             setExpandedSidebar(true);
-            history.replace(history.location.pathname);
         }
         if (!feature) return;
 

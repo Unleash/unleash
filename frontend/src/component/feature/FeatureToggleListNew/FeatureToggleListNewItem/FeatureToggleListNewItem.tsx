@@ -61,7 +61,7 @@ const FeatureToggleListNewItem = ({
         }
     };
 
-    const handleToggle = (env: IEnvironments, e: SyntheticEvent) => {
+    const handleToggle = (env: IEnvironments) => {
         toggleFeatureByEnvironment(env.name, env.enabled)
             .then(() => {
                 setToastData({
@@ -73,7 +73,6 @@ const FeatureToggleListNewItem = ({
             })
             .catch(e => {
                 if (e.message === ENVIRONMENT_STRATEGY_ERROR) {
-                    setEnvironmentName(env.name);
                     setShowInfoBox(true);
                 } else {
                     setToastData({
@@ -150,7 +149,10 @@ const FeatureToggleListNewItem = ({
                                     projectId={projectId}
                                     permission={UPDATE_FEATURE}
                                     ref={ref}
-                                    onClick={handleToggle.bind(this, env)}
+                                    onClick={() => {
+                                        handleToggle(env);
+                                        setEnvironmentName(env.name);
+                                    }}
                                 />
                             </span>
                         </TableCell>

@@ -56,6 +56,8 @@ For instance, if you have three variable weight variants and two fixed weight va
 2. Divide the remainder by the number of variable weight variants: 60 / 3 = 20
 3. Assign each variable weight variant the same (up to rounding differences) weight: 20%
 
+In the example above, 60 divides cleanly by three. In cases where the remainder doesn't divide evenly among the variable weight variants, Unleash will distribute it as evenly as it can to one decimal's precision. If you have three variable weight variants, they will be weighted at 33.4, 33.3, and 33.3 respectively, so that it adds up to 100.0.
+
 #### Overrides
 
 :::note

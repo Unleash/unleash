@@ -58,7 +58,10 @@ const FeatureToggleListItem = ({
             className={classnames(styles.listItem, rest.className)}
         >
             <span className={styles.listItemMetric}>
-                <FeatureStatus lastSeenAt={lastSeenAt} />
+                <FeatureStatus
+                    lastSeenAt={lastSeenAt}
+                    tooltipPlacement="left"
+                />
             </span>
             <span
                 className={classnames(

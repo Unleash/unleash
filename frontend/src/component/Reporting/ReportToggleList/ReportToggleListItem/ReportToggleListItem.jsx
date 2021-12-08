@@ -7,6 +7,7 @@ import { Checkbox } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
+import FeatureStatus from '../../../feature/FeatureView2/FeatureStatus/FeatureStatus';
 
 import {
     pluralize,
@@ -75,20 +76,13 @@ const ReportToggleListItem = ({
 
             return pluralize(result, 'day');
         }
+        return 'N/A';
     };
 
     const formatLastSeenAt = () => {
-        if (!lastSeenAt) return 'Never';
-
-        const [date, now] = getDates(lastSeenAt);
-        const diff = getDiffInDays(date, now);
-        if (diff === 0) return '1 day';
-
-        if (diff) {
-            return pluralize(diff, 'day');
-        }
-
-        return '1 day';
+        return (
+            <FeatureStatus lastSeenAt={lastSeenAt} tooltipPlacement="bottom" />
+        );
     };
 
     const renderStatus = (icon, text) => (
@@ -126,7 +120,7 @@ const ReportToggleListItem = ({
         history.push(getTogglePath(project, name));
     };
 
-    const statusClasses = classnames(styles.active, {
+    const statusClasses = classnames(styles.active, styles.hideColumnStatus, {
         [styles.stale]: stale,
     });
 
@@ -151,9 +145,11 @@ const ReportToggleListItem = ({
                 }
             />
             <td>{name}</td>
-            <td>{formatLastSeenAt()}</td>
-            <td>{formatCreatedAt()}</td>
-            <td className={styles.expired}>{formatExpiredAt()}</td>
+            <td className={styles.hideColumnLastSeen}>{formatLastSeenAt()}</td>
+            <td className={styles.hideColumn}>{formatCreatedAt()}</td>
+            <td className={`${styles.expired} ${styles.hideColumn}`}>
+                {formatExpiredAt()}
+            </td>
             <td className={statusClasses}>{stale ? 'Stale' : 'Active'}</td>
             <td>{formatReportStatus()}</td>
         </tr>

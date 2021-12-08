@@ -2,6 +2,8 @@
     width: 100%;
     padding: var(--card-padding);
     margin: var(--card-margin-y) 0;
+    border-radius: 10px;
+    box-shadow: none;
 }
 
 .header {
@@ -14,9 +16,19 @@
     display: flex;
     justify-content: space-between;
 }
+.reportCardHealth {
+    padding: 10px;
+}
+.reportCardAction {
+    padding: 10px;
+}
+.reportCardToggle {
+    padding: 10px;
+}
 
 .reportCardHealthInnerContainer {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     align-items: center;
@@ -70,6 +82,12 @@
 .reportCardActionText {
     max-width: 300px;
     font-size: var(--p-size);
+    margin-left: 35px;
+}
+.reportCardNoActionText {
+    max-width: 300px;
+    font-size: var(--p-size);
+    margin-left: 15px;
 }
 
 .reportCardBtn {
@@ -82,4 +100,17 @@
 
 .healthWarning {
     color: var(--warning);
+}
+.lastUpdate {
+    color: #585858;
+}
+
+@media (max-width: 600px) {
+    .reportCardContainer {
+        flex-wrap: wrap;
+    }
+    .reportCardToggle {
+        margin: 10px 5px;
+        flex-basis: 100%;
+    }
 }

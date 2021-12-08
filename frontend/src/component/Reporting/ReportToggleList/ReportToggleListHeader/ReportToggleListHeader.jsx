@@ -5,11 +5,23 @@ import PropTypes from 'prop-types';
 
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 
-import { NAME, LAST_SEEN, CREATED, EXPIRED, STATUS, REPORT } from '../../constants';
+import {
+    NAME,
+    LAST_SEEN,
+    CREATED,
+    EXPIRED,
+    STATUS,
+    REPORT,
+} from '../../constants';
 
 import styles from '../ReportToggleList.module.scss';
 
-const ReportToggleListHeader = ({ handleCheckAll, checkAll, setSortData, bulkActionsOn }) => {
+const ReportToggleListHeader = ({
+    handleCheckAll,
+    checkAll,
+    setSortData,
+    bulkActionsOn,
+}) => {
     const handleSort = type => {
         setSortData(prev => ({
             sortKey: type,
@@ -34,27 +46,56 @@ const ReportToggleListHeader = ({ handleCheckAll, checkAll, setSortData, bulkAct
                     }
                 />
 
-                <th role="button" tabIndex={0} style={{ width: '150px' }} onClick={() => handleSort(NAME)}>
+                <th
+                    role="button"
+                    tabIndex={0}
+                    style={{ width: '150px' }}
+                    onClick={() => handleSort(NAME)}
+                >
                     Name
                     <UnfoldMoreOutlinedIcon className={styles.sortIcon} />
                 </th>
-                <th role="button" tabIndex={0} onClick={() => handleSort(LAST_SEEN)}>
+                <th
+                    role="button"
+                    className={styles.hideColumnLastSeen}
+                    tabIndex={0}
+                    onClick={() => handleSort(LAST_SEEN)}
+                >
                     Last seen
                     <UnfoldMoreOutlinedIcon className={styles.sortIcon} />
                 </th>
-                <th role="button" tabIndex={0} onClick={() => handleSort(CREATED)}>
+                <th
+                    role="button"
+                    tabIndex={0}
+                    className={styles.hideColumn}
+                    onClick={() => handleSort(CREATED)}
+                >
                     Created
                     <UnfoldMoreOutlinedIcon className={styles.sortIcon} />
                 </th>
-                <th role="button" tabIndex={0} onClick={() => handleSort(EXPIRED)}>
+                <th
+                    role="button"
+                    tabIndex={0}
+                    className={styles.hideColumn}
+                    onClick={() => handleSort(EXPIRED)}
+                >
                     Expired
                     <UnfoldMoreOutlinedIcon className={styles.sortIcon} />
                 </th>
-                <th role="button" tabIndex={0} onClick={() => handleSort(STATUS)}>
+                <th
+                    role="button"
+                    tabIndex={0}
+                    className={styles.hideColumnStatus}
+                    onClick={() => handleSort(STATUS)}
+                >
                     Status
                     <UnfoldMoreOutlinedIcon className={styles.sortIcon} />
                 </th>
-                <th role="button" tabIndex={0} onClick={() => handleSort(REPORT)}>
+                <th
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => handleSort(REPORT)}
+                >
                     Report
                     <UnfoldMoreOutlinedIcon className={styles.sortIcon} />
                 </th>

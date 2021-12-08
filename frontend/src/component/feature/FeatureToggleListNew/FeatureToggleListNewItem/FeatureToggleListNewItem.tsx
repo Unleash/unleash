@@ -95,7 +95,10 @@ const FeatureToggleListNewItem = ({
                     align="left"
                     onClick={onClick}
                 >
-                    <FeatureStatus lastSeenAt={lastSeenAt} />
+                    <FeatureStatus
+                        lastSeenAt={lastSeenAt}
+                        tooltipPlacement="left"
+                    />
                 </TableCell>
                 <TableCell
                     className={classNames(

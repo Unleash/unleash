@@ -24,4 +24,5 @@ export interface IProjectHealthReport extends IProject {
     staleCount: number;
     potentiallyStaleCount: number;
     activeCount: number;
+    updatedAt: Date;
 }

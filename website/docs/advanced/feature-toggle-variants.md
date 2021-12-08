@@ -58,15 +58,19 @@ For instance, if you have three variable weight variants and two fixed weight va
 
 #### Overrides
 
+:::note
+Overrides are intended to be used for one-off exceptions during development and may not be suitable for other use cases.
+:::
+
 The weighting system automatically assigns users to a specific group for you. If you want to make sure that a specific user or group of users receives a certain variant, though, you can use the override functionality to achieve that.
 
 When adding an override, you choose a [field from the Unleash Context](../user_guide/unleash_context) and specify that if a context contains one of a given list of values, then the current variant should always activate.
 
 You can use both standard and custom context fields when creating overrides.
 
-Each variant can have multiple overrides, so you can use any number of context fields you want to group people.
+Each variant can have multiple overrides, so you can use any number of context fields you want to create overrides.
 
-If two variants have the same override, then ...
+Note that if multiple variants use overrides that affect the same user, then Unleash can not guarantee which override will take effect. We recommend that you do not use multiple overrides that can conflict in this way, as it will probably not do what you expect.
 
 ### Variant payload
 
@@ -103,17 +107,6 @@ When a toggle has no variants or when a toggle is disabled for a user, Unleash w
 This is a fallback variant that Unleash uses to represent the lack of a variant.
 
 Note: The actual representation of the built-in fallback variant in the client SDK will vary slightly, to honor best practices in various languages.
-
-## Usage example
-
-The exact usage will vary depending on your SDK, so make sure to consult its documentation, but a simple use case would usually look a little something like this:
-
-_Java SDK example:_
-
-```java
-Variant variant = unleash.getVariant("toggle.name", unleashContext);
-System.out.println(variant.getName());
-```
 
 ## Client SDK Support {#client-sdk-support}
 

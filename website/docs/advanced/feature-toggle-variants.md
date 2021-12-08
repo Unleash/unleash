@@ -18,7 +18,7 @@ Whenever you create a feature toggle, you can assign it any number of _variants_
 A variant has four components that define it:
 - a **name**:
 
-    This must be unique among the toggle's variants. When working with a toggle with variants in a client, you will typically use variant name to find out which variant it is.
+    This must be unique among the toggle's variants. When working with a toggle with variants in a client, you will typically use the variant's name to find out which variant it is.
 
 - a **weight**:
 
@@ -31,7 +31,7 @@ A variant has four components that define it:
 
 - an optional **override**
 
-    Overrides let you specify that certain users (as identified either by their user ID or by another [custom stickiness](stickiness) value) will always get this variant, regardless of the variant's weighting.
+    Overrides let you specify that certain users (as identified either by their user ID or by another [custom stickiness](stickiness) value) will always get this variant, regardless of the variant's weight.
 
 ![A form for adding new variants. It has fields for name, weight, payload, and overrides.](/img/variant-creation-form.png 'Creating a new toggle variant')
 

@@ -2,24 +2,102 @@
 id: toggle_variants
 title: Feature Toggle Variants
 ---
+<div class="alert alert--info" role="alert">
+  <em>Feature toggle variants</em> were introduced in <em>Unleash v3.2.0</em>.
+</div>
+<br/>
 
-> This feature was introduced in _Unleash v3.2.0_.
+Every toggle in Unleash can have something called _variants_. Where _feature toggles_ allow you to decide which users get access to a feature, _toggle variants_ allow you to further split those users into segments. Say, for instance, that you're testing out a new feature, such as an alternate sign-up form. The feature toggle would expose the form only to a select group of users. The variants could decide whether the user sees a blue or a green submit button on that form.
 
-Do you want to facilitate more advanced experimentations? Do you want to use Unleash to handle your A/B experiments? Say hello to feature toggle variants!
+Variants facilitate A/B testing and experimentation by letting you create controlled and measurable experiments. Check [our blog post on using Unleash for A/B/n experiments](https://www.getunleash.io/blog/a-b-n-experiments-in-3-simple-steps) for some more insights into how you can set it up.
 
-You can now extend feature toggles with multiple variants. This feature enables you to extend a feature toggle to divide your traffic among a set of variants.
+## What are variants?
+
+Whenever you create a feature toggle, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better.
+
+A variant has four components that define it:
+- a **name**:
+
+    This must be unique among the toggle's variants. When working with a toggle with variants in a client, you will typically use the variant's name to find out which variant it is.
+
+- a **weight**:
+
+    The weight is the likelihood of any one user getting this specific variant. See the [weights section](#variant-weight) for more info.
+
+- an optional **payload**:
+
+    A variant can also have an associated payload. Use this to deliver more data or context. See the [payload section](#variant-payload) for a more details.
+
+
+- an optional **override**
+
+    Overrides let you specify that certain users (as identified either by their user ID or by another [custom stickiness](stickiness) value) will always get this variant, regardless of the variant's weight.
+
+![A form for adding new variants. It has fields for name, weight, payload, and overrides.](/img/variant-creation-form.png 'Creating a new toggle variant')
+
+### Variant weight
+
+A variant's weight determines how likely it is that a user will receive that variant. It is a numeric value between 0 and 100 (inclusive) with one decimal's worth of precision.
+
+When you have multiple variants, the sum of all their weights must add up to exactly 100. Depending on the [weight type](#weight-types), Unleash may automatically determine the weight of the new variant and balance it out with the other variants.
+
+#### Weight types and calculation
+
+There are two kinds of variant weight types: _variable_ and _fixed_. Unleash requires you to always have _at least_ one variable weight variant.
+
+The default weight type is _variable_. Variable weight variants will adjust their weight based on the number of other variable weight variants and whatever weight is not used up by fixed weight variants.
+
+_Fixed_ weight variants have a set weight which will not change. All fixed weight variants' weights can not add up to more than 100.
+
+To calculate what the weight of a variable weight variant is, Unleash first subtracts the sum of fixed weights from 100 and then distributes the remaining weight evenly among the variable weight variants.
+
+For instance, if you have three variable weight variants and two fixed weight variants weighted at 25 and 15 respectively, Unleash will:
+1. Subtract the fixed weight from the total available: 100 - 40 = 60
+2. Divide the remainder by the number of variable weight variants: 60 / 3 = 20
+3. Assign each variable weight variant the same (up to rounding differences) weight: 20%
+
+In the example above, 60 divides cleanly by three. In cases where the remainder doesn't divide evenly among the variable weight variants, Unleash will distribute it as evenly as it can to one decimal's precision. If you have three variable weight variants, they will be weighted at 33.4, 33.3, and 33.3 respectively, so that it adds up to 100.0.
+
+#### Overrides
+
+:::note
+Overrides are intended to be used for one-off exceptions during development and may not be suitable for other use cases.
+:::
+
+The weighting system automatically assigns users to a specific group for you. If you want to make sure that a specific user or group of users receives a certain variant, though, you can use the override functionality to achieve that.
+
+When adding an override, you choose a [field from the Unleash Context](../user_guide/unleash_context) and specify that if a context contains one of a given list of values, then the current variant should always activate.
+
+You can use both standard and custom context fields when creating overrides.
+
+Each variant can have multiple overrides, so you can use any number of context fields you want to create overrides.
+
+Note that if multiple variants use overrides that affect the same user, then Unleash can not guarantee which override will take effect. We recommend that you do not use multiple overrides that can conflict in this way, as it will probably not do what you expect.
+
+### Variant payload
+
+Each variant can have an associated payload. Use this to add more context or data to a payload that you can access on the client, such as a customized message or other information.
+
+Unleash currently supports these payload types:
+
+- JSON
+- CSV
+- String
+
+### Variant stickiness
+
+Variant stickiness is calculated on the received user and context, as described in [the stickiness chapter](stickiness). This ensures that the same user will consistently see the same variant barring overrides and weight changes. If no context data is provided, the traffic will be spread randomly for each request.
+
+
+## How do I configure variants
+
+In the Unleash UI, you can configure variants by navigating to the feature view, and then choosing the 'Variants' tab.
 
 ![toggle_variants](/img/variants.png 'Feature Toggle Variants')
 
-#### How does it work? {#how-does-it-work}
+## The `disabled` variant
 
-Unleash will first use activation strategies to decide whether a feature toggle is considered enabled or disabled for the current user.
-
-If the toggle is considered **enabled**, the Unleash client will select the correct variant for the request. Unleash clients will use values from the Unleash context to make the allocation predictable. `UserId` is the preferred value, then `sessionId` and `remoteAdr`. If no context data is provided, the traffic will be spread randomly for each request.
-
-If the toggle is considered **disabled** you will get the built-in `disabled` variant.
-
-A json representation of the empty variant will be the following:
+When a toggle has no variants or when a toggle is disabled for a user, Unleash will return it with variant data that looks like this:
 
 ```json
 {
@@ -28,18 +106,11 @@ A json representation of the empty variant will be the following:
 }
 ```
 
-The actual representation of the built-in the client SDK will vary slightly, to honor best practices in various languages.
+This is a fallback variant that Unleash uses to represent the lack of a variant.
 
-> If you change the number of variants, it will affect variant allocations. This means that some of the users will be moved to the next variant.
+Note: The actual representation of the built-in fallback variant in the client SDK will vary slightly, to honor best practices in various languages.
 
-_Java SDK example:_
-
-```java
-Variant variant = unleash.getVariant("toggle.name", unleashContext);
-System.out.println(variant.getName());
-```
-
-#### Client SDK Support {#client-sdk-support}
+## Client SDK Support {#client-sdk-support}
 
 To make use of toggle variants, you need to use a compatible client. Client SDK with variant support:
 

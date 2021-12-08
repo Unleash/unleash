@@ -33,11 +33,11 @@ const EnvironmentStrategyDialog = ({
         >
             <p className={styles.infoText}>
                 Before you can enable the toggle in the environment, you need to
-                add an execution strategy.
+                add an activation strategy.
             </p>
             <p className={styles.infoText}>
-                You can add the execution strategy by selecting the toggle, open
-                the environment accordion and add the execution strategy.
+                You can add the activation strategy by selecting the toggle, open
+                the environment accordion and add the activation strategy.
             </p>
         </Dialogue>
     );

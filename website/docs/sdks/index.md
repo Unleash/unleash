@@ -48,55 +48,55 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 :::
 
 
-| Capability                               | Java | Node.js | Go  | Python | Ruby | .Net | PHP | Unleash Proxy Server |
-|------------------------------------------|------|---------|-----|--------|------|------|-----|----------------------|
-| **Category: Initialization**             |      |         |     |        |      |      |     |                      |
-| Async initialization                     | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | N/A                  |
-| Can block until synchronized             | ✅   | ✅      | ⭕  | ⭕     | ⭕   | ✅   | ⭕  | N/A                  |
-| Default refresh interval                 | 10s  | 15s     | 15s | 15s    | 15s  | 30s  | 30s | 5s                   |
-| Default metrics interval                 | 60s  | 60s     | 60s | 60s    | 30s  | 60s  | 30s | 30s                  |
-| Context provider                         | ✅   | N/A     | N/A | N/A    | N/A  | ✅   | ✅  | N/A                  |
-| Global fallback function                 | ✅   | ✅      | ✅  | ✅     | ❌   | ❌   | ❌  | N/A                  |
-| Toggle Query: `namePrefix`               | ✅   | ✅      | ❌  | ❌     | ❌   | ❌   | ❌  | ✅                   |
-| Toggle Query: `tags`                     | ✅   | ✅      | ❌  | ❌     | ❌   | ❌   | ❌  | ✅                   |
-| Toggle Query: `project_name`             | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | N/A | ✅                   |
-| **Category: Custom Headers**             |      |         |     |        |      |      |     |                      |
-| static                                   | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | N/A                  |
-| function                                 | ✅   | ✅      | ⭕  | ✅     | ⭕   | ✅   | ⭕  | N/A                  |
-| **Category: Built-in strategies**        |      |         |     |        |      |      |     |                      |
-| standard                                 | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| `flexibleRollout`                        | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| `flexibleRollout`: custom stickiness     | ✅   | ✅      | ⭕  | ✅     | ⭕   | ?    | ✅  | ✅                   |
-| `userWithID`                             | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| `remoteAddress`                          | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| `remoteAddress`: CIDR syntax             | ✅   | ✅      | ✅  | ✅     | ⭕   | ⭕   | ⭕  | ✅                   |
-| `applicationHostname`                    | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| **Category: Custom strategies**          |      |         |     |        |      |      |     |                      |
-| Basic support                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| **Category:Strategy constraints**        |      |         |     |        |      |      |     |                      |
-| Basic support (`IN`, `NOT_IN` operators) | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| **Category: Unleash Context**            |      |         |     |        |      |      |     |                      |
-| Static fields (`environment`, `appName`) | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| Defined fields                           | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| Custom properties                        | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| **Category: `isEnabled`**                |      |         |     |        |      |      |     |                      |
-| Can take context                         | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| Override fallback value                  | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| Fallback function                        | ✅   | ✅      | ✅  | ✅     | ✅   | ⭕   | ⭕  | ✅                   |
-| **Category: Variants**                   |      |         |     |        |      |      |     |                      |
-| Basic support                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| Custom fallback variant                  | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| Custom weight                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| Custom stickiness (beta)                 | ✅   | ✅      | ⭕  | ✅     | ⭕   | ⭕   | ✅  | ✅                   |
-| **Category: Local backup**               |      |         |     |        |      |      |     |                      |
-| File based backup                        | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| **Category: Usage metrics**              |      |         |     |        |      |      |     |                      |
-| Can disable metrics                      | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| Client registration                      | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| Basic usage metrics (yes/no)             | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| **Category: Bootstrap (beta)**           |      |         |     |        |      |      |     |                      |
-| Bootstrap from file                      | ✅   | ⭕      | ⭕  | ⭕     | ⭕   | ⭕   | ⭕  | ⭕                   |
-| Custom Bootstrap implementation          | ✅   | ⭕      | ⭕  | ⭕     | ⭕   | ⭕   | ⭕  | ⭕                   |
+| Capability                                                                                          | Java | Node.js | Go  | Python | Ruby | .Net | PHP | Unleash Proxy Server |
+|-----------------------------------------------------------------------------------------------------|------|---------|-----|--------|------|------|-----|----------------------|
+| **Category: Initialization**                                                                        |      |         |     |        |      |      |     |                      |
+| Async initialization                                                                                | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | N/A                  |
+| Can block until synchronized                                                                        | ✅   | ✅      | ⭕  | ⭕     | ⭕   | ✅   | ⭕  | N/A                  |
+| Default refresh interval                                                                            | 10s  | 15s     | 15s | 15s    | 15s  | 30s  | 30s | 5s                   |
+| Default metrics interval                                                                            | 60s  | 60s     | 60s | 60s    | 30s  | 60s  | 30s | 30s                  |
+| Context provider                                                                                    | ✅   | N/A     | N/A | N/A    | N/A  | ✅   | ✅  | N/A                  |
+| Global fallback function                                                                            | ✅   | ✅      | ✅  | ✅     | ❌   | ❌   | ❌  | N/A                  |
+| Toggle Query: `namePrefix`                                                                          | ✅   | ✅      | ❌  | ❌     | ❌   | ❌   | ❌  | ✅                   |
+| Toggle Query: `tags`                                                                                | ✅   | ✅      | ❌  | ❌     | ❌   | ❌   | ❌  | ✅                   |
+| Toggle Query: `project_name`                                                                        | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | N/A | ✅                   |
+| **Category: Custom Headers**                                                                        |      |         |     |        |      |      |     |                      |
+| static                                                                                              | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | N/A                  |
+| function                                                                                            | ✅   | ✅      | ⭕  | ✅     | ⭕   | ✅   | ⭕  | N/A                  |
+| **Category: Built-in strategies**                                                                   |      |         |     |        |      |      |     |                      |
+| [standard](../user_guide/activation_strategy#standard)                                              | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| [`flexibleRollout`](../user_guide/activation_strategy#gradual-rollout)                              | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| [`flexibleRollout`: custom stickiness](../user_guide/activation_strategy#customize-stickiness-beta) | ✅   | ✅      | ⭕  | ✅     | ⭕   | ?    | ✅  | ✅                   |
+| [`userWithID`](../user_guide/activation_strategy#userids)                                                                                        | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| [`remoteAddress`](../user_guide/activation_strategy#ips)                                                                                     | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| `remoteAddress`: CIDR syntax                                                                        | ✅   | ✅      | ✅  | ✅     | ⭕   | ⭕   | ⭕  | ✅                   |
+| [`applicationHostname`](../user_guide/activation_strategy#hostnames)                                                                               | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Category: [Custom strategies](../advanced/custom_activation_strategy)**                                                                     |      |         |     |        |      |      |     |                      |
+| Basic support                                                                                       | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Category: [Strategy constraints](../advanced/strategy_constraints)**                                                                   |      |         |     |        |      |      |     |                      |
+| Basic support (`IN`, `NOT_IN` operators)                                                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Category: [Unleash Context](../user_guide/unleash_context)**                                                                       |      |         |     |        |      |      |     |                      |
+| Static fields (`environment`, `appName`)                                                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Defined fields                                                                                      | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Custom properties                                                                                   | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Category: [`isEnabled`](../client-specification#implementation-of-isenabled)**                                                                           |      |         |     |        |      |      |     |                      |
+| Can take context                                                                                    | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Override fallback value                                                                             | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Fallback function                                                                                   | ✅   | ✅      | ✅  | ✅     | ✅   | ⭕   | ⭕  | ✅                   |
+| **Category: [Variants](../advanced/toggle_variants)**                                                                              |      |         |     |        |      |      |     |                      |
+| Basic support                                                                                       | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Custom fallback variant                                                                             | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Custom weight                                                                                       | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| [Custom stickiness (beta)](../advanced/stickiness#custom-stickiness-beta)                                                                            | ✅   | ✅      | ⭕  | ✅     | ⭕   | ⭕   | ✅  | ✅                   |
+| **Category: Local backup**                                                                          |      |         |     |        |      |      |     |                      |
+| File based backup                                                                                   | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Category: Usage metrics**                                                                         |      |         |     |        |      |      |     |                      |
+| Can disable metrics                                                                                 | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Client registration                                                                                 | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Basic usage metrics (yes/no)                                                                        | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Category: Bootstrap (beta)**                                                                      |      |         |     |        |      |      |     |                      |
+| Bootstrap from file                                                                                 | ✅   | ⭕      | ⭕  | ⭕     | ⭕   | ⭕   | ⭕  | ⭕                   |
+| Custom Bootstrap implementation                                                                     | ✅   | ⭕      | ⭕  | ⭕     | ⭕   | ⭕   | ⭕  | ⭕                   |
 
 ## Clients written by awesome enthusiasts {#clients-written-by-awesome-enthusiasts}
 

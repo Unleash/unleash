@@ -20,7 +20,7 @@ import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import EventEmitter from 'events';
 import { IClientMetricsStoreV2 } from '../../types/stores/client-metrics-store-v2';
 
-export default class ClientMetricsService {
+export default class ClientInstanceService {
     apps = {};
 
     logger = null;
@@ -91,7 +91,7 @@ export default class ClientMetricsService {
         );
     }
 
-    public async registerClientMetrics(
+    public async registerInstance(
         data: IClientApp,
         clientIp: string,
     ): Promise<void> {

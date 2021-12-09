@@ -3,7 +3,7 @@ import Controller from '../controller';
 import { IUnleashServices } from '../../types';
 import { IUnleashConfig } from '../../types/option';
 import { Logger } from '../../logger';
-import ClientMetricsService from '../../services/client-metrics';
+import ClientInstanceService from '../../services/client-metrics/client-instance-service';
 import { IAuthRequest, User } from '../../server-impl';
 import { IClientApp } from '../../types/model';
 import ApiUser from '../../types/api-user';
@@ -13,17 +13,17 @@ import { NONE } from '../../types/permissions';
 export default class RegisterController extends Controller {
     logger: Logger;
 
-    metrics: ClientMetricsService;
+    metrics: ClientInstanceService;
 
     constructor(
         {
-            clientMetricsService,
-        }: Pick<IUnleashServices, 'clientMetricsService'>,
+            clientInstanceService,
+        }: Pick<IUnleashServices, 'clientInstanceService'>,
         config: IUnleashConfig,
     ) {
         super(config);
         this.logger = config.getLogger('/api/client/register');
-        this.metrics = clientMetricsService;
+        this.metrics = clientInstanceService;
 
         // NONE permission is not optimal here in terms of readability.
         this.post('/', this.handleRegister, NONE);

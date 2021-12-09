@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import ClientMetricsService from './index';
+import ClientInstanceService from './client-instance-service';
 import getLogger from '../../../test/fixtures/no-logger';
 import { IClientApp } from '../../types/model';
 import { secondsToMilliseconds } from 'date-fns';
@@ -48,7 +48,7 @@ test('Multiple registrations of same appname and instanceid within same time per
     const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
-    const clientMetrics = new ClientMetricsService(
+    const clientMetrics = new ClientInstanceService(
         {
             clientMetricsStoreV2: null,
             strategyStore: null,
@@ -98,7 +98,7 @@ test('Multiple unique clients causes multiple registrations', async () => {
         bulkUpsert: bulkSpy,
     };
 
-    const clientMetrics = new ClientMetricsService(
+    const clientMetrics = new ClientInstanceService(
         {
             clientMetricsStoreV2: null,
             strategyStore: null,
@@ -151,7 +151,7 @@ test('Same client registered outside of dedup interval will be registered twice'
 
     const bulkInterval = secondsToMilliseconds(2);
 
-    const clientMetrics = new ClientMetricsService(
+    const clientMetrics = new ClientInstanceService(
         {
             clientMetricsStoreV2: null,
             strategyStore: null,
@@ -204,7 +204,7 @@ test('No registrations during a time period will not call stores', async () => {
     const clientInstanceStore: any = {
         bulkUpsert: bulkSpy,
     };
-    new ClientMetricsService(
+    new ClientInstanceService(
         {
             clientMetricsStoreV2: null,
             strategyStore: null,

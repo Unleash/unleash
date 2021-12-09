@@ -20,6 +20,6 @@ test('should enable prometheus', async () => {
         .expect('Content-Type', /text/)
         .expect(200);
     services.versionService.destroy();
-    services.clientMetricsService.destroy();
+    services.clientInstanceService.destroy();
     services.apiTokenService.destroy();
 });

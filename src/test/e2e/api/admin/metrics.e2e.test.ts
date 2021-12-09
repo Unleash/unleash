@@ -1,10 +1,9 @@
-import dbInit from '../../helpers/database-init';
-import { setupApp } from '../../helpers/test-helper';
+import dbInit, { ITestDb } from '../../helpers/database-init';
+import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
-import { parseISO } from 'date-fns';
 
-let app;
-let db;
+let app: IUnleashTest;
+let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('metrics_serial', getLogger);
@@ -12,45 +11,38 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-    await app.services.clientMetricsService.createApplication({
+    await app.services.clientInstanceService.createApplication({
         appName: 'demo-app-1',
         strategies: ['default'],
+        //@ts-ignore
         announced: true,
     });
-    await app.services.clientMetricsService.createApplication({
+    await app.services.clientInstanceService.createApplication({
         appName: 'demo-app-2',
         strategies: ['default', 'extra'],
         description: 'hello',
+        //@ts-ignore
         announced: true,
     });
-    await app.services.clientMetricsService.createApplication({
+    await app.services.clientInstanceService.createApplication({
         appName: 'deletable-app',
         strategies: ['default'],
         description: 'Some desc',
+        //@ts-ignore
         announced: true,
     });
 
-    const clientStartedDate = parseISO('2018-01-15T14:35:38.494Z');
     await db.stores.clientInstanceStore.insert({
         appName: 'demo-app-1',
         instanceId: 'test-1',
-        strategies: ['default'],
-        started: clientStartedDate,
-        interval: 10,
     });
     await db.stores.clientInstanceStore.insert({
         appName: 'demo-seed-2',
         instanceId: 'test-2',
-        strategies: ['default'],
-        started: clientStartedDate,
-        interval: 10,
     });
     await db.stores.clientInstanceStore.insert({
         appName: 'deletable-app',
         instanceId: 'inst-1',
-        strategies: ['default'],
-        started: clientStartedDate,
-        interval: 10,
     });
 });
 

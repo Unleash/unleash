@@ -1,4 +1,4 @@
-import { applicationSchema } from './metrics-schema';
+import { applicationSchema } from './schema';
 import { APPLICATION_CREATED } from '../../types/events';
 import { IApplication } from './models';
 import { IUnleashStores } from '../../types/stores';
@@ -13,11 +13,11 @@ import { IStrategyStore } from '../../types/stores/strategy-store';
 import { IClientInstanceStore } from '../../types/stores/client-instance-store';
 import { IApplicationQuery } from '../../types/query';
 import { IClientApp } from '../../types/model';
-import { clientRegisterSchema } from './register-schema';
+import { clientRegisterSchema } from './schema';
 
 import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { IClientMetricsStoreV2 } from '../../types/stores/client-metrics-store-v2';
-import { clientMetricsSchema } from './client-metrics-schema';
+import { clientMetricsSchema } from './schema';
 
 export default class ClientInstanceService {
     apps = {};

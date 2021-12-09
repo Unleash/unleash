@@ -7,7 +7,7 @@ import {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
 } from '../../types/stores/client-metrics-store-v2';
-import { clientMetricsSchema } from './client-metrics-schema';
+import { clientMetricsSchema } from './schema';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 import EventEmitter from 'events';

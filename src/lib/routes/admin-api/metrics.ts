@@ -4,7 +4,7 @@ import { UPDATE_APPLICATION } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
-import ClientInstanceService from '../../services/client-metrics/client-instance-service';
+import ClientInstanceService from '../../services/client-metrics/instance-service';
 
 class MetricsController extends Controller {
     private logger: Logger;

@@ -7,8 +7,8 @@ import HealthService from './health-service';
 
 import ProjectService from './project-service';
 import StateService from './state-service';
-import ClientInstanceService from './client-metrics/client-instance-service';
-import ClientMetricsServiceV2 from './client-metrics/client-metrics-service-v2';
+import ClientInstanceService from './client-metrics/instance-service';
+import ClientMetricsServiceV2 from './client-metrics/metrics-service-v2';
 import TagTypeService from './tag-type-service';
 import TagService from './tag-service';
 import StrategyService from './strategy-service';

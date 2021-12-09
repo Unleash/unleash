@@ -94,10 +94,11 @@ export default class ClientInstanceService {
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
-        await this.clientInstanceStore.insert({
+        await this.clientInstanceStore.setLastSeen({
             appName: value.appName,
             instanceId: value.instanceId,
-            clientIp,
+            environment: value.environment,
+            clientIp: clientIp,
         });
     }
 

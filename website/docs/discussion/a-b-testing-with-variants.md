@@ -4,7 +4,7 @@ title: A/B and multivariate testing
 
 A/B testing is a type of randomized controlled experiment, where you test two different versions of a feature to see which version performs better. If you have more than two versions, it's known as _multivariate testing_. Coupled with analytics, A/B and multivariate testing enables you to better understand your users and how you can serve them better.
 
-To facilitate A/B testing and experimentation, Unleash has a built-in 'experiment' [toggle type](http://localhost:3000/advanced/feature_toggle_types#feature-toggle-types) and lets you give toggles any number of [variants](https://docs.getunleash.io/advanced/toggle_variants).
+To facilitate A/B testing and experimentation, Unleash has a built-in 'experiment' [toggle type](../advanced/feature_toggle_types#feature-toggle-types) and lets you give toggles any number of [variants](../advanced/toggle_variants). To see a concrete example of configuring multivariate testing with unleash, see [our blog post on A/B testing with Unleash and Google Analytics](https://www.getunleash.io/blog/a-b-n-experiments-in-3-simple-steps).
 
 In the rest of this document, _A/B testing_ will refer to both strict A/B testing and multivariate testing unless otherwise specified.
 
@@ -31,26 +31,26 @@ How long the experiment should run for depends on your use case, but you should 
 
 The simplest A/B experiments use a control group and a single treatment group, but that may not be the way forward in all situations. If you're launching a new feature, for instance, you won't have a control group that receives 'no change'. In that case, the question is the same (does A or B perform better), but you don't have a control group. Additionally, you might want to try out multiple variations — with or without a control group. The principles remain the same however: find a measurable goal, and see which variant performs better.
 
-### Potential issues
+### Potential pitfalls
 
 A thing to keep in mind when running experiments like this or in other cases where you're optimizing for a single metric is whether this is damaging to certain other metrics. Does more sign-ups also lead to more people (relatively) cancelling their membership? Does it decrease engagement with other parts of your product?
 
-Don't do yourself a disservice by chasing one metric above all else. Keep an eye on other metrics at the same time and see if they are affected — always keep a holistic view of things.
+Don't do yourself a disservice by chasing one metric above all else. Keep an eye on other metrics at the same time and see if they are affected — always maintain a holistic view of things.
 
 
-## What can Unleash do for you?
+## A/B testing with Unleash
 
-### variants
-### The experiment toggle type
+Feature toggles are a great way to run A/B tests and to decouple them from your code, and Unleash ships with features to make it easy to get started with.
 
-> Hey all, has anyone found any really detailed explanations of variants and best practices? Maybe some examples?  I feel I understand the info in the docs but it didn't help me to paint a mental picture of how to best use it.
-> https://docs.getunleash.io/advanced/toggle_variants
-> I also found some examples in the php sdk README
-> https://github.com/Unleash/unleash-client-php
-> Which gave me a bit more info in how to best use it, but I find myself craving more examples and good ideas.
+Toggles can be used for different purposes and we consider experimentation important enough to have given it its own [toggle type](../advanced/feature_toggle_types#feature-toggle-types). Experiment toggles have a lifetime expectancy suited to let you run an experiment and gather enough data to know whether it was a success or not.
 
->  I'm trying to determine how YOU suggest I use it. From an end-user perspective, I see this cool tab that says "variants" and I can see from the UI that  I can give it 2 variants with a couple different strings and then some documentation in a couple SDKs that suggests "all you have to do is call .getVariants()! and then... nothing. Why do I want to call getVariants? what's the use case? what is it best for? why did you create it? give me some examples of it being used and show me how powerful it can be for my business... that kinda thing.
+If you're running a basic A/B test where the control group doesn't see any change, then a basic experiment toggle will do the job excellently. With a [gradual rollout](../user_guide/activation_strategy#gradual-rollout), some appropriate [strategy constraints](../advanced/strategy_constraints), and an analytics tool of your choosing, you should be all set to start collecting metrics and measuring.
 
-> I think overall I kinda "get" it... as in... I could invent a way to use it by returning 1 of 2 variants and then custom-coding a header that will display "Hello ${client.getVariant().value)" (just a placeholder code snippet I pulled out of nowhere in particular) or something like that and display "World" or "Earth" depending on the user but... Is that what it's intended for? That seems like I could almost as easily do that in code with an on/off switch. Wacha got for me?
+If you want to run a more advanced experiment, then take a look at using [feature toggle variants](../advanced/toggle_variants). If you have a control group, and want to test multiple potential improvements, then simply add your desired variants to the toggle as discussed in the previous paragraph. If you want to launch a new feature (or a headline) in multiple variations right out the gate, consider using a basic on/off toggle with variants and activate it for all your users.
 
-## When is it appropriate
+
+## Summary
+
+A/B testing allows you to run experiments on your users and improve your product by using real, proven metrics. It's used by some of the world's most popular businesses and can help you get ahead of competitors (and stay on top). We at Unleash want to help you, so we've baked in some tools to let you do A/B testing right out the gate to make it as smooth as possible to get started.
+
+So what are you waiting for? Find out what you want to improve next and get testing!

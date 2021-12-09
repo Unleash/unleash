@@ -25,7 +25,75 @@ On this page you will find examples for connecting your application to the demo 
 - [iOS Proxy SDK](/sdks/proxy-ios)
 - [React Proxy SDK](/sdks/proxy-react)
 
-### Clients written by awesome enthusiasts: {#clients-written-by-awesome-enthusiasts}
+
+## SDK compatibility
+
+...
+
+**Legend**:
+
+- ✅: Implemented
+- ⭕: Not yet implemented, but we're looking into it
+- ❌: Not implemented, not planned
+- **N/A**: Not applicable to this SDK
+
+If you see an item marked with a ❌ that you would find useful, feel free to reach out to us with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it.
+
+### Server SDKs
+
+Some of
+
+| Capability                               | Java | Node.js | Go  | Python | Ruby | .Net | PHP | Unleash Proxy Server |
+|------------------------------------------|------|---------|-----|--------|------|------|-----|----------------------|
+| **Initialization**                       |      |         |     |        |      |      |     |                      |
+| Async initialization                     | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | N/A                  |
+| Can block until synchronized             | ✅   | ✅      | ⭕  | ⭕     | ⭕   | ✅   | ⭕  | N/A                  |
+| Refresh interval - default               | 10s  | 15s     | 15s | 15s    | 15s  | 30s  | 30s | 5s                   |
+| Metrics interval - default               | 60s  | 60s     | 60s | 60s    | 30s  | 60s  | 30s | 30s                  |
+| Context provider                         | ✅   | N/A     | N/A | N/A    | N/A  | ✅   | ✅  | N/A                  |
+| Global fallback function                 | ✅   | ✅      | ✅  | ✅     | ❌   | ❌   | ❌  | N/A                  |
+| Toggle Query: `namePrefix`               | ✅   | ✅      | ❌  | ❌     | ❌   | ❌   | ❌  | ✅                   |
+| Toggle Query: `tags`                     | ✅   | ✅      | ❌  | ❌     | ❌   | ❌   | ❌  | ✅                   |
+| Toggle Query: `project_name`             | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | N/A | ✅                   |
+| **Custom Headers**                       |      |         |     |        |      |      |     |                      |
+| static                                   | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | N/A                  |
+| function                                 | ✅   | ✅      | ⭕  | ✅     | ⭕   | ✅   | ⭕  | N/A                  |
+| **Built-in strategies**                  |      |         |     |        |      |      |     |                      |
+| standard                                 | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| `flexibleRollout`                        | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| `flexibleRollout`: custom stickiness     | ✅   | ✅      | ⭕  | ✅     | ⭕   |      | ✅  | ✅                   |
+| `userWithID`                             | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| `remoteAddress`                          | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| `remoteAddress`: CIDR syntax             | ✅   | ✅      | ✅  | ✅     | ⭕   | ⭕   | ⭕  | ✅                   |
+| `applicationHostname`                    | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Custom strategies**                    |      |         |     |        |      |      |     |                      |
+| Basic support                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Strategy constraints**                 |      |         |     |        |      |      |     |                      |
+| Basic support (`IN`, `NOT_IN` operators) | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Unleash Context**                      |      |         |     |        |      |      |     |                      |
+| Static fields (`environment`, `appName`) | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Defined fields                           | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Custom properties                        | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **`isEnabled`**                          |      |         |     |        |      |      |     |                      |
+| Can take context                         | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Override fallback value                  | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Fallback function                        | ✅   | ✅      | ✅  | ✅     | ✅   | ⭕   | ⭕  | ✅                   |
+| **Variants**                             |      |         |     |        |      |      |     |                      |
+| Basic support                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Custom fallback variant                  | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Custom weight                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Custom stickiness (beta)                 | ✅   | ✅      | ⭕  | ✅     | ⭕   | ⭕   | ✅  | ✅                   |
+| **Local backup**                         |      |         |     |        |      |      |     |                      |
+| File based backup                        | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Usage metrics**                        |      |         |     |        |      |      |     |                      |
+| Can disable metrics                      | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Client registration                      | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| Basic usage metrics (yes/no)             | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Bootstrap (beta)**                     |      |         |     |        |      |      |     |                      |
+| Bootstrap from file                      | ✅   | ⭕      | ⭕  | ⭕     | ⭕   | ⭕   | ⭕  | ⭕                   |
+| Custom Bootstrap implementation          | ✅   | ⭕      | ⭕  | ⭕     | ⭕   | ⭕   | ⭕  | ⭕                   |
+
+## Clients written by awesome enthusiasts: {#clients-written-by-awesome-enthusiasts}
 
 - [cognitedata/unleash-client-rust](https://github.com/cognitedata/unleash-client-rust) (Rust)
 - [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)

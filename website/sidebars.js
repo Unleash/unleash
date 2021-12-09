@@ -67,7 +67,7 @@ module.exports = {
             'advanced/sso-google',
         ],
         'Discussion topics': [
-            'discussion/a-b-testing-with-variants'
+            'discussion/a-b-testing'
         ]
     },
     api: {

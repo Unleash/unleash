@@ -1,4 +1,3 @@
-import EventEmitter from 'events';
 import { Knex } from 'knex';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';

@@ -9,24 +9,37 @@ import {
 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './client-metrics-schema';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
+import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import EventEmitter from 'events';
+import { CLIENT_METRICS } from '../../types/events';
 
 export default class ClientMetricsServiceV2 {
     private timer: NodeJS.Timeout;
 
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
+    private featureToggleStore: IFeatureToggleStore;
+
+    private eventBus: EventEmitter;
+
     private logger: Logger;
 
     private bulkInterval: number;
 
     constructor(
-        { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            featureToggleStore,
+            clientMetricsStoreV2,
+        }: Pick<IUnleashStores, 'featureToggleStore' | 'clientMetricsStoreV2'>,
+        { eventBus, getLogger }: Pick<IUnleashConfig, 'eventBus' | 'getLogger'>,
         bulkInterval = minutesToMilliseconds(5),
     ) {
+        this.featureToggleStore = featureToggleStore;
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
-
-        this.logger = getLogger('/services/client-metrics/index.ts');
+        this.eventBus = eventBus;
+        this.logger = getLogger(
+            '/services/client-metrics/client-metrics-service-v2.ts',
+        );
 
         this.bulkInterval = bulkInterval;
         this.timer = setInterval(async () => {
@@ -41,6 +54,9 @@ export default class ClientMetricsServiceV2 {
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
         const toggleNames = Object.keys(value.bucket.toggles);
+        if (toggleNames.length > 0) {
+            await this.featureToggleStore.setLastSeen(toggleNames);
+        }
 
         this.logger.debug(`got metrics from ${clientIp}`);
 
@@ -57,6 +73,7 @@ export default class ClientMetricsServiceV2 {
 
         // TODO: should we aggregate for a few minutes (bulkInterval) before pushing to DB?
         await this.clientMetricsStoreV2.batchInsertMetrics(clientMetrics);
+        this.eventBus.emit(CLIENT_METRICS, value);
     }
 
     // Overview over usage last "hour" bucket and all applications using the toggle

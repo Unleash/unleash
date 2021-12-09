@@ -1,4 +1,3 @@
-import EventEmitter from 'events';
 import ClientInstanceService from './client-instance-service';
 import getLogger from '../../../test/fixtures/no-logger';
 import { IClientApp } from '../../types/model';
@@ -57,7 +56,7 @@ test('Multiple registrations of same appname and instanceid within same time per
             clientInstanceStore,
             eventStore: null,
         },
-        { getLogger, eventBus: new EventEmitter() },
+        { getLogger },
     );
     const client1: IClientApp = {
         appName: 'test_app',
@@ -107,7 +106,7 @@ test('Multiple unique clients causes multiple registrations', async () => {
             clientInstanceStore,
             eventStore: null,
         },
-        { getLogger, eventBus: new EventEmitter() },
+        { getLogger },
     );
     const client1 = {
         appName: 'test_app',
@@ -160,7 +159,7 @@ test('Same client registered outside of dedup interval will be registered twice'
             clientInstanceStore,
             eventStore: null,
         },
-        { getLogger, eventBus: new EventEmitter() },
+        { getLogger },
         bulkInterval,
     );
     const client1 = {
@@ -213,7 +212,7 @@ test('No registrations during a time period will not call stores', async () => {
             clientInstanceStore,
             eventStore: null,
         },
-        { getLogger, eventBus: new EventEmitter() },
+        { getLogger },
     );
     jest.advanceTimersByTime(6000);
     expect(appStoreSpy).toHaveBeenCalledTimes(0);
